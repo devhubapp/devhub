@@ -1,8 +1,10 @@
 // @flow
+/* eslint-disable import/prefer-default-export */
 
-import { SET_THEME } from '../utils/constants/actions';
-import { Theme } from '../utils/types';
+import type { Action, ActionType, Theme } from '../utils/types';
 
-const a = (type: string, payload: T): Action<T> => ({ type, payload });
+function action<T>(type: ActionType, payload: T): Action<T> {
+  return { type, payload };
+}
 
-export const setTheme = (theme: Theme) => a(SET_THEME, { theme });
+export const setTheme = (theme: Theme) => action('SET_THEME,', theme);
