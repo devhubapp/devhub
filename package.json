@@ -8,7 +8,12 @@
 	},
 	"dependencies": {
 		"react": "~15.3.1",
-		"react-native": "0.37.0"
+		"react-native": "0.37.0",
+		"react-redux": "^4.4.6",
+		"redux": "^3.6.0",
+		"redux-persist": "^4.0.0-beta1",
+		"remote-redux-devtools": "^0.5.4",
+		"styled-components": "^1.0.11"
 	},
 	"devDependencies": {
 		"babel-jest": "17.0.2",
