@@ -3,12 +3,14 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
+export const paddingHorizontal = 20;
+
 const Column = styled.View`
   background-color: ${({ theme }) => theme.base02};
 `;
 
 const Header = styled.View`
-  padding-horizontal: 10;
+  padding-horizontal: ${paddingHorizontal};
   padding-vertical: 12;
   border-width: 0;
   border-bottom-width: 2;
