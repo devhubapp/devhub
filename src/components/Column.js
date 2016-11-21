@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-export const paddingHorizontal = 20;
+export const paddingHorizontal = 10;
 
 const Column = styled.View`
   background-color: ${({ theme }) => theme.base02};

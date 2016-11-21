@@ -6,6 +6,7 @@ import styled from 'styled-components/native';
 const Avatar = styled.View`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  background-color: ${({ theme }) => theme.base03};
   border-radius: 4;
 `;
 
