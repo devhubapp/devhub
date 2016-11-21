@@ -14,6 +14,6 @@ type Props = {
   size?: number,
 };
 
-export default ({ size = 80, ...props }: Props) => (
+export default ({ size = 50, ...props }: Props) => (
   <Avatar size={size} {...props} />
 );

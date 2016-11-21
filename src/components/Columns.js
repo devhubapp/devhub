@@ -2,18 +2,21 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
-import { Dimensions, ScrollView } from 'react-native';
+import { Dimensions } from 'react-native';
 
-import Column, { paddingHorizontal } from './Column';
+import Column from './Column';
+import { contentPadding } from '../themes/variables';
+
+const margin = 2;
 
 const getWidth = ({ first, last } = {}) => {
   const onlyOne = first && last;
   const { width } = Dimensions.get('window');
 
   if (onlyOne) return width;
-  if (first || last) return width - paddingHorizontal;
+  if (first || last) return width - contentPadding;
 
-  return width - (2 * paddingHorizontal);
+  return width - (2 * contentPadding);
 };
 
 const StyledScrollView = styled.ScrollView`
@@ -27,7 +30,7 @@ const StyledView = styled.View`
 
 const StyledColumn = styled(Column)`
   flex: 1;
-  margin-horizontal: 1;
+  margin: ${margin};
 `;
 
 export default () => (
