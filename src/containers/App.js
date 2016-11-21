@@ -9,6 +9,7 @@ import { StatusBar, View } from 'react-native';
 import Main from '../components/Main';
 import { loadTheme } from '../reducers/config';
 import { setTheme } from '../actions';
+import { DEFAULT_THEME } from '../utils/constants/defaults';
 import type { State } from '../utils/types';
 
 const Root = styled(View)`
@@ -27,7 +28,7 @@ const StyledMain = styled(Main)`
 
 const App = ({ setTheme, theme }: State) => {
   // TODO: Remove this
-  setTheme('dark');
+  setTheme(DEFAULT_THEME);
 
   return (
     <ThemeProvider theme={theme}>

@@ -7,7 +7,7 @@ import { Dimensions } from 'react-native';
 import Column from './Column';
 import { contentPadding } from '../themes/variables';
 
-const margin = 4;
+const margin = 2;
 
 const getWidth = ({ first, last } = {}) => {
   const { width } = Dimensions.get('window');
@@ -29,7 +29,8 @@ const StyledView = styled.View`
 
 const StyledColumn = styled(Column)`
   flex: 1;
-  margin: ${margin};
+  margin-horizontal: ${margin};
+  margin-vertical: ${margin * 2};
   border-radius: 4;
 `;
 

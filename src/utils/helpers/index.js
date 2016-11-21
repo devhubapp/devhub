@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import { DARK_THEME, LIGHT_THEME } from '../../themes';
+import { DARK_THEME, DARK_BLUE_THEME, LIGHT_THEME } from '../../themes';
 import type { Theme } from '../types';
 
 export function isNight() {
@@ -11,8 +11,9 @@ export function isNight() {
 
 export function loadTheme(theme: Theme) {
   switch (theme) {
-    case 'light': return LIGHT_THEME;
     case 'dark': return DARK_THEME;
+    case 'dark-blue': return DARK_BLUE_THEME;
+    case 'light': return LIGHT_THEME;
     default: return isNight() ? DARK_THEME : LIGHT_THEME;
   }
 }

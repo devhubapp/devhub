@@ -7,13 +7,13 @@ import styled from 'styled-components/native';
 import Avatar from './Avatar';
 import { contentPadding } from '../themes/variables';
 
-const avatarWidth = 44;
+const avatarWidth = 36;
 
 const Card = styled.View`
   padding-horizontal: ${contentPadding};
   padding-vertical: ${contentPadding * 1.4};
   border-width: 0;
-  border-bottom-width: 2;
+  border-bottom-width: 0.5;
   border-color: ${({ theme }) => theme.base01};
 `;
 
@@ -47,7 +47,7 @@ const HeaderRow = styled(HorizontalView)`
 
 const Text = styled.Text`
   color: ${({ theme }) => theme.base04};
-  line-height: 20;
+  line-height: 18;
   font-size: 14;
 `;
 
@@ -71,12 +71,12 @@ const RepositoryName = styled(Text)`
 const CardItemId = styled(Text)`
   font-weight: bold;
   font-size: 12;
-  opacity: 0.8;
+  opacity: 0.9;
 `;
 
 const Comment = styled(Text)`
   flex: 1;
-  opacity: 0.8;
+  opacity: 0.9;
 `;
 
 const ContentRow = styled(HorizontalView)`
@@ -109,7 +109,7 @@ const CardIdContainer = styled(HighlightContainer2)`
 
 const Star = styled(Icon)`
   font-size: 16;
-  color: ${({ theme }) => theme.base09};
+  color: ${({ theme }) => theme.star};
 `;
 
 type Props = {
@@ -120,7 +120,10 @@ export default ({ ...props }: Props) => (
   <Card {...props}>
     <Header>
       <LeftColumn>
-        <Avatar size={44} source={{ uri: 'https://avatars0.githubusercontent.com/u/619186?v=3&s=100' }} />
+        <Avatar
+          size={avatarWidth}
+          source={{ uri: 'https://avatars0.githubusercontent.com/u/619186?v=3&s=100' }}
+        />
       </LeftColumn>
 
       <MainColumn>
@@ -155,7 +158,10 @@ export default ({ ...props }: Props) => (
 
     <ContentRow>
       <LeftColumn>
-        <Avatar size={22} source={{ uri: 'https://avatars0.githubusercontent.com/u/619186?v=3&s=100' }} />
+        <Avatar
+          size={avatarWidth / 2}
+          source={{ uri: 'https://avatars0.githubusercontent.com/u/619186?v=3&s=100' }}
+        />
       </LeftColumn>
 
       <MainColumnRowContent>

@@ -10,19 +10,22 @@ import { composeWithDevTools } from 'remote-redux-devtools';
 
 import reducer from './reducers';
 import { registerScreens } from './screens';
+import { DEFAULT_THEME } from './utils/constants/defaults';
+import { loadTheme } from './utils/helpers';
 import { iconsMap, iconsLoaded } from './utils/helpers/icon-loader';
-import darkTheme from './themes/dark';
 
 const composeEnhancers = composeWithDevTools({ realtime: true });
 const store = createStore(reducer, composeEnhancers(autoRehydrate()));
 persistStore(store, { storage: AsyncStorage, blacklist: ['theme'] });
 
-const navigatorStyle = {
-  screenColor: darkTheme.base00,
-  navBarHidden: true,
-};
-
 function startApp() {
+  const theme = loadTheme(DEFAULT_THEME);
+
+  const navigatorStyle = {
+    screenColor: theme.base00,
+    navBarHidden: true,
+  };
+
   Navigation.startTabBasedApp({
     tabs: [
       {
@@ -55,9 +58,9 @@ function startApp() {
       },
     ],
     tabsStyle: {
-      tabBarButtonColor: '#3f3f3f', // change the color of the tab icons and text (also unselected)
-      tabBarSelectedButtonColor: '#ffffff', // change the color of the selected tab icon and text (only selected)
-      tabBarBackgroundColor: '#111111', // change the background color of the tab bar
+      tabBarButtonColor: theme.base03, // change the color of the tab icons and text (also unselected)
+      tabBarSelectedButtonColor: theme.base04, // change the color of the selected tab icon and text (only selected)
+      tabBarBackgroundColor: theme.base00, // change the background color of the tab bar
     },
   });
 }
