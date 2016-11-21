@@ -1,9 +1,10 @@
 package com.devhub;
 
-import com.facebook.react.ReactActivity;
+// import com.facebook.react.ReactActivity;
+import com.reactnativenavigation.controllers.SplashActivity;
 import com.oblador.vectoricons.VectorIconsPackage;
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends SplashActivity {
 
     /**
      * Returns the name of the main component registered from JavaScript.

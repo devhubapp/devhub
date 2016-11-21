@@ -13,6 +13,7 @@ import type { State } from '../utils/types';
 
 const Root = styled(View)`
   flex: 1;
+  background-color: ${({ theme }) => theme.base00};
 `;
 
 const StatusBarContainer = styled(View)`
@@ -24,20 +25,25 @@ const StyledMain = styled(Main)`
   flex: 1;
 `;
 
-const App = ({ theme }: State) => (
-  <ThemeProvider theme={theme}>
-    <Root>
-      <StatusBarContainer>
-        <StatusBar
-          backgroundColor={theme.base01}
-          barStyle={theme.isDark ? 'light-content' : 'dark-content'}
-        />
-      </StatusBarContainer>
+const App = ({ setTheme, theme }: State) => {
+  // TODO: Remove this
+  setTheme('dark');
 
-      <StyledMain />
-    </Root>
-  </ThemeProvider>
-);
+  return (
+    <ThemeProvider theme={theme}>
+      <Root>
+        <StatusBarContainer>
+          <StatusBar
+            backgroundColor={theme.base01}
+            barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+          />
+        </StatusBarContainer>
+
+        <StyledMain />
+      </Root>
+    </ThemeProvider>
+  );
+};
 
 const mapStateToProps = ({ config }: State) => ({
   config,

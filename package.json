@@ -12,6 +12,7 @@
   "dependencies": {
     "react": "~15.3.1",
     "react-native": "0.37.0",
+    "react-native-navigation": "next",
     "react-native-vector-icons": "^3.0.0",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
