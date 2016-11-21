@@ -10,8 +10,8 @@ const Main = styled.View`
   background-color: ${({ theme }) => theme.base00};
 `;
 
-export default ({ ...props }) => (
-  <Main {...props}>
+export default () => (
+  <Main>
     <Columns />
   </Main>
 );

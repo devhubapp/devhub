@@ -1,38 +1,39 @@
 {
-	"name": "devhub",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest",
-		"flow": "flow ./src",
-		"lint": "eslint ./src",
-		"lint-fix": "eslint ./src --fix"
-	},
-	"dependencies": {
-		"react": "~15.3.1",
-		"react-native": "0.37.0",
-		"react-redux": "^4.4.6",
-		"redux": "^3.6.0",
-		"redux-persist": "^4.0.0-beta1",
-		"remote-redux-devtools": "^0.5.4",
-		"styled-components": "^1.0.11"
-	},
-	"devDependencies": {
-		"babel-eslint": "^7.1.1",
-		"babel-jest": "17.0.2",
-		"babel-preset-react-native": "1.9.0",
-		"eslint": "^3.10.2",
-		"eslint-config-airbnb": "latest",
-		"eslint-plugin-flowtype": "^2.25.0",
-		"eslint-plugin-import": "^2.1.0",
-		"eslint-plugin-jsx-a11y": "^2.2.3",
-		"eslint-plugin-react": "^6.6.0",
-		"jest": "17.0.3",
-		"jest-react-native": "17.0.3",
-		"react-test-renderer": "~15.3.1"
-	},
-	"jest": {
-		"preset": "jest-react-native"
-	}
+  "name": "devhub",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "flow": "flow ./src",
+    "lint": "eslint ./src",
+    "lint-fix": "eslint ./src --fix"
+  },
+  "dependencies": {
+    "react": "~15.3.1",
+    "react-native": "0.37.0",
+    "react-native-vector-icons": "^3.0.0",
+    "react-redux": "^4.4.6",
+    "redux": "^3.6.0",
+    "redux-persist": "^4.0.0-beta1",
+    "remote-redux-devtools": "^0.5.4",
+    "styled-components": "^1.0.11"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "17.0.2",
+    "babel-preset-react-native": "1.9.0",
+    "eslint": "^3.10.2",
+    "eslint-config-airbnb": "latest",
+    "eslint-plugin-flowtype": "^2.25.0",
+    "eslint-plugin-import": "^2.1.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.6.0",
+    "jest": "17.0.3",
+    "jest-react-native": "17.0.3",
+    "react-test-renderer": "~15.3.1"
+  },
+  "jest": {
+    "preset": "jest-react-native"
+  }
 }

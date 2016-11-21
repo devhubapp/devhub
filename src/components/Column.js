@@ -21,7 +21,7 @@ const Header = styled.View`
 const Title = styled.Text`
   font-size: 20;
   color: ${({ theme }) => theme.base04};
-  opacity: 0.8;
+  opacity: 0.5;
 `;
 
 type Props = {

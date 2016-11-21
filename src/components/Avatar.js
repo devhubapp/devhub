@@ -2,8 +2,9 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
+import type ImageSourcePropType from 'react-native/Libraries/Image/ImageSourcePropType';
 
-const Avatar = styled.View`
+const Avatar = styled.Image`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   background-color: ${({ theme }) => theme.base03};
@@ -12,6 +13,7 @@ const Avatar = styled.View`
 
 type Props = {
   size?: number,
+  source: ImageSourcePropType,
 };
 
 export default ({ size = 50, ...props }: Props) => (

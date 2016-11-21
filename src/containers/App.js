@@ -24,7 +24,7 @@ const StyledMain = styled(Main)`
   flex: 1;
 `;
 
-const App = ({ theme, ...props }: State) => (
+const App = ({ theme }: State) => (
   <ThemeProvider theme={theme}>
     <Root>
       <StatusBarContainer>
@@ -34,7 +34,7 @@ const App = ({ theme, ...props }: State) => (
         />
       </StatusBarContainer>
 
-      <StyledMain {...props} />
+      <StyledMain />
     </Root>
   </ThemeProvider>
 );
