@@ -1,7 +1,8 @@
-// Define all your icons once,
-// load them once,
-// and use everywhere
-// https://gist.github.com/dropfen/4a2209d7274788027f782e8655be198f
+/**
+ * @flow
+ * Define all your icons once, load them once, and use everywhere.
+ * https://gist.github.com/dropfen/4a2209d7274788027f782e8655be198f
+ */
 
 import Octicons from 'react-native-vector-icons/Octicons';
 

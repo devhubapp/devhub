@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
@@ -55,6 +56,10 @@ const MutedText = styled(Text)`
   opacity: 0.6;
 `;
 
+const Timestamp = styled(MutedText)`
+  font-size: 12;
+`;
+
 const Username = styled(Text)`
   font-weight: bold;
 `;
@@ -107,9 +112,17 @@ const CardIdContainer = styled(HighlightContainer2)`
   padding-horizontal: 6;
 `;
 
-const Star = styled(Icon)`
+const StarIcon = styled(Icon)`
   font-size: 16;
   color: ${({ theme }) => theme.star};
+`;
+
+const CardIcon = styled(Icon)`
+  align-self: center;
+  margin-right: ${contentPadding - 2};
+  font-size: 20;
+  color: ${({ theme }) => theme.base04};
+  opacity: 0.4;
 `;
 
 type Props = {
@@ -128,15 +141,16 @@ export default ({ ...props }: Props) => (
 
       <MainColumn>
         <HeaderRow>
-          <Username>brunolemos</Username>
-          <MutedText>34m</MutedText>
-        </HeaderRow>
+          <View>
+            <HorizontalView>
+              <Username>brunolemos</Username>
+              <Timestamp> • 34m</Timestamp>
+            </HorizontalView>
 
-        <HeaderRow>
-          <MutedText>
-            <Icon name="comment-discussion" />&nbsp;
-            commented on pull request
-          </MutedText>
+            <MutedText>commented on pull request</MutedText>
+          </View>
+
+          <CardIcon name="comment-discussion" />
         </HeaderRow>
       </MainColumn>
     </Header>
@@ -151,7 +165,7 @@ export default ({ ...props }: Props) => (
             <RepositoryName>react</RepositoryName>
           </HorizontalView>
 
-          <Star name="star" />
+          <StarIcon name="star" />
         </RepositoryContainer>
       </MainColumn>
     </ContentRow>
@@ -169,7 +183,7 @@ export default ({ ...props }: Props) => (
           <CardItemId>#5030</CardItemId>
         </CardIdContainer>
 
-        <Comment numberOfLines={1}>&nbsp;Hi there, you might know, I guess</Comment>
+        <Comment numberOfLines={1}>&nbsp;Hi there, it would be nice to have this feature</Comment>
       </MainColumnRowContent>
     </ContentRow>
   </Card>

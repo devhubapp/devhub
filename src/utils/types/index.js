@@ -1,8 +1,10 @@
-// @flow
+/**
+ * @flow
+ */
 
 import type { SET_THEME } from './actions';
 
-export type Theme = 'auto' | 'light' | 'dark';
+export type Theme = 'auto' | 'light' | 'dark' | 'dark-blue';
 
 export type ActionType =
   | SET_THEME

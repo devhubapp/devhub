@@ -1,4 +1,6 @@
-// @flow
+/**
+ * @flow
+ */
 
 export type Navigator = {
   push: Function,
