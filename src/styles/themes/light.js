@@ -4,7 +4,7 @@ import base from './base';
 
 export const base16 = {
   base00: '#f7f7f5', // page background
-  base01: '#ccccca', // card background -1
+  base01: '#ededed', // card background -1
   base02: '#ffffff', // card background 0
   base03: '#f7f7f5', // card background +1
   base04: '#222222', // color

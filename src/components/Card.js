@@ -53,7 +53,7 @@ const Text = styled.Text`
 `;
 
 const MutedText = styled(Text)`
-  opacity: 0.6;
+  opacity: 0.7;
 `;
 
 const Timestamp = styled(MutedText)`

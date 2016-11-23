@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 
 import type { SET_THEME } from './actions';
 
