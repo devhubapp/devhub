@@ -1,21 +1,17 @@
-// @flow
-
 import React from 'react';
-import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import { persistStore, autoRehydrate } from 'redux-persist';
-import { composeWithDevTools } from 'remote-redux-devtools';
+import { NavigationContext, NavigationProvider, StackNavigation } from '@exponent/ex-navigation';
 
-import App from './containers/App';
-import reducer from './reducers';
+import Store from './store';
+import Router from './navigation/Router';
 
-const composeEnhancers = composeWithDevTools({ realtime: true });
-const store = createStore(reducer, composeEnhancers(autoRehydrate()));
-persistStore(store, { storage: AsyncStorage, blacklist: ['theme'] });
+const navigationContext = new NavigationContext({ router: Router, store: Store });
 
 export default () => (
-  <Provider store={store}>
-    <App />
+  <Provider store={Store}>
+    <NavigationProvider context={navigationContext}>
+      <StackNavigation initialRoute={Router.getRoute('tabs')} />
+    </NavigationProvider>
   </Provider>
 );
+
