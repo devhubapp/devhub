@@ -10,7 +10,7 @@ const navigationContext = new NavigationContext({ router: Router, store: Store }
 export default () => (
   <Provider store={Store}>
     <NavigationProvider context={navigationContext}>
-      <StackNavigation initialRoute={Router.getRoute('tabs')} />
+      <StackNavigation initialRoute={Router.getRoute('app')} />
     </NavigationProvider>
   </Provider>
 );

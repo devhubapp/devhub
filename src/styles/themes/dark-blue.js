@@ -10,8 +10,8 @@ export const base16 = {
   base04: '#ffffff', // color (to mute, use opacity 0.9 = #666666, #888888)
   base05: warna.darken('#ffffff', 0.6).hex, // muted color
   base06: undefined, //
-  base07: base.brandSecondary, // brand 1
-  base08: base.brand, // brand 2
+  base07: base.brand, // brand 1
+  base08: base.brandSecondary, // brand 2
   base09: undefined,
   base0A: undefined,
   base0B: undefined,

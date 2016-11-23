@@ -1,6 +1,8 @@
 // @flow
 
 import React from 'react';
+import styled from 'styled-components';
+import { Button } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
 
@@ -14,13 +16,17 @@ type Props = {
   theme: ThemeObject,
 };
 
-const App = ({ setTheme, theme }: Props) => (
+const Page = ({ setTheme, theme }: Props) => (
   <ThemeProvider theme={theme}>
-    <Screen />
+    <Screen>
+      <Button title="Light" color={theme.base04} onPress={() => setTheme('light')} />
+      <Button title="Dark" color={theme.base04} onPress={() => setTheme('dark')} />
+      <Button title="Dark Blue" color={theme.base04} onPress={() => setTheme('dark-blue')} />
+    </Screen>
   </ThemeProvider>
 );
 
 const mapStateToProps = ({ config }: State) => ({ config, theme: loadTheme(config) });
 const mapDispatchToProps = { setTheme };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Page);

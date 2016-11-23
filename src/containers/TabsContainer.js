@@ -12,10 +12,10 @@ type Props = {
   theme: ThemeObject,
 };
 
-const HomeScreen = ({ theme }: Props) => (
+const TabsContainer = ({ theme }: Props) => (
   <TabNavigationLayout theme={theme} />
 );
 
 const mapStateToProps = ({ config }: State) => ({ theme: loadTheme(config) });
 
-export default connect(mapStateToProps)(HomeScreen);
+export default connect(mapStateToProps)(TabsContainer);
