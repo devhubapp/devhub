@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
 import Card from './Card';
-import { contentPadding } from '../themes/variables';
+import { contentPadding } from '../styles/variables';
 
 const Column = styled.View`
   background-color: ${({ theme }) => theme.base02};

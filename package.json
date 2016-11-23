@@ -18,7 +18,8 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.0.0-beta1",
     "remote-redux-devtools": "^0.5.4",
-    "styled-components": "^1.0.11"
+    "styled-components": "^1.0.11",
+    "warna": "^0.2.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
@@ -32,7 +33,8 @@
     "eslint-plugin-react": "^6.6.0",
     "jest": "17.0.3",
     "jest-react-native": "17.0.3",
-    "react-test-renderer": "~15.3.1"
+    "react-test-renderer": "~15.3.1",
+    "whatwg-fetch": "^2.0.1"
   },
   "jest": {
     "preset": "jest-react-native"

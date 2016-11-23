@@ -7,7 +7,7 @@ export const DARK_BLUE_THEME = darkBlueTheme;
 export const LIGHT_THEME = lightTheme;
 
 export default {
-  DARK_THEME,
-  DARK_BLUE_THEME,
-  LIGHT_THEME,
+  dark: DARK_THEME,
+  'dark-blue': DARK_BLUE_THEME,
+  light: LIGHT_THEME,
 };

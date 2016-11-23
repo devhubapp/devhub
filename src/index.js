@@ -22,7 +22,7 @@ function startApp() {
   const theme = loadTheme(DEFAULT_THEME);
 
   const navigatorStyle = {
-    screenColor: theme.base00,
+    screenBackgroundColor: theme.base00,
     navBarHidden: true,
   };
 
@@ -58,9 +58,10 @@ function startApp() {
       },
     ],
     tabsStyle: {
-      tabBarButtonColor: theme.base03, // change the color of the tab icons and text (also unselected)
-      tabBarSelectedButtonColor: theme.base04, // change the color of the selected tab icon and text (only selected)
+      tabBarButtonColor: theme.base05, // change the color of the tab icons and text
+      tabBarSelectedButtonColor: theme.base07, // change the color of the selected tab icon and text
       tabBarBackgroundColor: theme.base00, // change the background color of the tab bar
+      borderTopWidth: 0,
     },
   });
 }

@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
 import Avatar from './Avatar';
-import { contentPadding } from '../themes/variables';
+import { contentPadding } from '../styles/variables';
 
 const avatarWidth = 36;
 
@@ -126,7 +126,6 @@ const CardIcon = styled(Icon)`
 `;
 
 type Props = {
-  title: string,
 };
 
 export default ({ ...props }: Props) => (
