@@ -11,10 +11,11 @@ import { loadTheme } from '../reducers/config';
 import type { State, ThemeObject } from '../utils/types';
 
 type Props = {
+  feed: Array,
   theme: ThemeObject,
 };
 
-const Page = ({ theme}: Props) => (
+const Page = ({ feed, theme}: Props) => (
   <ThemeProvider theme={theme}>
     <Screen>
       <StatusBar
@@ -22,11 +23,11 @@ const Page = ({ theme}: Props) => (
         barStyle={theme.isDark ? 'light-content' : 'dark-content'}
       />
 
-      <Columns />
+      <Columns data={feed} />
     </Screen>
   </ThemeProvider>
 );
 
-const mapStateToProps = ({ config }: State) => ({ config, theme: loadTheme(config) });
+const mapStateToProps = ({ feed, config }: State) => ({ feed, theme: loadTheme(config) });
 
 export default connect(mapStateToProps)(Page);

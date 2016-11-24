@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 import Card from './Card';
 import { contentPadding } from '../styles/variables';
 
-const Column = styled.View`
+const Column = styled.ScrollView`
   background-color: ${({ theme }) => theme.base02};
 `;
 
@@ -28,8 +28,8 @@ type Props = {
   title: string,
 };
 
-export default ({ title, ...props }: Props) => (
-  <Column {...props}>
+export default ({ id, title, data, style, ...props }: Props) => (
+  <Column style={style}>
     <Header>
       <Title>
         <Icon name="home" size={20} />&nbsp;&nbsp;
@@ -37,6 +37,10 @@ export default ({ title, ...props }: Props) => (
       </Title>
     </Header>
 
-    <Card />
+    {
+      data.map(item => (
+        <Card key={`column-${id}-card-${item.id}`} {...item} />
+      ))
+    }
   </Column>
 );

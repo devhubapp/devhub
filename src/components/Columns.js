@@ -34,7 +34,7 @@ const StyledColumn = styled(Column)`
   border-radius: 4;
 `;
 
-export default props => (
+export default ({ data = [], ...props }) => (
   <StyledScrollView
     width={getWidth()}
     loop={false}
@@ -44,10 +44,12 @@ export default props => (
     pagingEnabled
     {...props}
   >
-    <StyledView first><StyledColumn title="React" /></StyledView>
-    <StyledView><StyledColumn title="Redux" /></StyledView>
-    <StyledView><StyledColumn title="GraphQL" /></StyledView>
-    <StyledView><StyledColumn title="Node.js" /></StyledView>
-    <StyledView last><StyledColumn title="PHP" /></StyledView>
+    {
+      data.map(item => (
+        <StyledView key={`column-${item.id}`}>
+          <StyledColumn title={item.title} data={item.data} />
+        </StyledView>
+      ))
+    }
   </StyledScrollView>
 );

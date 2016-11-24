@@ -3,18 +3,23 @@
 
 import type { GithubEvent, GithubIcon } from '../types/github';
 
-export function getEventIcon(event: GithubEvent, ref_type: string): GithubIcon {
+type GithubEventPayload = {
+  action?: string,
+  ref_type?: string,
+};
+
+export function getEventIcon(event: GithubEvent, payload: GithubEventPayload = {}): GithubIcon {
   switch (event) {
     case 'CommitCommentEvent': return 'git-commit';
     case 'CreateEvent':
-      switch(ref_type) {
+      switch(payload.ref_type) {
         case 'repository': return 'repo';
         case 'branch': return 'git-branch';
         case 'tag': return 'tag';
         default: return 'plus';
       }
     case 'DeleteEvent':
-      switch(ref_type) {
+      switch(payload.ref_type) {
         case 'repository': return 'repo'; // probably not used
         case 'branch': return 'git-branch';
         case 'tag': return 'tag';
@@ -23,7 +28,7 @@ export function getEventIcon(event: GithubEvent, ref_type: string): GithubIcon {
     case 'ForkEvent': return 'repo-forked';
     case 'IssueCommentEvent': return 'comment-discussion';
     case 'IssuesEvent':
-      switch(ref_type) {
+      switch(payload.action) {
         case 'closed': return 'issue-closed';
         case 'reopened': return 'issue-reopened';
         // case 'opened':

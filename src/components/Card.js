@@ -7,6 +7,7 @@ import styled from 'styled-components/native';
 
 import Avatar from './Avatar';
 import { contentPadding } from '../styles/variables';
+import { getEventIcon } from '../utils/helpers/github';
 
 const avatarWidth = 36;
 
@@ -128,62 +129,67 @@ const CardIcon = styled(Icon)`
 type Props = {
 };
 
-export default ({ ...props }: Props) => (
-  <Card {...props}>
-    <Header>
-      <LeftColumn>
-        <Avatar
-          size={avatarWidth}
-          source={{ uri: 'https://avatars0.githubusercontent.com/u/619186?v=3&s=100' }}
-        />
-      </LeftColumn>
+export default ({ type, payload = {}, actor = {}, repo = {}, ...props }: Props) => {
+  const orgName = (repo.name || '').split('/')[0];
+  const repoName = (repo.name || '').split('/')[1];
 
-      <MainColumn>
-        <HeaderRow>
-          <View>
+  return (
+    <Card {...props}>
+      <Header>
+        <LeftColumn>
+          <Avatar
+            size={avatarWidth}
+            source={{ uri: actor.avatar_url }}
+          />
+        </LeftColumn>
+
+        <MainColumn>
+          <HeaderRow>
+            <View>
+              <HorizontalView>
+                <Username>{actor.login}</Username>
+                <Timestamp> • 1m</Timestamp>
+              </HorizontalView>
+
+              <MutedText>{type}</MutedText>
+            </View>
+
+            <CardIcon name={getEventIcon(type, payload)} />
+          </HeaderRow>
+        </MainColumn>
+      </Header>
+
+      <ContentRow>
+        <LeftColumn />
+
+        <MainColumn>
+          <RepositoryContainer>
             <HorizontalView>
-              <Username>brunolemos</Username>
-              <Timestamp> • 34m</Timestamp>
+              <OrganizationName>{orgName}/</OrganizationName>
+              <RepositoryName>{repoName}</RepositoryName>
             </HorizontalView>
 
-            <MutedText>commented on pull request</MutedText>
-          </View>
+            <StarIcon name="star" />
+          </RepositoryContainer>
+        </MainColumn>
+      </ContentRow>
 
-          <CardIcon name="comment-discussion" />
-        </HeaderRow>
-      </MainColumn>
-    </Header>
+      <ContentRow>
+        <LeftColumn>
+          <Avatar
+            size={avatarWidth / 2}
+            source={{ uri: actor.avatar_url }}
+          />
+        </LeftColumn>
 
-    <ContentRow>
-      <LeftColumn />
+        <MainColumnRowContent>
+          <CardIdContainer>
+            <CardItemId>#5030</CardItemId>
+          </CardIdContainer>
 
-      <MainColumn>
-        <RepositoryContainer>
-          <HorizontalView>
-            <OrganizationName>react/</OrganizationName>
-            <RepositoryName>react</RepositoryName>
-          </HorizontalView>
-
-          <StarIcon name="star" />
-        </RepositoryContainer>
-      </MainColumn>
-    </ContentRow>
-
-    <ContentRow>
-      <LeftColumn>
-        <Avatar
-          size={avatarWidth / 2}
-          source={{ uri: 'https://avatars0.githubusercontent.com/u/619186?v=3&s=100' }}
-        />
-      </LeftColumn>
-
-      <MainColumnRowContent>
-        <CardIdContainer>
-          <CardItemId>#5030</CardItemId>
-        </CardIdContainer>
-
-        <Comment numberOfLines={1}>&nbsp;Hi there, it would be nice to have this feature</Comment>
-      </MainColumnRowContent>
-    </ContentRow>
-  </Card>
-);
+          <Comment numberOfLines={1}>&nbsp;Hi there, it would be nice to have this feature</Comment>
+        </MainColumnRowContent>
+      </ContentRow>
+    </Card>
+  );
+}

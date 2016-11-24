@@ -3,7 +3,7 @@ import warna from 'warna';
 import base from './base';
 
 export const base16 = {
-  base00: '#f7f7f5', // page background
+  base00: '#f0f0f0', // page background
   base01: '#ededed', // card background -1
   base02: '#ffffff', // card background 0
   base03: '#f7f7f5', // card background +1
