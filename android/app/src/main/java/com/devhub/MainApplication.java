@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.reactnativenavigation.NavigationReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativenavigation.NavigationReactPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new LinearGradientPackage(),
             new NavigationReactPackage(),
             new VectorIconsPackage(),
             new NavigationReactPackage()

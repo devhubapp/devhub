@@ -13,6 +13,8 @@ const createStoreWithNavigation = createNavigationEnabledStore({
 
 const composeEnhancers = composeWithDevTools({ realtime: true });
 const store = createStoreWithNavigation(reducer, composeEnhancers(autoRehydrate()));
-persistStore(store, { storage: AsyncStorage, blacklist: ['navigation'] });
+
+// TODO: Don't ignore feed
+persistStore(store, { storage: AsyncStorage, whitelist: ['config'] });
 
 export default store;

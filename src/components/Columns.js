@@ -47,7 +47,7 @@ export default ({ data = [], ...props }) => (
     {
       data.map(item => (
         <StyledView key={`column-${item.id}`}>
-          <StyledColumn title={item.title} data={item.data} />
+          <StyledColumn id={item.id} title={item.title} data={item.data} />
         </StyledView>
       ))
     }

@@ -4,6 +4,14 @@
  */
 
 /**
+ * Triggered when a commit comment is created.
+ * https://developer.github.com/v3/repos/comments/#list-commit-comments-for-a-repository
+ */
+export type CommitCommentEvent = {
+  comment: Object,
+};
+
+/**
  * Represents a created repository, branch, or tag.
  * Note: webhooks will not receive this event for created repositories.
  * Additionally, webhooks will not receive this event for tags
@@ -34,6 +42,13 @@ export type ForkEvent = {
 };
 
 /**
+ * Triggered when a Wiki page is created or updated.
+ */
+export type GollumEvent = {
+  pages: Array,
+};
+
+/**
  * Triggered when an issue comment is created, edited, or deleted.
  * https://developer.github.com/v3/issues/comments/
  */
@@ -41,7 +56,7 @@ export type IssueCommentEvent = {
   action: 'created' | 'edited' | 'deleted',
   issue: Object, // The issue the comment belongs to.
   comment: Object, // The comment itself.
-  changes: Object, // The changes to the comment if the action was "edited".
+  changes: Object, // The changes to the comment if the action was 'edited'.
 };
 
 /**
@@ -63,7 +78,7 @@ export type IssuesEvent = {
     | 'reopened'
   ,
   issue: Object, // The issue itself.
-  changes: Object, // The changes to the issue if the action was "edited".
+  changes: Object, // The changes to the issue if the action was 'edited'.
   assignee?: Object, // The optional user who was assigned or unassigned from the issue.
   label?: Object, // The optional label that was added or removed from the issue.
 };
@@ -85,6 +100,91 @@ export type PublicEvent = {
 };
 
 /**
+ * Triggered when a pull request is assigned, unassigned,
+ * labeled, unlabeled, opened, edited, closed, reopened, or synchronized.
+ * https://developer.github.com/v3/pulls
+ *
+ * If the action is 'closed' and the merged key is false,
+ * the pull request was closed with unmerged commits.
+ *
+ * If the action is 'closed' and the merged key is true,
+ * the pull request was merged.
+ *
+ * While webhooks are also triggered when a pull request is synchronized,
+ * Events API timelines don't include pull request events with the 'synchronize' action.
+ */
+export type PullRequestEvent = {
+  action:
+      'assigned'
+    | 'unassigned'
+    | 'labeled'
+    | 'unlabeled'
+    | 'opened'
+    | 'edited'
+    | 'closed'
+    | 'reopened'
+  ,
+  number: number,
+  pull_request: Object,
+  repository: Object,
+  sender: Object,
+};
+
+/**
+ * Triggered when a pull request review is submitted into a non-pending state.
+ */
+export type PullRequestReviewEvent = {
+  action: 'submitted',
+  pull_request: Object,
+  review: Object,
+};
+
+/**
+ * Triggered when a comment on a Pull Request's unified diff is created,
+ * edited, or deleted (in the Files Changed tab).
+ * https://developer.github.com/v3/pulls/comments
+ */
+export type PullRequestReviewCommentEvent = {
+  action: 'created' | 'edited' | 'deleted',
+  changes: Object,
+  pull_request: Object,
+  comment: Object,
+};
+
+/**
+ * Triggered when a repository branch is pushed to.
+ * In addition to branch pushes, webhook push events
+ * are also triggered when repository tags are pushed.
+ */
+export type PushEvent = {
+  ref: string, // The full Git ref that was pushed. Example: "refs/heads/master".
+  head: string, // The SHA of the most recent commit on ref after the push.
+  before: string, // The SHA of the most recent commit on ref before the push.
+  size: number, // The number of commits in the push.
+  distinct_size: number, // The number of distinct commits in the push.
+  commits: Array<{
+    sha: string,
+    message: string,
+    author: {
+      name: string,
+      email: string,
+    },
+    url: string,
+    distinct: boolean, // Whether this commit is distinct from any that have been pushed before.
+    forced: boolean,
+  }>,
+};
+
+/**
+ * Triggered when a release is published.
+ * https://developer.github.com/v3/repos/releases/#get-a-single-release
+ */
+export type ReleaseEvent = {
+  action: 'published'
+  release: Object, // https://developer.github.com/v3/repos/releases/#get-a-single-release
+};
+
+/**
  * The WatchEvent is related to starring a repository, not watching.
  * See this API blog post for an explanation.
  *
@@ -96,23 +196,21 @@ export type WatchEvent = {
 };
 
 export type GithubEvent =
+  | 'CommitCommentEvent'
   | 'CreateEvent'
   | 'DeleteEvent'
   | 'ForkEvent'
+  | 'GollumEvent'
   | 'IssueCommentEvent'
   | 'IssuesEvent'
   | 'MemberEvent'
   | 'PublicEvent'
+  | 'PullRequestEvent'
+  | 'PullRequestReviewEvent'
+  | 'PullRequestReviewCommentEvent'
+  | 'PushEvent'
+  | 'ReleaseEvent'
   | 'WatchEvent'
-
-  // ignoring
-  // | 'CommitCommentEvent'
-  // | 'GollumEvent'
-  // | 'PullRequestEvent'
-  // | 'PullRequestReviewEvent'
-  // | 'PullRequestReviewCommentEvent'
-  // | 'PushEvent'
-  // | 'ReleaseEvent'
 
   // not visible in timelines
   // | 'DeploymentEvent'

@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@exponent/ex-navigation": "^2.1.3",
-    "babel-preset-react-native-stage-0": "^1.0.1",
+    "gravatar": "^1.6.0",
+    "moment": "^2.17.0",
     "react": "^15.4.1",
     "react-native": "^0.38.0",
+    "react-native-linear-gradient": "^1.5.15",
     "react-native-vector-icons": "^3.0.0",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
@@ -25,7 +27,9 @@
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-jest": "17.0.2",
+    "babel-plugin-transform-es2015-parameters": "^6.18.0",
     "babel-preset-react-native": "1.9.0",
+    "babel-preset-react-native-stage-0": "^1.0.1",
     "eslint": "^3.10.2",
     "eslint-config-airbnb": "latest",
     "eslint-plugin-flowtype": "^2.25.0",

@@ -9,9 +9,9 @@ import userEventsData from '../../test/data/github-user-events.json';
 import userReceivedEventsData from '../../test/data/github-user-received_events.json';
 
 const data = [
-  { id: 0, title: 'sibelius', data: userReceivedEventsData },
-  { id: 1, title: 'brunolemos', data: userEventsData },
-  { id: 2, title: 'react', data: repoEventsData },
+  { id: 0, title: 'react', data: repoEventsData },
+  { id: 1, title: 'sibelius', data: userReceivedEventsData },
+  { id: 2, title: 'brunolemos', data: userEventsData },
 ];
 
 export default (state:Array = data, { type, payload }: Action<Array>): Array => {

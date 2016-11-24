@@ -15,7 +15,7 @@ const Header = styled.View`
   padding-horizontal: ${contentPadding};
   padding-vertical: ${contentPadding};
   border-width: 0;
-  border-bottom-width: 0.5;
+  border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
 `;
 
