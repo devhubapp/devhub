@@ -16,8 +16,12 @@ export default class extends React.Component {
   };
 
   getChildContext = () => ({
-    theme: this.props.theme,
+    theme: this.props.theme || this.context.theme,
   });
+
+  children: {
+    theme: ThemeObject,
+  };
 
   props: {
     theme: ThemeObject,

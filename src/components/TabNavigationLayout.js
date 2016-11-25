@@ -6,12 +6,10 @@ import { StackNavigation, TabNavigation, TabNavigationItem } from '@exponent/ex-
 import Icon from 'react-native-vector-icons/Octicons';
 
 import Router from '../navigation/Router';
+import Themable from './hoc/Themable';
 
+@Themable
 export default class TabNavigationLayout extends React.Component {
-  static contextTypes = {
-    theme: React.PropTypes.object,
-  };
-
   render() {
     const { theme } = this.props || this.context;
 

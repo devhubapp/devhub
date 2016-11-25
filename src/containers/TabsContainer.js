@@ -17,7 +17,7 @@ type Props = {
 
 const Page = ({ setTheme, theme }: Props) => (
   <ThemeProvider theme={theme}>
-    <TabNavigationLayout theme={theme} />
+    <TabNavigationLayout />
   </ThemeProvider>
 );
 

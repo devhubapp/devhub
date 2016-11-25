@@ -8,6 +8,7 @@ import gravatar from 'gravatar';
 
 import Avatar from './Avatar';
 import RightTransparentTextOverlay from './RightTransparentTextOverlay';
+import Themable from './hoc/Themable';
 import { contentPadding, mutedTextOpacity } from '../styles/variables';
 import { getDateSmallText } from '../utils/helpers/';
 import { getEventIcon, getEventText } from '../utils/helpers/github';
@@ -162,6 +163,7 @@ type Props = {
   type: GithubEvent,
   payload: Object,
   created_at: string,
+  theme: ThemeObject,
 };
 
 type Context = {
@@ -170,7 +172,9 @@ type Context = {
 
 const Card = ({
   type, payload = {}, actor = {}, repo = {}, created_at, ...props,
-}: Props, { theme }: Context) => {
+}: Props, context: Context) => {
+  const theme = props.theme || context.theme;
+
   this.renderItemId = (number, icon) => {
     if (!number && !icon) return null;
 
@@ -380,4 +384,4 @@ Card.contextTypes = {
   theme: React.PropTypes.object,
 };
 
-export default Card;
+export default Themable(Card);

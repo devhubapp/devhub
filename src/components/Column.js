@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled, { ThemeProvider } from 'styled-components/native';
 
 import Card from './Card';
+import ListView from './lists/ListView';
 import { contentPadding } from '../styles/variables';
 
 const Column = styled.View`
@@ -24,28 +25,30 @@ const Title = styled.Text`
   color: ${({ theme }) => theme.base04};
 `;
 
-const CardsContainer = styled.ScrollView`
-`;
-
 type Props = {
   title: string,
 };
 
+const renderHeader = (title, icon = 'home') => (
+  <Header>
+    <Title>
+      <Icon name={icon} size={20}/>&nbsp;&nbsp;
+      {title}
+    </Title>
+  </Header>
+);
+
+const renderRow = (item, sectionID, rowID) => (
+  <Card key={`column-${sectionID}-${rowID}-card-${item.id}`} {...item} />
+);
+
 export default ({ id, title, data, style, ...props }: Props) => (
   <Column style={style}>
-    <Header>
-      <Title>
-        <Icon name="home" size={20}/>&nbsp;&nbsp;
-        {title}
-      </Title>
-    </Header>
+    {renderHeader(title)}
 
-    <CardsContainer>
-      {
-        data.map(item => (
-          <Card key={`column-${id}-card-${item.id}`} {...item} />
-        ))
-      }
-    </CardsContainer>
+    <ListView
+      data={data}
+      renderRow={renderRow}
+    />
   </Column>
 );

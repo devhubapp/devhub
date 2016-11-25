@@ -5,11 +5,12 @@ import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 
 import Column from './Column';
+import ListView from './lists/ListView';
 import { contentPadding } from '../styles/variables';
 
 const margin = 2;
 
-const getWidth = ({ first, last } = {}) => {
+const getWidth = () => { // { first, last } = {}
   const { width } = Dimensions.get('window');
 
   // if (first && last) return width;
@@ -18,7 +19,7 @@ const getWidth = ({ first, last } = {}) => {
   return width - (2 * (contentPadding + margin));
 };
 
-const StyledScrollView = styled.ScrollView`
+const StyledListView = styled(ListView)`
   overflow: visible;
 `;
 
@@ -34,8 +35,16 @@ const StyledColumn = styled(Column)`
   border-radius: 4;
 `;
 
+const renderRow = (item, sectionID, rowID) => (
+  <StyledView key={`column-${item.id}-${sectionID}-${rowID}`}>
+    <StyledColumn id={item.id} title={item.title} data={item.data} />
+  </StyledView>
+);
+
 export default ({ data = [], ...props }) => (
-  <StyledScrollView
+  <StyledListView
+    data={data}
+    renderRow={renderRow}
     width={getWidth()}
     loop={false}
     removeClippedSubviews={false}
@@ -43,13 +52,5 @@ export default ({ data = [], ...props }) => (
     horizontal
     pagingEnabled
     {...props}
-  >
-    {
-      data.map(item => (
-        <StyledView key={`column-${item.id}`}>
-          <StyledColumn id={item.id} title={item.title} data={item.data} />
-        </StyledView>
-      ))
-    }
-  </StyledScrollView>
+  />
 );
