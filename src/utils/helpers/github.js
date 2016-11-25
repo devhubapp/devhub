@@ -96,7 +96,7 @@ export function getEventText(event: GithubEvent, payload: GithubEventPayload = {
         case 'demilestoned': return 'demilestoned an issue';
         default: return 'interacted with an issue';
       }
-    case 'MemberEvent': return 'was added to a repository';
+    case 'MemberEvent': return 'added an user to a repository';
     case 'PublicEvent': return 'made a repository public';
     case 'PullRequestEvent':
       switch(payload.action) {

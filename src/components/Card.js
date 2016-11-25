@@ -413,6 +413,30 @@ const Card = ({
     );
   };
 
+  this.renderMemberRow = (type, { member = {} } = {}) => {
+    let _login = (member.login || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    if (!_login) return null;
+
+    return (
+      <ContentRow narrow>
+        <LeftColumn>{this.renderUserAvatar(member, avatarWidth / 2)}</LeftColumn>
+
+        <MainColumn>
+          <HighlightContainerRow1>
+            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+              <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
+                <Text numberOfLines={1}>
+                  <Icon name="person" />&nbsp;
+                  {_login}
+                </Text>
+              </RepositoryContentContainer>
+            </RightTransparentTextOverlay>
+          </HighlightContainerRow1>
+        </MainColumn>
+      </ContentRow>
+    );
+  };
+
   this.renderCommentRow = (type, {
     comment: { body } = {}
   } = {}) => {
@@ -479,6 +503,8 @@ const Card = ({
           narrow : true,
         })
       }
+
+      {this.renderMemberRow(type, payload)}
 
       {this.renderWikiPageRows(type, payload)}
 
