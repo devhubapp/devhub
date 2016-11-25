@@ -16,7 +16,7 @@ export function loadTheme(theme: Theme) {
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }
 
-export function getDateSmallText(date) {
+export function getDateSmallText(date, separator = '•') {
   if (!date) return '';
 
   const momentDate = moment(date);
@@ -27,19 +27,19 @@ export function getDateSmallText(date) {
   const hoursDiff = momentNow.diff(momentDate, 'hours');
   const minutesDiff = momentNow.diff(momentDate, 'minutes');
 
+  const time = momentDate.format('HH:mm');
+
   if (daysDiff < 1) {
     if (hoursDiff < 1) {
       if (minutesDiff < 1) return 'now';
       return `${minutesDiff}m`
     }
 
-    return `${hoursDiff}h`
+    
+    return `${time} (${hoursDiff}h)`;
   } else if (daysDiff <= 3) {
-    return `${daysDiff}d`
+    return `${daysDiff}d ${separator} ${time}`;
   } else {
-    momentDate.format('l');
+    momentDate.format('MMM Do').toLowerCase();
   }
-
-  // if (daysDiff < 300) return momentDate.format('MMM Do h:mm').toLowerCase();
-  // return momentDate.format('ll').toLowerCase();
 }

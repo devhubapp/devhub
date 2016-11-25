@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { Image } from 'react-native';
 import styled from 'styled-components/native';
 import type ImageSourcePropType from 'react-native/Libraries/Image/ImageSourcePropType';
 
@@ -14,6 +15,11 @@ const Avatar = styled.Image`
 export default class extends React.Component {
   onLoad = next => () => {
     this.setState({ loading: false, error: false });
+    if (typeof next === 'function') next();
+  };
+
+  onLoadStart = next => () => {
+    this.setState({ loading: true });
     if (typeof next === 'function') next();
   };
 
@@ -39,12 +45,14 @@ export default class extends React.Component {
 
   render() {
     const { error, loading } = this.state;
-    const { size = 50, onLoad, onLoadEnd, onError, ...props } = this.props;
+    const { size = 50, onLoad, onLoadStart, onLoadEnd, onError, ...props } = this.props;
 
     return (
       <Avatar
         size={size}
+        resizeMode="cover"
         onLoad={this.onLoad(onLoad)}
+        onLoadStart={this.onLoadStart(onLoadStart)}
         onLoadEnd={this.onLoadEnd(onLoadEnd)}
         onError={this.onError(onError)}
         {...props}

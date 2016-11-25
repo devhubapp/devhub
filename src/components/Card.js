@@ -190,9 +190,9 @@ const Card = ({
   this.renderUserAvatar = ({ avatar_url, email } = {}, size) => {
     if (!avatar_url && !email) return null;
 
-    const _size = 50 * Math.max(1, Math.ceil(size / 50));
+    const _size = 100 * Math.max(1, Math.ceil(size / 100));
     const uri = (avatar_url
-      ? `${avatar_url}?size=${_size}`
+      ? avatar_url // transparency bug when using size attribute ?size=${_size}
       : `https:${gravatar.url(email, { size: _size })}`).replace('??', '?');
 
     return (
@@ -312,7 +312,7 @@ const Card = ({
 
     if (!repoName) return null;
 
-    const avatar_url = orgName ? `https://github.com/${orgName}.png?` : '';
+    const avatar_url = orgName ? `https://github.com/${orgName}.png` : '';
     const icon = (() => {
       if (forcePushed) return 'repo-force-push';
       if (pushed) return 'repo-push';
@@ -366,7 +366,7 @@ const Card = ({
     );
   };
 
-  const dateText = getDateSmallText(created_at);
+  const dateText = getDateSmallText(created_at, '•');
 
   return (
     <CardWrapper {...props}>
