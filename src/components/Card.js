@@ -201,10 +201,17 @@ const Card = ({
   };
 
   this.renderPullRequestRow = ({
-    pull_request: { number, title, user } = {},
+    pull_request: { number, state, title, user } = {},
   } = {}) => {
     let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
+
+    const { icon, color } = (() => {
+      switch(state) {
+        case 'closed': return { icon: 'git-pull-request', color: theme.red };
+        default: return { icon: 'git-pull-request', color: theme.green };
+      }
+    })();
 
     return (
       <ContentRow narrow>
@@ -215,7 +222,7 @@ const Card = ({
             <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
-                  <Icon name="git-pull-request" />&nbsp;
+                  <Icon name={icon} color={color} />&nbsp;
                   {_title}
                 </Comment>
               </ScrollableContentContainer>
@@ -267,7 +274,6 @@ const Card = ({
     const { icon, color } = (() => {
       switch(state) {
         case 'closed': return { icon: 'issue-closed', color: theme.red };
-        case 'reopened': return { icon: 'issue-reopened', color: theme.green };
         default: return { icon: 'issue-opened', color: theme.green };
       }
     })();
