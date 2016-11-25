@@ -48,6 +48,7 @@ const MainColumn = styled.View`
 
 const MainColumnRowContent = styled(MainColumn)`
   flex-direction: row;
+  align-self: ${({ center }) => center ? 'center' : 'auto'};
 `;
 
 const HeaderRow = styled(HorizontalView)`
@@ -59,14 +60,12 @@ const Text = styled.Text`
   color: ${({ theme }) => theme.base04};
   line-height: 18;
   font-size: 14;
+  opacity: ${({ muted }) => muted ? mutedTextOpacity : 1};
 `;
 
-const MutedText = styled(Text)`
-  opacity: ${mutedTextOpacity};
-`;
-
-const Timestamp = styled(MutedText)`
+const Timestamp = styled(Text)`
   font-size: 12;
+  opacity: ${mutedTextOpacity};
 `;
 
 const Username = styled(Text)`
@@ -200,7 +199,47 @@ const Card = ({
     );
   };
 
-  this.renderPullRequestRow = ({
+  this._renderWikiPageRow = ({ title } = {}) => {
+    if (!title) return null;
+
+    return (
+      <ContentRow narrow>
+        <LeftColumn />
+
+        <MainColumn>
+          <HighlightContainerRow1>
+            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+                <Text numberOfLines={1}>
+                  <Icon name="book" />&nbsp;
+                  {title}
+                </Text>
+              </ScrollableContentContainer>
+            </RightTransparentTextOverlay>
+          </HighlightContainerRow1>
+        </MainColumn>
+      </ContentRow>
+    );
+  };
+
+  this.renderWikiPageRows = (type, { pages = [] } = {}) => {
+    if (type !== 'GollumEvent') return null;
+    if (!(pages && pages.length > 0)) return null;
+
+    const WikiPageRow = this._renderWikiPageRow;
+
+    return (
+      <View>
+        {
+          pages.map(({ sha, title }) => (
+            <WikiPageRow key={`wiki-page-row-${sha}`} title={title} />
+          ))
+        }
+      </View>
+    );
+  };
+
+  this.renderPullRequestRow = (type, {
     pull_request: { number, state, title, user } = {},
   } = {}) => {
     let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
@@ -237,7 +276,7 @@ const Card = ({
     );
   };
 
-  this.renderCommitRow = ({ commits, head_commit } = {}) => {
+  this.renderCommitRow = (type, { commits, head_commit } = {}) => {
     const commit = head_commit ? head_commit : (commits || [])[0];
 
     if (!commit) return null;
@@ -267,7 +306,7 @@ const Card = ({
     );
   };
 
-  this.renderIssueRow = ({ actor, issue: { user, number, state, title } = {} } = {}) => {
+  this.renderIssueRow = (type, { actor, issue: { user, number, state, title } = {} } = {}) => {
     let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
 
@@ -302,9 +341,8 @@ const Card = ({
     );
   };
 
-  this.renderRepositoryRow = ({
-    type,
-    name, branch = 'master', forcePushed, pushed, fork,
+  this.renderRepositoryRow = (type, {
+    name, forcePushed, pushed, fork,
     narrow,
   } = {}) => {
     const orgName = (name || '').split('/')[0];
@@ -328,15 +366,11 @@ const Card = ({
           <HighlightContainerRow1>
             <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
-                <MutedText>
+                <Text muted>
                   <Icon name={icon} />&nbsp;
                   {orgName && `${orgName}/`}
-                </MutedText>
+                </Text>
                 <RepositoryName>{repoName}</RepositoryName>
-                {
-                  branch && branch !== 'master' &&
-                  <MutedText>({branch})</MutedText>
-                }
               </RepositoryContentContainer>
             </RightTransparentTextOverlay>
 
@@ -349,7 +383,37 @@ const Card = ({
     );
   };
 
-  this.renderCommentRow = ({
+  this.renderBranchRow = (type, {
+    branch = 'master',
+    narrow,
+  } = {}) => {
+    const _branch = (branch || '').split('/').pop();
+    if (!_branch) return null;
+
+    const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
+    if (_branch === 'master' && !isBranchMainEventAction) return;
+
+    return (
+      <ContentRow narrow={narrow}>
+        <LeftColumn />
+
+        <MainColumn>
+          <HighlightContainerRow1>
+            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+              <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
+                <Text numberOfLines={1} muted={!isBranchMainEventAction}>
+                  <Icon name="git-branch" />&nbsp;
+                  {_branch}
+                </Text>
+              </RepositoryContentContainer>
+            </RightTransparentTextOverlay>
+          </HighlightContainerRow1>
+        </MainColumn>
+      </ContentRow>
+    );
+  };
+
+  this.renderCommentRow = (type, {
     comment: { body } = {}
   } = {}) => {
     let _body = (body || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
@@ -359,7 +423,7 @@ const Card = ({
       <ContentRow narrow>
         <LeftColumn>{this.renderUserAvatar(actor, avatarWidth / 2)}</LeftColumn>
 
-        <MainColumnRowContent>
+        <MainColumnRowContent center>
           <Comment numberOfLines={2}>{_body}</Comment>
         </MainColumnRowContent>
       </ContentRow>
@@ -375,16 +439,16 @@ const Card = ({
 
         <MainColumn>
           <HeaderRow>
-            <View>
+            <View style={{ flex: 1 }}>
               <HorizontalView>
-                <Username>{actor.login}</Username>
+                <Username>{actor.display_login || actor.login}</Username>
                 {
                   dateText &&
                   <Timestamp> • {dateText}</Timestamp>
                 }
               </HorizontalView>
 
-              <MutedText>{getEventText(type, payload)}</MutedText>
+              <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
             </View>
 
             <CardIcon name={getEventIcon(type, payload)}/>
@@ -393,8 +457,7 @@ const Card = ({
       </Header>
 
       {
-        this.renderRepositoryRow({
-          type,
+        this.renderRepositoryRow(type, {
           name: (repo || {}).name,
           pushed: type === 'PushEvent',
           forcePushed: type === 'PushEvent' && payload.forced,
@@ -402,21 +465,30 @@ const Card = ({
       }
 
       {
-        this.renderRepositoryRow({
-          type,
+        this.renderBranchRow(type, {
+          name: (repo || {}).name,
+          branch: payload.ref,
+          narrow : true,
+        })
+      }
+
+      {
+        this.renderRepositoryRow(type, {
           name: (payload.forkee || {}).full_name,
           fork: !!payload.forkee,
           narrow : true,
         })
       }
 
-      {this.renderPullRequestRow(payload)}
+      {this.renderWikiPageRows(type, payload)}
 
-      {this.renderCommitRow(payload)}
+      {this.renderPullRequestRow(type, payload)}
 
-      {this.renderIssueRow(payload)}
+      {this.renderCommitRow(type, payload)}
 
-      {this.renderCommentRow(payload)}
+      {this.renderIssueRow(type, payload)}
+
+      {this.renderCommentRow(type, payload)}
     </CardWrapper>
   );
 };

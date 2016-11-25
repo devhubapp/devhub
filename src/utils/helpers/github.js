@@ -71,7 +71,15 @@ export function getEventText(event: GithubEvent, payload: GithubEventPayload = {
         case 'tag': return 'deleted a tag';
         default: return 'deleted something';
       }
-    case 'GollumEvent': return 'updated the wiki';
+    case 'GollumEvent':
+      return (() => {
+        const count = (payload.pages || []).length || 1;
+        const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page';
+        switch(((payload.pages || [])[0] || {}).action) {
+          case 'created': return `created ${pagesText}`;
+          default: return `updated ${pagesText}`;
+        }
+      })();
     case 'ForkEvent': return 'forked a repository';
     case 'IssueCommentEvent': return 'commented on an issue';
     case 'IssuesEvent': // TODO: Fix these texts
@@ -111,14 +119,18 @@ export function getEventText(event: GithubEvent, payload: GithubEventPayload = {
         default: return 'interacted with a pull request review';
       }
     case 'PushEvent':
-      const commits = payload.commits || [{}];
-      const commit = payload.head_commit || commits[0];
-      const count = payload.distinct_size || payload.size || commits.length || 1;
+      return (() => {
+        const commits = payload.commits || [{}];
+        const commit = payload.head_commit || commits[0];
+        const count = payload.distinct_size || payload.size || commits.length || 1;
+        const branch = (payload.ref || '').split('/').pop();
 
-      const pushedText = payload.forced ? 'force pushed' : 'pushed';
-      const commitText = count > 1 ? `${count} commits` : 'a commit';
-      
-      return `${pushedText} ${commitText}`;
+        const pushedText = payload.forced ? 'force pushed' : 'pushed';
+        const commitText = count > 1 ? `${count} commits` : 'a commit';
+        // const branchText = branch && branch !== 'master' ? `to ${branch}` : '';
+
+        return `${pushedText} ${commitText}`.replace(/  /g, ' ');
+      })();
     case 'ReleaseEvent': return 'published a release';
     case 'WatchEvent': return 'starred a repository';
     default: return 'did something';

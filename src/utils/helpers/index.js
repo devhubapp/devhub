@@ -36,9 +36,9 @@ export function getDateSmallText(date, separator = '•') {
     }
 
     
-    return `${time} (${hoursDiff}h)`;
+    return `${hoursDiff}h (${time})`;
   } else if (daysDiff <= 3) {
-    return `${daysDiff}d ${separator} ${time}`;
+    return `${daysDiff}d (${time})`;
   } else {
     momentDate.format('MMM Do').toLowerCase();
   }

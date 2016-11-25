@@ -49,6 +49,7 @@ export default ({ id, title, data, style, ...props }: Props) => (
     <ListView
       data={data}
       renderRow={renderRow}
+      initialListSize={5}
     />
   </Column>
 );

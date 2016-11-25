@@ -49,6 +49,7 @@ export default ({ data = [], ...props }) => (
     loop={false}
     removeClippedSubviews={false}
     contentContainerStyle={{ marginHorizontal: contentPadding + margin }}
+    initialListSize={1}
     horizontal
     pagingEnabled
     {...props}
