@@ -1,21 +1,26 @@
 // @flow
 
 import React from 'react';
-import { ThemeProvider } from 'styled-components/native';
+import { Button } from 'react-native';
 import { connect } from 'react-redux';
 
-import TabNavigationLayout from '../navigation/TabNavigationLayout';
+import TabNavigationLayout from '../components/TabNavigationLayout';
+import ThemeProvider from '../components/ThemeProvider';
 import { loadTheme } from '../reducers/config';
+import { setTheme } from '../actions';
 import type { State, ThemeObject } from '../utils/types';
 
 type Props = {
+  setTheme: Function,
   theme: ThemeObject,
 };
 
-const TabsContainer = ({ theme }: Props) => (
-  <TabNavigationLayout theme={theme} />
+const Page = ({ setTheme, theme }: Props) => (
+  <ThemeProvider theme={theme}>
+    <TabNavigationLayout theme={theme} />
+  </ThemeProvider>
 );
 
 const mapStateToProps = ({ config }: State) => ({ theme: loadTheme(config) });
 
-export default connect(mapStateToProps)(TabsContainer);
+export default connect(mapStateToProps)(Page);

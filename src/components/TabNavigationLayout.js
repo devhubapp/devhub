@@ -5,11 +5,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import { StackNavigation, TabNavigation, TabNavigationItem } from '@exponent/ex-navigation';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import Router from './Router';
+import Router from '../navigation/Router';
 
 export default class TabNavigationLayout extends React.Component {
+  static contextTypes = {
+    theme: React.PropTypes.object,
+  };
+
   render() {
-    const { theme } = this.props;
+    const { theme } = this.props || this.context;
 
     return (
       <TabNavigation
@@ -45,7 +49,7 @@ export default class TabNavigationLayout extends React.Component {
   }
 
   _renderIcon(title: string, iconName: string, isSelected?: bool, selectedColor?: ?string, color?: ?string): ReactElement<any> {
-    const { theme } = this.props;
+    const { theme } = this.props || this.context;
     const _color = isSelected ? (selectedColor || theme.base07) : (color || theme.base05);
 
     return (

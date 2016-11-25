@@ -1,20 +1,23 @@
 // @flow
 
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled from 'styled-components/native';
+import styled, { ThemeProvider } from 'styled-components/native';
 import gravatar from 'gravatar';
 
 import Avatar from './Avatar';
-import { contentPadding } from '../styles/variables';
+import RightTransparentTextOverlay from './RightTransparentTextOverlay';
+import { contentPadding, mutedTextOpacity } from '../styles/variables';
 import { getDateSmallText } from '../utils/helpers/';
 import { getEventIcon, getEventText } from '../utils/helpers/github';
+import type { ThemeObject } from '../utils/types';
+import type { GithubEvent } from '../utils/types/github';
 
 const avatarWidth = 36;
 const innerContentPadding = contentPadding;
 
-const Card = styled.View`
+const CardWrapper = styled.View`
   padding: ${contentPadding};
   border-width: 0;
   border-bottom-width: 1;
@@ -58,7 +61,7 @@ const Text = styled.Text`
 `;
 
 const MutedText = styled(Text)`
-  opacity: 0.7;
+  opacity: ${mutedTextOpacity};
 `;
 
 const Timestamp = styled(MutedText)`
@@ -85,7 +88,6 @@ const CardItemId = styled(Text)`
 const Comment = styled(Text)`
   flex: 1;
   font-size: 14;
-  opacity: 0.9;
 `;
 
 const ContentRow = styled(HorizontalView)`
@@ -116,13 +118,20 @@ const CardItemIdContainer = styled(HighlightContainer2)`
   padding-horizontal: 4;
 `;
 
-const ScrollableContentContainer = styled.ScrollView`
-  padding-horizontal: ${contentPadding};
-`;
-
 const RightOfScrollableContent = styled.View`
   margin-right: ${contentPadding};
 `;
+
+const ScrollableContentContainer = ({ contentContainerStyle, style, ...props }) => (
+  <ScrollView
+    style={[{ alignSelf: 'stretch' }, style]}
+    contentContainerStyle={[{
+      alignItems: 'center',
+      paddingHorizontal: contentPadding,
+    }, contentContainerStyle]}
+    {...props}
+  />
+);
 
 const RepositoryContentContainer = styled(ScrollableContentContainer)`
   flex-direction: row;
@@ -150,9 +159,18 @@ const CardIcon = styled(Icon)`
 `;
 
 type Props = {
+  type: GithubEvent,
+  payload: Object,
+  created_at: string,
 };
 
-export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...props }: Props) => {
+type Context = {
+  theme: ThemeObject,
+};
+
+const Card = ({
+  type, payload = {}, actor = {}, repo = {}, created_at, ...props,
+}: Props, { theme }: Context) => {
   this.renderItemId = (number, icon) => {
     if (!number && !icon) return null;
 
@@ -171,9 +189,10 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
   this.renderUserAvatar = ({ avatar_url, email } = {}, size) => {
     if (!avatar_url && !email) return null;
 
-    const uri = avatar_url
-      ? avatar_url
-      : `https:${gravatar.url(email, { size: Math.max(100, size) })}`;
+    const _size = 50 * Math.max(1, Math.ceil(size / 50));
+    const uri = (avatar_url
+      ? `${avatar_url}?size=${_size}`
+      : `https:${gravatar.url(email, { size: _size })}`).replace('??', '?');
 
     return (
       <Avatar size={size} source={{ uri }} />
@@ -192,12 +211,17 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
 
         <MainColumn>
           <HighlightContainerRow1>
-            <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
-              <Comment numberOfLines={1}>{_title}</Comment>
-            </ScrollableContentContainer>
+            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+                <Comment numberOfLines={1}>
+                  <Icon name="git-pull-request" />&nbsp;
+                  {_title}
+                </Comment>
+              </ScrollableContentContainer>
+            </RightTransparentTextOverlay>
 
             <RightOfScrollableContent>
-              {this.renderItemId(number, 'git-pull-request')}
+              {this.renderItemId(number)}
             </RightOfScrollableContent>
           </HighlightContainerRow1>
         </MainColumn>
@@ -221,13 +245,14 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
 
         <MainColumn>
           <HighlightContainerRow1>
-            <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
-              <Comment numberOfLines={1}>{_message}</Comment>
-            </ScrollableContentContainer>
-
-            <RightOfScrollableContent>
-              {this.renderItemId(null, 'git-commit')}
-            </RightOfScrollableContent>
+            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+                <Comment numberOfLines={1}>
+                  <Icon name="git-commit" />&nbsp;
+                  {_message}
+                  </Comment>
+              </ScrollableContentContainer>
+            </RightTransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
@@ -244,12 +269,17 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
 
         <MainColumn>
           <HighlightContainerRow1>
-            <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
-              <Comment numberOfLines={1}>{_title}</Comment>
-            </ScrollableContentContainer>
+            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+                <Comment numberOfLines={1}>
+                  <Icon name="issue-opened" />&nbsp;
+                  {_title}
+                </Comment>
+              </ScrollableContentContainer>
+            </RightTransparentTextOverlay>
 
             <RightOfScrollableContent>
-              {this.renderItemId(number, 'issue-opened')}
+              {this.renderItemId(number)}
             </RightOfScrollableContent>
           </HighlightContainerRow1>
         </MainColumn>
@@ -263,16 +293,23 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
 
     if (!repoName) return null;
 
+    const avatar_url = orgName ? `https://github.com/${orgName}.png?` : '';
+
     return (
       <ContentRow>
-        <LeftColumn center />
+        <LeftColumn center>{this.renderUserAvatar({ avatar_url }, avatarWidth / 2)}</LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
-              { orgName && <OrganizationName>{orgName}/</OrganizationName>}
-              <RepositoryName>{repoName}</RepositoryName>
-            </RepositoryContentContainer>
+            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+              <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
+                <OrganizationName>
+                  <Icon name="repo" />&nbsp;
+                  {orgName && `${orgName}/`}
+                </OrganizationName>
+                <RepositoryName>{repoName}</RepositoryName>
+              </RepositoryContentContainer>
+            </RightTransparentTextOverlay>
 
             <RepositoryStarButton>
               <RepositoryStarIcon name="star"/>
@@ -284,8 +321,7 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
   };
 
   this.renderCommentRow = ({
-    comment: { body } = {},
-    issue: { number } = {}
+    comment: { body } = {}
   } = {}) => {
     let _body = (body || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_body) return null;
@@ -304,7 +340,7 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
   const dateText = getDateSmallText(created_at);
 
   return (
-    <Card {...props}>
+    <CardWrapper {...props}>
       <Header>
         <LeftColumn>{this.renderUserAvatar(actor, avatarWidth)}</LeftColumn>
 
@@ -336,6 +372,12 @@ export default ({ type, payload = {}, actor = {}, repo = {}, created_at, ...prop
       {this.renderIssueRow(payload)}
 
       {this.renderCommentRow(payload)}
-    </Card>
+    </CardWrapper>
   );
-}
+};
+
+Card.contextTypes = {
+  theme: React.PropTypes.object,
+};
+
+export default Card;
