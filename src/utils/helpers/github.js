@@ -116,7 +116,8 @@ export function getEventText(event: GithubEvent, payload: GithubEventPayload = {
       const count = payload.distinct_size || payload.size || commits.length || 1;
 
       const pushedText = payload.forced ? 'force pushed' : 'pushed';
-      const commitText = count === 1 ? 'a commit' : (count > 1 ? `${count} commits` : 'commits');
+      const commitText = count > 1 ? `${count} commits` : 'a commit';
+      
       return `${pushedText} ${commitText}`;
     case 'ReleaseEvent': return 'published a release';
     case 'WatchEvent': return 'starred a repository';

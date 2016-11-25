@@ -15,7 +15,7 @@ import { getEventIcon, getEventText } from '../utils/helpers/github';
 import type { ThemeObject } from '../utils/types';
 import type { GithubEvent } from '../utils/types/github';
 
-const avatarWidth = 36;
+const avatarWidth = 44;
 const innerContentPadding = contentPadding;
 
 const CardWrapper = styled.View`
@@ -90,7 +90,7 @@ const Comment = styled(Text)`
 
 const ContentRow = styled(HorizontalView)`
   align-items: flex-start;
-  margin-top: ${({ narrow }) => narrow ? innerContentPadding / 2 : innerContentPadding};
+  margin-top: ${({ narrow }) => narrow ? innerContentPadding / 3 : innerContentPadding};
 `;
 
 const HighlightContainerBase = styled(HorizontalView)`
@@ -260,9 +260,17 @@ const Card = ({
     );
   };
 
-  this.renderIssueRow = ({ actor, issue: { user, number, title } = {} } = {}) => {
+  this.renderIssueRow = ({ actor, issue: { user, number, state, title } = {} } = {}) => {
     let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
+
+    const { icon, color } = (() => {
+      switch(state) {
+        case 'closed': return { icon: 'issue-closed', color: theme.red };
+        case 'reopened': return { icon: 'issue-reopened', color: theme.green };
+        default: return { icon: 'issue-opened', color: theme.green };
+      }
+    })();
 
     return (
       <ContentRow narrow>
@@ -273,7 +281,7 @@ const Card = ({
             <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
-                  <Icon name="issue-opened" />&nbsp;
+                  <Icon name={icon} color={color} />&nbsp;
                   {_title}
                 </Comment>
               </ScrollableContentContainer>
@@ -288,7 +296,7 @@ const Card = ({
     );
   };
 
-  this.renderRepositoryRow = (name, branch = 'master', icon = 'repo') => {
+  this.renderRepositoryRow = (name, branch = 'master', icon = 'repo', { narrow } = {}) => {
     const orgName = (name || '').split('/')[0];
     const repoName = orgName ? (name || '').split('/')[1] : name;
 
@@ -297,7 +305,7 @@ const Card = ({
     const avatar_url = orgName ? `https://github.com/${orgName}.png?` : '';
 
     return (
-      <ContentRow>
+      <ContentRow narrow={narrow}>
         <LeftColumn center>{this.renderUserAvatar({ avatar_url }, avatarWidth / 2)}</LeftColumn>
 
         <MainColumn>
@@ -332,7 +340,7 @@ const Card = ({
     if (!_body) return null;
 
     return (
-      <ContentRow>
+      <ContentRow narrow>
         <LeftColumn>{this.renderUserAvatar(actor, avatarWidth / 2)}</LeftColumn>
 
         <MainColumnRowContent>
@@ -370,7 +378,7 @@ const Card = ({
 
       {this.renderRepositoryRow((repo || {}).name)}
 
-      {this.renderRepositoryRow((payload.forkee || {}).full_name, undefined, 'repo-forked')}
+      {this.renderRepositoryRow((payload.forkee || {}).full_name, undefined, 'repo-forked', { narrow : true})}
 
       {this.renderPullRequestRow(payload)}
 
