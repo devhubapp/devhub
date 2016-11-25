@@ -296,13 +296,23 @@ const Card = ({
     );
   };
 
-  this.renderRepositoryRow = (name, branch = 'master', icon = 'repo', { narrow } = {}) => {
+  this.renderRepositoryRow = ({
+    type,
+    name, branch = 'master', forcePushed, pushed, fork,
+    narrow,
+  } = {}) => {
     const orgName = (name || '').split('/')[0];
     const repoName = orgName ? (name || '').split('/')[1] : name;
 
     if (!repoName) return null;
 
     const avatar_url = orgName ? `https://github.com/${orgName}.png?` : '';
+    const icon = (() => {
+      if (forcePushed) return 'repo-force-push';
+      if (pushed) return 'repo-push';
+      if (fork) return 'repo-forked';
+      return 'repo';
+    })();
 
     return (
       <ContentRow narrow={narrow}>
@@ -376,9 +386,23 @@ const Card = ({
         </MainColumn>
       </Header>
 
-      {this.renderRepositoryRow((repo || {}).name)}
+      {
+        this.renderRepositoryRow({
+          type,
+          name: (repo || {}).name,
+          pushed: type === 'PushEvent',
+          forcePushed: type === 'PushEvent' && payload.forced,
+        })
+      }
 
-      {this.renderRepositoryRow((payload.forkee || {}).full_name, undefined, 'repo-forked', { narrow : true})}
+      {
+        this.renderRepositoryRow({
+          type,
+          name: (payload.forkee || {}).full_name,
+          fork: !!payload.forkee,
+          narrow : true,
+        })
+      }
 
       {this.renderPullRequestRow(payload)}
 

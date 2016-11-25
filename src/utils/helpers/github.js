@@ -47,7 +47,7 @@ export function getEventIcon(event: GithubEvent, payload: GithubEventPayload = {
     case 'PullRequestEvent': return 'git-pull-request';
     case 'PullRequestReviewEvent':
     case 'PullRequestReviewCommentEvent': return 'comment-discussion';
-    case 'PushEvent': return payload.forced ? 'repo-force-push' : 'repo-push'; // git-commit
+    case 'PushEvent': return 'code';
     case 'ReleaseEvent': return 'tag';
     case 'WatchEvent': return 'star';
     default: return 'mark-github';
