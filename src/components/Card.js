@@ -73,9 +73,6 @@ const Username = styled(Text)`
   font-weight: bold;
 `;
 
-const OrganizationName = styled(MutedText)`
-`;
-
 const RepositoryName = styled(Text)`
   font-weight: bold;
 `;
@@ -291,7 +288,7 @@ const Card = ({
     );
   };
 
-  this.renderRepositoryRow = ({ name } = {}, { ref }) => {
+  this.renderRepositoryRow = (name, branch = 'master', icon = 'repo') => {
     const orgName = (name || '').split('/')[0];
     const repoName = orgName ? (name || '').split('/')[1] : name;
 
@@ -307,11 +304,15 @@ const Card = ({
           <HighlightContainerRow1>
             <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
-                <OrganizationName>
-                  <Icon name="repo" />&nbsp;
+                <MutedText>
+                  <Icon name={icon} />&nbsp;
                   {orgName && `${orgName}/`}
-                </OrganizationName>
+                </MutedText>
                 <RepositoryName>{repoName}</RepositoryName>
+                {
+                  branch && branch !== 'master' &&
+                  <MutedText>({branch})</MutedText>
+                }
               </RepositoryContentContainer>
             </RightTransparentTextOverlay>
 
@@ -367,7 +368,9 @@ const Card = ({
         </MainColumn>
       </Header>
 
-      {this.renderRepositoryRow(repo, payload)}
+      {this.renderRepositoryRow((repo || {}).name)}
+
+      {this.renderRepositoryRow((payload.forkee || {}).full_name, undefined, 'repo-forked')}
 
       {this.renderPullRequestRow(payload)}
 
