@@ -7,7 +7,7 @@ import styled, { ThemeProvider } from 'styled-components/native';
 import gravatar from 'gravatar';
 
 import Avatar from './Avatar';
-import RightTransparentTextOverlay from './RightTransparentTextOverlay';
+import TransparentTextOverlay from './TransparentTextOverlay';
 import Themable from './hoc/Themable';
 import { contentPadding, mutedTextOpacity } from '../styles/variables';
 import { getDateSmallText } from '../utils/helpers/';
@@ -208,14 +208,14 @@ const Card = ({
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1}>
                   <Icon name="book" />&nbsp;
                   {title}
                 </Text>
               </ScrollableContentContainer>
-            </RightTransparentTextOverlay>
+            </TransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
@@ -229,13 +229,19 @@ const Card = ({
     const WikiPageRow = this._renderWikiPageRow;
 
     return (
-      <View>
-        {
-          pages.map(({ sha, title }) => (
-            <WikiPageRow key={`wiki-page-row-${sha}`} title={title} />
-          ))
-        }
-      </View>
+      <TransparentTextOverlay color={theme.base00} size={contentPadding} from="bottom">
+        <ScrollView
+          style={{ maxHeight: 120 }}
+          contentContainerStyle={{ paddingBottom: contentPadding }}
+          alwaysBounceVertical={false}
+        >
+          {
+            pages.map(({ sha, title }) => (
+              <WikiPageRow key={`wiki-page-row-${sha}`} title={title} />
+            ))
+          }
+        </ScrollView>
+      </TransparentTextOverlay>
     );
   };
 
@@ -258,14 +264,14 @@ const Card = ({
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
                   <Icon name={icon} color={color} />&nbsp;
                   {_title}
                 </Comment>
               </ScrollableContentContainer>
-            </RightTransparentTextOverlay>
+            </TransparentTextOverlay>
 
             <RightOfScrollableContent>
               {this.renderItemId(number)}
@@ -276,13 +282,7 @@ const Card = ({
     );
   };
 
-  this.renderCommitRow = (type, { commits, head_commit } = {}) => {
-    const commit = head_commit ? head_commit : (commits || [])[0];
-
-    if (!commit) return null;
-
-    const { author, message } = commit;
-
+  this._renderCommitRow = ({ author, message  } = {}) => {
     let _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_message) return null;
 
@@ -292,17 +292,46 @@ const Card = ({
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
                   <Icon name="git-commit" />&nbsp;
                   {_message}
-                  </Comment>
+                </Comment>
               </ScrollableContentContainer>
-            </RightTransparentTextOverlay>
+            </TransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
+    );
+  };
+
+  this.renderCommitRows = (type, { commits, head_commit } = {}) => {
+    const commit = head_commit ? head_commit : (commits || [])[0];
+    if (!commit) return null;
+
+    const { message } = commit;
+
+    let _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    if (!_message) return null;
+
+    const CommitRow = this._renderCommitRow;
+    const list = commits || [head_commit];
+
+    return (
+      <TransparentTextOverlay color={theme.base00} size={contentPadding} from="bottom">
+        <ScrollView
+          style={{ maxHeight: 120 }}
+          contentContainerStyle={{ paddingBottom: contentPadding }}
+          alwaysBounceVertical={false}
+        >
+          {
+            list.map(({ sha, author, message }) => (
+              <CommitRow key={`commit-row-${sha}`} author={author} message={message} />
+            ))
+          }
+        </ScrollView>
+      </TransparentTextOverlay>
     );
   };
 
@@ -323,14 +352,14 @@ const Card = ({
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
                   <Icon name={icon} color={color} />&nbsp;
                   {_title}
                 </Comment>
               </ScrollableContentContainer>
-            </RightTransparentTextOverlay>
+            </TransparentTextOverlay>
 
             <RightOfScrollableContent>
               {this.renderItemId(number)}
@@ -364,7 +393,7 @@ const Card = ({
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text muted>
                   <Icon name={icon} />&nbsp;
@@ -372,7 +401,7 @@ const Card = ({
                 </Text>
                 <RepositoryName>{repoName}</RepositoryName>
               </RepositoryContentContainer>
-            </RightTransparentTextOverlay>
+            </TransparentTextOverlay>
 
             <RepositoryStarButton>
               <RepositoryStarIcon name="star"/>
@@ -399,14 +428,14 @@ const Card = ({
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1} muted={!isBranchMainEventAction}>
                   <Icon name="git-branch" />&nbsp;
                   {_branch}
                 </Text>
               </RepositoryContentContainer>
-            </RightTransparentTextOverlay>
+            </TransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
@@ -423,14 +452,14 @@ const Card = ({
 
         <MainColumn>
           <HighlightContainerRow1>
-            <RightTransparentTextOverlay color={theme.base01} size={contentPadding}>
+            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1}>
                   <Icon name="person" />&nbsp;
                   {_login}
                 </Text>
               </RepositoryContentContainer>
-            </RightTransparentTextOverlay>
+            </TransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
@@ -510,7 +539,7 @@ const Card = ({
 
       {this.renderPullRequestRow(type, payload)}
 
-      {this.renderCommitRow(type, payload)}
+      {this.renderCommitRows(type, payload)}
 
       {this.renderIssueRow(type, payload)}
 

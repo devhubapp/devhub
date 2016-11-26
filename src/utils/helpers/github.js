@@ -122,8 +122,8 @@ export function getEventText(event: GithubEvent, payload: GithubEventPayload = {
       return (() => {
         const commits = payload.commits || [{}];
         const commit = payload.head_commit || commits[0];
-        const count = payload.distinct_size || payload.size || commits.length || 1;
-        const branch = (payload.ref || '').split('/').pop();
+        const count = Math.max(Math.max(Math.max(1, payload.size), payload.distinct_size), commits.length) || 1;
+        // const branch = (payload.ref || '').split('/').pop();
 
         const pushedText = payload.forced ? 'force pushed' : 'pushed';
         const commitText = count > 1 ? `${count} commits` : 'a commit';
