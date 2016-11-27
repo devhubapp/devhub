@@ -7,8 +7,8 @@ import styled, { ThemeProvider } from 'styled-components/native';
 import gravatar from 'gravatar';
 
 import Avatar from './Avatar';
-import TransparentTextOverlay from './TransparentTextOverlay';
 import Themable from './hoc/Themable';
+import TransparentTextOverlay from './TransparentTextOverlay';
 import { contentPadding, mutedTextOpacity } from '../styles/variables';
 import { getDateSmallText } from '../utils/helpers/';
 import { getEventIcon, getEventText } from '../utils/helpers/github';
@@ -155,29 +155,20 @@ const CardIcon = styled(Icon)`
   opacity: 0.4;
 `;
 
-type Props = {
-  type: GithubEvent,
-  payload: Object,
-  created_at: string,
-  theme: ThemeObject,
-};
+@Themable
+export default class extends React.Component {
+  props: {
+    event: GithubEvent,
+    theme: ThemeObject,
+  };
 
-type Context = {
-  theme: ThemeObject,
-};
-
-const Card = ({
-  type, payload = {}, actor = {}, repo = {}, created_at, ...props,
-}: Props, context: Context) => {
-  const theme = props.theme || context.theme;
-
-  this.renderItemId = (number, icon) => {
+  renderItemId = (number, icon) => {
     if (!number && !icon) return null;
 
     return (
       <CardItemIdContainer>
         <CardItemId>
-          {icon ? <Icon name={icon} /> : ''}
+          {icon ? <Icon name={icon}/> : ''}
           {number && icon ? ' ' : ''}
           {typeof number === 'number' ? '#' : ''}
           {number}
@@ -186,7 +177,7 @@ const Card = ({
     );
   };
 
-  this.renderUserAvatar = ({ avatar_url, email } = {}, size) => {
+  renderUserAvatar = ({ avatar_url, email } = {}, size) => {
     if (!avatar_url && !email) return null;
 
     const _size = 100 * Math.max(1, Math.ceil(size / 100));
@@ -195,12 +186,14 @@ const Card = ({
       : `https:${gravatar.url(email, { size: _size })}`).replace('??', '?');
 
     return (
-      <Avatar size={size} source={{ uri }} />
+      <Avatar size={size} source={{ uri }}/>
     );
   };
 
-  this._renderWikiPageRow = ({ title } = {}) => {
+  _renderWikiPageRow = ({ title } = {}) => {
     if (!title) return null;
+
+    const { theme } = this.props;
 
     return (
       <ContentRow narrow>
@@ -211,7 +204,7 @@ const Card = ({
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1}>
-                  <Icon name="book" />&nbsp;
+                  <Icon name="book"/>&nbsp;
                   {title}
                 </Text>
               </ScrollableContentContainer>
@@ -222,14 +215,15 @@ const Card = ({
     );
   };
 
-  this.renderWikiPageRows = (type, { pages = [] } = {}) => {
+  renderWikiPageRows = (type, { pages = [] } = {}) => {
     if (type !== 'GollumEvent') return null;
     if (!(pages && pages.length > 0)) return null;
 
     const WikiPageRow = this._renderWikiPageRow;
+    const { theme } = this.props;
 
     return (
-      <TransparentTextOverlay color={theme.base00} size={contentPadding} from="bottom">
+      <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
         <ScrollView
           style={{ maxHeight: 120 }}
           contentContainerStyle={{ paddingBottom: contentPadding }}
@@ -237,7 +231,7 @@ const Card = ({
         >
           {
             pages.map(({ sha, title }) => (
-              <WikiPageRow key={`wiki-page-row-${sha}`} title={title} />
+              <WikiPageRow key={`wiki-page-row-${sha}`} title={title}/>
             ))
           }
         </ScrollView>
@@ -245,16 +239,20 @@ const Card = ({
     );
   };
 
-  this.renderPullRequestRow = (type, {
+  renderPullRequestRow = (type, {
     pull_request: { number, state, title, user } = {},
   } = {}) => {
     let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
 
+    const { theme } = this.props;
+
     const { icon, color } = (() => {
-      switch(state) {
-        case 'closed': return { icon: 'git-pull-request', color: theme.red };
-        default: return { icon: 'git-pull-request', color: theme.green };
+      switch (state) {
+        case 'closed':
+          return { icon: 'git-pull-request', color: theme.red };
+        default:
+          return { icon: 'git-pull-request', color: theme.green };
       }
     })();
 
@@ -267,7 +265,7 @@ const Card = ({
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
-                  <Icon name={icon} color={color} />&nbsp;
+                  <Icon name={icon} color={color}/>&nbsp;
                   {_title}
                 </Comment>
               </ScrollableContentContainer>
@@ -282,9 +280,11 @@ const Card = ({
     );
   };
 
-  this._renderCommitRow = ({ author, message  } = {}) => {
+  _renderCommitRow = ({ author, message } = {}) => {
     let _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_message) return null;
+
+    const { theme } = this.props;
 
     return (
       <ContentRow narrow>
@@ -295,7 +295,7 @@ const Card = ({
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
-                  <Icon name="git-commit" />&nbsp;
+                  <Icon name="git-commit"/>&nbsp;
                   {_message}
                 </Comment>
               </ScrollableContentContainer>
@@ -306,7 +306,7 @@ const Card = ({
     );
   };
 
-  this.renderCommitRows = (type, { commits, head_commit } = {}) => {
+  renderCommitRows = (type, { commits, head_commit } = {}) => {
     const commit = head_commit ? head_commit : (commits || [])[0];
     if (!commit) return null;
 
@@ -317,9 +317,10 @@ const Card = ({
 
     const CommitRow = this._renderCommitRow;
     const list = commits || [head_commit];
+    const { theme } = this.props;
 
     return (
-      <TransparentTextOverlay color={theme.base00} size={contentPadding} from="bottom">
+      <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
         <ScrollView
           style={{ maxHeight: 120 }}
           contentContainerStyle={{ paddingBottom: contentPadding }}
@@ -327,7 +328,7 @@ const Card = ({
         >
           {
             list.map(({ sha, author, message }) => (
-              <CommitRow key={`commit-row-${sha}`} author={author} message={message} />
+              <CommitRow key={`commit-row-${sha}`} author={author} message={message}/>
             ))
           }
         </ScrollView>
@@ -335,14 +336,18 @@ const Card = ({
     );
   };
 
-  this.renderIssueRow = (type, { actor, issue: { user, number, state, title } = {} } = {}) => {
+  renderIssueRow = (type, { actor, issue: { user, number, state, title } = {} } = {}) => {
     let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
 
+    const { theme } = this.props;
+
     const { icon, color } = (() => {
-      switch(state) {
-        case 'closed': return { icon: 'issue-closed', color: theme.red };
-        default: return { icon: 'issue-opened', color: theme.green };
+      switch (state) {
+        case 'closed':
+          return { icon: 'issue-closed', color: theme.red };
+        default:
+          return { icon: 'issue-opened', color: theme.green };
       }
     })();
 
@@ -355,7 +360,7 @@ const Card = ({
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
-                  <Icon name={icon} color={color} />&nbsp;
+                  <Icon name={icon} color={color}/>&nbsp;
                   {_title}
                 </Comment>
               </ScrollableContentContainer>
@@ -370,7 +375,7 @@ const Card = ({
     );
   };
 
-  this.renderRepositoryRow = (type, {
+  renderRepositoryRow = (type, {
     name, forcePushed, pushed, fork,
     narrow,
   } = {}) => {
@@ -387,6 +392,8 @@ const Card = ({
       return 'repo';
     })();
 
+    const { theme } = this.props;
+
     return (
       <ContentRow narrow={narrow}>
         <LeftColumn center>{this.renderUserAvatar({ avatar_url }, avatarWidth / 2)}</LeftColumn>
@@ -396,7 +403,7 @@ const Card = ({
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text muted>
-                  <Icon name={icon} />&nbsp;
+                  <Icon name={icon}/>&nbsp;
                   {orgName && `${orgName}/`}
                 </Text>
                 <RepositoryName>{repoName}</RepositoryName>
@@ -412,7 +419,7 @@ const Card = ({
     );
   };
 
-  this.renderBranchRow = (type, {
+  renderBranchRow = (type, {
     branch = 'master',
     narrow,
   } = {}) => {
@@ -421,6 +428,8 @@ const Card = ({
 
     const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
     if (_branch === 'master' && !isBranchMainEventAction) return;
+
+    const { theme } = this.props;
 
     return (
       <ContentRow narrow={narrow}>
@@ -431,7 +440,7 @@ const Card = ({
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1} muted={!isBranchMainEventAction}>
-                  <Icon name="git-branch" />&nbsp;
+                  <Icon name="git-branch"/>&nbsp;
                   {_branch}
                 </Text>
               </RepositoryContentContainer>
@@ -442,9 +451,11 @@ const Card = ({
     );
   };
 
-  this.renderMemberRow = (type, { member = {} } = {}) => {
+  renderMemberRow = (type, { member = {} } = {}) => {
     let _login = (member.login || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_login) return null;
+
+    const { theme } = this.props;
 
     return (
       <ContentRow narrow>
@@ -455,7 +466,7 @@ const Card = ({
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1}>
-                  <Icon name="person" />&nbsp;
+                  <Icon name="person"/>&nbsp;
                   {_login}
                 </Text>
               </RepositoryContentContainer>
@@ -466,7 +477,7 @@ const Card = ({
     );
   };
 
-  this.renderCommentRow = (type, {
+  renderCommentRow = (type, actor, {
     comment: { body } = {}
   } = {}) => {
     let _body = (body || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
@@ -483,73 +494,71 @@ const Card = ({
     );
   };
 
-  const dateText = getDateSmallText(created_at, '•');
+  render() {
+    const { event: { type, payload = {}, actor = {}, repo = {}, created_at }, ...props } = this.props;
 
-  return (
-    <CardWrapper {...props}>
-      <Header>
-        <LeftColumn>{this.renderUserAvatar(actor, avatarWidth)}</LeftColumn>
+    const dateText = getDateSmallText(created_at, '•');
 
-        <MainColumn>
-          <HeaderRow>
-            <View style={{ flex: 1 }}>
-              <HorizontalView>
-                <Username>{actor.display_login || actor.login}</Username>
-                {
-                  dateText &&
-                  <Timestamp> • {dateText}</Timestamp>
-                }
-              </HorizontalView>
+    return (
+      <CardWrapper {...props}>
+        <Header>
+          <LeftColumn>{this.renderUserAvatar(actor, avatarWidth)}</LeftColumn>
 
-              <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
-            </View>
+          <MainColumn>
+            <HeaderRow>
+              <View style={{ flex: 1 }}>
+                <HorizontalView>
+                  <Username>{actor.display_login || actor.login}</Username>
+                  {
+                    dateText &&
+                    <Timestamp> • {dateText}</Timestamp>
+                  }
+                </HorizontalView>
 
-            <CardIcon name={getEventIcon(type, payload)}/>
-          </HeaderRow>
-        </MainColumn>
-      </Header>
+                <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
+              </View>
 
-      {
-        this.renderRepositoryRow(type, {
-          name: (repo || {}).name,
-          pushed: type === 'PushEvent',
-          forcePushed: type === 'PushEvent' && payload.forced,
-        })
-      }
+              <CardIcon name={getEventIcon(type, payload)}/>
+            </HeaderRow>
+          </MainColumn>
+        </Header>
 
-      {
-        this.renderBranchRow(type, {
-          name: (repo || {}).name,
-          branch: payload.ref,
-          narrow : true,
-        })
-      }
+        {
+          this.renderRepositoryRow(type, {
+            name: (repo || {}).name,
+            pushed: type === 'PushEvent',
+            forcePushed: type === 'PushEvent' && payload.forced,
+          })
+        }
 
-      {
-        this.renderRepositoryRow(type, {
-          name: (payload.forkee || {}).full_name,
-          fork: !!payload.forkee,
-          narrow : true,
-        })
-      }
+        {
+          this.renderBranchRow(type, {
+            name: (repo || {}).name,
+            branch: payload.ref,
+            narrow: true,
+          })
+        }
 
-      {this.renderMemberRow(type, payload)}
+        {
+          this.renderRepositoryRow(type, {
+            name: (payload.forkee || {}).full_name,
+            fork: !!payload.forkee,
+            narrow: true,
+          })
+        }
 
-      {this.renderWikiPageRows(type, payload)}
+        {this.renderMemberRow(type, payload)}
 
-      {this.renderPullRequestRow(type, payload)}
+        {this.renderWikiPageRows(type, payload)}
 
-      {this.renderCommitRows(type, payload)}
+        {this.renderPullRequestRow(type, payload)}
 
-      {this.renderIssueRow(type, payload)}
+        {this.renderCommitRows(type, payload)}
 
-      {this.renderCommentRow(type, payload)}
-    </CardWrapper>
-  );
-};
+        {this.renderIssueRow(type, payload)}
 
-Card.contextTypes = {
-  theme: React.PropTypes.object,
-};
-
-export default Themable(Card);
+        {this.renderCommentRow(type, actor, payload)}
+      </CardWrapper>
+    );
+  };
+}

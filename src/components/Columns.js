@@ -37,13 +37,17 @@ const StyledColumn = styled(Column)`
 
 const renderRow = (item, sectionID, rowID) => (
   <StyledView key={`column-${item.id}-${sectionID}-${rowID}`}>
-    <StyledColumn id={item.id} title={item.title} data={item.data} />
+    <StyledColumn id={item.id} title={item.title} items={item.data} />
   </StyledView>
 );
 
-export default ({ data = [], ...props }) => (
+type Props = {
+  columns: Array<mixed>,
+}
+
+export default ({ columns = [], ...props }: Props) => (
   <StyledListView
-    data={data}
+    data={columns}
     renderRow={renderRow}
     width={getWidth()}
     loop={false}

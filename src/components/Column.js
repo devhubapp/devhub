@@ -25,10 +25,6 @@ const Title = styled.Text`
   color: ${({ theme }) => theme.base04};
 `;
 
-type Props = {
-  title: string,
-};
-
 const renderHeader = (title, icon = 'home') => (
   <Header>
     <Title>
@@ -39,15 +35,22 @@ const renderHeader = (title, icon = 'home') => (
 );
 
 const renderRow = (item, sectionID, rowID) => (
-  <Card key={`column-${sectionID}-${rowID}-card-${item.id}`} {...item} />
+  <Card key={`column-${sectionID}-${rowID}-card-${item.id}`} event={item} />
 );
 
-export default ({ id, title, data, style, ...props }: Props) => (
-  <Column style={style}>
+type Props = {
+  id: string,
+  title: string,
+  items: Array<Object>,
+  style?: ?Object,
+};
+
+export default ({ id, title, items, ...props }: Props) => (
+  <Column {...props}>
     {renderHeader(title)}
 
     <ListView
-      data={data}
+      data={items}
       renderRow={renderRow}
       initialListSize={5}
     />

@@ -29,6 +29,7 @@ type Props = {
   color: string,
   from: 'top' | 'bottom' | 'left' | 'right',
   size: number,
+  style?: ?Object,
 };
 
 export default ({ children, color, from, size, style, ...props }: Props) => {

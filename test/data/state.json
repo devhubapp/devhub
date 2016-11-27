@@ -1,0 +1,20 @@
+{
+  "theme": "dark",
+
+  "entities": {
+    "user": {
+      "u001": {
+      }
+    },
+    "event": {
+      "e001": {
+      }
+    }
+  },
+  "columns": {
+    "0": {
+      "order": 1,
+      "data": ["e001"]
+    }
+  }
+}

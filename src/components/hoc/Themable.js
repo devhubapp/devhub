@@ -3,18 +3,20 @@
 import React from 'react';
 import { CHANNEL } from 'styled-components/lib/models/ThemeProvider';
 
-import { ThemeObject } from '../../utils/types';
+import type { ThemeObject } from '../../utils/types';
 
-export default Component => class extends React.Component {
+export default (Component: React.Element<*>) => class extends React.Component {
   static contextTypes = {
     [CHANNEL]: React.PropTypes.func,
   };
 
   state = ({
-    theme: undefined,
+    theme: this.props.theme || this.context.theme,
   }: {
-    theme: ThemeObject,
+    theme?: ?ThemeObject,
   });
+
+  unsubscribe: Function;
 
   componentWillMount() {
     const subscribe = this.context[CHANNEL];

@@ -9,15 +9,14 @@ import ThemeProvider from '../components/ThemeProvider';
 import { loadTheme } from '../reducers/config';
 import type { State, ThemeObject } from '../utils/types';
 
-type Props = {
-  feed: Array,
+type Props = State & {
   theme: ThemeObject,
 };
 
 const Page = ({ feed, theme }: Props) => (
   <ThemeProvider theme={theme}>
     <Screen>
-      <Columns data={feed} />
+      <Columns columns={feed} />
     </Screen>
   </ThemeProvider>
 );

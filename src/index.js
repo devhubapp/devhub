@@ -3,13 +3,13 @@ import { Provider } from 'react-redux';
 import { NavigationContext, NavigationProvider, StackNavigation } from '@exponent/ex-navigation';
 
 import App from './containers/App';
-import Store from './store';
+import store from './store';
 import Router from './navigation/Router';
 
-const navigationContext = new NavigationContext({ router: Router, store: Store });
+const navigationContext = new NavigationContext({ router: Router, store });
 
 export default () => (
-  <Provider store={Store}>
+  <Provider store={store}>
     <NavigationProvider context={navigationContext}>
       <App>
         <StackNavigation initialRoute={Router.getRoute('app')} />
@@ -17,3 +17,16 @@ export default () => (
     </NavigationProvider>
   </Provider>
 );
+
+// import GitHubAPI from 'github';
+//
+// const github = new GitHubAPI();
+//
+// (async () => {
+//   try {
+//     const result = await github.activity.getEventsReceived({ username: 'brunolemos' });
+//     console.log(result);
+//   } catch(e) {
+//     console.log('Error', e);
+//   }
+// })();

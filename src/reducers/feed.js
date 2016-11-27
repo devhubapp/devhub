@@ -1,7 +1,10 @@
 // @flow
 
-import { LOAD_FEED } from '../utils/constants/actions';
+import { combineReducers } from 'redux';
+
+import { LOAD_FEED_SUCCESS } from '../utils/constants/actions';
 import type { Action } from '../utils/types';
+import type { GithubEvent } from '../utils/types/github';
 
 // static data
 import allEventsData from '../../test/data/github-bigquery.json';
@@ -16,9 +19,9 @@ const data = [
   { id: 3, title: 'brunolemos', data: userEventsData },
 ];
 
-export default (state:Array = data, { type, payload }: Action<Array>): Array => {
+export default (state:Array<GithubEvent> = data, { type, payload }: Action<Array<GithubEvent>>): Array<GithubEvent> => {
   switch (type) {
-    case LOAD_FEED: return [
+    case LOAD_FEED_SUCCESS: return [
       ...payload,
       ...state,
     ];

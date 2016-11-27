@@ -25,6 +25,7 @@ const Page = ({ setTheme, theme }: Props) => (
   <ThemeProvider theme={theme}>
     <Screen>
       <Footer>
+        <Button title="Auto" color={theme.base04} onPress={() => setTheme('auto')}/>
         <Button title="Light" color={theme.base04} onPress={() => setTheme('light')}/>
         <Button title="Dark" color={theme.base04} onPress={() => setTheme('dark')}/>
         <Button title="Dark Blue" color={theme.base04} onPress={() => setTheme('dark-blue')}/>

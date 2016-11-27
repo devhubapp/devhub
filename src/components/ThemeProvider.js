@@ -24,6 +24,7 @@ export default class extends React.Component {
   };
 
   props: {
+    children: React.Element<*>,
     theme: ThemeObject,
   };
 

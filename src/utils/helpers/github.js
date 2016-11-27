@@ -1,14 +1,14 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import type { GithubEvent, GithubIcon } from '../types/github';
+import type { GithubEventType, GithubIcon } from '../types/github';
 
 type GithubEventPayload = {
   action?: string,
   ref_type?: string,
 };
 
-export function getEventIcon(event: GithubEvent, payload: GithubEventPayload = {}): GithubIcon {
+export function getEventIcon(event: GithubEventType, payload: GithubEventPayload = {}): GithubIcon {
   switch (event) {
     case 'CommitCommentEvent': return 'comment-discussion'; // git-commit
     case 'CreateEvent':
@@ -54,7 +54,7 @@ export function getEventIcon(event: GithubEvent, payload: GithubEventPayload = {
   }
 }
 
-export function getEventText(event: GithubEvent, payload: GithubEventPayload = {}): GithubIcon {
+export function getEventText(event: GithubEventType, payload: GithubEventPayload = {}): GithubIcon {
   switch (event) {
     case 'CommitCommentEvent': return 'commented on a commit';
     case 'CreateEvent':

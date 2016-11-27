@@ -1,6 +1,9 @@
 // @flow
 
-import type { SET_THEME } from './actions';
+export * from './actions';
+export * from './github';
+
+import type { GithubEvent } from './github';
 
 export type Theme = 'auto' | 'light' | 'dark' | 'dark-blue';
 
@@ -23,19 +26,11 @@ export type ThemeObject = {
   base0F: ?string,
 };
 
-export type ActionType =
-  | SET_THEME
-;
-
-export type Action<T> = {
-  type: ActionType,
-  payload: T,
-};
-
 export type Config = {
   theme: Theme,
 };
 
 export type State = {
   config: Config,
+  feed: Array<Array<GithubEvent>>,
 };
