@@ -6,21 +6,34 @@ import { connect } from 'react-redux';
 import Columns from '../components/Columns';
 import Screen from '../components/Screen';
 import ThemeProvider from '../components/ThemeProvider';
+import { loadUserFeedRequest } from '../actions';
 import { loadTheme } from '../reducers/config';
 import type { State, ThemeObject } from '../utils/types';
 
-type Props = State & {
-  theme: ThemeObject,
-};
+class Page extends React.Component {
+  componentDidMount() {
+    this.props.loadUserFeedRequest('brunolemos');
+  }
 
-const Page = ({ feed, theme }: Props) => (
-  <ThemeProvider theme={theme}>
-    <Screen>
-      <Columns columns={feed} />
-    </Screen>
-  </ThemeProvider>
-);
+  props: State & {
+    theme: ThemeObject,
+    loadUserFeedRequest: Function,
+  };
+
+  render() {
+    const { feed, theme } = this.props;
+
+    return (
+      <ThemeProvider theme={theme}>
+        <Screen>
+          <Columns columns={feed} />
+        </Screen>
+      </ThemeProvider>
+    );
+  }
+}
 
 const mapStateToProps = ({ feed, config }: State) => ({ feed, theme: loadTheme(config) });
+const mapDispatchToProps = { loadUserFeedRequest };
 
-export default connect(mapStateToProps)(Page);
+export default connect(mapStateToProps, mapDispatchToProps)(Page);

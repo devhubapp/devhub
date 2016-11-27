@@ -1,24 +1,33 @@
 // @flow
 
-import { put, takeEvery } from 'redux-saga';
+import { takeEvery } from 'redux-saga';
+import { call, put } from 'redux-saga/effects';
+
+import { LOAD_USER_FEED_REQUEST } from '../utils/constants/actions';
 
 import {
-  LOAD_FEED_REQUEST,
-} from '../utils/constants/actions';
+  loadUserFeedSuccess,
+  loadUserFeedFailure,
+} from '../actions';
 
-import { loadFeedRequest } from '../actions';
+import github from '../api/github';
 
-export function* loadFeed(): Generator<*, *, *> {
-  yield put(loadFeedRequest())
+export function* loadUserFeed({ payload: { username } = {} }: Object): Generator<*, *, *> {
+  try {
+    const { data, meta } = yield call(github.activity.getEventsReceived, { username });
+    yield put(loadUserFeedSuccess(username, data, meta))
+  } catch (error) {
+    yield put(loadUserFeedFailure(error))
+  }
 }
 
 // Our watcher Saga: spawn a new incrementAsync task on each INCREMENT_ASYNC
-export function* watchLoadFeed(): Generator<*, *, *> {
-  yield takeEvery(LOAD_FEED_REQUEST, loadFeed)
+export function* watchloadUserFeed(): Generator<*, *, *> {
+  yield takeEvery(LOAD_USER_FEED_REQUEST, loadUserFeed)
 }
 
 export default function* (): Generator<*, *, *> {
   return yield [
-    watchLoadFeed
+    watchloadUserFeed()
   ];
 }

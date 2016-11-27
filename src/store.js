@@ -26,7 +26,6 @@ const store = createStoreWithNavigation(
 
 sagaMiddleware.run(sagas);
 
-// TODO: Don't ignore feed
-persistStore(store, { storage: AsyncStorage, whitelist: ['config'] });
+persistStore(store, { storage: AsyncStorage, blacklist: ['navigation'] });
 
 export default store;

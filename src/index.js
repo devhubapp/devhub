@@ -17,16 +17,3 @@ export default () => (
     </NavigationProvider>
   </Provider>
 );
-
-// import GitHubAPI from 'github';
-//
-// const github = new GitHubAPI();
-//
-// (async () => {
-//   try {
-//     const result = await github.activity.getEventsReceived({ username: 'brunolemos' });
-//     console.log(result);
-//   } catch(e) {
-//     console.log('Error', e);
-//   }
-// })();

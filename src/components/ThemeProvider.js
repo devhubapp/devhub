@@ -19,12 +19,8 @@ export default class extends React.Component {
     theme: this.props.theme || this.context.theme,
   });
 
-  children: {
-    theme: ThemeObject,
-  };
-
   props: {
-    children: React.Element<*>,
+    children?: ?React.Element<*>,
     theme: ThemeObject,
   };
 
