@@ -23,7 +23,74 @@ export type User = {
   received_events_url?: string, // https://api.github.com/users/richelbilderbeek/received_events
 };
 
-export type Organization = {
+export type Comment = {
+  id: string,
+  commit_id: string, // 6ef64f902613c73251da32d1bc9eb236f38798cc
+  user: User,
+  body: string,
+  position?: ?number,
+  line?: ?number,
+  path?: ?number,
+  reactions?: Array<Reaction>,
+  created_at: string, // 2016-11-24T16:00:16Z
+  updated_at: string, // 2016-11-24T16:00:16Z
+  html_url: string, // https://github.com/richelbilderbeek/pbdmms/commit/6ef64f902613c73251da32d1bc9eb236f38798cc#commitcomment-19954756
+  url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
+};
+
+export type Label = {
+  id: number,
+  url: string, // "https://api.github.com/repos/hasadna/Open-Knesset/labels/4%20-%20Prioritized",
+  name: string,
+  color: string, // CCCCCC
+  'default': boolean,
+  url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
+};
+
+export type Milestone = {
+  id: number, // 1165557
+  number: number, // 5
+  title: string, // 30
+  description: string, // Knesset 30 - future issues / will be fixed later
+  creator: User,
+  open_issues: number, // 17
+  closed_issues: number, // 1
+  state: 'open' | 'closed', // open
+  created_at: string, // 2015-06-15T18:46:59Z
+  updated_at: string, // 2016-05-23T18:01:44Z
+  due_on: string, // 2035-04-30T21:00:00Z
+  closed_at: ?string, // null
+
+  html_url: string, // https://github.com/hasadna/Open-Knesset/milestones/30
+  url: string, // https://api.github.com/repos/hasadna/Open-Knesset/milestones/5
+  labels_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/milestones/5/labels
+};
+
+export type Issue = {
+  id: string,
+  user: User,
+  assignee: User,
+  assignees: Array<User>,
+  number: number,
+  body: string,
+  title: string,
+  labels: Array<Label>,
+  state: 'open' | 'closed',
+  locked: boolean,
+  milestone: Milestone,
+  comments: number,
+  created_at: string, // 2016-11-24T16:00:16Z
+  updated_at: string, // 2016-11-24T16:00:16Z
+
+  html_url: string, // https://github.com/hasadna/Open-Knesset/issues/345
+  url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345
+  repository_url: string, // https://api.github.com/repos/hasadna/Open-Knesset
+  labels_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345/labels{/name}
+  comments_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345/comments
+  events_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345/events
+};
+
+export type Org = {
   id: number | string,
   login: string,
   avatar_url: string,
@@ -32,9 +99,56 @@ export type Organization = {
   url: string, // https://api.github.com/orgs/DefinitelyTyped
 };
 
-export type Repository = {
+export type PullRequest = {
+  id: number, // 95201658
+  number: number, // 2
+  state: 'open' | 'closed', // closed
+  locked: boolean, // false
+  title: string, // ok
+  user: User,
+  body: string, //
+  created_at: string, // 2016-11-24T15:59:50Z
+  updated_at: string, // 2016-11-24T16:00:02Z
+  closed_at: ?string, // 2016-11-24T16:00:02Z
+  merged_at: ?string, // 2016-11-24T16:00:02Z
+  merge_commit_sha: ?string, // e94fd3c0ed8b1fe095acad353ef27c43dfd7ce9b
+  assignee: ?User, // null
+  assignees: ?Array<User>, // []
+  milestone: ?Milestone, // null
+  head: Object, // Object
+  base: Object, // Object
+  _links: {
+    [key: string]: {
+      href: string,
+    },
+  },
+  merged: boolean, // true
+  mergeable: boolean, // null
+  mergeable_state: string, // unknown
+  merged_by: User, // User
+  comments: number, // 0
+  review_comments: number, // 0
+  commits: number, // 2
+  additions: number, // 4
+  deletions: number, // 4
+  changed_files: number, // 1
+
+  html_url: string, // https://github.com/billy0920/hotsite/pull/2
+  url: string, // https://api.github.com/repos/billy0920/hotsite/pulls/2
+  diff_url: string, // https://github.com/billy0920/hotsite/pull/2.diff
+  patch_url: string, // https://github.com/billy0920/hotsite/pull/2.patch
+  issue_url: string, // https://api.github.com/repos/billy0920/hotsite/issues/2
+  commits_url: string, // https://api.github.com/repos/billy0920/hotsite/pulls/2/commits
+  review_comments_url: string, // https://api.github.com/repos/billy0920/hotsite/pulls/2/comments
+  review_comment_url: string, // https://api.github.com/repos/billy0920/hotsite/pulls/comments{/number}
+  comments_url: string, // https://api.github.com/repos/billy0920/hotsite/issues/2/comments
+  statuses_url: string, // https://api.github.com/repos/billy0920/hotsite/statuses/b8c4838ea4fd5a0153d422ef5c158493fd57254d
+};
+
+export type Repo = {
   id: number | string,
   name: string,
+  full_name?: string,
 
   // api
   url: string, // https://api.github.com/repos/facebook/react
@@ -53,21 +167,6 @@ export type Reaction = {
   url: string, // 'https://api.github.com/repos/octocat/Hello-World/comments/1/reactions'
 };
 
-export type Comment = {
-  id: string,
-  commit_id: string, // 6ef64f902613c73251da32d1bc9eb236f38798cc
-  user: User,
-  body: string,
-  position?: ?number,
-  line?: ?number,
-  path?: ?number,
-  reactions?: Array<Reaction>,
-  created_at: string, // 2016-11-24T16:00:16Z
-  updated_at: string, // 2016-11-24T16:00:16Z
-  html_url: string, // https://github.com/richelbilderbeek/pbdmms/commit/6ef64f902613c73251da32d1bc9eb236f38798cc#commitcomment-19954756
-  url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
-};
-
 /**
  * Triggered when a commit comment is created.
  * https://developer.github.com/v3/repos/comments/#list-commit-comments-for-a-repository
@@ -76,8 +175,8 @@ export type CommitCommentEvent = {
   id: string,
   type: 'CommitCommentEvent',
   actor: User,
-  org?: Organization,
-  repo: Repository,
+  org?: Org,
+  repo: Repo,
   payload: {
     comment: Comment,
   },
@@ -95,8 +194,8 @@ export type CreateEvent = {
   id: string,
   type: 'CreateEvent',
   actor: User,
-  org?: Organization,
-  repo: Repository,
+  org?: Org,
+  repo: Repo,
   payload: {
     ref: ?string, // The git ref (or null if only a repository was created).
     ref_type: 'repository' | 'branch' | 'tag', // The object that was created.
@@ -116,8 +215,8 @@ export type DeleteEvent = {
   id: string,
   type: 'CreateEvent',
   actor: User,
-  org?: Organization,
-  repo: Repository,
+  org?: Org,
+  repo: Repo,
   payload: {
     ref: string, // 	The full git ref.
     ref_type: 'branch' | 'tag', // The object that was deleted.
@@ -219,8 +318,7 @@ export type PullRequestEvent = {
       | 'reopened'
   ,
   number: number,
-  pull_request: Object,
-  repository: Object,
+  pull_request: PullRequest,
   sender: Object,
 };
 
@@ -229,7 +327,7 @@ export type PullRequestEvent = {
  */
 export type PullRequestReviewEvent = {
   action: 'submitted',
-  pull_request: Object,
+  pull_request: PullRequest,
   review: Object,
 };
 
@@ -241,7 +339,7 @@ export type PullRequestReviewEvent = {
 export type PullRequestReviewCommentEvent = {
   action: 'created' | 'edited' | 'deleted',
   changes: Object,
-  pull_request: Object,
+  pull_request: PullRequest,
   comment: Object,
 };
 

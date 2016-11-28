@@ -3,10 +3,13 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled, { ThemeProvider } from 'styled-components/native';
+import TransparentTextOverlay from './TransparentTextOverlay';
 
 import Card from './Card';
+import Themable from './hoc/Themable';
 import ListView from './lists/ListView';
 import { contentPadding } from '../styles/variables';
+import type { ThemeObject } from '../utils/types';
 
 const Column = styled.View`
   background-color: ${({ theme }) => theme.base02};
@@ -42,17 +45,22 @@ type Props = {
   id: string,
   title: string,
   items: Array<Object>,
+  theme: ThemeObject,
   style?: ?Object,
 };
 
-export default ({ id, title, items, ...props }: Props) => (
+const Component = ({ id, title, items, theme, ...props }: Props): React.Element<*> => (
   <Column {...props}>
     {renderHeader(title)}
 
-    <ListView
-      data={items}
-      renderRow={renderRow}
-      initialListSize={5}
-    />
+    <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
+      <ListView
+        data={items}
+        renderRow={renderRow}
+        initialListSize={5}
+      />
+    </TransparentTextOverlay>
   </Column>
 );
+
+export default Themable(Component);

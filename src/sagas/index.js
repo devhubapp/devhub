@@ -1,8 +1,10 @@
 // @flow
 
+import { arrayOf, normalize } from 'normalizr';
 import { takeEvery } from 'redux-saga';
 import { call, put } from 'redux-saga/effects';
 
+import { EventSchema } from '../api/normalizr/schemas';
 import { LOAD_USER_FEED_REQUEST } from '../utils/constants/actions';
 
 import {
@@ -15,7 +17,8 @@ import github from '../api/github';
 export function* loadUserFeed({ payload: { username } = {} }: Object): Generator<*, *, *> {
   try {
     const { data, meta } = yield call(github.activity.getEventsReceived, { username });
-    yield put(loadUserFeedSuccess(username, data, meta))
+    const normalizedData = normalize(data, arrayOf(EventSchema));
+    yield put(loadUserFeedSuccess(username, normalizedData, meta))
   } catch (error) {
     yield put(loadUserFeedFailure(error))
   }

@@ -25,7 +25,7 @@ function getProps(from) {
 }
 
 type Props = {
-  children: React.Element,
+  children?: ?React.Element<*>,
   color: string,
   from: 'top' | 'bottom' | 'left' | 'right',
   size: number,

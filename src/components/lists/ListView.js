@@ -5,12 +5,12 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    const { data, rowHasChanged: _rowHasChanged } = props;
+    const { data, dataSource, rowHasChanged: _rowHasChanged } = props;
 
     this.state.data = data || [];
 
     const rowHasChanged = _rowHasChanged !== undefined ? _rowHasChanged : this.rowHasChanged;
-    const ds = new ListView.DataSource({ rowHasChanged });
+    const ds = dataSource || new ListView.DataSource({ rowHasChanged });
     this.state.dataSource = ds.cloneWithRows(this.state.data);
   }
 

@@ -30,8 +30,10 @@ export default (Component: React.Element<*>) => class extends React.Component {
   }
 
   render() {
-    const { theme } = this.state;
+    const { theme: stateTheme } = this.state;
+    const { theme: propsTheme, ...props } = this.props;
+    const { theme: contextTheme } = this.context;
 
-    return <Component theme={theme || this.context.theme} {...this.props} />
+    return <Component theme={stateTheme || propsTheme || contextTheme} {...props} />
   }
 }

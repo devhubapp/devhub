@@ -30,7 +30,22 @@ export type Config = {
   theme: Theme,
 };
 
+export type Column = {
+  id: string,
+  title: string,
+  data: Array<string>,
+};
+
 export type State = {
   config: Config,
-  feed: Array<Array<GithubEvent>>,
+  entities: {
+    comments: Object,
+    events: Object,
+    issues: Object,
+    orgs: Object,
+    pullRequests: Object,
+    repos: Object,
+    users: Object,
+  },
+  feed: Array<Column>,
 };

@@ -6,6 +6,11 @@ import moment from 'moment';
 import themes, { DARK_THEME, LIGHT_THEME } from '../../styles/themes';
 import type { Theme } from '../types';
 
+export * from './actions';
+export * from './color';
+export * from './github';
+export * from './icon-loader';
+
 export function isNight() {
   const hours = (new Date()).getHours();
   return hours >= 18 || hours <= 6;
