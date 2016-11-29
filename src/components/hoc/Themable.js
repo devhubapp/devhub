@@ -18,22 +18,22 @@ export default (Component: React.Element<*>) => class extends React.Component {
 
   unsubscribe: Function;
 
-  componentWillMount() {
+  componentWillMount = () => {
     const subscribe = this.context[CHANNEL];
     this.unsubscribe = subscribe(theme => {
       this.setState({ theme })
     });
-  }
+  };
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     if (typeof this.unsubscribe === 'function') this.unsubscribe();
-  }
+  };
 
-  render() {
+  render = () => {
     const { theme: stateTheme } = this.state;
     const { theme: propsTheme, ...props } = this.props;
     const { theme: contextTheme } = this.context;
 
     return <Component theme={stateTheme || propsTheme || contextTheme} {...props} />
-  }
+  };
 }

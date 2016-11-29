@@ -2,6 +2,24 @@
   "theme": "dark",
 
   "entities": {
+    "columns": {
+      "0": {
+        "order": 1,
+        "title": 1,
+        "subscriptions": {
+          "/users/u001/received_events": true,
+          "USER_RECEIVED_EVENTS": {
+            "username": "u001",
+            "filters": {
+              "exclude": "xxx"
+            }
+          }
+        },
+        "events": ["e001"],
+        "createdAt": 1480289494283,
+        "updatedAt": 1480289494283
+      }
+    },
     "comments": {
       "c001": {
         "id": "c001",
@@ -98,15 +116,6 @@
         "events": ["e001"],
         "eventsReceived": ["e002"]
       }
-    }
-  },
-  "columns": {
-    "0": {
-      "order": 1,
-      "title": 1,
-      "events": ["e001"],
-      "createdAt": 1480289494283,
-      "updatedAt": 1480289494283
     }
   }
 }

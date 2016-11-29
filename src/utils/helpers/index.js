@@ -11,12 +11,17 @@ export * from './color';
 export * from './github';
 export * from './icon-loader';
 
+export function guid() {
+  const str4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); // eslint-disable-line no-bitwise, max-len
+  return (`${str4() + str4()}-${str4()}-${str4()}-${str4()}-${str4()}${str4()}${str4()}`);
+}
+
 export function isNight() {
   const hours = (new Date()).getHours();
   return hours >= 18 || hours <= 6;
 }
 
-export function loadTheme(theme: Theme) {
+export function loadTheme(theme: Theme): Object {
   if (theme && themes[theme]) return themes[theme];
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }

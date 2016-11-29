@@ -10,6 +10,8 @@ const getRepoFullNameFromUrl = (url: string): string => (
 
 export const CommentSchema = new Schema('comments', { idAttribute });
 
+export const ColumnSchema = new Schema('columns', { idAttribute });
+
 export const EventSchema = new Schema('events', { idAttribute });
 
 export const IssueSchema = new Schema('issues', {
@@ -42,6 +44,10 @@ CommentSchema.define({
   user: UserSchema,
 });
 
+ColumnSchema.define({
+  events: arrayOf(EventSchema),
+});
+
 EventSchema.define({
   actor: UserSchema,
   org: OrgSchema,
@@ -69,6 +75,7 @@ PullRequestSchema.define({
 
 export default {
   CommentSchema,
+  ColumnSchema,
   EventSchema,
   IssueSchema,
   OrgSchema,

@@ -1,16 +1,16 @@
 // @flow
 
-import type { ActionType } from '../types';
+import type { Action, ActionType } from '../types';
 
 /**
  * Create an action object
  *
  * Example:
- * action('LOGIN_REQUEST', { email, password })
+ * action('SET_THEME', 'dark')
  * produces
- * { type: 'LOGIN_REQUEST', payload: { email: '...', password: '...' } }
+ * { type: 'SET_THEME', payload: 'dark' }
  */
-export function action(type: ActionType, payload: any) {
+export function action<T>(type: ActionType, payload: T): Action<T> {
   return { type, payload };
 }
 

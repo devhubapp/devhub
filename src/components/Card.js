@@ -3,10 +3,11 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled, { ThemeProvider } from 'styled-components/native';
+import styled from 'styled-components/native';
 import gravatar from 'gravatar';
 
 import Avatar from './Avatar';
+import StarButton from './buttons/StartButton';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
 import { contentPadding, mutedTextOpacity } from '../styles/variables';
@@ -132,19 +133,6 @@ const ScrollableContentContainer = ({ contentContainerStyle, style, ...props }) 
 
 const RepositoryContentContainer = styled(ScrollableContentContainer)`
   flex-direction: row;
-`;
-
-const RepositoryStarButton = styled.TouchableOpacity`
-  align-self: stretch;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  padding-horizontal: ${contentPadding};
-`;
-
-const RepositoryStarIcon = styled(Icon)`
-  font-size: 16;
-  color: ${({ theme }) => theme.star};
 `;
 
 const CardIcon = styled(Icon)`
@@ -376,7 +364,7 @@ export default class extends React.Component {
   };
 
   renderRepositoryRow = (type, {
-    name, forcePushed, pushed, fork,
+    name, forcePushed, pushed, isFork, isOrg,
     narrow,
   } = {}) => {
     const orgName = (name || '').split('/')[0];
@@ -385,10 +373,16 @@ export default class extends React.Component {
     if (!repoName) return null;
 
     const avatar_url = orgName ? `https://github.com/${orgName}.png` : '';
-    const icon = (() => {
+
+    const ownerIcon = (() => {
+      if (isOrg) return 'organization';
+      return 'person';
+    })();
+
+    const repoicon = (() => {
       if (forcePushed) return 'repo-force-push';
       if (pushed) return 'repo-push';
-      if (fork) return 'repo-forked';
+      if (isFork) return 'repo-forked';
       return 'repo';
     })();
 
@@ -402,17 +396,14 @@ export default class extends React.Component {
           <HighlightContainerRow1>
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
-                <Text muted>
-                  <Icon name={icon}/>&nbsp;
-                  {orgName && `${orgName}/`}
-                </Text>
+                <Text muted><Icon name={repoicon}/>&nbsp;</Text>
+                {orgName && <Text muted>{orgName}/</Text>}
+
                 <RepositoryName>{repoName}</RepositoryName>
               </RepositoryContentContainer>
             </TransparentTextOverlay>
 
-            <RepositoryStarButton>
-              <RepositoryStarIcon name="star"/>
-            </RepositoryStarButton>
+            <StarButton />
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
@@ -495,7 +486,8 @@ export default class extends React.Component {
   };
 
   render() {
-    const { event: { type, payload = {}, actor = {}, repo = {}, created_at }, ...props } = this.props;
+    const { event, ...props } = this.props;
+    const { type, payload = {}, actor = {}, repo = {}, org = {}, created_at } = event;
 
     const dateText = getDateSmallText(created_at, '•');
 
@@ -528,6 +520,7 @@ export default class extends React.Component {
             name: (repo || {}).name,
             pushed: type === 'PushEvent',
             forcePushed: type === 'PushEvent' && payload.forced,
+            isOrg: !!org.login,
           })
         }
 
@@ -542,7 +535,8 @@ export default class extends React.Component {
         {
           this.renderRepositoryRow(type, {
             name: (payload.forkee || {}).full_name,
-            fork: !!payload.forkee,
+            isFork: !!payload.forkee,
+            isOrg: !!org.login,
             narrow: true,
           })
         }

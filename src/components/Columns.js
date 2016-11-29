@@ -37,7 +37,7 @@ const StyledColumn = styled(Column)`
 
 const renderRow = (item, sectionID, rowID) => (
   <StyledView key={`column-${item.id}-${sectionID}-${rowID}`}>
-    <StyledColumn id={item.id} title={item.title} items={item.data} />
+    <StyledColumn id={item.id} title={item.title} items={item.events} />
   </StyledView>
 );
 

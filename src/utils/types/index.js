@@ -3,8 +3,6 @@
 export * from './actions';
 export * from './github';
 
-import type { GithubEvent } from './github';
-
 export type Theme = 'auto' | 'light' | 'dark' | 'dark-blue';
 
 export type ThemeObject = {
@@ -30,15 +28,22 @@ export type Config = {
   theme: Theme,
 };
 
+export type Normalized<T> = {
+  [key: string]: T
+};
+
+
 export type Column = {
   id: string,
   title: string,
-  data: Array<string>,
+  events: Array<string>,
+  subscriptions: Array<string>,
 };
 
 export type State = {
   config: Config,
   entities: {
+    columns: Normalized<Column>,
     comments: Object,
     events: Object,
     issues: Object,
@@ -47,5 +52,5 @@ export type State = {
     repos: Object,
     users: Object,
   },
-  feed: Array<Column>,
+  columns: Array<Column>,
 };
