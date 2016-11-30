@@ -3,6 +3,7 @@
 
 import {
   CREATE_COLUMN,
+  DELETE_COLUMN,
   SET_THEME,
   STAR_REPO,
   UNSTAR_REPO,
@@ -16,6 +17,10 @@ import type { Column, Theme, ApiRequestPayload, ApiResponsePayload } from '../ut
 
 export const createColumn = (title: string, subscriptions: ?Array<string>) => (
   action(CREATE_COLUMN, ({ title, subscriptions }: Column))
+);
+
+export const deleteColumn = (id: string) => (
+  action(DELETE_COLUMN, ({ id }: Column))
 );
 
 export const setTheme = (theme: Theme) => action(SET_THEME, theme);

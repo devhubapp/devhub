@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 import TransparentTextOverlay from './TransparentTextOverlay';
@@ -8,7 +9,7 @@ import TransparentTextOverlay from './TransparentTextOverlay';
 import Card from './Card';
 import Themable from './hoc/Themable';
 import ListView from './lists/ListView';
-import { contentPadding } from '../styles/variables';
+import { contentPadding, mutedTextOpacity } from '../styles/variables';
 import type { ThemeObject } from '../utils/types';
 
 const Column = styled.View`
@@ -21,6 +22,9 @@ const StyledTextOverlay = styled(TransparentTextOverlay)`
 `;
 
 const Header = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   padding-horizontal: ${contentPadding};
   padding-vertical: ${contentPadding};
   border-width: 0;
@@ -33,6 +37,12 @@ const Title = styled.Text`
   color: ${({ theme }) => theme.base04};
 `;
 
+const HeaderButtonText = styled.Text`
+  font-size: 14;
+  color: ${({ theme }) => theme.base04};
+  opacity: ${mutedTextOpacity};
+`;
+
 @Themable
 export default class extends React.PureComponent {
   renderHeader = (title, icon = 'home') => (
@@ -40,7 +50,14 @@ export default class extends React.PureComponent {
       <Title>
         <Icon name={icon} size={20} />&nbsp;&nbsp;
         {title}
+
       </Title>
+
+      <View>
+        <TouchableOpacity onPress={() => this.props.actions.deleteColumn(this.props.id)}>
+          <HeaderButtonText><Icon name="trashcan" size={20} /></HeaderButtonText>
+        </TouchableOpacity>
+      </View>
     </Header>
   );
 
@@ -55,6 +72,7 @@ export default class extends React.PureComponent {
 
   props: {
     actions: {
+      deleteColumn: Function,
       starRepo: Function,
       unstarRepo: Function,
     },
