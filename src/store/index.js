@@ -1,4 +1,4 @@
-import createSagaMiddleware from 'redux-saga'
+import createSagaMiddleware from 'redux-saga';
 // import createMigration from 'redux-persist-migrate';
 import { AsyncStorage } from 'react-native';
 import { applyMiddleware, createStore } from 'redux'; // compose
@@ -29,8 +29,8 @@ const store = createStoreWithNavigation(
   composeEnhancers(
     applyMiddleware(sagaMiddleware),
     // migration,
-    autoRehydrate()
-  )
+    autoRehydrate(),
+  ),
 );
 
 sagaMiddleware.run(sagas);

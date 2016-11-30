@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListView, View } from 'react-native';
 
-export default class extends React.Component {
+export default class extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -31,6 +31,7 @@ export default class extends React.Component {
 
   props: {
     data: Array,
+    dataSource?: ?Object,
     rowHasChanged?: Function,
     style?: ?Object,
     contentContainerStyle?: ?Object,
@@ -54,6 +55,7 @@ export default class extends React.Component {
 
   render() {
     const { renderHeader, renderFooter, ...props } = this.props;
+    delete props.dataSource;
 
     return (
       <ListView

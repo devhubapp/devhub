@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled, { ThemeProvider } from 'styled-components/native';
+import styled from 'styled-components/native';
 import TransparentTextOverlay from './TransparentTextOverlay';
 
 import Card from './Card';
@@ -13,6 +13,11 @@ import type { ThemeObject } from '../utils/types';
 
 const Column = styled.View`
   background-color: ${({ theme }) => theme.base02};
+  border-radius: ${({ radius }) => radius || 0};
+`;
+
+const StyledTextOverlay = styled(TransparentTextOverlay)`
+  border-radius: ${({ radius }) => radius || 0};
 `;
 
 const Header = styled.View`
@@ -31,7 +36,7 @@ const Title = styled.Text`
 const renderHeader = (title, icon = 'home') => (
   <Header>
     <Title>
-      <Icon name={icon} size={20}/>&nbsp;&nbsp;
+      <Icon name={icon} size={20} />&nbsp;&nbsp;
       {title}
     </Title>
   </Header>
@@ -41,26 +46,32 @@ const renderRow = (item, sectionID, rowID) => (
   <Card key={`column-${sectionID}-${rowID}-card-${item.id}`} event={item} />
 );
 
-type Props = {
-  id: string,
-  title: string,
-  items: Array<Object>,
-  theme: ThemeObject,
-  style?: ?Object,
-};
+@Themable
+export default class extends React.PureComponent {
+  props: {
+    id: string,
+    title: string,
+    items: Array<Object>,
+    radius?: number,
+    style?: ?Object,
+    theme: ThemeObject,
+  };
 
-const Component = ({ id, title, items, theme, ...props }: Props): React.Element<*> => (
-  <Column {...props}>
-    {renderHeader(title)}
+  render() {
+    const { title, items, radius, theme, ...props } = this.props;
 
-    <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
-      <ListView
-        data={items}
-        renderRow={renderRow}
-        initialListSize={5}
-      />
-    </TransparentTextOverlay>
-  </Column>
-);
+    return (
+      <Column radius={radius} {...props}>
+        {renderHeader(title)}
 
-export default Themable(Component);
+        <StyledTextOverlay color={theme.base02} size={contentPadding} from="bottom" radius={radius}>
+          <ListView
+            data={items}
+            renderRow={renderRow}
+            initialListSize={5}
+          />
+        </StyledTextOverlay>
+      </Column>
+    );
+  }
+}

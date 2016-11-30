@@ -6,7 +6,11 @@
     "jest": true
   },
   "plugins": [
-    "flowtype"
+    "babel",
+    "flowtype",
+    "import",
+    "react",
+    "react-native"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -14,8 +18,20 @@
     },
     "sourceType": "module"
   },
+  "settings": {
+    "import/extensions": [".js", ".jsx", ".android.js", ".ios.js"]
+  },
   "rules": {
     "react/jsx-filename-extension": ["off"],
-    "no-case-declarations": ["off"]
+    "react/prefer-stateless-function": ["error", {
+      "ignorePureComponents": true
+    }],
+    "no-case-declarations": ["off"],
+    "arrow-parens": 0,
+    "babel/arrow-parens": 1,
+    "react-native/no-unused-styles": 2,
+    "react-native/split-platform-components": 2,
+    "react-native/no-inline-styles": 2,
+    "react-native/no-color-literals": 2
   }
 }

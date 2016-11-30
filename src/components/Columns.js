@@ -7,6 +7,7 @@ import { Dimensions } from 'react-native';
 import Column from './Column';
 import ListView from './lists/ListView';
 import { contentPadding } from '../styles/variables';
+import type { Column as ColumnType } from '../utils/types';
 
 const margin = 2;
 
@@ -32,30 +33,35 @@ const StyledColumn = styled(Column)`
   flex: 1;
   margin-horizontal: ${margin};
   margin-vertical: ${margin * 2};
-  border-radius: 4;
 `;
 
 const renderRow = (item, sectionID, rowID) => (
   <StyledView key={`column-${item.id}-${sectionID}-${rowID}`}>
-    <StyledColumn id={item.id} title={item.title} items={item.events} />
+    <StyledColumn id={item.id} title={item.title} items={item.events} radius={4} />
   </StyledView>
 );
 
-type Props = {
-  columns: Array<mixed>,
-}
+export default class extends React.PureComponent {
+  props: {
+    columns: Array<ColumnType>,
+  };
 
-export default ({ columns = [], ...props }: Props) => (
-  <StyledListView
-    data={columns}
-    renderRow={renderRow}
-    width={getWidth()}
-    loop={false}
-    removeClippedSubviews={false}
-    contentContainerStyle={{ marginHorizontal: contentPadding + margin }}
-    initialListSize={1}
-    horizontal
-    pagingEnabled
-    {...props}
-  />
-);
+  render() {
+    const { columns = [], ...props } = this.props;
+
+    return (
+      <StyledListView
+        data={columns}
+        renderRow={renderRow}
+        width={getWidth()}
+        loop={false}
+        removeClippedSubviews={false}
+        contentContainerStyle={{ marginHorizontal: contentPadding + margin }}
+        initialListSize={1}
+        horizontal
+        pagingEnabled
+        {...props}
+      />
+    );
+  }
+}

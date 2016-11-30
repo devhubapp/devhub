@@ -49,6 +49,7 @@ module.system=haste
 
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable
+esproposal.decorators=enable
 
 experimental.strict_type_args=true
 

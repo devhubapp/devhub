@@ -26,7 +26,7 @@ export function loadTheme(theme: Theme): Object {
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }
 
-export function getDateSmallText(date, separator = '•') {
+export function getDateSmallText(date) { // , separator = '•'
   if (!date) return '';
 
   const momentDate = moment(date);
@@ -42,14 +42,13 @@ export function getDateSmallText(date, separator = '•') {
   if (daysDiff < 1) {
     if (hoursDiff < 1) {
       if (minutesDiff < 1) return 'now';
-      return `${minutesDiff}m`
+      return `${minutesDiff}m`;
     }
 
-    
     return `${hoursDiff}h (${time})`;
   } else if (daysDiff <= 3) {
     return `${daysDiff}d (${time})`;
-  } else {
-    momentDate.format('MMM Do').toLowerCase();
   }
+
+  return momentDate.format('MMM Do').toLowerCase();
 }

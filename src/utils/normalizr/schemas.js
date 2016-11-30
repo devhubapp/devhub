@@ -4,9 +4,11 @@ import type { Issue, Org, PullRequest, Repo, User } from '../../utils/types';
 
 const idAttribute = (obj: { id: number | string }): string => obj.id.toString().toLowerCase();
 
+/* eslint-disable no-useless-escape */
 const getRepoFullNameFromUrl = (url: string): string => (
   (url.match(/(?:github.com\/repos\/)([a-zA-Z0-9\-\.\_]+\/[a-zA-Z0-9-\-\.\_]+[^\/]?)/i) || [])[1] || ''
 );
+/* eslint-enable no-useless-escape */
 
 export const CommentSchema = new Schema('comments', { idAttribute });
 

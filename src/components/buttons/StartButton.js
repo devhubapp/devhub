@@ -14,32 +14,39 @@ const RepositoryStarButton = styled.TouchableOpacity`
 const RepositoryStarIcon = styled(Icon)`
   margin-horizontal: ${contentPadding};
   font-size: 16;
-  color: ${({ starred, theme }) => starred ? theme.star : theme.base04 };
+  color: ${({ starred, theme }) => (starred ? theme.star : theme.base04)};
 `;
 
 export default class extends React.PureComponent {
-  props: {
-    onPress: Function,
-    starred?: boolean,
-    style?: Object,
+  state = {
+    starred: this.props.starred,
   };
 
-  state = {
-    starred: !!this.props.starred,
-  };
+  componentWillReceiveProps({ starred }) {
+    if (starred !== this.state.starred) {
+      this.setState({ starred });
+    }
+  }
 
   onPress = next => () => {
     this.setState({ starred: !this.state.starred });
-    if (typeof next === 'function') return next();
+    if (typeof next === 'function') next();
+  };
+
+  props: {
+    containerStyle?: Object,
+    onPress: Function,
+    starred: boolean,
+    style?: Object,
   };
 
   render() {
-    const { starred  } = this.state;
-    const { containerStyle, onPress, ...props  } = this.props;
+    const { starred } = this.state;
+    const { containerStyle, onPress, ...props } = this.props;
 
     return (
       <RepositoryStarButton style={containerStyle} onPress={this.onPress(onPress)}>
-        <RepositoryStarIcon name="star" starred={starred} {...props} />
+        <RepositoryStarIcon name="star" {...props} starred={starred} />
       </RepositoryStarButton>
     );
   }

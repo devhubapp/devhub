@@ -23,6 +23,19 @@ export type User = {
   received_events_url?: string, // https://api.github.com/users/richelbilderbeek/received_events
 };
 
+export type Reaction = {
+  total_count: number,
+  '+1': number,
+  '-1': number,
+  laugh: number,
+  confused: number,
+  heart: number,
+  hooray: number,
+
+  // api
+  url: string, // 'https://api.github.com/repos/octocat/Hello-World/comments/1/reactions'
+};
+
 export type Comment = {
   id: string,
   commit_id: string, // 6ef64f902613c73251da32d1bc9eb236f38798cc
@@ -154,19 +167,6 @@ export type Repo = {
   url: string, // https://api.github.com/repos/facebook/react
 };
 
-export type Reaction = {
-  total_count: number,
-  '+1': number,
-  '-1': number,
-  laugh: number,
-  confused: number,
-  heart: number,
-  hooray: number,
-
-  // api
-  url: string, // 'https://api.github.com/repos/octocat/Hello-World/comments/1/reactions'
-};
-
 /**
  * Triggered when a commit comment is created.
  * https://developer.github.com/v3/repos/comments/#list-commit-comments-for-a-repository
@@ -218,7 +218,7 @@ export type DeleteEvent = {
   org?: Org,
   repo: Repo,
   payload: {
-    ref: string, // 	The full git ref.
+    ref: string, // The full git ref.
     ref_type: 'branch' | 'tag', // The object that was deleted.
     pusher_type: 'user' | string,
   },

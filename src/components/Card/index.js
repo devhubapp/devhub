@@ -4,17 +4,16 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
-import gravatar from 'gravatar';
 
-import Avatar from './Avatar';
-import StarButton from './buttons/StartButton';
-import Themable from './hoc/Themable';
-import TransparentTextOverlay from './TransparentTextOverlay';
-import { contentPadding, mutedTextOpacity } from '../styles/variables';
-import { getDateSmallText } from '../utils/helpers/';
-import { getEventIcon, getEventText } from '../utils/helpers/github';
-import type { ThemeObject } from '../utils/types';
-import type { GithubEvent } from '../utils/types/github';
+import UserAvatar from './_UserAvatar';
+import StarButton from '../buttons/StartButton';
+import Themable from '../hoc/Themable';
+import TransparentTextOverlay from '../TransparentTextOverlay';
+import { contentPadding, mutedTextOpacity } from '../../styles/variables';
+import { getDateSmallText } from '../../utils/helpers';
+import { getEventIcon, getEventText } from '../../utils/helpers/github';
+import type { ThemeObject } from '../../utils/types';
+import type { GithubEvent } from '../../utils/types/github';
 
 const avatarWidth = 44;
 const innerContentPadding = contentPadding;
@@ -35,7 +34,7 @@ const Header = styled(HorizontalView)`
 `;
 
 const LeftColumn = styled.View`
-  align-self: ${({ center }) => center ? 'center' : 'auto'};
+  align-self: ${({ center }) => (center ? 'center' : 'auto')};
   align-items: flex-end;
   justify-content: flex-start;
   width: ${avatarWidth};
@@ -49,7 +48,7 @@ const MainColumn = styled.View`
 
 const MainColumnRowContent = styled(MainColumn)`
   flex-direction: row;
-  align-self: ${({ center }) => center ? 'center' : 'auto'};
+  align-self: ${({ center }) => (center ? 'center' : 'auto')};
 `;
 
 const HeaderRow = styled(HorizontalView)`
@@ -61,7 +60,7 @@ const Text = styled.Text`
   color: ${({ theme }) => theme.base04};
   line-height: 18;
   font-size: 14;
-  opacity: ${({ muted }) => muted ? mutedTextOpacity : 1};
+  opacity: ${({ muted }) => (muted ? mutedTextOpacity : 1)};
 `;
 
 const Timestamp = styled(Text)`
@@ -90,7 +89,7 @@ const Comment = styled(Text)`
 
 const ContentRow = styled(HorizontalView)`
   align-items: flex-start;
-  margin-top: ${({ narrow }) => narrow ? innerContentPadding / 3 : innerContentPadding};
+  margin-top: ${({ narrow }) => (narrow ? innerContentPadding / 3 : innerContentPadding)};
 `;
 
 const HighlightContainerBase = styled(HorizontalView)`
@@ -144,7 +143,7 @@ const CardIcon = styled(Icon)`
 `;
 
 @Themable
-export default class extends React.Component {
+export default class extends React.PureComponent {
   props: {
     event: GithubEvent,
     theme: ThemeObject,
@@ -162,19 +161,6 @@ export default class extends React.Component {
           {number}
         </CardItemId>
       </CardItemIdContainer>
-    );
-  };
-
-  renderUserAvatar = ({ avatar_url, email } = {}, size) => {
-    if (!avatar_url && !email) return null;
-
-    const _size = 100 * Math.max(1, Math.ceil(size / 100));
-    const uri = (avatar_url
-      ? avatar_url // transparency bug when using size attribute ?size=${_size}
-      : `https:${gravatar.url(email, { size: _size })}`).replace('??', '?');
-
-    return (
-      <Avatar size={size} source={{ uri }}/>
     );
   };
 
@@ -246,7 +232,9 @@ export default class extends React.Component {
 
     return (
       <ContentRow narrow>
-        <LeftColumn center>{this.renderUserAvatar(user, avatarWidth / 2)}</LeftColumn>
+        <LeftColumn center>
+          <UserAvatar url={user.avatar_url} size={avatarWidth / 2} />
+        </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
@@ -276,7 +264,9 @@ export default class extends React.Component {
 
     return (
       <ContentRow narrow>
-        <LeftColumn center>{this.renderUserAvatar(author, avatarWidth / 2)}</LeftColumn>
+        <LeftColumn center>
+          <UserAvatar url={author.avatar_url} size={avatarWidth / 2} />
+        </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
@@ -341,7 +331,9 @@ export default class extends React.Component {
 
     return (
       <ContentRow narrow>
-        <LeftColumn center>{this.renderUserAvatar(user || actor, avatarWidth / 2)}</LeftColumn>
+        <LeftColumn center>
+          <UserAvatar url={(user || actor).avatar_url} size={avatarWidth / 2} />
+        </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
@@ -364,7 +356,7 @@ export default class extends React.Component {
   };
 
   renderRepositoryRow = (type, {
-    name, forcePushed, pushed, isFork, isOrg,
+    name, forcePushed, pushed, isFork, isStarred,
     narrow,
   } = {}) => {
     const orgName = (name || '').split('/')[0];
@@ -372,12 +364,7 @@ export default class extends React.Component {
 
     if (!repoName) return null;
 
-    const avatar_url = orgName ? `https://github.com/${orgName}.png` : '';
-
-    const ownerIcon = (() => {
-      if (isOrg) return 'organization';
-      return 'person';
-    })();
+    const avatarUrl = orgName ? `https://github.com/${orgName}.png` : '';
 
     const repoicon = (() => {
       if (forcePushed) return 'repo-force-push';
@@ -390,7 +377,9 @@ export default class extends React.Component {
 
     return (
       <ContentRow narrow={narrow}>
-        <LeftColumn center>{this.renderUserAvatar({ avatar_url }, avatarWidth / 2)}</LeftColumn>
+        <LeftColumn center>
+          <UserAvatar url={avatarUrl} size={avatarWidth / 2} />
+        </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
@@ -403,7 +392,7 @@ export default class extends React.Component {
               </RepositoryContentContainer>
             </TransparentTextOverlay>
 
-            <StarButton />
+            <StarButton starred={isStarred} />
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
@@ -450,7 +439,9 @@ export default class extends React.Component {
 
     return (
       <ContentRow narrow>
-        <LeftColumn>{this.renderUserAvatar(member, avatarWidth / 2)}</LeftColumn>
+        <LeftColumn>
+          <UserAvatar url={member.avatar_url} size={avatarWidth / 2} />
+        </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
@@ -476,7 +467,9 @@ export default class extends React.Component {
 
     return (
       <ContentRow narrow>
-        <LeftColumn>{this.renderUserAvatar(actor, avatarWidth / 2)}</LeftColumn>
+        <LeftColumn>
+          <UserAvatar url={actor.avatar_url} size={avatarWidth / 2} />
+        </LeftColumn>
 
         <MainColumnRowContent center>
           <Comment numberOfLines={2}>{_body}</Comment>
@@ -494,7 +487,9 @@ export default class extends React.Component {
     return (
       <CardWrapper {...props}>
         <Header>
-          <LeftColumn>{this.renderUserAvatar(actor, avatarWidth)}</LeftColumn>
+          <LeftColumn>
+            <UserAvatar url={actor.avatar_url} size={avatarWidth} />
+          </LeftColumn>
 
           <MainColumn>
             <HeaderRow>
@@ -520,7 +515,7 @@ export default class extends React.Component {
             name: (repo || {}).name,
             pushed: type === 'PushEvent',
             forcePushed: type === 'PushEvent' && payload.forced,
-            isOrg: !!org.login,
+            isStarred: !!repo.isStarred,
           })
         }
 
@@ -533,10 +528,11 @@ export default class extends React.Component {
         }
 
         {
+          payload.forkee &&
           this.renderRepositoryRow(type, {
-            name: (payload.forkee || {}).full_name,
+            name: payload.forkee.full_name,
             isFork: !!payload.forkee,
-            isOrg: !!org.login,
+            isStarred: !!payload.forkee.isStarred,
             narrow: true,
           })
         }

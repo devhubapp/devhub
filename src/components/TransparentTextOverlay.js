@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import { fade } from '../utils/helpers/color';
 
 function getStyle(from, size) {
-  switch(from) {
+  switch (from) {
     case 'top': return { position: 'absolute', top: 0, left: 0, right: 0, height: size };
     case 'bottom': return { position: 'absolute', bottom: 0, left: 0, right: 0, height: size };
     case 'left': return { position: 'absolute', top: 0, bottom: 0, left: 0, width: size };
@@ -16,7 +16,7 @@ function getStyle(from, size) {
 }
 
 function getProps(from) {
-  switch(from) {
+  switch (from) {
     case 'top': return { start: [0, 1], end: [0, 0] };
     case 'bottom': return { start: [0, 0], end: [0, 1] };
     case 'left': return { start: [1, 0], end: [0, 0] };
@@ -27,12 +27,13 @@ function getProps(from) {
 type Props = {
   children?: ?React.Element<*>,
   color: string,
+  containerStyle?: ?Object,
   from: 'top' | 'bottom' | 'left' | 'right',
   size: number,
   style?: ?Object,
 };
 
-export default ({ children, color, from, size, style, ...props }: Props) => {
+export default ({ children, color, containerStyle, from, size, style, ...props }: Props) => {
   const GradientLayerOverlay = () => (
     <LinearGradient
       colors={[fade(color, 0), color]}
@@ -43,9 +44,9 @@ export default ({ children, color, from, size, style, ...props }: Props) => {
   );
 
   return (
-    <View style={{ flex: 1, alignSelf: 'stretch' }}>
+    <View style={[{ flex: 1, alignSelf: 'stretch' }, containerStyle]}>
       {children}
-      <GradientLayerOverlay />
+      <GradientLayerOverlay style={style} />
     </View>
   );
-}
+};

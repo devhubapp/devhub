@@ -5,14 +5,12 @@ import { CHANNEL } from 'styled-components/lib/models/ThemeProvider';
 
 import type { ThemeObject } from '../../utils/types';
 
-export default (Component: React.Element<*>) => class extends React.Component {
+export default Component => class extends React.PureComponent {
   static contextTypes = {
     [CHANNEL]: React.PropTypes.func,
   };
 
-  state = ({
-    theme: this.props.theme || this.context.theme,
-  }: {
+  state = ({}: {
     theme?: ?ThemeObject,
   });
 
@@ -20,8 +18,8 @@ export default (Component: React.Element<*>) => class extends React.Component {
 
   componentWillMount = () => {
     const subscribe = this.context[CHANNEL];
-    this.unsubscribe = subscribe(theme => {
-      this.setState({ theme })
+    this.unsubscribe = subscribe((theme) => {
+      this.setState({ theme });
     });
   };
 
@@ -30,10 +28,10 @@ export default (Component: React.Element<*>) => class extends React.Component {
   };
 
   render = () => {
-    const { theme: stateTheme } = this.state;
-    const { theme: propsTheme, ...props } = this.props;
-    const { theme: contextTheme } = this.context;
+    const { theme } = this.state;
 
-    return <Component theme={stateTheme || propsTheme || contextTheme} {...props} />
+    return (
+      <Component theme={theme} {...this.props} />
+    );
   };
-}
+};

@@ -52,5 +52,4 @@ export type State = {
     repos: Object,
     users: Object,
   },
-  columns: Array<Column>,
 };
