@@ -4,8 +4,8 @@
 import {
   CREATE_COLUMN,
   SET_THEME,
-  // STAR_REPO,
-  // UNSTAR_REPO,
+  STAR_REPO,
+  UNSTAR_REPO,
   LOAD_USER_FEED_REQUEST,
   LOAD_USER_FEED_SUCCESS,
   LOAD_USER_FEED_FAILURE,
@@ -19,8 +19,8 @@ export const createColumn = (title: string, subscriptions: ?Array<string>) => (
 );
 
 export const setTheme = (theme: Theme) => action(SET_THEME, theme);
-// export const starRepo = (repoFullName: string) => action(STAR_REPO, repoFullName);
-// export const unstarRepo = (repoFullName: string) => action(UNSTAR_REPO, repoFullName);
+export const starRepo = (repoFullName: string) => action(STAR_REPO, repoFullName);
+export const unstarRepo = (repoFullName: string) => action(UNSTAR_REPO, repoFullName);
 
 export const loadUserFeedRequest = (username: string) => (
   action(LOAD_USER_FEED_REQUEST, ({

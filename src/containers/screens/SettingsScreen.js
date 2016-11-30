@@ -5,10 +5,10 @@ import styled from 'styled-components/native';
 import { Button } from 'react-native';
 import { connect } from 'react-redux';
 
-import Themable from '../components/hoc/Themable';
-import Screen from '../components/Screen';
-import { setTheme as setThemeAction } from '../actions';
-import type { State, ThemeObject } from '../utils/types';
+import Themable from '../../components/hoc/Themable';
+import Screen from '../../components/Screen';
+import { setTheme as setThemeAction } from '../../actions';
+import type { State, ThemeObject } from '../../utils/types';
 
 const Footer = styled.View`
   flex: 1;

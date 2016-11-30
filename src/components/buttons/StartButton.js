@@ -29,15 +29,23 @@ export default class extends React.PureComponent {
   }
 
   onPress = next => () => {
-    this.setState({ starred: !this.state.starred });
-    if (typeof next === 'function') next();
+    const { starRepoFn, unstarRepoFn } = this.props;
+
+    const starred = !this.state.starred;
+    this.setState({ starred });
+
+    if (typeof next === 'function') next(starred);
+    if (starred && typeof starRepoFn === 'function') starRepoFn();
+    if (!starred && typeof unstarRepoFn === 'function') unstarRepoFn();
   };
 
   props: {
     containerStyle?: Object,
-    onPress: Function,
+    onPress?: Function,
+    starRepoFn: Function,
     starred: boolean,
     style?: Object,
+    unstarRepoFn: Function,
   };
 
   render() {

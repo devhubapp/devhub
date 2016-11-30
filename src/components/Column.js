@@ -33,27 +33,36 @@ const Title = styled.Text`
   color: ${({ theme }) => theme.base04};
 `;
 
-const renderHeader = (title, icon = 'home') => (
-  <Header>
-    <Title>
-      <Icon name={icon} size={20} />&nbsp;&nbsp;
-      {title}
-    </Title>
-  </Header>
-);
-
-const renderRow = (item, sectionID, rowID) => (
-  <Card key={`column-${sectionID}-${rowID}-card-${item.id}`} event={item} />
-);
-
 @Themable
 export default class extends React.PureComponent {
+  renderHeader = (title, icon = 'home') => (
+    <Header>
+      <Title>
+        <Icon name={icon} size={20} />&nbsp;&nbsp;
+        {title}
+      </Title>
+    </Header>
+  );
+
+  renderRow = (item, sectionID, rowID) => (
+    <Card
+      key={`column-${sectionID}-${rowID}-card-${item.id}`}
+      event={item}
+      starRepo={this.props.actions.starRepo}
+      unstarRepo={this.props.actions.unstarRepo}
+    />
+  );
+
   props: {
+    actions: {
+      starRepo: Function,
+      unstarRepo: Function,
+    },
     id: string,
-    title: string,
     items: Array<Object>,
     radius?: number,
     style?: ?Object,
+    title: string,
     theme: ThemeObject,
   };
 
@@ -62,12 +71,12 @@ export default class extends React.PureComponent {
 
     return (
       <Column radius={radius} {...props}>
-        {renderHeader(title)}
+        {this.renderHeader(title)}
 
         <StyledTextOverlay color={theme.base02} size={contentPadding} from="bottom" radius={radius}>
           <ListView
             data={items}
-            renderRow={renderRow}
+            renderRow={this.renderRow}
             initialListSize={5}
           />
         </StyledTextOverlay>

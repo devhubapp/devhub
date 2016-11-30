@@ -146,7 +146,9 @@ const CardIcon = styled(Icon)`
 export default class extends React.PureComponent {
   props: {
     event: GithubEvent,
+    starRepo: Function,
     theme: ThemeObject,
+    unstarRepo: Function,
   };
 
   renderItemId = (number, icon) => {
@@ -373,7 +375,7 @@ export default class extends React.PureComponent {
       return 'repo';
     })();
 
-    const { theme } = this.props;
+    const { starRepo, theme, unstarRepo } = this.props;
 
     return (
       <ContentRow narrow={narrow}>
@@ -392,7 +394,11 @@ export default class extends React.PureComponent {
               </RepositoryContentContainer>
             </TransparentTextOverlay>
 
-            <StarButton starred={isStarred} />
+            <StarButton
+              starred={isStarred}
+              starRepoFn={starRepo.bind(null, name)}
+              unstarRepoFn={unstarRepo.bind(null, name)}
+            />
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>

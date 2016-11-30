@@ -35,13 +35,19 @@ const StyledColumn = styled(Column)`
   margin-vertical: ${margin * 2};
 `;
 
-const renderRow = (item, sectionID, rowID) => (
-  <StyledView key={`column-${item.id}-${sectionID}-${rowID}`}>
-    <StyledColumn id={item.id} title={item.title} items={item.events} radius={4} />
-  </StyledView>
-);
-
 export default class extends React.PureComponent {
+  renderRow = (item, sectionID, rowID) => (
+    <StyledView key={`column-${item.id}-${sectionID}-${rowID}`}>
+      <StyledColumn
+        id={item.id}
+        title={item.title}
+        items={item.events}
+        radius={4}
+        actions={this.props.actions}
+      />
+    </StyledView>
+  );
+
   props: {
     columns: Array<ColumnType>,
   };
@@ -52,7 +58,7 @@ export default class extends React.PureComponent {
     return (
       <StyledListView
         data={columns}
-        renderRow={renderRow}
+        renderRow={this.renderRow}
         width={getWidth()}
         loop={false}
         removeClippedSubviews={false}
