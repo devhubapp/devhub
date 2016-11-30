@@ -4925,10 +4925,6 @@ redux-devtools-instrument@^1.3.1:
     lodash "^4.2.0"
     symbol-observable "^0.2.4"
 
-redux-persist-migrate@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/redux-persist-migrate/-/redux-persist-migrate-4.0.1.tgz#b15b6caef5613472af96a39237a7021eec819ab5"
-
 redux-persist@^4.0.0-beta1:
   version "4.0.0-beta1"
   resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-4.0.0-beta1.tgz#accaaab9f369a8420b60d16c4f2ca0ce1de96312"

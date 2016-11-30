@@ -25,7 +25,6 @@
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
     "redux-persist": "^4.0.0-beta1",
-    "redux-persist-migrate": "^4.0.1",
     "redux-saga": "^0.13.0",
     "remote-redux-devtools": "^0.5.4",
     "styled-components": "1.1.1",

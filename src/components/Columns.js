@@ -49,6 +49,7 @@ export default class extends React.PureComponent {
   );
 
   props: {
+    actions: Object<Function>,
     columns: Array<ColumnType>,
   };
 
