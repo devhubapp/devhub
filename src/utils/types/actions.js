@@ -28,6 +28,12 @@ export type Action<T> = {
   payload: T,
 };
 
+export type ActionCreator = Function;
+
+export type ActionCreators = {
+  [key: string]: ActionCreator,
+};
+
 export type ApiRequestPayload = {
   path: string,
   params: Object,

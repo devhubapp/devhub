@@ -8,6 +8,7 @@ import { AlertIOS } from 'react-native';
 import Themable from './hoc/Themable';
 
 const Column = styled.View`
+  flex: 1;
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.base02};
@@ -17,15 +18,10 @@ const Column = styled.View`
 const NewColumnButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
-  width: 50;
-  height: 50;
-  background-color: ${({ theme }) => theme.base03};
-  border-radius: 8;
 `;
 
-const NewColumnIcon = styled(Icon)`
+const NewColumnText = styled.Text`
   align-self: center;
-  margin-right: -6;
   text-align: center;
   font-size: 24;
   color: ${({ theme }) => theme.base05};
@@ -59,7 +55,10 @@ export default class extends React.PureComponent {
     return (
       <Column radius={radius} {...props}>
         <NewColumnButton onPress={this.onPress}>
-          <NewColumnIcon name="plus" />
+          <NewColumnText>
+            <Icon name="plus" size={40} />{'\n'}
+            add new column
+          </NewColumnText>
         </NewColumnButton>
       </Column>
     );

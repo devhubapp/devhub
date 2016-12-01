@@ -9,14 +9,15 @@ import UserAvatar from './_UserAvatar';
 import StarButton from '../buttons/StartButton';
 import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import { contentPadding, mutedTextOpacity } from '../../styles/variables';
+import { contentPadding } from '../../styles/variables';
 import { getDateSmallText } from '../../utils/helpers';
 import { getEventIcon, getEventText } from '../../utils/helpers/github';
 import type { ThemeObject } from '../../utils/types';
 import type { GithubEvent } from '../../utils/types/github';
 
-const avatarWidth = 44;
-const innerContentPadding = contentPadding;
+export const avatarWidth = 44;
+export const innerContentPadding = contentPadding;
+export const iconRightMargin = contentPadding - 2;
 
 const CardWrapper = styled.View`
   padding: ${contentPadding};
@@ -57,15 +58,13 @@ const HeaderRow = styled(HorizontalView)`
 `;
 
 const Text = styled.Text`
-  color: ${({ theme }) => theme.base04};
+  color: ${({ muted, theme }) => (muted ? theme.base05 : theme.base04)};
   line-height: 18;
   font-size: 14;
-  opacity: ${({ muted }) => (muted ? mutedTextOpacity : 1)};
 `;
 
 const Timestamp = styled(Text)`
   font-size: 12;
-  opacity: ${mutedTextOpacity};
 `;
 
 const Username = styled(Text)`
@@ -136,10 +135,9 @@ const RepositoryContentContainer = styled(ScrollableContentContainer)`
 
 const CardIcon = styled(Icon)`
   align-self: flex-start;
-  margin-right: ${contentPadding - 2};
+  margin-right: ${iconRightMargin};
   font-size: 20;
-  color: ${({ theme }) => theme.base04};
-  opacity: 0.4;
+  color: ${({ theme }) => theme.base05};
 `;
 
 @Themable
@@ -504,7 +502,7 @@ export default class extends React.PureComponent {
                   <Username>{actor.display_login || actor.login}</Username>
                   {
                     dateText &&
-                    <Timestamp> • {dateText}</Timestamp>
+                    <Timestamp muted> • {dateText}</Timestamp>
                   }
                 </HorizontalView>
 

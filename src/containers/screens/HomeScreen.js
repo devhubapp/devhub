@@ -11,7 +11,7 @@ import Columns from '../../components/Columns';
 import Screen from '../../components/Screen';
 import { ColumnSchema } from '../../utils/normalizr/schemas';
 import * as actionCreators from '../../actions';
-import type { Column, State } from '../../utils/types';
+import type { ActionCreators, Column, State } from '../../utils/types';
 
 let previousIds = [];
 let previousEntities = {};
@@ -25,8 +25,9 @@ const denormalizeWithCache = (ids = [], entities = {}, ...args) => {
   return previousDenormalizedData;
 };
 
-const mapStateToProps = ({ entities }: State) => ({
+const mapStateToProps = ({ app, entities }: State) => ({
   columns: denormalizeWithCache(Object.keys(entities.columns), entities, arrayOf(ColumnSchema)),
+  rehydrated: app.rehydrated,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -36,16 +37,16 @@ const mapDispatchToProps = dispatch => ({
 @connect(mapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
   props: {
-    actions: Object<Function>,
+    actions: ActionCreators,
     columns: Array<Column>,
   };
 
   render() {
-    const { actions, columns } = this.props;
+    const { actions, columns, rehydrated } = this.props;
 
     return (
       <Screen>
-        <Columns columns={columns} actions={actions} />
+        {rehydrated ? <Columns columns={columns} actions={actions} /> : null}
       </Screen>
     );
   }

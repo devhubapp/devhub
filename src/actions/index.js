@@ -15,7 +15,7 @@ import {
 import { action, errorAction } from '../utils/helpers/actions';
 import type { Column, Theme, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
 
-export const createColumn = (title: string, subscriptions: ?Array<string>) => (
+export const createColumn = (title: string, subscriptions: Array<string>) => (
   action(CREATE_COLUMN, ({ title, subscriptions }: Column))
 );
 

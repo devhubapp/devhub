@@ -1,5 +1,5 @@
 import base from './base';
-import { mutedTextOpacity } from '../variables';
+import { mutedOpacity } from '../variables';
 import { fade } from '../../utils/helpers/color';
 
 export const base00 = '#111111'; // page background
@@ -7,7 +7,7 @@ export const base01 = '#111111'; // card background -1
 export const base02 = '#1c1c1c'; // card background 0
 export const base03 = '#353535'; // card background +1
 export const base04 = '#dddddd'; // color (to mute, use opacity 0.9 = #666666, #888888)
-export const base05 = fade(base04, mutedTextOpacity); // muted color
+export const base05 = fade(base04, mutedOpacity); // muted color
 export const base06 = undefined; //
 export const base07 = base.brand; // brand 1
 export const base08 = base.brandSecondary; // brand 2

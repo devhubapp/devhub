@@ -29,8 +29,8 @@ const renderIcon = (title: string,
 
   return (
     <TabItemContainer>
-      <Icon name={iconName} size={28} color={color} />
-      <TabItemText color={color} numberOfLines={1}>{title}</TabItemText>
+      <Icon name={iconName} size={24} color={color} />
+      <TabItemText color={color} numberOfLines={1}>{title.toLowerCase()}</TabItemText>
     </TabItemContainer>
   );
 };
@@ -61,7 +61,7 @@ export default class extends React.PureComponent {
         <TabNavigationItem
           id="home"
           renderIcon={isSelected => (
-            renderIcon('Feed', 'mark-github', isSelected, theme.base07, theme.base05)
+            renderIcon('Feed', 'home', isSelected, theme.base08, theme.base05)
           )}
         >
           <StackNavigation initialRoute={Router.getRoute('home')} />
@@ -70,7 +70,7 @@ export default class extends React.PureComponent {
         <TabNavigationItem
           id="trending"
           renderIcon={isSelected => (
-            renderIcon('Trending', 'flame', isSelected, theme.base08, theme.base05)
+            renderIcon('Trending', 'pulse', isSelected, theme.base08, theme.base05)
           )}
         >
           <StackNavigation initialRoute={Router.getRoute('view')} />
@@ -79,7 +79,7 @@ export default class extends React.PureComponent {
         <TabNavigationItem
           id="notifications"
           renderIcon={isSelected => (
-            renderIcon('Notifications', 'globe', isSelected, theme.base08, theme.base05)
+            renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
           )}
         >
           <StackNavigation initialRoute={Router.getRoute('view')} />
@@ -88,7 +88,7 @@ export default class extends React.PureComponent {
         <TabNavigationItem
           id="settings"
           renderIcon={isSelected => (
-            renderIcon('Settings', 'gear', isSelected, theme.base08, theme.base05)
+            renderIcon('Me', 'octoface', isSelected, theme.base08, theme.base05)
           )}
         >
           <StackNavigation initialRoute={Router.getRoute('settings')} />

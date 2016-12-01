@@ -26,6 +26,15 @@ export function loadTheme(theme: Theme): Object {
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }
 
+export function getDateFromNow(date) {
+  if (!date) return '';
+
+  const momentDate = moment(date);
+  if (!momentDate.isValid()) return '';
+
+  return momentDate.fromNow();
+}
+
 export function getDateSmallText(date) { // , separator = '•'
   if (!date) return '';
 
@@ -33,6 +42,10 @@ export function getDateSmallText(date) { // , separator = '•'
   if (!momentDate.isValid()) return '';
 
   const momentNow = moment(new Date());
+
+  // // TODO: Remove this
+  // return momentNow.diff(momentDate, 'seconds');
+
   const daysDiff = momentNow.diff(momentDate, 'days');
   const hoursDiff = momentNow.diff(momentDate, 'hours');
   const minutesDiff = momentNow.diff(momentDate, 'minutes');

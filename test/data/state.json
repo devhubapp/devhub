@@ -1,23 +1,21 @@
 {
   "theme": "dark",
-
+  "app": {
+    "rehydrated": false
+  },
   "entities": {
     "columns": {
       "0": {
         "order": 1,
         "title": 1,
-        "subscriptions": {
-          "/users/u001/received_events": true,
-          "USER_RECEIVED_EVENTS": {
-            "username": "u001",
-            "filters": {
-              "exclude": "xxx"
-            }
-          }
-        },
+        "subscriptions": ["/users/u001/received_events"],
         "events": ["e001"],
+        "filters": {
+          "exclude": "/starred/i"
+        },
         "createdAt": 1480289494283,
-        "updatedAt": 1480289494283
+        "updatedAt": 1480289494283,
+        "loading": false
       }
     },
     "comments": {
@@ -52,7 +50,7 @@
         "id": "i001",
         "user": "u001",
         "assignee": "u001",
-        "assignees": ["u001", "u002"],
+        "assignees": ["u001","u002"],
         "number": 123,
         "body": "Lorem ipsum",
         "title": "",
@@ -81,7 +79,7 @@
         "user": "u001",
         "merged_by": "u001",
         "assignee": "u001",
-        "assignees": ["u001", "u002"],
+        "assignees": ["u001","u002"],
         "number": 123,
         "title": "",
         "body": "Lorem ipsum",
@@ -106,6 +104,13 @@
         "id": "10270250",
         "name": "facebook/react",
         "events": ["e001"]
+      }
+    },
+    "subscriptions": {
+      "/users/u001/received_events": {
+        "id": "/users/u001/received_events",
+        "type": "USER_RECEIVED_EVENTS",
+        "payload": "u001"
       }
     },
     "users": {

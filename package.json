@@ -20,6 +20,7 @@
     "normalizr": "^2.2.1",
     "react": "^15.4.1",
     "react-native": "^0.38.0",
+    "react-native-blur": "^1.2.0",
     "react-native-linear-gradient": "^1.5.15",
     "react-native-vector-icons": "^3.0.0",
     "react-redux": "^4.4.6",
