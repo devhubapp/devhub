@@ -5,6 +5,7 @@ import * as actions from '../constants/actions';
 
 export type CREATE_COLUMN = typeof actions.CREATE_COLUMN;
 export type UPDATE_COLUMN = typeof actions.UPDATE_COLUMN;
+export type UPDATE_ALL_COLUMNS_SUBSCRIPTIONS = typeof actions.UPDATE_ALL_COLUMNS_SUBSCRIPTIONS;
 export type UPDATE_COLUMN_SUBSCRIPTIONS = typeof actions.UPDATE_COLUMN_SUBSCRIPTIONS;
 export type DELETE_COLUMN = typeof actions.DELETE_COLUMN;
 export type CREATE_SUBSCRIPTION = typeof actions.CREATE_SUBSCRIPTION;
@@ -20,6 +21,7 @@ export type LOAD_SUBSCRIPTION_DATA_FAILURE = typeof actions.LOAD_SUBSCRIPTION_DA
 export type ActionType =
   | typeof actions.CREATE_COLUMN
   | typeof actions.UPDATE_COLUMN
+  | typeof actions.UPDATE_ALL_COLUMNS_SUBSCRIPTIONS
   | typeof actions.UPDATE_COLUMN_SUBSCRIPTIONS
   | typeof actions.DELETE_COLUMN
   | typeof actions.CREATE_SUBSCRIPTION

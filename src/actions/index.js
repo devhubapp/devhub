@@ -4,6 +4,7 @@
 import {
   CREATE_COLUMN,
   DELETE_COLUMN,
+  UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
   UPDATE_COLUMN_SUBSCRIPTIONS,
   CREATE_SUBSCRIPTION,
   DELETE_SUBSCRIPTION,
@@ -46,6 +47,8 @@ export const createSubscription = (
 export const deleteSubscription = (id: string) => (
   action(DELETE_SUBSCRIPTION, ({ id }: Subscription))
 );
+
+export const updateAllColumnsSubscriptions = () => action(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS);
 
 export const updateColumnSubscriptions = (id: string) => (
   action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ id }: Subscription))
