@@ -16,6 +16,7 @@ import type { ActionCreators, Column, State } from '../../utils/types';
 let previousIds = [];
 let previousEntities = {};
 let previousDenormalizedData = [];
+// TODO: Use reselect
 const denormalizeWithCache = (ids = [], entities = {}, ...args) => {
   const hasChanged = !(isEqual(ids, previousIds) && isEqual(entities, previousEntities));
   previousIds = ids;
@@ -39,6 +40,7 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     columns: Array<Column>,
+    rehydrated: boolean,
   };
 
   render() {

@@ -1,26 +1,36 @@
 // @flow
 /*  eslint-disable import/prefer-default-export */
 
-export type CREATE_COLUMN = 'CREATE_COLUMN';
-export type UPDATE_COLUMN = 'UPDATE_COLUMN';
-export type DELETE_COLUMN = 'DELETE_COLUMN';
-export type SET_THEME = 'SET_THEME';
-export type STAR_REPO = 'STAR_REPO';
-export type UNSTAR_REPO = 'UNSTAR_REPO';
-export type LOAD_USER_FEED_REQUEST = 'LOAD_USER_FEED_REQUEST';
-export type LOAD_USER_FEED_SUCCESS = 'LOAD_USER_FEED_SUCCESS';
-export type LOAD_USER_FEED_FAILURE = 'LOAD_USER_FEED_FAILURE';
+import * as actions from '../constants/actions';
+
+export type CREATE_COLUMN = typeof actions.CREATE_COLUMN;
+export type UPDATE_COLUMN = typeof actions.UPDATE_COLUMN;
+export type UPDATE_COLUMN_SUBSCRIPTIONS = typeof actions.UPDATE_COLUMN_SUBSCRIPTIONS;
+export type DELETE_COLUMN = typeof actions.DELETE_COLUMN;
+export type CREATE_SUBSCRIPTION = typeof actions.CREATE_SUBSCRIPTION;
+export type UPDATE_SUBSCRIPTION = typeof actions.UPDATE_SUBSCRIPTION;
+export type DELETE_SUBSCRIPTION = typeof actions.DELETE_SUBSCRIPTION;
+export type SET_THEME = typeof actions.SET_THEME;
+export type STAR_REPO = typeof actions.STAR_REPO;
+export type UNSTAR_REPO = typeof actions.UNSTAR_REPO;
+export type LOAD_SUBSCRIPTION_DATA_REQUEST = typeof actions.LOAD_SUBSCRIPTION_DATA_REQUEST;
+export type LOAD_SUBSCRIPTION_DATA_SUCCESS = typeof actions.LOAD_SUBSCRIPTION_DATA_SUCCESS;
+export type LOAD_SUBSCRIPTION_DATA_FAILURE = typeof actions.LOAD_SUBSCRIPTION_DATA_FAILURE;
 
 export type ActionType =
-  | CREATE_COLUMN
-  | UPDATE_COLUMN
-  | DELETE_COLUMN
-  | SET_THEME
-  | STAR_REPO
-  | UNSTAR_REPO
-  | LOAD_USER_FEED_REQUEST
-  | LOAD_USER_FEED_SUCCESS
-  | LOAD_USER_FEED_FAILURE
+  | typeof actions.CREATE_COLUMN
+  | typeof actions.UPDATE_COLUMN
+  | typeof actions.UPDATE_COLUMN_SUBSCRIPTIONS
+  | typeof actions.DELETE_COLUMN
+  | typeof actions.CREATE_SUBSCRIPTION
+  | typeof actions.UPDATE_SUBSCRIPTION
+  | typeof actions.DELETE_SUBSCRIPTION
+  | typeof actions.SET_THEME
+  | typeof actions.STAR_REPO
+  | typeof actions.UNSTAR_REPO
+  | typeof actions.LOAD_SUBSCRIPTION_DATA_REQUEST
+  | typeof actions.LOAD_SUBSCRIPTION_DATA_SUCCESS
+  | typeof actions.LOAD_SUBSCRIPTION_DATA_FAILURE
 ;
 
 export type Action<T> = {
@@ -35,8 +45,9 @@ export type ActionCreators = {
 };
 
 export type ApiRequestPayload = {
-  path: string,
   params: Object,
+  requestType: string,
+  subscriptionId: string,
 };
 
 export type ApiResponsePayload = {

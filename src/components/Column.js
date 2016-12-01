@@ -11,6 +11,8 @@ import Themable from './hoc/Themable';
 import ListView from './lists/ListView';
 import { getDateFromNow } from '../utils/helpers';
 import { contentPadding } from '../styles/variables';
+import { requestTypes } from '../api/github';
+import { generateSubscriptionId } from '../reducers/entities/subscriptions';
 import type { ActionCreator, ThemeObject } from '../utils/types';
 
 const Column = styled.View`
@@ -67,42 +69,37 @@ const FixedHeader = styled.View`
 
 @Themable
 export default class extends React.PureComponent {
-  state = {
-    isRefreshing: false,
-  };
-
   // TODO: refactor this and do it the right way
   onCreateColumnButtonPress = () => {
-    const { createColumn } = this.props.actions;
+    const { createColumn, createSubscription, loadUserReceivedEvents } = this.props.actions;
 
     AlertIOS.prompt(
       'Enter a Github username:',
       null,
       username => {
-        createColumn(username, [`/users/${username}/received_events`]);
+        const params = { username };
+        const subscriptionId = generateSubscriptionId(requestTypes.USER_RECEIVED_EVENTS, params);
+        createSubscription(subscriptionId, requestTypes.USER_RECEIVED_EVENTS, params);
+        createColumn(username, [subscriptionId]);
+        loadUserReceivedEvents(username);
       },
     );
   };
 
   _onRefresh = () => {
-    this.setState({ isRefreshing: true });
-
-    const { loadUserFeedRequest } = this.props.actions;
-    loadUserFeedRequest('brunolemos');
-
-    // loading indicator will always appear for at least 0,5s
-    setTimeout(() => {
-      this.setState({ isRefreshing: false });
-    }, 1000);
+    const { id, actions: { updateColumnSubscriptions } } = this.props;
+    updateColumnSubscriptions(id);
   };
 
   props: {
     actions: {
       createColumn: ActionCreator,
+      createSubscription: ActionCreator,
       deleteColumn: ActionCreator,
-      loadUserFeedRequest: ActionCreator,
+      loadSubscriptionDataRequest: ActionCreator,
       starRepo: ActionCreator,
       unstarRepo: ActionCreator,
+      updateColumnSubscriptions: ActionCreator,
     },
     events: Array<Object>,
     id: string,
@@ -163,7 +160,7 @@ export default class extends React.PureComponent {
             renderRow={this.renderRow}
             refreshControl={
               <RefreshControl
-                refreshing={this.state.isRefreshing || loading || false}
+                refreshing={loading || false}
                 onRefresh={this._onRefresh}
                 colors={[theme.base08]}
                 tintColor={theme.base08}

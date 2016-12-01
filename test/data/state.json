@@ -1,5 +1,5 @@
 {
-  "theme": "dark",
+  "theme": "auto",
   "app": {
     "rehydrated": false
   },
@@ -109,8 +109,10 @@
     "subscriptions": {
       "/users/u001/received_events": {
         "id": "/users/u001/received_events",
-        "type": "USER_RECEIVED_EVENTS",
-        "payload": "u001"
+        "requestType": "USER_RECEIVED_EVENTS",
+        "params": {
+          "username": "u001"
+        }
       }
     },
     "users": {

@@ -7,9 +7,9 @@ import { guid } from '../../utils/helpers';
 import {
   CREATE_COLUMN,
   DELETE_COLUMN,
-  LOAD_USER_FEED_REQUEST,
-  LOAD_USER_FEED_SUCCESS,
-  LOAD_USER_FEED_FAILURE,
+  LOAD_SUBSCRIPTION_DATA_REQUEST,
+  LOAD_SUBSCRIPTION_DATA_SUCCESS,
+  LOAD_SUBSCRIPTION_DATA_FAILURE,
 } from '../../utils/constants/actions';
 
 import type {
@@ -43,11 +43,11 @@ export default (state: State = {}, { type, payload }: Action<any>): State => {
     case DELETE_COLUMN:
       return omit(state, payload.id);
 
-    case LOAD_USER_FEED_REQUEST:
-      return (({ path }: ApiRequestPayload) => {
+    case LOAD_SUBSCRIPTION_DATA_REQUEST:
+      return (({ subscriptionId }: ApiRequestPayload) => {
         let changed = false;
         const newColumns = mapValues(state, column => {
-          if (column.subscriptions.indexOf(path) < 0) return column;
+          if (column.subscriptions.indexOf(subscriptionId) < 0) return column;
           changed = true;
 
           return ({
@@ -59,11 +59,11 @@ export default (state: State = {}, { type, payload }: Action<any>): State => {
         return changed ? newColumns : state;
       })(payload);
 
-    case LOAD_USER_FEED_SUCCESS:
-      return (({ request: { path }, data: { result } }: ApiResponsePayload) => {
+    case LOAD_SUBSCRIPTION_DATA_SUCCESS:
+      return (({ request: { subscriptionId }, data: { result } }: ApiResponsePayload) => {
         let changed = false;
         const newColumns = mapValues(state, column => {
-          if (column.subscriptions.indexOf(path) < 0) return column;
+          if (column.subscriptions.indexOf(subscriptionId) < 0) return column;
           changed = true;
 
           return ({
@@ -77,11 +77,11 @@ export default (state: State = {}, { type, payload }: Action<any>): State => {
         return changed ? newColumns : state;
       })(payload);
 
-    case LOAD_USER_FEED_FAILURE:
-      return (({ request: { path } }: ApiResponsePayload) => {
+    case LOAD_SUBSCRIPTION_DATA_FAILURE:
+      return (({ request: { subscriptionId } }: ApiResponsePayload) => {
         let changed = false;
         const newColumns = mapValues(state, column => {
-          if (column.subscriptions.indexOf(path) < 0) return column;
+          if (column.subscriptions.indexOf(subscriptionId) < 0) return column;
           changed = true;
 
           return ({

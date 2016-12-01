@@ -4,42 +4,77 @@
 import {
   CREATE_COLUMN,
   DELETE_COLUMN,
+  UPDATE_COLUMN_SUBSCRIPTIONS,
+  CREATE_SUBSCRIPTION,
+  DELETE_SUBSCRIPTION,
   SET_THEME,
   STAR_REPO,
   UNSTAR_REPO,
-  LOAD_USER_FEED_REQUEST,
-  LOAD_USER_FEED_SUCCESS,
-  LOAD_USER_FEED_FAILURE,
+  LOAD_SUBSCRIPTION_DATA_REQUEST,
+  LOAD_SUBSCRIPTION_DATA_SUCCESS,
+  LOAD_SUBSCRIPTION_DATA_FAILURE,
 } from '../utils/constants/actions';
 
+import { ApiRequestType, requestTypes } from '../api/github';
+import { generateSubscriptionId } from '../reducers/entities/subscriptions';
 import { action, errorAction } from '../utils/helpers/actions';
-import type { Column, Theme, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
+import type {
+  ApiRequestPayload,
+  ApiResponsePayload,
+  Column,
+  Subscription,
+  Theme,
+} from '../utils/types';
 
-export const createColumn = (title: string, subscriptions: Array<string>) => (
-  action(CREATE_COLUMN, ({ title, subscriptions }: Column))
+export const createColumn = (title: string, subscriptions: Array<Object>, other?: Object = {}) => (
+  action(CREATE_COLUMN, ({ title, subscriptions, ...other }: Column))
 );
 
 export const deleteColumn = (id: string) => (
   action(DELETE_COLUMN, ({ id }: Column))
 );
 
+export const createSubscription = (
+  id: string,
+  requestType: ApiRequestType,
+  params: Object,
+  other?: Object = {},
+) => (
+  action(CREATE_SUBSCRIPTION, ({ id, requestType, params, ...other }: Subscription))
+);
+
+export const deleteSubscription = (id: string) => (
+  action(DELETE_SUBSCRIPTION, ({ id }: Subscription))
+);
+
+export const updateColumnSubscriptions = (id: string) => (
+  action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ id }: Subscription))
+);
+
 export const setTheme = (theme: Theme) => action(SET_THEME, theme);
 export const starRepo = (repoFullName: string) => action(STAR_REPO, repoFullName);
 export const unstarRepo = (repoFullName: string) => action(UNSTAR_REPO, repoFullName);
 
-export const loadUserFeedRequest = (username: string) => (
-  action(LOAD_USER_FEED_REQUEST, ({
-    path: `/users/${username}/received_events`,
-    params: {
-      username,
-    },
-  }: ApiRequestPayload))
+export const loadSubscriptionDataRequest = (requestType: ApiRequestType, params: Object) => {
+  const subscriptionId = generateSubscriptionId(requestType, params);
+
+  return (
+    action(LOAD_SUBSCRIPTION_DATA_REQUEST, ({
+      params,
+      requestType,
+      subscriptionId,
+    }: ApiRequestPayload))
+  );
+};
+
+export const loadUserReceivedEvents = (username: string) => (
+  loadSubscriptionDataRequest(requestTypes.USER_RECEIVED_EVENTS, { username })
 );
 
-export const loadUserFeedSuccess = (request: ApiRequestPayload, data: Object, meta: Object) => (
-  action(LOAD_USER_FEED_SUCCESS, ({ request, data, meta }: ApiResponsePayload))
+export const loadSubscriptionDataSuccess = (request: ApiRequestPayload, data: Object, meta: Object) => (
+  action(LOAD_SUBSCRIPTION_DATA_SUCCESS, ({ request, data, meta }: ApiResponsePayload))
 );
 
-export const loadUserFeedFailure = (request: ApiRequestPayload, error: any) => (
-  errorAction(LOAD_USER_FEED_FAILURE, error)
+export const loadSubscriptionDataFailure = (request: ApiRequestPayload, error: any) => (
+  errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, error)
 );

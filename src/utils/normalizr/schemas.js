@@ -34,6 +34,8 @@ export const PullRequestSchema = new Schema('pullRequests', {
   },
 });
 
+export const SubscriptionSchema = new Schema('subscriptions');
+
 export const UserSchema = new Schema('users', {
   idAttribute: (user: User) => user.login.toLowerCase() || idAttribute(user),
 });
@@ -48,6 +50,7 @@ CommentSchema.define({
 
 ColumnSchema.define({
   events: arrayOf(EventSchema),
+  subscriptions: arrayOf(SubscriptionSchema),
 });
 
 EventSchema.define({
@@ -84,4 +87,5 @@ export default {
   PullRequestSchema,
   UserSchema,
   RepoSchema,
+  SubscriptionSchema,
 };

@@ -10,8 +10,9 @@ import issues from './issues';
 import orgs from './orgs';
 import pullRequests from './pull-requests';
 import repos from './repos';
+import subscriptions from './subscriptions';
 import users from './users';
-import { LOAD_USER_FEED_SUCCESS } from '../../utils/constants/actions';
+import { LOAD_SUBSCRIPTION_DATA_SUCCESS } from '../../utils/constants/actions';
 import type { Action } from '../../utils/types';
 
 const reducer = combineReducers({
@@ -22,18 +23,20 @@ const reducer = combineReducers({
   orgs,
   pullRequests,
   repos,
+  subscriptions,
   users,
 });
 
+const indexReducer = (state, action) => {
+  const { type, payload: { data: { entities } = {} } = {} } = action || {};
+
+  switch (type) {
+    case LOAD_SUBSCRIPTION_DATA_SUCCESS: return merge({}, state, entities);
+    default: return state;
+  }
+};
+
 export default (state: Object = {}, action: Action<Object>) => {
-  let _state = ((state, action) => {
-    const { type, payload: { data: { entities } = {} } = {} } = action || {};
-
-    switch (type) {
-      case LOAD_USER_FEED_SUCCESS: return merge({}, state, entities);
-      default: return state;
-    }
-  })(state, action);
-
-  return reducer(_state, action);
+  const stateAfterIndexReducer = indexReducer(state, action);
+  return reducer(stateAfterIndexReducer, action);
 };

@@ -42,14 +42,14 @@ const StyledNewColumn = styled(NewColumn)`
 
 export default class extends React.PureComponent {
   onPress = () => {
-    const { createColumn, loadUserFeedRequest } = this.props.actions;
+    const { createColumn, loadSubscriptionDataRequest } = this.props.actions;
 
     AlertIOS.prompt(
       'Enter a Github username:',
       null,
       username => {
         createColumn(username, [`/users/${username}/received_events`]);
-        loadUserFeedRequest(username);
+        loadSubscriptionDataRequest(username);
       },
     );
   };
@@ -62,13 +62,14 @@ export default class extends React.PureComponent {
   renderRow = (item, sectionID, rowID) => (
     <ColumnContainer key={`column-${item.id}-${sectionID}-${rowID}`}>
       <StyledColumn
-        id={item.id}
-        title={item.title}
-        events={item.events}
-        loading={item.loading}
-        updatedAt={item.updatedAt}
-        radius={radius}
         actions={this.props.actions}
+        events={item.events}
+        id={item.id}
+        loading={item.loading}
+        radius={radius}
+        subscriptions={item.subscriptions}
+        title={item.title}
+        updatedAt={item.updatedAt}
       />
     </ColumnContainer>
   );
@@ -78,11 +79,7 @@ export default class extends React.PureComponent {
 
     if (columns.length === 0) return (
       <ColumnContainer>
-        <StyledNewColumn
-          createColumn={actions.createColumn}
-          loadUserFeedRequest={actions.loadUserFeedRequest}
-          radius={radius}
-        />
+        <StyledNewColumn actions={actions} radius={radius} />
       </ColumnContainer>
     );
 
