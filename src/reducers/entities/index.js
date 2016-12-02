@@ -1,7 +1,7 @@
 // @flow
 
-import merge from 'lodash/merge';
-import { combineReducers } from 'redux';
+import { fromJS, OrderedMap } from 'immutable';
+import { combineReducers } from 'redux-immutable';
 
 import columns from './columns';
 import comments from './comments';
@@ -27,16 +27,22 @@ const reducer = combineReducers({
   users,
 });
 
-const indexReducer = (state, action) => {
-  const { type, payload: { data: { entities } = {} } = {} } = action || {};
+const indexReducer = (state: Object = OrderedMap({}), action) => {
+  const { type, payload } = action || {};
 
   switch (type) {
-    case LOAD_SUBSCRIPTION_DATA_SUCCESS: return merge({}, state, entities);
-    default: return state;
+    case LOAD_SUBSCRIPTION_DATA_SUCCESS:
+      return ((_payload) => {
+        const { data: { entities } = {} } = _payload || {};
+        return state.mergeDeep(fromJS(entities));
+      })(payload);
+
+    default:
+      return state;
   }
 };
 
-export default (state: Object = {}, action: Action<Object>) => {
+export default (state: Object = OrderedMap({}), action: Action<Object>) => {
   const stateAfterIndexReducer = indexReducer(state, action);
   return reducer(stateAfterIndexReducer, action);
 };

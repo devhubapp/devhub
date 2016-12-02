@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { Map } from 'immutable';
 import { ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
@@ -484,7 +485,14 @@ export default class extends React.PureComponent {
 
   render() {
     const { event, ...props } = this.props;
-    const { type, payload = {}, actor = {}, repo = {}, created_at } = event;
+    
+    const {
+      type,
+      payload = Map({}),
+      actor = Map({}),
+      repo = Map({}),
+      created_at,
+    } = event;
 
     const dateText = getDateSmallText(created_at, '•');
 
@@ -492,14 +500,14 @@ export default class extends React.PureComponent {
       <CardWrapper {...props}>
         <Header>
           <LeftColumn>
-            <UserAvatar url={actor.avatar_url} size={avatarWidth} />
+            <UserAvatar url={actor.get('avatar_url')} size={avatarWidth} />
           </LeftColumn>
 
           <MainColumn>
             <HeaderRow>
               <View style={{ flex: 1 }}>
                 <HorizontalView>
-                  <Username>{actor.display_login || actor.login}</Username>
+                  <Username>{actor.get('display_login') || actor.get('login')}</Username>
                   {
                     dateText &&
                     <Timestamp muted> • {dateText}</Timestamp>
@@ -516,17 +524,17 @@ export default class extends React.PureComponent {
 
         {
           this.renderRepositoryRow(type, {
-            name: (repo || {}).name,
+            name: repo.get('name'),
             pushed: type === 'PushEvent',
-            forcePushed: type === 'PushEvent' && payload.forced,
-            isStarred: !!repo.isStarred,
+            forcePushed: type === 'PushEvent' && payload.get('forced'),
+            isStarred: !!repo.get('isStarred'),
           })
         }
 
         {
           this.renderBranchRow(type, {
-            name: (repo || {}).name,
-            branch: payload.ref,
+            name: repo.get('name'),
+            branch: payload.get('ref'),
             narrow: true,
           })
         }
@@ -534,9 +542,9 @@ export default class extends React.PureComponent {
         {
           payload.forkee &&
           this.renderRepositoryRow(type, {
-            name: payload.forkee.full_name,
-            isFork: !!payload.forkee,
-            isStarred: !!payload.forkee.isStarred,
+            name: payload.getIn(['forkee', 'full_name']),
+            isFork: !!payload.get('forkee'),
+            isStarred: !!payload.getIn(['forkee', 'isStarred']),
             narrow: true,
           })
         }
@@ -554,5 +562,5 @@ export default class extends React.PureComponent {
         {this.renderCommentRow(type, actor, payload)}
       </CardWrapper>
     );
-  };
+  }
 }

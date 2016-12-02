@@ -11,7 +11,7 @@ import * as actionCreators from '../../actions';
 import type { ActionCreators, Column, State } from '../../utils/types';
 
 const mapStateToProps = (state: State) => ({
-  rehydrated: state.app.rehydrated,
+  rehydrated: state.getIn(['app', 'rehydrated']),
   ...selector(state),
 });
 

@@ -5,10 +5,10 @@ import { createSelector } from 'reselect';
 
 import { ColumnSchema } from '../utils/normalizr/schemas';
 
-const objectKeysMemoized = memoize(Object.keys);
+const objectKeysMemoized = memoize(obj => obj.keySeq());
 
-const columnsIdsSelector = state => objectKeysMemoized(state.entities.columns);
-const entitiesSelector = state => state.entities;
+const columnsIdsSelector = state => objectKeysMemoized(state.getIn(['entities', 'columns']));
+const entitiesSelector = state => state.get('entities');
 
 export default createSelector(
   columnsIdsSelector,

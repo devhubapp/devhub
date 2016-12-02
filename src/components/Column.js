@@ -4,18 +4,18 @@ import React from 'react';
 import { AlertIOS, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
-import TransparentTextOverlay from './TransparentTextOverlay';
+import ImmutableListView from 'react-native-immutable-list-view';
 
 import Card, { iconRightMargin } from './Card';
 import Themable from './hoc/Themable';
-import ListView from './lists/ListView';
+import TransparentTextOverlay from './TransparentTextOverlay';
 import { getDateFromNow } from '../utils/helpers';
 import { contentPadding } from '../styles/variables';
 import { requestTypes } from '../api/github';
 import { generateSubscriptionId } from '../reducers/entities/subscriptions';
-import type { ActionCreator, ThemeObject } from '../utils/types';
+import type { ActionCreator, Column, ThemeObject } from '../utils/types';
 
-const Column = styled.View`
+const Root = styled.View`
   background-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius || 0};
 `;
@@ -86,8 +86,8 @@ export default class extends React.PureComponent {
     );
   };
 
-  _onRefresh = () => {
-    const { id, actions: { updateColumnSubscriptions } } = this.props;
+  onRefresh = () => {
+    const { column: { id }, actions: { updateColumnSubscriptions } } = this.props;
     updateColumnSubscriptions(id);
   };
 
@@ -97,46 +97,40 @@ export default class extends React.PureComponent {
       createSubscription: ActionCreator,
       deleteColumn: ActionCreator,
       loadSubscriptionDataRequest: ActionCreator,
+      loadUserReceivedEvents: ActionCreator,
       starRepo: ActionCreator,
       unstarRepo: ActionCreator,
       updateColumnSubscriptions: ActionCreator,
     },
-    events: Array<Object>,
-    id: string,
-    loading: boolean,
+    column: Column,
     radius?: number,
     style?: ?Object,
-    title: string,
     theme: ThemeObject,
-    updatedAt: string,
   };
 
-  renderRow = (item) => (
-    <Card
-      key={`card-${item.id}`}
-      event={item}
-      starRepo={this.props.actions.starRepo}
-      unstarRepo={this.props.actions.unstarRepo}
-    />
-  );
+  renderRow = (event) => {
+    if (!event) return null;
+
+    const { id } = event;
+
+    return (
+      <Card
+        key={`card-${id}`}
+        event={event}
+        starRepo={this.props.actions.starRepo}
+        unstarRepo={this.props.actions.unstarRepo}
+      />
+    );
+  };
 
   render() {
-    const {
-      actions,
-      id,
-      events,
-      loading = false,
-      radius,
-      theme,
-      title,
-      updatedAt,
-      ...props,
-    } = this.props;
+    const { actions, radius, theme, ...props } = this.props;
+    const { id, events, loading = false, title, updatedAt } = this.props.column;
 
     const updatedText = getDateFromNow(updatedAt) ? `Updated ${getDateFromNow(updatedAt)}` : '';
 
     return (
-      <Column radius={radius} {...props}>
+      <Root radius={radius} {...props}>
         <FixedHeader>
           <Title>
             <Icon name="home" size={20} />&nbsp;&nbsp;{title}
@@ -154,14 +148,14 @@ export default class extends React.PureComponent {
         </FixedHeader>
 
         <StyledTextOverlay color={theme.base02} size={contentPadding} from="bottom" radius={radius}>
-          <ListView
-            data={events}
+          <ImmutableListView
+            immutableData={events}
             initialListSize={5}
             renderRow={this.renderRow}
             refreshControl={
               <RefreshControl
                 refreshing={loading || false}
-                onRefresh={this._onRefresh}
+                onRefresh={this.onRefresh}
                 colors={[theme.base08]}
                 tintColor={theme.base08}
                 title={(loading ? 'Loading...' : (updatedText || ' ')).toLowerCase()}
@@ -171,7 +165,7 @@ export default class extends React.PureComponent {
             }
           />
         </StyledTextOverlay>
-      </Column>
+      </Root>
     );
   }
 }

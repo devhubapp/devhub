@@ -454,6 +454,10 @@ babel-plugin-check-es2015-constants@^6.5.0, babel-plugin-check-es2015-constants@
   dependencies:
     babel-runtime "^6.0.0"
 
+babel-plugin-extensible-destructuring@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-extensible-destructuring/-/babel-plugin-extensible-destructuring-4.0.1.tgz#e3ecb1699d2719f3665da3f7acc47f875c2bf81e"
+
 babel-plugin-external-helpers@^6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-external-helpers/-/babel-plugin-external-helpers-6.18.0.tgz#c6bbf87a4448eb49616f24a8b8088503863488da"
@@ -2313,6 +2317,12 @@ extend@3, extend@^3.0.0, extend@~3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.0.tgz#5a474353b9f3353ddd8176dfd37b91c83a46f1d4"
 
+extensible-runtime@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/extensible-runtime/-/extensible-runtime-4.0.1.tgz#f6e70a184d0fb9ae52317b05167ee51f31d7b5c8"
+  dependencies:
+    immutable "^3.7.6"
+
 extglob@^0.3.1:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/extglob/-/extglob-0.3.2.tgz#2e18ff3d2f49ab2765cec9023f011daa8d8349a1"
@@ -2957,6 +2967,10 @@ ignore@^3.1.5, ignore@^3.2.0:
 image-size@^0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.3.5.tgz#83240eab2fb5b00b04aab8c74b0471e9cba7ad8c"
+
+"immutable@>= 3", immutable@^3.7.6, immutable@^3.8.1, immutable@~3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
 
 immutable@~3.7.6:
   version "3.7.6"
@@ -4687,6 +4701,12 @@ react-native-fs@^2.0.1-rc.2:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
 
+react-native-immutable-list-view@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-immutable-list-view/-/react-native-immutable-list-view-0.2.1.tgz#3518261f802965567ae52e7f7088656643b3592b"
+  dependencies:
+    immutable "~3.8.1"
+
 react-native-linear-gradient@^1.5.15:
   version "1.5.15"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-1.5.15.tgz#4413111934dc1d8f5e0572ca96e60b1a2cf41f4d"
@@ -4929,7 +4949,28 @@ redux-devtools-instrument@^1.3.1:
     lodash "^4.2.0"
     symbol-observable "^0.2.4"
 
-redux-persist@^4.0.0-beta1:
+redux-immutable@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/redux-immutable/-/redux-immutable-3.0.8.tgz#df5a5d601c88227ba38f474cf82f7d00e56f8c14"
+  dependencies:
+    immutable "^3.7.6"
+
+redux-persist-immutable@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/redux-persist-immutable/-/redux-persist-immutable-4.0.1.tgz#fab9da5b1ad0a7346bcfeab82d9587b2be98d814"
+  dependencies:
+    redux-persist "^4.0.0-alpha6"
+    redux-persist-transform-immutable "^4.1.0"
+
+redux-persist-transform-immutable@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/redux-persist-transform-immutable/-/redux-persist-transform-immutable-4.1.0.tgz#379bf0d660bf8d528c3b1e3b8918d5a2d770fb87"
+  dependencies:
+    immutable ">= 3"
+    transit-immutable-js ">= 0.5"
+    transit-js ">= 0.8"
+
+redux-persist@^4.0.0-alpha6, redux-persist@^4.0.0-beta1:
   version "4.0.0-beta1"
   resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-4.0.0-beta1.tgz#accaaab9f369a8420b60d16c4f2ca0ce1de96312"
   dependencies:
@@ -5676,6 +5717,14 @@ tough-cookie@^2.3.1, tough-cookie@~2.3.0:
 tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+
+"transit-immutable-js@>= 0.5":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/transit-immutable-js/-/transit-immutable-js-0.6.0.tgz#db738a54a152f75c67b51f4cabc0ebe8cdb45f9d"
+
+"transit-js@>= 0.8":
+  version "0.8.846"
+  resolved "https://registry.yarnpkg.com/transit-js/-/transit-js-0.8.846.tgz#76e06e8f0e6be27675e3442112f5c9bb75343464"
 
 traverse@^0.6.6:
   version "0.6.6"

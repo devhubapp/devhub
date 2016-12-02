@@ -1,6 +1,6 @@
 // @flow
 
-import omit from 'lodash/omit';
+import { fromJS, OrderedMap } from 'immutable';
 
 import { ApiRequestType, getUniquePath } from '../../api/github';
 import { CREATE_SUBSCRIPTION, DELETE_SUBSCRIPTION } from '../../utils/constants/actions';
@@ -16,26 +16,23 @@ export function generateSubscriptionId(requestType: ApiRequestType, params: Obje
 }
 
 type State = Normalized<Subscription>;
-export default (state: State = {}, { type, payload }: Action<any>): State => {
+export default (state: State = OrderedMap({}), { type, payload }: Action<any>): State => {
   switch (type) {
     case CREATE_SUBSCRIPTION:
       return (({ id: subscriptionId, requestType, params, ...restOfPayload }: Subscription) => {
         const id = subscriptionId || generateSubscriptionId(requestType, params);
 
-        return {
-          [id]: {
-            id,
-            requestType,
-            params: params || {},
-            createdAt: new Date(),
-            ...restOfPayload,
-          },
-          ...omit(state, id),
-        };
+        return state.set(id, fromJS({
+          id,
+          requestType,
+          params: params || {},
+          createdAt: new Date(),
+          ...restOfPayload,
+        }));
       })(payload);
 
     case DELETE_SUBSCRIPTION:
-      return omit(state, payload.id);
+      return state.delete(payload.id);
 
     default:
       return state;

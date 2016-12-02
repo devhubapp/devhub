@@ -1,24 +1,22 @@
 // @flow
 
+import { Map } from 'immutable';
 import { REHYDRATE } from 'redux-persist/constants';
+
 import type { Action } from '../../utils/types';
 
-const initialState = {
+const initialState = Map({
   rehydrated: false,
-};
+});
 
 type State = {
-  version: string,
   rehydrated: boolean,
 };
 
 export default (state: State = initialState, { type }: Action<any>): State => {
   switch (type) {
     case REHYDRATE:
-      return {
-        ...state,
-        rehydrated: true,
-      };
+      return state.set('rehydrated', true);
 
     default:
       return state;

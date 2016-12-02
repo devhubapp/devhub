@@ -8,18 +8,17 @@ import { connect } from 'react-redux';
 import Themable from '../../components/hoc/Themable';
 import Screen from '../../components/Screen';
 import { setTheme as setThemeAction } from '../../actions';
-import type { State, ThemeObject } from '../../utils/types';
+import type { ThemeObject } from '../../utils/types';
 
 const Footer = styled.View`
   flex: 1;
   justify-content: flex-end;
 `;
 
-const mapStateToProps = ({ config }: State) => ({ config });
 const mapDispatchToProps = { setTheme: setThemeAction };
 
 @Themable
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(null, mapDispatchToProps)
 export default class extends React.PureComponent {
   props: {
     setTheme: Function,

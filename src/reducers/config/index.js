@@ -1,6 +1,7 @@
 // @flow
 
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux-immutable';
+
 import { loadTheme as _loadTheme } from '../../utils/helpers';
 import type { Config } from '../../utils/types';
 

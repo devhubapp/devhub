@@ -1,24 +1,19 @@
 import createSagaMiddleware from 'redux-saga';
+import { Map } from 'immutable';
 import { AsyncStorage } from 'react-native';
 import { applyMiddleware, createStore } from 'redux'; // compose
-import { persistStore, autoRehydrate } from 'redux-persist';
+import { autoRehydrate, persistStore } from 'redux-persist-immutable';
 import { composeWithDevTools } from 'remote-redux-devtools';
-import { createNavigationEnabledStore } from '@exponent/ex-navigation';
 
 import sagas from '../sagas';
 import reducer from '../reducers';
 
-export default (initialState) => {
-  const createStoreWithNavigation = createNavigationEnabledStore({
-    createStore,
-    navigationStateKey: 'navigation',
-  });
-
+export default (initialState = Map({})) => {
   const sagaMiddleware = createSagaMiddleware();
 
   const composeEnhancers = composeWithDevTools({ realtime: true });
 
-  const store = createStoreWithNavigation(
+  const store = createStore(
     reducer,
     initialState,
     composeEnhancers(
@@ -29,7 +24,7 @@ export default (initialState) => {
 
   sagaMiddleware.run(sagas);
 
-  persistStore(store, { storage: AsyncStorage, blacklist: ['navigation'] });
+  persistStore(store, { storage: AsyncStorage });
 
   return store;
 };

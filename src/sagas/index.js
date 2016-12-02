@@ -1,8 +1,9 @@
 // @flow
 
+import { List } from 'immutable';
 import { flatten, uniq } from 'lodash';
 import { arrayOf, normalize } from 'normalizr';
-import { delay, take, takeEvery, takeLatest } from 'redux-saga';
+import { delay, takeEvery, takeLatest } from 'redux-saga';
 import { call, fork, put, race, select } from 'redux-saga/effects';
 
 import { EventSchema } from '../utils/normalizr/schemas';
@@ -23,8 +24,18 @@ import {
 
 import { getApiMethod } from '../api/github';
 
-const columnsSelector = state => state.entities.columns;
-const subscriptionsSelector = state => state.entities.subscriptions;
+const columnsSelector = state => state.getIn(['entities', 'columns']);
+
+const columnSelector = (state, id) => columnsSelector(state).get(id);
+
+const columnsIdsSelector = state => columnsSelector(state).keySeq().toArray();
+
+const columnSubscriptionsIdsSelector = (state, columnId) => (
+  columnSelector(state, columnId).get('subscriptions').toArray()
+);
+
+const subscriptionsSelector = state => state.getIn(['entities', 'subscriptions']);
+const subscriptionSelector = (state, id) => subscriptionsSelector(state).get(id);
 
 function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
   try {
@@ -50,56 +61,46 @@ function* updateSubscriptionsFromColumn({ payload: { id } }: Action<ApiRequestPa
   try {
     const state = yield select();
 
-    const columns = columnsSelector(state);
-    const subscriptions = subscriptionsSelector(state);
-    if (!(columns && subscriptions)) return null;
-
-    const column = columns[id];
-    if (!column) return null;
-
-    const subscriptionIds = column.subscriptions || [];
+    const subscriptionIds = columnSubscriptionsIdsSelector(state, id);
     if (!(subscriptionIds.length > 0)) return null;
 
-    return yield subscriptionIds.map(function*(subscriptionId) {
-      const subscription = subscriptions[subscriptionId];
+    return yield subscriptionIds.map(function* (subscriptionId) {
+      const subscription = subscriptionSelector(state, subscriptionId);
       if (!subscription) return null;
 
-      const { requestType, params } = subscription;
+      const { requestType, params } = subscription.toJS();
       if (!(requestType && params)) return null;
 
       return yield put(loadSubscriptionDataRequest(requestType, params));
     }).filter(Boolean);
-  } catch (e) {}
+  } catch (error) {
+    return yield put({ type: 'ERROR', error });
+  }
 }
 
 function* updateSubscriptionsFromAllColumns() {
   try {
     const state = yield select();
 
-    const columns = columnsSelector(state);
-    const subscriptions = subscriptionsSelector(state);
-    if (!(columns && subscriptions)) return null;
-
-    const columnIds = Object.keys(columns) || [];
+    const columnIds = columnsIdsSelector(state);
     if (!(columnIds.length > 0)) return null;
 
-    const subscriptionIds = uniq(flatten(columnIds.map(columnId => {
-      const column = columns[columnId];
-      if (!column) return null;
+    const subscriptionIds = uniq(flatten(columnIds.map(columnId => (
+      columnSubscriptionsIdsSelector(columnId) || []
+    )))).filter(Boolean);
 
-      return column.subscriptions || [];
-    }))).filter(Boolean);
-
-    return yield subscriptionIds.map(function*(subscriptionId) {
-      const subscription = subscriptions[subscriptionId];
+    return yield subscriptionIds.map(function* (subscriptionId) {
+      const subscription = subscriptionSelector(state, subscriptionId);
       if (!subscription) return null;
 
-      const { requestType, params } = subscription;
+      const { requestType, params } = subscription.toJS();
       if (!(requestType && params)) return null;
 
       return yield put(loadSubscriptionDataRequest(requestType, params));
     }).filter(Boolean);
-  } catch (e) {}
+  } catch (error) {
+    return yield put({ type: 'ERROR', error });
+  }
 }
 
 function* runTimer() {
@@ -108,7 +109,9 @@ function* runTimer() {
       yield call(delay, 60 * 1000); // update all columns each minute
       yield updateSubscriptionsFromAllColumns();
     }
-  } catch (e) {}
+  } catch (error) {
+    return yield put({ type: 'ERROR', error });
+  }
 }
 
 export default function* () {

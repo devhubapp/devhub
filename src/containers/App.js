@@ -3,14 +3,16 @@ import styled, { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
 import { StatusBar } from 'react-native';
 
-import { loadTheme } from '../reducers/config';
+import themeSelector from '../selectors/theme';
 import type { State, ThemeObject } from '../utils/types';
 
 const View = styled.View`
   flex: 1;
 `;
 
-const mapStateToProps = ({ config }: State) => ({ theme: loadTheme(config) });
+const mapStateToProps = (state: State) => ({
+  theme: themeSelector(state),
+});
 
 @connect(mapStateToProps)
 export default class extends React.PureComponent {

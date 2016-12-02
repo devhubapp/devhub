@@ -1,6 +1,6 @@
 // @flow
 
-import { mapValues, omit, union } from 'lodash';
+import { fromJS, List, OrderedMap, Set } from 'immutable';
 
 import { guid } from '../../utils/helpers';
 
@@ -21,77 +21,59 @@ import type {
 } from '../../utils/types';
 
 type State = Normalized<Column>;
-export default (state: State = {}, { type, payload }: Action<any>): State => {
+export default (state: State = OrderedMap({}), { type, payload }: Action<any>): State => {
   switch (type) {
     case CREATE_COLUMN:
       return (({ title, events, subscriptions, ...restOfPayload }: Column) => {
         const id = guid();
 
-        return {
-          [id]: {
-            id,
-            title,
-            events: events || [],
-            subscriptions: subscriptions || [],
-            createdAt: new Date(),
-            ...restOfPayload,
-          },
-          ...omit(state, id),
-        };
+        return state.set(id, OrderedMap(fromJS({
+          id,
+          title,
+          events: List(events),
+          subscriptions: List(subscriptions),
+          createdAt: new Date(),
+          ...restOfPayload,
+        })));
       })(payload);
 
     case DELETE_COLUMN:
-      return omit(state, payload.id);
+      return state.delete(payload.id);
 
     case LOAD_SUBSCRIPTION_DATA_REQUEST:
-      return (({ subscriptionId }: ApiRequestPayload) => {
-        let changed = false;
-        const newColumns = mapValues(state, column => {
-          if (column.subscriptions.indexOf(subscriptionId) < 0) return column;
-          changed = true;
+      return (({ subscriptionId }: ApiRequestPayload) => (
+        state.map(column => {
+          if (!column.get('subscriptions').includes(subscriptionId)) return column;
 
-          return ({
-            ...column,
-            loading: true,
-          });
-        });
-
-        return changed ? newColumns : state;
-      })(payload);
+          return column
+            .set('loading', true)
+          ;
+        })
+      ))(payload);
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
-      return (({ request: { subscriptionId }, data: { result } }: ApiResponsePayload) => {
-        let changed = false;
-        const newColumns = mapValues(state, column => {
-          if (column.subscriptions.indexOf(subscriptionId) < 0) return column;
-          changed = true;
+      return (({ request: { subscriptionId }, data: { result } }: ApiResponsePayload) => (
+        state.map(column => {
+          if (!column.get('subscriptions').includes(subscriptionId)) return column;
 
-          return ({
-            ...column,
-            events: union(result, column.events),
-            loading: false,
-            updatedAt: new Date(),
-          });
-        });
-
-        return changed ? newColumns : state;
-      })(payload);
+          return column
+            .set('events', Set(result).union(Set(column.get('events')).toList()))
+            .set('loading', false)
+            .set('updatedAt', new Date())
+          ;
+        })
+      ))(payload);
 
     case LOAD_SUBSCRIPTION_DATA_FAILURE:
-      return (({ request: { subscriptionId } }: ApiResponsePayload) => {
-        let changed = false;
-        const newColumns = mapValues(state, column => {
-          if (column.subscriptions.indexOf(subscriptionId) < 0) return column;
-          changed = true;
+      return (({ request: { subscriptionId } }: ApiResponsePayload) => (
+        state.map(column => {
+          if (!column.get('subscriptions').includes(subscriptionId)) return column;
 
-          return ({
-            ...column,
-            loading: false,
-          });
-        });
-
-        return changed ? newColumns : state;
-      })(payload);
+          return column
+            .set('loading', false)
+          ;
+        })
+      ))(payload);
 
     default:
       return state;
