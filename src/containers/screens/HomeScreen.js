@@ -1,34 +1,18 @@
 // @flow
 
 import React from 'react';
-import { isEqual } from 'lodash';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { arrayOf } from 'normalizr';
-import { denormalize } from 'denormalizr';
 
 import Columns from '../../components/Columns';
 import Screen from '../../components/Screen';
-import { ColumnSchema } from '../../utils/normalizr/schemas';
+import selector from '../../selectors';
 import * as actionCreators from '../../actions';
 import type { ActionCreators, Column, State } from '../../utils/types';
 
-let previousIds = [];
-let previousEntities = {};
-let previousDenormalizedData = [];
-// TODO: Use reselect
-const denormalizeWithCache = (ids = [], entities = {}, ...args) => {
-  const hasChanged = !(isEqual(ids, previousIds) && isEqual(entities, previousEntities));
-  previousIds = ids;
-  previousEntities = entities;
-
-  if (hasChanged) previousDenormalizedData = denormalize(ids, entities, ...args);
-  return previousDenormalizedData;
-};
-
-const mapStateToProps = ({ app, entities }: State) => ({
-  columns: denormalizeWithCache(Object.keys(entities.columns), entities, arrayOf(ColumnSchema)),
-  rehydrated: app.rehydrated,
+const mapStateToProps = (state: State) => ({
+  rehydrated: state.app.rehydrated,
+  ...selector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -28,6 +28,7 @@
     "redux-persist": "^4.0.0-beta1",
     "redux-saga": "^0.13.0",
     "remote-redux-devtools": "^0.5.4",
+    "reselect": "^2.5.4",
     "styled-components": "1.1.1",
     "warna": "^0.2.4"
   },

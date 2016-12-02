@@ -464,7 +464,7 @@ export default class extends React.PureComponent {
   };
 
   renderCommentRow = (type, actor, {
-    comment: { body } = {}
+    comment: { body } = {},
   } = {}) => {
     let _body = (body || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_body) return null;
@@ -484,7 +484,7 @@ export default class extends React.PureComponent {
 
   render() {
     const { event, ...props } = this.props;
-    const { type, payload = {}, actor = {}, repo = {}, org = {}, created_at } = event;
+    const { type, payload = {}, actor = {}, repo = {}, created_at } = event;
 
     const dateText = getDateSmallText(created_at, '•');
 
