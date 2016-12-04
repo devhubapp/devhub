@@ -442,7 +442,7 @@ export default class extends React.PureComponent {
     if (!_branch) return null;
 
     const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
-    if (_branch === 'master' && !isBranchMainEventAction) return;
+    // if (_branch === 'master' && !isBranchMainEventAction) return;
 
     const { theme } = this.props;
 

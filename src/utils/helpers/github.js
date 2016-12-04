@@ -2,6 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import max from 'lodash/max';
+import { List, Map } from 'immutable';
 
 import type { GithubEventType, GithubIcon } from '../types/github';
 
@@ -125,13 +126,13 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
         const commits = payload.get('commits') || List([Map({})]);
         // const commit = payload.get('head_commit'))' || commits[0];
         const count = max([1, payload.get('size'), payload.get('distinct_size'), commits.size]) || 1;
-        // const branch = (payload.get('ref'))' || '').split('/').pop();
+        // const branch = (payload.get('ref') || '').split('/').pop();
 
         const pushedText = payload.get('forced') ? 'force pushed' : 'pushed';
         const commitText = count > 1 ? `${count} commits` : 'a commit';
-        // const branchText = branch && branch !== 'master' ? `to ${branch}` : '';
+        // const branchText = branch === 'master' ? `to ${branch}` : '';
 
-        return `${pushedText} ${commitText}`.replace(/ {2}/g, ' ');
+        return `${pushedText} ${commitText}`.replace(/ {2}/g, ' '); //  ${branchText}
       })();
     case 'ReleaseEvent': return 'published a release';
     case 'WatchEvent': return 'starred a repository';
