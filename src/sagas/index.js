@@ -7,6 +7,8 @@ import { call, fork, put, race, select, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { EventSchema } from '../utils/normalizr/schemas';
+import { columnSelector, columnsIdsSelector } from '../selectors/columns';
+import { columnSubscriptionsIdsSelector, subscriptionSelector } from '../selectors/subscriptions';
 
 import {
   LOAD_SUBSCRIPTION_DATA_REQUEST,
@@ -20,22 +22,12 @@ import {
   loadSubscriptionDataRequest,
   loadSubscriptionDataSuccess,
   loadSubscriptionDataFailure,
+  updateAllColumnsSubscriptions,
 } from '../actions';
 
 import { getApiMethod } from '../api/github';
 
-const columnsSelector = state => state.getIn(['entities', 'columns']);
-
-const columnSelector = (state, id) => columnsSelector(state).get(id);
-
-const columnsIdsSelector = state => columnsSelector(state).keySeq().toArray();
-
-const columnSubscriptionsIdsSelector = (state, columnId) => (
-  columnSelector(state, columnId).get('subscriptions').toArray()
-);
-
-const subscriptionsSelector = state => state.getIn(['entities', 'subscriptions']);
-const subscriptionSelector = (state, id) => subscriptionsSelector(state).get(id);
+const sagaActionChunk = { dispatchedBySaga: true };
 
 function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
   try {
@@ -51,63 +43,57 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
     const { data, meta }: ApiResponsePayload = response;
     const normalizedData = normalize(data, arrayOf(EventSchema));
 
-    yield put(loadSubscriptionDataSuccess(payload, normalizedData, meta));
+    yield put(loadSubscriptionDataSuccess(payload, normalizedData, meta, sagaActionChunk));
   } catch (error) {
-    yield put(loadSubscriptionDataFailure(payload, error));
+    yield put(loadSubscriptionDataFailure(payload, error, sagaActionChunk));
   }
 }
 
-function* updateSubscriptionsFromColumn({ payload: { id } }: Action<ApiRequestPayload>) {
-  try {
-    const state = yield select();
+function* updateSubscriptionsFromColumn({ payload: { id: columnId } }: Action<ApiRequestPayload>) {
+  const state = yield select();
 
-    const subscriptionIds = columnSubscriptionsIdsSelector(state, id);
-    if (!(subscriptionIds.length > 0)) return null;
+  const column = columnSelector(state, { id: columnId });
+  const subscriptionIds = columnSubscriptionsIdsSelector(state, { column });
+  if (!(subscriptionIds.size > 0)) return;
 
-    return yield subscriptionIds.map(function* (subscriptionId) {
-      const subscription = subscriptionSelector(state, subscriptionId);
-      if (!subscription) return null;
+  yield* subscriptionIds.map(function* (subscriptionId) {
+    const subscription = subscriptionSelector(state, { id: subscriptionId });
+    if (!subscription) return;
 
-      const { requestType, params } = subscription.toJS();
-      if (!(requestType && params)) return null;
+    const { requestType, params } = subscription.toJS();
+    if (!(requestType && params)) return;
 
-      return yield put(loadSubscriptionDataRequest(requestType, params));
-    }).filter(Boolean);
-  } catch (error) {
-    return yield put({ type: 'ERROR', error });
-  }
+    yield put(loadSubscriptionDataRequest(requestType, params, sagaActionChunk));
+  });
 }
 
 function* updateSubscriptionsFromAllColumns() {
-  try {
-    const state = yield select();
+  const state = yield select();
 
-    const columnIds = columnsIdsSelector(state);
-    if (!(columnIds.length > 0)) return null;
+  const columnIds = columnsIdsSelector(state);
+  if (!(columnIds.size > 0)) return;
 
-    const subscriptionIds = uniq(flatten(columnIds.map(columnId => (
-      columnSubscriptionsIdsSelector(columnId) || []
-    )))).filter(Boolean);
+  const subscriptionIds = uniq(flatten(columnIds.map(id => {
+    const column = columnSelector(state, { id });
+    return columnSubscriptionsIdsSelector(state, { column });
+  }).toJS())).filter(Boolean);
 
-    return yield subscriptionIds.map(function* (subscriptionId) {
-      const subscription = subscriptionSelector(state, subscriptionId);
-      if (!subscription) return null;
+  yield* subscriptionIds.map(function* (subscriptionId) {
+    const subscription = subscriptionSelector(state, { id: subscriptionId });
+    if (!subscription) return;
 
-      const { requestType, params } = subscription.toJS();
-      if (!(requestType && params)) return null;
+    const { requestType, params } = subscription.toJS();
+    if (!(requestType && params)) return;
 
-      return yield put(loadSubscriptionDataRequest(requestType, params));
-    }).filter(Boolean);
-  } catch (error) {
-    return yield put({ type: 'ERROR', error });
-  }
+    yield put(loadSubscriptionDataRequest(requestType, params, sagaActionChunk));
+  });
 }
 
 function* startTimer() {
   yield take(REHYDRATE);
 
   while (true) {
-    yield put({ type: UPDATE_ALL_COLUMNS_SUBSCRIPTIONS });
+    yield put(updateAllColumnsSubscriptions(sagaActionChunk));
     yield call(delay, 60 * 1000); // update all columns each minute
   }
 }

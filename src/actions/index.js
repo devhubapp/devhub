@@ -28,11 +28,11 @@ import type {
 } from '../utils/types';
 
 export const createColumn = (title: string, subscriptions: Array<Object>, other?: Object = {}) => (
-  action(CREATE_COLUMN, ({ title, subscriptions, ...other }: Column))
+  action(CREATE_COLUMN, ({ title, subscriptions }: Column), other)
 );
 
-export const deleteColumn = (id: string) => (
-  action(DELETE_COLUMN, ({ id }: Column))
+export const deleteColumn = (id: string, other?: Object = {}) => (
+  action(DELETE_COLUMN, ({ id }: Column), other)
 );
 
 export const createSubscription = (
@@ -41,24 +41,38 @@ export const createSubscription = (
   params: Object,
   other?: Object = {},
 ) => (
-  action(CREATE_SUBSCRIPTION, ({ id, requestType, params, ...other }: Subscription))
+  action(CREATE_SUBSCRIPTION, ({ id, requestType, params }: Subscription), other)
 );
 
-export const deleteSubscription = (id: string) => (
-  action(DELETE_SUBSCRIPTION, ({ id }: Subscription))
+export const deleteSubscription = (id: string, other?: Object = {}) => (
+  action(DELETE_SUBSCRIPTION, ({ id }: Subscription), other)
 );
 
-export const updateAllColumnsSubscriptions = () => action(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS);
-
-export const updateColumnSubscriptions = (id: string) => (
-  action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ id }: Subscription))
+export const updateAllColumnsSubscriptions = (other?: Object = {}) => (
+  action(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, undefined, other)
 );
 
-export const setTheme = (theme: Theme) => action(SET_THEME, theme);
-export const starRepo = (repoFullName: string) => action(STAR_REPO, repoFullName);
-export const unstarRepo = (repoFullName: string) => action(UNSTAR_REPO, repoFullName);
+export const updateColumnSubscriptions = (id: string, other?: Object = {}) => (
+  action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ id }: Subscription), other)
+);
 
-export const loadSubscriptionDataRequest = (requestType: ApiRequestType, params: Object) => {
+export const setTheme = (theme: Theme, other?: Object = {}) => (
+  action(SET_THEME, theme, other)
+);
+
+export const starRepo = (repoFullName: string, other?: Object = {}) => (
+  action(STAR_REPO, repoFullName, other)
+);
+
+export const unstarRepo = (repoFullName: string, other?: Object = {}) => (
+  action(UNSTAR_REPO, repoFullName, other)
+);
+
+export const loadSubscriptionDataRequest = (
+  requestType: ApiRequestType,
+  params: Object,
+  other?: Object = {},
+) => {
   const subscriptionId = generateSubscriptionId(requestType, params);
 
   return (
@@ -66,38 +80,43 @@ export const loadSubscriptionDataRequest = (requestType: ApiRequestType, params:
       params,
       requestType,
       subscriptionId,
-    }: ApiRequestPayload))
+    }: ApiRequestPayload), other)
   );
 };
 
-export const loadUserReceivedEvents = (username: string) => (
-  loadSubscriptionDataRequest(requestTypes.USER_RECEIVED_EVENTS, { username })
+export const loadUserReceivedEvents = (username: string, other?: Object = {}) => (
+  loadSubscriptionDataRequest(requestTypes.USER_RECEIVED_EVENTS, { username }, other)
 );
 
-export const loadUserEvents = (username: string) => (
-  loadSubscriptionDataRequest(requestTypes.USER_EVENTS, { username })
+export const loadUserEvents = (username: string, other?: Object = {}) => (
+  loadSubscriptionDataRequest(requestTypes.USER_EVENTS, { username }, other)
 );
 
-export const loadUserOrgEvents = (username: string, org: string) => (
-  loadSubscriptionDataRequest(requestTypes.USER_ORG_EVENTS, { username, org })
+export const loadUserOrgEvents = (username: string, org: string, other?: Object = {}) => (
+  loadSubscriptionDataRequest(requestTypes.USER_ORG_EVENTS, { username, org }, other)
 );
 
-export const loadRepoEvents = (owner: string, repo: string) => (
-  loadSubscriptionDataRequest(requestTypes.REPO_EVENTS, { owner, repo })
+export const loadRepoEvents = (owner: string, repo: string, other?: Object = {}) => (
+  loadSubscriptionDataRequest(requestTypes.REPO_EVENTS, { owner, repo }, other)
 );
 
-export const loadOrgEvents = (org: string) => (
-  loadSubscriptionDataRequest(requestTypes.ORG_PUBLIC_EVENTS, { org })
+export const loadOrgEvents = (org: string, other?: Object = {}) => (
+  loadSubscriptionDataRequest(requestTypes.ORG_PUBLIC_EVENTS, { org }, other)
 );
 
 export const loadSubscriptionDataSuccess = (
   request: ApiRequestPayload,
   data: Object,
   meta: Object,
+  other?: Object = {},
 ) => (
-  action(LOAD_SUBSCRIPTION_DATA_SUCCESS, ({ request, data, meta }: ApiResponsePayload))
+  action(LOAD_SUBSCRIPTION_DATA_SUCCESS, ({ request, data, meta }: ApiResponsePayload), other)
 );
 
-export const loadSubscriptionDataFailure = (request: ApiRequestPayload, error: any) => (
-  errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, error)
+export const loadSubscriptionDataFailure = (
+  request: ApiRequestPayload,
+  error: any,
+  other?: Object = {},
+) => (
+  errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, error, other)
 );
