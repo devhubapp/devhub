@@ -572,7 +572,7 @@ export default class extends React.PureComponent {
         {this.renderBranchRow(type, payload.get('ref'), { narrow: true })}
 
         {
-          payload.forkee &&
+          payload.get('forkee') &&
           this.renderRepositoryRow(type, {
             name: payload.getIn(['forkee', 'full_name']),
             isFork: !!payload.get('forkee'),
