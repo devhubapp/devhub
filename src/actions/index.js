@@ -74,7 +74,27 @@ export const loadUserReceivedEvents = (username: string) => (
   loadSubscriptionDataRequest(requestTypes.USER_RECEIVED_EVENTS, { username })
 );
 
-export const loadSubscriptionDataSuccess = (request: ApiRequestPayload, data: Object, meta: Object) => (
+export const loadUserEvents = (username: string) => (
+  loadSubscriptionDataRequest(requestTypes.USER_EVENTS, { username })
+);
+
+export const loadUserOrgEvents = (username: string, org: string) => (
+  loadSubscriptionDataRequest(requestTypes.USER_ORG_EVENTS, { username, org })
+);
+
+export const loadRepoEvents = (owner: string, repo: string) => (
+  loadSubscriptionDataRequest(requestTypes.REPO_EVENTS, { owner, repo })
+);
+
+export const loadOrgEvents = (org: string) => (
+  loadSubscriptionDataRequest(requestTypes.ORG_PUBLIC_EVENTS, { org })
+);
+
+export const loadSubscriptionDataSuccess = (
+  request: ApiRequestPayload,
+  data: Object,
+  meta: Object,
+) => (
   action(LOAD_SUBSCRIPTION_DATA_SUCCESS, ({ request, data, meta }: ApiResponsePayload))
 );
 

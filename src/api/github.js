@@ -1,3 +1,5 @@
+// @flow
+
 import GitHubAPI from 'github';
 
 const PUBLIC_EVENTS: 'PUBLIC_EVENTS' = 'PUBLIC_EVENTS';
@@ -9,7 +11,7 @@ const USER_RECEIVED_EVENTS: 'USER_RECEIVED_EVENTS' = 'USER_RECEIVED_EVENTS';
 const USER_RECEIVED_PUBLIC_EVENTS: 'USER_RECEIVED_PUBLIC_EVENTS' = 'USER_RECEIVED_PUBLIC_EVENTS';
 const USER_EVENTS: 'USER_EVENTS' = 'USER_EVENTS';
 const USER_PUBLIC_EVENTS: 'USER_PUBLIC_EVENTS' = 'USER_PUBLIC_EVENTS';
-const ORG_EVENTS: 'ORG_EVENTS' = 'ORG_EVENTS';
+const USER_ORG_EVENTS: 'USER_ORG_EVENTS' = 'USER_ORG_EVENTS';
 
 const github = new GitHubAPI();
 
@@ -23,7 +25,7 @@ export const requestTypes = {
   USER_RECEIVED_PUBLIC_EVENTS,
   USER_EVENTS,
   USER_PUBLIC_EVENTS,
-  ORG_EVENTS,
+  USER_ORG_EVENTS,
 };
 
 export type ApiRequestType =
@@ -36,11 +38,11 @@ export type ApiRequestType =
   | typeof USER_RECEIVED_PUBLIC_EVENTS
   | typeof USER_EVENTS
   | typeof USER_PUBLIC_EVENTS
-  | typeof ORG_EVENTS
+  | typeof USER_ORG_EVENTS
 ;
 
 // TODO: Some icons might be wrong, like the ones for organization
-export function getIcon(type) {
+export function getIcon(type: ApiRequestType) {
   switch (type) {
     case requestTypes.PUBLIC_EVENTS: return 'home';
     case requestTypes.REPO_EVENTS: return 'repo';
@@ -51,7 +53,7 @@ export function getIcon(type) {
     case requestTypes.USER_RECEIVED_PUBLIC_EVENTS: return 'home';
     case requestTypes.USER_EVENTS: return 'person';
     case requestTypes.USER_PUBLIC_EVENTS: return 'person';
-    case requestTypes.ORG_EVENTS: return 'organization';
+    case requestTypes.USER_ORG_EVENTS: return 'organization';
     default: throw new Error(`No api method configured for type '${type}'`);
   }
 }
@@ -75,7 +77,7 @@ export function getUniquePath(type: ApiRequestType, { org, owner, repo, username
         return `/networks/${owner}/${repo}/events`;
 
       case requestTypes.ORG_PUBLIC_EVENTS:
-        if (!repo) throw new Error('Required params: repo');
+        if (!org) throw new Error('Required params: org');
         return `/orgs/${org}/events`;
 
       case requestTypes.USER_RECEIVED_EVENTS:
@@ -94,8 +96,8 @@ export function getUniquePath(type: ApiRequestType, { org, owner, repo, username
         if (!username) throw new Error('Required params: username');
         return `/users/${username}/events/public`;
 
-      case requestTypes.ORG_EVENTS:
-        if (!username) throw new Error('Required params: username');
+      case requestTypes.USER_ORG_EVENTS:
+        if (!(username && org)) throw new Error('Required params: username, org');
         return `/users/${username}/events/orgs/${org}`;
 
       default: throw new Error(`No path configured for type '${type}'`);
@@ -103,7 +105,7 @@ export function getUniquePath(type: ApiRequestType, { org, owner, repo, username
   })().toLowerCase();
 }
 
-export function getApiMethod(type) {
+export function getApiMethod(type: ApiRequestType) {
   switch (type) {
     case requestTypes.PUBLIC_EVENTS: return github.activity.getEvents;
     case requestTypes.REPO_EVENTS: return github.activity.getEventsForRepo;
@@ -114,12 +116,12 @@ export function getApiMethod(type) {
     case requestTypes.USER_RECEIVED_PUBLIC_EVENTS: return github.activity.getEventsReceivedPublic;
     case requestTypes.USER_EVENTS: return github.activity.getEventsForUser;
     case requestTypes.USER_PUBLIC_EVENTS: return github.activity.getEventsForUserPublic;
-    case requestTypes.ORG_EVENTS: return github.activity.getEventsForUserOrg;
+    case requestTypes.USER_ORG_EVENTS: return github.activity.getEventsForUserOrg;
     default: throw new Error(`No api method configured for type '${type}'`);
   }
 }
 
-export function fetch(type) {
+export function fetch(type: ApiRequestType) {
   const method = getApiMethod(type);
   return method();
 }

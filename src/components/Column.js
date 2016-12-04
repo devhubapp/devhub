@@ -1,19 +1,19 @@
 // @flow
 
 import React from 'react';
-import { AlertIOS, RefreshControl } from 'react-native';
+import { RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 
 import Card, { iconRightMargin } from './Card';
+import CreateColumnUtils from './utils/CreateColumnUtils';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
+import { getIcon } from '../api/github';
 import { getDateFromNow } from '../utils/helpers';
 import { contentPadding } from '../styles/variables';
-import { requestTypes } from '../api/github';
-import { generateSubscriptionId } from '../reducers/entities/subscriptions';
-import type { ActionCreator, Column, ThemeObject } from '../utils/types';
+import type { ActionCreators, Column, ThemeObject } from '../utils/types';
 
 const Root = styled.View`
   background-color: ${({ theme }) => theme.base02};
@@ -69,21 +69,8 @@ const FixedHeader = styled.View`
 
 @Themable
 export default class extends React.PureComponent {
-  // TODO: refactor this and do it the right way
   onCreateColumnButtonPress = () => {
-    const { createColumn, createSubscription, loadUserReceivedEvents } = this.props.actions;
-
-    AlertIOS.prompt(
-      'Enter a Github username:',
-      null,
-      username => {
-        const params = { username };
-        const subscriptionId = generateSubscriptionId(requestTypes.USER_RECEIVED_EVENTS, params);
-        createSubscription(subscriptionId, requestTypes.USER_RECEIVED_EVENTS, params);
-        createColumn(username, [subscriptionId]);
-        loadUserReceivedEvents(username);
-      },
-    );
+    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions);
   };
 
   onRefresh = () => {
@@ -92,16 +79,7 @@ export default class extends React.PureComponent {
   };
 
   props: {
-    actions: {
-      createColumn: ActionCreator,
-      createSubscription: ActionCreator,
-      deleteColumn: ActionCreator,
-      loadSubscriptionDataRequest: ActionCreator,
-      loadUserReceivedEvents: ActionCreator,
-      starRepo: ActionCreator,
-      unstarRepo: ActionCreator,
-      updateColumnSubscriptions: ActionCreator,
-    },
+    actions: ActionCreators,
     column: Column,
     radius?: number,
     style?: ?Object,
@@ -120,13 +98,20 @@ export default class extends React.PureComponent {
   render() {
     const { actions, radius, theme, ...props } = this.props;
 
-    const { id, events, loading = false, title, updatedAt } = {
+    const { id, events, loading = false, subscriptions, title, updatedAt } = {
       id: this.props.column.get('id'),
       events: this.props.column.get('events'),
       loading: this.props.column.get('loading'),
-      title: this.props.column.get('title'),
+      subscriptions: this.props.column.get('subscriptions'),
+      title: (this.props.column.get('title') || '').toLowerCase(),
       updatedAt: this.props.column.get('updatedAt'),
     };
+
+    const icon = (
+      subscriptions && subscriptions.size > 0
+      ? getIcon(subscriptions.first().get('requestType'))
+      : ''
+    ) || 'mark-github';
 
     const updatedText = getDateFromNow(updatedAt) ? `Updated ${getDateFromNow(updatedAt)}` : '';
 
@@ -134,7 +119,7 @@ export default class extends React.PureComponent {
       <Root radius={radius} {...props}>
         <FixedHeader>
           <Title>
-            <Icon name="home" size={20} />&nbsp;&nbsp;{title}
+            <Icon name={icon} size={20} />&nbsp;&nbsp;{title}
           </Title>
 
           <HeaderButtonsContainer>

@@ -1,9 +1,10 @@
 import moment from 'moment';
-import { List, Seq } from 'immutable';
+import { Seq } from 'immutable';
 import { memoize } from 'lodash';
 import { createSelector } from 'reselect';
 
 import { columnEventsSelector } from './events';
+import { columnSubscriptionsSelector } from './subscriptions';
 
 const objectKeysMemoized = memoize(obj => (obj ? obj.keySeq() : Seq()));
 
@@ -27,6 +28,7 @@ export default createSelector(
 
       return column.merge({
         events: columnEventsSelector(state, { column }),
+        subscriptions: columnSubscriptionsSelector(state, { column }),
       });
     }).filter(Boolean)
   ).sort(sortColumnsByDate),

@@ -139,3 +139,12 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
     default: return 'did something';
   }
 }
+
+export function getOwnerAndRepo(repoFullName: string): { owner: ?string, repo: ?string} {
+  const repoSplitedNames = (repoFullName || '').trim().split('/').filter(Boolean);
+
+  const owner = (repoSplitedNames[0] || '').trim();
+  const repo = (repoSplitedNames[1] || '').trim();
+
+  return { owner, repo };
+}

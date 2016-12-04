@@ -3,11 +3,10 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Octicons';
-import { AlertIOS } from 'react-native';
 
+import CreateColumnUtils from './utils/CreateColumnUtils';
 import Themable from './hoc/Themable';
-import { generateSubscriptionId } from '../reducers/entities/subscriptions';
-import { requestTypes } from '../api/github';
+import type { ActionCreators } from '../utils/types';
 
 const Column = styled.View`
   flex: 1;
@@ -32,27 +31,11 @@ const NewColumnText = styled.Text`
 @Themable
 export default class extends React.PureComponent {
   onPress = () => {
-    const { createColumn, createSubscription, loadUserReceivedEvents } = this.props.actions;
-
-    AlertIOS.prompt(
-      'Enter a Github username:',
-      null,
-      username => {
-        const params = { username };
-        const subscriptionId = generateSubscriptionId(requestTypes.USER_RECEIVED_EVENTS, params);
-        createSubscription(subscriptionId, requestTypes.USER_RECEIVED_EVENTS, params);
-        createColumn(username, [subscriptionId]);
-        loadUserReceivedEvents(username);
-      },
-    );
+    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions);
   };
 
   props: {
-    actions: {
-      createColumn: Function,
-      createSubscription: Function,
-      loadUserReceivedEvents: Function,
-    },
+    actions: ActionCreators,
     radius?: number,
     style?: ?Object,
   };
