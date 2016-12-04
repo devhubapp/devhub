@@ -87,8 +87,8 @@ export default class extends React.PureComponent {
   };
 
   onRefresh = () => {
-    const { column: { id }, actions: { updateColumnSubscriptions } } = this.props;
-    updateColumnSubscriptions(id);
+    const { column, actions: { updateColumnSubscriptions } } = this.props;
+    updateColumnSubscriptions(column.get('id'));
   };
 
   props: {
@@ -108,24 +108,25 @@ export default class extends React.PureComponent {
     theme: ThemeObject,
   };
 
-  renderRow = (event) => {
-    if (!event) return null;
-
-    const { id } = event;
-
-    return (
-      <Card
-        key={`card-${id}`}
-        event={event}
-        starRepo={this.props.actions.starRepo}
-        unstarRepo={this.props.actions.unstarRepo}
-      />
-    );
-  };
+  renderRow = (event) => (
+    <Card
+      key={`card-${event.get('id')}`}
+      event={event}
+      starRepo={this.props.actions.starRepo}
+      unstarRepo={this.props.actions.unstarRepo}
+    />
+  );
 
   render() {
     const { actions, radius, theme, ...props } = this.props;
-    const { id, events, loading = false, title, updatedAt } = this.props.column;
+
+    const { id, events, loading = false, title, updatedAt } = {
+      id: this.props.column.get('id'),
+      events: this.props.column.get('events'),
+      loading: this.props.column.get('loading'),
+      title: this.props.column.get('title'),
+      updatedAt: this.props.column.get('updatedAt'),
+    };
 
     const updatedText = getDateFromNow(updatedAt) ? `Updated ${getDateFromNow(updatedAt)}` : '';
 

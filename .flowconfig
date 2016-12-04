@@ -25,31 +25,18 @@
 .*/Libraries/react-native/ReactNative.js
 .*/node_modules/jest-runtime/build/__tests__/.*
 
-.*/node_modules/@exponent/.*
-# .*/node_modules/react-native/lib/.*
-# .*/node_modules/react-native/Libraries/.*
-.*/node_modules/react-native-linear-gradient/.*
-.*/node_modules/react-native-tab-view/.*
-.*/node_modules/styled-components/src/.*
-
 [include]
 
 [libs]
 node_modules/react-native/Libraries/react-native/react-native-interface.js
 node_modules/react-native/flow
 flow/
-flow-typed
-
-node_modules/styled-components/flow-typed/glamor_vx.x.x.js
-node_modules/styled-components/flow-typed/lodash_v4.x.x.js
-node_modules/styled-components/flow-typed/inline-style-prefixer_vx.x.x.js
 
 [options]
 module.system=haste
 
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable
-esproposal.decorators=enable
 
 experimental.strict_type_args=true
 
@@ -68,3 +55,5 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 
 unsafe.enable_getters_and_setters=true
 
+[version]
+^0.33.0

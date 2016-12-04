@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Map } from 'immutable';
+import { List, Map } from 'immutable';
 import { ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
@@ -165,7 +165,8 @@ export default class extends React.PureComponent {
     );
   };
 
-  _renderWikiPageRow = ({ title } = {}) => {
+  _renderWikiPageRow = (wiki = Map({})) => {
+    const title = wiki.get('title');
     if (!title) return null;
 
     const { theme } = this.props;
@@ -190,9 +191,11 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderWikiPageRows = (type, { pages = [] } = {}) => {
+  renderWikiPageRows = (type, wiki = Map({})) => {
     if (type !== 'GollumEvent') return null;
-    if (!(pages && pages.length > 0)) return null;
+
+    const pages = wiki.get('pages') || List([]);
+    if (!(pages && pages.size > 0)) return null;
 
     const WikiPageRow = this._renderWikiPageRow;
     const { theme } = this.props;
@@ -214,10 +217,17 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderPullRequestRow = (type, {
-    pull_request: { number, state, title, user } = {},
-  } = {}) => {
-    let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+  renderPullRequestRow = (type, pullRequest) => {
+    if (!pullRequest) return null;
+
+    const { number, state, title, user } = {
+      number: pullRequest.get('number'),
+      state: pullRequest.get('state'),
+      title: pullRequest.get('title'),
+      user: pullRequest.get('user'),
+    };
+
+    const _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
 
     const { theme } = this.props;
@@ -234,7 +244,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow>
         <LeftColumn center>
-          <UserAvatar url={user.avatar_url} size={avatarWidth / 2} />
+          <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 
         <MainColumn>
@@ -257,8 +267,13 @@ export default class extends React.PureComponent {
     );
   };
 
-  _renderCommitRow = ({ author, message } = {}) => {
-    let _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+  _renderCommitRow = (payload = Map({})) => {
+    const { author, message } = {
+      author: payload.get('author'),
+      message: payload.get('message'),
+    };
+
+    const _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_message) return null;
 
     const { theme } = this.props;
@@ -266,7 +281,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow>
         <LeftColumn center>
-          <UserAvatar url={author.avatar_url} size={avatarWidth / 2} />
+          <UserAvatar url={author.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 
         <MainColumn>
@@ -274,7 +289,7 @@ export default class extends React.PureComponent {
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Comment numberOfLines={1}>
-                  <Icon name="git-commit"/>&nbsp;
+                  <Icon name="git-commit" />&nbsp;
                   {_message}
                 </Comment>
               </ScrollableContentContainer>
@@ -285,17 +300,22 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderCommitRows = (type, { commits, head_commit } = {}) => {
-    const commit = head_commit ? head_commit : (commits || [])[0];
+  renderCommitRows = (type, payload = Map({})) => {
+    const { commits, headCommit } = {
+      commits: payload.get('commits'),
+      headCommit: payload.get('head_commit'),
+    };
+
+    const commit = headCommit ? headCommit : (commits || [])[0];
     if (!commit) return null;
 
-    const { message } = commit;
+    const message= commit.get('message');
 
-    let _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    const _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_message) return null;
 
     const CommitRow = this._renderCommitRow;
-    const list = commits || [head_commit];
+    const list = commits || [headCommit];
     const { theme } = this.props;
 
     return (
@@ -306,8 +326,12 @@ export default class extends React.PureComponent {
           alwaysBounceVertical={false}
         >
           {
-            list.map(({ sha, author, message }) => (
-              <CommitRow key={`commit-row-${sha}`} author={author} message={message}/>
+            list.map(item => (
+              <CommitRow
+                key={`commit-row-${item.get('sha')}`}
+                author={item.get('author')}
+                message={item.get('message')}
+              />
             ))
           }
         </ScrollView>
@@ -315,8 +339,17 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderIssueRow = (type, { actor, issue: { user, number, state, title } = {} } = {}) => {
-    let _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+  renderIssueRow = (type, actor, issue) => {
+    if (!issue) return null;
+
+    const { user, number, state, title } = {
+      user: issue.get('user'),
+      number: issue.get('number'),
+      state: issue.get('state'),
+      title: issue.get('title'),
+    };
+
+    const _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
 
     const { theme } = this.props;
@@ -333,7 +366,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow>
         <LeftColumn center>
-          <UserAvatar url={(user || actor).avatar_url} size={avatarWidth / 2} />
+          <UserAvatar url={(user || actor).get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 
         <MainColumn>
@@ -404,10 +437,7 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderBranchRow = (type, {
-    branch = 'master',
-    narrow,
-  } = {}) => {
+  renderBranchRow = (type, branch, { narrow } = {}) => {
     const _branch = (branch || '').split('/').pop();
     if (!_branch) return null;
 
@@ -425,7 +455,7 @@ export default class extends React.PureComponent {
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1} muted={!isBranchMainEventAction}>
-                  <Icon name="git-branch"/>&nbsp;
+                  <Icon name="git-branch" />&nbsp;
                   {_branch}
                 </Text>
               </RepositoryContentContainer>
@@ -436,8 +466,10 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderMemberRow = (type, { member = {} } = {}) => {
-    let _login = (member.login || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+  renderMemberRow = (type, member) => {
+    if (!member) return null;
+
+    const _login = (member.get('login') || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_login) return null;
 
     const { theme } = this.props;
@@ -445,7 +477,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow>
         <LeftColumn>
-          <UserAvatar url={member.avatar_url} size={avatarWidth / 2} />
+          <UserAvatar url={member.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 
         <MainColumn>
@@ -453,7 +485,7 @@ export default class extends React.PureComponent {
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1}>
-                  <Icon name="person"/>&nbsp;
+                  <Icon name="person" />&nbsp;
                   {_login}
                 </Text>
               </RepositoryContentContainer>
@@ -464,20 +496,20 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderCommentRow = (type, actor, {
-    comment: { body } = {},
-  } = {}) => {
-    let _body = (body || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
-    if (!_body) return null;
+  renderCommentRow = (type, actor, comment) => {
+    if (!comment) return null;
+
+    const body = (comment.get('body') || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    if (!body) return null;
 
     return (
       <ContentRow narrow>
         <LeftColumn>
-          <UserAvatar url={actor.avatar_url} size={avatarWidth / 2} />
+          <UserAvatar url={actor.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 
         <MainColumnRowContent center>
-          <Comment numberOfLines={2}>{_body}</Comment>
+          <Comment numberOfLines={2}>{body}</Comment>
         </MainColumnRowContent>
       </ContentRow>
     );
@@ -485,14 +517,20 @@ export default class extends React.PureComponent {
 
   render() {
     const { event, ...props } = this.props;
-    
+
     const {
       type,
-      payload = Map({}),
-      actor = Map({}),
-      repo = Map({}),
+      payload,
+      actor,
+      repo,
       created_at,
-    } = event;
+    } = {
+      type: event.get('type'),
+      payload: event.get('payload') || Map({}),
+      actor: event.get('actor') || Map({}),
+      repo: event.get('repo') || Map({}),
+      created_at: event.get('created_at'),
+    };
 
     const dateText = getDateSmallText(created_at, '•');
 
@@ -531,13 +569,7 @@ export default class extends React.PureComponent {
           })
         }
 
-        {
-          this.renderBranchRow(type, {
-            name: repo.get('name'),
-            branch: payload.get('ref'),
-            narrow: true,
-          })
-        }
+        {this.renderBranchRow(type, payload.get('ref'), { narrow: true })}
 
         {
           payload.forkee &&
@@ -549,17 +581,17 @@ export default class extends React.PureComponent {
           })
         }
 
-        {this.renderMemberRow(type, payload)}
+        {this.renderMemberRow(type, payload.get('member'))}
 
         {this.renderWikiPageRows(type, payload)}
 
-        {this.renderPullRequestRow(type, payload)}
+        {this.renderPullRequestRow(type, payload.get('pull_request'))}
 
         {this.renderCommitRows(type, payload)}
 
-        {this.renderIssueRow(type, payload)}
+        {this.renderIssueRow(type, payload.get('actor'), payload.get('issue'))}
 
-        {this.renderCommentRow(type, actor, payload)}
+        {this.renderCommentRow(type, actor, payload.get('comment'))}
       </CardWrapper>
     );
   }

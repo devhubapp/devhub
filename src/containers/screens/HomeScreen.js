@@ -6,13 +6,13 @@ import { connect } from 'react-redux';
 
 import Columns from '../../components/Columns';
 import Screen from '../../components/Screen';
-import selector from '../../selectors';
+import columnsSelector from '../../selectors/columns';
 import * as actionCreators from '../../actions';
 import type { ActionCreators, Column, State } from '../../utils/types';
 
 const mapStateToProps = (state: State) => ({
   rehydrated: state.getIn(['app', 'rehydrated']),
-  ...selector(state),
+  columns: columnsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

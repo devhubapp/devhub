@@ -43,8 +43,8 @@ export function getDateSmallText(date) { // , separator = '•'
 
   const momentNow = moment(new Date());
 
-  // TODO: Remove this
-  return momentNow.diff(momentDate, 'seconds');
+  // // TODO: Remove this
+  // return momentNow.diff(momentDate, 'seconds');
 
   const daysDiff = momentNow.diff(momentDate, 'days');
   const hoursDiff = momentNow.diff(momentDate, 'hours');

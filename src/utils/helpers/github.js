@@ -14,14 +14,14 @@ export function getEventIcon(event: GithubEventType, payload: GithubEventPayload
   switch (event) {
     case 'CommitCommentEvent': return 'comment-discussion'; // git-commit
     case 'CreateEvent':
-      switch (payload.ref_type) {
+      switch (payload.get('ref_type')) {
         case 'repository': return 'repo';
         case 'branch': return 'git-branch';
         case 'tag': return 'tag';
         default: return 'plus';
       }
     case 'DeleteEvent':
-      switch (payload.ref_type) {
+      switch (payload.get('ref_type')) {
         case 'repository': return 'repo'; // probably not used
         case 'branch': return 'git-branch';
         case 'tag': return 'tag';
@@ -31,7 +31,7 @@ export function getEventIcon(event: GithubEventType, payload: GithubEventPayload
     case 'ForkEvent': return 'repo-forked';
     case 'IssueCommentEvent': return 'comment-discussion';
     case 'IssuesEvent':
-      switch (payload.action) {
+      switch (payload.get('action')) {
         case 'closed': return 'issue-closed';
         case 'reopened': return 'issue-reopened';
         // case 'opened':
@@ -60,14 +60,14 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
   switch (event) {
     case 'CommitCommentEvent': return 'commented on a commit';
     case 'CreateEvent':
-      switch (payload.ref_type) {
+      switch (payload.get('ref_type')) {
         case 'repository': return 'created a repository';
         case 'branch': return 'created a branch';
         case 'tag': return 'created a tag';
         default: return 'created something';
       }
     case 'DeleteEvent':
-      switch (payload.ref_type) {
+      switch (payload.get('ref_type')) {
         case 'repository': return 'deleted a repository';
         case 'branch': return 'deleted a branch';
         case 'tag': return 'deleted a tag';
@@ -75,9 +75,9 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
       }
     case 'GollumEvent':
       return (() => {
-        const count = (payload.pages || []).length || 1;
+        const count = (payload.get('pages') || List([])).size || 1;
         const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page';
-        switch (((payload.pages || [])[0] || {}).action) {
+        switch (((payload.get('pages') || List([]))[0] || Map({})).get('action')) {
           case 'created': return `created ${pagesText}`;
           default: return `updated ${pagesText}`;
         }
@@ -85,7 +85,7 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
     case 'ForkEvent': return 'forked a repository';
     case 'IssueCommentEvent': return 'commented on an issue';
     case 'IssuesEvent': // TODO: Fix these texts
-      switch (payload.action) {
+      switch (payload.get('action')) {
         case 'closed': return 'closed an issue';
         case 'reopened': return 'reopened an issue';
         case 'opened': return 'opened an issue';
@@ -101,7 +101,7 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
     case 'MemberEvent': return 'added an user to a repository';
     case 'PublicEvent': return 'made a repository public';
     case 'PullRequestEvent':
-      switch (payload.action) {
+      switch (payload.get('action')) {
         case 'assigned': return 'assigned a pull request';
         case 'unassigned': return 'unassigned a pull request';
         case 'labeled': return 'labeled a pull request';
@@ -114,7 +114,7 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
       }
     case 'PullRequestReviewEvent': return 'reviewed a pull request';
     case 'PullRequestReviewCommentEvent':
-      switch (payload.action) {
+      switch (payload.get('action')) {
         case 'created': return 'commented on a pull request review';
         case 'edited': return 'edited a pull request review';
         case 'deleted': return 'deleted a pull request review';
@@ -122,12 +122,12 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
       }
     case 'PushEvent':
       return (() => {
-        const commits = payload.commits || [{}];
-        // const commit = payload.head_commit || commits[0];
-        const count = max([1, payload.size, payload.distinct_size, commits.length]) || 1;
-        // const branch = (payload.ref || '').split('/').pop();
+        const commits = payload.get('commits') || List([Map({})]);
+        // const commit = payload.get('head_commit'))' || commits[0];
+        const count = max([1, payload.get('size'), payload.get('distinct_size'), commits.size]) || 1;
+        // const branch = (payload.get('ref'))' || '').split('/').pop();
 
-        const pushedText = payload.forced ? 'force pushed' : 'pushed';
+        const pushedText = payload.get('forced') ? 'force pushed' : 'pushed';
         const commitText = count > 1 ? `${count} commits` : 'a commit';
         // const branchText = branch && branch !== 'master' ? `to ${branch}` : '';
 

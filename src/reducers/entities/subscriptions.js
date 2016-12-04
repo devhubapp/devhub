@@ -1,6 +1,6 @@
 // @flow
 
-import { fromJS, OrderedMap } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import { ApiRequestType, getUniquePath } from '../../api/github';
 import { CREATE_SUBSCRIPTION, DELETE_SUBSCRIPTION } from '../../utils/constants/actions';
@@ -16,7 +16,7 @@ export function generateSubscriptionId(requestType: ApiRequestType, params: Obje
 }
 
 type State = Normalized<Subscription>;
-export default (state: State = OrderedMap({}), { type, payload }: Action<any>): State => {
+export default (state: State = Map({}), { type, payload }: Action<any>): State => {
   switch (type) {
     case CREATE_SUBSCRIPTION:
       return (({ id: subscriptionId, requestType, params, ...restOfPayload }: Subscription) => {

@@ -1,6 +1,6 @@
 // @flow
 
-import { fromJS, OrderedMap } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import { combineReducers } from 'redux-immutable';
 
 import columns from './columns';
@@ -27,7 +27,7 @@ const reducer = combineReducers({
   users,
 });
 
-const indexReducer = (state: Object = OrderedMap({}), action) => {
+const indexReducer = (state: Object = Map({}), action) => {
   const { type, payload } = action || {};
 
   switch (type) {
@@ -42,7 +42,7 @@ const indexReducer = (state: Object = OrderedMap({}), action) => {
   }
 };
 
-export default (state: Object = OrderedMap({}), action: Action<Object>) => {
+export default (state: Object = Map({}), action: Action<Object>) => {
   const stateAfterIndexReducer = indexReducer(state, action);
   return reducer(stateAfterIndexReducer, action);
 };

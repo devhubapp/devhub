@@ -39,7 +39,6 @@
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-jest": "17.0.2",
-    "babel-plugin-extensible-destructuring": "^4.0.1",
     "babel-plugin-transform-es2015-parameters": "^6.18.0",
     "babel-preset-react-native": "1.9.0",
     "babel-preset-react-native-stage-0": "^1.0.1",
@@ -51,7 +50,6 @@
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "^6.7.1",
     "eslint-plugin-react-native": "^2.2.0",
-    "extensible-runtime": "^4.0.1",
     "flow-bin": "^0.36.0",
     "jest": "17.0.3",
     "jest-react-native": "17.0.3",

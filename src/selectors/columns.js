@@ -1,19 +1,18 @@
-import { denormalize } from 'denormalizr';
+import { Seq } from 'immutable';
 import { memoize } from 'lodash';
+import { denormalize } from 'denormalizr';
 import { arrayOf } from 'normalizr';
 import { createSelector } from 'reselect';
 
 import { ColumnSchema } from '../utils/normalizr/schemas';
 
-const objectKeysMemoized = memoize(obj => obj.keySeq());
+const objectKeysMemoized = memoize(obj => (obj ? obj.keySeq() : Seq()));
 
-const columnsIdsSelector = state => objectKeysMemoized(state.getIn(['entities', 'columns']));
 const entitiesSelector = state => state.get('entities');
+const columnsIdsSelector = state => objectKeysMemoized(state.getIn(['entities', 'columns']));
 
 export default createSelector(
   columnsIdsSelector,
   entitiesSelector,
-  (columnsIds, entities) => (
-    denormalize(columnsIds, entities, arrayOf(ColumnSchema))
-  ),
+  (columnsIds, entities) => denormalize(columnsIds, entities, arrayOf(ColumnSchema)),
 );

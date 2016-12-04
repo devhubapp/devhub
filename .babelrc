@@ -4,7 +4,6 @@
     "react-native-stage-0/decorator-support"
   ],
   "plugins": [
-    "transform-es2015-parameters",
-    ["extensible-destructuring", {"mode": "optout", "impl": "immutable"}]
+    "transform-es2015-parameters"
   ]
 }

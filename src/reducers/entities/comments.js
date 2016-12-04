@@ -1,8 +1,8 @@
 // @flow
 
-import { OrderedMap } from 'immutable';
+import { Map } from 'immutable';
 
 import type { Normalized } from '../../utils/types';
 
 type State = Normalized<Object>;
-export default (state: State = OrderedMap({})): State => state;
+export default (state: State = Map({})): State => state;

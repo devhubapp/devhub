@@ -1,12 +1,12 @@
 // @flow
 
-import { OrderedMap } from 'immutable';
+import { Map } from 'immutable';
 import type { Action, Repo } from '../../utils/types';
 
 import { STAR_REPO, UNSTAR_REPO } from '../../utils/constants/actions';
 
 type State = Repo;
-export default (state: State = OrderedMap({}), action: Action<any>): State => {
+export default (state: State = Map({}), action: Action<any>): State => {
   const { type, payload } = action || {};
 
   switch (type) {

@@ -1,6 +1,6 @@
 // @flow
 
-import { fromJS, List, OrderedMap, Set } from 'immutable';
+import { fromJS, List, Map, Set } from 'immutable';
 
 import { guid } from '../../utils/helpers';
 
@@ -21,13 +21,13 @@ import type {
 } from '../../utils/types';
 
 type State = Normalized<Column>;
-export default (state: State = OrderedMap({}), { type, payload }: Action<any>): State => {
+export default (state: State = Map({}), { type, payload }: Action<any>): State => {
   switch (type) {
     case CREATE_COLUMN:
       return (({ title, events, subscriptions, ...restOfPayload }: Column) => {
         const id = guid();
 
-        return state.set(id, OrderedMap(fromJS({
+        return state.set(id, Map(fromJS({
           id,
           title,
           events: List(events),
