@@ -1,10 +1,10 @@
 // @flow
 
-import { List } from 'immutable';
 import { flatten, uniq } from 'lodash';
 import { arrayOf, normalize } from 'normalizr';
 import { delay, takeEvery, takeLatest } from 'redux-saga';
-import { call, fork, put, race, select } from 'redux-saga/effects';
+import { call, fork, put, race, select, take } from 'redux-saga/effects';
+import { REHYDRATE } from 'redux-persist/constants';
 
 import { EventSchema } from '../utils/normalizr/schemas';
 
@@ -103,14 +103,12 @@ function* updateSubscriptionsFromAllColumns() {
   }
 }
 
-function* runTimer() {
-  try {
-    while (true) {
-      yield call(delay, 60 * 1000); // update all columns each minute
-      yield updateSubscriptionsFromAllColumns();
-    }
-  } catch (error) {
-    return yield put({ type: 'ERROR', error });
+function* startTimer() {
+  yield take(REHYDRATE);
+
+  while (true) {
+    yield put({ type: UPDATE_ALL_COLUMNS_SUBSCRIPTIONS });
+    yield call(delay, 60 * 1000); // update all columns each minute
   }
 }
 
@@ -119,6 +117,6 @@ export default function* () {
     yield takeEvery(LOAD_SUBSCRIPTION_DATA_REQUEST, loadSubscriptionData),
     yield takeEvery(UPDATE_COLUMN_SUBSCRIPTIONS, updateSubscriptionsFromColumn),
     yield takeLatest(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, updateSubscriptionsFromAllColumns),
-    yield fork(runTimer),
+    yield fork(startTimer),
   ];
 }
