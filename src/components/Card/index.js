@@ -441,7 +441,7 @@ export default class extends React.PureComponent {
     if (!_branch) return null;
 
     const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
-    // if (_branch === 'master' && !isBranchMainEventAction) return null;
+    if (_branch === 'master' && !isBranchMainEventAction) return null;
 
     const { theme } = this.props;
 
@@ -556,7 +556,7 @@ export default class extends React.PureComponent {
                 <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
               </View>
 
-              <CardIcon name={getEventIcon(type, payload)}/>
+              <CardIcon name={getEventIcon(type, payload)} />
             </HeaderRow>
           </MainColumn>
         </Header>
