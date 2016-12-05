@@ -118,5 +118,5 @@ export const loadSubscriptionDataFailure = (
   error: any,
   other?: Object = {},
 ) => (
-  errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, error, other)
+  errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, { request }, error, other)
 );

@@ -165,8 +165,10 @@ export default class extends React.PureComponent {
     );
   };
 
-  _renderWikiPageRow = (wiki = Map({})) => {
-    const title = wiki.get('title');
+  _wikiPageRowComponent = (props) => {
+    if (!props) return null;
+
+    const title = props.title;
     if (!title) return null;
 
     const { theme } = this.props;
@@ -180,7 +182,7 @@ export default class extends React.PureComponent {
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
               <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
                 <Text numberOfLines={1}>
-                  <Icon name="book"/>&nbsp;
+                  <Icon name="book" />&nbsp;
                   {title}
                 </Text>
               </ScrollableContentContainer>
@@ -191,13 +193,11 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderWikiPageRows = (type, wiki = Map({})) => {
+  renderWikiPageRows = (type, pages) => {
     if (type !== 'GollumEvent') return null;
-
-    const pages = wiki.get('pages') || List([]);
     if (!(pages && pages.size > 0)) return null;
 
-    const WikiPageRow = this._renderWikiPageRow;
+    const WikiPageRow = this._wikiPageRowComponent;
     const { theme } = this.props;
 
     return (
@@ -209,7 +209,7 @@ export default class extends React.PureComponent {
         >
           {
             pages.map(({ sha, title }) => (
-              <WikiPageRow key={`wiki-page-row-${sha}`} title={title}/>
+              <WikiPageRow key={`wiki-page-row-${sha}`} title={title} />
             ))
           }
         </ScrollView>
@@ -267,11 +267,8 @@ export default class extends React.PureComponent {
     );
   };
 
-  _renderCommitRow = (payload = Map({})) => {
-    const { author, message } = {
-      author: payload.get('author'),
-      message: payload.get('message'),
-    };
+  _commitRowComponent = (props) => {
+    const { author, message } = props || {};
 
     const _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_message) return null;
@@ -314,7 +311,7 @@ export default class extends React.PureComponent {
     const _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_message) return null;
 
-    const CommitRow = this._renderCommitRow;
+    const CommitRow = this._commitRowComponent;
     const list = commits || [headCommit];
     const { theme } = this.props;
 
@@ -526,11 +523,13 @@ export default class extends React.PureComponent {
       created_at,
     } = {
       type: event.get('type'),
-      payload: event.get('payload') || Map({}),
+      payload: event.get('payload'),
       actor: event.get('actor') || Map({}),
       repo: event.get('repo') || Map({}),
       created_at: event.get('created_at'),
     };
+
+    if (!payload) return null;
 
     const dateText = getDateSmallText(created_at, '•');
 
@@ -583,7 +582,7 @@ export default class extends React.PureComponent {
 
         {this.renderMemberRow(type, payload.get('member'))}
 
-        {this.renderWikiPageRows(type, payload)}
+        {this.renderWikiPageRows(type, payload.get('pages'))}
 
         {this.renderPullRequestRow(type, payload.get('pull_request'))}
 

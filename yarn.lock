@@ -873,7 +873,7 @@ babel-preset-jest@^17.0.2:
 
 babel-preset-react-native-stage-0@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/babel-preset-react-native-stage-0/-/babel-preset-react-native-stage-0-1.0.1.tgz#d5f5f685575471ef756a49f191b193269f74306e"
+  resolved "http://registry.npmjs.org/babel-preset-react-native-stage-0/-/babel-preset-react-native-stage-0-1.0.1.tgz#d5f5f685575471ef756a49f191b193269f74306e"
   dependencies:
     babel-plugin-syntax-trailing-function-commas "^6.5.0"
     babel-plugin-transform-class-constructor-call "^6.6.5"
@@ -978,7 +978,7 @@ balanced-match@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
 
-base-64@0.1.0, base-64@^0.1.0:
+base-64@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
 
@@ -2134,11 +2134,11 @@ eslint-plugin-react-native@^2.2.0:
     eslint "3.11.0"
 
 eslint-plugin-react@^6.7.1:
-  version "6.7.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-6.7.1.tgz#1af96aea545856825157d97c1b50d5a8fb64a5a7"
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-6.8.0.tgz#741ab5438a094532e5ce1bbb935d6832356f492d"
   dependencies:
     doctrine "^1.2.2"
-    jsx-ast-utils "^1.3.3"
+    jsx-ast-utils "^1.3.4"
 
 eslint@3.11.0:
   version "3.11.0"
@@ -2595,11 +2595,10 @@ github-username@^2.0.0:
 
 "github@https://github.com/brunolemos/react-native-github-api.git":
   version "7.0.0"
-  resolved "https://github.com/brunolemos/react-native-github-api.git#28f03b5b41da5047e6fdd58a226a62fb0d80488c"
+  resolved "https://github.com/brunolemos/react-native-github-api.git#42ca84e453605c0f06d1694e66ab9298f81fcb4b"
   dependencies:
     https-proxy-agent "^1.0.0"
     mime-types "^2.1.13"
-    react-native-fs "^2.0.1-rc.2"
   optionalDependencies:
     browser-request "^0.3.3"
     follow-redirects "^1.1.0"
@@ -2945,7 +2944,7 @@ hyphenate-style-name@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.2.tgz#31160a36930adaf1fc04c6074f7eb41465d4ec4b"
 
-iconv-lite@0.4.11, iconv-lite@^0.4.5:
+iconv-lite@0.4.11:
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.11.tgz#2ecb42fd294744922209a2e7c404dac8793d8ade"
 
@@ -2953,7 +2952,7 @@ iconv-lite@0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
 
-iconv-lite@^0.4.13, iconv-lite@~0.4.13:
+iconv-lite@^0.4.13, iconv-lite@^0.4.5, iconv-lite@~0.4.13:
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
@@ -3188,7 +3187,7 @@ is-path-inside@^1.0.0:
 
 is-posix-bracket@^0.1.0:
   version "0.1.1"
-  resolved "https://registry.yarnpkg.com/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
+  resolved "http://registry.npmjs.org/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
 
 is-primitive@^2.0.0:
   version "2.0.0"
@@ -3687,7 +3686,7 @@ jstransform@^11.0.3:
     object-assign "^2.0.0"
     source-map "^0.4.2"
 
-jsx-ast-utils@^1.0.0, jsx-ast-utils@^1.3.3:
+jsx-ast-utils@^1.0.0, jsx-ast-utils@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-1.3.4.tgz#0257ed1cc4b1e65b39d7d9940f9fb4f20f7ba0a9"
   dependencies:
@@ -4150,8 +4149,8 @@ module-deps@^3.9.1:
     xtend "^4.0.0"
 
 moment@2.x.x, moment@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.0.tgz#a4c292e02aac5ddefb29a6eed24f51938dd3b74f"
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
 
 morgan@~1.6.1:
   version "1.6.1"
@@ -4623,8 +4622,8 @@ railroad-diagrams@^1.0.0:
   resolved "https://registry.yarnpkg.com/railroad-diagrams/-/railroad-diagrams-1.0.0.tgz#eb7e6267548ddedfb899c1b90e57374559cddb7e"
 
 randexp@^0.4.2:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/randexp/-/randexp-0.4.3.tgz#1712d4f9cdd57e0005c13064e0e208fba8e58d50"
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/randexp/-/randexp-0.4.4.tgz#ba68265f4a9f9e85f5814d34e160291f939f168e"
   dependencies:
     discontinuous-range "1.0.0"
     ret "~0.1.10"
@@ -4695,13 +4694,6 @@ react-native-drawer-layout@^1.0.0:
     autobind-decorator "^1.3.2"
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-fs@^2.0.1-rc.2:
-  version "2.0.1-rc.2"
-  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.0.1-rc.2.tgz#e7e00b1d5c48c52c4ca8cd76b4ea62440ae54082"
-  dependencies:
-    base-64 "^0.1.0"
-    utf8 "^2.1.1"
-
 react-native-immutable-list-view@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-native-immutable-list-view/-/react-native-immutable-list-view-0.2.1.tgz#3518261f802965567ae52e7f7088656643b3592b"
@@ -4724,8 +4716,8 @@ react-native-vector-icons@^3.0.0:
     yargs "^6.3.0"
 
 react-native@^0.38.0:
-  version "0.38.0"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.38.0.tgz#fa553d467a9e75cbd6a0c15eb1ab88346e0d5d5c"
+  version "0.38.1"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.38.1.tgz#7e4b2038a7caf0608c8b7efdde662286d8433df3"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -5141,8 +5133,8 @@ restore-cursor@^1.0.1:
     onetime "^1.0.0"
 
 ret@~0.1.10:
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.12.tgz#29348dc8b879393692dc47574494c38a26bf648f"
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.13.tgz#38c2702ece654978941edd8b7dfac6aeeef4067d"
 
 right-align@^0.1.1:
   version "0.1.3"
@@ -5313,8 +5305,8 @@ shortid@^2.2.6:
   resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.6.tgz#3abbefc6c51074cf2c1f1e72f6216a1b45876d72"
 
 signal-exit@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.1.tgz#5a4c884992b63a7acd9badb7894c3ee9cfccad81"
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
 simple-plist@0.1.4:
   version "0.1.4"
@@ -5876,10 +5868,6 @@ user-home@^2.0.0:
   resolved "https://registry.yarnpkg.com/user-home/-/user-home-2.0.0.tgz#9c70bfd8169bc1dcbf48604e0f04b8b49cde9e9f"
   dependencies:
     os-homedir "^1.0.0"
-
-utf8@^2.1.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/utf8/-/utf8-2.1.2.tgz#1fa0d9270e9be850d9b05027f63519bf46457d96"
 
 util-deprecate@1.0.2, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"

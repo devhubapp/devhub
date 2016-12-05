@@ -22,6 +22,6 @@ export function action<T>(type: ActionType, payload: T, other?: Object = {}): Ac
  * produces
  * { type: 'LOGIN_FAILURE', error: { message: '...' } }
  */
-export function errorAction(type: ActionType, error: any, other?: Object = {}) {
-  return { ...other, type, error };
+export function errorAction(type: ActionType, payload: Object, error: any, other?: Object = {}) {
+  return { ...other, type, payload, error };
 }

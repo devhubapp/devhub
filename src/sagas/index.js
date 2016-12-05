@@ -45,6 +45,7 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
     yield put(loadSubscriptionDataSuccess(payload, normalizedData, meta, sagaActionChunk));
   } catch (error) {
+    console.log('loadSubscriptionData catch', error);
     yield put(loadSubscriptionDataFailure(payload, error, sagaActionChunk));
   }
 }
