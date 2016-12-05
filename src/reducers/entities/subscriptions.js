@@ -16,7 +16,7 @@ export function generateSubscriptionId(requestType: ApiRequestType, params: Obje
 }
 
 type State = Normalized<Subscription>;
-export default (state: State = Map({}), { type, payload }: Action<any>): State => {
+export default (state: State = Map(), { type, payload }: Action<any>): State => {
   switch (type) {
     case CREATE_SUBSCRIPTION:
       return (({ id: subscriptionId, requestType, params, ...restOfPayload }: Subscription) => {

@@ -8,7 +8,7 @@ import { composeWithDevTools } from 'remote-redux-devtools';
 import sagas from '../sagas';
 import reducer from '../reducers';
 
-export default (initialState = Map({})) => {
+export default (initialState = Map()) => {
   const sagaMiddleware = createSagaMiddleware();
 
   const composeEnhancers = composeWithDevTools({ realtime: true });

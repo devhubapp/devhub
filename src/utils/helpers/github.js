@@ -78,7 +78,7 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
       return (() => {
         const count = (payload.get('pages') || List([])).size || 1;
         const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page';
-        switch (((payload.get('pages') || List([]))[0] || Map({})).get('action')) {
+        switch (((payload.get('pages') || List([]))[0] || Map()).get('action')) {
           case 'created': return `created ${pagesText}`;
           default: return `updated ${pagesText}`;
         }
@@ -123,7 +123,7 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
       }
     case 'PushEvent':
       return (() => {
-        const commits = payload.get('commits') || List([Map({})]);
+        const commits = payload.get('commits') || List([Map()]);
         // const commit = payload.get('head_commit'))' || commits[0];
         const count = max([1, payload.get('size'), payload.get('distinct_size'), commits.size]) || 1;
         // const branch = (payload.get('ref') || '').split('/').pop();

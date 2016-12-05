@@ -208,8 +208,8 @@ export default class extends React.PureComponent {
           alwaysBounceVertical={false}
         >
           {
-            pages.map(({ sha, title }) => (
-              <WikiPageRow key={`wiki-page-row-${sha}`} title={title} />
+            pages.map((page) => (
+              <WikiPageRow key={`wiki-page-row-${page.get('sha')}`} title={page.get('title')} />
             ))
           }
         </ScrollView>
@@ -268,7 +268,7 @@ export default class extends React.PureComponent {
   };
 
   _commitRowComponent = (props) => {
-    const { author, message } = props || {};
+    const { author = Map(), message } = props || {};
 
     const _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
     if (!_message) return null;
@@ -297,22 +297,24 @@ export default class extends React.PureComponent {
     );
   };
 
-  renderCommitRows = (type, payload = Map({})) => {
+  renderCommitRows = (type, payload = Map()) => {
     const { commits, headCommit } = {
       commits: payload.get('commits'),
       headCommit: payload.get('head_commit'),
     };
 
-    const commit = headCommit ? headCommit : (commits || [])[0];
-    if (!commit) return null;
+    const list = (commits || List([headCommit])).filter(Boolean);
+    if (!(list.size > 0)) return null;
 
-    const message= commit.get('message');
+    const firstCommit = list.first();
+    const firstCommitRowProps = {
+      author: firstCommit.get('author'),
+      message: firstCommit.get('message'),
+    };
 
-    const _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
-    if (!_message) return null;
-
+    if (!(this._commitRowComponent(firstCommitRowProps))) return null;
     const CommitRow = this._commitRowComponent;
-    const list = commits || [headCommit];
+
     const { theme } = this.props;
 
     return (
@@ -439,7 +441,7 @@ export default class extends React.PureComponent {
     if (!_branch) return null;
 
     const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
-    // if (_branch === 'master' && !isBranchMainEventAction) return;
+    // if (_branch === 'master' && !isBranchMainEventAction) return null;
 
     const { theme } = this.props;
 
@@ -524,8 +526,8 @@ export default class extends React.PureComponent {
     } = {
       type: event.get('type'),
       payload: event.get('payload'),
-      actor: event.get('actor') || Map({}),
-      repo: event.get('repo') || Map({}),
+      actor: event.get('actor') || Map(),
+      repo: event.get('repo') || Map(),
       created_at: event.get('created_at'),
     };
 
