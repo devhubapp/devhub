@@ -8,10 +8,11 @@ import ImmutableListView from 'react-native-immutable-list-view';
 
 import Card, { iconRightMargin } from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
+import IntervalRefresh from './IntervalRefresh';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
 import { getIcon } from '../api/github';
-import { getDateFromNow } from '../utils/helpers';
+import { getDateWithHourAndMinuteText } from '../utils/helpers';
 import { contentPadding } from '../styles/variables';
 import type { ActionCreators, Column, ThemeObject } from '../utils/types';
 
@@ -113,7 +114,8 @@ export default class extends React.PureComponent {
       : ''
     ) || 'mark-github';
 
-    const updatedText = getDateFromNow(updatedAt) ? `Updated ${getDateFromNow(updatedAt)}` : '';
+    const dateFromNowText = getDateWithHourAndMinuteText(updatedAt);
+    const updatedText = dateFromNowText ? `Updated ${dateFromNowText}` : '';
 
     return (
       <Root radius={radius} {...props}>

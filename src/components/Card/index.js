@@ -6,10 +6,11 @@ import { ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
-import UserAvatar from './_UserAvatar';
+import IntervalRefresh from '../IntervalRefresh';
 import StarButton from '../buttons/StartButton';
 import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
+import UserAvatar from './_UserAvatar';
 import { contentPadding } from '../../styles/variables';
 import { getDateSmallText } from '../../utils/helpers';
 import { getEventIcon, getEventText } from '../../utils/helpers/github';
@@ -64,7 +65,7 @@ const Text = styled.Text`
   font-size: 14;
 `;
 
-const Timestamp = styled(Text)`
+const SmallText = styled(Text)`
   font-size: 12;
 `;
 
@@ -533,8 +534,6 @@ export default class extends React.PureComponent {
 
     if (!payload) return null;
 
-    const dateText = getDateSmallText(created_at, '•');
-
     return (
       <CardWrapper {...props}>
         <Header>
@@ -547,10 +546,15 @@ export default class extends React.PureComponent {
               <View style={{ flex: 1 }}>
                 <HorizontalView>
                   <Username>{actor.get('display_login') || actor.get('login')}</Username>
-                  {
-                    dateText &&
-                    <Timestamp muted> • {dateText}</Timestamp>
-                  }
+                  <IntervalRefresh
+                    interval={1000}
+                    onRender={
+                      () => {
+                        const dateText = getDateSmallText(created_at, '•');
+                        return dateText && <SmallText muted> • {dateText}</SmallText>;
+                      }
+                    }
+                  />
                 </HorizontalView>
 
                 <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>

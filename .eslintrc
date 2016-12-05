@@ -27,6 +27,7 @@
       "ignorePureComponents": true
     }],
     "no-case-declarations": ["off"],
+    "no-underscore-dangle": ["off"],
     "arrow-parens": 0,
     "babel/arrow-parens": 1,
     "react-native/no-unused-styles": 2,

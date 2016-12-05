@@ -26,13 +26,30 @@ export function loadTheme(theme: Theme): Object {
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }
 
-export function getDateFromNow(date) {
+export function getDateFromNowText(date) {
+  if (!date) return '';
+
+  const momentDate = moment(date);
+  if (!momentDate.isValid()) return '';
+  // return `${moment(new Date()).diff(momentDate, 'seconds')}s`;
+
+  return momentDate.fromNow();
+}
+
+export function getDateWithHourAndMinuteText(date) {
   if (!date) return '';
 
   const momentDate = moment(date);
   if (!momentDate.isValid()) return '';
 
-  return momentDate.fromNow();
+  const momentNow = moment(new Date());
+  const timeText = momentDate.format('HH:mm');
+  const daysDiff = momentNow.diff(momentDate, 'days');
+
+  if (daysDiff < 1) return timeText;
+
+  const dateText = momentDate.format('MMM Do').toLowerCase();
+  return `${dateText} ${timeText}`;
 }
 
 export function getDateSmallText(date) { // , separator = '•'
@@ -40,9 +57,9 @@ export function getDateSmallText(date) { // , separator = '•'
 
   const momentDate = moment(date);
   if (!momentDate.isValid()) return '';
+  // return `${moment(new Date()).diff(momentDate, 'seconds')}s`;
 
   const momentNow = moment(new Date());
-
   const daysDiff = momentNow.diff(momentDate, 'days');
   const time = momentDate.format('HH:mm');
 
@@ -58,7 +75,7 @@ export function getDateSmallText(date) { // , separator = '•'
           return 'now';
         }
 
-        return `${secondsDiff}m`;
+        return `${secondsDiff}s`;
       }
 
       if (minutesDiff < 30) {
