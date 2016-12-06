@@ -21,7 +21,7 @@ export const subscriptionSelector = createSelector(
 export const columnSubscriptionsSelector = createSelector(
   stateSelector,
   columnSubscriptionsIdsSelector,
-  (state, subscriptionsIds) => (
-    subscriptionsIds.map(id => subscriptionSelector(state, { id }))
+  (state, subscriptionsIds) => List(
+    subscriptionsIds.map(id => subscriptionSelector(state, { id })),
   ),
 );

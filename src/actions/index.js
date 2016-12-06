@@ -65,12 +65,12 @@ export const setTheme = (theme: Theme, other?: Object = {}) => (
   action(SET_THEME, theme, other)
 );
 
-export const starRepo = (repoFullName: string, other?: Object = {}) => (
-  action(STAR_REPO, repoFullName, other)
+export const starRepo = (repoId: number | string, other?: Object = {}) => (
+  action(STAR_REPO, repoId.toString(), other)
 );
 
-export const unstarRepo = (repoFullName: string, other?: Object = {}) => (
-  action(UNSTAR_REPO, repoFullName, other)
+export const unstarRepo = (repoId: number | string, other?: Object = {}) => (
+  action(UNSTAR_REPO, repoId.toString(), other)
 );
 
 export const loadSubscriptionDataRequest = (

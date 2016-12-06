@@ -92,8 +92,7 @@ export default class extends React.PureComponent {
     <Card
       key={`card-${event.get('id')}`}
       event={event}
-      starRepo={this.props.actions.starRepo}
-      unstarRepo={this.props.actions.unstarRepo}
+      actions={this.props.actions}
     />
   );
 
@@ -124,7 +123,7 @@ export default class extends React.PureComponent {
           <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
             <ScrollableContentContainer>
               <Title numberOfLines={1}>
-                <Icon name={icon} size={20} />&nbsp;&nbsp;{title}
+                <Icon name={icon} size={20} />&nbsp;{title}
               </Title>
             </ScrollableContentContainer>
           </TransparentTextOverlay>
@@ -144,6 +143,7 @@ export default class extends React.PureComponent {
           <ImmutableListView
             immutableData={events}
             initialListSize={5}
+            rowsDuringInteraction={5}
             renderRow={this.renderRow}
             refreshControl={
               <RefreshControl

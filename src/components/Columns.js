@@ -90,6 +90,8 @@ export default class extends React.PureComponent {
     return (
       <StyledImmutableListViewListView
         immutableData={columns}
+        initialListSize={1}
+        rowsDuringInteraction={1}
         renderRow={this.renderRow}
         width={getWidth()}
         contentContainerStyle={{ marginHorizontal: contentPadding + margin }}

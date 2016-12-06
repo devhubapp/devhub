@@ -2,46 +2,54 @@
 
 import React from 'react';
 import { List, Map } from 'immutable';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
+// rows
+import BranchRow from './_BranchRow';
+import CommentRow from './_CommentRow';
+import CommitListRow from './_CommitListRow';
+import IssueRow from './_IssueRow';
+import MemberRow from './_MemberRow';
+import PullRequestRow from './_PullRequestRow';
+import RepositoryRow from './_RepositoryRow';
+import WikiPageListRow from './_WikiPageListRow';
+
 import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
-import StarButton from '../buttons/StartButton';
 import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 import { contentPadding, radius } from '../../styles/variables';
 import { getDateSmallText } from '../../utils/helpers';
 import { getEventIcon, getEventText } from '../../utils/helpers/github';
-import type { ThemeObject } from '../../utils/types';
-import type { GithubEvent } from '../../utils/types/github';
+import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
 
 export const avatarWidth = 44;
 export const innerContentPadding = contentPadding;
 export const iconRightMargin = contentPadding - 2;
 
-const CardWrapper = styled.View`
+export const CardWrapper = styled.View`
   padding: ${contentPadding};
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
 `;
 
-const HorizontalView = styled.View`
+export const HorizontalView = styled.View`
   flex-direction: row;
 `;
 
-const RepositoryContentContainer = styled(ScrollableContentContainer)`
+export const RepositoryContentContainer = styled(ScrollableContentContainer)`
   padding-horizontal: ${contentPadding};
 `;
 
-const Header = styled(HorizontalView)`
+export const Header = styled(HorizontalView)`
   align-items: center;
 `;
 
-const LeftColumn = styled.View`
+export const LeftColumn = styled.View`
   align-self: ${({ center }) => (center ? 'center' : 'auto')};
   align-items: flex-end;
   justify-content: flex-start;
@@ -49,83 +57,83 @@ const LeftColumn = styled.View`
   margin-right: ${contentPadding};
 `;
 
-const MainColumn = styled.View`
+export const MainColumn = styled.View`
   flex: 1;
   justify-content: center;
 `;
 
-const MainColumnRowContent = styled(MainColumn)`
+export const MainColumnRowContent = styled(MainColumn)`
   flex-direction: row;
   align-self: ${({ center }) => (center ? 'center' : 'auto')};
 `;
 
-const HeaderRow = styled(HorizontalView)`
+export const HeaderRow = styled(HorizontalView)`
   align-items: flex-start;
   justify-content: space-between;
 `;
 
-const Text = styled.Text`
+export const Text = styled.Text`
   color: ${({ muted, theme }) => (muted ? theme.base05 : theme.base04)};
   line-height: 18;
   font-size: 14;
 `;
 
-const SmallText = styled(Text)`
+export const SmallText = styled(Text)`
   font-size: 12;
 `;
 
-const Username = styled(Text)`
+export const Username = styled(Text)`
   font-weight: bold;
 `;
 
-const RepositoryName = styled(Text)`
+export const RepositoryName = styled(Text)`
   font-weight: bold;
 `;
 
-const CardItemId = styled(Text)`
+export const CardItemId = styled(Text)`
   font-weight: bold;
   font-size: 12;
   opacity: 0.9;
 `;
 
-const Comment = styled(Text)`
+export const CardText = styled(Text)`
   flex: 1;
   font-size: 14;
 `;
 
-const ContentRow = styled(HorizontalView)`
+export const ContentRow = styled(HorizontalView)`
   align-items: flex-start;
   margin-top: ${({ narrow }) => (narrow ? innerContentPadding / 3 : innerContentPadding)};
 `;
 
-const HighlightContainerBase = styled(HorizontalView)`
+export const HighlightContainerBase = styled(HorizontalView)`
   align-items: center;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.base01};
   border-radius: ${radius};
 `;
 
-const HighlightContainer1 = styled(HighlightContainerBase)`
+export const HighlightContainer1 = styled(HighlightContainerBase)`
   background-color: ${({ theme }) => theme.base01};
 `;
 
-const HighlightContainer2 = styled(HighlightContainerBase)`
+export const HighlightContainer2 = styled(HighlightContainerBase)`
   background-color: ${({ theme }) => theme.base03};
 `;
 
-const HighlightContainerRow1 = styled(HighlightContainer1)`
+export const HighlightContainerRow1 = styled(HighlightContainer1)`
   min-height: 30;
 `;
 
-const CardItemIdContainer = styled(HighlightContainer2)`
+export const CardItemIdContainer = styled(HighlightContainer2)`
   padding-horizontal: 4;
 `;
 
-const RightOfScrollableContent = styled.View`
+export const RightOfScrollableContent = styled.View`
   margin-right: ${contentPadding};
 `;
 
-const CardIcon = styled(Icon)`
+export const CardIcon = styled(Icon)`
   align-self: flex-start;
   margin-left: ${contentPadding};
   margin-right: ${iconRightMargin};
@@ -133,411 +141,31 @@ const CardIcon = styled(Icon)`
   color: ${({ theme }) => theme.base05};
 `;
 
+export const renderItemId = (number, icon) => {
+  if (!number && !icon) return null;
+
+  return (
+    <CardItemIdContainer>
+      <CardItemId>
+        {icon ? <Icon name={icon}/> : ''}
+        {number && icon ? ' ' : ''}
+        {typeof number === 'number' ? '#' : ''}
+        {number}
+      </CardItemId>
+    </CardItemIdContainer>
+  );
+};
+
 @Themable
 export default class extends React.PureComponent {
   props: {
+    actions: ActionCreators,
     event: GithubEvent,
-    starRepo: Function,
     theme: ThemeObject,
-    unstarRepo: Function,
-  };
-
-  renderItemId = (number, icon) => {
-    if (!number && !icon) return null;
-
-    return (
-      <CardItemIdContainer>
-        <CardItemId>
-          {icon ? <Icon name={icon}/> : ''}
-          {number && icon ? ' ' : ''}
-          {typeof number === 'number' ? '#' : ''}
-          {number}
-        </CardItemId>
-      </CardItemIdContainer>
-    );
-  };
-
-  _wikiPageRowComponent = (props) => {
-    if (!props) return null;
-
-    const title = props.title;
-    if (!title) return null;
-
-    const { theme } = this.props;
-
-    return (
-      <ContentRow narrow>
-        <LeftColumn />
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <Text numberOfLines={1}>
-                  <Icon name="book" />&nbsp;
-                  {title}
-                </Text>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
-    );
-  };
-
-  renderWikiPageRows = (type, pages) => {
-    if (type !== 'GollumEvent') return null;
-    if (!(pages && pages.size > 0)) return null;
-
-    const WikiPageRow = this._wikiPageRowComponent;
-    const { theme } = this.props;
-
-    return (
-      <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
-        <ScrollView
-          style={{ maxHeight: 120 }}
-          contentContainerStyle={{ paddingBottom: contentPadding }}
-          alwaysBounceVertical={false}
-        >
-          {
-            pages.map((page) => (
-              <WikiPageRow key={`wiki-page-row-${page.get('sha')}`} title={page.get('title')} />
-            ))
-          }
-        </ScrollView>
-      </TransparentTextOverlay>
-    );
-  };
-
-  renderPullRequestRow = (type, pullRequest) => {
-    if (!pullRequest) return null;
-
-    const { number, state, title, user } = {
-      number: pullRequest.get('number'),
-      state: pullRequest.get('state'),
-      title: pullRequest.get('title'),
-      user: pullRequest.get('user'),
-    };
-
-    const _title = (title || '').replace(/[\r\n]/g, ' ').replace('  ', ' ').trim();
-    if (!_title) return null;
-
-    const { theme } = this.props;
-
-    const { icon, color } = (() => {
-      switch (state) {
-        case 'closed':
-          return { icon: 'git-pull-request', color: theme.red };
-        default:
-          return { icon: 'git-pull-request', color: theme.green };
-      }
-    })();
-
-    return (
-      <ContentRow narrow>
-        <LeftColumn center>
-          <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
-        </LeftColumn>
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <RepositoryContentContainer>
-                <Comment numberOfLines={1}>
-                  <Icon name={icon} color={color}/>&nbsp;
-                  {_title}
-                </Comment>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-
-            <RightOfScrollableContent>
-              {this.renderItemId(number)}
-            </RightOfScrollableContent>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
-    );
-  };
-
-  _commitRowComponent = (props) => {
-    const { author = Map(), message } = props || {};
-
-    const _message = (message || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
-    if (!_message) return null;
-
-    const { theme } = this.props;
-
-    return (
-      <ContentRow narrow>
-        <LeftColumn center>
-          <UserAvatar url={author.get('avatar_url')} size={avatarWidth / 2} />
-        </LeftColumn>
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <Comment numberOfLines={1}>
-                  <Icon name="git-commit" />&nbsp;
-                  {_message}
-                </Comment>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
-    );
-  };
-
-  renderCommitRows = (type, payload = Map()) => {
-    const { commits, headCommit } = {
-      commits: payload.get('commits'),
-      headCommit: payload.get('head_commit'),
-    };
-
-    const list = (commits || List([headCommit])).filter(Boolean);
-    if (!(list.size > 0)) return null;
-
-    const firstCommit = list.first();
-    const firstCommitRowProps = {
-      author: firstCommit.get('author'),
-      message: firstCommit.get('message'),
-    };
-
-    if (!(this._commitRowComponent(firstCommitRowProps))) return null;
-    const CommitRow = this._commitRowComponent;
-
-    const { theme } = this.props;
-
-    return (
-      <TransparentTextOverlay
-        color={theme.base02}
-        size={contentPadding}
-        from="bottom"
-        radius={radius}
-      >
-        <ScrollView
-          style={{ maxHeight: 120 }}
-          contentContainerStyle={{ paddingBottom: contentPadding }}
-          alwaysBounceVertical={false}
-        >
-          {
-            list.map(item => (
-              <CommitRow
-                key={`commit-row-${item.get('sha')}`}
-                author={item.get('author')}
-                message={item.get('message')}
-              />
-            ))
-          }
-        </ScrollView>
-      </TransparentTextOverlay>
-    );
-  };
-
-  renderIssueRow = (type, actor, issue) => {
-    if (!issue) return null;
-
-    const { user, number, state, title } = {
-      user: issue.get('user'),
-      number: issue.get('number'),
-      state: issue.get('state'),
-      title: issue.get('title'),
-    };
-
-    const _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
-    if (!_title) return null;
-
-    const { theme } = this.props;
-
-    const { icon, color } = (() => {
-      switch (state) {
-        case 'closed':
-          return { icon: 'issue-closed', color: theme.red };
-        default:
-          return { icon: 'issue-opened', color: theme.green };
-      }
-    })();
-
-    return (
-      <ContentRow narrow>
-        <LeftColumn center>
-          <UserAvatar url={(user || actor).get('avatar_url')} size={avatarWidth / 2} />
-        </LeftColumn>
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <Comment numberOfLines={1}>
-                  <Icon name={icon} color={color}/>&nbsp;
-                  {_title}
-                </Comment>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-
-            <RightOfScrollableContent>
-              {this.renderItemId(number)}
-            </RightOfScrollableContent>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
-    );
-  };
-
-  renderRepositoryRow = (type, {
-    name, forcePushed, pushed, isFork, isStarred,
-    narrow,
-  } = {}) => {
-    const orgName = (name || '').split('/')[0];
-    const repoName = orgName ? (name || '').split('/')[1] : name;
-
-    if (!repoName) return null;
-
-    const avatarUrl = orgName ? `https://github.com/${orgName}.png` : '';
-
-    const repoicon = (() => {
-      if (forcePushed) return 'repo-force-push';
-      if (pushed) return 'repo-push';
-      if (isFork) return 'repo-forked';
-      return 'repo';
-    })();
-
-    const { starRepo, theme, unstarRepo } = this.props;
-
-    return (
-      <ContentRow narrow={narrow}>
-        <LeftColumn center>
-          <UserAvatar url={avatarUrl} size={avatarWidth / 2} />
-        </LeftColumn>
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <RepositoryContentContainer>
-                <Text muted><Icon name={repoicon}/>&nbsp;</Text>
-                {orgName && <Text muted>{orgName}/</Text>}
-
-                <RepositoryName>{repoName}</RepositoryName>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-
-            <StarButton
-              starred={isStarred}
-              starRepoFn={starRepo.bind(null, name)}
-              unstarRepoFn={unstarRepo.bind(null, name)}
-            />
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
-    );
-  };
-
-  renderBranchRow = (type, branch, { narrow } = {}) => {
-    const _branch = (branch || '').split('/').pop();
-    if (!_branch) return null;
-
-    const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
-    if (_branch === 'master' && !isBranchMainEventAction) return null;
-
-    const { theme } = this.props;
-
-    return (
-      <ContentRow narrow={narrow}>
-        <LeftColumn />
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <Text numberOfLines={1} muted={!isBranchMainEventAction}>
-                  <Icon name="git-branch" />&nbsp;
-                  {_branch}
-                </Text>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
-    );
-  };
-
-  renderMemberRow = (type, member) => {
-    if (!member) return null;
-
-    const _login = (member.get('login') || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
-    if (!_login) return null;
-
-    const { theme } = this.props;
-
-    return (
-      <ContentRow narrow>
-        <LeftColumn>
-          <UserAvatar url={member.get('avatar_url')} size={avatarWidth / 2} />
-        </LeftColumn>
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <Text numberOfLines={1}>
-                  <Icon name="person" />&nbsp;
-                  {_login}
-                </Text>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
-    );
-  };
-
-  renderCommentRow = (type, actor, comment) => {
-    if (!comment) return null;
-
-    const body = (comment.get('body') || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
-    if (!body) return null;
-
-    return (
-      <ContentRow narrow>
-        <LeftColumn>
-          <UserAvatar url={actor.get('avatar_url')} size={avatarWidth / 2} />
-        </LeftColumn>
-
-        <MainColumnRowContent center>
-          <Comment numberOfLines={2}>{body}</Comment>
-        </MainColumnRowContent>
-      </ContentRow>
-    );
   };
 
   render() {
-    const { event, theme, ...props } = this.props;
+    const { actions, event, theme, ...props } = this.props;
 
     const {
       type,
@@ -594,38 +222,70 @@ export default class extends React.PureComponent {
           </MainColumn>
         </Header>
 
-        {
-          this.renderRepositoryRow(type, {
-            name: repo.get('name'),
-            pushed: type === 'PushEvent',
-            forcePushed: type === 'PushEvent' && payload.get('forced'),
-            isStarred: !!repo.get('isStarred'),
-          })
-        }
+        <RepositoryRow
+          actions={actions}
+          repo={repo}
+          pushed={type === 'PushEvent'}
+          forcePushed={type === 'PushEvent' && payload.get('forced')}
+        />
 
-        {this.renderBranchRow(type, payload.get('ref'), { narrow: true })}
+        {
+          payload.get('ref') &&
+          <BranchRow type={type} branch={payload.get('ref')} narrow />
+        }
 
         {
           payload.get('forkee') &&
-          this.renderRepositoryRow(type, {
-            name: payload.getIn(['forkee', 'full_name']),
-            isFork: !!payload.get('forkee'),
-            isStarred: !!payload.getIn(['forkee', 'isStarred']),
-            narrow: true,
-          })
+          <RepositoryRow
+            actions={actions}
+            repo={payload.get('forkee')}
+            forcePushed={type === 'PushEvent' && payload.get('forced')}
+            isFork
+            narrow
+          />
         }
 
-        {this.renderMemberRow(type, payload.get('member'))}
+        {
+          payload.get('member') &&
+          <MemberRow user={payload.get('member')} />
+        }
 
-        {this.renderWikiPageRows(type, payload.get('pages'))}
+        {
+          type === 'GollumEvent' &&
+          payload.get('pages') &&
+          <WikiPageListRow pages={payload.get('pages')} />
+        }
 
-        {this.renderPullRequestRow(type, payload.get('pull_request'))}
+        {
+          payload.get('pull_request') &&
+          <PullRequestRow pullRequest={payload.get('pull_request')} />
+        }
 
-        {this.renderCommitRows(type, payload)}
+        {
+          (() => {
+            const { commits, headCommit } = {
+              commits: payload.get('commits'),
+              headCommit: payload.get('head_commit'),
+            };
 
-        {this.renderIssueRow(type, payload.get('actor'), payload.get('issue'))}
+            const list = (commits || List([headCommit])).filter(Boolean);
+            if (!(list.size > 0)) return null;
 
-        {this.renderCommentRow(type, actor, payload.get('comment'))}
+            return (
+              <CommitListRow commits={list} />
+            );
+          })()
+        }
+
+        {
+          payload.get('issue') &&
+          <IssueRow issue={payload.get('issue')} />
+        }
+
+        {
+          payload.get('comment') &&
+          <CommentRow actor={actor} comment={payload.get('comment')} />
+        }
       </CardWrapper>
     );
   }

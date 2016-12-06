@@ -32,13 +32,11 @@ export default class extends React.PureComponent {
     const { starRepoFn, unstarRepoFn } = this.props;
 
     const starred = !this.state.starred;
-    this.setState({ starred }, () => {
-      setTimeout(() => {
-        if (typeof next === 'function') next(starred);
-        if (starred && typeof starRepoFn === 'function') starRepoFn();
-        if (!starred && typeof unstarRepoFn === 'function') unstarRepoFn();
-      }, 50);
-    });
+    this.setState({ starred });
+
+    if (typeof next === 'function') next(starred);
+    if (starred && typeof starRepoFn === 'function') starRepoFn();
+    if (!starred && typeof unstarRepoFn === 'function') unstarRepoFn();
   };
 
   props: {

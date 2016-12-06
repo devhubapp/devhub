@@ -1,0 +1,90 @@
+// @flow
+
+import React from 'react';
+import Icon from 'react-native-vector-icons/Octicons';
+
+import Themable from '../hoc/Themable';
+import TransparentTextOverlay from '../TransparentTextOverlay';
+import UserAvatar from './_UserAvatar';
+
+import {
+  avatarWidth,
+  renderItemId,
+  CardText,
+  ContentRow,
+  HighlightContainerRow1,
+  LeftColumn,
+  MainColumn,
+  RepositoryContentContainer,
+  RightOfScrollableContent,
+} from './';
+
+import { contentPadding, radius } from '../../styles/variables';
+import type { ThemeObject } from '../../utils/types';
+import type { Issue } from '../../utils/types/github';
+
+@Themable
+export default class extends React.PureComponent {
+  props: {
+    issue: Issue,
+    theme?: ThemeObject,
+  };
+
+  render() {
+    const { issue, theme } = this.props;
+
+    if (!issue) return null;
+
+    const { user, number, state, title } = {
+      user: issue.get('user'),
+      number: issue.get('number'),
+      state: issue.get('state'),
+      title: issue.get('title'),
+    };
+
+    const _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    if (!_title) return null;
+
+    const { icon, color } = (() => {
+      switch (state) {
+        case 'closed':
+          return { icon: 'issue-closed', color: theme.red };
+        default:
+          return { icon: 'issue-opened', color: theme.green };
+      }
+    })();
+
+    return (
+      <ContentRow narrow>
+        <LeftColumn center>
+          {
+            user &&
+            <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
+          }
+        </LeftColumn>
+
+        <MainColumn>
+          <HighlightContainerRow1>
+            <TransparentTextOverlay
+              color={theme.base01}
+              size={contentPadding}
+              from="right"
+              radius={radius}
+            >
+              <RepositoryContentContainer>
+                <CardText numberOfLines={1}>
+                  <Icon name={icon} color={color} />&nbsp;
+                  {_title}
+                </CardText>
+              </RepositoryContentContainer>
+            </TransparentTextOverlay>
+
+            <RightOfScrollableContent>
+              {renderItemId(number)}
+            </RightOfScrollableContent>
+          </HighlightContainerRow1>
+        </MainColumn>
+      </ContentRow>
+    );
+  }
+}

@@ -30,7 +30,7 @@ export const columnSelector = createSelector(
 export default createSelector(
   stateSelector,
   columnsIdsSelector,
-  (state, columnsIds) => (
+  (state, columnsIds) => List(
     columnsIds.map(id => {
       const column = columnSelector(state, { id });
       if (!column) return null;
@@ -39,6 +39,6 @@ export default createSelector(
         events: columnEventsSelector(state, { column }),
         subscriptions: columnSubscriptionsSelector(state, { column }),
       });
-    }).filter(Boolean)
+    }).filter(Boolean),
   ).sort(sortColumnsByDate),
 );
