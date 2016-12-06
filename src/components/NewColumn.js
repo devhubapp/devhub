@@ -17,6 +17,8 @@ const Column = styled.View`
 `;
 
 const NewColumnButton = styled.TouchableOpacity`
+  flex: 1;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
 `;

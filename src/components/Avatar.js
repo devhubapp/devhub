@@ -4,11 +4,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 import type ImageSourcePropType from 'react-native/Libraries/Image/ImageSourcePropType';
 
+import { radius } from '../styles/variables';
+
 const Avatar = styled.Image`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   background-color: ${({ error, loading, theme }) => (!loading && !error ? '#ffffff' : theme.base03)};
-  border-radius: 4;
+  border-radius: ${radius};
 `;
 
 export default class extends React.PureComponent {

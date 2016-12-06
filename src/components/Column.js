@@ -8,7 +8,7 @@ import ImmutableListView from 'react-native-immutable-list-view';
 
 import Card, { iconRightMargin } from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
-import IntervalRefresh from './IntervalRefresh';
+import ScrollableContentContainer from './ScrollableContentContainer';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
 import { getIcon } from '../api/github';
@@ -31,12 +31,14 @@ const HeaderButtonsContainer = styled.View`
 `;
 
 const Title = styled.Text`
+  padding: ${contentPadding};
   font-size: 20;
   color: ${({ theme }) => theme.base04};
 `;
 
 const HeaderButton = styled.TouchableOpacity`
-  margin-left: ${contentPadding};
+  padding-vertical: ${contentPadding};
+  padding-horizontal: ${contentPadding};
 `;
 
 const HeaderButtonText = styled.Text`
@@ -48,8 +50,7 @@ const FixedHeader = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding-horizontal: ${contentPadding};
-  padding-vertical: ${contentPadding};
+  min-height: ${20 + (3 * contentPadding)};
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
@@ -120,9 +121,13 @@ export default class extends React.PureComponent {
     return (
       <Root radius={radius} {...props}>
         <FixedHeader>
-          <Title>
-            <Icon name={icon} size={20} />&nbsp;&nbsp;{title}
-          </Title>
+          <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
+            <ScrollableContentContainer>
+              <Title numberOfLines={1}>
+                <Icon name={icon} size={20} />&nbsp;&nbsp;{title}
+              </Title>
+            </ScrollableContentContainer>
+          </TransparentTextOverlay>
 
           <HeaderButtonsContainer>
             <HeaderButton onPress={this.onCreateColumnButtonPress}>

@@ -29,15 +29,18 @@ type Props = {
   color: string,
   containerStyle?: ?Object,
   from: 'top' | 'bottom' | 'left' | 'right',
+  radius?: number,
   size: number,
   style?: ?Object,
 };
 
-export default ({ children, color, containerStyle, from, size, style, ...props }: Props) => {
+export default ({
+  children, color, containerStyle, from, radius, size, style, ...props
+}: Props) => {
   const GradientLayerOverlay = () => (
     <LinearGradient
       colors={[fade(color, 0), color]}
-      style={[getStyle(from, size), style]}
+      style={[getStyle(from, size), radius && { borderRadius: radius }, style]}
       {...getProps(from)}
       {...props}
     />

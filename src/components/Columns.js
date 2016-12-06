@@ -9,11 +9,10 @@ import { AlertIOS, Dimensions } from 'react-native';
 import Column from './Column';
 import NewColumn from './NewColumn';
 // import ListView from './lists/ListView';
-import { contentPadding } from '../styles/variables';
+import { contentPadding, radius } from '../styles/variables';
 import type { ActionCreators, Column as ColumnType } from '../utils/types';
 
 const margin = 2;
-const radius = 4;
 
 const getFullWidth = () => Dimensions.get('window').width;
 const getWidth = () => getFullWidth() - (2 * (contentPadding + margin));

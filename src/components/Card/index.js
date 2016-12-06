@@ -7,11 +7,12 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
 import IntervalRefresh from '../IntervalRefresh';
+import ScrollableContentContainer from '../ScrollableContentContainer';
 import StarButton from '../buttons/StartButton';
 import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
-import { contentPadding } from '../../styles/variables';
+import { contentPadding, radius } from '../../styles/variables';
 import { getDateSmallText } from '../../utils/helpers';
 import { getEventIcon, getEventText } from '../../utils/helpers/github';
 import type { ThemeObject } from '../../utils/types';
@@ -30,6 +31,10 @@ const CardWrapper = styled.View`
 
 const HorizontalView = styled.View`
   flex-direction: row;
+`;
+
+const RepositoryContentContainer = styled(ScrollableContentContainer)`
+  padding-horizontal: ${contentPadding};
 `;
 
 const Header = styled(HorizontalView)`
@@ -97,7 +102,7 @@ const HighlightContainerBase = styled(HorizontalView)`
   align-items: center;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.base01};
-  border-radius: 4;
+  border-radius: ${radius};
 `;
 
 const HighlightContainer1 = styled(HighlightContainerBase)`
@@ -120,23 +125,9 @@ const RightOfScrollableContent = styled.View`
   margin-right: ${contentPadding};
 `;
 
-const ScrollableContentContainer = ({ contentContainerStyle, style, ...props }) => (
-  <ScrollView
-    style={[{ alignSelf: 'stretch' }, style]}
-    contentContainerStyle={[{
-      alignItems: 'center',
-      paddingHorizontal: contentPadding,
-    }, contentContainerStyle]}
-    {...props}
-  />
-);
-
-const RepositoryContentContainer = styled(ScrollableContentContainer)`
-  flex-direction: row;
-`;
-
 const CardIcon = styled(Icon)`
   align-self: flex-start;
+  margin-left: ${contentPadding};
   margin-right: ${iconRightMargin};
   font-size: 20;
   color: ${({ theme }) => theme.base05};
@@ -180,13 +171,18 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+            <TransparentTextOverlay
+              color={theme.base01}
+              size={contentPadding}
+              from="right"
+              radius={radius}
+            >
+              <RepositoryContentContainer>
                 <Text numberOfLines={1}>
                   <Icon name="book" />&nbsp;
                   {title}
                 </Text>
-              </ScrollableContentContainer>
+              </RepositoryContentContainer>
             </TransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
@@ -228,7 +224,7 @@ export default class extends React.PureComponent {
       user: pullRequest.get('user'),
     };
 
-    const _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    const _title = (title || '').replace(/[\r\n]/g, ' ').replace('  ', ' ').trim();
     if (!_title) return null;
 
     const { theme } = this.props;
@@ -251,12 +247,12 @@ export default class extends React.PureComponent {
         <MainColumn>
           <HighlightContainerRow1>
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+              <RepositoryContentContainer>
                 <Comment numberOfLines={1}>
                   <Icon name={icon} color={color}/>&nbsp;
                   {_title}
                 </Comment>
-              </ScrollableContentContainer>
+              </RepositoryContentContainer>
             </TransparentTextOverlay>
 
             <RightOfScrollableContent>
@@ -284,13 +280,18 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+            <TransparentTextOverlay
+              color={theme.base01}
+              size={contentPadding}
+              from="right"
+              radius={radius}
+            >
+              <RepositoryContentContainer>
                 <Comment numberOfLines={1}>
                   <Icon name="git-commit" />&nbsp;
                   {_message}
                 </Comment>
-              </ScrollableContentContainer>
+              </RepositoryContentContainer>
             </TransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
@@ -319,7 +320,12 @@ export default class extends React.PureComponent {
     const { theme } = this.props;
 
     return (
-      <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
+      <TransparentTextOverlay
+        color={theme.base02}
+        size={contentPadding}
+        from="bottom"
+        radius={radius}
+      >
         <ScrollView
           style={{ maxHeight: 120 }}
           contentContainerStyle={{ paddingBottom: contentPadding }}
@@ -371,13 +377,18 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <ScrollableContentContainer alwaysBounceHorizontal={false} horizontal>
+            <TransparentTextOverlay
+              color={theme.base01}
+              size={contentPadding}
+              from="right"
+              radius={radius}
+            >
+              <RepositoryContentContainer>
                 <Comment numberOfLines={1}>
                   <Icon name={icon} color={color}/>&nbsp;
                   {_title}
                 </Comment>
-              </ScrollableContentContainer>
+              </RepositoryContentContainer>
             </TransparentTextOverlay>
 
             <RightOfScrollableContent>
@@ -418,7 +429,7 @@ export default class extends React.PureComponent {
         <MainColumn>
           <HighlightContainerRow1>
             <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
+              <RepositoryContentContainer>
                 <Text muted><Icon name={repoicon}/>&nbsp;</Text>
                 {orgName && <Text muted>{orgName}/</Text>}
 
@@ -452,8 +463,13 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
+            <TransparentTextOverlay
+              color={theme.base01}
+              size={contentPadding}
+              from="right"
+              radius={radius}
+            >
+              <RepositoryContentContainer>
                 <Text numberOfLines={1} muted={!isBranchMainEventAction}>
                   <Icon name="git-branch" />&nbsp;
                   {_branch}
@@ -482,8 +498,13 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <RepositoryContentContainer alwaysBounceHorizontal={false} horizontal>
+            <TransparentTextOverlay
+              color={theme.base01}
+              size={contentPadding}
+              from="right"
+              radius={radius}
+            >
+              <RepositoryContentContainer>
                 <Text numberOfLines={1}>
                   <Icon name="person" />&nbsp;
                   {_login}
@@ -516,7 +537,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { event, ...props } = this.props;
+    const { event, theme, ...props } = this.props;
 
     const {
       type,
@@ -544,18 +565,26 @@ export default class extends React.PureComponent {
           <MainColumn>
             <HeaderRow>
               <View style={{ flex: 1 }}>
-                <HorizontalView>
-                  <Username>{actor.get('display_login') || actor.get('login')}</Username>
-                  <IntervalRefresh
-                    interval={1000}
-                    onRender={
-                      () => {
-                        const dateText = getDateSmallText(created_at, '•');
-                        return dateText && <SmallText muted> • {dateText}</SmallText>;
-                      }
-                    }
-                  />
-                </HorizontalView>
+                <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
+                  <ScrollableContentContainer>
+                    <HorizontalView>
+                      <Username numberOfLines={1}>
+                        {actor.get('display_login') || actor.get('login')}
+                      </Username>
+                      <IntervalRefresh
+                        interval={1000}
+                        onRender={
+                          () => {
+                            const dateText = getDateSmallText(created_at, '•');
+                            return dateText && (
+                              <SmallText style={{ flex: 1 }} muted> • {dateText}</SmallText>
+                            );
+                          }
+                        }
+                      />
+                    </HorizontalView>
+                  </ScrollableContentContainer>
+                </TransparentTextOverlay>
 
                 <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
               </View>
