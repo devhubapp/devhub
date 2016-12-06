@@ -3,34 +3,38 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { Button } from 'react-native';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Themable from '../../components/hoc/Themable';
 import Screen from '../../components/Screen';
-import { setTheme as setThemeAction } from '../../actions';
-import type { ThemeObject } from '../../utils/types';
+import * as actionCreators from '../../actions';
+import type { ActionCreators, ThemeObject } from '../../utils/types';
 
 const Footer = styled.View`
   flex: 1;
   justify-content: flex-end;
 `;
 
-const mapDispatchToProps = { setTheme: setThemeAction };
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(actionCreators, dispatch),
+});
 
 @Themable
 @connect(null, mapDispatchToProps)
 export default class extends React.PureComponent {
   props: {
-    setTheme: Function,
+    actions: ActionCreators,
     theme: ThemeObject,
   };
 
   render() {
-    const { setTheme, theme } = this.props;
+    const { actions: { clearCache, setTheme }, theme } = this.props;
 
     return (
       <Screen>
         <Footer>
+          <Button title="Clear cache" color={theme.base04} onPress={() => clearCache()} />
           <Button title="Auto" color={theme.base04} onPress={() => setTheme('auto')} />
           <Button title="Light" color={theme.base04} onPress={() => setTheme('light')} />
           <Button title="Dark" color={theme.base04} onPress={() => setTheme('dark')} />

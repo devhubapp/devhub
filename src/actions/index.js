@@ -2,6 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import {
+  CLEAR_CACHE,
   CREATE_COLUMN,
   DELETE_COLUMN,
   UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
@@ -26,6 +27,10 @@ import type {
   Subscription,
   Theme,
 } from '../utils/types';
+
+export const clearCache = (other?: Object = {}) => (
+  action(CLEAR_CACHE, undefined, other)
+);
 
 export const createColumn = (title: string, subscriptions: Array<Object>, other?: Object = {}) => (
   action(CREATE_COLUMN, ({ title, subscriptions }: Column), other)

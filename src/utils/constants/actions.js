@@ -1,6 +1,7 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
+export const CLEAR_CACHE: 'CLEAR_CACHE' = 'CLEAR_CACHE';
 export const CREATE_COLUMN: 'CREATE_COLUMN' = 'CREATE_COLUMN';
 export const UPDATE_COLUMN: 'UPDATE_COLUMN' = 'UPDATE_COLUMN';
 export const UPDATE_ALL_COLUMNS_SUBSCRIPTIONS: 'UPDATE_ALL_COLUMNS_SUBSCRIPTIONS' = 'UPDATE_ALL_COLUMNS_SUBSCRIPTIONS';

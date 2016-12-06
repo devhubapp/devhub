@@ -1,5 +1,6 @@
 // @flow
 
+import { AsyncStorage } from 'react-native';
 import { flatten, uniq } from 'lodash';
 import { arrayOf, normalize } from 'normalizr';
 import { delay, takeEvery, takeLatest } from 'redux-saga';
@@ -11,6 +12,7 @@ import { columnSelector, columnsIdsSelector } from '../selectors/columns';
 import { columnSubscriptionsIdsSelector, subscriptionSelector } from '../selectors/subscriptions';
 
 import {
+  CLEAR_CACHE,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   UPDATE_COLUMN_SUBSCRIPTIONS,
   UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
@@ -35,10 +37,10 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
     const { response, timeout } = yield race({
       response: call(getApiMethod(requestType), params),
-      timeout: call(delay, 5000),
+      timeout: call(delay, 10000),
     });
 
-    if (timeout) throw new Error('Timeout');
+    if (timeout) throw new Error('TimeoutError', 'Timeout');
 
     const { data, meta }: ApiResponsePayload = response;
     const normalizedData = normalize(data, arrayOf(EventSchema));
@@ -99,11 +101,16 @@ function* startTimer() {
   }
 }
 
+function* clearCache() {
+  yield AsyncStorage.clear();
+}
+
 export default function* () {
   return yield [
     yield takeEvery(LOAD_SUBSCRIPTION_DATA_REQUEST, loadSubscriptionData),
     yield takeEvery(UPDATE_COLUMN_SUBSCRIPTIONS, updateSubscriptionsFromColumn),
     yield takeLatest(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, updateSubscriptionsFromAllColumns),
+    yield takeLatest(CLEAR_CACHE, clearCache),
     yield fork(startTimer),
   ];
 }

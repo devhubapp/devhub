@@ -260,15 +260,15 @@ export type IssueCommentEvent = {
 export type IssuesEvent = {
   action:
     'assigned'
-      | 'unassigned'
-      | 'labeled'
-      | 'unlabeled'
-      | 'opened'
-      | 'edited'
-      | 'milestoned'
-      | 'demilestoned'
-      | 'closed'
-      | 'reopened'
+    | 'unassigned'
+    | 'labeled'
+    | 'unlabeled'
+    | 'opened'
+    | 'edited'
+    | 'milestoned'
+    | 'demilestoned'
+    | 'closed'
+    | 'reopened'
   ,
   issue: Object, // The issue itself.
   changes: Object, // The changes to the issue if the action was 'edited'.
@@ -309,13 +309,13 @@ export type PublicEvent = {
 export type PullRequestEvent = {
   action:
     'assigned'
-      | 'unassigned'
-      | 'labeled'
-      | 'unlabeled'
-      | 'opened'
-      | 'edited'
-      | 'closed'
-      | 'reopened'
+    | 'unassigned'
+    | 'labeled'
+    | 'unlabeled'
+    | 'opened'
+    | 'edited'
+    | 'closed'
+    | 'reopened'
   ,
   number: number,
   pull_request: PullRequest,
