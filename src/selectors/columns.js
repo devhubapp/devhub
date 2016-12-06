@@ -14,10 +14,17 @@ export const stateSelector = state => state || Map();
 export const entitiesSelector = state => state.get('entities') || Map();
 export const columnsSelector = state => entitiesSelector(state).get('columns') || Map();
 export const columnsIdsSelector = state => objectKeysMemoized(columnsSelector(state)) || List();
-export const columnSelector = (state, { id }) => columnsSelector(state).get(id) || Map();
 
 const sortColumnsByDate = (b, a) => (
   moment(a.get('createdAt')).isAfter(moment(b.get('createdAt'))) ? 1 : -1
+);
+
+export const columnSelector = createSelector(
+  stateSelector,
+  (state, { id }) => id,
+  (state, id) => (
+    columnsSelector(state).get(id)
+  ),
 );
 
 export default createSelector(

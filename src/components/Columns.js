@@ -93,8 +93,6 @@ export default class extends React.PureComponent {
         immutableData={columns}
         renderRow={this.renderRow}
         width={getWidth()}
-        removeClippedSubviews={false}
-        initialListSize={1}
         contentContainerStyle={{ marginHorizontal: contentPadding + margin }}
         horizontal
         pagingEnabled
