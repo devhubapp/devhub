@@ -10,8 +10,8 @@ export default (state: State = Map(), action: Action<any>): State => {
   const { type, payload } = action || {};
 
   switch (type) {
-    case STAR_REPO: return state.setIn([payload, 'isStarred'], true);
-    case UNSTAR_REPO: return state.setIn([payload, 'isStarred'], false);
+    case STAR_REPO: return state.setIn([payload, 'starred'], true);
+    case UNSTAR_REPO: return state.setIn([payload, 'starred'], false);
     default: return state;
   }
 };

@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { TouchableWithoutFeedback } from 'react-native';
 import { List, Map } from 'immutable';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
@@ -9,7 +10,6 @@ import styled from 'styled-components/native';
 import BranchRow from './_BranchRow';
 import CommentRow from './_CommentRow';
 import CommitListRow from './_CommitListRow';
-import CommitRow from './_CommitRow';
 import IssueRow from './_IssueRow';
 import MemberRow from './_MemberRow';
 import PullRequestRow from './_PullRequestRow';
@@ -35,6 +35,7 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
+  opacity: ${({ seen }) => (seen ? 0.2 : 1)};
 `;
 
 export const FullView = styled.View`
@@ -188,43 +189,45 @@ export default class extends React.PureComponent {
     if (!payload) return null;
 
     return (
-      <CardWrapper {...props}>
-        <Header>
-          <LeftColumn>
-            <UserAvatar url={actor.get('avatar_url')} size={avatarWidth} />
-          </LeftColumn>
+      <CardWrapper {...props} seen={event.get('seen')}>
+        <TouchableWithoutFeedback onPress={() => actions.toggleSeen(event.get('id'))}>
+          <Header onPress={() => actions.toggleSeen(event.get('id'))}>
+            <LeftColumn>
+              <UserAvatar url={actor.get('avatar_url')} size={avatarWidth} />
+            </LeftColumn>
 
-          <MainColumn>
-            <HeaderRow>
-              <FullView>
-                <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
-                  <ScrollableContentContainer>
-                    <HorizontalView>
-                      <Username numberOfLines={1}>
-                        {actor.get('display_login') || actor.get('login')}
-                      </Username>
-                      <IntervalRefresh
-                        interval={1000}
-                        onRender={
-                          () => {
-                            const dateText = getDateSmallText(created_at, '•');
-                            return dateText && (
-                              <SmallText style={{ flex: 1 }} muted> • {dateText}</SmallText>
-                            );
+            <MainColumn>
+              <HeaderRow>
+                <FullView>
+                  <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
+                    <ScrollableContentContainer>
+                      <HorizontalView>
+                        <Username numberOfLines={1}>
+                          {actor.get('display_login') || actor.get('login')}
+                        </Username>
+                        <IntervalRefresh
+                          interval={1000}
+                          onRender={
+                            () => {
+                              const dateText = getDateSmallText(created_at, '•');
+                              return dateText && (
+                                <SmallText style={{ flex: 1 }} muted> • {dateText}</SmallText>
+                              );
+                            }
                           }
-                        }
-                      />
-                    </HorizontalView>
-                  </ScrollableContentContainer>
-                </TransparentTextOverlay>
+                        />
+                      </HorizontalView>
+                    </ScrollableContentContainer>
+                  </TransparentTextOverlay>
 
-                <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
-              </FullView>
+                  <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
+                </FullView>
 
-              <CardIcon name={getEventIcon(type, payload)} />
-            </HeaderRow>
-          </MainColumn>
-        </Header>
+                <CardIcon name={getEventIcon(type, payload)} />
+              </HeaderRow>
+            </MainColumn>
+          </Header>
+        </TouchableWithoutFeedback>
 
         <RepositoryRow
           actions={actions}

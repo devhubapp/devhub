@@ -8,7 +8,10 @@ import { EventSchema } from '../utils/normalizr/schemas';
 
 export const stateSelector = state => state || Map();
 export const entitiesSelector = state => state.get('entities') || Map();
-export const columnEventsIdsSelector = (state, { column }) => column.get('events') || List();
+
+export const columnEventsIdsSelector = (state, { column }) => (
+  List(column.get('events')).filter(Boolean)
+);
 
 export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_at') ? 1 : -1);
 
@@ -26,5 +29,8 @@ export const columnEventsSelector = createSelector(
       .take(30)
       .map(eventId => eventSelector(state, { id: eventId }))
     ,
-  ).sort(sortEventsByDate),
+  )
+  .filter(Boolean)
+  .filter(event => event.get('hidden') !== true)
+  .sort(sortEventsByDate),
 );

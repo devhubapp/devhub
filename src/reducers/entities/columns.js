@@ -5,11 +5,15 @@ import { fromJS, List, Map, Set } from 'immutable';
 import { guid } from '../../utils/helpers';
 
 import {
+  // CLEAR_EVENTS,
+  TOGGLE_SEEN,
   CREATE_COLUMN,
   DELETE_COLUMN,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOAD_SUBSCRIPTION_DATA_SUCCESS,
   LOAD_SUBSCRIPTION_DATA_FAILURE,
+  MARK_EVENTS_AS_SEEN,
+  MARK_EVENTS_AS_NOT_SEEN,
 } from '../../utils/constants/actions';
 
 import type {
@@ -74,6 +78,30 @@ export default (state: State = Map(), { type, payload }: Action<any>): State => 
           ;
         })
       ))(payload);
+
+    case MARK_EVENTS_AS_SEEN:
+      return state.setIn([payload.columnId, 'allSeen'], true);
+
+    case MARK_EVENTS_AS_NOT_SEEN:
+      return state.setIn([payload.columnId, 'allSeen'], false);
+
+    case TOGGLE_SEEN:
+      return state.map(column => (
+        column.get('events').includes(payload)
+          ? column.set('allSeen', false)
+          : column
+      ));
+
+    // case CLEAR_EVENTS:
+    //   return state.map(column => {
+    //     // if (payload.columnId !== column.get('id')) return column;
+
+    //     const clearEventIds = List(payload.eventIds);
+    //     const currentEventIds = column.get('events');
+    //     const newEventIds = currentEventIds.filterNot(eventId => clearEventIds.includes(eventId));
+
+    //     return column.set('events', newEventIds);
+    //   });
 
     default:
       return state;

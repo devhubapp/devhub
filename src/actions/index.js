@@ -12,6 +12,10 @@ import {
   SET_THEME,
   STAR_REPO,
   UNSTAR_REPO,
+  TOGGLE_SEEN,
+  CLEAR_EVENTS,
+  MARK_EVENTS_AS_SEEN,
+  MARK_EVENTS_AS_NOT_SEEN,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOAD_SUBSCRIPTION_DATA_SUCCESS,
   LOAD_SUBSCRIPTION_DATA_FAILURE,
@@ -71,6 +75,23 @@ export const starRepo = (repoId: number | string, other?: Object = {}) => (
 
 export const unstarRepo = (repoId: number | string, other?: Object = {}) => (
   action(UNSTAR_REPO, repoId.toString(), other)
+);
+
+export const toggleSeen = (eventId: number | string, other?: Object = {}) => (
+  action(TOGGLE_SEEN, eventId.toString(), other)
+);
+
+type SeenEvents = { columnId: string, eventIds: Array<string> };
+export const clearEvents = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (
+  action(CLEAR_EVENTS, { columnId, eventIds }, other)
+);
+
+export const markEventsAsSeen = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (
+  action(MARK_EVENTS_AS_SEEN, { columnId, eventIds }, other)
+);
+
+export const markEventsAsUnseen = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (
+  action(MARK_EVENTS_AS_NOT_SEEN, { columnId, eventIds }, other)
 );
 
 export const loadSubscriptionDataRequest = (

@@ -1,5 +1,6 @@
 // @flow
 
+import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import { Dimensions, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
@@ -26,7 +27,7 @@ const Root = styled.View`
   border-radius: ${({ radius }) => radius || 0};
 `;
 
-const StyledTextOverlay = styled(TransparentTextOverlay)`
+const StyledTextOverlay = styled(TransparentTextOverlay) `
   border-radius: ${({ radius }) => radius || 0};
 `;
 
@@ -86,6 +87,15 @@ const ProgressBarContainer = styled.View`
 //   )
 // }
 
+const buttons = ['Create new column', 'Mark all as seen / unseen', 'Clear seen', 'Delete column', 'Cancel'];
+const BUTTONS = {
+  CREATE_NEW_COLUMN: 0,
+  MARK_EVENTS_AS_SEEN_OR_UNSEEN: 1,
+  CLEAR_SEEN: 2,
+  DELETE_COLUMN: 3,
+  CANCEL: 4,
+};
+
 @Themable
 export default class extends React.PureComponent {
   state = {
@@ -100,15 +110,16 @@ export default class extends React.PureComponent {
       this.setState({ loadingWithDelay: true, loadingWithDelayStartedAt: new Date() });
     } else if (!loading && this.state.loadingWithDelay) {
       const timeLoading = Math.max(0, new Date() - this.state.loadingWithDelayStartedAt);
-      const minimalTimeShowingLoadingIndicator = 800;
+      const minimalTimeShowingLoadingIndicator = 1000;
       const delayToAchiveMinimalTime = timeLoading > minimalTimeShowingLoadingIndicator
         ? 0
         : minimalTimeShowingLoadingIndicator - timeLoading
-      ;
+        ;
 
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         this.setState({ loadingWithDelay: false, loadingWithDelayStartedAt: null });
+        clearTimeout(this.timeout);
       }, delayToAchiveMinimalTime);
     }
   }
@@ -117,15 +128,49 @@ export default class extends React.PureComponent {
     clearTimeout(this.timeout);
   }
 
-  onCreateColumnButtonPress = () => {
-    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions);
-  };
-
   onRefresh = () => {
     this.setState({ loadingWithDelay: true });
 
     const { column, actions: { updateColumnSubscriptions } } = this.props;
     updateColumnSubscriptions(column.get('id'));
+  };
+
+  showActionSheet = () => {
+    this.ActionSheet.show();
+  };
+
+  handleActionSheetButtonPress = (index) => {
+    const { actions, column } = this.props;
+
+    const columnId = column.get('id');
+    const eventIds = column.get('events').map(event => event.get('id'));
+
+    switch (index) {
+      case BUTTONS.CREATE_NEW_COLUMN:
+        CreateColumnUtils.showColumnTypeSelectAlert(actions);
+        break;
+
+      case BUTTONS.MARK_EVENTS_AS_SEEN_OR_UNSEEN:
+        if (column.get('allSeen')) {
+          actions.markEventsAsUnseen({ columnId, eventIds });
+        } else {
+          actions.markEventsAsSeen({ columnId, eventIds });
+        }
+
+        break;
+
+      case BUTTONS.CLEAR_SEEN:
+        const seenEventIds = column.get('events').filter(e => e.get('seen')).map(e => e.get('id'));
+        actions.clearEvents({ columnId, eventIds: seenEventIds });
+        break;
+
+      case BUTTONS.DELETE_COLUMN:
+        actions.deleteColumn(columnId);
+        break;
+
+      default:
+        break;
+    }
   };
 
   timeout = null;
@@ -147,10 +192,9 @@ export default class extends React.PureComponent {
   );
 
   render() {
-    const { actions, radius, theme, ...props } = this.props;
+    const { radius, theme, ...props } = this.props;
 
-    const { id, events, subscriptions, title, updatedAt } = {
-      id: this.props.column.get('id'),
+    const { events, subscriptions, title, updatedAt } = {
       events: this.props.column.get('events'),
       subscriptions: this.props.column.get('subscriptions'),
       title: (this.props.column.get('title') || '').toLowerCase(),
@@ -159,8 +203,8 @@ export default class extends React.PureComponent {
 
     const icon = (
       subscriptions && subscriptions.size > 0
-      ? getIcon(subscriptions.first().get('requestType'))
-      : ''
+        ? getIcon(subscriptions.first().get('requestType'))
+        : ''
     ) || 'mark-github';
 
     const dateFromNowText = getDateWithHourAndMinuteText(updatedAt);
@@ -178,12 +222,8 @@ export default class extends React.PureComponent {
           </TransparentTextOverlay>
 
           <HeaderButtonsContainer>
-            <HeaderButton onPress={this.onCreateColumnButtonPress}>
-              <HeaderButtonText><Icon name="plus" size={20} /></HeaderButtonText>
-            </HeaderButton>
-
-            <HeaderButton onPress={() => actions.deleteColumn(id)}>
-              <HeaderButtonText><Icon name="trashcan" size={20} /></HeaderButtonText>
+            <HeaderButton onPress={this.showActionSheet}>
+              <HeaderButtonText><Icon name="settings" size={20} /></HeaderButtonText>
             </HeaderButton>
           </HeaderButtonsContainer>
         </FixedHeader>
@@ -218,6 +258,15 @@ export default class extends React.PureComponent {
             }
           />
         </StyledTextOverlay>
+
+        <ActionSheet
+          ref={ref => this.ActionSheet = ref}
+          title={title}
+          options={buttons}
+          cancelButtonIndex={BUTTONS.CANCEL}
+          destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
+          onPress={this.handleActionSheetButtonPress}
+        />
       </Root>
     );
   }

@@ -76,7 +76,7 @@ export default class extends React.PureComponent {
             </FullView>
 
             <StarButton
-              starred={repo.get('isStarred')}
+              starred={repo.get('starred')}
               starRepoFn={starRepo}
               unstarRepoFn={unstarRepo}
             />
