@@ -106,6 +106,7 @@ export default class extends React.PureComponent {
         : minimalTimeShowingLoadingIndicator - timeLoading
       ;
 
+      clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         this.setState({ loadingWithDelay: false, loadingWithDelayStartedAt: null });
       }, delayToAchiveMinimalTime);

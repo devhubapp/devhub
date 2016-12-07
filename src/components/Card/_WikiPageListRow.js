@@ -7,7 +7,7 @@ import WikiPageRow from './_WikiPageRow';
 import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 
-import { contentPadding } from '../../styles/variables';
+import { contentPadding, radius } from '../../styles/variables';
 import type { ThemeObject } from '../../utils/types';
 
 @Themable
@@ -18,15 +18,22 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { pages, theme } = this.props;
+    const { pages, theme, ...props } = this.props;
 
     if (!(pages && pages.size > 0)) return null;
 
     return (
-      <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
+      <TransparentTextOverlay
+        {...props}
+        color={theme.base02}
+        size={contentPadding}
+        from="bottom"
+        radius={radius}
+        containerStyle={{ flex: 0, marginBottom: -contentPadding }}
+      >
         <ScrollView
           style={{ maxHeight: 120 }}
-          contentContainerStyle={{ flex: 1, paddingBottom: contentPadding }}
+          contentContainerStyle={{ paddingBottom: contentPadding }}
           alwaysBounceVertical={false}
         >
           {

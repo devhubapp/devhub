@@ -11,7 +11,6 @@ import {
   avatarWidth,
   CardText,
   ContentRow,
-  FullView,
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
@@ -30,7 +29,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { commit, narrow, theme } = this.props;
+    const { commit, narrow, theme, ...props } = this.props;
 
     if (!commit) return null;
 
@@ -40,28 +39,26 @@ export default class extends React.PureComponent {
     const author = commit.get('author');
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
           <UserAvatar url={author.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
-            <FullView>
-              <TransparentTextOverlay
-                color={theme.base01}
-                size={contentPadding}
-                from="right"
-                radius={radius}
-              >
-                <RepositoryContentContainer>
-                  <CardText numberOfLines={1}>
-                    <Icon name="git-commit" />&nbsp;
-                    {message}
-                  </CardText>
-                </RepositoryContentContainer>
-              </TransparentTextOverlay>
-            </FullView>
+            <TransparentTextOverlay
+              color={theme.base01}
+              size={contentPadding}
+              from="right"
+              radius={radius}
+            >
+              <RepositoryContentContainer>
+                <CardText numberOfLines={1}>
+                  <Icon name="git-commit" />&nbsp;
+                  {message}
+                </CardText>
+              </RepositoryContentContainer>
+            </TransparentTextOverlay>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>

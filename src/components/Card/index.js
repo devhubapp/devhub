@@ -9,6 +9,7 @@ import styled from 'styled-components/native';
 import BranchRow from './_BranchRow';
 import CommentRow from './_CommentRow';
 import CommitListRow from './_CommitListRow';
+import CommitRow from './_CommitRow';
 import IssueRow from './_IssueRow';
 import MemberRow from './_MemberRow';
 import PullRequestRow from './_PullRequestRow';
