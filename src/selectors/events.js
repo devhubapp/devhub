@@ -23,7 +23,7 @@ export const columnEventsSelector = createSelector(
   columnEventsIdsSelector,
   (state, eventsIds) => List(
     eventsIds
-      .take(30)
+      .take(7)
       .map(eventId => eventSelector(state, { id: eventId }))
     ,
   ).sort(sortEventsByDate),

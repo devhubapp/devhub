@@ -12,6 +12,7 @@ import {
   renderItemId,
   CardText,
   ContentRow,
+  FullView,
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
@@ -64,14 +65,16 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <RepositoryContentContainer>
-                <CardText numberOfLines={1}>
-                  <Icon name={icon} color={color} />&nbsp;
-                  {title}
-                </CardText>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
+            <FullView>
+              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
+                <RepositoryContentContainer>
+                  <CardText numberOfLines={1}>
+                    <Icon name={icon} color={color} />&nbsp;
+                    {title}
+                  </CardText>
+                </RepositoryContentContainer>
+              </TransparentTextOverlay>
+            </FullView>
 
             <RightOfScrollableContent>
               {renderItemId(number)}

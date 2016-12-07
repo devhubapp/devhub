@@ -12,10 +12,10 @@ import NewColumn from './NewColumn';
 import { contentPadding, radius } from '../styles/variables';
 import type { ActionCreators, Column as ColumnType } from '../utils/types';
 
-const margin = 2;
+export const columnMargin = 2;
 
 const getFullWidth = () => Dimensions.get('window').width;
-const getWidth = () => getFullWidth() - (2 * (contentPadding + margin));
+const getWidth = () => getFullWidth() - (2 * (contentPadding + columnMargin));
 
 const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
@@ -31,14 +31,14 @@ const ColumnContainer = styled.View`
 
 const StyledColumn = styled(Column)`
   flex: 1;
-  margin-horizontal: ${margin};
-  margin-vertical: ${margin * 2};
+  margin-horizontal: ${columnMargin};
+  margin-vertical: ${columnMargin * 2};
 `;
 
 const StyledNewColumn = styled(NewColumn)`
   flex: 1;
-  margin-horizontal: ${margin};
-  margin-vertical: ${margin * 2};
+  margin-horizontal: ${columnMargin};
+  margin-vertical: ${columnMargin * 2};
 `;
 
 export default class extends React.PureComponent {
@@ -94,7 +94,7 @@ export default class extends React.PureComponent {
         rowsDuringInteraction={1}
         renderRow={this.renderRow}
         width={getWidth()}
-        contentContainerStyle={{ marginHorizontal: contentPadding + margin }}
+        contentContainerStyle={{ marginHorizontal: contentPadding + columnMargin }}
         horizontal
         pagingEnabled
         {...props}

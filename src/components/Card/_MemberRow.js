@@ -10,6 +10,7 @@ import UserAvatar from './_UserAvatar';
 import {
   avatarWidth,
   ContentRow,
+  FullView,
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
@@ -43,19 +44,21 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <Text numberOfLines={1}>
-                  <Icon name="person" />&nbsp;
-                  {_login}
-                </Text>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
+            <FullView>
+              <TransparentTextOverlay
+                color={theme.base01}
+                size={contentPadding}
+                from="right"
+                radius={radius}
+              >
+                <RepositoryContentContainer>
+                  <Text numberOfLines={1}>
+                    <Icon name="person" />&nbsp;
+                    {_login}
+                  </Text>
+                </RepositoryContentContainer>
+              </TransparentTextOverlay>
+            </FullView>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>

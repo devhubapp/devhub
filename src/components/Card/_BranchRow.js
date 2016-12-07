@@ -8,6 +8,7 @@ import TransparentTextOverlay from '../TransparentTextOverlay';
 
 import {
   ContentRow,
+  FullView,
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
@@ -42,19 +43,21 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <Text numberOfLines={1} muted={!isBranchMainEventAction}>
-                  <Icon name="git-branch" />&nbsp;
-                  {_branch}
-                </Text>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
+            <FullView>
+              <TransparentTextOverlay
+                color={theme.base01}
+                size={contentPadding}
+                from="right"
+                radius={radius}
+              >
+                <RepositoryContentContainer>
+                  <Text numberOfLines={1} muted={!isBranchMainEventAction}>
+                    <Icon name="git-branch" />&nbsp;
+                    {_branch}
+                  </Text>
+                </RepositoryContentContainer>
+              </TransparentTextOverlay>
+            </FullView>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>

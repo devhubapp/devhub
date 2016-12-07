@@ -1,20 +1,25 @@
 // @flow
 
 import React from 'react';
-import { RefreshControl } from 'react-native';
+import { Dimensions, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 
 import Card, { iconRightMargin } from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
+import ProgressBar from './ProgressBar';
 import ScrollableContentContainer from './ScrollableContentContainer';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
+import { columnMargin } from './Columns';
 import { getIcon } from '../api/github';
 import { getDateWithHourAndMinuteText } from '../utils/helpers';
 import { contentPadding } from '../styles/variables';
 import type { ActionCreators, Column, ThemeObject } from '../utils/types';
+
+const getFullWidth = () => Dimensions.get('window').width;
+const getWidth = () => getFullWidth() - (2 * contentPadding) - (4 * columnMargin);
 
 const Root = styled.View`
   background-color: ${({ theme }) => theme.base02};
@@ -51,34 +56,78 @@ const FixedHeader = styled.View`
   align-items: center;
   justify-content: space-between;
   min-height: ${20 + (3 * contentPadding)};
-  border-width: 0;
-  border-bottom-width: 1;
-  border-color: ${({ theme }) => theme.base01};
+`;
+
+const ProgressBarContainer = styled.View`
+  height: 1;
+  background-color: ${({ theme }) => theme.base01};
 `;
 
 // const HiddenHeader = styled.View`
-//   margin-top: -16;
+//   align-items: flex-start;
+//   min-height: 30;
+//   margin-top: -25;
 //   align-items: center;
 //   justify-content: center;
 //   overflow: visible;
 // `;
-//
+
 // const SubHeaderText = styled.Text`
 //   text-align: center;
-//   font-size: 14;
+//   font-size: 12;
 //   color: ${({ theme }) => theme.base05};
 // `;
 
+// renderHeader={
+//   () => (
+//     <HiddenHeader>
+//       <SubHeaderText>{updatedText.toLowerCase()}</SubHeaderText>
+//     </HiddenHeader>
+//   )
+// }
+
 @Themable
 export default class extends React.PureComponent {
+  state = {
+    loadingWithDelay: false,
+    loadingWithDelayStartedAt: null,
+  };
+
+  componentWillReceiveProps(newProps) {
+    const loading = (newProps.column || Map()).get('loading');
+
+    if (loading && !this.state.loadingWithDelay) {
+      this.setState({ loadingWithDelay: true, loadingWithDelayStartedAt: new Date() });
+    } else if (!loading && this.state.loadingWithDelay) {
+      const timeLoading = Math.max(0, new Date() - this.state.loadingWithDelayStartedAt);
+      const minimalTimeShowingLoadingIndicator = 800;
+      const delayToAchiveMinimalTime = timeLoading > minimalTimeShowingLoadingIndicator
+        ? 0
+        : minimalTimeShowingLoadingIndicator - timeLoading
+      ;
+
+      this.timeout = setTimeout(() => {
+        this.setState({ loadingWithDelay: false, loadingWithDelayStartedAt: null });
+      }, delayToAchiveMinimalTime);
+    }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
   onCreateColumnButtonPress = () => {
     CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions);
   };
 
   onRefresh = () => {
+    this.setState({ loadingWithDelay: true });
+
     const { column, actions: { updateColumnSubscriptions } } = this.props;
     updateColumnSubscriptions(column.get('id'));
   };
+
+  timeout = null;
 
   props: {
     actions: ActionCreators,
@@ -99,10 +148,9 @@ export default class extends React.PureComponent {
   render() {
     const { actions, radius, theme, ...props } = this.props;
 
-    const { id, events, loading = false, subscriptions, title, updatedAt } = {
+    const { id, events, subscriptions, title, updatedAt } = {
       id: this.props.column.get('id'),
       events: this.props.column.get('events'),
-      loading: this.props.column.get('loading'),
       subscriptions: this.props.column.get('subscriptions'),
       title: (this.props.column.get('title') || '').toLowerCase(),
       updatedAt: this.props.column.get('updatedAt'),
@@ -139,6 +187,17 @@ export default class extends React.PureComponent {
           </HeaderButtonsContainer>
         </FixedHeader>
 
+        <ProgressBarContainer>
+          {
+            this.state.loadingWithDelay &&
+            <ProgressBar
+              width={getWidth()}
+              height={1}
+              indeterminate
+            />
+          }
+        </ProgressBarContainer>
+
         <StyledTextOverlay color={theme.base02} size={contentPadding} from="bottom" radius={radius}>
           <ImmutableListView
             immutableData={events}
@@ -147,11 +206,11 @@ export default class extends React.PureComponent {
             renderRow={this.renderRow}
             refreshControl={
               <RefreshControl
-                refreshing={loading || false}
+                refreshing={false}
                 onRefresh={this.onRefresh}
-                colors={[theme.base08]}
-                tintColor={theme.base08}
-                title={(loading ? 'Loading...' : (updatedText || ' ')).toLowerCase()}
+                colors={[this.state.loadingWithDelay ? 'transparent' : theme.base08]}
+                tintColor={this.state.loadingWithDelay ? 'transparent' : theme.base08}
+                title={(updatedText || ' ').toLowerCase()}
                 titleColor={theme.base05}
                 progressBackgroundColor={theme.base02}
               />

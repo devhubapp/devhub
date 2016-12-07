@@ -95,9 +95,10 @@ function* updateSubscriptionsFromAllColumns() {
 function* startTimer() {
   yield take(REHYDRATE);
 
+ // update all columns each minute
   while (true) {
     yield put(updateAllColumnsSubscriptions(sagaActionChunk));
-    yield call(delay, 60 * 1000); // update all columns each minute
+    yield call(delay, 60 * 1000);
   }
 }
 

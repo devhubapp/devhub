@@ -11,6 +11,7 @@ import {
   avatarWidth,
   CardText,
   ContentRow,
+  FullView,
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
@@ -46,19 +47,21 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="right"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <CardText numberOfLines={1}>
-                  <Icon name="git-commit" />&nbsp;
-                  {message}
-                </CardText>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
+            <FullView>
+              <TransparentTextOverlay
+                color={theme.base01}
+                size={contentPadding}
+                from="right"
+                radius={radius}
+              >
+                <RepositoryContentContainer>
+                  <CardText numberOfLines={1}>
+                    <Icon name="git-commit" />&nbsp;
+                    {message}
+                  </CardText>
+                </RepositoryContentContainer>
+              </TransparentTextOverlay>
+            </FullView>
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>

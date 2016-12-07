@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { List, Map } from 'immutable';
-import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
@@ -35,6 +34,10 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
+`;
+
+export const FullView = styled.View`
+  flex: 1;
 `;
 
 export const HorizontalView = styled.View`
@@ -147,7 +150,7 @@ export const renderItemId = (number, icon) => {
   return (
     <CardItemIdContainer>
       <CardItemId>
-        {icon ? <Icon name={icon}/> : ''}
+        {icon ? <Icon name={icon} /> : ''}
         {number && icon ? ' ' : ''}
         {typeof number === 'number' ? '#' : ''}
         {number}
@@ -192,7 +195,7 @@ export default class extends React.PureComponent {
 
           <MainColumn>
             <HeaderRow>
-              <View style={{ flex: 1 }}>
+              <FullView>
                 <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
                   <ScrollableContentContainer>
                     <HorizontalView>
@@ -215,7 +218,7 @@ export default class extends React.PureComponent {
                 </TransparentTextOverlay>
 
                 <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
-              </View>
+              </FullView>
 
               <CardIcon name={getEventIcon(type, payload)} />
             </HeaderRow>

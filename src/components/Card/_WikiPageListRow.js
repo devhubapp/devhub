@@ -26,7 +26,7 @@ export default class extends React.PureComponent {
       <TransparentTextOverlay color={theme.base02} size={contentPadding} from="bottom">
         <ScrollView
           style={{ maxHeight: 120 }}
-          contentContainerStyle={{ paddingBottom: contentPadding }}
+          contentContainerStyle={{ flex: 1, paddingBottom: contentPadding }}
           alwaysBounceVertical={false}
         >
           {

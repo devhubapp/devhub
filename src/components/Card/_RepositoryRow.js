@@ -11,6 +11,7 @@ import UserAvatar from './_UserAvatar';
 import {
   avatarWidth,
   ContentRow,
+  FullView,
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
@@ -63,14 +64,16 @@ export default class extends React.PureComponent {
 
         <MainColumn>
           <HighlightContainerRow1>
-            <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
-              <RepositoryContentContainer>
-                <Text muted><Icon name={repoIcon}/>&nbsp;</Text>
-                {orgName && <Text muted>{orgName}/</Text>}
+            <FullView>
+              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
+                <RepositoryContentContainer>
+                  <Text muted><Icon name={repoIcon} />&nbsp;</Text>
+                  {orgName && <Text muted>{orgName}/</Text>}
 
-                <RepositoryName>{repoName}</RepositoryName>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
+                  <RepositoryName>{repoName}</RepositoryName>
+                </RepositoryContentContainer>
+              </TransparentTextOverlay>
+            </FullView>
 
             <StarButton
               starred={repo.get('isStarred')}
