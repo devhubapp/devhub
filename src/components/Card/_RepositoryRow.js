@@ -68,9 +68,10 @@ export default class extends React.PureComponent {
               <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
                 <RepositoryContentContainer>
                   <Text muted><Icon name={repoIcon} />&nbsp;</Text>
-                  {orgName && <Text muted>{orgName}/</Text>}
-
                   <RepositoryName>{repoName}</RepositoryName>
+                  
+                  {orgName && <Text muted> {orgName}</Text>}
+
                 </RepositoryContentContainer>
               </TransparentTextOverlay>
             </FullView>
