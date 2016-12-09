@@ -18,6 +18,7 @@ import {
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
+import { trimNewLines } from '../../utils/helpers';
 import type { Commit, ThemeObject } from '../../utils/types';
 
 @Themable
@@ -33,7 +34,7 @@ export default class extends React.PureComponent {
 
     if (!commit) return null;
 
-    const message = (commit.get('message') || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    const message = trimNewLines(commit.get('message'));
     if (!message) return null;
 
     const author = commit.get('author');

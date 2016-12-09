@@ -13,6 +13,7 @@ import CommitListRow from './_CommitListRow';
 import IssueRow from './_IssueRow';
 import MemberRow from './_MemberRow';
 import PullRequestRow from './_PullRequestRow';
+import ReleaseRow from './_ReleaseRow';
 import RepositoryRow from './_RepositoryRow';
 import WikiPageListRow from './_WikiPageListRow';
 
@@ -80,7 +81,7 @@ export const HeaderRow = styled(HorizontalView)`
 export const Text = styled.Text`
   color: ${({ muted, theme }) => (muted ? theme.base05 : theme.base04)};
   line-height: 18;
-  font-size: 14;
+  font-size: ${({ small }) => small ? 12 : 14};
 `;
 
 export const SmallText = styled(Text)`
@@ -254,18 +255,18 @@ export default class extends React.PureComponent {
 
         {
           payload.get('member') &&
-          <MemberRow user={payload.get('member')} />
+          <MemberRow user={payload.get('member')} narrow />
         }
 
         {
           type === 'GollumEvent' &&
           payload.get('pages') &&
-          <WikiPageListRow pages={payload.get('pages')} />
+          <WikiPageListRow pages={payload.get('pages')} narrow />
         }
 
         {
           payload.get('pull_request') &&
-          <PullRequestRow pullRequest={payload.get('pull_request')} />
+          <PullRequestRow pullRequest={payload.get('pull_request')} narrow />
         }
 
         {
@@ -279,19 +280,24 @@ export default class extends React.PureComponent {
             if (!(list.size > 0)) return null;
 
             return (
-              <CommitListRow commits={list} />
+              <CommitListRow commits={list} narrow />
             );
           })()
         }
 
         {
           payload.get('issue') &&
-          <IssueRow issue={payload.get('issue')} />
+          <IssueRow issue={payload.get('issue')} narrow />
         }
 
         {
           payload.get('comment') &&
-          <CommentRow actor={actor} comment={payload.get('comment')} />
+          <CommentRow actor={actor} comment={payload.get('comment')} narrow />
+        }
+
+        {
+          payload.get('release') &&
+          <ReleaseRow release={payload.get('release')} type={type} narrow />
         }
       </CardWrapper>
     );

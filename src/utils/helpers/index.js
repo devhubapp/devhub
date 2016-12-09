@@ -26,6 +26,12 @@ export function loadTheme(theme: Theme): Object {
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }
 
+export function trimNewLines(text) {
+  if (!text || typeof text !== 'string') return '';
+
+  return text.replace(/[\r\n]/g, ' ').replace('  ', ' ').trim(); 
+}
+
 export function getDateFromNowText(date) {
   if (!date) return '';
 

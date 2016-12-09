@@ -24,13 +24,11 @@ export const eventSelector = createSelector(
 export const columnEventsSelector = createSelector(
   stateSelector,
   columnEventsIdsSelector,
-  (state, eventsIds) => List(
-    eventsIds
-      .take(30)
+  (state, eventsIds) => (
+    List(eventsIds)
       .map(eventId => eventSelector(state, { id: eventId }))
-    ,
-  )
-  .filter(Boolean)
-  .filter(event => event.get('hidden') !== true)
-  .sort(sortEventsByDate),
+      .filter(Boolean)
+      .filter(event => event.get('hidden') !== true)
+      .sort(sortEventsByDate)
+  ),
 );

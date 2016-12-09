@@ -17,6 +17,7 @@ import {
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
+import { trimNewLines } from '../../utils/helpers';
 import type { ThemeObject } from '../../utils/types';
 
 @Themable
@@ -28,8 +29,9 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { title, narrow, theme } = this.props;
+    const { narrow, theme } = this.props;
 
+    const title = trimNewLines(this.props.title);
     if (!title) return null;
 
     return (

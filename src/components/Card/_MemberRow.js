@@ -19,6 +19,7 @@ import {
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
+import { trimNewLines } from '../../utils/helpers';
 import type { User, ThemeObject } from '../../utils/types';
 
 @Themable
@@ -33,7 +34,7 @@ export default class extends React.PureComponent {
 
     if (!user) return null;
 
-    const _login = (user.get('login') || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    const _login = trimNewLines(user.get('login'));
     if (!_login) return null;
 
     return (

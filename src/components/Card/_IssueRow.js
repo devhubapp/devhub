@@ -21,6 +21,7 @@ import {
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
+import { trimNewLines } from '../../utils/helpers';
 import type { ThemeObject } from '../../utils/types';
 import type { Issue } from '../../utils/types/github';
 
@@ -43,7 +44,7 @@ export default class extends React.PureComponent {
       title: issue.get('title'),
     };
 
-    const _title = (title || '').replace(/\r\n/g, ' ').replace('  ', ' ').trim();
+    const _title = trimNewLines(title);
     if (!_title) return null;
 
     const { icon, color } = (() => {
