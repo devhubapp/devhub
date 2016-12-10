@@ -12,6 +12,7 @@ import Card from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
 import ProgressBar from './ProgressBar';
 import ScrollableContentContainer from './ScrollableContentContainer';
+import StatusMessage from './StatusMessage';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
 // import { columnMargin } from './Columns';
@@ -177,6 +178,7 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     column: Column,
+    errors?: ?Array<string>,
     events: Array<GithubEvent>,
     radius?: number,
     style?: ?Object,
@@ -193,11 +195,13 @@ export default class extends React.PureComponent {
   );
 
   render() {
-    const { events, radius, subscriptions, theme, ...props } = this.props;
+    const { column, errors, events, radius, subscriptions, theme, ...props } = this.props;
+
+    if (!column) return null;
 
     const { title, updatedAt } = {
-      title: (this.props.column.get('title') || '').toLowerCase(),
-      updatedAt: this.props.column.get('updatedAt'),
+      title: (column.get('title') || '').toLowerCase(),
+      updatedAt: column.get('updatedAt'),
     };
 
     const icon = (
@@ -237,6 +241,12 @@ export default class extends React.PureComponent {
             />
           }
         </ProgressBarContainer>
+
+        {
+          errors && errors.map(error => (
+            <StatusMessage message={error} error />
+          ))
+        }
 
         <StyledTextOverlay color={theme.base02} size={contentPadding} from="bottom" radius={radius}>
           <ImmutableListView

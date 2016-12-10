@@ -8,6 +8,7 @@ import Column from '../components/Column';
 
 import {
   columnIsLoadingSelector,
+  columnErrorsSelector,
   makeColumnSelector,
   makeColumnSubscriptionsSelector,
   makeDenormalizedColumnEventsSelector,
@@ -29,6 +30,7 @@ const makeMapStateToProps = () => {
 
   return (state: State, ownProps: { columnId: string }) => ({
     column: columnSelector(state, ownProps),
+    errors: columnErrorsSelector(state, ownProps),
     events: denormalizedColumnEventsSelector(state, ownProps),
     subscriptions: columnSubscriptionsSelector(state, ownProps),
     loading: columnIsLoadingSelector(state, ownProps),
@@ -44,19 +46,21 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     column: ColumnType,
+    errors: Array<string>,
     events: Array<GithubEvent>,
     loading: boolean,
     subscriptions: Array<Subscription>,
   };
 
   render() {
-    const { actions, column, events, loading, subscriptions, ...props } = this.props;
+    const { actions, column, errors, events, loading, subscriptions, ...props } = this.props;
 
     return (
       <Column
         actions={actions}
         column={column}
         events={events}
+        errors={errors}
         loading={loading}
         subscriptions={subscriptions}
         {...props}

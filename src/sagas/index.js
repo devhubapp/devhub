@@ -62,7 +62,8 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
   } catch (error) {
     console.log('loadSubscriptionData catch', error);
-    yield put(loadSubscriptionDataFailure(payload, error, sagaActionChunk));
+    const errorMessage = (error.message || {}).message || error.message || error.body || error.status;
+    yield put(loadSubscriptionDataFailure(payload, errorMessage, sagaActionChunk));
   }
 }
 

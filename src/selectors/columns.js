@@ -71,6 +71,13 @@ export const columnIsLoadingSelector = createSelector(
   subscriptions => subscriptions.some(subscription => subscription.get('loading')),
 );
 
+export const columnErrorsSelector = createSelector(
+  columnSubscriptionsSelector,
+  subscriptions => subscriptions
+    .reduce((errors, subscription) => errors.concat(subscription.get('error')), [])
+    .filter(Boolean),
+);
+
 export const columnListSelector = createSelector(
   columnsSelector,
   (columns) => (

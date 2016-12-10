@@ -26,13 +26,13 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
       return (({ title, subscriptionIds, ...restOfPayload }: Column) => {
         const id = guid();
 
-        return state.set(id, Map(fromJS({
+        return state.set(id, fromJS({
           id,
           title,
-          subscriptions: subscriptionIds,
+          subscriptions: List(subscriptionIds),
           createdAt: new Date(),
           ...restOfPayload,
-        })));
+        }));
       })(payload);
 
     case DELETE_COLUMN:
