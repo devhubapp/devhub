@@ -160,7 +160,7 @@ export default class extends React.PureComponent {
 
       case BUTTONS.CLEAR_SEEN:
         const seenEventIds = events.filter(e => e.get('seen')).map(e => e.get('id'));
-        actions.hideEvents({ columnId, eventIds: seenEventIds });
+        actions.clearEvents({ columnId, eventIds: seenEventIds });
         break;
 
       case BUTTONS.DELETE_COLUMN:

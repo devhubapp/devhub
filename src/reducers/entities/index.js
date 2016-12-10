@@ -12,7 +12,7 @@ import pullRequests from './pull-requests';
 import repos from './repos';
 import subscriptions from './subscriptions';
 import users from './users';
-import { LOAD_SUBSCRIPTION_DATA_SUCCESS } from '../../utils/constants/actions';
+import { CLEAR_APP_DATA, LOAD_SUBSCRIPTION_DATA_SUCCESS } from '../../utils/constants/actions';
 import type { Action } from '../../utils/types';
 
 const reducer = combineReducers({
@@ -27,10 +27,15 @@ const reducer = combineReducers({
   users,
 });
 
-const indexReducer = (state: Object = Map(), action) => {
+const initialState = Map();
+
+const indexReducer = (state: Object = initialState, action) => {
   const { type, payload } = action || {};
 
   switch (type) {
+    case CLEAR_APP_DATA:
+      return initialState;
+
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
       return ((_payload) => {
         const { data: { entities } = {} } = _payload || {};
@@ -42,7 +47,7 @@ const indexReducer = (state: Object = Map(), action) => {
   }
 };
 
-export default (state: Object = Map(), action: Action<Object>) => {
+export default (state: Object = initialState, action: Action<Object>) => {
   const stateAfterIndexReducer = indexReducer(state, action);
   return reducer(stateAfterIndexReducer, action);
 };

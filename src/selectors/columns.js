@@ -34,7 +34,7 @@ export const makeColumnSelector = () => createSelector(
 export const columnSelector = makeColumnSelector();
 
 export const columnSubscriptionIdsSelector = (state, { columnId }) => (
-  columnSelector(state, { columnId }).get('subscriptions') || List()
+  (columnSelector(state, { columnId }) || Map()).get('subscriptions') || List()
 );
 
 export const columnEventIdsSelector = createSelector(

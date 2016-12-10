@@ -26,7 +26,6 @@ export const makeDenormalizedColumnEventsSelector = () => createSelector(
   (eventIds, entities) => (
     denormalize(eventIds, entities, arrayOf(EventSchema))
       .filter(Boolean)
-      .filter(event => event.get('hidden') !== true)
       .sort(sortEventsByDate)
   ),
 );

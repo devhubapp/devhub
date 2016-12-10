@@ -4,7 +4,7 @@ import { fromJS, List, Map, Set } from 'immutable';
 
 import { ApiRequestType, getUniquePath } from '../../api/github';
 import {
-  HIDE_EVENTS,
+  CLEAR_EVENTS,
   CREATE_SUBSCRIPTION,
   DELETE_SUBSCRIPTION,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
@@ -27,7 +27,9 @@ export function generateSubscriptionId(requestType: ApiRequestType, params: Obje
 }
 
 type State = Normalized<Subscription>;
-export default (state: State = Map(), { type, payload, error }: Action<any>): State => {
+const initialState = Map();
+
+export default (state: State = initialState, { type, payload, error }: Action<any>): State => {
   switch (type) {
     case CREATE_SUBSCRIPTION:
       return (({ id: subscriptionId, requestType, params, ...restOfPayload }: Subscription) => {
@@ -53,7 +55,7 @@ export default (state: State = Map(), { type, payload, error }: Action<any>): St
       ))(payload);
 
     case LOAD_SUBSCRIPTION_DATA_FAILURE:
-      return (({ subscriptionId }: ApiRequestPayload, error) => (
+      return (({ request: { subscriptionId } }: ApiResponsePayload, error) => (
         state
           .setIn([subscriptionId, 'loading'], false)
           .setIn([subscriptionId, 'error'], error)
@@ -74,16 +76,16 @@ export default (state: State = Map(), { type, payload, error }: Action<any>): St
         ;
       })(payload);
 
-    case HIDE_EVENTS:
+    case CLEAR_EVENTS:
       return (({ eventIds }: SeenEvents) => {
         if (!eventIds) return state;
 
         return state.map(subscription => {
           // if (payload.subscriptionId !== subscription.get('id')) return subscription;
 
-          const hideEventIds = List(eventIds);
+          const clearEventIds = List(eventIds);
           const currentEventIds = subscription.get('events');
-          const newEventIds = currentEventIds.filterNot(eventId => hideEventIds.includes(eventId));
+          const newEventIds = currentEventIds.filterNot(eventId => clearEventIds.includes(eventId));
 
           return subscription.set('events', newEventIds);
         });

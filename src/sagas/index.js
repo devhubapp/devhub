@@ -1,5 +1,6 @@
 // @flow
 
+import moment from 'moment';
 import { AsyncStorage } from 'react-native';
 import { flatten, uniq } from 'lodash';
 import { arrayOf, normalize } from 'normalizr';
@@ -11,7 +12,7 @@ import { EventSchema } from '../utils/normalizr/schemas';
 import { columnIdsSelector, columnSubscriptionIdsSelector, subscriptionSelector } from '../selectors';
 
 import {
-  CLEAR_CACHE,
+  CLEAR_APP_DATA,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   UPDATE_COLUMN_SUBSCRIPTIONS,
   UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
@@ -32,7 +33,7 @@ const sagaActionChunk = { dispatchedBySaga: true };
 
 function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
   try {
-    const { requestType, params } = payload;
+    const { params, requestType, subscriptionId } = payload;
 
     const { response, timeout } = yield race({
       response: call(getApiMethod(requestType), params),
@@ -42,9 +43,23 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
     if (timeout) throw new Error('TimeoutError', 'Timeout');
 
     const { data, meta }: ApiResponsePayload = response;
-    const normalizedData = normalize(data, arrayOf(EventSchema));
 
+    let onlyNewEvents = data;
+
+    const state = yield select();
+    const subscription = subscriptionSelector(state, { subscriptionId });
+    const subscriptionUpdatedAt = subscription.get('updatedAt') ? moment(subscription.get('updatedAt')) : null;
+
+    // remove old events, that were already fetched
+    if (subscriptionUpdatedAt && subscriptionUpdatedAt.isValid()) {
+      onlyNewEvents = onlyNewEvents.filter(event => (
+        !event.created_at || moment(event.created_at).isAfter(subscriptionUpdatedAt)
+      ));
+    }
+
+    const normalizedData = normalize(onlyNewEvents, arrayOf(EventSchema));
     yield put(loadSubscriptionDataSuccess(payload, normalizedData, meta, sagaActionChunk));
+
   } catch (error) {
     console.log('loadSubscriptionData catch', error);
     yield put(loadSubscriptionDataFailure(payload, error, sagaActionChunk));
@@ -99,7 +114,7 @@ function* startTimer() {
   }
 }
 
-function* clearCache() {
+function* clearAppData() {
   yield AsyncStorage.clear();
 }
 
@@ -108,7 +123,7 @@ export default function* () {
     yield takeEvery(LOAD_SUBSCRIPTION_DATA_REQUEST, loadSubscriptionData),
     yield takeEvery(UPDATE_COLUMN_SUBSCRIPTIONS, updateSubscriptionsFromColumn),
     yield takeLatest(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, updateSubscriptionsFromAllColumns),
-    yield takeLatest(CLEAR_CACHE, clearCache),
+    yield takeLatest(CLEAR_APP_DATA, clearAppData),
     yield fork(startTimer),
   ];
 }

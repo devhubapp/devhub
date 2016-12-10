@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import {
-  CLEAR_CACHE,
+  CLEAR_APP_DATA,
   CREATE_COLUMN,
   DELETE_COLUMN,
   UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
@@ -13,7 +13,7 @@ import {
   STAR_REPO,
   UNSTAR_REPO,
   TOGGLE_SEEN,
-  HIDE_EVENTS,
+  CLEAR_EVENTS,
   MARK_EVENTS_AS_SEEN,
   MARK_EVENTS_AS_NOT_SEEN,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
@@ -32,8 +32,8 @@ import type {
   Theme,
 } from '../utils/types';
 
-export const clearCache = (other?: Object = {}) => (
-  action(CLEAR_CACHE, undefined, other)
+export const clearAppData = (other?: Object = {}) => (
+  action(CLEAR_APP_DATA, undefined, other)
 );
 
 export const createColumn = (title: string, subscriptionIds: Array<Object>, other?: Object = {}) => (
@@ -82,8 +82,8 @@ export const toggleSeen = (eventId: number | string, other?: Object = {}) => (
 );
 
 export type SeenEvents = { columnId: string, eventIds: Array<string> };
-export const hideEvents = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (
-  action(HIDE_EVENTS, { columnId, eventIds }, other)
+export const clearEvents = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (
+  action(CLEAR_EVENTS, { columnId, eventIds }, other)
 );
 
 export const markEventsAsSeen = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (

@@ -6,7 +6,9 @@ import type { Action, Repo } from '../../utils/types';
 import { STAR_REPO, UNSTAR_REPO } from '../../utils/constants/actions';
 
 type State = Repo;
-export default (state: State = Map(), action: Action<any>): State => {
+const initialState = Map();
+
+export default (state: State = initialState, action: Action<any>): State => {
   const { type, payload } = action || {};
 
   switch (type) {

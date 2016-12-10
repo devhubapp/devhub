@@ -5,4 +5,6 @@ import { Map } from 'immutable';
 import type { Normalized } from '../../utils/types';
 
 type State = Normalized<Object>;
-export default (state: State = Map()): State => state;
+const initialState = Map();
+
+export default (state: State = initialState): State => state;
