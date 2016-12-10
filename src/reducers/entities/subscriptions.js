@@ -32,16 +32,26 @@ const initialState = Map();
 export default (state: State = initialState, { type, payload, error }: Action<any>): State => {
   switch (type) {
     case CREATE_SUBSCRIPTION:
-      return (({ id: subscriptionId, events, requestType, params, ...restOfPayload }: Subscription) => {
+      return (({ id: subscriptionId, requestType, params, ...restOfPayload }: Subscription) => {
         const id = subscriptionId || generateSubscriptionId(requestType, params);
+        const subscription = state.get(id);
+
+        // already exists
+        if (subscription) {
+          return state.mergeDeep(fromJS({
+            [id]: {
+              requestType,
+              params: Map(params),
+              ...restOfPayload,
+            },
+          }));
+        }
 
         return state.set(id, fromJS({
           id,
           requestType,
           params: Map(params),
-          events: List(events),
           createdAt: new Date(),
-          updatedAt: null,
           ...restOfPayload,
         }));
       })(payload);
