@@ -1,10 +1,13 @@
+// @flow
+/*  eslint-disable import/prefer-default-export */
+
 import { createSelector } from 'reselect';
 
 import { loadTheme } from '../utils/helpers';
 
-const themeSelector = state => state.getIn(['config', 'theme']);
+export const themeNameSelector = state => state.getIn(['config', 'theme']);
 
-export default createSelector(
-  themeSelector,
+export const themeSelector = createSelector(
+  themeNameSelector,
   theme => loadTheme(theme),
 );

@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
 import { StatusBar } from 'react-native';
 
-import themeSelector from '../selectors/theme';
+import { themeSelector } from '../selectors';
 import type { State, ThemeObject } from '../utils/types';
 
 const View = styled.View`

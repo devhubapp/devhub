@@ -56,4 +56,5 @@ export type ApiResponsePayload = {
   request: ApiRequestPayload,
   data: Object,
   meta: Object,
+  error?: ?Object,
 };

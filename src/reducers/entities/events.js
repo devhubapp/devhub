@@ -6,12 +6,12 @@ import {
   MARK_EVENTS_AS_SEEN,
   MARK_EVENTS_AS_NOT_SEEN,
   TOGGLE_SEEN,
-  CLEAR_EVENTS,
+  HIDE_EVENTS,
 } from '../../utils/constants/actions';
 
 import type { Action, Normalized } from '../../utils/types';
 
-function arrayOfIdsToMergableMap(ids, newValue) {
+function arrayOfIdsToMergeableMap(ids, newValue) {
   return List(ids)
     .filter(Boolean)
     .toMap()
@@ -27,16 +27,16 @@ export default (state: State = Map(), action: Action<any>): State => {
 
   switch (type) {
     case MARK_EVENTS_AS_SEEN:
-      return state.mergeDeep(arrayOfIdsToMergableMap(eventIds, Map({ seen: true })));
+      return state.merge(arrayOfIdsToMergeableMap(eventIds, Map({ seen: true })));
 
     case MARK_EVENTS_AS_NOT_SEEN:
-      return state.mergeDeep(arrayOfIdsToMergableMap(eventIds, Map({ seen: false })));
+      return state.merge(arrayOfIdsToMergeableMap(eventIds, Map({ seen: false })));
 
     case TOGGLE_SEEN:
       return state.setIn([payload, 'seen'], !state.getIn([payload, 'seen']));
 
-    case CLEAR_EVENTS:
-      return state.mergeDeep(arrayOfIdsToMergableMap(eventIds, Map({ hidden: true })));
+    case HIDE_EVENTS:
+      return state.merge(arrayOfIdsToMergeableMap(eventIds, Map({ hidden: true })));
       // return state.filterNot(event => eventIds.includes(event.get('id')));
 
     default:

@@ -1,38 +1,31 @@
 // @flow
 
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Columns from '../../components/Columns';
+import ColumnsContainer from '../ColumnsContainer';
 import Screen from '../../components/Screen';
-import denormalizedColumnsSelector from '../../selectors/columns';
-import * as actionCreators from '../../actions';
-import type { ActionCreators, Column, State } from '../../utils/types';
+import type { State } from '../../utils/types';
 
 const mapStateToProps = (state: State) => ({
   rehydrated: state.getIn(['app', 'rehydrated']),
-  columns: denormalizedColumnsSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(actionCreators, dispatch),
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 export default class extends React.PureComponent {
   props: {
-    actions: ActionCreators,
-    columns: Array<Column>,
     rehydrated: boolean,
   };
 
   render() {
-    const { actions, columns, rehydrated } = this.props;
+    const { rehydrated } = this.props;
 
     return (
       <Screen>
-        {rehydrated ? <Columns columns={columns} actions={actions} /> : null}
+        {
+          rehydrated &&
+          <ColumnsContainer />
+        }
       </Screen>
     );
   }

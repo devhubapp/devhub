@@ -8,8 +8,7 @@ import { call, fork, put, race, select, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { EventSchema } from '../utils/normalizr/schemas';
-import { columnSelector, columnsIdsSelector } from '../selectors/columns';
-import { columnSubscriptionsIdsSelector, subscriptionSelector } from '../selectors/subscriptions';
+import { columnIdsSelector, columnSubscriptionIdsSelector, subscriptionSelector } from '../selectors';
 
 import {
   CLEAR_CACHE,
@@ -55,12 +54,11 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 function* updateSubscriptionsFromColumn({ payload: { id: columnId } }: Action<ApiRequestPayload>) {
   const state = yield select();
 
-  const column = columnSelector(state, { id: columnId });
-  const subscriptionIds = columnSubscriptionsIdsSelector(state, { column });
+  const subscriptionIds = columnSubscriptionIdsSelector(state, { columnId });
   if (!(subscriptionIds.size > 0)) return;
 
   yield* subscriptionIds.map(function* (subscriptionId) {
-    const subscription = subscriptionSelector(state, { id: subscriptionId });
+    const subscription = subscriptionSelector(state, { subscriptionId });
     if (!subscription) return;
 
     const { requestType, params } = subscription.toJS();
@@ -73,16 +71,15 @@ function* updateSubscriptionsFromColumn({ payload: { id: columnId } }: Action<Ap
 function* updateSubscriptionsFromAllColumns() {
   const state = yield select();
 
-  const columnIds = columnsIdsSelector(state);
+  const columnIds = columnIdsSelector(state);
   if (!(columnIds.size > 0)) return;
 
-  const subscriptionIds = uniq(flatten(columnIds.map(id => {
-    const column = columnSelector(state, { id });
-    return columnSubscriptionsIdsSelector(state, { column });
-  }).toJS())).filter(Boolean);
+  const subscriptionIds = uniq(flatten(columnIds.map(columnId => (
+    columnSubscriptionIdsSelector(state, { columnId })
+  )).toJS())).filter(Boolean);
 
   yield* subscriptionIds.map(function* (subscriptionId) {
-    const subscription = subscriptionSelector(state, { id: subscriptionId });
+    const subscription = subscriptionSelector(state, { subscriptionId });
     if (!subscription) return;
 
     const { requestType, params } = subscription.toJS();

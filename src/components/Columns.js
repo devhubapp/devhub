@@ -6,7 +6,7 @@ import ImmutableListView from 'react-native-immutable-list-view';
 import { List } from 'immutable';
 import { AlertIOS, Dimensions } from 'react-native';
 
-import Column from './Column';
+import ColumnContainer from '../containers/ColumnContainer';
 import NewColumn from './NewColumn';
 // import ListView from './lists/ListView';
 import { contentPadding, radius } from '../styles/variables';
@@ -23,13 +23,13 @@ const StyledImmutableListViewListView = styled(ImmutableListView)`
   background-color: ${({ theme }) => theme.base00};
 `;
 
-const ColumnContainer = styled.View`
+const ColumnWrapper = styled.View`
   flex: 1;
   align-self: center;
   width: ${getWidth};
 `;
 
-const StyledColumn = styled(Column)`
+const StyledColumnContainer = styled(ColumnContainer)`
   flex: 1;
   margin-horizontal: ${columnMargin};
   margin-vertical: ${columnMargin * 2};
@@ -63,16 +63,16 @@ export default class extends React.PureComponent {
   renderRow = (column) => {
     if (!column) return null;
 
-    const { id } = column;
+    const columnId = column.get('id');
+    if (!columnId) return null;
 
     return (
-      <ColumnContainer key={`column-${id}`}>
-        <StyledColumn
-          actions={this.props.actions}
-          column={column}
+      <ColumnWrapper key={`column-${columnId}`}>
+        <StyledColumnContainer
+          columnId={columnId}
           radius={radius}
         />
-      </ColumnContainer>
+      </ColumnWrapper>
     );
   };
 
@@ -81,9 +81,9 @@ export default class extends React.PureComponent {
 
     if (!(columns.size > 0)) {
       return (
-        <ColumnContainer>
+        <ColumnWrapper>
           <StyledNewColumn actions={actions} radius={radius} />
-        </ColumnContainer>
+        </ColumnWrapper>
       );
     }
 

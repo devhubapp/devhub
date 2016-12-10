@@ -1,27 +1,33 @@
 // @flow
+/*  eslint-disable import/prefer-default-export */
 
 import { denormalize } from 'denormalizr';
-import { List, Map } from 'immutable';
+import { Map } from 'immutable';
+import { arrayOf } from 'normalizr';
 import { createSelector } from 'reselect';
 
 import { SubscriptionSchema } from '../utils/normalizr/schemas';
 
-export const stateSelector = state => state || Map();
-export const entitiesSelector = state => state.get('entities') || Map();
-export const subscriptionsSelector = state => entitiesSelector(state).get('subscriptions') || List();
-export const columnSubscriptionsIdsSelector = (state, { column }) => column.get('subscriptions') || List();
+const entitiesSelector = state => state.get('entities') || Map();
 
-export const subscriptionSelector = createSelector(
-  entitiesSelector,
-  (state, { id }) => id,
-  (entities, subscriptionId) => denormalize(subscriptionId, entities, SubscriptionSchema),
+export const subscriptionIdSelector = (state, { subscriptionId }) => subscriptionId;
+
+export const subscriptionsSelector = state => (
+  entitiesSelector(state).get('subscriptions') || Map()
 );
 
-
-export const columnSubscriptionsSelector = createSelector(
-  stateSelector,
-  columnSubscriptionsIdsSelector,
-  (state, subscriptionsIds) => List(
-    subscriptionsIds.map(id => subscriptionSelector(state, { id })),
+export const denormalizedSubscriptionsSelector = createSelector(
+  subscriptionsSelector,
+  entitiesSelector,
+  (subscriptions, entities) => (
+    denormalize(subscriptions, entities, arrayOf(SubscriptionSchema))
   ),
 );
+
+export const subscriptionSelector = createSelector(
+  subscriptionIdSelector,
+  subscriptionsSelector,
+  (subscriptionId, subscriptions) => subscriptions.get(subscriptionId),
+);
+
+export default denormalizedSubscriptionsSelector;

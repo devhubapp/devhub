@@ -13,7 +13,7 @@ import {
   STAR_REPO,
   UNSTAR_REPO,
   TOGGLE_SEEN,
-  CLEAR_EVENTS,
+  HIDE_EVENTS,
   MARK_EVENTS_AS_SEEN,
   MARK_EVENTS_AS_NOT_SEEN,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
@@ -36,8 +36,8 @@ export const clearCache = (other?: Object = {}) => (
   action(CLEAR_CACHE, undefined, other)
 );
 
-export const createColumn = (title: string, subscriptions: Array<Object>, other?: Object = {}) => (
-  action(CREATE_COLUMN, ({ title, subscriptions }: Column), other)
+export const createColumn = (title: string, subscriptionIds: Array<Object>, other?: Object = {}) => (
+  action(CREATE_COLUMN, ({ title, subscriptionIds }: Column), other)
 );
 
 export const deleteColumn = (id: string, other?: Object = {}) => (
@@ -81,9 +81,9 @@ export const toggleSeen = (eventId: number | string, other?: Object = {}) => (
   action(TOGGLE_SEEN, eventId.toString(), other)
 );
 
-type SeenEvents = { columnId: string, eventIds: Array<string> };
-export const clearEvents = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (
-  action(CLEAR_EVENTS, { columnId, eventIds }, other)
+export type SeenEvents = { columnId: string, eventIds: Array<string> };
+export const hideEvents = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (
+  action(HIDE_EVENTS, { columnId, eventIds }, other)
 );
 
 export const markEventsAsSeen = ({ columnId, eventIds }: SeenEvents, other?: Object = {}) => (

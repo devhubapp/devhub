@@ -7,20 +7,21 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 
-import Card, { iconRightMargin } from './Card';
+import { iconRightMargin } from './Card';
+import Card from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
 import ProgressBar from './ProgressBar';
 import ScrollableContentContainer from './ScrollableContentContainer';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
-import { columnMargin } from './Columns';
+// import { columnMargin } from './Columns';
 import { getIcon } from '../api/github';
 import { getDateWithHourAndMinuteText } from '../utils/helpers';
 import { contentPadding } from '../styles/variables';
-import type { ActionCreators, Column, ThemeObject } from '../utils/types';
+import type { ActionCreators, Column, GithubEvent, Subscription, ThemeObject } from '../utils/types';
 
 const getFullWidth = () => Dimensions.get('window').width;
-const getWidth = () => getFullWidth() - (2 * contentPadding) - (4 * columnMargin);
+const getWidth = () => getFullWidth() - (2 * contentPadding) - (4 * 2); // columnMargin
 
 const Root = styled.View`
   background-color: ${({ theme }) => theme.base02};
@@ -104,11 +105,9 @@ export default class extends React.PureComponent {
   };
 
   componentWillReceiveProps(newProps) {
-    const loading = (newProps.column || Map()).get('loading');
-
-    if (loading && !this.state.loadingWithDelay) {
+    if (newProps.loading && !this.state.loadingWithDelay) {
       this.setState({ loadingWithDelay: true, loadingWithDelayStartedAt: new Date() });
-    } else if (!loading && this.state.loadingWithDelay) {
+    } else if (!newProps.loading && this.state.loadingWithDelay) {
       const timeLoading = Math.max(0, new Date() - this.state.loadingWithDelayStartedAt);
       const minimalTimeShowingLoadingIndicator = 1000;
       const delayToAchiveMinimalTime = timeLoading > minimalTimeShowingLoadingIndicator
@@ -140,10 +139,10 @@ export default class extends React.PureComponent {
   };
 
   handleActionSheetButtonPress = (index) => {
-    const { actions, column } = this.props;
+    const { actions, column, events } = this.props;
 
     const columnId = column.get('id');
-    const eventIds = column.get('events').map(event => event.get('id'));
+    const eventIds = events.map(event => event.get('id'));
 
     switch (index) {
       case BUTTONS.CREATE_NEW_COLUMN:
@@ -160,8 +159,8 @@ export default class extends React.PureComponent {
         break;
 
       case BUTTONS.CLEAR_SEEN:
-        const seenEventIds = column.get('events').filter(e => e.get('seen')).map(e => e.get('id'));
-        actions.clearEvents({ columnId, eventIds: seenEventIds });
+        const seenEventIds = events.filter(e => e.get('seen')).map(e => e.get('id'));
+        actions.hideEvents({ columnId, eventIds: seenEventIds });
         break;
 
       case BUTTONS.DELETE_COLUMN:
@@ -178,25 +177,25 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     column: Column,
+    events: Array<GithubEvent>,
     radius?: number,
     style?: ?Object,
+    subscriptions: Array<Subscription>,
     theme: ThemeObject,
   };
 
   renderRow = (event) => (
     <Card
       key={`card-${event.get('id')}`}
-      event={event}
       actions={this.props.actions}
+      event={event}
     />
   );
 
   render() {
-    const { radius, theme, ...props } = this.props;
+    const { events, radius, subscriptions, theme, ...props } = this.props;
 
-    const { events, subscriptions, title, updatedAt } = {
-      events: this.props.column.get('events'),
-      subscriptions: this.props.column.get('subscriptions'),
+    const { title, updatedAt } = {
       title: (this.props.column.get('title') || '').toLowerCase(),
       updatedAt: this.props.column.get('updatedAt'),
     };
@@ -260,7 +259,7 @@ export default class extends React.PureComponent {
         </StyledTextOverlay>
 
         <ActionSheet
-          ref={ref => this.ActionSheet = ref}
+          ref={(ref) => { this.ActionSheet = ref; }}
           title={title}
           options={buttons}
           cancelButtonIndex={BUTTONS.CANCEL}

@@ -1,32 +1,30 @@
 // @flow
+/*  eslint-disable import/prefer-default-export */
 
 import { denormalize } from 'denormalizr';
-import { List, Map } from 'immutable';
+import { Map } from 'immutable';
+import { arrayOf } from 'normalizr';
 import { createSelector } from 'reselect';
 
+import { columnEventIdsSelector } from './columns';
 import { EventSchema } from '../utils/normalizr/schemas';
 
-export const stateSelector = state => state || Map();
-export const entitiesSelector = state => state.get('entities') || Map();
+const entitiesSelector = state => state.get('entities') || Map();
 
-export const columnEventsIdsSelector = (state, { column }) => (
-  List(column.get('events')).filter(Boolean)
-);
-
+export const eventIdSelector = (state, { eventId }) => eventId;
 export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_at') ? 1 : -1);
 
-export const eventSelector = createSelector(
+export const makeDenormalizedEventSelector = () => createSelector(
+  eventIdSelector,
   entitiesSelector,
-  (state, { id }) => id,
-  (entities, eventId) => denormalize(eventId, entities, EventSchema),
+  (eventId, entities) => denormalize(eventId, entities, EventSchema),
 );
 
-export const columnEventsSelector = createSelector(
-  stateSelector,
-  columnEventsIdsSelector,
-  (state, eventsIds) => (
-    List(eventsIds)
-      .map(eventId => eventSelector(state, { id: eventId }))
+export const makeDenormalizedColumnEventsSelector = () => createSelector(
+  columnEventIdsSelector,
+  entitiesSelector,
+  (eventIds, entities) => (
+    denormalize(eventIds, entities, arrayOf(EventSchema))
       .filter(Boolean)
       .filter(event => event.get('hidden') !== true)
       .sort(sortEventsByDate)

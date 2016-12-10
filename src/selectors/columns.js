@@ -1,44 +1,81 @@
 // @flow
+/*  eslint-disable import/prefer-default-export */
 
 import moment from 'moment';
-import { List, Map, Seq } from 'immutable';
+import { denormalize } from 'denormalizr';
+import { List, Map, Set } from 'immutable';
 import { memoize } from 'lodash';
+import { arrayOf } from 'normalizr';
 import { createSelector } from 'reselect';
 
-import { columnEventsSelector } from './events';
-import { columnSubscriptionsSelector } from './subscriptions';
+import { subscriptionsSelector, subscriptionSelector } from './subscriptions';
 
 export const objectKeysMemoized = memoize(obj => (obj ? obj.keySeq() : Seq()));
 
-export const stateSelector = state => state || Map();
-export const entitiesSelector = state => state.get('entities') || Map();
+const stateSelector = state => state || Map();
+const entitiesSelector = state => state.get('entities') || Map();
+
+export const columnIdSelector = (state, { columnId }) => columnId;
 export const columnsSelector = state => entitiesSelector(state).get('columns') || Map();
-export const columnsIdsSelector = state => objectKeysMemoized(columnsSelector(state)) || List();
+export const columnIdsSelector = state => objectKeysMemoized(columnsSelector(state)) || List();
 
 const sortColumnsByDate = (b, a) => (
   moment(a.get('createdAt')).isAfter(moment(b.get('createdAt'))) ? 1 : -1
 );
 
-export const columnSelector = createSelector(
-  stateSelector,
-  (state, { id }) => id,
-  (state, id) => (
-    columnsSelector(state).get(id)
+export const makeColumnSelector = () => createSelector(
+  columnIdSelector,
+  columnsSelector,
+  (columnId, columns) => (
+    columns.get(columnId)
   ),
 );
 
-export default createSelector(
-  stateSelector,
-  columnsIdsSelector,
-  (state, columnsIds) => List(
-    columnsIds.map(id => {
-      const column = columnSelector(state, { id });
-      if (!column) return null;
+export const columnSelector = makeColumnSelector();
 
-      return column.merge({
-        events: columnEventsSelector(state, { column }),
-        subscriptions: columnSubscriptionsSelector(state, { column }),
-      });
-    }).filter(Boolean),
-  ).sort(sortColumnsByDate),
+export const columnSubscriptionIdsSelector = (state, { columnId }) => (
+  columnSelector(state, { columnId }).get('subscriptions') || List()
+);
+
+export const columnEventIdsSelector = createSelector(
+  stateSelector,
+  columnIdSelector,
+  columnSubscriptionIdsSelector,
+  (state, columnId, subscriptionsIds) => {
+    let eventIds = Set();
+
+    subscriptionsIds.forEach((subscriptionId) => {
+      const subscription = subscriptionSelector(state, { subscriptionId });
+      const subscriptionEventIds = subscription.get('events') || List();
+      eventIds = eventIds.union(subscriptionEventIds);
+    });
+
+    return eventIds.toList();
+  },
+);
+
+export const makeColumnSubscriptionsSelector = () => createSelector(
+  columnSubscriptionIdsSelector,
+  subscriptionsSelector,
+  (subscriptionIds, subscriptions) => (
+    subscriptionIds.map(subscriptionId => (
+      subscriptions.get(subscriptionId)
+    ))
+  ),
+);
+
+const columnSubscriptionsSelector = makeColumnSubscriptionsSelector();
+
+export const columnIsLoadingSelector = createSelector(
+  columnSubscriptionsSelector,
+  subscriptions => subscriptions.some(subscription => subscription.get('loading')),
+);
+
+export const columnListSelector = createSelector(
+  columnsSelector,
+  (columns) => (
+    columns
+      .toList()
+      .sort(sortColumnsByDate)
+  ),
 );
