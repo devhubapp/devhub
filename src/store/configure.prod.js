@@ -23,7 +23,5 @@ export default (initialState = Map()) => {
 
   persistStore(store, { storage: AsyncStorage });
 
-  AsyncStorage.clear();
-
   return store;
 };

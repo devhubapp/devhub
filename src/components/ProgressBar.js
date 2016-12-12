@@ -1,13 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-} from 'react';
-
-import {
-  Animated,
-  Easing,
-  View,
-} from 'react-native';
+import React, { Component, PropTypes } from 'react';
+import { Animated, Easing, View } from 'react-native';
 
 import Themable from './hoc/Themable';
 

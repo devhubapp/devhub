@@ -4,13 +4,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 import type ImageSourcePropType from 'react-native/Libraries/Image/ImageSourcePropType';
 
-import { radius } from '../styles/variables';
+import * as vars from '../styles/variables';
 
 const Avatar = styled.Image`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   background-color: ${({ error, loading, theme }) => (!loading && !error ? '#ffffff' : theme.base03)};
-  border-radius: ${radius};
+  border-radius: ${({ radius }) => radius};
 `;
 
 export default class extends React.PureComponent {
@@ -45,18 +45,30 @@ export default class extends React.PureComponent {
     onLoadEnd?: Function,
     onError?: Function,
     size?: number,
+    radius?: number,
     source: ImageSourcePropType,
   };
 
   render() {
     const { error, loading } = this.state;
-    const { size = 50, onLoad, onLoadStart, onLoadEnd, onError, ...props } = this.props;
+
+    const {
+      size = 50,
+      radius = vars.radius,
+      onLoad,
+      onLoadStart,
+      onLoadEnd,
+      onError,
+      ...props,
+    } = this.props;
+
     delete props.error;
     delete props.loading;
 
     return (
       <Avatar
         size={size}
+        radius={radius}
         error={error}
         loading={loading}
         resizeMode="cover"

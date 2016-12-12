@@ -7,8 +7,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 
-import { iconRightMargin } from './Card';
-import Card from './Card';
+import Card, { iconRightMargin } from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
 import ProgressBar from './ProgressBar';
 import ScrollableContentContainer from './ScrollableContentContainer';
@@ -199,10 +198,11 @@ export default class extends React.PureComponent {
 
     if (!column) return null;
 
-    const { title, updatedAt } = {
-      title: (column.get('title') || '').toLowerCase(),
-      updatedAt: column.get('updatedAt'),
-    };
+    const title = (column.get('title') || '').toLowerCase();
+
+    const updatedAt = subscriptions && subscriptions.size > 0
+      ? subscriptions.first().get('updatedAt')
+      : null;
 
     const icon = (
       subscriptions && subscriptions.size > 0
