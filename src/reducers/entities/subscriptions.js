@@ -37,15 +37,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
         const subscription = state.get(id);
 
         // already exists
-        if (subscription) {
-          return state.mergeDeep(fromJS({
-            [id]: {
-              requestType,
-              params: Map(params),
-              ...restOfPayload,
-            },
-          }));
-        }
+        if (subscription) return state;
 
         return state.set(id, fromJS({
           id,

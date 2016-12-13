@@ -159,7 +159,20 @@ export default class extends React.PureComponent {
         break;
 
       case BUTTONS.CLEAR_SEEN:
-        const seenEventIds = events.filter(e => e.get('seen')).map(e => e.get('id'));
+        const seenEvents = events.filter(e => e.get('seen'));
+        let seenEventIds = [];
+
+        seenEvents.forEach(seenEvent => {
+          seenEventIds.push(seenEvent.get('id'));
+
+          const merged = seenEvent.get('merged');
+          if (merged) {
+            merged.forEach(mergedEvent => {
+              seenEventIds.push(mergedEvent.get('id'));
+            });
+          }
+        });
+
         actions.clearEvents({ columnId, eventIds: seenEventIds });
         break;
 

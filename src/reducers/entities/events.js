@@ -35,7 +35,18 @@ export default (state: State = initialState, action: Action<any>): State => {
       return state.mergeDeep(arrayOfIdsToMergeableMap(eventIds, Map({ seen: false })));
 
     case TOGGLE_SEEN:
-      return state.setIn([payload, 'seen'], !state.getIn([payload, 'seen']));
+      return (() => {
+        const eventIds = payload instanceof List ? payload : (Array.isArray(payload) ? List(payload) : List([payload]));
+        const newSeenValue = !state.getIn([eventIds.first(), 'seen']);
+
+        let newState = state;
+
+        eventIds.forEach(eventId => {
+          newState = newState.setIn([eventId, 'seen'], newSeenValue);
+        });
+
+        return newState;
+      })();
 
     case CLEAR_EVENTS:
       // return state.mergeDeep(arrayOfIdsToMergeableMap(eventIds, Map({ hidden: true })));

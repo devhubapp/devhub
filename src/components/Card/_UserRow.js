@@ -26,11 +26,12 @@ import type { User, ThemeObject } from '../../utils/types';
 export default class extends React.PureComponent {
   props: {
     user: User,
+    additionalInfo?: ?string,
     theme?: ThemeObject,
   };
 
   render() {
-    const { user, theme } = this.props;
+    const { additionalInfo, user, theme } = this.props;
 
     if (!user) return null;
 
@@ -56,6 +57,7 @@ export default class extends React.PureComponent {
                   <Text numberOfLines={1}>
                     <Icon name="person" />&nbsp;
                     {_login}
+                    {additionalInfo && <Text muted> {additionalInfo}</Text>}
                   </Text>
                 </RepositoryContentContainer>
               </TransparentTextOverlay>

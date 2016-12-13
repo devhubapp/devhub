@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListView, View } from 'react-native';
+import { ListView } from 'react-native';
 
 export default class extends React.PureComponent {
   constructor(props) {
@@ -38,30 +38,15 @@ export default class extends React.PureComponent {
     renderRow: Function,
     renderHeader?: Function,
     renderFooter?: Function,
-    showBorderSeparator: boolean,
   };
 
-  renderHeader = renderHeader => (
-    <View>
-      {typeof renderHeader === 'function' ? renderHeader() : null}
-    </View>
-  );
-
-  renderFooter = renderFooter => (
-    <View>
-      {typeof renderFooter === 'function' ? renderFooter() : null}
-    </View>
-  );
-
   render() {
-    const { renderHeader, renderFooter, ...props } = this.props;
+    const { ...props } = this.props;
     delete props.dataSource;
 
     return (
       <ListView
         dataSource={this.state.dataSource}
-        renderHeader={() => this.renderHeader(renderHeader)}
-        renderFooter={() => this.renderFooter(renderFooter)}
         enableEmptySections
         {...props}
       />

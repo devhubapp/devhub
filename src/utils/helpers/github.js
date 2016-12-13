@@ -2,17 +2,20 @@
 /* eslint-disable import/prefer-default-export */
 
 import max from 'lodash/max';
-import { List, Map } from 'immutable';
+import { fromJS, List, Map } from 'immutable';
 
-import type { GithubEventType, GithubIcon } from '../types/github';
+import type { GithubEvent, GithubEventType, GithubIcon } from '../types/github';
 
 type GithubEventPayload = {
   action?: string,
   ref_type?: string,
 };
 
-export function getEventIcon(event: GithubEventType, payload: GithubEventPayload = {}): GithubIcon {
-  switch (event) {
+export function getEventIcon(event: GithubEvent): GithubIcon {
+  const eventType = event.get('type').split(':')[0];
+  const payload = event.get('payload');
+
+  switch (eventType) {
     case 'CommitCommentEvent': return 'comment-discussion'; // git-commit
     case 'CreateEvent':
       switch (payload.get('ref_type')) {
@@ -57,8 +60,11 @@ export function getEventIcon(event: GithubEventType, payload: GithubEventPayload
   }
 }
 
-export function getEventText(event: GithubEventType, payload: GithubEventPayload = {}): GithubIcon {
-  switch (event) {
+export function getEventText(event: GithubEvent): GithubIcon {
+  const eventType = event.get('type');
+  const payload = event.get('payload');
+
+  switch (eventType) {
     case 'CommitCommentEvent': return 'commented on a commit';
     case 'CreateEvent':
       switch (payload.get('ref_type')) {
@@ -132,10 +138,26 @@ export function getEventText(event: GithubEventType, payload: GithubEventPayload
         const commitText = count > 1 ? `${count} commits` : 'a commit';
         const branchText = branch === 'master' ? `to ${branch}` : '';
 
-        return `${pushedText} ${commitText} ${branchText}`.replace(/ {2}/g, ' ');
+        return `${pushedText} ${commitText} ${branchText}`.replace(/ {2}/g, ' ').trim();
       })();
     case 'ReleaseEvent': return 'published a release';
     case 'WatchEvent': return 'starred a repository';
+    case 'WatchEvent:OneRepoMultipleUsers':
+      return (() => {
+        const otherUsers = payload.get('users');
+        const otherUsersText = otherUsers && otherUsers.size > 0
+          ? (otherUsers.size > 1 ? `and ${otherUsers.size} others` : 'and 1 other')
+          : '';
+
+        return `${otherUsersText} starred a repository`.replace(/ {2}/g, ' ').trim();
+      })();
+    case 'WatchEvent:OneUserMultipleRepos':
+      return (() => {
+        const otherRepos = payload.get('repos');
+        const count = (otherRepos && otherRepos.size) || 0;
+
+        return count > 1 ? `starred ${count} repositories` : 'starred a repository';
+      })();
     default: return 'did something';
   }
 }
@@ -147,4 +169,134 @@ export function getOwnerAndRepo(repoFullName: string): { owner: ?string, repo: ?
   const repo = (repoSplitedNames[1] || '').trim();
 
   return { owner, repo };
+}
+
+export function mergeSimilarEvents(events: Array<GithubEvent>) {
+  let hasMerged = false;
+
+  const tryMergeEvents = (eventA: GithubEvent, eventB: GithubEvent) => {
+    if (!eventA || !eventB) return null;
+
+    const typeA: GithubEventType = eventA.get('type');
+    const typeB: GithubEventType = eventB.get('type');
+    const isSameType = typeA === typeA;
+
+    const isSameAction = eventA.getIn(['payload', 'action']) === eventB.getIn(['payload', 'action']);
+    const isSameRepo = eventA.getIn(['repo', 'id']) === eventB.getIn(['repo', 'id']);
+    const isSameUser = eventA.getIn(['actor', 'id']) === eventB.getIn(['actor', 'id']);
+
+    if (!isSameType || !isSameAction) return null;
+
+    switch (typeA) {
+      case 'WatchEvent':
+        return (() => {
+          switch (typeB) {
+            case 'WatchEvent':
+              return (() => {
+                if (isSameRepo) {
+                  return eventA.mergeDeep(fromJS({
+                    type: 'WatchEvent:OneRepoMultipleUsers',
+                    payload: {
+                      users: [eventB.get('actor')],
+                    },
+                  }));
+                } else if (isSameUser) {
+                  return eventA.mergeDeep(fromJS({
+                    type: 'WatchEvent:OneUserMultipleRepos',
+                    repo: null,
+                    payload: {
+                      repos: [eventA.get('repo'), eventB.get('repo')],
+                    },
+                  }));
+                }
+
+                return null;
+              })();
+
+            default:
+              return null;
+          }
+        })();
+
+      case 'WatchEvent:OneRepoMultipleUsers':
+        return (() => {
+          switch (typeB) {
+            case 'WatchEvent':
+              return (() => {
+                if (isSameRepo) {
+                  const users = eventA.getIn(['payload', 'users']) || List();
+                  const newUser = eventB.getIn(['actor']);
+
+                  const alreadyMergedThisUser = users.find(mergedUser => (
+                    `${mergedUser.get('id')}` === `${newUser.get('id')}`
+                  ));
+
+                  if (!alreadyMergedThisUser) {
+                    const newUsers = users.push(newUser);
+                    return eventA.setIn(['payload', 'users'], newUsers);
+                  }
+
+                  return null;
+                }
+
+                return null;
+              })();
+
+            default:
+              return null;
+          }
+        })();
+
+      case 'WatchEvent:OneUserMultipleRepos':
+        return (() => {
+          switch (typeB) {
+            case 'WatchEvent':
+              return (() => {
+                if (isSameUser) {
+                  const repos = eventA.getIn(['payload', 'repos']) || List();
+                  const newRepo = eventB.getIn(['repo']);
+
+                  const alreadyMergedThisRepo = repos.find(mergedRepo => (
+                    `${mergedRepo.get('id')}` === `${newRepo.get('id')}`
+                  ));
+
+                  if (!alreadyMergedThisRepo) {
+                    const newRepos = repos.push(newRepo);
+                    return eventA.setIn(['payload', 'repos'], newRepos);
+                  }
+
+                  return null;
+                }
+
+                return null;
+              })();
+
+            default:
+              return null;
+          }
+        })();
+
+      default: return null;
+    }
+  };
+
+  const accumulator = (newEvents: Array<GithubEvent>, event: GithubEvent) => {
+    const lastEvent = newEvents.last();
+    const mergedLastEvent = tryMergeEvents(lastEvent, event);
+
+    if (mergedLastEvent) {
+      hasMerged = true;
+
+      let allMergedEvents = mergedLastEvent.get('merged') || List();
+      allMergedEvents = allMergedEvents.push(event);
+
+      const mergedLastEventUpdated = mergedLastEvent.set('merged', allMergedEvents);
+      return newEvents.set(-1, mergedLastEventUpdated);
+    } else {
+      return newEvents.push(event);
+    }
+  };
+
+  const newEvents = events.reduce(accumulator, List());
+  return hasMerged ? newEvents : events;
 }

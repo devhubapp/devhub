@@ -30,6 +30,7 @@ EventSchema.define({
     issue: IssueSchema,
     pull_request: PullRequestSchema,
   },
+  merged: arrayOf(EventSchema),
 });
 
 IssueSchema.define({

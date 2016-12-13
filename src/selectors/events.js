@@ -8,6 +8,7 @@ import { createSelector } from 'reselect';
 
 import { columnEventIdsSelector } from './columns';
 import { EventSchema } from '../utils/normalizr/schemas';
+import { mergeSimilarEvents } from '../utils/helpers';
 
 const entitiesSelector = state => state.get('entities') || Map();
 
@@ -23,7 +24,7 @@ export const makeDenormalizedEventSelector = () => createSelector(
 export const makeDenormalizedColumnEventsSelector = () => createSelector(
   columnEventIdsSelector,
   entitiesSelector,
-  (eventIds, entities) => (
+  (eventIds, entities) => mergeSimilarEvents(
     denormalize(eventIds, entities, arrayOf(EventSchema))
       .filter(Boolean)
       .sort(sortEventsByDate)

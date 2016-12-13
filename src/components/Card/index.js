@@ -11,10 +11,11 @@ import BranchRow from './_BranchRow';
 import CommentRow from './_CommentRow';
 import CommitListRow from './_CommitListRow';
 import IssueRow from './_IssueRow';
-import MemberRow from './_MemberRow';
 import PullRequestRow from './_PullRequestRow';
 import ReleaseRow from './_ReleaseRow';
 import RepositoryRow from './_RepositoryRow';
+import RepositoryListRow from './_RepositoryListRow';
+import UserListRow from './_UserListRow';
 import WikiPageListRow from './_WikiPageListRow';
 
 import IntervalRefresh from '../IntervalRefresh';
@@ -179,20 +180,29 @@ export default class extends React.PureComponent {
       actor,
       repo,
       created_at,
+      merged,
     } = {
       type: event.get('type'),
       payload: event.get('payload'),
       actor: event.get('actor') || Map(),
-      repo: event.get('repo') || Map(),
+      repo: event.get('repo'),
       created_at: event.get('created_at'),
+      merged: event.get('merged'),
     };
 
     if (!payload) return null;
 
+    let eventIds = List([event.get('id')]);
+    if (merged) {
+      merged.forEach(mergedEvent => {
+        eventIds = eventIds.push(mergedEvent.get('id'));
+      });
+    }
+
     return (
       <CardWrapper {...props} seen={event.get('seen')}>
-        <TouchableWithoutFeedback onPress={() => actions.toggleSeen(event.get('id'))}>
-          <Header onPress={() => actions.toggleSeen(event.get('id'))}>
+        <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
+          <Header>
             <LeftColumn>
               <UserAvatar url={actor.get('avatar_url')} size={avatarWidth} />
             </LeftColumn>
@@ -221,21 +231,41 @@ export default class extends React.PureComponent {
                     </ScrollableContentContainer>
                   </TransparentTextOverlay>
 
-                  <Text numberOfLines={1} muted>{getEventText(type, payload)}</Text>
+                  <Text numberOfLines={1} muted>{getEventText(event)}</Text>
                 </FullView>
 
-                <CardIcon name={getEventIcon(type, payload)} />
+                <CardIcon name={getEventIcon(event)} />
               </HeaderRow>
             </MainColumn>
           </Header>
         </TouchableWithoutFeedback>
 
-        <RepositoryRow
-          actions={actions}
-          repo={repo}
-          pushed={type === 'PushEvent'}
-          forcePushed={type === 'PushEvent' && payload.get('forced')}
-        />
+        {
+          repo &&
+          <RepositoryRow
+            actions={actions}
+            repo={repo}
+            pushed={type === 'PushEvent'}
+            forcePushed={type === 'PushEvent' && payload.get('forced')}
+          />
+        }
+
+        {
+          (() => {
+            const repos = (payload.get('repos') || List()).filter(Boolean);
+
+            if (!(repos.size > 0)) return null;
+
+            return (
+              <RepositoryListRow
+                actions={actions}
+                repos={repos}
+                pushed={type === 'PushEvent'}
+                forcePushed={type === 'PushEvent' && payload.get('forced')}
+              />
+            );
+          })()
+        }
 
         {
           payload.get('ref') &&
@@ -254,8 +284,16 @@ export default class extends React.PureComponent {
         }
 
         {
-          payload.get('member') &&
-          <MemberRow user={payload.get('member')} narrow />
+          (() => {
+            const member = payload.get('member');
+            const users = (payload.get('users') || List([member])).filter(Boolean);
+
+            if (!(users.size > 0)) return null;
+
+            return (
+              <UserListRow users={users} narrow />
+            );
+          })()
         }
 
         {

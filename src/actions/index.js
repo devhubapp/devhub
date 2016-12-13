@@ -77,8 +77,8 @@ export const unstarRepo = (repoId: number | string, other?: Object = {}) => (
   action(UNSTAR_REPO, repoId.toString(), other)
 );
 
-export const toggleSeen = (eventId: number | string, other?: Object = {}) => (
-  action(TOGGLE_SEEN, eventId.toString(), other)
+export const toggleSeen = (eventIds: Array<string>, other?: Object = {}) => (
+  action(TOGGLE_SEEN, eventIds, other)
 );
 
 export type SeenEvents = { columnId: string, eventIds: Array<string> };
