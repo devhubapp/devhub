@@ -14,11 +14,12 @@ import type { Commit, ThemeObject } from '../../utils/types';
 export default class extends React.PureComponent {
   props: {
     commits: Array<Commit>,
+    narrow?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { commits, theme, ...props } = this.props;
+    const { commits, narrow, theme, ...props } = this.props;
 
     if (!(commits && commits.size > 0)) return null;
 
@@ -41,7 +42,7 @@ export default class extends React.PureComponent {
               <CommitRow
                 key={`commit-row-${commit.get('sha')}`}
                 commit={commit}
-                narrow
+                narrow={narrow}
               />
             ))
           }

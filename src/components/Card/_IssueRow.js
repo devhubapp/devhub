@@ -29,11 +29,12 @@ import type { Issue } from '../../utils/types/github';
 export default class extends React.PureComponent {
   props: {
     issue: Issue,
+    narrow?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { issue, theme } = this.props;
+    const { issue, narrow, theme } = this.props;
 
     if (!issue) return null;
 
@@ -57,7 +58,7 @@ export default class extends React.PureComponent {
     })();
 
     return (
-      <ContentRow narrow>
+      <ContentRow narrow={narrow}>
         <LeftColumn center>
           {
             user &&

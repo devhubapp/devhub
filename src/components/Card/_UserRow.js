@@ -27,11 +27,12 @@ export default class extends React.PureComponent {
   props: {
     user: User,
     additionalInfo?: ?string,
+    narrow?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { additionalInfo, user, theme } = this.props;
+    const { additionalInfo, narrow, user, theme } = this.props;
 
     if (!user) return null;
 
@@ -39,8 +40,8 @@ export default class extends React.PureComponent {
     if (!_login) return null;
 
     return (
-      <ContentRow narrow>
-        <LeftColumn>
+      <ContentRow narrow={narrow}>
+        <LeftColumn center>
           <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 

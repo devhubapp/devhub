@@ -28,7 +28,7 @@ export default class extends React.PureComponent {
     if (!(users && users.size > 0)) return null;
 
     return (
-      <RowList data={users} maxHeight={maxHeight} renderRow={this.renderRow(props)} />
+      <RowList data={users} maxHeight={maxHeight} renderRow={this.renderRow(props)} {...props} />
     );
   }
 }

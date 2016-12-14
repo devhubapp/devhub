@@ -13,12 +13,13 @@ import type { ThemeObject } from '../../utils/types';
 @Themable
 export default class extends React.PureComponent {
   props: {
+    narrow?: boolean,
     pages: Array<Object>,
     theme?: ThemeObject,
   };
 
   render() {
-    const { pages, theme, ...props } = this.props;
+    const { pages, narrow, theme, ...props } = this.props;
 
     if (!(pages && pages.size > 0)) return null;
 
@@ -41,7 +42,7 @@ export default class extends React.PureComponent {
               <WikiPageRow
                 key={`wiki-page-row-${page.get('sha')}`}
                 title={page.get('title')}
-                narrow
+                narrow={narrow}
               />
             ))
           }

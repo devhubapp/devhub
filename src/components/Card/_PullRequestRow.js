@@ -27,12 +27,13 @@ import type { PullRequest, ThemeObject } from '../../utils/types';
 @Themable
 export default class extends React.PureComponent {
   props: {
+    narrow: boolean,
     pullRequest: PullRequest,
     theme?: ThemeObject,
   };
 
   render() {
-    const { pullRequest, theme } = this.props;
+    const { narrow, pullRequest, theme } = this.props;
 
     if (!pullRequest) return null;
 
@@ -59,7 +60,7 @@ export default class extends React.PureComponent {
     })();
 
     return (
-      <ContentRow narrow>
+      <ContentRow narrow={narrow}>
         <LeftColumn center>
           <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>

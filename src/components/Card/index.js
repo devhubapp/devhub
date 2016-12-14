@@ -30,6 +30,7 @@ import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types
 
 export const avatarWidth = 44;
 export const innerContentPadding = contentPadding;
+export const narrowInnerContentPadding = innerContentPadding / 2;
 export const iconRightMargin = contentPadding - 2;
 
 export const CardWrapper = styled.View`
@@ -43,6 +44,11 @@ export const CardWrapper = styled.View`
 export const FullView = styled.View`
   flex: 1;
 `;
+
+// export const RowSeparator = styled.View`
+//   flexGrow: 1;
+//   height: ${({ narrow }) => (narrow ? narrowInnerContentPadding : innerContentPadding)};
+// `;
 
 export const HorizontalView = styled.View`
   flex-direction: row;
@@ -109,7 +115,7 @@ export const CardText = styled(Text)`
 
 export const ContentRow = styled(HorizontalView)`
   align-items: flex-start;
-  margin-top: ${({ narrow }) => (narrow ? innerContentPadding / 3 : innerContentPadding)};
+  margin-top: ${({ narrow }) => (narrow ? narrowInnerContentPadding : innerContentPadding)};
 `;
 
 export const HighlightContainerBase = styled(HorizontalView)`
@@ -247,6 +253,7 @@ export default class extends React.PureComponent {
             repo={repo}
             pushed={type === 'PushEvent'}
             forcePushed={type === 'PushEvent' && payload.get('forced')}
+            narrow
           />
         }
 
@@ -262,6 +269,7 @@ export default class extends React.PureComponent {
                 repos={repos}
                 pushed={type === 'PushEvent'}
                 forcePushed={type === 'PushEvent' && payload.get('forced')}
+                narrow
               />
             );
           })()

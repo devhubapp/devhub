@@ -31,7 +31,7 @@ export default class extends React.PureComponent {
 
     return (
       <ContentRow narrow={narrow}>
-        <LeftColumn>
+        <LeftColumn center>
           <UserAvatar url={actor.get('avatar_url')} size={avatarWidth / 2} />
         </LeftColumn>
 
