@@ -8,7 +8,8 @@
     "test": "jest",
     "flow": "flow ./src",
     "lint": "eslint ./src",
-    "lint-fix": "eslint ./src --fix"
+    "lint-fix": "eslint ./src --fix",
+    "postinstall": "remotedev-debugger --port 8000 --injectdebugger --injectserver"
   },
   "dependencies": {
     "@exponent/ex-navigation": "^2.1.8",
@@ -26,21 +27,22 @@
     "react-native-immutable-list-view": "^0.2.1",
     "react-native-linear-gradient": "^1.5.15",
     "react-native-vector-icons": "^3.0.0",
-    "react-redux": "^4.4.6",
+    "react-redux": "^5.0.1",
     "redux": "^3.6.0",
-    "redux-immutable": "^3.0.8",
+    "redux-immutable": "^3.0.9",
     "redux-persist": "^4.0.0-beta1",
     "redux-persist-immutable": "^4.0.1",
     "redux-saga": "^0.13.0",
     "remote-redux-devtools": "^0.5.4",
     "reselect": "^2.5.4",
-    "styled-components": "file:../../packages/styled-components",
+    "styled-components": "1.1.1",
     "warna": "^0.2.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-jest": "17.0.2",
     "babel-plugin-transform-es2015-parameters": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
     "babel-preset-react-native": "1.9.0",
     "babel-preset-react-native-stage-0": "^1.0.1",
     "eslint": "^3.9.1",
@@ -55,6 +57,7 @@
     "jest": "17.0.3",
     "jest-react-native": "^17.1.0",
     "react-test-renderer": "^15.4.1",
+    "remote-redux-devtools-on-debugger": "^0.7.0",
     "whatwg-fetch": "^2.0.1"
   },
   "jest": {
