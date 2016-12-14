@@ -63,7 +63,7 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
 
   const { issueIsKnown, repoIsKnown } = options || {};
 
-  const issueText = issueIsKnown ? 'this issue' : 'a issue';
+  const issueText = issueIsKnown ? 'this issue' : 'an issue';
   const repositoryText = repoIsKnown ? 'this repository' : 'a repository';
 
   const text = (() => {
@@ -191,11 +191,15 @@ export function mergeSimilarEvents(events: Array<GithubEvent>) {
     const isSameRepo = eventA.getIn(['repo', 'id']) === eventB.getIn(['repo', 'id']);
     const isSameUser = eventA.getIn(['actor', 'id']) === eventB.getIn(['actor', 'id']);
     const createdAtMinutesDiff = moment(eventA.get('created_at')).diff(moment(eventB.get('created_at')), 'minutes');
+    const merged = eventA.get('merged') || List();
 
     if (!isSameType || !isSameAction) return null;
 
     // only merge events that were created in the same hour
     if (createdAtMinutesDiff >= 60) return null;
+
+    // only merge 5 items max
+    if (merged.size >= 5 - 1) return null;
 
     switch (typeA) {
       case 'WatchEvent':
