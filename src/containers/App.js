@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components/native';
+import { Client } from 'bugsnag-react-native';
 import { connect } from 'react-redux';
 import { StatusBar } from 'react-native';
 
@@ -16,6 +17,12 @@ const mapStateToProps = (state: State) => ({
 
 @connect(mapStateToProps)
 export default class extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.client = new Client('231f337f6090422c611017d3dab3d32e');
+  }
+
   props: {
     children: React.Element,
     theme: ThemeObject,

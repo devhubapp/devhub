@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@exponent/ex-navigation": "^2.1.8",
+    "bugsnag-react-native": "^1.1.4",
     "denormalizr": "^0.4.1",
     "github": "https://github.com/brunolemos/react-native-github-api.git",
     "gravatar": "^1.6.0",

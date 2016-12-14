@@ -1175,6 +1175,12 @@ buffer@^5.0.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
+bugsnag-react-native@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.1.4.tgz#478d348f8a754a520d0a73454b451cca4829500e"
+  dependencies:
+    promise "^7"
+
 builtin-modules@^1.0.0, builtin-modules@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
@@ -4029,7 +4035,7 @@ progress@^1.1.8:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/progress/-/progress-1.1.8.tgz#e260c78f6161cdd9b0e56cc3e0a85de17c7a57be"
 
-promise@^7.1.1:
+promise@^7, promise@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.1.1.tgz#489654c692616b8aa55b0724fa809bb7db49c5bf"
   dependencies:

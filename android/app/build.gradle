@@ -126,6 +126,7 @@ android {
 }
 
 dependencies {
+    compile project(':bugsnag-react-native')
     compile project(':react-native-vector-icons')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-blur')
