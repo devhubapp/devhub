@@ -231,7 +231,7 @@ export default class extends React.PureComponent {
                     </ScrollableContentContainer>
                   </TransparentTextOverlay>
 
-                  <Text numberOfLines={1} muted>{getEventText(event)}</Text>
+                  <Text numberOfLines={1} muted>{getEventText(event, { repoIsKnown: onlyOneRepository })}</Text>
                 </FullView>
 
                 <CardIcon name={getEventIcon(event)} />

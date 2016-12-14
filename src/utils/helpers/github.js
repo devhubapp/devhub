@@ -60,106 +60,116 @@ export function getEventIcon(event: GithubEvent): GithubIcon {
   }
 }
 
-export function getEventText(event: GithubEvent): GithubIcon {
+type GetEventTextOptions = { issueIsKnown: ?boolean, repoIsKnown: ?boolean };
+export function getEventText(event: GithubEvent, options: ?GetEventTextOptions): GithubIcon {
   const eventType = event.get('type');
   const payload = event.get('payload');
 
-  switch (eventType) {
-    case 'CommitCommentEvent': return 'commented on a commit';
-    case 'CreateEvent':
-      switch (payload.get('ref_type')) {
-        case 'repository': return 'created a repository';
-        case 'branch': return 'created a branch';
-        case 'tag': return 'created a tag';
-        default: return 'created something';
-      }
-    case 'DeleteEvent':
-      switch (payload.get('ref_type')) {
-        case 'repository': return 'deleted a repository';
-        case 'branch': return 'deleted a branch';
-        case 'tag': return 'deleted a tag';
-        default: return 'deleted something';
-      }
-    case 'GollumEvent':
-      return (() => {
-        const count = (payload.get('pages') || List([])).size || 1;
-        const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page';
-        switch (((payload.get('pages') || List([]))[0] || Map()).get('action')) {
-          case 'created': return `created ${pagesText}`;
-          default: return `updated ${pagesText}`;
+  const { issueIsKnown, repoIsKnown } = options || {};
+
+  const issueText = issueIsKnown ? 'this issue' : 'a issue';
+  const repositoryText = repoIsKnown ? 'this repository' : 'a repository';
+
+  const text = (() => {
+    switch (eventType) {
+      case 'CommitCommentEvent': return 'commented on a commit';
+      case 'CreateEvent':
+        switch (payload.get('ref_type')) {
+          case 'repository': return `created ${repositoryText}`;
+          case 'branch': return 'created a branch';
+          case 'tag': return 'created a tag';
+          default: return 'created something';
         }
-      })();
-    case 'ForkEvent': return 'forked a repository';
-    case 'IssueCommentEvent': return 'commented on an issue';
-    case 'IssuesEvent': // TODO: Fix these texts
-      switch (payload.get('action')) {
-        case 'closed': return 'closed an issue';
-        case 'reopened': return 'reopened an issue';
-        case 'opened': return 'opened an issue';
-        case 'assigned': return 'assigned an issue';
-        case 'unassigned': return 'unassigned an issue';
-        case 'labeled': return 'labeled an issue';
-        case 'unlabeled': return 'unlabeled an issue';
-        case 'edited': return 'edited an issue';
-        case 'milestoned': return 'milestoned an issue';
-        case 'demilestoned': return 'demilestoned an issue';
-        default: return 'interacted with an issue';
-      }
-    case 'MemberEvent': return 'added an user to a repository';
-    case 'PublicEvent': return 'made a repository public';
-    case 'PullRequestEvent':
-      switch (payload.get('action')) {
-        case 'assigned': return 'assigned a pull request';
-        case 'unassigned': return 'unassigned a pull request';
-        case 'labeled': return 'labeled a pull request';
-        case 'unlabeled': return 'unlabeled a pull request';
-        case 'opened': return 'opened a pull request';
-        case 'edited': return 'edited a pull request';
-        case 'closed': return 'closed a pull request';
-        case 'reopened': return 'reopened a pull request';
-        default: return 'interacted with a pull request';
-      }
-    case 'PullRequestReviewEvent': return 'reviewed a pull request';
-    case 'PullRequestReviewCommentEvent':
-      switch (payload.get('action')) {
-        case 'created': return 'commented on a pull request review';
-        case 'edited': return 'edited a pull request review';
-        case 'deleted': return 'deleted a pull request review';
-        default: return 'interacted with a pull request review';
-      }
-    case 'PushEvent':
-      return (() => {
-        const commits = payload.get('commits') || List([Map()]);
-        // const commit = payload.get('head_commit') || commits[0];
-        const count = max([1, payload.get('size'), payload.get('distinct_size'), commits.size]) || 1;
-        const branch = (payload.get('ref') || '').split('/').pop();
+      case 'DeleteEvent':
+        switch (payload.get('ref_type')) {
+          case 'repository': return `deleted ${repositoryText}`;
+          case 'branch': return 'deleted a branch';
+          case 'tag': return 'deleted a tag';
+          default: return 'deleted something';
+        }
+      case 'GollumEvent':
+        return (() => {
+          const count = (payload.get('pages') || List([])).size || 1;
+          const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page';
+          switch (((payload.get('pages') || List([]))[0] || Map()).get('action')) {
+            case 'created': return `created ${pagesText}`;
+            default: return `updated ${pagesText}`;
+          }
+        })();
+      case 'ForkEvent': return `forked ${repositoryText}`;
+      case 'IssueCommentEvent': return `commented on ${issueText}`;
+      case 'IssuesEvent': // TODO: Fix these texts
+        switch (payload.get('action')) {
+          case 'closed': return `closed ${issueText}`;
+          case 'reopened': return `reopened ${issueText}`;
+          case 'opened': return `opened ${issueText}`;
+          case 'assigned': return `assigned ${issueText}`;
+          case 'unassigned': return `unassigned ${issueText}`;
+          case 'labeled': return `labeled ${issueText}`;
+          case 'unlabeled': return `unlabeled ${issueText}`;
+          case 'edited': return `edited ${issueText}`;
+          case 'milestoned': return `milestoned ${issueText}`;
+          case 'demilestoned': return `demilestoned ${issueText}`;
+          default: return `interacted with ${issueText}`;
+        }
+      case 'MemberEvent': return `added an user ${repositoryText && `to ${repositoryText}`}`;
+      case 'PublicEvent': return `made ${repositoryText} public`;
+      case 'PullRequestEvent':
+        switch (payload.get('action')) {
+          case 'assigned': return 'assigned a pr';
+          case 'unassigned': return 'unassigned a pr';
+          case 'labeled': return 'labeled a pr';
+          case 'unlabeled': return 'unlabeled a pr';
+          case 'opened': return 'opened a pr';
+          case 'edited': return 'edited a pr';
+          case 'closed': return 'closed a pr';
+          case 'reopened': return 'reopened a pr';
+          default: return 'interacted with a pr';
+        }
+      case 'PullRequestReviewEvent': return 'reviewed a pr';
+      case 'PullRequestReviewCommentEvent':
+        switch (payload.get('action')) {
+          case 'created': return 'commented on a pr review';
+          case 'edited': return 'edited a pr review';
+          case 'deleted': return 'deleted a pr review';
+          default: return 'interacted with a pr review';
+        }
+      case 'PushEvent':
+        return (() => {
+          const commits = payload.get('commits') || List([Map()]);
+          // const commit = payload.get('head_commit') || commits[0];
+          const count = max([1, payload.get('size'), payload.get('distinct_size'), commits.size]) || 1;
+          const branch = (payload.get('ref') || '').split('/').pop();
 
-        const pushedText = payload.get('forced') ? 'force pushed' : 'pushed';
-        const commitText = count > 1 ? `${count} commits` : 'a commit';
-        const branchText = branch === 'master' ? `to ${branch}` : '';
+          const pushedText = payload.get('forced') ? 'force pushed' : 'pushed';
+          const commitText = count > 1 ? `${count} commits` : 'a commit';
+          const branchText = branch === 'master' ? `to ${branch}` : '';
 
-        return `${pushedText} ${commitText} ${branchText}`.replace(/ {2}/g, ' ').trim();
-      })();
-    case 'ReleaseEvent': return 'published a release';
-    case 'WatchEvent': return 'starred a repository';
-    case 'WatchEvent:OneRepoMultipleUsers':
-      return (() => {
-        const otherUsers = payload.get('users');
-        const otherUsersText = otherUsers && otherUsers.size > 0
-          ? (otherUsers.size > 1 ? `and ${otherUsers.size} others` : 'and 1 other')
-          : '';
+          return `${pushedText} ${commitText} ${branchText}`;
+        })();
+      case 'ReleaseEvent': return 'published a release';
+      case 'WatchEvent': return `starred ${repositoryText}`;
+      case 'WatchEvent:OneRepoMultipleUsers':
+        return (() => {
+          const otherUsers = payload.get('users');
+          const otherUsersText = otherUsers && otherUsers.size > 0
+            ? (otherUsers.size > 1 ? `and ${otherUsers.size} others` : 'and 1 other')
+            : '';
 
-        return `${otherUsersText} starred a repository`.replace(/ {2}/g, ' ').trim();
-      })();
-    case 'WatchEvent:OneUserMultipleRepos':
-      return (() => {
-        const otherRepos = payload.get('repos');
-        const count = (otherRepos && otherRepos.size) || 0;
+          return `${otherUsersText} starred ${repositoryText}`;
+        })();
+      case 'WatchEvent:OneUserMultipleRepos':
+        return (() => {
+          const otherRepos = payload.get('repos');
+          const count = (otherRepos && otherRepos.size) || 0;
 
-        return count > 1 ? `starred ${count} repositories` : 'starred a repository';
-      })();
-    default: return 'did something';
-  }
+          return count > 1 ? `starred ${count} repositories` : `starred ${repositoryText}`;
+        })();
+      default: return 'did something';
+    }
+  })();
+  
+  return text.replace(/ {2}/g, ' ').trim();
 }
 
 export function getOwnerAndRepo(repoFullName: string): { owner: ?string, repo: ?string} {

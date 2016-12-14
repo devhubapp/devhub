@@ -32,15 +32,15 @@ export function trimNewLines(text) {
   return text.replace(/\s\s+/g, ' ').trim();
 }
 
-export function getDateFromNowText(date) {
-  if (!date) return '';
-
-  const momentDate = moment(date);
-  if (!momentDate.isValid()) return '';
-  // return `${moment(new Date()).diff(momentDate, 'seconds')}s`;
-
-  return momentDate.fromNow();
-}
+// export function getDateFromNowText(date) {
+//   if (!date) return '';
+//
+//   const momentDate = moment(date);
+//   if (!momentDate.isValid()) return '';
+//   // return `${moment(new Date()).diff(momentDate, 'seconds')}s`;
+//
+//   return momentDate.fromNow();
+// }
 
 export function getDateWithHourAndMinuteText(date) {
   if (!date) return '';
@@ -67,7 +67,7 @@ export function getDateSmallText(date) { // , separator = '•'
 
   const momentNow = moment(new Date());
   const daysDiff = momentNow.diff(momentDate, 'days');
-  const time = momentDate.format('HH:mm');
+  const timeText = momentDate.format('HH:mm');
 
   if (daysDiff < 1) {
     const hoursDiff = momentNow.diff(momentDate, 'hours');
@@ -84,16 +84,16 @@ export function getDateSmallText(date) { // , separator = '•'
         return `${secondsDiff}s`;
       }
 
-      if (minutesDiff < 30) {
-        return `${minutesDiff}m`;
-      }
+      // if (minutesDiff < 30) {
+      //   return `${minutesDiff}m`;
+      // }
 
-      return `${minutesDiff}m (${time})`;
+      return `${minutesDiff}m (${timeText})`;
     }
 
-    return `${hoursDiff}h (${time})`;
+    return `${hoursDiff}h (${timeText})`;
   } else if (daysDiff <= 3) {
-    return `${daysDiff}d (${time})`;
+    return `${daysDiff}d (${timeText})`;
   }
 
   return momentDate.format('MMM Do').toLowerCase();
