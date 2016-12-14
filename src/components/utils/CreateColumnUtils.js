@@ -53,7 +53,7 @@ export default class {
         const params = { owner, repo };
         const subscriptionId = generateSubscriptionId(requestTypes.REPO_EVENTS, params);
         createSubscription(subscriptionId, requestTypes.REPO_EVENTS, params);
-        createColumn(`${owner}/${repo}`, [subscriptionId]);
+        createColumn(repo, [subscriptionId]);
         loadRepoEvents(owner, repo);
       },
     );

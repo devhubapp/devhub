@@ -37,7 +37,7 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ seen }) => (seen ? 0.2 : 1)};
+  opacity: ${({ seen }) => (seen ? 0.25 : 1)};
 `;
 
 export const FullView = styled.View`
@@ -94,7 +94,6 @@ export const Username = styled(Text)`
 `;
 
 export const RepositoryName = styled(Text)`
-  font-weight: bold;
 `;
 
 export const CardItemId = styled(Text)`
@@ -168,11 +167,12 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     event: GithubEvent,
+    onlyOneRepository?: boolean,
     theme: ThemeObject,
   };
 
   render() {
-    const { actions, event, theme, ...props } = this.props;
+    const { actions, event, onlyOneRepository, theme, ...props } = this.props;
 
     const {
       type,
@@ -241,7 +241,7 @@ export default class extends React.PureComponent {
         </TouchableWithoutFeedback>
 
         {
-          repo &&
+          repo && !onlyOneRepository &&
           <RepositoryRow
             actions={actions}
             repo={repo}

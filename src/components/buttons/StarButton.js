@@ -13,7 +13,7 @@ const RepositoryStarButton = styled.TouchableOpacity`
 
 const RepositoryStarIcon = styled(Icon)`
   margin-horizontal: ${contentPadding};
-  font-size: 16;
+  font-size: ${({ size }) => size};
   color: ${({ starred, theme }) => (starred ? theme.star : theme.base04)};
 `;
 
@@ -42,6 +42,7 @@ export default class extends React.PureComponent {
   props: {
     containerStyle?: Object,
     onPress?: Function,
+    size?: number,
     starRepoFn: Function,
     starred: boolean,
     style?: Object,
@@ -50,11 +51,11 @@ export default class extends React.PureComponent {
 
   render() {
     const { starred } = this.state;
-    const { containerStyle, onPress, ...props } = this.props;
+    const { containerStyle, onPress, size = 16, style, ...props } = this.props;
 
     return (
       <RepositoryStarButton style={containerStyle} onPress={this.onPress(onPress)}>
-        <RepositoryStarIcon name="star" {...props} starred={starred} />
+        <RepositoryStarIcon name="star" {...props} starred={starred} size={size} style={style} />
       </RepositoryStarButton>
     );
   }

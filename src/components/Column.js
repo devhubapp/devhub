@@ -1,5 +1,6 @@
 // @flow
 
+import uniq from 'lodash/uniq';
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import { Dimensions, RefreshControl } from 'react-native';
@@ -10,7 +11,7 @@ import ImmutableListView from 'react-native-immutable-list-view';
 import Card, { iconRightMargin } from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
 import ProgressBar from './ProgressBar';
-import ScrollableContentContainer from './ScrollableContentContainer';
+import StarButton from './buttons/StarButton';
 import StatusMessage from './StatusMessage';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
@@ -37,10 +38,22 @@ const HeaderButtonsContainer = styled.View`
   padding-right: ${iconRightMargin};
 `;
 
+export const TitleWrapper = styled.View`
+  flex: 1;
+  flex-direction: row;
+`;
+
 const Title = styled.Text`
   padding: ${contentPadding};
+  padding-top: ${contentPadding + 4};
+  line-height: 20;
   font-size: 20;
+  font-weight: 600;
   color: ${({ theme }) => theme.base04};
+`;
+
+const StyledStarButton = styled(StarButton)`
+  margin-left: ${contentPadding / 2};
 `;
 
 const HeaderButton = styled.TouchableOpacity`
@@ -57,7 +70,7 @@ const FixedHeader = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  min-height: ${20 + (3 * contentPadding)};
+  min-height: ${20 + (2 * contentPadding)};
 `;
 
 const ProgressBarContainer = styled.View`
@@ -102,7 +115,15 @@ export default class extends React.PureComponent {
   state = {
     loadingWithDelay: false,
     loadingWithDelayStartedAt: null,
+    uniqRepository: null,
   };
+
+  constructor(props) {
+    super(props);
+
+    const uniqRepository = this.getUpdatedUniqRepository(props);
+    this.state.uniqRepository = uniqRepository;
+  }
 
   componentWillReceiveProps(newProps) {
     if (newProps.loading && !this.state.loadingWithDelay) {
@@ -121,10 +142,31 @@ export default class extends React.PureComponent {
         clearTimeout(this.timeout);
       }, delayToAchiveMinimalTime);
     }
+
+    if (newProps.subscriptions !== this.props.subscriptions) {
+      const uniqRepository = this.getUpdatedUniqRepository(newProps);
+      this.setState({ uniqRepository });
+    }
   }
 
   componentWillUnmount() {
     clearTimeout(this.timeout);
+  }
+
+  getUpdatedUniqRepository(newProps) {
+    const props = newProps || this.props;
+    const { events, subscriptions } = props;
+
+    const repos = subscriptions && subscriptions.toJS().map(subscription => {
+        const { repo, owner } = subscription.params || {};
+        if (!(owner && repo)) return null;
+        return `${owner}/${repo}`;
+      }).filter(Boolean);
+
+    const onlyOneRepository = repos && uniq(repos).length === 1;
+    const uniqRepository = (onlyOneRepository && events && events.getIn([0, 'repo'])) || null;
+
+    return uniqRepository;
   }
 
   onRefresh = () => {
@@ -203,11 +245,13 @@ export default class extends React.PureComponent {
       key={`card-${event.get('id')}`}
       actions={this.props.actions}
       event={event}
+      onlyOneRepository={!!this.state.uniqRepository}
     />
   );
 
   render() {
-    const { column, errors, events, radius, subscriptions, theme, ...props } = this.props;
+    const { loadingWithDelay, uniqRepository } = this.state;
+    const { actions, column, errors, events, radius, subscriptions, theme, ...props } = this.props;
 
     if (!column) return null;
 
@@ -229,13 +273,22 @@ export default class extends React.PureComponent {
     return (
       <Root radius={radius} {...props}>
         <FixedHeader>
-          <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
-            <ScrollableContentContainer>
-              <Title numberOfLines={1}>
-                <Icon name={icon} size={20} />&nbsp;{title}
-              </Title>
-            </ScrollableContentContainer>
-          </TransparentTextOverlay>
+          <TitleWrapper>
+            <Title numberOfLines={1} style={{ maxWidth: 280 }}>
+              <Icon name={icon} size={20} />&nbsp;{title}
+            </Title>
+
+            {
+              uniqRepository && (
+                <StyledStarButton
+                  starred={uniqRepository.get('starred')}
+                  starRepoFn={actions.starRepo.bind(null, uniqRepository.get('id'))}
+                  unstarRepoFn={actions.unstarRepo.bind(null, uniqRepository.get('id'))}
+                  containerStyle={{ marginTop: 4, marginLeft: -contentPadding }}
+                />
+              )
+            }
+          </TitleWrapper>
 
           <HeaderButtonsContainer>
             <HeaderButton onPress={this.showActionSheet}>
@@ -246,7 +299,7 @@ export default class extends React.PureComponent {
 
         <ProgressBarContainer>
           {
-            this.state.loadingWithDelay &&
+            loadingWithDelay &&
             <ProgressBar
               width={getWidth()}
               height={1}
@@ -271,8 +324,8 @@ export default class extends React.PureComponent {
               <RefreshControl
                 refreshing={false}
                 onRefresh={this.onRefresh}
-                colors={[this.state.loadingWithDelay ? 'transparent' : theme.base08]}
-                tintColor={this.state.loadingWithDelay ? 'transparent' : theme.base08}
+                colors={[loadingWithDelay ? 'transparent' : theme.base08]}
+                tintColor={loadingWithDelay ? 'transparent' : theme.base08}
                 title={(updatedText || ' ').toLowerCase()}
                 titleColor={theme.base05}
                 progressBackgroundColor={theme.base02}

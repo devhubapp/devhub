@@ -3,7 +3,7 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import StarButton from '../buttons/StartButton';
+import StarButton from '../buttons/StarButton';
 import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
