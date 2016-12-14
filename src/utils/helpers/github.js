@@ -2,14 +2,10 @@
 /* eslint-disable import/prefer-default-export */
 
 import max from 'lodash/max';
+import moment from 'moment';
 import { fromJS, List, Map } from 'immutable';
 
 import type { GithubEvent, GithubEventType, GithubIcon } from '../types/github';
-
-type GithubEventPayload = {
-  action?: string,
-  ref_type?: string,
-};
 
 export function getEventIcon(event: GithubEvent): GithubIcon {
   const eventType = event.get('type').split(':')[0];
@@ -194,8 +190,12 @@ export function mergeSimilarEvents(events: Array<GithubEvent>) {
     const isSameAction = eventA.getIn(['payload', 'action']) === eventB.getIn(['payload', 'action']);
     const isSameRepo = eventA.getIn(['repo', 'id']) === eventB.getIn(['repo', 'id']);
     const isSameUser = eventA.getIn(['actor', 'id']) === eventB.getIn(['actor', 'id']);
+    const createdAtMinutesDiff = moment(eventA.get('created_at')).diff(moment(eventB.get('created_at')), 'minutes');
 
     if (!isSameType || !isSameAction) return null;
+
+    // only merge events that were created in the same hour
+    if (createdAtMinutesDiff >= 60) return null;
 
     switch (typeA) {
       case 'WatchEvent':
