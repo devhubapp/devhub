@@ -87,7 +87,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
           // if (payload.subscriptionId !== subscription.get('id')) return subscription;
 
           const clearEventIds = List(eventIds);
-          const currentEventIds = subscription.get('events');
+          const currentEventIds = subscription.get('events') || List();
           const newEventIds = currentEventIds.filterNot(eventId => clearEventIds.includes(eventId));
 
           return subscription.set('events', newEventIds);
