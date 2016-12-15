@@ -25,6 +25,7 @@
     "react-native": "0.39.2",
     "react-native-actionsheet": "^2.0.4",
     "react-native-blur": "^1.2.0",
+    "react-native-fabric": "^0.3.2",
     "react-native-immutable-list-view": "^0.2.1",
     "react-native-linear-gradient": "^1.5.15",
     "react-native-vector-icons": "^3.0.0",

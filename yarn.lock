@@ -4156,6 +4156,10 @@ react-native-drawer-layout@^1.0.0:
     autobind-decorator "^1.3.2"
     react-native-dismiss-keyboard "1.0.0"
 
+react-native-fabric@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-fabric/-/react-native-fabric-0.3.2.tgz#cb1bf2f1c1dc2b6f01ae6ab318066e058e81db17"
+
 react-native-immutable-list-view@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-native-immutable-list-view/-/react-native-immutable-list-view-0.2.1.tgz#3518261f802965567ae52e7f7088656643b3592b"
