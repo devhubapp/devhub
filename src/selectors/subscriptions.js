@@ -4,11 +4,9 @@
 import { denormalize } from 'denormalizr';
 import { Map } from 'immutable';
 import { arrayOf } from 'normalizr';
-import { createSelector } from 'reselect';
 
+import { createImmutableSelector, entitiesSelector } from './shared';
 import { SubscriptionSchema } from '../utils/normalizr/schemas';
-
-const entitiesSelector = state => state.get('entities') || Map();
 
 export const subscriptionIdSelector = (state, { subscriptionId }) => subscriptionId;
 
@@ -16,7 +14,7 @@ export const subscriptionsSelector = state => (
   entitiesSelector(state).get('subscriptions') || Map()
 );
 
-export const denormalizedSubscriptionsSelector = createSelector(
+export const denormalizedSubscriptionsSelector = createImmutableSelector(
   subscriptionsSelector,
   entitiesSelector,
   (subscriptions, entities) => (
@@ -24,7 +22,7 @@ export const denormalizedSubscriptionsSelector = createSelector(
   ),
 );
 
-export const subscriptionSelector = createSelector(
+export const subscriptionSelector = createImmutableSelector(
   subscriptionIdSelector,
   subscriptionsSelector,
   (subscriptionId, subscriptions) => subscriptions.get(subscriptionId),

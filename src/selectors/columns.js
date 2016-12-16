@@ -2,18 +2,10 @@
 /*  eslint-disable import/prefer-default-export */
 
 import moment from 'moment';
-import { denormalize } from 'denormalizr';
 import { List, Map, Set } from 'immutable';
-import { memoize } from 'lodash';
-import { arrayOf } from 'normalizr';
-import { createSelector } from 'reselect';
 
 import { subscriptionsSelector, subscriptionSelector } from './subscriptions';
-
-export const objectKeysMemoized = memoize(obj => (obj ? obj.keySeq() : Seq()));
-
-const stateSelector = state => state || Map();
-const entitiesSelector = state => state.get('entities') || Map();
+import { createImmutableSelector, entitiesSelector, objectKeysMemoized, stateSelector } from './shared';
 
 export const columnIdSelector = (state, { columnId }) => columnId;
 export const columnsSelector = state => entitiesSelector(state).get('columns') || Map();
@@ -23,7 +15,7 @@ const sortColumnsByDate = (b, a) => (
   moment(a.get('createdAt')).isAfter(moment(b.get('createdAt'))) ? 1 : -1
 );
 
-export const makeColumnSelector = () => createSelector(
+export const makeColumnSelector = () => createImmutableSelector(
   columnIdSelector,
   columnsSelector,
   (columnId, columns) => (
@@ -37,7 +29,7 @@ export const columnSubscriptionIdsSelector = (state, { columnId }) => (
   (columnSelector(state, { columnId }) || Map()).get('subscriptions') || List()
 );
 
-export const columnEventIdsSelector = createSelector(
+export const makeColumnEventIdsSelector = () => createImmutableSelector(
   stateSelector,
   columnIdSelector,
   columnSubscriptionIdsSelector,
@@ -54,7 +46,9 @@ export const columnEventIdsSelector = createSelector(
   },
 );
 
-export const makeColumnSubscriptionsSelector = () => createSelector(
+export const columnEventIdsSelector = makeColumnEventIdsSelector();
+
+export const makeColumnSubscriptionsSelector = () => createImmutableSelector(
   columnSubscriptionIdsSelector,
   subscriptionsSelector,
   (subscriptionIds, subscriptions) => (
@@ -66,19 +60,19 @@ export const makeColumnSubscriptionsSelector = () => createSelector(
 
 const columnSubscriptionsSelector = makeColumnSubscriptionsSelector();
 
-export const columnIsLoadingSelector = createSelector(
+export const columnIsLoadingSelector = createImmutableSelector(
   columnSubscriptionsSelector,
   subscriptions => subscriptions.some(subscription => subscription.get('loading')),
 );
 
-export const columnErrorsSelector = createSelector(
+export const columnErrorsSelector = createImmutableSelector(
   columnSubscriptionsSelector,
   subscriptions => subscriptions
     .reduce((errors, subscription) => errors.concat(subscription.get('error')), [])
     .filter(Boolean),
 );
 
-export const columnListSelector = createSelector(
+export const columnListSelector = createImmutableSelector(
   columnsSelector,
   (columns) => (
     columns
