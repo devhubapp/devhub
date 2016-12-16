@@ -1,4 +1,9 @@
 apply plugin: "com.android.application"
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 import com.android.build.OutputFile
 
@@ -84,10 +89,10 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '24.0.3'
 
     defaultConfig {
-        applicationId "com.devhub"
+        applicationId "org.brunolemos.devhub"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -125,12 +130,28 @@ android {
     }
 }
 
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        // These docs use an open ended version so that our plugin
+        // can be updated quickly in response to Android tooling updates
+        // We recommend changing it to the latest version from our changelog:
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
 dependencies {
     compile project(':react-native-fabric')
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') { transitive = true; }
     compile project(':bugsnag-react-native')
     compile project(':react-native-vector-icons')
     compile project(':react-native-linear-gradient')
-    compile project(':react-native-blur')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
@@ -142,3 +163,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'

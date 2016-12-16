@@ -1,4 +1,4 @@
-package com.devhub;
+package org.brunolemos.devhub;
 
 import com.facebook.react.ReactActivity;
 

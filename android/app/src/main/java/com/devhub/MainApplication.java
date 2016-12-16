@@ -1,4 +1,4 @@
-package com.devhub;
+package org.brunolemos.devhub;
 
 import android.app.Application;
 import android.util.Log;
@@ -9,7 +9,6 @@ import com.smixx.fabric.FabricPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -35,8 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
             new FabricPackage(),
             BugsnagReactNative.getPackage(),
             new VectorIconsPackage(),
-            new LinearGradientPackage(),
-            new BlurViewPackage()
+            new LinearGradientPackage()
       );
     }
   };

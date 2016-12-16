@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "xcode": "open ios/devhub.xcodeproj/",
+    "xcode": "open ios/devhub.xcworkspace/",
+    "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
     "flow": "flow ./src",
     "lint": "eslint ./src",
