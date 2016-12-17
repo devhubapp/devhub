@@ -15,7 +15,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { url, email, size } = this.props;
+    const { url, email, size, ...props } = this.props;
 
     if (!url && !email) return null;
 
@@ -23,7 +23,7 @@ export default class extends React.PureComponent {
     const uri = url || `https:${gravatar.url(email, { size: roundedSize })}`.replace('??', '?');
 
     return (
-      <Avatar size={size} source={{ uri }} />
+      <Avatar size={size} source={{ uri }} {...props} />
     );
   }
 }

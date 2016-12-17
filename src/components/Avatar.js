@@ -59,7 +59,7 @@ export default class extends React.PureComponent {
       onLoadStart,
       onLoadEnd,
       onError,
-      ...props,
+      ...props
     } = this.props;
 
     delete props.error;

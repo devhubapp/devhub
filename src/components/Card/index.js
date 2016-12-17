@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback, View } from 'react-native';
 import { List, Map, Set } from 'immutable';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
@@ -43,6 +43,15 @@ export const CardWrapper = styled.View`
 
 export const FullView = styled.View`
   flex: 1;
+`;
+
+export const FullAbsolureView = styled.View`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  ${({ zIndex }) => (zIndex ? `z-index: ${zIndex};` : '')}
 `;
 
 // export const RowSeparator = styled.View`
@@ -151,6 +160,7 @@ export const CardIcon = styled(Icon)`
   margin-right: ${iconRightMargin};
   font-size: 20;
   color: ${({ theme }) => theme.base05};
+  background-color: transparent;
 `;
 
 export const renderItemId = (number, icon) => {
@@ -208,44 +218,60 @@ export default class extends React.PureComponent {
 
     return (
       <CardWrapper {...props} seen={seen}>
-        <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
-          <Header>
-            <LeftColumn>
-              <UserAvatar url={actor.get('avatar_url')} size={avatarWidth} />
-            </LeftColumn>
+        <FullAbsolureView zIndex={seen ? 1 : -1}>
+          <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
+            <FullAbsolureView />
+          </TouchableWithoutFeedback>
+        </FullAbsolureView>
 
-            <MainColumn>
-              <HeaderRow>
-                <FullView>
-                  <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
-                    <ScrollableContentContainer>
-                      <HorizontalView>
-                        <Username numberOfLines={1}>
-                          {actor.get('display_login') || actor.get('login')}
-                        </Username>
-                        <IntervalRefresh
-                          interval={1000}
-                          onRender={
-                            () => {
-                              const dateText = getDateSmallText(created_at, '•');
-                              return dateText && (
-                                <SmallText style={{ flex: 1 }} muted> • {dateText}</SmallText>
-                              );
-                            }
+        <FullAbsolureView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth / 2, zIndex: 1 }}>
+          <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
+            <FullAbsolureView />
+          </TouchableWithoutFeedback>
+        </FullAbsolureView>
+
+        <Header>
+          <LeftColumn>
+            <UserAvatar url={actor.get('avatar_url')} size={avatarWidth} />
+          </LeftColumn>
+
+          <MainColumn>
+            <HeaderRow>
+              <FullView>
+                <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
+                  <ScrollableContentContainer>
+                    <HorizontalView>
+                      <Username numberOfLines={1}>
+                        {actor.get('display_login') || actor.get('login')}
+                      </Username>
+                      <IntervalRefresh
+                        interval={1000}
+                        onRender={
+                          () => {
+                            const dateText = getDateSmallText(created_at, '•');
+                            return dateText && (
+                              <SmallText style={{ flex: 1 }} muted> • {dateText}</SmallText>
+                            );
                           }
-                        />
-                      </HorizontalView>
-                    </ScrollableContentContainer>
-                  </TransparentTextOverlay>
+                        }
+                      />
+                    </HorizontalView>
+                  </ScrollableContentContainer>
+                </TransparentTextOverlay>
 
-                  <Text numberOfLines={1} muted>{getEventText(event, { repoIsKnown: onlyOneRepository })}</Text>
-                </FullView>
+                <Text numberOfLines={1} muted>{getEventText(event, { repoIsKnown: onlyOneRepository })}</Text>
+              </FullView>
 
-                <CardIcon name={getEventIcon(event)} />
-              </HeaderRow>
-            </MainColumn>
-          </Header>
-        </TouchableWithoutFeedback>
+              <CardIcon name={getEventIcon(event)} />
+            </HeaderRow>
+
+            <FullAbsolureView style={{ left: null, width: 150 }}>
+              <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
+                <FullAbsolureView />
+              </TouchableWithoutFeedback>
+            </FullAbsolureView>
+          </MainColumn>
+        </Header>
 
         {
           repo && !onlyOneRepository &&

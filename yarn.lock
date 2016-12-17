@@ -4141,10 +4141,6 @@ react-native-actionsheet@^2.0.4:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.0.5.tgz#dcb9df969cc44a45d9d5a92aa555ad72fc567201"
 
-react-native-blur@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-1.2.0.tgz#4479a1efdb3666768835767accb9475b27af4ab3"
-
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
