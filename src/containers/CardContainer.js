@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { Iterable } from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -8,6 +9,7 @@ import Card from '../components/Card';
 
 import {
   makeDenormalizedEventSelector,
+  makeSeenEventSelector,
 } from '../selectors';
 
 import * as actionCreators from '../actions';
@@ -19,10 +21,17 @@ import type {
 
 const makeMapStateToProps = () => {
   const denormalizedEventSelector = makeDenormalizedEventSelector();
+  const seenEventSelector = makeSeenEventSelector();
 
-  return (state: State, { eventId }: { eventId: string }) => ({
-    event: denormalizedEventSelector(state, { eventId }),
-  });
+  return (state: State, { eventOrEventId }: { eventOrEventId: string|GithubEvent }) => {
+    const event = Iterable.isIterable(eventOrEventId) ? eventOrEventId : null;
+    const eventId = event ? `${event.get('id')}` : eventOrEventId;
+
+    return {
+      event: event || denormalizedEventSelector(state, { eventId }),
+      seen: seenEventSelector(state, { eventId }),
+    };
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -34,15 +43,17 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     event: GithubEvent,
+    seen: boolean,
   };
 
   render() {
-    const { actions, event, ...props } = this.props;
+    const { actions, event, seen, ...props } = this.props;
 
     return (
       <Card
         actions={actions}
         event={event}
+        seen={seen}
         {...props}
       />
     );

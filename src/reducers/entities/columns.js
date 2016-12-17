@@ -1,14 +1,12 @@
 // @flow
 
-import { fromJS, List, Map, Set } from 'immutable';
+import { fromJS, List, Map } from 'immutable';
 
 import { guid } from '../../utils/helpers';
 
 import {
   CREATE_COLUMN,
   DELETE_COLUMN,
-  MARK_EVENTS_AS_SEEN,
-  MARK_EVENTS_AS_NOT_SEEN,
 } from '../../utils/constants/actions';
 
 import type {
@@ -38,12 +36,6 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
     case DELETE_COLUMN:
       // TODO: Delete subscription and its events
       return state.delete(payload.id);
-
-    case MARK_EVENTS_AS_SEEN:
-      return state.setIn([payload.columnId, 'allSeen'], true);
-
-    case MARK_EVENTS_AS_NOT_SEEN:
-      return state.setIn([payload.columnId, 'allSeen'], false);
 
     default:
       return state;

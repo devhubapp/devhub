@@ -28,6 +28,7 @@
     }],
     "no-case-declarations": ["off"],
     "no-underscore-dangle": ["off"],
+    "no-nested-ternary": ["off"],
     "arrow-parens": 0,
     "babel/arrow-parens": 1,
     "react-native/no-unused-styles": 2,

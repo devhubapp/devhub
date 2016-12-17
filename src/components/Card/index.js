@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
-import { List, Map } from 'immutable';
+import { List, Map, Set } from 'immutable';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
@@ -174,11 +174,12 @@ export default class extends React.PureComponent {
     actions: ActionCreators,
     event: GithubEvent,
     onlyOneRepository?: boolean,
+    seen?: boolean,
     theme: ThemeObject,
   };
 
   render() {
-    const { actions, event, onlyOneRepository, theme, ...props } = this.props;
+    const { actions, event, onlyOneRepository, seen, theme, ...props } = this.props;
 
     const {
       type,
@@ -198,15 +199,15 @@ export default class extends React.PureComponent {
 
     if (!payload) return null;
 
-    let eventIds = List([event.get('id')]);
+    let eventIds = Set([event.get('id')]);
     if (merged) {
       merged.forEach(mergedEvent => {
-        eventIds = eventIds.push(mergedEvent.get('id'));
+        eventIds = eventIds.add(mergedEvent.get('id'));
       });
     }
 
     return (
-      <CardWrapper {...props} seen={event.get('seen')}>
+      <CardWrapper {...props} seen={seen}>
         <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
           <Header>
             <LeftColumn>

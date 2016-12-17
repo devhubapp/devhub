@@ -10,9 +10,7 @@ import { SubscriptionSchema } from '../utils/normalizr/schemas';
 
 export const subscriptionIdSelector = (state, { subscriptionId }) => subscriptionId;
 
-export const subscriptionsSelector = state => (
-  entitiesSelector(state).get('subscriptions') || Map()
-);
+export const subscriptionsSelector = state => entitiesSelector(state).get('subscriptions');
 
 export const denormalizedSubscriptionsSelector = createImmutableSelector(
   subscriptionsSelector,

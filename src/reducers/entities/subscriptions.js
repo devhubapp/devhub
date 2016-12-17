@@ -68,8 +68,8 @@ export default (state: State = initialState, { type, payload, error }: Action<an
       return (({ request: { subscriptionId }, data: { result } }: ApiResponsePayload) => {
         if (!state.get(subscriptionId)) return state;
 
-        const eventsIds = state.getIn([subscriptionId, 'events']) || List();
-        const newEventsIds = Set(result).union(Set(eventsIds)).toList();
+        const eventsIds = Set(state.getIn([subscriptionId, 'events']));
+        const newEventsIds = Set(result).union(eventsIds);
 
         return state
           .setIn([subscriptionId, 'events'], newEventsIds)
@@ -80,19 +80,16 @@ export default (state: State = initialState, { type, payload, error }: Action<an
       })(payload);
 
     case CLEAR_EVENTS:
-      return (({ eventIds }: SeenEvents) => {
-        if (!eventIds) return state;
-
-        return state.map(subscription => {
+      return (({ eventIds }: SeenEvents) => (
+        state.map(subscription => {
           // if (payload.subscriptionId !== subscription.get('id')) return subscription;
 
-          const clearEventIds = List(eventIds);
-          const currentEventIds = subscription.get('events') || List();
-          const newEventIds = currentEventIds.filterNot(eventId => clearEventIds.includes(eventId));
+          const currentEventIds = Set(subscription.get('events'));
+          const newEventIds = currentEventIds.subtract(eventIds);
 
           return subscription.set('events', newEventIds);
-        });
-      })(payload);
+        })
+      ))(payload);
 
     default:
       return state;

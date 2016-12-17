@@ -25,15 +25,15 @@ import type {
 
 const makeMapStateToProps = () => {
   const columnSelector = makeColumnSelector();
-  const denormalizedColumnEventsSelector = makeDenormalizedColumnEventsSelector();
   const columnSubscriptionsSelector = makeColumnSubscriptionsSelector();
+  const denormalizedColumnEventsSelector = makeDenormalizedColumnEventsSelector();
 
-  return (state: State, ownProps: { columnId: string }) => ({
-    column: columnSelector(state, ownProps),
-    errors: columnErrorsSelector(state, ownProps),
-    events: denormalizedColumnEventsSelector(state, ownProps),
-    subscriptions: columnSubscriptionsSelector(state, ownProps),
-    loading: columnIsLoadingSelector(state, ownProps),
+  return (state: State, { columnId }: { columnId: string }) => ({
+    column: columnSelector(state, { columnId }),
+    errors: columnErrorsSelector(state, { columnId }),
+    events: denormalizedColumnEventsSelector(state, { columnId }),
+    subscriptions: columnSubscriptionsSelector(state, { columnId }),
+    loading: columnIsLoadingSelector(state, { columnId }),
   });
 };
 
@@ -53,7 +53,15 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { actions, column, errors, events, loading, subscriptions, ...props } = this.props;
+    const {
+      actions,
+      column,
+      errors,
+      events,
+      loading,
+      subscriptions,
+      ...props
+    } = this.props;
 
     return (
       <Column

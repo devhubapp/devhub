@@ -3,15 +3,21 @@
 import uniq from 'lodash/uniq';
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
-import { Dimensions, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
+import { Dimensions, RefreshControl } from 'react-native';
 
-import Card, { iconRightMargin } from './Card';
+import {
+  makeColumnEventIdsSelector,
+  makeColumnSeenEventIdsSelector,
+} from '../selectors';
+
+import CardContainer from '../containers/CardContainer';
+import { iconRightMargin } from './Card';
 import CreateColumnUtils from './utils/CreateColumnUtils';
 import ProgressBar from './ProgressBar';
-import StarButton from './buttons/StarButton';
+import RepositoryStarButtonContainer from '../containers/RepositoryStarButtonContainer';
 import StatusMessage from './StatusMessage';
 import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
@@ -52,7 +58,7 @@ const Title = styled.Text`
   color: ${({ theme }) => theme.base04};
 `;
 
-const StyledStarButton = styled(StarButton)`
+const StyledRepositoryStarButtonContainer = styled(RepositoryStarButtonContainer)`
   margin-left: ${contentPadding / 2};
 `;
 
@@ -112,10 +118,8 @@ const BUTTONS = {
 
 @Themable
 export default class extends React.PureComponent {
-  state = {
-    loadingWithDelay: false,
-    loadingWithDelayStartedAt: null,
-    uniqRepository: null,
+  static contextTypes = {
+    store: React.PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -124,6 +128,12 @@ export default class extends React.PureComponent {
     const uniqRepository = this.getUpdatedUniqRepository(props);
     this.state.uniqRepository = uniqRepository;
   }
+
+  state = {
+    loadingWithDelay: false,
+    loadingWithDelayStartedAt: null,
+    uniqRepository: null,
+  };
 
   componentWillReceiveProps(newProps) {
     if (newProps.loading && !this.state.loadingWithDelay) {
@@ -153,22 +163,6 @@ export default class extends React.PureComponent {
     clearTimeout(this.timeout);
   }
 
-  getUpdatedUniqRepository(newProps) {
-    const props = newProps || this.props;
-    const { events, subscriptions } = props;
-
-    const repos = subscriptions && subscriptions.toJS().map(subscription => {
-        const { repo, owner } = subscription.params || {};
-        if (!(owner && repo)) return null;
-        return `${owner}/${repo}`;
-      }).filter(Boolean);
-
-    const onlyOneRepository = repos && uniq(repos).length === 1;
-    const uniqRepository = (onlyOneRepository && events && events.getIn([0, 'repo'])) || null;
-
-    return uniqRepository;
-  }
-
   onRefresh = () => {
     this.setState({ loadingWithDelay: true });
 
@@ -176,15 +170,47 @@ export default class extends React.PureComponent {
     updateColumnSubscriptions(column.get('id'));
   };
 
+  getUpdatedUniqRepository(newProps) {
+    const props = newProps || this.props;
+    const { events, subscriptions } = props;
+
+    const repos = subscriptions && subscriptions.toJS().map(subscription => {
+      const { repo, owner } = subscription.params || {};
+      if (!(owner && repo)) return null;
+      return `${owner}/${repo}`;
+    }).filter(Boolean);
+
+    const onlyOneRepository = repos && uniq(repos).length === 1;
+    const uniqRepository = (onlyOneRepository && events && events.getIn([0, 'repo'])) || null;
+
+    return uniqRepository;
+  }
+
+  getEventIdsAndSeenEventIds = () => {
+    const { column } = this.props;
+
+    const columnId = column.get('id');
+
+    const store = this.context.store;
+    const state = store.getState();
+
+    this.columnEventIdsSelector = this.columnEventIdsSelector || makeColumnEventIdsSelector();
+    this.columnSeenEventIdsSelector = this.columnSeenEventIdsSelector || makeColumnSeenEventIdsSelector();
+
+    return {
+      eventIds: this.columnEventIdsSelector(state, { columnId }),
+      seenEventIds: this.columnSeenEventIdsSelector(state, { columnId }),
+    };
+  }
+
   showActionSheet = () => {
     this.ActionSheet.show();
   };
 
   handleActionSheetButtonPress = (index) => {
-    const { actions, column, events } = this.props;
+    const { actions, column } = this.props;
 
     const columnId = column.get('id');
-    const eventIds = events.map(event => event.get('id'));
 
     switch (index) {
       case BUTTONS.CREATE_NEW_COLUMN:
@@ -192,30 +218,23 @@ export default class extends React.PureComponent {
         break;
 
       case BUTTONS.MARK_EVENTS_AS_SEEN_OR_UNSEEN:
-        if (column.get('allSeen')) {
-          actions.markEventsAsUnseen({ columnId, eventIds });
-        } else {
-          actions.markEventsAsSeen({ columnId, eventIds });
-        }
+        (() => {
+          const { eventIds, seenEventIds } = this.getEventIdsAndSeenEventIds();
+
+          if (seenEventIds && seenEventIds.size >= eventIds.size) {
+            actions.markEventsAsUnseen({ columnId, eventIds });
+          } else {
+            actions.markEventsAsSeen({ columnId, eventIds });
+          }
+        })();
 
         break;
 
       case BUTTONS.CLEAR_SEEN:
-        const seenEvents = events.filter(e => e.get('seen'));
-        let seenEventIds = [];
-
-        seenEvents.forEach(seenEvent => {
-          seenEventIds.push(seenEvent.get('id'));
-
-          const merged = seenEvent.get('merged');
-          if (merged) {
-            merged.forEach(mergedEvent => {
-              seenEventIds.push(mergedEvent.get('id'));
-            });
-          }
-        });
-
-        actions.clearEvents({ columnId, eventIds: seenEventIds });
+        (() => {
+          const { seenEventIds } = this.getEventIdsAndSeenEventIds();
+          actions.clearEvents({ columnId, eventIds: seenEventIds });
+        })();
         break;
 
       case BUTTONS.DELETE_COLUMN:
@@ -236,22 +255,23 @@ export default class extends React.PureComponent {
     events: Array<GithubEvent>,
     radius?: number,
     style?: ?Object,
+    seenEventIds: Array<string>,
     subscriptions: Array<Subscription>,
     theme: ThemeObject,
   };
 
   renderRow = (event) => (
-    <Card
+    <CardContainer
       key={`card-${event.get('id')}`}
       actions={this.props.actions}
-      event={event}
+      eventOrEventId={event && event.get('merged') ? event : event.get('id')}
       onlyOneRepository={!!this.state.uniqRepository}
     />
   );
-
+  
   render() {
     const { loadingWithDelay, uniqRepository } = this.state;
-    const { actions, column, errors, events, radius, subscriptions, theme, ...props } = this.props;
+    const { column, errors, events, radius, subscriptions, theme, ...props } = this.props;
 
     if (!column) return null;
 
@@ -280,10 +300,8 @@ export default class extends React.PureComponent {
 
             {
               uniqRepository && (
-                <StyledStarButton
-                  starred={uniqRepository.get('starred')}
-                  starRepoFn={actions.starRepo.bind(null, uniqRepository.get('id'))}
-                  unstarRepoFn={actions.unstarRepo.bind(null, uniqRepository.get('id'))}
+                <StyledRepositoryStarButtonContainer
+                  repoId={uniqRepository.get('id')}
                   containerStyle={{ marginTop: 4, marginLeft: -contentPadding }}
                 />
               )

@@ -4,13 +4,18 @@ import { combineReducers } from 'redux-immutable';
 import app from './app';
 import config from './config';
 import entities from './entities';
+import seenEvents from './seen-events';
+import starredRepos from './starred-repos';
 
 import { CLEAR_APP_DATA } from '../utils/constants/actions';
+import type { Action } from '../utils/types';
 
 const reducer = combineReducers({
   app,
   config,
   entities,
+  seenEvents,
+  starredRepos,
 });
 
 const initialState = Map();

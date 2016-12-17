@@ -3,7 +3,7 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import StarButton from '../buttons/StarButton';
+import RepositoryStarButtonContainer from '../../containers/RepositoryStarButtonContainer';
 import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
@@ -21,12 +21,11 @@ import {
 } from './';
 
 import { contentPadding } from '../../styles/variables';
-import type { ActionCreators, Repository, ThemeObject } from '../../utils/types';
+import type { Repository, ThemeObject } from '../../utils/types';
 
 @Themable
 export default class extends React.PureComponent {
   props: {
-    actions: ActionCreators,
     forcePushed?: boolean,
     isFork?: boolean,
     narrow?: boolean,
@@ -36,7 +35,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { actions, forcePushed, isFork, narrow, pushed, repo, theme } = this.props;
+    const { forcePushed, isFork, narrow, pushed, repo, theme } = this.props;
 
     const repoFullName = repo.get('full_name') || repo.get('name') || '';
     const orgName = repoFullName.split('/')[0];
@@ -52,9 +51,6 @@ export default class extends React.PureComponent {
       if (isFork) return 'repo-forked';
       return 'repo';
     })();
-
-    const starRepo = actions.starRepo.bind(null, repo.get('id'));
-    const unstarRepo = actions.unstarRepo.bind(null, repo.get('id'));
 
     return (
       <ContentRow narrow={narrow}>
@@ -76,11 +72,7 @@ export default class extends React.PureComponent {
               </TransparentTextOverlay>
             </FullView>
 
-            <StarButton
-              starred={repo.get('starred')}
-              starRepoFn={starRepo}
-              unstarRepoFn={unstarRepo}
-            />
+            <RepositoryStarButtonContainer repoId={repo.get('id')} />
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>

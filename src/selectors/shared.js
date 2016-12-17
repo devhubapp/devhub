@@ -2,8 +2,8 @@ import { is, Iterable, List, Map } from 'immutable';
 import { isEqual } from 'lodash';
 import { createSelectorCreator } from 'reselect';
 
-export const stateSelector = state => state || Map();
-export const entitiesSelector = state => state.get('entities') || Map();
+export const stateSelector = state => state;
+export const entitiesSelector = state => state.get('entities');
 
 export function shallowEqualityCheck(a, b) {
   return a === b;
@@ -27,7 +27,12 @@ export function immutableMemoize(func, equalityCheck = shallowEqualityCheck) {
       !args.every(isEqualToLastArg)
     ) {
       const newResult = func(...args);
-      if (!deepImmutableEqualityCheck(newResult, lastResult)) lastResult = newResult;
+      if (
+        !shallowEqualityCheck(newResult, lastResult) &&
+        !deepImmutableEqualityCheck(newResult, lastResult)
+      ) {
+        lastResult = newResult;
+      }
     }
 
     lastArgs = args;
