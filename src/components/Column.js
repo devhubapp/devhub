@@ -56,6 +56,7 @@ const Title = styled.Text`
   font-size: 20;
   font-weight: 600;
   color: ${({ theme }) => theme.base04};
+  background-color: transparent;
 `;
 
 const StyledRepositoryStarButtonContainer = styled(RepositoryStarButtonContainer)`

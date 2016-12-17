@@ -29,13 +29,13 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { narrow, theme } = this.props;
+    const { narrow, theme, ...props } = this.props;
 
     const title = trimNewLines(this.props.title);
     if (!title) return null;
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn />
 
         <MainColumn>

@@ -8,13 +8,13 @@ import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 
 import {
-  avatarWidth,
   ContentRow,
   FullView,
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
   RepositoryContentContainer,
+  smallAvatarWidth,
   Text,
 } from './';
 
@@ -32,7 +32,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { additionalInfo, narrow, user, theme } = this.props;
+    const { additionalInfo, narrow, user, theme, ...props } = this.props;
 
     if (!user) return null;
 
@@ -40,9 +40,9 @@ export default class extends React.PureComponent {
     if (!_login) return null;
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
+          <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>

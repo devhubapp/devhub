@@ -9,7 +9,6 @@ import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 
 import {
-  avatarWidth,
   ContentRow,
   FullView,
   HighlightContainerRow1,
@@ -17,10 +16,11 @@ import {
   MainColumn,
   RepositoryContentContainer,
   RepositoryName,
+  smallAvatarWidth,
   Text,
 } from './';
 
-import { contentPadding } from '../../styles/variables';
+import { contentPadding, radius } from '../../styles/variables';
 import type { Repository, ThemeObject } from '../../utils/types';
 
 @Themable
@@ -35,7 +35,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { forcePushed, isFork, narrow, pushed, repo, theme } = this.props;
+    const { forcePushed, isFork, narrow, pushed, repo, theme, ...props } = this.props;
 
     const repoFullName = repo.get('full_name') || repo.get('name') || '';
     const orgName = repoFullName.split('/')[0];
@@ -53,15 +53,20 @@ export default class extends React.PureComponent {
     })();
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={avatarUrl} size={avatarWidth / 2} />
+          <UserAvatar url={avatarUrl} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
             <FullView>
-              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="horizontal">
+              <TransparentTextOverlay
+                color={theme.base01}
+                size={contentPadding}
+                from="horizontal"
+                radius={radius}
+              >
                 <RepositoryContentContainer>
                   <Text muted><Icon name={repoIcon} />&nbsp;</Text>
                   <RepositoryName>{repoName}</RepositoryName>

@@ -29,7 +29,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { branch, narrow, theme, type } = this.props;
+    const { branch, narrow, theme, type, ...props } = this.props;
 
     const _branch = (branch || '').replace('refs/heads/', '');
     if (!_branch) return null;
@@ -38,7 +38,7 @@ export default class extends React.PureComponent {
     if (_branch === 'master' && !isBranchMainEventAction) return null;
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn />
 
         <MainColumn>

@@ -33,7 +33,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { narrow, release, theme, type } = this.props;
+    const { narrow, release, theme, type, ...props } = this.props;
 
     if (type !== 'ReleaseEvent' || !release) return null;
 
@@ -56,7 +56,7 @@ export default class extends React.PureComponent {
           <BranchRow branch={branch} type={type} narrow />
         }
 
-        <ContentRow narrow={narrow}>
+        <ContentRow narrow={narrow} {...props}>
           <LeftColumn />
 
           <MainColumn>
@@ -82,7 +82,7 @@ export default class extends React.PureComponent {
 
         {
           body &&
-          <ContentRow narrow={narrow}>
+          <ContentRow narrow={narrow} {...props}>
             <LeftColumn />
 
             <MainColumn>

@@ -5,11 +5,11 @@ import React from 'react';
 import UserAvatar from './_UserAvatar';
 
 import {
-  avatarWidth,
   CardText,
   ContentRow,
   LeftColumn,
   MainColumnRowContent,
+  smallAvatarWidth,
 } from './';
 
 import { trimNewLines } from '../../utils/helpers';
@@ -23,16 +23,16 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { actor, comment, narrow } = this.props;
+    const { actor, comment, narrow, ...props } = this.props;
     if (!comment) return null;
 
     const body = trimNewLines(comment.get('body'));
     if (!body) return null;
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={actor.get('avatar_url')} size={avatarWidth / 2} />
+          <UserAvatar url={actor.get('avatar_url')} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumnRowContent center>

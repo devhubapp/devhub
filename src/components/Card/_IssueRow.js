@@ -8,7 +8,6 @@ import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 
 import {
-  avatarWidth,
   renderItemId,
   CardText,
   ContentRow,
@@ -18,6 +17,7 @@ import {
   MainColumn,
   RepositoryContentContainer,
   RightOfScrollableContent,
+  smallAvatarWidth,
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -34,7 +34,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { issue, narrow, theme } = this.props;
+    const { issue, narrow, theme, ...props } = this.props;
 
     if (!issue) return null;
 
@@ -58,11 +58,11 @@ export default class extends React.PureComponent {
     })();
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
           {
             user &&
-            <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
+            <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
           }
         </LeftColumn>
 

@@ -8,7 +8,6 @@ import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 
 import {
-  avatarWidth,
   renderItemId,
   CardText,
   ContentRow,
@@ -18,9 +17,10 @@ import {
   MainColumn,
   RepositoryContentContainer,
   RightOfScrollableContent,
+  smallAvatarWidth,
 } from './';
 
-import { contentPadding } from '../../styles/variables';
+import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLines } from '../../utils/helpers';
 import type { PullRequest, ThemeObject } from '../../utils/types';
 
@@ -33,7 +33,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { narrow, pullRequest, theme } = this.props;
+    const { narrow, pullRequest, theme, ...props } = this.props;
 
     if (!pullRequest) return null;
 
@@ -60,15 +60,20 @@ export default class extends React.PureComponent {
     })();
 
     return (
-      <ContentRow narrow={narrow}>
+      <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={user.get('avatar_url')} size={avatarWidth / 2} />
+          <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>
           <HighlightContainerRow1>
             <FullView>
-              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="horizontal">
+              <TransparentTextOverlay
+                color={theme.base01}
+                size={contentPadding}
+                from="horizontal"
+                radius={radius}
+              >
                 <RepositoryContentContainer>
                   <CardText numberOfLines={1}>
                     <Icon name={icon} color={color} />&nbsp;

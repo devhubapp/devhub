@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import { List } from 'immutable';
-import { AlertIOS, Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
 import ColumnContainer from '../containers/ColumnContainer';
 import NewColumn from './NewColumn';
@@ -14,8 +14,9 @@ import type { ActionCreators, Column as ColumnType } from '../utils/types';
 
 export const columnMargin = 2;
 
+const spacing = columnMargin + contentPadding;
 const getFullWidth = () => Dimensions.get('window').width;
-const getWidth = () => getFullWidth() - (2 * (contentPadding + columnMargin));
+const getWidth = () => getFullWidth() - (2 * spacing);
 
 const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
@@ -42,19 +43,6 @@ const StyledNewColumn = styled(NewColumn)`
 `;
 
 export default class extends React.PureComponent {
-  onPress = () => {
-    const { createColumn, loadSubscriptionDataRequest } = this.props.actions;
-
-    AlertIOS.prompt(
-      'Enter a Github username:',
-      null,
-      username => {
-        createColumn(username, [`/users/${username}/received_events`]);
-        loadSubscriptionDataRequest(username);
-      },
-    );
-  };
-
   props: {
     actions: ActionCreators,
     columns: Array<ColumnType>,
@@ -94,7 +82,7 @@ export default class extends React.PureComponent {
         rowsDuringInteraction={1}
         renderRow={this.renderRow}
         width={getWidth()}
-        contentContainerStyle={{ marginHorizontal: contentPadding + columnMargin }}
+        contentContainerStyle={{ marginHorizontal: spacing }}
         horizontal
         pagingEnabled
         {...props}

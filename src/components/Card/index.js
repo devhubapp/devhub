@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { TouchableWithoutFeedback, View } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 import { List, Map, Set } from 'immutable';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
@@ -28,7 +28,8 @@ import { getDateSmallText } from '../../utils/helpers';
 import { getEventIcon, getEventText } from '../../utils/helpers/github';
 import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
 
-export const avatarWidth = 44;
+export const avatarWidth = 50;
+export const smallAvatarWidth = avatarWidth / 2;
 export const innerContentPadding = contentPadding;
 export const narrowInnerContentPadding = innerContentPadding / 2;
 export const iconRightMargin = contentPadding - 2;
@@ -224,7 +225,7 @@ export default class extends React.PureComponent {
           </TouchableWithoutFeedback>
         </FullAbsolureView>
 
-        <FullAbsolureView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth / 2, zIndex: 1 }}>
+        <FullAbsolureView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
           <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
             <FullAbsolureView />
           </TouchableWithoutFeedback>
