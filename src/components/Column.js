@@ -332,7 +332,7 @@ export default class extends React.PureComponent {
           ))
         }
 
-        <StyledTextOverlay color={theme.base02} size={contentPadding} from="bottom" radius={radius}>
+        <StyledTextOverlay color={theme.base02} size={contentPadding} from="vertical" radius={radius}>
           <ImmutableListView
             immutableData={events}
             initialListSize={5}

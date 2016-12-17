@@ -37,11 +37,11 @@ type Props = {
 export default ({
   children, color, containerStyle, from, radius, size, style, ...props
 }: Props) => {
-  const GradientLayerOverlay = () => (
+  const GradientLayerOverlay = ({ from: newFrom }) => (
     <LinearGradient
       colors={[fade(color, 0), color]}
-      style={[getStyle(from, size), radius && { borderRadius: radius }, style]}
-      {...getProps(from)}
+      style={[getStyle(newFrom, size), radius && { borderRadius: radius }, style]}
+      {...getProps(newFrom)}
       {...props}
     />
   );
@@ -49,7 +49,26 @@ export default ({
   return (
     <View style={[{ flex: 1, alignSelf: 'stretch' }, containerStyle]}>
       {children}
-      <GradientLayerOverlay style={style} />
+
+      {
+        (from === 'vertical' || from === 'top') &&
+        <GradientLayerOverlay style={style} from="top" />
+      }
+
+      {
+        (from === 'vertical' || from === 'bottom') &&
+        <GradientLayerOverlay style={style} from="bottom" />
+      }
+
+      {
+        (from === 'horizontal' || from === 'left') &&
+        <GradientLayerOverlay style={style} from="left" />
+      }
+
+      {
+        (from === 'horizontal' || from === 'right') &&
+        <GradientLayerOverlay style={style} from="right" />
+      }
     </View>
   );
 };

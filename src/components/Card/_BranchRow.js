@@ -47,7 +47,7 @@ export default class extends React.PureComponent {
               <TransparentTextOverlay
                 color={theme.base01}
                 size={contentPadding}
-                from="right"
+                from="horizontal"
                 radius={radius}
               >
                 <RepositoryContentContainer>

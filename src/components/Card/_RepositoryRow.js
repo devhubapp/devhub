@@ -61,7 +61,7 @@ export default class extends React.PureComponent {
         <MainColumn>
           <HighlightContainerRow1>
             <FullView>
-              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
+              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="horizontal">
                 <RepositoryContentContainer>
                   <Text muted><Icon name={repoIcon} />&nbsp;</Text>
                   <RepositoryName>{repoName}</RepositoryName>

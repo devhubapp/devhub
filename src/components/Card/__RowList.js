@@ -14,12 +14,13 @@ export default class extends React.PureComponent {
   props: {
     data: Array<any>,
     maxHeight?: number,
+    narrow?: boolean,
     renderRow: Function,
     theme?: ThemeObject,
   };
 
   render() {
-    const { data, maxHeight = 120, renderRow, theme, ...props } = this.props;
+    const { data, maxHeight = 130, narrow, renderRow, theme, ...props } = this.props;
 
     if (!(data && data.size > 0)) return null;
 
@@ -27,14 +28,17 @@ export default class extends React.PureComponent {
       <TransparentTextOverlay
         {...props}
         color={theme.base02}
-        size={contentPadding}
-        from="bottom"
+        size={narrow ? contentPadding / 2 : contentPadding}
+        from="vertical"
         radius={radius}
-        containerStyle={{ flex: 0, marginBottom: -contentPadding }}
+        containerStyle={{ flex: 0 }}
       >
         <ScrollView
           style={{ maxHeight }}
-          contentContainerStyle={{ paddingBottom: contentPadding }}
+          contentContainerStyle={{
+            marginTop: narrow ? -contentPadding / 2 : -contentPadding,
+            paddingVertical: narrow ? contentPadding / 2 : contentPadding,
+          }}
           alwaysBounceVertical={false}
         >
           {data.map(renderRow)}

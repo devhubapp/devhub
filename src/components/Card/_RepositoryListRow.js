@@ -8,6 +8,11 @@ import RowList from './__RowList';
 import type { Repo } from '../../utils/types';
 
 export default class extends React.PureComponent {
+  props: {
+    repos: Array<Repo>,
+    maxHeight?: number,
+  };
+
   renderRow = (passProps = {}) => repo => (
     <RepoRow
       key={`repo-row-${repo.get('id')}`}
@@ -16,11 +21,6 @@ export default class extends React.PureComponent {
       {...passProps}
     />
   );
-
-  props: {
-    repos: Array<Repo>,
-    maxHeight?: number,
-  };
 
   render() {
     const { maxHeight = 200, repos, ...props } = this.props;

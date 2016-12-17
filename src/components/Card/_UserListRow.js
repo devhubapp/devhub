@@ -8,6 +8,11 @@ import RowList from './__RowList';
 import type { User } from '../../utils/types';
 
 export default class extends React.PureComponent {
+  props: {
+    users: Array<User>,
+    maxHeight?: number,
+  };
+
   renderRow = (passProps = {}) => user => (
     <UserRow
       key={`user-row-${user.get('id')}`}
@@ -16,11 +21,6 @@ export default class extends React.PureComponent {
       {...passProps}
     />
   );
-
-  props: {
-    users: Array<User>,
-    maxHeight?: number,
-  };
 
   render() {
     const { maxHeight, users, ...props } = this.props;

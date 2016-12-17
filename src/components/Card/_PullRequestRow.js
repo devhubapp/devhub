@@ -68,7 +68,7 @@ export default class extends React.PureComponent {
         <MainColumn>
           <HighlightContainerRow1>
             <FullView>
-              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="right">
+              <TransparentTextOverlay color={theme.base01} size={contentPadding} from="horizontal">
                 <RepositoryContentContainer>
                   <CardText numberOfLines={1}>
                     <Icon name={icon} color={color} />&nbsp;
