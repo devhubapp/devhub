@@ -18,6 +18,7 @@ import {
   RepositoryContentContainer,
   RightOfScrollableContent,
   smallAvatarWidth,
+  Text,
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -57,6 +58,8 @@ export default class extends React.PureComponent {
       }
     })();
 
+    const byText = user && user.get('login') ? `@${user.get('login')}` : '';
+
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
@@ -79,6 +82,7 @@ export default class extends React.PureComponent {
                   <CardText numberOfLines={1}>
                     <Icon name={icon} color={color} />&nbsp;
                     {_title}
+                    {byText && <Text muted small> by {byText}</Text>}
                   </CardText>
                 </RepositoryContentContainer>
               </TransparentTextOverlay>

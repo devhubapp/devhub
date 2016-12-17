@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -846,7 +847,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run 3da23c888a85e715f322aa4e00828f6c4a5175a7 adabdb06a4380117decde3e2a1e5b6c0d72c3c115634aff4487b2446a11ee7c0";
+			shellScript = "if [ \"$CONFIGURATON\" != \"Release\" ]; then\nexit 0\nfi\n\n./Fabric.framework/run 3da23c888a85e715f322aa4e00828f6c4a5175a7 adabdb06a4380117decde3e2a1e5b6c0d72c3c115634aff4487b2446a11ee7c0";
 		};
 		2E830AFF1E0351EA004EAD84 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -859,7 +860,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "JSON_FILE=${SRCROOT}/devhub-65899-firebase-crashreporting-d5gaa-45a6ff6616.json\nGOOGLE_APP_ID=1:589579854600:ios:9e47b631a5be6ed3\n\ndefaults write com.google.SymbolUpload version -integer 1\n\nJSON=$(cat \"${JSON_FILE}\")\n/usr/bin/plutil -replace \"app_${GOOGLE_APP_ID//:/_}\" -json \"${JSON}\" \"$HOME/Library/Preferences/com.google.SymbolUpload.plist\"\n\"${PODS_ROOT}\"/FirebaseCrash/upload-sym\n";
+			shellScript = "if [ \"$CONFIGURATON\" != \"Release\" ]; then\n    exit 0\nfi\n\nJSON_FILE=${SRCROOT}/devhub-65899-firebase-crashreporting-d5gaa-45a6ff6616.json\nGOOGLE_APP_ID=1:589579854600:ios:9e47b631a5be6ed3\n\ndefaults write com.google.SymbolUpload version -integer 1\n\nJSON=$(cat \"${JSON_FILE}\")\n/usr/bin/plutil -replace \"app_${GOOGLE_APP_ID//:/_}\" -json \"${JSON}\" \"$HOME/Library/Preferences/com.google.SymbolUpload.plist\"\n\"${PODS_ROOT}\"/FirebaseCrash/upload-sym\n";
 		};
 		33C16AC000C337D9CACAA12A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
