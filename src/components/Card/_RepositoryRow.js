@@ -21,6 +21,7 @@ import {
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
+import { getOrgAvatar, getOwnerAndRepo } from '../../utils/helpers/github';
 import type { Repository, ThemeObject } from '../../utils/types';
 
 @Themable
@@ -38,12 +39,9 @@ export default class extends React.PureComponent {
     const { forcePushed, isFork, narrow, pushed, repo, theme, ...props } = this.props;
 
     const repoFullName = repo.get('full_name') || repo.get('name') || '';
-    const orgName = repoFullName.split('/')[0];
-    const repoName = orgName ? repoFullName.split('/')[1] : repoFullName;
+    const { owner: orgName, repo: repoName } = getOwnerAndRepo(repoFullName);
 
     // if (!repoName) return null;
-
-    const avatarUrl = orgName ? `https://github.com/${orgName}.png` : '';
 
     const repoIcon = (() => {
       if (forcePushed) return 'repo-force-push';
@@ -55,7 +53,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={avatarUrl} size={smallAvatarWidth} />
+          <UserAvatar url={getOrgAvatar(orgName)} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>

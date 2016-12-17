@@ -26,7 +26,7 @@ export function loadTheme(theme: Theme): Object {
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }
 
-export function trimNewLines(text) {
+export function trimNewLinesAndSpaces(text) {
   if (!text || typeof text !== 'string') return '';
 
   return text.replace(/\s\s+/g, ' ').trim();

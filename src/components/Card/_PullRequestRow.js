@@ -21,7 +21,7 @@ import {
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
-import { trimNewLines } from '../../utils/helpers';
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { PullRequest, ThemeObject } from '../../utils/types';
 
 @Themable
@@ -37,7 +37,7 @@ export default class extends React.PureComponent {
 
     if (!pullRequest) return null;
 
-    const title = trimNewLines(pullRequest.get('title'));
+    const title = trimNewLinesAndSpaces(pullRequest.get('title'));
     if (!title) return null;
 
     const {

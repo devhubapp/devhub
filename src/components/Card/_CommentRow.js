@@ -12,7 +12,7 @@ import {
   smallAvatarWidth,
 } from './';
 
-import { trimNewLines } from '../../utils/helpers';
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { Comment, User } from '../../utils/types';
 
 export default class extends React.PureComponent {
@@ -26,7 +26,7 @@ export default class extends React.PureComponent {
     const { actor, comment, narrow, ...props } = this.props;
     if (!comment) return null;
 
-    const body = trimNewLines(comment.get('body'));
+    const body = trimNewLinesAndSpaces(comment.get('body'));
     if (!body) return null;
 
     return (

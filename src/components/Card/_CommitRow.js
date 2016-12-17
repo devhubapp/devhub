@@ -15,10 +15,11 @@ import {
   MainColumn,
   RepositoryContentContainer,
   smallAvatarWidth,
+  Text,
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
-import { trimNewLines } from '../../utils/helpers';
+import { trimNewLinesAndSpaces, tryGetUsernameFromGithubEmail } from '../../utils/helpers';
 import type { Commit, ThemeObject } from '../../utils/types';
 
 @Themable
@@ -34,15 +35,22 @@ export default class extends React.PureComponent {
 
     if (!commit) return null;
 
-    const message = trimNewLines(commit.get('message'));
+    const message = trimNewLinesAndSpaces(commit.get('message'));
     if (!message) return null;
 
-    const author = commit.get('author');
+    const authorName = commit.getIn(['author', 'name']);
+    const authorEmail = commit.getIn(['author', 'email']);
+    const authorUsername = tryGetUsernameFromGithubEmail(authorEmail);
+
+    let byText = authorName;
+    if (authorUsername) byText += ` @${authorUsername}`;
+    if (authorEmail && !authorUsername) byText += byText ? ` <${authorEmail}>` : ` ${authorEmail}`;
+    byText = trimNewLinesAndSpaces(byText);
 
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar email={author.get('email')} size={smallAvatarWidth} />
+          <UserAvatar email={authorEmail} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>
@@ -57,6 +65,7 @@ export default class extends React.PureComponent {
                 <CardText numberOfLines={1}>
                   <Icon name="git-commit" />&nbsp;
                   {message}
+                  {byText && <Text muted small> by {byText}</Text>}
                 </CardText>
               </RepositoryContentContainer>
             </TransparentTextOverlay>

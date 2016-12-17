@@ -20,7 +20,7 @@ import {
 } from './';
 
 import { contentPadding, radius } from '../../styles/variables';
-import { trimNewLines } from '../../utils/helpers';
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { GithubEventType, ReleaseEvent, ThemeObject } from '../../utils/types';
 
 @Themable
@@ -43,10 +43,10 @@ export default class extends React.PureComponent {
       name,
       tagName,
     } = {
-      body: trimNewLines(release.get('body')),
+      body: trimNewLinesAndSpaces(release.get('body')),
       branch: release.get('target_commitish'),
-      name: trimNewLines(release.get('name')),
-      tagName: trimNewLines(release.get('tag_name')),
+      name: trimNewLinesAndSpaces(release.get('name')),
+      tagName: trimNewLinesAndSpaces(release.get('tag_name')),
     };
 
     return (
