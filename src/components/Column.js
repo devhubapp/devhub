@@ -4,7 +4,7 @@ import uniq from 'lodash/uniq';
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import { Dimensions, RefreshControl } from 'react-native';
 
@@ -19,7 +19,6 @@ import CreateColumnUtils from './utils/CreateColumnUtils';
 import ProgressBar from './ProgressBar';
 import RepositoryStarButtonContainer from '../containers/RepositoryStarButtonContainer';
 import StatusMessage from './StatusMessage';
-import Themable from './hoc/Themable';
 import TransparentTextOverlay from './TransparentTextOverlay';
 // import { columnMargin } from './Columns';
 import { getIcon } from '../api/github';
@@ -117,7 +116,7 @@ const BUTTONS = {
   CANCEL: 4,
 };
 
-@Themable
+@withTheme
 export default class extends React.PureComponent {
   static contextTypes = {
     store: React.PropTypes.object.isRequired,

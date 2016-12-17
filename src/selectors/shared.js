@@ -1,4 +1,4 @@
-import { is, Iterable, List, Map } from 'immutable';
+import { is, Iterable, List } from 'immutable';
 import { isEqual } from 'lodash';
 import { createSelectorCreator } from 'reselect';
 

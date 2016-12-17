@@ -3,7 +3,7 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import Themable from '../hoc/Themable';
+import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 
 import {
@@ -19,7 +19,7 @@ import {
 import { contentPadding, radius } from '../../styles/variables';
 import type { GithubEventType, ThemeObject } from '../../utils/types';
 
-@Themable
+@withTheme
 export default class extends React.PureComponent {
   props: {
     branch: string,

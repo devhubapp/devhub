@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 
 import BranchRow from './_BranchRow';
-import Themable from '../hoc/Themable';
+import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 
 import {
@@ -23,7 +23,7 @@ import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { GithubEventType, ReleaseEvent, ThemeObject } from '../../utils/types';
 
-@Themable
+@withTheme
 export default class extends React.PureComponent {
   props: {
     narrow: boolean,

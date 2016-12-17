@@ -3,7 +3,7 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import Themable from '../hoc/Themable';
+import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 
@@ -22,7 +22,7 @@ import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { User, ThemeObject } from '../../utils/types';
 
-@Themable
+@withTheme
 export default class extends React.PureComponent {
   props: {
     user: User,

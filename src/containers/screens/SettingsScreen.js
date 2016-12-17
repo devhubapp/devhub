@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react';
-import styled from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
 import { Button } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Themable from '../../components/hoc/Themable';
 import Screen from '../../components/Screen';
 import * as actionCreators from '../../actions';
 import type { ActionCreators, ThemeObject } from '../../utils/types';
@@ -28,7 +27,7 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
 });
 
-@Themable
+@withTheme
 @connect(null, mapDispatchToProps)
 export default class extends React.PureComponent {
   props: {

@@ -1,13 +1,12 @@
 // @flow
 
 import React from 'react';
-import styled from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
 import { StyleSheet } from 'react-native';
 import { StackNavigation, TabNavigation, TabNavigationItem } from '@exponent/ex-navigation';
 import Icon from 'react-native-vector-icons/Octicons';
 
 import Router from '../navigation/Router';
-import Themable from './hoc/Themable';
 import type { ThemeObject } from '../utils/types';
 
 const TabItemContainer = styled.View`
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-@Themable
+@withTheme
 export default class extends React.PureComponent {
   props: {
     theme: ThemeObject,

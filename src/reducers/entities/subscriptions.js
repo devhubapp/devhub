@@ -1,6 +1,6 @@
 // @flow
 
-import { fromJS, List, Map, Set } from 'immutable';
+import { fromJS, Map, Set } from 'immutable';
 
 import { ApiRequestType, getUniquePath } from '../../api/github';
 import {

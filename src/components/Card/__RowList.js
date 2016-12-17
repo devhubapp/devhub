@@ -3,13 +3,13 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 
-import Themable from '../hoc/Themable';
+import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 
 import { contentPadding, radius } from '../../styles/variables';
 import type { ThemeObject } from '../../utils/types';
 
-@Themable
+@withTheme
 export default class extends React.PureComponent {
   props: {
     data: Array<any>,

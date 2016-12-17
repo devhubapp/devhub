@@ -4,7 +4,7 @@ import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { List, Map, Set } from 'immutable';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
 
 // rows
 import BranchRow from './_BranchRow';
@@ -20,7 +20,6 @@ import WikiPageListRow from './_WikiPageListRow';
 
 import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
-import Themable from '../hoc/Themable';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 import { contentPadding, radius } from '../../styles/variables';
@@ -179,7 +178,7 @@ export const renderItemId = (number, icon) => {
   );
 };
 
-@Themable
+@withTheme
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,

@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
+import { withTheme } from 'styled-components/native';
 import { Animated, Easing, View } from 'react-native';
 
-import Themable from './hoc/Themable';
-
-@Themable
+@withTheme
 export default class ProgressBar extends Component {
   static propTypes = {
     animated: PropTypes.bool,

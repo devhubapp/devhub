@@ -2,7 +2,6 @@
 /*  eslint-disable import/prefer-default-export */
 
 import { denormalize } from 'denormalizr';
-import { Map } from 'immutable';
 import { arrayOf } from 'normalizr';
 
 import { createImmutableSelector, entitiesSelector } from './shared';

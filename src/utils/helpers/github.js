@@ -165,7 +165,7 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
       default: return 'did something';
     }
   })();
-  
+
   return text.replace(/ {2}/g, ' ').trim();
 }
 
@@ -186,7 +186,7 @@ export function mergeSimilarEvents(events: Array<GithubEvent>) {
 
     const typeA: GithubEventType = eventA.get('type');
     const typeB: GithubEventType = eventB.get('type');
-    const isSameType = typeA === typeA;
+    const isSameType = typeA === typeB;
 
     const isSameAction = eventA.getIn(['payload', 'action']) === eventB.getIn(['payload', 'action']);
     const isSameRepo = eventA.getIn(['repo', 'id']) === eventB.getIn(['repo', 'id']);
@@ -307,9 +307,9 @@ export function mergeSimilarEvents(events: Array<GithubEvent>) {
 
       const mergedLastEventUpdated = mergedLastEvent.set('merged', allMergedEvents);
       return newEvents.set(-1, mergedLastEventUpdated);
-    } else {
-      return newEvents.push(event);
     }
+
+    return newEvents.push(event);
   };
 
   const newEvents = events.reduce(accumulator, List());
