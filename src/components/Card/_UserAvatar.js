@@ -19,8 +19,10 @@ export default class extends React.PureComponent {
 
     if (!url && !email) return null;
 
-    const roundedSize = 100 * Math.max(1, Math.ceil(size / 100));
-    const uri = url || `https:${gravatar.url(email, { size: roundedSize })}`.replace('??', '?');
+    const sizeSteps = 50; // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
+    const steppedSize = sizeSteps * Math.max(1, Math.ceil(size / sizeSteps));
+    const options = { size: steppedSize, d: 'retro' };
+    const uri = url || `https:${gravatar.url(email, options)}`.replace('??', '?');
 
     return (
       <Avatar size={size} source={{ uri }} {...props} />

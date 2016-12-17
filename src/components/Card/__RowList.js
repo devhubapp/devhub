@@ -20,7 +20,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { data, maxHeight = 130, narrow, renderRow, theme, ...props } = this.props;
+    const { data, maxHeight = 200, narrow, renderRow, theme, ...props } = this.props;
 
     if (!(data && data.size > 0)) return null;
 

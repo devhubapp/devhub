@@ -23,7 +23,7 @@ export default class extends React.PureComponent {
   );
 
   render() {
-    const { maxHeight = 200, repos, ...props } = this.props;
+    const { maxHeight, repos, ...props } = this.props;
 
     if (!(repos && repos.size > 0)) return null;
 

@@ -29,7 +29,7 @@ import { getEventIcon, getEventText } from '../../utils/helpers/github';
 import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
 
 export const avatarWidth = 50;
-export const smallAvatarWidth = avatarWidth / 2;
+export const smallAvatarWidth = 26;
 export const innerContentPadding = contentPadding;
 export const narrowInnerContentPadding = innerContentPadding / 2;
 export const iconRightMargin = contentPadding - 2;
@@ -46,7 +46,7 @@ export const FullView = styled.View`
   flex: 1;
 `;
 
-export const FullAbsolureView = styled.View`
+export const FullAbsoluteView = styled.View`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -219,17 +219,17 @@ export default class extends React.PureComponent {
 
     return (
       <CardWrapper {...props} seen={seen}>
-        <FullAbsolureView zIndex={seen ? 1 : -1}>
+        <FullAbsoluteView zIndex={seen ? 1 : -1}>
           <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
-            <FullAbsolureView />
+            <FullAbsoluteView />
           </TouchableWithoutFeedback>
-        </FullAbsolureView>
+        </FullAbsoluteView>
 
-        <FullAbsolureView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
+        <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
           <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
-            <FullAbsolureView />
+            <FullAbsoluteView />
           </TouchableWithoutFeedback>
-        </FullAbsolureView>
+        </FullAbsoluteView>
 
         <Header>
           <LeftColumn>
@@ -266,11 +266,11 @@ export default class extends React.PureComponent {
               <CardIcon name={getEventIcon(event)} />
             </HeaderRow>
 
-            <FullAbsolureView style={{ left: null, width: 150 }}>
+            <FullAbsoluteView>
               <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
-                <FullAbsolureView />
+                <FullAbsoluteView />
               </TouchableWithoutFeedback>
-            </FullAbsolureView>
+            </FullAbsoluteView>
           </MainColumn>
         </Header>
 

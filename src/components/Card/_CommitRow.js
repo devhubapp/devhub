@@ -42,7 +42,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={author.get('avatar_url')} size={smallAvatarWidth} />
+          <UserAvatar email={author.get('email')} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>
