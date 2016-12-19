@@ -551,6 +551,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = JNXGJS86YQ;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -939,6 +940,7 @@
 			baseConfigurationReference = CA03081ECC7C41D48D85CA76 /* Pods-devhub.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
@@ -964,6 +966,7 @@
 			baseConfigurationReference = EF761F6D75A7F622A9DEB5F7 /* Pods-devhub.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
 				FRAMEWORK_SEARCH_PATHS = (

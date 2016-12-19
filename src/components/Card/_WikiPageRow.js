@@ -29,9 +29,11 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { narrow, theme, ...props } = this.props;
+    const { narrow, page, theme, ...props } = this.props;
 
-    const title = trimNewLinesAndSpaces(this.props.title);
+    if (!page) return null;
+
+    const title = trimNewLinesAndSpaces(page.get('title') || page.get('page_name'));
     if (!title) return null;
 
     return (

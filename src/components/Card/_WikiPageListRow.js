@@ -15,7 +15,7 @@ export default class extends React.PureComponent {
 
   renderRow = (passProps = {}) => page => (
     <WikiPageRow
-      key={`wiki-page-row-${page.get('id')}`}
+      key={`wiki-page-row-${page.get('sha')}`}
       page={page}
       narrow
       {...passProps}
