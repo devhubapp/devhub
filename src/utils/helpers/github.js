@@ -194,8 +194,6 @@ export function mergeSimilarEvents(events: Array<GithubEvent>) {
     const createdAtMinutesDiff = moment(eventA.get('created_at')).diff(moment(eventB.get('created_at')), 'minutes');
     const merged = eventA.get('merged') || List();
 
-    if (!isSameType || !isSameAction) return null;
-
     // only merge events that were created in the same hour
     if (createdAtMinutesDiff >= 60) return null;
 
