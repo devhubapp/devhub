@@ -65,6 +65,7 @@ export default class extends React.PureComponent {
 
     return (
       <Column
+        key={`column-container-${column.get('id')}`}
         actions={actions}
         column={column}
         events={events}

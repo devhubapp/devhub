@@ -69,7 +69,7 @@ export default class extends React.PureComponent {
                   <Text muted><Icon name={repoIcon} />&nbsp;</Text>
                   <RepositoryName>{repoName}</RepositoryName>
                   
-                  {orgName && <Text muted> {orgName}</Text>}
+                  {orgName && <Text muted small> {orgName}</Text>}
 
                 </RepositoryContentContainer>
               </TransparentTextOverlay>

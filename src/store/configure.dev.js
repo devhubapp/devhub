@@ -11,7 +11,8 @@ import reducer from '../reducers';
 export default (initialState = Map()) => {
   const sagaMiddleware = createSagaMiddleware();
 
-  const composeEnhancers = composeWithDevTools({ hostname: 'localhost', port: 8000 });
+  const devToolsOptions = { realtime: true, hostname: 'localhost', port: 8800 };
+  const composeEnhancers = composeWithDevTools(devToolsOptions);
 
   const store = createStore(
     reducer,

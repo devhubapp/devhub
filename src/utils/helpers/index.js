@@ -29,7 +29,7 @@ export function loadTheme(theme: Theme): Object {
 export function trimNewLinesAndSpaces(text) {
   if (!text || typeof text !== 'string') return '';
 
-  return text.replace(/\s\s+/g, ' ').trim();
+  return text.replace(/\s+/g, ' ').trim();
 }
 
 // export function getDateFromNowText(date) {

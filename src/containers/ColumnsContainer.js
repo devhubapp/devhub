@@ -28,7 +28,12 @@ export default class extends React.PureComponent {
     const { actions, columns, ...props } = this.props;
 
     return (
-      <Columns actions={actions} columns={columns} {...props} />
+      <Columns
+        key="columns-container"
+        actions={actions}
+        columns={columns}
+        {...props}
+      />
     );
   }
 }

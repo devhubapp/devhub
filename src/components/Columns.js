@@ -70,13 +70,17 @@ export default class extends React.PureComponent {
     if (!(columns.size > 0)) {
       return (
         <ColumnWrapper>
-          <StyledNewColumn actions={actions} radius={radius} />
+          <StyledNewColumn
+            actions={actions}
+            radius={radius}
+          />
         </ColumnWrapper>
       );
     }
 
     return (
       <StyledImmutableListViewListView
+        key="columns-list-view"
         immutableData={columns}
         initialListSize={1}
         rowsDuringInteraction={1}
