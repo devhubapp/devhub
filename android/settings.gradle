@@ -1,4 +1,6 @@
 rootProject.name = 'devhub'
+include ':react-native-oauth'
+project(':react-native-oauth').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-oauth/android')
 include ':react-native-fabric'
 project(':react-native-fabric').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fabric/android')
 include ':bugsnag-react-native'

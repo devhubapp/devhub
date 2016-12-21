@@ -25,5 +25,6 @@ export default {
   ...base,
   theme: 'light',
   isDark: false,
+  invert: () => require('./dark').default, // eslint-disable-line global-require
   ...base16,
 };

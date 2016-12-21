@@ -72,7 +72,7 @@ export default class extends React.PureComponent {
             renderIcon('Trending', 'pulse', isSelected, theme.base08, theme.base05)
           )}
         >
-          <StackNavigation initialRoute={Router.getRoute('view')} />
+          <StackNavigation initialRoute={Router.getRoute('empty')} />
         </TabNavigationItem>
 
         <TabNavigationItem
@@ -81,7 +81,7 @@ export default class extends React.PureComponent {
             renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
           )}
         >
-          <StackNavigation initialRoute={Router.getRoute('view')} />
+          <StackNavigation initialRoute={Router.getRoute('empty')} />
         </TabNavigationItem>
 
         <TabNavigationItem

@@ -8,5 +8,6 @@ target 'devhub' do
   # Pods for devhub
   pod 'Firebase/Core'
   pod 'Firebase/Crash'
+  pod 'DCTAuth', :git => 'https://github.com/danielctull/DCTAuth.git'
 
 end

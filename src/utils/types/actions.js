@@ -58,3 +58,15 @@ export type ApiResponsePayload = {
   meta: Object,
   error?: ?Object,
 };
+
+export type LoginRequestPayload = {
+  scopes: string,
+};
+
+export type LoginResponsePayload = {
+  request: LoginRequestPayload,
+  data: {
+    accessToken: string,
+  },
+  error?: ?Object,
+};

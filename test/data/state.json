@@ -124,5 +124,8 @@
         "eventsReceived": ["e002"]
       }
     }
+  },
+  "user": {
+    "token": "xxx"
   }
 }

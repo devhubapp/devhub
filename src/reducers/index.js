@@ -2,6 +2,7 @@ import { Map } from 'immutable';
 import { combineReducers } from 'redux-immutable';
 
 import app from './app';
+import auth from './auth';
 import config from './config';
 import entities from './entities';
 import seenEvents from './seen-events';
@@ -12,6 +13,7 @@ import type { Action } from '../utils/types';
 
 const reducer = combineReducers({
   app,
+  auth,
   config,
   entities,
   seenEvents,

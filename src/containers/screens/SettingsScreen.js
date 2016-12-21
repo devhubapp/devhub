@@ -36,13 +36,13 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { actions: { clearAppData, setTheme }, theme } = this.props;
+    const { actions: { clearAppData, logout, setTheme }, theme } = this.props;
 
     return (
       <Screen>
         <Wrapper>
           <Main>
-            <Button title="Clear app data" color={theme.base04} onPress={() => clearAppData()} />
+            <Button title="Clear app data" color={theme.red} onPress={() => clearAppData()} />
           </Main>
 
           <Footer>
@@ -50,8 +50,9 @@ export default class extends React.PureComponent {
             <Button title="Light" color={theme.base04} onPress={() => setTheme('light')} />
             <Button title="Dark" color={theme.base04} onPress={() => setTheme('dark')} />
             <Button title="Dark Blue" color={theme.base04} onPress={() => setTheme('dark-blue')} />
+            <Button title="Logout" color={theme.red} onPress={() => logout()} />
           </Footer>
-      </Wrapper>
+        </Wrapper>
       </Screen>
     );
   }

@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import ColumnsContainer from '../ColumnsContainer';
 import Screen from '../../components/Screen';
 import debounce from '../../utils/hoc/debounce';
+import { rehydratedSelector } from '../../selectors';
 import type { State, ThemeObject } from '../../utils/types';
 
 const CenterView = styled.View`
@@ -17,7 +18,7 @@ const CenterView = styled.View`
 `;
 
 const mapStateToProps = (state: State) => ({
-  rehydrated: state.getIn(['app', 'rehydrated']),
+  rehydrated: rehydratedSelector(state),
 });
 
 @connect(mapStateToProps)

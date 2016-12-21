@@ -145,6 +145,7 @@ buildscript {
 }
 
 dependencies {
+    compile project(':react-native-oauth')
     compile project(':react-native-fabric')
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-crash:10.0.1'

@@ -1,4 +1,5 @@
 PODS:
+  - DCTAuth (3.0)
   - Firebase/Analytics (3.3.0):
     - FirebaseAnalytics (= 3.2.1)
   - Firebase/Core (3.3.0):
@@ -25,10 +26,21 @@ PODS:
     - GoogleSymbolUtilities (~> 1.0)
 
 DEPENDENCIES:
+  - DCTAuth (from `https://github.com/danielctull/DCTAuth.git`)
   - Firebase/Core
   - Firebase/Crash
 
+EXTERNAL SOURCES:
+  DCTAuth:
+    :git: https://github.com/danielctull/DCTAuth.git
+
+CHECKOUT OPTIONS:
+  DCTAuth:
+    :commit: 0a8091a3fc165fb99a6f70cf15b3aed25252dad9
+    :git: https://github.com/danielctull/DCTAuth.git
+
 SPEC CHECKSUMS:
+  DCTAuth: 8add154decd00335d62917828896bba790ce47fd
   Firebase: 6250071f0e2440a5c4c67b8cb6b868f868237ac3
   FirebaseAnalytics: 0fd6532cb2c3d03cd5cf26ad295ccb091efd3104
   FirebaseCrash: 899d0abc23b411d01087094e3da24527eaecabf7
@@ -37,6 +49,6 @@ SPEC CHECKSUMS:
   GoogleSymbolUtilities: 33117db1b5f290c6fbf259585e4885b4c84b98d7
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
 
-PODFILE CHECKSUM: 889b0680b6cf798dafbf480c24103c201a719b0b
+PODFILE CHECKSUM: 322deb0ebdab27e8a9e13737af18c6f807ea9b30
 
 COCOAPODS: 1.1.1

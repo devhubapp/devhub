@@ -4162,6 +4162,13 @@ react-native-linear-gradient@^1.5.15:
   version "1.5.15"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-1.5.15.tgz#4413111934dc1d8f5e0572ca96e60b1a2cf41f4d"
 
+react-native-oauth@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-oauth/-/react-native-oauth-2.1.5.tgz#a42f4e7367ebbea28535e2f1ccbc32f9c412355b"
+  dependencies:
+    invariant "^2.2.1"
+    valib "^2.0.0"
+
 react-native-tab-view@^0.0.38:
   version "0.0.38"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.38.tgz#4194bba0abda9f781101c1a995c92733b194461a"
@@ -5323,6 +5330,10 @@ uuid@3.0.1, uuid@^3.0.0:
 uws@0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/uws/-/uws-0.11.0.tgz#c5d1111027befc702c4955a40977b88c0cc67215"
+
+valib@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/valib/-/valib-2.0.0.tgz#e0d455b10e17ae605c0f33971adac73564ee18a7"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.1"

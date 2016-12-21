@@ -41,6 +41,21 @@ export type ApiRequestType =
   | typeof USER_ORG_EVENTS
 ;
 
+export function authenticate(token: string) {
+  if (!token) return false;
+
+  try {
+    github.authenticate({
+      type: 'oauth',
+      token,
+    });
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 // TODO: Some icons might be wrong, like the ones for organization
 export function getIcon(type: ApiRequestType) {
   switch (type) {

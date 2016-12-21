@@ -43,4 +43,5 @@ export default {
   theme: 'dark',
   isDark: true,
   ...base16,
+  invert: () => require('./light').default, // eslint-disable-line global-require
 };

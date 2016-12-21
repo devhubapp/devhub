@@ -1,0 +1,103 @@
+// @flow
+
+import React from 'react';
+import { ActivityIndicator } from 'react-native';
+import styled from 'styled-components/native';
+import Icon from 'react-native-vector-icons/Octicons';
+
+import { contentPadding } from '../../styles/variables';
+
+export const Button = styled.TouchableOpacity`
+  height: ${({ horizontal }) => (horizontal ? 50 : 60)};
+  background-color: ${({ theme }) => theme.invert().base02};
+  border-color: ${({ theme }) => theme.base02};
+  border-radius: ${({ radius }) => radius};
+  border-width: 1;
+`;
+
+export const Content = styled.View`
+  flex: 1;
+  flex-direction: row;
+`;
+
+export const IconWrapper = styled.View`
+  align-items: center;
+  justify-content: center;
+  padding: ${contentPadding};
+  border-width: 0;
+  border-right-width: 1;
+  border-color: ${({ theme }) => theme.base02};
+`;
+
+export const ButtonIcon = styled(Icon) `
+  font-size: 20;
+  color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};
+`;
+
+export const TextWrapper = styled.View`
+  flex: 1;
+  padding: ${contentPadding};
+  align-items: ${({ horizontal }) => (horizontal ? 'center' : 'flex-start')};
+  ${({ horizontal }) => horizontal && 'flex-direction: row;'}
+`;
+
+export const Text = styled.Text`
+  font-size: 15;
+  font-weight: 500;
+  text-align: left;
+  color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};
+`;
+
+type Props = {
+  leftIcon?: string,
+  horizontal?: boolean,
+  loading?: boolean,
+  radius?: number,
+  rightIcon?: string,
+  title?: string,
+  subtitle?: string,
+  subtitleProps?: Object,
+  textProps?: Object,
+};
+
+export default ({
+  leftIcon = 'mark-github',
+  horizontal,
+  loading,
+  title,
+  radius,
+  rightIcon,
+  subtitle,
+  subtitleProps = {},
+  textProps = {},
+  ...props
+}: Props) => (
+  <Button activeOpacity={1} horizontal={horizontal} radius={radius} {...props}>
+    <Content>
+      {
+        leftIcon && (
+          <IconWrapper>
+            <ButtonIcon name={leftIcon} />
+          </IconWrapper>
+        )
+      }
+
+      <TextWrapper horizontal={horizontal}>
+        {title && (<Text {...textProps}>{title}</Text>)}
+        {subtitle && <Text muted {...subtitleProps}>{subtitle}</Text>}
+      </TextWrapper>
+
+      {
+        (rightIcon || loading) && (
+          <IconWrapper>
+            {
+              loading
+              ? <ActivityIndicator />
+              : <ButtonIcon name={rightIcon} muted />
+            }
+          </IconWrapper>
+        )
+      }
+    </Content>
+  </Button>
+);
