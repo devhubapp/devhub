@@ -1,5 +1,6 @@
 // @flow
 
+import moment from 'moment';
 import { fromJS, Map, Set } from 'immutable';
 
 import { ApiRequestType, getUniquePath } from '../../api/github';
@@ -65,18 +66,26 @@ export default (state: State = initialState, { type, payload, error }: Action<an
       ))(payload, error);
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
-      return (({ request: { subscriptionId }, data: { result } }: ApiResponsePayload) => {
-        if (!state.get(subscriptionId)) return state;
+      return (({ request: { subscriptionId }, data: { result }, meta }: ApiResponsePayload) => {
+        const subscription = state.get(subscriptionId);
+        if (!subscription) return state;
 
-        const eventsIds = Set(state.getIn([subscriptionId, 'events']));
+        const eventsIds = Set(subscription.get('events'));
         const newEventsIds = Set(result).union(eventsIds);
 
-        return state
-          .setIn([subscriptionId, 'events'], newEventsIds)
-          .setIn([subscriptionId, 'updatedAt'], new Date())
-          .setIn([subscriptionId, 'loading'], false)
-          .setIn([subscriptionId, 'error'], null)
-        ;
+        const newSubscription = subscription.mergeDeep(fromJS({
+          events: newEventsIds,
+          updatedAt: new Date(),
+          lastModified: meta['last-modified'] ? moment(new Date(meta['last-modified'])).toDate() : undefined,
+          pollInterval: Number(meta['x-poll-interval']),
+          rateLimit: Number(meta['x-ratelimit-limit']),
+          rateLimitRemaining: Number(meta['x-ratelimit-remaining']),
+          rateLimitReset: meta['x-ratelimit-reset'],
+          loading: false,
+          error: null,
+        }));
+
+        return state.set(subscriptionId, newSubscription);
       })(payload);
 
     case CLEAR_EVENTS:
