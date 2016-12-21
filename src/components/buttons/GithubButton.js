@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import { contentPadding } from '../../styles/variables';
 
 export const Button = styled.TouchableOpacity`
-  height: ${({ horizontal }) => (horizontal ? 50 : 60)};
+  height: ${({ horizontal }) => (horizontal ? 44 : 58)};
   background-color: ${({ theme }) => theme.invert().base02};
   border-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius};
@@ -23,10 +23,10 @@ export const Content = styled.View`
 export const IconWrapper = styled.View`
   align-items: center;
   justify-content: center;
-  padding: ${contentPadding};
+  padding-horizontal: ${contentPadding};
   border-width: 0;
-  border-right-width: 1;
-  border-color: ${({ theme }) => theme.base02};
+  border-right-width: 0.5;
+  border-color: ${({ theme }) => theme.base04};
 `;
 
 export const ButtonIcon = styled(Icon) `
@@ -36,12 +36,14 @@ export const ButtonIcon = styled(Icon) `
 
 export const TextWrapper = styled.View`
   flex: 1;
-  padding: ${contentPadding};
+  padding-horizontal: ${contentPadding};
   align-items: ${({ horizontal }) => (horizontal ? 'center' : 'flex-start')};
+  justify-content: center;
   ${({ horizontal }) => horizontal && 'flex-direction: row;'}
 `;
 
 export const Text = styled.Text`
+  line-height: 18;
   font-size: 15;
   font-weight: 500;
   text-align: left;

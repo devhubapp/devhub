@@ -7,7 +7,6 @@ import { StackNavigation, withNavigation } from '@exponent/ex-navigation';
 
 import {
   isLoggedSelector,
-  isLoggingInSelector,
   rehydratedSelector,
   themeSelector,
 } from '../selectors';
@@ -20,7 +19,6 @@ const View = styled.View`
 
 const mapStateToProps = (state: State) => ({
   isLogged: isLoggedSelector(state),
-  isLoggingIn: isLoggingInSelector(state),
   rehydrated: rehydratedSelector(state),
   theme: themeSelector(state),
 });
@@ -34,23 +32,34 @@ export default class extends React.PureComponent {
     this.client = new Client('231f337f6090422c611017d3dab3d32e');
   }
 
+  componentDidMount() {
+    this.handleIsLoggedStatus();
+  }
+
   componentWillReceiveProps(props) {
     this.handleIsLoggedStatus(props);
   }
 
-  handleIsLoggedStatus = ({ isLogged, navigation, rehydrated }) => {
+  handleIsLoggedStatus = (props) => {
+    const { isLogged, navigation, rehydrated } = props || this.props;
     if (!rehydrated) return;
 
-    const navigator = navigation.getNavigator('root');
+    try {
+      const navigator = navigation.getNavigator('root');
+      if (!navigator) return;
 
-    // if (isLoggingIn) {
-    //   navigator.replace('empty');
-    // } else
-
-    if (isLogged && isLogged !== this.props.isLogged) {
-      navigator.replace('main');
-    } else {
-      navigator.replace('login');
+      if (isLogged && isLogged !== this.props.isLogged) {
+        // settimeout to prevent delay of theme initialization
+        setTimeout(() => {
+          navigator.replace('main');
+        }, 100);
+      } else if (!isLogged) {
+        navigator.replace('login');
+      }
+    } catch (e) {
+      // navigator was probably not initialized yet
+      // try again
+      setTimeout(this.handleIsLoggedStatus, 200);
     }
   };
 

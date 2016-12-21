@@ -8,8 +8,9 @@ import { connect } from 'react-redux';
 import GithubButton from '../../components/buttons/GithubButton';
 import Screen from '../../components/Screen';
 import * as actionCreators from '../../actions';
+import { isLoggingInSelector } from '../../selectors';
 import { contentPadding, radius } from '../../styles/variables';
-import type { ActionCreators } from '../../utils/types';
+import type { ActionCreators, State } from '../../utils/types';
 
 const Main = styled.View`
   flex: 1;
@@ -21,14 +22,18 @@ const Footer = styled.View`
 `;
 
 const StyledGithubButton = styled(GithubButton) `
-  margin-bottom: ${contentPadding};
+  margin-top: ${contentPadding / 2};
 `;
+
+const mapStateToProps = (state: State) => ({
+  isLoggingIn: isLoggingInSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
 });
 
-@connect(null, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
   state = ({
     isLoggingIn: false,
@@ -41,23 +46,25 @@ export default class extends React.PureComponent {
   loginWithGithubPublicAccess = () => {
     const { actions: { loginRequest } } = this.props;
 
-    this.setState({ isLoggingIn: true, loggingInMethod: 'github.public' });
+    this.setState({ loggingInMethod: 'github.public' });
     loginRequest({ provider: 'github', scopes: 'user public_repo notifications read:org' });
   };
 
   loginWithGithubPrivateAccess = () => {
     const { actions: { loginRequest } } = this.props;
 
-    this.setState({ isLoggingIn: true, loggingInMethod: 'github.private' });
+    this.setState({ loggingInMethod: 'github.private' });
     loginRequest({ provider: 'github', scopes: 'user repo notifications read:org' });
   }
 
   props: {
     actions: ActionCreators,
+    isLoggingIn?: boolean,
   };
 
   render() {
-    const { isLoggingIn, loggingInMethod } = this.state;
+    const { loggingInMethod } = this.state;
+    const { isLoggingIn } = this.props;
 
     return (
       <Screen>
