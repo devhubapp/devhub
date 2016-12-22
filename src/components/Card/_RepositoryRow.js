@@ -38,10 +38,12 @@ export default class extends React.PureComponent {
   render() {
     const { forcePushed, isFork, narrow, pushed, repo, theme, ...props } = this.props;
 
+    if (!repo) return null;
+
     const repoFullName = repo.get('full_name') || repo.get('name') || '';
     const { owner: orgName, repo: repoName } = getOwnerAndRepo(repoFullName);
 
-    // if (!repoName) return null;
+    if (!repoName) return null;
 
     const repoIcon = (() => {
       if (forcePushed) return 'repo-force-push';
@@ -49,6 +51,8 @@ export default class extends React.PureComponent {
       if (isFork) return 'repo-forked';
       return 'repo';
     })();
+
+    const isPrivate = repo.get('private') || repo.get('public') === false;
 
     return (
       <ContentRow narrow={narrow} {...props}>
@@ -66,6 +70,7 @@ export default class extends React.PureComponent {
                 radius={radius}
               >
                 <RepositoryContentContainer>
+                  {isPrivate && <Text muted><Icon name="lock" />&nbsp;</Text>}
                   <Text muted><Icon name={repoIcon} />&nbsp;</Text>
                   <RepositoryName>{repoName}</RepositoryName>
                   

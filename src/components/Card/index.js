@@ -216,6 +216,8 @@ export default class extends React.PureComponent {
       });
     }
 
+    const isPrivate = event.get('private') || event.get('public') === false;
+
     return (
       <CardWrapper {...props} seen={seen}>
         <FullAbsoluteView zIndex={seen ? 1 : -1}>
@@ -259,7 +261,10 @@ export default class extends React.PureComponent {
                   </ScrollableContentContainer>
                 </TransparentTextOverlay>
 
-                <Text numberOfLines={1} muted>{getEventText(event, { repoIsKnown: onlyOneRepository })}</Text>
+                <Text numberOfLines={1} muted>
+                  {isPrivate && <Text muted><Icon name="lock" />&nbsp;</Text>}
+                  {getEventText(event, { repoIsKnown: onlyOneRepository })}
+                </Text>
               </FullView>
 
               <CardIcon name={getEventIcon(event)} />
