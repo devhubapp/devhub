@@ -12,7 +12,8 @@ type State = Normalized<Object>;
 const initialState = Map();
 
 export default (state: State = initialState, action: Action<any>): State => {
-  const { type, payload: { eventIds } = {} } = action || {};
+  const { type, payload } = action || {};
+  const { eventIds } = payload || {};
 
   switch (type) {
     case CLEAR_EVENTS:

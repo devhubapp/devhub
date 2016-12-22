@@ -13,7 +13,7 @@ import {
   columnIdsSelector,
   columnSubscriptionIdsSelector,
   subscriptionSelector,
-  tokenSelector,
+  accessTokenSelector,
 } from '../selectors';
 
 import {
@@ -38,12 +38,12 @@ const sagaActionChunk = { dispatchedBySaga: true };
 
 function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
   let state = yield select();
-  const token = tokenSelector(state);
+  const accessToken = accessTokenSelector(state);
 
-  yield call(authenticate, token);
+  yield call(authenticate, accessToken);
 
   // just to have the token on success/failure actions
-  const requestPayload = { ...payload, token };
+  const requestPayload = { ...payload, accessToken };
 
   try {
     const { params, requestType, subscriptionId } = payload;

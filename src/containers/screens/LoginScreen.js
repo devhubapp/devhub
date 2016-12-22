@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import GithubButton from '../../components/buttons/GithubButton';
 import Screen from '../../components/Screen';
 import * as actionCreators from '../../actions';
-import { isLoggingInSelector } from '../../selectors';
+import { isLoggingSelector } from '../../selectors';
 import { contentPadding, radius } from '../../styles/variables';
 import type { ActionCreators, State } from '../../utils/types';
 
@@ -26,7 +26,7 @@ const StyledGithubButton = styled(GithubButton) `
 `;
 
 const mapStateToProps = (state: State) => ({
-  isLoggingIn: isLoggingInSelector(state),
+  isLoggingIn: isLoggingSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

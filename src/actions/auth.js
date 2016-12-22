@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT,
+  UPDATE_CURRENT_USER,
 } from '../utils/constants/actions';
 
 import { action, errorAction } from '../utils/helpers/actions';
@@ -25,5 +26,9 @@ export const loginFailure = (request: LoginRequestPayload, error: any, other?: O
 );
 
 export const logout = (other?: Object) => (
-  action(LOGOUT, undefined, other)
+  action(LOGOUT, null, other)
+);
+
+export const updateCurrentUser = (user: Object, other?: Object) => (
+  action(UPDATE_CURRENT_USER, user, other)
 );
