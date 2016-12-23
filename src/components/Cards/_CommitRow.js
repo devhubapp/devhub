@@ -16,7 +16,7 @@ import {
   RepositoryContentContainer,
   smallAvatarWidth,
   Text,
-} from './';
+} from './EventCard';
 
 import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces, tryGetUsernameFromGithubEmail } from '../../utils/helpers';

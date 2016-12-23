@@ -70,11 +70,11 @@ export default (state: State = initialState, { type, payload, error }: Action<an
         const subscription = state.get(subscriptionId);
         if (!subscription) return state;
 
-        const eventsIds = Set(subscription.get('events'));
-        const newEventsIds = Set(result).union(eventsIds);
+        const eventIds = Set(subscription.get('events'));
+        const newEventIds = Set(result).union(eventIds);
 
         const newSubscription = subscription.mergeDeep(fromJS({
-          events: newEventsIds,
+          events: newEventIds,
           updatedAt: new Date(),
           lastModified: meta['last-modified'] ? moment(new Date(meta['last-modified'])).toDate() : undefined,
           pollInterval: Number(meta['x-poll-interval']),

@@ -5,7 +5,7 @@ import { Set } from 'immutable';
 import {
   MARK_EVENTS_AS_SEEN,
   MARK_EVENTS_AS_NOT_SEEN,
-  TOGGLE_SEEN,
+  TOGGLE_SEEN_EVENT,
 } from '../../utils/constants/actions';
 import type { Action } from '../../utils/types';
 
@@ -22,7 +22,7 @@ export default (state: State = initialState, action: Action<any>): State => {
     case MARK_EVENTS_AS_NOT_SEEN:
       return Set(state).subtract(eventIds);
 
-    case TOGGLE_SEEN:
+    case TOGGLE_SEEN_EVENT:
       return (() => {
         const newSeenValue = !Set(state).includes(eventIds.first());
         return newSeenValue ? Set(state).concat(eventIds) : Set(state).subtract(eventIds);

@@ -19,44 +19,42 @@ import {
   RightOfScrollableContent,
   smallAvatarWidth,
   Text,
-} from './';
+} from './EventCard';
 
 import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { PullRequest, ThemeObject } from '../../utils/types';
+import type { ThemeObject } from '../../utils/types';
+import type { Issue } from '../../utils/types/github';
 
 @withTheme
 export default class extends React.PureComponent {
   props: {
-    narrow: boolean,
-    pullRequest: PullRequest,
+    issue: Issue,
+    narrow?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { narrow, pullRequest, theme, ...props } = this.props;
+    const { issue, narrow, theme, ...props } = this.props;
 
-    if (!pullRequest) return null;
+    if (!issue) return null;
 
-    const title = trimNewLinesAndSpaces(pullRequest.get('title'));
-    if (!title) return null;
-
-    const {
-      number,
-      state,
-      user,
-    } = {
-      number: pullRequest.get('number'),
-      state: pullRequest.get('state'),
-      user: pullRequest.get('user'),
+    const { user, number, state, title } = {
+      user: issue.get('user'),
+      number: issue.get('number'),
+      state: issue.get('state'),
+      title: issue.get('title'),
     };
+
+    const _title = trimNewLinesAndSpaces(title);
+    if (!_title) return null;
 
     const { icon, color } = (() => {
       switch (state) {
         case 'closed':
-          return { icon: 'git-pull-request', color: theme.red };
+          return { icon: 'issue-closed', color: theme.red };
         default:
-          return { icon: 'git-pull-request', color: theme.green };
+          return { icon: 'issue-opened', color: theme.green };
       }
     })();
 
@@ -65,7 +63,10 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
+          {
+            user &&
+            <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
+          }
         </LeftColumn>
 
         <MainColumn>
@@ -80,7 +81,7 @@ export default class extends React.PureComponent {
                 <RepositoryContentContainer>
                   <CardText numberOfLines={1}>
                     <Icon name={icon} color={color} />&nbsp;
-                    {title}
+                    {_title}
                     {byText && <Text muted small> by {byText}</Text>}
                   </CardText>
                 </RepositoryContentContainer>

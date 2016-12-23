@@ -5,7 +5,7 @@ import { Iterable } from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Card from '../components/Card';
+import EventCard from '../components/Cards/EventCard';
 
 import {
   makeDenormalizedEventSelector,
@@ -50,7 +50,7 @@ export default class extends React.PureComponent {
     const { actions, event, seen, ...props } = this.props;
 
     return (
-      <Card
+      <EventCard
         actions={actions}
         event={event}
         seen={seen}

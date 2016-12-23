@@ -10,7 +10,7 @@ import {
   LeftColumn,
   MainColumnRowContent,
   smallAvatarWidth,
-} from './';
+} from './EventCard';
 
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { Comment, User } from '../../utils/types';

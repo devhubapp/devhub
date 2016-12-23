@@ -22,13 +22,12 @@ import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
-import { contentPadding, radius } from '../../styles/variables';
+import { avatarWidth, contentPadding, radius } from '../../styles/variables';
 import { getDateSmallText } from '../../utils/helpers';
 import { getEventIcon, getEventText } from '../../utils/helpers/github';
 import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
 
-export const avatarWidth = 50;
-export const smallAvatarWidth = 26;
+export const smallAvatarWidth = avatarWidth / 2;
 export const innerContentPadding = contentPadding;
 export const narrowInnerContentPadding = innerContentPadding / 2;
 export const iconRightMargin = contentPadding - 2;
@@ -221,13 +220,13 @@ export default class extends React.PureComponent {
     return (
       <CardWrapper {...props} seen={seen}>
         <FullAbsoluteView zIndex={seen ? 1 : -1}>
-          <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
+          <TouchableWithoutFeedback onPress={() => actions.toggleSeenEvent(eventIds)}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
 
         <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
-          <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
+          <TouchableWithoutFeedback onPress={() => actions.toggleSeenEvent(eventIds)}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
@@ -271,7 +270,7 @@ export default class extends React.PureComponent {
             </HeaderRow>
 
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => actions.toggleSeen(eventIds)}>
+              <TouchableWithoutFeedback onPress={() => actions.toggleSeenEvent(eventIds)}>
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>

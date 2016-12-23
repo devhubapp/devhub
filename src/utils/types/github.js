@@ -616,3 +616,38 @@ export type GithubIcon =
     | 'x'
     | 'zap'
   ;
+
+export type NotificationsOptions = {
+  all?: boolean,
+  participating?: boolean,
+  since?: Date,
+  before?: string,
+};
+
+export type GithubNotificationReason =
+  | 'assign' // You were assigned to the Issue.
+  | 'author' // You created the thread.
+  | 'comment' // You commented on the thread.
+  | 'invitation' // You accepted an invitation to contribute to the repository.
+  | 'manual' // You subscribed to the thread (via an Issue or Pull Request).
+  | 'mention' // You were specifically @mentioned in the content.
+  | 'state_change' // You changed the thread state (for example, closing an Issue or merging a PR).
+  | 'subscribed' // You're watching the repository.
+  | 'team_mention' // You were on a team that was mentioned.
+;
+
+export type GithubNotification = {
+  id: string,
+  repository: Repo,
+  subject: {
+    title: string,
+    url: string,
+    latest_comment_url: string,
+    type: string,
+  },
+  reason: GithubNotificationReason,
+  unread: boolean,
+  updated_at: string,
+  last_read_at: string,
+  url: string,
+};

@@ -10,13 +10,13 @@ import { EventSchema } from '../utils/normalizr/schemas';
 import { mergeSimilarEvents } from '../utils/helpers';
 
 export const eventIdSelector = (state, { eventId }) => eventId;
-export const seenEventsIdsSelector = state => state.get('seenEvents');
+export const seenEventIdsSelector = state => state.get('seenEvents');
 export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_at') ? 1 : -1);
 
 export const makeSeenEventSelector = () => createImmutableSelector(
   eventIdSelector,
-  seenEventsIdsSelector,
-  (eventId, seenEvents) => seenEvents.includes(eventId),
+  seenEventIdsSelector,
+  (eventId, seenIds) => seenIds.includes(eventId),
 );
 
 export const makeDenormalizedEventSelector = () => createImmutableSelector(

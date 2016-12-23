@@ -81,7 +81,7 @@ export default class extends React.PureComponent {
             renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
           )}
         >
-          <StackNavigation initialRoute={Router.getRoute('empty')} />
+          <StackNavigation initialRoute={Router.getRoute('notifications')} />
         </TabNavigationItem>
 
         <TabNavigationItem

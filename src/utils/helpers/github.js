@@ -6,7 +6,13 @@ import max from 'lodash/max';
 import moment from 'moment';
 import { fromJS, List, Map } from 'immutable';
 
-import type { GithubEvent, GithubEventType, GithubIcon } from '../types/github';
+import type {
+    GithubEvent,
+    GithubEventType,
+    GithubIcon,
+    GithubNotification,
+    GithubNotificationReason,
+  } from '../types/github';
 
 export function getEventIcon(event: GithubEvent): GithubIcon {
   const eventType = event.get('type').split(':')[0];
@@ -57,8 +63,19 @@ export function getEventIcon(event: GithubEvent): GithubIcon {
   }
 }
 
+export function getNotificationIcon(notification: GithubNotification): GithubIcon {
+  const type = notification.getIn(['subject', 'type']).toLowerCase();
+
+  switch (type) {
+    case 'commit': return 'git-commit';
+    case 'issue': return 'issue-opened';
+    case 'pullrequest': return 'git-pull-request';
+    default: return 'bell';
+  }
+}
+
 type GetEventTextOptions = { issueIsKnown: ?boolean, repoIsKnown: ?boolean };
-export function getEventText(event: GithubEvent, options: ?GetEventTextOptions): GithubIcon {
+export function getEventText(event: GithubEvent, options: ?GetEventTextOptions): string {
   const eventType = event.get('type');
   const payload = event.get('payload');
 
@@ -167,6 +184,22 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
   })();
 
   return text.replace(/ {2}/g, ' ').trim();
+}
+
+export function getNotificationReasonText(notification: GithubNotification): string {
+  const reason: GithubNotificationReason = notification.get('reason');
+  switch (reason) {
+    case 'assign': return 'you were assigned to this issue';
+    case 'author': return 'you created the thread';
+    case 'comment': return 'you commented on the thread';
+    case 'invitation': return 'you accepted an invitation to contribute to the repository';
+    case 'manual': return 'you subscribed to the thread';
+    case 'mention': return 'you were @mentioned';
+    case 'state_change': return 'you changed the thread state';
+    case 'subscribed': return 'you\'re watching this repository';
+    case 'team_mention': return 'your team was mentioned';
+    default: return '';
+  }
 }
 
 export function getOwnerAndRepo(repoFullName: string): { owner: ?string, repo: ?string} {

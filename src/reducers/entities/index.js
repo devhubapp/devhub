@@ -9,10 +9,17 @@ import events from './events';
 import issues from './issues';
 import orgs from './orgs';
 import pullRequests from './pull-requests';
+import notifications from './notifications';
 import repos from './repos';
 import subscriptions from './subscriptions';
 import users from './users';
-import { CLEAR_APP_DATA, LOAD_SUBSCRIPTION_DATA_SUCCESS } from '../../utils/constants/actions';
+
+import {
+  CLEAR_APP_DATA,
+  LOAD_SUBSCRIPTION_DATA_SUCCESS,
+  LOAD_NOTIFICATIONS_SUCCESS,
+} from '../../utils/constants/actions';
+
 import type { Action } from '../../utils/types';
 
 const reducer = combineReducers({
@@ -20,6 +27,7 @@ const reducer = combineReducers({
   comments,
   events,
   issues,
+  notifications,
   orgs,
   pullRequests,
   repos,
@@ -37,6 +45,7 @@ const indexReducer = (state: Object = initialState, action) => {
       return initialState;
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
+    case LOAD_NOTIFICATIONS_SUCCESS:
       return ((_payload) => {
         const { data: { entities } = {} } = _payload || {};
         return state.mergeDeep(fromJS(entities));

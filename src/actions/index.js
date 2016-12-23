@@ -10,7 +10,8 @@ import {
   SET_THEME,
   STAR_REPO,
   UNSTAR_REPO,
-  TOGGLE_SEEN,
+  TOGGLE_SEEN_EVENT,
+  TOGGLE_SEEN_NOTIFICATION,
   CLEAR_EVENTS,
   MARK_EVENTS_AS_SEEN,
   MARK_EVENTS_AS_NOT_SEEN,
@@ -22,8 +23,9 @@ import type {
   Theme,
 } from '../utils/types';
 
-export * from './api';
 export * from './auth';
+export * from './events';
+export * from './notifications';
 export * from './subscriptions';
 
 export const clearAppData = (other?: Object) => (
@@ -50,8 +52,12 @@ export const unstarRepo = (repoId: number | string, other?: Object) => (
   action(UNSTAR_REPO, `${repoId}`, other)
 );
 
-export const toggleSeen = (eventIds: Array<string>, other?: Object) => (
-  action(TOGGLE_SEEN, { eventIds: Set(eventIds) }, other)
+export const toggleSeenEvent = (eventIds: Array<string>, other?: Object) => (
+  action(TOGGLE_SEEN_EVENT, { eventIds: Set(eventIds) }, other)
+);
+
+export const toggleSeenNotification = (notificationIds: Array<string>, other?: Object) => (
+  action(TOGGLE_SEEN_NOTIFICATION, { notificationIds: Set(notificationIds) }, other)
 );
 
 export type SeenEvents = { columnId: string, eventIds: Array<string> };

@@ -12,6 +12,7 @@ const USER_RECEIVED_PUBLIC_EVENTS: 'USER_RECEIVED_PUBLIC_EVENTS' = 'USER_RECEIVE
 const USER_EVENTS: 'USER_EVENTS' = 'USER_EVENTS';
 const USER_PUBLIC_EVENTS: 'USER_PUBLIC_EVENTS' = 'USER_PUBLIC_EVENTS';
 const USER_ORG_EVENTS: 'USER_ORG_EVENTS' = 'USER_ORG_EVENTS';
+const NOTIFICATIONS: 'NOTIFICATIONS' = 'NOTIFICATIONS';
 
 const github = new GitHubAPI();
 
@@ -26,6 +27,7 @@ export const requestTypes = {
   USER_EVENTS,
   USER_PUBLIC_EVENTS,
   USER_ORG_EVENTS,
+  NOTIFICATIONS,
 };
 
 export type ApiRequestType =
@@ -39,6 +41,7 @@ export type ApiRequestType =
   | typeof USER_EVENTS
   | typeof USER_PUBLIC_EVENTS
   | typeof USER_ORG_EVENTS
+  | typeof NOTIFICATIONS
 ;
 
 export function authenticate(token: string) {
@@ -56,8 +59,7 @@ export function authenticate(token: string) {
   }
 }
 
-// TODO: Some icons might be wrong, like the ones for organization
-export function getIcon(type: ApiRequestType) {
+export function getEventIcon(type: ApiRequestType) {
   switch (type) {
     case requestTypes.PUBLIC_EVENTS: return 'home';
     case requestTypes.REPO_EVENTS: return 'repo';
@@ -115,6 +117,9 @@ export function getUniquePath(type: ApiRequestType, { org, owner, repo, username
         if (!(username && org)) throw new Error('Required params: username, org');
         return `/users/${username}/events/orgs/${org}`;
 
+      case requestTypes.NOTIFICATIONS:
+        return '/notifications';
+
       default: throw new Error(`No path configured for type '${type}'`);
     }
   })().toLowerCase();
@@ -132,6 +137,7 @@ export function getApiMethod(type: ApiRequestType) {
     case requestTypes.USER_EVENTS: return github.activity.getEventsForUser;
     case requestTypes.USER_PUBLIC_EVENTS: return github.activity.getEventsForUserPublic;
     case requestTypes.USER_ORG_EVENTS: return github.activity.getEventsForUserOrg;
+    case requestTypes.NOTIFICATIONS: return github.activity.getNotifications;
     default: throw new Error(`No api method configured for type '${type}'`);
   }
 }

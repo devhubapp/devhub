@@ -24,27 +24,27 @@ export const createSubscription = (
   id: string,
   requestType: ApiRequestType,
   params: Object,
-  other?: Object = {},
+  other?: Object,
 ) => (
   action(CREATE_SUBSCRIPTION, ({ id, requestType, params }: Subscription), other)
 );
 
-export const deleteSubscription = (id: string, other?: Object = {}) => (
+export const deleteSubscription = (id: string, other?: Object) => (
   action(DELETE_SUBSCRIPTION, ({ id }: Subscription), other)
 );
 
-export const updateAllColumnsSubscriptions = (other?: Object = {}) => (
+export const updateAllColumnsSubscriptions = (other?: Object) => (
   action(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, undefined, other)
 );
 
-export const updateColumnSubscriptions = (id: string, other?: Object = {}) => (
+export const updateColumnSubscriptions = (id: string, other?: Object) => (
   action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ id }: Subscription), other)
 );
 
 export const loadSubscriptionDataRequest = (
   requestType: ApiRequestType,
   params: Object,
-  other?: Object = {},
+  other?: Object,
 ) => {
   const subscriptionId = generateSubscriptionId(requestType, params);
 
@@ -61,7 +61,7 @@ export const loadSubscriptionDataSuccess = (
   request: ApiRequestPayload,
   data: Object,
   meta: Object,
-  other?: Object = {},
+  other?: Object,
 ) => (
   action(LOAD_SUBSCRIPTION_DATA_SUCCESS, ({ request, data, meta }: ApiResponsePayload), other)
 );
@@ -69,7 +69,7 @@ export const loadSubscriptionDataSuccess = (
 export const loadSubscriptionDataFailure = (
   request: ApiRequestPayload,
   error: any,
-  other?: Object = {},
+  other?: Object,
 ) => (
   errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, { request }, error, other)
 );

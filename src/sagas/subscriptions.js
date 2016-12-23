@@ -1,7 +1,6 @@
 // @flow
 
 import moment from 'moment';
-import { AsyncStorage } from 'react-native';
 import { flatten, uniq } from 'lodash';
 import { arrayOf, normalize } from 'normalizr';
 import { delay, takeEvery, takeLatest } from 'redux-saga';
@@ -17,7 +16,6 @@ import {
 } from '../selectors';
 
 import {
-  CLEAR_APP_DATA,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   UPDATE_COLUMN_SUBSCRIPTIONS,
   UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
@@ -56,6 +54,7 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
     if (timeout) throw new Error('Timeout', 'TimeoutError');
 
     const { data, meta }: ApiResponsePayload = response;
+    // console.log('loadSubscriptionData response', response);
 
     let onlyNewEvents = data;
 
@@ -127,16 +126,11 @@ function* startTimer() {
   }
 }
 
-function* clearAppData() {
-  yield AsyncStorage.clear();
-}
-
 export default function* () {
   return yield [
     yield takeEvery(LOAD_SUBSCRIPTION_DATA_REQUEST, loadSubscriptionData),
     yield takeEvery(UPDATE_COLUMN_SUBSCRIPTIONS, updateSubscriptionsFromColumn),
     yield takeLatest(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, updateSubscriptionsFromAllColumns),
-    yield takeLatest(CLEAR_APP_DATA, clearAppData),
     yield fork(startTimer),
   ];
 }

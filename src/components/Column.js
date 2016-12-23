@@ -13,15 +13,15 @@ import {
   makeColumnSeenEventIdsSelector,
 } from '../selectors';
 
-import CardContainer from '../containers/CardContainer';
-import { iconRightMargin } from './Card';
+import EventCardContainer from '../containers/EventCardContainer';
+import { iconRightMargin } from './Cards/EventCard';
 import CreateColumnUtils from './utils/CreateColumnUtils';
 import ProgressBar from './ProgressBar';
 import RepositoryStarButtonContainer from '../containers/RepositoryStarButtonContainer';
 import StatusMessage from './StatusMessage';
 import TransparentTextOverlay from './TransparentTextOverlay';
 // import { columnMargin } from './Columns';
-import { getIcon } from '../api/github';
+import { getEventIcon } from '../api/github';
 import { getDateWithHourAndMinuteText } from '../utils/helpers';
 import { contentPadding } from '../styles/variables';
 import type { ActionCreators, Column, GithubEvent, Subscription, ThemeObject } from '../utils/types';
@@ -30,6 +30,7 @@ const getFullWidth = () => Dimensions.get('window').width;
 const getWidth = () => getFullWidth() - (2 * contentPadding) - (4 * 2); // columnMargin
 
 const Root = styled.View`
+  flex: 1;
   background-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius || 0};
 `;
@@ -261,10 +262,10 @@ export default class extends React.PureComponent {
   };
 
   renderRow = (event) => (
-    <CardContainer
-      key={`card-${event.get('id')}`}
+    <EventCardContainer
+      key={`event-card-${event.get('id')}`}
       actions={this.props.actions}
-      eventOrEventId={event && event.get('merged') ? event : event.get('id')}
+      eventOrEventId={event}
       onlyOneRepository={!!this.state.uniqRepository}
     />
   );
@@ -283,7 +284,7 @@ export default class extends React.PureComponent {
 
     const icon = (
       subscriptions && subscriptions.size > 0
-        ? getIcon(subscriptions.first().get('requestType'))
+        ? getEventIcon(subscriptions.first().get('requestType'))
         : ''
     ) || 'mark-github';
 

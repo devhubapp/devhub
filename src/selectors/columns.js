@@ -4,7 +4,7 @@
 import moment from 'moment';
 import { List, Map, Set } from 'immutable';
 
-import { seenEventsIdsSelector } from './events';
+import { seenEventIdsSelector } from './events';
 import { subscriptionsSelector, subscriptionSelector } from './subscriptions';
 import { createImmutableSelector, entitiesSelector, objectKeysMemoized, stateSelector } from './shared';
 
@@ -50,7 +50,7 @@ export const makeColumnSeenEventIdsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector();
 
   return createImmutableSelector(
-    seenEventsIdsSelector,
+    seenEventIdsSelector,
     columnEventIdsSelector,
     (seenEventIds, columnEventIds) => seenEventIds.intersect(columnEventIds),
   );

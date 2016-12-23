@@ -9,6 +9,7 @@ import {
 } from '../utils/constants/actions';
 
 import authSagas from './auth';
+import notificationsSagas from './notifications';
 import subscriptionsSagas from './subscriptions';
 
 function* clearAppData() {
@@ -23,6 +24,7 @@ export default function* () {
   return yield [
     yield takeLatest(CLEAR_APP_DATA, clearAppData),
     yield fork(authSagas),
+    yield fork(notificationsSagas),
     yield fork(subscriptionsSagas),
   ];
 }

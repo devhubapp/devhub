@@ -17,7 +17,7 @@ import {
   MainColumn,
   RepositoryContentContainer,
   Text,
-} from './';
+} from './EventCard';
 
 import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces } from '../../utils/helpers';

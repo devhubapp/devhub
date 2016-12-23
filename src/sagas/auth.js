@@ -58,7 +58,7 @@ function* watchFirebaseCurrentUser() {
   let lastUser = ignoreValue;
 
   firebase.auth().onAuthStateChanged((user) => {
-    console.log('watchFirebaseCurrentUser', user);
+    // console.log('watchFirebaseCurrentUser', user);
     lastUser = user;
   });
 

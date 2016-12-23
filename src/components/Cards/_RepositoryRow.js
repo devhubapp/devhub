@@ -18,7 +18,7 @@ import {
   RepositoryName,
   smallAvatarWidth,
   Text,
-} from './';
+} from './EventCard';
 
 import { contentPadding, radius } from '../../styles/variables';
 import { getOrgAvatar, getOwnerAndRepo } from '../../utils/helpers/github';

@@ -7,6 +7,7 @@ export const ColumnSchema = new Schema('columns', { idAttribute });
 export const EventSchema = new Schema('events', { idAttribute });
 export const IssueSchema = new Schema('issues', { idAttribute });
 export const OrgSchema = new Schema('orgs', { idAttribute });
+export const NotificationSchema = new Schema('notifications', { idAttribute });
 export const PullRequestSchema = new Schema('pullRequests', { idAttribute });
 export const SubscriptionSchema = new Schema('subscriptions');
 export const UserSchema = new Schema('users', { idAttribute });
@@ -37,6 +38,10 @@ IssueSchema.define({
   user: UserSchema,
   assignee: UserSchema,
   assignees: arrayOf(UserSchema),
+});
+
+NotificationSchema.define({
+  repository: RepoSchema,
 });
 
 PullRequestSchema.define({

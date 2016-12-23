@@ -14,7 +14,7 @@ import {
   MainColumn,
   RepositoryContentContainer,
   Text,
-} from './';
+} from './EventCard';
 
 import { contentPadding, radius } from '../../styles/variables';
 import type { GithubEventType, ThemeObject } from '../../utils/types';

@@ -14,9 +14,9 @@ import type { ActionCreators, Column as ColumnType } from '../utils/types';
 
 export const columnMargin = 2;
 
-const spacing = columnMargin + contentPadding;
-const getFullWidth = () => Dimensions.get('window').width;
-const getWidth = () => getFullWidth() - (2 * spacing);
+export const spacing = columnMargin + contentPadding;
+export const getFullWidth = () => Dimensions.get('window').width;
+export const getWidth = () => getFullWidth() - (2 * spacing);
 
 const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
