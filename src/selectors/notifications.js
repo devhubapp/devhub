@@ -43,6 +43,7 @@ export const denormalizedNotificationsSelector = createImmutableSelector(
   entitiesSelector,
   (notificationIds, entities) => (
     denormalize(notificationIds, entities, arrayOf(NotificationSchema))
+      .toList()
       .sort(sortNotificationsByDate)
   ),
 );

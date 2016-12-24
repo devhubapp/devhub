@@ -14,7 +14,10 @@ const USER_PUBLIC_EVENTS: 'USER_PUBLIC_EVENTS' = 'USER_PUBLIC_EVENTS';
 const USER_ORG_EVENTS: 'USER_ORG_EVENTS' = 'USER_ORG_EVENTS';
 const NOTIFICATIONS: 'NOTIFICATIONS' = 'NOTIFICATIONS';
 
-const github = new GitHubAPI();
+const github = new GitHubAPI({
+  agent: 'devhub',
+  // debug: process.env.NODE_ENV !== 'production',
+});
 
 export const requestTypes = {
   PUBLIC_EVENTS,

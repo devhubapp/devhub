@@ -186,7 +186,7 @@ export default class extends React.PureComponent {
       });
     }
 
-    const avatarUrl = getOrgAvatar(repo.get('name'));
+    const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const seen = notification.get('unread') === false;
     const title = trimNewLinesAndSpaces(subject.get('title'));
 

@@ -12,3 +12,12 @@ export default () => ({
     messagingSenderId: '589579854600',
   }),
 });
+
+// fetch logger
+global._fetch = fetch;
+fetch = function(uri, options, ...args) {
+  return _fetch(uri, options, ...args).then((response) => {
+    console.log('Fetch', { request: { uri, options, ...args }, response });
+    return response;
+  });
+};

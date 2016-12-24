@@ -76,7 +76,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
         const newSubscription = subscription.mergeDeep(fromJS({
           events: newEventIds,
           updatedAt: new Date(),
-          lastModified: meta['last-modified'] ? moment(new Date(meta['last-modified'])).toDate() : undefined,
+          lastModifiedAt: meta['last-modified'],
           pollInterval: Number(meta['x-poll-interval']),
           rateLimit: Number(meta['x-ratelimit-limit']),
           rateLimitRemaining: Number(meta['x-ratelimit-remaining']),
