@@ -4,7 +4,7 @@ import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { Set } from 'immutable';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled, { withTheme } from 'styled-components/native';
+import styled from 'styled-components/native';
 
 import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
@@ -12,7 +12,7 @@ import UserAvatar from './_UserAvatar';
 import { avatarWidth, contentPadding, radius } from '../../styles/variables';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getNotificationIcon, getOrgAvatar } from '../../utils/helpers/github';
-import type { ActionCreators, GithubNotification, ThemeObject } from '../../utils/types';
+import type { ActionCreators, GithubNotification } from '../../utils/types';
 
 export const innerContentPadding = contentPadding;
 export const narrowInnerContentPadding = innerContentPadding / 2;
@@ -169,26 +169,18 @@ export default class extends React.PureComponent {
       repo,
       subject,
       updated_at,
-      merged,
     } = {
       subject: notification.get('subject'),
       repo: notification.get('repository'),
       updated_at: notification.get('updated_at'),
-      merged: notification.get('merged'),
     };
 
     if (!subject) return null;
 
-    let notificationIds = Set([notification.get('id')]);
-    if (merged) {
-      merged.forEach(mergedNotification => {
-        notificationIds = notificationIds.add(mergedNotification.get('id'));
-      });
-    }
-
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
+    const body = trimNewLinesAndSpaces(subject.get('title'));
+    const notificationIds = Set([notification.get('id')]);
     const seen = notification.get('unread') === false;
-    const title = trimNewLinesAndSpaces(subject.get('title'));
 
     return (
       <CardWrapper {...props} seen={seen}>
@@ -229,7 +221,7 @@ export default class extends React.PureComponent {
                   />
                 </HorizontalView>
 
-                <Text numberOfLines={2}>{title}</Text>
+                <Text numberOfLines={2}>{body}</Text>
               </FullView>
               
               <CardIcon name={getNotificationIcon(notification)} />

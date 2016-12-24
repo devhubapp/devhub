@@ -42,7 +42,8 @@ const mapDispatchToProps = dispatch => ({
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
-    notification: GithubNotification,
+    notification?: GithubNotification,
+    notificationOrNotificationId: string | GithubNotification,
     seen: boolean,
   };
 

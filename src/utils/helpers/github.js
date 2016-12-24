@@ -354,12 +354,12 @@ export function groupNotificationsByRepository(notifications: Array<GithubNotifi
 
     let group = groupedNotifications.get(repoId);
     if (!group) {
-      group = Map({ repo, notifications: List() });
+      group = Map({ id: repoId, repo, notifications: List() });
       groupedNotifications = groupedNotifications.set(repoId, group);
     }
 
-    return groupedNotifications.updateIn(repoId, 'notifications', (_notifications) => (
-      _notifications.push(notification.delete('repository'))
+    groupedNotifications = groupedNotifications.updateIn([repoId, 'notifications'], (notif) => (
+      notif.push(notification)
     ));
   });
 

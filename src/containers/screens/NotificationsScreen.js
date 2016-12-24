@@ -5,7 +5,7 @@ import styled, { withTheme } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 
-import NotificationsContainer from '../NotificationsContainer';
+import NotificationColumnsContainer from '../NotificationColumnsContainer';
 import Screen from '../../components/Screen';
 import debounce from '../../utils/hoc/debounce';
 import { rehydratedSelector } from '../../selectors';
@@ -45,7 +45,7 @@ export default class extends React.PureComponent {
 
         {
           rehydrated &&
-          <NotificationsContainer />
+          <NotificationColumnsContainer />
         }
       </Screen>
     );

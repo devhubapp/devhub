@@ -6,24 +6,36 @@ import styled, { withTheme } from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import { Dimensions, RefreshControl } from 'react-native';
 
-import EventCardContainer from '../../containers/EventCardContainer';
-import { iconRightMargin } from '../cards/EventCard';
 import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
 import TransparentTextOverlay from '../TransparentTextOverlay';
+import { iconRightMargin } from '../cards/EventCard';
 import { contentPadding } from '../../styles/variables';
 import type { ActionCreators, Subscription, ThemeObject } from '../../utils/types';
 
-const getFullWidth = () => Dimensions.get('window').width;
-const getWidth = () => getFullWidth() - (2 * contentPadding) - (4 * 2); // columnMargin
+export const columnMargin = 2;
+export const spacing = columnMargin + contentPadding;
+export const getFullWidth = () => Dimensions.get('window').width;
+export const getWidth = () => getFullWidth() - (2 * spacing);
 
-const Root = styled.View`
+export const ColumnWrapper = styled.View`
   flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: ${getWidth};
+`;
+
+export const ColumnRoot = styled.View`
+  flex: 1;
+  align-self: stretch;
+  margin-horizontal: ${columnMargin}
+  margin-vertical: ${columnMargin};
   background-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius || 0};
 `;
 
-const StyledTextOverlay = styled(TransparentTextOverlay) `
+export const StyledTextOverlay = styled(TransparentTextOverlay) `
+  flex: 1;
   border-radius: ${({ radius }) => radius || 0};
 `;
 
@@ -69,6 +81,10 @@ export const ProgressBarContainer = styled.View`
   background-color: ${({ theme }) => theme.base01};
 `;
 
+export const StyledImmutableListView = styled(ImmutableListView)`
+  flex: 1;
+`;
+
 @withTheme
 export default class extends React.PureComponent {
   props: {
@@ -89,15 +105,6 @@ export default class extends React.PureComponent {
     title: string,
   };
 
-  renderRow = (event) => (
-    <EventCardContainer
-      key={`event-card-${event.get('id')}`}
-      actions={this.props.actions}
-      eventOrEventId={event}
-      onlyOneRepository={this.hasOnlyOneRepository()}
-    />
-  );
-
   render() {
     const {
       errors,
@@ -114,58 +121,58 @@ export default class extends React.PureComponent {
       ...props
     } = this.props;
 
-    console.log('items', items.toJS());
-
     return (
-      <Root radius={radius} {...props}>
-        <FixedHeader>
-          <TitleWrapper>
-            <Title numberOfLines={1} style={{ maxWidth: 280 }}>
-              <Icon name={icon} size={20} />&nbsp;{title}
-            </Title>
-          </TitleWrapper>
+      <ColumnWrapper>
+        <ColumnRoot radius={radius} {...props}>
+          <FixedHeader>
+            <TitleWrapper>
+              <Title numberOfLines={1} style={{ maxWidth: 280 }}>
+                <Icon name={icon} size={20} />&nbsp;{title}
+              </Title>
+            </TitleWrapper>
 
-          {headerRight}
-        </FixedHeader>
+            {headerRight}
+          </FixedHeader>
 
-        <ProgressBarContainer>
-          {
-            loading &&
-            <ProgressBar
-              width={getWidth()}
-              height={1}
-              indeterminate
-            />
-          }
-        </ProgressBarContainer>
-
-        {
-          errors && errors.map(error => (
-            <StatusMessage message={error} error />
-          ))
-        }
-
-        <StyledTextOverlay color={theme.base02} size={contentPadding} from="vertical" radius={radius}>
-          <ImmutableListView
-            immutableData={items}
-            initialListSize={5}
-            rowsDuringInteraction={5}
-            renderRow={renderRow}
-            refreshControl={
-              refreshFn &&
-              <RefreshControl
-                refreshing={false}
-                onRefresh={refreshFn}
-                colors={[loading ? 'transparent' : theme.base08]}
-                tintColor={loading ? 'transparent' : theme.base08}
-                title={(refreshText || ' ').toLowerCase()}
-                titleColor={theme.base05}
-                progressBackgroundColor={theme.base02}
+          <ProgressBarContainer>
+            {
+              loading &&
+              <ProgressBar
+                width={getWidth()}
+                height={1}
+                indeterminate
               />
             }
-          />
-        </StyledTextOverlay>
-      </Root>
+          </ProgressBarContainer>
+
+          {
+            errors && errors.map(error => (
+              <StatusMessage message={error} error />
+            ))
+          }
+
+          <StyledTextOverlay color={theme.base02} size={contentPadding} from="vertical" radius={radius}>
+            <StyledImmutableListView
+              immutableData={items}
+              initialListSize={5}
+              rowsDuringInteraction={5}
+              renderRow={renderRow}
+              refreshControl={
+                refreshFn &&
+                <RefreshControl
+                  refreshing={false}
+                  onRefresh={refreshFn}
+                  colors={[loading ? 'transparent' : theme.base08]}
+                  tintColor={loading ? 'transparent' : theme.base08}
+                  title={(refreshText || ' ').toLowerCase()}
+                  titleColor={theme.base05}
+                  progressBackgroundColor={theme.base02}
+                />
+              }
+            />
+          </StyledTextOverlay>
+        </ColumnRoot>
+      </ColumnWrapper>
     );
   }
 }

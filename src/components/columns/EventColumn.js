@@ -19,8 +19,6 @@ import type { ActionCreators, Column as ColumnType, Subscription } from '../../u
 
 const Root = styled.View`
   flex: 1;
-  background-color: ${({ theme }) => theme.base02};
-  border-radius: ${({ radius }) => radius || 0};
 `;
 
 const buttons = ['Create new column', 'Mark all as seen / unseen', 'Clear seen', 'Delete column', 'Cancel'];
@@ -132,7 +130,7 @@ export default class extends React.PureComponent {
   );
 
   render() {
-    const { column, errors, items, loading, subscriptions, ...props } = this.props;
+    const { column, errors, items, loading, subscriptions, style, ...props } = this.props;
 
     if (!column) return null;
 
@@ -152,7 +150,7 @@ export default class extends React.PureComponent {
     const updatedText = dateFromNowText ? `Updated ${dateFromNowText}` : '';
 
     return (
-      <Root {...props}>
+      <Root style={style}>
         <Column
           errors={errors}
           headerRight={

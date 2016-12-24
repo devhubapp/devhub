@@ -4,14 +4,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Octicons';
 
+import { ColumnRoot } from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
-const Column = styled.View`
+const Wrapper = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.base02};
-  border-radius: ${({ radius }) => radius || 0};
 `;
 
 const NewColumnButton = styled.TouchableOpacity`
@@ -38,19 +37,21 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { addColumnFn, radius, ...props } = this.props;
+    const { addColumnFn, ...props } = this.props;
 
-    if (!addColumnFn) return;
+    if (!addColumnFn) return null;
 
     return (
-      <Column radius={radius} {...props}>
-        <NewColumnButton onPress={addColumnFn}>
-          <NewColumnText>
-            <Icon name="plus" size={30} />{'\n'}
-            add new column
-          </NewColumnText>
-        </NewColumnButton>
-      </Column>
+      <ColumnRoot {...props}>
+        <Wrapper>
+          <NewColumnButton onPress={addColumnFn}>
+            <NewColumnText>
+              <Icon name="plus" size={30} />{'\n'}
+              add new column
+            </NewColumnText>
+          </NewColumnButton>
+        </Wrapper>
+      </ColumnRoot>
     );
   }
 }

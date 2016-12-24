@@ -4,32 +4,35 @@ import React from 'react';
 import { List } from 'immutable';
 
 import Columns from './_Columns';
-import EventColumnContainer from '../../containers/EventColumnContainer';
-import CreateColumnUtils from '../utils/CreateColumnUtils';
+import NotificationColumn from './NotificationColumn';
 import { radius } from '../../styles/variables';
 import type { ActionCreators, Column as ColumnType } from '../../utils/types';
 
 export default class extends React.PureComponent {
-  addColumnFn = () => {
-    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions);
-  };
-
   props: {
     actions: ActionCreators,
     columns: Array<ColumnType>,
+    updatedAt: Date,
   };
 
   renderRow = (column) => {
+    const { updatedAt } = this.props;
+
     if (!column) return null;
 
     const columnId = column.get('id');
     if (!columnId) return null;
 
+    const items = column.get('notifications');
+    if (!items) return null;
+
     return (
-      <EventColumnContainer
-        key={`event-column-${columnId}`}
-        columnId={columnId}
+      <NotificationColumn
+        key={`notification-column-${columnId}`}
+        column={column}
+        items={items}
         radius={radius}
+        updatedAt={updatedAt}
       />
     );
   };
@@ -39,8 +42,7 @@ export default class extends React.PureComponent {
 
     return (
       <Columns
-        key="event-columns"
-        addColumnFn={this.addColumnFn}
+        key="notification-columns"
         columns={columns}
         renderRow={this.renderRow}
         {...props}

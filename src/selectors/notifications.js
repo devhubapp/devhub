@@ -5,18 +5,21 @@ import { denormalize } from 'denormalizr';
 import { arrayOf } from 'normalizr';
 
 import { createImmutableSelector, entitiesSelector } from './shared';
+import { groupNotificationsByRepository } from '../utils/helpers/github';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 
 export const notificationIdSelector = (state, { notificationId }) => notificationId;
-export const orderedNotificationsSelector = (state) => entitiesSelector(state).get('notifications');
+export const notificationDetailsSelector = (state) => state.get('notifications');
+export const notificationEntitiesSelector = (state) => entitiesSelector(state).get('notifications');
+export const notificationsSelector = (state) => entitiesSelector(state).get('notifications');
 
 export const notificationIdsSelector = createImmutableSelector(
-  orderedNotificationsSelector,
+  notificationEntitiesSelector,
   (notifications) => notifications.map(notification => notification.get('id')),
 );
 
 export const seenNotificationIdsSelector = createImmutableSelector(
-  orderedNotificationsSelector,
+  notificationEntitiesSelector,
   (notifications) => (
     notifications
       .filter(notification => notification.get('unread') === false)
@@ -45,4 +48,14 @@ export const denormalizedOrderedNotificationsSelector = createImmutableSelector(
     denormalize(notificationIds, entities, arrayOf(NotificationSchema))
       .sort(sortNotificationsByDate)
   ),
+);
+
+export const denormalizedGroupedNotificationsSelector = createImmutableSelector(
+  denormalizedOrderedNotificationsSelector,
+  (notifications) => groupNotificationsByRepository(notifications),
+);
+
+export const updatedAtSelector = createImmutableSelector(
+  notificationDetailsSelector,
+  (notifications) => notifications.get('updatedAt'),
 );
