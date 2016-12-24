@@ -9,8 +9,8 @@ import { subscriptionsSelector, subscriptionSelector } from './subscriptions';
 import { createImmutableSelector, entitiesSelector, objectKeysMemoized, stateSelector } from './shared';
 
 export const columnIdSelector = (state, { columnId }) => columnId;
-export const columnsSelector = state => entitiesSelector(state).get('columns');
-export const columnIdsSelector = state => objectKeysMemoized(columnsSelector(state));
+export const columnsEntitySelector = state => entitiesSelector(state).get('columns');
+export const columnIdsSelector = state => objectKeysMemoized(columnsEntitySelector(state));
 
 const sortColumnsByDate = (b, a) => (
   moment(a.get('createdAt')).isAfter(moment(b.get('createdAt'))) ? 1 : -1
@@ -18,7 +18,7 @@ const sortColumnsByDate = (b, a) => (
 
 export const makeColumnSelector = () => createImmutableSelector(
   columnIdSelector,
-  columnsSelector,
+  columnsEntitySelector,
   (columnId, columns) => (
     columns.get(columnId)
   ),
@@ -46,13 +46,13 @@ export const makeColumnEventIdsSelector = () => createImmutableSelector(
   },
 );
 
-export const makeColumnSeenEventIdsSelector = () => {
+export const makeColumnSeenIdsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector();
 
   return createImmutableSelector(
     seenEventIdsSelector,
     columnEventIdsSelector,
-    (seenEventIds, columnEventIds) => seenEventIds.intersect(columnEventIds),
+    (seenIds, columnEventIds) => seenIds.intersect(columnEventIds),
   );
 };
 
@@ -80,11 +80,10 @@ export const columnErrorsSelector = createImmutableSelector(
     .filter(Boolean),
 );
 
-export const columnListSelector = createImmutableSelector(
-  columnsSelector,
+export const orderedColumnsSelector = createImmutableSelector(
+  columnsEntitySelector,
   (columns) => (
     columns
-      .toList()
       .sort(sortColumnsByDate)
   ),
 );

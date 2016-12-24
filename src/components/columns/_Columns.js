@@ -6,37 +6,28 @@ import ImmutableListView from 'react-native-immutable-list-view';
 import { List } from 'immutable';
 import { Dimensions } from 'react-native';
 
-import ColumnContainer from '../containers/ColumnContainer';
 import NewColumn from './NewColumn';
-// import ListView from './lists/ListView';
-import { contentPadding, radius } from '../styles/variables';
-import type { ActionCreators, Column as ColumnType } from '../utils/types';
+import { contentPadding, radius } from '../../styles/variables';
+import type { ActionCreators } from '../../utils/types';
 
 export const columnMargin = 2;
-
 export const spacing = columnMargin + contentPadding;
 export const getFullWidth = () => Dimensions.get('window').width;
 export const getWidth = () => getFullWidth() - (2 * spacing);
 
-const StyledImmutableListViewListView = styled(ImmutableListView)`
+export const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
   overflow: visible;
   background-color: ${({ theme }) => theme.base00};
 `;
 
-const ColumnWrapper = styled.View`
+export const ColumnWrapper = styled.View`
   flex: 1;
   align-self: center;
   width: ${getWidth};
 `;
 
-const StyledColumnContainer = styled(ColumnContainer)`
-  flex: 1;
-  margin-horizontal: ${columnMargin};
-  margin-vertical: ${columnMargin * 2};
-`;
-
-const StyledNewColumn = styled(NewColumn)`
+export const StyledNewColumn = styled(NewColumn)`
   flex: 1;
   margin-horizontal: ${columnMargin};
   margin-vertical: ${columnMargin * 2};
@@ -45,29 +36,15 @@ const StyledNewColumn = styled(NewColumn)`
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
-    columns: Array<ColumnType>,
-  };
-
-  renderRow = (column) => {
-    if (!column) return null;
-
-    const columnId = column.get('id');
-    if (!columnId) return null;
-
-    return (
-      <ColumnWrapper key={`column-${columnId}`}>
-        <StyledColumnContainer
-          columnId={columnId}
-          radius={radius}
-        />
-      </ColumnWrapper>
-    );
+    addColumnFn?: ?Function,
+    columns: Array<any>,
+    renderRow: Function,
   };
 
   render() {
-    const { actions, columns = List(), ...props } = this.props;
+    const { actions, addColumnFn, columns = List(), renderRow, ...props } = this.props;
 
-    if (!(columns.size > 0)) {
+    if (columns.size <= 0 && addColumnFn) {
       return (
         <ColumnWrapper>
           <StyledNewColumn
@@ -84,7 +61,7 @@ export default class extends React.PureComponent {
         immutableData={columns}
         initialListSize={1}
         rowsDuringInteraction={1}
-        renderRow={this.renderRow}
+        renderRow={renderRow}
         width={getWidth()}
         contentContainerStyle={{ marginHorizontal: spacing }}
         horizontal

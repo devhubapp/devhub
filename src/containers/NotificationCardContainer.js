@@ -5,7 +5,7 @@ import { Iterable } from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import NotificationCard from '../components/Cards/NotificationCard';
+import NotificationCard from '../components/cards/NotificationCard';
 
 import {
   makeDenormalizedNotificationSelector,

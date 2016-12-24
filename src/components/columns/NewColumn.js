@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react';
-import styled, { withTheme } from 'styled-components/native';
+import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import CreateColumnUtils from './utils/CreateColumnUtils';
-import type { ActionCreators } from '../utils/types';
+import type { ActionCreators } from '../../utils/types';
 
 const Column = styled.View`
   flex: 1;
@@ -29,24 +28,23 @@ const NewColumnText = styled.Text`
   color: ${({ theme }) => theme.base05};
 `;
 
-@withTheme
 export default class extends React.PureComponent {
-  onPress = () => {
-    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions);
-  };
 
   props: {
+    addColumnFn: Function,
     actions: ActionCreators,
     radius?: number,
     style?: ?Object,
   };
 
   render() {
-    const { radius, ...props } = this.props;
+    const { addColumnFn, radius, ...props } = this.props;
+
+    if (!addColumnFn) return;
 
     return (
       <Column radius={radius} {...props}>
-        <NewColumnButton onPress={this.onPress}>
+        <NewColumnButton onPress={addColumnFn}>
           <NewColumnText>
             <Icon name="plus" size={30} />{'\n'}
             add new column

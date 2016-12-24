@@ -4,7 +4,7 @@
 import gravatar from 'gravatar';
 import max from 'lodash/max';
 import moment from 'moment';
-import { fromJS, List, Map } from 'immutable';
+import { fromJS, List, Map, OrderedMap } from 'immutable';
 
 import type {
     GithubEvent,
@@ -211,10 +211,10 @@ export function getOwnerAndRepo(repoFullName: string): { owner: ?string, repo: ?
   return { owner, repo };
 }
 
-export function mergeSimilarEvents(events: Array<GithubEvent>) {
+export function groupSimilarEvents(events: Array<GithubEvent>) {
   let hasMerged = false;
 
-  const tryMergeEvents = (eventA: GithubEvent, eventB: GithubEvent) => {
+  const tryGroupEvents = (eventA: GithubEvent, eventB: GithubEvent) => {
     if (!eventA || !eventB) return null;
 
     const typeA: GithubEventType = eventA.get('type');
@@ -326,7 +326,7 @@ export function mergeSimilarEvents(events: Array<GithubEvent>) {
 
   const accumulator = (newEvents: Array<GithubEvent>, event: GithubEvent) => {
     const lastEvent = newEvents.last();
-    const mergedLastEvent = tryMergeEvents(lastEvent, event);
+    const mergedLastEvent = tryGroupEvents(lastEvent, event);
 
     if (mergedLastEvent) {
       hasMerged = true;
@@ -343,6 +343,27 @@ export function mergeSimilarEvents(events: Array<GithubEvent>) {
 
   const newEvents = events.reduce(accumulator, List());
   return hasMerged ? newEvents : events;
+}
+
+export function groupNotificationsByRepository(notifications: Array<GithubNotification>) {
+  let groupedNotifications = OrderedMap();
+
+  notifications.forEach((notification) => {
+    const repo = notification.get('repository');
+    const repoId = `${repo.get('id')}`;
+
+    let group = groupedNotifications.get(repoId);
+    if (!group) {
+      group = Map({ repo, notifications: List() });
+      groupedNotifications = groupedNotifications.set(repoId, group);
+    }
+
+    return groupedNotifications.updateIn(repoId, 'notifications', (_notifications) => (
+      _notifications.push(notification.delete('repository'))
+    ));
+  });
+
+  return groupedNotifications;
 }
 
 export function getOrgAvatar(orgName: string) {

@@ -4,13 +4,13 @@ import React from 'react';
 import styled, { withTheme } from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 
-import NotificationCardContainer from '../containers/NotificationCardContainer';
-import ProgressBar from './ProgressBar';
-import StatusMessage from './StatusMessage';
-import TransparentTextOverlay from './TransparentTextOverlay';
-import { columnMargin, getWidth, spacing } from './Columns';
-import { contentPadding } from '../styles/variables';
-import type { ActionCreators, GithubNotification, ThemeObject } from '../utils/types';
+import NotificationCardContainer from '../../containers/NotificationCardContainer';
+import ProgressBar from '../ProgressBar';
+import StatusMessage from '../StatusMessage';
+import TransparentTextOverlay from '../TransparentTextOverlay';
+import { columnMargin, getWidth, spacing } from '../columns/_Columns';
+import { contentPadding } from '../../styles/variables';
+import type { ActionCreators, GithubNotification, ThemeObject } from '../../utils/types';
 
 const Root = styled.View`
   flex: 1;

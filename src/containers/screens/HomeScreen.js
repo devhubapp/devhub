@@ -5,7 +5,7 @@ import styled, { withTheme } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 
-import ColumnsContainer from '../ColumnsContainer';
+import EventColumnsContainer from '../EventColumnsContainer';
 import Screen from '../../components/Screen';
 import debounce from '../../utils/hoc/debounce';
 import { rehydratedSelector } from '../../selectors';
@@ -45,7 +45,7 @@ export default class extends React.PureComponent {
 
         {
           rehydrated &&
-          <ColumnsContainer />
+          <EventColumnsContainer />
         }
       </Screen>
     );

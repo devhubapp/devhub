@@ -74,7 +74,9 @@ export function getEventIcon(type: ApiRequestType) {
     case requestTypes.USER_EVENTS: return 'person';
     case requestTypes.USER_PUBLIC_EVENTS: return 'person';
     case requestTypes.USER_ORG_EVENTS: return 'organization';
-    default: throw new Error(`No api method configured for type '${type}'`);
+    default:
+      console.error(`No api method configured for type '${type}'`);
+      return 'mark-github';
   }
 }
 

@@ -59,11 +59,11 @@ export default (state: State = initialState, { type, payload, error }: Action<an
       ))(payload);
 
     case LOAD_SUBSCRIPTION_DATA_FAILURE:
-      return (({ request: { subscriptionId } }: ApiResponsePayload, error) => (
+      return (({ request: { subscriptionId } }: ApiResponsePayload) => (
         state
           .setIn([subscriptionId, 'loading'], false)
           .setIn([subscriptionId, 'error'], error)
-      ))(payload, error);
+      ))(payload);
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
       return (({ request: { subscriptionId }, data: { result }, meta }: ApiResponsePayload) => {

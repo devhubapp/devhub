@@ -4,13 +4,13 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Notifications from '../components/Notifications';
-import { denormalizedNotificationsSelector } from '../selectors';
+import Notifications from '../components/columns/NotificationColumn';
+import { denormalizedOrderedNotificationsSelector } from '../selectors';
 import * as actionCreators from '../actions';
 import type { ActionCreators, GithubNotification, State } from '../utils/types';
 
 const mapStateToProps = (state: State) => ({
-  notifications: denormalizedNotificationsSelector(state),
+  notifications: denormalizedOrderedNotificationsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

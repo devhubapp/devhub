@@ -7,7 +7,7 @@ import { arrayOf } from 'normalizr';
 import { createImmutableSelector, entitiesSelector } from './shared';
 import { makeColumnEventIdsSelector } from './columns';
 import { EventSchema } from '../utils/normalizr/schemas';
-import { mergeSimilarEvents } from '../utils/helpers';
+import { groupSimilarEvents } from '../utils/helpers';
 
 export const eventIdSelector = (state, { eventId }) => eventId;
 export const seenEventIdsSelector = state => state.get('seenEvents');
@@ -25,13 +25,13 @@ export const makeDenormalizedEventSelector = () => createImmutableSelector(
   (eventId, entities) => denormalize(eventId, entities, EventSchema),
 );
 
-export const makeDenormalizedColumnEventsSelector = () => {
+export const makeDenormalizedOrderedColumnEventsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector();
 
   return createImmutableSelector(
     columnEventIdsSelector,
     entitiesSelector,
-    (eventIds, entities) => mergeSimilarEvents(
+    (eventIds, entities) => groupSimilarEvents(
       denormalize(eventIds, entities, arrayOf(EventSchema))
         .filter(Boolean)
         .sort(sortEventsByDate)

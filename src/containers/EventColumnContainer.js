@@ -4,14 +4,14 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Column from '../components/Column';
+import EventColumn from '../components/columns/EventColumn';
 
 import {
   columnIsLoadingSelector,
   columnErrorsSelector,
   makeColumnSelector,
   makeColumnSubscriptionsSelector,
-  makeDenormalizedColumnEventsSelector,
+  makeDenormalizedOrderedColumnEventsSelector,
 } from '../selectors';
 
 import * as actionCreators from '../actions';
@@ -26,12 +26,12 @@ import type {
 const makeMapStateToProps = () => {
   const columnSelector = makeColumnSelector();
   const columnSubscriptionsSelector = makeColumnSubscriptionsSelector();
-  const denormalizedColumnEventsSelector = makeDenormalizedColumnEventsSelector();
+  const denormalizedOrderedColumnEventsSelector = makeDenormalizedOrderedColumnEventsSelector();
 
   return (state: State, { columnId }: { columnId: string }) => ({
     column: columnSelector(state, { columnId }),
     errors: columnErrorsSelector(state, { columnId }),
-    events: denormalizedColumnEventsSelector(state, { columnId }),
+    events: denormalizedOrderedColumnEventsSelector(state, { columnId }),
     subscriptions: columnSubscriptionsSelector(state, { columnId }),
     loading: columnIsLoadingSelector(state, { columnId }),
   });
@@ -64,11 +64,11 @@ export default class extends React.PureComponent {
     } = this.props;
 
     return (
-      <Column
+      <EventColumn
         key={`column-container-${column.get('id')}`}
         actions={actions}
         column={column}
-        events={events}
+        items={events}
         errors={errors}
         loading={loading}
         subscriptions={subscriptions}

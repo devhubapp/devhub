@@ -5,7 +5,7 @@ import { Iterable } from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import EventCard from '../components/Cards/EventCard';
+import EventCard from '../components/cards/EventCard';
 
 import {
   makeDenormalizedEventSelector,

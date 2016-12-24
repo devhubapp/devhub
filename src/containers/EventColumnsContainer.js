@@ -4,13 +4,13 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Columns from '../components/Columns';
-import { columnListSelector } from '../selectors';
+import EventColumns from '../components/columns/EventColumns';
+import { orderedColumnsSelector } from '../selectors';
 import * as actionCreators from '../actions';
 import type { ActionCreators, Column as ColumnType, State } from '../utils/types';
 
 const mapStateToProps = (state: State) => ({
-  columns: columnListSelector(state),
+  columns: orderedColumnsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -28,8 +28,8 @@ export default class extends React.PureComponent {
     const { actions, columns, ...props } = this.props;
 
     return (
-      <Columns
-        key="columns-container"
+      <EventColumns
+        key="event-columns-container"
         actions={actions}
         columns={columns}
         {...props}

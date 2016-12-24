@@ -78,7 +78,6 @@ function* startTimer() {
     params.headers = {};
     if (!isEmpty && lastModifiedAt) params.headers['If-Modified-Since'] = lastModifiedAt;
 
-
     yield put(loadNotificationsRequest(params, sagaActionChunk));
     yield call(delay, 60 * 1000);
   }
