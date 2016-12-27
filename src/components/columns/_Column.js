@@ -9,7 +9,7 @@ import { Dimensions, RefreshControl } from 'react-native';
 import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import { iconRightMargin } from '../cards/EventCard';
+import { iconRightMargin } from '../cards/__CardComponents';
 import { contentPadding } from '../../styles/variables';
 import type { ActionCreators, Subscription, ThemeObject } from '../../utils/types';
 

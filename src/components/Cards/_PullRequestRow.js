@@ -19,7 +19,7 @@ import {
   RightOfScrollableContent,
   smallAvatarWidth,
   Text,
-} from './EventCard';
+} from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
@@ -53,10 +53,14 @@ export default class extends React.PureComponent {
 
     const { icon, color } = (() => {
       switch (state) {
+        case 'open':
+          return { icon: 'git-pull-request', color: theme.green };
+
         case 'closed':
           return { icon: 'git-pull-request', color: theme.red };
+
         default:
-          return { icon: 'git-pull-request', color: theme.green };
+          return { icon: 'git-pull-request' };
       }
     })();
 
@@ -65,7 +69,10 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
+          {
+            user &&
+            <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
+          }
         </LeftColumn>
 
         <MainColumn>

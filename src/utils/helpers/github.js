@@ -366,6 +366,57 @@ export function groupNotificationsByRepository(notifications: Array<GithubNotifi
   return groupedNotifications;
 }
 
+export function getCommentIdFromUrl(url: string) {
+  if (!url) return null;
+
+  const matches = url.match(/\/comments\/([0-9]+)([?].+)?$/);
+  return (matches && matches[1]) || undefined;
+}
+
+export function getIssueNumberFromUrl(url: string) {
+  if (!url) return null;
+
+  const matches = url.match(/\/issues\/([0-9]+)([?].+)?$/);
+  return (matches && matches[1]) || undefined;
+}
+
+export function getPullRequestNumberFromUrl(url: string) {
+  if (!url) return null;
+
+  const matches = url.match(/\/pulls\/([0-9]+)([?].+)?$/);
+  return (matches && matches[1]) || undefined;
+}
+
+export function enhanceNotificationsData(notifications: Array<GithubNotification>) {
+  if (!notifications) return null;
+  if (!Array.isArray(notifications)) return notifications;
+
+  return notifications.map((notification) => {
+    let newNotification = notification;
+
+    if (notification.subject.latest_comment_url) {
+      newNotification = {
+        ...notification,
+        comment: getCommentIdFromUrl(notification.subject.latest_comment_url),
+      };
+    }
+
+    if (newNotification.subject.type === 'Issue') {
+      return {
+        ...newNotification,
+        issueNumber: getIssueNumberFromUrl(newNotification.subject.url),
+      };
+    } else  if (newNotification.subject.type === 'PullRequest') {
+      return {
+        ...newNotification,
+        pullRequestNumber: getPullRequestNumberFromUrl(newNotification.subject.url),
+      };
+    }
+
+    return newNotification;
+  });
+}
+
 export function getOrgAvatar(orgName: string) {
   return orgName ? `https://github.com/${orgName}.png` : '';
 }

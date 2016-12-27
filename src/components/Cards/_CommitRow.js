@@ -16,7 +16,7 @@ import {
   RepositoryContentContainer,
   smallAvatarWidth,
   Text,
-} from './EventCard';
+} from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces, tryGetUsernameFromGithubEmail } from '../../utils/helpers';
@@ -50,7 +50,10 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar email={authorEmail} size={smallAvatarWidth} />
+          {
+            authorEmail &&
+            <UserAvatar email={authorEmail} size={smallAvatarWidth} />
+          }
         </LeftColumn>
 
         <MainColumn>

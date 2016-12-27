@@ -48,6 +48,8 @@ const indexReducer = (state: Object = initialState, action) => {
     case LOAD_NOTIFICATIONS_SUCCESS:
       return ((_payload) => {
         const { data: { entities } = {} } = _payload || {};
+        if (!entities) return state;
+
         return state.mergeDeep(fromJS(entities));
       })(payload);
 

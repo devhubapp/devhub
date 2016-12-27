@@ -2,159 +2,35 @@
 
 import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
-import { Set } from 'immutable';
-import Icon from 'react-native-vector-icons/Octicons';
-import styled from 'styled-components/native';
+import { fromJS, Map, Set } from 'immutable';
+
+// rows
+import CommentRow from './_CommentRow';
+import CommitRow from './_CommitRow';
+import IssueRow from './_IssueRow';
+import PullRequestRow from './_PullRequestRow';
 
 import IntervalRefresh from '../IntervalRefresh';
-import ScrollableContentContainer from '../ScrollableContentContainer';
 import UserAvatar from './_UserAvatar';
-import { avatarWidth, contentPadding, radius } from '../../styles/variables';
+import { avatarWidth, contentPadding } from '../../styles/variables';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getNotificationIcon, getOrgAvatar } from '../../utils/helpers/github';
 import type { ActionCreators, GithubNotification } from '../../utils/types';
 
-export const innerContentPadding = contentPadding;
-export const narrowInnerContentPadding = innerContentPadding / 2;
-
-export const CardWrapper = styled.View`
-  padding: ${contentPadding};
-  border-width: 0;
-  border-bottom-width: 1;
-  border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ seen }) => (seen ? 0.25 : 1)};
-`;
-
-export const FullView = styled.View`
-  flex: 1;
-`;
-
-export const FullAbsoluteView = styled.View`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  ${({ zIndex }) => (zIndex ? `z-index: ${zIndex};` : '')}
-`;
-
-export const HorizontalView = styled.View`
-  flex-direction: row;
-`;
-
-export const RepositoryContentContainer = styled(ScrollableContentContainer)`
-  padding-horizontal: ${contentPadding};
-`;
-
-export const Header = styled(HorizontalView)`
-  align-items: center;
-`;
-
-export const LeftColumn = styled.View`
-  align-self: ${({ center }) => (center ? 'center' : 'auto')};
-  align-items: flex-end;
-  justify-content: flex-start;
-  width: ${avatarWidth};
-  margin-right: ${contentPadding};
-`;
-
-export const MainColumn = styled.View`
-  flex: 1;
-  justify-content: center;
-`;
-
-export const MainColumnRowContent = styled(MainColumn)`
-  flex-direction: row;
-  align-self: ${({ center }) => (center ? 'center' : 'auto')};
-`;
-
-export const HeaderRow = styled(HorizontalView)`
-  align-items: flex-start;
-  justify-content: space-between;
-`;
-
-export const Text = styled.Text`
-  color: ${({ muted, theme }) => (muted ? theme.base05 : theme.base04)};
-  line-height: 18;
-  font-size: ${({ small }) => small ? 12 : 14};
-`;
-
-export const SmallText = styled(Text)`
-  font-size: 12;
-`;
-
-export const Username = styled(Text)`
-  font-weight: bold;
-`;
-
-export const RepositoryName = styled(Text)`
-`;
-
-export const CardItemId = styled(Text)`
-  font-weight: bold;
-  font-size: 12;
-  opacity: 0.9;
-`;
-
-export const CardText = styled(Text)`
-  flex: 1;
-  font-size: 14;
-`;
-
-export const ContentRow = styled(HorizontalView)`
-  align-items: flex-start;
-  margin-top: ${({ narrow }) => (narrow ? narrowInnerContentPadding : innerContentPadding)};
-`;
-
-export const HighlightContainerBase = styled(HorizontalView)`
-  align-items: center;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.base01};
-  border-radius: ${radius};
-`;
-
-export const HighlightContainer1 = styled(HighlightContainerBase)`
-  background-color: ${({ theme }) => theme.base01};
-`;
-
-export const HighlightContainer2 = styled(HighlightContainerBase)`
-  background-color: ${({ theme }) => theme.base03};
-`;
-
-export const HighlightContainerRow1 = styled(HighlightContainer1)`
-  min-height: 30;
-`;
-
-export const CardItemIdContainer = styled(HighlightContainer2)`
-  padding-horizontal: 4;
-`;
-
-export const RightOfScrollableContent = styled.View`
-  margin-right: ${contentPadding};
-`;
-
-export const CardIcon = styled(Icon)`
-  align-self: flex-start;
-  margin-left: ${contentPadding};
-  font-size: 20;
-  color: ${({ theme }) => theme.base05};
-  background-color: transparent;
-`;
-
-export const renderItemId = (number, icon) => {
-  if (!number && !icon) return null;
-
-  return (
-    <CardItemIdContainer>
-      <CardItemId>
-        {icon ? <Icon name={icon} /> : ''}
-        {number && icon ? ' ' : ''}
-        {typeof number === 'number' ? '#' : ''}
-        {number}
-      </CardItemId>
-    </CardItemIdContainer>
-  );
-};
+import {
+  CardWrapper,
+  FullView,
+  FullAbsoluteView,
+  HorizontalView,
+  Header,
+  LeftColumn,
+  MainColumn,
+  HeaderRow,
+  Text,
+  SmallText,
+  Username,
+  CardIcon,
+} from './__CardComponents';
 
 export default class extends React.PureComponent {
   props: {
@@ -165,22 +41,41 @@ export default class extends React.PureComponent {
   render() {
     const { actions, notification, ...props } = this.props;
 
+    console.log('comment', notification.get('comment'));
+
     const {
+      comment,
       repo,
       subject,
       updated_at,
     } = {
-      subject: notification.get('subject'),
+      comment: fromJS(notification.get('comment')),
       repo: notification.get('repository'),
+      subject: notification.get('subject'),
       updated_at: notification.get('updated_at'),
     };
 
     if (!subject) return null;
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
-    const body = trimNewLinesAndSpaces(subject.get('title'));
     const notificationIds = Set([notification.get('id')]);
+    const reason = notification.get('reason');
     const seen = notification.get('unread') === false;
+    const title = trimNewLinesAndSpaces(subject.get('title'));
+
+    const commit = subject.get('type') !== 'Commit' ? null : notification.get('commit') || Map({
+      message: trimNewLinesAndSpaces(subject.get('title')),
+    });
+
+    const issue = subject.get('type') !== 'Issue' ? null : notification.get('issue') || Map({
+      number: subject.get('issueNumber'),
+      title,
+    });
+
+    const pullRequest = subject.get('type') !== 'PullRequest' ? null : notification.get('pull_request') || Map({
+      number: subject.get('pullRequestNumber'),
+      title,
+    });
 
     return (
       <CardWrapper {...props} seen={seen}>
@@ -221,7 +116,7 @@ export default class extends React.PureComponent {
                   />
                 </HorizontalView>
 
-                <Text numberOfLines={2}>{body}</Text>
+                <Text numberOfLines={1}>{reason}</Text>
               </FullView>
               
               <CardIcon name={getNotificationIcon(notification)} />
@@ -234,6 +129,31 @@ export default class extends React.PureComponent {
             </FullAbsoluteView>
           </MainColumn>
         </Header>
+
+        {
+          commit &&
+          <CommitRow commit={commit} narrow />
+        }
+
+        {
+          issue &&
+          <IssueRow issue={issue} narrow />
+        }
+
+        {
+          pullRequest &&
+          <PullRequestRow pullRequest={pullRequest} narrow />
+        }
+
+        {
+          !(commit || issue || pullRequest) && title &&
+          <CommentRow body={title} narrow />
+        }
+
+        {
+          comment && comment.get('body') &&
+          <CommentRow user={comment.get('user')} body={comment.get('body')} narrow />
+        }
       </CardWrapper>
     );
   }

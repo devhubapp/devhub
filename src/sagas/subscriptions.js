@@ -56,23 +56,28 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
     // console.log('loadSubscriptionData response', response);
     const { data, meta }: ApiResponsePayload = response;
-    if (!data) return;
 
-    let onlyNewEvents = data;
+    let finalData = data;
 
-    state = yield select();
-    const subscription = subscriptionSelector(state, { subscriptionId });
-    const subscriptionUpdatedAt = subscription.get('updatedAt') ? moment(subscription.get('updatedAt')) : null;
+    // remove old events from data
+    if (data) {
+      let onlyNewEvents = data;
 
-    // remove old events, that were already fetched
-    if (subscriptionUpdatedAt && subscriptionUpdatedAt.isValid()) {
-      onlyNewEvents = onlyNewEvents.filter(event => (
-        !event.created_at || moment(event.created_at).isAfter(subscriptionUpdatedAt)
-      ));
+      state = yield select();
+      const subscription = subscriptionSelector(state, { subscriptionId });
+      const subscriptionUpdatedAt = subscription.get('updatedAt') ? moment(subscription.get('updatedAt')) : null;
+
+      // remove old events, that were already fetched
+      if (subscriptionUpdatedAt && subscriptionUpdatedAt.isValid()) {
+        onlyNewEvents = onlyNewEvents.filter(event => (
+          !event.created_at || moment(event.created_at).isAfter(subscriptionUpdatedAt)
+        ));
+      }
+
+      finalData = normalize(onlyNewEvents, arrayOf(EventSchema));
     }
 
-    const normalizedData = normalize(onlyNewEvents, arrayOf(EventSchema));
-    yield put(loadSubscriptionDataSuccess(requestPayload, normalizedData, meta, sagaActionChunk));
+    yield put(loadSubscriptionDataSuccess(requestPayload, finalData, meta, sagaActionChunk));
   } catch (e) {
     console.log('loadSubscriptionData catch', e);
     const errorMessage = (e.message || {}).message || e.message || e.body || e.status;

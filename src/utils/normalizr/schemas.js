@@ -26,10 +26,11 @@ EventSchema.define({
   org: OrgSchema,
   repo: RepoSchema,
   payload: {
-    repo: RepoSchema,
-    user: UserSchema,
+    comment: CommentSchema,
     issue: IssueSchema,
     pull_request: PullRequestSchema,
+    repo: RepoSchema,
+    user: UserSchema,
   },
   merged: arrayOf(EventSchema),
 });
@@ -41,6 +42,9 @@ IssueSchema.define({
 });
 
 NotificationSchema.define({
+  comment: CommentSchema,
+  // issue: IssueSchema,
+  // pull_request: PullRequestSchema,
   repository: RepoSchema,
 });
 

@@ -19,7 +19,7 @@ import {
   RightOfScrollableContent,
   smallAvatarWidth,
   Text,
-} from './EventCard';
+} from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
@@ -50,10 +50,14 @@ export default class extends React.PureComponent {
 
     const { icon, color } = (() => {
       switch (state) {
+        case 'open':
+          return { icon: 'issue-opened', color: theme.green };
+
         case 'closed':
           return { icon: 'issue-closed', color: theme.red };
+
         default:
-          return { icon: 'issue-opened', color: theme.green };
+          return { icon: 'issue-opened' };
       }
     })();
 

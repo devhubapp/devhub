@@ -6,6 +6,7 @@ import { delay, takeEvery } from 'redux-saga';
 import { call, cancel, fork, put, race, select, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
+import { enhanceNotificationsData } from '../utils/helpers';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 import { accessTokenSelector, isLoggedSelector, notificationIdsSelector } from '../selectors';
 
@@ -45,10 +46,18 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
 
     // console.log('onLoadNotificationsRequest response', response);
     const { data, meta }: ApiResponsePayload = response;
-    if (!data) return;
 
-    const normalizedData = normalize(data, arrayOf(NotificationSchema));
-    yield put(loadNotificationsSuccess(requestPayload, normalizedData, meta, sagaActionChunk));
+    let finalData = data;
+
+    if (data) {
+      const enhancedData = enhanceNotificationsData(data);
+
+      console.log('enhancedData', enhancedData);
+      finalData = normalize(enhancedData, arrayOf(NotificationSchema));
+      console.log('enhancedData normalized', finalData);
+    }
+
+    yield put(loadNotificationsSuccess(requestPayload, finalData, meta, sagaActionChunk));
   } catch (e) {
     console.log('onLoadNotificationsRequest catch', e);
     const errorMessage = (e.message || {}).message || e.message || e.body || e.status;

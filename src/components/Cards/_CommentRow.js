@@ -10,21 +10,21 @@ import {
   LeftColumn,
   MainColumnRowContent,
   smallAvatarWidth,
-} from './EventCard';
+} from './__CardComponents';
 
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { User } from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
-    actor: User,
+    user: User,
     body: string,
     narrow?: boolean,
     numberOfLines?: number,
   };
 
   render() {
-    const { actor, body: _body, narrow, numberOfLines = 4, ...props } = this.props;
+    const { user, body: _body, narrow, numberOfLines = 4, ...props } = this.props;
     if (!_body) return null;
 
     const body = trimNewLinesAndSpaces(_body);
@@ -33,7 +33,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn>
-          <UserAvatar url={actor.get('avatar_url')} size={smallAvatarWidth} />
+          <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumnRowContent center>

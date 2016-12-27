@@ -17,11 +17,17 @@ const initialState: State = Map({
 export default (state: State = initialState, { type, payload }: Action<any>): State => {
   switch (type) {
     case LOAD_NOTIFICATIONS_SUCCESS:
-      return (({ meta }) => (
-        state
-          .set('lastModifiedAt', meta['last-modified'])
-          .set('updatedAt', new Date())
-      ))(payload || {});
+      return (({ data, meta }) => {
+        if (!data) return state;
+
+        let newState = state;
+
+        if (meta['last-modified']) {
+          newState = newState.set('lastModifiedAt', meta['last-modified']);
+        }
+
+        return newState.set('updatedAt', new Date())
+        })(payload || {});
 
     default:
       return state;
