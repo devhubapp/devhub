@@ -13,6 +13,7 @@ import type { ActionCreators } from '../../utils/types';
 export const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
   overflow: visible;
+  marginHorizontal: ${spacing};
 `;
 
 export default class extends React.PureComponent {
@@ -44,7 +45,6 @@ export default class extends React.PureComponent {
         initialListSize={1}
         rowsDuringInteraction={1}
         renderRow={renderRow}
-        contentContainerStyle={{ marginHorizontal: spacing }}
         horizontal
         pagingEnabled
         {...props}
