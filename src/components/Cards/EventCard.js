@@ -364,12 +364,26 @@ export default class extends React.PureComponent {
 
         {
           payload.get('issue') &&
-          <IssueRow issue={payload.get('issue')} narrow />
+          <IssueRow issue={payload.get('issue')} type={type} narrow />
         }
 
         {
-          payload.get('comment') &&
-          <CommentRow actor={actor} comment={payload.get('comment')} narrow />
+          (
+            type === 'IssuesEvent' && payload.get('action') === 'opened' &&
+            payload.getIn(['issue', 'body']) &&
+            <CommentRow actor={actor} body={payload.getIn(['issue', 'body'])} narrow />
+
+            ||
+
+            type === 'PullRequestEvent' && payload.get('action') === 'opened' &&
+            payload.getIn(['pull_request', 'body']) &&
+            <CommentRow actor={actor} body={payload.getIn(['pull_request', 'body'])} narrow />
+
+            ||
+
+            payload.getIn(['comment', 'body']) &&
+            <CommentRow actor={actor} body={payload.getIn(['comment', 'body'])} narrow />
+          )
         }
 
         {

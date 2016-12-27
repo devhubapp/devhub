@@ -13,20 +13,21 @@ import {
 } from './EventCard';
 
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { Comment, User } from '../../utils/types';
+import type { User } from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
     actor: User,
-    comment: Comment,
+    body: string,
     narrow?: boolean,
+    numberOfLines?: number,
   };
 
   render() {
-    const { actor, comment, narrow, ...props } = this.props;
-    if (!comment) return null;
+    const { actor, body: _body, narrow, numberOfLines = 4, ...props } = this.props;
+    if (!_body) return null;
 
-    const body = trimNewLinesAndSpaces(comment.get('body'));
+    const body = trimNewLinesAndSpaces(_body);
     if (!body) return null;
 
     return (
@@ -36,7 +37,7 @@ export default class extends React.PureComponent {
         </LeftColumn>
 
         <MainColumnRowContent center>
-          <CardText numberOfLines={2}>{body}</CardText>
+          <CardText numberOfLines={numberOfLines}>{body}</CardText>
         </MainColumnRowContent>
       </ContentRow>
     );

@@ -23,8 +23,7 @@ import {
 
 import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { ThemeObject } from '../../utils/types';
-import type { Issue } from '../../utils/types/github';
+import type { Issue, ThemeObject } from '../../utils/types';
 
 @withTheme
 export default class extends React.PureComponent {
