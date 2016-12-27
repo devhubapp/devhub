@@ -1008,7 +1008,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.brunolemos.devhub;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.brunolemos.devhub-debug";
 				PRODUCT_NAME = devhub;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1049,7 +1049,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.brunolemos.devhub;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.brunolemos.devhub-debug";
 				PRODUCT_NAME = devhub;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

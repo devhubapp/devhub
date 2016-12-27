@@ -10,7 +10,7 @@
     "flow": "flow ./src",
     "lint": "eslint ./src",
     "lint-fix": "eslint ./src --fix",
-    "postinstall": "remotedev-debugger --port 8800 --injectdebugger --injectserver"
+    "postinstall": "remotedev-debugger --hostname 192.168.0.6 --port 8800 --injectdebugger --injectserver"
   },
   "dependencies": {
     "@exponent/ex-navigation": "^2.3.0",

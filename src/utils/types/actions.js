@@ -123,6 +123,12 @@ export type LoginResponsePayload = {
   request: LoginRequestPayload,
   data: {
     accessToken: string,
+    restored: boolean,
+    uid?: string,
+    providerId?: string,
+    displayName?: string,
+    email?: string,
+    avatarURL?: string,
   },
   error?: ?Object,
 };

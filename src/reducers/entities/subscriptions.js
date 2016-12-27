@@ -47,7 +47,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
           createdAt: new Date(),
           ...restOfPayload,
         }));
-      })(payload);
+      })(payload || {});
 
     case DELETE_SUBSCRIPTION:
       // TODO: Delete all events that are not being used elsewhere
@@ -56,14 +56,14 @@ export default (state: State = initialState, { type, payload, error }: Action<an
     case LOAD_SUBSCRIPTION_DATA_REQUEST:
       return (({ subscriptionId }: ApiRequestPayload) => (
         state.setIn([subscriptionId, 'loading'], true)
-      ))(payload);
+      ))(payload || {});
 
     case LOAD_SUBSCRIPTION_DATA_FAILURE:
       return (({ request: { subscriptionId } }: ApiResponsePayload) => (
         state
           .setIn([subscriptionId, 'loading'], false)
           .setIn([subscriptionId, 'error'], error)
-      ))(payload);
+      ))(payload || {});
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
       return (({ request: { subscriptionId }, data: { result }, meta }: ApiResponsePayload) => {
@@ -86,7 +86,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
         }));
 
         return state.set(subscriptionId, newSubscription);
-      })(payload);
+      })(payload || {});
 
     case CLEAR_EVENTS:
       return (({ eventIds }: SeenEvents) => (
@@ -98,7 +98,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
 
           return subscription.set('events', newEventIds);
         })
-      ))(payload);
+      ))(payload || {});
 
     default:
       return state;

@@ -12,8 +12,8 @@ import type { Action } from '../../utils/types';
 type State = Array<string>;
 const initialState = Set();
 
-export default (state: State = initialState, action: Action<any>): State => {
-  const { type, payload: { eventIds } = {} } = action || {};
+export default (state: State = initialState, { type, payload }: Action<any> = {}): State => {
+  const { eventIds } = payload || {};
 
   switch (type) {
     case MARK_EVENTS_AS_SEEN:

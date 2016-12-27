@@ -20,33 +20,40 @@ type State = {
 };
 
 type ActionType = Action<LoginRequestPayload | LoginResponsePayload>;
-export default (state: State = initialState, { type, payload }: ActionType): State => {
+export default (state: State = initialState, { type, payload, error }: ActionType): State => {
   switch (type) {
     case LOGIN_REQUEST:
       return state.set('isLogging', true);
 
     case LOGIN_SUCCESS:
-      return state
-        .set('isLogging', false)
-        .set('accessToken', payload.data.accessToken)
-        .set('loggedAt', new Date())
-      ;
-
-    case LOGIN_FAILURE:
-      return Map({ isLogging: false });
-
-    case LOGOUT:
-      return Map();
+      return state.mergeDeep({
+        isLogging: false,
+        accessToken: payload.data.accessToken,
+        loggedAt: new Date(),
+        lastAccessedAt: new Date(),
+      });
 
     case UPDATE_CURRENT_USER:
-      return state
-        .set('uid', payload && payload.uid)
-        .set('providerId', payload && payload.providerId)
-        .set('displayName', payload && payload.displayName)
-        .set('email', payload && payload.email)
-        .set('avatarURL', payload && payload.photoURL)
-      ;
+      return state.mergeDeep({
+        uid: payload && payload.uid,
+        providerId: payload && payload.providerId,
+        displayName: payload && payload.displayName,
+        email: payload && payload.email,
+        avatarURL: payload && payload.photoURL,
+        lastAccessedAt: new Date(),
+      });
 
+    case LOGIN_FAILURE:
+      return Map({
+        isLogging: false,
+        loggedOutAt: new Date(),
+        error,
+      });
+
+    case LOGOUT:
+      return Map({
+        loggedOutAt: new Date(),
+      });
 
     default:
       return state;

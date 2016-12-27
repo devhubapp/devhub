@@ -13,6 +13,7 @@ import {
   columnSubscriptionIdsSelector,
   subscriptionSelector,
   accessTokenSelector,
+  isLoggedSelector,
 } from '../selectors';
 
 import {
@@ -53,8 +54,9 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
     if (timeout) throw new Error('Timeout', 'TimeoutError');
 
-    const { data, meta }: ApiResponsePayload = response;
     // console.log('loadSubscriptionData response', response);
+    const { data, meta }: ApiResponsePayload = response;
+    if (!data) return;
 
     let onlyNewEvents = data;
 
@@ -116,13 +118,20 @@ function* updateSubscriptionsFromAllColumns() {
   });
 }
 
+// update all columns each minute
 function* startTimer() {
   yield take(REHYDRATE);
 
- // update all columns each minute
   while (true) {
-    yield put(updateAllColumnsSubscriptions(sagaActionChunk));
-    yield call(delay, 60 * 1000);
+    const state = yield select();
+    const isLogged = isLoggedSelector(state);
+
+    if (isLogged) {
+      yield put(updateAllColumnsSubscriptions(sagaActionChunk));
+      yield call(delay, 60 * 1000);
+    } else {
+      yield call(delay, 1000);
+    }
   }
 }
 

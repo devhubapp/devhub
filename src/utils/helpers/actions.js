@@ -11,7 +11,7 @@ import type { Action, ActionType } from '../types';
  * { type: 'SET_THEME', payload: 'dark' }
  */
 export function action<T>(type: ActionType, payload: T = {}, other?: Object = {}): Action<T> {
-  return { ...other, type, payload: payload || {} };
+  return { ...other, type, payload: payload };
 }
 
 /**

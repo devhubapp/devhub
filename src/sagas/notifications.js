@@ -3,11 +3,11 @@
 import moment from 'moment';
 import { arrayOf, normalize } from 'normalizr';
 import { delay, takeEvery } from 'redux-saga';
-import { call, fork, put, race, select, take } from 'redux-saga/effects';
+import { call, cancel, fork, put, race, select, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { NotificationSchema } from '../utils/normalizr/schemas';
-import { accessTokenSelector, notificationIdsSelector } from '../selectors';
+import { accessTokenSelector, isLoggedSelector, notificationIdsSelector } from '../selectors';
 
 import { LOAD_NOTIFICATIONS_REQUEST } from '../utils/constants/actions';
 
@@ -43,8 +43,9 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
 
     if (timeout) throw new Error('Timeout', 'TimeoutError');
 
-    const { data, meta }: ApiResponsePayload = response;
     // console.log('onLoadNotificationsRequest response', response);
+    const { data, meta }: ApiResponsePayload = response;
+    if (!data) return;
 
     const normalizedData = normalize(data, arrayOf(NotificationSchema));
     yield put(loadNotificationsSuccess(requestPayload, normalizedData, meta, sagaActionChunk));
@@ -55,31 +56,43 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
   }
 }
 
-function* startTimer() {
-  yield take(REHYDRATE);
+function* updateNotifications() {
+  const state = yield select();
+  const notificationIds = notificationIdsSelector(state);
+  const isEmpty = notificationIds.size <= 0;
 
- // load notifications each minute
-  while (true) {
-    const state = yield select();
-    const notificationIds = notificationIdsSelector(state);
-    const isEmpty = notificationIds.size <= 0;
-
-    const lastModifiedAt = state.getIn(['notifications', 'lastModifiedAt']);
-    const params = isEmpty
+  const lastModifiedAt = state.getIn(['notifications', 'lastModifiedAt']);
+  const params = isEmpty
       ? {
         all: true,
-        since: (lastModifiedAt ? moment(new Date(lastModifiedAt)) : moment().subtract(1, 'month')).format(),
+        since: moment().subtract(30, 'day').format(),
+        // since: (lastModifiedAt ? moment(new Date(lastModifiedAt)) : moment().subtract(1, 'month')).format(),
       }
       : {
-        since: moment().subtract(1, 'day').format(),
+        since: moment().subtract(30, 'day').format(),
       }
     ;
 
-    params.headers = {};
-    if (!isEmpty && lastModifiedAt) params.headers['If-Modified-Since'] = lastModifiedAt;
+  params.headers = {};
+  if (!isEmpty && lastModifiedAt) params.headers['If-Modified-Since'] = lastModifiedAt;
 
-    yield put(loadNotificationsRequest(params, sagaActionChunk));
-    yield call(delay, 60 * 1000);
+  yield put(loadNotificationsRequest(params, sagaActionChunk));
+}
+
+// update user notifications each minute
+function* startTimer() {
+  yield take(REHYDRATE);
+
+  while (true) {
+    const state = yield select();
+    const isLogged = isLoggedSelector(state);
+
+    if (isLogged) {
+      yield updateNotifications();
+      yield call(delay, 60 * 1000);
+    } else {
+      yield call(delay, 1000);
+    }
   }
 }
 

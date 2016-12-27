@@ -58,18 +58,17 @@ function* watchFirebaseCurrentUser() {
   let lastUser = ignoreValue;
 
   firebase.auth().onAuthStateChanged((user) => {
-    // console.log('watchFirebaseCurrentUser', user);
     lastUser = user;
   });
 
   while (true) {
-    yield call(delay, 1000);
-
     if (lastUser !== ignoreValue) {
       const user = lastUser && lastUser.providerData && lastUser.providerData[0];
       lastUser = ignoreValue;
       yield put(updateCurrentUser(user, sagaActionChunk));
     }
+
+    yield call(delay, 100);
   }
 }
 
