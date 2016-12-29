@@ -2,7 +2,6 @@
 /*  eslint-disable import/prefer-default-export */
 
 import { denormalize } from 'denormalizr';
-import { arrayOf } from 'normalizr';
 
 import { createImmutableSelector, entitiesSelector } from './shared';
 import { groupNotificationsByRepository } from '../utils/helpers/github';
@@ -11,7 +10,6 @@ import { NotificationSchema } from '../utils/normalizr/schemas';
 export const notificationIdSelector = (state, { notificationId }) => notificationId;
 export const notificationDetailsSelector = (state) => state.get('notifications');
 export const notificationEntitiesSelector = (state) => entitiesSelector(state).get('notifications');
-export const notificationsSelector = (state) => entitiesSelector(state).get('notifications');
 
 export const notificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
@@ -45,7 +43,7 @@ export const denormalizedOrderedNotificationsSelector = createImmutableSelector(
   notificationIdsSelector,
   entitiesSelector,
   (notificationIds, entities) => (
-    denormalize(notificationIds, entities, arrayOf(NotificationSchema))
+    denormalize(notificationIds, entities, [NotificationSchema])
       .sort(sortNotificationsByDate)
   ),
 );

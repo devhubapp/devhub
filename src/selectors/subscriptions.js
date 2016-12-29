@@ -2,7 +2,6 @@
 /*  eslint-disable import/prefer-default-export */
 
 import { denormalize } from 'denormalizr';
-import { arrayOf } from 'normalizr';
 
 import { createImmutableSelector, entitiesSelector } from './shared';
 import { SubscriptionSchema } from '../utils/normalizr/schemas';
@@ -15,7 +14,7 @@ export const denormalizedSubscriptionsSelector = createImmutableSelector(
   subscriptionsSelector,
   entitiesSelector,
   (subscriptions, entities) => (
-    denormalize(subscriptions, entities, arrayOf(SubscriptionSchema))
+    denormalize(subscriptions, entities, [SubscriptionSchema])
   ),
 );
 

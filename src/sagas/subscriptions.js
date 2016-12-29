@@ -2,7 +2,7 @@
 
 import moment from 'moment';
 import { flatten, uniq } from 'lodash';
-import { arrayOf, normalize } from 'normalizr';
+import { normalize } from 'normalizr';
 import { delay, takeEvery, takeLatest } from 'redux-saga';
 import { call, fork, put, race, select, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
@@ -74,7 +74,7 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
         ));
       }
 
-      finalData = normalize(onlyNewEvents, arrayOf(EventSchema));
+      finalData = normalize(onlyNewEvents, [EventSchema]);
     }
 
     yield put(loadSubscriptionDataSuccess(requestPayload, finalData, meta, sagaActionChunk));

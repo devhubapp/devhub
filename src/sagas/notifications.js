@@ -1,7 +1,7 @@
 // @flow
 
 import moment from 'moment';
-import { arrayOf, normalize } from 'normalizr';
+import { normalize } from 'normalizr';
 import { delay, takeEvery } from 'redux-saga';
 import { call, cancel, fork, put, race, select, take } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
@@ -53,7 +53,7 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
       const enhancedData = enhanceNotificationsData(data);
 
       console.log('enhancedData', enhancedData);
-      finalData = normalize(enhancedData, arrayOf(NotificationSchema));
+      finalData = normalize(enhancedData, [NotificationSchema]);
       console.log('enhancedData normalized', finalData);
     }
 

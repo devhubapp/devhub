@@ -1,24 +1,24 @@
-import { arrayOf, Schema } from 'normalizr';
+import { schema } from 'normalizr';
 
 const idAttribute = (obj: { id: number | string }): string => obj.id.toString().toLowerCase();
 
-export const CommentSchema = new Schema('comments', { idAttribute });
-export const ColumnSchema = new Schema('columns', { idAttribute });
-export const EventSchema = new Schema('events', { idAttribute });
-export const IssueSchema = new Schema('issues', { idAttribute });
-export const OrgSchema = new Schema('orgs', { idAttribute });
-export const NotificationSchema = new Schema('notifications', { idAttribute });
-export const PullRequestSchema = new Schema('pullRequests', { idAttribute });
-export const SubscriptionSchema = new Schema('subscriptions');
-export const UserSchema = new Schema('users', { idAttribute });
-export const RepoSchema = new Schema('repos', { idAttribute });
+export const CommentSchema = new schema.Entity('comments', { idAttribute });
+export const ColumnSchema = new schema.Entity('columns', { idAttribute });
+export const EventSchema = new schema.Entity('events', { idAttribute });
+export const IssueSchema = new schema.Entity('issues', { idAttribute });
+export const OrgSchema = new schema.Entity('orgs', { idAttribute });
+export const NotificationSchema = new schema.Entity('notifications', { idAttribute });
+export const PullRequestSchema = new schema.Entity('pullRequests', { idAttribute });
+export const SubscriptionSchema = new schema.Entity('subscriptions', { idAttribute });
+export const UserSchema = new schema.Entity('users', { idAttribute });
+export const RepoSchema = new schema.Entity('repos', { idAttribute });
 
 CommentSchema.define({
   user: UserSchema,
 });
 
 ColumnSchema.define({
-  subscriptions: arrayOf(SubscriptionSchema),
+  subscriptions: [SubscriptionSchema],
 });
 
 EventSchema.define({
@@ -32,13 +32,13 @@ EventSchema.define({
     repo: RepoSchema,
     user: UserSchema,
   },
-  merged: arrayOf(EventSchema),
+  merged: [EventSchema],
 });
 
 IssueSchema.define({
   user: UserSchema,
   assignee: UserSchema,
-  assignees: arrayOf(UserSchema),
+  assignees: [UserSchema],
 });
 
 NotificationSchema.define({
@@ -51,22 +51,10 @@ NotificationSchema.define({
 PullRequestSchema.define({
   user: UserSchema,
   assignee: UserSchema,
-  assignees: arrayOf(UserSchema),
+  assignees: [UserSchema],
   merged_by: UserSchema,
 });
 
 SubscriptionSchema.define({
-  events: arrayOf(EventSchema),
+  events: [EventSchema],
 });
-
-export default {
-  CommentSchema,
-  ColumnSchema,
-  EventSchema,
-  IssueSchema,
-  OrgSchema,
-  PullRequestSchema,
-  UserSchema,
-  RepoSchema,
-  SubscriptionSchema,
-};

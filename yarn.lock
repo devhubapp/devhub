@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@exponent/ex-navigation@^2.3.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@exponent/ex-navigation/-/ex-navigation-2.5.0.tgz#acb8486387ceb11d85a586f4c303544c20633f5d"
+"@exponent/ex-navigation@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@exponent/ex-navigation/-/ex-navigation-2.7.0.tgz#ef68067eb310bd1f018e406ca1754461177d4caf"
   dependencies:
     "@exponent/react-native-touchable-native-feedback-safe" "^1.1.0"
     clamp "^1.0.1"
@@ -19,7 +19,7 @@
     react-clone-referenced-element "^1.0.1"
     react-mixin "^3.0.5"
     react-native-drawer-layout "^1.0.0"
-    react-native-tab-view "^0.0.38"
+    react-native-tab-view "0.0.42"
     react-redux "^4.4.5"
     react-static-container "^1.0.0"
     react-timer-mixin "^0.13.3"
@@ -1170,9 +1170,9 @@ buffer@^5.0.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
-bugsnag-react-native@^1.1.4:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.2.0.tgz#85cd7e68f556232e28567ae07088cccb6070c0da"
+bugsnag-react-native@1.1.*:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.1.4.tgz#478d348f8a754a520d0a73454b451cca4829500e"
   dependencies:
     promise "^7"
 
@@ -1621,12 +1621,11 @@ denodeify@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/denodeify/-/denodeify-1.2.1.tgz#3a36287f5034e699e7577901052c2e6c94251631"
 
-denormalizr@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/denormalizr/-/denormalizr-0.4.1.tgz#b08ff8ca6d4b13b993f44d695117e8d721830505"
+"denormalizr@https://github.com/brunolemos/denormalizr":
+  version "1.0.0"
+  resolved "https://github.com/brunolemos/denormalizr#2e21f76ebfcb60cee5a8186de5c77378f06c7cf8"
   dependencies:
     lodash "^4.16.3"
-    normalizr "^2.0.0"
 
 depd@~1.0.1:
   version "1.0.1"
@@ -3516,9 +3515,9 @@ lodash@^3.5.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.3, lodash@^4.16.6, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1, lodash@^4.8.0:
-  version "4.17.2"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
+lodash@^4.0.0, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.3, lodash@^4.16.6, lodash@^4.17.3, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1, lodash@^4.8.0:
+  version "4.17.3"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.3.tgz#557ed7d2a9438cac5fd5a43043ca60cb455e01f7"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -3822,11 +3821,9 @@ normalize-path@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-2.0.1.tgz#47886ac1662760d4261b7d979d241709d3ce3f7a"
 
-normalizr@^2.0.0, normalizr@^2.2.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-2.3.1.tgz#ac12d771ce1fe6a43094c3d828caada4ed9a4540"
-  dependencies:
-    lodash "^4.17.2"
+normalizr@>=3.0.0-beta:
+  version "3.0.0-beta"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.0.0-beta.tgz#9f3cb52efd98504f6d6525dd9d584c56c7cee2de"
 
 npmlog@^2.0.4:
   version "2.0.4"
@@ -4191,15 +4188,15 @@ react-native-fabric@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/react-native-fabric/-/react-native-fabric-0.3.2.tgz#cb1bf2f1c1dc2b6f01ae6ab318066e058e81db17"
 
-react-native-immutable-list-view@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-immutable-list-view/-/react-native-immutable-list-view-0.2.1.tgz#3518261f802965567ae52e7f7088656643b3592b"
+react-native-immutable-list-view@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-immutable-list-view/-/react-native-immutable-list-view-0.2.2.tgz#35b0dc933e3e76ece801196797266f054fe2dc83"
   dependencies:
     immutable "~3.8.1"
 
-react-native-linear-gradient@^1.5.15:
-  version "1.5.15"
-  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-1.5.15.tgz#4413111934dc1d8f5e0572ca96e60b1a2cf41f4d"
+react-native-linear-gradient@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-1.6.2.tgz#1ea3e7a186b514661b927673aa9c427dd520999f"
 
 react-native-oauth@^2.1.5:
   version "2.1.5"
@@ -4208,9 +4205,9 @@ react-native-oauth@^2.1.5:
     invariant "^2.2.1"
     valib "^2.0.0"
 
-react-native-tab-view@^0.0.38:
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.38.tgz#4194bba0abda9f781101c1a995c92733b194461a"
+react-native-tab-view@0.0.42:
+  version "0.0.42"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.42.tgz#abaeda8e7ab856db98c09709d3d82d2a08b94564"
 
 react-native-vector-icons@^3.0.0:
   version "3.0.0"
@@ -4458,9 +4455,9 @@ redux-persist@^4.0.0, redux-persist@^4.0.0-beta2:
     lodash "^4.11.1"
     lodash-es "^4.16.0"
 
-redux-saga@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.13.0.tgz#9294386550deb0d56bc9a1b3c90a613e7ddb6593"
+redux-saga@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.14.0.tgz#7792bcc9dc57e9ed2484daa95794b154ee472b24"
 
 redux@^3.5.2, redux@^3.6.0:
   version "3.6.0"

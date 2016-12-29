@@ -2,7 +2,6 @@
 /*  eslint-disable import/prefer-default-export */
 
 import { denormalize } from 'denormalizr';
-import { arrayOf } from 'normalizr';
 
 import { createImmutableSelector, entitiesSelector } from './shared';
 import { makeColumnEventIdsSelector } from './columns';
@@ -32,7 +31,7 @@ export const makeDenormalizedOrderedColumnEventsSelector = () => {
     columnEventIdsSelector,
     entitiesSelector,
     (eventIds, entities) => groupSimilarEvents(
-      denormalize(eventIds, entities, arrayOf(EventSchema))
+      denormalize(eventIds, entities, [EventSchema])
         .filter(Boolean)
         .sort(sortEventsByDate)
       ,

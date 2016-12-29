@@ -1,6 +1,7 @@
 package org.brunolemos.devhub;
 
 import com.facebook.react.ReactActivity;
+import com.bugsnag.BugsnagReactNative;
 
 public class MainActivity extends ReactActivity {
 
