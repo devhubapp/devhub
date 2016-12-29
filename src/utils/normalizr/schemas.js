@@ -1,17 +1,33 @@
+import moment from 'moment';
 import { schema } from 'normalizr';
 
 const idAttribute = (obj: { id: number | string }): string => obj.id.toString().toLowerCase();
+const mergeStrategy = (entityA, entityB) => {
+  if (entityA.updated_at && entityB.updated_at) {
+    const dateA = new Date(entityA.updated_at);
+    const dateB = new Date(entityA.updated_at);
 
-export const CommentSchema = new schema.Entity('comments', { idAttribute });
-export const ColumnSchema = new schema.Entity('columns', { idAttribute });
-export const EventSchema = new schema.Entity('events', { idAttribute });
-export const IssueSchema = new schema.Entity('issues', { idAttribute });
-export const OrgSchema = new schema.Entity('orgs', { idAttribute });
-export const NotificationSchema = new schema.Entity('notifications', { idAttribute });
-export const PullRequestSchema = new schema.Entity('pullRequests', { idAttribute });
-export const SubscriptionSchema = new schema.Entity('subscriptions', { idAttribute });
-export const UserSchema = new schema.Entity('users', { idAttribute });
-export const RepoSchema = new schema.Entity('repos', { idAttribute });
+    return moment(dateA).isAfter(dateB) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
+  }
+
+  return {
+    ...entityB,
+    ...entityA,
+  };
+};
+
+const defaultOptions = { idAttribute, mergeStrategy };
+
+export const CommentSchema = new schema.Entity('comments', {}, defaultOptions);
+export const ColumnSchema = new schema.Entity('columns', {}, defaultOptions);
+export const EventSchema = new schema.Entity('events', {}, defaultOptions);
+export const IssueSchema = new schema.Entity('issues', {}, defaultOptions);
+export const OrgSchema = new schema.Entity('orgs', {}, defaultOptions);
+export const NotificationSchema = new schema.Entity('notifications', {}, defaultOptions);
+export const PullRequestSchema = new schema.Entity('pullRequests', {}, defaultOptions);
+export const SubscriptionSchema = new schema.Entity('subscriptions', {}, defaultOptions);
+export const UserSchema = new schema.Entity('users', {}, defaultOptions);
+export const RepoSchema = new schema.Entity('repos', {}, defaultOptions);
 
 CommentSchema.define({
   user: UserSchema,
