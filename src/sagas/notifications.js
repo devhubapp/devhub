@@ -3,14 +3,14 @@
 import moment from 'moment';
 import { normalize } from 'normalizr';
 import { delay } from 'redux-saga';
-import { call, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
+import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
-import { enhanceNotificationsData } from '../utils/helpers';
+import { dateToHeaderFormat, enhanceNotificationsData } from '../utils/helpers';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 import { accessTokenSelector, isLoggedSelector, notificationIdsSelector } from '../selectors';
 
-import { LOAD_NOTIFICATIONS_REQUEST } from '../utils/constants/actions';
+import { LOAD_NOTIFICATIONS_REQUEST, UPDATE_NOTIFICATIONS } from '../utils/constants/actions';
 
 import type { Action, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
 
@@ -18,6 +18,7 @@ import {
   loadNotificationsRequest,
   loadNotificationsSuccess,
   loadNotificationsFailure,
+  updateNotifications,
 } from '../actions';
 
 import { authenticate, getApiMethod } from '../api/github';
@@ -65,25 +66,22 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
   }
 }
 
-function* updateNotifications() {
-  const state = yield select();
-  const notificationIds = notificationIdsSelector(state);
-  const isEmpty = notificationIds.size <= 0;
+function* onUpdateNotificationsRequest() {
+  // const state = yield select();
+  // const notificationIds = notificationIdsSelector(state);
+  // const isEmpty = notificationIds.size <= 0;
 
-  const lastModifiedAt = state.getIn(['notifications', 'lastModifiedAt']);
-  const params = isEmpty
-      ? {
-        all: true,
-        since: moment().subtract(30, 'day').format(),
-        // since: (lastModifiedAt ? moment(new Date(lastModifiedAt)) : moment().subtract(1, 'month')).format(),
-      }
-      : {
-        since: moment().subtract(30, 'day').format(),
-      }
-    ;
+  // const lastModifiedAt = new Date(state.getIn(['notifications', 'lastModifiedAt']));
+  // const defaultModifiedSince = moment().subtract(1, 'month').toDate().toString();
+  const defaultSince = moment().subtract(1, 'month').format();
+
+  const params = { all: true, since: defaultSince };
 
   params.headers = {};
-  if (!isEmpty && lastModifiedAt) params.headers['If-Modified-Since'] = lastModifiedAt;
+  params.headers['If-Modified-Since'] = dateToHeaderFormat(defaultSince);
+  // if (!isEmpty && lastModifiedAt) {
+    // params.headers['If-Modified-Since'] = dateToHeaderFormat(lastModifiedAt);
+  // }
 
   yield put(loadNotificationsRequest(params, sagaActionChunk));
 }
@@ -97,7 +95,7 @@ function* startTimer() {
     const isLogged = isLoggedSelector(state);
 
     if (isLogged) {
-      yield updateNotifications();
+      yield put(updateNotifications(sagaActionChunk));
       yield call(delay, 60 * 1000);
     } else {
       yield call(delay, 1000);
@@ -107,6 +105,7 @@ function* startTimer() {
 
 export default function* () {
   return yield [
+    yield takeLatest(UPDATE_NOTIFICATIONS, onUpdateNotificationsRequest),
     yield takeEvery(LOAD_NOTIFICATIONS_REQUEST, onLoadNotificationsRequest),
     yield fork(startTimer),
   ];

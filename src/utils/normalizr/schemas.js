@@ -5,9 +5,16 @@ const idAttribute = (obj: { id: number | string }): string => obj.id.toString().
 const mergeStrategy = (entityA, entityB) => {
   if (entityA.updated_at && entityB.updated_at) {
     const dateA = new Date(entityA.updated_at);
-    const dateB = new Date(entityA.updated_at);
+    const dateB = new Date(entityB.updated_at);
 
-    return moment(dateA).isAfter(dateB) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
+    return moment(dateB).isAfter(dateA) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
+  }
+
+  if (entityA.created_at && entityB.created_at) {
+    const dateA = new Date(entityA.created_at);
+    const dateB = new Date(entityB.created_at);
+
+    return moment(dateB).isAfter(dateA) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
   }
 
   return {

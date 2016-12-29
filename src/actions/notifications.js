@@ -5,6 +5,7 @@ import {
   LOAD_NOTIFICATIONS_REQUEST,
   LOAD_NOTIFICATIONS_SUCCESS,
   LOAD_NOTIFICATIONS_FAILURE,
+  UPDATE_NOTIFICATIONS,
 } from '../utils/constants/actions';
 
 import { requestTypes } from '../api/github';
@@ -17,9 +18,13 @@ import type {
 
 export const loadNotificationsRequest = (params: NotificationsOptions, other?: Object) => (
   action(LOAD_NOTIFICATIONS_REQUEST, ({
-    params,
+    params: params || {},
     requestType: requestTypes.NOTIFICATIONS,
   }: ApiRequestPayload), other)
+);
+
+export const updateNotifications = (other?: Object) => (
+  action(UPDATE_NOTIFICATIONS, undefined, other)
 );
 
 export const loadNotificationsSuccess = (

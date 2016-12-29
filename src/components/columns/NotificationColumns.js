@@ -16,7 +16,7 @@ export default class extends React.PureComponent {
   };
 
   renderRow = (column) => {
-    const { updatedAt } = this.props;
+    const { actions, updatedAt } = this.props;
 
     if (!column) return null;
 
@@ -29,6 +29,7 @@ export default class extends React.PureComponent {
     return (
       <NotificationColumn
         key={`notification-column-${columnId}`}
+        actions={actions}
         column={column}
         items={items}
         radius={radius}
@@ -38,11 +39,12 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { columns = List(), ...props } = this.props;
+    const { actions, columns = List(), ...props } = this.props;
 
     return (
       <Columns
         key="notification-columns"
+        actions={actions}
         columns={columns}
         renderRow={this.renderRow}
         {...props}

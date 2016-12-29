@@ -9,8 +9,8 @@ import type { ActionCreators, Repo } from '../../utils/types';
 
 export default class extends React.PureComponent {
   onRefresh = () => {
-    const { actions: { updateNotificationsRequest } } = this.props;
-    updateNotificationsRequest();
+    const { actions: { updateNotifications } } = this.props;
+    updateNotifications();
   };
 
   props: {

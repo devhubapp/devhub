@@ -89,7 +89,6 @@ export const StyledImmutableListView = styled(ImmutableListView)`
 @withTheme
 export default class extends React.PureComponent {
   props: {
-    actions: ActionCreators,
     errors?: ?Array<string>,
     headerRight?: React.Element,
     icon: string,

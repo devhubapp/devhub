@@ -98,3 +98,8 @@ export function getDateSmallText(date) { // , separator = '•'
 
   return momentDate.format('MMM Do').toLowerCase();
 }
+
+export function dateToHeaderFormat(date: Date | string): string {
+  const _date = typeof date === 'string' ? new Date(date) : date;
+  return moment(_date).utc().format('ddd, DD MMM YYYY HH:mm:ss z').replace('UTC', 'GMT');
+}
