@@ -1623,7 +1623,7 @@ denodeify@^1.2.1:
 
 "denormalizr@https://github.com/brunolemos/denormalizr":
   version "1.0.0"
-  resolved "https://github.com/brunolemos/denormalizr#2e21f76ebfcb60cee5a8186de5c77378f06c7cf8"
+  resolved "https://github.com/brunolemos/denormalizr#8e6f31bf2424dac3556ac308e242ed6d8abf1449"
   dependencies:
     lodash "^4.16.3"
 
@@ -2356,9 +2356,9 @@ getport@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/getport/-/getport-0.1.0.tgz#abddf3d5d1e77dd967ccfa2b036a0a1fb26fd7f7"
 
-"github@https://github.com/brunolemos/react-native-github-api.git":
+"github@https://github.com/brunolemos/react-native-github-api":
   version "7.0.0"
-  resolved "https://github.com/brunolemos/react-native-github-api.git#42ca84e453605c0f06d1694e66ab9298f81fcb4b"
+  resolved "https://github.com/brunolemos/react-native-github-api#b9b0ea4d5ea2ad4cab6ed2c2e8329377ffa5b063"
   dependencies:
     https-proxy-agent "^1.0.0"
     mime-types "^2.1.13"

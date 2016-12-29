@@ -3,8 +3,8 @@
 import moment from 'moment';
 import { flatten, uniq } from 'lodash';
 import { normalize } from 'normalizr';
-import { delay, takeEvery, takeLatest } from 'redux-saga';
-import { call, fork, put, race, select, take } from 'redux-saga/effects';
+import { delay, takeEvery } from 'redux-saga';
+import { call, fork, put, race, select, take, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { EventSchema } from '../utils/normalizr/schemas';

@@ -17,10 +17,10 @@ function getStyle(from, size) {
 
 function getProps(from) {
   switch (from) {
-    case 'top': return { start: [0, 1], end: [0, 0] };
-    case 'bottom': return { start: [0, 0], end: [0, 1] };
-    case 'left': return { start: [1, 0], end: [0, 0] };
-    default: return { start: [0, 0], end: [1, 0] };
+    case 'top': return { start: { x: 0, y: 1 }, end: { x: 0, y: 0 } };
+    case 'bottom': return { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } };
+    case 'left': return { start: { x: 1, y: 0 }, end: { x: 0, y: 0 } };
+    default: return { start: { x: 0, y: 0 }, end: { x: 1, y: 0 } };
   }
 }
 

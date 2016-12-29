@@ -1,8 +1,8 @@
 // @flow
 
 import * as firebase from 'firebase';
-import { delay, takeLatest } from 'redux-saga';
-import { call, fork, put } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { call, fork, put, takeLatest } from 'redux-saga/effects';
 
 import OAuthManager from '../utils/oauth';
 

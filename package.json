@@ -17,7 +17,7 @@
     "bugsnag-react-native": "1.1.*",
     "denormalizr": "https://github.com/brunolemos/denormalizr",
     "firebase": "^3.6.4",
-    "github": "https://github.com/brunolemos/react-native-github-api.git",
+    "github": "https://github.com/brunolemos/react-native-github-api",
     "gravatar": "^1.6.0",
     "immutable": "^3.8.1",
     "lodash": "^4.17.3",
