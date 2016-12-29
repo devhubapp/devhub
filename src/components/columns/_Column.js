@@ -83,6 +83,7 @@ export const ProgressBarContainer = styled.View`
 
 export const StyledImmutableListView = styled(ImmutableListView)`
   flex: 1;
+  overflow: hidden;
 `;
 
 @withTheme
@@ -169,6 +170,8 @@ export default class extends React.PureComponent {
                   progressBackgroundColor={theme.base02}
                 />
               }
+              contentContainerStyle={{ overflow: 'hidden' }}
+              removeClippedSubviews
             />
           </StyledTextOverlay>
         </ColumnRoot>

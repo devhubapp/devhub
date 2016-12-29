@@ -22,7 +22,7 @@ import {
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
+import { getIssueIconAndColor, trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { Issue, ThemeObject } from '../../utils/types';
 
 @withTheme
@@ -38,28 +38,14 @@ export default class extends React.PureComponent {
 
     if (!issue) return null;
 
-    const { user, number, state, title } = {
-      user: issue.get('user'),
-      number: issue.get('number'),
-      state: issue.get('state'),
-      title: issue.get('title'),
-    };
+    const user = issue.get('user');
+    const number = issue.get('number');
+    const title = issue.get('title');
 
     const _title = trimNewLinesAndSpaces(title);
     if (!_title) return null;
 
-    const { icon, color } = (() => {
-      switch (state) {
-        case 'open':
-          return { icon: 'issue-opened', color: theme.green };
-
-        case 'closed':
-          return { icon: 'issue-closed', color: theme.red };
-
-        default:
-          return { icon: 'issue-opened' };
-      }
-    })();
+    const { icon, color } = getIssueIconAndColor(issue, theme);
 
     const byText = user && user.get('login') ? `@${user.get('login')}` : '';
 

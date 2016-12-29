@@ -3,7 +3,7 @@
  * https://developer.github.com/v3/activity/events/types/#watchevent
  */
 
-export type User = {
+export type GithubUser = {
   id: number | string,
   login: string,
   display_login?: string,
@@ -23,7 +23,7 @@ export type User = {
   received_events_url?: string, // https://api.github.com/users/richelbilderbeek/received_events
 };
 
-export type Reaction = {
+export type GithubReaction = {
   total_count: number,
   '+1': number,
   '-1': number,
@@ -36,22 +36,22 @@ export type Reaction = {
   url: string, // 'https://api.github.com/repos/octocat/Hello-World/comments/1/reactions'
 };
 
-export type Comment = {
+export type GithubComment = {
   id: string,
   commit_id: string, // 6ef64f902613c73251da32d1bc9eb236f38798cc
-  user: User,
+  user: GithubUser,
   body: string,
   position?: ?number,
   line?: ?number,
   path?: ?number,
-  reactions?: Array<Reaction>,
+  reactions?: Array<GithubReaction>,
   created_at: string, // 2016-11-24T16:00:16Z
   updated_at: string, // 2016-11-24T16:00:16Z
   html_url: string, // https://github.com/richelbilderbeek/pbdmms/commit/6ef64f902613c73251da32d1bc9eb236f38798cc#commitcomment-19954756
   url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 };
 
-export type Label = {
+export type GithubLabel = {
   id: number,
   url: string, // "https://api.github.com/repos/hasadna/Open-Knesset/labels/4%20-%20Prioritized",
   name: string,
@@ -60,12 +60,12 @@ export type Label = {
   url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 };
 
-export type Milestone = {
+export type GithubMilestone = {
   id: number, // 1165557
   number: number, // 5
   title: string, // 30
   description: string, // Knesset 30 - future issues / will be fixed later
-  creator: User,
+  creator: GithubUser,
   open_issues: number, // 17
   closed_issues: number, // 1
   state: 'open' | 'closed', // open
@@ -79,18 +79,18 @@ export type Milestone = {
   labels_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/milestones/5/labels
 };
 
-export type Issue = {
+export type GithubIssue = {
   id: string,
-  user: User,
-  assignee: User,
-  assignees: Array<User>,
+  user: GithubUser,
+  assignee: GithubUser,
+  assignees: Array<GithubUser>,
   number: number,
   body: string,
   title: string,
-  labels: Array<Label>,
+  labels: Array<GithubLabel>,
   state: 'open' | 'closed',
   locked: boolean,
-  milestone: Milestone,
+  milestone: GithubMilestone,
   comments: number,
   created_at: string, // 2016-11-24T16:00:16Z
   updated_at: string, // 2016-11-24T16:00:16Z
@@ -103,7 +103,7 @@ export type Issue = {
   events_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345/events
 };
 
-export type Org = {
+export type GithubOrg = {
   id: number | string,
   login: string,
   avatar_url: string,
@@ -112,22 +112,22 @@ export type Org = {
   url: string, // https://api.github.com/orgs/DefinitelyTyped
 };
 
-export type PullRequest = {
+export type GithubPullRequest = {
   id: number, // 95201658
   number: number, // 2
   state: 'open' | 'closed', // closed
   locked: boolean, // false
   title: string, // ok
-  user: User,
+  user: GithubUser,
   body: string, //
   created_at: string, // 2016-11-24T15:59:50Z
   updated_at: string, // 2016-11-24T16:00:02Z
   closed_at: ?string, // 2016-11-24T16:00:02Z
   merged_at: ?string, // 2016-11-24T16:00:02Z
   merge_commit_sha: ?string, // e94fd3c0ed8b1fe095acad353ef27c43dfd7ce9b
-  assignee: ?User, // null
-  assignees: ?Array<User>, // []
-  milestone: ?Milestone, // null
+  assignee: ?GithubUser, // null
+  assignees: ?Array<GithubUser>, // []
+  milestone: ?GithubMilestone, // null
   head: Object, // Object
   base: Object, // Object
   _links: {
@@ -138,7 +138,7 @@ export type PullRequest = {
   merged: boolean, // true
   mergeable: boolean, // null
   mergeable_state: string, // unknown
-  merged_by: User, // User
+  merged_by: GithubUser, // User
   comments: number, // 0
   review_comments: number, // 0
   commits: number, // 2
@@ -158,7 +158,7 @@ export type PullRequest = {
   statuses_url: string, // https://api.github.com/repos/billy0920/hotsite/statuses/b8c4838ea4fd5a0153d422ef5c158493fd57254d
 };
 
-export type Repo = {
+export type GithubRepo = {
   id: number | string,
   name: string,
   full_name?: string,
@@ -171,14 +171,14 @@ export type Repo = {
  * Triggered when a commit comment is created.
  * https://developer.github.com/v3/repos/comments/#list-commit-comments-for-a-repository
  */
-export type CommitCommentEvent = {
+export type GithubCommitCommentEvent = {
   id: string,
   type: 'CommitCommentEvent',
-  actor: User,
-  org?: Org,
-  repo: Repo,
+  actor: GithubUser,
+  org?: GithubOrg,
+  repo: GithubRepo,
   payload: {
-    comment: Comment,
+    comment: GithubComment,
   },
   'public': Boolean,
   created_at: string,
@@ -193,9 +193,9 @@ export type CommitCommentEvent = {
 export type CreateEvent = {
   id: string,
   type: 'CreateEvent',
-  actor: User,
-  org?: Org,
-  repo: Repo,
+  actor: GithubUser,
+  org?: GithubOrg,
+  repo: GithubRepo,
   payload: {
     ref: ?string, // The git ref (or null if only a repository was created).
     ref_type: 'repository' | 'branch' | 'tag', // The object that was created.
@@ -214,9 +214,9 @@ export type CreateEvent = {
 export type DeleteEvent = {
   id: string,
   type: 'CreateEvent',
-  actor: User,
-  org?: Org,
-  repo: Repo,
+  actor: GithubUser,
+  org?: GithubOrg,
+  repo: GithubRepo,
   payload: {
     ref: string, // The full git ref.
     ref_type: 'branch' | 'tag', // The object that was deleted.
@@ -318,7 +318,7 @@ export type PullRequestEvent = {
     | 'reopened'
   ,
   number: number,
-  pull_request: PullRequest,
+  pull_request: GithubPullRequest,
   sender: Object,
 };
 
@@ -327,7 +327,7 @@ export type PullRequestEvent = {
  */
 export type PullRequestReviewEvent = {
   action: 'submitted',
-  pull_request: PullRequest,
+  pull_request: GithubPullRequest,
   review: Object,
 };
 
@@ -339,7 +339,7 @@ export type PullRequestReviewEvent = {
 export type PullRequestReviewCommentEvent = {
   action: 'created' | 'edited' | 'deleted',
   changes: Object,
-  pull_request: PullRequest,
+  pull_request: GithubPullRequest,
   comment: Object,
 };
 
@@ -388,7 +388,7 @@ export type WatchEvent = {
 };
 
 export type GithubEvent =
-  | CommitCommentEvent
+  | GithubCommitCommentEvent
   | CreateEvent
   | DeleteEvent
   | ForkEvent
@@ -638,7 +638,7 @@ export type GithubNotificationReason =
 
 export type GithubNotification = {
   id: string,
-  repository: Repo,
+  repository: GithubRepo,
   subject: {
     title: string,
     url: string,

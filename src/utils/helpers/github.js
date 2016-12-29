@@ -6,60 +6,132 @@ import max from 'lodash/max';
 import moment from 'moment';
 import { fromJS, List, Map, OrderedMap } from 'immutable';
 
+import baseTheme from '../../styles/themes/base';
+
 import type {
     GithubEvent,
     GithubEventType,
     GithubIcon,
+    GithubIssue,
     GithubNotification,
     GithubNotificationReason,
+    GithubPullRequest,
+    ThemeObject,
   } from '../types/github';
 
-export function getEventIcon(event: GithubEvent): GithubIcon {
+
+export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = baseTheme)
+: { color: string, icon: string } {
+  const state = issue.get('state');
+
+  switch (state) {
+    case 'open':
+      return { icon: 'issue-opened', color: theme.green };
+
+    case 'closed':
+      return { icon: 'issue-closed', color: theme.red };
+
+    default:
+      return { icon: 'issue-opened' };
+  }
+}
+
+export function getPullRequestIconAndColor(pullRequest: GithubPullRequest, theme?: ThemeObject = baseTheme)
+: { color: string, icon: string } {
+  const merged = pullRequest.get('merged_at');
+  const state = merged ? 'merged' : pullRequest.get('state');
+
+  switch (state) {
+    case 'open':
+      return { icon: 'git-pull-request', color: theme.green };
+
+    case 'closed':
+      return { icon: 'git-pull-request', color: theme.red };
+
+    case 'merged':
+      return { icon: 'git-merge', color: theme.purple };
+
+    default:
+      return { icon: 'git-pull-request' };
+  }
+}
+
+export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = baseTheme):
+{ icon: GithubIcon, color?: string } {
   const eventType = event.get('type').split(':')[0];
   const payload = event.get('payload');
 
   switch (eventType) {
-    case 'CommitCommentEvent': return 'comment-discussion'; // git-commit
+    case 'CommitCommentEvent': return { icon: 'comment-discussion' }; // git-commit
     case 'CreateEvent':
       switch (payload.get('ref_type')) {
-        case 'repository': return 'repo';
-        case 'branch': return 'git-branch';
-        case 'tag': return 'tag';
-        default: return 'plus';
+        case 'repository': return { icon: 'repo' };
+        case 'branch': return { icon: 'git-branch' };
+        case 'tag': return { icon: 'tag' };
+        default: return { icon: 'plus' };
       }
     case 'DeleteEvent':
       switch (payload.get('ref_type')) {
-        case 'repository': return 'repo'; // probably not used
-        case 'branch': return 'git-branch';
-        case 'tag': return 'tag';
-        default: return 'trashcan';
+        case 'repository': return { icon: 'repo' }; // probably not used
+        case 'branch': return { icon: 'git-branch' };
+        case 'tag': return { icon: 'tag' };
+        default: return { icon: 'trashcan' };
       }
-    case 'GollumEvent': return 'book';
-    case 'ForkEvent': return 'repo-forked';
-    case 'IssueCommentEvent': return 'comment-discussion';
+    case 'GollumEvent': return { icon: 'book' };
+    case 'ForkEvent': return { icon: 'repo-forked' };
+    case 'IssueCommentEvent': return { icon: 'comment-discussion' };
     case 'IssuesEvent':
-      switch (payload.get('action')) {
-        case 'closed': return 'issue-closed';
-        case 'reopened': return 'issue-reopened';
-        // case 'opened':
-        // case 'assigned':
-        // case 'unassigned':
-        // case 'labeled':
-        // case 'unlabeled':
-        // case 'edited':
-        // case 'milestoned':
-        // case 'demilestoned':
-        default: return 'issue-opened';
-      }
-    case 'MemberEvent': return 'person';
-    case 'PublicEvent': return 'repo';
-    case 'PullRequestEvent': return 'git-pull-request';
+      return (() => {
+        const issue = payload.get('issue');
+
+        switch (payload.get('action')) {
+          case 'opened': return getIssueIconAndColor(Map({ state: 'open' }), theme);
+          case 'closed': return getIssueIconAndColor(Map({ state: 'closed' }), theme);
+
+          case 'reopened':
+            return {
+              ...getIssueIconAndColor(Map({ state: 'open' }), theme),
+              icon: 'issue-reopened',
+            };
+
+          // case 'assigned':
+          // case 'unassigned':
+          // case 'labeled':
+          // case 'unlabeled':
+          // case 'edited':
+          // case 'milestoned':
+          // case 'demilestoned':
+          default: return getIssueIconAndColor(issue, theme);
+        }
+      })();
+    case 'MemberEvent': return { icon: 'person' };
+    case 'PublicEvent': return { icon: 'repo' };
+
+    case 'PullRequestEvent':
+      return (() => {
+        const pullRequest = payload.get('pull_request');
+
+        switch (payload.get('action')) {
+          case 'opened':
+          case 'reopened': return getPullRequestIconAndColor(Map({ state: 'open' }), theme);
+
+          // case 'closed': return getPullRequestIconAndColor(Map({ state: 'closed' }), theme);
+
+          // case 'assigned':
+          // case 'unassigned':
+          // case 'labeled':
+          // case 'unlabeled':
+          // case 'edited':
+          default: return getPullRequestIconAndColor(pullRequest, theme);
+        }
+      })();
+
     case 'PullRequestReviewEvent':
-    case 'PullRequestReviewCommentEvent': return 'comment-discussion';
-    case 'PushEvent': return 'code';
-    case 'ReleaseEvent': return 'tag';
-    case 'WatchEvent': return 'star';
-    default: return 'mark-github';
+    case 'PullRequestReviewCommentEvent': return { icon: 'comment-discussion' };
+    case 'PushEvent': return { icon: 'code' };
+    case 'ReleaseEvent': return { icon: 'tag' };
+    case 'WatchEvent': return { icon: 'star' };
+    default: return { icon: 'mark-github' };
   }
 }
 
@@ -136,7 +208,10 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
           case 'unlabeled': return 'unlabeled a pr';
           case 'opened': return 'opened a pr';
           case 'edited': return 'edited a pr';
-          case 'closed': return 'closed a pr';
+
+          case 'closed':
+            return payload.getIn(['pull_request', 'merged_at']) ? 'merged a pr' : 'closed a pr';
+
           case 'reopened': return 'reopened a pr';
           default: return 'interacted with a pr';
         }
@@ -406,7 +481,7 @@ export function enhanceNotificationsData(notifications: Array<GithubNotification
         ...newNotification,
         issueNumber: getIssueNumberFromUrl(newNotification.subject.url),
       };
-    } else  if (newNotification.subject.type === 'PullRequest') {
+    } else if (newNotification.subject.type === 'PullRequest') {
       return {
         ...newNotification,
         pullRequestNumber: getPullRequestNumberFromUrl(newNotification.subject.url),

@@ -22,7 +22,7 @@ import {
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
+import { getPullRequestIconAndColor, trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { PullRequest, ThemeObject } from '../../utils/types';
 
 @withTheme
@@ -41,28 +41,10 @@ export default class extends React.PureComponent {
     const title = trimNewLinesAndSpaces(pullRequest.get('title'));
     if (!title) return null;
 
-    const {
-      number,
-      state,
-      user,
-    } = {
-      number: pullRequest.get('number'),
-      state: pullRequest.get('state'),
-      user: pullRequest.get('user'),
-    };
+    const number = pullRequest.get('number');
+    const user = pullRequest.get('user');
 
-    const { icon, color } = (() => {
-      switch (state) {
-        case 'open':
-          return { icon: 'git-pull-request', color: theme.green };
-
-        case 'closed':
-          return { icon: 'git-pull-request', color: theme.red };
-
-        default:
-          return { icon: 'git-pull-request' };
-      }
-    })();
+    const { icon, color } = getPullRequestIconAndColor(pullRequest, theme);
 
     const byText = user && user.get('login') ? `@${user.get('login')}` : '';
 

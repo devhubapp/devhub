@@ -2,8 +2,8 @@
 
 import moment from 'moment';
 import { normalize } from 'normalizr';
-import { delay, takeEvery } from 'redux-saga';
-import { call, cancel, fork, put, race, select, take } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { call, fork, put, race, select, take, takeEvery } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { enhanceNotificationsData } from '../utils/helpers';

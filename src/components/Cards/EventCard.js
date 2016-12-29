@@ -24,7 +24,7 @@ import TransparentTextOverlay from '../TransparentTextOverlay';
 import UserAvatar from './_UserAvatar';
 import { avatarWidth, contentPadding } from '../../styles/variables';
 import { getDateSmallText } from '../../utils/helpers';
-import { getEventIcon, getEventText } from '../../utils/helpers/github';
+import { getEventIconAndColor, getEventText } from '../../utils/helpers/github';
 import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
 
 import {
@@ -82,6 +82,7 @@ export default class extends React.PureComponent {
     }
 
     const isPrivate = event.get('private') || event.get('public') === false;
+    const { icon: cardIcon, color: cardIconColor } = getEventIconAndColor(event, theme);
 
     return (
       <CardWrapper {...props} seen={seen}>
@@ -108,20 +109,24 @@ export default class extends React.PureComponent {
                 <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
                   <ScrollableContentContainer>
                     <HorizontalView>
-                      <Username numberOfLines={1}>
-                        {actor.get('display_login') || actor.get('login')}
-                      </Username>
-                      <IntervalRefresh
-                        interval={1000}
-                        onRender={
-                          () => {
-                            const dateText = getDateSmallText(created_at, '•');
-                            return dateText && (
-                              <SmallText style={{ flex: 1 }} muted> • {dateText}</SmallText>
-                            );
+                      <Text numberOfLines={1}>
+                        <Username numberOfLines={1}>
+                          {actor.get('display_login') || actor.get('login')}
+                        </Username>
+                        <IntervalRefresh
+                          interval={1000}
+                          onRender={
+                            () => {
+                              const dateText = getDateSmallText(created_at, '•');
+                              return dateText && (
+                                <SmallText muted>
+                                &nbsp;•&nbsp;{dateText}
+                                </SmallText>
+                              );
+                            }
                           }
-                        }
-                      />
+                        />
+                      </Text>
                     </HorizontalView>
                   </ScrollableContentContainer>
                 </TransparentTextOverlay>
@@ -132,7 +137,7 @@ export default class extends React.PureComponent {
                 </Text>
               </FullView>
 
-              <CardIcon name={getEventIcon(event)} />
+              <CardIcon name={cardIcon} color={cardIconColor} />
             </HeaderRow>
 
             <FullAbsoluteView>

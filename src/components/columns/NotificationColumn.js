@@ -4,7 +4,7 @@ import React from 'react';
 
 import Column from './_Column';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
-import { getDateWithHourAndMinuteText } from '../../utils/helpers';
+import { getDateWithHourAndMinuteText, getOwnerAndRepo } from '../../utils/helpers';
 import type { ActionCreators, Repo } from '../../utils/types';
 
 export default class extends React.PureComponent {
@@ -40,7 +40,9 @@ export default class extends React.PureComponent {
     if (!column || !column.get('repo')) return null;
 
     const icon = 'repo';
-    const title = column.getIn(['repo', 'name']).toLowerCase();
+    const repo = column.get('repo');
+    const { repo: repoName } = getOwnerAndRepo(repo.get('full_name') || repo.get('name'));
+    const title = (repoName || '').toLowerCase();
 
     const dateFromNowText = getDateWithHourAndMinuteText(updatedAt);
     const refreshText = dateFromNowText ? `Updated ${dateFromNowText}` : '';

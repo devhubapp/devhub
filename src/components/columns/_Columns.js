@@ -45,8 +45,10 @@ export default class extends React.PureComponent {
         initialListSize={1}
         rowsDuringInteraction={1}
         renderRow={renderRow}
+        contentContainerStyle={{ overflow: 'hidden' }}
         horizontal
         pagingEnabled
+        removeClippedSubviews
         {...props}
       />
     );

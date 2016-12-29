@@ -138,7 +138,7 @@ export const CardIcon = styled(Icon)`
   margin-left: ${contentPadding};
   margin-right: ${iconRightMargin};
   font-size: 20;
-  color: ${({ theme }) => theme.base05};
+  color: ${({ color, theme }) => color || theme.base05};
   background-color: transparent;
 `;
 

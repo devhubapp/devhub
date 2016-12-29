@@ -62,7 +62,7 @@ export function authenticate(token: string) {
   }
 }
 
-export function getEventIcon(type: ApiRequestType) {
+export function getRequestTypeIcon(type: ApiRequestType) {
   switch (type) {
     case requestTypes.PUBLIC_EVENTS: return 'home';
     case requestTypes.REPO_EVENTS: return 'repo';

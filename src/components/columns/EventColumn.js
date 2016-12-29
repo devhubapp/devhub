@@ -13,7 +13,7 @@ import {
 import Column, { HeaderButton, HeaderButtonText, HeaderButtonsContainer } from './_Column';
 import EventCardContainer from '../../containers/EventCardContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
-import { getEventIcon, requestTypes } from '../../api/github';
+import { getRequestTypeIcon, requestTypes } from '../../api/github';
 import { getDateWithHourAndMinuteText } from '../../utils/helpers';
 import type { ActionCreators, Column as ColumnType, Subscription } from '../../utils/types';
 
@@ -142,7 +142,7 @@ export default class extends React.PureComponent {
 
     const icon = (
       subscriptions && subscriptions.size > 0
-        ? getEventIcon(subscriptions.first().get('requestType'))
+        ? getRequestTypeIcon(subscriptions.first().get('requestType'))
         : ''
     ) || 'mark-github';
 

@@ -14,7 +14,7 @@ import IntervalRefresh from '../IntervalRefresh';
 import UserAvatar from './_UserAvatar';
 import { avatarWidth, contentPadding } from '../../styles/variables';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
-import { getNotificationIcon, getOrgAvatar } from '../../utils/helpers/github';
+import { getNotificationIcon, getOrgAvatar, getOwnerAndRepo } from '../../utils/helpers/github';
 import type { ActionCreators, GithubNotification } from '../../utils/types';
 
 import {
@@ -41,25 +41,17 @@ export default class extends React.PureComponent {
   render() {
     const { actions, notification, ...props } = this.props;
 
-    console.log('comment', notification.get('comment'));
-
-    const {
-      comment,
-      repo,
-      subject,
-      updated_at,
-    } = {
-      comment: fromJS(notification.get('comment')),
-      repo: notification.get('repository'),
-      subject: notification.get('subject'),
-      updated_at: notification.get('updated_at'),
-    };
+    const comment = fromJS(notification.get('comment'));
+    const repo = notification.get('repository');
+    const subject = notification.get('subject');
+    const updatedAt = notification.get('updated_at');
 
     if (!subject) return null;
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const notificationIds = Set([notification.get('id')]);
     const reason = notification.get('reason');
+    const { repo: repoName } = getOwnerAndRepo(repo.get('full_name') || repo.get('name'));
     const seen = notification.get('unread') === false;
     const title = trimNewLinesAndSpaces(subject.get('title'));
 
@@ -85,7 +77,15 @@ export default class extends React.PureComponent {
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
 
-        <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth, zIndex: 1 }}>
+        <FullAbsoluteView
+          style={{
+            top: contentPadding + avatarWidth,
+            left: contentPadding,
+            right: null,
+            width: avatarWidth,
+            zIndex: 1,
+          }}
+        >
           <TouchableWithoutFeedback onPress={() => actions.toggleSeenNotification(notificationIds)}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
@@ -100,25 +100,29 @@ export default class extends React.PureComponent {
             <HeaderRow>
               <FullView>
                 <HorizontalView>
-                  <Username numberOfLines={1}>
-                    {repo.get('name')}
-                  </Username>
-                  <IntervalRefresh
-                    interval={1000}
-                    onRender={
-                      () => {
-                        const dateText = getDateSmallText(updated_at, '•');
-                        return dateText && (
-                          <SmallText style={{ flex: 1 }} numberOfLines={1} muted> • {dateText}</SmallText>
-                        );
+                  <Text numberOfLines={1}>
+                    <Username numberOfLines={1}>
+                      {repoName}
+                    </Username>
+                    <IntervalRefresh
+                      interval={1000}
+                      onRender={
+                        () => {
+                          const dateText = getDateSmallText(updatedAt, '•');
+                          return dateText && (
+                            <SmallText muted>
+                             &nbsp;•&nbsp;{dateText}
+                            </SmallText>
+                          );
+                        }
                       }
-                    }
-                  />
+                    />
+                  </Text>
                 </HorizontalView>
 
                 <Text numberOfLines={1}>{reason}</Text>
               </FullView>
-              
+
               <CardIcon name={getNotificationIcon(notification)} />
             </HeaderRow>
 

@@ -18,16 +18,16 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
   switch (type) {
     case LOAD_NOTIFICATIONS_SUCCESS:
       return (({ data, meta }) => {
-        if (!data) return state;
-
         let newState = state;
 
-        if (meta['last-modified']) {
-          newState = newState.set('lastModifiedAt', meta['last-modified']);
+        if (data) {
+          if (meta['last-modified']) {
+            newState = newState.set('lastModifiedAt', meta['last-modified']);
+          }
         }
 
-        return newState.set('updatedAt', new Date())
-        })(payload || {});
+        return newState.set('updatedAt', new Date());
+      })(payload || {});
 
     default:
       return state;
