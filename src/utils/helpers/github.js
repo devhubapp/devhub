@@ -226,7 +226,7 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
     // const merged = eventA.get('merged') || List();
 
     // only merge events that were created in the same hour
-    if (createdAtMinutesDiff >= 60) return null;
+    if (createdAtMinutesDiff >= 24 * 60) return null;
 
     // only merge 5 items max
     // if (merged.size >= 5 - 1) return null;
