@@ -5,6 +5,7 @@ import { combineReducers } from 'redux-immutable';
 
 import columns from './columns';
 import comments from './comments';
+import commits from './commits';
 import events from './events';
 import issues from './issues';
 import orgs from './orgs';
@@ -25,6 +26,7 @@ import type { Action } from '../../utils/types';
 const reducer = combineReducers({
   columns,
   comments,
+  commits,
   events,
   issues,
   notifications,

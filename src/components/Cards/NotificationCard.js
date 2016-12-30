@@ -16,7 +16,7 @@ import OwnerAvatar from './_OwnerAvatar';
 import Label from '../Label';
 import { contentPadding } from '../../styles/variables';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
-import { getNotificationIcon, getNotificationReasonTextsAndColor, getOrgAvatar } from '../../utils/helpers/github';
+import { getNotificationIconAndColor, getNotificationReasonTextsAndColor, getOrgAvatar } from '../../utils/helpers/github';
 import type { ActionCreators, GithubNotification } from '../../utils/types';
 
 import {
@@ -55,19 +55,12 @@ export default class extends React.PureComponent {
     const title = trimNewLinesAndSpaces(subject.get('title'));
     const { label, color } = getNotificationReasonTextsAndColor(notification);
 
-    const commit = subject.get('type') !== 'Commit' ? null : notification.get('commit') || Map({
-      message: trimNewLinesAndSpaces(subject.get('title')),
-    });
+    const subjectType = (subject.get('type') || '').toLowerCase();
+    const commit = (subjectType === 'commit' && subject) || null;
+    const issue = (subjectType === 'issue' && subject) || null;
+    const pullRequest = (subjectType === 'pullrequest' && subject) || null;
 
-    const issue = subject.get('type') !== 'Issue' ? null : notification.get('issue') || Map({
-      number: subject.get('number'),
-      title,
-    });
-
-    const pullRequest = subject.get('type') !== 'PullRequest' ? null : notification.get('pull_request') || Map({
-      number: subject.get('number'),
-      title,
-    });
+    const { icon: cardIcon, color: cardIconColor } = getNotificationIconAndColor(notification);
 
     return (
       <CardWrapper {...props} seen={seen}>
@@ -117,7 +110,7 @@ export default class extends React.PureComponent {
                 />
               </FullView>
 
-              <CardIcon name={getNotificationIcon(notification)} />
+              <CardIcon name={cardIcon} color={cardIconColor} />
             </HeaderRow>
 
             <FullAbsoluteView>

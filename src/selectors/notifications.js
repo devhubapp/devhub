@@ -36,7 +36,9 @@ export const makeSeenNotificationSelector = () => createImmutableSelector(
 export const makeDenormalizedNotificationSelector = () => createImmutableSelector(
   notificationIdSelector,
   entitiesSelector,
-  (notificationId, entities) => denormalize(notificationId, entities, NotificationSchema),
+  (notificationId, entities) => (
+    denormalize(notificationId, entities, NotificationSchema)
+  ),
 );
 
 export const denormalizedOrderedNotificationsSelector = createImmutableSelector(

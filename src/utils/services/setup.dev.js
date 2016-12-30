@@ -20,3 +20,6 @@ fetch = function(uri, options, ...args) {
     return response;
   });
 };
+
+// chrome network requests
+// GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;

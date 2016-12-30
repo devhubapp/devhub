@@ -1,37 +1,42 @@
-import moment from 'moment';
 import { schema } from 'normalizr';
 
-const idAttribute = (obj: { id: number | string }): string => obj.id.toString().toLowerCase();
-const mergeStrategy = (entityA, entityB) => {
-  if (entityA.updated_at && entityB.updated_at) {
-    const dateA = new Date(entityA.updated_at);
-    const dateB = new Date(entityB.updated_at);
+import {
+  commitIdAttribute,
+  issueOrPullRequestIdAttribute,
+  notificationProcessStrategy,
+  preferNewestMergeStrategy,
+  simpleIdAttribute,
+} from './helpers';
 
-    return moment(dateB).isAfter(dateA) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
-  }
-
-  if (entityA.created_at && entityB.created_at) {
-    const dateA = new Date(entityA.created_at);
-    const dateB = new Date(entityB.created_at);
-
-    return moment(dateB).isAfter(dateA) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
-  }
-
-  return {
-    ...entityB,
-    ...entityA,
-  };
-};
-
-const defaultOptions = { idAttribute, mergeStrategy };
+const defaultOptions = { idAttribute: simpleIdAttribute, mergeStrategy: preferNewestMergeStrategy };
 
 export const CommentSchema = new schema.Entity('comments', {}, defaultOptions);
+
+export const CommitsSchema = new schema.Entity('commits', {}, {
+  ...defaultOptions,
+  idAttribute: commitIdAttribute,
+});
+
 export const ColumnSchema = new schema.Entity('columns', {}, defaultOptions);
 export const EventSchema = new schema.Entity('events', {}, defaultOptions);
-export const IssueSchema = new schema.Entity('issues', {}, defaultOptions);
+
+export const IssueSchema = new schema.Entity('issues', {}, {
+  ...defaultOptions,
+  idAttribute: issueOrPullRequestIdAttribute,
+});
+
 export const OrgSchema = new schema.Entity('orgs', {}, defaultOptions);
-export const NotificationSchema = new schema.Entity('notifications', {}, defaultOptions);
-export const PullRequestSchema = new schema.Entity('pullRequests', {}, defaultOptions);
+
+export const NotificationSchema = new schema.Entity('notifications', {}, {
+  ...defaultOptions,
+  processStrategy: notificationProcessStrategy,
+});
+
+export const PullRequestSchema = new schema.Entity('pullRequests', {}, {
+  ...defaultOptions,
+  idAttribute: issueOrPullRequestIdAttribute,
+});
+
 export const SubscriptionSchema = new schema.Entity('subscriptions', {}, defaultOptions);
 export const UserSchema = new schema.Entity('users', {}, defaultOptions);
 export const RepoSchema = new schema.Entity('repos', {}, defaultOptions);
@@ -50,6 +55,7 @@ EventSchema.define({
   repo: RepoSchema,
   payload: {
     comment: CommentSchema,
+    commits: [CommitsSchema],
     issue: IssueSchema,
     pull_request: PullRequestSchema,
     repo: RepoSchema,
@@ -66,9 +72,12 @@ IssueSchema.define({
 
 NotificationSchema.define({
   comment: CommentSchema,
-  // issue: IssueSchema,
-  // pull_request: PullRequestSchema,
   repository: RepoSchema,
+  subject: new schema.Union({
+    Commit: CommitsSchema,
+    Issue: IssueSchema,
+    PullRequest: PullRequestSchema,
+  }, 'type'),
 });
 
 PullRequestSchema.define({

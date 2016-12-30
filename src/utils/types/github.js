@@ -51,6 +51,18 @@ export type GithubComment = {
   url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 };
 
+export type GithubCommit = {
+  sha: string,
+  message: string,
+  author: {
+    name: string,
+    email: string,
+  },
+  url: string,
+  distinct: boolean, // Whether this commit is distinct from any that have been pushed before.
+  forced: boolean,
+}
+
 export type GithubLabel = {
   id: number,
   url: string, // "https://api.github.com/repos/hasadna/Open-Knesset/labels/4%20-%20Prioritized",
@@ -354,17 +366,7 @@ export type PushEvent = {
   before: string, // The SHA of the most recent commit on ref before the push.
   size: number, // The number of commits in the push.
   distinct_size: number, // The number of distinct commits in the push.
-  commits: Array<{
-    sha: string,
-    message: string,
-    author: {
-      name: string,
-      email: string,
-    },
-    url: string,
-    distinct: boolean, // Whether this commit is distinct from any that have been pushed before.
-    forced: boolean,
-  }>,
+  commits: Array<GithubCommit>,
 };
 
 /**

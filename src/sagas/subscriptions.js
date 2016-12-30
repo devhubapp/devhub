@@ -59,7 +59,7 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
     // console.log('loadSubscriptionData response', response);
     const { data, meta }: ApiResponsePayload = response;
 
-    let finalData = data;
+    let finalData = data || undefined;
 
     // remove old events from data
     if (data) {

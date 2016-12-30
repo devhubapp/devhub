@@ -6,9 +6,9 @@ import { delay } from 'redux-saga';
 import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
-import { dateToHeaderFormat, enhanceNotificationsData } from '../utils/helpers';
+import { dateToHeaderFormat } from '../utils/helpers';
 import { NotificationSchema } from '../utils/normalizr/schemas';
-import { accessTokenSelector, isLoggedSelector, notificationIdsSelector } from '../selectors';
+import { accessTokenSelector, isLoggedSelector } from '../selectors';
 
 import { LOAD_NOTIFICATIONS_REQUEST, UPDATE_NOTIFICATIONS, LOGIN_SUCCESS, LOGOUT } from '../utils/constants/actions';
 
@@ -48,14 +48,10 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
     // console.log('onLoadNotificationsRequest response', response);
     const { data, meta }: ApiResponsePayload = response;
 
-    let finalData = data;
+    let finalData = data || undefined;
 
     if (data) {
-      const enhancedData = enhanceNotificationsData(data);
-
-      // console.log('enhancedData', enhancedData);
-      finalData = normalize(enhancedData, [NotificationSchema]);
-      // console.log('enhancedData normalized', finalData);
+      finalData = normalize(data, [NotificationSchema]);
     }
 
     yield put(loadNotificationsSuccess(requestPayload, finalData, meta, sagaActionChunk));

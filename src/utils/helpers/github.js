@@ -7,6 +7,7 @@ import moment from 'moment';
 import { fromJS, List, Map, OrderedMap } from 'immutable';
 
 import baseTheme from '../../styles/themes/base';
+import { issueOrPullRequestIdAttribute } from '../normalizr/helpers';
 
 import type {
     GithubEvent,
@@ -175,13 +176,17 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
   }
 }
 
-export function getNotificationIcon(notification: GithubNotification): GithubIcon {
-  const type = notification.getIn(['subject', 'type']).toLowerCase();
+export function getNotificationIconAndColor(
+  notification: GithubNotification,
+  theme?: ThemeObject
+): { icon: GithubIcon, color?: string } {
+  const subject = notification.get('subject');
+  const type = subject.get('type').toLowerCase();
 
   switch (type) {
-    case 'commit': return 'git-commit';
-    case 'issue': return 'issue-opened';
-    case 'pullrequest': return 'git-pull-request';
+    case 'commit': return { icon: 'git-commit' };
+    case 'issue': return getIssueIconAndColor(subject, theme);
+    case 'pullrequest': return getPullRequestIconAndColor(subject, theme );
     default: return 'bell';
   }
 }
@@ -472,54 +477,18 @@ export function getCommentIdFromUrl(url: string) {
   return (matches && matches[1]) || undefined;
 }
 
-export function getIssueNumberFromUrl(url: string) {
+export function getCommitShaFromUrl(url: string) {
   if (!url) return null;
 
-  const matches = url.match(/\/issues\/([0-9]+)([?].+)?$/);
+  const matches = url.match(/\/commits\/([a-zA-Z0-9]+)([?].+)?$/);
   return (matches && matches[1]) || undefined;
 }
 
-export function getPullRequestNumberFromUrl(url: string) {
+export function getIssueOrPullRequestNumberFromUrl(url: string) {
   if (!url) return null;
 
-  const matches = url.match(/\/pulls\/([0-9]+)([?].+)?$/);
-  return (matches && matches[1]) || undefined;
-}
-
-export function enhanceNotificationsData(notifications: Array<GithubNotification>) {
-  if (!notifications) return null;
-  if (!Array.isArray(notifications)) return notifications;
-
-  return notifications.map((notification) => {
-    let newNotification = notification;
-
-    if (notification.subject.latest_comment_url) {
-      newNotification = {
-        ...notification,
-        comment: getCommentIdFromUrl(notification.subject.latest_comment_url),
-      };
-    }
-
-    if (newNotification.subject.type === 'Issue') {
-      return {
-        ...newNotification,
-        subject: {
-          ...newNotification.subject,
-          number: getIssueNumberFromUrl(newNotification.subject.url),
-        },
-      };
-    } else if (newNotification.subject.type === 'PullRequest') {
-      return {
-        ...newNotification,
-        subject: {
-          ...newNotification.subject,
-          number: getPullRequestNumberFromUrl(newNotification.subject.url),
-        },
-      };
-    }
-
-    return newNotification;
-  });
+  const matches = url.match(/\/(issues|pulls)\/([0-9]+)([?].+)?$/);
+  return (matches && matches[2]) || undefined;
 }
 
 export function getOrgAvatar(orgName: string) {
@@ -549,3 +518,10 @@ export function getUserAvatarByEmail(email: string, { size, ...otherOptions }: {
   const options = { size: steppedSize, d: 'retro', ...otherOptions };
   return `https:${gravatar.url(email, options)}`.replace('??', '?');
 }
+
+/* eslint-disable-next-line no-useless-escape */
+export const getRepoFullNameFromUrl = (url: string): string => (
+  url
+    ? ((url.match(/(?:github.com[\/repos]?\/)([a-zA-Z0-9\-\.\_]+\/[a-zA-Z0-9-\-\.\_]+[^\/]?)/i) || [])[1]) || ''
+    : ''
+);
