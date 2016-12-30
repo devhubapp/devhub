@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import UserAvatar from './_UserAvatar';
+import OwnerAvatar from './_OwnerAvatar';
 
 import {
   ContentRow,
@@ -15,7 +15,7 @@ import {
   MainColumn,
   RepositoryContentContainer,
   smallAvatarWidth,
-  Text,
+  StyledText,
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -42,7 +42,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
+          <OwnerAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>
@@ -55,11 +55,11 @@ export default class extends React.PureComponent {
                 radius={radius}
               >
                 <RepositoryContentContainer>
-                  <Text numberOfLines={1}>
+                  <StyledText numberOfLines={1}>
                     <Icon name="person" />&nbsp;
                     {_login}
-                    {additionalInfo && <Text muted> {additionalInfo}</Text>}
-                  </Text>
+                    {additionalInfo && <StyledText muted> {additionalInfo}</StyledText>}
+                  </StyledText>
                 </RepositoryContentContainer>
               </TransparentTextOverlay>
             </FullView>

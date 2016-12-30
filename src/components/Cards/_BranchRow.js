@@ -13,7 +13,7 @@ import {
   LeftColumn,
   MainColumn,
   RepositoryContentContainer,
-  Text,
+  StyledText,
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -51,10 +51,10 @@ export default class extends React.PureComponent {
                 radius={radius}
               >
                 <RepositoryContentContainer>
-                  <Text numberOfLines={1} muted={!isBranchMainEventAction}>
+                  <StyledText numberOfLines={1} muted={!isBranchMainEventAction}>
                     <Icon name="git-branch" />&nbsp;
                     {_branch}
-                  </Text>
+                  </StyledText>
                 </RepositoryContentContainer>
               </TransparentTextOverlay>
             </FullView>

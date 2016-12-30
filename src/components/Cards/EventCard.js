@@ -21,7 +21,7 @@ import WikiPageListRow from './_WikiPageListRow';
 import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import UserAvatar from './_UserAvatar';
+import OwnerAvatar from './_OwnerAvatar';
 import { avatarWidth, contentPadding } from '../../styles/variables';
 import { getDateSmallText } from '../../utils/helpers';
 import { getEventIconAndColor, getEventText } from '../../utils/helpers/github';
@@ -37,7 +37,7 @@ import {
   LeftColumn,
   MainColumn,
   HeaderRow,
-  Text,
+  StyledText,
   SmallText,
   Username,
   CardIcon,
@@ -100,7 +100,7 @@ export default class extends React.PureComponent {
 
         <Header>
           <LeftColumn>
-            <UserAvatar url={actor.get('avatar_url')} size={avatarWidth} />
+            <OwnerAvatar url={actor.get('avatar_url')} size={avatarWidth} />
           </LeftColumn>
 
           <MainColumn>
@@ -109,7 +109,7 @@ export default class extends React.PureComponent {
                 <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
                   <ScrollableContentContainer>
                     <HorizontalView>
-                      <Text numberOfLines={1}>
+                      <StyledText numberOfLines={1}>
                         <Username numberOfLines={1}>
                           {actor.get('display_login') || actor.get('login')}
                         </Username>
@@ -126,15 +126,15 @@ export default class extends React.PureComponent {
                             }
                           }
                         />
-                      </Text>
+                      </StyledText>
                     </HorizontalView>
                   </ScrollableContentContainer>
                 </TransparentTextOverlay>
 
-                <Text numberOfLines={1} muted>
-                  {isPrivate && <Text muted><Icon name="lock" />&nbsp;</Text>}
+                <StyledText numberOfLines={1} muted>
+                  {isPrivate && <StyledText muted><Icon name="lock" />&nbsp;</StyledText>}
                   {getEventText(event, { repoIsKnown: onlyOneRepository })}
-                </Text>
+                </StyledText>
               </FullView>
 
               <CardIcon name={cardIcon} color={cardIconColor} />

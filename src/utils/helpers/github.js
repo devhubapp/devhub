@@ -17,7 +17,7 @@ import type {
     GithubNotificationReason,
     GithubPullRequest,
     ThemeObject,
-  } from '../types/github';
+  } from '../types';
 
 
 export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = baseTheme)
@@ -36,8 +36,10 @@ export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = b
   }
 }
 
-export function getPullRequestIconAndColor(pullRequest: GithubPullRequest, theme?: ThemeObject = baseTheme)
-: { color: string, icon: string } {
+export function getPullRequestIconAndColor(
+  pullRequest: GithubPullRequest,
+  theme?: ThemeObject = baseTheme
+) : { color: string, icon: string } {
   const merged = pullRequest.get('merged_at');
   const state = merged ? 'merged' : pullRequest.get('state');
 
@@ -53,6 +55,44 @@ export function getPullRequestIconAndColor(pullRequest: GithubPullRequest, theme
 
     default:
       return { icon: 'git-pull-request' };
+  }
+}
+
+export function getNotificationReasonTextsAndColor(
+  notification: GithubNotification,
+  theme?: ThemeObject = baseTheme
+): { color: string, reason: string, label: string, description: string } {
+  const reason: GithubNotificationReason = notification.get('reason');
+
+  switch (reason) {
+    case 'assign':
+      return { color: theme.pink, reason, label: 'assigned', description: 'You were assigned to this thread' };
+
+    case 'author':
+      return { color: theme.green, reason, label: 'author', description: 'You created this thread' };
+
+    case 'comment':
+      return { color: theme.brown, reason, label: 'commented', description: 'You commented on the thread' };
+
+    case 'invitation':
+      return { color: theme.yellow, reason, label: 'invited', description: 'You accepted an invitation to contribute to the repository' };
+
+    case 'manual':
+      return { color: theme.teal, reason, label: 'subscribed', description: 'You subscribed to the thread' };
+
+    case 'mention':
+      return { color: theme.red, reason, label: 'mentioned', description: 'You were @mentioned' };
+
+    case 'state_change':
+      return { color: theme.purple, reason, label: 'state changed', description: 'You changed the thread state' };
+
+    case 'subscribed':
+      return { color: theme.blueGray, reason, label: 'watching', description: 'You\'re watching this repository' };
+
+    case 'team_mention':
+      return { color: theme.orange, reason, label: 'team mentioned', description: 'Your team was mentioned' };
+
+    default: return { color: theme.gray, reason, label: reason, description: '' };
   }
 }
 
@@ -259,22 +299,6 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
   })();
 
   return text.replace(/ {2}/g, ' ').trim();
-}
-
-export function getNotificationReasonText(notification: GithubNotification): string {
-  const reason: GithubNotificationReason = notification.get('reason');
-  switch (reason) {
-    case 'assign': return 'you were assigned to this issue';
-    case 'author': return 'you created the thread';
-    case 'comment': return 'you commented on the thread';
-    case 'invitation': return 'you accepted an invitation to contribute to the repository';
-    case 'manual': return 'you subscribed to the thread';
-    case 'mention': return 'you were @mentioned';
-    case 'state_change': return 'you changed the thread state';
-    case 'subscribed': return 'you\'re watching this repository';
-    case 'team_mention': return 'your team was mentioned';
-    default: return '';
-  }
 }
 
 export function getOwnerAndRepo(repoFullName: string): { owner: ?string, repo: ?string} {

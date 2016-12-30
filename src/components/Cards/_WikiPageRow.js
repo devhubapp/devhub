@@ -13,7 +13,7 @@ import {
   LeftColumn,
   MainColumn,
   RepositoryContentContainer,
-  Text,
+  StyledText,
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -50,10 +50,10 @@ export default class extends React.PureComponent {
                 radius={radius}
               >
                 <RepositoryContentContainer>
-                  <Text numberOfLines={1}>
+                  <StyledText numberOfLines={1}>
                     <Icon name="book" />&nbsp;
                     {title}
-                  </Text>
+                  </StyledText>
                 </RepositoryContentContainer>
               </TransparentTextOverlay>
             </FullView>

@@ -45,6 +45,7 @@ export default class extends React.PureComponent {
         horizontal
         removeClippedSubviews
         {...(Platform.OS === 'ios' ? {
+          decelerationRate: 0,
           pagingEnabled: false,
           snapToInterval: getWidth(),
           snapToAlignment: 'start',

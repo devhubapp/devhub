@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import UserAvatar from './_UserAvatar';
+import OwnerAvatar from './_OwnerAvatar';
 
 import {
   CardText,
@@ -15,7 +15,7 @@ import {
   MainColumn,
   RepositoryContentContainer,
   smallAvatarWidth,
-  Text,
+  StyledText,
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -52,7 +52,7 @@ export default class extends React.PureComponent {
         <LeftColumn center>
           {
             authorEmail &&
-            <UserAvatar email={authorEmail} size={smallAvatarWidth} />
+            <OwnerAvatar email={authorEmail} size={smallAvatarWidth} />
           }
         </LeftColumn>
 
@@ -68,7 +68,7 @@ export default class extends React.PureComponent {
                 <CardText numberOfLines={1}>
                   <Icon name="git-commit" />&nbsp;
                   {message}
-                  {byText && <Text muted small> by {byText}</Text>}
+                  {byText && <StyledText muted small> by {byText}</StyledText>}
                 </CardText>
               </RepositoryContentContainer>
             </TransparentTextOverlay>

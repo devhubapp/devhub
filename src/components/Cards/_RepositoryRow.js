@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import RepositoryStarButtonContainer from '../../containers/RepositoryStarButtonContainer';
 import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import UserAvatar from './_UserAvatar';
+import OwnerAvatar from './_OwnerAvatar';
 
 import {
   ContentRow,
@@ -17,7 +17,7 @@ import {
   RepositoryContentContainer,
   RepositoryName,
   smallAvatarWidth,
-  Text,
+  StyledText,
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -57,7 +57,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn center>
-          <UserAvatar url={getOrgAvatar(orgName)} size={smallAvatarWidth} />
+          <OwnerAvatar url={getOrgAvatar(orgName)} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumn>
@@ -70,11 +70,11 @@ export default class extends React.PureComponent {
                 radius={radius}
               >
                 <RepositoryContentContainer>
-                  {isPrivate && <Text muted><Icon name="lock" />&nbsp;</Text>}
-                  <Text muted><Icon name={repoIcon} />&nbsp;</Text>
+                  {isPrivate && <StyledText muted><Icon name="lock" />&nbsp;</StyledText>}
+                  <StyledText muted><Icon name={repoIcon} />&nbsp;</StyledText>
                   <RepositoryName>{repoName}</RepositoryName>
                   
-                  {orgName && <Text muted small> {orgName}</Text>}
+                  {orgName && <StyledText muted small> {orgName}</StyledText>}
 
                 </RepositoryContentContainer>
               </TransparentTextOverlay>

@@ -5,8 +5,9 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
 import ScrollableContentContainer from '../ScrollableContentContainer';
-import { avatarWidth, contentPadding, radius } from '../../styles/variables';
+import { avatarWidth as defaultAvatarWidth, contentPadding, radius } from '../../styles/variables';
 
+export const avatarWidth = defaultAvatarWidth;
 export const smallAvatarWidth = avatarWidth / 2;
 export const innerContentPadding = contentPadding;
 export const narrowInnerContentPadding = innerContentPadding / 2;
@@ -17,11 +18,13 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ seen }) => (seen ? 0.25 : 1)};
+  opacity: ${({ seen }) => (seen ? 0.4 : 1)};
 `;
 
 export const FullView = styled.View`
   flex: 1;
+  flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
+  align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
 `;
 
 export const FullAbsoluteView = styled.View`
@@ -73,30 +76,30 @@ export const HeaderRow = styled(HorizontalView)`
   justify-content: space-between;
 `;
 
-export const Text = styled.Text`
+export const StyledText = styled.Text`
   color: ${({ muted, theme }) => (muted ? theme.base05 : theme.base04)};
   line-height: 18;
   font-size: ${({ small }) => small ? 12 : 14};
 `;
 
-export const SmallText = styled(Text)`
+export const SmallText = styled(StyledText)`
   font-size: 12;
 `;
 
-export const Username = styled(Text)`
+export const Username = styled(StyledText)`
   font-weight: bold;
 `;
 
-export const RepositoryName = styled(Text)`
+export const RepositoryName = styled(StyledText)`
 `;
 
-export const CardItemId = styled(Text)`
+export const CardItemId = styled(StyledText)`
   font-weight: bold;
   font-size: 12;
   opacity: 0.9;
 `;
 
-export const CardText = styled(Text)`
+export const CardText = styled(StyledText)`
   flex: 1;
   font-size: 14;
 `;

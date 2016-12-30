@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import { withTheme } from 'styled-components/native';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import UserAvatar from './_UserAvatar';
+import OwnerAvatar from './_OwnerAvatar';
 
 import {
   renderItemId,
@@ -18,7 +18,7 @@ import {
   RepositoryContentContainer,
   RightOfScrollableContent,
   smallAvatarWidth,
-  Text,
+  StyledText,
 } from './__CardComponents';
 
 import { contentPadding, radius } from '../../styles/variables';
@@ -53,7 +53,7 @@ export default class extends React.PureComponent {
         <LeftColumn center>
           {
             user &&
-            <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
+            <OwnerAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
           }
         </LeftColumn>
 
@@ -70,7 +70,7 @@ export default class extends React.PureComponent {
                   <CardText numberOfLines={1}>
                     <Icon name={icon} color={color} />&nbsp;
                     {title}
-                    {byText && <Text muted small> by {byText}</Text>}
+                    {byText && <StyledText muted small> by {byText}</StyledText>}
                   </CardText>
                 </RepositoryContentContainer>
               </TransparentTextOverlay>

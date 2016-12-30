@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import UserAvatar from './_UserAvatar';
+import OwnerAvatar from './_OwnerAvatar';
 
 import {
   CardText,
@@ -33,7 +33,7 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn>
-          <UserAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
+          <OwnerAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
         </LeftColumn>
 
         <MainColumnRowContent center>
