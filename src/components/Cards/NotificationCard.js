@@ -60,12 +60,12 @@ export default class extends React.PureComponent {
     });
 
     const issue = subject.get('type') !== 'Issue' ? null : notification.get('issue') || Map({
-      number: subject.get('issueNumber'),
+      number: subject.get('number'),
       title,
     });
 
     const pullRequest = subject.get('type') !== 'PullRequest' ? null : notification.get('pull_request') || Map({
-      number: subject.get('pullRequestNumber'),
+      number: subject.get('number'),
       title,
     });
 

@@ -53,9 +53,9 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
     if (data) {
       const enhancedData = enhanceNotificationsData(data);
 
-      console.log('enhancedData', enhancedData);
+      // console.log('enhancedData', enhancedData);
       finalData = normalize(enhancedData, [NotificationSchema]);
-      console.log('enhancedData normalized', finalData);
+      // console.log('enhancedData normalized', finalData);
     }
 
     yield put(loadNotificationsSuccess(requestPayload, finalData, meta, sagaActionChunk));

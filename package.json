@@ -24,7 +24,7 @@
     "moment": "^2.17.0",
     "normalizr": ">=3.0.0-beta",
     "react": "^15.4.1",
-    "react-native": "0.40.0-rc.2",
+    "react-native": "^0.39.2",
     "react-native-actionsheet": "^2.0.4",
     "react-native-fabric": "^0.3.2",
     "react-native-immutable-list-view": "^0.2.2",

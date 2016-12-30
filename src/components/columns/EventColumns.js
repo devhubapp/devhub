@@ -6,7 +6,6 @@ import { List } from 'immutable';
 import Columns from './_Columns';
 import EventColumnContainer from '../../containers/EventColumnContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
-import { radius } from '../../styles/variables';
 import type { ActionCreators, Column as ColumnType } from '../../utils/types';
 
 export default class extends React.PureComponent {
@@ -29,7 +28,6 @@ export default class extends React.PureComponent {
       <EventColumnContainer
         key={`event-column-${columnId}`}
         columnId={columnId}
-        radius={radius}
       />
     );
   };

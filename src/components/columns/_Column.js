@@ -10,13 +10,13 @@ import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import { iconRightMargin } from '../cards/__CardComponents';
-import { contentPadding } from '../../styles/variables';
-import type { ActionCreators, Subscription, ThemeObject } from '../../utils/types';
+import { contentPadding, radius as defaultRadius } from '../../styles/variables';
+import type { Subscription, ThemeObject } from '../../utils/types';
 
 export const columnMargin = 2;
-export const spacing = columnMargin + contentPadding;
+export const columnPreviewWidth = contentPadding;
 export const getFullWidth = () => Dimensions.get('window').width;
-export const getWidth = () => getFullWidth() - (2 * spacing);
+export const getWidth = () => getFullWidth() - (2 * columnPreviewWidth);
 
 export const ColumnWrapper = styled.View`
   flex: 1;
@@ -112,7 +112,7 @@ export default class extends React.PureComponent {
       icon,
       items,
       loading,
-      radius,
+      radius: receivedRadius,
       renderRow,
       refreshFn,
       refreshText,
@@ -120,6 +120,8 @@ export default class extends React.PureComponent {
       title,
       ...props
     } = this.props;
+
+    const radius = typeof receivedRadius === 'undefined' ? defaultRadius: receivedRadius;
 
     return (
       <ColumnWrapper>

@@ -16,7 +16,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import "OAuthManager.h"
 
-@import Firebase;
+@import Firebase; 
 
 @implementation AppDelegate
 

@@ -4,16 +4,15 @@ import React from 'react';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import { List } from 'immutable';
+import { Platform } from 'react-native';
 
 import NewColumn from './NewColumn';
-import { getWidth, spacing } from './_Column';
-import { radius } from '../../styles/variables';
+import { getWidth, columnPreviewWidth } from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
 export const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
-  overflow: visible;
-  marginHorizontal: ${spacing};
+  overflow: hidden;
 `;
 
 export default class extends React.PureComponent {
@@ -32,7 +31,6 @@ export default class extends React.PureComponent {
         <NewColumn
           addColumnFn={addColumnFn}
           actions={actions}
-          radius={radius}
         />
       );
     }
@@ -40,15 +38,29 @@ export default class extends React.PureComponent {
     return (
       <StyledImmutableListViewListView
         key="columns-list-view"
-        width={getWidth()}
         immutableData={columns}
         initialListSize={1}
         rowsDuringInteraction={1}
         renderRow={renderRow}
-        contentContainerStyle={{ overflow: 'hidden' }}
         horizontal
-        pagingEnabled
         removeClippedSubviews
+        {...(Platform.OS === 'ios' ? {
+          pagingEnabled: false,
+          snapToInterval: getWidth(),
+          snapToAlignment: 'start',
+          contentContainerStyle: {
+            overflow: 'hidden',
+            paddingHorizontal: columnPreviewWidth,
+          },
+        } : {
+          pagingEnabled: true,
+          contentContainerStyle: {
+            overflow: 'hidden',
+          },
+          style: {
+            marginHorizontal: columnPreviewWidth,
+          },
+        })}
         {...props}
       />
     );

@@ -5,7 +5,6 @@ import { List } from 'immutable';
 
 import Columns from './_Columns';
 import NotificationColumn from './NotificationColumn';
-import { radius } from '../../styles/variables';
 import type { ActionCreators, Column as ColumnType } from '../../utils/types';
 
 export default class extends React.PureComponent {
@@ -32,7 +31,6 @@ export default class extends React.PureComponent {
         actions={actions}
         column={column}
         items={items}
-        radius={radius}
         updatedAt={updatedAt}
       />
     );

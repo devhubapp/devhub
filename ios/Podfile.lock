@@ -1,5 +1,8 @@
 PODS:
+  - Crashlytics (3.7.2):
+    - Fabric (~> 1.6.3)
   - DCTAuth (3.0)
+  - Fabric (1.6.7)
   - Firebase/Analytics (3.3.0):
     - FirebaseAnalytics (= 3.2.1)
   - Firebase/Core (3.3.0):
@@ -26,7 +29,9 @@ PODS:
     - GoogleSymbolUtilities (~> 1.0)
 
 DEPENDENCIES:
+  - Crashlytics
   - DCTAuth (from `https://github.com/danielctull/DCTAuth.git`)
+  - Fabric
   - Firebase/Core
   - Firebase/Crash
 
@@ -40,7 +45,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/danielctull/DCTAuth.git
 
 SPEC CHECKSUMS:
+  Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
   DCTAuth: 8add154decd00335d62917828896bba790ce47fd
+  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   Firebase: 6250071f0e2440a5c4c67b8cb6b868f868237ac3
   FirebaseAnalytics: 0fd6532cb2c3d03cd5cf26ad295ccb091efd3104
   FirebaseCrash: 899d0abc23b411d01087094e3da24527eaecabf7
@@ -49,6 +56,6 @@ SPEC CHECKSUMS:
   GoogleSymbolUtilities: 33117db1b5f290c6fbf259585e4885b4c84b98d7
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
 
-PODFILE CHECKSUM: e5982f7d661697908bc891f3a31f6d3a0792b46e
+PODFILE CHECKSUM: c9eefe5426e2ef0a1e06fc99f134102e3dbacd25
 
 COCOAPODS: 1.1.1

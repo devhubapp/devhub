@@ -479,12 +479,18 @@ export function enhanceNotificationsData(notifications: Array<GithubNotification
     if (newNotification.subject.type === 'Issue') {
       return {
         ...newNotification,
-        issueNumber: getIssueNumberFromUrl(newNotification.subject.url),
+        subject: {
+          ...newNotification.subject,
+          number: getIssueNumberFromUrl(newNotification.subject.url),
+        },
       };
     } else if (newNotification.subject.type === 'PullRequest') {
       return {
         ...newNotification,
-        pullRequestNumber: getPullRequestNumberFromUrl(newNotification.subject.url),
+        subject: {
+          ...newNotification.subject,
+          number: getPullRequestNumberFromUrl(newNotification.subject.url),
+        },
       };
     }
 
