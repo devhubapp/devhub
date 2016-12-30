@@ -18,6 +18,8 @@ import {
 
 import {
   LOAD_SUBSCRIPTION_DATA_REQUEST,
+  LOGIN_SUCCESS,
+  LOGOUT,
   UPDATE_COLUMN_SUBSCRIPTIONS,
   UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
 } from '../utils/constants/actions';
@@ -133,7 +135,10 @@ function* startTimer() {
 
     if (isLogged) {
       yield put(updateAllColumnsSubscriptions(sagaActionChunk));
-      yield call(delay, 60 * 1000);
+      yield race({
+        delay: call(delay, 60 * 1000),
+        logout: take([LOGIN_SUCCESS, LOGOUT]),
+      });
     } else {
       yield call(delay, 1000);
     }

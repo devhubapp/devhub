@@ -10,7 +10,7 @@ import { dateToHeaderFormat, enhanceNotificationsData } from '../utils/helpers';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 import { accessTokenSelector, isLoggedSelector, notificationIdsSelector } from '../selectors';
 
-import { LOAD_NOTIFICATIONS_REQUEST, UPDATE_NOTIFICATIONS } from '../utils/constants/actions';
+import { LOAD_NOTIFICATIONS_REQUEST, UPDATE_NOTIFICATIONS, LOGIN_SUCCESS, LOGOUT } from '../utils/constants/actions';
 
 import type { Action, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
 
@@ -96,7 +96,10 @@ function* startTimer() {
 
     if (isLogged) {
       yield put(updateNotifications(sagaActionChunk));
-      yield call(delay, 60 * 1000);
+      yield race({
+        delay: call(delay, 60 * 1000),
+        logout: take([LOGIN_SUCCESS, LOGOUT]),
+      });
     } else {
       yield call(delay, 1000);
     }
