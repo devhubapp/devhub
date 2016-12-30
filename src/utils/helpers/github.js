@@ -449,8 +449,20 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
   return hasMerged ? newEvents : events;
 }
 
-export function groupNotificationsByRepository(notifications: Array<GithubNotification>) {
-  let groupedNotifications = OrderedMap();
+export function groupNotificationsByRepository(
+  notifications: Array<GithubNotification>,
+  { includeAllGroup = false } : { includeAllGroup?: boolean } = {}
+) {
+  let groupedNotifications = includeAllGroup
+    ? OrderedMap({
+      'all': Map({
+        id: 'all',
+        notifications,
+        title: 'notifications',
+      })
+    })
+    : OrderedMap()
+  ;
 
   notifications.forEach((notification) => {
     const repo = notification.get('repository');

@@ -10,7 +10,7 @@ import * as actionCreators from '../actions';
 import type { ActionCreators, State } from '../utils/types';
 
 const mapStateToProps = (state: State) => ({
-  columns: denormalizedGroupedNotificationsSelector(state),
+  columns: denormalizedGroupedNotificationsSelector(state, { includeAllGroup: true }),
   updatedAt: updatedAtSelector(state),
 });
 

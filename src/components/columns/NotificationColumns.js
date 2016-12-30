@@ -32,6 +32,9 @@ export default class extends React.PureComponent {
         column={column}
         items={items}
         updatedAt={updatedAt}
+        icon={column.get('icon')}
+        title={column.get('title')}
+        {...(column.get('column') || {})}
       />
     );
   };

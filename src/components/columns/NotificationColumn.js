@@ -17,12 +17,14 @@ export default class extends React.PureComponent {
     actions: ActionCreators,
     column: { repo: Repo },
     errors?: ?Array<string>,
+    icon?: string,
     items: Array<Object>,
     loading?: boolean,
     notificationsDetails: Object,
     radius?: number,
     style?: ?Object,
     seenIds: Array<string>,
+    title?: string,
     updatedAt: Date,
   };
 
@@ -36,14 +38,34 @@ export default class extends React.PureComponent {
   );
 
   render() {
-    const { column, errors, items, loading, updatedAt, ...props } = this.props;
+    const { column,
+      errors,
+      icon: _icon,
+      items,
+      loading,
+      title: _title,
+      updatedAt,
+      ...props
+    } = this.props;
 
-    if (!column || !column.get('repo')) return null;
+    if (!column) return null;
 
-    const icon = 'repo';
     const repo = column.get('repo');
-    const { repo: repoName } = getOwnerAndRepo(repo.get('full_name') || repo.get('name'));
-    const title = (repoName || '').toLowerCase();
+
+    let title = _title;
+    if (!title) {
+      if (repo) {
+        const { repo: repoName } = getOwnerAndRepo(repo.get('full_name') || repo.get('name'));
+        title = (repoName || '').toLowerCase();
+      }
+
+      if (!title) title = 'notifications';
+    }
+
+    let icon = _icon;
+    if (!icon){
+      icon = repo ? 'repo' : 'bell';
+    }
 
     const dateFromNowText = getDateWithHourAndMinuteText(updatedAt);
     const refreshText = dateFromNowText ? `Updated ${dateFromNowText}` : '';

@@ -52,7 +52,8 @@ export const denormalizedOrderedNotificationsSelector = createImmutableSelector(
 
 export const denormalizedGroupedNotificationsSelector = createImmutableSelector(
   denormalizedOrderedNotificationsSelector,
-  (notifications) => groupNotificationsByRepository(notifications),
+  (state, params) => params,
+  (notifications, params) => groupNotificationsByRepository(notifications, params),
 );
 
 export const updatedAtSelector = createImmutableSelector(
