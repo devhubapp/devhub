@@ -500,7 +500,9 @@ export function getIssueOrPullRequestNumberFromUrl(url: string) {
   if (!url) return null;
 
   const matches = url.match(/\/(issues|pulls)\/([0-9]+)([?].+)?$/);
-  return (matches && matches[2]) || undefined;
+  const number = matches && matches[2];
+
+  return parseInt(number) || number || undefined;
 }
 
 export function getOrgAvatar(orgName: string) {

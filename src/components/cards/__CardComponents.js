@@ -148,13 +148,15 @@ export const CardIcon = styled(Icon)`
 export const renderItemId = (number, icon) => {
   if (!number && !icon) return null;
 
+  const parsedNumber = parseInt(number) || number;
+
   return (
     <CardItemIdContainer>
       <CardItemId>
         {icon ? <Icon name={icon} /> : ''}
-        {number && icon ? ' ' : ''}
-        {typeof number === 'number' ? '#' : ''}
-        {number}
+        {parsedNumber && icon ? ' ' : ''}
+        {typeof parsedNumber === 'number' ? '#' : ''}
+        {parsedNumber}
       </CardItemId>
     </CardItemIdContainer>
   );
