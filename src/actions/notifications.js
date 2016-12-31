@@ -23,8 +23,8 @@ export const loadNotificationsRequest = (params: NotificationsOptions, other?: O
   }: ApiRequestPayload), other)
 );
 
-export const updateNotifications = (other?: Object) => (
-  action(UPDATE_NOTIFICATIONS, undefined, other)
+export const updateNotifications = (params?: Object, other?: Object) => (
+  action(UPDATE_NOTIFICATIONS, { params: params || undefined }, other)
 );
 
 export const loadNotificationsSuccess = (

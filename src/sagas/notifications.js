@@ -8,7 +8,7 @@ import { REHYDRATE } from 'redux-persist/constants';
 
 import { dateToHeaderFormat } from '../utils/helpers';
 import { NotificationSchema } from '../utils/normalizr/schemas';
-import { accessTokenSelector, isLoggedSelector } from '../selectors';
+import { accessTokenSelector, isLoggedSelector, lastModifiedAtSelector } from '../selectors';
 
 import { LOAD_NOTIFICATIONS_REQUEST, UPDATE_NOTIFICATIONS, LOGIN_SUCCESS, LOGOUT } from '../utils/constants/actions';
 
@@ -62,23 +62,30 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
   }
 }
 
-function* onUpdateNotificationsRequest() {
-  // const state = yield select();
-  // const notificationIds = notificationIdsSelector(state);
-  // const isEmpty = notificationIds.size <= 0;
+export function getDefaultSince() {
+  return moment().subtract(1, 'month').format();;
+}
 
-  // const lastModifiedAt = new Date(state.getIn(['notifications', 'lastModifiedAt']));
-  // const defaultModifiedSince = moment().subtract(1, 'month').toDate().toString();
-  const defaultSince = moment().subtract(1, 'month').format();
+export function getParamsToLoadAllNotifications() {
+  return { all: true, since: getDefaultSince() };
+}
 
-  const params = { all: true, since: defaultSince };
+export function* getParamsToLoadOnlyNewNotifications() {
+  const state = yield select();
+  const lastModifiedAt = lastModifiedAtSelector(state);
 
-  params.headers = {};
-  params.headers['If-Modified-Since'] = dateToHeaderFormat(defaultSince);
-  // if (!isEmpty && lastModifiedAt) {
-    // params.headers['If-Modified-Since'] = dateToHeaderFormat(lastModifiedAt);
-  // }
+  const defaultSince = getDefaultSince();
+  return {
+    all: true,
+    since: defaultSince,
+    headers: {
+      'If-Modified-Since': dateToHeaderFormat(lastModifiedAt || defaultSince),
+    },
+  };
+}
 
+function* onUpdateNotificationsRequest({ payload: { params: _params }}) {
+  const params = _params || (yield getParamsToLoadOnlyNewNotifications());
   yield put(loadNotificationsRequest(params, sagaActionChunk));
 }
 
@@ -86,16 +93,27 @@ function* onUpdateNotificationsRequest() {
 function* startTimer() {
   yield take(REHYDRATE);
 
+  // when the user opens the app, load ALL notifications.
+  // and then on each minute load only the new notifications
+  // to optimize polling with If-Modified-Since header
+  let params = getParamsToLoadAllNotifications();
+
   while (true) {
     const state = yield select();
     const isLogged = isLoggedSelector(state);
 
     if (isLogged) {
-      yield put(updateNotifications(sagaActionChunk));
-      yield race({
+      yield put(updateNotifications(params, sagaActionChunk));
+      params = yield getParamsToLoadOnlyNewNotifications();
+
+      const { logout } = yield race({
         delay: call(delay, 60 * 1000),
         logout: take([LOGIN_SUCCESS, LOGOUT]),
       });
+
+      if (logout) {
+        params = getParamsToLoadAllNotifications();
+      }
     } else {
       yield call(delay, 1000);
     }

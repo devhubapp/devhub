@@ -5,17 +5,20 @@ import React from 'react';
 import Column from './_Column';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
 import { getDateWithHourAndMinuteText, getOwnerAndRepo } from '../../utils/helpers';
-import type { ActionCreators, Repo } from '../../utils/types';
+import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
+import type { ActionCreators, GithubRepo } from '../../utils/types';
 
 export default class extends React.PureComponent {
   onRefresh = () => {
     const { actions: { updateNotifications } } = this.props;
-    updateNotifications();
+
+    const params = getParamsToLoadAllNotifications();
+    updateNotifications(params);
   };
 
   props: {
     actions: ActionCreators,
-    column: { repo: Repo },
+    column: { repo: GithubRepo },
     errors?: ?Array<string>,
     icon?: string,
     items: Array<Object>,

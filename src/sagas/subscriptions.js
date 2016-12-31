@@ -8,6 +8,7 @@ import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redu
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { EventSchema } from '../utils/normalizr/schemas';
+
 import {
   columnIdsSelector,
   columnSubscriptionIdsSelector,
@@ -23,6 +24,8 @@ import {
   UPDATE_COLUMN_SUBSCRIPTIONS,
   UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
 } from '../utils/constants/actions';
+
+import { dateToHeaderFormat } from '../utils/helpers';
 
 import type { Action, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
 
@@ -87,11 +90,11 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
   }
 }
 
-function* updateSubscriptionsFromColumn({ payload: { id: columnId } }: Action<ApiRequestPayload>) {
-  const state = yield select();
+function* _loadSubscriptions(subscriptionIds) {
+  if (!(subscriptionIds && typeof subscriptionIds.map === 'function')) return;
+  if (!(subscriptionIds.length > 0)) return;
 
-  const subscriptionIds = columnSubscriptionIdsSelector(state, { columnId });
-  if (!(subscriptionIds.size > 0)) return;
+  const state = yield select();
 
   yield* subscriptionIds.map(function* (subscriptionId) {
     const subscription = subscriptionSelector(state, { subscriptionId });
@@ -100,8 +103,21 @@ function* updateSubscriptionsFromColumn({ payload: { id: columnId } }: Action<Ap
     const { requestType, params } = subscription.toJS();
     if (!(requestType && params)) return;
 
+    const lastModifiedAt = new Date(subscription.get('lastModifiedAt'));
+    params.headers = {};
+    if (lastModifiedAt) {
+      params.headers['If-Modified-Since'] = dateToHeaderFormat(lastModifiedAt);
+    }
+
     yield put(loadSubscriptionDataRequest(requestType, params, sagaActionChunk));
   });
+}
+
+function* updateSubscriptionsFromColumn({ payload: { columnId } }: Action<ApiRequestPayload>) {
+  const state = yield select();
+
+  const subscriptionIds = columnSubscriptionIdsSelector(state, { columnId }).toJS();
+  yield _loadSubscriptions(subscriptionIds);
 }
 
 function* updateSubscriptionsFromAllColumns() {
@@ -114,15 +130,7 @@ function* updateSubscriptionsFromAllColumns() {
     columnSubscriptionIdsSelector(state, { columnId })
   )).toJS())).filter(Boolean);
 
-  yield* subscriptionIds.map(function* (subscriptionId) {
-    const subscription = subscriptionSelector(state, { subscriptionId });
-    if (!subscription) return;
-
-    const { requestType, params } = subscription.toJS();
-    if (!(requestType && params)) return;
-
-    yield put(loadSubscriptionDataRequest(requestType, params, sagaActionChunk));
-  });
+  yield _loadSubscriptions(subscriptionIds);
 }
 
 // update all columns each minute

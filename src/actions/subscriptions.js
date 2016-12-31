@@ -37,8 +37,8 @@ export const updateAllColumnsSubscriptions = (other?: Object) => (
   action(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, undefined, other)
 );
 
-export const updateColumnSubscriptions = (id: string, other?: Object) => (
-  action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ id }: Subscription), other)
+export const updateColumnSubscriptions = (columnId: string, other?: Object) => (
+  action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ columnId }: Subscription), other)
 );
 
 export const loadSubscriptionDataRequest = (

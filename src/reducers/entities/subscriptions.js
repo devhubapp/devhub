@@ -76,12 +76,14 @@ export default (state: State = initialState, { type, payload, error }: Action<an
       ))(payload || {});
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
-      return (({ request: { subscriptionId }, data: { result }, meta }: ApiResponsePayload) => {
+      return (({ request: { subscriptionId }, data, meta }: ApiResponsePayload) => {
+        const { result } = data || {};
+
         const subscription = state.get(subscriptionId);
         if (!subscription) return state;
 
         const eventIds = Set(subscription.get('events'));
-        const newEventIds = Set(result).union(eventIds);
+        const newEventIds = result ? Set(result).union(eventIds) : eventIds;
 
         const newSubscription = subscription.mergeDeep(fromJS({
           events: newEventIds,

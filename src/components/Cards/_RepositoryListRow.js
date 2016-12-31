@@ -5,11 +5,11 @@ import React from 'react';
 import RepoRow from './_RepositoryRow';
 import RowList from './__RowList';
 
-import type { Repo } from '../../utils/types';
+import type { GithubRepo } from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
-    repos: Array<Repo>,
+    repos: Array<GithubRepo>,
     maxHeight?: number,
   };
 
