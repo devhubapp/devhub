@@ -11,11 +11,12 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     columns: Array<ColumnType>,
+    loading: boolean,
     updatedAt: Date,
   };
 
   renderRow = (column) => {
-    const { actions, updatedAt } = this.props;
+    const { actions, loading, updatedAt } = this.props;
 
     if (!column) return null;
 
@@ -31,6 +32,7 @@ export default class extends React.PureComponent {
         actions={actions}
         column={column}
         items={items}
+        loading={loading}
         updatedAt={updatedAt}
         icon={column.get('icon')}
         title={column.get('title')}

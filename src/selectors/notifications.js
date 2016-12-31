@@ -60,3 +60,8 @@ export const updatedAtSelector = createImmutableSelector(
   notificationDetailsSelector,
   (notifications) => notifications.get('updatedAt'),
 );
+
+export const isLoadingSelector = createImmutableSelector(
+  notificationDetailsSelector,
+  (notifications) => notifications.get('loading'),
+);

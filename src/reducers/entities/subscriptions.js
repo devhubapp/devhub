@@ -27,7 +27,17 @@ export function generateSubscriptionId(requestType: ApiRequestType, params: Obje
   return getUniquePath(requestType, params);
 }
 
-type State = Normalized<Subscription>;
+type State = Normalized<Subscription> & {
+  updatedAt: Date,
+  lastModifiedAt?: string,
+  pollInterval?: number,
+  rateLimit?: number,
+  rateLimitRemaining?: number,
+  rateLimitReset?: number,
+  loading: boolean,
+  error?: string,
+};
+
 const initialState = Map();
 
 export default (state: State = initialState, { type, payload, error }: Action<any>): State => {
@@ -76,11 +86,13 @@ export default (state: State = initialState, { type, payload, error }: Action<an
         const newSubscription = subscription.mergeDeep(fromJS({
           events: newEventIds,
           updatedAt: new Date(),
-          lastModifiedAt: meta['last-modified'],
-          pollInterval: Number(meta['x-poll-interval']),
-          rateLimit: Number(meta['x-ratelimit-limit']),
-          rateLimitRemaining: Number(meta['x-ratelimit-remaining']),
-          rateLimitReset: meta['x-ratelimit-reset'],
+          ...( meta && meta['last-modified'] ? {
+            lastModifiedAt: meta['last-modified'],
+            pollInterval: Number(meta['x-poll-interval']),
+            rateLimit: Number(meta['x-ratelimit-limit']),
+            rateLimitRemaining: Number(meta['x-ratelimit-remaining']),
+            rateLimitReset: meta['x-ratelimit-reset'],
+          } : {}),
           loading: false,
           error: null,
         }));
