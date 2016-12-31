@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@exponent/ex-navigation": "^2.7.0",
-    "bugsnag-react-native": "1.1.*",
+    "bugsnag-react-native": "^1.2.1",
     "denormalizr": "https://github.com/brunolemos/denormalizr",
     "firebase": "^3.6.4",
     "github": "https://github.com/brunolemos/react-native-github-api",
@@ -22,7 +22,7 @@
     "immutable": "^3.8.1",
     "lodash": "^4.17.3",
     "moment": "^2.17.0",
-    "normalizr": ">=3.0.0-beta",
+    "normalizr": "^3.0.0",
     "react": "^15.4.1",
     "react-native": "^0.39.2",
     "react-native-actionsheet": "^2.0.4",

@@ -5,7 +5,12 @@ import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
 import ScrollableContentContainer from '../ScrollableContentContainer';
-import { avatarWidth as defaultAvatarWidth, contentPadding, radius } from '../../styles/variables';
+import {
+  avatarWidth as defaultAvatarWidth,
+  contentPadding,
+  mutedOpacity,
+  radius,
+} from '../../styles/variables';
 
 export const avatarWidth = defaultAvatarWidth;
 export const smallAvatarWidth = avatarWidth / 2;
@@ -18,7 +23,7 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ seen }) => (seen ? 0.4 : 1)};
+  opacity: ${({ seen }) => (seen ? mutedOpacity : 1)};
 `;
 
 export const FullView = styled.View`

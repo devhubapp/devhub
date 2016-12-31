@@ -70,19 +70,19 @@ export function getNotificationReasonTextsAndColor(
       return { color: theme.pink, reason, label: 'assigned', description: 'You were assigned to this thread' };
 
     case 'author':
-      return { color: theme.green, reason, label: 'author', description: 'You created this thread' };
+      return { color: theme.lightRed, reason, label: 'author', description: 'You created this thread' };
 
     case 'comment':
-      return { color: theme.brown, reason, label: 'commented', description: 'You commented on the thread' };
+      return { color: theme.blue, reason, label: 'commented', description: 'You commented on the thread' };
 
     case 'invitation':
-      return { color: theme.yellow, reason, label: 'invited', description: 'You accepted an invitation to contribute to the repository' };
+      return { color: theme.brown, reason, label: 'invited', description: 'You accepted an invitation to contribute to the repository' };
 
     case 'manual':
       return { color: theme.teal, reason, label: 'subscribed', description: 'You subscribed to the thread' };
 
     case 'mention':
-      return { color: theme.red, reason, label: 'mentioned', description: 'You were @mentioned' };
+      return { color: theme.orange, reason, label: 'mentioned', description: 'You were @mentioned' };
 
     case 'state_change':
       return { color: theme.purple, reason, label: 'state changed', description: 'You changed the thread state' };
@@ -91,7 +91,7 @@ export function getNotificationReasonTextsAndColor(
       return { color: theme.blueGray, reason, label: 'watching', description: 'You\'re watching this repository' };
 
     case 'team_mention':
-      return { color: theme.orange, reason, label: 'team mentioned', description: 'Your team was mentioned' };
+      return { color: theme.yellow, reason, label: 'team mentioned', description: 'Your team was mentioned' };
 
     default: return { color: theme.gray, reason, label: reason, description: '' };
   }

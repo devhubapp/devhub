@@ -1166,9 +1166,9 @@ buffer@^5.0.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
-bugsnag-react-native@1.1.*:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.1.4.tgz#478d348f8a754a520d0a73454b451cca4829500e"
+bugsnag-react-native@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.2.1.tgz#a13d23b7a46453462885f0ae3a67b9099bdf074f"
   dependencies:
     promise "^7"
 
@@ -1599,7 +1599,7 @@ denodeify@^1.2.1:
 
 "denormalizr@https://github.com/brunolemos/denormalizr":
   version "1.0.0"
-  resolved "https://github.com/brunolemos/denormalizr#8e6f31bf2424dac3556ac308e242ed6d8abf1449"
+  resolved "https://github.com/brunolemos/denormalizr#078ed4ab6f9e5cc3491f23f53997a508137e3d96"
   dependencies:
     lodash "^4.16.3"
 
@@ -2103,7 +2103,7 @@ faye-websocket@0.9.3:
 
 fb-watchman@^1.8.0, fb-watchman@^1.9.0:
   version "1.9.0"
-  resolved "http://registry.npmjs.org/fb-watchman/-/fb-watchman-1.9.0.tgz#6f268f1f347a6b3c875d1e89da7e1ed79adfc0ec"
+  resolved "https://registry.yarnpkg.com/fb-watchman/-/fb-watchman-1.9.0.tgz#6f268f1f347a6b3c875d1e89da7e1ed79adfc0ec"
   dependencies:
     bser "^1.0.2"
 
@@ -2342,8 +2342,8 @@ getport@^0.1.0:
     whatwg-fetch "^2.0.1"
 
 glamor@^2.15.5:
-  version "2.20.19"
-  resolved "https://registry.yarnpkg.com/glamor/-/glamor-2.20.19.tgz#2591ede49d0a62d808fb6e816d32ba70d279eeb5"
+  version "2.20.20"
+  resolved "https://registry.yarnpkg.com/glamor/-/glamor-2.20.20.tgz#546cb86bfae760b0fd5c019ba859007d08e6238f"
   dependencies:
     babel-runtime "^6.18.0"
     fbjs "^0.8.8"
@@ -3575,13 +3575,13 @@ mime-db@~1.23.0:
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.23.0.tgz#a31b4070adaea27d732ea333740a64d0ec9a6659"
 
-mime-types@2.1.11, mime-types@~2.1.9:
+mime-types@2.1.11:
   version "2.1.11"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.11.tgz#c259c471bda808a85d6cd193b430a5fae4473b3c"
   dependencies:
     mime-db "~1.23.0"
 
-mime-types@^2.1.12, mime-types@^2.1.13, mime-types@~2.1.11, mime-types@~2.1.13, mime-types@~2.1.6, mime-types@~2.1.7:
+mime-types@^2.1.12, mime-types@^2.1.13, mime-types@~2.1.11, mime-types@~2.1.13, mime-types@~2.1.6, mime-types@~2.1.7, mime-types@~2.1.9:
   version "2.1.13"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.13.tgz#e07aaa9c6c6b9a7ca3012c69003ad25a39e92a88"
   dependencies:
@@ -3757,9 +3757,9 @@ normalize-path@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-2.0.1.tgz#47886ac1662760d4261b7d979d241709d3ce3f7a"
 
-normalizr@>=3.0.0-beta:
-  version "3.0.0-beta"
-  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.0.0-beta.tgz#9f3cb52efd98504f6d6525dd9d584c56c7cee2de"
+normalizr@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.0.0.tgz#43099e099c102762f9b270fad02a7ca69620310e"
 
 npmlog@^2.0.4:
   version "2.0.4"
@@ -4259,7 +4259,7 @@ react-redux@^5.0.1:
 
 react-static-container@^1.0.0:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-static-container/-/react-static-container-1.0.1.tgz#694c0dd68a896b879519afb548399cc1989c9ab0"
+  resolved "http://registry.npmjs.org/react-static-container/-/react-static-container-1.0.1.tgz#694c0dd68a896b879519afb548399cc1989c9ab0"
 
 react-test-renderer@^15.4.1:
   version "15.4.1"
@@ -4419,7 +4419,7 @@ regenerator-transform@0.9.8:
 
 regex-cache@^0.4.2:
   version "0.4.3"
-  resolved "https://registry.yarnpkg.com/regex-cache/-/regex-cache-0.4.3.tgz#9b1a6c35d4d0dfcef5711ae651e8e9d3d7114145"
+  resolved "http://registry.npmjs.org/regex-cache/-/regex-cache-0.4.3.tgz#9b1a6c35d4d0dfcef5711ae651e8e9d3d7114145"
   dependencies:
     is-equal-shallow "^0.1.3"
     is-primitive "^2.0.0"
@@ -4672,7 +4672,7 @@ sc-broker@2.3.x:
 
 sc-channel@1.0.x:
   version "1.0.5"
-  resolved "https://registry.yarnpkg.com/sc-channel/-/sc-channel-1.0.5.tgz#09738b35febbb8a66a395255dfd99a52a217c8d3"
+  resolved "http://registry.npmjs.org/sc-channel/-/sc-channel-1.0.5.tgz#09738b35febbb8a66a395255dfd99a52a217c8d3"
   dependencies:
     sc-emitter "1.0.x"
 
@@ -5385,10 +5385,6 @@ window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
 
-window-size@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
-
 wordwrap@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.2.tgz#b79669bb42ecb409f83d583cad52ca17eaa1643f"
@@ -5491,8 +5487,8 @@ yargs-parser@^4.2.0:
     camelcase "^3.0.0"
 
 yargs@^6.0.0, yargs@^6.3.0, yargs@^6.4.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-6.5.0.tgz#a902e23a1f0fe912b2a03f6131b7ed740c9718ff"
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-6.6.0.tgz#782ec21ef403345f830a808ca3d513af56065208"
   dependencies:
     camelcase "^3.0.0"
     cliui "^3.2.0"
@@ -5505,7 +5501,6 @@ yargs@^6.0.0, yargs@^6.3.0, yargs@^6.4.0:
     set-blocking "^2.0.0"
     string-width "^1.0.2"
     which-module "^1.0.0"
-    window-size "^0.2.0"
     y18n "^3.2.1"
     yargs-parser "^4.2.0"
 
