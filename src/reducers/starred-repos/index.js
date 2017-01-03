@@ -11,9 +11,12 @@ const initialState = Set();
 export default (state: State = initialState, action: Action<any>): State => {
   const { type, payload } = action || {};
 
+  const { repoId } = payload || {};
+  if (!repoId) return state;
+
   switch (type) {
-    case STAR_REPO: return state.add(payload);
-    case UNSTAR_REPO: return state.remove(payload);
+    case STAR_REPO: return state.add(repoId);
+    case UNSTAR_REPO: return state.remove(repoId);
     default: return state;
   }
 };

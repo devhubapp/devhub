@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
-import RepositoryStarButtonContainer from '../../containers/RepositoryStarButtonContainer';
+// import RepositoryStarButtonContainer from '../../containers/RepositoryStarButtonContainer';
 
 import {
   RepositoryName,
@@ -44,6 +44,10 @@ export default class extends React.PureComponent {
 
     const isPrivate = repo.get('private') || repo.get('public') === false;
 
+    // right={
+    //   <RepositoryStarButtonContainer repoId={repo.get('id')} />
+    // }
+
     return (
       <TouchableRow
         left={
@@ -52,9 +56,6 @@ export default class extends React.PureComponent {
             linkURL={repo.get('html_url') || repo.get('url')}
             size={smallAvatarWidth}
           />
-        }
-        right={
-          <RepositoryStarButtonContainer repoId={repo.get('id')} />
         }
         url={repo.get('html_url') || repo.get('url')}
         {...props}

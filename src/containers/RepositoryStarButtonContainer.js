@@ -39,9 +39,9 @@ export default class extends React.PureComponent {
     }
   }
 
-  bindActionsToRepoId(props) {
-    this.starRepoFn = props.starRepo.bind(null, props.repoId);
-    this.unstarRepoFn = props.unstarRepo.bind(null, props.repoId);
+  bindActionsToRepoId({ repoId, starRepo }) {
+    this.starRepoFn = starRepo.bind(null, { repoId });
+    this.unstarRepoFn = unstarRepo.bind(null, { repoId });
   }
 
   props: {

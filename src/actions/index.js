@@ -44,12 +44,12 @@ export const setTheme = (theme: Theme, other?: Object) => (
   action(SET_THEME, theme, other)
 );
 
-export const starRepo = (repoId: number | string, other?: Object) => (
-  action(STAR_REPO, `${repoId}`, other)
+export const starRepo = ({ repoId, repoFullName }, other?: Object) => (
+  action(STAR_REPO, { repoId: `${repoId}`, repoFullName }, other)
 );
 
-export const unstarRepo = (repoId: number | string, other?: Object) => (
-  action(UNSTAR_REPO, `${repoId}`, other)
+export const unstarRepo = ({ repoId, repoFullName }, other?: Object) => (
+  action(UNSTAR_REPO, { repoId: `${repoId}`, repoFullName }, other)
 );
 
 export const toggleSeenEvent = (eventIds: Array<string>, other?: Object) => (
