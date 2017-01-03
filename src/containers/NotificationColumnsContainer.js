@@ -30,6 +30,7 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     columns: Object,
+    loading: boolean,
     updatedAt: Date,
   };
 

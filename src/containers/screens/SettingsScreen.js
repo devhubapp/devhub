@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styled, { withTheme } from 'styled-components/native';
-import { Button } from 'react-native';
+import { Button, Platform } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -38,6 +38,8 @@ export default class extends React.PureComponent {
   render() {
     const { actions: { clearAppData, logout, setTheme }, theme } = this.props;
 
+    const color = Platform.OS === 'android' ? theme.base08 : theme.base04;
+
     return (
       <Screen>
         <Wrapper>
@@ -46,10 +48,10 @@ export default class extends React.PureComponent {
           </Main>
 
           <Footer>
-            <Button title="Auto" color={theme.base04} onPress={() => setTheme('auto')} />
-            <Button title="Light" color={theme.base04} onPress={() => setTheme('light')} />
-            <Button title="Dark" color={theme.base04} onPress={() => setTheme('dark')} />
-            <Button title="Dark Blue" color={theme.base04} onPress={() => setTheme('dark-blue')} />
+            <Button title="Auto" color={color} onPress={() => setTheme('auto')} />
+            <Button title="Light" color={color} onPress={() => setTheme('light')} />
+            <Button title="Dark" color={color} onPress={() => setTheme('dark')} />
+            <Button title="Dark Blue" color={color} onPress={() => setTheme('dark-blue')} />
             <Button title="Logout" color={theme.red} onPress={() => logout()} />
           </Footer>
         </Wrapper>

@@ -145,6 +145,7 @@ buildscript {
 }
 
 dependencies {
+    compile project(':react-native-prompt-android')
     compile project(':react-native-orientation-listener')
     compile project(':bugsnag-react-native')
     compile project(':react-native-oauth')

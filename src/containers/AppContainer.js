@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
-import { StatusBar } from 'react-native';
+import { StatusBar, Platform } from 'react-native';
 import { StackNavigation, withNavigation } from '@exponent/ex-navigation';
 
 import {
@@ -35,7 +35,9 @@ export default class extends React.PureComponent {
 
   handleIsLoggedStatus = (props) => {
     const { isLogged, navigation, rehydrated } = props || this.props;
-    if (!rehydrated) return;
+
+    // TODO: Fix GitHub login on Android
+    if (!rehydrated || Platform.OS !== 'ios') return;
 
     try {
       const navigator = navigation.getNavigator('root');
@@ -66,6 +68,9 @@ export default class extends React.PureComponent {
   render() {
     const { theme } = this.props;
 
+    // TODO: Fix GitHub login on Android
+    const initialRoute = Platform.OS !== 'ios' ? 'main' : 'splash';
+
     return (
       <ThemeProvider theme={theme}>
         <View>
@@ -74,7 +79,7 @@ export default class extends React.PureComponent {
             barStyle={theme.isDark ? 'light-content' : 'dark-content'}
           />
 
-          <StackNavigation id="root" initialRoute="splash" />
+          <StackNavigation id="root" initialRoute={initialRoute} />
         </View>
       </ThemeProvider>
     );

@@ -31,6 +31,7 @@
     "react-native-linear-gradient": "^1.6.2",
     "react-native-oauth": "^2.1.5",
     "react-native-orientation-listener": "^0.0.4",
+    "react-native-prompt-android": "^0.0.5",
     "react-native-vector-icons": "^3.0.0",
     "react-redux": "^5.0.1",
     "redux": "^3.6.0",

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.react.ReactApplication;
+import im.shimo.react.prompt.RNPromptPackage;
 import com.walmartreact.ReactOrientationListener.ReactOrientationListener;
 import io.fullstack.oauth.OAuthManagerPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -36,11 +37,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNPromptPackage(),
             new ReactOrientationListener(),
             new OAuthManagerPackage(),
             new LinearGradientPackage(),
-            new FabricPackage(),
-            BugsnagReactNative.getPackage(),
             new FabricPackage(),
             BugsnagReactNative.getPackage(),
             new VectorIconsPackage(),

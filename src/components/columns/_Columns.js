@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import withOrientation from '../../hoc/withOrientation';
 import { List } from 'immutable';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import NewColumn from './NewColumn';
 import { getFullWidth, getWidth } from './_Column';
@@ -13,7 +13,13 @@ import type { ActionCreators } from '../../utils/types';
 
 export const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
-  overflow: ${Platform.OS === 'ios' ? 'hidden' : 'visible'};
+  ${
+    Platform.select({
+      ios: {
+        overflow: 'hidden',
+      },
+    })
+  }
 `;
 
 @withOrientation

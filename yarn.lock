@@ -4145,6 +4145,10 @@ react-native-orientation-listener@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/react-native-orientation-listener/-/react-native-orientation-listener-0.0.4.tgz#b50de51ab059a5846b5fa15bada29b6d0174c4b7"
 
+react-native-prompt-android@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-prompt-android/-/react-native-prompt-android-0.0.5.tgz#dfc5fd2068da3b894d9bd4fe59082e775d141122"
+
 react-native-tab-view@0.0.42:
   version "0.0.42"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.42.tgz#abaeda8e7ab856db98c09709d3d82d2a08b94564"

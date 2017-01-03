@@ -22,7 +22,7 @@ export default class extends React.PureComponent {
     errors?: ?Array<string>,
     icon?: string,
     items: Array<Object>,
-    loading?: boolean,
+    loading: boolean,
     notificationsDetails: Object,
     radius?: number,
     style?: ?Object,

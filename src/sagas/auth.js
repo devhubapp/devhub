@@ -26,10 +26,11 @@ function* login({ payload }: Action<LoginRequestPayload>) {
     const { provider, ...params } = payload;
 
     const response = yield call(OAuthManager.authorize, provider, params);
-    const { response: { credentials: { access_token: accessToken } } } = response;
+    const { response: { credentials: { access_token: accessToken } = {} } = {} } = response || {};
+    // console.log('response', response);
 
     if (!accessToken) {
-      throw new Error('No access token received.', 'NoAccessTokenException');
+      throw new Error('Login failed: No access token received.', 'NoAccessTokenException');
     }
 
     // sign in with firebase
@@ -39,7 +40,7 @@ function* login({ payload }: Action<LoginRequestPayload>) {
     const result = { accessToken };
     yield put(loginSuccess(payload, result, sagaActionChunk));
   } catch (e) {
-    console.error('Login failed', e);
+    console.log('Login failed', e);
     const errorMessage = (e.message || {}).message || e.message || e.body || e.status;
     yield put(loginFailure(payload, errorMessage, sagaActionChunk));
   }

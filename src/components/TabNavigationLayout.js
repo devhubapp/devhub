@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styled, { withTheme } from 'styled-components/native';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { StackNavigation, TabNavigation, TabNavigationItem } from '@exponent/ex-navigation';
 import Icon from 'react-native-vector-icons/Octicons';
 
@@ -65,23 +65,26 @@ export default class extends React.PureComponent {
           <StackNavigation initialRoute="home" />
         </TabNavigationItem>
 
-        <TabNavigationItem
-          id="trending"
-          renderIcon={isSelected => (
-            renderIcon('Trending', 'pulse', isSelected, theme.base08, theme.base05)
-          )}
-        >
-          <StackNavigation initialRoute="empty" />
-        </TabNavigationItem>
+        {/*<TabNavigationItem*/}
+          {/*id="trending"*/}
+          {/*renderIcon={isSelected => (*/}
+            {/*renderIcon('Trending', 'pulse', isSelected, theme.base08, theme.base05)*/}
+          {/*)}*/}
+        {/*>*/}
+          {/*<StackNavigation initialRoute="empty"/>*/}
+        {/*</TabNavigationItem>*/}
 
-        <TabNavigationItem
-          id="notifications"
-          renderIcon={isSelected => (
-            renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
-          )}
-        >
-          <StackNavigation initialRoute="notifications" />
-        </TabNavigationItem>
+        {
+          Platform.OS !== 'ios' ? <TabNavigationItem /> :
+          <TabNavigationItem
+            id="notifications"
+            renderIcon={isSelected => (
+              renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
+            )}
+          >
+            <StackNavigation initialRoute="notifications" />
+          </TabNavigationItem>
+        }
 
         <TabNavigationItem
           id="settings"

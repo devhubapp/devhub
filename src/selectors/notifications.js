@@ -56,9 +56,9 @@ export const denormalizedGroupedNotificationsSelector = createImmutableSelector(
   (notifications, params) => groupNotificationsByRepository(notifications, params),
 );
 
-export const updatedAtSelector = createImmutableSelector(
+export const isLoadingSelector = createImmutableSelector(
   notificationDetailsSelector,
-  (notifications) => notifications.get('updatedAt'),
+  (notifications) => !!notifications.get('loading'),
 );
 
 export const lastModifiedAtSelector = createImmutableSelector(
@@ -66,7 +66,7 @@ export const lastModifiedAtSelector = createImmutableSelector(
   (notifications) => notifications.get('lastModifiedAt'),
 );
 
-export const isLoadingSelector = createImmutableSelector(
+export const updatedAtSelector = createImmutableSelector(
   notificationDetailsSelector,
-  (notifications) => notifications.get('loading'),
+  (notifications) => notifications.get('updatedAt'),
 );

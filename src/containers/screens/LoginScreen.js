@@ -7,8 +7,9 @@ import { connect } from 'react-redux';
 
 import GithubButton from '../../components/buttons/GithubButton';
 import Screen from '../../components/Screen';
+import StatusMessage from '../../components/StatusMessage';
 import * as actionCreators from '../../actions';
-import { isLoggingSelector } from '../../selectors';
+import { isLoggingSelector, userErrorSelector } from '../../selectors';
 import { contentPadding, radius } from '../../styles/variables';
 import type { ActionCreators, State } from '../../utils/types';
 
@@ -27,6 +28,7 @@ const StyledGithubButton = styled(GithubButton) `
 
 const mapStateToProps = (state: State) => ({
   isLoggingIn: isLoggingSelector(state),
+  error: userErrorSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -55,20 +57,26 @@ export default class extends React.PureComponent {
 
     this.setState({ loggingInMethod: 'github.private' });
     loginRequest({ provider: 'github', scopes: 'user repo notifications read:org' });
-  }
+  };
 
   props: {
     actions: ActionCreators,
+    error?: string,
     isLoggingIn?: boolean,
   };
 
   render() {
     const { loggingInMethod } = this.state;
-    const { isLoggingIn } = this.props;
+    const { error, isLoggingIn } = this.props;
 
     return (
       <Screen>
-        <Main />
+        <Main>
+          {
+            error &&
+            <StatusMessage key={`error-${error}`} message={error} error />
+          }
+        </Main>
 
         <Footer>
           <StyledGithubButton

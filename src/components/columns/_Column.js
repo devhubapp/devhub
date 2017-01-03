@@ -4,7 +4,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 import styled, { withTheme } from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
-import { Dimensions, RefreshControl } from 'react-native';
+import { Dimensions, Platform, RefreshControl } from 'react-native';
 
 import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
@@ -15,9 +15,10 @@ import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 import type { Subscription, ThemeObject } from '../../utils/types';
 
 export const columnMargin = 2;
-export const columnPreviewWidth = contentPadding;
+export const columnPreviewWidth = Platform.OS === 'ios' ? contentPadding : 0; // because android does not support overflow visible
+export const maxWidth = Platform.OS === 'android' ? 800 : 680;
 export const getFullWidth = () => Dimensions.get('window').width;
-export const getWidth = () => Math.min(getFullWidth() - (2 * columnPreviewWidth), 680);
+export const getWidth = () => Math.min(getFullWidth() - (2 * columnPreviewWidth), maxWidth);
 
 export const ColumnWrapper = styled.View`
   flex: 1;

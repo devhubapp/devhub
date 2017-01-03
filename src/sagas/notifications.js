@@ -28,7 +28,6 @@ const sagaActionChunk = { dispatchedBySaga: true };
 function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
   const state = yield select();
   const accessToken = accessTokenSelector(state);
-  if (!accessToken) return;
 
   yield call(authenticate, accessToken);
 
@@ -36,6 +35,10 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
   const requestPayload = { ...payload, accessToken };
 
   try {
+    if (!accessToken) {
+      throw new Error('You must be logged in to see this', 'NotAuthorizedException');
+    }
+
     const { params, requestType } = payload;
 
     const { response, timeout } = yield race({
@@ -43,7 +46,9 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
       timeout: call(delay, 10000),
     });
 
-    if (timeout) throw new Error('Timeout', 'TimeoutError');
+    if (timeout) {
+      throw new Error('Timeout', 'TimeoutError');
+    }
 
     // console.log('onLoadNotificationsRequest response', response);
     const { data, meta }: ApiResponsePayload = response;
