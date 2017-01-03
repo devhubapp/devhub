@@ -64,12 +64,6 @@ export default class extends React.PureComponent {
 
     return (
       <CardWrapper {...props} seen={seen}>
-        <FullAbsoluteView zIndex={seen ? 1 : -1}>
-          <TouchableWithoutFeedback onPress={() => actions.toggleSeenNotification(notificationIds)}>
-            <FullAbsoluteView />
-          </TouchableWithoutFeedback>
-        </FullAbsoluteView>
-
         <FullAbsoluteView
           style={{
             top: contentPadding + smallAvatarWidth,
