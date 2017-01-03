@@ -12,6 +12,8 @@ import {
   radius,
 } from '../../styles/variables';
 
+import { openOnGithub } from '../../utils/helpers';
+
 export const avatarWidth = defaultAvatarWidth;
 export const smallAvatarWidth = avatarWidth / 2;
 export const innerContentPadding = contentPadding;
@@ -82,6 +84,7 @@ export const HeaderRow = styled(HorizontalView)`
 `;
 
 export const StyledText = styled.Text`
+  background-color: transparent;
   color: ${({ muted, theme }) => (muted ? theme.base05 : theme.base04)};
   line-height: 18;
   font-size: ${({ small }) => small ? 12 : 14};
@@ -150,14 +153,14 @@ export const CardIcon = styled(Icon)`
   background-color: transparent;
 `;
 
-export const renderItemId = (number, icon) => {
+export const renderItemId = (number, icon, url) => {
   if (!number && !icon) return null;
 
   const parsedNumber = parseInt(number) || number;
 
   return (
     <CardItemIdContainer>
-      <CardItemId>
+      <CardItemId onPress={url ? (() => openOnGithub(url)) : null}>
         {icon ? <Icon name={icon} /> : ''}
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}

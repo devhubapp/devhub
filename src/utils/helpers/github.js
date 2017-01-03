@@ -4,10 +4,10 @@
 import gravatar from 'gravatar';
 import max from 'lodash/max';
 import moment from 'moment';
+import { Linking } from 'react-native';
 import { fromJS, List, Map, OrderedMap } from 'immutable';
 
 import baseTheme from '../../styles/themes/base';
-import { issueOrPullRequestIdAttribute } from '../normalizr/helpers';
 
 import type {
     GithubEvent,
@@ -17,9 +17,11 @@ import type {
     GithubNotification,
     GithubNotificationReason,
     GithubPullRequest,
+    GithubRepo,
     ThemeObject,
   } from '../types';
 
+export const baseURL = 'https://github.com';
 
 export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = baseTheme)
 : { color: string, icon: string } {
@@ -146,7 +148,7 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
         }
       })();
     case 'MemberEvent': return { icon: 'person' };
-    case 'PublicEvent': return { icon: 'repo' };
+    case 'PublicEvent': return { icon: 'globe' };
 
     case 'PullRequestEvent':
       return (() => {
@@ -536,6 +538,71 @@ export function getUserAvatarByEmail(email: string, { size, ...otherOptions }: {
 /* eslint-disable-next-line no-useless-escape */
 export const getRepoFullNameFromUrl = (url: string): string => (
   url
-    ? ((url.match(/(?:github.com[\/repos]?\/)([a-zA-Z0-9\-\.\_]+\/[a-zA-Z0-9-\-\.\_]+[^\/]?)/i) || [])[1]) || ''
+      ? ((url.match(/(github.com\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^\/#$]?)/i) || [])[3]) || ''
     : ''
 );
+
+export const getGitHubURLForBranch = (repoFullName: string, branch: string) => (
+  repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
+);
+
+export function githubHTMLUrlFromAPIUrl(apiURL: string): string {
+  if (!apiURL) return '';
+
+  const [, type, restOfURL] = apiURL.match('api.github.com/([a-zA-Z]+)/(.*)');
+  if (!(type && restOfURL)) return '';
+
+  if (type === 'repos') {
+    const repoFullName = getRepoFullNameFromUrl(apiURL);
+    const [type2, ...restOfURL] = (apiURL.split(`/repos/${repoFullName}/`)[1] || '').split('/');
+
+    if (restOfURL[0]) {
+      switch (type2) {
+        case 'pulls':
+          if (restOfURL[1] === 'comments' && restOfURL[2]) {
+            return `${baseURL}/${repoFullName}/pull/${restOfURL[0]}#discussion_r${restOfURL[2]}`;
+          }
+
+          return `${baseURL}/${repoFullName}/pull/${restOfURL[0]}`;
+
+        case 'issues':
+          if (restOfURL[1] === 'comments' && restOfURL[2]) {
+            return `${baseURL}/${repoFullName}/pull/${restOfURL[0]}#issuecomment-${restOfURL[2]}`;
+          }
+
+          return `${baseURL}/${repoFullName}/issues/${restOfURL[0]}`;
+
+        case 'commits':
+          return `${baseURL}/${repoFullName}/commit/${restOfURL[0]}`;
+      }
+    }
+  }
+
+  return `${baseURL}/${restOfURL}`;
+}
+
+function openURL(url: string) {
+  if (!url) return null;
+
+  // sometimes the url come like this: '/facebook/react', so we add https://github.com
+  let _url = url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url;
+
+  // replace http with devhub:// so the app deeplinking will handle this
+  // the app will decide if it will push an app screen or open the web browser
+  _url = _url.replace(/(http[s]?)/, 'devhub');
+
+  return Linking.openURL(_url);
+}
+
+export function openOnGithub(obj: string | GithubRepo | GithubIssue | GithubPullRequest) {
+  if (!obj) return null;
+
+  if (typeof obj === 'string') {
+    return openURL(obj);
+  }
+
+  const url = obj.get('html_url') || obj.get('url');
+  if (!url) return null;
+
+  return openURL(internalUrl);
+}

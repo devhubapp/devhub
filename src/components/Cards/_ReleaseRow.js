@@ -1,39 +1,32 @@
 // @flow
 
 import React from 'react';
-import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
+import { View } from 'react-native';
 
 import BranchRow from './_BranchRow';
-import { withTheme } from 'styled-components/native';
-import TransparentTextOverlay from '../TransparentTextOverlay';
+import OwnerAvatar from './_OwnerAvatar';
+import TouchableRow from './__TouchableRow';
 
 import {
   CardText,
-  ContentRow,
-  FullView,
-  HighlightContainerRow1,
-  LeftColumn,
-  MainColumn,
-  RepositoryContentContainer,
   StyledText,
+  smallAvatarWidth,
 } from './__CardComponents';
 
-import { contentPadding, radius } from '../../styles/variables';
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { GithubEventType, ReleaseEvent, ThemeObject } from '../../utils/types';
+import { getRepoFullNameFromUrl, trimNewLinesAndSpaces, user } from '../../utils/helpers';
+import type { GithubEventType, GithubUser, ReleaseEvent, ThemeObject } from '../../utils/types';
 
-@withTheme
 export default class extends React.PureComponent {
   props: {
     narrow: boolean,
     release: ReleaseEvent,
-    theme?: ThemeObject,
     type: GithubEventType,
+    user: GithubUser,
   };
 
   render() {
-    const { narrow, release, theme, type, ...props } = this.props;
+    const { release, type, user, ...props } = this.props;
 
     if (type !== 'ReleaseEvent' || !release) return null;
 
@@ -49,60 +42,52 @@ export default class extends React.PureComponent {
       tagName: trimNewLinesAndSpaces(release.get('tag_name')),
     };
 
+    const repoFullName = getRepoFullNameFromUrl(release.get('url'));
+
     return (
       <View>
         {
           branch &&
-          <BranchRow branch={branch} type={type} narrow />
+          <BranchRow branch={branch} type={type} repoFullName={repoFullName} narrow />
         }
 
-        <ContentRow narrow={narrow} {...props}>
-          <LeftColumn />
-
-          <MainColumn>
-            <HighlightContainerRow1>
-              <FullView>
-                <TransparentTextOverlay
-                  color={theme.base01}
-                  size={contentPadding}
-                  from="horizontal"
-                  radius={radius}
-                >
-                  <RepositoryContentContainer>
-                    <StyledText numberOfLines={1}>
-                      <Icon name="tag" />&nbsp;
-                      {name || tagName}
-                    </StyledText>
-                  </RepositoryContentContainer>
-                </TransparentTextOverlay>
-              </FullView>
-            </HighlightContainerRow1>
-          </MainColumn>
-        </ContentRow>
+        <TouchableRow
+          left={
+            user &&
+            <OwnerAvatar
+              avatarURL={user.get('avatar_url')}
+              linkURL={user.get('html_url') || user.get('url')}
+              size={smallAvatarWidth}
+            />
+          }
+          url={release.get('html_url') || release.get('url')}
+          {...props}
+        >
+          <StyledText numberOfLines={1}>
+            <Icon name="tag" />&nbsp;
+            {name || tagName}
+          </StyledText>
+        </TouchableRow>
 
         {
           body &&
-          <ContentRow narrow={narrow} {...props}>
-            <LeftColumn />
-
-            <MainColumn>
-              <HighlightContainerRow1>
-                <TransparentTextOverlay
-                  color={theme.base01}
-                  size={contentPadding}
-                  from="horizontal"
-                  radius={radius}
-                >
-                  <RepositoryContentContainer>
-                    <CardText numberOfLines={1}>
-                      <Icon name="megaphone" />&nbsp;
-                      {body}
-                    </CardText>
-                  </RepositoryContentContainer>
-                </TransparentTextOverlay>
-              </HighlightContainerRow1>
-            </MainColumn>
-          </ContentRow>
+          <TouchableRow
+            left={
+              user &&
+              <OwnerAvatar
+                avatarURL={user.get('avatar_url')}
+                linkURL={user.get('html_url') || user.get('url')}
+                size={smallAvatarWidth}
+              />
+            }
+            url={release.get('html_url') || release.get('url')}
+            {...props}
+          >
+            <CardText numberOfLines={1}>
+              <Icon name="megaphone" />&nbsp;
+              {body}
+            </CardText>
+          </TouchableRow>
         }
       </View>
     );

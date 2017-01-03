@@ -10,7 +10,6 @@ import {
 
 import type {
   Action,
-  ApiRequestPayload,
   ApiResponsePayload,
 } from '../../utils/types'
 
@@ -29,19 +28,16 @@ const initialState: State = Map({
   lastModifiedAt: undefined,
 });
 
-export default (state: State = initialState, { type, payload }: Action<any>): State => {
+export default (state: State = initialState, { type, payload, error }: Action<any>): State => {
   switch (type) {
     case LOAD_NOTIFICATIONS_REQUEST:
-      return (({ subscriptionId }: ApiRequestPayload) => (
-        state.setIn([subscriptionId, 'loading'], true)
-      ))(payload || {});
+      return state.set('loading', true);
 
     case LOAD_NOTIFICATIONS_FAILURE:
-      return (({ request: { subscriptionId } }: ApiResponsePayload) => (
-        state
-          .setIn([subscriptionId, 'loading'], false)
-          .setIn([subscriptionId, 'error'], error)
-      ))(payload || {});
+      return state.mergeDeep({
+        loading: false,
+        error,
+      });
 
     case LOAD_NOTIFICATIONS_SUCCESS:
       return (({ meta }: ApiResponsePayload) => {

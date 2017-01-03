@@ -6,11 +6,14 @@ import './utils/services';
 import AppContainer from './containers/AppContainer';
 import store from './store';
 import Router from './navigation/Router';
+import DeepLinkWatcher from './navigation/DeepLinkWatcher';
 
 export default (props) => (
   <Provider store={store}>
     <NavigationProvider router={Router}>
-      <AppContainer {...props} />
+      <DeepLinkWatcher>
+        <AppContainer {...props} />
+      </DeepLinkWatcher>
     </NavigationProvider>
   </Provider>
 );

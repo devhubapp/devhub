@@ -149,7 +149,7 @@ export default class extends React.PureComponent {
 
           {
             errors && errors.map(error => (
-              <StatusMessage message={error} error />
+              <StatusMessage key={`error-${error}`} message={error} error />
             ))
           }
 

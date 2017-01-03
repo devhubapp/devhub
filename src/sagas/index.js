@@ -11,11 +11,13 @@ import authSagas from './auth';
 import notificationsSagas from './notifications';
 import subscriptionsSagas from './subscriptions';
 
-function* clearAppData() {
+export async function clearAppData() {
   try {
-    yield AsyncStorage.clear();
+    console.log('Reseting app data...');
+    await AsyncStorage.clear();
+    console.log('Reseted.');
   } catch (e) {
-    console.error(e);
+    console.error('Failed to reset app data', e);
   }
 }
 

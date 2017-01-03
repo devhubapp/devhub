@@ -2,6 +2,7 @@
 
 import { createRouter } from '@exponent/ex-navigation';
 
+// screens
 import HomeScreen from '../containers/screens/HomeScreen';
 import LoginScreen from '../containers/screens/LoginScreen';
 import SplashScreen from '../containers/screens/SplashScreen';

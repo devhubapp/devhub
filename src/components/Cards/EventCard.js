@@ -23,8 +23,14 @@ import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import OwnerAvatar from './_OwnerAvatar';
 import { avatarWidth, contentPadding } from '../../styles/variables';
-import { getDateSmallText } from '../../utils/helpers';
-import { getEventIconAndColor, getEventText } from '../../utils/helpers/github';
+
+import {
+  getDateSmallText,
+  getEventIconAndColor,
+  getEventText,
+  getRepoFullNameFromUrl,
+} from '../../utils/helpers';
+
 import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
 
 import {
@@ -100,7 +106,11 @@ export default class extends React.PureComponent {
 
         <Header>
           <LeftColumn>
-            <OwnerAvatar url={actor.get('avatar_url')} size={avatarWidth} />
+            <OwnerAvatar
+              avatarURL={actor.get('avatar_url')}
+              linkURL={actor.get('html_url') || actor.get('url')}
+              size={avatarWidth}
+            />
           </LeftColumn>
 
           <MainColumn>
@@ -179,7 +189,14 @@ export default class extends React.PureComponent {
 
         {
           payload.get('ref') &&
-          <BranchRow type={type} branch={payload.get('ref')} narrow />
+          <BranchRow
+            type={type}
+            branch={payload.get('ref')}
+            repoFullName={getRepoFullNameFromUrl(
+              payload.getIn(['ref', 'html_url']) || payload.getIn(['ref', 'url'])
+            )}
+            narrow
+          />
         }
 
         {
@@ -242,24 +259,39 @@ export default class extends React.PureComponent {
           (
             type === 'IssuesEvent' && payload.get('action') === 'opened' &&
             payload.getIn(['issue', 'body']) &&
-            <CommentRow user={actor} body={payload.getIn(['issue', 'body'])} narrow />
+            <CommentRow
+              body={payload.getIn(['issue', 'body'])}
+              user={actor}
+              url={payload.getIn(['issue', 'html_url']) || payload.getIn(['issue', 'url'])}
+              narrow
+            />
 
             ||
 
             type === 'PullRequestEvent' && payload.get('action') === 'opened' &&
             payload.getIn(['pull_request', 'body']) &&
-            <CommentRow user={actor} body={payload.getIn(['pull_request', 'body'])} narrow />
+            <CommentRow
+              body={payload.getIn(['pull_request', 'body'])}
+              user={actor}
+              url={payload.getIn(['pull_request', 'html_url']) || payload.getIn(['pull_request', 'url'])}
+              narrow
+            />
 
             ||
 
             payload.getIn(['comment', 'body']) &&
-            <CommentRow user={actor} body={payload.getIn(['comment', 'body'])} narrow />
+            <CommentRow
+              body={payload.getIn(['comment', 'body'])}
+              user={actor}
+              url={payload.getIn(['comment', 'html_url']) || payload.getIn(['comment', 'url'])}
+              narrow
+            />
           )
         }
 
         {
           payload.get('release') &&
-          <ReleaseRow release={payload.get('release')} type={type} narrow />
+          <ReleaseRow release={payload.get('release')} type={type} user={actor} narrow />
         }
       </CardWrapper>
     );

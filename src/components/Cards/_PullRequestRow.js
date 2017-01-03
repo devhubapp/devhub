@@ -3,38 +3,29 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import { withTheme } from 'styled-components/native';
-import TransparentTextOverlay from '../TransparentTextOverlay';
 import OwnerAvatar from './_OwnerAvatar';
+import TouchableRow from './__TouchableRow';
+import { openOnGithub } from '../../utils/helpers';
 
 import {
   renderItemId,
   CardText,
-  ContentRow,
-  FullView,
-  HighlightContainerRow1,
-  LeftColumn,
-  MainColumn,
-  RepositoryContentContainer,
   RightOfScrollableContent,
   smallAvatarWidth,
   StyledText,
 } from './__CardComponents';
 
-import { contentPadding, radius } from '../../styles/variables';
 import { getPullRequestIconAndColor, trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { PullRequest, ThemeObject } from '../../utils/types';
+import type { PullRequest } from '../../utils/types';
 
-@withTheme
 export default class extends React.PureComponent {
   props: {
     narrow: boolean,
     pullRequest: PullRequest,
-    theme?: ThemeObject,
   };
 
   render() {
-    const { narrow, pullRequest, theme, ...props } = this.props;
+    const { pullRequest, theme, ...props } = this.props;
 
     if (!pullRequest) return null;
 
@@ -49,39 +40,29 @@ export default class extends React.PureComponent {
     const byText = user && user.get('login') ? `@${user.get('login')}` : '';
 
     return (
-      <ContentRow narrow={narrow} {...props}>
-        <LeftColumn center>
-          {
-            user &&
-            <OwnerAvatar url={user.get('avatar_url')} size={smallAvatarWidth} />
-          }
-        </LeftColumn>
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <FullView>
-              <TransparentTextOverlay
-                color={theme.base01}
-                size={contentPadding}
-                from="horizontal"
-                radius={radius}
-              >
-                <RepositoryContentContainer>
-                  <CardText numberOfLines={1}>
-                    <Icon name={icon} color={color} />&nbsp;
-                    {title}
-                    {byText && <StyledText muted small> by {byText}</StyledText>}
-                  </CardText>
-                </RepositoryContentContainer>
-              </TransparentTextOverlay>
-            </FullView>
-
-            <RightOfScrollableContent>
-              {renderItemId(number)}
-            </RightOfScrollableContent>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
+      <TouchableRow
+        left={
+          user &&
+          <OwnerAvatar
+            avatarURL={user.get('avatar_url')}
+            linkURL={user.get('html_url') || user.get('url')}
+            size={smallAvatarWidth}
+          />
+        }
+        right={
+          <RightOfScrollableContent>
+            {renderItemId(number, null, pullRequest.get('html_url') || pullRequest.get('url'))}
+          </RightOfScrollableContent>
+        }
+        url={pullRequest.get('html_url') || pullRequest.get('url')}
+        {...props}
+      >
+        <CardText numberOfLines={1}>
+          <Icon name={icon} color={color} />&nbsp;
+          {title}
+          {byText && <StyledText muted small> by {byText}</StyledText>}
+        </CardText>
+      </TouchableRow>
     );
   }
 }

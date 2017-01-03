@@ -6,7 +6,6 @@ import { StyleSheet } from 'react-native';
 import { StackNavigation, TabNavigation, TabNavigationItem } from '@exponent/ex-navigation';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import Router from '../navigation/Router';
 import type { ThemeObject } from '../utils/types';
 
 const TabItemContainer = styled.View`
@@ -63,7 +62,7 @@ export default class extends React.PureComponent {
             renderIcon('Feed', 'home', isSelected, theme.base08, theme.base05)
           )}
         >
-          <StackNavigation initialRoute={Router.getRoute('home')} />
+          <StackNavigation initialRoute="home" />
         </TabNavigationItem>
 
         <TabNavigationItem
@@ -72,7 +71,7 @@ export default class extends React.PureComponent {
             renderIcon('Trending', 'pulse', isSelected, theme.base08, theme.base05)
           )}
         >
-          <StackNavigation initialRoute={Router.getRoute('empty')} />
+          <StackNavigation initialRoute="empty" />
         </TabNavigationItem>
 
         <TabNavigationItem
@@ -81,7 +80,7 @@ export default class extends React.PureComponent {
             renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
           )}
         >
-          <StackNavigation initialRoute={Router.getRoute('notifications')} />
+          <StackNavigation initialRoute="notifications" />
         </TabNavigationItem>
 
         <TabNavigationItem
@@ -90,7 +89,7 @@ export default class extends React.PureComponent {
             renderIcon('Me', 'octoface', isSelected, theme.base08, theme.base05)
           )}
         >
-          <StackNavigation initialRoute={Router.getRoute('settings')} />
+          <StackNavigation initialRoute="settings" />
         </TabNavigationItem>
       </TabNavigation>
     );

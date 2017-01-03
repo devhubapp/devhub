@@ -3,64 +3,42 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import { withTheme } from 'styled-components/native';
-import TransparentTextOverlay from '../TransparentTextOverlay';
+import TouchableRow from './__TouchableRow';
 
 import {
-  ContentRow,
-  FullView,
-  HighlightContainerRow1,
-  LeftColumn,
-  MainColumn,
-  RepositoryContentContainer,
   StyledText,
 } from './__CardComponents';
 
-import { contentPadding, radius } from '../../styles/variables';
-import type { GithubEventType, ThemeObject } from '../../utils/types';
+import { getGitHubURLForBranch } from '../../utils/helpers';
+import type { GithubEventType } from '../../utils/types';
 
-@withTheme
 export default class extends React.PureComponent {
   props: {
     branch: string,
     narrow: boolean,
-    theme?: ThemeObject,
+    repoFullName: string,
     type: GithubEventType,
   };
 
   render() {
-    const { branch, narrow, theme, type, ...props } = this.props;
+    const { branch: _branch, repoFullName, type, ...props } = this.props;
 
-    const _branch = (branch || '').replace('refs/heads/', '');
-    if (!_branch) return null;
+    const branch = (_branch || '').replace('refs/heads/', '');
+    if (!branch) return null;
 
     const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
-    if (_branch === 'master' && !isBranchMainEventAction) return null;
+    if (branch === 'master' && !isBranchMainEventAction) return null;
 
     return (
-      <ContentRow narrow={narrow} {...props}>
-        <LeftColumn />
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <FullView>
-              <TransparentTextOverlay
-                color={theme.base01}
-                size={contentPadding}
-                from="horizontal"
-                radius={radius}
-              >
-                <RepositoryContentContainer>
-                  <StyledText numberOfLines={1} muted={!isBranchMainEventAction}>
-                    <Icon name="git-branch" />&nbsp;
-                    {_branch}
-                  </StyledText>
-                </RepositoryContentContainer>
-              </TransparentTextOverlay>
-            </FullView>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
+      <TouchableRow
+        url={getGitHubURLForBranch(repoFullName, branch)}
+        {...props}
+      >
+        <StyledText numberOfLines={1} muted={!isBranchMainEventAction}>
+          <Icon name="git-branch" />&nbsp;
+          {branch}
+        </StyledText>
+      </TouchableRow>
     );
   }
 }

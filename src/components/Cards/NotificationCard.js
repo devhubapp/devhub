@@ -88,7 +88,11 @@ export default class extends React.PureComponent {
           <LeftColumn center>
             {
               avatarUrl &&
-              <OwnerAvatar url={avatarUrl} size={smallAvatarWidth} />
+              <OwnerAvatar
+                avatarURL={avatarUrl}
+                linkURL={repo.get('html_url') || repo.get('url')}
+                size={smallAvatarWidth}
+              />
             }
           </LeftColumn>
 
@@ -148,7 +152,12 @@ export default class extends React.PureComponent {
 
         {
           comment && comment.get('body') &&
-          <CommentRow user={comment.get('user')} body={comment.get('body')} narrow />
+          <CommentRow
+            body={comment.get('body')}
+            user={comment.get('user')}
+            url={comment.get('html_url') || comment.get('url')}
+            narrow
+          />
         }
       </CardWrapper>
     );

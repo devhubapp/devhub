@@ -3,26 +3,18 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import { withTheme } from 'styled-components/native';
-import TransparentTextOverlay from '../TransparentTextOverlay';
+import TouchableRow from './__TouchableRow';
 import OwnerAvatar from './_OwnerAvatar';
 
 import {
   CardText,
-  ContentRow,
-  HighlightContainerRow1,
-  LeftColumn,
-  MainColumn,
-  RepositoryContentContainer,
   smallAvatarWidth,
   StyledText,
 } from './__CardComponents';
 
-import { contentPadding, radius } from '../../styles/variables';
 import { trimNewLinesAndSpaces, tryGetUsernameFromGithubEmail } from '../../utils/helpers';
 import type { Commit, ThemeObject } from '../../utils/types';
 
-@withTheme
 export default class extends React.PureComponent {
   props: {
     commit: Commit,
@@ -31,7 +23,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { commit, narrow, theme, ...props } = this.props;
+    const { commit, ...props } = this.props;
 
     if (!commit) return null;
 
@@ -48,33 +40,20 @@ export default class extends React.PureComponent {
     byText = trimNewLinesAndSpaces(byText);
 
     return (
-      <ContentRow narrow={narrow} {...props}>
-        <LeftColumn center>
-          {
-            authorEmail &&
-            <OwnerAvatar email={authorEmail} size={smallAvatarWidth} />
-          }
-        </LeftColumn>
-
-        <MainColumn>
-          <HighlightContainerRow1>
-            <TransparentTextOverlay
-              color={theme.base01}
-              size={contentPadding}
-              from="horizontal"
-              radius={radius}
-            >
-              <RepositoryContentContainer>
-                <CardText numberOfLines={1}>
-                  <Icon name="git-commit" />&nbsp;
-                  {message}
-                  {byText && <StyledText muted small> by {byText}</StyledText>}
-                </CardText>
-              </RepositoryContentContainer>
-            </TransparentTextOverlay>
-          </HighlightContainerRow1>
-        </MainColumn>
-      </ContentRow>
+      <TouchableRow
+        left={
+          authorEmail &&
+          <OwnerAvatar email={authorEmail} size={smallAvatarWidth} />
+        }
+        url={commit.get('html_url') || commit.get('url')}
+        {...props}
+      >
+        <CardText numberOfLines={1}>
+          <Icon name="git-commit" />&nbsp;
+          {message}
+          {byText && <StyledText muted small> by {byText}</StyledText>}
+        </CardText>
+      </TouchableRow>
     );
   }
 }
