@@ -3,28 +3,38 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
+import withOrientation from '../../hoc/withOrientation';
 import { List } from 'immutable';
 import { Platform } from 'react-native';
 
 import NewColumn from './NewColumn';
-import { getWidth, columnPreviewWidth } from './_Column';
+import { getFullWidth, getWidth } from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
 export const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
-  overflow: hidden;
+  overflow: ${Platform.OS === 'ios' ? 'hidden' : 'visible'};
 `;
 
+@withOrientation
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     addColumnFn?: ?Function,
     columns: Array<any>,
     renderRow: Function,
+    width?: number,
   };
 
   render() {
-    const { actions, addColumnFn, columns = List(), renderRow, ...props } = this.props;
+    const {
+      actions,
+      addColumnFn,
+      columns = List(),
+      renderRow,
+      width: _width,
+      ...props
+    } = this.props;
 
     if (!(columns.size > 0) && addColumnFn) {
       return (
@@ -35,23 +45,26 @@ export default class extends React.PureComponent {
       );
     }
 
+    const width = _width || getWidth();
+    const initialListSize = Math.max(1, Math.ceil(getFullWidth() / width));
+
     return (
       <StyledImmutableListViewListView
         key="columns-list-view"
         immutableData={columns}
-        initialListSize={1}
-        rowsDuringInteraction={1}
+        initialListSize={initialListSize}
+        rowsDuringInteraction={initialListSize}
         renderRow={renderRow}
         horizontal
         removeClippedSubviews
         {...(Platform.OS === 'ios' ? {
           decelerationRate: 0,
           pagingEnabled: false,
-          snapToInterval: getWidth(),
+          snapToInterval: width,
           snapToAlignment: 'start',
           contentContainerStyle: {
             overflow: 'hidden',
-            paddingHorizontal: columnPreviewWidth,
+            paddingHorizontal: (getFullWidth() - width) / 2,
           },
         } : {
           pagingEnabled: true,
@@ -59,7 +72,7 @@ export default class extends React.PureComponent {
             overflow: 'hidden',
           },
           style: {
-            marginHorizontal: columnPreviewWidth,
+            marginHorizontal: (getFullWidth() - width) / 2,
           },
         })}
         {...props}

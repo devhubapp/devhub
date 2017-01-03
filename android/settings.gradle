@@ -1,4 +1,6 @@
 rootProject.name = 'devhub'
+include ':react-native-orientation-listener'
+project(':react-native-orientation-listener').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-orientation-listener/android')
 include ':react-native-oauth'
 project(':react-native-oauth').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-oauth/android')
 include ':react-native-fabric'

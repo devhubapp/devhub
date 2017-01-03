@@ -9,6 +9,7 @@ import { Dimensions, RefreshControl } from 'react-native';
 import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
 import TransparentTextOverlay from '../TransparentTextOverlay';
+import withOrientation from '../../hoc/withOrientation';
 import { iconRightMargin } from '../cards/__CardComponents';
 import { contentPadding, radius as defaultRadius } from '../../styles/variables';
 import type { Subscription, ThemeObject } from '../../utils/types';
@@ -16,13 +17,13 @@ import type { Subscription, ThemeObject } from '../../utils/types';
 export const columnMargin = 2;
 export const columnPreviewWidth = contentPadding;
 export const getFullWidth = () => Dimensions.get('window').width;
-export const getWidth = () => getFullWidth() - (2 * columnPreviewWidth);
+export const getWidth = () => Math.min(getFullWidth() - (2 * columnPreviewWidth), 680);
 
 export const ColumnWrapper = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  width: ${getWidth};
+  width: ${({ width }) => width};
 `;
 
 export const ColumnRoot = styled.View`
@@ -86,6 +87,7 @@ export const StyledImmutableListView = styled(ImmutableListView)`
   overflow: hidden;
 `;
 
+@withOrientation
 @withTheme
 export default class extends React.PureComponent {
   props: {
@@ -103,6 +105,7 @@ export default class extends React.PureComponent {
     subscriptions: Array<Subscription>,
     theme: ThemeObject,
     title: string,
+    width?: number,
   };
 
   render() {
@@ -118,13 +121,14 @@ export default class extends React.PureComponent {
       refreshText,
       theme,
       title,
+      width,
       ...props
     } = this.props;
 
     const radius = typeof receivedRadius === 'undefined' ? defaultRadius: receivedRadius;
 
     return (
-      <ColumnWrapper>
+      <ColumnWrapper width={width || getWidth()}>
         <ColumnRoot radius={radius} {...props}>
           <FixedHeader>
             <TitleWrapper>
