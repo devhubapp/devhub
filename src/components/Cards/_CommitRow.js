@@ -12,7 +12,13 @@ import {
   StyledText,
 } from './__CardComponents';
 
-import { trimNewLinesAndSpaces, tryGetUsernameFromGithubEmail } from '../../utils/helpers';
+import {
+  getGitHubURLForUser,
+  getGitHubSearchURL,
+  trimNewLinesAndSpaces,
+  tryGetUsernameFromGithubEmail,
+} from '../../utils/helpers';
+
 import type { Commit, ThemeObject } from '../../utils/types';
 
 export default class extends React.PureComponent {
@@ -43,7 +49,15 @@ export default class extends React.PureComponent {
       <TouchableRow
         left={
           authorEmail &&
-          <OwnerAvatar email={authorEmail} size={smallAvatarWidth} />
+          <OwnerAvatar
+            email={authorEmail}
+            size={smallAvatarWidth}
+            linkURL={
+              authorUsername
+                ? getGitHubURLForUser(authorUsername)
+                : getGitHubSearchURL({ q: authorEmail, type: 'Users' })
+            }
+            />
         }
         url={commit.get('html_url') || commit.get('url')}
         {...props}

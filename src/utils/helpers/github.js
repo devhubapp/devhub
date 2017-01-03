@@ -542,6 +542,16 @@ export const getRepoFullNameFromUrl = (url: string): string => (
     : ''
 );
 
+export const getGitHubURLForUser = (user: string) => (
+  user ? `${baseURL}/${user}` : ''
+);
+
+const objToQueryParams = obj => Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&');
+
+export const getGitHubSearchURL = (queryParams: Object) => (
+  queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : ''
+);
+
 export const getGitHubURLForBranch = (repoFullName: string, branch: string) => (
   repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
 );
