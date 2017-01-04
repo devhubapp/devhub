@@ -2,6 +2,12 @@
 #
 .DS_Store
 
+# Pods
+ios/pods/
+
+# Fastline (contains beta testers emails)
+ios/fastlane/
+
 # Xcode
 #
 build/
