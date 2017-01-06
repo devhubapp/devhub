@@ -137,6 +137,11 @@ function* updateSubscriptionsFromAllColumns() {
 function* startTimer() {
   yield take(REHYDRATE);
 
+  // // alert with the size of the state in bytes
+  // const byteCount = s => encodeURI(s).split(/%..|./).length - 1;
+  // const _state = yield select();
+  // alert(byteCount(JSON.stringify(_state)));
+
   while (true) {
     const state = yield select();
     const isLogged = isLoggedSelector(state);

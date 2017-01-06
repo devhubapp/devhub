@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import withOrientation from '../../hoc/withOrientation';
 import { List } from 'immutable';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 
 import NewColumn from './NewColumn';
 import { getFullWidth, getWidth } from './_Column';

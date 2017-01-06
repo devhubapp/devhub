@@ -26,7 +26,7 @@ function* login({ payload }: Action<LoginRequestPayload>) {
     const { provider, ...params } = payload;
 
     const response = yield call(OAuthManager.authorize, provider, params);
-    const { response: { credentials: { access_token: accessToken } = {} } = {} } = response || {};
+    const { response: { credentials: { accessToken } = {} } = {} } = response || {};
     // console.log('response', response);
 
     if (!accessToken) {
