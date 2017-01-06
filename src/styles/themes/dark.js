@@ -40,7 +40,7 @@ export const base16 = {
 
 export default {
   ...base,
-  theme: 'dark',
+  name: 'dark',
   isDark: true,
   ...base16,
   invert: () => require('./light').default, // eslint-disable-line global-require

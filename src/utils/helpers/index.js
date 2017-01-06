@@ -3,7 +3,7 @@
 
 import moment from 'moment';
 
-import themes, { DARK_THEME, LIGHT_THEME } from '../../styles/themes';
+import themes, { DARK_BLUE_THEME, LIGHT_THEME } from '../../styles/themes';
 import { DEFAULT_THEME } from '../constants/defaults';
 import type { Theme } from '../types';
 
@@ -22,11 +22,21 @@ export function isNight() {
   return hours >= 18 || hours <= 6;
 }
 
-export function loadTheme(theme: Theme): Object {
-  if (theme && themes[theme]) return themes[theme];
-  if (DEFAULT_THEME && themes[DEFAULT_THEME]) return themes[DEFAULT_THEME];
+export function loadTheme(
+  theme: Theme,
+  preferredDarkTheme?: Theme = null,
+  preferredLightTheme?: Theme = null,
+): Object {
+  const _theme = theme || DEFAULT_THEME;
+  const exists = _theme && themes[_theme];
 
-  return isNight() ? DARK_THEME : LIGHT_THEME;
+  if (!exists || _theme === 'auto') {
+    const darkTheme = themes[preferredDarkTheme] || DARK_BLUE_THEME;
+    const lightTheme = themes[preferredLightTheme] || LIGHT_THEME;
+    return isNight() ? darkTheme : lightTheme;
+  }
+
+  return themes[_theme];
 }
 
 export function trimNewLinesAndSpaces(text) {
