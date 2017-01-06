@@ -26,7 +26,6 @@ export default class extends React.PureComponent {
 
   render() {
     const { user, body: _body, narrow, numberOfLines = 4, url, ...props } = this.props;
-    if (!_body) return null;
 
     const body = trimNewLinesAndSpaces(_body);
     if (!body) return null;
@@ -34,11 +33,14 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn>
-          <OwnerAvatar
-            avatarURL={user.get('avatar_url')}
-            linkURL={user.get('html_url') || user.get('url')}
-            size={smallAvatarWidth}
-          />
+          {
+            user &&
+            <OwnerAvatar
+              avatarURL={user.get('avatar_url')}
+              linkURL={user.get('html_url') || user.get('url')}
+              size={smallAvatarWidth}
+            />
+          }
         </LeftColumn>
 
         <MainColumnRowContent center>

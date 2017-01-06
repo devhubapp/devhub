@@ -46,3 +46,6 @@ buck-out/
 \.buckd/
 android/app/libs
 *.keystore
+
+# IDES
+.vscode

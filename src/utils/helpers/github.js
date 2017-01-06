@@ -457,11 +457,11 @@ export function groupNotificationsByRepository(
 ) {
   let groupedNotifications = includeAllGroup
     ? OrderedMap({
-      'all': Map({
+      all: Map({
         id: 'all',
         notifications,
         title: 'notifications',
-      })
+      }),
     })
     : OrderedMap()
   ;
@@ -504,7 +504,7 @@ export function getIssueOrPullRequestNumberFromUrl(url: string) {
   const matches = url.match(/\/(issues|pulls)\/([0-9]+)([?].+)?$/);
   const number = matches && matches[2];
 
-  return parseInt(number) || number || undefined;
+  return parseInt(number, 10) || number || undefined;
 }
 
 export function getOrgAvatar(orgName: string) {
@@ -556,7 +556,7 @@ export const getGitHubURLForBranch = (repoFullName: string, branch: string) => (
   repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
 );
 
-export function githubHTMLUrlFromAPIUrl(apiURL: string): string {
+export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string {
   if (!apiURL) return '';
 
   const [, type, restOfURL] = apiURL.match('api.github.com/([a-zA-Z]+)/(.*)');
@@ -564,26 +564,30 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string): string {
 
   if (type === 'repos') {
     const repoFullName = getRepoFullNameFromUrl(apiURL);
-    const [type2, ...restOfURL] = (apiURL.split(`/repos/${repoFullName}/`)[1] || '').split('/');
+    const [type2, ...restOfURL2] = (apiURL.split(`/repos/${repoFullName}/`)[1] || '').split('/');
 
-    if (restOfURL[0]) {
+    if (restOfURL2[0]) {
       switch (type2) {
         case 'pulls':
-          if (restOfURL[1] === 'comments' && restOfURL[2]) {
-            return `${baseURL}/${repoFullName}/pull/${restOfURL[0]}#discussion_r${restOfURL[2]}`;
+          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
+            return number
+              ? `${baseURL}/${repoFullName}/pull/${number}/comments#discussion_r${restOfURL2[1]}`
+              : '';
           }
 
-          return `${baseURL}/${repoFullName}/pull/${restOfURL[0]}`;
+          return `${baseURL}/${repoFullName}/pull/${restOfURL2.join('/')}`;
 
         case 'issues':
-          if (restOfURL[1] === 'comments' && restOfURL[2]) {
-            return `${baseURL}/${repoFullName}/pull/${restOfURL[0]}#issuecomment-${restOfURL[2]}`;
+          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
+            return number
+              ? `${baseURL}/${repoFullName}/pull/${number}/comments#issuecomment-${restOfURL2[1]}`
+              : '';
           }
 
-          return `${baseURL}/${repoFullName}/issues/${restOfURL[0]}`;
+          return `${baseURL}/${repoFullName}/issues/${restOfURL2.join('/')}`;
 
         case 'commits':
-          return `${baseURL}/${repoFullName}/commit/${restOfURL[0]}`;
+          return `${baseURL}/${repoFullName}/commit/${restOfURL2.join('/')}`;
       }
     }
   }
@@ -614,5 +618,5 @@ export function openOnGithub(obj: string | GithubRepo | GithubIssue | GithubPull
   const url = obj.get('html_url') || obj.get('url');
   if (!url) return null;
 
-  return openURL(internalUrl);
+  return openURL(url);
 }

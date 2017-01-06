@@ -42,7 +42,7 @@ export default class extends React.PureComponent {
   render() {
     const { actions, onlyOneRepository, notification, ...props } = this.props;
 
-    const comment = fromJS(notification.get('comment'));
+    const comment = notification.get('comment');
     const repo = notification.get('repository');
     const subject = notification.get('subject');
     const updatedAt = notification.get('updated_at');
@@ -131,12 +131,12 @@ export default class extends React.PureComponent {
 
         {
           issue &&
-          <IssueRow issue={issue} narrow />
+          <IssueRow issue={issue} comment={comment} narrow />
         }
 
         {
           pullRequest &&
-          <PullRequestRow pullRequest={pullRequest} narrow />
+          <PullRequestRow pullRequest={pullRequest} comment={comment} narrow />
         }
 
         {
@@ -145,11 +145,11 @@ export default class extends React.PureComponent {
         }
 
         {
-          comment && comment.get('body') &&
+          comment &&
           <CommentRow
             body={comment.get('body')}
             user={comment.get('user')}
-            url={comment.get('html_url') || comment.get('url')}
+            url={comment.get('html_url')}
             narrow
           />
         }

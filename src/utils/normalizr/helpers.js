@@ -5,6 +5,7 @@ import {
   getCommitShaFromUrl,
   getIssueOrPullRequestNumberFromUrl,
   getRepoFullNameFromUrl,
+  githubHTMLUrlFromAPIUrl,
 } from '../helpers';
 
 import { getIn } from '../immutable';
@@ -53,20 +54,14 @@ export function notificationProcessStrategy(notification: GithubNotification) {
   if (!(notification && notification.subject)) return notification;
 
   let newNotification = notification;
-
-  if (notification.subject.latest_comment_url) {
-    newNotification = {
-      ...notification,
-      comment: {
-        id: getCommentIdFromUrl(notification.subject.latest_comment_url),
-      },
-    };
-  }
+  let number;
 
   if (newNotification.subject.type === 'Issue' || newNotification.subject.type === 'PullRequest') {
+    number = getIssueOrPullRequestNumberFromUrl(newNotification.subject.url);
+
     const subject = {
       ...newNotification.subject,
-      number: getIssueOrPullRequestNumberFromUrl(newNotification.subject.url),
+      number,
     };
 
     newNotification = {
@@ -83,6 +78,17 @@ export function notificationProcessStrategy(notification: GithubNotification) {
     newNotification = {
       ...newNotification,
       subject,
+    };
+  }
+
+  if (notification.subject.latest_comment_url) {
+    newNotification = {
+      ...notification,
+      comment: {
+        id: getCommentIdFromUrl(notification.subject.latest_comment_url),
+        html_url: githubHTMLUrlFromAPIUrl(notification.subject.latest_comment_url, { number }),
+        url: notification.subject.latest_comment_url,
+      },
     };
   }
 

@@ -15,17 +15,18 @@ import {
 } from './__CardComponents';
 
 import { getIssueIconAndColor, trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { Issue, ThemeObject } from '../../utils/types';
+import type { GithubComment, GithubIssue, ThemeObject } from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
-    issue: Issue,
+    comment?: GithubComment,
+    issue: GithubIssue,
     narrow?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { issue, theme, ...props } = this.props;
+    const { comment, issue, theme, ...props } = this.props;
 
     if (!issue) return null;
 
@@ -39,6 +40,12 @@ export default class extends React.PureComponent {
     const { icon, color } = getIssueIconAndColor(issue, theme);
 
     const byText = user && user.get('login') ? `@${user.get('login')}` : '';
+
+    // issue links will send to comment if comment was not loaded by app yet
+    const url = comment && !comment.get('body') && comment.get('html_url')
+      ? comment.get('html_url')
+      : issue.get('html_url') || issue.get('url')
+    ;
 
     return (
       <TouchableRow
@@ -55,7 +62,7 @@ export default class extends React.PureComponent {
             {renderItemId(number, null, issue.get('html_url') || issue.get('url'))}
           </RightOfScrollableContent>
         }
-        url={issue.get('html_url') || issue.get('url')}
+        url={url}
         {...props}
       >
         <CardText numberOfLines={1}>

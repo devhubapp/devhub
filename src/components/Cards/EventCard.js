@@ -225,7 +225,11 @@ export default class extends React.PureComponent {
 
         {
           payload.get('pull_request') &&
-          <PullRequestRow pullRequest={payload.get('pull_request')} narrow />
+          <PullRequestRow
+            pullRequest={payload.get('pull_request')}
+            comment={payload.get('comment')}
+            narrow
+          />
         }
 
         {
@@ -246,7 +250,7 @@ export default class extends React.PureComponent {
 
         {
           payload.get('issue') &&
-          <IssueRow issue={payload.get('issue')} narrow />
+          <IssueRow issue={payload.get('issue')} comment={payload.get('comment')} narrow />
         }
 
         {
@@ -277,7 +281,7 @@ export default class extends React.PureComponent {
             <CommentRow
               body={payload.getIn(['comment', 'body'])}
               user={actor}
-              url={payload.getIn(['comment', 'html_url']) || payload.getIn(['comment', 'url'])}
+              url={payload.getIn(['comment', 'html_url'])}
               narrow
             />
           )

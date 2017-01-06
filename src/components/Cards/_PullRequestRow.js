@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
-import { openOnGithub } from '../../utils/helpers';
 
 import {
   renderItemId,
@@ -15,17 +14,23 @@ import {
   StyledText,
 } from './__CardComponents';
 
-import { getPullRequestIconAndColor, trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { PullRequest } from '../../utils/types';
+import {
+  getPullRequestIconAndColor,
+  trimNewLinesAndSpaces,
+} from '../../utils/helpers';
+
+import type { GithubComment, GithubPullRequest, ThemeObject } from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
+    comment: GithubComment,
     narrow: boolean,
-    pullRequest: PullRequest,
+    pullRequest: GithubPullRequest,
+    theme?: ThemeObject,
   };
 
   render() {
-    const { pullRequest, theme, ...props } = this.props;
+    const { comment, pullRequest, theme, ...props } = this.props;
 
     if (!pullRequest) return null;
 
@@ -38,6 +43,12 @@ export default class extends React.PureComponent {
     const { icon, color } = getPullRequestIconAndColor(pullRequest, theme);
 
     const byText = user && user.get('login') ? `@${user.get('login')}` : '';
+
+    // pull request links will send to comment if comment was not loaded by app yet
+    const url = comment && !comment.get('body') && comment.get('html_url')
+      ? comment.get('html_url')
+      : pullRequest.get('html_url') || pullRequest.get('url')
+    ;
 
     return (
       <TouchableRow
@@ -54,7 +65,7 @@ export default class extends React.PureComponent {
             {renderItemId(number, null, pullRequest.get('html_url') || pullRequest.get('url'))}
           </RightOfScrollableContent>
         }
-        url={pullRequest.get('html_url') || pullRequest.get('url')}
+        url={url}
         {...props}
       >
         <CardText numberOfLines={1}>

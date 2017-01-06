@@ -16,6 +16,7 @@ export default class extends React.PureComponent {
   }
 
   _handleGitHubURL = (url) => {
+    // console.log('_handleGitHubURL', url);
     if (!url) return;
 
     let _url = url.replace('devhub://', 'https://');
@@ -27,6 +28,7 @@ export default class extends React.PureComponent {
   };
 
   _handleDeepLinking(url) {
+    // console.log('_handleDeepLinking', url);
     if (!url) return;
 
     if (url === 'reset') {
@@ -37,7 +39,8 @@ export default class extends React.PureComponent {
   }
 
   _handleOpenURL = (event) => {
-    const url = event.url.match("[^:]+://(.*)")[1];
+    const url = event.url.match('[^:]+://(.*)')[1];
+    // console.log('_handleOpenURL', url);
     if (!url) return;
 
     if (url.indexOf('github.com') >= 0) {
