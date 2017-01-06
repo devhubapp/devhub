@@ -42,7 +42,7 @@ export const makeColumnEventIdsSelector = () => createImmutableSelector(
       eventIds = eventIds.union(subscriptionEventIds);
     });
 
-    return eventIds;
+    return eventIds.toList();
   },
 );
 
@@ -52,7 +52,7 @@ export const makeColumnSeenIdsSelector = () => {
   return createImmutableSelector(
     seenEventIdsSelector,
     columnEventIdsSelector,
-    (seenIds, columnEventIds) => seenIds.intersect(columnEventIds),
+    (seenIds, columnEventIds) => Set(seenIds).intersect(columnEventIds),
   );
 };
 

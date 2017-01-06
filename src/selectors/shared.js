@@ -1,5 +1,5 @@
-import { is, Iterable, List } from 'immutable';
-import { isEqual } from 'lodash';
+import _ from 'lodash';
+import { is, Iterable, List, Seq, Set } from 'immutable';
 import { createSelectorCreator } from 'reselect';
 
 export const stateSelector = state => state;
@@ -12,30 +12,46 @@ export function shallowEqualityCheck(a, b) {
 export function deepImmutableEqualityCheck(a, b) {
   return Iterable.isIterable(a) && Iterable.isIterable(b)
     ? is(a, b)
-    : isEqual(a, b);
+    : _.isEqual(a, b);
 }
 
-export function immutableMemoize(func, equalityCheck = shallowEqualityCheck) {
+export function immutableMemoize(
+  func,
+  equalityCheck = shallowEqualityCheck,
+  numberOfArgsToMemoize = null,
+) {
   let lastArgs = null;
   let lastResult = null;
   const isEqualToLastArg = (value, index) => equalityCheck(value, lastArgs[index]);
 
   return (...args) => {
+    const slicedArgs = Number(numberOfArgsToMemoize) > 0
+      ? args.slice(0, numberOfArgsToMemoize)
+      : args
+    ;
+
     if (
       lastArgs === null ||
-      lastArgs.length !== args.length ||
-      !args.every(isEqualToLastArg)
+      lastArgs.length !== slicedArgs.length ||
+      !slicedArgs.every(isEqualToLastArg)
     ) {
       const newResult = func(...args);
+      const isArray = Array.isArray(newResult)
+        || newResult instanceof List
+        || newResult instanceof Seq
+        || newResult instanceof Set;
+
       if (
-        !shallowEqualityCheck(newResult, lastResult) &&
-        !deepImmutableEqualityCheck(newResult, lastResult)
+        !(
+          shallowEqualityCheck(newResult, lastResult) ||
+          (isArray && deepImmutableEqualityCheck(newResult, lastResult))
+        )
       ) {
         lastResult = newResult;
       }
     }
 
-    lastArgs = args;
+    lastArgs = slicedArgs;
     return lastResult;
   };
 }
@@ -43,11 +59,11 @@ export function immutableMemoize(func, equalityCheck = shallowEqualityCheck) {
 const getKeysFromImmutableObject = obj => (obj ? obj.keySeq().toList() : List());
 export const objectKeysMemoized = immutableMemoize(getKeysFromImmutableObject);
 
-export function createImmutableSelectorCreator(
-  memoize = immutableMemoize,
-  equalityCheck = shallowEqualityCheck,
-) {
-  return createSelectorCreator(memoize, equalityCheck);
-}
+export const createImmutableSelectorCreator = _.memoize((numberOfArgsToMemoize) => (
+  createSelectorCreator(
+    _.bind(immutableMemoize, null, _, _, numberOfArgsToMemoize),
+    shallowEqualityCheck,
+  )
+));
 
 export const createImmutableSelector = createImmutableSelectorCreator();

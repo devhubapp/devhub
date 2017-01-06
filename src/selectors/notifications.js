@@ -3,7 +3,12 @@
 
 import { denormalize } from 'denormalizr';
 
-import { createImmutableSelector, entitiesSelector } from './shared';
+import {
+  createImmutableSelectorCreator,
+  createImmutableSelector,
+  entitiesSelector,
+} from './shared';
+
 import { groupNotificationsByRepository } from '../utils/helpers/github';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 
@@ -13,7 +18,7 @@ export const notificationEntitiesSelector = (state) => entitiesSelector(state).g
 
 export const notificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
-  (notifications) => notifications.map(notification => notification.get('id')),
+  (notifications) => notifications.map(notification => notification.get('id')).toList(),
 );
 
 export const seenNotificationIdsSelector = createImmutableSelector(
@@ -22,6 +27,7 @@ export const seenNotificationIdsSelector = createImmutableSelector(
     notifications
       .filter(notification => notification.get('unread') === false)
       .map(notification => notification.get('id'))
+      .toList()
   ),
 );
 
@@ -41,7 +47,7 @@ export const makeDenormalizedNotificationSelector = () => createImmutableSelecto
   ),
 );
 
-export const denormalizedOrderedNotificationsSelector = createImmutableSelector(
+export const denormalizedOrderedNotificationsSelector = createImmutableSelectorCreator(1)(
   notificationIdsSelector,
   entitiesSelector,
   (notificationIds, entities) => (

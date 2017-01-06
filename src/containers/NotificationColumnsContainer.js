@@ -15,8 +15,9 @@ import {
 import * as actionCreators from '../actions';
 import type { ActionCreators, State } from '../utils/types';
 
+const denormalizedGNSelectorParams = { includeAllGroup: true };
 const mapStateToProps = (state: State) => ({
-  columns: denormalizedGroupedNotificationsSelector(state, { includeAllGroup: true }),
+  columns: denormalizedGroupedNotificationsSelector(state, denormalizedGNSelectorParams),
   updatedAt: updatedAtSelector(state),
   loading: isLoadingSelector(state),
 });
