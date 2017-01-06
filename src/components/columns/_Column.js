@@ -162,7 +162,6 @@ export default class extends React.PureComponent {
             <StyledImmutableListView
               immutableData={items}
               initialListSize={5}
-              rowsDuringInteraction={5}
               renderRow={renderRow}
               refreshControl={
                 refreshFn &&

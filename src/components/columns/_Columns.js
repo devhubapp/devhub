@@ -59,10 +59,9 @@ export default class extends React.PureComponent {
         key="columns-list-view"
         immutableData={columns}
         initialListSize={initialListSize}
-        rowsDuringInteraction={initialListSize}
         renderRow={renderRow}
+        removeClippedSubviews={false}
         horizontal
-        removeClippedSubviews
         {...(Platform.OS === 'ios' ? {
           decelerationRate: 0,
           pagingEnabled: false,
