@@ -68,7 +68,7 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
 }
 
 export function getDefaultSince() {
-  return moment().subtract(1, 'month').format();;
+  return moment().subtract(1, 'month').format();
 }
 
 export function getParamsToLoadAllNotifications() {

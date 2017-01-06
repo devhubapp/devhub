@@ -18,7 +18,7 @@ export const avatarWidth = defaultAvatarWidth;
 export const smallAvatarWidth = avatarWidth / 2;
 export const innerContentPadding = contentPadding;
 export const narrowInnerContentPadding = innerContentPadding / 2;
-export const iconRightMargin = contentPadding - 2;
+export const iconRightMargin = 0; // contentPadding - 2;
 
 export const CardWrapper = styled.View`
   padding: ${contentPadding};
