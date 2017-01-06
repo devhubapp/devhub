@@ -4,6 +4,7 @@
 import moment from 'moment';
 
 import themes, { DARK_THEME, LIGHT_THEME } from '../../styles/themes';
+import { DEFAULT_THEME } from '../constants/defaults';
 import type { Theme } from '../types';
 
 export * from './actions';
@@ -23,6 +24,8 @@ export function isNight() {
 
 export function loadTheme(theme: Theme): Object {
   if (theme && themes[theme]) return themes[theme];
+  if (DEFAULT_THEME && themes[DEFAULT_THEME]) return themes[DEFAULT_THEME];
+
   return isNight() ? DARK_THEME : LIGHT_THEME;
 }
 
