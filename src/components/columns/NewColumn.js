@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Octicons';
 
-import { ColumnRoot } from './_Column';
+import Column from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
 const Wrapper = styled.View`
@@ -20,19 +20,21 @@ const NewColumnButton = styled.TouchableOpacity`
   justify-content: center;
 `;
 
+const NewColumnIcon = styled(Icon)`
+  font-size: 22;
+`;
+
 const NewColumnText = styled.Text`
   align-self: center;
   text-align: center;
-  font-size: 20;
+  font-size: 18;
   color: ${({ theme }) => theme.base05};
 `;
 
 export default class extends React.PureComponent {
-
   props: {
     addColumnFn: Function,
     actions: ActionCreators,
-    radius?: number,
     style?: ?Object,
   };
 
@@ -42,16 +44,16 @@ export default class extends React.PureComponent {
     if (!addColumnFn) return null;
 
     return (
-      <ColumnRoot {...props}>
+      <Column {...props}>
         <Wrapper>
           <NewColumnButton onPress={addColumnFn}>
             <NewColumnText>
-              <Icon name="plus" size={30} />{'\n'}
+              <NewColumnIcon name="plus" />{'\n'}
               add new column
             </NewColumnText>
           </NewColumnButton>
         </Wrapper>
-      </ColumnRoot>
+      </Column>
     );
   }
 }

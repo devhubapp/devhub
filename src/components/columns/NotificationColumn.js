@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Column from './_Column';
+import Column from './_ColumnWithList';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
 import { getDateWithHourAndMinuteText, getOwnerAndRepo } from '../../utils/helpers';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';

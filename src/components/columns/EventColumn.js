@@ -10,7 +10,7 @@ import {
   makeColumnSeenIdsSelector,
 } from '../../selectors';
 
-import Column, { HeaderButton, HeaderButtonText, HeaderButtonsContainer } from './_Column';
+import Column, { HeaderButton, HeaderButtonText, HeaderButtonsContainer } from './_ColumnWithList';
 import EventCardContainer from '../../containers/EventCardContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
 import { getRequestTypeIcon, requestTypes } from '../../api/github';

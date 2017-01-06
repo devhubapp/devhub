@@ -28,6 +28,7 @@ export default class extends React.PureComponent {
     actions: ActionCreators,
     addColumnFn?: ?Function,
     columns: Array<any>,
+    radius?: number,
     renderRow: Function,
     width?: number,
   };
@@ -37,22 +38,25 @@ export default class extends React.PureComponent {
       actions,
       addColumnFn,
       columns = List(),
+      radius,
       renderRow,
       width: _width,
       ...props
     } = this.props;
+
+    const width = _width || getWidth();
+    const initialListSize = Math.max(1, Math.ceil(getFullWidth() / width));
 
     if (!(columns.size > 0) && addColumnFn) {
       return (
         <NewColumn
           addColumnFn={addColumnFn}
           actions={actions}
+          radius={radius}
+          width={width}
         />
       );
     }
-
-    const width = _width || getWidth();
-    const initialListSize = Math.max(1, Math.ceil(getFullWidth() / width));
 
     return (
       <StyledImmutableListViewListView
