@@ -21,6 +21,7 @@ const issueOrPullRequestFields = [
   'title',
   'repository_url',
   'type', // because of the subject field of type Union on notifications
+  'user',
 ];
 
 const ownerFields = [...defaultFields, 'avatar_url', 'display_login', 'login'];
