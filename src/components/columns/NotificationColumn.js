@@ -13,10 +13,10 @@ import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
 import { readNotificationIdsSelector } from '../../selectors';
 import type { ActionCreators, GithubRepo } from '../../utils/types';
 
-const buttons = ['Cancel', 'Mark all as read', 'Clear read'];
+const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read'];
 const BUTTONS = {
   CANCEL: 0,
-  MARK_NOTIFICATIONS_AS_READ: 1,
+  MARK_NOTIFICATIONS_AS_READ_OR_UNREAD: 1,
   CLEAR_READ: 2,
 };
 
@@ -60,12 +60,16 @@ export default class extends React.PureComponent {
     const { actions } = this.props;
 
     switch (index) {
-      case BUTTONS.MARK_NOTIFICATIONS_AS_READ:
+      case BUTTONS.MARK_NOTIFICATIONS_AS_READ_OR_UNREAD:
         (() => {
-          const notificationIds = this.getUnreadNotificationIds();
+          const readIds = this.getReadNotificationIds();
+          const unreadIds = this.getUnreadNotificationIds();
+          const notificationIds = this.getNotificationIds();
 
-          if (notificationIds && notificationIds.size > 0) {
-            actions.markNotificationsAsRead({ notificationIds });
+          if (readIds && readIds.size >= notificationIds.size) {
+            actions.markNotificationsAsUnread({ notificationIds: readIds });
+          } else {
+            actions.markNotificationsAsRead({ notificationIds: unreadIds });
           }
         })();
 

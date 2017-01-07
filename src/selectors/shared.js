@@ -85,7 +85,7 @@ export function isReadFilter(obj) {
   if (!obj) return false;
 
   // if any update ocurres after it was read, it is consided unread
-  // also, it preserves the newest state between last_read_at and last_unread_at
+  // also, it preserves the latest state between last_read_at and last_unread_at
   return obj.get('last_read_at') &&
     !(
       (

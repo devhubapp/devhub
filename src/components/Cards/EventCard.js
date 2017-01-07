@@ -93,10 +93,15 @@ export default class extends React.PureComponent {
     const isPrivate = event.get('private') || event.get('public') === false;
     const { icon: cardIcon, color: cardIconColor } = getEventIconAndColor(event, theme);
 
+    const toggleEventsSeenStatus = seen
+      ? actions.markEventsAsUnseen
+      : actions.markEventsAsSeen
+    ;
+
     return (
       <CardWrapper {...props} seen={seen}>
         <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
-          <TouchableWithoutFeedback onPress={() => actions.toggleEventsSeenStatus({ eventIds })}>
+          <TouchableWithoutFeedback onPress={() => toggleEventsSeenStatus({ eventIds })}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
@@ -147,7 +152,7 @@ export default class extends React.PureComponent {
             </HeaderRow>
 
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => actions.toggleEventsSeenStatus({ eventIds })}>
+              <TouchableWithoutFeedback onPress={() => toggleEventsSeenStatus({ eventIds })}>
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>

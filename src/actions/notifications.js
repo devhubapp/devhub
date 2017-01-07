@@ -7,7 +7,7 @@ import {
   LOAD_NOTIFICATIONS_SUCCESS,
   LOAD_NOTIFICATIONS_FAILURE,
   MARK_NOTIFICATIONS_AS_READ,
-  TOGGLE_NOTIFICATIONS_READ_STATUS,
+  MARK_NOTIFICATIONS_AS_UNREAD,
   UPDATE_NOTIFICATIONS,
 } from '../utils/constants/actions';
 
@@ -62,9 +62,9 @@ export const markNotificationsAsRead = (
   action(MARK_NOTIFICATIONS_AS_READ, { notificationIds }, other)
 );
 
-export const toggleNotificationsReadStatus = (
+export const markNotificationsAsUnread = (
   { notificationIds }: NotificationIdsParams,
   other?: Object,
 ) => (
-  action(TOGGLE_NOTIFICATIONS_READ_STATUS, { notificationIds }, other)
+  action(MARK_NOTIFICATIONS_AS_UNREAD, { notificationIds }, other)
 );

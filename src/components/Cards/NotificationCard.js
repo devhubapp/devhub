@@ -54,7 +54,7 @@ export default class extends React.PureComponent {
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const notificationIds = Set([notification.get('id')]);
-    const seen = isReadFilter(notification);
+    const read = isReadFilter(notification);
     const title = trimNewLinesAndSpaces(subject.get('title'));
     const { label, color } = getNotificationReasonTextsAndColor(notification);
 
@@ -65,8 +65,13 @@ export default class extends React.PureComponent {
 
     const { icon: cardIcon, color: cardIconColor } = getNotificationIconAndColor(notification);
 
+    const toggleNotificationsReadStatus = read
+      ? actions.markNotificationsAsUnread
+      : actions.markNotificationsAsRead
+    ;
+
     return (
-      <CardWrapper {...props} seen={seen}>
+      <CardWrapper {...props} seen={read}>
         <FullAbsoluteView
           style={{
             top: contentPadding + smallAvatarWidth,
@@ -76,7 +81,7 @@ export default class extends React.PureComponent {
             zIndex: 1,
           }}
         >
-          <TouchableWithoutFeedback onPress={() => actions.toggleNotificationsReadStatus({ notificationIds })}>
+          <TouchableWithoutFeedback onPress={() => toggleNotificationsReadStatus({ notificationIds })}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
@@ -96,7 +101,7 @@ export default class extends React.PureComponent {
           <MainColumn>
             <HeaderRow>
               <FullView center horizontal>
-                <Label numberOfLines={1} color={color} outline={seen}>{label}</Label>
+                <Label numberOfLines={1} color={color} outline={read}>{label}</Label>
 
                 <IntervalRefresh
                   interval={1000}
@@ -115,7 +120,7 @@ export default class extends React.PureComponent {
             </HeaderRow>
 
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => actions.toggleNotificationsReadStatus({ notificationIds })}>
+              <TouchableWithoutFeedback onPress={() => toggleNotificationsReadStatus({ notificationIds })}>
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>
