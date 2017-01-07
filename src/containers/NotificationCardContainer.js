@@ -9,7 +9,7 @@ import NotificationCard from '../components/cards/NotificationCard';
 
 import {
   makeDenormalizedNotificationSelector,
-  makeSeenNotificationSelector,
+  makeReadNotificationSelector,
 } from '../selectors';
 
 import * as actionCreators from '../actions';
@@ -21,7 +21,7 @@ import type {
 
 const makeMapStateToProps = () => {
   const denormalizedNotificationSelector = makeDenormalizedNotificationSelector();
-  const seenNotificationSelector = makeSeenNotificationSelector();
+  const seenNotificationSelector = makeReadNotificationSelector();
 
   return (state: State, { notificationOrNotificationId }: { notificationOrNotificationId: string|GithubNotification }) => {
     const notification = Iterable.isIterable(notificationOrNotificationId) ? notificationOrNotificationId : null;

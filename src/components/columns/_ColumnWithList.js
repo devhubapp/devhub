@@ -81,7 +81,7 @@ export default class extends React.PureComponent {
     refreshText?: string,
     renderRow: Function,
     style?: ?Object,
-    seenIds: Array<string>,
+    readIds: Array<string>,
     subscriptions: Array<Subscription>,
     theme: ThemeObject,
     title: string,

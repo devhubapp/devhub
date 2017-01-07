@@ -34,7 +34,7 @@ export type LOAD_NOTIFICATIONS_FAILURE = typeof actions.LOAD_NOTIFICATIONS_FAILU
 // repo
 export type STAR_REPO = typeof actions.STAR_REPO;
 export type UNSTAR_REPO = typeof actions.UNSTAR_REPO;
-export type TOGGLE_SEEN_EVENT = typeof actions.TOGGLE_SEEN_EVENT;
+export type TOGGLE_EVENTS_SEEN_STATUS = typeof actions.TOGGLE_EVENTS_SEEN_STATUS;
 
 // subscriptions
 export type CREATE_SUBSCRIPTION = typeof actions.CREATE_SUBSCRIPTION;
@@ -78,7 +78,7 @@ export type ActionType =
   // repo
   | STAR_REPO
   | UNSTAR_REPO
-  | TOGGLE_SEEN_EVENT
+  | TOGGLE_EVENTS_SEEN_STATUS
 
   // subscriptions
   | CREATE_SUBSCRIPTION

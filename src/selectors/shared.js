@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import { is, Iterable, List, Seq, Set } from 'immutable';
 import { createSelectorCreator } from 'reselect';
 
@@ -67,3 +68,14 @@ export const createImmutableSelectorCreator = _.memoize((numberOfArgsToMemoize) 
 ));
 
 export const createImmutableSelector = createImmutableSelectorCreator();
+
+export function isArchivedFilter(obj) {
+  if (!obj) return false;
+
+  return obj.get('archived') && obj.get('archived_at') &&
+    !(
+      obj.get('updated_at') &&
+      moment(obj.get('updated_at')).isAfter(obj.get('archived_at'))
+    )
+  ;
+}

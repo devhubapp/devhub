@@ -2,6 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import moment from 'moment';
+import { List } from 'immutable';
 
 import themes, { DARK_BLUE_THEME, LIGHT_THEME } from '../../styles/themes';
 import { DEFAULT_THEME } from '../constants/defaults';
@@ -115,4 +116,13 @@ export function getDateSmallText(date) { // , separator = '•'
 export function dateToHeaderFormat(date: Date | string): string {
   const _date = typeof date === 'string' ? new Date(date) : date;
   return moment(_date).utc().format('ddd, DD MMM YYYY HH:mm:ss z').replace('UTC', 'GMT');
+}
+
+export function arrayOfIdsToMergeableMap(ids, newValue) {
+  return List(ids)
+    .filter(Boolean)
+    .toMap()
+    .mapKeys((key, value) => value.toString())
+    .map(() => newValue)
+  ;
 }

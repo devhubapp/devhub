@@ -14,8 +14,8 @@ import RepositoryRow from './_RepositoryRow';
 import Label from '../Label';
 import IntervalRefresh from '../IntervalRefresh';
 import OwnerAvatar from './_OwnerAvatar';
+import { isArchivedFilter } from '../../selectors/shared';
 import { contentPadding } from '../../styles/variables';
-import { brandSecondary } from '../../styles/themes/base';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getNotificationIconAndColor, getNotificationReasonTextsAndColor, getOrgAvatar } from '../../utils/helpers/github';
 import type { ActionCreators, GithubNotification } from '../../utils/types';
@@ -30,7 +30,6 @@ import {
   MainColumn,
   HeaderRow,
   SmallText,
-  StyledText,
   CardIcon,
 } from './__CardComponents';
 
@@ -43,6 +42,8 @@ export default class extends React.PureComponent {
 
   render() {
     const { actions, onlyOneRepository, notification, ...props } = this.props;
+
+    if (isArchivedFilter(notification)) return null;
 
     const comment = notification.get('comment');
     const repo = notification.get('repository');
@@ -75,7 +76,7 @@ export default class extends React.PureComponent {
             zIndex: 1,
           }}
         >
-          <TouchableWithoutFeedback onPress={() => actions.toggleSeenNotification(notificationIds)}>
+          <TouchableWithoutFeedback onPress={() => actions.toggleNotificationsReadStatus({ notificationIds })}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
@@ -114,7 +115,7 @@ export default class extends React.PureComponent {
             </HeaderRow>
 
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => actions.toggleSeenNotification(notificationIds)}>
+              <TouchableWithoutFeedback onPress={() => actions.toggleNotificationsReadStatus({ notificationIds })}>
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>

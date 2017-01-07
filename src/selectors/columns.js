@@ -52,7 +52,7 @@ export const makeColumnSeenIdsSelector = () => {
   return createImmutableSelector(
     seenEventIdsSelector,
     columnEventIdsSelector,
-    (seenIds, columnEventIds) => Set(seenIds).intersect(columnEventIds),
+    (readIds, columnEventIds) => Set(readIds).intersect(columnEventIds),
   );
 };
 

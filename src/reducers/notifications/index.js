@@ -11,7 +11,7 @@ import {
 import type {
   Action,
   ApiResponsePayload,
-} from '../../utils/types'
+} from '../../utils/types';
 
 type State = {
   updatedAt: Date,
@@ -40,20 +40,20 @@ export default (state: State = initialState, { type, payload, error }: Action<an
       });
 
     case LOAD_NOTIFICATIONS_SUCCESS:
-      return (({ meta }: ApiResponsePayload) => {
-        return state.mergeDeep({
+      return (({ meta }: ApiResponsePayload) => (
+        state.mergeDeep({
           updatedAt: new Date(),
-          ...( meta && meta['last-modified'] ? {
-              lastModifiedAt: meta['last-modified'],
-              pollInterval: Number(meta['x-poll-interval']),
-              rateLimit: Number(meta['x-ratelimit-limit']),
-              rateLimitRemaining: Number(meta['x-ratelimit-remaining']),
-              rateLimitReset: meta['x-ratelimit-reset'],
-            } : {}),
+          ...(meta && meta['last-modified'] ? {
+            lastModifiedAt: meta['last-modified'],
+            pollInterval: Number(meta['x-poll-interval']),
+            rateLimit: Number(meta['x-ratelimit-limit']),
+            rateLimitRemaining: Number(meta['x-ratelimit-remaining']),
+            rateLimitReset: meta['x-ratelimit-reset'],
+          } : {}),
           loading: false,
           error: null,
-        });
-      })(payload || {});
+        })
+      ))(payload || {});
 
     default:
       return state;

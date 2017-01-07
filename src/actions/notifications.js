@@ -2,9 +2,12 @@
 /* eslint-disable import/prefer-default-export */
 
 import {
+  CLEAR_NOTIFICATIONS,
   LOAD_NOTIFICATIONS_REQUEST,
   LOAD_NOTIFICATIONS_SUCCESS,
   LOAD_NOTIFICATIONS_FAILURE,
+  MARK_NOTIFICATIONS_AS_READ,
+  TOGGLE_NOTIFICATIONS_READ_STATUS,
   UPDATE_NOTIFICATIONS,
 } from '../utils/constants/actions';
 
@@ -42,4 +45,26 @@ export const loadNotificationsFailure = (
   other?: Object,
 ) => (
   errorAction(LOAD_NOTIFICATIONS_FAILURE, { request }, error, other)
+);
+
+type NotificationIdsParams = { notificationIds: Array<string> };
+export const clearNotifications = (
+  { notificationIds }: NotificationIdsParams,
+  other?: Object,
+) => (
+  action(CLEAR_NOTIFICATIONS, { notificationIds }, other)
+);
+
+export const markNotificationsAsRead = (
+  { notificationIds }: NotificationIdsParams,
+  other?: Object,
+) => (
+  action(MARK_NOTIFICATIONS_AS_READ, { notificationIds }, other)
+);
+
+export const toggleNotificationsReadStatus = (
+  { notificationIds }: NotificationIdsParams,
+  other?: Object,
+) => (
+  action(TOGGLE_NOTIFICATIONS_READ_STATUS, { notificationIds }, other)
 );

@@ -1,19 +1,15 @@
 // @flow
 
-import moment from 'moment';
 import { fromJS, Map, Set } from 'immutable';
 
 import { ApiRequestType, getUniquePath } from '../../api/github';
 import {
-  CLEAR_EVENTS,
   CREATE_SUBSCRIPTION,
   DELETE_SUBSCRIPTION,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOAD_SUBSCRIPTION_DATA_SUCCESS,
   LOAD_SUBSCRIPTION_DATA_FAILURE,
   } from '../../utils/constants/actions';
-
-import type { SeenEvents } from '../../utils/constants/actions';
 
 import type {
   Action,
@@ -101,18 +97,6 @@ export default (state: State = initialState, { type, payload, error }: Action<an
 
         return state.set(subscriptionId, newSubscription);
       })(payload || {});
-
-    case CLEAR_EVENTS:
-      return (({ eventIds }: SeenEvents) => (
-        state.map(subscription => {
-          // if (payload.subscriptionId !== subscription.get('id')) return subscription;
-
-          const currentEventIds = Set(subscription.get('events'));
-          const newEventIds = currentEventIds.subtract(eventIds);
-
-          return subscription.set('events', newEventIds);
-        })
-      ))(payload || {});
 
     default:
       return state;

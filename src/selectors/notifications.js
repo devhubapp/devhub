@@ -7,6 +7,7 @@ import {
   createImmutableSelectorCreator,
   createImmutableSelector,
   entitiesSelector,
+  isArchivedFilter,
 } from './shared';
 
 import { groupNotificationsByRepository } from '../utils/helpers/github';
@@ -18,10 +19,15 @@ export const notificationEntitiesSelector = (state) => entitiesSelector(state).g
 
 export const notificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
-  (notifications) => notifications.map(notification => notification.get('id')).toList(),
+  (notifications) => (
+    notifications
+      .filter(Boolean)
+      .filterNot(isArchivedFilter)
+      .map(notification => notification.get('id')).toList()
+  ),
 );
 
-export const seenNotificationIdsSelector = createImmutableSelector(
+export const readNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
   (notifications) => (
     notifications
@@ -33,10 +39,10 @@ export const seenNotificationIdsSelector = createImmutableSelector(
 
 export const sortNotificationsByDate = (b, a) => (a.get('updated_at') > b.get('updated_at') ? 1 : -1);
 
-export const makeSeenNotificationSelector = () => createImmutableSelector(
+export const makeReadNotificationSelector = () => createImmutableSelector(
   notificationIdSelector,
-  seenNotificationIdsSelector,
-  (notificationId, seenIds) => seenIds.includes(notificationId),
+  readNotificationIdsSelector,
+  (notificationId, readIds) => readIds.includes(notificationId),
 );
 
 export const makeDenormalizedNotificationSelector = () => createImmutableSelector(

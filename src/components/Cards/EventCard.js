@@ -22,7 +22,7 @@ import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import OwnerAvatar from './_OwnerAvatar';
-import { brandSecondary } from '../../styles/themes/base';
+import { isArchivedFilter } from '../../selectors/shared';
 import { avatarWidth, contentPadding } from '../../styles/variables';
 
 import {
@@ -63,6 +63,8 @@ export default class extends React.PureComponent {
   render() {
     const { actions, event, onlyOneRepository, seen, theme, ...props } = this.props;
 
+    if (isArchivedFilter(event)) return null;
+
     const {
       type,
       payload,
@@ -94,7 +96,7 @@ export default class extends React.PureComponent {
     return (
       <CardWrapper {...props} seen={seen}>
         <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
-          <TouchableWithoutFeedback onPress={() => actions.toggleSeenEvent(eventIds)}>
+          <TouchableWithoutFeedback onPress={() => actions.toggleEventsSeenStatus({ eventIds })}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
@@ -145,7 +147,7 @@ export default class extends React.PureComponent {
             </HeaderRow>
 
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => actions.toggleSeenEvent(eventIds)}>
+              <TouchableWithoutFeedback onPress={() => actions.toggleEventsSeenStatus({ eventIds })}>
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>

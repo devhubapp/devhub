@@ -3,7 +3,6 @@
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled from 'styled-components/native';
 
 import {
   makeColumnEventIdsSelector,
@@ -13,21 +12,18 @@ import {
 import Column, { HeaderButton, HeaderButtonText, HeaderButtonsContainer } from './_ColumnWithList';
 import EventCardContainer from '../../containers/EventCardContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
+import { FullView } from '../cards/__CardComponents';
 import { getRequestTypeIcon, requestTypes } from '../../api/github';
 import { getDateWithHourAndMinuteText } from '../../utils/helpers';
 import type { ActionCreators, Column as ColumnType, Subscription } from '../../utils/types';
 
-const Root = styled.View`
-  flex: 1;
-`;
-
-const buttons = ['Create new column', 'Mark all as seen / unseen', 'Clear seen', 'Delete column', 'Cancel'];
+const buttons = ['Cancel', 'Create new column', 'Mark all as read / unread', 'Clear read', 'Delete column'];
 const BUTTONS = {
-  CREATE_NEW_COLUMN: 0,
-  MARK_EVENTS_AS_SEEN_OR_UNSEEN: 1,
-  CLEAR_SEEN: 2,
-  DELETE_COLUMN: 3,
-  CANCEL: 4,
+  CANCEL: 0,
+  CREATE_NEW_COLUMN: 1,
+  MARK_EVENTS_AS_SEEN_OR_UNSEEN: 2,
+  CLEAR_SEEN: 3,
+  DELETE_COLUMN: 4,
 };
 
 export default class extends React.PureComponent {
@@ -53,7 +49,7 @@ export default class extends React.PureComponent {
 
     return {
       eventIds: this.columnEventIdsSelector(state, { columnId }),
-      seenIds: this.columnSeenIdsSelector(state, { columnId }),
+      readIds: this.columnSeenIdsSelector(state, { columnId }),
     };
   }
 
@@ -81,9 +77,9 @@ export default class extends React.PureComponent {
 
       case BUTTONS.MARK_EVENTS_AS_SEEN_OR_UNSEEN:
         (() => {
-          const { eventIds, seenIds } = this.getEventIdsAndSeenIds();
+          const { eventIds, readIds } = this.getEventIdsAndSeenIds();
 
-          if (seenIds && seenIds.size >= eventIds.size) {
+          if (readIds && readIds.size >= eventIds.size) {
             actions.markEventsAsUnseen({ columnId, eventIds });
           } else {
             actions.markEventsAsSeen({ columnId, eventIds });
@@ -94,8 +90,8 @@ export default class extends React.PureComponent {
 
       case BUTTONS.CLEAR_SEEN:
         (() => {
-          const { seenIds } = this.getEventIdsAndSeenIds();
-          actions.clearEvents({ columnId, eventIds: seenIds });
+          const { readIds } = this.getEventIdsAndSeenIds();
+          actions.clearEvents({ columnId, eventIds: readIds });
         })();
         break;
 
@@ -116,7 +112,7 @@ export default class extends React.PureComponent {
     loading?: boolean,
     radius?: number,
     style?: ?Object,
-    seenIds: Array<string>,
+    readIds: Array<string>,
     subscriptions: Array<Subscription>,
   };
 
@@ -150,7 +146,7 @@ export default class extends React.PureComponent {
     const updatedText = dateFromNowText ? `Updated ${dateFromNowText}` : '';
 
     return (
-      <Root style={style}>
+      <FullView style={style}>
         <Column
           errors={errors}
           headerRight={
@@ -171,14 +167,14 @@ export default class extends React.PureComponent {
         />
 
         <ActionSheet
-          ref={(ref) => { this.ActionSheet = ref; } }
+          ref={(ref) => { this.ActionSheet = ref; }}
           title={title}
           options={buttons}
           cancelButtonIndex={BUTTONS.CANCEL}
           destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
           onPress={this.handleActionSheetButtonPress}
         />
-      </Root>
+      </FullView>
     );
   }
 }
