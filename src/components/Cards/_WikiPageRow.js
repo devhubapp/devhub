@@ -14,11 +14,13 @@ import { trimNewLinesAndSpaces } from '../../utils/helpers';
 export default class extends React.PureComponent {
   props: {
     narrow?: boolean,
+    page: Object,
+    seen?: boolean,
     title: string,
   };
 
   render() {
-    const { page, ...props } = this.props;
+    const { page, seen, ...props } = this.props;
 
     if (!page) return null;
 
@@ -30,8 +32,8 @@ export default class extends React.PureComponent {
         url={page.get('html_url') || page.get('url')}
         {...props}
       >
-        <StyledText numberOfLines={1}>
-          <Icon name="book" />&nbsp;
+        <StyledText numberOfLines={1} muted={seen}>
+          <StyledText muted><Icon name="book" />&nbsp;</StyledText>
           {title}
         </StyledText>
       </TouchableRow>

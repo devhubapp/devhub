@@ -1,4 +1,4 @@
-import base from './base';
+import * as base from './base';
 import { mutedOpacity } from '../variables';
 import { fade } from '../../utils/helpers/color';
 
@@ -11,7 +11,7 @@ export const base05 = fade(base04, mutedOpacity); // muted color
 export const base06 = undefined; //
 export const base07 = base.brand; // brand 1
 export const base08 = base.brandSecondary; // brand 2
-export const base09 = undefined;
+export const base09 = undefined; // unseen card background
 export const base0A = undefined;
 export const base0B = undefined;
 export const base0C = undefined;
@@ -44,4 +44,5 @@ export default {
   isDark: true,
   ...base16,
   invert: () => require('./light').default, // eslint-disable-line global-require
+  cardBackground: base03,
 };

@@ -25,11 +25,12 @@ export default class extends React.PureComponent {
   props: {
     commit: Commit,
     narrow?: boolean,
+    seen?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { commit, ...props } = this.props;
+    const { commit, seen, ...props } = this.props;
 
     if (!commit) return null;
 
@@ -57,13 +58,13 @@ export default class extends React.PureComponent {
                 ? getGitHubURLForUser(authorUsername)
                 : getGitHubSearchURL({ q: authorEmail, type: 'Users' })
             }
-            />
+          />
         }
         url={commit.get('html_url') || commit.get('url')}
         {...props}
       >
-        <CardText numberOfLines={1}>
-          <Icon name="git-commit" />&nbsp;
+        <CardText numberOfLines={1} muted={seen}>
+          <StyledText muted><Icon name="git-commit" />&nbsp;</StyledText>
           {message}
           {byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>

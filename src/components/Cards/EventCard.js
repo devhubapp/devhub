@@ -22,6 +22,7 @@ import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import OwnerAvatar from './_OwnerAvatar';
+import { brandSecondary } from '../../styles/themes/base';
 import { avatarWidth, contentPadding } from '../../styles/variables';
 
 import {
@@ -45,7 +46,7 @@ import {
   HeaderRow,
   StyledText,
   SmallText,
-  Username,
+  OwnerLogin,
   CardIcon,
 } from './__CardComponents';
 
@@ -114,18 +115,17 @@ export default class extends React.PureComponent {
                   <ScrollableContentContainer>
                     <HorizontalView>
                       <StyledText numberOfLines={1}>
-                        <Username numberOfLines={1}>
+                        <OwnerLogin numberOfLines={1} muted={seen}>
                           {actor.get('display_login') || actor.get('login')}
-                        </Username>
+                        </OwnerLogin>
+
                         <IntervalRefresh
                           interval={1000}
                           onRender={
                             () => {
                               const dateText = getDateSmallText(created_at, '•');
                               return dateText && (
-                                <SmallText muted>
-                                &nbsp;•&nbsp;{dateText}
-                                </SmallText>
+                                <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
                               );
                             }
                           }
@@ -250,46 +250,55 @@ export default class extends React.PureComponent {
 
         {
           payload.get('issue') &&
-          <IssueRow issue={payload.get('issue')} comment={payload.get('comment')} narrow />
+          <IssueRow
+            issue={payload.get('issue')}
+            comment={payload.get('comment')}
+            narrow
+          />
         }
 
         {
           (
-            type === 'IssuesEvent' && payload.get('action') === 'opened' &&
+            (type === 'IssuesEvent' && payload.get('action') === 'opened' &&
             payload.getIn(['issue', 'body']) &&
             <CommentRow
               body={payload.getIn(['issue', 'body'])}
               user={actor}
               url={payload.getIn(['issue', 'html_url']) || payload.getIn(['issue', 'url'])}
               narrow
-            />
+            />)
 
             ||
 
-            type === 'PullRequestEvent' && payload.get('action') === 'opened' &&
+            (type === 'PullRequestEvent' && payload.get('action') === 'opened' &&
             payload.getIn(['pull_request', 'body']) &&
             <CommentRow
               body={payload.getIn(['pull_request', 'body'])}
               user={actor}
               url={payload.getIn(['pull_request', 'html_url']) || payload.getIn(['pull_request', 'url'])}
               narrow
-            />
+            />)
 
             ||
 
-            payload.getIn(['comment', 'body']) &&
+            (payload.getIn(['comment', 'body']) &&
             <CommentRow
               body={payload.getIn(['comment', 'body'])}
               user={actor}
               url={payload.getIn(['comment', 'html_url'])}
               narrow
-            />
+            />)
           )
         }
 
         {
           payload.get('release') &&
-          <ReleaseRow release={payload.get('release')} type={type} user={actor} narrow />
+          <ReleaseRow
+            release={payload.get('release')}
+            type={type}
+            user={actor}
+            narrow
+          />
         }
       </CardWrapper>
     );

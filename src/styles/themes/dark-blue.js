@@ -1,4 +1,4 @@
-import base from './base';
+import * as base from './base';
 
 export const base00 = '#141d26'; // page background
 export const base01 = '#141d26'; // card background -1
@@ -40,6 +40,7 @@ export default {
   ...base,
   name: 'dark-blue',
   isDark: true,
-  invert: () => require('./light').default, // eslint-disable-line global-require
   ...base16,
+  invert: () => require('./light').default, // eslint-disable-line global-require
+  cardBackground: base03,
 };

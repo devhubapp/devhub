@@ -14,19 +14,20 @@ import {
   smallAvatarWidth,
 } from './__CardComponents';
 
-import { getRepoFullNameFromUrl, trimNewLinesAndSpaces, user } from '../../utils/helpers';
-import type { GithubEventType, GithubUser, ReleaseEvent, ThemeObject } from '../../utils/types';
+import { getRepoFullNameFromUrl, trimNewLinesAndSpaces } from '../../utils/helpers';
+import type { GithubEventType, GithubUser, ReleaseEvent } from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
     narrow: boolean,
     release: ReleaseEvent,
+    seen?: boolean,
     type: GithubEventType,
     user: GithubUser,
   };
 
   render() {
-    const { release, type, user, ...props } = this.props;
+    const { release, seen, type, user, ...props } = this.props;
 
     if (type !== 'ReleaseEvent' || !release) return null;
 
@@ -63,7 +64,7 @@ export default class extends React.PureComponent {
           url={release.get('html_url') || release.get('url')}
           {...props}
         >
-          <StyledText numberOfLines={1}>
+          <StyledText numberOfLines={1} muted={seen}>
             <Icon name="tag" />&nbsp;
             {name || tagName}
           </StyledText>
@@ -83,8 +84,8 @@ export default class extends React.PureComponent {
             url={release.get('html_url') || release.get('url')}
             {...props}
           >
-            <CardText numberOfLines={1}>
-              <Icon name="megaphone" />&nbsp;
+            <CardText numberOfLines={1} muted={seen}>
+              <StyledText muted><Icon name="megaphone" />&nbsp;</StyledText>
               {body}
             </CardText>
           </TouchableRow>

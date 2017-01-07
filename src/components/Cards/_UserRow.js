@@ -12,17 +12,18 @@ import {
 } from './__CardComponents';
 
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { User, ThemeObject } from '../../utils/types';
+import type { User } from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
     user: User,
     additionalInfo?: ?string,
     narrow?: boolean,
+    seen?: boolean,
   };
 
   render() {
-    const { additionalInfo, user, ...props } = this.props;
+    const { additionalInfo, seen, user, ...props } = this.props;
 
     if (!user) return null;
 
@@ -41,8 +42,8 @@ export default class extends React.PureComponent {
         url={user.get('html_url') || user.get('url')}
         {...props}
       >
-        <StyledText numberOfLines={1}>
-          <Icon name="person" />&nbsp;
+        <StyledText numberOfLines={1} muted={seen}>
+          <StyledText muted><Icon name="person" />&nbsp;</StyledText>
           {_login}
           {additionalInfo && <StyledText muted> {additionalInfo}</StyledText>}
         </StyledText>

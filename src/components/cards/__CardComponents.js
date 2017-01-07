@@ -6,16 +6,15 @@ import styled from 'styled-components/native';
 
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import {
-  avatarWidth as defaultAvatarWidth,
+  avatarWidth,
   contentPadding,
-  mutedOpacity,
   radius,
+  smallAvatarWidth,
 } from '../../styles/variables';
 
 import { openOnGithub } from '../../utils/helpers';
 
-export const avatarWidth = defaultAvatarWidth;
-export const smallAvatarWidth = avatarWidth / 2;
+export { avatarWidth, smallAvatarWidth };
 export const innerContentPadding = contentPadding;
 export const narrowInnerContentPadding = innerContentPadding / 2;
 export const iconRightMargin = 0; // contentPadding - 2;
@@ -25,7 +24,7 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ seen }) => (seen ? mutedOpacity : 1)};
+  opacity: ${({ seen }) => (seen ? 0.5 : 1)};
 `;
 
 export const FullView = styled.View`
@@ -85,16 +84,19 @@ export const HeaderRow = styled(HorizontalView)`
 
 export const StyledText = styled.Text`
   background-color: transparent;
-  color: ${({ muted, theme }) => (muted ? theme.base05 : theme.base04)};
+  color: ${({ color, muted, seen, theme }) => (
+    muted && seen !== false ? theme.base05 : color || theme.base04
+  )};
   line-height: 18;
-  font-size: ${({ small }) => small ? 12 : 14};
+  font-size: ${({ small }) => (small ? 12 : 14)};
+  font-weight: ${({ seen }) => (seen === false ? 'bold' : 'normal')};
 `;
 
 export const SmallText = styled(StyledText)`
   font-size: 12;
 `;
 
-export const Username = styled(StyledText)`
+export const OwnerLogin = styled(StyledText)`
   font-weight: bold;
 `;
 
@@ -153,14 +155,15 @@ export const CardIcon = styled(Icon)`
   background-color: transparent;
 `;
 
-export const renderItemId = (number, icon, url) => {
+type ItemIdProps = { icon?: string, number: number, seen?: boolean, url: string };
+export const renderItemId = ({ icon, number, seen, url }: ItemIdProps) => {
   if (!number && !icon) return null;
 
-  const parsedNumber = parseInt(number) || number;
+  const parsedNumber = parseInt(number, 10) || number;
 
   return (
     <CardItemIdContainer>
-      <CardItemId onPress={url ? (() => openOnGithub(url)) : null}>
+      <CardItemId onPress={url ? (() => openOnGithub(url)) : null} muted={seen}>
         {icon ? <Icon name={icon} /> : ''}
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}

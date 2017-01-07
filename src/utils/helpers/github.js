@@ -7,7 +7,7 @@ import moment from 'moment';
 import { Linking } from 'react-native';
 import { fromJS, List, Map, OrderedMap } from 'immutable';
 
-import baseTheme from '../../styles/themes/base';
+import * as baseTheme from '../../styles/themes/base';
 
 import type {
     GithubEvent,

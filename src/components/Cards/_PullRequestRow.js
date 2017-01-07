@@ -26,11 +26,12 @@ export default class extends React.PureComponent {
     comment: GithubComment,
     narrow: boolean,
     pullRequest: GithubPullRequest,
+    seen?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { comment, pullRequest, theme, ...props } = this.props;
+    const { comment, pullRequest, seen, theme, ...props } = this.props;
 
     if (!pullRequest) return null;
 
@@ -62,14 +63,14 @@ export default class extends React.PureComponent {
         }
         right={
           <RightOfScrollableContent>
-            {renderItemId(number, null, pullRequest.get('html_url') || pullRequest.get('url'))}
+            {renderItemId({ number, seen, url: pullRequest.get('html_url') || pullRequest.get('url') })}
           </RightOfScrollableContent>
         }
         url={url}
         {...props}
       >
-        <CardText numberOfLines={1}>
-          <Icon name={icon} color={color} />&nbsp;
+        <CardText numberOfLines={1} muted={seen}>
+          <StyledText muted><Icon name={icon} color={color} />&nbsp;</StyledText>
           {title}
           {byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>

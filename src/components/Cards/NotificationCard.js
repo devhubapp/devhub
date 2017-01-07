@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
-import { fromJS, Map, Set } from 'immutable';
+import { Set } from 'immutable';
 
 // rows
 import CommentRow from './_CommentRow';
@@ -11,10 +11,11 @@ import IssueRow from './_IssueRow';
 import PullRequestRow from './_PullRequestRow';
 import RepositoryRow from './_RepositoryRow';
 
+import Label from '../Label';
 import IntervalRefresh from '../IntervalRefresh';
 import OwnerAvatar from './_OwnerAvatar';
-import Label from '../Label';
 import { contentPadding } from '../../styles/variables';
+import { brandSecondary } from '../../styles/themes/base';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getNotificationIconAndColor, getNotificationReasonTextsAndColor, getOrgAvatar } from '../../utils/helpers/github';
 import type { ActionCreators, GithubNotification } from '../../utils/types';
@@ -29,6 +30,7 @@ import {
   MainColumn,
   HeaderRow,
   SmallText,
+  StyledText,
   CardIcon,
 } from './__CardComponents';
 
@@ -93,15 +95,15 @@ export default class extends React.PureComponent {
           <MainColumn>
             <HeaderRow>
               <FullView center horizontal>
-                <Label numberOfLines={1} color={color} outline>{label}</Label>
+                <Label numberOfLines={1} color={color} outline={seen}>{label}</Label>
 
                 <IntervalRefresh
                   interval={1000}
                   onRender={
                     () => {
-                      const dateText = getDateSmallText(updatedAt, '•');
+                      const dateText = getDateSmallText(updatedAt, ' ');
                       return dateText && (
-                        <SmallText numberOfLines={1} muted>&nbsp;&nbsp;{dateText}</SmallText>
+                        <SmallText numberOfLines={1}>&nbsp;&nbsp;{dateText}</SmallText>
                       );
                     }
                   }

@@ -20,7 +20,7 @@ export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_
 export const makeSeenEventSelector = () => createImmutableSelector(
   eventIdSelector,
   seenEventIdsSelector,
-  (eventId, seenIds) => seenIds.includes(eventId),
+  (eventId, seenIds) => !!seenIds.includes(eventId),
 );
 
 export const makeDenormalizedEventSelector = () => createImmutableSelectorCreator(1)(

@@ -9,15 +9,17 @@ const LabelContainer = styled.View`
   padding-vertical: 2;
   padding-horizontal: ${contentPadding};
   background-color: ${({ color, outline, theme }) => (
-    outline ? 'transparent' : color || theme.brand
+    outline ? 'transparent' : (color || theme.base04)
   )};
-  border-color: ${({ color, theme }) => color || theme.brand};
+  border-color: ${({ color, theme }) => color || theme.base04};
   border-width: ${({ borderWidth }) => borderWidth || 0.5};
   border-radius: ${({ radius }) => radius || 0};
 `;
 
 const Label = styled.Text`
-  color: ${({ color, outline, textColor, theme }) => textColor || (outline ? color : '#ffffff')};
+  color: ${({ color, outline, theme, textColor }) => (
+    textColor || (outline ? color || theme.base04 : '') || '#ffffff'
+  )};
 `;
 
 type Props = {

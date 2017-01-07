@@ -29,6 +29,8 @@ export const ColumnRoot = styled.View`
   margin-horizontal: ${columnMargin}
   margin-vertical: ${columnMargin};
   background-color: ${({ theme }) => theme.base02};
+  border-width: 1;
+  border-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius || 0};
 `;
 
