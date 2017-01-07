@@ -85,5 +85,6 @@ export const orderedColumnsSelector = createImmutableSelector(
   (columns) => (
     columns
       .sort(sortColumnsByDate)
+      .sortBy(column => column.get('order'))
   ),
 );

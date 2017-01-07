@@ -28,8 +28,12 @@ export const clearAppData = (other?: Object) => (
 
 // COLUMN
 
-export const createColumn = (title: string, subscriptionIds: Array<string>, other?: Object) => (
-  action(CREATE_COLUMN, ({ title, subscriptionIds }: Column), other)
+type CreateColumnParams = { title: string, subscriptionIds: Array<string> };
+export const createColumn = (
+  { order, subscriptionIds, title }: CreateColumnParams,
+  other?: Object,
+) => (
+  action(CREATE_COLUMN, ({ order, subscriptionIds, title }: Column), other)
 );
 
 export const deleteColumn = (id: string, other?: Object) => (

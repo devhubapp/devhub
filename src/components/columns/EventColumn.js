@@ -17,7 +17,7 @@ import { getRequestTypeIcon, requestTypes } from '../../api/github';
 import { getDateWithHourAndMinuteText } from '../../utils/helpers';
 import type { ActionCreators, Column as ColumnType, Subscription } from '../../utils/types';
 
-const buttons = ['Cancel', 'Create new column', 'Mark all as read / unread', 'Clear read', 'Delete column'];
+const buttons = ['Cancel', 'Create a column here', 'Mark all as read / unread', 'Clear read', 'Delete column'];
 const BUTTONS = {
   CANCEL: 0,
   CREATE_NEW_COLUMN: 1,
@@ -72,7 +72,10 @@ export default class extends React.PureComponent {
 
     switch (index) {
       case BUTTONS.CREATE_NEW_COLUMN:
-        CreateColumnUtils.showColumnTypeSelectAlert(actions);
+        CreateColumnUtils.showColumnTypeSelectAlert(
+          actions,
+          { createColumnOrder: column.get('order') },
+        );
         break;
 
       case BUTTONS.MARK_EVENTS_AS_SEEN_OR_UNSEEN:

@@ -9,8 +9,8 @@ import CreateColumnUtils from '../utils/CreateColumnUtils';
 import type { ActionCreators, Column as ColumnType } from '../../utils/types';
 
 export default class extends React.PureComponent {
-  addColumnFn = () => {
-    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions);
+  addColumnFn = ({ order } = {}) => {
+    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions, { createColumnOrder: order });
   };
 
   props: {

@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import withOrientation from '../../hoc/withOrientation';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 import { Platform } from 'react-native';
 
 import NewColumn from './NewColumn';
@@ -33,13 +33,37 @@ export default class extends React.PureComponent {
     width?: number,
   };
 
+  renderNewColumn(column) {
+    const { actions, addColumnFn, radius, width } = this.props;
+
+    if (!addColumnFn) return null;
+
+    const _addColumnFn = column
+      ? addColumnFn.bind(this, { order: column.get('order') })
+      : addColumnFn
+    ;
+
+    return (
+      <NewColumn
+        addColumnFn={_addColumnFn}
+        actions={actions}
+        radius={radius}
+        width={width || getWidth()}
+      />
+    );
+  }
+
+  renderRow = (mainRenderRow) => (column, ...otherArgs) => {
+    if (!column) return null;
+
+    if (column.get('id') === 'new') return this.renderNewColumn(column);
+    return mainRenderRow(column, ...otherArgs);
+  }
+
   render() {
     const {
-      actions,
-      addColumnFn,
-      columns = List(),
-      radius,
-      renderRow,
+      columns: _columns,
+      renderRow: mainRenderRow,
       width: _width,
       ...props
     } = this.props;
@@ -47,15 +71,14 @@ export default class extends React.PureComponent {
     const width = _width || getWidth();
     const initialListSize = Math.max(1, Math.ceil(getFullWidth() / width));
 
-    if (!(columns.size > 0) && addColumnFn) {
-      return (
-        <NewColumn
-          addColumnFn={addColumnFn}
-          actions={actions}
-          radius={radius}
-          width={width}
-        />
-      );
+    let columns = _columns ? _columns.toList() : List();
+
+    // if (columns.first().get('id') !== 'new') {
+    //   columns = columns.insert(0, Map({ id: 'new', order: 0 }));
+    // }
+
+    if (columns.size === 0 || columns.last().get('id') !== 'new') {
+      columns = columns.push(Map({ id: 'new', order: columns.size }));
     }
 
     return (
@@ -63,7 +86,7 @@ export default class extends React.PureComponent {
         key="columns-list-view"
         immutableData={columns}
         initialListSize={initialListSize}
-        renderRow={renderRow}
+        renderRow={this.renderRow(mainRenderRow)}
         removeClippedSubviews={false}
         horizontal
         {...(Platform.OS === 'ios' ? {
