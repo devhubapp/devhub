@@ -9,6 +9,7 @@ import {
 } from '../../utils/constants/actions';
 
 import { arrayOfIdsToMergeableMap } from '../../utils/helpers';
+import { isReadFilter } from '../../selectors/shared';
 import type { Action, Normalized } from '../../utils/types';
 
 type State = Normalized<Object>;
@@ -21,7 +22,7 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
         notificationIds
           ? state.mergeDeep(arrayOfIdsToMergeableMap(
             notificationIds,
-            Map({ archived: true, archived_at: new Date() }),
+            Map({ archived_at: new Date() }),
           ))
           : state
       ))(payload);
@@ -31,9 +32,7 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
         let newState = state;
 
         notificationIds.forEach((notificationId) => {
-          newState = newState
-            .setIn([notificationId, 'unread'], false)
-            .setIn([notificationId, 'last_read_at'], new Date());
+          newState = newState.setIn([notificationId, 'last_read_at'], new Date());
         });
 
         return newState;
@@ -46,13 +45,21 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
         const firstNotification = state.get(notificationIds.first());
         if (!firstNotification) return state;
 
-        const newUnreadValue = !firstNotification.get('unread');
-        const lastReadAt = newUnreadValue === false ? new Date() : null;
-        let newState = state;
+        const newReadState = !isReadFilter(firstNotification);
+        const lastReadAt = newReadState ? new Date() : undefined;
+        const lastUnreadAt = !newReadState ? new Date() : null;
 
+        let newState = state;
         notificationIds.forEach((notificationId) => {
-          newState = newState.setIn([notificationId, 'unread'], newUnreadValue);
           if (lastReadAt) newState = newState.setIn([notificationId, 'last_read_at'], lastReadAt);
+
+          // if newReadState is false we will mark the last_unread_at as null on purpose
+          // because when the notifications are updated, the last_read_at from github
+          // would replace the last_read_at from the app,
+          // and would make the notification be always marked as unread
+          // because the last_read_at from github is always before last_unread_at from the app
+          // (unread = last_unread_at > last_read_at)
+          newState = newState.setIn([notificationId, 'last_unread_at'], lastUnreadAt);
         });
 
         return newState;

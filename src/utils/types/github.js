@@ -648,8 +648,9 @@ export type GithubNotification = {
     type: string,
   },
   reason: GithubNotificationReason,
-  unread: boolean,
   updated_at: string,
+  archived_at: string, // specific to this app
   last_read_at: string,
+  last_unread_at: string, // specific to this app
   url: string,
 };

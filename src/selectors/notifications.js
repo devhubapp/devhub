@@ -8,6 +8,7 @@ import {
   createImmutableSelector,
   entitiesSelector,
   isArchivedFilter,
+  isReadFilter,
 } from './shared';
 
 import { groupNotificationsByRepository } from '../utils/helpers/github';
@@ -31,7 +32,7 @@ export const readNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
   (notifications) => (
     notifications
-      .filter(notification => notification.get('unread') === false)
+      .filter(isReadFilter)
       .map(notification => notification.get('id'))
       .toList()
   ),

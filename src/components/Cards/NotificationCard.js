@@ -14,7 +14,7 @@ import RepositoryRow from './_RepositoryRow';
 import Label from '../Label';
 import IntervalRefresh from '../IntervalRefresh';
 import OwnerAvatar from './_OwnerAvatar';
-import { isArchivedFilter } from '../../selectors/shared';
+import { isArchivedFilter, isReadFilter } from '../../selectors/shared';
 import { contentPadding } from '../../styles/variables';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getNotificationIconAndColor, getNotificationReasonTextsAndColor, getOrgAvatar } from '../../utils/helpers/github';
@@ -54,7 +54,7 @@ export default class extends React.PureComponent {
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const notificationIds = Set([notification.get('id')]);
-    const seen = notification.get('unread') === false;
+    const seen = isReadFilter(notification);
     const title = trimNewLinesAndSpaces(subject.get('title'));
     const { label, color } = getNotificationReasonTextsAndColor(notification);
 

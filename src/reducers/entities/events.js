@@ -20,7 +20,7 @@ export default (state: State = initialState, action: Action<any>): State => {
     case CLEAR_EVENTS:
       return state.mergeDeep(arrayOfIdsToMergeableMap(
         eventIds,
-        Map({ archived: true, archived_at: new Date() }),
+        Map({ archived_at: new Date() }),
       ));
       // return eventIds ? state.filterNot(event => eventIds.includes(event.get('id'))) : state;
 
