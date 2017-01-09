@@ -504,14 +504,14 @@ export function getCommentIdFromUrl(url: string) {
   if (!url) return null;
 
   const matches = url.match(/\/comments\/([0-9]+)([?].+)?$/);
-  return (matches && matches[1]) || undefined;
+  return (matches && matches[1]) || null;
 }
 
 export function getCommitShaFromUrl(url: string) {
   if (!url) return null;
 
   const matches = url.match(/\/commits\/([a-zA-Z0-9]+)([?].+)?$/);
-  return (matches && matches[1]) || undefined;
+  return (matches && matches[1]) || null;
 }
 
 export function getIssueOrPullRequestNumberFromUrl(url: string) {
@@ -520,7 +520,7 @@ export function getIssueOrPullRequestNumberFromUrl(url: string) {
   const matches = url.match(/\/(issues|pulls)\/([0-9]+)([?].+)?$/);
   const number = matches && matches[2];
 
-  return parseInt(number, 10) || number || undefined;
+  return parseInt(number, 10) || number || null;
 }
 
 export function getOrgAvatar(orgName: string) {

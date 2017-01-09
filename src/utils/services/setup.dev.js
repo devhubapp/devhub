@@ -22,4 +22,4 @@ fetch = function(uri, options, ...args) {
 };
 
 // chrome network requests
-// GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;

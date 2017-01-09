@@ -89,14 +89,18 @@ export function notificationProcessStrategy(notification: GithubNotification) {
   }
 
   if (notification.subject.latest_comment_url) {
-    newNotification = {
-      ...newNotification,
-      comment: {
-        id: getCommentIdFromUrl(newNotification.subject.latest_comment_url),
-        html_url: githubHTMLUrlFromAPIUrl(newNotification.subject.latest_comment_url, { number }),
-        url: newNotification.subject.latest_comment_url,
-      },
-    };
+    const id = getCommentIdFromUrl(newNotification.subject.latest_comment_url);
+    
+    if (id) {
+      newNotification = {
+        ...newNotification,
+        comment: {
+          id,
+          html_url: githubHTMLUrlFromAPIUrl(newNotification.subject.latest_comment_url, { number }),
+          url: newNotification.subject.latest_comment_url,
+        },
+      };
+    }
   }
 
   return newNotification;
