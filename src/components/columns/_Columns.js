@@ -49,6 +49,7 @@ export default class extends React.PureComponent {
         actions={actions}
         radius={radius}
         width={width || getWidth()}
+        outline
       />
     );
   }

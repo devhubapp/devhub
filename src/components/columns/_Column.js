@@ -28,7 +28,7 @@ export const ColumnRoot = styled.View`
   align-self: stretch;
   margin-horizontal: ${columnMargin}
   margin-vertical: ${columnMargin};
-  background-color: ${({ theme }) => theme.base02};
+  background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base02)};
   border-width: 1;
   border-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius || 0};
@@ -37,6 +37,7 @@ export const ColumnRoot = styled.View`
 export default class extends React.PureComponent {
   props: {
     children: React.Element,
+    outline?: boolean,
     radius?: number,
     width?: number,
   };

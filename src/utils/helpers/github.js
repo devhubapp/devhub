@@ -105,7 +105,7 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
   const payload = event.get('payload');
 
   switch (eventType) {
-    case 'CommitCommentEvent': return { icon: 'comment-discussion' }; // git-commit
+    case 'CommitCommentEvent': return { icon: 'git-commit', subIcon: 'comment-discussion' };
     case 'CreateEvent':
       switch (payload.get('ref_type')) {
         case 'repository': return { icon: 'repo' };
@@ -115,14 +115,25 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
       }
     case 'DeleteEvent':
       switch (payload.get('ref_type')) {
-        case 'repository': return { icon: 'repo' }; // probably not used
-        case 'branch': return { icon: 'git-branch' };
-        case 'tag': return { icon: 'tag' };
+        case 'repository': return { icon: 'repo', subIcon: 'trashcan', subIconColor: theme.red };
+        case 'branch': return { icon: 'git-branch', subIcon: 'trashcan', subIconColor: theme.red };
+        case 'tag': return { icon: 'tag', subIcon: 'trashcan', subIconColor: theme.red };
         default: return { icon: 'trashcan' };
       }
     case 'GollumEvent': return { icon: 'book' };
     case 'ForkEvent': return { icon: 'repo-forked' };
-    case 'IssueCommentEvent': return { icon: 'comment-discussion' };
+
+    case 'IssueCommentEvent':
+      return {
+        ...(
+          // can be an issue or pull request sometimes due to github bug
+          payload.get('pull_request') || payload.getIn(['issue', 'merged_at'])
+          ? getPullRequestIconAndColor(payload.get('pull_request') || payload.get('issue'), theme)
+          : getIssueIconAndColor(payload.get('issue'), theme)
+        ),
+        subIcon: 'comment-discussion',
+      };
+
     case 'IssuesEvent':
       return (() => {
         const issue = payload.get('issue');
@@ -170,10 +181,15 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
       })();
 
     case 'PullRequestReviewEvent':
-    case 'PullRequestReviewCommentEvent': return { icon: 'comment-discussion' };
+    case 'PullRequestReviewCommentEvent':
+      return {
+        ...getPullRequestIconAndColor(payload.get('pull_request'), theme),
+        subIcon: 'comment-discussion',
+      };
+
     case 'PushEvent': return { icon: 'code' };
     case 'ReleaseEvent': return { icon: 'tag' };
-    case 'WatchEvent': return { icon: 'star' };
+    case 'WatchEvent': return { icon: 'star', color: theme.star };
     default: return { icon: 'mark-github' };
   }
 }

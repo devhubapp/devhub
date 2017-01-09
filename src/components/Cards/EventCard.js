@@ -91,7 +91,12 @@ export default class extends React.PureComponent {
     }
 
     const isPrivate = event.get('private') || event.get('public') === false;
-    const { icon: cardIcon, color: cardIconColor } = getEventIconAndColor(event, theme);
+    const {
+      icon: cardIcon,
+      color: cardIconColor,
+      subIcon: cardSubIcon,
+      subIconColor: cardSubIconColor,
+    } = getEventIconAndColor(event, theme);
 
     const toggleEventsSeenStatus = seen
       ? actions.markEventsAsUnseen
@@ -148,7 +153,11 @@ export default class extends React.PureComponent {
                 </StyledText>
               </FullView>
 
-              <CardIcon name={cardIcon} color={cardIconColor} />
+              {
+                cardSubIcon 
+                ? <CardIcon name={cardSubIcon} color={cardSubIconColor || cardIconColor} />
+                : <CardIcon name={cardIcon} color={cardIconColor} />
+              }
             </HeaderRow>
 
             <FullAbsoluteView>

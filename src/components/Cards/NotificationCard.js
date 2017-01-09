@@ -101,7 +101,7 @@ export default class extends React.PureComponent {
           <MainColumn>
             <HeaderRow>
               <FullView center horizontal>
-                <Label numberOfLines={1} color={color} outline={read}>{label}</Label>
+                <Label numberOfLines={1} color={color} outline>{label}</Label>
 
                 <IntervalRefresh
                   interval={1000}

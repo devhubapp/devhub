@@ -150,9 +150,9 @@ export const CardIcon = styled(Icon)`
   align-self: flex-start;
   margin-left: ${contentPadding};
   margin-right: ${iconRightMargin};
-  font-size: 20;
-  color: ${({ color, theme }) => color || theme.base05};
+  font-size: 18;
   background-color: transparent;
+  color: ${({ color, theme }) => color || theme.base05};
 `;
 
 type ItemIdProps = { icon?: string, number: number, seen?: boolean, url: string };
