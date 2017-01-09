@@ -123,7 +123,7 @@ export default class extends React.PureComponent {
     <EventCardContainer
       key={`event-card-${event.get('id')}`}
       actions={this.props.actions}
-      eventOrEventId={event.get('id')}
+      eventOrEventId={event.get('merged') ? event : event.get('id')}
       onlyOneRepository={this.hasOnlyOneRepository()}
     />
   );
