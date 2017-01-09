@@ -15,11 +15,12 @@ const defaultFields = ['id', 'html_url', 'url', 'created_at', 'updated_at'];
 
 const issueOrPullRequestFields = [
   ...defaultFields,
-  'number',
+  'body',
   'latest_comment_url',
+  'number',
+  'repository_url',
   'state',
   'title',
-  'repository_url',
   'type', // because of the subject field of type Union on notifications
   'user',
 ];
@@ -31,7 +32,7 @@ export const CommentSchema = new schema.Entity('comments', {}, {
   processStrategy: obj => pick(obj, [...defaultFields, 'body', 'user']),
 });
 
-export const CommitsSchema = new schema.Entity('commits', {}, {
+export const CommitSchema = new schema.Entity('commits', {}, {
   ...defaultOptions,
   idAttribute: commitIdAttribute,
 });
@@ -84,7 +85,7 @@ EventSchema.define({
   repo: RepoSchema,
   payload: {
     comment: CommentSchema,
-    commits: [CommitsSchema],
+    commits: [CommitSchema],
     issue: IssueSchema,
     forkee: RepoSchema,
     pull_request: PullRequestSchema,
@@ -104,7 +105,7 @@ NotificationSchema.define({
   comment: CommentSchema,
   repository: RepoSchema,
   subject: new schema.Union({
-    Commit: CommitsSchema,
+    Commit: CommitSchema,
     Issue: IssueSchema,
     PullRequest: PullRequestSchema,
   }, 'type'),

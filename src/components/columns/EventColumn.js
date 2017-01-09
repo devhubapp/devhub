@@ -83,9 +83,9 @@ export default class extends React.PureComponent {
           const { eventIds, readIds } = this.getEventIdsAndSeenIds();
 
           if (readIds && readIds.size >= eventIds.size) {
-            actions.markEventsAsUnseen({ columnId, eventIds });
+            actions.markEventsAsUnseen({ all: true, columnId, eventIds });
           } else {
-            actions.markEventsAsSeen({ columnId, eventIds });
+            actions.markEventsAsSeen({ all: true, columnId, eventIds });
           }
         })();
 

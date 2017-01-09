@@ -180,7 +180,7 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
 
 export function getNotificationIconAndColor(
   notification: GithubNotification,
-  theme?: ThemeObject
+  theme?: ThemeObject,
 ): { icon: GithubIcon, color?: string } {
   const subject = notification.get('subject');
   const type = subject.get('type').toLowerCase();

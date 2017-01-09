@@ -47,7 +47,11 @@ export function issueOrPullRequestIdAttribute(obj: GithubIssue | GithubPullReque
 
 export function commitIdAttribute(commit: GithubCommit) {
   const url = getIn(commit, ['url']);
-  return getIn(commit, ['sha']) || getIn(commit, ['commit_id']) || getCommitShaFromUrl(url);
+  return getIn(commit, ['sha'])
+    || getIn(commit, ['commit_id'])
+    || getCommitShaFromUrl(url)
+    || simpleIdAttribute(commit)
+  ;
 }
 
 export function notificationProcessStrategy(notification: GithubNotification) {
@@ -69,8 +73,11 @@ export function notificationProcessStrategy(notification: GithubNotification) {
       subject,
     };
   } else if (newNotification.subject.type === 'Commit') {
+    const { ...commitSubject } = newNotification.subject;
+    delete commitSubject.title;
+
     const subject = {
-      ...newNotification.subject,
+      ...commitSubject,
       message: newNotification.subject.title,
       sha: getCommitShaFromUrl(newNotification.subject.url),
     };
@@ -83,11 +90,11 @@ export function notificationProcessStrategy(notification: GithubNotification) {
 
   if (notification.subject.latest_comment_url) {
     newNotification = {
-      ...notification,
+      ...newNotification,
       comment: {
-        id: getCommentIdFromUrl(notification.subject.latest_comment_url),
-        html_url: githubHTMLUrlFromAPIUrl(notification.subject.latest_comment_url, { number }),
-        url: notification.subject.latest_comment_url,
+        id: getCommentIdFromUrl(newNotification.subject.latest_comment_url),
+        html_url: githubHTMLUrlFromAPIUrl(newNotification.subject.latest_comment_url, { number }),
+        url: newNotification.subject.latest_comment_url,
       },
     };
   }

@@ -57,19 +57,22 @@ export default class extends React.PureComponent {
   };
 
   handleActionSheetButtonPress = (index) => {
-    const { actions } = this.props;
+    const { actions, column } = this.props;
+
+    const repo = column.get('repo');
+    const repoId = repo ? repo.get('id') : undefined;
+
+    const readIds = this.getReadNotificationIds();
+    const notificationIds = this.getNotificationIds();
 
     switch (index) {
       case BUTTONS.MARK_NOTIFICATIONS_AS_READ_OR_UNREAD:
         (() => {
-          const readIds = this.getReadNotificationIds();
-          const unreadIds = this.getUnreadNotificationIds();
-          const notificationIds = this.getNotificationIds();
-
           if (readIds && readIds.size >= notificationIds.size) {
-            actions.markNotificationsAsUnread({ notificationIds: readIds });
+            actions.markNotificationsAsUnread({ all: true, notificationIds: readIds, repoId });
           } else {
-            actions.markNotificationsAsRead({ notificationIds: unreadIds });
+            const unreadIds = this.getUnreadNotificationIds();
+            actions.markNotificationsAsRead({ all: true, notificationIds: unreadIds, repoId });
           }
         })();
 
@@ -77,8 +80,8 @@ export default class extends React.PureComponent {
 
       case BUTTONS.CLEAR_READ:
         (() => {
-          const notificationIds = this.getReadNotificationIds();
-          actions.clearNotifications({ notificationIds });
+          const all = readIds.size === notificationIds.size;
+          actions.clearNotifications({ all, notificationIds: readIds, repoId });
         })();
         break;
 
