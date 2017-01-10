@@ -15,12 +15,12 @@ export default class extends React.PureComponent {
   props: {
     narrow?: boolean,
     page: Object,
-    seen?: boolean,
+    read?: boolean,
     title: string,
   };
 
   render() {
-    const { page, seen, ...props } = this.props;
+    const { page, read, ...props } = this.props;
 
     if (!page) return null;
 
@@ -32,7 +32,7 @@ export default class extends React.PureComponent {
         url={page.get('html_url') || page.get('url')}
         {...props}
       >
-        <StyledText numberOfLines={1} muted={seen}>
+        <StyledText numberOfLines={1} muted={read}>
           <StyledText muted><Icon name="book" />&nbsp;</StyledText>
           {title}
         </StyledText>

@@ -19,11 +19,11 @@ export default class extends React.PureComponent {
     user: User,
     additionalInfo?: ?string,
     narrow?: boolean,
-    seen?: boolean,
+    read?: boolean,
   };
 
   render() {
-    const { additionalInfo, seen, user, ...props } = this.props;
+    const { additionalInfo, read, user, ...props } = this.props;
 
     if (!user) return null;
 
@@ -42,7 +42,7 @@ export default class extends React.PureComponent {
         url={user.get('html_url') || user.get('url')}
         {...props}
       >
-        <StyledText numberOfLines={1} muted={seen}>
+        <StyledText numberOfLines={1} muted={read}>
           <StyledText muted><Icon name="person" />&nbsp;</StyledText>
           {_login}
           {additionalInfo && <StyledText muted> {additionalInfo}</StyledText>}

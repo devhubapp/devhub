@@ -8,8 +8,9 @@ import { connect } from 'react-redux';
 import EventCard from '../components/cards/EventCard';
 
 import {
+  makeIsArchivedEventSelector,
   makeDenormalizedEventSelector,
-  makeSeenEventSelector,
+  makeIsReadEventSelector,
 } from '../selectors';
 
 import * as actionCreators from '../actions';
@@ -21,15 +22,17 @@ import type {
 
 const makeMapStateToProps = () => {
   const denormalizedEventSelector = makeDenormalizedEventSelector();
-  const seenEventSelector = makeSeenEventSelector();
+  const isArchivedEventSelector = makeIsArchivedEventSelector();
+  const isReadEventSelector = makeIsReadEventSelector();
 
   return (state: State, { eventOrEventId }: { eventOrEventId: string|GithubEvent }) => {
     const event = Iterable.isIterable(eventOrEventId) ? eventOrEventId : null;
     const eventId = event ? `${event.get('id')}` : eventOrEventId;
 
     return {
+      archived: isArchivedEventSelector(state, { eventId }),
       event: event || denormalizedEventSelector(state, { eventId }),
-      seen: seenEventSelector(state, { eventId }),
+      read: isReadEventSelector(state, { eventId }),
     };
   };
 };
@@ -43,17 +46,17 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     event: GithubEvent,
-    seen: boolean,
+    read: boolean,
   };
 
   render() {
-    const { actions, event, seen, ...props } = this.props;
+    const { actions, event, read, ...props } = this.props;
 
     return (
       <EventCard
         actions={actions}
         event={event}
-        seen={seen}
+        read={read}
         {...props}
       />
     );

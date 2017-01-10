@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import NotificationCard from '../components/cards/NotificationCard';
 
 import {
+  makeArchivedNotificationSelector,
   makeDenormalizedNotificationSelector,
   makeReadNotificationSelector,
 } from '../selectors';
@@ -20,16 +21,18 @@ import type {
 } from '../utils/types';
 
 const makeMapStateToProps = () => {
+  const archivedNotificationSelector = makeArchivedNotificationSelector();
   const denormalizedNotificationSelector = makeDenormalizedNotificationSelector();
-  const seenNotificationSelector = makeReadNotificationSelector();
+  const readNotificationSelector = makeReadNotificationSelector();
 
   return (state: State, { notificationOrNotificationId }: { notificationOrNotificationId: string|GithubNotification }) => {
     const notification = Iterable.isIterable(notificationOrNotificationId) ? notificationOrNotificationId : null;
     const notificationId = notification ? `${notification.get('id')}` : notificationOrNotificationId;
 
     return {
+      archived: archivedNotificationSelector(state, { notificationId }),
       notification: notification || denormalizedNotificationSelector(state, { notificationId }),
-      seen: seenNotificationSelector(state, { notificationId }),
+      read: readNotificationSelector(state, { notificationId }),
     };
   };
 };
@@ -44,18 +47,18 @@ export default class extends React.PureComponent {
     actions: ActionCreators,
     notification?: GithubNotification,
     notificationOrNotificationId: string | GithubNotification,
-    seen: boolean,
+    read: boolean,
   };
 
   render() {
-    const { actions, notification, seen, ...props } = this.props;
+    const { actions, notification, read, ...props } = this.props;
 
     return (
       <NotificationCard
         actions={actions}
         notification={notification}
         event={notification}
-        seen={seen}
+        read={read}
         {...props}
       />
     );

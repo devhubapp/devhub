@@ -17,14 +17,26 @@ import { NotificationSchema } from '../utils/normalizr/schemas';
 export const notificationIdSelector = (state, { notificationId }) => notificationId;
 export const notificationDetailsSelector = (state) => state.get('notifications');
 export const notificationEntitiesSelector = (state) => entitiesSelector(state).get('notifications');
+export const notificationSelector = (state, { notificationId }) => notificationEntitiesSelector(state).get(notificationId);
 
 export const notificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
   (notifications) => (
     notifications
       .filter(Boolean)
+      .map(notification => notification.get('id'))
+      .toList()
+  ),
+);
+
+export const unarchivedNotificationIdsSelector = createImmutableSelector(
+  notificationEntitiesSelector,
+  (notifications) => (
+    notifications
+      .filter(Boolean)
       .filterNot(isArchivedFilter)
-      .map(notification => notification.get('id')).toList()
+      .map(notification => notification.get('id'))
+      .toList()
   ),
 );
 
@@ -32,6 +44,7 @@ export const readNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
   (notifications) => (
     notifications
+      .filter(Boolean)
       .filter(isReadFilter)
       .map(notification => notification.get('id'))
       .toList()
@@ -39,6 +52,11 @@ export const readNotificationIdsSelector = createImmutableSelector(
 );
 
 export const sortNotificationsByDate = (b, a) => (a.get('updated_at') > b.get('updated_at') ? 1 : -1);
+
+export const makeArchivedNotificationSelector = () => createImmutableSelector(
+  notificationSelector,
+  isArchivedFilter,
+);
 
 export const makeReadNotificationSelector = () => createImmutableSelector(
   notificationIdSelector,
@@ -55,10 +73,11 @@ export const makeDenormalizedNotificationSelector = () => createImmutableSelecto
 );
 
 export const denormalizedOrderedNotificationsSelector = createImmutableSelectorCreator(1)(
-  notificationIdsSelector,
+  notificationIdsSelector, // just here for memoization optimization: dont call this fn again unless new notifications were added
+  unarchivedNotificationIdsSelector,
   entitiesSelector,
-  (notificationIds, entities) => (
-    denormalize(notificationIds, entities, [NotificationSchema])
+  (notificationIds, unarchivedNotificationIds, entities) => (
+    denormalize(unarchivedNotificationIds, entities, [NotificationSchema])
       .sort(sortNotificationsByDate)
   ),
 );

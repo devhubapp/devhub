@@ -36,14 +36,16 @@ import {
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
+    archived?: ?boolean,
     onlyOneRepository?: ?boolean,
     notification: GithubNotification,
+    read?: ?boolean,
   };
 
   render() {
-    const { actions, onlyOneRepository, notification, ...props } = this.props;
+    const { actions, archived, onlyOneRepository, notification, read, ...props } = this.props;
 
-    if (isArchivedFilter(notification)) return null;
+    if (archived) return null;
 
     const comment = notification.get('comment');
     const repo = notification.get('repository');
@@ -54,7 +56,6 @@ export default class extends React.PureComponent {
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const notificationIds = Set([notification.get('id')]);
-    const read = isReadFilter(notification);
     const title = trimNewLinesAndSpaces(subject.get('title'));
     const { label, color } = getNotificationReasonTextsAndColor(notification);
 
@@ -71,7 +72,7 @@ export default class extends React.PureComponent {
     ;
 
     return (
-      <CardWrapper {...props} seen={read}>
+      <CardWrapper {...props} read={read}>
         <FullAbsoluteView
           style={{
             top: contentPadding + smallAvatarWidth,

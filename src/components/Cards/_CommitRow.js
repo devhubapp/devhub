@@ -25,12 +25,12 @@ export default class extends React.PureComponent {
   props: {
     commit: Commit,
     narrow?: boolean,
-    seen?: boolean,
+    read?: boolean,
     theme?: ThemeObject,
   };
 
   render() {
-    const { commit, seen, ...props } = this.props;
+    const { commit, read, ...props } = this.props;
 
     if (!commit) return null;
 
@@ -63,7 +63,7 @@ export default class extends React.PureComponent {
         url={commit.get('html_url') || commit.get('url')}
         {...props}
       >
-        <CardText numberOfLines={1} muted={seen}>
+        <CardText numberOfLines={1} muted={read}>
           <StyledText muted><Icon name="git-commit" />&nbsp;</StyledText>
           {message}
           {byText && <StyledText muted small> by {byText}</StyledText>}

@@ -54,16 +54,17 @@ import {
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
+    archived?: boolean,
     event: GithubEvent,
     onlyOneRepository?: boolean,
-    seen?: boolean,
+    read?: boolean,
     theme: ThemeObject,
   };
 
   render() {
-    const { actions, event, onlyOneRepository, seen, theme, ...props } = this.props;
+    const { actions, archived, event, onlyOneRepository, read, theme, ...props } = this.props;
 
-    if (isArchivedFilter(event)) return null;
+    if (archived) return null;
 
     const {
       type,
@@ -98,15 +99,15 @@ export default class extends React.PureComponent {
       subIconColor: cardSubIconColor,
     } = getEventIconAndColor(event, theme);
 
-    const toggleEventsSeenStatus = seen
-      ? actions.markEventsAsUnseen
-      : actions.markEventsAsSeen
+    const toggleEventsReadStatus = read
+      ? actions.markEventsAsUnread
+      : actions.markEventsAsRead
     ;
 
     return (
-      <CardWrapper {...props} seen={seen}>
+      <CardWrapper {...props} read={read}>
         <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
-          <TouchableWithoutFeedback onPress={() => toggleEventsSeenStatus({ eventIds })}>
+          <TouchableWithoutFeedback onPress={() => toggleEventsReadStatus({ eventIds })}>
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
@@ -127,7 +128,7 @@ export default class extends React.PureComponent {
                   <ScrollableContentContainer>
                     <HorizontalView>
                       <StyledText numberOfLines={1}>
-                        <OwnerLogin numberOfLines={1} muted={seen}>
+                        <OwnerLogin numberOfLines={1} muted={read}>
                           {actor.get('display_login') || actor.get('login')}
                         </OwnerLogin>
 
@@ -161,7 +162,7 @@ export default class extends React.PureComponent {
             </HeaderRow>
 
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => toggleEventsSeenStatus({ eventIds })}>
+              <TouchableWithoutFeedback onPress={() => toggleEventsReadStatus({ eventIds })}>
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>

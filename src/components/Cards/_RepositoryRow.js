@@ -23,11 +23,11 @@ export default class extends React.PureComponent {
     narrow?: boolean,
     pushed?: boolean,
     repo: GithubRepo,
-    seen?: boolean,
+    read?: boolean,
   };
 
   render() {
-    const { forcePushed, isFork, seen, pushed, repo, ...props } = this.props;
+    const { forcePushed, isFork, read, pushed, repo, ...props } = this.props;
 
     if (!repo) return null;
 
@@ -63,7 +63,7 @@ export default class extends React.PureComponent {
       >
         {isPrivate && <StyledText muted><Icon name="lock" />&nbsp;</StyledText>}
         <StyledText muted><Icon name={repoIcon} />&nbsp;</StyledText>
-        <RepositoryName muted={seen}>{repoName}</RepositoryName>
+        <RepositoryName muted={read}>{repoName}</RepositoryName>
 
         {orgName && <StyledText muted small> {orgName}</StyledText>}
       </TouchableRow>

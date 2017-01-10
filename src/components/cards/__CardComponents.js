@@ -24,7 +24,7 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ seen }) => (seen ? 0.5 : 1)};
+  opacity: ${({ read }) => (read ? 0.5 : 1)};
 `;
 
 export const FullView = styled.View`
@@ -84,12 +84,12 @@ export const HeaderRow = styled(HorizontalView)`
 
 export const StyledText = styled.Text`
   background-color: transparent;
-  color: ${({ color, muted, seen, theme }) => (
-    muted && seen !== false ? theme.base05 : color || theme.base04
+  color: ${({ color, muted, read, theme }) => (
+    muted && read !== false ? theme.base05 : color || theme.base04
   )};
   line-height: 18;
   font-size: ${({ small }) => (small ? 12 : 14)};
-  font-weight: ${({ seen }) => (seen === false ? 'bold' : 'normal')};
+  font-weight: ${({ read }) => (read === false ? 'bold' : 'normal')};
 `;
 
 export const SmallText = styled(StyledText)`
@@ -155,15 +155,15 @@ export const CardIcon = styled(Icon)`
   color: ${({ color, theme }) => color || theme.base05};
 `;
 
-type ItemIdProps = { icon?: string, number: number, seen?: boolean, url: string };
-export const renderItemId = ({ icon, number, seen, url }: ItemIdProps) => {
+type ItemIdProps = { icon?: string, number: number, read?: boolean, url: string };
+export const renderItemId = ({ icon, number, read, url }: ItemIdProps) => {
   if (!number && !icon) return null;
 
   const parsedNumber = parseInt(number, 10) || number;
 
   return (
     <CardItemIdContainer>
-      <CardItemId onPress={url ? (() => openOnGithub(url)) : null} muted={seen}>
+      <CardItemId onPress={url ? (() => openOnGithub(url)) : null} muted={read}>
         {icon ? <Icon name={icon} /> : ''}
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}

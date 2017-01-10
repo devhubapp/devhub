@@ -21,13 +21,13 @@ export default class extends React.PureComponent {
   props: {
     narrow: boolean,
     release: ReleaseEvent,
-    seen?: boolean,
+    read?: boolean,
     type: GithubEventType,
     user: GithubUser,
   };
 
   render() {
-    const { release, seen, type, user, ...props } = this.props;
+    const { release, read, type, user, ...props } = this.props;
 
     if (type !== 'ReleaseEvent' || !release) return null;
 
@@ -64,7 +64,7 @@ export default class extends React.PureComponent {
           url={release.get('html_url') || release.get('url')}
           {...props}
         >
-          <StyledText numberOfLines={1} muted={seen}>
+          <StyledText numberOfLines={1} muted={read}>
             <Icon name="tag" />&nbsp;
             {name || tagName}
           </StyledText>
@@ -84,7 +84,7 @@ export default class extends React.PureComponent {
             url={release.get('html_url') || release.get('url')}
             {...props}
           >
-            <CardText numberOfLines={1} muted={seen}>
+            <CardText numberOfLines={1} muted={read}>
               <StyledText muted><Icon name="megaphone" />&nbsp;</StyledText>
               {body}
             </CardText>

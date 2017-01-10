@@ -20,13 +20,13 @@ export default class extends React.PureComponent {
     body: string,
     narrow?: boolean,
     numberOfLines?: number,
-    seen?: boolean,
+    read?: boolean,
     url?: string,
     user: GithubUser,
   };
 
   render() {
-    const { user, body: _body, narrow, numberOfLines = 4, seen, url, ...props } = this.props;
+    const { user, body: _body, narrow, numberOfLines = 4, read, url, ...props } = this.props;
 
     const body = trimNewLinesAndSpaces(_body, 400);
     if (!body) return null;
@@ -48,7 +48,7 @@ export default class extends React.PureComponent {
           <CardText
             numberOfLines={numberOfLines}
             onPress={url ? (() => openOnGithub(url)) : null}
-            muted={seen}
+            muted={read}
           >{body}</CardText>
         </MainColumnRowContent>
       </ContentRow>

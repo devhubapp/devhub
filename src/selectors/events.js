@@ -16,12 +16,17 @@ import { groupSimilarEvents } from '../utils/helpers';
 
 export const eventIdSelector = (state, { eventId }) => eventId;
 export const eventSelector = (state, { eventId }) => entitiesSelector(state).getIn(['events', eventId]);
-export const seenEventIdsSelector = state => state.get('seenEvents').toList();
+export const readEventIdsSelector = state => state.get('seenEvents').toList();
 export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_at') ? 1 : -1);
 
-export const makeSeenEventSelector = () => createImmutableSelector(
+export const makeIsArchivedEventSelector = () => createImmutableSelector(
+  eventSelector,
+  isArchivedFilter,
+);
+
+export const makeIsReadEventSelector = () => createImmutableSelector(
   eventIdSelector,
-  seenEventIdsSelector,
+  readEventIdsSelector,
   (eventId, readIds) => !!readIds.includes(eventId),
 );
 

@@ -23,8 +23,8 @@ export type SET_THEME = typeof actions.SET_THEME;
 
 // events
 export type CLEAR_EVENTS = typeof actions.CLEAR_EVENTS;
-export type MARK_EVENTS_AS_SEEN = typeof actions.MARK_EVENTS_AS_SEEN;
-export type MARK_EVENTS_AS_NOT_SEEN = typeof actions.MARK_EVENTS_AS_NOT_SEEN;
+export type MARK_EVENTS_AS_READ = typeof actions.MARK_EVENTS_AS_READ;
+export type MARK_EVENTS_AS_UNREAD = typeof actions.MARK_EVENTS_AS_UNREAD;
 
 // notifications
 export type LOAD_NOTIFICATIONS_REQUEST = typeof actions.LOAD_NOTIFICATIONS_REQUEST;
@@ -66,8 +66,8 @@ export type ActionType =
 
   // events
   | CLEAR_EVENTS
-  | MARK_EVENTS_AS_SEEN
-  | MARK_EVENTS_AS_NOT_SEEN
+  | MARK_EVENTS_AS_READ
+  | MARK_EVENTS_AS_UNREAD
 
   // notifications
   | LOAD_NOTIFICATIONS_REQUEST

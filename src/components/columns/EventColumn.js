@@ -3,10 +3,11 @@
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
+import { List, Set } from 'immutable';
 
 import {
   makeColumnEventIdsSelector,
-  makeColumnSeenIdsSelector,
+  makeColumnReadIdsSelector,
 } from '../../selectors';
 
 import Column, { HeaderButton, HeaderButtonText, HeaderButtonsContainer } from './_ColumnWithList';
@@ -21,8 +22,8 @@ const buttons = ['Cancel', 'Create a column here', 'Mark all as read / unread', 
 const BUTTONS = {
   CANCEL: 0,
   CREATE_NEW_COLUMN: 1,
-  MARK_EVENTS_AS_SEEN_OR_UNSEEN: 2,
-  CLEAR_SEEN: 3,
+  MARK_EVENTS_AS_READ_OR_UNREAD: 2,
+  CLEAR_READ: 3,
   DELETE_COLUMN: 4,
 };
 
@@ -36,21 +37,29 @@ export default class extends React.PureComponent {
     updateColumnSubscriptions(column.get('id'));
   };
 
-  getEventIdsAndSeenIds = () => {
-    const { column } = this.props;
+  getEventIds = () => {
+    const { items = List() } = this.props;
+    return items.first() === 'string' ? items : items.map(item => item.get('id'));
+  }
 
-    const columnId = column.get('id');
+  getReadEventIds = () => {
+    const { column } = this.props;
 
     const store = this.context.store;
     const state = store.getState();
+    const columnId = column.get('id');
 
-    this.columnEventIdsSelector = this.columnEventIdsSelector || makeColumnEventIdsSelector();
-    this.columnSeenIdsSelector = this.columnSeenIdsSelector || makeColumnSeenIdsSelector();
+    this.columnReadIdsSelector = this.columnReadIdsSelector || makeColumnReadIdsSelector();
 
-    return {
-      eventIds: this.columnEventIdsSelector(state, { columnId }),
-      readIds: this.columnSeenIdsSelector(state, { columnId }),
-    };
+    const eventIds = this.getEventIds();
+    const readEventsIds = this.columnReadIdsSelector(state, { columnId });
+    return Set(readEventsIds).intersect(eventIds);
+  }
+
+  getUnreadEventIds = () => {
+    const eventIds = this.getEventIds();
+    const readIds = this.getReadEventIds();
+    return Set(eventIds).subtract(readIds);
   }
 
   hasOnlyOneRepository = () => {
@@ -78,23 +87,28 @@ export default class extends React.PureComponent {
         );
         break;
 
-      case BUTTONS.MARK_EVENTS_AS_SEEN_OR_UNSEEN:
+      case BUTTONS.MARK_EVENTS_AS_READ_OR_UNREAD:
         (() => {
-          const { eventIds, readIds } = this.getEventIdsAndSeenIds();
+          const eventIds = this.getEventIds();
+          const readIds = this.getReadEventIds();
+          const unreadIds = this.getUnreadEventIds();
 
           if (readIds && readIds.size >= eventIds.size) {
-            actions.markEventsAsUnseen({ all: true, columnId, eventIds });
+            actions.markEventsAsUnread({ all: true, columnId, eventIds: readIds });
           } else {
-            actions.markEventsAsSeen({ all: true, columnId, eventIds });
+            actions.markEventsAsRead({ all: true, columnId, eventIds: unreadIds });
           }
         })();
 
         break;
 
-      case BUTTONS.CLEAR_SEEN:
+      case BUTTONS.CLEAR_READ:
         (() => {
-          const { readIds } = this.getEventIdsAndSeenIds();
-          actions.clearEvents({ columnId, eventIds: readIds });
+          const eventIds = this.getEventIds();
+          const readIds = this.getReadEventIds();
+          const all = readIds.size === eventIds.size;
+
+          actions.clearEvents({ all, columnId, eventIds: readIds });
         })();
         break;
 

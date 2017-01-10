@@ -17,12 +17,12 @@ export default class extends React.PureComponent {
     branch: string,
     narrow: boolean,
     repoFullName: string,
-    seen?: boolean,
+    read?: boolean,
     type: GithubEventType,
   };
 
   render() {
-    const { branch: _branch, repoFullName, seen, type, ...props } = this.props;
+    const { branch: _branch, repoFullName, read, type, ...props } = this.props;
 
     const branch = (_branch || '').replace('refs/heads/', '');
     if (!branch) return null;
@@ -35,7 +35,7 @@ export default class extends React.PureComponent {
         url={getGitHubURLForBranch(repoFullName, branch)}
         {...props}
       >
-        <StyledText numberOfLines={1} muted={!isBranchMainEventAction || seen}>
+        <StyledText numberOfLines={1} muted={!isBranchMainEventAction || read}>
           <StyledText muted><Icon name="git-branch" />&nbsp;</StyledText>
           {branch}
         </StyledText>

@@ -17,8 +17,11 @@ const reducer = combineReducers({
   config,
   entities,
   notifications,
+
+  // TODO: Make this in a better way, not in a separate reducer
   seenEvents,
   starredRepos,
+
   user,
 });
 

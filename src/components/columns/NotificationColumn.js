@@ -3,14 +3,14 @@
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
-import { Set } from 'immutable';
+import { List, Set } from 'immutable';
 
 import Column, { HeaderButton, HeaderButtonText, HeaderButtonsContainer } from './_ColumnWithList';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
 import { FullView } from '../cards/__CardComponents';
 import { getDateWithHourAndMinuteText, getOwnerAndRepo } from '../../utils/helpers';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
-import { readNotificationIdsSelector } from '../../selectors';
+import { isArchivedFilter, readNotificationIdsSelector } from '../../selectors';
 import type { ActionCreators, GithubRepo } from '../../utils/types';
 
 const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read'];
@@ -33,8 +33,12 @@ export default class extends React.PureComponent {
   };
 
   getNotificationIds = () => {
-    const { items } = this.props;
-    return items.first() === 'string' ? items : items.map(item => item.get('id'));
+    const { items = List() } = this.props;
+    
+    return items.first() === 'string'
+      ? items
+      : items.map(item => !isArchivedFilter(item) && item.get('id')).filter(Boolean)
+    ;
   }
 
   getReadNotificationIds = () => {
@@ -43,7 +47,7 @@ export default class extends React.PureComponent {
 
     const notificationIds = this.getNotificationIds();
     const readNotificationsIds = readNotificationIdsSelector(state);
-    return Set(notificationIds).intersect(readNotificationsIds);
+    return Set(readNotificationsIds).intersect(notificationIds);
   }
 
   getUnreadNotificationIds = () => {

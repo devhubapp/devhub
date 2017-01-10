@@ -8,8 +8,8 @@ import { loadSubscriptionDataRequest } from './subscriptions';
 
 import {
   CLEAR_EVENTS,
-  MARK_EVENTS_AS_SEEN,
-  MARK_EVENTS_AS_NOT_SEEN,
+  MARK_EVENTS_AS_READ,
+  MARK_EVENTS_AS_UNREAD,
 } from '../utils/constants/actions';
 
 import { action } from '../utils/helpers/actions';
@@ -34,15 +34,15 @@ export const loadOrgEvents = (org: string, other?: Object) => (
   loadSubscriptionDataRequest(requestTypes.ORG_PUBLIC_EVENTS, { org }, other)
 );
 
-export type SeenEvents = { columnId: string, eventIds: Array<string> };
-export const clearEvents = ({ columnId, eventIds }: SeenEvents, other?: Object) => (
+export type ReadEvents = { columnId: string, eventIds: Array<string> };
+export const clearEvents = ({ columnId, eventIds }: ReadEvents, other?: Object) => (
   action(CLEAR_EVENTS, { columnId, eventIds: Set(eventIds) }, other)
 );
 
-export const markEventsAsSeen = ({ columnId, eventIds }: SeenEvents, other?: Object) => (
-  action(MARK_EVENTS_AS_SEEN, { columnId, eventIds: Set(eventIds) }, other)
+export const markEventsAsRead = ({ columnId, eventIds }: ReadEvents, other?: Object) => (
+  action(MARK_EVENTS_AS_READ, { columnId, eventIds: Set(eventIds) }, other)
 );
 
-export const markEventsAsUnseen = ({ columnId, eventIds }: SeenEvents, other?: Object) => (
-  action(MARK_EVENTS_AS_NOT_SEEN, { columnId, eventIds: Set(eventIds) }, other)
+export const markEventsAsUnread = ({ columnId, eventIds }: ReadEvents, other?: Object) => (
+  action(MARK_EVENTS_AS_UNREAD, { columnId, eventIds: Set(eventIds) }, other)
 );
