@@ -43,7 +43,10 @@ export const EventSchema = new schema.Entity('events', {}, defaultOptions);
 export const IssueSchema = new schema.Entity('issues', {}, {
   ...defaultOptions,
   idAttribute: issueOrPullRequestIdAttribute,
-  processStrategy: obj => pick(obj, issueOrPullRequestFields),
+  processStrategy: obj => ({
+    ...pick(obj, issueOrPullRequestFields),
+    type: 'Issue',
+  }),
 });
 
 export const NotificationSchema = new schema.Entity('notifications', {}, {
@@ -62,7 +65,10 @@ export const OrgSchema = new schema.Entity('orgs', {}, {
 export const PullRequestSchema = new schema.Entity('issues', {}, {
   ...defaultOptions,
   idAttribute: issueOrPullRequestIdAttribute,
-  processStrategy: obj => pick(obj, [...issueOrPullRequestFields, 'merged_at']),
+  processStrategy: obj => ({
+    ...pick(obj, [...issueOrPullRequestFields, 'merged_at']),
+    type: 'PullRequest',
+  }),
 });
 
 export const SubscriptionSchema = new schema.Entity('subscriptions', {}, defaultOptions);

@@ -30,7 +30,7 @@ export default class ProgressBar extends Component {
     duration: 800,
     height: 1,
     indeterminate: true,
-    indeterminateWidthFactor: 0.6,
+    indeterminateWidthFactor: 1,
     progress: 0,
     theme: {},
     width: 200,

@@ -30,14 +30,19 @@ export const TitleWrapper = styled.View`
   flex-direction: row;
 `;
 
+const headerFontSize = 18;
 export const Title = styled.Text`
   padding: ${contentPadding};
   padding-top: ${contentPadding + 4};
-  line-height: 18;
-  font-size: 18;
+  line-height: ${headerFontSize};
+  font-size: ${headerFontSize};
   font-weight: 500;
   color: ${({ theme }) => theme.base04};
   background-color: transparent;
+`;
+
+export const TitleIcon = styled(Icon)`
+  font-size: ${headerFontSize};
 `;
 
 export const HeaderButton = styled.TouchableOpacity`
@@ -45,8 +50,8 @@ export const HeaderButton = styled.TouchableOpacity`
   padding-horizontal: ${contentPadding};
 `;
 
-export const HeaderButtonText = styled.Text`
-  font-size: 14;
+export const HeaderButtonIcon = styled(Icon)`
+  font-size: ${headerFontSize};
   color: ${({ theme }) => theme.base04};
 `;
 
@@ -100,6 +105,7 @@ export default class extends React.PureComponent {
       refreshText,
       theme,
       title,
+      width,
       ...props
     } = this.props;
 
@@ -110,7 +116,7 @@ export default class extends React.PureComponent {
         <FixedHeader>
           <TitleWrapper>
             <Title numberOfLines={1} style={{ maxWidth: 280 }}>
-              <Icon name={icon} size={18} />&nbsp;{title}
+              <TitleIcon name={icon} />&nbsp;{title}
             </Title>
           </TitleWrapper>
 
@@ -121,7 +127,7 @@ export default class extends React.PureComponent {
           {
             loading &&
             <ProgressBar
-              width={getWidth()}
+              width={width || getWidth()}
               height={1}
               indeterminate
             />

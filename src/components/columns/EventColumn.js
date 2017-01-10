@@ -10,7 +10,7 @@ import {
   makeColumnReadIdsSelector,
 } from '../../selectors';
 
-import Column, { HeaderButton, HeaderButtonText, HeaderButtonsContainer } from './_ColumnWithList';
+import Column, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
 import EventCardContainer from '../../containers/EventCardContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
 import { FullView } from '../cards/__CardComponents';
@@ -172,7 +172,7 @@ export default class extends React.PureComponent {
           headerRight={
             <HeaderButtonsContainer>
               <HeaderButton onPress={this.showActionSheet}>
-                <HeaderButtonText><Icon name="settings" size={20} /></HeaderButtonText>
+                <HeaderButtonIcon name="chevron-down" />
               </HeaderButton>
             </HeaderButtonsContainer>
           }

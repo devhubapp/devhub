@@ -9,7 +9,6 @@ import commits from './commits';
 import events from './events';
 import issues from './issues';
 import orgs from './orgs';
-import pullRequests from './pull-requests';
 import notifications from './notifications';
 import repos from './repos';
 import subscriptions from './subscriptions';
@@ -31,7 +30,6 @@ const reducer = combineReducers({
   issues,
   notifications,
   orgs,
-  pullRequests,
   repos,
   subscriptions,
   users,
