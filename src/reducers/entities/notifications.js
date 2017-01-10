@@ -3,16 +3,13 @@
 import { Map } from 'immutable';
 
 import {
-  CLEAR_NOTIFICATIONS,
+  ARCHIVE_NOTIFICATIONS,
   MARK_NOTIFICATIONS_AS_READ,
   MARK_NOTIFICATIONS_AS_UNREAD,
 } from '../../utils/constants/actions';
 
+import { archiveIds } from './_shared';
 import type { Action, Normalized } from '../../utils/types';
-
-const markAsArchived = (notification, archivedAt) => (
-  notification.set('archived_at', archivedAt || new Date())
-);
 
 const markAsRead = (notification, lastReadAt) => (
   notification
@@ -36,21 +33,8 @@ const initialState = Map();
 
 export default (state: State = initialState, { type, payload }: Action<any>): State => {
   switch (type) {
-    case CLEAR_NOTIFICATIONS:
-      return (({ notificationIds }) => {
-        const archivedAt = new Date();
-
-        let newState = state;
-        notificationIds.forEach((notificationId) => {
-          const notification = newState.get(notificationId);
-          if (!notification) return;
-
-          const newNotification = markAsArchived(notification, archivedAt);
-          newState = newState.set(notificationId, newNotification);
-        });
-
-        return newState;
-      })(payload);
+    case ARCHIVE_NOTIFICATIONS:
+      return archiveIds(state, payload.notificationIds);
 
     case MARK_NOTIFICATIONS_AS_READ:
       return (({ notificationIds }) => {

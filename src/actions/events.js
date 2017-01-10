@@ -7,7 +7,7 @@ import { requestTypes } from '../api/github';
 import { loadSubscriptionDataRequest } from './subscriptions';
 
 import {
-  CLEAR_EVENTS,
+  ARCHIVE_EVENTS,
   MARK_EVENTS_AS_READ,
   MARK_EVENTS_AS_UNREAD,
 } from '../utils/constants/actions';
@@ -35,8 +35,8 @@ export const loadOrgEvents = (org: string, other?: Object) => (
 );
 
 export type ReadEvents = { columnId: string, eventIds: Array<string> };
-export const clearEvents = ({ columnId, eventIds }: ReadEvents, other?: Object) => (
-  action(CLEAR_EVENTS, { columnId, eventIds: Set(eventIds) }, other)
+export const archiveEvents = ({ columnId, eventIds }: ReadEvents, other?: Object) => (
+  action(ARCHIVE_EVENTS, { columnId, eventIds: Set(eventIds) }, other)
 );
 
 export const markEventsAsRead = ({ columnId, eventIds }: ReadEvents, other?: Object) => (

@@ -10,14 +10,14 @@ import NotificationCardContainer from '../../containers/NotificationCardContaine
 import { FullView } from '../cards/__CardComponents';
 import { getDateWithHourAndMinuteText, getOwnerAndRepo } from '../../utils/helpers';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
-import { isArchivedFilter, readNotificationIdsSelector } from '../../selectors';
+import { readNotificationIdsSelector } from '../../selectors';
 import type { ActionCreators, GithubRepo } from '../../utils/types';
 
 const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read'];
 const BUTTONS = {
   CANCEL: 0,
   MARK_NOTIFICATIONS_AS_READ_OR_UNREAD: 1,
-  CLEAR_READ: 2,
+  ARCHIVE_READ: 2,
 };
 
 export default class extends React.PureComponent {
@@ -34,11 +34,7 @@ export default class extends React.PureComponent {
 
   getNotificationIds = () => {
     const { items = List() } = this.props;
-    
-    return items.first() === 'string'
-      ? items
-      : items.map(item => !isArchivedFilter(item) && item.get('id')).filter(Boolean)
-    ;
+    return items.first() === 'string' ? items : items.map(item => item.get('id'));
   }
 
   getReadNotificationIds = () => {
@@ -82,10 +78,10 @@ export default class extends React.PureComponent {
 
         break;
 
-      case BUTTONS.CLEAR_READ:
+      case BUTTONS.ARCHIVE_READ:
         (() => {
           const all = readIds.size === notificationIds.size;
-          actions.clearNotifications({ all, notificationIds: readIds, repoId });
+          actions.archiveNotifications({ all, notificationIds: readIds, repoId });
         })();
         break;
 

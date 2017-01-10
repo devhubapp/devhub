@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import {
-  CLEAR_NOTIFICATIONS,
+  ARCHIVE_NOTIFICATIONS,
   LOAD_NOTIFICATIONS_REQUEST,
   LOAD_NOTIFICATIONS_SUCCESS,
   LOAD_NOTIFICATIONS_FAILURE,
@@ -48,11 +48,11 @@ export const loadNotificationsFailure = (
 );
 
 type NotificationIdsParams = { notificationIds: Array<string> };
-export const clearNotifications = (
+export const archiveNotifications = (
   { notificationIds }: NotificationIdsParams,
   other?: Object,
 ) => (
-  action(CLEAR_NOTIFICATIONS, { notificationIds }, other)
+  action(ARCHIVE_NOTIFICATIONS, { notificationIds }, other)
 );
 
 export const markNotificationsAsRead = (

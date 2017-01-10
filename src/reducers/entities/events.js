@@ -3,9 +3,10 @@
 import { Map } from 'immutable';
 
 import {
-  CLEAR_EVENTS,
+  ARCHIVE_EVENTS,
 } from '../../utils/constants/actions';
 
+import { archiveIds } from './_shared';
 import { arrayOfIdsToMergeableMap } from '../../utils/helpers';
 import type { Action, Normalized } from '../../utils/types';
 
@@ -17,12 +18,8 @@ export default (state: State = initialState, action: Action<any>): State => {
   const { eventIds } = payload || {};
 
   switch (type) {
-    case CLEAR_EVENTS:
-      return state.mergeDeep(arrayOfIdsToMergeableMap(
-        eventIds,
-        Map({ archived_at: new Date() }),
-      ));
-      // return eventIds ? state.filterNot(event => eventIds.includes(event.get('id'))) : state;
+    case ARCHIVE_EVENTS:
+      return archiveIds(state, payload.eventIds);
 
     default:
       return state;

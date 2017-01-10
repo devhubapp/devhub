@@ -22,7 +22,7 @@ export type DELETE_COLUMN = typeof actions.DELETE_COLUMN;
 export type SET_THEME = typeof actions.SET_THEME;
 
 // events
-export type CLEAR_EVENTS = typeof actions.CLEAR_EVENTS;
+export type ARCHIVE_EVENTS = typeof actions.ARCHIVE_EVENTS;
 export type MARK_EVENTS_AS_READ = typeof actions.MARK_EVENTS_AS_READ;
 export type MARK_EVENTS_AS_UNREAD = typeof actions.MARK_EVENTS_AS_UNREAD;
 
@@ -65,7 +65,7 @@ export type ActionType =
   | SET_THEME
 
   // events
-  | CLEAR_EVENTS
+  | ARCHIVE_EVENTS
   | MARK_EVENTS_AS_READ
   | MARK_EVENTS_AS_UNREAD
 
