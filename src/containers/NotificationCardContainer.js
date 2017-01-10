@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 import NotificationCard from '../components/cards/NotificationCard';
 
 import {
-  makeArchivedNotificationSelector,
+  makeIsArchivedNotificationSelector,
   makeDenormalizedNotificationSelector,
-  makeReadNotificationSelector,
+  makeIsReadNotificationSelector,
 } from '../selectors';
 
 import * as actionCreators from '../actions';
@@ -21,18 +21,18 @@ import type {
 } from '../utils/types';
 
 const makeMapStateToProps = () => {
-  const archivedNotificationSelector = makeArchivedNotificationSelector();
   const denormalizedNotificationSelector = makeDenormalizedNotificationSelector();
-  const readNotificationSelector = makeReadNotificationSelector();
+  const isArchivedNotificationSelector = makeIsArchivedNotificationSelector();
+  const isReadNotificationSelector = makeIsReadNotificationSelector();
 
   return (state: State, { notificationOrNotificationId }: { notificationOrNotificationId: string|GithubNotification }) => {
     const notification = Iterable.isIterable(notificationOrNotificationId) ? notificationOrNotificationId : null;
     const notificationId = notification ? `${notification.get('id')}` : notificationOrNotificationId;
 
     return {
-      archived: archivedNotificationSelector(state, { notificationId }),
+      archived: isArchivedNotificationSelector(state, { notificationId }),
       notification: notification || denormalizedNotificationSelector(state, { notificationId }),
-      read: readNotificationSelector(state, { notificationId }),
+      read: isReadNotificationSelector(state, { notificationId }),
     };
   };
 };

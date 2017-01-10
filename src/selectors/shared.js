@@ -37,15 +37,15 @@ export function immutableMemoize(
       !slicedArgs.every(isEqualToLastArg)
     ) {
       const newResult = func(...args);
-      const isArray = Array.isArray(newResult)
-        || newResult instanceof List
-        || newResult instanceof Seq
-        || newResult instanceof Set;
+      // const isArray = Array.isArray(newResult)
+      //   || newResult instanceof List
+      //   || newResult instanceof Seq
+      //   || newResult instanceof Set;
 
       if (
         !(
           shallowEqualityCheck(newResult, lastResult) ||
-          (isArray && deepImmutableEqualityCheck(newResult, lastResult))
+          (/*isArray && */deepImmutableEqualityCheck(newResult, lastResult))
         )
       ) {
         lastResult = newResult;

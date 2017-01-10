@@ -133,11 +133,14 @@ export default class extends React.PureComponent {
     subscriptions: Array<Subscription>,
   };
 
+  // to remember: eventOrEventId cant be an id for merged events
+  // (because merged events are totally different than the on in the state)
+  // so do the check: if(event.get('merged)) ? event : event.get('id')
   renderRow = (event) => (
     <EventCardContainer
       key={`event-card-${event.get('id')}`}
       actions={this.props.actions}
-      eventOrEventId={event.get('merged') ? event : event.get('id')}
+      eventOrEventId={event}
       onlyOneRepository={this.hasOnlyOneRepository()}
     />
   );

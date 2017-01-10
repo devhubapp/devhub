@@ -53,12 +53,12 @@ export const readNotificationIdsSelector = createImmutableSelector(
 
 export const sortNotificationsByDate = (b, a) => (a.get('updated_at') > b.get('updated_at') ? 1 : -1);
 
-export const makeArchivedNotificationSelector = () => createImmutableSelector(
+export const makeIsArchivedNotificationSelector = () => createImmutableSelector(
   notificationSelector,
   isArchivedFilter,
 );
 
-export const makeReadNotificationSelector = () => createImmutableSelector(
+export const makeIsReadNotificationSelector = () => createImmutableSelector(
   notificationIdSelector,
   readNotificationIdsSelector,
   (notificationId, readIds) => readIds.includes(notificationId),
