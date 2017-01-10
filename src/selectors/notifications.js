@@ -102,3 +102,8 @@ export const updatedAtSelector = createImmutableSelector(
   notificationDetailsSelector,
   (notifications) => notifications.get('updatedAt'),
 );
+
+export const errorSelector = createImmutableSelector(
+  notificationDetailsSelector,
+  (notifications) => notifications.get('error'),
+);

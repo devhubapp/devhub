@@ -29,7 +29,7 @@ export default class extends React.PureComponent {
 
     return (
       <EventColumns
-        key="event-columns-container"
+        key="event-columns"
         actions={actions}
         columns={columns}
         {...props}

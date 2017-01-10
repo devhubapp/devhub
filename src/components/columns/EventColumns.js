@@ -26,7 +26,7 @@ export default class extends React.PureComponent {
 
     return (
       <EventColumnContainer
-        key={`event-column-${columnId}`}
+        key={`event-column-container-${columnId}`}
         columnId={columnId}
       />
     );

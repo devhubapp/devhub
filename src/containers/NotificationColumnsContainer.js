@@ -8,8 +8,6 @@ import NotificationColumns from '../components/columns/NotificationColumns';
 
 import {
   denormalizedGroupedNotificationsSelector,
-  isLoadingSelector,
-  updatedAtSelector,
 } from '../selectors';
 
 import * as actionCreators from '../actions';
@@ -18,8 +16,6 @@ import type { ActionCreators, State } from '../utils/types';
 const denormalizedGNSelectorParams = { includeAllGroup: true };
 const mapStateToProps = (state: State) => ({
   columns: denormalizedGroupedNotificationsSelector(state, denormalizedGNSelectorParams),
-  updatedAt: updatedAtSelector(state),
-  loading: isLoadingSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -31,20 +27,16 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     columns: Object,
-    loading: boolean,
-    updatedAt: Date,
   };
 
   render() {
-    const { actions, columns, loading, updatedAt, ...props } = this.props;
+    const { actions, columns, ...props } = this.props;
 
     return (
       <NotificationColumns
-        key="notification-columns-container"
+        key="notification-columns"
         actions={actions}
         columns={columns}
-        loading={loading}
-        updatedAt={updatedAt}
         {...props}
       />
     );

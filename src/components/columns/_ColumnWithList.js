@@ -129,7 +129,7 @@ export default class extends React.PureComponent {
         </ProgressBarContainer>
 
         {
-          errors && errors.map(error => (
+          errors && errors.filter(Boolean).map(error => (
             <StatusMessage key={`error-${error}`} message={error} error />
           ))
         }
