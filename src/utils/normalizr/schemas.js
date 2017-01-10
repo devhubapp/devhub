@@ -56,7 +56,10 @@ export const OrgSchema = new schema.Entity('orgs', {}, {
   processStrategy: obj => pick(obj, ownerFields),
 });
 
-export const PullRequestSchema = new schema.Entity('pullRequests', {}, {
+// ps: saving pull requests together with issues
+// because they are the basically the same in githubs databases
+// and because sometimes an pull request cames as an issue by the api
+export const PullRequestSchema = new schema.Entity('issues', {}, {
   ...defaultOptions,
   idAttribute: issueOrPullRequestIdAttribute,
   processStrategy: obj => pick(obj, [...issueOrPullRequestFields, 'merged_at']),
