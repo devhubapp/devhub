@@ -40,10 +40,15 @@ export function loadTheme(
   return themes[_theme];
 }
 
-export function trimNewLinesAndSpaces(text) {
+export function trimNewLinesAndSpaces(text, maxLength = 100) {
   if (!text || typeof text !== 'string') return '';
 
-  return text.replace(/\s+/g, ' ').trim();
+  let newText = text.replace(/\s+/g, ' ').trim();
+  if (maxLength > 0 && newText.length > maxLength) {
+    newText = newText.substr(0, maxLength).trim() + '...';
+  }
+
+  return newText;
 }
 
 // export function getDateFromNowText(date) {

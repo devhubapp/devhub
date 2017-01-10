@@ -28,7 +28,7 @@ export default class extends React.PureComponent {
   render() {
     const { user, body: _body, narrow, numberOfLines = 4, seen, url, ...props } = this.props;
 
-    const body = trimNewLinesAndSpaces(_body);
+    const body = trimNewLinesAndSpaces(_body, 400);
     if (!body) return null;
 
     return (
