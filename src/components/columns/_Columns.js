@@ -4,8 +4,8 @@ import React from 'react';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
 import withOrientation from '../../hoc/withOrientation';
-import { List, Map } from 'immutable';
 import { Platform } from 'react-native';
+import { List } from 'immutable';
 
 import NewColumn from './NewColumn';
 import { getFullWidth, getWidth } from './_Column';
@@ -63,7 +63,7 @@ export default class extends React.PureComponent {
 
   render() {
     const {
-      columns: _columns,
+      columns = List(),
       renderRow: mainRenderRow,
       width: _width,
       ...props
@@ -71,16 +71,6 @@ export default class extends React.PureComponent {
 
     const width = _width || getWidth();
     const initialListSize = Math.max(1, Math.ceil(getFullWidth() / width));
-
-    let columns = _columns ? _columns.toList() : List();
-
-    // if (columns.first().get('id') !== 'new') {
-    //   columns = columns.insert(0, Map({ id: 'new', order: 0 }));
-    // }
-
-    if (columns.size === 0 || columns.last().get('id') !== 'new') {
-      columns = columns.push(Map({ id: 'new', order: columns.size }));
-    }
 
     return (
       <StyledImmutableListViewListView
