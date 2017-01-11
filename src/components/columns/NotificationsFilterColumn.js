@@ -10,7 +10,7 @@ import { contentPadding } from '../../styles/variables';
 import type { ActionCreators } from '../../utils/types';
 
 export const Section = styled.View`
-  height: ${({ hide }) => (hide ? 0 : 1)};
+  height: 1;
   background-color: ${({ theme }) => theme.base01};
 `;
 
@@ -82,13 +82,18 @@ export default class extends React.PureComponent {
   isSectionEmpty = (sectionData) => !(
     sectionData && sectionData.toList().reduce(
       (sectionHasItems, item) => sectionHasItems || this.totalItemNotifications(item),
-      false
+      false,
     )
+  );
+
+  sectionHeaderHasChanged = (prevSectionData, nextSectionData) => (
+    prevSectionData !== nextSectionData
   );
 
   makeRenderSectionHeader = (firstSectionId) => (sectionData, sectionId) => (
     sectionData && sectionData.size > 0 &&
-    <Section hide={sectionId === firstSectionId || this.isSectionEmpty(sectionData)} />
+    !(sectionId === firstSectionId || this.isSectionEmpty(sectionData)) &&
+    <Section />
   );
 
   renderRow = (item, sectionId, rowId) => {
@@ -137,6 +142,7 @@ export default class extends React.PureComponent {
           items={items}
           renderRow={this.renderRow}
           renderSectionHeader={this.makeRenderSectionHeader(items.keySeq().first())}
+          sectionHeaderHasChanged={this.sectionHeaderHasChanged}
           {...props}
         />
       </FullView>

@@ -89,6 +89,7 @@ export default class extends React.PureComponent {
     renderSectionHeader?: Function,
     style?: ?Object,
     readIds: Array<string>,
+    sectionHeaderHasChanged?: Function,
     subscriptions: Array<Subscription>,
     theme: ThemeObject,
     title: string,
@@ -104,6 +105,7 @@ export default class extends React.PureComponent {
       refreshText,
       renderRow,
       renderSectionHeader,
+      sectionHeaderHasChanged,
       theme,
       ...props
     } = this.props;
@@ -131,6 +133,7 @@ export default class extends React.PureComponent {
                 progressBackgroundColor={theme.base02}
               />
             }
+            sectionHeaderHasChanged={sectionHeaderHasChanged}
             contentContainerStyle={{ overflow: 'hidden' }}
             removeClippedSubviews
           />
