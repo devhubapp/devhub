@@ -7,7 +7,10 @@ import { Dimensions, Platform } from 'react-native';
 import { contentPadding, radius as defaultRadius } from '../../styles/variables';
 
 export const columnMargin = 2;
-export const columnPreviewWidth = Platform.OS === 'ios' ? contentPadding : 0; // because android does not support overflow visible
+
+// because android does not support overflow visible (RN < 0.41)
+export const columnPreviewWidth = Platform.OS === 'ios' ? contentPadding : 0;
+
 export const maxWidth = Platform.OS === 'android' ? 800 : 680;
 export const getFullWidth = () => Dimensions.get('window').width;
 export const getWidth = () => Math.min(getFullWidth() - (2 * columnPreviewWidth), maxWidth);

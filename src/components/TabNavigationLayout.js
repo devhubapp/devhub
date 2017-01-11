@@ -74,17 +74,14 @@ export default class extends React.PureComponent {
           {/*<StackNavigation initialRoute="empty"/>*/}
         {/*</TabNavigationItem>*/}
 
-        {
-          Platform.OS !== 'ios' ? <TabNavigationItem /> :
-          <TabNavigationItem
-            id="notifications"
-            renderIcon={isSelected => (
-              renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
-            )}
-          >
-            <StackNavigation initialRoute="notifications" />
-          </TabNavigationItem>
-        }
+        <TabNavigationItem
+          id="notifications"
+          renderIcon={isSelected => (
+            renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
+          )}
+        >
+          <StackNavigation initialRoute="notifications" />
+        </TabNavigationItem>
 
         <TabNavigationItem
           id="settings"

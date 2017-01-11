@@ -4190,9 +4190,9 @@ react-native-linear-gradient@^1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-1.6.2.tgz#1ea3e7a186b514661b927673aa9c427dd520999f"
 
-react-native-oauth@^2.1.7:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/react-native-oauth/-/react-native-oauth-2.1.8.tgz#6041e4316b6aa97928f15238093ac461cb7a7f37"
+"react-native-oauth@https://github.com/fullstackreact/react-native-oauth":
+  version "2.1.9"
+  resolved "https://github.com/fullstackreact/react-native-oauth#291d2bf795bfdfce0420ab4c5389052702b7c2fc"
   dependencies:
     invariant "^2.2.1"
     valib "^2.0.0"

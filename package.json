@@ -29,7 +29,7 @@
     "react-native-fabric": "^0.3.2",
     "react-native-immutable-list-view": "^0.2.2",
     "react-native-linear-gradient": "^1.6.2",
-    "react-native-oauth": "^2.1.7",
+    "react-native-oauth": "https://github.com/fullstackreact/react-native-oauth",
     "react-native-orientation-listener": "^0.0.4",
     "react-native-prompt-android": "^0.0.5",
     "react-native-vector-icons": "^3.0.0",

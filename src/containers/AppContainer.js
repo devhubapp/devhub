@@ -36,8 +36,7 @@ export default class extends React.PureComponent {
   handleIsLoggedStatus = (props) => {
     const { isLogged, navigation, rehydrated } = props || this.props;
 
-    // TODO: Fix GitHub login on Android
-    if (!rehydrated || Platform.OS !== 'ios') return;
+    if (!rehydrated) return;
 
     try {
       const navigator = navigation.getNavigator('root');
@@ -68,9 +67,6 @@ export default class extends React.PureComponent {
   render() {
     const { theme } = this.props;
 
-    // TODO: Fix GitHub login on Android
-    const initialRoute = Platform.OS !== 'ios' ? 'main' : 'splash';
-
     return (
       <ThemeProvider theme={theme}>
         <View>
@@ -79,7 +75,7 @@ export default class extends React.PureComponent {
             barStyle={theme.isDark ? 'light-content' : 'dark-content'}
           />
 
-          <StackNavigation id="root" initialRoute={initialRoute} />
+          <StackNavigation id="root" initialRoute="splash" />
         </View>
       </ThemeProvider>
     );
