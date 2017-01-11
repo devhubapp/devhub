@@ -104,8 +104,14 @@ export default class extends React.PureComponent {
         </ItemTitleWrapper>
 
         <CounterWrapper>
-          <UnreadCount>{item.get('unread') || 0}</UnreadCount>
-          <TotalCount> / {this.totalItemNotifications(item)}</TotalCount>
+          {item.get('unread') >= 0 && <UnreadCount>{item.get('unread')}</UnreadCount>}
+          {
+            item.get('read') >= 0 &&
+            <TotalCount>
+              {item.get('unread') >= 0 && ' / '}
+              {this.totalItemNotifications(item)}
+            </TotalCount>
+          }
         </CounterWrapper>
       </ItemWrapper>
     );

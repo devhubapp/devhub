@@ -3,8 +3,9 @@
 
 import moment from 'moment';
 import { max } from 'lodash';
-import { fromJS, List, Map, OrderedMap } from 'immutable';
+import { fromJS, List, Map } from 'immutable';
 
+import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared';
 import * as baseTheme from '../../../styles/themes/base';
 
 import type {

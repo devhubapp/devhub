@@ -6,14 +6,13 @@ import { connect } from 'react-redux';
 import NotificationsFilterColumn from '../components/columns/NotificationsFilterColumn';
 
 import {
-  denormalizedOrderedNotificationsSelector,
+  filterColumnDataSelector,
 } from '../selectors';
 
-import { notificationsToFilterColumnData } from '../utils/helpers';
 import type { State } from '../utils/types';
 
 const makeMapStateToProps = (state: State) => ({
-  items: notificationsToFilterColumnData(denormalizedOrderedNotificationsSelector(state)),
+  items: filterColumnDataSelector(state),
 });
 
 @connect(makeMapStateToProps)
@@ -28,7 +27,7 @@ export default class extends React.PureComponent {
 
     return (
       <NotificationsFilterColumn
-        key={`notifications-filter-column}`}
+        key={`notifications-filter-column`}
         column={column}
         items={items}
         {...props}

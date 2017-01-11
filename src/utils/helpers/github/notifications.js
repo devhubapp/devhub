@@ -160,12 +160,14 @@ export const defaultFilterColumnsData = OrderedMap({
     read: {
       icon: 'mail',
       title: 'Read',
-      ...defaultFilterColumnsCounters,
+      read: 0,
+      // no unread field here
     },
     unread: {
       icon: 'mail-read',
       title: 'Unread',
-      ...defaultFilterColumnsCounters,
+      unread: 0,
+      // no read field here
     },
   })),
   subjectTypes: OrderedMap(fromJS({
