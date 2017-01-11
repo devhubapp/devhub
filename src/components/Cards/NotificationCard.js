@@ -57,7 +57,8 @@ export default class extends React.PureComponent {
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const notificationIds = Set([notification.get('id')]);
     const title = trimNewLinesAndSpaces(subject.get('title'));
-    const { label, color } = getNotificationReasonTextsAndColor(notification);
+    const { label: _label, color } = getNotificationReasonTextsAndColor(notification);
+    const label = _label.toLowerCase();
 
     const subjectType = (subject.get('type') || '').toLowerCase();
     const commit = (subjectType === 'commit' && subject) || null;

@@ -5,7 +5,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
 import { List, Set } from 'immutable';
 
-import Column, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
+import ColumnWithList, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
 import { FullView } from '../cards/__CardComponents';
 import { getDateWithHourAndMinuteText, getOwnerAndRepo } from '../../utils/helpers';
@@ -150,7 +150,7 @@ export default class extends React.PureComponent {
 
     return (
       <FullView style={style}>
-        <Column
+        <ColumnWithList
           errors={errors}
           headerRight={
             <HeaderButtonsContainer>

@@ -38,7 +38,7 @@ export default class extends React.PureComponent {
   render() {
     const { actions: { clearAppData, logout, setTheme }, theme } = this.props;
 
-    const color = Platform.OS === 'android' ? theme.base08 : theme.base04;
+    const color = Platform.OS === 'android' ? theme.base07 : theme.base04;
 
     return (
       <Screen>

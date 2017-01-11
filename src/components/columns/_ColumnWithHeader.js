@@ -2,24 +2,16 @@
 
 import React from 'react';
 import Icon from 'react-native-vector-icons/Octicons';
-import styled, { withTheme } from 'styled-components/native';
-import ImmutableListView from 'react-native-immutable-list-view';
-import { RefreshControl } from 'react-native';
+import styled from 'styled-components/native';
 
-import ColumnWithHeader, { getRadius, getWidth } from './_ColumnWithHeader';
+import Column, { getRadius, getWidth } from './_Column';
 import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
-import TransparentTextOverlay from '../TransparentTextOverlay';
 import { iconRightMargin } from '../cards/__CardComponents';
 import { contentPadding } from '../../styles/variables';
 import type { Subscription, ThemeObject } from '../../utils/types';
 
-export * from './_ColumnWithHeader';
-
-export const StyledTextOverlay = styled(TransparentTextOverlay) `
-  flex: 1;
-  border-radius: ${({ radius }) => radius || 0};
-`;
+export * from './_Column';
 
 export const HeaderButtonsContainer = styled.View`
   flex-direction: row;
@@ -31,7 +23,7 @@ export const TitleWrapper = styled.View`
   flex-direction: row;
 `;
 
-const headerFontSize = 18;
+export const headerFontSize = 18;
 export const Title = styled.Text`
   padding: ${contentPadding};
   padding-top: ${contentPadding + 4};
@@ -68,25 +60,17 @@ export const ProgressBarContainer = styled.View`
   background-color: ${({ theme }) => theme.base01};
 `;
 
-export const StyledImmutableListView = styled(ImmutableListView)`
-  flex: 1;
-  overflow: hidden;
-`;
-
-@withTheme
 export default class extends React.PureComponent {
   props: {
     errors?: ?Array<string>,
     headerRight?: React.Element,
     icon: string,
-    initialListSize?: number,
     items: Array<Object>,
     loading?: boolean,
     radius?: number,
     refreshFn?: Function,
     refreshText?: string,
     renderRow: Function,
-    renderSectionHeader?: Function,
     style?: ?Object,
     readIds: Array<string>,
     subscriptions: Array<Subscription>,
@@ -97,45 +81,54 @@ export default class extends React.PureComponent {
 
   render() {
     const {
-      initialListSize,
+      children,
+      errors,
+      headerRight,
+      icon,
       items,
       loading,
+      renderRow,
       refreshFn,
       refreshText,
-      renderRow,
-      renderSectionHeader,
       theme,
+      title,
+      width,
       ...props
     } = this.props;
 
     const _radius = getRadius(props);
 
     return (
-      <ColumnWithHeader {...this.props}>
-        <StyledTextOverlay color={theme.base02} size={contentPadding} from="vertical" radius={_radius}>
-          <StyledImmutableListView
-            immutableData={items}
-            initialListSize={initialListSize || 5}
-            rowsDuringInteraction={initialListSize || 5}
-            renderRow={renderRow}
-            renderSectionHeader={renderSectionHeader}
-            refreshControl={
-              refreshFn &&
-              <RefreshControl
-                refreshing={false}
-                onRefresh={refreshFn}
-                colors={[loading ? 'transparent' : theme.base07]}
-                tintColor={loading ? 'transparent' : theme.base07}
-                title={(refreshText || ' ').toLowerCase()}
-                titleColor={theme.base05}
-                progressBackgroundColor={theme.base02}
-              />
-            }
-            contentContainerStyle={{ overflow: 'hidden' }}
-            removeClippedSubviews
-          />
-        </StyledTextOverlay>
-      </ColumnWithHeader>
+      <Column {...this.props}>
+        <FixedHeader>
+          <TitleWrapper>
+            <Title numberOfLines={1} style={{ maxWidth: 280 }}>
+              <TitleIcon name={icon} />&nbsp;{title}
+            </Title>
+          </TitleWrapper>
+
+          {headerRight}
+        </FixedHeader>
+
+        <ProgressBarContainer>
+          {
+            loading &&
+            <ProgressBar
+              width={width || getWidth()}
+              height={1}
+              indeterminate
+            />
+          }
+        </ProgressBarContainer>
+
+        {
+          errors && errors.filter(Boolean).map(error => (
+            <StatusMessage key={`error-${error}`} message={error} error />
+          ))
+        }
+
+        {children}
+      </Column>
     );
   }
 }

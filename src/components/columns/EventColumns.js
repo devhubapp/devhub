@@ -33,7 +33,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { columns: _columns, ...props } = this.props;
+    const { actions, columns: _columns, ...props } = this.props;
 
     let columns = _columns ? _columns.toList() : List();
 
@@ -44,6 +44,7 @@ export default class extends React.PureComponent {
     return (
       <Columns
         key="event-columns"
+        actions={actions}
         addColumnFn={this.addColumnFn}
         columns={columns}
         renderRow={this.renderRow}

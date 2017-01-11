@@ -117,7 +117,7 @@ export default class ProgressBar extends Component {
       ...restProps
     } = this.props;
 
-    const color = _color || theme.base08 || 'rgba(0, 122, 255, 1)';
+    const color = _color || theme.base07 || 'rgba(0, 122, 255, 1)';
 
     const innerWidth = width - (borderWidth * 2);
     const containerStyle = {

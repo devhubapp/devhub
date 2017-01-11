@@ -10,13 +10,13 @@ import {
   makeColumnReadIdsSelector,
 } from '../../selectors';
 
-import Column, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
+import ColumnWithList, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
 import EventCardContainer from '../../containers/EventCardContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
 import { FullView } from '../cards/__CardComponents';
 import { getRequestTypeIcon, requestTypes } from '../../api/github';
 import { getDateWithHourAndMinuteText } from '../../utils/helpers';
-import type { ActionCreators, Column as ColumnType, Subscription } from '../../utils/types';
+import type { ActionCreators, ColumnWithList as ColumnType, Subscription } from '../../utils/types';
 
 const buttons = ['Cancel', 'Create a column here', 'Mark all as read / unread', 'Clear read', 'Delete column'];
 const BUTTONS = {
@@ -167,7 +167,7 @@ export default class extends React.PureComponent {
 
     return (
       <FullView style={style}>
-        <Column
+        <ColumnWithList
           errors={errors}
           headerRight={
             <HeaderButtonsContainer>
