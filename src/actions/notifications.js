@@ -55,16 +55,22 @@ export const archiveNotifications = (
   action(ARCHIVE_NOTIFICATIONS, { notificationIds }, other)
 );
 
+export type MarkNotificationsParams = {
+  notificationIds: Array<string>,
+  all?: boolean,
+  repoId?: string,
+};
+
 export const markNotificationsAsRead = (
-  { notificationIds }: NotificationIdsParams,
+  { all, lastReadAt = new Date(), notificationIds, repoId }: MarkNotificationsParams,
   other?: Object,
 ) => (
-  action(MARK_NOTIFICATIONS_AS_READ, { notificationIds }, other)
+  action(MARK_NOTIFICATIONS_AS_READ, { all, lastReadAt, notificationIds, repoId }, other)
 );
 
 export const markNotificationsAsUnread = (
-  { notificationIds }: NotificationIdsParams,
+  { all, lastUnreadAt = new Date(), notificationIds, repoId }: MarkNotificationsParams,
   other?: Object,
 ) => (
-  action(MARK_NOTIFICATIONS_AS_UNREAD, { notificationIds }, other)
+  action(MARK_NOTIFICATIONS_AS_UNREAD, { all, lastUnreadAt, notificationIds, repoId }, other)
 );

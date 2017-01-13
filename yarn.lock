@@ -1016,8 +1016,8 @@ babel-types@^6.15.0, babel-types@^6.16.0, babel-types@^6.18.0, babel-types@^6.19
     to-fast-properties "^1.0.1"
 
 babylon@^6.11.0, babylon@^6.13.0, babylon@^6.14.1:
-  version "6.14.1"
-  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.14.1.tgz#956275fab72753ad9b3435d7afe58f8bf0a29815"
+  version "6.15.0"
+  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.15.0.tgz#ba65cfa1a80e1759b0e89fb562e27dccae70348e"
 
 balanced-match@^0.4.1:
   version "0.4.2"
@@ -1166,7 +1166,7 @@ buffer-shims@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/buffer-shims/-/buffer-shims-1.0.0.tgz#9978ce317388c649ad8793028c3477ef044a8b51"
 
-buffer@^5.0.0:
+buffer@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.0.2.tgz#41d0407ff76782e9ec19f52f88e237ce6bb0de6d"
   dependencies:
@@ -1174,8 +1174,8 @@ buffer@^5.0.0:
     ieee754 "^1.1.4"
 
 bugsnag-react-native@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.2.2.tgz#d6eda8814e0616c20c8b19e8eecb841d112478c4"
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.2.3.tgz#d5ec49995c1347b059ffc364dca92a0ef388abc9"
   dependencies:
     promise "^7"
 
@@ -2135,7 +2135,7 @@ faye-websocket@0.9.3:
 
 fb-watchman@^1.8.0, fb-watchman@^1.9.0:
   version "1.9.0"
-  resolved "https://registry.yarnpkg.com/fb-watchman/-/fb-watchman-1.9.0.tgz#6f268f1f347a6b3c875d1e89da7e1ed79adfc0ec"
+  resolved "http://registry.npmjs.org/fb-watchman/-/fb-watchman-1.9.0.tgz#6f268f1f347a6b3c875d1e89da7e1ed79adfc0ec"
   dependencies:
     bser "^1.0.2"
 
@@ -2158,7 +2158,7 @@ fbjs-scripts@^0.7.0:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@^0.8.3, fbjs@^0.8.4, fbjs@^0.8.5, fbjs@^0.8.8:
+fbjs@^0.8.3, fbjs@^0.8.4, fbjs@^0.8.5, fbjs@^0.8.7, fbjs@^0.8.8:
   version "0.8.8"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.8.tgz#02f1b6e0ea0d46c24e0b51a2d24df069563a5ad6"
   dependencies:
@@ -2232,8 +2232,8 @@ find-up@^1.0.0, find-up@^1.1.2:
     pinkie-promise "^2.0.0"
 
 firebase@^3.6.4:
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/firebase/-/firebase-3.6.4.tgz#5c5b91d20f439b6f0a7aebe1b27c2db1a463e308"
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-3.6.5.tgz#e321da57c9c5b66e436432a3e15f1cf6d3b2f9a9"
   dependencies:
     dom-storage "2.0.2"
     faye-websocket "0.9.3"
@@ -2257,6 +2257,10 @@ fleximap@0.9.x:
 flow-bin@^0.35.0:
   version "0.35.0"
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.35.0.tgz#63d4eb9582ce352541be98e6a424503217141b07"
+
+flow-runtime@0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/flow-runtime/-/flow-runtime-0.0.6.tgz#570aeab33dca9d2357d137c0b0a2e141b7342410"
 
 follow-redirects@^1.1.0:
   version "1.2.1"
@@ -2365,9 +2369,10 @@ getport@^0.1.0:
   resolved "https://registry.yarnpkg.com/getport/-/getport-0.1.0.tgz#abddf3d5d1e77dd967ccfa2b036a0a1fb26fd7f7"
 
 "github@https://github.com/brunolemos/react-native-github-api":
-  version "7.0.0"
-  resolved "https://github.com/brunolemos/react-native-github-api#c06522e889d46499c2c6ef00b48a93f3b818b6f5"
+  version "8.0.0"
+  resolved "https://github.com/brunolemos/react-native-github-api#2068c68ce3eb17c3f754ffa557efa6100ec4f964"
   dependencies:
+    buffer "^5.0.2"
     https-proxy-agent "^1.0.0"
     mime-types "^2.1.13"
   optionalDependencies:
@@ -2377,7 +2382,7 @@ getport@^0.1.0:
     url "^0.11.0"
     whatwg-fetch "^2.0.1"
 
-glamor@^2.15.5:
+glamor@^2.20.12:
   version "2.20.20"
   resolved "https://registry.yarnpkg.com/glamor/-/glamor-2.20.20.tgz#546cb86bfae760b0fd5c019ba859007d08e6238f"
   dependencies:
@@ -2831,7 +2836,7 @@ is-plain-object@^2.0.1:
 
 is-posix-bracket@^0.1.0:
   version "0.1.1"
-  resolved "https://registry.yarnpkg.com/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
+  resolved "http://registry.npmjs.org/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
 
 is-primitive@^2.0.0:
   version "2.0.0"
@@ -3810,8 +3815,8 @@ normalize-path@^2.0.1:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-2.0.1.tgz#47886ac1662760d4261b7d979d241709d3ce3f7a"
 
 normalizr@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.0.2.tgz#ac51ab65af807e9022b9f16a767fb1449c0dae6a"
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.1.0.tgz#5a1eaa334d91b88d2bf7f3c33559e4ed16a56370"
 
 npmlog@^2.0.4:
   version "2.0.4"
@@ -4191,8 +4196,8 @@ react-native-linear-gradient@^1.6.2:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-1.6.2.tgz#1ea3e7a186b514661b927673aa9c427dd520999f"
 
 react-native-oauth@^2.1.7:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/react-native-oauth/-/react-native-oauth-2.1.8.tgz#6041e4316b6aa97928f15238093ac461cb7a7f37"
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/react-native-oauth/-/react-native-oauth-2.1.10.tgz#8babcaffdeaaf1a0e5c998cbdf5e0291d069290b"
   dependencies:
     invariant "^2.2.1"
     valib "^2.0.0"
@@ -4312,8 +4317,8 @@ react-redux@^4.4.5:
     loose-envify "^1.1.0"
 
 react-redux@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.1.tgz#84a41bd4cdd180452bb6922bc79ad25bd5abb7c4"
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.2.tgz#3d9878f5f71c6fafcd45de1fbb162ea31f389814"
   dependencies:
     hoist-non-react-statics "^1.0.3"
     invariant "^2.0.0"
@@ -4323,7 +4328,7 @@ react-redux@^5.0.1:
 
 react-static-container@^1.0.0:
   version "1.0.1"
-  resolved "http://registry.npmjs.org/react-static-container/-/react-static-container-1.0.1.tgz#694c0dd68a896b879519afb548399cc1989c9ab0"
+  resolved "https://registry.yarnpkg.com/react-static-container/-/react-static-container-1.0.1.tgz#694c0dd68a896b879519afb548399cc1989c9ab0"
 
 react-test-renderer@^15.4.1:
   version "15.4.2"
@@ -4423,9 +4428,10 @@ redux-devtools-instrument@^1.3.3:
     symbol-observable "^1.0.2"
 
 redux-immutable@^3.0.9:
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/redux-immutable/-/redux-immutable-3.0.9.tgz#b14f8ddc5cc390c46439e287e053336398881c58"
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/redux-immutable/-/redux-immutable-3.0.10.tgz#160c9ebfe59cf3f2fd4ee9baf0017cd56fe54649"
   dependencies:
+    flow-runtime "0.0.6"
     immutable "^3.8.1"
 
 redux-persist-immutable@^4.1.0:
@@ -4486,7 +4492,7 @@ regenerator-transform@0.9.8:
 
 regex-cache@^0.4.2:
   version "0.4.3"
-  resolved "http://registry.npmjs.org/regex-cache/-/regex-cache-0.4.3.tgz#9b1a6c35d4d0dfcef5711ae651e8e9d3d7114145"
+  resolved "https://registry.yarnpkg.com/regex-cache/-/regex-cache-0.4.3.tgz#9b1a6c35d4d0dfcef5711ae651e8e9d3d7114145"
   dependencies:
     is-equal-shallow "^0.1.3"
     is-primitive "^2.0.0"
@@ -4936,25 +4942,25 @@ socketcluster-client@^5.1.1:
     ws "1.1.1"
 
 socketcluster-server@5.x.x:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/socketcluster-server/-/socketcluster-server-5.4.0.tgz#0d6e37a527e15f74cb114c4322bac7bbdc14e991"
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/socketcluster-server/-/socketcluster-server-5.4.1.tgz#b58726364a1404d9f2fad50c0cd43152e1d96053"
   dependencies:
     async "2.0.0"
     base64id "0.1.0"
     lodash.defaults "4.2.0"
-    node-uuid "1.4.7"
     sc-auth "3.0.x"
     sc-domain "1.x.x"
     sc-emitter "1.1.x"
     sc-errors "1.0.x"
     sc-formatter "3.0.x"
     sc-simple-broker "1.2.x"
+    uuid "3.0.1"
     uws "0.12.0"
     ws "1.1.1"
 
 socketcluster@^5.0.4:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/socketcluster/-/socketcluster-5.2.0.tgz#42f45ec74dee907680be3ed680e910ee1d8504a6"
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/socketcluster/-/socketcluster-5.2.1.tgz#87ab5db763ab7fd3246d1dc612e91468e2c75dfe"
   dependencies:
     async "2.0.0"
     base64id "0.1.0"
@@ -5110,13 +5116,13 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
 styled-components@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-1.2.1.tgz#5884267dd9c6a8199d4abd3e0714afb973772b42"
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-1.3.0.tgz#0711b5a82fe784b458fd6e5054b842751c543a6b"
   dependencies:
-    buffer "^5.0.0"
+    buffer "^5.0.2"
     css-to-react-native "^1.0.6"
-    fbjs "^0.8.4"
-    glamor "^2.15.5"
+    fbjs "^0.8.7"
+    glamor "^2.20.12"
     inline-style-prefixer "^2.0.5"
     is-function "^1.0.1"
     is-plain-object "^2.0.1"
@@ -5433,8 +5439,8 @@ whatwg-fetch@^1.0.0:
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-1.1.1.tgz#ac3c9d39f320c6dce5339969d054ef43dd333319"
 
 whatwg-url@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-4.2.0.tgz#abf1a3f5ff4bc2005b3f0c2119382631789d8e44"
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-4.3.0.tgz#92aaee21f4f2a642074357d70ef8500a7cbb171a"
   dependencies:
     tr46 "~0.0.3"
     webidl-conversions "^3.0.0"

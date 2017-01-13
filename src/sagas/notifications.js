@@ -6,11 +6,27 @@ import { delay } from 'redux-saga';
 import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
-import { dateToHeaderFormat } from '../utils/helpers';
+import { dateToHeaderFormat, getOwnerAndRepo } from '../utils/helpers';
 import { NotificationSchema } from '../utils/normalizr/schemas';
-import { accessTokenSelector, isLoggedSelector, lastModifiedAtSelector } from '../selectors';
 
-import { LOAD_NOTIFICATIONS_REQUEST, UPDATE_NOTIFICATIONS, LOGIN_SUCCESS, LOGOUT } from '../utils/constants/actions';
+import {
+  accessTokenSelector,
+  isLoggedSelector,
+  lastModifiedAtSelector,
+  repoSelector,
+} from '../selectors';
+
+import { authenticate, getApiMethod, requestTypes } from '../api/github';
+
+import {
+  LOAD_NOTIFICATIONS_REQUEST,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  MARK_NOTIFICATIONS_AS_READ,
+  UPDATE_NOTIFICATIONS,
+} from '../utils/constants/actions';
+
+import type { MarkNotificationsParams } from '../actions/notifications';
 
 import type { Action, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
 
@@ -21,8 +37,6 @@ import {
   updateNotifications,
 } from '../actions';
 
-import { authenticate, getApiMethod } from '../api/github';
-
 const sagaActionChunk = { dispatchedBySaga: true };
 
 function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
@@ -30,8 +44,6 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
   const accessToken = accessTokenSelector(state);
 
   yield call(authenticate, accessToken);
-
-  // just to have the token on success/failure actions
   const requestPayload = { ...payload, accessToken };
 
   try {
@@ -61,9 +73,65 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
 
     yield put(loadNotificationsSuccess(requestPayload, finalData, meta, sagaActionChunk));
   } catch (e) {
-    console.log('onLoadNotificationsRequest catch', e);
+    console.log('onLoadNotificationsRequest catch', e, requestPayload);
     const errorMessage = (e.message || {}).message || e.message || e.body || e.status;
     yield put(loadNotificationsFailure(requestPayload, errorMessage, sagaActionChunk));
+  }
+}
+
+function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotificationsParams>) {
+  const state = yield select();
+  const accessToken = accessTokenSelector(state);
+
+  yield call(authenticate, accessToken);
+  const requestPayload = { ...payload, accessToken };
+
+  try {
+    if (!accessToken) {
+      throw new Error('You must be logged mark notifications are read', 'NotAuthorizedException');
+    }
+
+    const { all, lastReadAt: _lastReadAt, notificationIds, repoId } = payload;
+    const lastReadAt = moment(_lastReadAt || new Date()).utc().format();
+
+    // let callMethods;
+    let params;
+    let requestType;
+
+    if (all) {
+      if (repoId) {
+        const repoEntity = repoSelector(state, { repoId });
+        if (!repoEntity) return;
+
+        const { owner, repo } = getOwnerAndRepo(repoEntity.get('full_name'));
+
+        requestType = requestTypes.MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO;
+        params = { owner, repo, last_read_at: lastReadAt };
+      } else {
+        requestType = requestTypes.MARK_ALL_NOTIFICATIONS_AS_READ;
+        params = { last_read_at: lastReadAt };
+      }
+    } else {
+      requestType = requestTypes.MARK_NOTIFICATION_THREAD_AS_READ;
+
+       // TODO: Improve this. Call for all notifications.
+       // Not important yet because of the way this is triggered
+       // (by toggling one notification each time)
+      params = { id: notificationIds.first(), last_read_at: lastReadAt };
+    }
+
+    const { response, timeout } = yield race({
+      response: call(getApiMethod(requestType), params),
+      timeout: call(delay, 10000),
+    });
+
+    if (timeout) {
+      throw new Error('Timeout', 'TimeoutError');
+    }
+
+    console.log('onMarkNotificationsAsReadRequest response', response);
+  } catch (e) {
+    console.log('onMarkNotificationsAsReadRequest catch', e, requestPayload);
   }
 }
 
@@ -89,7 +157,7 @@ export function* getParamsToLoadOnlyNewNotifications() {
   };
 }
 
-function* onUpdateNotificationsRequest({ payload: { params: _params }}) {
+function* onUpdateNotificationsRequest({ payload: { params: _params } }) {
   const params = _params || (yield getParamsToLoadOnlyNewNotifications());
   yield put(loadNotificationsRequest(params, sagaActionChunk));
 }
@@ -129,6 +197,7 @@ export default function* () {
   return yield [
     yield takeLatest(UPDATE_NOTIFICATIONS, onUpdateNotificationsRequest),
     yield takeEvery(LOAD_NOTIFICATIONS_REQUEST, onLoadNotificationsRequest),
+    yield takeEvery(MARK_NOTIFICATIONS_AS_READ, onMarkNotificationsAsReadRequest),
     yield fork(startTimer),
   ];
 }

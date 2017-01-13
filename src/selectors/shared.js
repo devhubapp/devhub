@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
-import { is, Iterable, List, Seq, Set } from 'immutable';
+import { is, Iterable, List } from 'immutable';
 import { createSelectorCreator } from 'reselect';
 
 export const stateSelector = state => state;
@@ -72,9 +72,9 @@ export const createImmutableSelector = createImmutableSelectorCreator();
 export function isArchivedFilter(obj) {
   if (!obj) return false;
 
-  // if any update ocurres after it was archived, it is consided unarchived
   return obj.get('archived_at') &&
     !(
+      // if any update ocurres after it was archived, it is consided unarchived
       obj.get('updated_at') &&
       moment(obj.get('updated_at')).isAfter(obj.get('archived_at'))
     )
@@ -84,21 +84,11 @@ export function isArchivedFilter(obj) {
 export function isReadFilter(obj) {
   if (!obj) return false;
 
-  // if any update ocurres after it was read, it is consided unread
-  // also, it preserves the latest state between last_read_at and last_unread_at
   return obj.get('last_read_at') &&
     !(
-      (
-        obj.get('updated_at') &&
-        moment(obj.get('updated_at')).isAfter(obj.get('last_read_at'))
-      )
-
-      ||
-
-      (
-        obj.get('last_unread_at') &&
-        moment(obj.get('last_unread_at')).isAfter(obj.get('last_read_at'))
-      )
+      // preserves the latest state between last_read_at and last_unread_at
+      obj.get('last_unread_at') &&
+      moment(obj.get('last_unread_at')).isAfter(obj.get('last_read_at'))
     )
   ;
 }
