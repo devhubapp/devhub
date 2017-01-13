@@ -6,7 +6,9 @@ import {
   LOAD_NOTIFICATIONS_REQUEST,
   LOAD_NOTIFICATIONS_SUCCESS,
   LOAD_NOTIFICATIONS_FAILURE,
-  MARK_NOTIFICATIONS_AS_READ,
+  MARK_NOTIFICATIONS_AS_READ_REQUEST,
+  MARK_NOTIFICATIONS_AS_READ_FAILURE,
+  MARK_NOTIFICATIONS_AS_READ_SUCCESS,
   MARK_NOTIFICATIONS_AS_UNREAD,
   UPDATE_NOTIFICATIONS,
 } from '../utils/constants/actions';
@@ -61,11 +63,28 @@ export type MarkNotificationsParams = {
   repoId?: string,
 };
 
-export const markNotificationsAsRead = (
+export const markNotificationsAsReadRequest = (
   { all, lastReadAt = new Date(), notificationIds, repoId }: MarkNotificationsParams,
   other?: Object,
 ) => (
-  action(MARK_NOTIFICATIONS_AS_READ, { all, lastReadAt, notificationIds, repoId }, other)
+  action(MARK_NOTIFICATIONS_AS_READ_REQUEST, { all, lastReadAt, notificationIds, repoId }, other)
+);
+
+export const markNotificationsAsReadFailure = (
+  { notificationIds }: MarkNotificationsParams,
+  error: any,
+  other?: Object,
+) => (
+  errorAction(MARK_NOTIFICATIONS_AS_READ_FAILURE, { notificationIds }, error, other)
+);
+
+export const markNotificationsAsReadSuccess = (
+  { notificationIds }: MarkNotificationsParams,
+  data: Object,
+  meta: Object,
+  other?: Object,
+) => (
+  action(MARK_NOTIFICATIONS_AS_READ_SUCCESS, { data, meta, notificationIds }, other)
 );
 
 export const markNotificationsAsUnread = (

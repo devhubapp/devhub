@@ -71,7 +71,7 @@ export default class extends React.PureComponent {
             actions.markNotificationsAsUnread({ all: true, notificationIds: readIds, repoId });
           } else {
             const unreadIds = this.getUnreadNotificationIds();
-            actions.markNotificationsAsRead({ all: true, notificationIds: unreadIds, repoId });
+            actions.markNotificationsAsReadRequest({ all: true, notificationIds: unreadIds, repoId });
           }
         })();
 

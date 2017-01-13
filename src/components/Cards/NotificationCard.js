@@ -69,7 +69,7 @@ export default class extends React.PureComponent {
 
     const toggleNotificationsReadStatus = read
       ? actions.markNotificationsAsUnread
-      : actions.markNotificationsAsRead
+      : actions.markNotificationsAsReadRequest
     ;
 
     return (

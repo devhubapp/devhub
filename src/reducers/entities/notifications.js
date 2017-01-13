@@ -4,7 +4,9 @@ import { Map } from 'immutable';
 
 import {
   ARCHIVE_NOTIFICATIONS,
-  MARK_NOTIFICATIONS_AS_READ,
+  MARK_NOTIFICATIONS_AS_READ_REQUEST,
+  MARK_NOTIFICATIONS_AS_READ_FAILURE,
+  MARK_NOTIFICATIONS_AS_READ_SUCCESS,
   MARK_NOTIFICATIONS_AS_UNREAD,
 } from '../../utils/constants/actions';
 
@@ -24,8 +26,19 @@ const markAsRead = (notification, lastReadAt) => (
     .set('last_unread_at', null)
 );
 
+const undoMmarkAsRead = (notification) => (
+  notification
+    .set('last_read_at', null)
+);
+
 const markAsUnread = (notification, lastUnreadAt) => (
-  notification.set('last_unread_at', lastUnreadAt || new Date())
+  notification
+    // we dont se unread=true because we use this field to track the read status on github website
+    // and github does not support setting as unread.
+    // doing this, we can prevent calling markAsRead api method unnecessarily.
+    // .set('unread', true)
+
+    .set('last_unread_at', lastUnreadAt || new Date())
 );
 
 type State = Normalized<Object>;
@@ -36,7 +49,7 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
     case ARCHIVE_NOTIFICATIONS:
       return archiveIds(state, payload.notificationIds);
 
-    case MARK_NOTIFICATIONS_AS_READ:
+    case MARK_NOTIFICATIONS_AS_READ_REQUEST:
       return (({ lastReadAt: _lastReadAt, notificationIds }) => {
         const lastReadAt = _lastReadAt || new Date();
 
@@ -46,6 +59,34 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
           if (!notification) return;
 
           const newNotification = markAsRead(notification, lastReadAt);
+          newState = newState.set(notificationId, newNotification);
+        });
+
+        return newState;
+      })(payload);
+
+    case MARK_NOTIFICATIONS_AS_READ_FAILURE:
+      return (({ notificationIds }) => {
+        let newState = state;
+        notificationIds.forEach((notificationId) => {
+          const notification = newState.get(notificationId);
+          if (!notification) return;
+
+          const newNotification = undoMmarkAsRead(notification);
+          newState = newState.set(notificationId, newNotification);
+        });
+
+        return newState;
+      })(payload);
+
+    case MARK_NOTIFICATIONS_AS_READ_SUCCESS:
+      return (({ notificationIds }) => {
+        let newState = state;
+        notificationIds.forEach((notificationId) => {
+          const notification = newState.get(notificationId);
+          if (!notification) return;
+
+          const newNotification = notification.set('unread', false);
           newState = newState.set(notificationId, newNotification);
         });
 
