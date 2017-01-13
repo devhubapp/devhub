@@ -45,7 +45,7 @@ export function immutableMemoize(
       if (
         !(
           shallowEqualityCheck(newResult, lastResult) ||
-          (/*isArray && */deepImmutableEqualityCheck(newResult, lastResult))
+          (/* isArray && */deepImmutableEqualityCheck(newResult, lastResult))
         )
       ) {
         lastResult = newResult;
@@ -90,7 +90,7 @@ export function isReadFilter(obj) {
       (
         // if any update ocurres after it was archived, it is consided unarchived
         obj.get('updated_at') &&
-        moment(obj.get('updated_at')).isAfter(obj.get('archived_at'))
+        moment(obj.get('updated_at')).isAfter(obj.get('last_read_at'))
       )
 
       ||

@@ -1,12 +1,12 @@
 // @flow
 
-import { Set } from 'immutable';
+import { Map } from 'immutable';
 
 import { STAR_REPO, UNSTAR_REPO } from '../../utils/constants/actions';
 import type { Action } from '../../utils/types';
 
 type State = Array<string>;
-const initialState = Set();
+const initialState = Map();
 
 export default (state: State = initialState, action: Action<any>): State => {
   const { type, payload } = action || {};

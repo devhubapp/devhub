@@ -2,23 +2,38 @@
 
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 import { List, Set } from 'immutable';
 
 import {
-  makeColumnEventIdsSelector,
   makeColumnReadIdsSelector,
 } from '../../selectors';
 
-import ColumnWithList, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
+import ColumnWithList, {
+  HeaderButton,
+  HeaderButtonIcon,
+  HeaderButtonsContainer,
+} from './_ColumnWithList';
+
 import EventCardContainer from '../../containers/EventCardContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
 import { FullView } from '../cards/__CardComponents';
 import { getRequestTypeIcon, requestTypes } from '../../api/github';
-import { getDateWithHourAndMinuteText } from '../../utils/helpers';
+
+import {
+  getDateWithHourAndMinuteText,
+  getEventIdsFromEventsIncludingMerged,
+  } from '../../utils/helpers';
+
 import type { ActionCreators, ColumnWithList as ColumnType, Subscription } from '../../utils/types';
 
-const buttons = ['Cancel', 'Create a column here', 'Mark all as read / unread', 'Clear read', 'Delete column'];
+const buttons = [
+  'Cancel',
+  'Create a column here',
+  'Mark all as read / unread',
+  'Clear read',
+  'Delete column',
+];
+
 const BUTTONS = {
   CANCEL: 0,
   CREATE_NEW_COLUMN: 1,
@@ -39,7 +54,7 @@ export default class extends React.PureComponent {
 
   getEventIds = () => {
     const { items = List() } = this.props;
-    return items.first() === 'string' ? items : items.map(item => item.get('id'));
+    return items.first() === 'string' ? items : getEventIdsFromEventsIncludingMerged(items);
   }
 
   getReadEventIds = () => {

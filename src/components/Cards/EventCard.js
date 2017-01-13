@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
-import { List, Map, Set } from 'immutable';
+import { List, Map } from 'immutable';
 import Icon from 'react-native-vector-icons/Octicons';
 import { withTheme } from 'styled-components/native';
 
@@ -22,7 +22,6 @@ import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import OwnerAvatar from './_OwnerAvatar';
-import { isArchivedFilter } from '../../selectors/shared';
 import { avatarWidth, contentPadding } from '../../styles/variables';
 
 import {
@@ -30,6 +29,7 @@ import {
   getEventIconAndColor,
   getEventText,
   getRepoFullNameFromUrl,
+  getEventIdsFromEventIncludingMerged,
 } from '../../utils/helpers';
 
 import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
@@ -84,12 +84,7 @@ export default class extends React.PureComponent {
 
     if (!payload) return null;
 
-    let eventIds = Set([event.get('id')]);
-    if (merged) {
-      merged.forEach(mergedEvent => {
-        eventIds = eventIds.add(mergedEvent.get('id'));
-      });
-    }
+    const eventIds = getEventIdsFromEventIncludingMerged(event);
 
     const isPrivate = event.get('private') || event.get('public') === false;
     const {

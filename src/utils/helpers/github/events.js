@@ -3,8 +3,9 @@
 
 import moment from 'moment';
 import { max } from 'lodash';
-import { fromJS, List, Map } from 'immutable';
+import { fromJS, List, Map, Set } from 'immutable';
 
+import { isArchivedFilter, isReadFilter } from '../../../selectors';
 import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared';
 import * as baseTheme from '../../../styles/themes/base';
 
@@ -13,7 +14,7 @@ import type {
     GithubEventType,
     GithubIcon,
     ThemeObject,
-  } from '../types';
+  } from '../../types';
 
 export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = baseTheme):
 { icon: GithubIcon, color?: string } {
@@ -236,8 +237,13 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
 
     const isSameRepo = eventA.getIn(['repo', 'id']) === eventB.getIn(['repo', 'id']);
     const isSameUser = eventA.getIn(['actor', 'id']) === eventB.getIn(['actor', 'id']);
+    const isSameArchiveStatus = isArchivedFilter(eventA) === isArchivedFilter(eventB);
+    const isSameReadStatus = isReadFilter(eventA) === isReadFilter(eventB);
     const createdAtMinutesDiff = moment(eventA.get('created_at')).diff(moment(eventB.get('created_at')), 'minutes');
     const merged = eventA.get('merged') || List();
+
+    // only merge events with same archive and read status
+    if (!(isSameArchiveStatus && isSameReadStatus)) return null;
 
     // only merge events that were created in the same hour
     if (createdAtMinutesDiff >= 24 * 60) return null;
@@ -357,4 +363,30 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
 
   const newEvents = events.reduce(accumulator, List());
   return hasMerged ? newEvents : events;
+}
+
+export function getEventIdsFromEventIncludingMerged(event) {
+  if (!event) return Set([]);
+
+  let eventIds = Set([event.get('id')]);
+  const merged = event.get('merged');
+
+  if (merged) {
+    merged.forEach(mergedEvent => {
+      eventIds = eventIds.add(mergedEvent.get('id'));
+    });
+  }
+
+  return eventIds;
+}
+
+export function getEventIdsFromEventsIncludingMerged(events) {
+  let eventIds = Set([]);
+  if (!events) return eventIds;
+
+  events.forEach(event => {
+    eventIds = eventIds.concat(getEventIdsFromEventIncludingMerged(event));
+  });
+
+  return eventIds;
 }
