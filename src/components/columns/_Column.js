@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
+import withOrientation from '../../hoc/withOrientation';
 import { Dimensions, Platform } from 'react-native';
 
 import { contentPadding, radius as defaultRadius } from '../../styles/variables';
@@ -37,6 +38,7 @@ export const ColumnRoot = styled.View`
   border-radius: ${({ radius }) => radius || 0};
 `;
 
+@withOrientation
 export default class extends React.PureComponent {
   props: {
     children: React.Element,

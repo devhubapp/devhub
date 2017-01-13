@@ -7,7 +7,6 @@ import {
 } from '../../utils/constants/actions';
 
 import { archiveIds } from './_shared';
-import { arrayOfIdsToMergeableMap } from '../../utils/helpers';
 import type { Action, Normalized } from '../../utils/types';
 
 type State = Normalized<Object>;
@@ -15,7 +14,6 @@ const initialState = Map();
 
 export default (state: State = initialState, action: Action<any>): State => {
   const { type, payload } = action || {};
-  const { eventIds } = payload || {};
 
   switch (type) {
     case ARCHIVE_EVENTS:

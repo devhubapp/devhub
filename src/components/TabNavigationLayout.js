@@ -59,7 +59,7 @@ export default class extends React.PureComponent {
         <TabNavigationItem
           id="home"
           renderIcon={isSelected => (
-            renderIcon('Feed', 'home', isSelected, theme.base08, theme.base05)
+            renderIcon('Feed', 'home', isSelected, theme.base07, theme.base05)
           )}
         >
           <StackNavigation initialRoute="home" />
@@ -68,25 +68,28 @@ export default class extends React.PureComponent {
         {/*<TabNavigationItem*/}
           {/*id="trending"*/}
           {/*renderIcon={isSelected => (*/}
-            {/*renderIcon('Trending', 'pulse', isSelected, theme.base08, theme.base05)*/}
+            {/*renderIcon('Trending', 'pulse', isSelected, theme.base07, theme.base05)*/}
           {/*)}*/}
         {/*>*/}
           {/*<StackNavigation initialRoute="empty"/>*/}
         {/*</TabNavigationItem>*/}
 
-        <TabNavigationItem
-          id="notifications"
-          renderIcon={isSelected => (
-            renderIcon('Notifications', 'bell', isSelected, theme.base08, theme.base05)
-          )}
-        >
-          <StackNavigation initialRoute="notifications" />
-        </TabNavigationItem>
+        {
+          Platform.OS !== 'ios' ? <TabNavigationItem /> :
+          <TabNavigationItem
+            id="notifications"
+            renderIcon={isSelected => (
+              renderIcon('Notifications', 'bell', isSelected, theme.base07, theme.base05)
+            )}
+          >
+            <StackNavigation initialRoute="notifications" />
+          </TabNavigationItem>
+        }
 
         <TabNavigationItem
           id="settings"
           renderIcon={isSelected => (
-            renderIcon('Me', 'octoface', isSelected, theme.base08, theme.base05)
+            renderIcon('Me', 'octoface', isSelected, theme.base07, theme.base05)
           )}
         >
           <StackNavigation initialRoute="settings" />

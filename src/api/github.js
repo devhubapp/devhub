@@ -13,6 +13,9 @@ const USER_EVENTS: 'USER_EVENTS' = 'USER_EVENTS';
 const USER_PUBLIC_EVENTS: 'USER_PUBLIC_EVENTS' = 'USER_PUBLIC_EVENTS';
 const USER_ORG_EVENTS: 'USER_ORG_EVENTS' = 'USER_ORG_EVENTS';
 const NOTIFICATIONS: 'NOTIFICATIONS' = 'NOTIFICATIONS';
+const MARK_ALL_NOTIFICATIONS_AS_READ: 'MARK_ALL_NOTIFICATIONS_AS_READ' = 'MARK_ALL_NOTIFICATIONS_AS_READ';
+const MARK_NOTIFICATION_THREAD_AS_READ: 'MARK_NOTIFICATION_THREAD_AS_READ' = 'MARK_NOTIFICATION_THREAD_AS_READ';
+const MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO: 'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO' = 'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO';
 
 const github = new GitHubAPI({
   agent: 'devhub',
@@ -31,6 +34,9 @@ export const requestTypes = {
   USER_PUBLIC_EVENTS,
   USER_ORG_EVENTS,
   NOTIFICATIONS,
+  MARK_ALL_NOTIFICATIONS_AS_READ,
+  MARK_NOTIFICATION_THREAD_AS_READ,
+  MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO,
 };
 
 export type ApiRequestType =
@@ -45,6 +51,9 @@ export type ApiRequestType =
   | typeof USER_PUBLIC_EVENTS
   | typeof USER_ORG_EVENTS
   | typeof NOTIFICATIONS
+  | typeof MARK_ALL_NOTIFICATIONS_AS_READ
+  | typeof MARK_NOTIFICATION_THREAD_AS_READ
+  | typeof MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO
 ;
 
 export function authenticate(token: string) {
@@ -132,17 +141,48 @@ export function getUniquePath(type: ApiRequestType, { org, owner, repo, username
 
 export function getApiMethod(type: ApiRequestType) {
   switch (type) {
-    case requestTypes.PUBLIC_EVENTS: return github.activity.getEvents;
-    case requestTypes.REPO_EVENTS: return github.activity.getEventsForRepo;
-    case requestTypes.REPO_ISSUE_EVENTS: return github.activity.getEventsForRepoIssues;
-    case requestTypes.REPO_NETWORK_PUBLIC_EVENTS: return github.activity.getEventsForRepoNetwork;
-    case requestTypes.ORG_PUBLIC_EVENTS: return github.activity.getEventsForOrg;
-    case requestTypes.USER_RECEIVED_EVENTS: return github.activity.getEventsReceived;
-    case requestTypes.USER_RECEIVED_PUBLIC_EVENTS: return github.activity.getEventsReceivedPublic;
-    case requestTypes.USER_EVENTS: return github.activity.getEventsForUser;
-    case requestTypes.USER_PUBLIC_EVENTS: return github.activity.getEventsForUserPublic;
-    case requestTypes.USER_ORG_EVENTS: return github.activity.getEventsForUserOrg;
-    case requestTypes.NOTIFICATIONS: return github.activity.getNotifications;
+    case requestTypes.PUBLIC_EVENTS:
+      return github.activity.getEvents;
+
+    case requestTypes.REPO_EVENTS:
+      return github.activity.getEventsForRepo;
+
+    case requestTypes.REPO_ISSUE_EVENTS:
+      return github.activity.getEventsForRepoIssues;
+
+    case requestTypes.REPO_NETWORK_PUBLIC_EVENTS:
+      return github.activity.getEventsForRepoNetwork;
+
+    case requestTypes.ORG_PUBLIC_EVENTS:
+      return github.activity.getEventsForOrg;
+
+    case requestTypes.USER_RECEIVED_EVENTS:
+      return github.activity.getEventsReceived;
+
+    case requestTypes.USER_RECEIVED_PUBLIC_EVENTS:
+      return github.activity.getEventsReceivedPublic;
+
+    case requestTypes.USER_EVENTS:
+      return github.activity.getEventsForUser;
+
+    case requestTypes.USER_PUBLIC_EVENTS:
+      return github.activity.getEventsForUserPublic;
+
+    case requestTypes.USER_ORG_EVENTS:
+      return github.activity.getEventsForUserOrg;
+
+    case requestTypes.NOTIFICATIONS:
+      return github.activity.getNotifications;
+
+    case requestTypes.MARK_ALL_NOTIFICATIONS_AS_READ:
+      return github.activity.markNotificationsAsRead;
+
+    case requestTypes.MARK_NOTIFICATION_THREAD_AS_READ:
+      return github.activity.markNotificationThreadAsRead;
+
+    case requestTypes.MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO:
+      return github.activity.markNotificationsAsReadForRepo;
+
     default: throw new Error(`No api method configured for type '${type}'`);
   }
 }

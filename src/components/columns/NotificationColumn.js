@@ -2,13 +2,12 @@
 
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 import { List, Set } from 'immutable';
 
-import Column, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
+import ColumnWithList, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
 import { FullView } from '../cards/__CardComponents';
-import { getDateWithHourAndMinuteText, getOwnerAndRepo } from '../../utils/helpers';
+import { getOwnerAndRepo } from '../../utils/helpers';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
 import { readNotificationIdsSelector } from '../../selectors';
 import type { ActionCreators, GithubRepo } from '../../utils/types';
@@ -145,12 +144,9 @@ export default class extends React.PureComponent {
       icon = repo ? 'repo' : 'bell';
     }
 
-    const dateFromNowText = getDateWithHourAndMinuteText(updatedAt);
-    const refreshText = dateFromNowText ? `Updated ${dateFromNowText}` : '';
-
     return (
       <FullView style={style}>
-        <Column
+        <ColumnWithList
           errors={errors}
           headerRight={
             <HeaderButtonsContainer>
@@ -163,9 +159,9 @@ export default class extends React.PureComponent {
           items={items}
           loading={loading}
           title={title}
-          renderRow={this.renderRow}
           refreshFn={this.onRefresh}
-          refreshText={refreshText}
+          renderRow={this.renderRow}
+          updatedAt={updatedAt}
           {...props}
         />
 

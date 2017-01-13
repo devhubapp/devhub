@@ -88,9 +88,9 @@ export function notificationProcessStrategy(notification: GithubNotification) {
     };
   }
 
-  if (notification.subject.latest_comment_url) {
+  if (newNotification.subject.latest_comment_url) {
     const id = getCommentIdFromUrl(newNotification.subject.latest_comment_url);
-    
+
     if (id) {
       newNotification = {
         ...newNotification,

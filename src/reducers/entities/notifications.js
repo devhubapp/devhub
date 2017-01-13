@@ -37,8 +37,8 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
       return archiveIds(state, payload.notificationIds);
 
     case MARK_NOTIFICATIONS_AS_READ:
-      return (({ notificationIds }) => {
-        const lastReadAt = new Date();
+      return (({ lastReadAt: _lastReadAt, notificationIds }) => {
+        const lastReadAt = _lastReadAt || new Date();
 
         let newState = state;
         notificationIds.forEach((notificationId) => {
@@ -53,8 +53,8 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
       })(payload);
 
     case MARK_NOTIFICATIONS_AS_UNREAD:
-      return (({ notificationIds }) => {
-        const lastUnreadAt = new Date();
+      return (({ lastUnreadAt: _lastUnreadAt, notificationIds }) => {
+        const lastUnreadAt = _lastUnreadAt || new Date();
 
         let newState = state;
         notificationIds.forEach((notificationId) => {

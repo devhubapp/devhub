@@ -8,12 +8,12 @@ import NotificationColumns from '../components/columns/NotificationColumns';
 
 import {
   denormalizedGroupedNotificationsSelector,
-} from '../selectors';
+} from '../selectors/notifications';
 
 import * as actionCreators from '../actions';
 import type { ActionCreators, State } from '../utils/types';
 
-const denormalizedGNSelectorParams = { includeAllGroup: true };
+const denormalizedGNSelectorParams = { includeAllGroup: true, includeFilterGroup: true };
 const mapStateToProps = (state: State) => ({
   columns: denormalizedGroupedNotificationsSelector(state, denormalizedGNSelectorParams),
 });

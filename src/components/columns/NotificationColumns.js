@@ -4,6 +4,7 @@ import React from 'react';
 import { List } from 'immutable';
 
 import Columns from './_Columns';
+import NotificationsFilterColumnContainer from '../../containers/NotificationsFilterColumnContainer';
 import NotificationColumnContainer from '../../containers/NotificationColumnContainer';
 import type { ActionCreators, Column as ColumnType } from '../../utils/types';
 
@@ -13,11 +14,21 @@ export default class extends React.PureComponent {
     columns: Array<ColumnType>,
   };
 
+  renderFilterColumn = (column) => {
+    return (
+      <NotificationsFilterColumnContainer
+        column={column}
+      />
+    );
+  };
+
   renderRow = (column) => {
     if (!column) return null;
     
     const columnId = column.get('id');
     if (!columnId) return null;
+
+    if (columnId === 'filter') return this.renderFilterColumn(column);
 
     const { actions, errors } = this.props;
 

@@ -10,14 +10,14 @@ import {
   errorSelector,
   isLoadingSelector,
   updatedAtSelector,
-} from '../selectors';
+} from '../selectors/notifications';
 
 import * as actionCreators from '../actions';
+
 import type {
   ActionCreators,
   Column as ColumnType,
   GithubNotification,
-  Subscription,
   State,
 } from '../utils/types';
 
@@ -40,7 +40,6 @@ export default class extends React.PureComponent {
     errors: Array<string>,
     items: Array<GithubNotification>,
     loading: boolean,
-    subscriptions: Array<Subscription>,
   };
 
   render() {

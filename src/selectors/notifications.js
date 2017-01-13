@@ -11,7 +11,7 @@ import {
   isReadFilter,
 } from './shared';
 
-import { groupNotificationsByRepository } from '../utils/helpers/github';
+import { groupNotificationsByRepository, notificationsToFilterColumnData } from '../utils/helpers/github';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 
 export const notificationIdSelector = (state, { notificationId }) => notificationId;
@@ -72,8 +72,10 @@ export const makeDenormalizedNotificationSelector = () => createImmutableSelecto
   ),
 );
 
-export const denormalizedOrderedNotificationsSelector = createImmutableSelectorCreator(1)(
-  notificationIdsSelector, // just here for memoization optimization: dont call this fn again unless new notifications were added
+// with memoization of first argument
+// to prevent calling this again unless new notifications were added
+export const denormalizedOrderedNotificationsSelectorWithM1 = createImmutableSelectorCreator(1)(
+  notificationIdsSelector,
   unarchivedNotificationIdsSelector,
   entitiesSelector,
   (notificationIds, unarchivedNotificationIds, entities) => (
@@ -82,10 +84,24 @@ export const denormalizedOrderedNotificationsSelector = createImmutableSelectorC
   ),
 );
 
+export const deanormalizedOrderedUnarchivedNotificationsSelector = createImmutableSelector(
+  unarchivedNotificationIdsSelector,
+  entitiesSelector,
+  (unarchivedNotificationIds, entities) => (
+    denormalize(unarchivedNotificationIds, entities, [NotificationSchema])
+      .sort(sortNotificationsByDate)
+  ),
+);
+
 export const denormalizedGroupedNotificationsSelector = createImmutableSelector(
-  denormalizedOrderedNotificationsSelector,
+  denormalizedOrderedNotificationsSelectorWithM1,
   (state, params) => params,
   (notifications, params) => groupNotificationsByRepository(notifications, params),
+);
+
+export const filterColumnDataSelector = createImmutableSelector(
+  deanormalizedOrderedUnarchivedNotificationsSelector,
+  (notifications) => notificationsToFilterColumnData(notifications),
 );
 
 export const isLoadingSelector = createImmutableSelector(

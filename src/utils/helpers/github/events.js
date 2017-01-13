@@ -1,103 +1,19 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import gravatar from 'gravatar';
-import max from 'lodash/max';
 import moment from 'moment';
-import { Linking } from 'react-native';
-import { fromJS, List, Map, OrderedMap } from 'immutable';
+import { max } from 'lodash';
+import { fromJS, List, Map } from 'immutable';
 
-import * as baseTheme from '../../styles/themes/base';
+import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared';
+import * as baseTheme from '../../../styles/themes/base';
 
 import type {
     GithubEvent,
     GithubEventType,
     GithubIcon,
-    GithubIssue,
-    GithubNotification,
-    GithubNotificationReason,
-    GithubPullRequest,
-    GithubRepo,
     ThemeObject,
   } from '../types';
-
-export const baseURL = 'https://github.com';
-
-export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = baseTheme)
-: { color: string, icon: string } {
-  const state = issue.get('state');
-
-  switch (state) {
-    case 'open':
-      return { icon: 'issue-opened', color: theme.green };
-
-    case 'closed':
-      return { icon: 'issue-closed', color: theme.red };
-
-    default:
-      return { icon: 'issue-opened' };
-  }
-}
-
-export function getPullRequestIconAndColor(
-  pullRequest: GithubPullRequest,
-  theme?: ThemeObject = baseTheme
-) : { color: string, icon: string } {
-  const merged = pullRequest.get('merged_at');
-  const state = merged ? 'merged' : pullRequest.get('state');
-
-  switch (state) {
-    case 'open':
-      return { icon: 'git-pull-request', color: theme.green };
-
-    case 'closed':
-      return { icon: 'git-pull-request', color: theme.red };
-
-    case 'merged':
-      return { icon: 'git-merge', color: theme.purple };
-
-    default:
-      return { icon: 'git-pull-request' };
-  }
-}
-
-export function getNotificationReasonTextsAndColor(
-  notification: GithubNotification,
-  theme?: ThemeObject = baseTheme
-): { color: string, reason: string, label: string, description: string } {
-  const reason: GithubNotificationReason = notification.get('reason');
-
-  switch (reason) {
-    case 'assign':
-      return { color: theme.pink, reason, label: 'assigned', description: 'You were assigned to this thread' };
-
-    case 'author':
-      return { color: theme.lightRed, reason, label: 'author', description: 'You created this thread' };
-
-    case 'comment':
-      return { color: theme.blue, reason, label: 'commented', description: 'You commented on the thread' };
-
-    case 'invitation':
-      return { color: theme.brown, reason, label: 'invited', description: 'You accepted an invitation to contribute to the repository' };
-
-    case 'manual':
-      return { color: theme.teal, reason, label: 'subscribed', description: 'You subscribed to the thread' };
-
-    case 'mention':
-      return { color: theme.orange, reason, label: 'mentioned', description: 'You were @mentioned' };
-
-    case 'state_change':
-      return { color: theme.purple, reason, label: 'state changed', description: 'You changed the thread state' };
-
-    case 'subscribed':
-      return { color: theme.blueGray, reason, label: 'watching', description: 'You\'re watching this repository' };
-
-    case 'team_mention':
-      return { color: theme.yellow, reason, label: 'team mentioned', description: 'Your team was mentioned' };
-
-    default: return { color: theme.gray, reason, label: reason, description: '' };
-  }
-}
 
 export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = baseTheme):
 { icon: GithubIcon, color?: string } {
@@ -191,21 +107,6 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
     case 'ReleaseEvent': return { icon: 'tag' };
     case 'WatchEvent': return { icon: 'star', color: theme.star };
     default: return { icon: 'mark-github' };
-  }
-}
-
-export function getNotificationIconAndColor(
-  notification: GithubNotification,
-  theme?: ThemeObject,
-): { icon: GithubIcon, color?: string } {
-  const subject = notification.get('subject');
-  const type = subject.get('type').toLowerCase();
-
-  switch (type) {
-    case 'commit': return { icon: 'git-commit' };
-    case 'issue': return getIssueIconAndColor(subject, theme);
-    case 'pullrequest': return getPullRequestIconAndColor(subject, theme );
-    default: return 'bell';
   }
 }
 
@@ -322,15 +223,6 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
   })();
 
   return text.replace(/ {2}/g, ' ').trim();
-}
-
-export function getOwnerAndRepo(repoFullName: string): { owner: ?string, repo: ?string} {
-  const repoSplitedNames = (repoFullName || '').trim().split('/').filter(Boolean);
-
-  const owner = (repoSplitedNames[0] || '').trim();
-  const repo = (repoSplitedNames[1] || '').trim();
-
-  return { owner, repo };
 }
 
 export function groupSimilarEvents(events: Array<GithubEvent>) {
@@ -465,174 +357,4 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
 
   const newEvents = events.reduce(accumulator, List());
   return hasMerged ? newEvents : events;
-}
-
-export function groupNotificationsByRepository(
-  notifications: Array<GithubNotification>,
-  { includeAllGroup = false } : { includeAllGroup?: boolean } = {}
-) {
-  let groupedNotifications = includeAllGroup
-    ? OrderedMap({
-      all: Map({
-        id: 'all',
-        notifications,
-        title: 'notifications',
-      }),
-    })
-    : OrderedMap()
-  ;
-
-  notifications.forEach((notification) => {
-    const repo = notification.get('repository');
-    const repoId = `${repo.get('id')}`;
-
-    let group = groupedNotifications.get(repoId);
-    if (!group) {
-      group = Map({ id: repoId, repo, notifications: List() });
-      groupedNotifications = groupedNotifications.set(repoId, group);
-    }
-
-    groupedNotifications = groupedNotifications.updateIn([repoId, 'notifications'], (notif) => (
-      notif.push(notification)
-    ));
-  });
-
-  return groupedNotifications;
-}
-
-export function getCommentIdFromUrl(url: string) {
-  if (!url) return null;
-
-  const matches = url.match(/\/comments\/([0-9]+)([?].+)?$/);
-  return (matches && matches[1]) || null;
-}
-
-export function getCommitShaFromUrl(url: string) {
-  if (!url) return null;
-
-  const matches = url.match(/\/commits\/([a-zA-Z0-9]+)([?].+)?$/);
-  return (matches && matches[1]) || null;
-}
-
-export function getIssueOrPullRequestNumberFromUrl(url: string) {
-  if (!url) return null;
-
-  const matches = url.match(/\/(issues|pulls)\/([0-9]+)([?].+)?$/);
-  const number = matches && matches[2];
-
-  return parseInt(number, 10) || number || null;
-}
-
-export function getOrgAvatar(orgName: string) {
-  return orgName ? `https://github.com/${orgName}.png` : '';
-}
-
-export function getUserAvatar(userName: string) {
-  return userName ? `https://github.com/${userName}.png` : '';
-}
-
-export function tryGetUsernameFromGithubEmail(email: string) {
-  if (!email) return '';
-
-  const emailSplit = email.split('@');
-  if (emailSplit.length === 2 && emailSplit[1] === 'users.noreply.github.com') return emailSplit[0];
-
-  return '';
-}
-
-export function getUserAvatarByEmail(email: string, { size, ...otherOptions }: { size?: number }) {
-  const sizeSteps = 50; // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
-  const steppedSize = !size ? sizeSteps : sizeSteps * Math.max(1, Math.ceil(size / sizeSteps));
-
-  const username = tryGetUsernameFromGithubEmail(email);
-  if (username) return getUserAvatar(username);
-
-  const options = { size: steppedSize, d: 'retro', ...otherOptions };
-  return `https:${gravatar.url(email, options)}`.replace('??', '?');
-}
-
-/* eslint-disable-next-line no-useless-escape */
-export const getRepoFullNameFromUrl = (url: string): string => (
-  url
-      ? ((url.match(/(github.com\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^\/#$]?)/i) || [])[3]) || ''
-    : ''
-);
-
-export const getGitHubURLForUser = (user: string) => (
-  user ? `${baseURL}/${user}` : ''
-);
-
-const objToQueryParams = obj => Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&');
-
-export const getGitHubSearchURL = (queryParams: Object) => (
-  queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : ''
-);
-
-export const getGitHubURLForBranch = (repoFullName: string, branch: string) => (
-  repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
-);
-
-export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string {
-  if (!apiURL) return '';
-
-  const [, type, restOfURL] = apiURL.match('api.github.com/([a-zA-Z]+)/(.*)');
-  if (!(type && restOfURL)) return '';
-
-  if (type === 'repos') {
-    const repoFullName = getRepoFullNameFromUrl(apiURL);
-    const [type2, ...restOfURL2] = (apiURL.split(`/repos/${repoFullName}/`)[1] || '').split('/');
-
-    if (restOfURL2[0]) {
-      switch (type2) {
-        case 'pulls':
-          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
-            return number
-              ? `${baseURL}/${repoFullName}/pull/${number}/comments#discussion_r${restOfURL2[1]}`
-              : '';
-          }
-
-          return `${baseURL}/${repoFullName}/pull/${restOfURL2.join('/')}`;
-
-        case 'issues':
-          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
-            return number
-              ? `${baseURL}/${repoFullName}/pull/${number}/comments#issuecomment-${restOfURL2[1]}`
-              : '';
-          }
-
-          return `${baseURL}/${repoFullName}/issues/${restOfURL2.join('/')}`;
-
-        case 'commits':
-          return `${baseURL}/${repoFullName}/commit/${restOfURL2.join('/')}`;
-      }
-    }
-  }
-
-  return `${baseURL}/${restOfURL}`;
-}
-
-function openURL(url: string) {
-  if (!url) return null;
-
-  // sometimes the url come like this: '/facebook/react', so we add https://github.com
-  let _url = url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url;
-
-  // replace http with devhub:// so the app deeplinking will handle this
-  // the app will decide if it will push an app screen or open the web browser
-  _url = _url.replace(/(http[s]?)/, 'devhub');
-
-  return Linking.openURL(_url);
-}
-
-export function openOnGithub(obj: string | GithubRepo | GithubIssue | GithubPullRequest) {
-  if (!obj) return null;
-
-  if (typeof obj === 'string') {
-    return openURL(obj);
-  }
-
-  const url = obj.get('html_url') || obj.get('url');
-  if (!url) return null;
-
-  return openURL(url);
 }
