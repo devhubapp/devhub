@@ -8,6 +8,7 @@ import {
   createImmutableSelector,
   entitiesSelector,
   isArchivedFilter,
+  isReadFilter,
 } from './shared';
 
 import { makeColumnEventIdsSelector } from './columns';
@@ -15,9 +16,20 @@ import { EventSchema } from '../utils/normalizr/schemas';
 import { groupSimilarEvents } from '../utils/helpers';
 
 export const eventIdSelector = (state, { eventId }) => eventId;
-export const eventSelector = (state, { eventId }) => entitiesSelector(state).getIn(['events', eventId]);
-export const readEventIdsSelector = state => state.get('seenEvents').toList();
+export const eventEntitiesSelector = (state) => entitiesSelector(state).get('events');
+export const eventSelector = (state, { eventId }) => eventEntitiesSelector(state).get(eventId);
 export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_at') ? 1 : -1);
+
+export const readEventIdsSelector = createImmutableSelector(
+  eventEntitiesSelector,
+  (events) => (
+    events
+      .filter(Boolean)
+      .filter(isReadFilter)
+      .map(event => event.get('id'))
+      .toList()
+  ),
+);
 
 export const makeIsArchivedEventSelector = () => createImmutableSelector(
   eventSelector,

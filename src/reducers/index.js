@@ -5,8 +5,6 @@ import app from './app';
 import config from './config';
 import entities from './entities';
 import notifications from './notifications';
-import seenEvents from './seen-events';
-import starredRepos from './starred-repos';
 import user from './user';
 
 import { CLEAR_APP_DATA } from '../utils/constants/actions';
@@ -17,11 +15,6 @@ const reducer = combineReducers({
   config,
   entities,
   notifications,
-
-  // TODO: Make this in a better way, not in a separate reducer
-  seenEvents,
-  starredRepos,
-
   user,
 });
 

@@ -1,10 +1,22 @@
 // @flow
 
-import { Map } from 'immutable';
+import { Set } from 'immutable';
 
-import type { Normalized } from '../../utils/types';
+import { STAR_REPO, UNSTAR_REPO } from '../../utils/constants/actions';
+import type { Action } from '../../utils/types';
 
-type State = Normalized<Object>;
-const initialState = Map();
+type State = Array<string>;
+const initialState = Set();
 
-export default (state: State = initialState): State => state;
+export default (state: State = initialState, action: Action<any>): State => {
+  const { type, payload } = action || {};
+
+  const { repoId } = payload || {};
+  if (!repoId) return state;
+
+  switch (type) {
+    case STAR_REPO: return state.setIn([repoId, 'starred'], true);
+    case UNSTAR_REPO: return state.setIn([repoId, 'starred'], false);
+    default: return state;
+  }
+};
