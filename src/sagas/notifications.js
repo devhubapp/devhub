@@ -12,9 +12,9 @@ import { NotificationSchema } from '../utils/normalizr/schemas';
 import {
   accessTokenSelector,
   isLoggedSelector,
-  lastModifiedAtSelector,
+  notificationsLastModifiedAtSelector,
+  makeRepoSelector,
   notificationSelector,
-  repoSelector,
 } from '../selectors';
 
 import { authenticate, getApiMethod, requestTypes } from '../api/github';
@@ -105,6 +105,7 @@ function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotifications
 
     if (all) {
       if (repoId) {
+        const repoSelector = makeRepoSelector();
         const repoEntity = repoSelector(state, { repoId });
         if (!repoEntity) return;
 
@@ -165,7 +166,7 @@ export function getParamsToLoadAllNotifications() {
 
 export function* getParamsToLoadOnlyNewNotifications() {
   const state = yield select();
-  const lastModifiedAt = lastModifiedAtSelector(state);
+  const lastModifiedAt = notificationsLastModifiedAtSelector(state);
 
   const defaultSince = getDefaultSince();
   return {

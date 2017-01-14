@@ -2,7 +2,7 @@
 
 import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
-import { List, Set } from 'immutable';
+import { Iterable, List, Set } from 'immutable';
 
 import ColumnWithList, { HeaderButton, HeaderButtonIcon, HeaderButtonsContainer } from './_ColumnWithList';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
@@ -56,10 +56,9 @@ export default class extends React.PureComponent {
   };
 
   handleActionSheetButtonPress = (index) => {
-    const { actions, column } = this.props;
+    const { actions, column, repo } = this.props;
 
-    const repo = column.get('repo');
-    const repoId = repo ? repo.get('id') : undefined;
+    const repoId = repo ? repo.get('id') : repo.get('repoId');
 
     const readIds = this.getReadNotificationIds();
     const notificationIds = this.getNotificationIds();
@@ -91,7 +90,7 @@ export default class extends React.PureComponent {
 
   props: {
     actions: ActionCreators,
-    column: { repo: GithubRepo },
+    column: { repoId: string },
     errors?: ?Array<string>,
     icon?: string,
     items: Array<Object>,
@@ -100,18 +99,28 @@ export default class extends React.PureComponent {
     radius?: number,
     style?: ?Object,
     readIds: Array<string>,
+    repo?: GithubRepo,
     title?: string,
     updatedAt: Date,
   };
 
-  renderRow = (notification) => (
-    <NotificationCardContainer
-      key={`notification-card-${notification.get('id')}`}
-      actions={this.props.actions}
-      notificationOrNotificationId={notification.get('id')}
-      onlyOneRepository={!!this.props.column.get('repo')}
-    />
-  );
+  renderRow = (notificationOrNotificationId) => {
+    const notification = Iterable.isIterable(notificationOrNotificationId)
+      ? notificationOrNotificationId
+      : null
+    ;
+
+    const notificationId = notification ? `${notification.get('id')}` : notificationOrNotificationId;
+
+    return (
+      <NotificationCardContainer
+        key={`notification-card-${notificationId}`}
+        actions={this.props.actions}
+        notificationOrNotificationId={notificationId}
+        onlyOneRepository={!!this.props.column.get('repo')}
+      />
+    );
+  };
 
   render() {
     const { column,
@@ -119,6 +128,7 @@ export default class extends React.PureComponent {
       icon: _icon,
       items,
       loading,
+      repo,
       style,
       title: _title,
       updatedAt,
@@ -126,8 +136,6 @@ export default class extends React.PureComponent {
     } = this.props;
 
     if (!column) return null;
-
-    const repo = column.get('repo');
 
     let title = _title;
     if (!title) {
@@ -141,7 +149,7 @@ export default class extends React.PureComponent {
 
     let icon = _icon;
     if (!icon) {
-      icon = repo ? 'repo' : 'bell';
+      icon = repo || column.get('repoId') ? 'repo' : 'bell';
     }
 
     return (

@@ -9,19 +9,19 @@ import NotificationsFilterColumn from '../components/columns/NotificationsFilter
 import * as actionCreators from '../actions';
 
 import {
-  errorSelector,
-  filterColumnDataSelector,
-  isLoadingSelector,
-  updatedAtSelector,
+  notificationsErrorSelector,
+  notificationsFiltersSelector,
+  notificationsIsLoadingSelector,
+  notificationsUpdatedAtSelector,
 } from '../selectors/notifications';
 
 import type { State } from '../utils/types';
 
 const makeMapStateToProps = (state: State) => ({
-  errors: errorSelector(state) ? [errorSelector(state)] : null,
-  loading: isLoadingSelector(state),
-  items: filterColumnDataSelector(state),
-  updatedAt: updatedAtSelector(state),
+  errors: notificationsErrorSelector(state) ? [notificationsErrorSelector(state)] : null,
+  loading: notificationsIsLoadingSelector(state),
+  items: notificationsFiltersSelector(state),
+  updatedAt: notificationsUpdatedAtSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

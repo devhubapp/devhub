@@ -7,10 +7,11 @@ import { connect } from 'react-redux';
 import NotificationColumn from '../components/columns/NotificationColumn';
 
 import {
-  errorSelector,
-  isLoadingSelector,
-  updatedAtSelector,
-} from '../selectors/notifications';
+  notificationsErrorSelector,
+  notificationsIsLoadingSelector,
+  makeRepoSelector,
+  notificationsUpdatedAtSelector,
+} from '../selectors';
 
 import * as actionCreators from '../actions';
 
@@ -18,15 +19,21 @@ import type {
   ActionCreators,
   Column as ColumnType,
   GithubNotification,
+  GithubRepo,
   State,
 } from '../utils/types';
 
-const makeMapStateToProps = (state: State, { column }: { column: Object }) => ({
-  errors: errorSelector(state) ? [errorSelector(state)] : null,
-  loading: isLoadingSelector(state),
-  items: column.get('notifications'),
-  updatedAt: updatedAtSelector(state),
-});
+const makeMapStateToProps = (state: State, { column }: { column: Object }) => {
+  const repoSelector = makeRepoSelector();
+
+  return ({
+    errors: notificationsErrorSelector(state) ? [notificationsErrorSelector(state)] : null,
+    loading: notificationsIsLoadingSelector(state),
+    items: column.get('notifications') || column.get('notificationIds'),
+    repo: repoSelector(state, { repoId: column.get('repoId') }),
+    updatedAt: notificationsUpdatedAtSelector(state),
+  });
+};
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
@@ -38,8 +45,9 @@ export default class extends React.PureComponent {
     actions: ActionCreators,
     column: ColumnType,
     errors: Array<string>,
-    items: Array<GithubNotification>,
+    items: Array<string | GithubNotification>,
     loading: boolean,
+    repo?: GithubRepo,
   };
 
   render() {
@@ -49,6 +57,7 @@ export default class extends React.PureComponent {
       errors,
       items,
       loading,
+      repo,
       ...props
     } = this.props;
 
@@ -60,6 +69,7 @@ export default class extends React.PureComponent {
         items={items}
         errors={errors}
         loading={loading}
+        repo={repo}
         {...props}
       />
     );

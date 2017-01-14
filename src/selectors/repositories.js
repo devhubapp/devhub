@@ -3,6 +3,7 @@
 
 import {
   createImmutableSelector,
+  createImmutableSelectorCreator,
   entitiesSelector,
   isReadFilter,
 } from './shared';
@@ -21,7 +22,7 @@ export const starredReposSelector = createImmutableSelector(
   ),
 );
 
-export const repoSelector = createImmutableSelector(
+export const makeRepoSelector = () => createImmutableSelectorCreator(1)(
   repoIdSelector,
   reposEntitiesSelector,
   (repoId, repos) => repos.get(`${repoId}`),

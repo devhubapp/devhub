@@ -14,23 +14,21 @@ export default class extends React.PureComponent {
     columns: Array<ColumnType>,
   };
 
-  renderFilterColumn = (column) => {
-    return (
-      <NotificationsFilterColumnContainer
-        column={column}
-      />
-    );
-  };
+  renderFilterColumn = (column) => (
+    <NotificationsFilterColumnContainer
+      column={column}
+    />
+  );
 
   renderRow = (column) => {
     if (!column) return null;
-    
+
     const columnId = column.get('id');
     if (!columnId) return null;
 
     if (columnId === 'filter') return this.renderFilterColumn(column);
 
-    const { actions, errors } = this.props;
+    const { actions } = this.props;
 
     return (
       <NotificationColumnContainer

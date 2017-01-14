@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import { capitalize, camelCase } from 'lodash';
-import { fromJS, List, Map, OrderedMap } from 'immutable';
+import { fromJS, Iterable, List, Map, OrderedMap } from 'immutable';
 
 import * as baseTheme from '../../../styles/themes/base';
 import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared';
@@ -83,25 +83,26 @@ export function getNotificationIconAndColor(
 export function groupNotificationsByRepository(
   notifications: Array<GithubNotification>,
   { includeAllGroup = false, includeFilterGroup = false }:
-  { includeAllGroup?: boolean, includeFilterGroup?: boolean } = {}
+  { includeAllGroup?: boolean, includeFilterGroup?: boolean } = {},
 ) {
   let groupedNotifications = OrderedMap();
-  
+  const notificationIds = notifications.map(notification => notification.get('id'));
+
   if (includeFilterGroup) {
     groupedNotifications = groupedNotifications.concat(Map({
       filter: Map({
         id: 'filter',
-        notifications,
+        notificationIds,
         title: 'filter',
       }),
     }));
   }
-  
+
   if (includeAllGroup) {
     groupedNotifications = groupedNotifications.concat(Map({
       all: Map({
         id: 'all',
-        notifications,
+        notificationIds,
         title: 'notifications',
       }),
     }));
@@ -109,16 +110,16 @@ export function groupNotificationsByRepository(
 
   notifications.forEach((notification) => {
     const repo = notification.get('repository');
-    const repoId = `${repo.get('id')}`;
+    const repoId = Iterable.isIterable(repo) ? `${repo.get('id')}` : repo;
 
     let group = groupedNotifications.get(repoId);
     if (!group) {
-      group = Map({ id: repoId, repo, notifications: List() });
+      group = Map({ id: repoId, repoId, notificationIds: List() });
       groupedNotifications = groupedNotifications.set(repoId, group);
     }
 
-    groupedNotifications = groupedNotifications.updateIn([repoId, 'notifications'], (notif) => (
-      notif.push(notification)
+    groupedNotifications = groupedNotifications.updateIn([repoId, 'notificationIds'], (notif) => (
+      notif.push(notification.get('id'))
     ));
   });
 
@@ -194,7 +195,7 @@ export const defaultFilterColumnsData = OrderedMap({
         ...reasonToColorAndTitle(reason),
         ...defaultFilterColumnsCounters,
       })]
-    ))
+    )),
   ),
   repos: OrderedMap(),
 });
