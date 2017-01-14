@@ -3,9 +3,8 @@ import OAuthManager from 'react-native-oauth';
 const config = {
   github: {
     client_id: 'ad3a22fdaf40e63a130d',
-    client_secret: '0b46f5587706bac4bbf9a996aab7e9cb5125e009',
+    client_secret: '3a489723ad5d8ff330369597586ad44b4112b0c9',
     redirect_uri: 'http://localhost/github',
-    scopes: 'user public_repo notifications read:org',
   },
 };
 

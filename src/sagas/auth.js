@@ -35,7 +35,7 @@ function* login({ payload }: Action<LoginRequestPayload>) {
 
     // sign in with firebase
     const credential = firebase.auth.GithubAuthProvider.credential(accessToken);
-    firebase.auth().signInWithCredential(credential);
+    firebase.auth().signInWithCredential(credential).catch(console.log);
 
     const result = { accessToken };
     yield put(loginSuccess(payload, result, sagaActionChunk));
@@ -64,6 +64,7 @@ function* watchFirebaseCurrentUser() {
 
   while (true) {
     if (lastUser !== ignoreValue) {
+      // console.log('firebase user', lastUser);
       const user = lastUser && lastUser.providerData && lastUser.providerData[0];
       lastUser = ignoreValue;
       yield put(updateCurrentUser(user, sagaActionChunk));

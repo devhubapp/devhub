@@ -1174,8 +1174,8 @@ buffer@^5.0.2:
     ieee754 "^1.1.4"
 
 bugsnag-react-native@^1.2.1:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.2.3.tgz#d5ec49995c1347b059ffc364dca92a0ef388abc9"
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.2.4.tgz#f8ff9aa09d651804e1f9f768048053abfd7e71ea"
   dependencies:
     promise "^7"
 
@@ -2231,7 +2231,7 @@ find-up@^1.0.0, find-up@^1.1.2:
     path-exists "^2.0.0"
     pinkie-promise "^2.0.0"
 
-firebase@^3.6.4:
+firebase@^3.6.5:
   version "3.6.5"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-3.6.5.tgz#e321da57c9c5b66e436432a3e15f1cf6d3b2f9a9"
   dependencies:
@@ -2620,13 +2620,9 @@ iconv-lite@0.4.11:
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.11.tgz#2ecb42fd294744922209a2e7c404dac8793d8ade"
 
-iconv-lite@0.4.13:
+iconv-lite@0.4.13, iconv-lite@^0.4.13, iconv-lite@~0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
-
-iconv-lite@^0.4.13, iconv-lite@~0.4.13:
-  version "0.4.15"
-  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
 ieee754@^1.1.4:
   version "1.1.8"
@@ -4199,9 +4195,9 @@ react-native-linear-gradient@^1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-1.6.2.tgz#1ea3e7a186b514661b927673aa9c427dd520999f"
 
-"react-native-oauth@https://github.com/fullstackreact/react-native-oauth":
-  version "2.1.9"
-  resolved "https://github.com/fullstackreact/react-native-oauth#a81d91dea05e0c4edf0878128032701f523afb62"
+react-native-oauth@^2.1.11:
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/react-native-oauth/-/react-native-oauth-2.1.11.tgz#e8afc2f8eba38de26ec398664a52fbd4be1bf3fa"
   dependencies:
     invariant "^2.2.1"
     valib "^2.0.0"
@@ -5032,8 +5028,8 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
 sshpk@^1.7.0:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.10.1.tgz#30e1a5d329244974a1af61511339d595af6638b0"
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.10.2.tgz#d5a804ce22695515638e798dbe23273de070a5fa"
   dependencies:
     asn1 "~0.2.3"
     assert-plus "^1.0.0"

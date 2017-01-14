@@ -32,9 +32,9 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
       }
     case 'DeleteEvent':
       switch (payload.get('ref_type')) {
-        case 'repository': return { icon: 'repo', subIcon: 'trashcan', subIconColor: theme.red };
-        case 'branch': return { icon: 'git-branch', subIcon: 'trashcan', subIconColor: theme.red };
-        case 'tag': return { icon: 'tag', subIcon: 'trashcan', subIconColor: theme.red };
+        case 'repository': return { icon: 'repo', color: theme.red };
+        case 'branch': return { icon: 'git-branch', color: theme.red };
+        case 'tag': return { icon: 'tag', color: theme.red };
         default: return { icon: 'trashcan' };
       }
     case 'GollumEvent': return { icon: 'book' };
@@ -76,7 +76,7 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
         }
       })();
     case 'MemberEvent': return { icon: 'person' };
-    case 'PublicEvent': return { icon: 'globe' };
+    case 'PublicEvent': return { icon: 'globe', color: theme.blue };
 
     case 'PullRequestEvent':
       return (() => {
