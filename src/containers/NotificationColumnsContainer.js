@@ -4,6 +4,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import debounce from '../utils/hoc/debounce';
 import NotificationColumns from '../components/columns/NotificationColumns';
 
 import {
@@ -23,6 +24,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
+@debounce(50)
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,

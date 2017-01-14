@@ -83,23 +83,12 @@ export function isArchivedFilter(obj) {
 
 export function isReadFilter(obj) {
   if (!obj) return false;
-  if (obj.get('unread') === true) return false;
 
-  return obj.get('last_read_at') &&
-    !(
-      (
-        // if any update ocurres after it was archived, it is consided unarchived
-        obj.get('updated_at') &&
-        moment(obj.get('updated_at')).isAfter(obj.get('last_read_at'))
-      )
+  // preserves the latest state between last_read_at and last_unread_at
+  if (obj.get('last_read_at') && obj.get('last_unread_at')) {
+    return !moment(obj.get('last_unread_at')).isAfter(obj.get('last_read_at'));
+  }
 
-      ||
-
-      (
-        // preserves the latest state between last_read_at and last_unread_at
-        obj.get('last_unread_at') &&
-        moment(obj.get('last_unread_at')).isAfter(obj.get('last_read_at'))
-      )
-    )
-  ;
+  // dont do !obj.get('unread') because unread=undefined on events by default
+  return obj.get('unread') === false || obj.get('unread') === null;
 }

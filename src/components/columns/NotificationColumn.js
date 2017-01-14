@@ -33,7 +33,9 @@ export default class extends React.PureComponent {
 
   getNotificationIds = () => {
     const { items = List() } = this.props;
-    return items.first() === 'string' ? items : items.map(item => item.get('id'));
+    return items.first() === 'string' ? items : items.map(item => (
+      Iterable.isIterable(item) ? item.get('id') : item
+    ));
   }
 
   getReadNotificationIds = () => {
@@ -58,7 +60,7 @@ export default class extends React.PureComponent {
   handleActionSheetButtonPress = (index) => {
     const { actions, column, repo } = this.props;
 
-    const repoId = repo ? repo.get('id') : repo.get('repoId');
+    const repoId = repo ? repo.get('id') : column.get('repoId');
 
     const readIds = this.getReadNotificationIds();
     const notificationIds = this.getNotificationIds();

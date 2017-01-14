@@ -27,7 +27,7 @@ export default (state: State = initialState, action: Action<any>): State => {
       return markIdsAsArchived(state, payload.eventIds, payload.archivedAt);
 
     case MARK_EVENTS_AS_READ:
-      return markIdsAsRead(state, payload.eventIds, payload.lastReadAt);
+      return markIdsAsRead(state, payload.eventIds, payload.lastReadAt, true);
 
     case MARK_EVENTS_AS_UNREAD:
       return markIdsAsUnread(state, payload.eventIds, payload.lastUnreadAt);

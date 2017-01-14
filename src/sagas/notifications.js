@@ -129,7 +129,7 @@ function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotifications
 
       // dont call api again if it was already marked as read on github
       const notification = notificationSelector(state, { notificationId });
-      if (notification && !notification.get('unread')) ignoreApiCall = true;
+      if (notification && notification.get('unread') === false) ignoreApiCall = true;
     }
 
     let response;

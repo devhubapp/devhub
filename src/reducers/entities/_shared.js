@@ -1,6 +1,6 @@
 import { isArchivedFilter } from '../../selectors';
 
-function _markIdsAsFn(state, ids, date, fn) {
+function _markIdsAsFn(state, ids, fn, date, ...fnArgs) {
   const _date = date || new Date();
 
   let newState = state;
@@ -8,7 +8,7 @@ function _markIdsAsFn(state, ids, date, fn) {
     const obj = newState.get(id);
     if (!obj) return;
 
-    const newObj = fn(obj, _date);
+    const newObj = fn(obj, _date, ...fnArgs);
     newState = newState.set(id, newObj);
   });
 
@@ -22,15 +22,18 @@ export const markAsArchived = (obj, archivedAt) => (
     : obj.set('archived_at', archivedAt || new Date())
 );
 
-export function markIdsAsArchived(state, ids, archivedAt) {
-  return _markIdsAsFn(state, ids, archivedAt, markAsArchived);
+export function markIdsAsArchived(state, ids, archivedAt, ...args) {
+  return _markIdsAsFn(state, ids, markAsArchived, archivedAt, ...args);
 }
 
-export const markAsRead = (notification, lastReadAt) => (
+// unread:true: not read on github
+// unread:false: read on github (we dont need to call api anymore for this)
+// unread:null: read on app, unknown on github
+export const markAsRead = (notification, lastReadAt, finalUnreadStatus = true) => (
   notification
+    .set('unread', notification.get('unread') === false || finalUnreadStatus ? false : null)
     .set('last_read_at', lastReadAt || new Date())
 
-  // not used for the events, only notifications.
   // we mark the last_unread_at as null
   // because when the notification is updated,
   // the last_read_at from github would replace the last_read_at from the app,
@@ -40,30 +43,27 @@ export const markAsRead = (notification, lastReadAt) => (
     .set('last_unread_at', null)
 );
 
-export function markIdsAsRead(state, ids, lastReadAt) {
-  return _markIdsAsFn(state, ids, lastReadAt, markAsRead);
+export function markIdsAsRead(state, ids, lastReadAt, finalUnreadStatus, ...args) {
+  return _markIdsAsFn(state, ids, markAsRead, lastReadAt, finalUnreadStatus, ...args);
 }
 
 export const undoMarkAsRead = (notification) => (
   notification
+    .set('unread', true)
     .set('last_read_at', null)
 );
 
-export function undoMarkIdsAsRead(state, ids) {
-  return _markIdsAsFn(state, ids, undefined, undoMarkAsRead);
+export function undoMarkIdsAsRead(state, ids, ...args) {
+  return _markIdsAsFn(state, ids, undoMarkAsRead, ...args);
 }
 
 export const markAsUnread = (notification, lastUnreadAt) => (
   notification
-    // we dont set unread=true because we use this field to track the read status on github website
-    // and github does not support setting as unread.
-    // doing this, we can prevent calling markAsRead api method unnecessarily.
-    // .set('unread', true)
-
+    // .set('unread', true) // dont!
     .set('last_unread_at', lastUnreadAt || new Date())
 );
 
-export function markIdsAsUnread(state, ids, lastUnreadAt) {
-  return _markIdsAsFn(state, ids, lastUnreadAt, markAsUnread);
+export function markIdsAsUnread(state, ids, lastUnreadAt, ...args) {
+  return _markIdsAsFn(state, ids, markAsUnread, lastUnreadAt, ...args);
 }
 

@@ -28,24 +28,13 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
       return markIdsAsArchived(state, payload.notificationIds, payload.archivedAt);
 
     case MARK_NOTIFICATIONS_AS_READ_REQUEST:
-      return markIdsAsRead(state, payload.notificationIds, payload.lastReadAt);
+      return markIdsAsRead(state, payload.notificationIds, payload.lastReadAt, false);
 
     case MARK_NOTIFICATIONS_AS_READ_FAILURE:
       return undoMarkIdsAsRead(state, payload.notificationIds);
 
     case MARK_NOTIFICATIONS_AS_READ_SUCCESS:
-      return (({ notificationIds }) => {
-        let newState = state;
-        notificationIds.forEach((notificationId) => {
-          const notification = newState.get(notificationId);
-          if (!notification) return;
-
-          const newNotification = notification.set('unread', false);
-          newState = newState.set(notificationId, newNotification);
-        });
-
-        return newState;
-      })(payload);
+      return markIdsAsRead(state, payload.notificationIds, payload.lastReadAt, true);
 
     case MARK_NOTIFICATIONS_AS_UNREAD:
       return markIdsAsUnread(state, payload.notificationIds, payload.lastUnreadAt);

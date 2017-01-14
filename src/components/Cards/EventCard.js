@@ -64,6 +64,7 @@ export default class extends React.PureComponent {
   render() {
     const { actions, archived, event, onlyOneRepository, read, theme, ...props } = this.props;
 
+    if (!event) return null;
     if (archived) return null;
 
     const {

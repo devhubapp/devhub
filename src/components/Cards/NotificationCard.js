@@ -45,6 +45,7 @@ export default class extends React.PureComponent {
   render() {
     const { actions, archived, onlyOneRepository, notification, read, ...props } = this.props;
 
+    if (!notification) return null;
     if (archived) return null;
 
     const comment = notification.get('comment');
