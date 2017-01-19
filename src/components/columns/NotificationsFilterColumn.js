@@ -46,14 +46,16 @@ const CounterWrapper = styled.View`
   justify-content: center;
   margin-left: ${contentPadding};
   padding-horizontal: ${contentPadding};
-  padding-vertical: 2;
+  padding-vertical: 1;
   border-radius: 10;
-  background-color: ${({ theme }) => theme.base03};
+  background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base03)};
+  border-width: 1;
+  border-color: ${({ theme }) => theme.base03};
 `;
 
 const UnreadCount = styled(StyledText)`
   font-size: 12;
-  color: ${({ theme }) => theme.base04};
+  color: ${({ count, theme }) => (count > 0 ? theme.base04 : theme.base05)};
   text-align: center;
 `;
 
@@ -116,8 +118,11 @@ export default class extends React.PureComponent {
           <ItemTitle numberOfLines={1}>{item.get('title') || rowId}</ItemTitle>
         </ItemTitleWrapper>
 
-        <CounterWrapper>
-          {item.get('unread') >= 0 && <UnreadCount>{item.get('unread')}</UnreadCount>}
+        <CounterWrapper outline={!(item.get('unread') > 0)}>
+          {
+            item.get('unread') >= 0 &&
+            <UnreadCount count={item.get('unread')}>{item.get('unread')}</UnreadCount>
+          }
           {
             item.get('read') >= 0 &&
             <TotalCount>
