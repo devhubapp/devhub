@@ -145,6 +145,7 @@ const defaultFilterColumnsRepoData = OrderedMap({
 export const defaultFilterColumnsData = OrderedMap({
   inboxes: OrderedMap(fromJS({
     inbox: {
+      pinned: true,
       icon: 'inbox',
       color: baseTheme.teal,
       title: 'Inbox',

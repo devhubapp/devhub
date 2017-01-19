@@ -8,7 +8,9 @@ import ColumnWithList, { headerFontSize } from './_ColumnWithList';
 import { FullView, StyledText } from '../cards/__CardComponents';
 import { contentPadding } from '../../styles/variables';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
+import { get } from '../../utils/immutable';
 import type { ActionCreators } from '../../utils/types';
+
 
 export const Section = styled.View`
   height: 1;
@@ -85,15 +87,16 @@ export default class extends React.PureComponent {
 
   totalItemNotifications = (item) => (
     item
-      ? (item.get('read') || 0) + (item.get('unread') || 0)
+      ? (get(item, 'read') || 0) + (get(item, 'unread') || 0)
       : 0
   );
 
-  isSectionEmpty = (sectionData) => !(
-    sectionData && sectionData.toList().reduce(
-      (sectionHasItems, item) => sectionHasItems || this.totalItemNotifications(item),
-      false,
-    )
+  willShowItem = (item) => (
+    item && (get(item, 'pinned') || this.totalItemNotifications(item))
+  );
+
+  isSectionEmpty = (sectionData) => (
+    !sectionData || !sectionData.some(this.willShowItem)
   );
 
   sectionHeaderHasChanged = (prevSectionData, nextSectionData) => (
@@ -107,26 +110,26 @@ export default class extends React.PureComponent {
   );
 
   renderRow = (item, sectionId, rowId) => {
-    if (!this.totalItemNotifications(item)) {
+    if (!this.willShowItem(item)) {
       return null;
     }
 
     return (
       <ItemWrapper key={`notifications-filter-column-item-${sectionId}-${rowId}`}>
         <ItemTitleWrapper>
-          <ItemIcon name={item.get('icon')} color={item.get('color')} />
-          <ItemTitle numberOfLines={1}>{item.get('title') || rowId}</ItemTitle>
+          <ItemIcon name={get(item, 'icon')} color={get(item, 'color')} />
+          <ItemTitle numberOfLines={1}>{get(item, 'title') || rowId}</ItemTitle>
         </ItemTitleWrapper>
 
-        <CounterWrapper outline={!(item.get('unread') > 0)}>
+        <CounterWrapper outline={!(get(item, 'unread') > 0)}>
           {
-            item.get('unread') >= 0 &&
-            <UnreadCount count={item.get('unread')}>{item.get('unread')}</UnreadCount>
+            get(item, 'unread') >= 0 &&
+            <UnreadCount count={get(item, 'unread')}>{get(item, 'unread')}</UnreadCount>
           }
           {
-            item.get('read') >= 0 &&
+            get(item, 'read') >= 0 &&
             <TotalCount>
-              {item.get('unread') >= 0 && ' / '}
+              {get(item, 'unread') >= 0 && ' / '}
               {this.totalItemNotifications(item)}
             </TotalCount>
           }
