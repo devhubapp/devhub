@@ -151,7 +151,7 @@ export default class extends React.PureComponent {
               </FullView>
 
               {
-                cardSubIcon 
+                cardSubIcon
                 ? <CardIcon name={cardSubIcon} color={cardSubIconColor || cardIconColor} />
                 : <CardIcon name={cardIcon} color={cardIconColor} />
               }
@@ -200,7 +200,7 @@ export default class extends React.PureComponent {
             type={type}
             branch={payload.get('ref')}
             repoFullName={getRepoFullNameFromUrl(
-              payload.getIn(['ref', 'html_url']) || payload.getIn(['ref', 'url'])
+              payload.getIn(['ref', 'html_url']) || payload.getIn(['ref', 'url']),
             )}
             narrow
           />

@@ -10,6 +10,7 @@ import EventColumn from '../components/columns/EventColumn';
 import {
   columnIsLoadingSelector,
   columnErrorsSelector,
+  makeColumnIsEmptySelector,
   makeColumnSelector,
   makeColumnSubscriptionsSelector,
   makeDenormalizedOrderedColumnEventsSelector,
@@ -25,6 +26,7 @@ import type {
 } from '../utils/types';
 
 const makeMapStateToProps = () => {
+  const columnIsEmptySelector = makeColumnIsEmptySelector();
   const columnSelector = makeColumnSelector();
   const columnSubscriptionsSelector = makeColumnSubscriptionsSelector();
   const denormalizedOrderedColumnEventsSelector = makeDenormalizedOrderedColumnEventsSelector();
@@ -33,8 +35,9 @@ const makeMapStateToProps = () => {
     column: columnSelector(state, { columnId }),
     errors: columnErrorsSelector(state, { columnId }),
     events: denormalizedOrderedColumnEventsSelector(state, { columnId }),
-    subscriptions: columnSubscriptionsSelector(state, { columnId }),
+    isEmpty: columnIsEmptySelector(state, { columnId }),
     loading: columnIsLoadingSelector(state, { columnId }),
+    subscriptions: columnSubscriptionsSelector(state, { columnId }),
   });
 };
 

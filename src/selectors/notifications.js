@@ -17,7 +17,10 @@ import { NotificationSchema } from '../utils/normalizr/schemas';
 export const notificationIdSelector = (state, { notificationId }) => notificationId;
 export const notificationDetailsSelector = (state) => state.get('notifications');
 export const notificationEntitiesSelector = (state) => entitiesSelector(state).get('notifications');
-export const notificationSelector = (state, { notificationId }) => notificationEntitiesSelector(state).get(notificationId);
+
+export const notificationSelector = (state, { notificationId }) => (
+  notificationEntitiesSelector(state).get(notificationId)
+);
 
 export const notificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,

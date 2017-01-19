@@ -26,11 +26,13 @@ import type {
 
 const makeMapStateToProps = (state: State, { column }: { column: Object }) => {
   const repoSelector = makeRepoSelector();
+  const items = column.get('notifications') || column.get('notificationIds');
 
   return ({
     errors: notificationsErrorSelector(state) ? [notificationsErrorSelector(state)] : null,
     loading: notificationsIsLoadingSelector(state),
-    items: column.get('notifications') || column.get('notificationIds'),
+    isEmpty: items.size === 0,
+    items,
     repo: column.get('repo') || repoSelector(state, { repoId: column.get('repoId') }),
     updatedAt: notificationsUpdatedAtSelector(state),
   });

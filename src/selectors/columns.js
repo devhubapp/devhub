@@ -4,7 +4,7 @@
 import moment from 'moment';
 import { List, Map, Set } from 'immutable';
 
-import { readEventIdsSelector } from './events';
+import { archivedEventIdsSelector, readEventIdsSelector } from './events';
 import { subscriptionsSelector, subscriptionSelector } from './subscriptions';
 import { createImmutableSelector, entitiesSelector, objectKeysMemoized, stateSelector } from './shared';
 
@@ -45,6 +45,16 @@ export const makeColumnEventIdsSelector = () => createImmutableSelector(
     return eventIds.toList();
   },
 );
+
+export const makeColumnArchivedIdsSelector = () => {
+  const columnEventIdsSelector = makeColumnEventIdsSelector();
+
+  return createImmutableSelector(
+    archivedEventIdsSelector,
+    columnEventIdsSelector,
+    (archivedIds, columnEventIds) => Set(archivedIds).intersect(columnEventIds),
+  );
+};
 
 export const makeColumnReadIdsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector();
@@ -88,3 +98,14 @@ export const orderedColumnsSelector = createImmutableSelector(
       .sortBy(column => column.get('order'))
   ),
 );
+
+export const makeColumnIsEmptySelector = () => {
+  const columnEventIdsSelector = makeColumnEventIdsSelector();
+  const columnArchivedIdsSelector = makeColumnArchivedIdsSelector();
+
+  return createImmutableSelector(
+    columnEventIdsSelector,
+    columnArchivedIdsSelector,
+    (columnEventIds, columnArchivedIds) => columnEventIds.size === columnArchivedIds.size,
+  );
+};

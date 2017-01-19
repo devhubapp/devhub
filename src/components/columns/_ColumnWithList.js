@@ -7,6 +7,7 @@ import { RefreshControl } from 'react-native';
 
 import ColumnWithHeader, { getRadius } from './_ColumnWithHeader';
 import TransparentTextOverlay from '../TransparentTextOverlay';
+import { EmptyColumnContent } from './EmptyColumn';
 import { contentPadding } from '../../styles/variables';
 import { getDateWithHourAndMinuteText } from '../../utils/helpers';
 import type { Subscription, ThemeObject } from '../../utils/types';
@@ -30,6 +31,7 @@ export default class extends React.PureComponent {
     headerRight?: React.Element,
     icon: string,
     initialListSize?: number,
+    isEmpty?: boolean,
     items: Array<Object>,
     loading?: boolean,
     radius?: number,
@@ -50,6 +52,7 @@ export default class extends React.PureComponent {
   render() {
     const {
       initialListSize,
+      isEmpty,
       items,
       loading,
       refreshFn,
@@ -70,31 +73,39 @@ export default class extends React.PureComponent {
       refreshText = dateFromNowText ? `Updated ${dateFromNowText}` : '';
     }
 
+    const refreshControl = (
+      (refreshFn || refreshText) &&
+      <RefreshControl
+        refreshing={false}
+        onRefresh={refreshFn}
+        colors={[loading || !refreshFn ? 'transparent' : theme.base07]}
+        tintColor={loading || !refreshFn ? 'transparent' : theme.base07}
+        title={(refreshText || ' ').toLowerCase()}
+        titleColor={theme.base05}
+        progressBackgroundColor={theme.base02}
+      />
+    );
+
     return (
       <ColumnWithHeader {...this.props}>
         <StyledTextOverlay color={theme.base02} size={contentPadding} from="vertical" radius={_radius}>
-          <StyledImmutableListView
-            immutableData={items}
-            initialListSize={initialListSize || 5}
-            rowsDuringInteraction={initialListSize || 5}
-            renderRow={renderRow}
-            renderSectionHeader={renderSectionHeader}
-            refreshControl={
-              (refreshFn || refreshText) &&
-              <RefreshControl
-                refreshing={false}
-                onRefresh={refreshFn}
-                colors={[loading || !refreshFn ? 'transparent' : theme.base07]}
-                tintColor={loading || !refreshFn ? 'transparent' : theme.base07}
-                title={(refreshText || ' ').toLowerCase()}
-                titleColor={theme.base05}
-                progressBackgroundColor={theme.base02}
-              />
-            }
-            sectionHeaderHasChanged={sectionHeaderHasChanged}
-            contentContainerStyle={{ overflow: 'hidden' }}
-            removeClippedSubviews
-          />
+          {
+            isEmpty || !(items.size > 0)
+              ? <EmptyColumnContent key="empty-column" refreshControl={refreshControl} />
+              : (
+                <StyledImmutableListView
+                  immutableData={items}
+                  initialListSize={initialListSize || 5}
+                  rowsDuringInteraction={initialListSize || 5}
+                  renderRow={renderRow}
+                  renderSectionHeader={renderSectionHeader}
+                  refreshControl={refreshControl}
+                  sectionHeaderHasChanged={sectionHeaderHasChanged}
+                  contentContainerStyle={{ overflow: 'hidden' }}
+                  removeClippedSubviews
+                />
+              )
+          }
         </StyledTextOverlay>
       </ColumnWithHeader>
     );
