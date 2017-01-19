@@ -3,7 +3,8 @@
 
 import warna from 'warna';
 
-export * from 'warna';
+export const darken = warna.darken;
+export const lighten = warna.lighten;
 
 export function fade(color: string, opacity: number = 1) {
   const rgb = warna.parse(color).rgb;
