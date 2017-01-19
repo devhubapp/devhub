@@ -26,6 +26,19 @@ export const StyledImmutableListView = styled(ImmutableListView)`
 
 @withTheme
 export default class extends React.PureComponent {
+  state = {
+    hasLoadedOnce: false,
+  };
+
+  componentWillReceiveProps({ loading }) {
+    // if finished loading
+    if (loading === false && this.props.loading === true) {
+      if (this.state.hasLoadedOnce === false) {
+        this.setState({ hasLoadedOnce: true });
+      }
+    }
+  }
+
   props: {
     errors?: ?Array<string>,
     headerRight?: React.Element,
@@ -50,6 +63,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
+    const { hasLoadedOnce } = this.state;
     const {
       initialListSize,
       isEmpty,
@@ -91,7 +105,11 @@ export default class extends React.PureComponent {
         <StyledTextOverlay color={theme.base02} size={contentPadding} from="vertical" radius={_radius}>
           {
             isEmpty || !(items.size > 0)
-              ? <EmptyColumnContent key="empty-column" refreshControl={refreshControl} />
+              ? (
+                hasLoadedOnce
+                  ? <EmptyColumnContent key="empty-column" refreshControl={refreshControl} />
+                  : null
+              )
               : (
                 <StyledImmutableListView
                   immutableData={items}
