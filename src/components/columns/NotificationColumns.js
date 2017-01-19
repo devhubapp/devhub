@@ -47,7 +47,7 @@ export default class extends React.PureComponent {
 
     return (
       <Columns
-        key="notification-columns"
+        key="notification-_Columns"
         actions={actions}
         columns={columns}
         renderRow={this.renderRow}

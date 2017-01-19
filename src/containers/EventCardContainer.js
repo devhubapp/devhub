@@ -52,8 +52,11 @@ export default class extends React.PureComponent {
   render() {
     const { actions, event, read, ...props } = this.props;
 
+    if (!event) return null;
+
     return (
       <EventCard
+        key={`event-card-${event.get('id')}`}
         actions={actions}
         event={event}
         read={read}

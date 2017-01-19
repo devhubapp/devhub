@@ -40,6 +40,8 @@ export default class extends React.PureComponent {
   render() {
     const { column, items, ...props } = this.props;
 
+    if (!column) return null;
+
     return (
       <NotificationsFilterColumn
         key="notifications-filter-column"

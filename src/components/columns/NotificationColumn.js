@@ -113,10 +113,11 @@ export default class extends React.PureComponent {
     ;
 
     const notificationId = notification ? `${notification.get('id')}` : notificationOrNotificationId;
+    if (!notificationId) return null;
 
     return (
       <NotificationCardContainer
-        key={`notification-card-${notificationId}`}
+        key={`notification-card-container-${notificationId}`}
         actions={this.props.actions}
         notificationOrNotificationId={notificationId}
         onlyOneRepository={!!this.props.column.get('repo')}
@@ -157,6 +158,7 @@ export default class extends React.PureComponent {
     return (
       <FullView style={style}>
         <ColumnWithList
+          key="notification-_ColumnWithList"
           errors={errors}
           headerRight={
             <HeaderButtonsContainer>

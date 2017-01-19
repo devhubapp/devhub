@@ -53,8 +53,11 @@ export default class extends React.PureComponent {
   render() {
     const { actions, notification, read, ...props } = this.props;
 
+    if (!notification) return null;
+
     return (
       <NotificationCard
+        key={`notification-card-${notification.get('id')}`}
         actions={actions}
         notification={notification}
         event={notification}

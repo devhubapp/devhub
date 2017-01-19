@@ -14,6 +14,7 @@ export default class extends React.PureComponent {
   };
 
   renderRow = (passProps = {}) => commit => (
+    commit &&
     <CommitRow
       key={`commit-row-${commit.get('sha')}`}
       commit={commit}

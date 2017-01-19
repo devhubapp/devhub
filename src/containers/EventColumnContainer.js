@@ -65,6 +65,8 @@ export default class extends React.PureComponent {
       ...props
     } = this.props;
 
+    if (!column) return null;
+
     return (
       <EventColumn
         key={`event-column-${column.get('id')}`}

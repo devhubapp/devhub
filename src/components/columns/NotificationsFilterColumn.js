@@ -110,7 +110,7 @@ export default class extends React.PureComponent {
     }
 
     return (
-      <ItemWrapper>
+      <ItemWrapper key={`notifications-filter-column-item-${sectionId}-${rowId}`}>
         <ItemTitleWrapper>
           <ItemIcon name={item.get('icon')} color={item.get('color')} />
           <ItemTitle numberOfLines={1}>{item.get('title') || rowId}</ItemTitle>
@@ -144,6 +144,7 @@ export default class extends React.PureComponent {
     return (
       <FullView style={style}>
         <ColumnWithList
+          key="notification-filter-_ColumnWithList"
           icon={icon}
           title={title}
           initialListSize={20}

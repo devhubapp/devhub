@@ -14,6 +14,7 @@ export default class extends React.PureComponent {
   };
 
   renderRow = (passProps = {}) => repo => (
+    repo &&
     <RepoRow
       key={`repo-row-${repo.get('id')}`}
       repo={repo}

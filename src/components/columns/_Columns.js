@@ -74,7 +74,6 @@ export default class extends React.PureComponent {
 
     return (
       <StyledImmutableListViewListView
-        key="columns-list-view"
         immutableData={columns}
         initialListSize={initialListSize}
         renderRow={this.renderRow(mainRenderRow)}

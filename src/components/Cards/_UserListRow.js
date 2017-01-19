@@ -14,6 +14,7 @@ export default class extends React.PureComponent {
   };
 
   renderRow = (passProps = {}) => user => (
+    user &&
     <UserRow
       key={`user-row-${user.get('id')}`}
       user={user}

@@ -63,6 +63,8 @@ export default class extends React.PureComponent {
       ...props
     } = this.props;
 
+    if (!column) return null;
+
     return (
       <NotificationColumn
         key={`notification-column-${column.get('id')}`}

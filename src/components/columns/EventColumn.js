@@ -152,8 +152,9 @@ export default class extends React.PureComponent {
   // (because merged events are totally different than the on in the state)
   // so do the check: if(event.get('merged)) ? event : event.get('id')
   renderRow = (event) => (
+    event &&
     <EventCardContainer
-      key={`event-card-${event.get('id')}`}
+      key={`event-card-container-${event.get('id')}`}
       actions={this.props.actions}
       eventOrEventId={event}
       onlyOneRepository={this.hasOnlyOneRepository()}
@@ -183,6 +184,7 @@ export default class extends React.PureComponent {
     return (
       <FullView style={style}>
         <ColumnWithList
+          key="event-column-_ColumnWithList"
           errors={errors}
           headerRight={
             <HeaderButtonsContainer>
