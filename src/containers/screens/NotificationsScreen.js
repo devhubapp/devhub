@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 
 import NotificationColumnsContainer from '../NotificationColumnsContainer';
 import Screen from '../../components/Screen';
-import debounce from '../../utils/hoc/debounce';
 import { rehydratedSelector } from '../../selectors';
 import type { State, ThemeObject } from '../../utils/types';
 
@@ -23,7 +22,6 @@ const mapStateToProps = (state: State) => ({
 
 @connect(mapStateToProps)
 @withTheme
-@debounce(50)
 export default class extends React.PureComponent {
   props: {
     rehydrated: boolean,

@@ -4,7 +4,6 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import debounce from '../utils/hoc/debounce';
 import EventColumn from '../components/columns/EventColumn';
 
 import {
@@ -46,7 +45,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(makeMapStateToProps, mapDispatchToProps)
-@debounce(50)
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
