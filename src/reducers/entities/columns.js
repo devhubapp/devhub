@@ -49,7 +49,28 @@ export default (state: State = initialState, { type, payload }: Action<any>): St
 
     case DELETE_COLUMN:
       // TODO: Delete subscription and its events
-      return state.delete(payload.id);
+      return (({ id }: Column) => {
+        if (!id) return state;
+
+        const columnToDelete = state.get(id);
+        if (!columnToDelete) return state;
+
+        let newState = state;
+
+        const order = columnToDelete.get('order');
+        // shift columns to left to fix order value
+        if (order >= 0) {
+          newState = newState.map((column) => {
+            if (column.get('order') >= order && column !== columnToDelete) {
+              return column.set('order', column.get('order') - 1);
+            }
+
+            return column;
+          });
+        }
+
+        return newState.delete(id);
+      })(payload);
 
     default:
       return state;
