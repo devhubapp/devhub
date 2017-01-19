@@ -5,8 +5,9 @@ import moment from 'moment';
 import { max } from 'lodash';
 import { fromJS, List, Map, Set } from 'immutable';
 
+import { get, getIn } from '../../immutable';
 import { isArchivedFilter, isReadFilter } from '../../../selectors';
-import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared';
+import { getIssueIconAndColor, getPullRequestIconAndColor, isPullRequest } from './shared';
 import * as baseTheme from '../../../styles/themes/base';
 
 import type {
@@ -18,20 +19,20 @@ import type {
 
 export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = baseTheme):
 { icon: GithubIcon, color?: string } {
-  const eventType = event.get('type').split(':')[0];
-  const payload = event.get('payload');
+  const eventType = get(event, 'type').split(':')[0];
+  const payload = get(event, 'payload');
 
   switch (eventType) {
     case 'CommitCommentEvent': return { icon: 'git-commit', subIcon: 'comment-discussion' };
     case 'CreateEvent':
-      switch (payload.get('ref_type')) {
+      switch (get(payload, 'ref_type')) {
         case 'repository': return { icon: 'repo' };
         case 'branch': return { icon: 'git-branch' };
         case 'tag': return { icon: 'tag' };
         default: return { icon: 'plus' };
       }
     case 'DeleteEvent':
-      switch (payload.get('ref_type')) {
+      switch (get(payload, 'ref_type')) {
         case 'repository': return { icon: 'repo', color: theme.red };
         case 'branch': return { icon: 'git-branch', color: theme.red };
         case 'tag': return { icon: 'tag', color: theme.red };
@@ -43,19 +44,18 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
     case 'IssueCommentEvent':
       return {
         ...(
-          // can be an issue or pull request sometimes due to github bug
-          payload.get('pull_request') || payload.getIn(['issue', 'merged_at'])
-          ? getPullRequestIconAndColor(payload.get('pull_request') || payload.get('issue'), theme)
-          : getIssueIconAndColor(payload.get('issue'), theme)
+          get(payload, 'pull_request') || isPullRequest(get(payload, 'issue'))
+          ? getPullRequestIconAndColor(get(payload, 'pull_request') || get(payload, 'issue'), theme)
+          : getIssueIconAndColor(get(payload, 'issue'), theme)
         ),
         subIcon: 'comment-discussion',
       };
 
     case 'IssuesEvent':
       return (() => {
-        const issue = payload.get('issue');
+        const issue = get(payload, 'issue');
 
-        switch (payload.get('action')) {
+        switch (get(payload, 'action')) {
           case 'opened': return getIssueIconAndColor(Map({ state: 'open' }), theme);
           case 'closed': return getIssueIconAndColor(Map({ state: 'closed' }), theme);
 
@@ -80,9 +80,9 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
 
     case 'PullRequestEvent':
       return (() => {
-        const pullRequest = payload.get('pull_request');
+        const pullRequest = get(payload, 'pull_request');
 
-        switch (payload.get('action')) {
+        switch (get(payload, 'action')) {
           case 'opened':
           case 'reopened': return getPullRequestIconAndColor(Map({ state: 'open' }), theme);
 
@@ -100,7 +100,7 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
     case 'PullRequestReviewEvent':
     case 'PullRequestReviewCommentEvent':
       return {
-        ...getPullRequestIconAndColor(payload.get('pull_request'), theme),
+        ...getPullRequestIconAndColor(get(payload, 'pull_request'), theme),
         subIcon: 'comment-discussion',
       };
 
@@ -111,28 +111,29 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
   }
 }
 
-type GetEventTextOptions = { issueIsKnown: ?boolean, repoIsKnown: ?boolean };
+type GetEventTextOptions = { issueOrPullRequestIsKnown: ?boolean, repoIsKnown: ?boolean };
 export function getEventText(event: GithubEvent, options: ?GetEventTextOptions): string {
-  const eventType = event.get('type');
-  const payload = event.get('payload');
+  const eventType = get(event, 'type');
+  const payload = get(event, 'payload');
 
-  const { issueIsKnown, repoIsKnown } = options || {};
+  const { issueOrPullRequestIsKnown, repoIsKnown } = options || {};
 
-  const issueText = issueIsKnown ? 'this issue' : 'an issue';
+  const issueText = issueOrPullRequestIsKnown ? 'this issue' : 'an issue';
+  const pullRequestText = issueOrPullRequestIsKnown ? 'this pr' : 'a pr';
   const repositoryText = repoIsKnown ? 'this repository' : 'a repository';
 
   const text = (() => {
     switch (eventType) {
       case 'CommitCommentEvent': return 'commented on a commit';
       case 'CreateEvent':
-        switch (payload.get('ref_type')) {
+        switch (get(payload, 'ref_type')) {
           case 'repository': return `created ${repositoryText}`;
           case 'branch': return 'created a branch';
           case 'tag': return 'created a tag';
           default: return 'created something';
         }
       case 'DeleteEvent':
-        switch (payload.get('ref_type')) {
+        switch (get(payload, 'ref_type')) {
           case 'repository': return `deleted ${repositoryText}`;
           case 'branch': return 'deleted a branch';
           case 'tag': return 'deleted a tag';
@@ -140,17 +141,18 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
         }
       case 'GollumEvent':
         return (() => {
-          const count = (payload.get('pages') || List([])).size || 1;
+          const count = (get(payload, 'pages') || List([])).size || 1;
           const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page';
-          switch (((payload.get('pages') || List([]))[0] || Map()).get('action')) {
+          switch (get(((get(payload, 'pages') || List([]))[0] || Map()), 'action')) {
             case 'created': return `created ${pagesText}`;
             default: return `updated ${pagesText}`;
           }
         })();
       case 'ForkEvent': return `forked ${repositoryText}`;
-      case 'IssueCommentEvent': return `commented on ${issueText}`;
+      case 'IssueCommentEvent':
+        return `commented on ${isPullRequest(get(payload, 'issue')) ? pullRequestText : issueText}`;
       case 'IssuesEvent': // TODO: Fix these texts
-        switch (payload.get('action')) {
+        switch (get(payload, 'action')) {
           case 'closed': return `closed ${issueText}`;
           case 'reopened': return `reopened ${issueText}`;
           case 'opened': return `opened ${issueText}`;
@@ -166,36 +168,39 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
       case 'MemberEvent': return `added an user ${repositoryText && `to ${repositoryText}`}`;
       case 'PublicEvent': return `made ${repositoryText} public`;
       case 'PullRequestEvent':
-        switch (payload.get('action')) {
-          case 'assigned': return 'assigned a pr';
-          case 'unassigned': return 'unassigned a pr';
-          case 'labeled': return 'labeled a pr';
-          case 'unlabeled': return 'unlabeled a pr';
-          case 'opened': return 'opened a pr';
-          case 'edited': return 'edited a pr';
+        switch (get(payload, 'action')) {
+          case 'assigned': return `assigned ${pullRequestText}`;
+          case 'unassigned': return `unassigned ${pullRequestText}`;
+          case 'labeled': return `labeled ${pullRequestText}`;
+          case 'unlabeled': return `unlabeled ${pullRequestText}`;
+          case 'opened': return `opened ${pullRequestText}`;
+          case 'edited': return `edited ${pullRequestText}`;
 
           case 'closed':
-            return payload.getIn(['pull_request', 'merged_at']) ? 'merged a pr' : 'closed a pr';
+            return getIn(payload, ['pull_request', 'merged_at'])
+              ? `merged ${pullRequestText}`
+              : `closed ${pullRequestText}`
+            ;
 
-          case 'reopened': return 'reopened a pr';
-          default: return 'interacted with a pr';
+          case 'reopened': return `reopened ${pullRequestText}`;
+          default: return `interacted with ${pullRequestText}`;
         }
-      case 'PullRequestReviewEvent': return 'reviewed a pr';
+      case 'PullRequestReviewEvent': return `reviewed ${pullRequestText}`;
       case 'PullRequestReviewCommentEvent':
-        switch (payload.get('action')) {
-          case 'created': return 'commented on a pr review';
-          case 'edited': return 'edited a pr review';
-          case 'deleted': return 'deleted a pr review';
-          default: return 'interacted with a pr review';
+        switch (get(payload, 'action')) {
+          case 'created': return `commented on ${pullRequestText} review`;
+          case 'edited': return `edited ${pullRequestText} review`;
+          case 'deleted': return `deleted ${pullRequestText} review`;
+          default: return `interacted with ${pullRequestText} review`;
         }
       case 'PushEvent':
         return (() => {
-          const commits = payload.get('commits') || List([Map()]);
-          // const commit = payload.get('head_commit') || commits[0];
-          const count = max([1, payload.get('size'), payload.get('distinct_size'), commits.size]) || 1;
-          const branch = (payload.get('ref') || '').split('/').pop();
+          const commits = get(payload, 'commits') || List([Map()]);
+          // const commit = get(payload, 'head_commit') || commits[0];
+          const count = max([1, get(payload, 'size'), get(payload, 'distinct_size'), commits.size]) || 1;
+          const branch = (get(payload, 'ref') || '').split('/').pop();
 
-          const pushedText = payload.get('forced') ? 'force pushed' : 'pushed';
+          const pushedText = get(payload, 'forced') ? 'force pushed' : 'pushed';
           const commitText = count > 1 ? `${count} commits` : 'a commit';
           const branchText = branch === 'master' ? `to ${branch}` : '';
 
@@ -205,7 +210,7 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
       case 'WatchEvent': return `starred ${repositoryText}`;
       case 'WatchEvent:OneRepoMultipleUsers':
         return (() => {
-          const otherUsers = payload.get('users');
+          const otherUsers = get(payload, 'users');
           const otherUsersText = otherUsers && otherUsers.size > 0
             ? (otherUsers.size > 1 ? `and ${otherUsers.size} others` : 'and 1 other')
             : '';
@@ -214,7 +219,7 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
         })();
       case 'WatchEvent:OneUserMultipleRepos':
         return (() => {
-          const otherRepos = payload.get('repos');
+          const otherRepos = get(payload, 'repos');
           const count = (otherRepos && otherRepos.size) || 0;
 
           return count > 1 ? `starred ${count} repositories` : `starred ${repositoryText}`;
@@ -232,15 +237,15 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
   const tryGroupEvents = (eventA: GithubEvent, eventB: GithubEvent) => {
     if (!eventA || !eventB) return null;
 
-    const typeA: GithubEventType = eventA.get('type');
-    const typeB: GithubEventType = eventB.get('type');
+    const typeA: GithubEventType = get(eventA, 'type');
+    const typeB: GithubEventType = get(eventB, 'type');
 
-    const isSameRepo = eventA.getIn(['repo', 'id']) === eventB.getIn(['repo', 'id']);
-    const isSameUser = eventA.getIn(['actor', 'id']) === eventB.getIn(['actor', 'id']);
+    const isSameRepo = getIn(eventA, ['repo', 'id']) === getIn(eventB, ['repo', 'id']);
+    const isSameUser = getIn(eventA, ['actor', 'id']) === getIn(eventB, ['actor', 'id']);
     const isSameArchiveStatus = isArchivedFilter(eventA) === isArchivedFilter(eventB);
     const isSameReadStatus = isReadFilter(eventA) === isReadFilter(eventB);
-    const createdAtMinutesDiff = moment(eventA.get('created_at')).diff(moment(eventB.get('created_at')), 'minutes');
-    const merged = eventA.get('merged') || List();
+    const createdAtMinutesDiff = moment(get(eventA, 'created_at')).diff(moment(get(eventB, 'created_at')), 'minutes');
+    const merged = get(eventA, 'merged') || List();
 
     // only merge events with same archive and read status
     if (!(isSameArchiveStatus && isSameReadStatus)) return null;
@@ -261,7 +266,7 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
                   return eventA.mergeDeep(fromJS({
                     type: 'WatchEvent:OneRepoMultipleUsers',
                     payload: {
-                      users: [eventB.get('actor')],
+                      users: [get(eventB, 'actor')],
                     },
                   }));
                 } else if (isSameUser) {
@@ -269,7 +274,7 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
                     type: 'WatchEvent:OneUserMultipleRepos',
                     repo: null,
                     payload: {
-                      repos: [eventA.get('repo'), eventB.get('repo')],
+                      repos: [get(eventA, 'repo'), get(eventB, 'repo')],
                     },
                   }));
                 }
@@ -288,11 +293,11 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
             case 'WatchEvent':
               return (() => {
                 if (isSameRepo) {
-                  const users = eventA.getIn(['payload', 'users']) || List();
-                  const newUser = eventB.getIn(['actor']);
+                  const users = getIn(eventA, ['payload', 'users']) || List();
+                  const newUser = getIn(eventB, ['actor']);
 
                   const alreadyMergedThisUser = users.find(mergedUser => (
-                    `${mergedUser.get('id')}` === `${newUser.get('id')}`
+                    `${get(mergedUser, 'id')}` === `${get(newUser, 'id')}`
                   ));
 
                   if (!alreadyMergedThisUser) {
@@ -317,11 +322,11 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
             case 'WatchEvent':
               return (() => {
                 if (isSameUser) {
-                  const repos = eventA.getIn(['payload', 'repos']) || List();
-                  const newRepo = eventB.getIn(['repo']);
+                  const repos = getIn(eventA, ['payload', 'repos']) || List();
+                  const newRepo = getIn(eventB, ['repo']);
 
                   const alreadyMergedThisRepo = repos.find(mergedRepo => (
-                    `${mergedRepo.get('id')}` === `${newRepo.get('id')}`
+                    `${get(mergedRepo, 'id')}` === `${get(newRepo, 'id')}`
                   ));
 
                   if (!alreadyMergedThisRepo) {
@@ -351,7 +356,7 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
     if (mergedLastEvent) {
       hasMerged = true;
 
-      let allMergedEvents = mergedLastEvent.get('merged') || List();
+      let allMergedEvents = get(mergedLastEvent, 'merged') || List();
       allMergedEvents = allMergedEvents.push(event);
 
       const mergedLastEventUpdated = mergedLastEvent.set('merged', allMergedEvents);
@@ -368,12 +373,12 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
 export function getEventIdsFromEventIncludingMerged(event) {
   if (!event) return Set([]);
 
-  let eventIds = Set([event.get('id')]);
-  const merged = event.get('merged');
+  let eventIds = Set([get(event, 'id')]);
+  const merged = get(event, 'merged');
 
   if (merged) {
     merged.forEach(mergedEvent => {
-      eventIds = eventIds.add(mergedEvent.get('id'));
+      eventIds = eventIds.add(get(mergedEvent, 'id'));
     });
   }
 

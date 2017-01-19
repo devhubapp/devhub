@@ -4,6 +4,7 @@
 import { capitalize, camelCase } from 'lodash';
 import { fromJS, Iterable, List, Map, OrderedMap } from 'immutable';
 
+import { get, getIn, setIn } from '../../immutable';
 import * as baseTheme from '../../../styles/themes/base';
 import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared';
 import { isArchivedFilter, isReadFilter } from '../../../selectors';
@@ -24,14 +25,14 @@ export const notificationReasons = [
   'mention',
   'state_change',
   'subscribed',
-  'team_mention'
+  'team_mention',
 ];
 
 export function getNotificationReasonTextsAndColor(
   notification: GithubNotification,
-  theme?: ThemeObject = baseTheme
+  theme?: ThemeObject = baseTheme,
 ): { color: string, reason: string, label: string, description: string } {
-  const reason: GithubNotificationReason = notification.get('reason');
+  const reason: GithubNotificationReason = get(notification, 'reason');
 
   switch (reason) {
     case 'assign':
@@ -69,13 +70,13 @@ export function getNotificationIconAndColor(
   notification: GithubNotification,
   theme?: ThemeObject,
 ): { icon: GithubIcon, color?: string } {
-  const subject = notification.get('subject');
-  const type = subject.get('type').toLowerCase();
+  const subject = get(notification, 'subject');
+  const type = get(subject, 'type').toLowerCase();
 
   switch (type) {
     case 'commit': return { icon: 'git-commit' };
     case 'issue': return getIssueIconAndColor(subject, theme);
-    case 'pullrequest': return getPullRequestIconAndColor(subject, theme );
+    case 'pullrequest': return getPullRequestIconAndColor(subject, theme);
     default: return 'bell';
   }
 }
@@ -86,7 +87,7 @@ export function groupNotificationsByRepository(
   { includeAllGroup?: boolean, includeFilterGroup?: boolean } = {},
 ) {
   let groupedNotifications = OrderedMap();
-  const notificationIds = notifications.map(notification => notification.get('id'));
+  const notificationIds = notifications.map(notification => get(notification, 'id'));
 
   if (includeFilterGroup) {
     groupedNotifications = groupedNotifications.concat(Map({
@@ -109,17 +110,17 @@ export function groupNotificationsByRepository(
   }
 
   notifications.forEach((notification) => {
-    const repo = notification.get('repository');
-    const repoId = Iterable.isIterable(repo) ? `${repo.get('id')}` : repo;
+    const repo = get(notification, 'repository');
+    const repoId = Iterable.isIterable(repo) ? `${get(repo, 'id')}` : repo;
 
-    let group = groupedNotifications.get(repoId);
+    let group = get(groupedNotifications, repoId);
     if (!group) {
       group = Map({ id: repoId, repoId, notificationIds: List() });
       groupedNotifications = groupedNotifications.set(repoId, group);
     }
 
     groupedNotifications = groupedNotifications.updateIn([repoId, 'notificationIds'], (notif) => (
-      notif.push(notification.get('id'))
+      notif.push(get(notification, 'id'))
     ));
   });
 
@@ -217,34 +218,34 @@ export function notificationsToFilterColumnData(notifications) {
     partialPath = isArchived ? 'archived' : 'inbox';
     path = ['inboxes', partialPath, counterPath];
 
-    count = result.getIn(path) || 0;
-    result = result.setIn(path, count + 1);
+    count = getIn(result, path) || 0;
+    result = setIn(result, path, count + 1);
 
     // readStatus
     partialPath = isRead ? 'read' : 'unread';
     path = ['readStatus', partialPath, counterPath];
-    count = result.getIn(path) || 0;
-    result = result.setIn(path, count + 1);
+    count = getIn(result, path) || 0;
+    result = setIn(result, path, count + 1);
 
     // subjectTypes
-    partialPath = camelCase(notification.getIn(['subject', 'type']));
+    partialPath = camelCase(getIn(notification, ['subject', 'type']));
     path = ['subjectTypes', partialPath, counterPath];
-    count = result.getIn(path) || 0;
-    result = result.setIn(path, count + 1);
+    count = getIn(result, path) || 0;
+    result = setIn(result, path, count + 1);
 
     // reasons
-    partialPath = notification.get('reason');
+    partialPath = get(notification, 'reason');
     path = ['reasons', partialPath, counterPath];//
-    count = result.getIn(path) || 0;
-    result = result.setIn(path, count + 1);
+    count = getIn(result, path) || 0;
+    result = setIn(result, path, count + 1);
 
     // repos
-    partialPath = notification.getIn(['repository', 'full_name']);
+    partialPath = getIn(notification, ['repository', 'full_name']);
     path = ['repos', partialPath];
-    if (!result.getIn(path)) result = result.setIn(path, defaultFilterColumnsRepoData);
+    if (!getIn(result, path)) result = setIn(result, path, defaultFilterColumnsRepoData);
     path = [...path, counterPath];
-    count = result.getIn(path) || 0;
-    result = result.setIn(path, count + 1);
+    count = getIn(result, path) || 0;
+    result = setIn(result, path, count + 1);
   });
 
   return result;

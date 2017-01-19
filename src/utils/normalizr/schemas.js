@@ -9,6 +9,8 @@ import {
   simpleIdAttribute,
 } from './helpers';
 
+import { isPullRequest } from '../helpers/github';
+
 const defaultOptions = { idAttribute: simpleIdAttribute, mergeStrategy: preferNewestMergeStrategy };
 
 const defaultFields = ['id', 'html_url', 'url', 'created_at', 'updated_at'];
@@ -17,6 +19,7 @@ const issueOrPullRequestFields = [
   ...defaultFields,
   'body',
   'latest_comment_url',
+  'merged_at',
   'number',
   'repository_url',
   'state',
@@ -45,7 +48,7 @@ export const IssueSchema = new schema.Entity('issues', {}, {
   idAttribute: issueOrPullRequestIdAttribute,
   processStrategy: obj => ({
     ...pick(obj, issueOrPullRequestFields),
-    type: 'Issue',
+    type: isPullRequest(obj) ? 'PullRequest' : 'Issue',
   }),
 });
 
@@ -66,7 +69,7 @@ export const PullRequestSchema = new schema.Entity('issues', {}, {
   ...defaultOptions,
   idAttribute: issueOrPullRequestIdAttribute,
   processStrategy: obj => ({
-    ...pick(obj, [...issueOrPullRequestFields, 'merged_at']),
+    ...pick(obj, issueOrPullRequestFields),
     type: 'PullRequest',
   }),
 });

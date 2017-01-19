@@ -3,11 +3,13 @@
 
 import { Linking } from 'react-native';
 
+import { get } from '../../immutable';
+
 import type {
-    GithubIssue,
-    GithubPullRequest,
-    GithubRepo,
-  } from '../types';
+  GithubIssue,
+  GithubPullRequest,
+  GithubRepo,
+} from '../../types';
 
 export const baseURL = 'https://github.com';
 
@@ -114,7 +116,7 @@ export function openOnGithub(obj: string | GithubRepo | GithubIssue | GithubPull
     return openURL(obj);
   }
 
-  const url = obj.get('html_url') || obj.get('url');
+  const url = get(obj, 'html_url') || get(obj, 'url');
   if (!url) return null;
 
   return openURL(url);

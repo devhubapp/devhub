@@ -4,35 +4,29 @@
 import gravatar from 'gravatar';
 
 import * as baseTheme from '../../../styles/themes/base';
+import { get } from '../../immutable';
 
 import type {
-    GithubIssue,
-    GithubPullRequest,
-    ThemeObject,
-  } from '../types';
+  GithubIssue,
+  GithubPullRequest,
+  ThemeObject,
+} from '../../types';
 
-export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = baseTheme)
-: { color: string, icon: string } {
-  const state = issue.get('state');
-
-  switch (state) {
-    case 'open':
-      return { icon: 'issue-opened', color: theme.green };
-
-    case 'closed':
-      return { icon: 'issue-closed', color: theme.red };
-
-    default:
-      return { icon: 'issue-opened' };
-  }
+export function isPullRequest(issue: GithubIssue | GithubPullRequest) {
+  return issue && (
+    get(issue, 'pull_request') ||
+    get(issue, 'merged_at') ||
+    (get(issue, 'html_url') && get(issue, 'html_url').indexOf('pull') >= 0) ||
+    (get(issue, 'url') && get(issue, 'url').indexOf('pull') >= 0)
+  );
 }
 
 export function getPullRequestIconAndColor(
   pullRequest: GithubPullRequest,
-  theme?: ThemeObject = baseTheme
+  theme?: ThemeObject = baseTheme,
 ) : { color: string, icon: string } {
-  const merged = pullRequest.get('merged_at');
-  const state = merged ? 'merged' : pullRequest.get('state');
+  const merged = get(pullRequest, 'merged_at');
+  const state = merged ? 'merged' : get(pullRequest, 'state');
 
   switch (state) {
     case 'open':
@@ -46,6 +40,26 @@ export function getPullRequestIconAndColor(
 
     default:
       return { icon: 'git-pull-request' };
+  }
+}
+
+export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = baseTheme)
+: { color: string, icon: string } {
+  const state = get(issue, 'state');
+
+  if (isPullRequest(issue)) {
+    return getPullRequestIconAndColor(issue, theme);
+  }
+
+  switch (state) {
+    case 'open':
+      return { icon: 'issue-opened', color: theme.green };
+
+    case 'closed':
+      return { icon: 'issue-closed', color: theme.red };
+
+    default:
+      return { icon: 'issue-opened' };
   }
 }
 
