@@ -1,7 +1,7 @@
 import createSagaMiddleware from 'redux-saga';
 import { Map } from 'immutable';
 import { AsyncStorage } from 'react-native';
-import { applyMiddleware, createStore } from 'redux'; // compose
+import { applyMiddleware, createStore } from 'redux';
 import { autoRehydrate, persistStore } from 'redux-persist-immutable';
 import { composeWithDevTools } from 'remote-redux-devtools';
 
@@ -17,15 +17,12 @@ export default (initialState = Map()) => {
   const store = createStore(
     reducer,
     initialState,
-    composeEnhancers(
-      applyMiddleware(sagaMiddleware),
-      autoRehydrate(),
-    ),
+    composeEnhancers(applyMiddleware(sagaMiddleware), autoRehydrate()),
   );
 
   sagaMiddleware.run(sagas);
 
-  persistStore(store, { storage: AsyncStorage });
+  persistStore(store, { debounce: 500, storage: AsyncStorage });
 
   return store;
 };
