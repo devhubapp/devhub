@@ -14,7 +14,6 @@ import RepositoryRow from './_RepositoryRow';
 import Label from '../Label';
 import IntervalRefresh from '../IntervalRefresh';
 import OwnerAvatar from './_OwnerAvatar';
-import { isArchivedFilter, isReadFilter } from '../../selectors/shared';
 import { contentPadding } from '../../styles/variables';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getNotificationIconAndColor, getNotificationReasonTextsAndColor, getOrgAvatar } from '../../utils/helpers/github';

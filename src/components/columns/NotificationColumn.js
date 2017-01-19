@@ -120,13 +120,14 @@ export default class extends React.PureComponent {
         key={`notification-card-container-${notificationId}`}
         actions={this.props.actions}
         notificationOrNotificationId={notificationId}
-        onlyOneRepository={!!this.props.column.get('repo')}
+        onlyOneRepository={!!(this.props.repo || this.props.column.get('repoId'))}
       />
     );
   };
 
   render() {
-    const { column,
+    const {
+      column,
       errors,
       icon: _icon,
       items,

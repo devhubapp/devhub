@@ -31,7 +31,7 @@ const makeMapStateToProps = (state: State, { column }: { column: Object }) => {
     errors: notificationsErrorSelector(state) ? [notificationsErrorSelector(state)] : null,
     loading: notificationsIsLoadingSelector(state),
     items: column.get('notifications') || column.get('notificationIds'),
-    repo: repoSelector(state, { repoId: column.get('repoId') }),
+    repo: column.get('repo') || repoSelector(state, { repoId: column.get('repoId') }),
     updatedAt: notificationsUpdatedAtSelector(state),
   });
 };
