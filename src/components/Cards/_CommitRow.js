@@ -49,7 +49,7 @@ export default class extends React.PureComponent {
     return (
       <TouchableRow
         left={
-          authorEmail &&
+          !!authorEmail &&
           <OwnerAvatar
             email={authorEmail}
             size={smallAvatarWidth}
@@ -66,7 +66,7 @@ export default class extends React.PureComponent {
         <CardText numberOfLines={1} muted={read}>
           <StyledText muted><Icon name="git-commit" />&nbsp;</StyledText>
           {message}
-          {byText && <StyledText muted small> by {byText}</StyledText>}
+          {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>
       </TouchableRow>
     );

@@ -45,7 +45,7 @@ export default class extends React.PureComponent {
         <StyledText numberOfLines={1} muted={read}>
           <StyledText muted><Icon name="person" />&nbsp;</StyledText>
           {_login}
-          {additionalInfo && <StyledText muted> {additionalInfo}</StyledText>}
+          {!!additionalInfo && <StyledText muted> {additionalInfo}</StyledText>}
         </StyledText>
       </TouchableRow>
     );

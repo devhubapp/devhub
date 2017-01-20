@@ -87,7 +87,7 @@ export default class extends React.PureComponent {
 
     const eventIds = getEventIdsFromEventIncludingMerged(event);
 
-    const isPrivate = event.get('private') || event.get('public') === false;
+    const isPrivate = !!event.get('private') || event.get('public') === false;
     const {
       icon: cardIcon,
       color: cardIconColor,
@@ -145,7 +145,7 @@ export default class extends React.PureComponent {
                 </TransparentTextOverlay>
 
                 <StyledText numberOfLines={1} muted>
-                  {isPrivate && <StyledText muted><Icon name="lock" />&nbsp;</StyledText>}
+                  {!!isPrivate && <StyledText muted><Icon name="lock" />&nbsp;</StyledText>}
                   {getEventText(event, { repoIsKnown: onlyOneRepository })}
                 </StyledText>
               </FullView>
@@ -166,7 +166,7 @@ export default class extends React.PureComponent {
         </Header>
 
         {
-          repo && !onlyOneRepository &&
+          !!repo && !onlyOneRepository &&
           <RepositoryRow
             actions={actions}
             repo={repo}
@@ -195,7 +195,7 @@ export default class extends React.PureComponent {
         }
 
         {
-          payload.get('ref') &&
+          !!payload.get('ref') &&
           <BranchRow
             type={type}
             branch={payload.get('ref')}
@@ -207,7 +207,7 @@ export default class extends React.PureComponent {
         }
 
         {
-          payload.get('forkee') &&
+          !!payload.get('forkee') &&
           <RepositoryRow
             actions={actions}
             repo={payload.get('forkee')}
@@ -232,12 +232,12 @@ export default class extends React.PureComponent {
 
         {
           type === 'GollumEvent' &&
-          payload.get('pages') &&
+          !!payload.get('pages') &&
           <WikiPageListRow pages={payload.get('pages')} narrow />
         }
 
         {
-          payload.get('pull_request') &&
+          !!payload.get('pull_request') &&
           <PullRequestRow
             pullRequest={payload.get('pull_request')}
             comment={payload.get('comment')}
@@ -262,7 +262,7 @@ export default class extends React.PureComponent {
         }
 
         {
-          payload.get('issue') &&
+          !!payload.get('issue') &&
           <IssueRow
             issue={payload.get('issue')}
             comment={payload.get('comment')}
@@ -273,7 +273,7 @@ export default class extends React.PureComponent {
         {
           (
             (type === 'IssuesEvent' && payload.get('action') === 'opened' &&
-            payload.getIn(['issue', 'body']) &&
+            !!payload.getIn(['issue', 'body']) &&
             <CommentRow
               body={payload.getIn(['issue', 'body'])}
               user={actor}
@@ -284,7 +284,7 @@ export default class extends React.PureComponent {
             ||
 
             (type === 'PullRequestEvent' && payload.get('action') === 'opened' &&
-            payload.getIn(['pull_request', 'body']) &&
+            !!payload.getIn(['pull_request', 'body']) &&
             <CommentRow
               body={payload.getIn(['pull_request', 'body'])}
               user={actor}
@@ -294,7 +294,7 @@ export default class extends React.PureComponent {
 
             ||
 
-            (payload.getIn(['comment', 'body']) &&
+            (!!payload.getIn(['comment', 'body']) &&
             <CommentRow
               body={payload.getIn(['comment', 'body'])}
               user={actor}
@@ -305,7 +305,7 @@ export default class extends React.PureComponent {
         }
 
         {
-          payload.get('release') &&
+          !!payload.get('release') &&
           <ReleaseRow
             release={payload.get('release')}
             type={type}

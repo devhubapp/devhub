@@ -48,13 +48,13 @@ export default class extends React.PureComponent {
     return (
       <View>
         {
-          branch &&
+          !!branch &&
           <BranchRow branch={branch} type={type} repoFullName={repoFullName} narrow />
         }
 
         <TouchableRow
           left={
-            user &&
+            !!user &&
             <OwnerAvatar
               avatarURL={user.get('avatar_url')}
               linkURL={user.get('html_url') || user.get('url')}
@@ -71,10 +71,10 @@ export default class extends React.PureComponent {
         </TouchableRow>
 
         {
-          body &&
+          !!body &&
           <TouchableRow
             left={
-              user &&
+              !!user &&
               <OwnerAvatar
                 avatarURL={user.get('avatar_url')}
                 linkURL={user.get('html_url') || user.get('url')}

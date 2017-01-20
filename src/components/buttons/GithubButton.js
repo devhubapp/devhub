@@ -85,8 +85,8 @@ export default ({
       }
 
       <TextWrapper horizontal={horizontal}>
-        {title && (<Text {...textProps}>{title}</Text>)}
-        {subtitle && <Text muted {...subtitleProps}>{subtitle}</Text>}
+        {!!title && (<Text {...textProps}>{title}</Text>)}
+        {!!subtitle && <Text muted {...subtitleProps}>{subtitle}</Text>}
       </TextWrapper>
 
       {

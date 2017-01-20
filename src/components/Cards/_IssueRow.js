@@ -51,7 +51,7 @@ export default class extends React.PureComponent {
     return (
       <TouchableRow
         left={
-          user &&
+          !!user &&
           <OwnerAvatar
             avatarURL={user.get('avatar_url')}
             linkURL={user.get('html_url') || user.get('url')}
@@ -69,7 +69,7 @@ export default class extends React.PureComponent {
         <CardText numberOfLines={1} muted={read}>
           <StyledText muted><Icon name={icon} color={color} />&nbsp;</StyledText>
           {_title}
-          {byText && <StyledText muted small> by {byText}</StyledText>}
+          {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>
       </TouchableRow>
     );

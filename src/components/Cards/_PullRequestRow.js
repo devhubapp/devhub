@@ -33,7 +33,8 @@ export default class extends React.PureComponent {
   render() {
     const { comment, pullRequest, read, theme, ...props } = this.props;
 
-    if (!pullRequest) return null;
+    // TODO: Remove this typeof pullRequest.get === 'function' on next release
+    if (!(pullRequest && typeof pullRequest.get === 'function')) return null;
 
     const title = trimNewLinesAndSpaces(pullRequest.get('title'));
     if (!title) return null;
@@ -72,7 +73,7 @@ export default class extends React.PureComponent {
         <CardText numberOfLines={1} muted={read}>
           <StyledText muted><Icon name={icon} color={color} />&nbsp;</StyledText>
           {title}
-          {byText && <StyledText muted small> by {byText}</StyledText>}
+          {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>
       </TouchableRow>
     );
