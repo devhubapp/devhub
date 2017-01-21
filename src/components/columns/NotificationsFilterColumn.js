@@ -3,6 +3,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Octicons';
+import { Map } from 'immutable';
 
 import ColumnWithList, { headerFontSize } from './_ColumnWithList';
 import { FullView, StyledText } from '../cards/__CardComponents';
@@ -11,6 +12,8 @@ import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
 import { get } from '../../utils/immutable';
 import type { ActionCreators } from '../../utils/types';
 
+export const defaultIcon = 'zap';
+export const defaultTitle = 'summary';
 
 export const Section = styled.View`
   height: 1;
@@ -50,7 +53,9 @@ const CounterWrapper = styled.View`
   padding-horizontal: ${contentPadding};
   padding-vertical: 1;
   border-radius: 10;
-  background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base03)};
+  background-color: ${({ outline, theme }) => (
+    outline ? 'transparent' : theme.base03
+  )};
   border-width: 1;
   border-color: ${({ theme }) => theme.base03};
 `;
@@ -67,6 +72,14 @@ const TotalCount = styled(StyledText)`
 `;
 
 export default class extends React.PureComponent {
+  static defaultProps = {
+    icon: defaultIcon,
+    onRefresh: this.onRefresh,
+    radius: undefined,
+    style: undefined,
+    title: defaultTitle,
+  };
+
   onRefresh = () => {
     const { actions: { updateNotifications } } = this.props;
 
@@ -79,23 +92,21 @@ export default class extends React.PureComponent {
     column: Object,
     icon?: string,
     items: Object,
+    onRefresh?: Function,
     radius?: number,
     style?: Object,
     title?: string,
-    theme?: Object,
   };
 
-  totalItemNotifications = (item) => (
-    item
-      ? (get(item, 'read') || 0) + (get(item, 'unread') || 0)
-      : 0
+  totalItemNotifications = item => (
+    item ? (get(item, 'read') || 0) + (get(item, 'unread') || 0) : 0
   );
 
-  willShowItem = (item) => (
+  willShowItem = item => (
     item && (get(item, 'pinned') || this.totalItemNotifications(item))
   );
 
-  isSectionEmpty = (sectionData) => (
+  isSectionEmpty = sectionData => (
     !sectionData || !sectionData.some(this.willShowItem)
   );
 
@@ -103,10 +114,13 @@ export default class extends React.PureComponent {
     prevSectionData !== nextSectionData
   );
 
-  makeRenderSectionHeader = (firstSectionId) => (sectionData, sectionId) => (
-    sectionData && sectionData.size > 0 &&
-    !(sectionId === firstSectionId || this.isSectionEmpty(sectionData)) &&
-    <Section />
+  // TODO: Mode firstSectionId to component state
+  makeRenderSectionHeader = firstSectionId => (
+    (sectionData, sectionId) =>
+      sectionData &&
+        sectionData.size > 0 &&
+        !(sectionId === firstSectionId || this.isSectionEmpty(sectionData)) &&
+        <Section />
   );
 
   renderRow = (item, sectionId, rowId) => {
@@ -115,23 +129,28 @@ export default class extends React.PureComponent {
     }
 
     return (
-      <ItemWrapper key={`notifications-filter-column-item-${sectionId}-${rowId}`}>
+      <ItemWrapper
+        key={`notifications-filter-column-item-${sectionId}-${rowId}`}
+      >
         <ItemTitleWrapper>
           <ItemIcon name={get(item, 'icon')} color={get(item, 'color')} />
           <ItemTitle numberOfLines={1}>{get(item, 'title') || rowId}</ItemTitle>
         </ItemTitleWrapper>
-
         <CounterWrapper outline={!(get(item, 'unread') > 0)}>
           {
-            get(item, 'unread') >= 0 &&
-            <UnreadCount count={get(item, 'unread')}>{get(item, 'unread')}</UnreadCount>
+            get(item, 'unread') >= 0 && (
+              <UnreadCount count={get(item, 'unread')}>
+                {get(item, 'unread')}
+              </UnreadCount>
+            )
           }
           {
-            get(item, 'read') >= 0 &&
-            <TotalCount>
-              {get(item, 'unread') >= 0 && ' / '}
-              {this.totalItemNotifications(item)}
-            </TotalCount>
+            get(item, 'read') >= 0 && (
+              <TotalCount>
+                {get(item, 'unread') >= 0 && ' / '}
+                {this.totalItemNotifications(item)}
+              </TotalCount>
+            )
           }
         </CounterWrapper>
       </ItemWrapper>
@@ -139,29 +158,28 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { column,
-      icon = 'zap',
-      items,
+    const {
+      items: _items,
+      onRefresh,
       style,
-      title = 'summary',
       ...props
     } = this.props;
 
-    if (!column) return null;
+    const items = _items || Map();
 
     return (
       <FullView style={style}>
         <ColumnWithList
-          key="notification-filter-_ColumnWithList"
-          icon={icon}
-          title={title}
-          initialListSize={20}
-          items={items}
-          refreshFn={this.onRefresh}
-          renderRow={this.renderRow}
-          renderSectionHeader={this.makeRenderSectionHeader(items.keySeq().first())}
-          sectionHeaderHasChanged={this.sectionHeaderHasChanged}
           {...props}
+          key="notification-filter-_ColumnWithList"
+          items={items}
+          initialListSize={20}
+          refreshFn={onRefresh}
+          renderRow={this.renderRow}
+          renderSectionHeader={
+            this.makeRenderSectionHeader(items.keySeq().first())
+          }
+          sectionHeaderHasChanged={this.sectionHeaderHasChanged}
         />
       </FullView>
     );

@@ -3,6 +3,7 @@
 import React from 'react';
 import styled, { withTheme } from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
+import { Map } from 'immutable';
 import { RefreshControl } from 'react-native';
 
 import ColumnWithHeader, { getRadius } from './_ColumnWithHeader';
@@ -41,7 +42,7 @@ export default class extends React.PureComponent {
 
   props: {
     errors?: ?Array<string>,
-    headerRight?: React.Element,
+    rightHeader?: React.Element,
     icon: string,
     initialListSize?: number,
     isEmpty?: boolean,
@@ -67,7 +68,7 @@ export default class extends React.PureComponent {
     const {
       initialListSize,
       isEmpty,
-      items,
+      items: _items,
       loading,
       refreshFn,
       refreshText: _refreshText,
@@ -79,6 +80,7 @@ export default class extends React.PureComponent {
       ...props
     } = this.props;
 
+    const items = _items || Map();
     const _radius = getRadius(props);
 
     let refreshText = _refreshText;

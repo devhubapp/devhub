@@ -65,14 +65,14 @@ export default class extends React.PureComponent {
           <StackNavigation initialRoute="home" />
         </TabNavigationItem>
 
-        {/*<TabNavigationItem*/}
-          {/*id="trending"*/}
-          {/*renderIcon={isSelected => (*/}
-            {/*renderIcon('Trending', 'pulse', isSelected, theme.base07, theme.base05)*/}
-          {/*)}*/}
-        {/*>*/}
-          {/*<StackNavigation initialRoute="empty"/>*/}
-        {/*</TabNavigationItem>*/}
+        {/* <TabNavigationItem*/}
+        {/* id="trending"*/}
+        {/* renderIcon={isSelected => (*/}
+        {/* renderIcon('Trending', 'pulse', isSelected, theme.base07, theme.base05)*/}
+        {/* )}*/}
+        {/* >*/}
+        {/* <StackNavigation initialRoute="empty"/>*/}
+        {/* </TabNavigationItem>*/}
 
         <TabNavigationItem
           id="notifications"

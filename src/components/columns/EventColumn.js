@@ -184,9 +184,10 @@ export default class extends React.PureComponent {
     return (
       <FullView style={style}>
         <ColumnWithList
+          {...props}
           key="event-column-_ColumnWithList"
           errors={errors}
-          headerRight={
+          rightHeader={
             <HeaderButtonsContainer>
               <HeaderButton onPress={this.showActionSheet}>
                 <HeaderButtonIcon name="chevron-down" />
@@ -200,7 +201,6 @@ export default class extends React.PureComponent {
           renderRow={this.renderRow}
           refreshFn={this.onRefresh}
           refreshText={updatedText}
-          {...props}
         />
 
         <ActionSheet

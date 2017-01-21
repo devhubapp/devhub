@@ -11,115 +11,114 @@ import {
   isReadFilter,
 } from './shared';
 
-import { groupNotificationsByRepository, notificationsToFilterColumnData } from '../utils/helpers/github';
+import { groupNotificationsByRepository } from '../utils/helpers/github';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 
-export const notificationIdSelector = (state, { notificationId }) => notificationId;
-export const notificationDetailsSelector = (state) => state.get('notifications');
-export const notificationEntitiesSelector = (state) => entitiesSelector(state).get('notifications');
-
-export const notificationSelector = (state, { notificationId }) => (
-  notificationEntitiesSelector(state).get(notificationId)
+export const sortNotificationsByDate = (b, a) => (
+  a.get('updated_at') > b.get('updated_at') ? 1 : -1
 );
+
+export const notificationIdSelector = (state, { notificationId }) =>
+  notificationId;
+export const notificationDetailsSelector = state => state.get('notifications');
+export const notificationEntitiesSelector = state =>
+  entitiesSelector(state).get('notifications');
+
+export const notificationSelector = (state, { notificationId }) =>
+  notificationEntitiesSelector(state).get(notificationId);
 
 export const notificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
-  (notifications) => (
+  notifications =>
     notifications
       .filter(Boolean)
       .map(notification => notification.get('id'))
-      .toList()
-  ),
+      .toList(),
 );
 
 export const unarchivedNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
-  (notifications) => (
+  notifications =>
     notifications
       .filter(Boolean)
       .filterNot(isArchivedFilter)
       .map(notification => notification.get('id'))
-      .toList()
+      .toList(),
+);
+
+export const makeDenormalizedNotificationsSelector = (n) => createImmutableSelectorCreator(n)(
+  (state, { notifications, notificationIds }) => (
+    notifications || notificationIds || notificationIdsSelector(state)
   ),
+  entitiesSelector,
+  (notifications, entities) =>
+    denormalize(notifications, entities, [NotificationSchema]).sort(
+      sortNotificationsByDate,
+    ),
 );
 
 export const readNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
-  (notifications) => (
+  notifications =>
     notifications
       .filter(Boolean)
       .filter(isReadFilter)
       .map(notification => notification.get('id'))
-      .toList()
-  ),
+      .toList(),
 );
 
-export const sortNotificationsByDate = (b, a) => (a.get('updated_at') > b.get('updated_at') ? 1 : -1);
+export const makeIsArchivedNotificationSelector = () =>
+  createImmutableSelector(notificationSelector, isArchivedFilter);
 
-export const makeIsArchivedNotificationSelector = () => createImmutableSelector(
-  notificationSelector,
-  isArchivedFilter,
-);
+export const makeIsReadNotificationSelector = () =>
+  createImmutableSelector(
+    notificationIdSelector,
+    readNotificationIdsSelector,
+    (notificationId, readIds) => readIds.includes(notificationId),
+  );
 
-export const makeIsReadNotificationSelector = () => createImmutableSelector(
-  notificationIdSelector,
-  readNotificationIdsSelector,
-  (notificationId, readIds) => readIds.includes(notificationId),
-);
-
-export const makeDenormalizedNotificationSelector = () => createImmutableSelector(
-  notificationSelector,
-  entitiesSelector,
-  (notification, entities) => (
-    denormalize(notification, entities, NotificationSchema)
-  ),
-);
+export const makeDenormalizedNotificationSelector = () =>
+  createImmutableSelector(
+    notificationSelector,
+    entitiesSelector,
+    (notification, entities) =>
+      denormalize(notification, entities, NotificationSchema),
+  );
 
 // with memoization of first argument
 // to prevent calling this again unless new notifications were added
 export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCreator(1)(
   unarchivedNotificationIdsSelector,
   notificationEntitiesSelector,
-  (notificationIds, notificationEntities) => (
+  (notificationIds, notificationEntities) =>
     notificationIds
       .map(notificationId => notificationEntities.get(notificationId))
-      .sort(sortNotificationsByDate)
-  ),
+      .sort(sortNotificationsByDate),
 );
 
 export const groupedUnarchivedNotificationsSelector = createImmutableSelector(
   orderedUnarchivedNotificationsSelector,
   (state, params) => params,
-  (notifications, params) => groupNotificationsByRepository(notifications, params),
-);
-
-export const notificationsFiltersSelector = createImmutableSelector(
-  unarchivedNotificationIdsSelector,
-  entitiesSelector,
-  (notificationIds, entities) => (
-    notificationsToFilterColumnData(
-      denormalize(notificationIds, entities, [NotificationSchema])
-        .sort(sortNotificationsByDate),
-    )
-  ),
+  (notifications, params) =>
+    groupNotificationsByRepository(notifications, params),
 );
 
 export const notificationsIsLoadingSelector = createImmutableSelector(
   notificationDetailsSelector,
-  (notifications) => !!notifications.get('loading'),
+  notifications => !!notifications.get('loading'),
 );
 
 export const notificationsLastModifiedAtSelector = createImmutableSelector(
   notificationDetailsSelector,
-  (notifications) => notifications.get('lastModifiedAt'),
+  notifications => notifications.get('lastModifiedAt'),
 );
 
 export const notificationsUpdatedAtSelector = createImmutableSelector(
   notificationDetailsSelector,
-  (notifications) => notifications.get('updatedAt'),
+  notifications => notifications.get('updatedAt'),
 );
 
 export const notificationsErrorSelector = createImmutableSelector(
   notificationDetailsSelector,
-  (notifications) => notifications.get('error'),
+  notifications => notifications.get('error'),
 );

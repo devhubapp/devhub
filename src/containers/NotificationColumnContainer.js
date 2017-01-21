@@ -23,18 +23,19 @@ import type {
   State,
 } from '../utils/types';
 
-const makeMapStateToProps = (state: State, { column }: { column: Object }) => {
+const makeMapStateToProps = (state: State, { column }: {column: Object}) => {
   const repoSelector = makeRepoSelector();
   const items = column.get('notifications') || column.get('notificationIds');
 
-  return ({
-    errors: notificationsErrorSelector(state) ? [notificationsErrorSelector(state)] : null,
+  return {
+    errors: [notificationsErrorSelector(state)],
     loading: notificationsIsLoadingSelector(state),
     isEmpty: items.size === 0,
     items,
-    repo: column.get('repo') || repoSelector(state, { repoId: column.get('repoId') }),
+    repo: column.get('repo') ||
+      repoSelector(state, { repoId: column.get('repoId') }),
     updatedAt: notificationsUpdatedAtSelector(state),
-  });
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -43,37 +44,26 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
+  static defaultProps = { repo: undefined };
+
   props: {
     actions: ActionCreators,
     column: ColumnType,
     errors: Array<string>,
     items: Array<string | GithubNotification>,
     loading: boolean,
-    repo?: GithubRepo,
+    repo?: GithubRepo
   };
 
   render() {
-    const {
-      actions,
-      column,
-      errors,
-      items,
-      loading,
-      repo,
-      ...props
-    } = this.props;
+    const { column, ...props } = this.props;
 
     if (!column) return null;
 
     return (
       <NotificationColumn
         key={`notification-column-${column.get('id')}`}
-        actions={actions}
         column={column}
-        items={items}
-        errors={errors}
-        loading={loading}
-        repo={repo}
         {...props}
       />
     );

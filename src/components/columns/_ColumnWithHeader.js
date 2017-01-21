@@ -45,7 +45,9 @@ export const HeaderButton = styled.TouchableOpacity`
 
 export const HeaderButtonIcon = styled(Icon)`
   font-size: ${headerFontSize};
-  color: ${({ theme }) => theme.base04};
+  color: ${({ active, muted, theme }) => (
+    muted ? theme.base05 : (active ? theme.brand : theme.base04)
+  )};
 `;
 
 export const FixedHeader = styled.View`
@@ -63,7 +65,7 @@ export const ProgressBarContainer = styled.View`
 export default class extends React.PureComponent {
   props: {
     errors?: ?Array<string>,
-    headerRight?: React.Element,
+    rightHeader?: React.Element,
     icon: string,
     items: Array<Object>,
     loading?: boolean,
@@ -83,7 +85,7 @@ export default class extends React.PureComponent {
     const {
       children,
       errors,
-      headerRight,
+      rightHeader,
       icon,
       items,
       loading,
@@ -107,7 +109,7 @@ export default class extends React.PureComponent {
             </Title>
           </TitleWrapper>
 
-          {headerRight}
+          {rightHeader}
         </FixedHeader>
 
         <ProgressBarContainer>

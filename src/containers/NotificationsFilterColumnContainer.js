@@ -8,21 +8,39 @@ import NotificationsFilterColumn from '../components/columns/NotificationsFilter
 
 import * as actionCreators from '../actions';
 
+import { notificationsToFilterColumnData } from '../utils/helpers/github';
+
 import {
   notificationsErrorSelector,
-  notificationsFiltersSelector,
+  makeDenormalizedNotificationsSelector,
   notificationsIsLoadingSelector,
   notificationsUpdatedAtSelector,
 } from '../selectors/notifications';
 
 import type { State } from '../utils/types';
 
-const makeMapStateToProps = (state: State) => ({
-  errors: notificationsErrorSelector(state) ? [notificationsErrorSelector(state)] : null,
-  loading: notificationsIsLoadingSelector(state),
-  items: notificationsFiltersSelector(state),
-  updatedAt: notificationsUpdatedAtSelector(state),
-});
+const makeMapStateToProps = (
+  state: State,
+  { column, updatedAt }: {column: Object, updatedAt?: Date},
+) => {
+  const denormalizedNotificationsSelector = makeDenormalizedNotificationsSelector(
+    state,
+  );
+
+  const notifications = denormalizedNotificationsSelector(state, {
+    notifications: column.get('notifications'),
+    notificationIds: column.get('notificationIds'),
+  });
+
+  return {
+    errors: [notificationsErrorSelector(state)],
+    loading: notificationsIsLoadingSelector(state),
+    items: notificationsToFilterColumnData(notifications),
+    updatedAt: typeof updatedAt === 'undefined'
+      ? notificationsUpdatedAtSelector(state)
+      : updatedAt,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
@@ -30,22 +48,14 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
-  props: {
-    column: Object,
-    loading: boolean,
-    items: Object,
-    updatedAt: Date,
-  };
+  props: {column: Object, loading: boolean, items: Object, updatedAt: Date};
 
   render() {
-    const { column, items, ...props } = this.props;
-
-    if (!column) return null;
+    const { items, ...props } = this.props;
 
     return (
       <NotificationsFilterColumn
         key="notifications-filter-column"
-        column={column}
         items={items}
         {...props}
       />

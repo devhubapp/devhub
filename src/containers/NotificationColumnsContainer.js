@@ -13,7 +13,7 @@ import {
 import * as actionCreators from '../actions';
 import type { ActionCreators, State } from '../utils/types';
 
-const denormalizedGNSelectorParams = { includeAllGroup: true, includeFilterGroup: true };
+const denormalizedGNSelectorParams = { includeAllGroup: true };
 const mapStateToProps = (state: State) => ({
   columns: groupedUnarchivedNotificationsSelector(state, denormalizedGNSelectorParams),
 });
