@@ -56,9 +56,9 @@ export default class extends React.PureComponent {
 
     return (
       <NotificationsFilterColumn
+        {...props}
         key="notifications-filter-column"
         items={items}
-        {...props}
       />
     );
   }

@@ -174,7 +174,7 @@ export default class extends React.PureComponent {
           key="notification-filter-_ColumnWithList"
           items={items}
           initialListSize={20}
-          refreshFn={onRefresh}
+          onRefresh={onRefresh}
           renderRow={this.renderRow}
           renderSectionHeader={
             this.makeRenderSectionHeader(items.keySeq().first())

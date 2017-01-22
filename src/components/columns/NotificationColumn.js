@@ -179,7 +179,6 @@ export default class extends React.PureComponent {
       repo,
       style,
       title: _title,
-      updatedAt,
       ...props
     } = this.props;
 
@@ -211,9 +210,8 @@ export default class extends React.PureComponent {
           icon={icon}
           items={items}
           title={title}
-          refreshFn={this.onRefresh}
+          onRefresh={this.onRefresh}
           renderRow={this.renderRow}
-          updatedAt={updatedAt}
         />
 
         <ActionSheet
@@ -229,17 +227,16 @@ export default class extends React.PureComponent {
 
         {
           summary && (
-            <FullAbsoluteView key={`notifications-gcc-${column.get('id')}-FullAbsoluteView`}>
+            <FullAbsoluteView key={`notifications-fcc-${column.get('id')}-FullAbsoluteView`}>
               <NotificationsFilterColumnContainer
                 {...props}
                 key={`notifications-filter-column-container-${column.get('id')}`}
                 column={column}
                 icon={icon}
                 title={title}
-                refreshFn={this.onRefresh}
+                onRefresh={this.onRefresh}
                 renderRow={this.renderRow}
                 rightHeader={this.getRightHeader(true)}
-                updatedAt={null}
               />
             </FullAbsoluteView>
           )

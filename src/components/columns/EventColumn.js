@@ -202,7 +202,7 @@ export default class extends React.PureComponent {
           loading={loading}
           title={title}
           renderRow={this.renderRow}
-          refreshFn={this.onRefresh}
+          onRefresh={this.onRefresh}
           refreshText={updatedText}
         />
 

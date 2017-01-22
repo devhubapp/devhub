@@ -49,7 +49,7 @@ export default class extends React.PureComponent {
     items: Array<Object>,
     loading?: boolean,
     radius?: number,
-    refreshFn?: Function,
+    onRefresh?: Function,
     refreshText?: string,
     renderRow: Function,
     renderSectionHeader?: Function,
@@ -70,7 +70,7 @@ export default class extends React.PureComponent {
       isEmpty,
       items: _items,
       loading,
-      refreshFn,
+      onRefresh,
       refreshText: _refreshText,
       renderRow,
       renderSectionHeader,
@@ -90,12 +90,12 @@ export default class extends React.PureComponent {
     }
 
     const refreshControl = (
-      (refreshFn || refreshText) &&
+      (onRefresh || refreshText) &&
       <RefreshControl
         refreshing={false}
-        onRefresh={refreshFn}
-        colors={[loading || !refreshFn ? 'transparent' : theme.base07]}
-        tintColor={loading || !refreshFn ? 'transparent' : theme.base07}
+        onRefresh={onRefresh}
+        colors={[loading || !onRefresh ? 'transparent' : theme.base07]}
+        tintColor={loading || !onRefresh ? 'transparent' : theme.base07}
         title={(refreshText || ' ').toLowerCase()}
         titleColor={theme.base05}
         progressBackgroundColor={theme.base02}
