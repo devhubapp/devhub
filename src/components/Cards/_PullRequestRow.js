@@ -1,16 +1,16 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
 
 import {
   renderItemId,
-  CardText,
-  RightOfScrollableContent,
   smallAvatarWidth,
+  CardText,
+  Icon,
+  RightOfScrollableContent,
   StyledText,
 } from './__CardComponents';
 
@@ -62,6 +62,7 @@ export default class extends React.PureComponent {
             size={smallAvatarWidth}
           />
         }
+        read={read}
         right={
           <RightOfScrollableContent>
             {renderItemId({ number, read, url: pullRequest.get('html_url') || pullRequest.get('url') })}
@@ -71,7 +72,9 @@ export default class extends React.PureComponent {
         {...props}
       >
         <CardText numberOfLines={1} muted={read}>
-          <StyledText muted><Icon name={icon} color={color} />&nbsp;</StyledText>
+          <StyledText muted>
+            <Icon name={icon} color={color} muted={read} />&nbsp;
+          </StyledText>
           {title}
           {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>

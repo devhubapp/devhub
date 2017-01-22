@@ -61,6 +61,7 @@ export default class extends React.PureComponent {
               size={smallAvatarWidth}
             />
           }
+          read={read}
           url={release.get('html_url') || release.get('url')}
           {...props}
         >
@@ -81,6 +82,7 @@ export default class extends React.PureComponent {
                 size={smallAvatarWidth}
               />
             }
+            read={read}
             url={release.get('html_url') || release.get('url')}
             {...props}
           >

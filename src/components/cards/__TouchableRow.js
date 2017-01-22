@@ -26,6 +26,7 @@ export default class extends React.PureComponent {
     narrow?: boolean,
     onPress?: Function,
     pushed?: boolean,
+    read?: boolean,
     right?: React.Element,
     theme?: ThemeObject,
     url?: string,
@@ -37,6 +38,7 @@ export default class extends React.PureComponent {
       left,
       narrow,
       onPress,
+      read,
       right,
       theme,
       url,
@@ -45,7 +47,7 @@ export default class extends React.PureComponent {
 
     return (
       <ContentRow narrow={narrow} {...props}>
-        <LeftColumn center>
+        <LeftColumn muted={read} center>
           {left}
         </LeftColumn>
 

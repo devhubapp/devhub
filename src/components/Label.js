@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import { contentPadding, radius as defaultRadius } from '../styles/variables';
+import { contentPadding, mutedOpacity, radius as defaultRadius } from '../styles/variables';
 
 const LabelContainer = styled.View`
   padding-vertical: 2;
@@ -12,13 +12,14 @@ const LabelContainer = styled.View`
     outline ? 'transparent' : (color || theme.base04)
   )};
   border-color: ${({ color, theme }) => color || theme.base04};
-  border-width: ${({ borderWidth }) => borderWidth || 0.5};
+  border-width: ${({ borderWidth }) => borderWidth || 1};
   border-radius: ${({ radius }) => radius || 0};
+  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
 
 const Label = styled.Text`
-  color: ${({ color, outline, theme, textColor }) => (
-    textColor || (outline ? color || theme.base04 : '') || '#ffffff'
+  color: ${({ color, muted, outline, theme, textColor }) => (
+    textColor || (outline ? color || (muted ? theme.base05 : theme.base04) : '') || '#ffffff'
   )};
 `;
 
@@ -27,6 +28,7 @@ type Props = {
   color?: ?string,
   containerStyle?: Object,
   containerProps?: Object,
+  muted?: boolean,
   outline?: boolean,
   radius?: number,
   textColor?: ?string,
@@ -37,18 +39,20 @@ export default ({
   children,
   containerStyle,
   containerProps = {},
+  muted,
   outline,
   radius = defaultRadius,
   ...props
 }: Props) => (
   <LabelContainer
     color={color}
+    muted={muted}
     outline={outline}
     radius={radius}
     style={containerStyle}
     {...containerProps}
   >
-    <Label color={color} outline={outline} {...props}>
+    <Label color={color} outline={outline} muted={muted} {...props}>
       {children}
     </Label>
   </LabelContainer>

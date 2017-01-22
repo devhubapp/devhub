@@ -16,7 +16,11 @@ import IntervalRefresh from '../IntervalRefresh';
 import OwnerAvatar from './_OwnerAvatar';
 import { contentPadding } from '../../styles/variables';
 import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
-import { getNotificationIconAndColor, getNotificationReasonTextsAndColor, getOrgAvatar } from '../../utils/helpers/github';
+import {
+  getNotificationIconAndColor,
+  getNotificationReasonTextsAndColor,
+  getOrgAvatar,
+} from '../../utils/helpers/github';
 import type { ActionCreators, GithubNotification } from '../../utils/types';
 
 import {
@@ -33,16 +37,29 @@ import {
 } from './__CardComponents';
 
 export default class extends React.PureComponent {
+  static defaultProps = {
+    archived: false,
+    onlyOneRepository: false,
+    read: false,
+  };
+
   props: {
     actions: ActionCreators,
     archived?: ?boolean,
     onlyOneRepository?: ?boolean,
     notification: GithubNotification,
-    read?: ?boolean,
+    read?: ?boolean
   };
 
   render() {
-    const { actions, archived, onlyOneRepository, notification, read, ...props } = this.props;
+    const {
+      actions,
+      archived,
+      onlyOneRepository,
+      notification,
+      read,
+      ...props
+    } = this.props;
 
     if (!notification) return null;
     if (archived) return null;
@@ -57,7 +74,9 @@ export default class extends React.PureComponent {
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const notificationIds = Set([notification.get('id')]);
     const title = trimNewLinesAndSpaces(subject.get('title'));
-    const { label: _label, color } = getNotificationReasonTextsAndColor(notification);
+    const { label: _label, color } = getNotificationReasonTextsAndColor(
+      notification,
+    );
     const label = _label.toLowerCase();
 
     const subjectType = (subject.get('type') || '').toLowerCase();
@@ -65,103 +84,107 @@ export default class extends React.PureComponent {
     const issue = (subjectType === 'issue' && subject) || null;
     const pullRequest = (subjectType === 'pullrequest' && subject) || null;
 
-    const { icon: cardIcon, color: cardIconColor } = getNotificationIconAndColor(notification);
+    const { icon: cardIcon, color: cardIconColor } = getNotificationIconAndColor(
+      notification,
+    );
 
     const toggleNotificationsReadStatus = read
       ? actions.markNotificationsAsUnread
-      : actions.markNotificationsAsReadRequest
-    ;
+      : actions.markNotificationsAsReadRequest;
 
     return (
       <CardWrapper {...props} read={read}>
         <FullAbsoluteView
-          style={{
-            top: contentPadding + smallAvatarWidth,
-            left: contentPadding,
-            right: null,
-            width: smallAvatarWidth,
-            zIndex: 1,
-          }}
+          top={contentPadding + smallAvatarWidth}
+          left={contentPadding}
+          right={null}
+          width={smallAvatarWidth}
+          zIndex={1}
         >
-          <TouchableWithoutFeedback onPress={() => toggleNotificationsReadStatus({ notificationIds })}>
+          <TouchableWithoutFeedback
+            onPress={() => toggleNotificationsReadStatus({ notificationIds })}
+          >
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
-
         <Header>
-          <LeftColumn center>
+          <LeftColumn muted={read} center>
             {
               avatarUrl &&
-              <OwnerAvatar
-                avatarURL={avatarUrl}
-                linkURL={repo.get('html_url') || repo.get('url')}
-                size={smallAvatarWidth}
-              />
+                (
+                  <OwnerAvatar
+                    avatarURL={avatarUrl}
+                    linkURL={repo.get('html_url') || repo.get('url')}
+                    size={smallAvatarWidth}
+                  />
+                )
             }
           </LeftColumn>
-
           <MainColumn>
             <HeaderRow>
               <FullView center horizontal>
-                <Label numberOfLines={1} color={color} outline>{label}</Label>
-
+                <Label numberOfLines={1} color={color} muted={read} outline>{label}</Label>
                 <IntervalRefresh
                   interval={1000}
-                  onRender={
-                    () => {
-                      const dateText = getDateSmallText(updatedAt, ' ');
-                      return dateText && (
-                        <SmallText numberOfLines={1}>&nbsp;&nbsp;{dateText}</SmallText>
-                      );
-                    }
-                  }
+                  onRender={() => {
+                    const dateText = getDateSmallText(updatedAt, ' ');
+                    return dateText &&
+                      <SmallText numberOfLines={1} muted={read}> {dateText}</SmallText>;
+                  }}
                 />
               </FullView>
-
-              <CardIcon name={cardIcon} color={cardIconColor} />
+              <CardIcon
+                name={cardIcon}
+                color={cardIconColor}
+                muted={read}
+              />
             </HeaderRow>
-
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => toggleNotificationsReadStatus({ notificationIds })}>
+              <TouchableWithoutFeedback
+                onPress={() => toggleNotificationsReadStatus({ notificationIds })}
+              >
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>
           </MainColumn>
         </Header>
-
         {
-          repo && !onlyOneRepository &&
-          <RepositoryRow actions={actions} repo={repo} narrow />
+          !!repo &&
+            !onlyOneRepository &&
+            <RepositoryRow actions={actions} repo={repo} read={read} narrow />
         }
-
+        {!!commit && <CommitRow commit={commit} read={read} narrow />}
         {
-          commit &&
-          <CommitRow commit={commit} narrow />
+          !!issue &&
+            <IssueRow issue={issue} comment={comment} read={read} narrow />
         }
-
         {
-          issue &&
-          <IssueRow issue={issue} comment={comment} narrow />
+          !!pullRequest &&
+            (
+              <PullRequestRow
+                pullRequest={pullRequest}
+                comment={comment}
+                read={read}
+                narrow
+              />
+            )
         }
-
         {
-          pullRequest &&
-          <PullRequestRow pullRequest={pullRequest} comment={comment} narrow />
+          !(commit || issue || pullRequest) &&
+            !!title &&
+            <CommentRow body={title} read={read} narrow />
         }
-
         {
-          !(commit || issue || pullRequest) && title &&
-          <CommentRow body={title} narrow />
-        }
-
-        {
-          comment &&
-          <CommentRow
-            body={comment.get('body')}
-            user={comment.get('user')}
-            url={comment.get('html_url')}
-            narrow
-          />
+          !!comment &&
+            (
+              <CommentRow
+                body={comment.get('body')}
+                user={comment.get('user')}
+                url={comment.get('html_url')}
+                read={read}
+                narrow
+              />
+            )
         }
       </CardWrapper>
     );

@@ -4,16 +4,26 @@ import React from 'react';
 import styled from 'styled-components/native';
 import type ImageSourcePropType from 'react-native/Libraries/Image/ImageSourcePropType';
 
-import * as vars from '../styles/variables';
+import { radius as defaultRadius, mutedOpacity } from '../styles/variables';
 
 const Avatar = styled.Image`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   background-color: ${({ error, loading, theme }) => (!loading && !error ? '#ffffff' : theme.base03)};
   border-radius: ${({ radius }) => radius};
+  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
 
 export default class extends React.PureComponent {
+  static defaultProps = {
+    onLoad: undefined,
+    onLoadStart: undefined,
+    onLoadEnd: undefined,
+    onError: undefined,
+    radius: defaultRadius,
+    size: 50,
+  };
+
   state = {
     error: false,
     loading: true,
@@ -53,8 +63,8 @@ export default class extends React.PureComponent {
     const { error, loading } = this.state;
 
     const {
-      size = 50,
-      radius = vars.radius,
+      size,
+      radius,
       onLoad,
       onLoadStart,
       onLoadEnd,

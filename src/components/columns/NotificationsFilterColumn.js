@@ -51,13 +51,13 @@ const CounterWrapper = styled.View`
   justify-content: center;
   margin-left: ${contentPadding};
   padding-horizontal: ${contentPadding};
-  padding-vertical: 1;
+  padding-vertical: 0.5;
   border-radius: 10;
   background-color: ${({ outline, theme }) => (
-    outline ? 'transparent' : theme.base03
+    outline ? 'transparent' : theme.base01
   )};
   border-width: 1;
-  border-color: ${({ theme }) => theme.base03};
+  border-color: ${({ outline, theme }) => (outline ? theme.base03 : theme.base01)};
 `;
 
 const UnreadCount = styled(StyledText)`

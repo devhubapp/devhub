@@ -58,6 +58,7 @@ export default class extends React.PureComponent {
             size={smallAvatarWidth}
           />
         }
+        read={read}
         url={repo.get('html_url') || repo.get('url')}
         {...props}
       >

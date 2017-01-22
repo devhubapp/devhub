@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
+import Octicon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
 import ScrollableContentContainer from '../ScrollableContentContainer';
@@ -10,6 +10,7 @@ import {
   contentPadding,
   radius,
   smallAvatarWidth,
+  mutedOpacity,
 } from '../../styles/variables';
 
 import { openOnGithub } from '../../utils/helpers';
@@ -24,7 +25,7 @@ export const CardWrapper = styled.View`
   border-width: 0;
   border-bottom-width: 1;
   border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ read }) => (read ? 0.5 : 1)};
+  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
 
 export const FullView = styled.View`
@@ -35,10 +36,12 @@ export const FullView = styled.View`
 
 export const FullAbsoluteView = styled.View`
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  top: ${({ top }) => top || 0};
+  bottom: ${({ bottom }) => bottom || 0};
+  left: ${({ left }) => left || 0};
+  right: ${({ right }) => right || 0};
+  ${({ width }) => (width ? `width: ${width};` : '')}
+  ${({ height }) => (height ? `height: ${height};` : '')}
   ${({ zIndex }) => (zIndex ? `z-index: ${zIndex};` : '')}
 `;
 
@@ -65,6 +68,7 @@ export const LeftColumn = styled.View`
   justify-content: flex-start;
   width: ${avatarWidth};
   margin-right: ${contentPadding};
+  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
 
 export const MainColumn = styled.View`
@@ -146,13 +150,17 @@ export const RightOfScrollableContent = styled.View`
   margin-right: ${contentPadding};
 `;
 
+export const Icon = styled(Octicon)`
+  background-color: transparent;
+  color: ${({ color, muted, theme }) => color || (muted ? theme.base05 : theme.base04)};
+  opacity: ${({ color, muted }) => (color && muted ? mutedOpacity : 1)};
+`;
+
 export const CardIcon = styled(Icon)`
   align-self: flex-start;
   margin-left: ${contentPadding};
   margin-right: ${iconRightMargin};
   font-size: 18;
-  background-color: transparent;
-  color: ${({ color, theme }) => color || theme.base05};
 `;
 
 type ItemIdProps = { icon?: string, number: number, read?: boolean, url: string };
@@ -171,4 +179,9 @@ export const renderItemId = ({ icon, number, read, url }: ItemIdProps) => {
       </CardItemId>
     </CardItemIdContainer>
   );
+};
+
+renderItemId.defaultProps = {
+  icon: undefined,
+  read: undefined,
 };

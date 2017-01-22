@@ -60,6 +60,7 @@ export default class extends React.PureComponent {
             }
           />
         }
+        read={read}
         url={commit.get('html_url') || commit.get('url')}
         {...props}
       >

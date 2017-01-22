@@ -73,14 +73,12 @@ export default class extends React.PureComponent {
       actor,
       repo,
       created_at,
-      merged,
     } = {
       type: event.get('type'),
       payload: event.get('payload'),
       actor: event.get('actor') || Map(),
       repo: event.get('repo'),
       created_at: event.get('created_at'),
-      merged: event.get('merged'),
     };
 
     if (!payload) return null;
@@ -101,7 +99,7 @@ export default class extends React.PureComponent {
     ;
 
     return (
-      <CardWrapper {...props} read={read}>
+      <CardWrapper {...props}>
         <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
           <TouchableWithoutFeedback onPress={() => toggleEventsReadStatus({ eventIds })}>
             <FullAbsoluteView />
@@ -109,7 +107,7 @@ export default class extends React.PureComponent {
         </FullAbsoluteView>
 
         <Header>
-          <LeftColumn>
+          <LeftColumn muted={read}>
             <OwnerAvatar
               avatarURL={actor.get('avatar_url')}
               linkURL={actor.get('html_url') || actor.get('url')}
@@ -152,8 +150,8 @@ export default class extends React.PureComponent {
 
               {
                 cardSubIcon
-                ? <CardIcon name={cardSubIcon} color={cardSubIconColor || cardIconColor} />
-                : <CardIcon name={cardIcon} color={cardIconColor} />
+                ? <CardIcon name={cardSubIcon} color={cardSubIconColor || cardIconColor} muted={read} />
+                : <CardIcon name={cardIcon} color={cardIconColor} muted={read} />
               }
             </HeaderRow>
 
@@ -172,6 +170,7 @@ export default class extends React.PureComponent {
             repo={repo}
             pushed={type === 'PushEvent'}
             forcePushed={type === 'PushEvent' && payload.get('forced')}
+            read={read}
             narrow
           />
         }
@@ -188,6 +187,7 @@ export default class extends React.PureComponent {
                 repos={repos}
                 pushed={type === 'PushEvent'}
                 forcePushed={type === 'PushEvent' && payload.get('forced')}
+                read={read}
                 narrow
               />
             );
@@ -202,6 +202,7 @@ export default class extends React.PureComponent {
             repoFullName={getRepoFullNameFromUrl(
               payload.getIn(['ref', 'html_url']) || payload.getIn(['ref', 'url']),
             )}
+            read={read}
             narrow
           />
         }
@@ -212,6 +213,7 @@ export default class extends React.PureComponent {
             actions={actions}
             repo={payload.get('forkee')}
             forcePushed={type === 'PushEvent' && payload.get('forced')}
+            read={read}
             isFork
             narrow
           />
@@ -225,7 +227,7 @@ export default class extends React.PureComponent {
             if (!(users.size > 0)) return null;
 
             return (
-              <UserListRow users={users} narrow />
+              <UserListRow users={users} read={read} narrow />
             );
           })()
         }
@@ -233,7 +235,7 @@ export default class extends React.PureComponent {
         {
           type === 'GollumEvent' &&
           !!payload.get('pages') &&
-          <WikiPageListRow pages={payload.get('pages')} narrow />
+          <WikiPageListRow pages={payload.get('pages')} read={read} narrow />
         }
 
         {
@@ -241,6 +243,7 @@ export default class extends React.PureComponent {
           <PullRequestRow
             pullRequest={payload.get('pull_request')}
             comment={payload.get('comment')}
+            read={read}
             narrow
           />
         }
@@ -256,7 +259,7 @@ export default class extends React.PureComponent {
             if (!(list.size > 0)) return null;
 
             return (
-              <CommitListRow commits={list} narrow />
+              <CommitListRow commits={list} read={read} narrow />
             );
           })()
         }
@@ -266,6 +269,7 @@ export default class extends React.PureComponent {
           <IssueRow
             issue={payload.get('issue')}
             comment={payload.get('comment')}
+            read={read}
             narrow
           />
         }
@@ -278,6 +282,7 @@ export default class extends React.PureComponent {
               body={payload.getIn(['issue', 'body'])}
               user={actor}
               url={payload.getIn(['issue', 'html_url']) || payload.getIn(['issue', 'url'])}
+              read={read}
               narrow
             />)
 
@@ -289,6 +294,7 @@ export default class extends React.PureComponent {
               body={payload.getIn(['pull_request', 'body'])}
               user={actor}
               url={payload.getIn(['pull_request', 'html_url']) || payload.getIn(['pull_request', 'url'])}
+              read={read}
               narrow
             />)
 
@@ -299,6 +305,7 @@ export default class extends React.PureComponent {
               body={payload.getIn(['comment', 'body'])}
               user={actor}
               url={payload.getIn(['comment', 'html_url'])}
+              read={read}
               narrow
             />)
           )
@@ -310,6 +317,7 @@ export default class extends React.PureComponent {
             release={payload.get('release')}
             type={type}
             user={actor}
+            read={read}
             narrow
           />
         }

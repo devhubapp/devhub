@@ -33,6 +33,7 @@ export default class extends React.PureComponent {
     return (
       <TouchableRow
         url={getGitHubURLForBranch(repoFullName, branch)}
+        read={read}
         {...props}
       >
         <StyledText numberOfLines={1} muted={!isBranchMainEventAction || read}>

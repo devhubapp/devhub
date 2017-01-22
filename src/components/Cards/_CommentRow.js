@@ -33,7 +33,7 @@ export default class extends React.PureComponent {
 
     return (
       <ContentRow narrow={narrow} {...props}>
-        <LeftColumn>
+        <LeftColumn muted={read}>
           {
             user &&
             <OwnerAvatar

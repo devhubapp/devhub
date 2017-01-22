@@ -29,6 +29,7 @@ export default class extends React.PureComponent {
 
     return (
       <TouchableRow
+        read={read}
         url={page.get('html_url') || page.get('url')}
         {...props}
       >

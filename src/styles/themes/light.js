@@ -1,12 +1,13 @@
 import * as base from './base';
+import { mutedOpacity } from '../variables';
 import { lighten } from '../../utils/helpers/color';
 
 export const base00 = '#f0f0f0'; // page background
 export const base01 = '#ededed'; // card background -1
 export const base02 = '#ffffff'; // card background 0
-export const base03 = '#f7f7f5'; // card background +1
+export const base03 = '#f0f0f0'; // card background +1
 export const base04 = '#222222'; // color
-export const base05 = lighten('#222222', 0.6).hex; // muted color
+export const base05 = lighten('#222222', mutedOpacity).hex; // muted color
 export const base06 = undefined; //
 export const base07 = base.brand; // brand 1
 export const base08 = base.brandSecondary; // brand 2
