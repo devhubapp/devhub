@@ -96,10 +96,10 @@ export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCre
       .sort(sortNotificationsByDate),
 );
 
-export const groupedUnarchivedNotificationsSelector = createImmutableSelector(
-  orderedUnarchivedNotificationsSelector,
+export const makeGroupedUnarchivedNotificationsSelector = (n) => createImmutableSelectorCreator(n)(
   (state, params) => params,
-  (notifications, params) =>
+  orderedUnarchivedNotificationsSelector,
+  (params, notifications) =>
     groupNotificationsByRepository(notifications, params),
 );
 

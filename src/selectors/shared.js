@@ -26,8 +26,12 @@ export function immutableMemoize(
   const isEqualToLastArg = (value, index) => equalityCheck(value, lastArgs[index]);
 
   return (...args) => {
-    const slicedArgs = Number(numberOfArgsToMemoize) > 0
-      ? args.slice(0, numberOfArgsToMemoize)
+    const slicedArgs = typeof numberOfArgsToMemoize === 'number'
+      ? (
+        numberOfArgsToMemoize < 0
+          ? args.slice(numberOfArgsToMemoize)
+          : args.slice(0, numberOfArgsToMemoize)
+      )
       : args
     ;
 

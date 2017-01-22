@@ -3,6 +3,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Set } from 'immutable';
 
 import NotificationColumn from '../components/columns/NotificationColumn';
 
@@ -11,6 +12,7 @@ import {
   notificationsIsLoadingSelector,
   makeRepoSelector,
   notificationsUpdatedAtSelector,
+  unarchivedNotificationIdsSelector,
 } from '../selectors';
 
 import * as actionCreators from '../actions';
@@ -23,18 +25,30 @@ import type {
   State,
 } from '../utils/types';
 
-const makeMapStateToProps = (state: State, { column }: {column: Object}) => {
+const makeMapStateToProps = () => {
   const repoSelector = makeRepoSelector();
-  const items = column.get('notificationIds') || column.get('notifications');
 
-  return {
-    errors: [notificationsErrorSelector(state)],
-    loading: notificationsIsLoadingSelector(state),
-    isEmpty: items.size === 0,
-    items,
-    repo: column.get('repo') ||
-      repoSelector(state, { repoId: column.get('repoId') }),
-    updatedAt: notificationsUpdatedAtSelector(state),
+  return (state: State, { column }: {column: Object}) => {
+    const _items = column.get('notificationIds').toList();
+
+    // This is not very intuitive, but works. This code is here because
+    // the notifications columns are only being generated once.
+    // This means that, even after clearing the column items,
+    // column.get('notificationIds') will have the same initial value,
+    // so we update it here ignoring the archived ones.
+    // (otherwise, the empty message would not show up)
+    const unarchivedIds = unarchivedNotificationIdsSelector(state);
+    const items = Set(_items).intersect(unarchivedIds).toList();
+
+    return {
+      errors: [notificationsErrorSelector(state)],
+      loading: notificationsIsLoadingSelector(state),
+      isEmpty: items.size === 0,
+      items,
+      repo: column.get('repo') ||
+        repoSelector(state, { repoId: column.get('repoId') }),
+      updatedAt: notificationsUpdatedAtSelector(state),
+    };
   };
 };
 
@@ -62,9 +76,9 @@ export default class extends React.PureComponent {
 
     return (
       <NotificationColumn
+        {...props}
         key={`notification-column-${column.get('id')}`}
         column={column}
-        {...props}
       />
     );
   }

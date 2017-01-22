@@ -33,10 +33,8 @@ export default class extends React.PureComponent {
 
   componentWillReceiveProps({ loading }) {
     // if finished loading
-    if (!loading && this.props.loading) {
-      if (this.state.hasLoadedOnce === false) {
-        this.setState({ hasLoadedOnce: true });
-      }
+    if (!loading && !this.state.hasLoadedOnce) {
+      this.setState({ hasLoadedOnce: true });
     }
   }
 
@@ -108,9 +106,9 @@ export default class extends React.PureComponent {
           {
             isEmpty || !(items.size > 0)
               ? (
-                hasLoadedOnce
-                  ? <EmptyColumnContent refreshControl={refreshControl} />
-                  : null
+                loading && !hasLoadedOnce
+                  ? null
+                  : <EmptyColumnContent refreshControl={refreshControl} />
               )
               : (
                 <StyledImmutableListView
