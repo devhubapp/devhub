@@ -129,7 +129,7 @@ export default class extends React.PureComponent {
                   onRender={() => {
                     const dateText = getDateSmallText(updatedAt, ' ');
                     return dateText &&
-                      <SmallText numberOfLines={1} muted={read}> {dateText}</SmallText>;
+                      <SmallText numberOfLines={1} muted={read}>&nbsp;&nbsp;{dateText}</SmallText>;
                   }}
                 />
               </FullView>

@@ -25,7 +25,7 @@ import type {
 
 const makeMapStateToProps = (state: State, { column }: {column: Object}) => {
   const repoSelector = makeRepoSelector();
-  const items = column.get('notifications') || column.get('notificationIds');
+  const items = column.get('notificationIds') || column.get('notifications');
 
   return {
     errors: [notificationsErrorSelector(state)],

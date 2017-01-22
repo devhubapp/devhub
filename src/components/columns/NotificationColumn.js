@@ -51,9 +51,9 @@ export default class extends React.PureComponent {
 
   getNotificationIds = () => {
     const { items = List() } = this.props;
-    return items.first() === 'string'
+    return typeof items.first() === 'string'
       ? items
-      : items.map(item => (Iterable.isIterable(item) ? item.get('id') : item));
+      : items.map(item => (Iterable.isIterable(item) ? item.get('id') : item)).toList();
   };
 
   getReadNotificationIds = () => {

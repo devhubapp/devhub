@@ -144,16 +144,17 @@ export function groupNotificationsByRepository(
   }: {includeAllGroup?: boolean, includeFilterGroup?: boolean} = {},
 ) {
   let groupedNotifications = OrderedMap();
-  const notificationIds = notifications.map(
-    notification => get(notification, 'id'),
-  );
+  const notificationIds = notifications
+    .map(notification => get(notification, 'id'))
+    .toList()
+  ;
 
   if (includeFilterGroup) {
     groupedNotifications = groupedNotifications.concat(
       Map({
         filter: Map({
           id: 'filter',
-          notifications,
+          // notifications,
           notificationIds,
           title: 'filter',
         }),
@@ -166,7 +167,7 @@ export function groupNotificationsByRepository(
       Map({
         all: Map({
           id: 'all',
-          notifications,
+          // notifications,
           notificationIds,
           title: 'notifications',
         }),
@@ -183,7 +184,7 @@ export function groupNotificationsByRepository(
       group = Map({
         id: repoId,
         repoId,
-        notifications: OrderedMap(),
+        // notifications: OrderedMap(),
         notificationIds: List(),
       });
       groupedNotifications = groupedNotifications.set(repoId, group);
@@ -194,11 +195,13 @@ export function groupNotificationsByRepository(
       notif => notif.push(get(notification, 'id')),
     );
 
-    groupedNotifications = groupedNotifications.updateIn(
-      [repoId, 'notifications'],
-      notif => notif.concat((Map({ id: notification }))),
-    );
+    // const notificationId = `${get(notification, 'id')}`;
+    // groupedNotifications = groupedNotifications.updateIn(
+    //   [repoId, 'notifications'],
+    //   notif => notif.mergeDeep((Map({ [notificationId]: notification }))),
+    // );
   });
+
 
   return groupedNotifications;
 }
@@ -328,7 +331,7 @@ export function notificationsToFilterColumnData(notifications) {
     partialPath = getIn(notification, ['repository', 'full_name']);
     path = ['repos', partialPath];
     if (!getIn(result, path)) {
- result = setIn(result, path, defaultFilterColumnsRepoData);
+      result = setIn(result, path, defaultFilterColumnsRepoData);
     }
     path = [...path, counterPath];
     count = getIn(result, path) || 0;

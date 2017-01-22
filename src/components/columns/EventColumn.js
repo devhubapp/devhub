@@ -54,7 +54,10 @@ export default class extends React.PureComponent {
 
   getEventIds = () => {
     const { items = List() } = this.props;
-    return items.first() === 'string' ? items : getEventIdsFromEventsIncludingMerged(items);
+    return typeof items.first() === 'string'
+      ? items
+      : getEventIdsFromEventsIncludingMerged(items)
+    ;
   }
 
   getReadEventIds = () => {

@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Map } from 'immutable';
 
 import NotificationsFilterColumn from '../components/columns/NotificationsFilterColumn';
 
@@ -28,8 +29,8 @@ const makeMapStateToProps = (
   );
 
   const notifications = denormalizedNotificationsSelector(state, {
-    notifications: column.get('notifications'),
-    notificationIds: column.get('notificationIds'),
+    notificationIds: column.get('notificationIds') ||
+      (column.get('notifications') || Map()).map(n => n.get('id')).toList(),
   });
 
   return {

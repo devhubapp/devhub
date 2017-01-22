@@ -393,5 +393,5 @@ export function getEventIdsFromEventsIncludingMerged(events) {
     eventIds = eventIds.concat(getEventIdsFromEventIncludingMerged(event));
   });
 
-  return eventIds;
+  return eventIds.toList();
 }
