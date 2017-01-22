@@ -3,7 +3,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Set } from 'immutable';
+import { OrderedSet } from 'immutable';
 
 import NotificationColumn from '../components/columns/NotificationColumn';
 
@@ -38,7 +38,7 @@ const makeMapStateToProps = () => {
     // so we update it here ignoring the archived ones.
     // (otherwise, the empty message would not show up)
     const unarchivedIds = unarchivedNotificationIdsSelector(state);
-    const items = Set(_items).intersect(unarchivedIds).toList();
+    const items = OrderedSet(_items).intersect(unarchivedIds).toList();
 
     return {
       errors: [notificationsErrorSelector(state)],
