@@ -2,12 +2,15 @@
 
 import * as firebase from 'firebase';
 import { delay } from 'redux-saga';
-import { call, fork, put, takeLatest } from 'redux-saga/effects';
+import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
+import { REHYDRATE } from 'redux-persist/constants';
 
 import OAuthManager from '../utils/oauth';
 
 import {
   LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
   LOGOUT,
 } from '../utils/constants/actions';
 
@@ -19,9 +22,11 @@ import {
   updateCurrentUser,
 } from '../actions';
 
+import { accessTokenSelector } from '../selectors';
+
 const sagaActionChunk = { dispatchedBySaga: true };
 
-function* login({ payload }: Action<LoginRequestPayload>) {
+function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
   try {
     const { provider, ...params } = payload;
 
@@ -33,10 +38,6 @@ function* login({ payload }: Action<LoginRequestPayload>) {
       throw new Error('Login failed: No access token received.', 'NoAccessTokenException');
     }
 
-    // sign in with firebase
-    const credential = firebase.auth.GithubAuthProvider.credential(accessToken);
-    firebase.auth().signInWithCredential(credential).catch(console.log);
-
     const result = { accessToken };
     yield put(loginSuccess(payload, result, sagaActionChunk));
   } catch (e) {
@@ -46,11 +47,32 @@ function* login({ payload }: Action<LoginRequestPayload>) {
   }
 }
 
-function logout() {
+function* signInOnFirebase() {
+  const state = yield select();
+  const accessToken = accessTokenSelector(state);
+
+  if (!accessToken) {
+    return;
+  }
+
+  // sign in with firebase
   try {
-    firebase.auth().signOut();
+    const credential = firebase.auth.GithubAuthProvider.credential(accessToken);
+    yield firebase.auth().signInWithCredential(credential);
   } catch (e) {
-    console.error('Failed to logout', e);
+    console.error(`Failed to login on Firebase: ${e.message}`, e);
+  }
+}
+
+function* onLoginSuccessOrRestored() {
+  yield signInOnFirebase();
+}
+
+function* onLogoutRequest() {
+  try {
+    yield firebase.auth().signOut();
+  } catch (e) {
+    console.error(`Failed to logout from Firebase: ${e.message}`, e);
   }
 }
 
@@ -67,7 +89,9 @@ function* watchFirebaseCurrentUser() {
       // console.log('firebase user', lastUser);
       const user = lastUser && lastUser.providerData && lastUser.providerData[0];
       lastUser = ignoreValue;
-      yield put(updateCurrentUser(user, sagaActionChunk));
+
+      const payload = user ? { ...user, lastAccessedAt: new Date() } : undefined;
+      yield put(updateCurrentUser(payload, sagaActionChunk));
     }
 
     yield call(delay, 100);
@@ -76,8 +100,9 @@ function* watchFirebaseCurrentUser() {
 
 export default function* () {
   return yield [
-    yield takeLatest(LOGIN_REQUEST, login),
-    yield takeLatest(LOGOUT, logout),
+    yield takeLatest(LOGIN_REQUEST, onLoginRequest),
+    yield takeLatest([LOGIN_SUCCESS, REHYDRATE], onLoginSuccessOrRestored),
+    yield takeLatest([LOGIN_FAILURE, LOGOUT], onLogoutRequest),
     yield fork(watchFirebaseCurrentUser),
   ];
 }
