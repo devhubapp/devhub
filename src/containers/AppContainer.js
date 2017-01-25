@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar } from 'react-native';
 import { StackNavigation, withNavigation } from '@exponent/ex-navigation';
 
 import {
