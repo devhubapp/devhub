@@ -5,7 +5,7 @@ import moment from 'moment';
 import { List } from 'immutable';
 
 import themes, { DARK_BLUE_THEME, LIGHT_THEME } from '../../styles/themes';
-import { DEFAULT_THEME } from '../constants/defaults';
+import { AUTO_THEME, DEFAULT_THEME } from '../constants/defaults';
 import type { Theme } from '../types';
 
 export * from './actions';
@@ -31,7 +31,7 @@ export function loadTheme(
   const _theme = theme || DEFAULT_THEME;
   const exists = _theme && themes[_theme];
 
-  if (!exists || _theme === 'auto') {
+  if (!exists || _theme === AUTO_THEME) {
     const darkTheme = themes[preferredDarkTheme] || DARK_BLUE_THEME;
     const lightTheme = themes[preferredLightTheme] || LIGHT_THEME;
     return isNight() ? darkTheme : lightTheme;
