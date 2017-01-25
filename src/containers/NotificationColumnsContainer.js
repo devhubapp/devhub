@@ -14,8 +14,7 @@ import * as actionCreators from '../actions';
 import type { ActionCreators, State } from '../utils/types';
 
 const makeMapStateToProps = () => {
-  // passing 0, we memoize it forever: it will always return the same value
-  const groupedUnarchivedNotificationsSelector = makeGroupedUnarchivedNotificationsSelector(0);
+  const groupedUnarchivedNotificationsSelector = makeGroupedUnarchivedNotificationsSelector();
   const denormalizedGNSelectorParams = { includeAllGroup: true };
 
   return (state: State) => ({
