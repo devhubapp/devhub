@@ -202,7 +202,6 @@ export function groupNotificationsByRepository(
     // );
   });
 
-
   return groupedNotifications;
 }
 

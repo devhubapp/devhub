@@ -4,7 +4,7 @@
 import moment from 'moment';
 import { List } from 'immutable';
 
-import themes, { DARK_THEME, LIGHT_THEME } from '../../styles/themes';
+import themes, { DARK_BLUE_THEME, LIGHT_THEME } from '../../styles/themes';
 import { DEFAULT_THEME } from '../constants/defaults';
 import type { Theme } from '../types';
 
@@ -32,7 +32,7 @@ export function loadTheme(
   const exists = _theme && themes[_theme];
 
   if (!exists || _theme === 'auto') {
-    const darkTheme = themes[preferredDarkTheme] || DARK_THEME;
+    const darkTheme = themes[preferredDarkTheme] || DARK_BLUE_THEME;
     const lightTheme = themes[preferredLightTheme] || LIGHT_THEME;
     return isNight() ? darkTheme : lightTheme;
   }
@@ -45,7 +45,7 @@ export function trimNewLinesAndSpaces(text, maxLength = 100) {
 
   let newText = text.replace(/\s+/g, ' ').trim();
   if (maxLength > 0 && newText.length > maxLength) {
-    newText = newText.substr(0, maxLength).trim() + '...';
+    newText = `${newText.substr(0, maxLength).trim()}...`;
   }
 
   return newText;

@@ -1,5 +1,5 @@
 export const lightBlue = '#49d3b4';
-export const purple = '#6e5494'; // #614381
+export const purple = '#6e5494';
 
 export const brand = lightBlue;
 export const brandSecondary = purple;

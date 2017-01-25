@@ -1,8 +1,8 @@
 import * as base from './base';
 
-export const base00 = '#141d26'; // page background
-export const base01 = '#141d26'; // card background -1
-export const base02 = '#1b2836'; // card background 0
+export const base00 = '#141c26'; // page background
+export const base01 = '#141c26'; // card background -1
+export const base02 = '#1b2936'; // card background 0
 export const base03 = '#243447'; // card background +1
 export const base04 = '#dddddd'; // color (to mute, use opacity 0.9 = #666666, #888888)
 export const base05 = '#6b7d8c'; // muted color
