@@ -1,20 +1,12 @@
 import _ from 'lodash';
 import moment from 'moment';
-import { is, Iterable, List } from 'immutable';
+import { List } from 'immutable';
 import { createSelectorCreator } from 'reselect';
+
+import { deepImmutableEqualityCheck, shallowEqualityCheck } from '../utils/immutable';
 
 export const stateSelector = state => state;
 export const entitiesSelector = state => state.get('entities');
-
-export function shallowEqualityCheck(a, b) {
-  return a === b;
-}
-
-export function deepImmutableEqualityCheck(a, b) {
-  return Iterable.isIterable(a) && Iterable.isIterable(b)
-    ? is(a, b)
-    : _.isEqual(a, b);
-}
 
 export function immutableMemoize(
   func,

@@ -2,13 +2,45 @@
  * This file is from https://github.com/gpbl/denormalizr
  */
 
-import reduce from 'lodash/reduce';
+import { isEqual, reduce } from 'lodash';
+import Immutable from 'immutable';
 
 /**
  * Helpers to enable Immutable-JS compatibility.
  */
 function stringifiedArray(array) {
   return array.map(item => `${item}`);
+}
+
+/**
+ * Returns a non-immutable object
+ *
+ * @param  {Immutable} object
+ * @return {Any}
+ */
+export function toJS(object) {
+  if (object && typeof object.toJS === 'function') {
+    return object.toJS();
+  }
+
+  return object;
+}
+
+/**
+ * Shallow copy between two variables
+ */
+export function shallowEqualityCheck(a, b) {
+  return a === b;
+}
+
+/**
+ * Deep copy between two variables.
+ * It uses lodash isEqual for normal objects, and Immutable.is for immutable
+ */
+export function deepImmutableEqualityCheck(a, b) {
+  return Immutable.Iterable.isIterable(a) && Immutable.Iterable.isIterable(b)
+    ? Immutable.is(a, Immutable.fromJS(b))
+    : isEqual(a, toJS(b));
 }
 
 /**

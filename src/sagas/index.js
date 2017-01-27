@@ -8,6 +8,7 @@ import {
 } from '../utils/constants/actions';
 
 import authSagas from './auth';
+import firebaseSagas from './firebase';
 import notificationsSagas from './notifications';
 import subscriptionsSagas from './subscriptions';
 
@@ -25,6 +26,7 @@ export default function* () {
   return yield [
     yield takeLatest(CLEAR_APP_DATA, clearAppData),
     yield fork(authSagas),
+    yield fork(firebaseSagas),
     yield fork(notificationsSagas),
     yield fork(subscriptionsSagas),
   ];
