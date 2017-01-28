@@ -35,11 +35,8 @@
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
   
-  // dark blue #141c26
-  //rootView.backgroundColor = [UIColor colorWithRed:0.08 green:0.11 blue:0.15 alpha:1.0];
-  
-  // white
-  rootView.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+  // hex to uicolor: http://uicolor.xyz/
+  rootView.backgroundColor = [UIColor colorWithRed:0.29 green:0.83 blue:0.71 alpha:1.0];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];

@@ -5,10 +5,10 @@ import { createRouter } from '@exponent/ex-navigation';
 // screens
 import HomeScreen from '../containers/screens/HomeScreen';
 import LoginScreen from '../containers/screens/LoginScreen';
-import SplashScreen from '../containers/screens/SplashScreen';
 import MainTabbedScreen from '../containers/screens/MainTabbedScreen';
 import NotificationsScreen from '../containers/screens/NotificationsScreen';
 import SettingsScreen from '../containers/screens/SettingsScreen';
+import SplashScreen from '../containers/screens/SplashScreen';
 import ViewScreen from '../containers/screens/ViewScreen';
 
 export default createRouter(() => ({
