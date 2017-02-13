@@ -3,7 +3,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import ImmutableListView from 'react-native-immutable-list-view';
-import { Platform } from 'react-native';
 import { List } from 'immutable';
 
 import NewColumn from './NewColumn';
@@ -13,7 +12,6 @@ import type { ActionCreators } from '../../utils/types';
 
 export const StyledImmutableListViewListView = styled(ImmutableListView)`
   flex: 1;
-  ${Platform.OS === 'android' ? null : { overflow: 'visible' }}
 `;
 
 @withOrientation
@@ -73,12 +71,6 @@ export default class extends React.PureComponent {
         horizontal
         pagingEnabled
         removeClippedSubviews
-        style={{
-          marginHorizontal: (getFullWidth() - width) / 2,
-        }}
-        contentContainerStyle={{
-          overflow: 'hidden',
-        }}
         {...props}
       />
     );

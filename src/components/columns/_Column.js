@@ -10,7 +10,7 @@ import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 export const columnMargin = 2;
 
 // because android does not support overflow visible (RN < 0.41)
-export const columnPreviewWidth = contentPadding;
+export const columnPreviewWidth = contentPadding / 2;
 
 export const maxWidth = Platform.OS === 'android' ? 800 : 680;
 export const getFullWidth = () => Dimensions.get('window').width;
@@ -21,15 +21,16 @@ export const getRadius = (
 
 export const ColumnWrapper = styled.View`
   flex: 1;
-  align-self: center;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
-  width: ${({ width }) => width || getWidth()};
+  width: ${getFullWidth()};
 `;
 
 export const ColumnRoot = styled.View`
   flex: 1;
-  align-self: stretch;
+  align-self: center;
+  width: ${({ width }) => width || getWidth()};
   margin-horizontal: ${columnMargin}
   margin-vertical: ${columnMargin};
   background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base02)};
@@ -58,8 +59,8 @@ export default class extends React.PureComponent {
     const _radius = getRadius({ radius });
 
     return (
-      <ColumnWrapper width={width}>
-        <ColumnRoot radius={_radius} {...props}>
+      <ColumnWrapper>
+        <ColumnRoot radius={_radius} width={width} {...props}>
           {children}
         </ColumnRoot>
       </ColumnWrapper>
