@@ -6,7 +6,7 @@ import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 
 import { splashScreenBackgroundColor } from '../../styles/variables';
-import { base00 } from '../../styles/themes/dark-blue';
+import { base00 } from '../../styles/themes/dark';
 
 const Screen = styled.View`
   flex: 1;
