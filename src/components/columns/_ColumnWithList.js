@@ -119,7 +119,6 @@ export default class extends React.PureComponent {
                   renderSectionHeader={renderSectionHeader}
                   refreshControl={refreshControl}
                   sectionHeaderHasChanged={sectionHeaderHasChanged}
-                  contentContainerStyle={{ overflow: 'hidden' }}
                   removeClippedSubviews
                 />
               )

@@ -68,9 +68,9 @@ export default class extends React.PureComponent {
         immutableData={columns}
         initialListSize={initialListSize}
         renderRow={this.renderRow(mainRenderRow)}
+        removeClippedSubviews={false}
         horizontal
         pagingEnabled
-        removeClippedSubviews
         {...props}
       />
     );
