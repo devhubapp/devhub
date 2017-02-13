@@ -24,7 +24,7 @@
                                                       moduleName:@"devhub"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
-
+  
   // hex to uicolor: http://uicolor.xyz/
   rootView.backgroundColor = [UIColor colorWithRed:0.29 green:0.83 blue:0.71 alpha:1.0];
 
