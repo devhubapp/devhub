@@ -9,23 +9,13 @@
 
 #import "AppDelegate.h"
 
-#import "RCTBundleURLProvider.h"
-#import "RCTRootView.h"
-
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import "OAuthManager.h"
-
-@import Firebase; 
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [Fabric with:@[[Crashlytics class]]];
-  [FIRApp configure];
-  [OAuthManager setupOAuthHandler:application];
-
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
@@ -34,7 +24,7 @@
                                                       moduleName:@"devhub"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
-  
+
   // hex to uicolor: http://uicolor.xyz/
   rootView.backgroundColor = [UIColor colorWithRed:0.29 green:0.83 blue:0.71 alpha:1.0];
 
@@ -44,13 +34,6 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
-}
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-  return [OAuthManager handleOpenUrl:application
-                             openURL:url
-                   sourceApplication:sourceApplication
-                          annotation:annotation];
 }
 
 @end

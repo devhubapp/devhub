@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.brunolemos.devhub"
     android:versionCode="0"
-    android:versionName="0.1">
+    android:versionName="0.2.3">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -40,9 +40,5 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="3da23c888a85e715f322aa4e00828f6c4a5175a7" />
     </application>
-
 </manifest>

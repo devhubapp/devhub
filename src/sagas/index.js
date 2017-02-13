@@ -26,7 +26,7 @@ export default function* () {
   return yield [
     yield takeLatest(CLEAR_APP_DATA, clearAppData),
     yield fork(authSagas),
-    yield fork(firebaseSagas),
+    // yield fork(firebaseSagas),
     yield fork(notificationsSagas),
     yield fork(subscriptionsSagas),
   ];

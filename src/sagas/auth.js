@@ -30,8 +30,11 @@ function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
   try {
     const { provider, ...params } = payload;
 
-    const response = yield call(OAuthManager.authorize, provider, params);
-    const { response: { credentials: { accessToken } = {} } = {} } = response || {};
+    // TODO: Remove this after reimplement oauth
+    const accessToken = '5957acfcb0d4fd12e03a6449360b8a37676942d9';
+
+    // const response = yield call(OAuthManager.authorize, provider, params);
+    // const { response: { credentials: { accessToken } = {} } = {} } = response || {};
     // console.log('response', response);
 
     if (!accessToken) {
@@ -101,8 +104,8 @@ function* watchFirebaseCurrentUser() {
 export default function* () {
   return yield [
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
-    yield takeLatest([LOGIN_SUCCESS, REHYDRATE], onLoginSuccessOrRestored),
+    // yield takeLatest([LOGIN_SUCCESS, REHYDRATE], onLoginSuccessOrRestored),
     yield takeLatest([LOGIN_FAILURE, LOGOUT], onLogoutRequest),
-    yield fork(watchFirebaseCurrentUser),
+    // yield fork(watchFirebaseCurrentUser),
   ];
 }

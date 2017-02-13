@@ -2,12 +2,6 @@
 #
 .DS_Store
 
-# Pods
-ios/pods/
-
-# Fastline (contains beta testers emails)
-ios/fastlane/
-
 # Xcode
 #
 build/
@@ -39,7 +33,8 @@ local.properties
 # node.js
 #
 node_modules/
-npm-debug.log
+npm-debug.log*
+yarn-error.log*
 
 # BUCK
 buck-out/
@@ -47,5 +42,19 @@ buck-out/
 android/app/libs
 *.keystore
 
-# IDES
-.vscode
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
+
+# Fastline (contains beta testers emails)
+ios/fastlane/
+
+# fastlane/report.xml
+# fastlane/Preview.html
+# fastlane/screenshots
+
+# Pods
+ios/pods/
