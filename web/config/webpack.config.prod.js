@@ -90,7 +90,13 @@ module.exports = {
       'react-native': 'react-native-web'
     }
   },
-  
+  resolveLoader: {
+    root: [
+      paths.ownNodeModules,
+      paths.appNodeModules,
+    ],
+    moduleTemplates: ['*-loader'],
+  },
   module: {
     // First, run the linter.
     // It's important to do this before Babel processes the JS.
