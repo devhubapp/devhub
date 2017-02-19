@@ -7,9 +7,7 @@ import { Dimensions, Platform } from 'react-native';
 
 import { contentPadding, radius as defaultRadius } from '../../styles/variables';
 
-export const columnMargin = 2;
-
-// because android does not support overflow visible (RN < 0.41)
+export const columnMargin = contentPadding / 2;
 export const columnPreviewWidth = contentPadding / 2;
 
 export const maxWidth = Platform.OS === 'android' ? 800 : 680;

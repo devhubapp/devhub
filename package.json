@@ -14,7 +14,6 @@
     "studio": "open -a /Applications/Android\\ Studio.app ./android/"
   },
   "dependencies": {
-    "@exponent/ex-navigation": "^2.9.1",
     "bugsnag-react-native": "^2.0.2",
     "denormalizr": "^0.5.2",
     "firebase": "^3.6.9",
@@ -32,6 +31,7 @@
     "react-native-orientation-listener": "https://github.com/iRoachie/react-native-orientation-listener",
     "react-native-prompt-android": "^0.0.5",
     "react-native-vector-icons": "^4.0.0",
+    "react-navigation": "^1.0.0-beta.5",
     "react-redux": "^5.0.1",
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.11",
