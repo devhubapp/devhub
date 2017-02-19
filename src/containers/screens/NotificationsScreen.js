@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 
 import NotificationColumnsContainer from '../NotificationColumnsContainer';
 import Screen from '../../components/Screen';
-import { rehydratedSelector } from '../../selectors';
+import TabIcon from '../../components/TabIcon';
+import { rehydratedSelector } from '../../selectors/app';
 import type { State, ThemeObject } from '../../utils/types';
 
 const CenterView = styled.View`
@@ -22,7 +23,9 @@ const mapStateToProps = (state: State) => ({
 
 @connect(mapStateToProps)
 @withTheme
-export default class extends React.PureComponent {
+class NotificationsScreen extends React.PureComponent {
+  static navigationOptions;
+
   props: {
     rehydrated: boolean,
     theme: ThemeObject,
@@ -33,19 +36,24 @@ export default class extends React.PureComponent {
 
     return (
       <Screen>
-        {
-          !rehydrated && (
-            <CenterView>
-              <ActivityIndicator color={theme.base04} />
-            </CenterView>
-          )
-        }
+        {!rehydrated &&
+          <CenterView>
+            <ActivityIndicator color={theme.base04} />
+          </CenterView>}
 
-        {
-          rehydrated &&
-          <NotificationColumnsContainer />
-        }
+        {rehydrated && <NotificationColumnsContainer />}
       </Screen>
     );
   }
 }
+
+NotificationsScreen.navigationOptions = {
+  tabBar: {
+    label: 'Notifications',
+    icon: ({ tintColor }: { tintColor: 'string' }) => (
+      <TabIcon icon="bell" color={tintColor} />
+    ),
+  },
+};
+
+export default NotificationsScreen;

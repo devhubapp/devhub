@@ -9,7 +9,7 @@ import GithubButton from '../../components/buttons/GithubButton';
 import Screen from '../../components/Screen';
 import StatusMessage from '../../components/StatusMessage';
 import * as actionCreators from '../../actions';
-import { isLoggingSelector, userErrorSelector } from '../../selectors';
+import { isLoggingSelector, userErrorSelector } from '../../selectors/user';
 import { contentPadding, radius } from '../../styles/variables';
 import type { ActionCreators, State } from '../../utils/types';
 
@@ -42,7 +42,7 @@ export default class extends React.PureComponent {
     loggingInMethod: null,
   }: {
     isLoggingIn: boolean,
-    loggingInMethod: 'github.public' | 'github.private',
+    loggingInMethod: 'github.public' | 'github.private' | null,
   });
 
   loginWithGithubPublicAccess = () => {
@@ -61,8 +61,8 @@ export default class extends React.PureComponent {
 
   props: {
     actions: ActionCreators,
-    error?: string,
-    isLoggingIn?: boolean,
+    error: string,
+    isLoggingIn: boolean,
   };
 
   render() {
