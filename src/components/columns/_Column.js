@@ -8,11 +8,11 @@ import { Dimensions, Platform } from 'react-native';
 import { contentPadding, radius as defaultRadius } from '../../styles/variables';
 
 export const columnMargin = contentPadding / 2;
-export const columnPreviewWidth = contentPadding / 2;
+export const columnPreviewWidth = Platform.OS === 'web' ? 2 : contentPadding / 2;
 
-export const maxWidth = Platform.OS === 'android' ? 800 : 680;
-export const getFullWidth = () => Dimensions.get('window').width;
-export const getWidth = () => Math.min(getFullWidth() - (2 * columnPreviewWidth), maxWidth);
+export const maxWidth = Platform.select({ android: 800, ios: 680, web: 360 });
+export const getColumnWidth = () => Math.min(Dimensions.get('window').width, maxWidth);
+export const getColumnContentWidth = () => getColumnWidth() - (2 * columnPreviewWidth);
 export const getRadius = (
   ({ radius } = {}) => (typeof radius === 'undefined' ? defaultRadius : radius)
 );
@@ -22,13 +22,13 @@ export const ColumnWrapper = styled.View`
   align-self: stretch;
   align-items: center;
   justify-content: center;
-  width: ${getFullWidth()};
+  width: ${getColumnWidth()};
 `;
 
 export const ColumnRoot = styled.View`
   flex: 1;
   align-self: center;
-  width: ${({ width }) => width || getWidth()};
+  width: ${({ width }) => width || getColumnContentWidth()};
   margin-horizontal: ${columnMargin}
   margin-vertical: ${columnMargin};
   background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base02)};

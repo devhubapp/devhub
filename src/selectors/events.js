@@ -14,7 +14,7 @@ import {
 
 import { makeColumnEventIdsSelector } from './columns';
 import { EventSchema } from '../utils/normalizr/schemas';
-import { groupSimilarEvents } from '../utils/helpers';
+import { groupSimilarEvents } from '../utils/helpers/github/events';
 
 export const eventIdSelector = (state, { eventId }) => eventId;
 export const eventEntitiesSelector = (state) => entitiesSelector(state).get('events');

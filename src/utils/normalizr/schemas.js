@@ -9,7 +9,7 @@ import {
   simpleIdAttribute,
 } from './helpers';
 
-import { isPullRequest } from '../helpers/github';
+import { isPullRequest } from '../helpers/github/shared';
 
 const defaultOptions = { idAttribute: simpleIdAttribute, mergeStrategy: preferNewestMergeStrategy };
 

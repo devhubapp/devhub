@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
-import Column, { getRadius, getWidth } from './_Column';
+import Column, { getRadius, getColumnContentWidth } from './_Column';
+import Icon from '../Icon';
 import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
 import { iconRightMargin } from '../cards/__CardComponents';
@@ -116,7 +116,7 @@ export default class extends React.PureComponent {
           {
             loading &&
             <ProgressBar
-              width={width || getWidth()}
+              width={width || getColumnContentWidth()}
               height={1}
               indeterminate
             />

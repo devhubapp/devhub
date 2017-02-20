@@ -1,11 +1,11 @@
 // @flow
 
-import { ApiRequestType } from '../../api/github';
+import type { ApiRequestType } from '../../api/github';
 
 export * from './actions';
 export * from './github';
 
-export type Theme = 'auto' | 'light' | 'dark' | 'dark-blue';
+export type Theme = '' | 'auto' | 'light' | 'dark' | 'dark-blue';
 
 export type ThemeObject = {
   base00: string,

@@ -5,7 +5,7 @@ import { withTheme } from 'styled-components/native';
 
 import ScrollableButton from '../buttons/ScrollableButton';
 import TransparentTextOverlay from '../TransparentTextOverlay';
-import { openOnGithub } from '../../utils/helpers';
+import { openOnGithub } from '../../utils/helpers/github/url';
 
 import {
   ContentRow,

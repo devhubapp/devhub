@@ -14,10 +14,8 @@ import {
   StyledText,
 } from './__CardComponents';
 
-import {
-  getPullRequestIconAndColor,
-  trimNewLinesAndSpaces,
-} from '../../utils/helpers';
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
+import { getPullRequestIconAndColor } from '../../utils/helpers/github/shared';
 
 import type { GithubComment, GithubPullRequest, ThemeObject } from '../../utils/types';
 

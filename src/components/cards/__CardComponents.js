@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import Octicon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
+import Octicon from '../Icon';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import {
   avatarWidth,
@@ -13,7 +13,7 @@ import {
   mutedOpacity,
 } from '../../styles/variables';
 
-import { openOnGithub } from '../../utils/helpers';
+import { openOnGithub } from '../../utils/helpers/github/url';
 
 export { avatarWidth, smallAvatarWidth };
 export const innerContentPadding = contentPadding;
@@ -30,6 +30,7 @@ export const CardWrapper = styled.View`
 
 export const FullView = styled.View`
   flex: 1;
+  alignSelf: stretch;
   flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
   align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
 `;

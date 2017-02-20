@@ -1,7 +1,7 @@
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 import styled from 'styled-components/native';
 
+import Icon from '../Icon';
 import { contentPadding } from '../../styles/variables';
 
 const RepositoryStarButton = styled.TouchableOpacity`

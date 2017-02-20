@@ -1,7 +1,9 @@
+/* eslint-env browser */
+
 import createSagaMiddleware from 'redux-saga';
 import { Map } from 'immutable';
-import { AsyncStorage } from 'react-native';
-import { applyMiddleware, createStore } from 'redux';
+import { AsyncStorage, Platform } from 'react-native';
+import { applyMiddleware, compose, createStore } from 'redux';
 import { autoRehydrate, persistStore } from 'redux-persist-immutable';
 import { composeWithDevTools } from 'remote-redux-devtools';
 
@@ -12,7 +14,9 @@ export default (initialState = Map()) => {
   const sagaMiddleware = createSagaMiddleware();
 
   const devToolsOptions = { realtime: true, hostname: 'localhost', port: 8800 };
-  const composeEnhancers = composeWithDevTools(devToolsOptions);
+  const composeEnhancers = Platform.OS === 'web'
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+    : composeWithDevTools(devToolsOptions);
 
   const store = createStore(
     reducer,
@@ -22,7 +26,8 @@ export default (initialState = Map()) => {
 
   sagaMiddleware.run(sagas);
 
-  persistStore(store, { debounce: 500, storage: AsyncStorage });
+  const storage = Platform.OS === 'web' ? undefined : AsyncStorage;
+  persistStore(store, { debounce: 500, storage });
 
   return store;
 };

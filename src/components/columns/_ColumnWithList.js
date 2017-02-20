@@ -2,11 +2,11 @@
 
 import React from 'react';
 import styled, { withTheme } from 'styled-components/native';
-import ImmutableListView from 'react-native-immutable-list-view';
 import { Map } from 'immutable';
 import { RefreshControl } from 'react-native';
 
 import ColumnWithHeader, { getRadius } from './_ColumnWithHeader';
+import ImmutableListView from '../../libs/immutable-list-view';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import { EmptyColumnContent } from './EmptyColumn';
 import { contentPadding } from '../../styles/variables';
@@ -88,7 +88,7 @@ export default class extends React.PureComponent {
     }
 
     const refreshControl = (
-      (onRefresh || refreshText) &&
+      !!(onRefresh || refreshText) && !!RefreshControl &&
       <RefreshControl
         refreshing={false}
         onRefresh={onRefresh}

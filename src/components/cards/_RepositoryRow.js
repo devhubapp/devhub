@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 
+import Icon from '../Icon';
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
 // import RepositoryStarButtonContainer from '../../containers/RepositoryStarButtonContainer';
@@ -13,7 +13,7 @@ import {
   StyledText,
 } from './__CardComponents';
 
-import { getOrgAvatar, getOwnerAndRepo } from '../../utils/helpers/github';
+import { getOrgAvatar, getOwnerAndRepo } from '../../utils/helpers/github/shared';
 import type { GithubRepo } from '../../utils/types';
 
 export default class extends React.PureComponent {

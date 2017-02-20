@@ -11,7 +11,7 @@ import {
   isReadFilter,
 } from './shared';
 
-import { groupNotificationsByRepository } from '../utils/helpers/github';
+import { groupNotificationsByRepository } from '../utils/helpers/github/notifications';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 
 export const sortNotificationsByDate = (b, a) => (

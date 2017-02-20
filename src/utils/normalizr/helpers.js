@@ -6,7 +6,7 @@ import {
   getIssueOrPullRequestNumberFromUrl,
   getRepoFullNameFromUrl,
   githubHTMLUrlFromAPIUrl,
-} from '../helpers';
+} from '../helpers/github/url';
 
 import { getIn } from '../immutable';
 import type { GithubCommit, GithubIssue, GithubNotification, GithubPullRequest } from '../types';

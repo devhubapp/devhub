@@ -9,7 +9,7 @@ import NotificationsFilterColumn from '../components/columns/NotificationsFilter
 
 import * as actionCreators from '../actions';
 
-import { notificationsToFilterColumnData } from '../utils/helpers/github';
+import { notificationsToFilterColumnData } from '../utils/helpers/github/notifications';
 
 import {
   notificationsErrorSelector,

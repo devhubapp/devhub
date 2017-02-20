@@ -1,12 +1,13 @@
 // @flow
 
-import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import { List, Set } from 'immutable';
 
+import ActionSheet from '../../libs/actionsheet';
+
 import {
   makeColumnReadIdsSelector,
-} from '../../selectors';
+} from '../../selectors/columns';
 
 import ColumnWithList, {
   HeaderButton,
@@ -19,10 +20,8 @@ import CreateColumnUtils from '../utils/CreateColumnUtils';
 import { FullView } from '../cards/__CardComponents';
 import { getRequestTypeIcon, requestTypes } from '../../api/github';
 
-import {
-  getDateWithHourAndMinuteText,
-  getEventIdsFromEventsIncludingMerged,
-  } from '../../utils/helpers';
+import { getDateWithHourAndMinuteText } from '../../utils/helpers';
+import { getEventIdsFromEventsIncludingMerged } from '../../utils/helpers/github/events';
 
 import type { ActionCreators, ColumnWithList as ColumnType, Subscription } from '../../utils/types';
 

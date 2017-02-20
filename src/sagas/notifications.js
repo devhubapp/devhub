@@ -6,7 +6,8 @@ import { delay } from 'redux-saga';
 import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
-import { dateToHeaderFormat, getOwnerAndRepo } from '../utils/helpers';
+import { dateToHeaderFormat } from '../utils/helpers';
+import { getOwnerAndRepo } from '../utils/helpers/github/shared';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 
 import {

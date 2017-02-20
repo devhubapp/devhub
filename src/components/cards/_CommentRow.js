@@ -12,7 +12,8 @@ import {
   smallAvatarWidth,
 } from './__CardComponents';
 
-import { openOnGithub, trimNewLinesAndSpaces } from '../../utils/helpers';
+import { openOnGithub } from '../../utils/helpers/github/url';
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { GithubUser } from '../../utils/types';
 
 export default class extends React.PureComponent {

@@ -1,9 +1,9 @@
 /* eslint-env browser */
 
-import React from 'react';
+import 'babel-polyfill';
 import { AppRegistry } from 'react-native';
 
-const App = () => <p>web</p>;
+import App from './src/';
 
 AppRegistry.registerComponent('devhub', () => App);
 AppRegistry.runApplication('devhub', {

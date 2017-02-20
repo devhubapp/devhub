@@ -2,12 +2,12 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
-import ImmutableListView from 'react-native-immutable-list-view';
 import { List } from 'immutable';
 
 import NewColumn from './NewColumn';
+import ImmutableListView from '../../libs/immutable-list-view';
 import withOrientation from '../../hoc/withOrientation';
-import { getFullWidth, getWidth } from './_Column';
+import { getColumnWidth, getColumnContentWidth } from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
 export const StyledImmutableListViewListView = styled(ImmutableListView)`
@@ -39,7 +39,7 @@ export default class extends React.PureComponent {
         addColumnFn={_addColumnFn}
         actions={actions}
         radius={radius}
-        width={width || getWidth()}
+        width={width || getColumnContentWidth()}
         outline
       />
     );
@@ -60,8 +60,8 @@ export default class extends React.PureComponent {
       ...props
     } = this.props;
 
-    const width = _width || getWidth();
-    const initialListSize = Math.max(1, Math.ceil(getFullWidth() / width));
+    const width = _width || getColumnContentWidth();
+    const initialListSize = Math.max(1, Math.ceil(getColumnWidth() / width));
 
     return (
       <StyledImmutableListViewListView

@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 import { View } from 'react-native';
 
 import BranchRow from './_BranchRow';
+import Icon from '../Icon';
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
 
@@ -14,7 +14,8 @@ import {
   smallAvatarWidth,
 } from './__CardComponents';
 
-import { getRepoFullNameFromUrl, trimNewLinesAndSpaces } from '../../utils/helpers';
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
+import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url';
 import type { GithubEventType, GithubUser, ReleaseEvent } from '../../utils/types';
 
 export default class extends React.PureComponent {

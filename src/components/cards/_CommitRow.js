@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 
+import Icon from '../Icon';
 import TouchableRow from './__TouchableRow';
 import OwnerAvatar from './_OwnerAvatar';
 
@@ -12,12 +12,14 @@ import {
   StyledText,
 } from './__CardComponents';
 
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
+
 import {
   getGitHubURLForUser,
   getGitHubSearchURL,
-  trimNewLinesAndSpaces,
-  tryGetUsernameFromGithubEmail,
-} from '../../utils/helpers';
+} from '../../utils/helpers/github/url';
+
+import { tryGetUsernameFromGithubEmail } from '../../utils/helpers/github/shared';
 
 import type { Commit, ThemeObject } from '../../utils/types';
 

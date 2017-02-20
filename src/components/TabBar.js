@@ -1,12 +1,13 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { TabNavigator } from 'react-navigation';
 import { withTheme } from 'styled-components/native';
 
-const DefaultTabBar = TabNavigator.Presets.Default.tabBarComponent;
+import { TabNavigator } from '../libs/navigation';
+
+const TabBarComponent = TabNavigator.Presets.Default.tabBarComponent;
 
 export default withTheme(({ theme, ...props }) => (
-  <DefaultTabBar
+  <TabBarComponent
     {...props}
     activeTintColor={theme.brand}
     inactiveTintColor={theme.base05}

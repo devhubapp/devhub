@@ -2,9 +2,9 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
-import Icon from 'react-native-vector-icons/Octicons';
 
 import Column from './_Column';
+import Icon from '../Icon';
 import type { ActionCreators } from '../../utils/types';
 
 const Wrapper = styled.View`

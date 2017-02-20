@@ -5,7 +5,7 @@ import { delay } from 'redux-saga';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
-import OAuthManager from '../utils/oauth';
+import OAuthManager from '../libs/oauth';
 
 import {
   LOGIN_REQUEST,

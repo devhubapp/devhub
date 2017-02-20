@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
 
+import Icon from '../Icon';
 import TouchableRow from './__TouchableRow';
 
 import {

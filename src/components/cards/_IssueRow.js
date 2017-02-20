@@ -14,7 +14,8 @@ import {
   StyledText,
 } from './__CardComponents';
 
-import { getIssueIconAndColor, trimNewLinesAndSpaces } from '../../utils/helpers';
+import { trimNewLinesAndSpaces } from '../../utils/helpers';
+import { getIssueIconAndColor } from '../../utils/helpers/github/shared';
 import type { GithubComment, GithubIssue, ThemeObject } from '../../utils/types';
 
 export default class extends React.PureComponent {

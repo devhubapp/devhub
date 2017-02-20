@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react';
-import Icon from 'react-native-vector-icons/Octicons';
+
+import Icon from './Icon';
 
 type Props = { color: string, icon: string, size?: number };
 const TabIcon = ({ color, icon, size }: Props) => (

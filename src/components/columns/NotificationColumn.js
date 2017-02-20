@@ -1,8 +1,9 @@
 // @flow
 
-import ActionSheet from 'react-native-actionsheet';
 import React from 'react';
 import { Iterable, List, Set } from 'immutable';
+
+import ActionSheet from '../../libs/actionsheet';
 
 import ColumnWithList, {
   HeaderButton,
@@ -13,9 +14,9 @@ import { defaultIcon as summaryIcon } from './NotificationsFilterColumn';
 import NotificationsFilterColumnContainer from '../../containers/NotificationsFilterColumnContainer';
 import NotificationCardContainer from '../../containers/NotificationCardContainer';
 import { FullAbsoluteView, FullView } from '../cards/__CardComponents';
-import { getOwnerAndRepo } from '../../utils/helpers';
+import { getOwnerAndRepo } from '../../utils/helpers/github/shared';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
-import { readNotificationIdsSelector } from '../../selectors';
+import { readNotificationIdsSelector } from '../../selectors/notifications';
 import type { ActionCreators, GithubRepo } from '../../utils/types';
 
 const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read'];
@@ -61,14 +62,14 @@ export default class extends React.PureComponent {
     const state = store.getState();
 
     const notificationIds = this.getNotificationIds();
-    const readNotificationsIds = readNotificationIdsSelector(state);
-    return Set(readNotificationsIds).intersect(notificationIds);
+    const readNotificationIds = readNotificationIdsSelector(state);
+    return Set(readNotificationIds).intersect(notificationIds);
   };
 
   getUnreadNotificationIds = () => {
     const notificationIds = this.getNotificationIds();
-    const readNotificationsIds = this.getReadNotificationIds();
-    return Set(notificationIds).subtract(readNotificationsIds);
+    const readNotificationIds = this.getReadNotificationIds();
+    return Set(notificationIds).subtract(readNotificationIds);
   };
 
   getRightHeader = (isSummary) => (

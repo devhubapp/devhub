@@ -19,8 +19,8 @@ import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
 import {
   getNotificationIconAndColor,
   getNotificationReasonTextsAndColor,
-  getOrgAvatar,
-} from '../../utils/helpers/github';
+} from '../../utils/helpers/github/notifications';
+import { getOrgAvatar } from '../../utils/helpers/github/shared';
 import type { ActionCreators, GithubNotification } from '../../utils/types';
 
 import {

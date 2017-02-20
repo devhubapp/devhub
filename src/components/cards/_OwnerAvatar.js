@@ -4,7 +4,8 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
 import Avatar from '../Avatar';
-import { getUserAvatarByEmail, openOnGithub } from '../../utils/helpers/github';
+import { getUserAvatarByEmail } from '../../utils/helpers/github/shared';
+import { openOnGithub } from '../../utils/helpers/github/url';
 
 export default class extends React.PureComponent {
   props: {

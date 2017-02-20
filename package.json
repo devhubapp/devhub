@@ -14,6 +14,7 @@
     "studio": "open -a /Applications/Android\\ Studio.app ./android/"
   },
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "bugsnag-react-native": "^2.0.2",
     "denormalizr": "^0.5.2",
     "firebase": "^3.6.9",
@@ -26,7 +27,7 @@
     "react": "~15.4.0",
     "react-native": "0.42.0-rc.2",
     "react-native-actionsheet": "^2.0.4",
-    "react-native-immutable-list-view": "^0.2.4",
+    "react-native-immutable-list-view": "^0.2.5",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-orientation-listener": "https://github.com/iRoachie/react-native-orientation-listener",
     "react-native-prompt-android": "^0.0.5",

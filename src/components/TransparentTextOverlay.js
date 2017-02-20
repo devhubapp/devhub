@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import LinearGradient from 'react-native-linear-gradient';
 import { View } from 'react-native';
 
+import LinearGradient from '../libs/linear-gradient';
 import { fade } from '../utils/helpers/color';
 
 function getStyle(from, size) {

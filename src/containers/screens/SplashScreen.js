@@ -1,8 +1,7 @@
 // @flow
 
 import React from 'react';
-import { StatusBar } from 'react-native';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Platform, StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 
 import { splashScreenBackgroundColor } from '../../styles/variables';
@@ -17,7 +16,8 @@ const Screen = styled.View`
 
 export default () => (
   <Screen>
-    <StatusBar hidden />
+    {(Platform.OS === 'ios' || Platform.OS === 'android') &&
+      <StatusBar hidden />}
     <ActivityIndicator color={base00} />
   </Screen>
 );

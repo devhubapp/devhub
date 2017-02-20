@@ -36,7 +36,11 @@ module.exports = {
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveApp('../index.web.js'),
   appPackageJson: resolveApp('package.json'),
-  appSrc: [resolveApp('../src'), resolveApp('../index.web.js')],
+  appSrc: [
+    resolveApp('../src'),
+    resolveApp('../index.web.js'),
+    // resolveApp('node_modules/react-navigation-web/src'),
+  ],
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),

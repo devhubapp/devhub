@@ -2,9 +2,9 @@
 
 // const config = {
 //   github: {
-//     client_id: '081d51ecc94dea9a425a',
-//     client_secret: 'b44f0b97caff9fdeeb1104d3afac8d23b93c01d2',
-//     redirect_uri: 'devhub://oauth',
+//     client_id: 'ad3a22fdaf40e63a130d',
+//     client_secret: '3a489723ad5d8ff330369597586ad44b4112b0c9',
+//     redirect_uri: 'http://localhost/github',
 //   },
 // };
 
@@ -15,4 +15,4 @@
 
 export default ({
   authorize: () => {},
-})
+});

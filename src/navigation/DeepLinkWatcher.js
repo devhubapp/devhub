@@ -4,11 +4,11 @@ import React from 'react';
 import { Linking } from 'react-native';
 
 import { clearAppData } from '../sagas';
-import { githubHTMLUrlFromAPIUrl } from '../utils/helpers';
+import { githubHTMLUrlFromAPIUrl } from '../utils/helpers/github/url';
 
 export default class extends React.PureComponent {
   componentDidMount() {
-    Linking.addEventListener('url', this._handleOpenURL)
+    Linking.addEventListener('url', this._handleOpenURL);
   }
 
   componentWillUnmount() {

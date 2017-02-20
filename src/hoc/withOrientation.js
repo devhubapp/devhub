@@ -1,29 +1,31 @@
 // @flow
 
 import React from 'react';
-import Orientation from 'react-native-orientation-listener';
 
+import orientationListener, { Orientation } from '../libs/orientation-listener';
+
+// eslint-disable-next-line
 export default Component => class extends React.PureComponent {
-  state = {
-    orientation: null,
-  };
+  state = ({
+    orientation: 'PORTRAIT',
+  }: {
+    orientation: Orientation,
+  });
 
   onOrientationChange = ({ orientation }) => {
     this.setState({ orientation });
   };
 
   componentDidMount() {
-    Orientation.getOrientation((orientation) => {
+    orientationListener.getOrientation((orientation) => {
       this.setState({ orientation });
     });
-  }
 
-  componentDidMount() {
-    Orientation.addListener(this.onOrientationChange);
+    orientationListener.addListener(this.onOrientationChange);
   }
 
   componentWillUnmount() {
-    Orientation.removeListener(this.onOrientationChange);
+    orientationListener.removeListener(this.onOrientationChange);
   }
 
   render() {
@@ -33,4 +35,4 @@ export default Component => class extends React.PureComponent {
       <Component orientation={orientation} {...this.props} />
     );
   }
-}
+};

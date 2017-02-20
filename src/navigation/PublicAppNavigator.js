@@ -1,14 +1,13 @@
 // @flow
 
-import { StackNavigator } from 'react-navigation';
+import { Platform } from 'react-native';
 
 import LoginScreen from '../containers/screens/LoginScreen';
+import { StackNavigator } from '../libs/navigation';
 
-export default StackNavigator(
-  {
-    Login: { path: 'login', screen: LoginScreen },
-  },
-  {
-    headerMode: 'none',
-  },
-);
+export const routes = { Login: { path: 'login', screen: LoginScreen } };
+export const options = { headerMode: 'none' };
+
+export default (Platform.OS === 'ios' || Platform.OS === 'android'
+  ? StackNavigator(routes, options)
+  : LoginScreen);

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
-import { StatusBar } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 
 import MainAppNavigator from '../navigation/MainAppNavigator';
 import PublicAppNavigator from '../navigation/PublicAppNavigator';
@@ -45,10 +45,11 @@ export default class extends React.PureComponent {
     return (
       <ThemeProvider theme={theme}>
         <View>
-          <StatusBar
-            backgroundColor={theme.base01}
-            barStyle={theme.isDark ? 'light-content' : 'dark-content'}
-          />
+          {(Platform.OS === 'ios' || Platform.OS === 'android') &&
+            <StatusBar
+              backgroundColor={theme.base01}
+              barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+            />}
 
           {rehydrated
             ? isLogged ? <MainAppNavigator /> : <PublicAppNavigator />

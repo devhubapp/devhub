@@ -1,11 +1,9 @@
 // @flow
 
-import prompt from 'react-native-prompt-android';
-import { Alert } from 'react-native';
-
+import prompt from '../../libs/prompt';
 import { requestTypes } from '../../api/github';
 import { generateSubscriptionId } from '../../reducers/entities/subscriptions';
-import { getOwnerAndRepo } from '../../utils/helpers';
+import { getOwnerAndRepo } from '../../utils/helpers/github/shared';
 import type { ActionCreators } from '../../utils/types';
 
 export default class {
@@ -136,7 +134,7 @@ export default class {
   }
 
   static showColumnTypeSelectAlert(actions, params) {
-    Alert.alert(
+    prompt(
       'Create a column',
       'Select the type of the column',
       [

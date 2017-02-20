@@ -3,7 +3,6 @@
 import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { List, Map } from 'immutable';
-import Icon from 'react-native-vector-icons/Octicons';
 import { withTheme } from 'styled-components/native';
 
 // rows
@@ -18,19 +17,22 @@ import RepositoryListRow from './_RepositoryListRow';
 import UserListRow from './_UserListRow';
 import WikiPageListRow from './_WikiPageListRow';
 
+import Icon from '../Icon';
 import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import OwnerAvatar from './_OwnerAvatar';
 import { avatarWidth, contentPadding } from '../../styles/variables';
 
+import { getDateSmallText } from '../../utils/helpers';
+
 import {
-  getDateSmallText,
   getEventIconAndColor,
   getEventText,
-  getRepoFullNameFromUrl,
   getEventIdsFromEventIncludingMerged,
-} from '../../utils/helpers';
+} from '../../utils/helpers/github/events';
+
+import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url';
 
 import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
 
@@ -119,27 +121,25 @@ export default class extends React.PureComponent {
             <HeaderRow>
               <FullView>
                 <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
-                  <ScrollableContentContainer>
-                    <HorizontalView>
-                      <StyledText numberOfLines={1}>
-                        <OwnerLogin numberOfLines={1} muted={read}>
-                          {actor.get('display_login') || actor.get('login')}
-                        </OwnerLogin>
+                  <HorizontalView>
+                    <StyledText numberOfLines={1}>
+                      <OwnerLogin numberOfLines={1} muted={read}>
+                        {actor.get('display_login') || actor.get('login')}
+                      </OwnerLogin>
 
-                        <IntervalRefresh
-                          interval={1000}
-                          onRender={
-                            () => {
-                              const dateText = getDateSmallText(created_at, '•');
-                              return dateText && (
-                                <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
-                              );
-                            }
+                      <IntervalRefresh
+                        interval={1000}
+                        onRender={
+                          () => {
+                            const dateText = getDateSmallText(created_at, '•');
+                            return dateText && (
+                              <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
+                            );
                           }
-                        />
-                      </StyledText>
-                    </HorizontalView>
-                  </ScrollableContentContainer>
+                        }
+                      />
+                    </StyledText>
+                  </HorizontalView>
                 </TransparentTextOverlay>
 
                 <StyledText numberOfLines={1} muted>

@@ -8,10 +8,9 @@ import themes, { DARK_THEME, LIGHT_THEME } from '../../styles/themes';
 import { AUTO_THEME, DEFAULT_THEME } from '../constants/defaults';
 import type { Theme } from '../types';
 
-export * from './actions';
-export * from './color';
-export * from './github';
-export * from './icon-loader';
+// export * from './actions';
+// export * from './color';
+// export * from './github';
 
 export function guid() {
   const str4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); // eslint-disable-line no-bitwise, max-len
@@ -24,9 +23,9 @@ export function isNight() {
 }
 
 export function loadTheme(
-  theme: Theme,
-  preferredDarkTheme?: Theme = null,
-  preferredLightTheme?: Theme = null,
+  theme?: Theme,
+  preferredDarkTheme?: ?Theme = null,
+  preferredLightTheme?: ?Theme = null,
 ): Object {
   const _theme = theme || DEFAULT_THEME;
   const exists = _theme && themes[_theme];
@@ -40,7 +39,7 @@ export function loadTheme(
   return themes[_theme];
 }
 
-export function trimNewLinesAndSpaces(text, maxLength = 100) {
+export function trimNewLinesAndSpaces(text: string, maxLength?: number = 100) {
   if (!text || typeof text !== 'string') return '';
 
   let newText = text.replace(/\s+/g, ' ').trim();
@@ -61,7 +60,7 @@ export function trimNewLinesAndSpaces(text, maxLength = 100) {
 //   return momentDate.fromNow();
 // }
 
-export function getDateWithHourAndMinuteText(date) {
+export function getDateWithHourAndMinuteText(date: Date) {
   if (!date) return '';
 
   const momentDate = moment(date);
@@ -77,7 +76,7 @@ export function getDateWithHourAndMinuteText(date) {
   return `${dateText} ${timeText}`;
 }
 
-export function getDateSmallText(date) { // , separator = '•'
+export function getDateSmallText(date: Date) { // , separator = '•'
   if (!date) return '';
 
   const momentDate = moment(date);
@@ -123,7 +122,7 @@ export function dateToHeaderFormat(date: Date | string): string {
   return moment(_date).utc().format('ddd, DD MMM YYYY HH:mm:ss z').replace('UTC', 'GMT');
 }
 
-export function arrayOfIdsToMergeableMap(ids, newValue) {
+export function arrayOfIdsToMergeableMap(ids: Array<string>, newValue: any) {
   return List(ids)
     .filter(Boolean)
     .toMap()
