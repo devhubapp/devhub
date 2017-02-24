@@ -117,6 +117,7 @@ export const CardItemId = styled(StyledText)`
 export const CardText = styled(StyledText)`
   flex: 1;
   font-size: 14;
+  word-break: break-all;
 `;
 
 export const ContentRow = styled(HorizontalView)`
