@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
+import { Platform } from 'react-native';
 
 import Octicon from '../Icon';
 import ScrollableContentContainer from '../ScrollableContentContainer';
@@ -117,7 +118,7 @@ export const CardItemId = styled(StyledText)`
 export const CardText = styled(StyledText)`
   flex: 1;
   font-size: 14;
-  word-break: break-all;
+  ${Platform.select({ web: { wordBreak: 'break-all' } })}
 `;
 
 export const ContentRow = styled(HorizontalView)`

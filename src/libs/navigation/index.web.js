@@ -15,9 +15,7 @@ export default from 'react-navigation';
 
 const NavView = ({ navigation, router }) => {
   const state = router.getStateForAction({ type: NavigationActions.INIT });
-  console.log('navigation', navigation, state);
   const Component = router.getComponentForState(state);
-  console.log('Component', Component);
 
   return (
     <Component

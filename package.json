@@ -4,7 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "start:web": "node web/scripts/start.js",
+    "web": "npm run web:start",
+    "web:start": "node web/scripts/start.js",
+    "web:build": "node web/scripts/build.js",
+    "web:build:serve": "pushstate-server web/build",
+    "web:test": "node web/scripts/test.js",
     "test": "jest",
     "flow": "flow ./src",
     "lint": "eslint ./src",

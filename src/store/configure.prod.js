@@ -1,6 +1,8 @@
+/* eslint-env browser */
+
 import createSagaMiddleware from 'redux-saga';
 import { Map } from 'immutable';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Platform } from 'react-native';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { autoRehydrate, persistStore } from 'redux-persist-immutable';
 
@@ -18,7 +20,8 @@ export default (initialState = Map()) => {
 
   sagaMiddleware.run(sagas);
 
-  persistStore(store, { debounce: 500, storage: AsyncStorage });
+  const storage = Platform.OS === 'web' ? undefined : AsyncStorage;
+  persistStore(store, { debounce: 500, storage });
 
   return store;
 };

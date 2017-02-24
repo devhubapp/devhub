@@ -1,8 +1,9 @@
 import * as firebase from 'firebase';
-import { Client as Bugsnag } from 'bugsnag-react-native';
+
+import Bugsnag from '../../libs/bugsnag';
 
 export default () => ({
-  bugsnagClient: new Bugsnag('231f337f6090422c611017d3dab3d32e'),
+  bugsnagClient: Bugsnag('231f337f6090422c611017d3dab3d32e'),
 
   firebaseApp: firebase.initializeApp({
     apiKey: 'AIzaSyDsTWehKARyK8RKSFCKuVoG_m00j1OGhDQ',

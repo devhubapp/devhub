@@ -16,7 +16,7 @@ export default class ProgressBar extends Component {
     indeterminate: PropTypes.bool,
     indeterminateWidthFactor: PropTypes.number,
     progress: PropTypes.number,
-    style: View.propTypes.style,
+    style: PropTypes.any,
     theme: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     unfilledColor: PropTypes.string,
     width: PropTypes.number,
