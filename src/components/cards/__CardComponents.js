@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 
-import Octicon from '../Icon';
+import Octicon from '../../libs/icon';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import {
   avatarWidth,

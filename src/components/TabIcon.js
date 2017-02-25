@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Icon from './Icon';
+import Icon from '../libs/icon';
 
 type Props = { color: string, icon: string, size?: number };
 const TabIcon = ({ color, icon, size }: Props) => (

@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import Column from './_Column';
-import Icon from '../Icon';
+import Icon from '../../libs/icon';
 import type { ActionCreators } from '../../utils/types';
 
 const Wrapper = styled.View`

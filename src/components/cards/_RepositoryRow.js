@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Icon from '../Icon';
+import Icon from '../../libs/icon';
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
 // import RepositoryStarButtonContainer from '../../containers/RepositoryStarButtonContainer';

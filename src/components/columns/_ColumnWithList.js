@@ -98,7 +98,7 @@ export default class extends React.PureComponent {
         titleColor={theme.base05}
         progressBackgroundColor={theme.base02}
       />
-    );
+    ) || null;
 
     return (
       <ColumnWithHeader {...this.props}>

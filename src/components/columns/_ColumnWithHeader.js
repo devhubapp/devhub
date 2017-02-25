@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import Column, { getRadius, getColumnContentWidth } from './_Column';
-import Icon from '../Icon';
+import Icon from '../../libs/icon';
 import ProgressBar from '../ProgressBar';
 import StatusMessage from '../StatusMessage';
 import { iconRightMargin } from '../cards/__CardComponents';

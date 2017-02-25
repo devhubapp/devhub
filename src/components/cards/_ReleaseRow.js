@@ -4,7 +4,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import BranchRow from './_BranchRow';
-import Icon from '../Icon';
+import Icon from '../../libs/icon';
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
 

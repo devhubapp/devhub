@@ -4,7 +4,7 @@ import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 
-import Icon from '../Icon';
+import Icon from '../../libs/icon';
 import { contentPadding } from '../../styles/variables';
 
 export const Button = styled.TouchableOpacity`

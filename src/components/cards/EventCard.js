@@ -17,7 +17,7 @@ import RepositoryListRow from './_RepositoryListRow';
 import UserListRow from './_UserListRow';
 import WikiPageListRow from './_WikiPageListRow';
 
-import Icon from '../Icon';
+import Icon from '../../libs/icon';
 import IntervalRefresh from '../IntervalRefresh';
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import TransparentTextOverlay from '../TransparentTextOverlay';

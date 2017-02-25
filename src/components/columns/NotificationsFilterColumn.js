@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import { Map } from 'immutable';
 
 import ColumnWithList, { headerFontSize } from './_ColumnWithList';
-import Icon from '../Icon';
+import Icon from '../../libs/icon';
 import { FullView, StyledText } from '../cards/__CardComponents';
 import { contentPadding } from '../../styles/variables';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
