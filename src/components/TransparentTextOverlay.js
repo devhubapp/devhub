@@ -15,12 +15,12 @@ function getStyle(from, size) {
   }
 }
 
-function getProps(from) {
+function getProps(from, size) {
   switch (from) {
-    case 'top': return { start: { x: 0, y: 1 }, end: { x: 0, y: 0 } };
-    case 'bottom': return { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } };
-    case 'left': return { start: { x: 1, y: 0 }, end: { x: 0, y: 0 } };
-    default: return { start: { x: 0, y: 0 }, end: { x: 1, y: 0 } };
+    case 'top': return { start: { x: 0, y: 1 }, end: { x: 0, y: 0 }, height: size };
+    case 'bottom': return { start: { x: 0, y: 0 }, end: { x: 0, y: 1 }, height: size };
+    case 'left': return { start: { x: 1, y: 0 }, end: { x: 0, y: 0 }, width: size };
+    default: return { start: { x: 0, y: 0 }, end: { x: 1, y: 0 }, width: size };
   }
 }
 
@@ -41,7 +41,7 @@ export default ({
     <LinearGradient
       colors={[fade(color, 0), color]}
       style={[getStyle(newFrom, size), radius && { borderRadius: radius }, style]}
-      {...getProps(newFrom)}
+      {...getProps(newFrom, size)}
       {...props}
     />
   );
