@@ -4,20 +4,20 @@ import React from 'react';
 import { ActivityIndicator, Platform, StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 
+import Screen from '../../components/Screen';
 import { splashScreenBackgroundColor } from '../../styles/variables';
 import { base00 } from '../../styles/themes/dark';
 
-const Screen = styled.View`
+const SplashScreen = styled(Screen)`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: ${splashScreenBackgroundColor};
 `;
 
 export default () => (
-  <Screen>
+  <SplashScreen backgroundColor={splashScreenBackgroundColor}>
     {(Platform.OS === 'ios' || Platform.OS === 'android') &&
       <StatusBar hidden />}
     <ActivityIndicator color={base00} />
-  </Screen>
+  </SplashScreen>
 );
