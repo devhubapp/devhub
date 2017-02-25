@@ -1,5 +1,6 @@
 // @flow
 
+import alert from '../../libs/alert';
 import prompt from '../../libs/prompt';
 import { requestTypes } from '../../api/github';
 import { generateSubscriptionId } from '../../reducers/entities/subscriptions';
@@ -134,16 +135,17 @@ export default class {
   }
 
   static showColumnTypeSelectAlert(actions, params) {
-    prompt(
+    alert(
       'Create a column',
       'Select the type of the column',
       [
+        { text: 'Cancel', style: 'cancel' },
         { text: 'User feed', onPress: () => this.onSelectUserFeedType(actions, params) },
         { text: 'User events', onPress: () => this.onSelectUserType(actions, params) },
         { text: 'Repository events', onPress: () => this.onSelectRepositoryType(actions, params) },
         { text: 'Organization events', onPress: () => this.onSelectOrgType(actions, params) },
-        { text: 'Cancel', style: 'cancel' },
       ],
+      {},
     );
   }
 }
