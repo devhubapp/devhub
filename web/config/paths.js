@@ -40,7 +40,7 @@ module.exports = {
     resolveApp('../src'),
     resolveApp('../index.web.js'),
     resolveApp('../node_modules/react-native-vector-icons'),
-    // resolveApp('node_modules/react-navigation-web/src'),
+    resolveApp('../node_modules/react-native-tab-view/src'),
   ],
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),

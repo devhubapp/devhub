@@ -4,10 +4,18 @@ import { withTheme } from 'styled-components/native';
 
 import { TabNavigator } from '../libs/navigation';
 
-const TabBarComponent = TabNavigator.Presets.Default.tabBarComponent;
+const _tabBarOptions = Platform.select({
+  android: TabNavigator.Presets.AndroidTopTabs,
+  ios: TabNavigator.Presets.iOSBottomTabs,
+  web: {
+    ...TabNavigator.Presets.iOSBottomTabs,
+    tabBarPosition: 'top',
+  },
+});
 
-export default withTheme(({ theme, ...props }) => (
-  <TabBarComponent
+const BaseTabBar = _tabBarOptions.tabBarComponent;
+const TabBar = withTheme(({ theme, ...props }) => (
+  <BaseTabBar
     {...props}
     activeTintColor={theme.brand}
     inactiveTintColor={theme.base05}
@@ -15,7 +23,7 @@ export default withTheme(({ theme, ...props }) => (
       backgroundColor: theme.brand,
     }}
     scrollEnabled={false}
-    showLabel={Platform.OS !== 'android'}
+    showLabel={Platform.OS === 'ios'}
     showIcon
     style={{
       backgroundColor: theme.base00,
@@ -23,3 +31,6 @@ export default withTheme(({ theme, ...props }) => (
     }}
   />
 ));
+
+export const tabBarOptions = { ..._tabBarOptions, tabBarComponent: TabBar };
+export default TabBar;

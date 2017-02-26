@@ -1,9 +1,9 @@
 // @flow
 
-import TabBar from '../components/TabBar';
 import HomeScreen from '../containers/screens/HomeScreen';
 import NotificationsScreen from '../containers/screens/NotificationsScreen';
 import SettingsScreen from '../containers/screens/SettingsScreen';
+import { tabBarOptions } from '../components/TabBar';
 import { TabNavigator } from '../libs/navigation';
 
 export const routes = {
@@ -12,6 +12,6 @@ export const routes = {
   Settings: { path: 'settings', screen: SettingsScreen },
 };
 
-export const options = { swipeEnabled: false, tabBarComponent: TabBar };
+export const config = { ...tabBarOptions, swipeEnabled: false };
 
-export default TabNavigator(routes, options);
+export default TabNavigator(routes, config);

@@ -6,8 +6,8 @@ import LoginScreen from '../containers/screens/LoginScreen';
 import { StackNavigator } from '../libs/navigation';
 
 export const routes = { Login: { path: 'login', screen: LoginScreen } };
-export const options = { headerMode: 'none' };
+export const config = { headerMode: 'none' };
 
 export default (Platform.OS === 'ios' || Platform.OS === 'android'
-  ? StackNavigator(routes, options)
+  ? StackNavigator(routes, config)
   : LoginScreen);
