@@ -22,7 +22,7 @@ import { accessTokenSelector } from '../selectors';
 const sagaActionChunk = { dispatchedBySaga: true };
 
 function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
-  const oauthURL = 'http://localhost:3000';
+  const oauthURL = 'https://micro-oauth-imbdqwgzhx.now.sh';
   const { scopes } = payload;
 
   try {
