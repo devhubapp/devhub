@@ -5,8 +5,6 @@ import { delay } from 'redux-saga';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
-import OAuthManager from '../libs/oauth';
-
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -14,38 +12,27 @@ import {
   LOGOUT,
 } from '../utils/constants/actions';
 
-import type { Action, LoginRequestPayload } from '../utils/types';
+import oauth from './oauth';
+import { loginSuccess, loginFailure, updateCurrentUser } from '../actions';
 
-import {
-  loginSuccess,
-  loginFailure,
-  updateCurrentUser,
-} from '../actions';
+import type { Action, LoginRequestPayload } from '../utils/types';
 
 import { accessTokenSelector } from '../selectors';
 
 const sagaActionChunk = { dispatchedBySaga: true };
 
 function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
+  const oauthURL = 'http://localhost:3000';
+  const { scopes } = payload;
+
   try {
-    const { provider, ...params } = payload;
-
-    // TODO: Remove this after reimplement oauth
-    const accessToken = '5957acfcb0d4fd12e03a6449360b8a37676942d9';
-
-    // const response = yield call(OAuthManager.authorize, provider, params);
-    // const { response: { credentials: { accessToken } = {} } = {} } = response || {};
-    // console.log('response', response);
-
-    if (!accessToken) {
-      throw new Error('Login failed: No access token received.', 'NoAccessTokenException');
-    }
-
-    const result = { accessToken };
+    const params = yield call(oauth, oauthURL, scopes);
+    const result = { accessToken: params.access_token };
     yield put(loginSuccess(payload, result, sagaActionChunk));
   } catch (e) {
     console.log('Login failed', e);
-    const errorMessage = (e.message || {}).message || e.message || e.body || e.status;
+    const errorMessage = e &&
+      ((e.message || {}).message || e.message || e.body || e.status);
     yield put(loginFailure(payload, errorMessage, sagaActionChunk));
   }
 }
@@ -104,8 +91,8 @@ function* watchFirebaseCurrentUser() {
 export default function* () {
   return yield [
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
-    // yield takeLatest([LOGIN_SUCCESS, REHYDRATE], onLoginSuccessOrRestored),
+    yield takeLatest([LOGIN_SUCCESS, REHYDRATE], onLoginSuccessOrRestored),
     yield takeLatest([LOGIN_FAILURE, LOGOUT], onLogoutRequest),
-    // yield fork(watchFirebaseCurrentUser),
+    yield fork(watchFirebaseCurrentUser),
   ];
 }

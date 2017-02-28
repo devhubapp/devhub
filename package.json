@@ -28,6 +28,7 @@
     "lodash": "^4.17.3",
     "moment": "^2.17.0",
     "normalizr": "^3.2.1",
+    "qs": "^6.3.1",
     "react": "~15.4.0",
     "react-native": "0.42.0-rc.2",
     "react-native-actionsheet": "^2.0.4",

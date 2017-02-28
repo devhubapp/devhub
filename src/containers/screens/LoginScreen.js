@@ -49,14 +49,14 @@ export default class extends React.PureComponent {
     const { actions: { loginRequest } } = this.props;
 
     this.setState({ loggingInMethod: 'github.public' });
-    loginRequest({ provider: 'github', scopes: 'user,public_repo,notifications,read:org' });
+    loginRequest({ scopes: ['user', 'public_repo', 'notifications', 'read:org'] });
   };
 
   loginWithGithubPrivateAccess = () => {
     const { actions: { loginRequest } } = this.props;
 
     this.setState({ loggingInMethod: 'github.private' });
-    loginRequest({ provider: 'github', scopes: 'user,repo,notifications,read:org' });
+    loginRequest({ scopes: ['user', 'repo', 'notifications', 'read:org'] });
   };
 
   props: {
