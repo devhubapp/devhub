@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 import { get } from '../../immutable';
 
@@ -102,9 +102,13 @@ function openURL(url: string) {
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
   let _url = url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url;
 
-  // replace http with devhub:// so the app deeplinking will handle this
-  // the app will decide if it will push an app screen or open the web browser
-  _url = _url.replace(/(http[s]?)/, 'devhub');
+  if (Platform.OS === 'web') {
+    _url = _url.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(_url) : _url;
+  } else {
+    // replace http with devhub:// so the app deeplinking will handle this
+    // the app will decide if it will push an app screen or open the web browser
+    _url = _url.replace(/(http[s]?)/, 'devhub');
+  }
 
   return Linking.openURL(_url);
 }
