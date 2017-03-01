@@ -147,6 +147,7 @@ export function groupNotificationsByRepository(
 ) {
   let groupedNotifications = OrderedMap();
   const notificationIds = notifications
+    .filter(Boolean)
     .map(notification => get(notification, 'id'))
     .toList()
   ;

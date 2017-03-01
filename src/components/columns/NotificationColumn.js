@@ -23,7 +23,7 @@ const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read'];
 const BUTTONS = {
   CANCEL: 0,
   MARK_NOTIFICATIONS_AS_READ_OR_UNREAD: 1,
-  ARCHIVE_READ: 2,
+  CLEAR_READ: 2,
 };
 
 export const defaultIcon = 'bell';
@@ -121,10 +121,10 @@ export default class extends React.PureComponent {
 
         break;
 
-      case BUTTONS.ARCHIVE_READ:
+      case BUTTONS.CLEAR_READ:
         (() => {
           const all = readIds.size === notificationIds.size;
-          actions.archiveNotifications({ all, notificationIds: readIds, repoId });
+          actions.deleteNotifications({ all, notificationIds: readIds, repoId });
         })();
         break;
 

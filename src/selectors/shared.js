@@ -65,8 +65,13 @@ export const createImmutableSelectorCreator = _.memoize((numberOfArgsToMemoize) 
 
 export const createImmutableSelector = createImmutableSelectorCreator();
 
+export function isDeletedFilter(obj) {
+  return !!(obj && obj.get('deleted_at'));
+}
+
 export function isArchivedFilter(obj) {
   if (!obj) return false;
+  if (isDeletedFilter(obj)) return false;
 
   return obj.get('archived_at') &&
     !(
@@ -79,6 +84,7 @@ export function isArchivedFilter(obj) {
 
 export function isReadFilter(obj) {
   if (!obj) return false;
+  if (isDeletedFilter(obj)) return false;
 
   // preserves the latest state between last_read_at and last_unread_at
   if (obj.get('last_read_at') && obj.get('last_unread_at')) {

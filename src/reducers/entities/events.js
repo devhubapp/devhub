@@ -4,14 +4,16 @@ import { Map } from 'immutable';
 
 import {
   ARCHIVE_EVENTS,
+  DELETE_EVENTS,
   MARK_EVENTS_AS_READ,
   MARK_EVENTS_AS_UNREAD,
 } from '../../utils/constants/actions';
 
 import {
-  markIdsAsRead,
-  markIdsAsUnread,
-  markIdsAsArchived,
+  deleteByIds,
+  markAsReadByIds,
+  markAsUnreadByIds,
+  markAsArchivedByIds,
 } from './_shared';
 
 import type { Action, Normalized } from '../../utils/types';
@@ -24,13 +26,16 @@ export default (state: State = initialState, action: Action<any>): State => {
 
   switch (type) {
     case ARCHIVE_EVENTS:
-      return markIdsAsArchived(state, payload.eventIds, payload.archivedAt);
+      return markAsArchivedByIds(state, payload.eventIds, payload.archivedAt);
+
+    case DELETE_EVENTS:
+      return deleteByIds(state, payload.eventIds, payload.deletedAt, false);
 
     case MARK_EVENTS_AS_READ:
-      return markIdsAsRead(state, payload.eventIds, payload.lastReadAt, true);
+      return markAsReadByIds(state, payload.eventIds, payload.lastReadAt, true);
 
     case MARK_EVENTS_AS_UNREAD:
-      return markIdsAsUnread(state, payload.eventIds, payload.lastUnreadAt);
+      return markAsUnreadByIds(state, payload.eventIds, payload.lastUnreadAt);
 
     default:
       return state;

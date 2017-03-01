@@ -9,6 +9,7 @@ import {
   createImmutableSelector,
   entitiesSelector,
   isArchivedFilter,
+  isDeletedFilter,
   isReadFilter,
 } from './shared';
 
@@ -25,7 +26,6 @@ export const archivedEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
   (events) => (
     events
-      .filter(Boolean)
       .filter(isArchivedFilter)
       .map(event => event.get('id'))
       .toList()
@@ -36,7 +36,6 @@ export const readEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
   (events) => (
     events
-      .filter(Boolean)
       .filter(isReadFilter)
       .map(event => event.get('id'))
       .toList()
@@ -48,6 +47,7 @@ export const unarchivedEventIdsSelector = createImmutableSelector(
   (events) => (
     events
       .filter(Boolean)
+      .filterNot(isDeletedFilter)
       .filterNot(isArchivedFilter)
       .map(event => event.get('id'))
       .toList()
@@ -65,11 +65,14 @@ export const makeIsReadEventSelector = () => createImmutableSelector(
   (eventId, readIds) => !!readIds.includes(eventId),
 );
 
-export const makeDenormalizedEventSelector = () => createImmutableSelectorCreator(1)(
-  eventSelector,
-  entitiesSelector,
-  (event, entities) => denormalize(event, entities, EventSchema),
-);
+export const makeDenormalizedEventSelector = () =>
+  createImmutableSelectorCreator(1)(eventSelector, entitiesSelector, (
+    event,
+    entities,
+  ) =>
+    denormalize(event, entities, EventSchema)
+      .filter(Boolean)
+      .filterNot(isDeletedFilter));
 
 export const makeDenormalizedOrderedColumnEventsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector();

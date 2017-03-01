@@ -3,6 +3,7 @@
 
 import {
   ARCHIVE_NOTIFICATIONS,
+  DELETE_NOTIFICATIONS,
   LOAD_NOTIFICATIONS_REQUEST,
   LOAD_NOTIFICATIONS_SUCCESS,
   LOAD_NOTIFICATIONS_FAILURE,
@@ -55,6 +56,13 @@ export const archiveNotifications = (
   other?: Object,
 ) => (
   action(ARCHIVE_NOTIFICATIONS, { notificationIds }, other)
+);
+
+export const deleteNotifications = (
+  { notificationIds }: NotificationIdsParams,
+  other?: Object,
+) => (
+  action(DELETE_NOTIFICATIONS, { notificationIds }, other)
 );
 
 export type MarkNotificationsParams = {

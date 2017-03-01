@@ -37,7 +37,7 @@ const BUTTONS = {
   CANCEL: 0,
   CREATE_NEW_COLUMN: 1,
   MARK_EVENTS_AS_READ_OR_UNREAD: 2,
-  ARCHIVE_READ: 3,
+  CLEAR_READ: 3,
   DELETE_COLUMN: 4,
 };
 
@@ -119,13 +119,13 @@ export default class extends React.PureComponent {
 
         break;
 
-      case BUTTONS.ARCHIVE_READ:
+      case BUTTONS.CLEAR_READ:
         (() => {
           const eventIds = this.getEventIds();
           const readIds = this.getReadEventIds();
           const all = readIds.size === eventIds.size;
 
-          actions.archiveEvents({ all, columnId, eventIds: readIds });
+          actions.deleteEvents({ all, columnId, eventIds: readIds });
         })();
         break;
 

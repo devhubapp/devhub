@@ -8,6 +8,7 @@ import {
   createImmutableSelector,
   entitiesSelector,
   isArchivedFilter,
+  isDeletedFilter,
   isReadFilter,
 } from './shared';
 
@@ -32,6 +33,7 @@ export const notificationIdsSelector = createImmutableSelector(
   notifications =>
     notifications
       .filter(Boolean)
+      .filterNot(isDeletedFilter)
       .map(notification => notification.get('id'))
       .toList(),
 );
@@ -41,27 +43,28 @@ export const unarchivedNotificationIdsSelector = createImmutableSelector(
   notifications =>
     notifications
       .filter(Boolean)
+      .filterNot(isDeletedFilter)
       .filterNot(isArchivedFilter)
       .map(notification => notification.get('id'))
       .toList(),
 );
 
-export const makeDenormalizedNotificationsSelector = (n) => createImmutableSelectorCreator(n)(
-  (state, { notifications, notificationIds }) => (
-    notifications || notificationIds || notificationIdsSelector(state)
-  ),
-  entitiesSelector,
-  (notifications, entities) =>
-    denormalize(notifications, entities, [NotificationSchema]).sort(
-      sortNotificationsByDate,
-    ),
-);
+export const makeDenormalizedNotificationsSelector = n =>
+  createImmutableSelectorCreator(n)(
+    (state, { notifications, notificationIds }) =>
+      notifications || notificationIds || notificationIdsSelector(state),
+    entitiesSelector,
+    (notifications, entities) =>
+      denormalize(notifications, entities, [NotificationSchema])
+        .filter(Boolean)
+        .filterNot(isDeletedFilter)
+        .sort(sortNotificationsByDate),
+  );
 
 export const readNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
   notifications =>
     notifications
-      .filter(Boolean)
       .filter(isReadFilter)
       .map(notification => notification.get('id'))
       .toList(),
@@ -93,6 +96,8 @@ export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCre
   (notificationIds, notificationEntities) =>
     notificationIds
       .map(notificationId => notificationEntities.get(notificationId))
+      .filter(Boolean)
+      .filterNot(isDeletedFilter)
       .sort(sortNotificationsByDate),
 );
 
