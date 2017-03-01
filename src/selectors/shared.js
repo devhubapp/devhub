@@ -66,7 +66,7 @@ export const createImmutableSelectorCreator = _.memoize((numberOfArgsToMemoize) 
 export const createImmutableSelector = createImmutableSelectorCreator();
 
 export function isDeletedFilter(obj) {
-  return !!(obj && obj.get('deleted_at'));
+  return obj ? !!obj.get('deleted_at') : true;
 }
 
 export function isArchivedFilter(obj) {
