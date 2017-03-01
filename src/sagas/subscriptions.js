@@ -17,6 +17,8 @@ import {
   isLoggedSelector,
 } from '../selectors';
 
+import { TIMEOUT } from '../utils/constants/defaults';
+
 import {
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOGIN_SUCCESS,
@@ -54,7 +56,7 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
     const { response, timeout } = yield race({
       response: call(getApiMethod(requestType), params),
-      timeout: call(delay, 10000),
+      timeout: call(delay, TIMEOUT),
     });
 
     if (timeout) throw new Error('Timeout', 'TimeoutError');

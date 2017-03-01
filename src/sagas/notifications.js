@@ -18,6 +18,7 @@ import {
   notificationSelector,
 } from '../selectors';
 
+import { TIMEOUT } from '../utils/constants/defaults';
 import { authenticate, getApiMethod, requestTypes } from '../api/github';
 
 import {
@@ -59,7 +60,7 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
 
     const { response, timeout } = yield race({
       response: call(getApiMethod(requestType), params),
-      timeout: call(delay, 10000),
+      timeout: call(delay, TIMEOUT),
     });
 
     if (timeout) {
@@ -137,7 +138,7 @@ function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotifications
     if (!ignoreApiCall) {
       const { response: _response, timeout } = yield race({
         response: call(getApiMethod(requestType), params),
-        timeout: call(delay, 10000),
+        timeout: call(delay, TIMEOUT),
       });
 
       if (timeout) {
