@@ -73,12 +73,11 @@ export function notificationProcessStrategy(notification: GithubNotification) {
       subject,
     };
   } else if (newNotification.subject.type === 'Commit') {
-    const { ...commitSubject } = newNotification.subject;
-    delete commitSubject.title;
+    const { title, ...commitSubject } = newNotification.subject;
 
     const subject = {
       ...commitSubject,
-      message: newNotification.subject.title,
+      message: title,
       sha: getCommitShaFromUrl(newNotification.subject.url),
     };
 
@@ -86,6 +85,23 @@ export function notificationProcessStrategy(notification: GithubNotification) {
       ...newNotification,
       subject,
     };
+  } else if (newNotification.subject.type === 'Release') {
+    const { title, ...releaseSubject } = newNotification.subject;
+
+    const subject = {
+      ...releaseSubject,
+      name: title,
+    };
+
+    newNotification = {
+      ...newNotification,
+      subject,
+    };
+  }
+
+  // not really a comment link. why u do that github?
+  if (newNotification.subject.url === newNotification.subject.latest_comment_url) {
+    delete newNotification.subject.latest_comment_url;
   }
 
   if (newNotification.subject.latest_comment_url) {

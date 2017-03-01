@@ -131,8 +131,10 @@ export function getNotificationIconAndColor(
       return getIssueIconAndColor(subject, theme);
     case 'pullrequest':
       return getPullRequestIconAndColor(subject, theme);
+    case 'release':
+      return { icon: 'tag' };
     default:
-      return 'bell';
+      return { icon: 'bell' };
   }
 }
 
@@ -268,6 +270,11 @@ export const defaultFilterColumnsData = OrderedMap({
       pullRequest: {
         icon: 'git-pull-request',
         title: 'Pull Request',
+        ...defaultFilterColumnsCounters,
+      },
+      release: {
+        icon: 'tag',
+        title: 'Release',
         ...defaultFilterColumnsCounters,
       },
     }),

@@ -7,6 +7,7 @@ import * as baseTheme from '../../../styles/themes/base';
 import { get } from '../../immutable';
 
 import type {
+  GithubIcon,
   GithubIssue,
   GithubPullRequest,
   ThemeObject,
@@ -24,7 +25,7 @@ export function isPullRequest(issue: GithubIssue | GithubPullRequest) {
 export function getPullRequestIconAndColor(
   pullRequest: GithubPullRequest,
   theme?: ThemeObject = baseTheme,
-) : { color: string, icon: string } {
+) : { icon: GithubIcon, color?: string } {
   const merged = get(pullRequest, 'merged_at');
   const state = merged ? 'merged' : get(pullRequest, 'state');
 
@@ -44,7 +45,7 @@ export function getPullRequestIconAndColor(
 }
 
 export function getIssueIconAndColor(issue: GithubIssue, theme?: ThemeObject = baseTheme)
-: { color: string, icon: string } {
+: { icon: GithubIcon, color?: string } {
   const state = get(issue, 'state');
 
   if (isPullRequest(issue)) {

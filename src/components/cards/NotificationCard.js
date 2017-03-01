@@ -10,6 +10,7 @@ import CommitRow from './_CommitRow';
 import IssueRow from './_IssueRow';
 import PullRequestRow from './_PullRequestRow';
 import RepositoryRow from './_RepositoryRow';
+import ReleaseRow from './_ReleaseRow';
 
 import Label from '../Label';
 import IntervalRefresh from '../IntervalRefresh';
@@ -83,6 +84,7 @@ export default class extends React.PureComponent {
     const commit = (subjectType === 'commit' && subject) || null;
     const issue = (subjectType === 'issue' && subject) || null;
     const pullRequest = (subjectType === 'pullrequest' && subject) || null;
+    const release = (subjectType === 'release' && subject) || null;
 
     const { icon: cardIcon, color: cardIconColor } = getNotificationIconAndColor(
       notification,
@@ -168,6 +170,10 @@ export default class extends React.PureComponent {
                 narrow
               />
             )
+        }
+        {
+          !!release &&
+            <ReleaseRow release={release} read={read} narrow />
         }
         {
           !(commit || issue || pullRequest) &&

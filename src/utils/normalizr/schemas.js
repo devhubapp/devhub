@@ -74,6 +74,8 @@ export const PullRequestSchema = new schema.Entity('issues', {}, {
   }),
 });
 
+export const ReleaseSchema = new schema.Entity('releases', {}, defaultOptions);
+
 export const SubscriptionSchema = new schema.Entity('subscriptions', {}, defaultOptions);
 
 export const UserSchema = new schema.Entity('users', {}, {
@@ -101,6 +103,7 @@ EventSchema.define({
     issue: IssueSchema,
     forkee: RepoSchema,
     pull_request: PullRequestSchema,
+    release: ReleaseSchema,
     repo: RepoSchema,
     user: UserSchema,
   },
@@ -120,6 +123,7 @@ NotificationSchema.define({
     Commit: CommitSchema,
     Issue: IssueSchema,
     PullRequest: PullRequestSchema,
+    Release: ReleaseSchema,
   }, 'type'),
 });
 

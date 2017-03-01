@@ -69,14 +69,8 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string
 
     if (restOfURL2[0]) {
       switch (type2) {
-        case 'pulls':
-          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
-            return number
-              ? `${baseURL}/${repoFullName}/pull/${number}/comments#discussion_r${restOfURL2[1]}`
-              : '';
-          }
-
-          return `${baseURL}/${repoFullName}/pull/${restOfURL2.join('/')}`;
+        case 'commits':
+          return `${baseURL}/${repoFullName}/commit/${restOfURL2.join('/')}`;
 
         case 'issues':
           if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
@@ -87,8 +81,19 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string
 
           return `${baseURL}/${repoFullName}/issues/${restOfURL2.join('/')}`;
 
-        case 'commits':
-          return `${baseURL}/${repoFullName}/commit/${restOfURL2.join('/')}`;
+        case 'pulls':
+          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
+            return number
+              ? `${baseURL}/${repoFullName}/pull/${number}/comments#discussion_r${restOfURL2[1]}`
+              : '';
+          }
+
+          return `${baseURL}/${repoFullName}/pull/${restOfURL2.join('/')}`;
+
+        case 'releases':
+          // it wont go directly to the release, but to the generic releases page.
+          // we would need to have the tag name to do that.
+          return `${baseURL}/${repoFullName}/releases/?${restOfURL2.join('/')}`;
       }
     }
   }

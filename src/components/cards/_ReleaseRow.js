@@ -30,7 +30,7 @@ export default class extends React.PureComponent {
   render() {
     const { release, read, type, user, ...props } = this.props;
 
-    if (type !== 'ReleaseEvent' || !release) return null;
+    if (!release) return null;
 
     const {
       body,

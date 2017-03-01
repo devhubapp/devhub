@@ -10,6 +10,7 @@ import events from './events';
 import issues from './issues';
 import orgs from './orgs';
 import notifications from './notifications';
+import releases from './releases';
 import repos from './repos';
 import subscriptions from './subscriptions';
 import users from './users';
@@ -30,6 +31,7 @@ const reducer = combineReducers({
   issues,
   notifications,
   orgs,
+  releases,
   repos,
   subscriptions,
   users,
