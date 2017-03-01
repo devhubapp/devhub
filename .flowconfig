@@ -50,4 +50,4 @@ unsafe.enable_getters_and_setters=true
 esproposal.decorators=ignore
 
 [version]
-^0.38.0
+^0.40.0
