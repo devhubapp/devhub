@@ -7,7 +7,7 @@ import entities from './entities';
 import notifications from './notifications';
 import user from './user';
 
-import { CLEAR_APP_DATA } from '../utils/constants/actions';
+import { RESET_APP_DATA } from '../utils/constants/actions';
 import type { Action } from '../utils/types';
 
 const reducer = combineReducers({
@@ -24,7 +24,7 @@ const indexReducer = (state: Object = initialState, action) => {
   const { type } = action || {};
 
   switch (type) {
-    case CLEAR_APP_DATA:
+    case RESET_APP_DATA:
       return initialState;
 
     default:

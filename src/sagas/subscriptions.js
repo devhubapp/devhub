@@ -5,7 +5,6 @@ import { flatten, uniq } from 'lodash';
 import { normalize } from 'normalizr';
 import { delay } from 'redux-saga';
 import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
-import { REHYDRATE } from 'redux-persist/constants';
 
 import { EventSchema } from '../utils/normalizr/schemas';
 
@@ -17,6 +16,7 @@ import {
   isLoggedSelector,
 } from '../selectors';
 
+import { APP_READY } from '../utils/constants/actions';
 import { TIMEOUT } from '../utils/constants/defaults';
 
 import {
@@ -40,7 +40,7 @@ import {
 
 import { authenticate, getApiMethod } from '../api/github';
 
-const sagaActionChunk = { dispatchedBySaga: true };
+import { sagaActionChunk } from './_shared';
 
 function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
   let state = yield select();
@@ -137,7 +137,7 @@ function* updateSubscriptionsFromAllColumns() {
 
 // update all columns each minute
 function* startTimer() {
-  yield take(REHYDRATE);
+  yield take(APP_READY);
 
   // // alert with the size of the state in bytes
   // const byteCount = s => encodeURI(s).split(/%..|./).length - 1;

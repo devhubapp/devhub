@@ -5,7 +5,7 @@ import moment from 'moment';
 import { List, Map, Set } from 'immutable';
 
 import { archivedEventIdsSelector, readEventIdsSelector } from './events';
-import { subscriptionsSelector, subscriptionSelector } from './subscriptions';
+import { subscriptionsEntitySelector, subscriptionSelector } from './subscriptions';
 import { createImmutableSelector, entitiesSelector, objectKeysMemoized, stateSelector } from './shared';
 
 export const columnIdSelector = (state, { columnId }) => columnId;
@@ -68,7 +68,7 @@ export const makeColumnReadIdsSelector = () => {
 
 export const makeColumnSubscriptionsSelector = () => createImmutableSelector(
   columnSubscriptionIdsSelector,
-  subscriptionsSelector,
+  subscriptionsEntitySelector,
   (subscriptionIds, subscriptions) => (
     subscriptionIds.map(subscriptionId => (
       subscriptions.get(subscriptionId)

@@ -3,16 +3,15 @@
 import { AsyncStorage } from 'react-native';
 import { fork, takeLatest } from 'redux-saga/effects';
 
-import {
-  CLEAR_APP_DATA,
-} from '../utils/constants/actions';
+import { RESET_APP_DATA } from '../utils/constants/actions';
 
+import appSagas from './app';
 import authSagas from './auth';
 import firebaseSagas from './firebase';
 import notificationsSagas from './notifications';
 import subscriptionsSagas from './subscriptions';
 
-export async function clearAppData() {
+export async function resetAppData() {
   try {
     console.log('Reseting app data...');
     await AsyncStorage.clear();
@@ -24,10 +23,11 @@ export async function clearAppData() {
 
 export default function* () {
   return yield [
-    yield takeLatest(CLEAR_APP_DATA, clearAppData),
+    yield takeLatest(RESET_APP_DATA, resetAppData),
     yield fork(authSagas),
     yield fork(firebaseSagas),
     yield fork(notificationsSagas),
     yield fork(subscriptionsSagas),
+    yield fork(appSagas),
   ];
 }

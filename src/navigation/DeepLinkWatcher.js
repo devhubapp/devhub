@@ -3,7 +3,7 @@
 import React from 'react';
 import { Linking } from 'react-native';
 
-import { clearAppData } from '../sagas';
+import { resetAppData } from '../sagas';
 import { githubHTMLUrlFromAPIUrl } from '../utils/helpers/github/url';
 
 export default class extends React.PureComponent {
@@ -32,7 +32,7 @@ export default class extends React.PureComponent {
     if (!url) return;
 
     if (url === 'reset') {
-      clearAppData();
+      resetAppData();
     } else {
       Linking.openURL(url);
     }

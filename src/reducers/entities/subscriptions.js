@@ -5,6 +5,7 @@ import { fromJS, Map, Set } from 'immutable';
 import { ApiRequestType, getUniquePath } from '../../api/github';
 import {
   CREATE_SUBSCRIPTION,
+  DELETE_EVENTS,
   DELETE_SUBSCRIPTION,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOAD_SUBSCRIPTION_DATA_SUCCESS,
@@ -55,6 +56,11 @@ export default (state: State = initialState, { type, payload, error }: Action<an
         }));
       })(payload || {});
 
+    case DELETE_EVENTS:
+      return state.map(subscription => (
+        subscription.update('events', events => (events || Set).toSet().subtract(payload.eventIds))
+      ));
+
     case DELETE_SUBSCRIPTION:
       // TODO: Delete all events that are not being used elsewhere
       return state.delete(payload.id);
@@ -84,7 +90,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
         const newSubscription = subscription.mergeDeep(fromJS({
           events: newEventIds,
           updatedAt: new Date(),
-          ...( meta && meta['last-modified'] ? {
+          ...(meta && meta['last-modified'] ? {
             lastModifiedAt: meta['last-modified'],
             pollInterval: Number(meta['x-poll-interval']),
             rateLimit: Number(meta['x-ratelimit-limit']),

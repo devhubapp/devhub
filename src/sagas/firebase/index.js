@@ -3,10 +3,9 @@
 import * as firebase from 'firebase';
 import { mapKeys } from 'lodash';
 import { fork, select, take } from 'redux-saga/effects';
-import { REHYDRATE } from 'redux-persist/constants';
 
+import { APP_READY } from '../../utils/constants/actions';
 import { deepImmutableEqualityCheck, get, getIn, toJS } from '../../utils/immutable';
-
 import { isLoggedSelector } from '../../selectors';
 
 const firebaseCharMap = { '/': '__STRIPE__' };
@@ -61,7 +60,7 @@ function* startFirebaseWatcher() {
   let user;
   let state;
 
-  yield take(REHYDRATE);
+  yield take(APP_READY);
 
   while (true) {
     yield take('*');

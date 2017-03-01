@@ -4,8 +4,10 @@ import moment from 'moment';
 import { normalize } from 'normalizr';
 import { delay } from 'redux-saga';
 import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
-import { REHYDRATE } from 'redux-persist/constants';
 
+import { APP_READY } from '../utils/constants/actions';
+import { TIMEOUT } from '../utils/constants/defaults';
+import { authenticate, getApiMethod, requestTypes } from '../api/github';
 import { dateToHeaderFormat } from '../utils/helpers';
 import { getOwnerAndRepo } from '../utils/helpers/github/shared';
 import { NotificationSchema } from '../utils/normalizr/schemas';
@@ -17,9 +19,6 @@ import {
   makeRepoSelector,
   notificationSelector,
 } from '../selectors';
-
-import { TIMEOUT } from '../utils/constants/defaults';
-import { authenticate, getApiMethod, requestTypes } from '../api/github';
 
 import {
   LOAD_NOTIFICATIONS_REQUEST,
@@ -42,7 +41,7 @@ import {
   updateNotifications,
 } from '../actions';
 
-const sagaActionChunk = { dispatchedBySaga: true };
+import { sagaActionChunk } from './_shared';
 
 function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
   const state = yield select();
@@ -187,7 +186,7 @@ function* onUpdateNotificationsRequest({ payload: { params: _params } }) {
 
 // update user notifications each minute
 function* startTimer() {
-  yield take(REHYDRATE);
+  yield take(APP_READY);
 
   // when the user opens the app, load ALL notifications.
   // and then on each minute load only the new notifications

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import EventColumnsContainer from '../EventColumnsContainer';
 import Screen from '../../components/Screen';
 import TabIcon from '../../components/TabIcon';
-import { rehydratedSelector } from '../../selectors/app';
+import { isReadySelector } from '../../selectors/app';
 import type { State, ThemeObject } from '../../utils/types';
 
 const CenterView = styled.View`
@@ -18,7 +18,7 @@ const CenterView = styled.View`
 `;
 
 const mapStateToProps = (state: State) => ({
-  rehydrated: rehydratedSelector(state),
+  ready: isReadySelector(state),
 });
 
 @connect(mapStateToProps)
@@ -27,21 +27,21 @@ class HomeScreen extends React.PureComponent {
   static navigationOptions;
 
   props: {
-    rehydrated: boolean,
+    ready: boolean,
     theme: ThemeObject,
   };
 
   render() {
-    const { rehydrated, theme } = this.props;
+    const { ready, theme } = this.props;
 
     return (
       <Screen>
-        {!rehydrated &&
+        {!ready &&
           <CenterView>
             <ActivityIndicator color={theme.base04} />
           </CenterView>}
 
-        {rehydrated && <EventColumnsContainer />}
+        {ready && <EventColumnsContainer />}
       </Screen>
     );
   }

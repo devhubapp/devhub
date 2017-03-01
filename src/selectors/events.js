@@ -11,6 +11,7 @@ import {
   isArchivedFilter,
   isDeletedFilter,
   isReadFilter,
+  objectKeysMemoized,
 } from './shared';
 
 import { makeColumnEventIdsSelector } from './columns';
@@ -19,6 +20,8 @@ import { groupSimilarEvents } from '../utils/helpers/github/events';
 
 export const eventIdSelector = (state, { eventId }) => eventId;
 export const eventEntitiesSelector = (state) => entitiesSelector(state).get('events');
+export const eventIdsSelector = state => objectKeysMemoized(eventEntitiesSelector(state));
+
 export const eventSelector = (state, { eventId }) => eventEntitiesSelector(state).get(eventId);
 export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_at') ? 1 : -1);
 

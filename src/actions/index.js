@@ -2,7 +2,9 @@
 /* eslint-disable import/prefer-default-export */
 
 import {
-  CLEAR_APP_DATA,
+  APP_CLEANUP,
+  APP_READY,
+  RESET_APP_DATA,
   CREATE_COLUMN,
   DELETE_COLUMN,
   SET_THEME,
@@ -22,12 +24,19 @@ export * from './events';
 export * from './notifications';
 export * from './subscriptions';
 
-export const clearAppData = (other?: Object) => (
-  action(CLEAR_APP_DATA, undefined, other)
+export const cleanupApp = (other?: Object) => (
+  action(APP_CLEANUP, undefined, other)
+);
+
+export const appReady = (other?: Object) => (
+  action(APP_READY, undefined, other)
+);
+
+export const resetAppData = (other?: Object) => (
+  action(RESET_APP_DATA, undefined, other)
 );
 
 // COLUMN
-
 type CreateColumnParams = { title: string, subscriptionIds: Array<string> };
 export const createColumn = (
   { order, subscriptionIds, title }: CreateColumnParams,

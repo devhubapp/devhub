@@ -3,9 +3,9 @@
 import * as firebase from 'firebase';
 import { delay } from 'redux-saga';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
-import { REHYDRATE } from 'redux-persist/constants';
 
 import {
+  APP_READY,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
@@ -13,13 +13,10 @@ import {
 } from '../utils/constants/actions';
 
 import oauth from './oauth';
+import { sagaActionChunk } from './_shared';
 import { loginSuccess, loginFailure, updateCurrentUser } from '../actions';
-
-import type { Action, LoginRequestPayload } from '../utils/types';
-
 import { accessTokenSelector } from '../selectors';
-
-const sagaActionChunk = { dispatchedBySaga: true };
+import type { Action, LoginRequestPayload } from '../utils/types';
 
 function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
   const oauthURL = 'https://micro-oauth-pmkvlpfaua.now.sh';
@@ -84,14 +81,14 @@ function* watchFirebaseCurrentUser() {
       yield put(updateCurrentUser(payload, sagaActionChunk));
     }
 
-    yield call(delay, 100);
+    yield call(delay, 1000);
   }
 }
 
 export default function* () {
   return yield [
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
-    yield takeLatest([LOGIN_SUCCESS, REHYDRATE], onLoginSuccessOrRestored),
+    yield takeLatest([LOGIN_SUCCESS, APP_READY], onLoginSuccessOrRestored),
     yield takeLatest([LOGIN_FAILURE, LOGOUT], onLogoutRequest),
     yield fork(watchFirebaseCurrentUser),
   ];

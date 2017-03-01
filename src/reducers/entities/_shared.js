@@ -1,6 +1,6 @@
 import { Map } from 'immutable';
 
-import { isArchivedFilter } from '../../selectors';
+import { isArchivedFilter, isDeletedFilter } from '../../selectors';
 
 export function updateByIdsUsingFn(state, ids, fn, ...fnArgs) {
   let newState = state;
@@ -18,8 +18,15 @@ export function updateByIdsUsingFn(state, ids, fn, ...fnArgs) {
   return newState;
 }
 
+export const markAsDeleted = (item, deletedAt) => (
+  // prevent remarking as deleted
+  isDeletedFilter(item)
+    ? item
+    : Map({ deleted_at: deletedAt || new Date() })
+);
+
 export const deleteByIds = (state, ids, deletedAt, softDelete = false) => {
-  const fn = softDelete ? () => Map({ deleted_at: deletedAt || new Date() }) : () => null;
+  const fn = softDelete ? markAsDeleted : () => null;
   return updateByIdsUsingFn(state, ids, fn);
 };
 

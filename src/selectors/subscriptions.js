@@ -4,19 +4,22 @@
 import { denormalize } from 'denormalizr';
 
 import {
-  createImmutableSelectorCreator,
   createImmutableSelector,
+  createImmutableSelectorCreator,
   entitiesSelector,
+  objectKeysMemoized,
 } from './shared';
 
 import { SubscriptionSchema } from '../utils/normalizr/schemas';
 
 export const subscriptionIdSelector = (state, { subscriptionId }) => subscriptionId;
 
-export const subscriptionsSelector = state => entitiesSelector(state).get('subscriptions');
+export const subscriptionsEntitySelector = state => entitiesSelector(state).get('subscriptions');
+
+export const subscriptionIdsSelector = state => objectKeysMemoized(subscriptionsEntitySelector(state));
 
 export const denormalizedSubscriptionsSelector = createImmutableSelectorCreator(1)(
-  subscriptionsSelector,
+  subscriptionsEntitySelector,
   entitiesSelector,
   (subscriptions, entities) => (
     denormalize(subscriptions, entities, [SubscriptionSchema])
@@ -25,8 +28,13 @@ export const denormalizedSubscriptionsSelector = createImmutableSelectorCreator(
 
 export const subscriptionSelector = createImmutableSelector(
   subscriptionIdSelector,
-  subscriptionsSelector,
+  subscriptionsEntitySelector,
   (subscriptionId, subscriptions) => subscriptions.get(subscriptionId),
+);
+
+export const subscriptionEventsSelector = createImmutableSelector(
+  subscriptionSelector,
+  subscription => subscription.get('events'),
 );
 
 export default denormalizedSubscriptionsSelector;

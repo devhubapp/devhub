@@ -2,7 +2,9 @@
 /* eslint-disable import/prefer-default-export */
 
 // app data
-export const CLEAR_APP_DATA: 'CLEAR_APP_DATA' = 'CLEAR_APP_DATA';
+export const APP_CLEANUP: 'APP_CLEANUP' = 'APP_CLEANUP';
+export const APP_READY: 'APP_READY' = 'APP_READY';
+export const RESET_APP_DATA: 'RESET_APP_DATA' = 'RESET_APP_DATA';
 
 // auth
 export const LOGIN_REQUEST: 'LOGIN_REQUEST' = 'LOGIN_REQUEST';

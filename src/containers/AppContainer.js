@@ -9,7 +9,7 @@ import SplashScreen from '../containers/screens/SplashScreen';
 
 import {
   isLoggedSelector,
-  rehydratedSelector,
+  isReadySelector,
   themeSelector,
 } from '../selectors';
 
@@ -21,7 +21,7 @@ const View = styled.View`
 
 const mapStateToProps = (state: State) => ({
   isLogged: isLoggedSelector(state),
-  rehydrated: rehydratedSelector(state),
+  ready: isReadySelector(state),
   theme: themeSelector(state),
 });
 
@@ -29,18 +29,18 @@ const mapStateToProps = (state: State) => ({
 export default class extends React.PureComponent {
   static defaultProps = {
     isLogged: false,
-    rehydrated: false,
+    ready: false,
     theme: {},
   };
 
   props: {
     isLogged?: boolean,
-    rehydrated?: boolean,
+    ready?: boolean,
     theme: ThemeObject,
   };
 
   render() {
-    const { isLogged, rehydrated, theme } = this.props;
+    const { isLogged, ready, theme } = this.props;
 
     return (
       <ThemeProvider theme={theme}>
@@ -51,7 +51,7 @@ export default class extends React.PureComponent {
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
             />}
 
-          {rehydrated
+          {ready
             ? isLogged ? <MainAppNavigator /> : <PublicAppNavigator />
             : <SplashScreen />}
         </View>
