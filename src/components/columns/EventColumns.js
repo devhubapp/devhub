@@ -18,7 +18,7 @@ export default class extends React.PureComponent {
     columns: Array<ColumnType>,
   };
 
-  renderRow = (column) => {
+  renderItem = ({ index, item: column }) => {
     if (!column) return null;
 
     const columnId = column.get('id');
@@ -47,7 +47,7 @@ export default class extends React.PureComponent {
         actions={actions}
         addColumnFn={this.addColumnFn}
         columns={columns}
-        renderRow={this.renderRow}
+        renderItem={this.renderItem}
         {...props}
       />
     );

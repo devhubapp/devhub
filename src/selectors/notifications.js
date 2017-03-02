@@ -58,6 +58,7 @@ export const makeDenormalizedNotificationsSelector = n =>
       denormalize(notifications, entities, [NotificationSchema])
         .filter(Boolean)
         .filterNot(isDeletedFilter)
+        .toList()
         .sort(sortNotificationsByDate),
   );
 
@@ -98,6 +99,7 @@ export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCre
       .map(notificationId => notificationEntities.get(notificationId))
       .filter(Boolean)
       .filterNot(isDeletedFilter)
+      .toList()
       .sort(sortNotificationsByDate),
 );
 
@@ -106,7 +108,7 @@ export const makeGroupedUnarchivedNotificationsSelector = () => createImmutableS
   orderedUnarchivedNotificationsSelector,
   (state, params) => params,
   (notificationIds, notifications, params) =>
-    groupNotificationsByRepository(notifications, params),
+    groupNotificationsByRepository(notifications, params).toList(),
 );
 
 export const notificationsIsLoadingSelector = createImmutableSelector(

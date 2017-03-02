@@ -6,7 +6,7 @@ import { Map } from 'immutable';
 import { RefreshControl } from 'react-native';
 
 import ColumnWithHeader, { getRadius } from './_ColumnWithHeader';
-import ImmutableListView from '../../libs/immutable-list-view';
+import ImmutableVirtualizedList from '../../libs/immutable-virtualized-list';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import { EmptyColumnContent } from './EmptyColumn';
 import { contentPadding } from '../../styles/variables';
@@ -18,11 +18,6 @@ export * from './_ColumnWithHeader';
 export const StyledTextOverlay = styled(TransparentTextOverlay) `
   flex: 1;
   border-radius: ${({ radius }) => radius || 0};
-`;
-
-export const StyledImmutableListView = styled(ImmutableListView)`
-  flex: 1;
-  overflow: hidden;
 `;
 
 @withTheme
@@ -39,21 +34,22 @@ export default class extends React.PureComponent {
   }
 
   props: {
+    ListComponent?: ?React.element,
     errors?: ?Array<string>,
-    rightHeader?: React.Element,
     icon: string,
     initialListSize?: number,
     isEmpty?: boolean,
     items: Array<Object>,
     loading?: boolean,
-    radius?: number,
     onRefresh?: Function,
-    refreshText?: string,
-    renderRow: Function,
-    renderSectionHeader?: Function,
-    style?: ?Object,
+    radius?: number,
     readIds: Array<string>,
+    refreshText?: string,
+    renderItem: Function,
+    renderSectionHeader?: Function,
+    rightHeader?: React.Element,
     sectionHeaderHasChanged?: Function,
+    style?: ?Object,
     subscriptions: Array<Subscription>,
     theme: ThemeObject,
     title: string,
@@ -70,7 +66,7 @@ export default class extends React.PureComponent {
       loading,
       onRefresh,
       refreshText: _refreshText,
-      renderRow,
+      renderItem,
       renderSectionHeader,
       sectionHeaderHasChanged,
       theme,
@@ -100,26 +96,30 @@ export default class extends React.PureComponent {
       />
     ) || null;
 
+    const ListComponent = this.props.ListComponent || ImmutableVirtualizedList;
+
     return (
       <ColumnWithHeader {...this.props}>
         <StyledTextOverlay color={theme.base02} size={contentPadding} from="vertical" radius={_radius}>
           {
-            isEmpty || !(items.size > 0)
+            isEmpty || (!this.props.ListComponent && !(items.size > 0))
               ? (
                 loading && !hasLoadedOnce
                   ? null
                   : <EmptyColumnContent refreshControl={refreshControl} />
               )
               : (
-                <StyledImmutableListView
+                <ListComponent
                   immutableData={items}
                   initialListSize={initialListSize || 5}
                   rowsDuringInteraction={initialListSize || 5}
-                  renderRow={renderRow}
+                  renderItem={renderItem}
                   renderSectionHeader={renderSectionHeader}
                   refreshControl={refreshControl}
                   sectionHeaderHasChanged={sectionHeaderHasChanged}
                   removeClippedSubviews
+                  style={{ flex: 1, overflow: 'hidden' }}
+                  {...props}
                 />
               )
           }

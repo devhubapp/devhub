@@ -15,12 +15,12 @@ export default class extends React.PureComponent {
     data: Array<any>,
     maxHeight?: number,
     narrow?: boolean,
-    renderRow: Function,
+    renderItem: Function,
     theme?: ThemeObject,
   };
 
   render() {
-    const { data, maxHeight = 200, narrow, renderRow, theme, ...props } = this.props;
+    const { data, maxHeight = 200, narrow, renderItem, theme, ...props } = this.props;
 
     if (!(data && data.size > 0)) return null;
 
@@ -41,7 +41,7 @@ export default class extends React.PureComponent {
           }}
           alwaysBounceVertical={false}
         >
-          {data.map(renderRow)}
+          {data.map((item, index) => renderItem({ item, index }))}
         </ScrollView>
       </TransparentTextOverlay>
     );

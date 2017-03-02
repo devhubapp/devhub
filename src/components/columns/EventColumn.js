@@ -153,7 +153,7 @@ export default class extends React.PureComponent {
   // to remember: eventOrEventId cant be an id for merged events
   // (because merged events are totally different than the on in the state)
   // so do the check: if(event.get('merged)) ? event : event.get('id')
-  renderRow = (event) => (
+  renderItem = ({ index, item: event }) => (
     event &&
     <EventCardContainer
       key={`event-card-container-${event.get('id')}`}
@@ -200,7 +200,7 @@ export default class extends React.PureComponent {
           items={items}
           loading={loading}
           title={title}
-          renderRow={this.renderRow}
+          renderItem={this.renderItem}
           onRefresh={this.onRefresh}
           refreshText={updatedText}
         />

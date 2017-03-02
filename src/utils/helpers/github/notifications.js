@@ -1,6 +1,7 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
+import { Platform } from 'react-native';
 import { capitalize, camelCase } from 'lodash';
 import { fromJS, Iterable, List, Map, OrderedMap } from 'immutable';
 
@@ -217,7 +218,9 @@ const reasonToColorAndTitle = reason => {
 
 const defaultFilterColumnsCounters = { read: 0, unread: 0 };
 
-const defaultFilterColumnsRepoData = OrderedMap({
+const getDefaultFilterColumnsRepoData = repoFullName => fromJS({
+  key: repoFullName,
+  title: repoFullName,
   icon: 'repo',
   ...defaultFilterColumnsCounters,
 });
@@ -226,16 +229,16 @@ export const defaultFilterColumnsData = OrderedMap({
   inboxes: OrderedMap(
     fromJS({
       inbox: {
-        pinned: true,
-        icon: 'inbox',
-        color: baseTheme.teal,
         title: 'Inbox',
+        icon: 'inbox',
+        pinned: true,
+        color: baseTheme.teal,
         ...defaultFilterColumnsCounters,
       },
       archived: {
+        title: 'Archived',
         icon: 'check',
         color: baseTheme.green,
-        title: 'Archived',
         ...defaultFilterColumnsCounters,
       },
     }),
@@ -249,8 +252,8 @@ export const defaultFilterColumnsData = OrderedMap({
         read: 0,
       },
       unread: {
-        icon: 'mail-read',
         title: 'Unread',
+        icon: 'mail-read',
         // no read field here
         unread: 0,
       },
@@ -259,42 +262,42 @@ export const defaultFilterColumnsData = OrderedMap({
   subjectTypes: OrderedMap(
     fromJS({
       commit: {
-        icon: 'git-commit',
         title: 'Commit',
+        icon: 'git-commit',
         ...defaultFilterColumnsCounters,
       },
       issue: {
-        icon: 'issue-opened',
         title: 'Issue',
+        icon: 'issue-opened',
         ...defaultFilterColumnsCounters,
       },
       pullRequest: {
-        icon: 'git-pull-request',
         title: 'Pull Request',
+        icon: 'git-pull-request',
         ...defaultFilterColumnsCounters,
       },
       release: {
-        icon: 'tag',
         title: 'Release',
+        icon: 'tag',
         ...defaultFilterColumnsCounters,
       },
     }),
   ),
   reasons: OrderedMap(
-    List(notificationReasons)
-      .toOrderedMap()
-      .mapEntries(([, reason]) => [
-        reason,
-        Map({
-          icon: 'primitive-dot',
-          ...reasonToColorAndTitle(reason),
-          ...defaultFilterColumnsCounters,
-        }),
-      ]),
+    List(notificationReasons).toOrderedMap().mapEntries(([, reason]) => [
+      reason,
+      fromJS({
+        key: reason,
+        icon: 'primitive-dot',
+        ...reasonToColorAndTitle(reason),
+        ...defaultFilterColumnsCounters,
+      }),
+    ]),
   ),
   repos: OrderedMap(),
 });
-//
+
+
 export function notificationsToFilterColumnData(notifications) {
   let result = defaultFilterColumnsData;
   if (!notifications) return result;
@@ -330,20 +333,29 @@ export function notificationsToFilterColumnData(notifications) {
     // reasons
     partialPath = get(notification, 'reason');
     path = ['reasons', partialPath, counterPath];
-    //
     count = getIn(result, path) || 0;
     result = setIn(result, path, count + 1);
 
     // repos
-    partialPath = getIn(notification, ['repository', 'full_name']);
-    path = ['repos', partialPath];
+    const repoFullName = getIn(notification, ['repository', 'full_name']);
+    path = ['repos', repoFullName];
     if (!getIn(result, path)) {
-      result = setIn(result, path, defaultFilterColumnsRepoData);
+      result = setIn(result, path, getDefaultFilterColumnsRepoData(repoFullName));
     }
     path = [...path, counterPath];
     count = getIn(result, path) || 0;
     result = setIn(result, path, count + 1);
   });
+
+  // SectionList (ios/android) requires a different format than ListView (web)
+  if (Platform.OS !== 'web') {
+    result = result
+      .map((section, sectionKey) => Map({
+        key: sectionKey,
+        data: section.map((item, itemKey) => item.set('key', itemKey)).toList(),
+      }))
+      .toList();
+  }
 
   return result;
 }

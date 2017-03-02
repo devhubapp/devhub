@@ -13,7 +13,8 @@
     "flow": "flow ./src",
     "lint": "eslint ./src",
     "lint-fix": "eslint ./src --fix",
-    "postinstall": "remotedev-debugger --hostname localhost --port 8800 --injectdebugger --injectserver",
+    "get-flatlist": "mkdir -p node_modules/react-native/Libraries/CustomComponents/Lists/; for file in 'FlatList' 'MetroListView' 'SectionList' 'ViewabilityHelper' 'VirtualizeUtils' 'VirtualizedList' 'VirtualizedSectionList';   do curl https://raw.githubusercontent.com/facebook/react-native/master/Libraries/CustomComponents/Lists/${file}.js > node_modules/react-native/Libraries/CustomComponents/Lists/${file}.js;   done",
+    "postinstall": "npm run get-flatlist && remotedev-debugger --hostname localhost --port 8800 --injectdebugger --injectserver",
     "xcode": "open ios/devhub.xcodeproj",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/"
   },

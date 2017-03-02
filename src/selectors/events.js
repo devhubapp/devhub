@@ -90,6 +90,7 @@ export const makeDenormalizedOrderedColumnEventsSelector = () => {
       return groupSimilarEvents(
         denormalize(notArchivedIds, entities, [EventSchema])
           .filter(Boolean)
+          .toList()
           .sort(sortEventsByDate)
         ,
       );

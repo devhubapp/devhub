@@ -13,7 +13,7 @@ export default class extends React.PureComponent {
     maxHeight?: number,
   };
 
-  renderRow = (passProps = {}) => user => (
+  makeRenderItem = (passProps = {}) => ({ index, item: user }) => (
     user &&
     <UserRow
       key={`user-row-${user.get('id')}`}
@@ -29,7 +29,7 @@ export default class extends React.PureComponent {
     if (!(users && users.size > 0)) return null;
 
     return (
-      <RowList data={users} maxHeight={maxHeight} renderRow={this.renderRow(props)} {...props} />
+      <RowList data={users} maxHeight={maxHeight} renderItem={this.makeRenderItem(props)} {...props} />
     );
   }
 }

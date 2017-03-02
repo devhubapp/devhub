@@ -94,6 +94,7 @@ export const orderedColumnsSelector = createImmutableSelector(
   columnsEntitySelector,
   (columns) => (
     columns
+      .toList()
       .sort(sortColumnsByDate)
       .sortBy(column => column.get('order'))
   ),

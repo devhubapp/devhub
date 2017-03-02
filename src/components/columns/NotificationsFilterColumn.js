@@ -2,10 +2,11 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
-import { Map } from 'immutable';
+import { List } from 'immutable';
 
 import ColumnWithList, { headerFontSize } from './_ColumnWithList';
 import Icon from '../../libs/icon';
+import { ImmutableSectionList } from '../../libs/immutable-virtualized-list';
 import { FullView, StyledText } from '../cards/__CardComponents';
 import { contentPadding } from '../../styles/variables';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
@@ -106,35 +107,34 @@ export default class extends React.PureComponent {
     item && (get(item, 'pinned') || this.totalItemNotifications(item))
   );
 
-  isSectionEmpty = sectionData => (
-    !sectionData || !sectionData.some(this.willShowItem)
+  isSectionEmpty = section => (
+    !section || !get(section, 'data') || !get(section, 'data').some(this.willShowItem)
   );
 
   sectionHeaderHasChanged = (prevSectionData, nextSectionData) => (
     prevSectionData !== nextSectionData
   );
 
-  // TODO: Mode firstSectionId to component state
-  makeRenderSectionHeader = firstSectionId => (
-    (sectionData, sectionId) =>
-      sectionData &&
-        sectionData.size > 0 &&
-        !(sectionId === firstSectionId || this.isSectionEmpty(sectionData)) &&
-        <Section />
-  );
+  // TODO: Mode firstSectionKey to component state
+  makeRenderSectionHeader = firstSectionKey =>
+  ({ section }) =>
+    !!section &&
+      !(get(section, 'key') === firstSectionKey ||
+        this.isSectionEmpty(section)) &&
+        <Section />;
 
-  renderRow = (item, sectionId, rowId) => {
+  renderItem = ({ index, item }) => {
     if (!this.willShowItem(item)) {
       return null;
     }
 
     return (
       <ItemWrapper
-        key={`notifications-filter-column-item-${sectionId}-${rowId}`}
+        key={`notifications-filter-column-item-${get(item, 'key') || index}`}
       >
         <ItemTitleWrapper>
           <ItemIcon name={get(item, 'icon')} color={get(item, 'color')} />
-          <ItemTitle numberOfLines={1}>{get(item, 'title') || rowId}</ItemTitle>
+          <ItemTitle numberOfLines={1}>{get(item, 'title') || get(item, 'key')}</ItemTitle>
         </ItemTitleWrapper>
         <CounterWrapper outline={!(get(item, 'unread') > 0)}>
           {
@@ -165,22 +165,24 @@ export default class extends React.PureComponent {
       ...props
     } = this.props;
 
-    const items = _items || Map();
+    const items = _items || List();
 
     return (
       <FullView style={style}>
         <ColumnWithList
           {...props}
+          ListComponent={ImmutableSectionList}
           key="notification-filter-_ColumnWithList"
-          items={items}
           initialListSize={20}
           isEmpty={false}
+          items={items}
           onRefresh={onRefresh}
-          renderRow={this.renderRow}
+          renderItem={this.renderItem}
           renderSectionHeader={
-            this.makeRenderSectionHeader(items.keySeq().first())
+            this.makeRenderSectionHeader(items.first().get('key'))
           }
           sectionHeaderHasChanged={this.sectionHeaderHasChanged}
+          sections={items}
         />
       </FullView>
     );

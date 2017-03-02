@@ -13,7 +13,7 @@ export default class extends React.PureComponent {
     maxHeight?: number,
   };
 
-  renderRow = (passProps = {}) => repo => (
+  makeRenderItem = (passProps = {}) => ({ index, item: repo }) => (
     repo &&
     <RepoRow
       key={`repo-row-${repo.get('id')}`}
@@ -29,7 +29,7 @@ export default class extends React.PureComponent {
     if (!(repos && repos.size > 0)) return null;
 
     return (
-      <RowList data={repos} maxHeight={maxHeight} renderRow={this.renderRow(props)} {...props} />
+      <RowList data={repos} maxHeight={maxHeight} renderItem={this.makeRenderItem(props)} {...props} />
     );
   }
 }

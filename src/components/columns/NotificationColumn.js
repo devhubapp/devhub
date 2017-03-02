@@ -147,7 +147,7 @@ export default class extends React.PureComponent {
     updatedAt: Date
   };
 
-  renderRow = notificationOrNotificationId => {
+  renderItem = ({ index, item: notificationOrNotificationId }) => {
     const { actions, column, repo } = this.props;
 
     const notification = Iterable.isIterable(notificationOrNotificationId)
@@ -212,7 +212,7 @@ export default class extends React.PureComponent {
           items={items}
           title={title}
           onRefresh={this.onRefresh}
-          renderRow={this.renderRow}
+          renderItem={this.renderItem}
         />
 
         <ActionSheet
@@ -236,7 +236,7 @@ export default class extends React.PureComponent {
                 icon={icon}
                 title={title}
                 onRefresh={this.onRefresh}
-                renderRow={this.renderRow}
+                renderItem={this.renderItem}
                 rightHeader={this.getRightHeader(true)}
               />
             </FullAbsoluteView>

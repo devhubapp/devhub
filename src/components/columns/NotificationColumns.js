@@ -20,7 +20,7 @@ export default class extends React.PureComponent {
     />
   );
 
-  renderRow = (column) => {
+  renderItem = ({ index, item: column }) => {
     if (!column) return null;
 
     const columnId = column.get('id');
@@ -50,7 +50,7 @@ export default class extends React.PureComponent {
         key="notification-_Columns"
         actions={actions}
         columns={columns}
-        renderRow={this.renderRow}
+        renderItem={this.renderItem}
         {...props}
       />
     );

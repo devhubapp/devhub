@@ -5,12 +5,12 @@ import styled from 'styled-components/native';
 import { List } from 'immutable';
 
 import NewColumn from './NewColumn';
-import ImmutableListView from '../../libs/immutable-list-view';
+import ImmutableVirtualizedList from '../../libs/immutable-virtualized-list';
 import withOrientation from '../../hoc/withOrientation';
 import { getColumnWidth, getColumnContentWidth } from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
-export const StyledImmutableListViewListView = styled(ImmutableListView)`
+export const StyledImmutableVirtualizedListListView = styled(ImmutableVirtualizedList)`
   flex: 1;
 `;
 
@@ -21,7 +21,7 @@ export default class extends React.PureComponent {
     addColumnFn?: ?Function,
     columns: Array<any>,
     radius?: number,
-    renderRow: Function,
+    renderItem: Function,
     width?: number,
   };
 
@@ -45,17 +45,17 @@ export default class extends React.PureComponent {
     );
   }
 
-  renderRow = mainRenderRow => (column, ...otherArgs) => {
+  makeRenderItem = mainRenderItem => ({ index, item: column }, ...otherArgs) => {
     if (!column) return null;
 
     if (column.get('id') === 'new') return this.renderNewColumn(column);
-    return mainRenderRow(column, ...otherArgs);
+    return mainRenderItem({ index, item: column }, ...otherArgs);
   };
 
   render() {
     const {
       columns = List(),
-      renderRow: mainRenderRow,
+      renderItem: mainRenderItem,
       width: _width,
       ...props
     } = this.props;
@@ -64,10 +64,10 @@ export default class extends React.PureComponent {
     const initialListSize = Math.max(1, Math.ceil(getColumnWidth() / width));
 
     return (
-      <StyledImmutableListViewListView
+      <StyledImmutableVirtualizedListListView
         immutableData={columns}
         initialListSize={initialListSize}
-        renderRow={this.renderRow(mainRenderRow)}
+        renderItem={this.makeRenderItem(mainRenderItem)}
         removeClippedSubviews={false}
         horizontal
         pagingEnabled
