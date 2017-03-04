@@ -29,7 +29,7 @@ function* _getUsedSubscriptionIds() {
     .toSet()
     .reduce(
       (resultIds, column) =>
-        resultIds.union(
+        resultIds && resultIds.union(
           columnSubscriptionIdsSelector(state, { columnId: column.get('id') }),
         ),
       Set(),

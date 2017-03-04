@@ -36,11 +36,17 @@ export const base16 = {
   base0F,
 };
 
+export const cardBackground = base03;
+export const tabBarBackground = base00;
+export const statusBarBackground = tabBarBackground;
+
 export default {
   ...base,
   name: 'dark-blue',
   isDark: true,
   ...base16,
   invert: () => require('./light').default, // eslint-disable-line global-require
-  cardBackground: base03,
+  cardBackground,
+  statusBarBackground,
+  tabBarBackground,
 };

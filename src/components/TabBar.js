@@ -26,7 +26,7 @@ const TabBar = withTheme(({ theme, ...props }) => (
     showLabel={Platform.OS === 'ios'}
     showIcon
     style={{
-      backgroundColor: theme.base00,
+      backgroundColor: theme.tabBarBackground || theme.base00,
       ...Platform.select({ ios: { padding: 3, borderTopColor: theme.base02 } }),
     }}
   />

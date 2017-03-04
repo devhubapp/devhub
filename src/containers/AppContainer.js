@@ -47,7 +47,7 @@ export default class extends React.PureComponent {
         <View>
           {(Platform.OS === 'ios' || Platform.OS === 'android') &&
             <StatusBar
-              backgroundColor={theme.base01}
+              backgroundColor={theme.statusBarBackground || theme.base00}
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
             />}
 

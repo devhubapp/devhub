@@ -72,6 +72,8 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
       state = yield select();
       const subscription = subscriptionSelector(state, { subscriptionId });
+      if (!subscription) return;
+
       const subscriptionUpdatedAt = subscription.get('updatedAt') ? moment(subscription.get('updatedAt')) : null;
 
       // remove old events, that were already fetched

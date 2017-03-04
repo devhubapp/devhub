@@ -38,6 +38,8 @@ export const makeColumnEventIdsSelector = () => createImmutableSelector(
 
     subscriptionsIds.forEach((subscriptionId) => {
       const subscription = subscriptionSelector(state, { subscriptionId });
+      if (!subscription) return;
+
       const subscriptionEventIds = Set(subscription.get('events'));
       eventIds = eventIds.union(subscriptionEventIds);
     });

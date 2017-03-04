@@ -34,7 +34,7 @@ export const subscriptionSelector = createImmutableSelector(
 
 export const subscriptionEventsSelector = createImmutableSelector(
   subscriptionSelector,
-  subscription => subscription.get('events'),
+  subscription => subscription && subscription.get('events'),
 );
 
 export default denormalizedSubscriptionsSelector;

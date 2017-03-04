@@ -23,7 +23,9 @@ export const eventEntitiesSelector = (state) => entitiesSelector(state).get('eve
 export const eventIdsSelector = state => objectKeysMemoized(eventEntitiesSelector(state));
 
 export const eventSelector = (state, { eventId }) => eventEntitiesSelector(state).get(eventId);
-export const sortEventsByDate = (b, a) => (a.get('created_at') > b.get('created_at') ? 1 : -1);
+
+export const sortEventsByDate = (b, a) =>
+  (a && b ? (a.get('created_at') > b.get('created_at') ? 1 : -1) : 0);
 
 export const archivedEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
