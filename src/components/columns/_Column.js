@@ -10,7 +10,7 @@ import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 export const columnMargin = contentPadding / 2;
 export const columnPreviewWidth = Platform.OS === 'web' ? 2 : contentPadding / 2;
 
-export const maxWidth = Platform.select({ android: 800, ios: 680, web: 360 });
+export const maxWidth = Platform.select({ default: 360, android: 800, ios: 680, web: 360 });
 export const getColumnWidth = () => Math.min(Dimensions.get('window').width, maxWidth);
 export const getColumnContentWidth = () => getColumnWidth() - (2 * columnPreviewWidth);
 export const getRadius = (

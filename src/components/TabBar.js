@@ -5,6 +5,7 @@ import { withTheme } from 'styled-components/native';
 import { TabNavigator } from '../libs/navigation';
 
 const _tabBarOptions = Platform.select({
+  default: TabNavigator.Presets.iOSBottomTabs,
   android: TabNavigator.Presets.AndroidTopTabs,
   ios: TabNavigator.Presets.iOSBottomTabs,
   web: {
