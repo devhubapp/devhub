@@ -27,7 +27,7 @@ export default (initialState = Map()) => {
   sagaMiddleware.run(sagas);
 
   const storage = Platform.OS === 'web' ? undefined : AsyncStorage;
-  persistStore(store, { debounce: 500, storage });
+  persistStore(store, { debounce: 500, blacklist: ['navigation'], storage });
 
   return store;
 };

@@ -4,6 +4,7 @@ import { combineReducers } from 'redux-immutable';
 import app from './app';
 import config from './config';
 import entities from './entities';
+import navigation from './navigation';
 import notifications from './notifications';
 import user from './user';
 
@@ -14,6 +15,7 @@ const reducer = combineReducers({
   app,
   config,
   entities,
+  navigation,
   notifications,
   user,
 });

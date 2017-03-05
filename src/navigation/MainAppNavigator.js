@@ -7,9 +7,9 @@ import { tabBarOptions } from '../components/TabBar';
 import { TabNavigator } from '../libs/navigation';
 
 export const routes = {
-  Home: { path: '', screen: HomeScreen },
-  Notifications: { path: 'notifications', screen: NotificationsScreen },
-  Settings: { path: 'settings', screen: SettingsScreen },
+  home: { path: '', screen: HomeScreen },
+  notifications: { path: 'notifications', screen: NotificationsScreen },
+  settings: { path: 'settings', screen: SettingsScreen },
 };
 
 export const config = { ...tabBarOptions, swipeEnabled: false };

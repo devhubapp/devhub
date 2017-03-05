@@ -3,8 +3,9 @@ import styled, { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
 import { Platform, StatusBar } from 'react-native';
 
-import MainAppNavigator from '../navigation/MainAppNavigator';
-import PublicAppNavigator from '../navigation/PublicAppNavigator';
+import MainAppNavigatorContainer from './navigators/MainAppNavigatorContainer';
+import PublicAppNavigatorContainer from './navigators/PublicAppNavigatorContainer';
+import SettingsScreen from '../containers/screens/SettingsScreen';
 import SplashScreen from '../containers/screens/SplashScreen';
 
 import {
@@ -39,8 +40,19 @@ export default class extends React.PureComponent {
     theme: ThemeObject,
   };
 
+  renderMainContent() {
+    const { isLogged, ready } = this.props;
+
+    try {
+      if (!ready) return <SplashScreen />;
+      return isLogged ? <MainAppNavigatorContainer /> : <PublicAppNavigatorContainer />;
+    } catch (e) {
+      return <SettingsScreen />;
+    }
+  }
+
   render() {
-    const { isLogged, ready, theme } = this.props;
+    const { theme } = this.props;
 
     return (
       <ThemeProvider theme={theme}>
@@ -51,9 +63,7 @@ export default class extends React.PureComponent {
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
             />}
 
-          {ready
-            ? isLogged ? <MainAppNavigator /> : <PublicAppNavigator />
-            : <SplashScreen />}
+          {this.renderMainContent()}
         </View>
       </ThemeProvider>
     );
