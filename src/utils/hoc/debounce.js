@@ -1,22 +1,32 @@
 // @flow
 
 import React from 'react';
-import debounce from 'lodash/debounce';
+import debounce from 'lodash/throttle';
 
-export default (interval, ...debounceArgs) => {
-  if (typeof interval !== 'number' && interval > 0) {
-    throw new Error('[debounce] Interval (ms) parameter not received.');
+export default (intervalOrFn, ...debounceArgs) => {
+  if (!(
+    typeof intervalOrFn === 'function'
+      || (typeof intervalOrFn === 'number' && intervalOrFn > 0)
+    )) {
+    throw new Error(`[debounce] Interval parameter must be a number (ms) or a function(props) => number. Received ${intervalOrFn}.`);
   }
 
   return Component => class extends React.PureComponent {
     constructor(props) {
       super(props);
 
-      this.state = props;
+      this.state = { props };
     }
 
-    updateStateWithProps = (props) => this.setState(props || this.props);
-    componentWillReceiveProps = debounce(this.updateStateWithProps, interval, ...debounceArgs);
-    render = () => <Component {...this.state} />;
+    updateStateWithProps = props => {
+      this.setState({ props: props || this.props });
+    };
+
+    componentWillReceiveProps = props => {
+      const interval = typeof intervalOrFn === 'function' ? intervalOrFn(props) : intervalOrFn;
+      debounce(this.updateStateWithProps, interval, ...debounceArgs)(props);
+    };
+
+    render = () => <Component {...this.state.props} />;
   };
 };
