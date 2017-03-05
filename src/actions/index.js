@@ -5,6 +5,7 @@ import {
   APP_CLEANUP,
   APP_READY,
   RESET_APP_DATA,
+  RESET_APP_DATA_REQUEST,
   CREATE_COLUMN,
   DELETE_COLUMN,
   SET_THEME,
@@ -34,6 +35,10 @@ export const appReady = (other?: Object) => (
 
 export const resetAppData = (other?: Object) => (
   action(RESET_APP_DATA, undefined, other)
+);
+
+export const resetAppDataRequest = (other?: Object) => (
+  action(RESET_APP_DATA_REQUEST, undefined, other)
 );
 
 // COLUMN

@@ -2,59 +2,95 @@
 
 import React from 'react';
 import { Linking } from 'react-native';
+import { connect } from 'react-redux';
 
-import { resetAppData } from '../sagas';
+import { name as appName } from '../../package.json';
+import { resetAppDataRequest } from '../actions';
+import { resetAppData as resetAppDataDirect } from '../sagas';
 import { githubHTMLUrlFromAPIUrl } from '../utils/helpers/github/url';
 
+const getSchemeAndPathFromURL = url => {
+  // no scheme
+  if ((url || '').indexOf('://') === -1) {
+    return ({ scheme: null, path: url || '' });
+  }
+
+  const [, scheme = null, path = null] = (url || '').match('([^:]+)://(.*)') || [];
+  return { path, scheme };
+};
+
+const mapDispatchToProps = ({ resetAppData: resetAppDataRequest });
+
+@connect(null, mapDispatchToProps)
 export default class extends React.PureComponent {
-  componentDidMount() {
-    Linking.addEventListener('url', this._handleOpenURL);
+  static defaultProps = {
+    resetAppData: resetAppDataDirect,
+  };
+
+  async componentDidMount() {
+    Linking.addEventListener('url', this._handleLinkingEvent);
+
+    const initialURL = await Linking.getInitialURL();
+    if (initialURL) this._handleURL(initialURL);
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this._handleOpenURL);
+    Linking.removeEventListener('url', this._handleLinkingEvent);
   }
 
   _handleGitHubURL = (url) => {
-    // console.log('_handleGitHubURL', url);
     if (!url) return;
 
-    let _url = url.replace('devhub://', 'https://');
-    _url = _url.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(_url) : _url;
+    const { scheme, path } = getSchemeAndPathFromURL(url);
+    if ((path || '').indexOf('github.com') === -1) return;
 
-    if (_url.indexOf('http') !== 0) _url = `https://${_url}`;
+    const httpText = scheme === 'http' ? 'http' : 'https';
+    const _url = path.indexOf('api.github.com') >= 0
+      ? githubHTMLUrlFromAPIUrl(path)
+      : `${httpText}://${path}`;
 
-    return Linking.openURL(_url);
+    Linking.openURL(_url);
   };
 
-  _handleDeepLinking(url) {
-    // console.log('_handleDeepLinking', url);
-    if (!url) return;
+  _handleDeepLinking = (url) => {
+    console.debug('[DEEP LINK]', url);
 
-    if (url === 'reset') {
-      resetAppData();
-    } else {
-      Linking.openURL(url);
+    const { path, scheme } = getSchemeAndPathFromURL(url);
+    if (scheme !== appName || !path) return;
+
+    switch (path) {
+      case 'reset':
+        this.props.resetAppData();
+        break;
+
+      default:
+        break;
     }
   }
 
-  _handleOpenURL = (event) => {
-    const url = event.url.match('[^:]+://(.*)')[1];
-    // console.log('_handleOpenURL', url);
-    if (!url) return;
+  _handleURL = (url) => {
+    const { path, scheme } = getSchemeAndPathFromURL(url);
+    if (!path) return;
 
-    if (url.indexOf('github.com') >= 0) {
-      return this._handleGitHubURL(url);
+    if (path.indexOf('github.com') >= 0) {
+      this._handleGitHubURL(path);
+      return;
     }
 
-    return this._handleDeepLinking(url);
+    if (scheme === 'http' || scheme === 'https') {
+      Linking.openURL(url);
+      return;
+    }
+
+    this._handleDeepLinking(url);
   };
+
+  _handleLinkingEvent = event => this._handleURL((event || {}).url || '');
 
   props: {
-    children?: any,
+    children: React.node,
+    resetAppData?: Function,
   };
 
-  render() {
-    return this.props.children;
-  }
+  render = () => this.props.children;
 }
