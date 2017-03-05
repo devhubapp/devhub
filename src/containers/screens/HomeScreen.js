@@ -1,14 +1,16 @@
 // @flow
 
 import React from 'react';
-import styled, { withTheme } from 'styled-components/native';
+import styled, { withTheme, ThemeProvider } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 
+import debounce from '../../utils/hoc/debounce';
+import withIsCurrentRoute from '../../utils/hoc/withIsCurrentRoute';
 import EventColumnsContainer from '../EventColumnsContainer';
 import Screen from '../../components/Screen';
 import TabIcon from '../../components/TabIcon';
-import { isReadySelector } from '../../selectors/app';
+import { getMainNavigationState, isReadySelector } from '../../selectors';
 import type { State, ThemeObject } from '../../utils/types';
 
 const CenterView = styled.View`
@@ -23,6 +25,8 @@ const mapStateToProps = (state: State) => ({
 
 @connect(mapStateToProps)
 @withTheme
+@withIsCurrentRoute(getMainNavigationState)
+@debounce(({ isCurrentRoute }) => (isCurrentRoute ? 0 : 10))
 class HomeScreen extends React.PureComponent {
   static navigationOptions;
 
@@ -35,14 +39,16 @@ class HomeScreen extends React.PureComponent {
     const { ready, theme } = this.props;
 
     return (
-      <Screen>
-        {!ready &&
-          <CenterView>
-            <ActivityIndicator color={theme.base04} />
-          </CenterView>}
+      <ThemeProvider theme={theme}>
+        <Screen>
+          {!ready &&
+            <CenterView>
+              <ActivityIndicator color={theme.base04} />
+            </CenterView>}
 
-        {ready && <EventColumnsContainer />}
-      </Screen>
+          {ready && <EventColumnsContainer />}
+        </Screen>
+      </ThemeProvider>
     );
   }
 }

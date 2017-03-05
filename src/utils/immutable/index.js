@@ -1,3 +1,5 @@
+/* global __DEV__ */
+
 /**
  * This file is from https://github.com/gpbl/denormalizr
  */
@@ -52,6 +54,8 @@ export function deepImmutableEqualityCheck(a, b) {
  * @return {Any}
  */
 export function get(object, keyName) {
+  if (!__DEV__ && !object) return null;
+
   if (typeof object.get === 'function') {
     return object.get(`${keyName}`);
   }
@@ -68,6 +72,8 @@ export function get(object, keyName) {
  * @return {Any}
  */
 export function getIn(object, keyPath) {
+  if (!__DEV__ && !object) return null;
+
   if (typeof object.getIn === 'function') {
     return object.getIn(stringifiedArray(keyPath));
   }
@@ -89,6 +95,8 @@ export function getIn(object, keyPath) {
  * @return {Any}
  */
 export function set(object, keyName, value) {
+  if (!__DEV__ && !object) return null;
+
   if (typeof object.set === 'function') {
     return object.set(keyName, value);
   }
@@ -106,6 +114,8 @@ export function set(object, keyName, value) {
  * @return {Any}
  */
 export function setIn(object, keyPath, value) {
+  if (!__DEV__ && !object) return null;
+
   if (typeof object.setIn === 'function') {
     return object.setIn(stringifiedArray(keyPath), value);
   }
@@ -117,4 +127,25 @@ export function setIn(object, keyPath, value) {
   lastKeyLocation[lastKeyName] = set(lastKeyLocation, lastKeyName, value);
 
   return object;
+}
+
+/**
+ * Get the length of an array or object.
+ *
+ * @param  {Object, Immutable.Map, Immutable.Record} object
+ * @param  {Array<string, number>} keyPath
+ * @return {Any}
+ */
+export function sizeOf(object) {
+  if (!__DEV__ && !object) return null;
+
+  if (typeof object.get === 'function') {
+    return object.size;
+  }
+
+  if (typeof object === 'object') {
+    return Object.keys(object).length;
+  }
+
+  return object.length;
 }

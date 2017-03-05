@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Navigator from '../../navigation/PublicAppNavigator';
+import { toJS } from '../../utils/immutable';
 
 import type { State } from '../../utils/types';
 
@@ -24,7 +25,8 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { dispatch, navigationState: state } = this.props;
+    const { dispatch, navigationState } = this.props;
+    const state = toJS(navigationState);
 
     return (
       <Navigator navigation={addNavigationHelpers({ dispatch, state })} />

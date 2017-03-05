@@ -3,14 +3,14 @@
 
 import { createSelector } from 'reselect';
 
-export const appSelector = state => state.get('app');
+export const appEntitySelector = state => state.get('app');
 
 export const isReadySelector = createSelector(
-  appSelector,
+  appEntitySelector,
   app => app && app.get('ready'),
 );
 
 export const rehydratedSelector = createSelector(
-  appSelector,
+  appEntitySelector,
   app => app && app.get('rehydrated'),
 );

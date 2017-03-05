@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import debounce from 'lodash/throttle';
+import debounce from 'lodash/debounce';
 
 export default (intervalOrFn, ...debounceArgs) => {
   if (!(

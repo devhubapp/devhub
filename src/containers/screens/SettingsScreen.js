@@ -54,6 +54,7 @@ class SettingsScreen extends React.PureComponent {
               color={theme.red}
               onPress={() => resetAppData()}
             />
+            <Button title="Logout" color={theme.red} onPress={() => logout()} />
           </Main>
 
           <Footer>
@@ -77,7 +78,6 @@ class SettingsScreen extends React.PureComponent {
               color={color}
               onPress={() => setTheme('dark-blue')}
             />
-            <Button title="Logout" color={theme.red} onPress={() => logout()} />
           </Footer>
         </Wrapper>
       </Screen>
