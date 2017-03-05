@@ -21,13 +21,13 @@ const NewColumnButton = styled.TouchableOpacity`
 `;
 
 const NewColumnIcon = styled(Icon)`
-  font-size: 22;
+  font-size: 22px;
 `;
 
 const NewColumnText = styled.Text`
   align-self: center;
   text-align: center;
-  font-size: 18;
+  font-size: 18px;
   color: ${({ theme }) => theme.base05};
 `;
 

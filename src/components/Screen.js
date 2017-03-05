@@ -9,7 +9,7 @@ const getBackgroundColorFromProps = ({ backgroundColor, theme }) =>
 
 const Screen = styled.View`
   flex: 1;
-  padding-top: ${Platform.OS === 'ios' ? 22 : 0};
+  padding-top: ${Platform.OS === 'ios' ? 22 : 0}px;
   background-color: ${getBackgroundColorFromProps};
 `;
 

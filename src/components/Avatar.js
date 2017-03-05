@@ -10,10 +10,10 @@ import { radius as defaultRadius, mutedOpacity } from '../styles/variables';
 const bgColorAfterLog = Platform.select({ android: 'transparent', default: '#ffffff' });
 
 const Avatar = styled.Image`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
   background-color: ${({ error, loading, theme }) => (!loading && !error ? bgColorAfterLog : theme.base03)};
-  border-radius: ${({ radius }) => radius};
+  border-radius: ${({ radius }) => radius}px;
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
 

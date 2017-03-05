@@ -17,7 +17,7 @@ export * from './_ColumnWithHeader';
 
 export const StyledTextOverlay = styled(TransparentTextOverlay) `
   flex: 1;
-  border-radius: ${({ radius }) => radius || 0};
+  border-radius: ${({ radius }) => radius || 0}px;
 `;
 
 @withTheme

@@ -22,9 +22,9 @@ export const narrowInnerContentPadding = innerContentPadding / 2;
 export const iconRightMargin = 0; // contentPadding - 2;
 
 export const CardWrapper = styled.View`
-  padding: ${contentPadding};
-  border-width: 0;
-  border-bottom-width: 1;
+  padding: ${contentPadding}px;
+  border-width: 0px;
+  border-bottom-width: 1px;
   border-color: ${({ theme }) => theme.base01};
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
@@ -38,18 +38,18 @@ export const FullView = styled.View`
 
 export const FullAbsoluteView = styled.View`
   position: absolute;
-  top: ${({ top }) => top || 0};
-  bottom: ${({ bottom }) => bottom || 0};
-  left: ${({ left }) => left || 0};
-  right: ${({ right }) => right || 0};
-  ${({ width }) => (width ? `width: ${width};` : '')}
-  ${({ height }) => (height ? `height: ${height};` : '')}
+  top: ${({ top }) => top || 0}px;
+  bottom: ${({ bottom }) => bottom || 0}px;
+  left: ${({ left }) => left || 0}px;
+  right: ${({ right }) => right || 0}px;
+  ${({ width }) => (width ? `width: ${width}px;` : '')}
+  ${({ height }) => (height ? `height: ${height}px;` : '')}
   ${({ zIndex }) => (zIndex ? `z-index: ${zIndex};` : '')}
 `;
 
 // export const RowSeparator = styled.View`
 //   flexGrow: 1;
-//   height: ${({ narrow }) => (narrow ? narrowInnerContentPadding : innerContentPadding)};
+//   height: ${({ narrow }) => (narrow ? narrowInnerContentPadding : innerContentPadding)}px;
 // `;
 
 export const HorizontalView = styled.View`
@@ -57,7 +57,7 @@ export const HorizontalView = styled.View`
 `;
 
 export const RepositoryContentContainer = styled(ScrollableContentContainer)`
-  padding-horizontal: ${contentPadding};
+  padding-horizontal: ${contentPadding}px;
 `;
 
 export const Header = styled(HorizontalView)`
@@ -93,13 +93,13 @@ export const StyledText = styled.Text`
   color: ${({ color, muted, read, theme }) => (
     muted && read !== false ? theme.base05 : color || theme.base04
   )};
-  line-height: 18;
-  font-size: ${({ small }) => (small ? 12 : 14)};
+  line-height: 18px;
+  font-size: ${({ small }) => (small ? 12 : 14)}px;
   font-weight: ${({ read }) => (read === false ? 'bold' : 'normal')};
 `;
 
 export const SmallText = styled(StyledText)`
-  font-size: 12;
+  font-size: 12px;
 `;
 
 export const OwnerLogin = styled(StyledText)`
@@ -111,13 +111,13 @@ export const RepositoryName = styled(StyledText)`
 
 export const CardItemId = styled(StyledText)`
   font-weight: bold;
-  font-size: 12;
+  font-size: 12px;
   opacity: 0.9;
 `;
 
 export const CardText = styled(StyledText)`
   flex: 1;
-  font-size: 14;
+  font-size: 14px;
   ${Platform.select({ web: { wordBreak: 'break-all' } })}
 `;
 
@@ -130,7 +130,7 @@ export const HighlightContainerBase = styled(HorizontalView)`
   align-items: center;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.base01};
-  border-radius: ${radius};
+  border-radius: ${radius}px;
 `;
 
 export const HighlightContainer1 = styled(HighlightContainerBase)`
@@ -142,15 +142,15 @@ export const HighlightContainer2 = styled(HighlightContainerBase)`
 `;
 
 export const HighlightContainerRow1 = styled(HighlightContainer1)`
-  min-height: 30;
+  min-height: 30px;
 `;
 
 export const CardItemIdContainer = styled(HighlightContainer2)`
-  padding-horizontal: 4;
+  padding-horizontal: 4px;
 `;
 
 export const RightOfScrollableContent = styled.View`
-  margin-right: ${contentPadding};
+  margin-right: ${contentPadding}px;
 `;
 
 export const Icon = styled(Octicon)`
@@ -161,9 +161,9 @@ export const Icon = styled(Octicon)`
 
 export const CardIcon = styled(Icon)`
   align-self: flex-start;
-  margin-left: ${contentPadding};
-  margin-right: ${iconRightMargin};
-  font-size: 18;
+  margin-left: ${contentPadding}px;
+  margin-right: ${iconRightMargin}px;
+  font-size: 18px;
 `;
 
 type ItemIdProps = { icon?: string, number: number, read?: boolean, url: string };

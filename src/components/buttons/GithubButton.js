@@ -8,11 +8,11 @@ import Icon from '../../libs/icon';
 import { contentPadding } from '../../styles/variables';
 
 export const Button = styled.TouchableOpacity`
-  height: ${({ horizontal }) => (horizontal ? 44 : 58)};
+  height: ${({ horizontal }) => (horizontal ? 44 : 58)}px;
   background-color: ${({ theme }) => theme.invert().base02};
   border-color: ${({ theme }) => theme.base02};
-  border-radius: ${({ radius }) => radius};
-  border-width: 1;
+  border-radius: ${({ radius }) => radius}px;
+  border-width: 1px;
 `;
 
 export const Content = styled.View`
@@ -23,28 +23,28 @@ export const Content = styled.View`
 export const IconWrapper = styled.View`
   align-items: center;
   justify-content: center;
-  padding-horizontal: ${contentPadding};
-  border-width: 0;
-  border-right-width: 0.5;
+  padding-horizontal: ${contentPadding}px;
+  border-width: 0px;
+  border-right-width: 0.5px;
   border-color: ${({ theme }) => theme.base04};
 `;
 
 export const ButtonIcon = styled(Icon) `
-  font-size: 20;
+  font-size: 20px;
   color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};
 `;
 
 export const TextWrapper = styled.View`
   flex: 1;
-  padding-horizontal: ${contentPadding};
+  padding-horizontal: ${contentPadding}px;
   align-items: ${({ horizontal }) => (horizontal ? 'center' : 'flex-start')};
   justify-content: center;
   ${({ horizontal }) => horizontal && 'flex-direction: row;'}
 `;
 
 export const Text = styled.Text`
-  line-height: 18;
-  font-size: 15;
+  line-height: 18px;
+  font-size: 15px;
   font-weight: 500;
   text-align: left;
   color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};

@@ -12,8 +12,8 @@ const RepositoryStarButton = styled.TouchableOpacity`
 `;
 
 const RepositoryStarIcon = styled(Icon)`
-  margin-horizontal: ${contentPadding};
-  font-size: ${({ size }) => size};
+  margin-horizontal: ${contentPadding}px;
+  font-size: ${({ size }) => size}px;
   color: ${({ starred, theme }) => (starred ? theme.star : theme.base04)};
 `;
 

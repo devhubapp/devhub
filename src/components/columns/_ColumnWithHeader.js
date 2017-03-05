@@ -15,7 +15,7 @@ export * from './_Column';
 
 export const HeaderButtonsContainer = styled.View`
   flex-direction: row;
-  padding-right: ${iconRightMargin};
+  padding-right: ${iconRightMargin}px;
 `;
 
 export const TitleWrapper = styled.View`
@@ -25,26 +25,26 @@ export const TitleWrapper = styled.View`
 
 export const headerFontSize = 18;
 export const Title = styled.Text`
-  padding: ${contentPadding};
-  padding-top: ${contentPadding + 4};
-  line-height: ${headerFontSize};
-  font-size: ${headerFontSize};
+  padding: ${contentPadding}px;
+  padding-top: ${contentPadding + 4}px;
+  line-height: ${headerFontSize}px;
+  font-size: ${headerFontSize}px;
   font-weight: 500;
   color: ${({ theme }) => theme.base04};
   background-color: transparent;
 `;
 
 export const TitleIcon = styled(Icon)`
-  font-size: ${headerFontSize};
+  font-size: ${headerFontSize}px;
 `;
 
 export const HeaderButton = styled.TouchableOpacity`
-  padding-vertical: ${contentPadding};
-  padding-horizontal: ${contentPadding};
+  padding-vertical: ${contentPadding}px;
+  padding-horizontal: ${contentPadding}px;
 `;
 
 export const HeaderButtonIcon = styled(Icon)`
-  font-size: ${headerFontSize};
+  font-size: ${headerFontSize}px;
   color: ${({ active, muted, theme }) => (
     muted ? theme.base05 : (active ? theme.brand : theme.base04)
   )};
@@ -54,11 +54,11 @@ export const FixedHeader = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  min-height: ${20 + (2 * contentPadding)};
+  min-height: ${20 + (2 * contentPadding)}px;
 `;
 
 export const ProgressBarContainer = styled.View`
-  height: 1;
+  height: 1px;
   background-color: ${({ theme }) => theme.base01};
 `;
 

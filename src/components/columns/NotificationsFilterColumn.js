@@ -17,7 +17,7 @@ export const defaultIcon = 'zap';
 export const defaultTitle = 'summary';
 
 export const Section = styled.View`
-  height: 1;
+  height: 1px;
   background-color: ${({ theme }) => theme.base01};
 `;
 
@@ -25,7 +25,7 @@ export const ItemWrapper = styled.View`
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  padding: ${contentPadding};
+  padding: ${contentPadding}px;
 `;
 
 export const ItemTitleWrapper = styled.View`
@@ -40,9 +40,9 @@ const ItemTitle = styled(StyledText)`
 `;
 
 const ItemIcon = styled(Icon)`
-  margin-top: 2;
-  margin-right: 6;
-  font-size: ${headerFontSize};
+  margin-top: 2px;
+  margin-right: 6px;
+  font-size: ${headerFontSize}px;
   color: ${({ color, theme }) => color || theme.base04};
 `;
 
@@ -50,25 +50,25 @@ const CounterWrapper = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-left: ${contentPadding};
-  padding-horizontal: ${contentPadding};
+  margin-left: ${contentPadding}px;
+  padding-horizontal: ${contentPadding}px;
   padding-vertical: 0.5;
-  border-radius: 10;
+  border-radius: 10px;
   background-color: ${({ outline, theme }) => (
     outline ? 'transparent' : theme.base01
   )};
-  border-width: 1;
+  border-width: 1px;
   border-color: ${({ outline, theme }) => (outline ? theme.base03 : theme.base01)};
 `;
 
 const UnreadCount = styled(StyledText)`
-  font-size: 12;
+  font-size: 12px;
   color: ${({ count, theme }) => (count > 0 ? theme.base04 : theme.base05)};
   text-align: center;
 `;
 
 const TotalCount = styled(StyledText)`
-  font-size: 12;
+  font-size: 12px;
   color: ${({ theme }) => theme.base05};
 `;
 

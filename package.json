@@ -46,7 +46,7 @@
     "redux-saga": "^0.14.3",
     "remote-redux-devtools": "^0.5.4",
     "reselect": "^2.5.4",
-    "styled-components": "^1.4.4",
+    "styled-components": "2.0.0-6",
     "warna": "^0.2.4"
   },
   "devDependencies": {

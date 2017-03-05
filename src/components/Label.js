@@ -6,14 +6,14 @@ import styled from 'styled-components/native';
 import { contentPadding, mutedOpacity, radius as defaultRadius } from '../styles/variables';
 
 const LabelContainer = styled.View`
-  padding-vertical: 2;
+  padding-vertical: 2px;
   padding-horizontal: ${contentPadding};
   background-color: ${({ color, outline, theme }) => (
     outline ? 'transparent' : (color || theme.base04)
   )};
   border-color: ${({ color, theme }) => color || theme.base04};
-  border-width: ${({ borderWidth }) => borderWidth || 1};
-  border-radius: ${({ radius }) => radius || 0};
+  border-width: ${({ borderWidth }) => borderWidth || 1}px;
+  border-radius: ${({ radius }) => radius || 0}px;
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
 

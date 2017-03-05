@@ -15,15 +15,15 @@ import type { ActionCreators, State } from '../../utils/types';
 
 const Main = styled.View`
   flex: 1;
-  padding: ${contentPadding};
+  padding: ${contentPadding}px;
 `;
 
 const Footer = styled.View`
-  padding: ${contentPadding};
+  padding: ${contentPadding}px;
 `;
 
 const StyledGithubButton = styled(GithubButton) `
-  margin-top: ${contentPadding / 2};
+  margin-top: ${contentPadding / 2}px;
 `;
 
 const mapStateToProps = (state: State) => ({

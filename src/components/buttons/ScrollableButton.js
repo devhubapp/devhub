@@ -8,7 +8,7 @@ const StyledButton = styled.TouchableOpacity`
   flex: 1;
   flex-direction: row;
   align-items: center;
-  padding-horizontal: ${contentPadding};
+  padding-horizontal: ${contentPadding}px;
 `;
 
 export default class extends React.PureComponent {
@@ -31,6 +31,6 @@ export default class extends React.PureComponent {
           {children}
         </StyledButton>
       </ScrollableContentContainer>
-    )
+    );
   }
 }

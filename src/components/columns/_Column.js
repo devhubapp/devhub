@@ -22,19 +22,19 @@ export const ColumnWrapper = styled.View`
   align-self: stretch;
   align-items: center;
   justify-content: center;
-  width: ${getColumnWidth()};
+  width: ${getColumnWidth()}px;
 `;
 
 export const ColumnRoot = styled.View`
   flex: 1;
   align-self: center;
-  width: ${({ width }) => width || getColumnContentWidth()};
-  margin-horizontal: ${columnMargin}
-  margin-vertical: ${columnMargin};
+  width: ${({ width }) => width || getColumnContentWidth()}px;
+  margin-horizontal: ${columnMargin}px;
+  margin-vertical: ${columnMargin}px;
   background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base02)};
-  border-width: 1;
+  border-width: 1px;
   border-color: ${({ theme }) => theme.base02};
-  border-radius: ${({ radius }) => radius || 0};
+  border-radius: ${({ radius }) => radius || 0}px;
 `;
 
 @withOrientation
