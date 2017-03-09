@@ -38,6 +38,13 @@ export function getIssueOrPullRequestNumberFromUrl(url: string) {
   return parseInt(number, 10) || number || null;
 }
 
+export function getReleaseIdFromUrl(url: string) {
+  if (!url) return null;
+
+  const matches = url.match(/\/releases\/([0-9]+)([?].+)?$/);
+  return (matches && matches[1]) || null;
+}
+
 /* eslint-disable-next-line no-useless-escape */
 export const getRepoFullNameFromUrl = (url: string): string => (
   url

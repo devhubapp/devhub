@@ -6,6 +6,7 @@ import {
   issueOrPullRequestIdAttribute,
   notificationProcessStrategy,
   preferNewestMergeStrategy,
+  releaseIdAttribute,
   simpleIdAttribute,
 } from './helpers';
 
@@ -74,7 +75,10 @@ export const PullRequestSchema = new schema.Entity('issues', {}, {
   }),
 });
 
-export const ReleaseSchema = new schema.Entity('releases', {}, defaultOptions);
+export const ReleaseSchema = new schema.Entity('releases', {}, {
+  ...defaultOptions,
+  idAttribute: releaseIdAttribute,
+});
 
 export const SubscriptionSchema = new schema.Entity('subscriptions', {}, defaultOptions);
 

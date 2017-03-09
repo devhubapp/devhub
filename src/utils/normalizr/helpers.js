@@ -4,12 +4,19 @@ import {
   getCommentIdFromUrl,
   getCommitShaFromUrl,
   getIssueOrPullRequestNumberFromUrl,
+  getReleaseIdFromUrl,
   getRepoFullNameFromUrl,
   githubHTMLUrlFromAPIUrl,
 } from '../helpers/github/url';
 
 import { getIn } from '../immutable';
-import type { GithubCommit, GithubIssue, GithubNotification, GithubPullRequest } from '../types';
+import type {
+  GithubCommit,
+  GithubIssue,
+  GithubNotification,
+  GithubPullRequest,
+  GithubRelease,
+} from '../types';
 
 export function preferNewestMergeStrategy(entityA, entityB) {
   if (entityA.updated_at && entityB.updated_at) {
@@ -33,7 +40,7 @@ export function preferNewestMergeStrategy(entityA, entityB) {
 }
 
 export function simpleIdAttribute(obj: { id: number | string }): string {
-  const id = getIn(obj, ['id']);
+  const id = getIn(obj, ['id']) || '';
   return `${id}`.toLowerCase();
 }
 
@@ -52,6 +59,10 @@ export function commitIdAttribute(commit: GithubCommit) {
     || getCommitShaFromUrl(url)
     || simpleIdAttribute(commit)
   ;
+}
+export function releaseIdAttribute(release: GithubRelease) {
+  const url = getIn(release, ['url']);
+  return simpleIdAttribute(release) || getReleaseIdFromUrl(url);
 }
 
 export function notificationProcessStrategy(notification: GithubNotification) {
