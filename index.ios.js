@@ -2,6 +2,8 @@
 
 import { AppRegistry } from 'react-native';
 
+import { name as appName } from './package.json';
+
 import App from './src/';
 
-AppRegistry.registerComponent('devhub', () => App);
+AppRegistry.registerComponent(appName, () => App);

@@ -5,8 +5,9 @@ import { AppRegistry } from 'react-native';
 
 import './web/src/index.css';
 import App from './src/';
+import { name as appName } from './package.json';
 
-AppRegistry.registerComponent('devhub', () => App);
-AppRegistry.runApplication('devhub', {
+AppRegistry.registerComponent(appName, () => App);
+AppRegistry.runApplication(appName, {
   rootTag: document.getElementById('root'),
 });

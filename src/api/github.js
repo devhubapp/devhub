@@ -2,6 +2,8 @@
 
 import GitHubAPI from 'github';
 
+import { name as appName } from '../../package.json';
+
 const PUBLIC_EVENTS: 'PUBLIC_EVENTS' = 'PUBLIC_EVENTS';
 const REPO_EVENTS: 'REPO_EVENTS' = 'REPO_EVENTS';
 const REPO_ISSUE_EVENTS: 'REPO_ISSUE_EVENTS' = 'REPO_ISSUE_EVENTS';
@@ -18,7 +20,7 @@ const MARK_NOTIFICATION_THREAD_AS_READ: 'MARK_NOTIFICATION_THREAD_AS_READ' = 'MA
 const MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO: 'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO' = 'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO';
 
 const github = new GitHubAPI({
-  agent: 'devhub',
+  agent: appName,
   // debug: process.env.NODE_ENV !== 'production',
 });
 

@@ -2,8 +2,9 @@ import qs from 'qs';
 import { Linking } from 'react-native';
 
 import { getUrlParamsIfMatches, listenForNextUrl } from './helpers';
+import { name as appName } from '../../../package.json';
 
-const callbackURL = 'devhub://oauth/github';
+const callbackURL = `${appName}://oauth/github`;
 
 export default async function (serverURL, scopes = []) {
   const scopesStr = (scopes || []).join(' ');

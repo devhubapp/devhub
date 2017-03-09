@@ -5,6 +5,8 @@ import { Linking, Platform } from 'react-native';
 
 import { get } from '../../immutable';
 
+import { name as appName } from '../../../../package.json';
+
 import type {
   GithubIssue,
   GithubPullRequest,
@@ -112,7 +114,7 @@ function openURL(url: string) {
   } else {
     // replace http with devhub:// so the app deeplinking will handle this
     // the app will decide if it will push an app screen or open the web browser
-    _url = _url.replace(/(http[s]?)/, 'devhub');
+    _url = _url.replace(/(http[s]?)/, appName);
   }
 
   return Linking.openURL(_url);
