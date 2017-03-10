@@ -13,7 +13,7 @@ let _currentUserId;
 let _databaseRef;
 let _lastState;
 
-export const map = {
+export const mapStateToFirebase = {
   config: {},
   entities: {
     columns: {},
@@ -24,10 +24,18 @@ export const map = {
   },
 };
 
+export const mapFirebaseToState = {
+  config: {},
+  entities: {
+    columns: {},
+    subscriptions: {},
+  },
+};
+
 const checkDiffAndPatchDebounced = debounce(
   store => {
     if (_databaseRef && _lastState !== undefined) {
-      const stateDiff = toJS(getObjectDiff(_lastState, store.getState(), map));
+      const stateDiff = toJS(getObjectDiff(_lastState, store.getState(), mapStateToFirebase));
 
       // console.log('state diff', stateDiff);
 
@@ -67,7 +75,7 @@ export function startFirebase({ store, userId }) {
         _lastState = store.getState();
       },
       debug: __DEV__,
-      map,
+      map: mapFirebaseToState,
       ref: _databaseRef,
     });
   }, (...args) => {

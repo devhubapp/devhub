@@ -63,6 +63,7 @@ function* onLoginSuccessOrRestored() {
 function* onLogoutRequest() {
   try {
     yield firebase.auth().signOut();
+    if (bugsnagClient) bugsnagClient.clearUser();
   } catch (e) {
     console.error(`Failed to logout from Firebase: ${e.message}`, e);
   }
@@ -81,7 +82,7 @@ function* onCurrentUserUpdate() {
 
 function* watchFirebaseCurrentUser() {
   const ignoreValue = 'ignore';
-  let lastUser = ignoreValue;
+  let lastUser = firebase.auth().currentUser;
 
   firebase.auth().onAuthStateChanged(user => {
     lastUser = user;

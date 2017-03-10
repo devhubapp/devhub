@@ -9,6 +9,7 @@ import { composeWithDevTools } from 'remote-redux-devtools';
 
 import sagas from '../sagas';
 import reducer from '../reducers';
+import bugsnagMiddleware from './middlewares/bugsnag';
 import firebaseMiddleware from './middlewares/firebase';
 
 export default (initialState = Map()) => {
@@ -27,7 +28,7 @@ export default (initialState = Map()) => {
     reducer,
     initialState,
     composeEnhancers(
-      applyMiddleware(firebaseMiddleware, sagaMiddleware),
+      applyMiddleware(bugsnagMiddleware, firebaseMiddleware, sagaMiddleware),
       autoRehydrate(),
     ),
   );

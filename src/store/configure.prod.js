@@ -8,6 +8,7 @@ import { autoRehydrate, persistStore } from 'redux-persist-immutable';
 
 import sagas from '../sagas';
 import reducer from '../reducers';
+import bugsnagMiddleware from './middlewares/bugsnag';
 import firebaseMiddleware from './middlewares/firebase';
 
 export default (initialState = Map()) => {
@@ -17,7 +18,7 @@ export default (initialState = Map()) => {
     reducer,
     initialState,
     compose(
-      applyMiddleware(firebaseMiddleware, sagaMiddleware),
+      applyMiddleware(bugsnagMiddleware, firebaseMiddleware, sagaMiddleware),
       autoRehydrate(),
     ),
   );

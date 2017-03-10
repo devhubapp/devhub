@@ -2,4 +2,9 @@
 
 import setupServices from './setup';
 
-export default setupServices();
+const services = setupServices();
+
+export default services;
+
+export const bugsnagClient = services.bugsnagClient;
+export const firebaseApp = services.firebaseApp;
