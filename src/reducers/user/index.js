@@ -18,7 +18,7 @@ import type {
 
 const initialState = Map({});
 
-type State = {isLogging: boolean, accessToken: string, loggedAt: Object};
+type State = { isLogging: boolean, accessToken: string, loggedAt: Object };
 type ActionType = Action<LoginRequestPayload | LoginResponsePayload>;
 
 export default (
@@ -40,14 +40,12 @@ export default (
       });
 
     case UPDATE_CURRENT_USER:
-      return state.mergeDeep({
-        uid: payload.uid,
-        providerId: payload.providerId,
-        displayName: payload.displayName,
-        email: payload.email,
-        avatarURL: payload.photoURL,
-        lastAccessedAt: payload.lastAccessedAt || state.get('lastAccessedAt'),
-      });
+      return state
+        .mergeDeep(payload)
+        .set(
+          'lastAccessedAt',
+          payload.lastAccessedAt || state.get('lastAccessedAt'),
+        );
 
     case LOGIN_FAILURE:
       return Map({ isLogging: false, error });

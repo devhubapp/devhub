@@ -1,6 +1,7 @@
 // @flow
 
 import * as firebase from 'firebase';
+import { bugsnagClient } from '../utils/services';
 import { delay } from 'redux-saga';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 
@@ -11,12 +12,15 @@ import {
   LOGIN_FAILURE,
   LOGOUT,
   RESET_APP_DATA,
+  UPDATE_CURRENT_USER,
 } from '../utils/constants/actions';
+
+import { get } from '../utils/immutable';
 
 import oauth from './oauth';
 import { sagaActionChunk } from './_shared';
 import { loginSuccess, loginFailure, updateCurrentUser } from '../actions';
-import { accessTokenSelector } from '../selectors';
+import { accessTokenSelector, userSelector } from '../selectors';
 import type { Action, LoginRequestPayload } from '../utils/types';
 
 function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
@@ -64,21 +68,52 @@ function* onLogoutRequest() {
   }
 }
 
+function* onCurrentUserUpdate() {
+  if (!bugsnagClient) return;
+
+  const user = yield select(userSelector) || {};
+  const id = get(user, 'firebaseId') || get(user, 'githubId') || get(user, 'uid');
+  const name = get(user, 'name') || get(user, 'displayName');
+  const email = get(user, 'email');
+
+  bugsnagClient.setUser(id, name, email);
+}
+
 function* watchFirebaseCurrentUser() {
   const ignoreValue = 'ignore';
   let lastUser = ignoreValue;
 
-  firebase.auth().onAuthStateChanged((user) => {
+  firebase.auth().onAuthStateChanged(user => {
     lastUser = user;
   });
 
   while (true) {
     if (lastUser !== ignoreValue) {
       // console.log('firebase user', lastUser);
-      const user = lastUser && lastUser.providerData && lastUser.providerData[0];
+      const user = lastUser &&
+        lastUser.providerData &&
+        lastUser.providerData[0];
       lastUser = ignoreValue;
 
-      const payload = user ? { ...user, lastAccessedAt: new Date() } : undefined;
+      const { uid: firebaseId } = lastUser || {};
+      const {
+        uid: githubId,
+        displayName: name,
+        photoURL: avatarURL,
+        ...restOfUser
+      } = user || {};
+
+      const payload = user
+        ? {
+          firebaseId,
+          githubId,
+          name,
+          avatarURL,
+          ...restOfUser,
+          lastAccessedAt: new Date(),
+        }
+        : undefined;
+
       yield put(updateCurrentUser(payload, sagaActionChunk));
     }
 
@@ -89,6 +124,7 @@ function* watchFirebaseCurrentUser() {
 export default function* () {
   return yield [
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
+    yield takeLatest(UPDATE_CURRENT_USER, onCurrentUserUpdate),
     yield takeLatest([LOGIN_SUCCESS, APP_READY], onLoginSuccessOrRestored),
     yield takeLatest([LOGIN_FAILURE, LOGOUT, RESET_APP_DATA], onLogoutRequest),
     yield fork(watchFirebaseCurrentUser),
