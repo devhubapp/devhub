@@ -74,7 +74,7 @@ export const makeColumnSubscriptionsSelector = () => createImmutableSelector(
   (subscriptionIds, subscriptions) => (
     subscriptionIds.map(subscriptionId => (
       subscriptions.get(subscriptionId)
-    ))
+    )).filter(Boolean)
   ),
 );
 

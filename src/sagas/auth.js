@@ -10,6 +10,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT,
+  RESET_APP_DATA,
 } from '../utils/constants/actions';
 
 import oauth from './oauth';
@@ -89,7 +90,7 @@ export default function* () {
   return yield [
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
     yield takeLatest([LOGIN_SUCCESS, APP_READY], onLoginSuccessOrRestored),
-    yield takeLatest([LOGIN_FAILURE, LOGOUT], onLogoutRequest),
+    yield takeLatest([LOGIN_FAILURE, LOGOUT, RESET_APP_DATA], onLogoutRequest),
     yield fork(watchFirebaseCurrentUser),
   ];
 }

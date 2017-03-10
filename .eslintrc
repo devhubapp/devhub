@@ -23,18 +23,19 @@
     "import/extensions": [".js", ".jsx", ".android.js", ".ios.js"]
   },
   "rules": {
-    "react/jsx-filename-extension": ["off"],
+    "react/jsx-filename-extension": 0,
     "react/prefer-stateless-function": ["error", {
       "ignorePureComponents": true
     }],
-    "no-case-declarations": ["off"],
-    "no-underscore-dangle": ["off"],
-    "no-nested-ternary": ["off"],
+    "no-case-declarations": 0,
+    "no-underscore-dangle": 0,
+    "no-nested-ternary": 0,
     "arrow-parens": 0,
     "babel/arrow-parens": 1,
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 2,
     "react-native/no-inline-styles": 2,
-    "react-native/no-color-literals": 2
+    "react-native/no-color-literals": 2,
+    "no-plusplus": 0
   }
 }

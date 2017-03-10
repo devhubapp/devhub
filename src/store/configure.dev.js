@@ -9,11 +9,16 @@ import { composeWithDevTools } from 'remote-redux-devtools';
 
 import sagas from '../sagas';
 import reducer from '../reducers';
+import firebaseMiddleware from './middlewares/firebase';
 
 export default (initialState = Map()) => {
   const sagaMiddleware = createSagaMiddleware();
 
-  const devToolsOptions = { realtime: true, hostname: 'localhost', port: 8800 };
+  const devToolsOptions = {
+    realtime: true,
+    hostname: 'localhost',
+    port: 8805,
+  };
   const composeEnhancers = Platform.OS === 'web'
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
     : composeWithDevTools(devToolsOptions);
@@ -21,7 +26,10 @@ export default (initialState = Map()) => {
   const store = createStore(
     reducer,
     initialState,
-    composeEnhancers(applyMiddleware(sagaMiddleware), autoRehydrate()),
+    composeEnhancers(
+      applyMiddleware(firebaseMiddleware, sagaMiddleware),
+      autoRehydrate(),
+    ),
   );
 
   sagaMiddleware.run(sagas);

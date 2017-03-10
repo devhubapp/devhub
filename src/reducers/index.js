@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import { combineReducers } from 'redux-immutable';
 
 import app from './app';
@@ -8,7 +8,10 @@ import navigation from './navigation';
 import notifications from './notifications';
 import user from './user';
 
-import { RESET_APP_DATA } from '../utils/constants/actions';
+import {
+  FIREBASE_RECEIVED_EVENT,
+  RESET_APP_DATA,
+} from '../utils/constants/actions';
 import type { Action } from '../utils/types';
 
 const reducer = combineReducers({
@@ -23,9 +26,20 @@ const reducer = combineReducers({
 const initialState = Map();
 
 const indexReducer = (state: Object = initialState, action) => {
-  const { type } = action || {};
+  const { payload, type } = action || {};
 
   switch (type) {
+    case FIREBASE_RECEIVED_EVENT:
+      return (({ eventName, fullPath, value }) => {
+        const fullPathArr = (fullPath || '').split('/').filter(Boolean);
+        if (!(fullPathArr && fullPathArr.length)) return state;
+
+        switch (eventName) {
+          case 'child_removed': return state.removeIn(fullPathArr);
+          default: return state.setIn(fullPathArr, fromJS(value));
+        }
+      })(payload);
+
     case RESET_APP_DATA:
       return initialState;
 

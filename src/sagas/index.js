@@ -6,13 +6,12 @@ import { call, fork, put, race, select, take, takeLatest } from 'redux-saga/effe
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { resetAppData as resetAppDataAction } from '../actions';
-import { RESET_APP_DATA_REQUEST } from '../utils/constants/actions';
+import { RESET_APP_DATA, RESET_APP_DATA_REQUEST } from '../utils/constants/actions';
 import { rehydratedSelector } from '../selectors';
 
 import appSagas from './app';
 import authSagas from './auth';
 import columnsSagas from './columns';
-import firebaseSagas from './firebase';
 import notificationsSagas from './notifications';
 import subscriptionsSagas from './subscriptions';
 
@@ -43,9 +42,9 @@ function* onResetAppDataRequest() {
 export default function* () {
   return yield [
     yield takeLatest(RESET_APP_DATA_REQUEST, onResetAppDataRequest),
+    yield takeLatest(RESET_APP_DATA, resetAppData),
     yield fork(authSagas),
     yield fork(columnsSagas),
-    yield fork(firebaseSagas),
     yield fork(notificationsSagas),
     yield fork(subscriptionsSagas),
     yield fork(appSagas),

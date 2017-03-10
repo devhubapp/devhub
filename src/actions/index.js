@@ -4,10 +4,11 @@
 import {
   APP_CLEANUP,
   APP_READY,
-  RESET_APP_DATA,
-  RESET_APP_DATA_REQUEST,
   CREATE_COLUMN,
   DELETE_COLUMN,
+  FIREBASE_RECEIVED_EVENT,
+  RESET_APP_DATA,
+  RESET_APP_DATA_REQUEST,
   SET_THEME,
   STAR_REPO,
   UNSTAR_REPO,
@@ -68,4 +69,10 @@ export const starRepo = ({ repoId, repoFullName }, other?: Object) => (
 
 export const unstarRepo = ({ repoId, repoFullName }, other?: Object) => (
   action(UNSTAR_REPO, { repoId: `${repoId}`, repoFullName }, other)
+);
+
+// FIREBASE
+
+export const firebaseReceivedEvent = ({ eventName, fullPath, value }, other?: Object) => (
+  action(FIREBASE_RECEIVED_EVENT, { eventName, fullPath, value }, other)
 );
