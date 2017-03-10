@@ -1,9 +1,14 @@
 import * as firebase from 'firebase';
 
 import Bugsnag from '../../libs/bugsnag';
+import pkg from '../../../package.json';
 
 export default () => ({
-  bugsnagClient: Bugsnag('231f337f6090422c611017d3dab3d32e'),
+  bugsnagClient: (() => {
+    const bugsnagClient = Bugsnag('231f337f6090422c611017d3dab3d32e');
+    bugsnagClient.codeBundleId = pkg.codeBundleId;
+    return bugsnagClient;
+  })(),
 
   firebaseApp: firebase.initializeApp({
     apiKey: 'AIzaSyDsTWehKARyK8RKSFCKuVoG_m00j1OGhDQ',

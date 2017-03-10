@@ -57,3 +57,7 @@ ios/fastlane/
 
 # Pods
 ios/pods/
+
+# Bundle and source maps
+build
+main.jsbundle*

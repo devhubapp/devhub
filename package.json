@@ -1,6 +1,7 @@
 {
   "name": "devhub",
   "version": "0.3.0",
+  "codeBundleId": "0.3.0",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
