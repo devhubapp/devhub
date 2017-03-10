@@ -58,7 +58,7 @@ export default (state: State = initialState, { type, payload, error }: Action<an
 
     case DELETE_EVENTS:
       return state.map(subscription => (
-        subscription.update('events', events => (events || Set).toSet().subtract(payload.eventIds))
+        subscription.update('events', events => (events || Set()).toSet().subtract(payload.eventIds))
       ));
 
     case DELETE_SUBSCRIPTION:
