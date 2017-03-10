@@ -32,6 +32,7 @@
     "react": "16.0.0-alpha.3",
     "react-native": "0.43.0-rc.0",
     "react-native-actionsheet": "^2.0.6",
+    "react-native-code-push": "^1.17.2-beta",
     "react-native-immutable-list-view": "^0.3.1",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-orientation-listener": "https://github.com/iRoachie/react-native-orientation-listener",

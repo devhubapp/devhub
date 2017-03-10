@@ -1,9 +1,14 @@
 // @flow
 
+import codePush from 'react-native-code-push';
 import { AppRegistry } from 'react-native';
 
 import { name as appName } from './package.json';
 
 import App from './src/';
 
-AppRegistry.registerComponent(appName, () => App);
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+};
+
+AppRegistry.registerComponent(appName, () => codePush(codePushOptions)(App));
