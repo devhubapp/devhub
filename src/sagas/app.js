@@ -47,8 +47,9 @@ function* cleanupEvents() {
   const usedEventIds = usedSubscriptionIds
     .map(subscriptionId =>
       subscriptionEventsSelector(state, { subscriptionId }))
+    .filter(Boolean)
     .toSet()
-    .reduce((resultIds, currentIds) => resultIds.union(currentIds), Set());
+    .reduce((resultIds, currentIds) => resultIds.union(Set(currentIds)), Set());
 
   const eventIdsToRemove = allEventIds
     .union(usedEventIds)

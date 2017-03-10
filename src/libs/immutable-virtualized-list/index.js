@@ -68,7 +68,6 @@ export class ImmutableSectionList extends PureComponent {
   static propTypes = { ...SectionList.propTypes, ...propTypes };
 
   render() {
-    console.log('render', this.props);
     const { immutableData, sections, ...props } = this.props;
 
     const _sections = sections && typeof sections.toJS === 'function' ? sections.toJS() : sections;

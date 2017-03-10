@@ -4,7 +4,7 @@
  * This file is from https://github.com/gpbl/denormalizr
  */
 
-import { isEqual, reduce } from 'lodash';
+import _ from 'lodash';
 import Immutable from 'immutable';
 
 /**
@@ -14,6 +14,20 @@ function stringifiedArray(array) {
   return array.map(item => `${item}`);
 }
 
+export function isImmutable(object) {
+  return object && Immutable.Iterable.isIterable(object);
+}
+
+/**
+ * Returns an immutable object
+ *
+ * @param  {Immutable} object
+ * @return {Any}
+ */
+export function fromJS(object) {
+  return Immutable.fromJS(object);
+}
+
 /**
  * Returns a non-immutable object
  *
@@ -21,7 +35,7 @@ function stringifiedArray(array) {
  * @return {Any}
  */
 export function toJS(object) {
-  if (object && typeof object.toJS === 'function') {
+  if (isImmutable(object)) {
     return object.toJS();
   }
 
@@ -40,9 +54,9 @@ export function shallowEqualityCheck(a, b) {
  * It uses lodash isEqual for normal objects, and Immutable.is for immutable
  */
 export function deepImmutableEqualityCheck(a, b) {
-  return Immutable.Iterable.isIterable(a) && Immutable.Iterable.isIterable(b)
-    ? Immutable.is(a, Immutable.fromJS(b))
-    : isEqual(a, toJS(b));
+  return isImmutable(a) || isImmutable(b)
+    ? Immutable.is(Immutable.fromJS(a), Immutable.fromJS(b))
+    : _.isEqual(toJS(a), toJS(b));
 }
 
 /**
@@ -56,7 +70,7 @@ export function deepImmutableEqualityCheck(a, b) {
 export function get(object, keyName) {
   if (!__DEV__ && !object) return null;
 
-  if (typeof object.get === 'function') {
+  if (isImmutable(object)) {
     return object.get(`${keyName}`);
   }
 
@@ -74,15 +88,11 @@ export function get(object, keyName) {
 export function getIn(object, keyPath) {
   if (!__DEV__ && !object) return null;
 
-  if (typeof object.getIn === 'function') {
+  if (isImmutable(object)) {
     return object.getIn(stringifiedArray(keyPath));
   }
 
-  return reduce(
-    keyPath,
-    (memo, key) => get(memo, key),
-    object,
-  );
+  return _.reduce(keyPath, (memo, key) => get(memo, key), object);
 }
 
 /**
@@ -97,7 +107,7 @@ export function getIn(object, keyPath) {
 export function set(object, keyName, value) {
   if (!__DEV__ && !object) return null;
 
-  if (typeof object.set === 'function') {
+  if (isImmutable(object)) {
     return object.set(keyName, value);
   }
 
@@ -116,7 +126,7 @@ export function set(object, keyName, value) {
 export function setIn(object, keyPath, value) {
   if (!__DEV__ && !object) return null;
 
-  if (typeof object.setIn === 'function') {
+  if (isImmutable(object)) {
     return object.setIn(stringifiedArray(keyPath), value);
   }
 
@@ -139,7 +149,7 @@ export function setIn(object, keyPath, value) {
 export function sizeOf(object) {
   if (!__DEV__ && !object) return null;
 
-  if (typeof object.get === 'function') {
+  if (isImmutable(object)) {
     return object.size;
   }
 
@@ -148,4 +158,84 @@ export function sizeOf(object) {
   }
 
   return object.length;
+}
+
+export function forEach(object, fn) {
+  if (isImmutable(object)) {
+    return object.forEach(fn);
+  }
+
+  return _.forEach(object, fn);
+}
+
+export function map(object, fn) {
+  if (isImmutable(object)) {
+    return object.map(fn);
+  }
+
+  return _.map(object, fn);
+}
+
+function _immutableKeyInFilter(keys) {
+  const keySet = Immutable.Set(keys);
+  return (v, k) => keySet.has(k);
+}
+
+export function omit(object, keys) {
+  if (!__DEV__ && !object) return null;
+
+  if (isImmutable(object)) {
+    return object.filterNot(_immutableKeyInFilter(keys));
+  }
+
+  return _.omit(object, keys);
+}
+
+export function pick(object, keys) {
+  if (!__DEV__ && !object) return null;
+
+  if (isImmutable(object)) {
+    return object.filter(_immutableKeyInFilter(keys));
+  }
+
+  return _.pick(object, keys);
+}
+
+export function remove(object, key) {
+  if (isImmutable(object)) {
+    return object.remove(key);
+  }
+
+  const { [key]: removedKey, ...newObject } = object; // eslint-disable-line no-unused-vars
+  return newObject;
+}
+
+export function getEmptyObjectFromTheSameType(object) {
+  if (isImmutable(object)) {
+    if (Immutable.List.isList(object)) return Immutable.List();
+    else if (Immutable.Seq.isSeq(object)) return Immutable.Seq();
+    else if (Immutable.Set.isSet(object)) return Immutable.Set();
+    else if (Immutable.OrderedSet.isOrderedSet(object)) return Immutable.OrderedSet();
+    else if (Immutable.OrderedMap.isOrderedMap(object)) return Immutable.OrderedMap();
+
+    return Immutable.Map();
+  }
+
+  return Array.isArray(object) ? [] : {};
+}
+
+export function isList(object) {
+  if (isImmutable(object)) {
+    return Immutable.List.isList(object) || Immutable.Seq.isSeq(object);
+  }
+
+  return !!object && Array.isArray(object);
+}
+
+export function isObjectOrMap(object) {
+  if (isImmutable(object)) {
+    return Immutable.Map.isMap(object) || Immutable.OrderedMap.isOrderedMap(object);
+  }
+
+  return !!object && typeof object === 'object' && !Array.isArray(object);
 }
