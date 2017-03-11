@@ -173,7 +173,7 @@ export default class extends React.PureComponent {
           {...props}
           ListComponent={ImmutableSectionList}
           key="notification-filter-_ColumnWithList"
-          initialListSize={20}
+          initialNumToRender={2}
           isEmpty={false}
           items={items}
           onRefresh={onRefresh}

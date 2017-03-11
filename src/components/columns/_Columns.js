@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
 import { List } from 'immutable';
 
 import NewColumn from './NewColumn';
@@ -10,7 +11,7 @@ import withOrientation from '../../hoc/withOrientation';
 import { getColumnWidth, getColumnContentWidth } from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
-export const StyledImmutableVirtualizedListListView = styled(ImmutableVirtualizedList)`
+export const StyledImmutableVirtualizedListListView = styled(ImmutableVirtualizedList) `
   flex: 1;
 `;
 
@@ -56,17 +57,15 @@ export default class extends React.PureComponent {
     const {
       columns = List(),
       renderItem: mainRenderItem,
-      width: _width,
       ...props
     } = this.props;
 
-    const width = _width || getColumnContentWidth();
-    const initialListSize = Math.max(1, Math.ceil(getColumnWidth() / width));
+    const initialNumToRender = Math.max(1, Math.ceil(Dimensions.get('window').width / getColumnWidth()));
 
     return (
       <StyledImmutableVirtualizedListListView
         immutableData={columns}
-        initialListSize={initialListSize}
+        initialNumToRender={initialNumToRender}
         renderItem={this.makeRenderItem(mainRenderItem)}
         removeClippedSubviews={false}
         horizontal

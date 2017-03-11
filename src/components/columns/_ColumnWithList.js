@@ -37,7 +37,7 @@ export default class extends React.PureComponent {
     ListComponent?: ?React.element,
     errors?: ?Array<string>,
     icon: string,
-    initialListSize?: number,
+    initialNumToRender?: number,
     isEmpty?: boolean,
     items: Array<Object>,
     loading?: boolean,
@@ -60,7 +60,7 @@ export default class extends React.PureComponent {
   render() {
     const { hasLoadedOnce } = this.state;
     const {
-      initialListSize,
+      initialNumToRender,
       isEmpty,
       items: _items,
       loading,
@@ -111,8 +111,8 @@ export default class extends React.PureComponent {
               : (
                 <ListComponent
                   immutableData={items}
-                  initialListSize={initialListSize || 5}
-                  rowsDuringInteraction={initialListSize || 5}
+                  initialNumToRender={initialNumToRender || 5}
+                  rowsDuringInteraction={initialNumToRender || 5}
                   renderItem={renderItem}
                   renderSectionHeader={renderSectionHeader}
                   refreshControl={refreshControl}
