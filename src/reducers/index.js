@@ -30,13 +30,12 @@ const indexReducer = (state: Object = initialState, action) => {
 
   switch (type) {
     case FIREBASE_RECEIVED_EVENT:
-      return (({ eventName, fullPath, value }) => {
-        const fullPathArr = (fullPath || '').split('/').filter(Boolean);
-        if (!(fullPathArr && fullPathArr.length)) return state;
+      return (({ eventName, statePathArr, value }) => {
+        if (!(statePathArr && statePathArr.length)) return state;
 
         switch (eventName) {
-          case 'child_removed': return state.removeIn(fullPathArr);
-          default: return state.setIn(fullPathArr, fromJS(value));
+          case 'child_removed': return state.removeIn(statePathArr);
+          default: return state.setIn(statePathArr, fromJS(value));
         }
       })(payload);
 

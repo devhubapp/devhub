@@ -18,7 +18,7 @@ import { action } from '../utils/helpers/actions';
 
 import type {
   Column,
-  Theme,
+    Theme,
 } from '../utils/types';
 
 export * from './auth';
@@ -48,7 +48,7 @@ export const createColumn = (
   { order, subscriptionIds, title }: CreateColumnParams,
   other?: Object,
 ) => (
-  action(CREATE_COLUMN, ({ order, subscriptionIds, title }: Column), other)
+    action(CREATE_COLUMN, ({ order, subscriptionIds, title }: Column), other)
 );
 
 export const deleteColumn = (id: string, other?: Object) => (
@@ -73,6 +73,6 @@ export const unstarRepo = ({ repoId, repoFullName }, other?: Object) => (
 
 // FIREBASE
 
-export const firebaseReceivedEvent = ({ eventName, fullPath, value }, other?: Object) => (
-  action(FIREBASE_RECEIVED_EVENT, { eventName, fullPath, value }, other)
+export const firebaseReceivedEvent = ({ eventName, firebasePathArr, statePathArr, value }, other?: Object) => (
+  action(FIREBASE_RECEIVED_EVENT, { eventName, firebasePathArr, statePathArr, value }, other)
 );

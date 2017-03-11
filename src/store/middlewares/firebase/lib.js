@@ -75,7 +75,7 @@ export function createFirebaseHandler(
   { blacklist, callback, debug, eventName },
 ) {
   return snapshot => {
-    const fullPath = fixFirebaseKey(getPathFromRef(snapshot.ref), false);
+    const fullPath = getPathFromRef(snapshot.ref);
     let value = snapshot.val();
 
     if (blacklist && blacklist.length) {
@@ -88,10 +88,15 @@ export function createFirebaseHandler(
       console.debug(`[FIREBASE] Received ${eventName} on ${fullPath}:`, value);
     }
 
+    const pathArr = fullPath.split('/').filter(Boolean);
+    const firebasePathArr = pathArr.map(path => fixFirebaseKey(path, true));
+    const statePathArr = pathArr.map(path => fixFirebaseKey(path, false));
+
     if (typeof callback === 'function') {
       let _callbackResult = callback({
         eventName,
-        fullPath,
+        firebasePathArr,
+        statePathArr,
         value,
       });
 
@@ -359,7 +364,7 @@ export const applyPatchOnFirebase = ({ debug, patch, ref = _databaseRef }) => {
     }
 
     if (debug) {
-      const fullPath = `${fixFirebaseKey(getPathFromRef(ref), false)}/${field}`;
+      const fullPath = `${getPathFromRef(ref)}/${field}`;
       console.debug(`[FIREBASE] Patching on ${fullPath}`, value);
     }
 

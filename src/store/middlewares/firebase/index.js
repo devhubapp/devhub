@@ -69,9 +69,9 @@ export function startFirebase({ store, userId }) {
     _lastState = fromJS(snapshot.val()) || null;
 
     watchFirebaseFromMap({
-      callback({ eventName, fullPath, value }) {
+      callback({ eventName, firebasePathArr, statePathArr, value }) {
         if (_lastState === undefined) return;
-        store.dispatch(firebaseReceivedEvent({ eventName, fullPath, value }));
+        store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
         _lastState = store.getState();
       },
       debug: __DEV__,
