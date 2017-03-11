@@ -36,8 +36,7 @@ export default class extends React.PureComponent {
         <ScrollView
           style={{ maxHeight }}
           contentContainerStyle={{
-            marginTop: narrow ? -contentPadding / 2 : -contentPadding,
-            paddingVertical: narrow ? contentPadding / 2 : contentPadding,
+            paddingBottom: narrow ? contentPadding / 2 : contentPadding,
           }}
           alwaysBounceVertical={false}
         >
