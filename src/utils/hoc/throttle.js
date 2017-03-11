@@ -3,13 +3,19 @@
 import React from 'react';
 import throttle from 'lodash/throttle';
 
-export default (intervalOrFn, ...throttleArgs) => {
-  if (!(
-    typeof intervalOrFn === 'function'
-      || (typeof intervalOrFn === 'number' && intervalOrFn > 0)
-    )) {
-    throw new Error(`[throttle] Interval parameter must be a number (ms) or a function(props) => number. Received ${intervalOrFn}.`);
+const validateInterval = interval => {
+  if (!(typeof interval === 'number' && interval >= 0)) {
+    throw new Error(`[throttle] Interval parameter must be a number (ms) or a function(props) => number. Received ${interval}.`);
   }
+};
+
+const validateIntervalOrFn = intervalOrFn =>
+  typeof intervalOrFn === 'function'
+    ? true
+    : validateInterval(intervalOrFn);
+
+export default (intervalOrFn, ...throttleArgs) => {
+  validateIntervalOrFn(intervalOrFn);
 
   return Component => class extends React.PureComponent {
     constructor(props) {
@@ -24,7 +30,13 @@ export default (intervalOrFn, ...throttleArgs) => {
 
     componentWillReceiveProps = props => {
       const interval = typeof intervalOrFn === 'function' ? intervalOrFn(props) : intervalOrFn;
-      throttle(this.updateStateWithProps, interval, ...throttleArgs)(props);
+      validateInterval(interval);
+
+      if (interval === 0) {
+        this.updateStateWithProps(props);
+      } else {
+        throttle(this.updateStateWithProps, interval, ...throttleArgs)(props);
+      }
     };
 
     render = () => <Component {...this.state.props} />;

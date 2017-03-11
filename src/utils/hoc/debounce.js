@@ -3,13 +3,19 @@
 import React from 'react';
 import debounce from 'lodash/debounce';
 
-export default (intervalOrFn, ...debounceArgs) => {
-  if (!(
-    typeof intervalOrFn === 'function'
-      || (typeof intervalOrFn === 'number' && intervalOrFn > 0)
-    )) {
-    throw new Error(`[debounce] Interval parameter must be a number (ms) or a function(props) => number. Received ${intervalOrFn}.`);
+const validateInterval = interval => {
+  if (!(typeof interval === 'number' && interval >= 0)) {
+    throw new Error(`[debounce] Interval parameter must be a number (ms) or a function(props) => number. Received ${interval}.`);
   }
+};
+
+const validateIntervalOrFn = intervalOrFn =>
+  typeof intervalOrFn === 'function'
+    ? true
+    : validateInterval(intervalOrFn);
+
+export default (intervalOrFn, ...debounceArgs) => {
+  validateIntervalOrFn(intervalOrFn);
 
   return Component => class extends React.PureComponent {
     constructor(props) {
@@ -24,7 +30,13 @@ export default (intervalOrFn, ...debounceArgs) => {
 
     componentWillReceiveProps = props => {
       const interval = typeof intervalOrFn === 'function' ? intervalOrFn(props) : intervalOrFn;
-      debounce(this.updateStateWithProps, interval, ...debounceArgs)(props);
+      validateInterval(interval);
+
+      if (interval === 0) {
+        this.updateStateWithProps(props);
+      } else {
+        debounce(this.updateStateWithProps, interval, ...debounceArgs)(props);
+      }
     };
 
     render = () => <Component {...this.state.props} />;
