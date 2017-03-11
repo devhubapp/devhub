@@ -9,7 +9,7 @@ import { resetAppDataRequest } from '../../actions';
 
 import Screen from '../../components/Screen';
 import { contentPadding, splashScreenBackgroundColor } from '../../styles/variables';
-import { base00 } from '../../styles/themes/dark';
+import { base04 } from '../../styles/themes/light';
 
 const Root = styled(Screen)`
   flex: 1;
@@ -27,7 +27,7 @@ const ResetButton = styled.TouchableOpacity`
 
 const ResetButtonText = styled.Text`
   text-align: center;
-  color: ${({ theme }) => theme.base00 || '#000000'};
+  color: ${base04};
 `;
 
 const mapDispatchToProps = ({ resetAppData: resetAppDataRequest });
@@ -38,7 +38,7 @@ const SplashScreen = ({ resetAppData }: Props) => (
     {(Platform.OS === 'ios' || Platform.OS === 'android') &&
       <StatusBar hidden />}
 
-    <ActivityIndicator color={base00} />
+    <ActivityIndicator color={base04} />
 
     <ResetButton onPress={() => resetAppData()} activeOpacity={0.1} focusedOpacity={1}>
       <ResetButtonText>Reset app data</ResetButtonText>
