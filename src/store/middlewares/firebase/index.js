@@ -7,7 +7,7 @@ import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions';
 import { firebaseReceivedEvent } from '../../../actions';
 import { fromJS, toJS } from '../../../utils/immutable';
 import { applyPatchOnFirebase, getObjectDiff, watchFirebaseFromMap } from './lib';
-import { isReadySelector } from '../../../selectors';
+import { isLoggedSelector, isReadySelector } from '../../../selectors';
 
 let _currentUserId;
 let _databaseRef;
@@ -39,7 +39,7 @@ const checkDiffAndPatchDebounced = debounce(
 
       // console.log('state diff', stateDiff);
 
-      if (stateDiff) {
+      if (stateDiff && _currentUserId) {
         applyPatchOnFirebase({ debug: __DEV__, patch: stateDiff });
         _lastState = store.getState();
       }
@@ -53,7 +53,6 @@ export function stopFirebase() {
 
   console.debug('[FIREBASE] Disconnected.');
   _databaseRef.off();
-  firebase.auth().signOut();
 
   _databaseRef = undefined;
   _lastState = undefined;
@@ -85,15 +84,16 @@ export function startFirebase({ store, userId }) {
 }
 
 export default store => next => action => {
+  next(action);
+
   const isAppReady = isReadySelector(store.getState());
 
   if (!isAppReady || action.type === FIREBASE_RECEIVED_EVENT) {
-    next(action);
     return;
   }
 
-  const user = firebase.auth().currentUser;
-  const userId = (user || {}).uid;
+  const isLogged = isLoggedSelector(store.getState());
+  const userId = isLogged && (firebase.auth().currentUser || {}).uid;
 
   if (userId !== _currentUserId) {
     _currentUserId = userId;
@@ -105,6 +105,5 @@ export default store => next => action => {
     }
   }
 
-  next(action);
   checkDiffAndPatchDebounced(store);
 };
