@@ -10,7 +10,7 @@ import Immutable from 'immutable';
 /**
  * Helpers to enable Immutable-JS compatibility.
  */
-function stringifiedArray(array) {
+function stringifiedArray(array: Array) {
   return array.map(item => `${item}`);
 }
 
@@ -92,7 +92,7 @@ export function getIn(object, keyPath) {
     return object.getIn(stringifiedArray(keyPath));
   }
 
-  return _.reduce(keyPath, (memo, key) => get(memo, key), object);
+  return _.reduce(keyPath: Array<string>, (memo, key) => get(memo, key), object);
 }
 
 /**
@@ -123,7 +123,7 @@ export function set(object, keyName, value) {
  * @param  {Any} value
  * @return {Any}
  */
-export function setIn(object, keyPath, value) {
+export function setIn(object, keyPath: Array<string>, value) {
   if (!__DEV__ && !object) return null;
 
   if (isImmutable(object)) {
@@ -137,6 +137,17 @@ export function setIn(object, keyPath, value) {
   lastKeyLocation[lastKeyName] = set(lastKeyLocation, lastKeyName, value);
 
   return object;
+}
+
+export function updateIn(object, keyPath: Array<string>, updater: Function) {
+  if (!__DEV__ && !object) return null;
+
+  if (isImmutable(object)) {
+    return object.updateIn(stringifiedArray(keyPath), updater);
+  }
+
+  const value = getIn(object, keyPath);
+  return setIn(object, keyPath, updater(value));
 }
 
 /**

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components/native';
+import { memoize } from 'lodash';
 import { List } from 'immutable';
 
 import ColumnWithList, { headerFontSize } from './_ColumnWithList';
@@ -10,7 +11,7 @@ import { ImmutableSectionList } from '../../libs/immutable-virtualized-list';
 import { FullView, StyledText } from '../cards/__CardComponents';
 import { contentPadding } from '../../styles/variables';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
-import { get } from '../../utils/immutable';
+import { get, updateIn } from '../../utils/immutable';
 import type { ActionCreators } from '../../utils/types';
 
 export const defaultIcon = 'zap';
@@ -72,6 +73,66 @@ const TotalCount = styled(StyledText)`
   color: ${({ theme }) => theme.base05};
 `;
 
+const totalItemNotifications = item => (
+  item ? (get(item, 'read') || 0) + (get(item, 'unread') || 0) : 0
+);
+
+const willShowItem = item => (
+  item && (get(item, 'pinned') || totalItemNotifications(item))
+);
+
+const isSectionEmpty = section => (
+  !section || !get(section, 'data') || !get(section, 'data').some(willShowItem)
+);
+
+const sectionHeaderHasChanged = (prevSectionData, nextSectionData) => (
+  prevSectionData !== nextSectionData
+);
+
+const renderItem = ({ index, item }: { index: number, item: Object }) => {
+  if (!willShowItem(item)) {
+    return null;
+  }
+
+  return (
+    <ItemWrapper
+      key={`notifications-filter-column-item-${get(item, 'key') || index}`}
+    >
+      <ItemTitleWrapper>
+        <ItemIcon name={get(item, 'icon')} color={get(item, 'color')} />
+        <ItemTitle numberOfLines={1}>{get(item, 'title') || get(item, 'key')}</ItemTitle>
+      </ItemTitleWrapper>
+      <CounterWrapper outline={!(get(item, 'unread') > 0)}>
+        {
+          get(item, 'unread') >= 0 && (
+            <UnreadCount count={get(item, 'unread')}>
+              {get(item, 'unread')}
+            </UnreadCount>
+          )
+        }
+        {
+          get(item, 'read') >= 0 && (
+            <TotalCount>
+              {get(item, 'unread') >= 0 && ' / '}
+              {totalItemNotifications(item)}
+            </TotalCount>
+          )
+        }
+      </CounterWrapper>
+    </ItemWrapper>
+  );
+};
+
+const cleanupData = memoize(sections =>
+  (sections || List())
+    .map(section => updateIn(section, ['data'], data => data.filter(willShowItem)))
+    .filterNot(isSectionEmpty));
+
+const getStateForItems = items => ({
+  firstSectionKey: (cleanupData(items).first() || List()).get('key'),
+  data: cleanupData(items),
+});
+
 export default class extends React.PureComponent {
   static defaultProps = {
     icon: defaultIcon,
@@ -80,6 +141,14 @@ export default class extends React.PureComponent {
     style: undefined,
     title: defaultTitle,
   };
+
+  state = getStateForItems(this.props.items);
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.items !== this.props.items) {
+      this.setState(getStateForItems(newProps.items));
+    }
+  }
 
   onRefresh = () => {
     const { actions: { updateNotifications } } = this.props;
@@ -99,73 +168,15 @@ export default class extends React.PureComponent {
     title?: string,
   };
 
-  totalItemNotifications = item => (
-    item ? (get(item, 'read') || 0) + (get(item, 'unread') || 0) : 0
-  );
-
-  willShowItem = item => (
-    item && (get(item, 'pinned') || this.totalItemNotifications(item))
-  );
-
-  isSectionEmpty = section => (
-    !section || !get(section, 'data') || !get(section, 'data').some(this.willShowItem)
-  );
-
-  sectionHeaderHasChanged = (prevSectionData, nextSectionData) => (
-    prevSectionData !== nextSectionData
-  );
-
-  // TODO: Mode firstSectionKey to component state
-  makeRenderSectionHeader = firstSectionKey =>
-  ({ section }) =>
+  renderSectionHeader = ({ section }) =>
     !!section &&
-      !(get(section, 'key') === firstSectionKey ||
-        this.isSectionEmpty(section)) &&
-        <Section />;
-
-  renderItem = ({ index, item }) => {
-    if (!this.willShowItem(item)) {
-      return null;
-    }
-
-    return (
-      <ItemWrapper
-        key={`notifications-filter-column-item-${get(item, 'key') || index}`}
-      >
-        <ItemTitleWrapper>
-          <ItemIcon name={get(item, 'icon')} color={get(item, 'color')} />
-          <ItemTitle numberOfLines={1}>{get(item, 'title') || get(item, 'key')}</ItemTitle>
-        </ItemTitleWrapper>
-        <CounterWrapper outline={!(get(item, 'unread') > 0)}>
-          {
-            get(item, 'unread') >= 0 && (
-              <UnreadCount count={get(item, 'unread')}>
-                {get(item, 'unread')}
-              </UnreadCount>
-            )
-          }
-          {
-            get(item, 'read') >= 0 && (
-              <TotalCount>
-                {get(item, 'unread') >= 0 && ' / '}
-                {this.totalItemNotifications(item)}
-              </TotalCount>
-            )
-          }
-        </CounterWrapper>
-      </ItemWrapper>
-    );
-  };
+    !(get(section, 'key') === this.state.firstSectionKey ||
+      isSectionEmpty(section)) &&
+      <Section />;
 
   render() {
-    const {
-      items: _items,
-      onRefresh,
-      style,
-      ...props
-    } = this.props;
-
-    const items = _items || List();
+    const { data } = this.state;
+    const { onRefresh, style, ...props } = this.props;
 
     return (
       <FullView style={style}>
@@ -173,16 +184,14 @@ export default class extends React.PureComponent {
           {...props}
           ListComponent={ImmutableSectionList}
           key="notification-filter-_ColumnWithList"
-          initialNumToRender={2}
+          initialNumToRender={20}
           isEmpty={false}
-          items={items}
+          items={data}
           onRefresh={onRefresh}
-          renderItem={this.renderItem}
-          renderSectionHeader={
-            this.makeRenderSectionHeader(items.first().get('key'))
-          }
-          sectionHeaderHasChanged={this.sectionHeaderHasChanged}
-          sections={items}
+          renderItem={renderItem}
+          renderSectionHeader={this.renderSectionHeader}
+          sectionHeaderHasChanged={sectionHeaderHasChanged}
+          sections={data}
         />
       </FullView>
     );
