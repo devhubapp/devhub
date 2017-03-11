@@ -34,6 +34,7 @@ const indexReducer = (state: Object = initialState, action) => {
         if (!(statePathArr && statePathArr.length)) return state;
 
         switch (eventName) {
+          case 'child_added': return state.mergeDeepIn(statePathArr, fromJS(value));
           case 'child_removed': return state.removeIn(statePathArr);
           default: return state.setIn(statePathArr, fromJS(value));
         }

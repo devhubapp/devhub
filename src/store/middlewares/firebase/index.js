@@ -64,22 +64,14 @@ export function startFirebase({ store, userId }) {
   _databaseRef = firebase.database().ref(`users/${userId}/`);
   console.debug('[FIREBASE] Connected.');
 
-  _databaseRef.once('value', snapshot => {
-    _lastState = fromJS(snapshot.val()) || null;
-
-    watchFirebaseFromMap({
-      callback({ eventName, firebasePathArr, statePathArr, value }) {
-        if (_lastState === undefined) return;
-        store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
-        _lastState = store.getState();
-      },
-      debug: __DEV__,
-      map: mapFirebaseToState,
-      ref: _databaseRef,
-    });
-  }, (...args) => {
-    console.error('[FIREBASE] Something went wrong getting data from the server', ...args);
-    _lastState = null;
+  watchFirebaseFromMap({
+    callback({ eventName, firebasePathArr, statePathArr, value }) {
+      store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
+      _lastState = store.getState();
+    },
+    debug: __DEV__,
+    map: mapFirebaseToState,
+    ref: _databaseRef,
   });
 }
 

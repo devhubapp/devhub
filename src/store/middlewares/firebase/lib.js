@@ -113,7 +113,7 @@ export function createFirebaseHandler(
 }
 
 export const addFirebaseListener = (
-  { blacklist, callback, debug, eventName, ref },
+  { blacklist, callback, debug, eventName, ref, ...rest },
 ) => {
   const fullPath = getPathFromRef(ref);
   let message = `[FIREBASE] Watching ${fullPath} ${eventName}`;
@@ -122,7 +122,7 @@ export const addFirebaseListener = (
     message = `${message}, except ${blacklist.join(', ')}`;
   }
 
-  if (debug) console.debug(message);
+  if (debug && !rest.isRecursiveCall) console.debug(message);
 
   if (eventName === 'children' || Array.isArray(eventName)) {
     const eventNames = Array.isArray(eventName)
@@ -133,9 +133,10 @@ export const addFirebaseListener = (
       addFirebaseListener({
         blacklist,
         callback,
-        debug: false,
+        debug,
         eventName: realEventName,
         ref,
+        isRecursiveCall: true,
       });
     });
 
