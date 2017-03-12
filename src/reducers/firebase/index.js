@@ -1,15 +1,28 @@
 // @flow
 
-import { fromJS } from 'immutable';
-
+import app from '../app';
 import config from '../config';
-import columns from '../entities/columns';
-import subscriptions from '../entities/subscriptions';
+import entities from '../entities';
+import user from '../user';
 
+import { getObjectFilteredByMap } from '../../store/middlewares/firebase/helpers';
 import { FIREBASE_RECEIVED_EVENT } from '../../utils/constants/actions';
+import { fromJS } from '../../utils/immutable';
 import type { Action } from '../../utils/types';
 
+export const mapFirebaseToState = {
+  config: {},
+  entities: {
+    columns: {},
+    subscriptions: {},
+  },
+};
+
 export const mapStateToFirebase = {
+  app: {
+    ready: false,
+    rehydrated: false,
+  },
   config: {},
   entities: {
     columns: {},
@@ -20,21 +33,12 @@ export const mapStateToFirebase = {
   },
 };
 
-export const mapFirebaseToState = {
-  config: {},
-  entities: {
-    columns: {},
-    subscriptions: {},
-  },
-};
-
-const initialState = fromJS({
+const initialState = fromJS(getObjectFilteredByMap({
+  app: app(),
   config: config(),
-  entities: {
-    columns: columns(),
-    subscriptions: subscriptions(),
-  },
-});
+  entities: entities(),
+  user: user(),
+}, mapStateToFirebase));
 
 type State = {};
 

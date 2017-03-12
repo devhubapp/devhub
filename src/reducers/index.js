@@ -1,4 +1,4 @@
-import { fromJS, Map } from 'immutable';
+import { Map } from 'immutable';
 import { combineReducers } from 'redux-immutable';
 
 import app from './app';
@@ -19,7 +19,7 @@ const reducer = combineReducers({
   app,
   config,
   entities,
-  firebase,
+  // firebase,
   navigation,
   notifications,
   user,
@@ -28,19 +28,11 @@ const reducer = combineReducers({
 const initialState = Map();
 
 const indexReducer = (state: Object = initialState, action) => {
-  const { payload, type } = action || {};
+  const { type } = action || {};
 
   switch (type) {
     case FIREBASE_RECEIVED_EVENT:
-      return (({ eventName, statePathArr, value }) => {
-        if (!(statePathArr && statePathArr.length)) return state;
-
-        switch (eventName) {
-          case 'child_added': return state.mergeDeepIn(statePathArr, fromJS(value));
-          case 'child_removed': return state.removeIn(statePathArr);
-          default: return state.setIn(statePathArr, fromJS(value));
-        }
-      })(payload);
+      return firebase(state, action);
 
     case RESET_APP_DATA:
       return initialState;

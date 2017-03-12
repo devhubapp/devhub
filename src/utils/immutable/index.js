@@ -164,7 +164,7 @@ export function sizeOf(object) {
     return object.size;
   }
 
-  if (typeof object === 'object') {
+  if (_.isPlainObject(object)) {
     return Object.keys(object).length;
   }
 
@@ -248,5 +248,5 @@ export function isObjectOrMap(object) {
     return Immutable.Map.isMap(object) || Immutable.OrderedMap.isOrderedMap(object);
   }
 
-  return !!object && typeof object === 'object' && !Array.isArray(object);
+  return !!object && _.isPlainObject(object);
 }

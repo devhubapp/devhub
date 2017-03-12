@@ -7,7 +7,8 @@ import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions';
 import { firebaseReceivedEvent } from '../../../actions';
 import { mapFirebaseToState, mapStateToFirebase } from '../../../reducers/firebase';
 import { toJS } from '../../../utils/immutable';
-import { applyPatchOnFirebase, getObjectDiff, watchFirebaseFromMap } from './lib';
+import { getObjectDiff, getObjectFilteredByMap, getMapSubtractedByMap } from './helpers';
+import { applyPatchOnFirebase, watchFirebaseFromMap } from './lib';
 import { isLoggedSelector, isReadySelector } from '../../../selectors';
 
 let _currentUserId;
@@ -15,10 +16,9 @@ let _databaseRef;
 let _lastState;
 
 const checkDiffAndPatchDebounced = debounce(
-  store => {
-    if (_databaseRef && _lastState !== undefined) {
-      const stateDiff = toJS(getObjectDiff(_lastState, store.getState(), mapStateToFirebase));
-
+  (stateA, stateB, map, store) => {
+    if (_databaseRef && stateA !== undefined) {
+      const stateDiff = toJS(getObjectDiff(stateA, stateB, map));
       // console.log('state diff', stateDiff);
 
       if (stateDiff && _currentUserId) {
@@ -46,6 +46,23 @@ export function startFirebase({ store, userId }) {
   _databaseRef = firebase.database().ref(`users/${userId}/`);
   console.debug('[FIREBASE] Connected.');
 
+  // get all the data on firebase and compare with the local state.
+  // upload to firebase the fields that are different, but not all of them,
+  // just the ones that we will naver get from firebase again
+  // (which means the difference from mapStateToFirebase and mapFirebaseToState)
+  // e.g. these fields will be uploaded: app/version, user/loggedAt, ...
+  // because we'll never get theses fields from firebase, we just upload them.
+  // they are more 'local' fields that doesnt make sense to sync.
+  _databaseRef.once('value', (snapshot) => {
+    const value = snapshot.val();
+
+    const missingOnFirebaseMap = getMapSubtractedByMap(mapStateToFirebase, mapFirebaseToState);
+    const firebaseData = getObjectFilteredByMap(value, missingOnFirebaseMap);
+    const localData = getObjectFilteredByMap(store.getState(), missingOnFirebaseMap);
+
+    checkDiffAndPatchDebounced(firebaseData, localData, missingOnFirebaseMap, store);
+  });
+
   watchFirebaseFromMap({
     callback({ eventName, firebasePathArr, statePathArr, value }) {
       store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
@@ -57,7 +74,7 @@ export function startFirebase({ store, userId }) {
   });
 }
 
-export default store => next => action => {
+export default store => next => (action = {}) => {
   next(action);
 
   const isAppReady = isReadySelector(store.getState());
@@ -79,5 +96,5 @@ export default store => next => action => {
     }
   }
 
-  checkDiffAndPatchDebounced(store);
+  checkDiffAndPatchDebounced(_lastState, store.getState(), mapStateToFirebase, store);
 };
