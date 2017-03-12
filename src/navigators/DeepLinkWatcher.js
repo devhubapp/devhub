@@ -9,6 +9,8 @@ import { resetAppDataRequest } from '../actions';
 import { resetAppData as resetAppDataDirect } from '../sagas';
 import { githubHTMLUrlFromAPIUrl } from '../utils/helpers/github/url';
 
+// TODO: Move this to a better place (probably saga)
+
 const getSchemeAndPathFromURL = url => {
   // no scheme
   if ((url || '').indexOf('://') === -1) {

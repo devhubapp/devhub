@@ -1,9 +1,13 @@
-import { combineReducers } from 'redux-immutable';
+// @flow
+/* eslint-disable import/prefer-default-export */
 
-import main from './main';
-import _public from './public';
+import Navigator from '../../navigators/AppNavigator';
 
-export default combineReducers({
-  main,
-  public: _public,
-});
+type State = ?{ index: number, routes: Array };
+export default (state: State = null, action: any): State => {
+  try {
+    return Navigator.router.getStateForAction(action, state) || state;
+  } catch (e) {
+    return state;
+  }
+};

@@ -4,18 +4,18 @@
 import memoize from 'lodash/memoize';
 import { createSelector } from 'reselect';
 
-import { get, sizeOf } from '../utils/immutable';
+import { fromJS, get, sizeOf } from '../utils/immutable';
 
 export const navigationEntitySelector = state => get(state, 'navigation');
 
-export const getMainNavigationState = createSelector(
+export const getNavigationState = createSelector(
   navigationEntitySelector,
-  navigation => navigation && get(navigation, 'main'),
+  navigation => fromJS(navigation),
 );
 
-export const getPublicNavigationState = createSelector(
-  navigationEntitySelector,
-  navigation => navigation && get(navigation, 'public'),
+export const getMainNavigationState = createSelector(
+  getNavigationState,
+  navigation => navigation && get(navigation, 'routes').find(route => get(route, 'routeName') === 'main'),
 );
 
 export const getSelectedRouteFromNavigationState = memoize(navigationState => {

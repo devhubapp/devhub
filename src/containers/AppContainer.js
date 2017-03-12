@@ -3,10 +3,8 @@ import styled, { ThemeProvider } from 'styled-components/native';
 import { connect } from 'react-redux';
 import { Platform, StatusBar } from 'react-native';
 
-import MainAppNavigatorContainer from './navigators/MainAppNavigatorContainer';
-import PublicAppNavigatorContainer from './navigators/PublicAppNavigatorContainer';
-import SettingsScreen from '../containers/screens/SettingsScreen';
-import SplashScreen from '../containers/screens/SplashScreen';
+import AppNavigatorContainer from './navigators/AppNavigatorContainer';
+import { NavigationActions } from '../libs/navigation';
 
 import {
   isLoggedSelector,
@@ -34,22 +32,36 @@ export default class extends React.PureComponent {
     theme: {},
   };
 
+  constructor(props) {
+    super(props);
+    this.updateNavigator(props);
+  }
+
+  componentWillReceiveProps(props) {
+    this.updateNavigator(props);
+  }
+
+  updateNavigator({ isLogged, ready }) {
+    if (!this.navigation) return;
+
+    const routeName = !ready ? 'splash' :
+      isLogged ? 'main' : 'login';
+
+    this.navigation.dispatch(NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName }),
+      ],
+    }));
+  }
+
   props: {
     isLogged?: boolean,
     ready?: boolean,
     theme: ThemeObject,
   };
 
-  renderMainContent() {
-    const { isLogged, ready } = this.props;
-
-    try {
-      if (!ready) return <SplashScreen />;
-      return isLogged ? <MainAppNavigatorContainer /> : <PublicAppNavigatorContainer />;
-    } catch (e) {
-      return <SettingsScreen />;
-    }
-  }
+  navigation = null;
 
   render() {
     const { theme } = this.props;
@@ -63,7 +75,7 @@ export default class extends React.PureComponent {
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
             />}
 
-          {this.renderMainContent()}
+          <AppNavigatorContainer navigationRef={ref => { this.navigation = ref; }} />
         </View>
       </ThemeProvider>
     );

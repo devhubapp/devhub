@@ -3,8 +3,8 @@
 import HomeScreen from '../containers/screens/HomeScreen';
 import NotificationsScreen from '../containers/screens/NotificationsScreen';
 import SettingsScreen from '../containers/screens/SettingsScreen';
-import { tabBarOptions } from '../components/TabBar';
 import { TabNavigator } from '../libs/navigation';
+import { tabBarOptions } from '../components/TabBar';
 
 export const routes = {
   home: { path: '', screen: HomeScreen },
