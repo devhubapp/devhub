@@ -95,7 +95,7 @@ class SettingsScreen extends React.PureComponent {
               color={color}
               onPress={() => setTheme('dark-blue')}
             />
-            <MutedText>v{pkg.version}</MutedText>
+            <MutedText>v{pkg.codeBundleId || pkg.version}</MutedText>
           </Footer>
         </Wrapper>
       </Screen>
