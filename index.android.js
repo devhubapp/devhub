@@ -9,6 +9,7 @@ import App from './src/';
 
 const codePushOptions = {
   checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.IMMEDIATE,
 };
 
 AppRegistry.registerComponent(appName, () => codePush(codePushOptions)(App));
