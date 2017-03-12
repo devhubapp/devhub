@@ -4,6 +4,7 @@ import { combineReducers } from 'redux-immutable';
 import app from './app';
 import config from './config';
 import entities from './entities';
+import firebase from './firebase';
 import navigation from './navigation';
 import notifications from './notifications';
 import user from './user';
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   app,
   config,
   entities,
+  firebase,
   navigation,
   notifications,
   user,

@@ -5,32 +5,14 @@ import { debounce } from 'lodash';
 
 import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions';
 import { firebaseReceivedEvent } from '../../../actions';
-import { fromJS, toJS } from '../../../utils/immutable';
+import { mapFirebaseToState, mapStateToFirebase } from '../../../reducers/firebase';
+import { toJS } from '../../../utils/immutable';
 import { applyPatchOnFirebase, getObjectDiff, watchFirebaseFromMap } from './lib';
 import { isLoggedSelector, isReadySelector } from '../../../selectors';
 
 let _currentUserId;
 let _databaseRef;
 let _lastState;
-
-export const mapStateToFirebase = {
-  config: {},
-  entities: {
-    columns: {},
-    subscriptions: {},
-  },
-  user: {
-    isLogging: false,
-  },
-};
-
-export const mapFirebaseToState = {
-  config: {},
-  entities: {
-    columns: {},
-    subscriptions: {},
-  },
-};
 
 const checkDiffAndPatchDebounced = debounce(
   store => {

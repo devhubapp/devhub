@@ -23,7 +23,7 @@ type ActionType = Action<LoginRequestPayload | LoginResponsePayload>;
 
 export default (
   state: State = initialState,
-  { type, payload: _payload, error }: ActionType,
+  { type, payload: _payload, error }: ?ActionType = {},
 ): State => {
   const payload = _payload || {};
 

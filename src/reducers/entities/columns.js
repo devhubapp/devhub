@@ -18,7 +18,7 @@ import type {
 type State = Normalized<Column>;
 const initialState = Map();
 
-export default (state: State = initialState, { type, payload }: Action<any>): State => {
+export default (state: State = initialState, { type, payload }: ?Action<any> = {}): State => {
   switch (type) {
     case CREATE_COLUMN:
       return (({ order, subscriptionIds, title, ...restOfPayload }: Column) => {

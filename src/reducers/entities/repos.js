@@ -8,7 +8,7 @@ import type { Action } from '../../utils/types';
 type State = Array<string>;
 const initialState = Map();
 
-export default (state: State = initialState, action: Action<any>): State => {
+export default (state: State = initialState, action: Action<any> = {}): State => {
   const { type, payload } = action || {};
 
   const { repoId } = payload || {};

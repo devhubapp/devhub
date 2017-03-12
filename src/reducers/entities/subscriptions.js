@@ -37,7 +37,7 @@ type State = Normalized<Subscription> & {
 
 const initialState = Map();
 
-export default (state: State = initialState, { type, payload, error }: Action<any>): State => {
+export default (state: State = initialState, { type, payload, error }: ?Action<any> = {}): State => {
   switch (type) {
     case CREATE_SUBSCRIPTION:
       return (({ id: subscriptionId, requestType, params, ...restOfPayload }: Subscription) => {

@@ -6,14 +6,19 @@ import { REHYDRATE } from 'redux-persist/constants';
 import { APP_READY, RESET_APP_DATA } from '../../utils/constants/actions';
 import type { Action } from '../../utils/types';
 
-const initialState = Map({ ready: false, rehydrated: false });
+const initialState = Map({
+  ready: false,
+  rehydrated: false,
+});
 
 type State = {
+  codeBundleId: string,
   ready: boolean,
   rehydrated: boolean,
+  version: string,
 };
 
-export default (state: State = initialState, { type }: Action<any>): State => {
+export default (state: State = initialState, { type }: Action<any> = {}): State => {
   switch (type) {
     case APP_READY:
       return state.set('ready', true);

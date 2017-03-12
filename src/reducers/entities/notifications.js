@@ -24,7 +24,7 @@ import type { Action, Normalized } from '../../utils/types';
 type State = Normalized<Object>;
 const initialState = Map();
 
-export default (state: State = initialState, { type, payload }: Action<any>): State => {
+export default (state: State = initialState, { type, payload }: ?Action<any> = {}): State => {
   switch (type) {
     case ARCHIVE_NOTIFICATIONS:
       return markAsArchivedByIds(state, payload.notificationIds, payload.archivedAt);

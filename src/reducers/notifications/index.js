@@ -31,7 +31,7 @@ const initialState: State = Map({
   lastModifiedAt: undefined,
 });
 
-export default (state: State = initialState, { type, payload, error }: Action<any>): State => {
+export default (state: State = initialState, { type, payload, error }: ?Action<any> = {}): State => {
   switch (type) {
     case LOAD_NOTIFICATIONS_REQUEST:
     case MARK_NOTIFICATIONS_AS_READ_REQUEST:
