@@ -207,9 +207,7 @@ export default class extends React.PureComponent {
           <BranchRow
             type={type}
             branch={payload.get('ref')}
-            repoFullName={getRepoFullNameFromUrl(
-              payload.getIn(['ref', 'html_url']) || payload.getIn(['ref', 'url']),
-            )}
+            repoFullName={getRepoFullNameFromUrl(repo.get('html_url') || repo.get('url'))}
             read={read}
             narrow
           />
