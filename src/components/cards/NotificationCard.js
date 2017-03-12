@@ -47,8 +47,8 @@ export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     archived?: ?boolean,
-    onlyOneRepository?: ?boolean,
     notification: GithubNotification,
+    onlyOneRepository?: ?boolean,
     read?: ?boolean
   };
 

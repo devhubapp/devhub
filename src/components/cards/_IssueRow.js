@@ -6,7 +6,7 @@ import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
 
 import {
-  renderItemId,
+  CardItemId,
   smallAvatarWidth,
   CardText,
   Icon,
@@ -62,7 +62,11 @@ export default class extends React.PureComponent {
         read={read}
         right={
           <RightOfScrollableContent>
-            {renderItemId({ number, read, url: issue.get('html_url') || issue.get('url') })}
+            <CardItemId
+              number={number}
+              read={read}
+              url={issue.get('html_url') || issue.get('url')}
+            />
           </RightOfScrollableContent>
         }
         url={url}

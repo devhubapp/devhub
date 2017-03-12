@@ -5,8 +5,6 @@ import { Linking, Platform } from 'react-native';
 
 import { get } from '../../immutable';
 
-import { name as appName } from '../../../../package.json';
-
 import type {
   GithubIssue,
   GithubPullRequest,
@@ -48,7 +46,7 @@ export function getReleaseIdFromUrl(url: string) {
 /* eslint-disable-next-line no-useless-escape */
 export const getRepoFullNameFromUrl = (url: string): string => (
   url
-      ? ((url.match(/(github.com\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^\/#$]?)/i) || [])[3]) || ''
+      ? ((url.match(/(github.com\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i) || [])[3]) || ''
     : ''
 );
 
@@ -103,6 +101,9 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string
           // it wont go directly to the release, but to the generic releases page.
           // we would need to have the tag name to do that.
           return `${baseURL}/${repoFullName}/releases/?${restOfURL2.join('/')}`;
+
+        default:
+          return `${baseURL}/${restOfURL}`;
       }
     }
   }
@@ -110,32 +111,29 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string
   return `${baseURL}/${restOfURL}`;
 }
 
-function openURL(url: string) {
-  if (!url) return null;
+function openURL(navigation: Object, url: string) {
+  if (!url) return;
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
-  let _url = url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url;
+  let uri = url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url;
+  uri = uri.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(uri) : uri;
 
   if (Platform.OS === 'web') {
-    _url = _url.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(_url) : _url;
-  } else {
-    // replace http with devhub:// so the app deeplinking will handle this
-    // the app will decide if it will push an app screen or open the web browser
-    _url = _url.replace(/(http[s]?)/, appName);
+    Linking.openURL(uri);
+    return;
   }
 
-  return Linking.openURL(_url);
+  navigation.navigate('browser', { uri });
 }
 
-export function openOnGithub(obj: string | GithubRepo | GithubIssue | GithubPullRequest) {
-  if (!obj) return null;
+export function openOnGithub(
+  navigation: Object,
+  obj: string | GithubRepo | GithubIssue | GithubPullRequest,
+) {
+  if (!obj) return;
 
-  if (typeof obj === 'string') {
-    return openURL(obj);
-  }
+  const uri = typeof obj === 'string' ? obj : (get(obj, 'html_url') || get(obj, 'url'));
+  if (!uri) return;
 
-  const url = get(obj, 'html_url') || get(obj, 'url');
-  if (!url) return null;
-
-  return openURL(url);
+  openURL(navigation, uri);
 }
