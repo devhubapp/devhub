@@ -1,5 +1,6 @@
 // @flow
 
+import moment from 'moment';
 import * as firebase from 'firebase';
 import { bugsnagClient } from '../utils/services';
 import { delay } from 'redux-saga';
@@ -111,8 +112,8 @@ function* watchFirebaseCurrentUser() {
           githubId,
           name,
           avatarURL,
+          lastAccessedAt: moment().toISOString(),
           ...restOfUser,
-          lastAccessedAt: new Date(),
         }
         : undefined;
 

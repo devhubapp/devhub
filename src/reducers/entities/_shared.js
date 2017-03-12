@@ -1,3 +1,5 @@
+
+import moment from 'moment';
 import { Map } from 'immutable';
 
 import { isArchivedFilter, isDeletedFilter } from '../../selectors';
@@ -22,7 +24,7 @@ export const markAsDeleted = (item, deletedAt) => (
   // prevent remarking as deleted
   isDeletedFilter(item)
     ? item
-    : Map({ deleted_at: deletedAt || new Date() })
+    : Map({ deleted_at: deletedAt || moment().toISOString() })
 );
 
 export const deleteByIds = (state, ids, deletedAt, softDelete = false) => {
@@ -34,7 +36,7 @@ export const markAsArchived = (item, archivedAt) => (
   // prevent remarking as archived
   isArchivedFilter(item)
     ? item
-    : item.set('archived_at', archivedAt || new Date())
+    : item.set('archived_at', archivedAt || moment().toISOString())
 );
 
 export const markAsArchivedByIds = (state, ids, archivedAt, ...args) =>
@@ -42,7 +44,7 @@ export const markAsArchivedByIds = (state, ids, archivedAt, ...args) =>
     state,
     ids,
     markAsArchived,
-    archivedAt || new Date(),
+    archivedAt || moment().toISOString(),
     ...args,
   );
 
@@ -55,7 +57,7 @@ export const markAsRead = (item, lastReadAt, finalUnreadStatus = true) =>
       'unread',
       item.get('unread') === false || finalUnreadStatus ? false : null,
     )
-    .set('last_read_at', lastReadAt || new Date())
+    .set('last_read_at', lastReadAt || moment().toISOString())
     // we mark the last_unread_at as null
     // because when the notification is updated,
     // the last_read_at from github would replace the last_read_at from the app,
@@ -75,7 +77,7 @@ export const markAsReadByIds = (
     state,
     ids,
     markAsRead,
-    lastReadAt || new Date(),
+    lastReadAt || moment().toISOString(),
     finalUnreadStatus,
     ...args,
   );
@@ -88,13 +90,13 @@ export const undoMarkAsReadByIds = (state, ids, ...args) =>
 
 export const markAsUnread = (notification, lastUnreadAt) => notification
   // .set('unread', true) // dont!
-  .set('last_unread_at', lastUnreadAt || new Date());
+  .set('last_unread_at', lastUnreadAt || moment().toISOString());
 
 export const markAsUnreadByIds = (state, ids, lastUnreadAt, ...args) =>
   updateByIdsUsingFn(
     state,
     ids,
     markAsUnread,
-    lastUnreadAt || new Date(),
+    lastUnreadAt || moment().toISOString(),
     ...args,
   );

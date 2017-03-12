@@ -1,5 +1,6 @@
 // @flow
 
+import moment from 'moment';
 import { fromJS, Map, Set } from 'immutable';
 
 import { ApiRequestType, getUniquePath } from '../../api/github';
@@ -51,7 +52,7 @@ export default (state: State = initialState, { type, payload, error }: ?Action<a
           id,
           requestType,
           params: Map(params),
-          createdAt: new Date(),
+          createdAt: moment().toISOString(),
           ...restOfPayload,
         }));
       })(payload || {});
@@ -89,7 +90,7 @@ export default (state: State = initialState, { type, payload, error }: ?Action<a
 
         const newSubscription = subscription.mergeDeep(fromJS({
           events: newEventIds,
-          updatedAt: new Date(),
+          updatedAt: moment().toISOString(),
           ...(meta && meta['last-modified'] ? {
             lastModifiedAt: meta['last-modified'],
             pollInterval: Number(meta['x-poll-interval']) || subscription.get('pollInterval') || null,

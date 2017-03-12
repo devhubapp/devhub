@@ -1,5 +1,6 @@
 // @flow
 
+import moment from 'moment';
 import { Map } from 'immutable';
 
 import {
@@ -35,8 +36,8 @@ export default (
       return state.mergeDeep({
         isLogging: false,
         accessToken: payload.data.accessToken,
-        loggedAt: new Date(),
-        lastAccessedAt: new Date(),
+        loggedAt: moment().toISOString(),
+        lastAccessedAt: moment().toISOString(),
       });
 
     case UPDATE_CURRENT_USER:
@@ -51,7 +52,7 @@ export default (
       return Map({ isLogging: false, error });
 
     case LOGOUT:
-      return Map({ loggedOutAt: new Date() });
+      return Map({ loggedOutAt: moment().toISOString() });
 
     default:
       return state;

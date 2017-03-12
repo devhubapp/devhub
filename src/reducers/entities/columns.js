@@ -1,5 +1,7 @@
 // @flow
 
+moment().toISOString();
+import moment from 'moment';
 import { fromJS, List, Map } from 'immutable';
 
 import { guid } from '../../utils/helpers';
@@ -42,7 +44,7 @@ export default (state: State = initialState, { type, payload }: ?Action<any> = {
           title,
           order,
           subscriptions: List(subscriptionIds),
-          createdAt: new Date(),
+          createdAt: moment().toISOString(),
           ...restOfPayload,
         }));
       })(payload);

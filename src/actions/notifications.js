@@ -1,6 +1,8 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
+import moment from 'moment';
+
 import {
   ARCHIVE_NOTIFICATIONS,
   DELETE_NOTIFICATIONS,
@@ -72,7 +74,7 @@ export type MarkNotificationsParams = {
 };
 
 export const markNotificationsAsReadRequest = (
-  { all, lastReadAt = new Date(), notificationIds, repoId }: MarkNotificationsParams,
+  { all, lastReadAt = moment().toISOString(), notificationIds, repoId }: MarkNotificationsParams,
   other?: Object,
 ) => (
   action(MARK_NOTIFICATIONS_AS_READ_REQUEST, { all, lastReadAt, notificationIds, repoId }, other)
@@ -96,7 +98,7 @@ export const markNotificationsAsReadSuccess = (
 );
 
 export const markNotificationsAsUnread = (
-  { all, lastUnreadAt = new Date(), notificationIds, repoId }: MarkNotificationsParams,
+  { all, lastUnreadAt = moment().toISOString(), notificationIds, repoId }: MarkNotificationsParams,
   other?: Object,
 ) => (
   action(MARK_NOTIFICATIONS_AS_UNREAD, { all, lastUnreadAt, notificationIds, repoId }, other)

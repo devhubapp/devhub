@@ -1,6 +1,7 @@
 // @flow
 
 import _ from 'lodash';
+import moment from 'moment';
 
 import { fixFirebaseKey, fixFirebaseKeysFromObject, getPathFromRef, getMapAnalysis } from './helpers';
 
@@ -174,6 +175,11 @@ export const applyPatchOnFirebase = ({ debug, patch, ref = _databaseRef }) => {
       console.debug(`[FIREBASE] Patching on ${fullPath}`, value);
     }
 
-    ref.child(fixedPath).set(value);
+    // value fixes
+    let _value = value;
+    if (_value instanceof Date) _value = moment(_value).toISOString();
+    // if (Number.isNaN(value)) _value = 0;
+
+    ref.child(fixedPath).set(_value);
   });
 };
