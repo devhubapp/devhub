@@ -1,7 +1,6 @@
 // @flow
 /*  eslint-disable import/prefer-default-export */
 
-import memoize from 'lodash/memoize';
 import { createSelector } from 'reselect';
 
 import { fromJS, get, sizeOf } from '../utils/immutable';
@@ -18,17 +17,18 @@ export const getMainNavigationState = createSelector(
   navigation => navigation && get(navigation, 'routes').find(route => get(route, 'routeName') === 'main'),
 );
 
-export const getSelectedRouteFromNavigationState = memoize(navigationState => {
+export const getSelectedRouteFromNavigationState = (navigationState, deep = false) => {
   if (!navigationState) return null;
 
   const index = get(navigationState, 'index');
   const routes = get(navigationState, 'routes');
 
-  if (!(routes && sizeOf(routes) > 0)) return null;
-  if (!(index >= 0 && index < sizeOf(routes))) return null;
+  if (!(routes && sizeOf(routes) > 0)) return navigationState;
+  if (!(index >= 0 && index < sizeOf(routes))) return navigationState;
 
-  return get(routes, index);
-});
+  const routeState = get(routes, index);
+  return deep ? getSelectedRouteFromNavigationState(routeState) : routeState;
+};
 
 export const getNavigatorSelectedRoute = createSelector(
   (state, { navigationState }) => navigationState,

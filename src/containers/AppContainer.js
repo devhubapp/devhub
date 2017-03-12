@@ -5,8 +5,10 @@ import { Platform, StatusBar } from 'react-native';
 
 import AppNavigatorContainer from './navigators/AppNavigatorContainer';
 import { NavigationActions } from '../libs/navigation';
+import { get } from '../utils/immutable';
 
 import {
+  getSelectedRouteFromNavigationState,
   isLoggedSelector,
   isReadySelector,
   themeSelector,
@@ -46,6 +48,9 @@ export default class extends React.PureComponent {
 
     const routeName = !ready ? 'splash' :
       isLogged ? 'main' : 'login';
+
+    const currentRouteState = getSelectedRouteFromNavigationState(this.navigation.state);
+    if (get(currentRouteState, 'routeName') === routeName) return;
 
     this.navigation.dispatch(NavigationActions.reset({
       index: 0,
