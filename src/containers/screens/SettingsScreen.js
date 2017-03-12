@@ -6,14 +6,17 @@ import { Button, Platform } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import pkg from '../../../package.json';
 import Screen from '../../components/Screen';
 import TabIcon from '../../components/TabIcon';
+import { contentPadding } from '../../styles/variables';
 import * as actionCreators from '../../actions';
 import type { ActionCreators, ThemeObject } from '../../utils/types';
 
 const Wrapper = styled.View`
   flex: 1;
   justify-content: space-between;
+  padding: ${contentPadding}px;
 `;
 
 const Main = styled.View`
@@ -22,6 +25,20 @@ const Main = styled.View`
 
 const Footer = styled.View`
   justify-content: center;
+`;
+
+const StyledButton = styled(Button)`
+  marginTop: ${contentPadding / 2};
+`;
+
+const Text = styled.Text`
+  marginTop: ${contentPadding / 2};
+  color: ${({ theme }) => theme.base04};
+  text-align: center;
+`;
+
+const MutedText = styled(Text)`
+  color: ${({ theme }) => theme.base05};
 `;
 
 const mapDispatchToProps = dispatch => ({
@@ -49,35 +66,36 @@ class SettingsScreen extends React.PureComponent {
       <Screen>
         <Wrapper>
           <Main>
-            <Button
+            <StyledButton
               title="Reset app data"
               color={theme.red}
               onPress={() => resetAppData()}
             />
-            <Button title="Logout" color={theme.red} onPress={() => logout()} />
+            <StyledButton title="Logout" color={theme.red} onPress={() => logout()} />
           </Main>
 
           <Footer>
-            <Button
+            <StyledButton
               title="Auto"
               color={color}
               onPress={() => setTheme('auto')}
             />
-            <Button
+            <StyledButton
               title="Light"
               color={color}
               onPress={() => setTheme('light')}
             />
-            <Button
+            <StyledButton
               title="Dark"
               color={color}
               onPress={() => setTheme('dark')}
             />
-            <Button
+            <StyledButton
               title="Dark Blue"
               color={color}
               onPress={() => setTheme('dark-blue')}
             />
+            <MutedText>v{pkg.version}</MutedText>
           </Footer>
         </Wrapper>
       </Screen>
