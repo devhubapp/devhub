@@ -184,7 +184,7 @@ export function map(object, fn) {
     return object.map(fn);
   }
 
-  return _.map(object, fn);
+  return _.isPlainObject(object) ? _.mapValues(object, fn) : _.map(object, fn);
 }
 
 function _immutableKeyInFilter(keys) {

@@ -3,7 +3,13 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import { fixFirebaseKey, fixFirebaseKeysFromObject, getPathFromRef, getMapAnalysis } from './helpers';
+import {
+  fixFirebaseKey,
+  fixFirebaseKeysFromObject,
+  getObjectFilteredByMap,
+  getPathFromRef,
+  getMapAnalysis,
+} from './helpers';
 
 import {
   forEach,
@@ -34,25 +40,22 @@ export const firebaseInvertedCharMap = _.invert(firebaseCharMap);
 let _databaseRef;
 
 export function createFirebaseHandler(
-  { blacklist, callback, debug, eventName },
+  { blacklist, callback, debug, eventName, map },
 ) {
   return snapshot => {
     const fullPath = getPathFromRef(snapshot.ref, _databaseRef);
-    const key = snapshot.key;
     let value = snapshot.val();
     let blacklisted = false;
 
-    if (blacklist && blacklist.length) {
-      if (eventName === 'value' && isObjectOrMap(value)) {
-        value = omit(value, blacklist);
-      } else {
-        blacklisted = blacklist.includes(key);
-      }
+    if (eventName === 'value' && isObjectOrMap(value)) {
+      value = getObjectFilteredByMap(value, map);
+    } else {
+      blacklisted = blacklist && blacklist.length && blacklist.includes(snapshot.key);
     }
 
     if (debug) {
       const blacklistedText = blacklisted ? ', but ignored' : '';
-      console.debug(`[FIREBASE] Received ${eventName} on ${fullPath}${blacklistedText}:`, value);
+      console.debug(`[FIREBASE] Received ${eventName} on ${fullPath}${blacklistedText}:`, snapshot.val());
     }
 
     if (blacklisted) {
@@ -75,7 +78,7 @@ export function createFirebaseHandler(
 }
 
 export const addFirebaseListener = (
-  { blacklist, callback, debug, eventName, ref, ...rest },
+  { blacklist, callback, debug, eventName, map, ref, ...rest },
 ) => {
   const fullPath = getPathFromRef(ref, _databaseRef);
   let message = `[FIREBASE] Watching ${fullPath} ${eventName}`;
@@ -97,6 +100,7 @@ export const addFirebaseListener = (
         callback,
         debug,
         eventName: realEventName,
+        map,
         ref,
         isRecursiveCall: true,
       });
@@ -107,7 +111,7 @@ export const addFirebaseListener = (
 
   ref.on(
     eventName,
-    createFirebaseHandler({ blacklist, callback, debug, eventName }),
+    createFirebaseHandler({ blacklist, callback, debug, eventName, map }),
   );
 };
 
@@ -121,7 +125,7 @@ export function watchFirebaseFromMap(
     _databaseRef = ref;
   }
 
-  const { blacklist, count, objects, whitelist } = mapAnalysis;
+  const { blacklist, count, hasAsterisk, objects, whitelist } = mapAnalysis;
 
   objects.forEach(field => {
     watchFirebaseFromMap({
@@ -133,13 +137,14 @@ export function watchFirebaseFromMap(
     });
   });
 
-  if (count === 0) {
+  if (count === 0 || (hasAsterisk && count === 1)) {
     // passed an empty object, so listen to it's children
     addFirebaseListener({
       callback,
       debug,
-      ref,
       eventName: 'children',
+      map,
+      ref,
     });
   } else if (blacklist.length) {
     // listen to all children, except the ones specified
@@ -147,8 +152,9 @@ export function watchFirebaseFromMap(
       blacklist,
       callback,
       debug,
-      ref,
       eventName: 'children',
+      map,
+      ref,
     });
   } else if (whitelist.length) {
     // listen only to the specified children
@@ -156,6 +162,7 @@ export function watchFirebaseFromMap(
       callback,
       debug,
       eventName: 'value',
+      map,
       ref: ref.child(field),
     }));
   }

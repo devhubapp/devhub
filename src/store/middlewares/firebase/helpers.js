@@ -8,11 +8,13 @@ import {
   get,
   getEmptyObjectFromTheSameType,
   isObjectOrMap,
+  map as mapFn,
   omit,
   pick,
   remove,
   set,
   sizeOf,
+  toJS,
 } from '../../../utils/immutable';
 
 _.mixin({
@@ -75,6 +77,7 @@ export function getMapAnalysis(map) {
   const objects = [];
   const others = [];
   const whitelist = [];
+  let hasAsterisk = false;
 
   let count = 0;
 
@@ -86,6 +89,11 @@ export function getMapAnalysis(map) {
   // eslint-disable-next-line no-restricted-syntax, guard-for-in
   forEach(map, (value, field) => {
     count++;
+
+    if (field === '*') {
+      hasAsterisk = true;
+      return;
+    }
 
     if (value === true) {
       whitelist.push(field);
@@ -109,7 +117,7 @@ export function getMapAnalysis(map) {
     return null;
   }
 
-  return { blacklist, count, objects, others, whitelist };
+  return { blacklist, count, hasAsterisk, objects, others, whitelist };
 }
 
 export function getObjectFilteredByMap(object, map) {
@@ -119,11 +127,17 @@ export function getObjectFilteredByMap(object, map) {
   const mapAnalysis = getMapAnalysis(map);
   if (!mapAnalysis) return object;
 
-  const { blacklist, count, objects, whitelist } = mapAnalysis;
+  const { blacklist, count, hasAsterisk, objects, whitelist } = mapAnalysis;
 
   if (count === 0) {
     // passed an empty object, so we dont modify anything
     return object;
+  } else if (hasAsterisk && count === 1) {
+    if (!object) return object;
+
+    const itemMap = get(map, '*');
+    const newObject = mapFn(object, item => getObjectFilteredByMap(item, itemMap));
+    return newObject;
   }
 
   let filteredObject = getEmptyObjectFromTheSameType(object);
@@ -145,8 +159,8 @@ export function getObjectFilteredByMap(object, map) {
 }
 
 export function getMapSubtractedByMap(mapA, mapB) {
-  if (mapB === true) return false;
-  if (mapB === false) return true;
+  if (mapB === true) return mapA === undefined ? false : mapA;
+  if (mapB === false) return mapA === undefined ? true : mapA;
   if (!isObjectOrMap(mapA) || !isObjectOrMap(mapB)) return null;
 
   if (sizeOf(mapB) === 0) {

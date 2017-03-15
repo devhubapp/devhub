@@ -26,7 +26,13 @@ export const mapStateToFirebase = {
   config: {},
   entities: {
     columns: {},
-    subscriptions: {},
+    subscriptions: {
+      '*': {
+        loading: false,
+        events: false,
+        lastModifiedAt: false,
+      },
+    },
   },
   user: {
     isLogging: false,
@@ -49,9 +55,8 @@ export default (state: State = initialState, { type, payload }: ?Action<any> = {
         if (!(statePathArr && statePathArr.length)) return state;
 
         switch (eventName) {
-          case 'child_added': return state.mergeDeepIn(statePathArr, fromJS(value));
           case 'child_removed': return state.removeIn(statePathArr);
-          default: return state.setIn(statePathArr, fromJS(value));
+          default: return state.mergeDeepIn(statePathArr, fromJS(value));
         }
       })(payload || {});
 
