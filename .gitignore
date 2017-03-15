@@ -61,3 +61,6 @@ ios/pods/
 # Bundle and source maps
 build
 main.jsbundle*
+
+.history
+.vscode
