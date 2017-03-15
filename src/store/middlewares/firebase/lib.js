@@ -7,18 +7,21 @@ import { fixFirebaseKey, fixFirebaseKeysFromObject, getPathFromRef, getMapAnalys
 
 import {
   forEach,
+  get,
   isObjectOrMap,
+  omit,
+  set,
 } from '../../../utils/immutable';
 
 _.mixin({
   deepMapKeys(obj, fn) {
     if (!_.isPlainObject(obj)) return obj;
 
-    const newObj = {};
+    let newObj = {};
     _.forOwn(obj, (v, k) => {
       let _v = v;
       if (_.isPlainObject(_v)) _v = _.deepMapKeys(v, fn);
-      newObj[fn(_v, k)] = _v;
+      newObj = set(newObj, fn(_v, k), _v);
     });
 
     return newObj;
@@ -35,38 +38,38 @@ export function createFirebaseHandler(
 ) {
   return snapshot => {
     const fullPath = getPathFromRef(snapshot.ref, _databaseRef);
+    const key = snapshot.key;
     let value = snapshot.val();
+    let blacklisted = false;
 
     if (blacklist && blacklist.length) {
-      value = _.omit(value, blacklist);
+      if (eventName === 'value' && isObjectOrMap(value)) {
+        value = omit(value, blacklist);
+      } else {
+        blacklisted = blacklist.includes(key);
+      }
     }
-
-    value = fixFirebaseKeysFromObject(value, false);
 
     if (debug) {
-      console.debug(`[FIREBASE] Received ${eventName} on ${fullPath}:`, value);
+      const blacklistedText = blacklisted ? ', but ignored' : '';
+      console.debug(`[FIREBASE] Received ${eventName} on ${fullPath}${blacklistedText}:`, value);
     }
 
-    const pathArr = fullPath.split('/').filter(Boolean);
-    const firebasePathArr = pathArr.map(path => fixFirebaseKey(path, true));
-    const statePathArr = pathArr.map(path => fixFirebaseKey(path, false));
+    if (blacklisted) {
+      return;
+    }
+
+    const firebasePathArr = fullPath.split('/').filter(Boolean);
+    const statePathArr = firebasePathArr.map(path => fixFirebaseKey(path, false));
+    value = fixFirebaseKeysFromObject(value, true);
 
     if (typeof callback === 'function') {
-      let _callbackResult = callback({
+      callback({
         eventName,
         firebasePathArr,
         statePathArr,
         value,
       });
-
-      if (callback.constructor.name === 'GeneratorFunction') {
-        while (
-          _callbackResult.done === false &&
-          typeof _callbackResult.next === 'function'
-        ) {
-          _callbackResult = _callbackResult.next();
-        }
-      }
     }
   };
 }
@@ -124,7 +127,7 @@ export function watchFirebaseFromMap(
     watchFirebaseFromMap({
       callback,
       debug,
-      map: map[field],
+      map: get(map, field),
       ref: ref.child(field),
       root: false,
     });
@@ -133,7 +136,6 @@ export function watchFirebaseFromMap(
   if (count === 0) {
     // passed an empty object, so listen to it's children
     addFirebaseListener({
-      blacklist,
       callback,
       debug,
       ref,
@@ -146,7 +148,7 @@ export function watchFirebaseFromMap(
       callback,
       debug,
       ref,
-      eventName: 'value',
+      eventName: 'children',
     });
   } else if (whitelist.length) {
     // listen only to the specified children
