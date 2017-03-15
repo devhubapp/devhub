@@ -14,7 +14,12 @@ export const mapFirebaseToState = {
   config: {},
   entities: {
     columns: {},
-    subscriptions: {},
+    subscriptions: {
+      '*': {
+        lastModifiedAt: false,
+        updatedAt: false,
+      },
+    },
   },
 };
 
@@ -30,7 +35,6 @@ export const mapStateToFirebase = {
       '*': {
         loading: false,
         events: false,
-        lastModifiedAt: false,
       },
     },
   },

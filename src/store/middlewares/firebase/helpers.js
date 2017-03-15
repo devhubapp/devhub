@@ -113,8 +113,8 @@ export function getMapAnalysis(map) {
   if (blacklist.length && whitelist.length) {
     console.error(
       '[MAPPER] You cannot pass both true and false values to the same map field.',
+      toJS(map),
     );
-    return null;
   }
 
   return { blacklist, count, hasAsterisk, objects, others, whitelist };
@@ -165,6 +165,12 @@ export function getMapSubtractedByMap(mapA, mapB) {
 
   if (sizeOf(mapB) === 0) {
     return null;
+  }
+
+  // avoid conflicts, e.g. both mapA and mapB has false items
+  // this way we avoid end up with both true and false values
+  if (sizeOf(mapA) > 0 && sizeOf(mapB) > 0) {
+    return mapA;
   }
 
   let newMap = mapA;

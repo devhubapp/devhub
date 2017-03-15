@@ -179,6 +179,14 @@ export function forEach(object, fn) {
   return _.forEach(object, fn);
 }
 
+export function filter(object, fn) {
+  if (isImmutable(object)) {
+    return object.filter(fn);
+  }
+
+  return _.isPlainObject(object) ? _.pick(object, _.filter(object, fn)) : _.filter(object, fn);
+}
+
 export function map(object, fn) {
   if (isImmutable(object)) {
     return object.map(fn);
