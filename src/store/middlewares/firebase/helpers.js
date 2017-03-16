@@ -159,30 +159,31 @@ export function getObjectFilteredByMap(object, map) {
 }
 
 export function getMapSubtractedByMap(mapA, mapB) {
-  if (mapB === true) return mapA === undefined ? false : mapA;
-  if (mapB === false) return mapA === undefined ? true : mapA;
+  if (mapA === undefined) return null;
+  if (mapB === undefined) return mapA;
+  if (mapB === true || mapB === false) return mapA === mapB ? null : mapA;
   if (!isObjectOrMap(mapA) || !isObjectOrMap(mapB)) return null;
 
   if (sizeOf(mapB) === 0) {
     return null;
   }
 
-  // avoid conflicts, e.g. both mapA and mapB has false items
-  // this way we avoid end up with both true and false values
-  if (sizeOf(mapA) > 0 && sizeOf(mapB) > 0) {
-    return mapA;
-  }
-
   let newMap = mapA;
+  let removeAnyField = false;
 
-  forEach(mapB, (_value, field) => {
-    const value = getMapSubtractedByMap(get(mapA, field), get(mapB, field));
-    if (value === null || (isObjectOrMap(value) && sizeOf(value) === 0)) {
+  forEach(mapB, (mapBValue, field) => {
+    const value = getMapSubtractedByMap(get(mapA, field), mapBValue);
+    if (value === null || value === undefined) {
       newMap = remove(newMap, field);
+      removeAnyField = true;
     } else {
       newMap = set(newMap, field, value);
     }
   });
+
+  if (removeAnyField && sizeOf(newMap) === 0) {
+    return null;
+  }
 
   return newMap;
 }

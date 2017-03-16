@@ -74,6 +74,9 @@
     "whatwg-fetch": "^2.0.3"
   },
   "jest": {
-    "preset": "jest-react-native"
+    "preset": "jest-react-native",
+    "moduleFileExtensions": ["js"],
+    "moduleDirectories": ["node_modules", "web/node_modules"],
+    "testRegex": "<rootDir>/(web/src|src)/.*\\.test\\.js$"
   }
 }
