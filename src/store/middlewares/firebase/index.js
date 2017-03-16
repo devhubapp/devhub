@@ -8,7 +8,7 @@ import { firebaseReceivedEvent } from '../../../actions';
 import { mapFirebaseToState, mapStateToFirebase } from '../../../reducers/firebase';
 import { toJS } from '../../../utils/immutable';
 import { getObjectDiff, getObjectFilteredByMap, fixFirebaseKeysFromObject, getMapSubtractedByMap } from './helpers';
-import { applyPatchOnFirebase, watchFirebaseFromMap } from './lib';
+import { addFirebaseListener, applyPatchOnFirebase, watchFirebaseFromMap } from './lib';
 import { isLoggedSelector, isReadySelector } from '../../../selectors';
 
 let _currentUserId;
@@ -26,7 +26,12 @@ const checkDiffAndPatchDebounced = debounce(
       // console.log('states before diff', toJS(fixedStateA), toJS(fixedStateA));
 
       if (stateDiff && _currentUserId) {
-        applyPatchOnFirebase({ debug: __DEV__, patch: stateDiff });
+        applyPatchOnFirebase({
+          debug: __DEV__,
+          patch: stateDiff,
+          ref: _databaseRef,
+          rootDatabaseRef: _databaseRef,
+        });
         _lastState = store.getState();
       }
     }
@@ -37,8 +42,8 @@ const checkDiffAndPatchDebounced = debounce(
 export function stopFirebase() {
   if (!_databaseRef) return;
 
-  console.debug('[FIREBASE] Disconnected.');
   _databaseRef.off();
+  console.debug('[FIREBASE] Disconnected.');
 
   _databaseRef = undefined;
   _lastState = undefined;
@@ -57,24 +62,35 @@ export function startFirebase({ store, userId }) {
   // e.g. these fields will be uploaded: app/version, user/loggedAt, ...
   // because we'll never get theses fields from firebase, we just upload them.
   // they are more 'local' fields that doesnt make sense to sync.
-  _databaseRef.once('value', (snapshot) => {
-    const value = snapshot.val();
+  addFirebaseListener({
+    callback(result) {
+      const missingOnFirebaseMap = getMapSubtractedByMap(mapStateToFirebase, mapFirebaseToState);
+      const firebaseData = getObjectFilteredByMap(result.value, missingOnFirebaseMap);
+      const localData = getObjectFilteredByMap(store.getState(), missingOnFirebaseMap);
 
-    const missingOnFirebaseMap = getMapSubtractedByMap(mapStateToFirebase, mapFirebaseToState);
-    const firebaseData = getObjectFilteredByMap(value, missingOnFirebaseMap);
-    const localData = getObjectFilteredByMap(store.getState(), missingOnFirebaseMap);
+      // send to firebse some things from the initial state, like app.version, ...
+      checkDiffAndPatchDebounced(firebaseData, localData, missingOnFirebaseMap, store);
 
-    checkDiffAndPatchDebounced(firebaseData, localData, missingOnFirebaseMap, store);
-  });
-
-  watchFirebaseFromMap({
-    callback({ eventName, firebasePathArr, statePathArr, value }) {
-      store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
+      // update local state with the info received by firebase
+      store.dispatch(firebaseReceivedEvent(result));
       _lastState = store.getState();
+
+      watchFirebaseFromMap({
+        callback({ eventName, firebasePathArr, statePathArr, value }) {
+          store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
+          _lastState = store.getState();
+        },
+        debug: __DEV__,
+        map: mapFirebaseToState,
+        ref: _databaseRef,
+        rootDatabaseRef: _databaseRef,
+      });
     },
-    debug: __DEV__,
-    map: mapFirebaseToState,
+    eventName: 'value',
+    map: true,
+    once: true,
     ref: _databaseRef,
+    rootDatabaseRef: _databaseRef,
   });
 }
 

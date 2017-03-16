@@ -7,7 +7,7 @@ import {
   fixFirebaseKey,
   fixFirebaseKeysFromObject,
   getObjectFilteredByMap,
-  getPathFromRef,
+  getRelativePathFromRef,
   getMapAnalysis,
 } from './helpers';
 
@@ -20,13 +20,11 @@ import {
 export const firebaseCharMap = { '/': '__STRIPE__' };
 export const firebaseInvertedCharMap = _.invert(firebaseCharMap);
 
-let _databaseRef;
-
 export function createFirebaseHandler(
-  { blacklist, callback, debug, eventName, map },
+  { blacklist, callback, debug, eventName, map, rootDatabaseRef },
 ) {
   return snapshot => {
-    const fullPath = getPathFromRef(snapshot.ref, _databaseRef);
+    const fullPath = getRelativePathFromRef(snapshot.ref, rootDatabaseRef);
     let value = snapshot.val();
     let blacklisted = false;
 
@@ -61,9 +59,9 @@ export function createFirebaseHandler(
 }
 
 export const addFirebaseListener = (
-  { blacklist, callback, debug, eventName, map, ref, ...rest },
+  { blacklist, callback, debug, eventName, map, once, ref, rootDatabaseRef, ...rest },
 ) => {
-  const fullPath = getPathFromRef(ref, _databaseRef);
+  const fullPath = getRelativePathFromRef(ref, rootDatabaseRef);
   let message = `[FIREBASE] Watching ${fullPath} ${eventName}`;
 
   if (blacklist && blacklist.length) {
@@ -79,12 +77,15 @@ export const addFirebaseListener = (
 
     eventNames.forEach(realEventName => {
       addFirebaseListener({
+        ...rest,
         blacklist,
         callback,
         debug,
         eventName: realEventName,
         map,
+        once,
         ref,
+        rootDatabaseRef,
         isRecursiveCall: true,
       });
     });
@@ -92,66 +93,82 @@ export const addFirebaseListener = (
     return;
   }
 
-  ref.on(
-    eventName,
-    createFirebaseHandler({ blacklist, callback, debug, eventName, map }),
-  );
+  if (once) {
+    ref.once(
+      eventName,
+      createFirebaseHandler({ blacklist, callback, debug, eventName, map, rootDatabaseRef }),
+    );
+  } else {
+    ref.on(
+      eventName,
+      createFirebaseHandler({ blacklist, callback, debug, eventName, map, rootDatabaseRef }),
+    );
+  }
 };
 
 export function watchFirebaseFromMap(
-  { callback, debug = false, map, ref, ...rest },
+  { callback, debug = false, map, once, rootDatabaseRef, ref = rootDatabaseRef, ...rest },
 ) {
   const mapAnalysis = getMapAnalysis(map);
   if (!mapAnalysis) return;
-
-  if (rest.root !== false) {
-    _databaseRef = ref;
-  }
 
   const { blacklist, count, hasAsterisk, objects, whitelist } = mapAnalysis;
 
   objects.forEach(field => {
     watchFirebaseFromMap({
+      ...rest,
       callback,
       debug,
       map: get(map, field),
+      once,
       ref: ref.child(field),
-      root: false,
+      rootDatabaseRef,
     });
   });
 
   if (count === 0 || (hasAsterisk && count === 1)) {
     // passed an empty object, so listen to it's children
     addFirebaseListener({
+      ...rest,
       callback,
       debug,
       eventName: 'children',
       map,
+      once,
       ref,
+      rootDatabaseRef,
     });
   } else if (blacklist.length) {
     // listen to all children, except the ones specified
     addFirebaseListener({
+      ...rest,
       blacklist,
       callback,
       debug,
       eventName: 'children',
       map,
+      once,
       ref,
+      rootDatabaseRef,
     });
   } else if (whitelist.length) {
     // listen only to the specified children
     whitelist.forEach(field => addFirebaseListener({
+      ...rest,
       callback,
       debug,
       eventName: 'value',
       map,
+      once,
       ref: ref.child(field),
+      rootDatabaseRef,
     }));
   }
 }
 
-export const applyPatchOnFirebase = ({ debug, depth = -1, patch, ref = _databaseRef, ...rest }) => {
+export const applyPatchOnFirebase = ({
+  debug, depth = -1, patch, rootDatabaseRef, ref = rootDatabaseRef, ...rest
+}) => {
   if (!(ref && patch && isObjectOrMap(patch))) return;
 
   const currentDepth = Number(rest.currentDepth) || 1;
@@ -162,10 +179,11 @@ export const applyPatchOnFirebase = ({ debug, depth = -1, patch, ref = _database
 
     if (isObjectOrMap(value) && (currentDepth < maxDepth || maxDepth === -1)) {
       applyPatchOnFirebase({
+        ...rest,
         debug,
         patch: value,
         ref: ref.child(fixedPath),
-        ...rest,
+        rootDatabaseRef,
         currentDepth: currentDepth + 1,
       });
 
@@ -173,7 +191,7 @@ export const applyPatchOnFirebase = ({ debug, depth = -1, patch, ref = _database
     }
 
     if (debug) {
-      const fullPath = `${getPathFromRef(ref, _databaseRef)}/${field}`;
+      const fullPath = `${getRelativePathFromRef(ref, rootDatabaseRef)}/${field}`;
       console.debug(`[FIREBASE] Patching on ${fullPath}`, value);
     }
 

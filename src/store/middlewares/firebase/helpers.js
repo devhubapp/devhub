@@ -48,11 +48,25 @@ export function fixFirebaseKeysFromObject(object, encrypt = false) {
     fixFirebaseKey(key, encrypt));
 }
 
-export function getPathFromRef(ref, rootRef) {
+export function getPathFromRef(ref) {
   if (!ref) return '';
-  let path = ref.toString();
 
-  if (rootRef) path = path.substring(rootRef.toString().length);
+  let path = ref.toString();
+  while (path.slice(-1) === '/') { path = path.slice(0, -1); }
+
+  return path;
+}
+
+export function getRelativePathFromRef(ref, rootRef) {
+  const itemPath = getPathFromRef(ref);
+  const rootPath = getPathFromRef(rootRef);
+
+  if (!(itemPath && rootPath)) {
+    console.error('Expected both ref and rootRef parameters on getRelativePathFromRef. Received:', ref, rootPath);
+    return '';
+  }
+
+  let path = itemPath.replace(rootPath, '');
   while (path.slice(-1) === '/') { path = path.slice(0, -1); }
 
   return path;
