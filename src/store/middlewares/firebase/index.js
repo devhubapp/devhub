@@ -7,7 +7,7 @@ import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions';
 import { firebaseReceivedEvent } from '../../../actions';
 import { mapFirebaseToState, mapStateToFirebase } from '../../../reducers/firebase';
 import { toJS } from '../../../utils/immutable';
-import { getObjectDiff, getObjectFilteredByMap, getMapSubtractedByMap } from './helpers';
+import { getObjectDiff, getObjectFilteredByMap, fixFirebaseKeysFromObject, getMapSubtractedByMap } from './helpers';
 import { applyPatchOnFirebase, watchFirebaseFromMap } from './lib';
 import { isLoggedSelector, isReadySelector } from '../../../selectors';
 
@@ -18,8 +18,12 @@ let _lastState;
 const checkDiffAndPatchDebounced = debounce(
   (stateA, stateB, map, store) => {
     if (_databaseRef && stateA !== undefined) {
-      const stateDiff = toJS(getObjectDiff(stateA, stateB, map));
+      const fixedStateA = fixFirebaseKeysFromObject(stateA, true);
+      const fixedStateB = fixFirebaseKeysFromObject(stateB, true);
+
+      const stateDiff = toJS(getObjectDiff(fixedStateA, fixedStateB, map));
       // console.log('state diff', stateDiff);
+      // console.log('states before diff', toJS(fixedStateA), toJS(fixedStateA));
 
       if (stateDiff && _currentUserId) {
         applyPatchOnFirebase({ debug: __DEV__, patch: stateDiff });

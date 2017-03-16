@@ -258,3 +258,16 @@ export function isObjectOrMap(object) {
 
   return !!object && _.isPlainObject(object);
 }
+
+export function deepMapKeys(obj, fn) {
+  if (!isObjectOrMap(obj)) return obj;
+
+  let newObj = getEmptyObjectFromTheSameType(obj);
+  forEach(obj, (v, k) => {
+    let _v = v;
+    if (isObjectOrMap(_v)) _v = deepMapKeys(v, fn);
+    newObj = set(newObj, fn(_v, k), _v);
+  });
+
+  return newObj;
+}

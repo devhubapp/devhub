@@ -15,24 +15,7 @@ import {
   forEach,
   get,
   isObjectOrMap,
-  omit,
-  set,
 } from '../../../utils/immutable';
-
-_.mixin({
-  deepMapKeys(obj, fn) {
-    if (!_.isPlainObject(obj)) return obj;
-
-    let newObj = {};
-    _.forOwn(obj, (v, k) => {
-      let _v = v;
-      if (_.isPlainObject(_v)) _v = _.deepMapKeys(v, fn);
-      newObj = set(newObj, fn(_v, k), _v);
-    });
-
-    return newObj;
-  },
-});
 
 export const firebaseCharMap = { '/': '__STRIPE__' };
 export const firebaseInvertedCharMap = _.invert(firebaseCharMap);
@@ -64,7 +47,7 @@ export function createFirebaseHandler(
 
     const firebasePathArr = fullPath.split('/').filter(Boolean);
     const statePathArr = firebasePathArr.map(path => fixFirebaseKey(path, false));
-    value = fixFirebaseKeysFromObject(value, true);
+    value = fixFirebaseKeysFromObject(value, false);
 
     if (typeof callback === 'function') {
       callback({
@@ -168,14 +151,24 @@ export function watchFirebaseFromMap(
   }
 }
 
-export const applyPatchOnFirebase = ({ debug, patch, ref = _databaseRef }) => {
+export const applyPatchOnFirebase = ({ debug, depth = -1, patch, ref = _databaseRef, ...rest }) => {
   if (!(ref && patch && isObjectOrMap(patch))) return;
+
+  const currentDepth = Number(rest.currentDepth) || 1;
+  const maxDepth = Number(depth) > 0 ? depth : -1;
 
   forEach(patch, (value, field) => {
     const fixedPath = fixFirebaseKey(field, true);
 
-    if (isObjectOrMap(value)) {
-      applyPatchOnFirebase({ debug, patch: value, ref: ref.child(fixedPath) });
+    if (isObjectOrMap(value) && (currentDepth < maxDepth || maxDepth === -1)) {
+      applyPatchOnFirebase({
+        debug,
+        patch: value,
+        ref: ref.child(fixedPath),
+        ...rest,
+        currentDepth: currentDepth + 1,
+      });
+
       return;
     }
 
@@ -187,7 +180,7 @@ export const applyPatchOnFirebase = ({ debug, patch, ref = _databaseRef }) => {
     // value fixes
     let _value = value;
     if (_value instanceof Date) _value = moment(_value).toISOString();
-    // if (Number.isNaN(value)) _value = 0;
+    if (Number.isNaN(_value)) _value = 0;
 
     ref.child(fixedPath).set(_value);
   });

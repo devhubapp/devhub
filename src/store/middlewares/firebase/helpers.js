@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import {
   deepImmutableEqualityCheck,
+  deepMapKeys,
   forEach,
   get,
   getEmptyObjectFromTheSameType,
@@ -16,21 +17,6 @@ import {
   sizeOf,
   toJS,
 } from '../../../utils/immutable';
-
-_.mixin({
-  deepMapKeys(obj, fn) {
-    if (!_.isPlainObject(obj)) return obj;
-
-    const newObj = {};
-    _.forOwn(obj, (v, k) => {
-      let _v = v;
-      if (_.isPlainObject(_v)) _v = _.deepMapKeys(v, fn);
-      newObj[fn(_v, k)] = _v;
-    });
-
-    return newObj;
-  },
-});
 
 export const firebaseCharMap = { '/': '__STRIPE__' };
 export const firebaseInvertedCharMap = _.invert(firebaseCharMap);
@@ -57,9 +43,9 @@ export function fixFirebaseKey(key, encrypt = false) {
   return fixedKey;
 }
 
-export function fixFirebaseKeysFromObject(object, fromFirebase) {
-  return _.deepMapKeys(object, (value, key) =>
-    fixFirebaseKey(key, fromFirebase));
+export function fixFirebaseKeysFromObject(object, encrypt = false) {
+  return deepMapKeys(object, (value, key) =>
+    fixFirebaseKey(key, encrypt));
 }
 
 export function getPathFromRef(ref, rootRef) {

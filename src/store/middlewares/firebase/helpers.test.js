@@ -1,4 +1,4 @@
-import { getMapSubtractedByMap } from './helpers';
+import { getMapSubtractedByMap, getObjectDiff } from './helpers';
 
 const mapA = {
   a: {},
@@ -39,5 +39,29 @@ test('It subtracts a map from another map', () => {
     i: {
       i2: { '*': { a: false, b: false } },
     },
+  });
+});
+
+test('It should get an object diff', () => {
+  const obj1 = {
+    a: 'a',
+    b: 'b',
+    c: { c: 'c' },
+    d: { d: 'd' },
+    e: { e: 'e' },
+  };
+
+  const obj2 = {
+    a: 'a',
+    b: 'b2',
+    c: { c: 'c' },
+    d: { d: 'dd' },
+    e: { ee: 'ee' },
+  };
+
+  expect(getObjectDiff(obj1, obj2)).toEqual({
+    b: 'b2',
+    d: { d: 'dd' },
+    e: { e: null, ee: 'ee' },
   });
 });
