@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import { ActivityIndicator, Platform, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 
-import { resetAppDataRequest } from '../../actions';
+import { resetAppData } from '../../actions';
 
 import Screen from '../../components/Screen';
 import { contentPadding, splashScreenBackgroundColor } from '../../styles/variables';
@@ -30,17 +30,17 @@ const ResetButtonText = styled.Text`
   color: ${base04};
 `;
 
-const mapDispatchToProps = ({ resetAppData: resetAppDataRequest });
+const mapDispatchToProps = ({ onResetAppData: resetAppData });
 
-type Props = { resetAppData: Function };
-const SplashScreen = ({ resetAppData }: Props) => (
+type Props = { onResetAppData: Function };
+const SplashScreen = ({ onResetAppData }: Props) => (
   <Root backgroundColor={splashScreenBackgroundColor}>
     {(Platform.OS === 'ios' || Platform.OS === 'android') &&
       <StatusBar hidden />}
 
     <ActivityIndicator color={base04} />
 
-    <ResetButton onPress={() => resetAppData()} activeOpacity={0.1} focusedOpacity={1}>
+    <ResetButton onPress={() => onResetAppData()} activeOpacity={0.1} focusedOpacity={1}>
       <ResetButtonText>Reset app data</ResetButtonText>
     </ResetButton>
   </Root>
