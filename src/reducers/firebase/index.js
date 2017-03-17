@@ -41,6 +41,7 @@ export const mapStateToFirebase = {
     },
   },
   user: {
+    accessToken: false,
     isLogging: false,
   },
 };
