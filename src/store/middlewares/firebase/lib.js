@@ -1,4 +1,5 @@
 // @flow
+/* global __DEV__ */
 
 import _ from 'lodash';
 import moment from 'moment';
@@ -21,7 +22,7 @@ export const firebaseCharMap = { '/': '__STRIPE__' };
 export const firebaseInvertedCharMap = _.invert(firebaseCharMap);
 
 export function createFirebaseHandler(
-  { blacklist, callback, debug, eventName, map, rootDatabaseRef },
+  { blacklist, callback, debug = __DEV__, eventName, map, rootDatabaseRef },
 ) {
   return snapshot => {
     const fullPath = getRelativePathFromRef(snapshot.ref, rootDatabaseRef);
@@ -35,8 +36,8 @@ export function createFirebaseHandler(
     }
 
     if (debug) {
-      const blacklistedText = blacklisted ? ', but ignored' : '';
-      console.debug(`[FIREBASE] Received ${eventName} on ${fullPath}${blacklistedText}:`, snapshot.val());
+      const suffix = blacklisted ? ', but ignored.' : ':';
+      console.debug(`[FIREBASE] Received ${eventName} on ${fullPath || '/'}${suffix}`, value);
     }
 
     if (blacklisted) {
@@ -59,10 +60,10 @@ export function createFirebaseHandler(
 }
 
 export const addFirebaseListener = (
-  { blacklist, callback, debug, eventName, map, once, ref, rootDatabaseRef, ...rest },
+  { blacklist, callback, debug = __DEV__, eventName, map, once, ref, rootDatabaseRef, ...rest },
 ) => {
   const fullPath = getRelativePathFromRef(ref, rootDatabaseRef);
-  let message = `[FIREBASE] Watching ${fullPath} ${eventName}`;
+  let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}`;
 
   if (blacklist && blacklist.length) {
     message = `${message}, except ${blacklist.join(', ')}`;
@@ -107,7 +108,7 @@ export const addFirebaseListener = (
 };
 
 export function watchFirebaseFromMap(
-  { callback, debug = false, map, once, rootDatabaseRef, ref = rootDatabaseRef, ...rest },
+  { callback, debug = __DEV__, map, once, rootDatabaseRef, ref = rootDatabaseRef, ...rest },
 ) {
   const mapAnalysis = getMapAnalysis(map);
   if (!mapAnalysis) return;
@@ -167,7 +168,7 @@ export function watchFirebaseFromMap(
 }
 
 export const applyPatchOnFirebase = ({
-  debug, depth = -1, patch, rootDatabaseRef, ref = rootDatabaseRef, ...rest
+  debug = __DEV__, depth = -1, patch, rootDatabaseRef, ref = rootDatabaseRef, ...rest
 }) => {
   if (!(ref && patch && isObjectOrMap(patch))) return;
 
@@ -192,7 +193,7 @@ export const applyPatchOnFirebase = ({
 
     if (debug) {
       const fullPath = `${getRelativePathFromRef(ref, rootDatabaseRef)}/${field}`;
-      console.debug(`[FIREBASE] Patching on ${fullPath}`, value);
+      console.debug(`[FIREBASE] Patching on ${fullPath || '/'}`, value);
     }
 
     // value fixes

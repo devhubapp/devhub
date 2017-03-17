@@ -229,6 +229,19 @@ export function remove(object, key) {
   return newObject;
 }
 
+export function removeIn(object, keyPath) {
+  if (isImmutable(object)) {
+    return object.removeIn(keyPath);
+  }
+
+  if (keyPath && keyPath.length > 1) {
+    return removeIn(get(object, keyPath.slice(-1)), keyPath.slice(0, -1));
+  }
+
+  const key = Array.isArray(keyPath) ? keyPath[0] : keyPath;
+  return remove(object, key);
+}
+
 export function getEmptyObjectFromTheSameType(object) {
   if (isImmutable(object)) {
     if (Immutable.List.isList(object)) return Immutable.List();
@@ -271,3 +284,25 @@ export function deepMapKeys(obj, fn) {
 
   return newObj;
 }
+
+export const mergeDeepAndRemoveNull = (state, value) => {
+  if (!state || typeof value !== 'object') return value;
+
+  if (isList(state)) {
+    return state.concat(value);
+  }
+
+  let newState = state;
+  forEach(value, (v, k) => {
+    if (v === null) {
+      newState = remove(newState, k);
+    } else {
+      newState = set(newState, k, mergeDeepAndRemoveNull(get(state, k), v));
+    }
+  }, []);
+
+  return newState;
+};
+
+export const mergeDeepInAndRemoveNull = (state, keyPath, value) =>
+  setIn(state, keyPath, mergeDeepAndRemoveNull(getIn(state, keyPath), value));

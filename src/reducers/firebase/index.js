@@ -5,9 +5,9 @@ import config from '../config';
 import entities from '../entities';
 import user from '../user';
 
-import { getObjectFilteredByMap } from '../../store/middlewares/firebase/helpers';
+import { getObjectDiff, getObjectFilteredByMap } from '../../store/middlewares/firebase/helpers';
 import { FIREBASE_RECEIVED_EVENT } from '../../utils/constants/actions';
-import { fromJS } from '../../utils/immutable';
+import { fromJS, mergeDeepInAndRemoveNull } from '../../utils/immutable';
 import type { Action } from '../../utils/types';
 
 export const mapFirebaseToState = {
@@ -16,7 +16,9 @@ export const mapFirebaseToState = {
     columns: {},
     subscriptions: {
       '*': {
+        error: false,
         lastModifiedAt: false,
+        rateLimitRemaining: false,
         updatedAt: false,
       },
     },
@@ -56,11 +58,16 @@ export default (state: State = initialState, { type, payload }: ?Action<any> = {
   switch (type) {
     case FIREBASE_RECEIVED_EVENT:
       return (({ eventName, statePathArr, value }) => {
-        if (!(statePathArr && statePathArr.length)) return state;
+        if (!Array.isArray(statePathArr)) return state;
 
         switch (eventName) {
           case 'child_removed': return state.removeIn(statePathArr);
-          default: return state.mergeDeepIn(statePathArr, fromJS(value));
+          case 'value': return (() => {
+            const filteredState = getObjectFilteredByMap(state, mapFirebaseToState);
+            const diff = getObjectDiff(filteredState, value, mapStateToFirebase);
+            return mergeDeepInAndRemoveNull(state, statePathArr, fromJS(diff));
+          })();
+          default: return mergeDeepInAndRemoveNull(state, statePathArr, fromJS(value));
         }
       })(payload || {});
 

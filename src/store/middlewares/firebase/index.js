@@ -68,10 +68,10 @@ export function startFirebase({ store, userId }) {
       const firebaseData = getObjectFilteredByMap(result.value, missingOnFirebaseMap);
       const localData = getObjectFilteredByMap(store.getState(), missingOnFirebaseMap);
 
-      // send to firebse some things from the initial state, like app.version, ...
+      // send to firebase some things from the initial state, like app.version, ...
       checkDiffAndPatchDebounced(firebaseData, localData, missingOnFirebaseMap, store);
 
-      // update local state with the info received by firebase
+      // update local state with the initial data received by firebase
       store.dispatch(firebaseReceivedEvent(result));
       _lastState = store.getState();
 
@@ -86,8 +86,9 @@ export function startFirebase({ store, userId }) {
         rootDatabaseRef: _databaseRef,
       });
     },
+    debug: __DEV__,
     eventName: 'value',
-    map: true,
+    map: mapFirebaseToState,
     once: true,
     ref: _databaseRef,
     rootDatabaseRef: _databaseRef,
