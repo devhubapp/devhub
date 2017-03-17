@@ -347,15 +347,5 @@ export function notificationsToFilterColumnData(notifications) {
     result = setIn(result, path, count + 1);
   });
 
-  // SectionList (ios/android) requires a different format than ListView (web)
-  if (Platform.OS !== 'web') {
-    result = result
-      .map((section, sectionKey) => Map({
-        key: sectionKey,
-        data: section.map((item, itemKey) => item.set('key', itemKey)).toList(),
-      }))
-      .toList();
-  }
-
   return result;
 }

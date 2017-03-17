@@ -3,7 +3,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { memoize } from 'lodash';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
+import { Platform } from 'react-native';
 
 import ColumnWithList, { headerFontSize } from './_ColumnWithList';
 import Icon from '../../libs/icon';
@@ -11,7 +12,7 @@ import { ImmutableSectionList } from '../../libs/immutable-virtualized-list';
 import { FullView, StyledText } from '../cards/__CardComponents';
 import { contentPadding } from '../../styles/variables';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
-import { get, updateIn } from '../../utils/immutable';
+import { get, sizeOf } from '../../utils/immutable';
 import type { ActionCreators } from '../../utils/types';
 
 export const defaultIcon = 'zap';
@@ -82,7 +83,7 @@ const willShowItem = item => (
 );
 
 const isSectionEmpty = section => (
-  !section || !get(section, 'data') || !get(section, 'data').some(willShowItem)
+  !section || !sizeOf(section.filter(willShowItem))
 );
 
 const sectionHeaderHasChanged = (prevSectionData, nextSectionData) => (
@@ -123,14 +124,30 @@ const renderItem = ({ index, item }: { index: number, item: Object }) => {
   );
 };
 
-const cleanupData = memoize(sections =>
-  (sections || List())
-    .map(section => updateIn(section, ['data'], data => data.filter(willShowItem)))
+// SectionList (ios/android) requires a different format than ListView (web)
+const formatSectionsIfNecessary = sections => {
+  if (Platform.OS === 'web') return sections || Map();
+  if (!sections) return List();
+
+  return sections
+    .map((section, sectionKey) => Map({
+      key: sectionKey,
+      data: section.map((item, itemKey) => item.set('key', itemKey)).toList(),
+    }))
+    .toList();
+};
+
+const cleanupItems = memoize(sections =>
+  (sections || Map())
+    .map(section => section.filter(willShowItem))
     .filterNot(isSectionEmpty));
 
+const cleanupItemsAndFormat = sections =>
+  formatSectionsIfNecessary(cleanupItems(sections));
+
 const getStateForItems = items => ({
-  firstSectionKey: (cleanupData(items).first() || List()).get('key'),
-  data: cleanupData(items),
+  firstSectionKey: (cleanupItemsAndFormat(items).first() || List()).get('key'),
+  items: cleanupItemsAndFormat(items),
 });
 
 export default class extends React.PureComponent {
@@ -170,12 +187,11 @@ export default class extends React.PureComponent {
 
   renderSectionHeader = ({ section }) =>
     !!section &&
-    !(get(section, 'key') === this.state.firstSectionKey ||
-      isSectionEmpty(section)) &&
+    !(get(section, 'key') === this.state.firstSectionKey) &&
       <Section />;
 
   render() {
-    const { data } = this.state;
+    const { items } = this.state;
     const { onRefresh, style, ...props } = this.props;
 
     return (
@@ -186,12 +202,12 @@ export default class extends React.PureComponent {
           key="notification-filter-_ColumnWithList"
           initialNumToRender={20}
           isEmpty={false}
-          items={data}
+          items={items}
           onRefresh={onRefresh}
           renderItem={renderItem}
           renderSectionHeader={this.renderSectionHeader}
           sectionHeaderHasChanged={sectionHeaderHasChanged}
-          sections={data}
+          sections={items}
         />
       </FullView>
     );
