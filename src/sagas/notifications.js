@@ -67,11 +67,11 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
     }
 
     // console.log('onLoadNotificationsRequest response', response);
-    const { data, meta }: ApiResponsePayload = response;
+    const { data, meta }: ApiResponsePayload = response || {};
 
     let finalData = data || undefined;
 
-    if (data) {
+    if (data && Array.isArray(data)) {
       finalData = normalize(data, [NotificationSchema]);
     }
 

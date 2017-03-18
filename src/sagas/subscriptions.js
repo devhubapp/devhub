@@ -16,10 +16,11 @@ import {
   isLoggedSelector,
 } from '../selectors';
 
-import { APP_READY } from '../utils/constants/actions';
+import { fromJS } from '../utils/immutable';
 import { TIMEOUT } from '../utils/constants/defaults';
 
 import {
+  APP_READY,
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOGIN_SUCCESS,
   LOGOUT,
@@ -62,12 +63,12 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
     if (timeout) throw new Error('Timeout', 'TimeoutError');
 
     // console.log('loadSubscriptionData response', response);
-    const { data, meta }: ApiResponsePayload = response;
+    const { data, meta }: ApiResponsePayload = response || {};
 
     let finalData = data || undefined;
 
     // remove old events from data
-    if (data) {
+    if (data && Array.isArray(data)) {
       let onlyNewEvents = data;
 
       state = yield select();
