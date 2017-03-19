@@ -6,7 +6,7 @@ import { Button, Platform } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import pkg from '../../../package.json';
+import AppVersion from '../../components/AppVersion';
 import Screen from '../../components/Screen';
 import TabIcon from '../../components/TabIcon';
 import { contentPadding } from '../../styles/variables';
@@ -31,14 +31,9 @@ const StyledButton = styled(Button)`
   marginTop: ${contentPadding / 2};
 `;
 
-const Text = styled.Text`
+const StyledAppVersion = styled(AppVersion)`
   marginTop: ${contentPadding / 2};
-  color: ${({ theme }) => theme.base04};
   text-align: center;
-`;
-
-const MutedText = styled(Text)`
-  color: ${({ theme }) => theme.base05};
 `;
 
 const mapDispatchToProps = dispatch => ({
@@ -95,7 +90,7 @@ class SettingsScreen extends React.PureComponent {
               color={color}
               onPress={() => setTheme('dark-blue')}
             />
-            <MutedText>v{pkg.codeBundleId || pkg.version}</MutedText>
+            <StyledAppVersion />
           </Footer>
         </Wrapper>
       </Screen>
