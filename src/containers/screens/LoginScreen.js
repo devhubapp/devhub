@@ -5,6 +5,8 @@ import styled from 'styled-components/native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import logo from '../../../assets/logo.png';
+import pkg from '../../../package.json';
 import GithubButton from '../../components/buttons/GithubButton';
 import Screen from '../../components/Screen';
 import StatusMessage from '../../components/StatusMessage';
@@ -18,8 +20,32 @@ const Main = styled.View`
   padding: ${contentPadding}px;
 `;
 
+const MainContent = styled.View`
+  flex: 1;
+  align-self: center;
+  width: 100%;
+  max-width: 400px;
+  justify-content: center;
+`;
+
 const Footer = styled.View`
+  align-items: center;
+  align-self: center;
+  justify-content: center;
   padding: ${contentPadding}px;
+`;
+
+const MutedText = styled.Text`
+  color: ${({ theme }) => theme.base05};
+  text-align: center;
+`;
+
+const Logo = styled.Image`
+  align-self: center;
+  width: 100px;
+  height: 100px;
+  margin-bottom: ${contentPadding};
+  border-radius: ${radius};
 `;
 
 const StyledGithubButton = styled(GithubButton) `
@@ -41,44 +67,45 @@ export default class extends React.PureComponent {
     isLoggingIn: false,
     loggingInMethod: null,
   }: {
-    isLoggingIn: boolean,
+  isLoggingIn: boolean,
     loggingInMethod: 'github.public' | 'github.private' | null,
   });
 
-  loginWithGithubPublicAccess = () => {
-    const { actions: { loginRequest } } = this.props;
+loginWithGithubPublicAccess = () => {
+  const { actions: { loginRequest } } = this.props;
 
-    this.setState({ loggingInMethod: 'github.public' });
-    loginRequest({ scopes: ['user', 'public_repo', 'notifications', 'read:org'] });
-  };
+  this.setState({ loggingInMethod: 'github.public' });
+  loginRequest({ scopes: ['user', 'public_repo', 'notifications', 'read:org'] });
+};
 
-  loginWithGithubPrivateAccess = () => {
-    const { actions: { loginRequest } } = this.props;
+loginWithGithubPrivateAccess = () => {
+  const { actions: { loginRequest } } = this.props;
 
-    this.setState({ loggingInMethod: 'github.private' });
-    loginRequest({ scopes: ['user', 'repo', 'notifications', 'read:org'] });
-  };
+  this.setState({ loggingInMethod: 'github.private' });
+  loginRequest({ scopes: ['user', 'repo', 'notifications', 'read:org'] });
+};
 
-  props: {
-    actions: ActionCreators,
+props: {
+  actions: ActionCreators,
     error: string,
-    isLoggingIn: boolean,
+      isLoggingIn: boolean,
   };
 
-  render() {
-    const { loggingInMethod } = this.state;
-    const { error, isLoggingIn } = this.props;
+render() {
+  const { loggingInMethod } = this.state;
+  const { error, isLoggingIn } = this.props;
 
-    return (
-      <Screen>
-        <Main>
-          {
-            error &&
-            <StatusMessage key={`error-${error}`} message={error} error />
-          }
-        </Main>
+  return (
+    <Screen>
+      <Main>
+        {
+          error &&
+          <StatusMessage key={`error-${error}`} message={error} error />
+        }
 
-        <Footer>
+        <MainContent>
+          <Logo source={logo} resizeMode="contain" />
+
           <StyledGithubButton
             onPress={this.loginWithGithubPublicAccess}
             title="Sign in with GitHub"
@@ -96,8 +123,13 @@ export default class extends React.PureComponent {
             loading={isLoggingIn && loggingInMethod === 'github.private'}
             radius={radius}
           />
-        </Footer>
-      </Screen>
-    );
-  }
+        </MainContent>
+      </Main>
+
+      <Footer>
+        <MutedText>v{pkg.codeBundleId || pkg.version}</MutedText>
+      </Footer>
+    </Screen>
+  );
+}
 }
