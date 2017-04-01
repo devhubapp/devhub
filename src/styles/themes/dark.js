@@ -1,8 +1,10 @@
+import { Platform } from 'react-native'
+
 import * as base from './base';
 import { mutedOpacity } from '../variables';
 import { fade } from '../../utils/helpers/color';
 
-export const base00 = '#111111'; // page background
+export const base00 = '#1c1c1c'; // page background
 export const base01 = '#111111'; // card background -1
 export const base02 = '#1c1c1c'; // card background 0
 export const base03 = '#353535'; // card background +1
@@ -39,8 +41,8 @@ export const base16 = {
 };
 
 export const cardBackground = base03;
-export const tabBarBackground = base00;
-export const statusBarBackground = tabBarBackground;
+export const tabBarBackground = Platform.select({ android: base01, default: base02 });
+export const statusBarBackground = Platform.select({ android: tabBarBackground, default: base01 });
 
 export default {
   ...base,

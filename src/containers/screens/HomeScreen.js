@@ -40,7 +40,7 @@ class HomeScreen extends React.PureComponent {
 
     return (
       <ThemeProvider theme={theme}>
-        <Screen>
+        <Screen backgroundColor={theme.base01}>
           {!ready &&
             <CenterView>
               <ActivityIndicator color={theme.base04} />

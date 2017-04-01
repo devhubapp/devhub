@@ -32,7 +32,7 @@ export const ColumnRoot = styled.View`
   margin-horizontal: ${columnMargin}px;
   margin-vertical: ${columnMargin}px;
   background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base02)};
-  border-width: 1px;
+  border-width: 0px;
   border-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius || 0}px;
 `;

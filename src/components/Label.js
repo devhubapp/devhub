@@ -18,6 +18,7 @@ const LabelContainer = styled.View`
 `;
 
 const Label = styled.Text`
+  font-size: 14px;
   color: ${({ color, muted, outline, theme, textColor }) => (
     textColor || (outline ? color || (muted ? theme.base05 : theme.base04) : '') || '#ffffff'
   )};

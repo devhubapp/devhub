@@ -46,18 +46,19 @@ export default class extends React.PureComponent {
   updateNavigator({ isLogged, ready }) {
     if (!this.navigation) return;
 
-    const routeName = !ready ? 'splash' :
-      isLogged ? 'main' : 'login';
+    const routeName = !ready ? 'splash' : isLogged ? 'main' : 'login';
 
-    const currentRouteState = getSelectedRouteFromNavigationState(this.navigation.state);
+    const currentRouteState = getSelectedRouteFromNavigationState(
+      this.navigation.state,
+    );
     if (get(currentRouteState, 'routeName') === routeName) return;
 
-    this.navigation.dispatch(NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({ routeName }),
-      ],
-    }));
+    this.navigation.dispatch(
+      NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName })],
+      }),
+    );
   }
 
   props: {
@@ -80,8 +81,13 @@ export default class extends React.PureComponent {
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
             />}
 
-          <AppNavigatorContainer navigationRef={ref => { this.navigation = ref; }} />
+          <AppNavigatorContainer
+            navigationRef={ref => {
+              this.navigation = ref;
+            }}
+          />
         </View>
+
       </ThemeProvider>
     );
   }
