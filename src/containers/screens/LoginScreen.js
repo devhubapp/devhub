@@ -124,7 +124,7 @@ export default class extends React.PureComponent {
         </Main>
 
         <Footer>
-          <AppVersion />
+          <AppVersion showAppName />
         </Footer>
       </Screen>
     );
