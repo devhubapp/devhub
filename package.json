@@ -39,6 +39,7 @@
     "react-native-orientation-listener": "https://github.com/iRoachie/react-native-orientation-listener",
     "react-native-prompt-android": "^0.0.5",
     "react-native-vector-icons": "^4.0.0",
+    "react-native-wkwebview-reborn": "^1.4.0",
     "react-navigation": "^1.0.0-beta.6",
     "react-redux": "^5.0.3",
     "redux": "^3.6.0",
@@ -75,8 +76,13 @@
   },
   "jest": {
     "preset": "jest-react-native",
-    "moduleFileExtensions": ["js"],
-    "moduleDirectories": ["node_modules", "web/node_modules"],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "web/node_modules"
+    ],
     "testRegex": "<rootDir>/(web/src|src)/.*\\.test\\.js$"
   }
 }
