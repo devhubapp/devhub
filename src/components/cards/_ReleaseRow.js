@@ -88,7 +88,7 @@ export default class extends React.PureComponent {
             {...props}
           >
             <CardText numberOfLines={1} muted={read}>
-              <StyledText muted><Icon name="megaphone" />&nbsp;</StyledText>
+              <StyledText muted={read}><Icon name="megaphone" />&nbsp;</StyledText>
               {body}
             </CardText>
           </TouchableRow>

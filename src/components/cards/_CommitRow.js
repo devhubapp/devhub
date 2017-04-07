@@ -67,7 +67,7 @@ export default class extends React.PureComponent {
         {...props}
       >
         <CardText numberOfLines={1} muted={read}>
-          <StyledText muted><Icon name="git-commit" />&nbsp;</StyledText>
+          <StyledText muted={read}><Icon name="git-commit" />&nbsp;</StyledText>
           {message}
           {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>

@@ -72,8 +72,8 @@ export const LeftColumn = styled.View`
   justify-content: flex-start;
   width: ${avatarWidth};
   margin-right: ${contentPadding};
-  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `;
+  // opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 
 export const MainColumn = styled.View`
   flex: 1;
@@ -93,9 +93,11 @@ export const HeaderRow = styled(HorizontalView)`
 export const StyledText = styled.Text`
   background-color: transparent;
   color: ${({ color, muted, read, theme }) => (
-    muted && read !== false ? theme.base05 : color || theme.base04
+    muted && read !== false
+      ? theme.base05
+      : (color && (theme[color] || color)) || theme.base04
   )};
-  line-height: 18px;
+  line-height: 20px;
   font-size: ${({ small }) => (small ? 12 : 14)}px;
   font-weight: ${({ read }) => (read === false ? 'bold' : 'normal')};
 `;
@@ -157,7 +159,7 @@ export const RightOfScrollableContent = styled.View`
 
 export const Icon = styled(Octicon)`
   background-color: transparent;
-  color: ${({ color, muted, theme }) => color || (muted ? theme.base05 : theme.base04)};
+  color: ${({ color, muted, theme }) => (color && (theme[color] || color)) || (muted ? theme.base05 : theme.base06)};
   opacity: ${({ color, muted }) => (color && muted ? mutedOpacity : 1)};
 `;
 

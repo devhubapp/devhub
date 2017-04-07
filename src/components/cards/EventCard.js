@@ -95,7 +95,10 @@ export default class extends React.PureComponent {
 
     const eventIds = getEventIdsFromEventIncludingMerged(event);
 
-    const isPrivate = !!event.get('private') || event.get('public') === false;
+    const isPrivate = !!(event.get('private') ||
+      event.get('public') === false ||
+      (repo && (repo.get('private') || repo.get('public') === false)));
+
     const {
       icon: cardIcon,
       color: cardIconColor,
@@ -151,7 +154,7 @@ export default class extends React.PureComponent {
                 </TransparentTextOverlay>
 
                 <StyledText numberOfLines={1} muted>
-                  {!!isPrivate && <StyledText muted><Icon name="lock" />&nbsp;</StyledText>}
+                  {!!isPrivate && <StyledText muted><Icon name="lock" /></StyledText>}
                   {getEventText(event, { repoIsKnown: onlyOneRepository })}
                 </StyledText>
               </FullView>
@@ -207,7 +210,7 @@ export default class extends React.PureComponent {
           <BranchRow
             type={type}
             branch={payload.get('ref')}
-            repoFullName={getRepoFullNameFromUrl(repo.get('html_url') || repo.get('url'))}
+            repoFullName={getRepoFullNameFromUrl(repo && (repo.get('html_url') || repo.get('url')))}
             read={read}
             narrow
           />

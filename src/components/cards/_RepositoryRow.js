@@ -43,7 +43,7 @@ export default class extends React.PureComponent {
       return 'repo';
     })();
 
-    const isPrivate = !!repo.get('private') || repo.get('public') === false;
+    // const isPrivate = !!repo.get('private') || repo.get('public') === false;
 
     // right={
     //   <RepositoryStarButtonContainer repoId={repo.get('id')} />
@@ -62,8 +62,7 @@ export default class extends React.PureComponent {
         url={repo.get('html_url') || repo.get('url')}
         {...props}
       >
-        {!!isPrivate && <StyledText muted><Icon name="lock" />&nbsp;</StyledText>}
-        <StyledText muted><Icon name={repoIcon} />&nbsp;</StyledText>
+        <StyledText muted={read}><Icon name={repoIcon} />&nbsp;</StyledText>
         <RepositoryName muted={read}>{repoName}</RepositoryName>
 
         {!!orgName && <StyledText muted small> {orgName}</StyledText>}

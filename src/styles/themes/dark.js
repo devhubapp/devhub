@@ -10,7 +10,7 @@ export const base02 = '#1c1c1c'; // card background 0
 export const base03 = '#353535'; // card background +1
 export const base04 = '#dddddd'; // color (to mute, use opacity 0.9 = #666666, #888888)
 export const base05 = fade(base04, mutedOpacity); // muted color
-export const base06 = undefined; //
+export const base06 = '#ffffff'; // color high contrast
 export const base07 = base.brand; // brand 1
 export const base08 = base.brandSecondary; // brand 2
 export const base09 = undefined; // unread card background

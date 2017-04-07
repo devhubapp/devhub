@@ -29,11 +29,14 @@ import {
   CardWrapper,
   FullView,
   FullAbsoluteView,
+  HorizontalView,
   Header,
+  Icon,
   LeftColumn,
   MainColumn,
   HeaderRow,
   SmallText,
+  StyledText,
   CardIcon,
 } from './__CardComponents';
 
@@ -71,6 +74,9 @@ export default class extends React.PureComponent {
     const updatedAt = notification.get('updated_at');
 
     if (!subject) return null;
+
+    const isPrivate = !!(repo &&
+      (repo.get('private') || repo.get('public') === false));
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
     const notificationIds = Set([notification.get('id')]);
@@ -125,16 +131,31 @@ export default class extends React.PureComponent {
           <MainColumn>
             <HeaderRow>
               <FullView center horizontal>
-                <Label numberOfLines={1} color={color} muted={read} outline>{label}</Label>
+                <Label
+                  color="base01"
+                  isPrivate={isPrivate}
+                  muted={read}
+                  numberOfLines={1}
+                  textColor={color}
+                >
+                  {label}
+                </Label>
+
                 <IntervalRefresh
                   interval={1000}
                   onRender={() => {
                     const dateText = getDateSmallText(updatedAt, ' ');
                     return dateText &&
-                      <SmallText numberOfLines={1} muted={read}>&nbsp;&nbsp;{dateText}</SmallText>;
+                      <SmallText
+                        numberOfLines={1}
+                        muted
+                      >
+                        &nbsp;&nbsp;{dateText}
+                      </SmallText>;
                   }}
                 />
               </FullView>
+
               <CardIcon
                 name={cardIcon}
                 color={cardIconColor}

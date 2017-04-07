@@ -34,7 +34,7 @@ export default class extends React.PureComponent {
         {...props}
       >
         <StyledText numberOfLines={1} muted={read}>
-          <StyledText muted><Icon name="book" />&nbsp;</StyledText>
+          <StyledText muted={read}><Icon name="book" />&nbsp;</StyledText>
           {title}
         </StyledText>
       </TouchableRow>
