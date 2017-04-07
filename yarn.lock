@@ -235,10 +235,6 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-autobind-decorator@^1.3.2:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-1.3.4.tgz#b67560e6bbbb68a35c049c82d6351ea0e82d820d"
-
 aws-sign2@~0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.6.0.tgz#14342dd38dbcc94d0e5b87d763cd63612c0e794f"
@@ -2357,9 +2353,9 @@ getport@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/getport/-/getport-0.1.0.tgz#abddf3d5d1e77dd967ccfa2b036a0a1fb26fd7f7"
 
-"github@https://github.com/brunolemos/react-native-github-api":
+"github@git+https://github.com/brunolemos/react-native-github-api.git":
   version "8.0.0"
-  resolved "https://github.com/brunolemos/react-native-github-api#2068c68ce3eb17c3f754ffa557efa6100ec4f964"
+  resolved "git+https://github.com/brunolemos/react-native-github-api.git#2068c68ce3eb17c3f754ffa557efa6100ec4f964"
   dependencies:
     buffer "^5.0.2"
     https-proxy-agent "^1.0.0"
@@ -4169,11 +4165,16 @@ react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
 
-react-native-drawer-layout@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-1.1.1.tgz#71aa76793e2a8ee451c3e9d0b76b6092d881899c"
+react-native-drawer-layout-polyfill@^1.0.4:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-drawer-layout-polyfill/-/react-native-drawer-layout-polyfill-1.3.0.tgz#50ea3f1dceed360b06f24a33b5ef3701d5c1417a"
   dependencies:
-    autobind-decorator "^1.3.2"
+    react-native-drawer-layout "1.3.0"
+
+react-native-drawer-layout@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-1.3.0.tgz#3f9942c4c57e18bfe947a1a9b624365c91914280"
+  dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
 react-native-immutable-list-view@^0.3.1:
@@ -4186,17 +4187,17 @@ react-native-linear-gradient@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.0.0.tgz#7442c00e1fcd9fca329119dcbaf744d12bcd1b5a"
 
-"react-native-orientation-listener@https://github.com/iRoachie/react-native-orientation-listener":
+"react-native-orientation-listener@git+https://github.com/iRoachie/react-native-orientation-listener.git":
   version "0.0.4"
-  resolved "https://github.com/iRoachie/react-native-orientation-listener#e6b32edaceac19fc7580e96e94d2b4f7c162632e"
+  resolved "git+https://github.com/iRoachie/react-native-orientation-listener.git#e6b32edaceac19fc7580e96e94d2b4f7c162632e"
 
 react-native-prompt-android@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/react-native-prompt-android/-/react-native-prompt-android-0.0.5.tgz#dfc5fd2068da3b894d9bd4fe59082e775d141122"
 
-react-native-tab-view@^0.0.56:
-  version "0.0.56"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.56.tgz#7417a1f6502deef49abf58ba76a1cde213abbbf1"
+react-native-tab-view@^0.0.57:
+  version "0.0.57"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.57.tgz#715e2ea4100fa50168e134df3947dd76ebd55743"
 
 react-native-vector-icons@^4.0.0:
   version "4.0.0"
@@ -4211,9 +4212,9 @@ react-native-wkwebview-reborn@^1.4.0:
   dependencies:
     fbjs "^0.8.3"
 
-react-native@0.43.0-rc.0:
-  version "0.43.0-rc.0"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.43.0-rc.0.tgz#0eefefcda4e5546b69072fa9020c51e42294cb2e"
+react-native@0.43.2:
+  version "0.43.2"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.43.2.tgz#83cdb23d7a9cba207acbb52ad2f0b167df9b42b0"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -4296,16 +4297,16 @@ react-native@0.43.0-rc.0:
     xpipe "^1.0.5"
     yargs "^6.4.0"
 
-react-navigation@^1.0.0-beta.6:
-  version "1.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.0.0-beta.6.tgz#56172ef7493a461b05d362674290eae4bdcaef6a"
+"react-navigation@git+https://github.com/react-community/react-navigation.git#7edd9a7":
+  version "1.0.0-beta.7"
+  resolved "git+https://github.com/react-community/react-navigation.git#7edd9a7"
   dependencies:
     clamp "^1.0.1"
     fbjs "^0.8.5"
     hoist-non-react-statics "^1.2.0"
     path-to-regexp "^1.7.0"
-    react-native-drawer-layout "^1.1.0"
-    react-native-tab-view "^0.0.56"
+    react-native-drawer-layout-polyfill "^1.0.4"
+    react-native-tab-view "^0.0.57"
 
 react-proxy@^1.1.7:
   version "1.1.8"
@@ -4342,9 +4343,9 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react@16.0.0-alpha.3:
-  version "16.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0-alpha.3.tgz#addfd7ae9d801fd20c6244142354ae0cb7b1fe00"
+react@16.0.0-alpha.6:
+  version "16.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0-alpha.6.tgz#2ccb1afb4425ccc12f78a123a666f2e4c141adb9"
   dependencies:
     fbjs "^0.8.9"
     loose-envify "^1.1.0"
