@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import debounce from '../../utils/hoc/debounce';
 import withIsCurrentRoute from '../../utils/hoc/withIsCurrentRoute';
 import NotificationColumnsContainer from '../NotificationColumnsContainer';
+import NotificationsTabIconContainer from '../NotificationsTabIconContainer';
 import Screen from '../../components/Screen';
-import TabIcon from '../../components/TabIcon';
 import { getMainNavigationState, isReadySelector } from '../../selectors';
 import type { State, ThemeObject } from '../../utils/types';
 
@@ -57,7 +57,7 @@ NotificationsScreen.navigationOptions = {
   tabBar: {
     label: 'Notifications',
     icon: ({ tintColor }: { tintColor: 'string' }) => (
-      <TabIcon icon="bell" color={tintColor} />
+      <NotificationsTabIconContainer icon="bell" color={tintColor} />
     ),
   },
 };

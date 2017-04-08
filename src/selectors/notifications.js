@@ -2,6 +2,7 @@
 /*  eslint-disable import/prefer-default-export */
 
 import { denormalize } from 'denormalizr';
+import { Set } from 'immutable';
 
 import {
   createImmutableSelectorCreator,
@@ -129,4 +130,11 @@ export const notificationsUpdatedAtSelector = createImmutableSelector(
 export const notificationsErrorSelector = createImmutableSelector(
   notificationDetailsSelector,
   notifications => notifications.get('error'),
+);
+
+export const notificationsUnreadCountSelector = createImmutableSelector(
+  unarchivedNotificationIdsSelector,
+  readNotificationIdsSelector,
+  (unarchivedNotificationIds, readNotificationIds) =>
+    Set(unarchivedNotificationIds).subtract(readNotificationIds).size,
 );
