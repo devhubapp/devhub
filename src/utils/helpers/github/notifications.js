@@ -1,8 +1,7 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import { Platform } from 'react-native';
-import { capitalize, camelCase } from 'lodash';
+import { capitalize, camelCase, memoize } from 'lodash';
 import { fromJS, Iterable, List, Map, OrderedMap } from 'immutable';
 
 import { get, getIn, setIn } from '../../immutable';
@@ -298,7 +297,7 @@ export const defaultFilterColumnsData = OrderedMap({
 });
 
 
-export function notificationsToFilterColumnData(notifications) {
+export const notificationsToFilterColumnData = memoize((notifications) => {
   let result = defaultFilterColumnsData;
   if (!notifications) return result;
 
@@ -348,4 +347,5 @@ export function notificationsToFilterColumnData(notifications) {
   });
 
   return result;
-}
+});
+
