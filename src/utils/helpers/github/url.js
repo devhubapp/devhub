@@ -1,14 +1,16 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import { Linking, Platform } from 'react-native';
+import { Platform } from 'react-native';
 
+import Browser from '../../../libs/browser';
 import { get } from '../../immutable';
 
 import type {
   GithubIssue,
   GithubPullRequest,
   GithubRepo,
+  ThemeObject,
 } from '../../types';
 
 export const baseURL = 'https://github.com';
@@ -111,29 +113,42 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string
   return `${baseURL}/${restOfURL}`;
 }
 
-function openURL(navigation: Object, url: string) {
+function openURL(
+  url: string,
+  {
+    safariOptions = {},
+  }: { safariOptions: Object } = {},
+) {
   if (!url) return;
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
-  let uri = url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url;
+  let uri = url[0] === '/' && url.indexOf('github.com') < 0
+    ? `${baseURL}${url}`
+    : url;
   uri = uri.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(uri) : uri;
 
-  if (Platform.OS === 'web') {
-    Linking.openURL(uri);
-    return;
-  }
-
-  navigation.navigate('browser', { uri });
+  Browser.openURL(
+    uri,
+    Platform.select({
+      ios: {
+        tintColor: '#000000',
+        ...safariOptions,
+      },
+      default: undefined,
+    }),
+  );
 }
 
 export function openOnGithub(
-  navigation: Object,
   obj: string | GithubRepo | GithubIssue | GithubPullRequest,
+  options?: { safariOptions: Object },
 ) {
   if (!obj) return;
 
-  const uri = typeof obj === 'string' ? obj : (get(obj, 'html_url') || get(obj, 'url'));
+  const uri = typeof obj === 'string'
+    ? obj
+    : get(obj, 'html_url') || get(obj, 'url');
   if (!uri) return;
 
-  openURL(navigation, uri);
+  openURL(uri, options || {});
 }

@@ -38,6 +38,7 @@
     "react-native-linear-gradient": "^2.0.0",
     "react-native-orientation-listener": "git+https://github.com/iRoachie/react-native-orientation-listener.git",
     "react-native-prompt-android": "^0.0.5",
+    "react-native-safari-view": "^2.0.0",
     "react-native-vector-icons": "^4.0.0",
     "react-native-wkwebview-reborn": "^1.4.0",
     "react-navigation": "git+https://github.com/react-community/react-navigation.git#7edd9a7",

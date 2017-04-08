@@ -4195,6 +4195,10 @@ react-native-prompt-android@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/react-native-prompt-android/-/react-native-prompt-android-0.0.5.tgz#dfc5fd2068da3b894d9bd4fe59082e775d141122"
 
+react-native-safari-view@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.0.0.tgz#3aeb40693b0765df16b9beaf8654b60c7ff1d7ed"
+
 react-native-tab-view@^0.0.57:
   version "0.0.57"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.57.tgz#715e2ea4100fa50168e134df3947dd76ebd55743"

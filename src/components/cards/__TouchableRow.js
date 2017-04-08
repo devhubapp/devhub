@@ -6,7 +6,6 @@ import { withTheme } from 'styled-components/native';
 import ScrollableButton from '../buttons/ScrollableButton';
 import TransparentTextOverlay from '../TransparentTextOverlay';
 import { openOnGithub } from '../../utils/helpers/github/url';
-import { withNavigation } from '../../libs/navigation';
 
 import {
   ContentRow,
@@ -19,14 +18,12 @@ import {
 import { contentPadding, radius } from '../../styles/variables';
 import type { ThemeObject } from '../../utils/types';
 
-@withNavigation
 @withTheme
 export default class extends React.PureComponent {
   props: {
     children: React.Element,
     left?: React.Element,
     narrow?: boolean,
-    navigation: Object,
     onPress?: Function,
     pushed?: boolean,
     read?: boolean,
@@ -40,7 +37,6 @@ export default class extends React.PureComponent {
       children,
       left,
       narrow,
-      navigation,
       onPress,
       read,
       right,
@@ -65,7 +61,7 @@ export default class extends React.PureComponent {
                 radius={radius}
               >
                 <ScrollableButton
-                  onPress={onPress || (url ? (() => openOnGithub(navigation, url)) : null)}
+                  onPress={onPress || (url ? (() => openOnGithub(url)) : null)}
                   horizontal
                 >
                   {children}

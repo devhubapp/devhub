@@ -5,7 +5,6 @@ import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 
 import Octicon from '../../libs/icon';
-import { withNavigation } from '../../libs/navigation';
 
 import ScrollableContentContainer from '../ScrollableContentContainer';
 import {
@@ -170,15 +169,15 @@ export const CardIcon = styled(Icon)`
   font-size: 18px;
 `;
 
-type ItemIdProps = { icon?: string, navigation: Object, number: number, read?: boolean, url: string };
-export const CardItemId = withNavigation(({ icon, navigation, number, read, url }: ItemIdProps) => {
+type ItemIdProps = { icon?: string, theme: Object, number: number, read?: boolean, url: string };
+export const CardItemId = ({ icon, number, read, url }: ItemIdProps) => {
   if (!number && !icon) return null;
 
   const parsedNumber = parseInt(number, 10) || number;
 
   return (
     <ItemIdContainer>
-      <ItemId onPress={url ? (() => openOnGithub(navigation, url)) : null} muted={read}>
+      <ItemId onPress={url ? (() => openOnGithub(url)) : null} muted={read}>
         {icon ? <Icon name={icon} /> : ''}
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}
@@ -186,7 +185,7 @@ export const CardItemId = withNavigation(({ icon, navigation, number, read, url 
       </ItemId>
     </ItemIdContainer>
   );
-});
+};
 
 CardItemId.defaultProps = {
   icon: undefined,

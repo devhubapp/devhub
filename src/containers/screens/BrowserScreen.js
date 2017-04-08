@@ -3,16 +3,16 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import Browser from '../../components/Browser';
+import WebView from '../../components/WebView';
 import Screen from '../../components/Screen';
 
-const StyledBrowser = styled(Browser) `
+const StyledWebView = styled(WebView) `
   flex: 1;
 `;
 
 type Props = { navigation: Object };
 export default ({ navigation: { state: { params: { uri, ...params } } }, ...props }: Props) => (
   <Screen>
-    <StyledBrowser source={{ uri }} {...params} {...props} />
+    <StyledWebView source={{ uri }} {...params} {...props} />
   </Screen>
 );
