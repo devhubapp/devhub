@@ -27,8 +27,9 @@ export default {
       .then(isAvailable => {
         if (isAvailable === false) throw new Error('SafariView not available.');
 
-        SafariView.show({
+        return SafariView.show({
           url,
+          tintColor: '#000000',
           ...options,
         });
       })
@@ -37,7 +38,7 @@ export default {
           url,
           ...options,
         });
-        Linking.openURL(url);
+        return Linking.openURL(url);
       });
   },
 };

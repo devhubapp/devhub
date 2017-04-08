@@ -1,8 +1,6 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import { Platform } from 'react-native';
-
 import Browser from '../../../libs/browser';
 import { get } from '../../immutable';
 
@@ -10,7 +8,6 @@ import type {
   GithubIssue,
   GithubPullRequest,
   GithubRepo,
-  ThemeObject,
 } from '../../types';
 
 export const baseURL = 'https://github.com';
@@ -127,16 +124,7 @@ function openURL(
     : url;
   uri = uri.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(uri) : uri;
 
-  Browser.openURL(
-    uri,
-    Platform.select({
-      ios: {
-        tintColor: '#000000',
-        ...safariOptions,
-      },
-      default: undefined,
-    }),
-  );
+  Browser.openURL(uri, safariOptions);
 }
 
 export function openOnGithub(
