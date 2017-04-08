@@ -3,6 +3,9 @@
 
 import { createSelector } from 'reselect';
 
+import { notificationsIsLoadingSelector } from './notifications';
+import { subscriptionsIsLoadingSelector } from './subscriptions';
+
 export const appEntitySelector = state => state.get('app');
 
 export const isReadySelector = createSelector(
@@ -13,4 +16,11 @@ export const isReadySelector = createSelector(
 export const rehydratedSelector = createSelector(
   appEntitySelector,
   app => app && app.get('rehydrated'),
+);
+
+export const isFetchingSelector = createSelector(
+  notificationsIsLoadingSelector,
+  subscriptionsIsLoadingSelector,
+  (isLoadingNotifications, isLoadingSubscriptions) =>
+    isLoadingNotifications || isLoadingSubscriptions,
 );

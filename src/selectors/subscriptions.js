@@ -38,3 +38,8 @@ export const subscriptionEventsSelector = createImmutableSelector(
 );
 
 export default denormalizedSubscriptionsSelector;
+
+export const subscriptionsIsLoadingSelector = createImmutableSelector(
+  subscriptionsEntitySelector,
+  subscriptions => subscriptions.some(subscription => subscription.get('loading')),
+);

@@ -9,6 +9,7 @@ import { get } from '../utils/immutable';
 
 import {
   getSelectedRouteFromNavigationState,
+  isFetchingSelector,
   isLoggedSelector,
   isReadySelector,
   themeSelector,
@@ -22,6 +23,7 @@ const View = styled.View`
 
 const mapStateToProps = (state: State) => ({
   isLogged: isLoggedSelector(state),
+  isFetching: isFetchingSelector(state),
   ready: isReadySelector(state),
   theme: themeSelector(state),
 });
@@ -30,6 +32,7 @@ const mapStateToProps = (state: State) => ({
 export default class extends React.PureComponent {
   static defaultProps = {
     isLogged: false,
+    isFetching: false,
     ready: false,
     theme: {},
   };
@@ -63,6 +66,7 @@ export default class extends React.PureComponent {
 
   props: {
     isLogged?: boolean,
+    isFetching?: boolean,
     ready?: boolean,
     theme: ThemeObject,
   };
@@ -70,7 +74,7 @@ export default class extends React.PureComponent {
   navigation = null;
 
   render() {
-    const { theme } = this.props;
+    const { isFetching, theme } = this.props;
 
     return (
       <ThemeProvider theme={theme}>
@@ -79,6 +83,7 @@ export default class extends React.PureComponent {
             <StatusBar
               backgroundColor={theme.statusBarBackground || theme.base00}
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+              networkActivityIndicatorVisible={isFetching}
             />}
 
           <AppNavigatorContainer
