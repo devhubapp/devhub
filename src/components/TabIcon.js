@@ -5,25 +5,22 @@ import styled from 'styled-components/native';
 import { View } from 'react-native';
 
 import Icon from '../libs/icon';
-
-const badgeSize = 16;
+import { radius } from '../styles/variables';
 
 const BadgeContainer = styled.View`
   position: absolute;
-  right: ${-badgeSize / 2};
-  top: -2;
+  right: -8px;
+  top: -2px;
   background-color: ${({ theme }) => theme.red};
-  border-radius: ${badgeSize};
-  min-width: ${badgeSize};
-  height: ${badgeSize};
+  border-radius: ${radius}px;
   justify-content: center;
   align-items: center;
 `;
 
 const BadgeText = styled.Text`
-  padding-horizontal: 2;
-  line-height: ${badgeSize};
-  font-size: 10;
+  paddingHorizontal: 4px;
+  paddingVertical: 2px;
+  font-size: 10px;
   background-color: transparent;
   color: #ffffff;
 `;
