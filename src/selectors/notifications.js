@@ -35,6 +35,7 @@ export const notificationIdsSelector = createImmutableSelector(
     notifications
       .filter(Boolean)
       .filterNot(isDeletedFilter)
+      .sort(sortNotificationsByDate)
       .map(notification => notification.get('id'))
       .toList(),
 );
@@ -46,6 +47,7 @@ export const unarchivedNotificationIdsSelector = createImmutableSelector(
       .filter(Boolean)
       .filterNot(isDeletedFilter)
       .filterNot(isArchivedFilter)
+      .sort(sortNotificationsByDate)
       .map(notification => notification.get('id'))
       .toList(),
 );

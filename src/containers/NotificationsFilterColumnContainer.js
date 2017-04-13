@@ -24,9 +24,7 @@ const makeMapStateToProps = (
   state: State,
   { column, updatedAt }: {column: Object, updatedAt?: Date},
 ) => {
-  const denormalizedNotificationsSelector = makeDenormalizedNotificationsSelector(
-    state,
-  );
+  const denormalizedNotificationsSelector = makeDenormalizedNotificationsSelector();
 
   const notifications = denormalizedNotificationsSelector(state, {
     notificationIds: column.get('notificationIds') ||
