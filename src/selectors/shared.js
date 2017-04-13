@@ -66,20 +66,20 @@ export const createImmutableSelectorCreator = _.memoize((numberOfArgsToMemoize) 
 export const createImmutableSelector = createImmutableSelectorCreator();
 
 export function isDeletedFilter(obj) {
-  return obj ? !!obj.get('deleted_at') : true;
+  if (!obj) return true;
+
+  return !!obj.get('deleted_at') &&
+    !(obj.get('updated_at') &&
+      moment(obj.get('updated_at')).isAfter(obj.get('deleted_at')));
 }
 
 export function isArchivedFilter(obj) {
   if (!obj) return false;
   if (isDeletedFilter(obj)) return false;
 
-  return obj.get('archived_at') &&
-    !(
-      // if any update ocurres after it was archived, it is consided unarchived
-      obj.get('updated_at') &&
-      moment(obj.get('updated_at')).isAfter(obj.get('archived_at'))
-    )
-  ;
+  return !!obj.get('archived_at') &&
+    !(obj.get('updated_at') &&
+      moment(obj.get('updated_at')).isAfter(obj.get('archived_at')));
 }
 
 export function isReadFilter(obj) {
