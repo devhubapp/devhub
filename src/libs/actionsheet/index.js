@@ -28,6 +28,8 @@ type ActionSheetProps = {
   radius: ?number,
   tintColor: ?string,
   title: ?string,
+  titleContainerStyle: ?any,
+  titleTextStyle: ?any,
   useNativeDriver: ?boolean
 };
 
@@ -271,7 +273,7 @@ export default class ActionSheet extends PureComponent {
   };
 
   renderTitle({ style, textStyle } = {}) {
-    const { optionContainerStyle, radius, title } = this.props;
+    const { optionContainerStyle, radius, title, titleContainerStyle, titleTextStyle } = this.props;
 
     if (!title) {
       return null;
@@ -287,12 +289,13 @@ export default class ActionSheet extends PureComponent {
             borderTopRightRadius: radius,
           },
           optionContainerStyle,
+          titleContainerStyle,
           style,
         ]}
       >
         {React.isValidElement(title)
           ? title
-          : <Text style={[styles.titleText, textStyle]} numberOfLines={1}>
+          : <Text style={[styles.titleText, titleTextStyle, textStyle]} numberOfLines={1}>
             {title}
           </Text>}
       </View>

@@ -3,8 +3,7 @@
 import React from 'react';
 import { Iterable, List, Set } from 'immutable';
 
-import ActionSheet from '../../libs/actionsheet';
-
+import ActionSheet from '../ActionSheet';
 import ColumnWithList, {
   HeaderButton,
   HeaderButtonIcon,
@@ -216,14 +215,14 @@ export default class extends React.PureComponent {
         />
 
         <ActionSheet
-          ref={ref => {
+          innerRef={ref => {
             this.ActionSheet = ref;
           }}
           title={title}
           options={buttons}
           cancelButtonIndex={BUTTONS.CANCEL}
           destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
-          onPress={this.handleActionSheetButtonPress}
+          onSelect={this.handleActionSheetButtonPress}
         />
 
         {

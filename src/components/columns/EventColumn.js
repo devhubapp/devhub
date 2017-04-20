@@ -3,8 +3,6 @@
 import React from 'react';
 import { List, Set } from 'immutable';
 
-import ActionSheet from '../../libs/actionsheet';
-
 import {
   makeColumnReadIdsSelector,
 } from '../../selectors/columns';
@@ -15,6 +13,7 @@ import ColumnWithList, {
   HeaderButtonsContainer,
 } from './_ColumnWithList';
 
+import ActionSheet from '../ActionSheet';
 import EventCardContainer from '../../containers/EventCardContainer';
 import CreateColumnUtils from '../utils/CreateColumnUtils';
 import { FullView } from '../cards/__CardComponents';
@@ -206,12 +205,12 @@ export default class extends React.PureComponent {
         />
 
         <ActionSheet
-          ref={(ref) => { this.ActionSheet = ref; }}
+          innerRef={(ref) => { this.ActionSheet = ref; }}
           title={title}
           options={buttons}
           cancelButtonIndex={BUTTONS.CANCEL}
           destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
-          onPress={this.handleActionSheetButtonPress}
+          onSelect={this.handleActionSheetButtonPress}
         />
       </FullView>
     );
