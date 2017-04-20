@@ -54,12 +54,10 @@ class NotificationsScreen extends React.PureComponent {
 }
 
 NotificationsScreen.navigationOptions = {
-  tabBar: {
-    label: 'Notifications',
-    icon: ({ tintColor }: { tintColor: 'string' }) => (
-      <NotificationsTabIconContainer icon="bell" color={tintColor} />
-    ),
-  },
+  tabBarLabel: 'Notifications',
+  tabBarIcon: ({ tintColor }: { tintColor: 'string' }) => (
+    <NotificationsTabIconContainer icon="bell" color={tintColor} />
+  ),
 };
 
 export default NotificationsScreen;

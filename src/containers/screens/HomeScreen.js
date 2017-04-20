@@ -54,12 +54,10 @@ class HomeScreen extends React.PureComponent {
 }
 
 HomeScreen.navigationOptions = {
-  tabBar: {
-    label: 'Feed',
-    icon: ({ tintColor }: { tintColor: 'string' }) => (
-      <TabIcon icon="home" color={tintColor} />
-    ),
-  },
+  tabBarLabel: 'Feed',
+  tabBarIcon: ({ tintColor }: { tintColor: 'string' }) => (
+    <TabIcon icon="home" color={tintColor} />
+  ),
 };
 
 export default HomeScreen;

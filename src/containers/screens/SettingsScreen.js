@@ -99,12 +99,10 @@ class SettingsScreen extends React.PureComponent {
 }
 
 SettingsScreen.navigationOptions = {
-  tabBar: {
-    label: 'Me',
-    icon: ({ tintColor }: { tintColor: 'string' }) => (
-      <TabIcon icon="octoface" color={tintColor} />
-    ),
-  },
+  tabBarLabel: 'Me',
+  tabBarIcon: ({ tintColor }: { tintColor: 'string' }) => (
+    <TabIcon icon="octoface" color={tintColor} />
+  ),
 };
 
 export default SettingsScreen;
