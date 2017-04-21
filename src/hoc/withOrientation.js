@@ -12,19 +12,24 @@ export default Component => class extends React.PureComponent {
     orientation: Orientation,
   });
 
+  mounted = false;
+
   onOrientationChange = ({ orientation }) => {
     this.setState({ orientation });
   };
 
   componentDidMount() {
+    this.mounted = true;
+
     orientationListener.getOrientation((orientation) => {
-      this.setState({ orientation });
+      if (this.mounted) this.setState({ orientation });
     });
 
     orientationListener.addListener(this.onOrientationChange);
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     orientationListener.removeListener(this.onOrientationChange);
   }
 
