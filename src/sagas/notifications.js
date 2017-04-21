@@ -78,8 +78,7 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
     yield put(loadNotificationsSuccess(requestPayload, finalData, meta, sagaActionChunk));
   } catch (e) {
     console.log('onLoadNotificationsRequest catch', e, requestPayload);
-    let errorMessage = (e.message || {}).message || e.message || e.body || e.status;
-    if (errorMessage) errorMessage = `Failed to update notifications: ${errorMessage}`;
+    const errorMessage = (e.message || {}).message || e.message || e.body || e.status;
     yield put(loadNotificationsFailure(requestPayload, errorMessage, sagaActionChunk));
   }
 }
