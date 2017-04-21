@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: OPTION_HEIGHT,
-    marginBottom: OPTION_MARGIN,
     padding: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
   },
@@ -218,13 +217,19 @@ export default class ActionSheet extends PureComponent {
   }
 
   renderOption = (index, label, { color, style, textStyle } = {}) => {
-    const { optionContainerStyle, optionTextStyle } = this.props;
+    const { optionContainerStyle, optionTextStyle, options } = this.props;
+    const isLastOption = index === options.length - 1;
 
     return (
       <TouchableOpacity
         key={index}
         activeOpacity={0.9}
-        style={[styles.optionButton, optionContainerStyle, style]}
+        style={[
+          styles.optionButton,
+          { marginBottom: isLastOption ? 0 : OPTION_MARGIN },
+          optionContainerStyle,
+          style,
+        ]}
         onPress={() => this.select(index)}
       >
         {React.isValidElement(label)
@@ -316,6 +321,7 @@ export default class ActionSheet extends PureComponent {
       containerPadding,
       containerStyle,
       optionsContainerStyle,
+      radius,
     } = this.props;
     const {
       height,
@@ -356,7 +362,13 @@ export default class ActionSheet extends PureComponent {
             if (layout.height > 0) this.setState({ height: layout.height });
           }}
         >
-          <View style={[styles.optionsContainer, optionsContainerStyle]}>
+          <View
+            style={[
+              styles.optionsContainer,
+              { backgroundColor: '#ededed', borderRadius: radius },
+              optionsContainerStyle,
+            ]}
+          >
             {this.renderTitle()}
             <ScrollView scrollEnabled={height > MAX_HEIGHT}>
               {this.renderOptions()}
