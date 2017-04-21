@@ -27,7 +27,7 @@ const checkDiffAndPatchDebounced = debounce(
 
       if (stateDiff && _currentUserId) {
         applyPatchOnFirebase({
-          debug: __DEV__,
+          debug: false, // __DEV__,
           patch: stateDiff,
           ref: _databaseRef,
           rootDatabaseRef: _databaseRef,
@@ -80,13 +80,13 @@ export function startFirebase({ store, userId }) {
           store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
           _lastState = store.getState();
         },
-        debug: __DEV__,
+        debug: false, // __DEV__,
         map: mapFirebaseToState,
         ref: _databaseRef,
         rootDatabaseRef: _databaseRef,
       });
     },
-    debug: __DEV__,
+    debug: false, // __DEV__,
     eventName: 'value',
     map: mapFirebaseToState,
     once: true,
