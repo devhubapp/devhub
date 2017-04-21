@@ -19,7 +19,7 @@ type ActionSheetProps = {
   containerPadding: ?number,
   containerStyle: ?any,
   destructiveButtonIndex: ?number,
-  icons: ?Array<number>,
+  // icons: ?Array<number>,
   onSelect: ?(i: number) => void,
   optionContainerStyle: ?any,
   optionTextStyle: ?any,
@@ -273,7 +273,13 @@ export default class ActionSheet extends PureComponent {
   };
 
   renderTitle({ style, textStyle } = {}) {
-    const { optionContainerStyle, radius, title, titleContainerStyle, titleTextStyle } = this.props;
+    const {
+      optionContainerStyle,
+      radius,
+      title,
+      titleContainerStyle,
+      titleTextStyle,
+    } = this.props;
 
     if (!title) {
       return null;
@@ -295,7 +301,10 @@ export default class ActionSheet extends PureComponent {
       >
         {React.isValidElement(title)
           ? title
-          : <Text style={[styles.titleText, titleTextStyle, textStyle]} numberOfLines={1}>
+          : <Text
+            style={[styles.titleText, titleTextStyle, textStyle]}
+            numberOfLines={1}
+          >
             {title}
           </Text>}
       </View>
@@ -339,11 +348,13 @@ export default class ActionSheet extends PureComponent {
             styles.container__bottom,
             containerStyle,
             {
-              height,
               padding: containerPadding,
               transform: [{ translateY }],
             },
           ]}
+          onLayout={({ nativeEvent: { layout } }) => {
+            if (layout.height > 0) this.setState({ height: layout.height });
+          }}
         >
           <View style={[styles.optionsContainer, optionsContainerStyle]}>
             {this.renderTitle()}
