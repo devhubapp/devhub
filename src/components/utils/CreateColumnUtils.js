@@ -8,8 +8,15 @@ import { getOwnerAndRepo } from '../../utils/helpers/github/shared';
 import type { ActionCreators } from '../../utils/types';
 
 export default class {
-  static onSelectUserFeedType(actions: ActionCreators, { createColumnOrder } = {}) {
-    const { createColumn, createSubscription, loadUserReceivedEvents } = actions;
+  static onSelectUserFeedType(
+    actions: ActionCreators,
+    { createColumnOrder } = {},
+  ) {
+    const {
+      createColumn,
+      createSubscription,
+      loadUserReceivedEvents,
+    } = actions;
 
     prompt(
       'User feed',
@@ -18,11 +25,18 @@ export default class {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Create column',
-          onPress: (username) => {
+          onPress: username => {
             const params = { username };
-            const subscriptionId = generateSubscriptionId(requestTypes.USER_RECEIVED_EVENTS, params);
+            const subscriptionId = generateSubscriptionId(
+              requestTypes.USER_RECEIVED_EVENTS,
+              params,
+            );
 
-            createSubscription(subscriptionId, requestTypes.USER_RECEIVED_EVENTS, params);
+            createSubscription(
+              subscriptionId,
+              requestTypes.USER_RECEIVED_EVENTS,
+              params,
+            );
 
             createColumn({
               title: username,
@@ -48,11 +62,18 @@ export default class {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Create column',
-          onPress: (username) => {
+          onPress: username => {
             const params = { username };
-            const subscriptionId = generateSubscriptionId(requestTypes.USER_EVENTS, params);
+            const subscriptionId = generateSubscriptionId(
+              requestTypes.USER_EVENTS,
+              params,
+            );
 
-            createSubscription(subscriptionId, requestTypes.USER_EVENTS, params);
+            createSubscription(
+              subscriptionId,
+              requestTypes.USER_EVENTS,
+              params,
+            );
 
             createColumn({
               title: username,
@@ -68,7 +89,10 @@ export default class {
     );
   }
 
-  static onSelectRepositoryType(actions: ActionCreators, { createColumnOrder } = {}) {
+  static onSelectRepositoryType(
+    actions: ActionCreators,
+    { createColumnOrder } = {},
+  ) {
     const { createColumn, createSubscription, loadRepoEvents } = actions;
 
     prompt(
@@ -78,14 +102,21 @@ export default class {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Create column',
-          onPress: (repoFullName) => {
+          onPress: repoFullName => {
             const { owner, repo } = getOwnerAndRepo(repoFullName);
             if (!(owner && repo)) return;
 
             const params = { owner, repo };
-            const subscriptionId = generateSubscriptionId(requestTypes.REPO_EVENTS, params);
+            const subscriptionId = generateSubscriptionId(
+              requestTypes.REPO_EVENTS,
+              params,
+            );
 
-            createSubscription(subscriptionId, requestTypes.REPO_EVENTS, params);
+            createSubscription(
+              subscriptionId,
+              requestTypes.REPO_EVENTS,
+              params,
+            );
 
             createColumn({
               title: repo,
@@ -111,14 +142,21 @@ export default class {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Create column',
-          onPress: (_org) => {
+          onPress: _org => {
             const org = (_org || '').trim();
             if (!org) return;
 
             const params = { org };
-            const subscriptionId = generateSubscriptionId(requestTypes.ORG_PUBLIC_EVENTS, params);
+            const subscriptionId = generateSubscriptionId(
+              requestTypes.ORG_PUBLIC_EVENTS,
+              params,
+            );
 
-            createSubscription(subscriptionId, requestTypes.ORG_PUBLIC_EVENTS, params);
+            createSubscription(
+              subscriptionId,
+              requestTypes.ORG_PUBLIC_EVENTS,
+              params,
+            );
 
             createColumn({
               title: org,
@@ -140,10 +178,22 @@ export default class {
       'Select the type of the column',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'User feed', onPress: () => this.onSelectUserFeedType(actions, params) },
-        { text: 'User events', onPress: () => this.onSelectUserType(actions, params) },
-        { text: 'Repository events', onPress: () => this.onSelectRepositoryType(actions, params) },
-        { text: 'Organization events', onPress: () => this.onSelectOrgType(actions, params) },
+        {
+          text: 'User feed',
+          onPress: () => this.onSelectUserFeedType(actions, params),
+        },
+        {
+          text: 'User events',
+          onPress: () => this.onSelectUserType(actions, params),
+        },
+        {
+          text: 'Repository events',
+          onPress: () => this.onSelectRepositoryType(actions, params),
+        },
+        {
+          text: 'Organization events',
+          onPress: () => this.onSelectOrgType(actions, params),
+        },
       ],
       {},
     );

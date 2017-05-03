@@ -23,13 +23,7 @@ const clearMessages = [
   'You rock!',
 ];
 
-const emojis = [
-  '👍',
-  '👏',
-  '💪',
-  '🎉',
-  '💯',
-];
+const emojis = ['👍', '👏', '💪', '🎉', '💯'];
 
 const getRandomClearMessage = () => {
   const randomIndex = Math.floor(Math.random() * clearMessages.length);
@@ -46,7 +40,7 @@ const getRandomEmoji = () => {
 const clearMessage = getRandomClearMessage();
 const emoji = getRandomEmoji();
 
-export const EmptyColumnContent = (props) => (
+export const EmptyColumnContent = props => (
   <Wrapper
     {...props}
     contentContainerStyle={{

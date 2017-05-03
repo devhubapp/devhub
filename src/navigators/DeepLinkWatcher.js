@@ -14,14 +14,15 @@ import { githubHTMLUrlFromAPIUrl } from '../utils/helpers/github/url';
 const getSchemeAndPathFromURL = url => {
   // no scheme
   if ((url || '').indexOf('://') === -1) {
-    return ({ scheme: null, path: url || '' });
+    return { scheme: null, path: url || '' };
   }
 
-  const [, scheme = null, path = null] = (url || '').match('([^:]+)://(.*)') || [];
+  const [, scheme = null, path = null] = (url || '')
+    .match('([^:]+)://(.*)') || [];
   return { path, scheme };
 };
 
-const mapDispatchToProps = ({ resetAppData: resetAppDataRequest });
+const mapDispatchToProps = { resetAppData: resetAppDataRequest };
 
 @connect(null, mapDispatchToProps)
 export default class extends React.PureComponent {
@@ -40,7 +41,7 @@ export default class extends React.PureComponent {
     Linking.removeEventListener('url', this._handleLinkingEvent);
   }
 
-  _handleGitHubURL = (url) => {
+  _handleGitHubURL = url => {
     if (!url) return;
 
     const { scheme, path } = getSchemeAndPathFromURL(url);
@@ -54,7 +55,7 @@ export default class extends React.PureComponent {
     Linking.openURL(_url);
   };
 
-  _handleDeepLinking = (url) => {
+  _handleDeepLinking = url => {
     console.debug('[DEEP LINK]', url);
 
     const { path, scheme } = getSchemeAndPathFromURL(url);
@@ -68,9 +69,9 @@ export default class extends React.PureComponent {
       default:
         break;
     }
-  }
+  };
 
-  _handleURL = (url) => {
+  _handleURL = url => {
     const { path, scheme } = getSchemeAndPathFromURL(url);
     if (!path) return;
 

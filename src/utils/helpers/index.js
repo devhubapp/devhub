@@ -13,12 +13,13 @@ import type { Theme } from '../types';
 // export * from './github';
 
 export function guid() {
-  const str4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); // eslint-disable-line no-bitwise, max-len
-  return (`${str4() + str4()}-${str4()}-${str4()}-${str4()}-${str4()}${str4()}${str4()}`);
+  const str4 = () =>
+    (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); // eslint-disable-line no-bitwise, max-len
+  return `${str4() + str4()}-${str4()}-${str4()}-${str4()}-${str4()}${str4()}${str4()}`;
 }
 
 export function isNight() {
-  const hours = (new Date()).getHours();
+  const hours = new Date().getHours();
   return hours >= 18 || hours <= 6;
 }
 
@@ -76,7 +77,8 @@ export function getDateWithHourAndMinuteText(date: Date) {
   return `${dateText} ${timeText}`;
 }
 
-export function getDateSmallText(date: Date) { // , separator = '•'
+export function getDateSmallText(date: Date) {
+  // , separator = '•'
   if (!date) return '';
 
   const momentDate = moment(date);
@@ -119,7 +121,10 @@ export function getDateSmallText(date: Date) { // , separator = '•'
 
 export function dateToHeaderFormat(date: Date | string): string {
   const _date = typeof date === 'string' ? new Date(date) : date;
-  return moment(_date).utc().format('ddd, DD MMM YYYY HH:mm:ss z').replace('UTC', 'GMT');
+  return moment(_date)
+    .utc()
+    .format('ddd, DD MMM YYYY HH:mm:ss z')
+    .replace('UTC', 'GMT');
 }
 
 export function arrayOfIdsToMergeableMap(ids: Array<string>, newValue: any) {
@@ -127,6 +132,5 @@ export function arrayOfIdsToMergeableMap(ids: Array<string>, newValue: any) {
     .filter(Boolean)
     .toMap()
     .mapKeys((key, value) => value.toString())
-    .map(() => newValue)
-  ;
+    .map(() => newValue);
 }

@@ -4,8 +4,10 @@ import React from 'react';
 import { List } from 'immutable';
 
 import Columns from './_Columns';
-import NotificationsFilterColumnContainer from '../../containers/NotificationsFilterColumnContainer';
-import NotificationColumnContainer from '../../containers/NotificationColumnContainer';
+import NotificationsFilterColumnContainer
+  from '../../containers/NotificationsFilterColumnContainer';
+import NotificationColumnContainer
+  from '../../containers/NotificationColumnContainer';
 import type { ActionCreators, Column as ColumnType } from '../../utils/types';
 
 export default class extends React.PureComponent {
@@ -14,10 +16,8 @@ export default class extends React.PureComponent {
     columns: Array<ColumnType>,
   };
 
-  renderFilterColumn = (column) => (
-    <NotificationsFilterColumnContainer
-      column={column}
-    />
+  renderFilterColumn = column => (
+    <NotificationsFilterColumnContainer column={column} />
   );
 
   renderItem = ({ index, item: column }) => {
@@ -37,7 +37,7 @@ export default class extends React.PureComponent {
         column={column}
         icon={column.get('icon')}
         title={column.get('title')}
-        {...(column.get('column') || {})}
+        {...column.get('column') || {}}
       />
     );
   };

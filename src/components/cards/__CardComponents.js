@@ -72,7 +72,7 @@ export const LeftColumn = styled.View`
   width: ${avatarWidth};
   margin-right: ${contentPadding};
 `;
-  // opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
+// opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 
 export const MainColumn = styled.View`
   flex: 1;
@@ -91,11 +91,7 @@ export const HeaderRow = styled(HorizontalView)`
 
 export const StyledText = styled.Text`
   background-color: transparent;
-  color: ${({ color, muted, read, theme }) => (
-    muted && read !== false
-      ? theme.base05
-      : (color && (theme[color] || color)) || theme.base04
-  )};
+  color: ${({ color, muted, read, theme }) => (muted && read !== false ? theme.base05 : (color && (theme[color] || color)) || theme.base04)};
   line-height: 20px;
   font-size: ${({ small }) => (small ? 12 : 14)}px;
   font-weight: ${({ read }) => (read === false ? 'bold' : 'normal')};
@@ -169,7 +165,13 @@ export const CardIcon = styled(Icon)`
   font-size: 18px;
 `;
 
-type ItemIdProps = { icon?: string, theme: Object, number: number, read?: boolean, url: string };
+type ItemIdProps = {
+  icon?: string,
+  theme: Object,
+  number: number,
+  read?: boolean,
+  url: string,
+};
 export const CardItemId = ({ icon, number, read, url }: ItemIdProps) => {
   if (!number && !icon) return null;
 
@@ -177,7 +179,7 @@ export const CardItemId = ({ icon, number, read, url }: ItemIdProps) => {
 
   return (
     <ItemIdContainer>
-      <ItemId onPress={url ? (() => openOnGithub(url)) : null} muted={read}>
+      <ItemId onPress={url ? () => openOnGithub(url) : null} muted={read}>
         {icon ? <Icon name={icon} /> : ''}
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}

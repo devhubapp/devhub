@@ -23,14 +23,18 @@ export function preferNewestMergeStrategy(entityA, entityB) {
     const dateA = new Date(entityA.updated_at);
     const dateB = new Date(entityB.updated_at);
 
-    return moment(dateB).isAfter(dateA) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
+    return moment(dateB).isAfter(dateA)
+      ? { ...entityA, ...entityB }
+      : { ...entityB, ...entityA };
   }
 
   if (entityA.created_at && entityB.created_at) {
     const dateA = new Date(entityA.created_at);
     const dateB = new Date(entityB.created_at);
 
-    return moment(dateB).isAfter(dateA) ? { ...entityA, ...entityB } : { ...entityB, ...entityA };
+    return moment(dateB).isAfter(dateA)
+      ? { ...entityA, ...entityB }
+      : { ...entityB, ...entityA };
   }
 
   return {
@@ -44,21 +48,27 @@ export function simpleIdAttribute(obj: { id: number | string }): string {
   return `${id}`.toLowerCase();
 }
 
-export function issueOrPullRequestIdAttribute(obj: GithubIssue | GithubPullRequest) {
+export function issueOrPullRequestIdAttribute(
+  obj: GithubIssue | GithubPullRequest,
+) {
   const url = getIn(obj, ['url']) || getIn(obj, ['repository_url']);
-  const number = getIn(obj, ['number']) || getIssueOrPullRequestNumberFromUrl(url);
+  const number =
+    getIn(obj, ['number']) || getIssueOrPullRequestNumberFromUrl(url);
 
   const repoFullName = getRepoFullNameFromUrl(url).toLowerCase();
-  return repoFullName && number ? `${repoFullName}#${number}` : simpleIdAttribute(obj);
+  return repoFullName && number
+    ? `${repoFullName}#${number}`
+    : simpleIdAttribute(obj);
 }
 
 export function commitIdAttribute(commit: GithubCommit) {
   const url = getIn(commit, ['url']);
-  return getIn(commit, ['sha'])
-    || getIn(commit, ['commit_id'])
-    || getCommitShaFromUrl(url)
-    || simpleIdAttribute(commit)
-  ;
+  return (
+    getIn(commit, ['sha']) ||
+    getIn(commit, ['commit_id']) ||
+    getCommitShaFromUrl(url) ||
+    simpleIdAttribute(commit)
+  );
 }
 export function releaseIdAttribute(release: GithubRelease) {
   const url = getIn(release, ['url']);
@@ -71,7 +81,10 @@ export function notificationProcessStrategy(notification: GithubNotification) {
   let newNotification = notification;
   let number;
 
-  if (newNotification.subject.type === 'Issue' || newNotification.subject.type === 'PullRequest') {
+  if (
+    newNotification.subject.type === 'Issue' ||
+    newNotification.subject.type === 'PullRequest'
+  ) {
     number = getIssueOrPullRequestNumberFromUrl(newNotification.subject.url);
 
     const subject = {
@@ -111,7 +124,9 @@ export function notificationProcessStrategy(notification: GithubNotification) {
   }
 
   // not really a comment link. why u do that github?
-  if (newNotification.subject.url === newNotification.subject.latest_comment_url) {
+  if (
+    newNotification.subject.url === newNotification.subject.latest_comment_url
+  ) {
     delete newNotification.subject.latest_comment_url;
   }
 
@@ -123,7 +138,10 @@ export function notificationProcessStrategy(notification: GithubNotification) {
         ...newNotification,
         comment: {
           id,
-          html_url: githubHTMLUrlFromAPIUrl(newNotification.subject.latest_comment_url, { number }),
+          html_url: githubHTMLUrlFromAPIUrl(
+            newNotification.subject.latest_comment_url,
+            { number },
+          ),
           url: newNotification.subject.latest_comment_url,
         },
       };

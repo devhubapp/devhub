@@ -12,18 +12,19 @@ import {
   getMapAnalysis,
 } from './helpers';
 
-import {
-  forEach,
-  get,
-  isObjectOrMap,
-} from '../../../utils/immutable';
+import { forEach, get, isObjectOrMap } from '../../../utils/immutable';
 
 export const firebaseCharMap = { '/': '__STRIPE__' };
 export const firebaseInvertedCharMap = _.invert(firebaseCharMap);
 
-export function createFirebaseHandler(
-  { blacklist, callback, debug = __DEV__, eventName, map, rootDatabaseRef },
-) {
+export function createFirebaseHandler({
+  blacklist,
+  callback,
+  debug = __DEV__,
+  eventName,
+  map,
+  rootDatabaseRef,
+}) {
   return snapshot => {
     const fullPath = getRelativePathFromRef(snapshot.ref, rootDatabaseRef);
     let value = snapshot.val();
@@ -32,12 +33,16 @@ export function createFirebaseHandler(
     if (eventName === 'value' && isObjectOrMap(value)) {
       value = getObjectFilteredByMap(value, map);
     } else {
-      blacklisted = blacklist && blacklist.length && blacklist.includes(snapshot.key);
+      blacklisted =
+        blacklist && blacklist.length && blacklist.includes(snapshot.key);
     }
 
     if (debug) {
       const suffix = blacklisted ? ', but ignored.' : ':';
-      console.debug(`[FIREBASE] Received ${eventName} on ${fullPath || '/'}${suffix}`, value);
+      console.debug(
+        `[FIREBASE] Received ${eventName} on ${fullPath || '/'}${suffix}`,
+        value,
+      );
     }
 
     if (blacklisted) {
@@ -45,7 +50,9 @@ export function createFirebaseHandler(
     }
 
     const firebasePathArr = fullPath.split('/').filter(Boolean);
-    const statePathArr = firebasePathArr.map(path => fixFirebaseKey(path, false));
+    const statePathArr = firebasePathArr.map(path =>
+      fixFirebaseKey(path, false),
+    );
     value = fixFirebaseKeysFromObject(value, false);
 
     if (typeof callback === 'function') {
@@ -59,9 +66,17 @@ export function createFirebaseHandler(
   };
 }
 
-export const addFirebaseListener = (
-  { blacklist, callback, debug = __DEV__, eventName, map, once, ref, rootDatabaseRef, ...rest },
-) => {
+export const addFirebaseListener = ({
+  blacklist,
+  callback,
+  debug = __DEV__,
+  eventName,
+  map,
+  once,
+  ref,
+  rootDatabaseRef,
+  ...rest
+}) => {
   const fullPath = getRelativePathFromRef(ref, rootDatabaseRef);
   let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}`;
 
@@ -97,19 +112,39 @@ export const addFirebaseListener = (
   if (once) {
     ref.once(
       eventName,
-      createFirebaseHandler({ blacklist, callback, debug, eventName, map, rootDatabaseRef }),
+      createFirebaseHandler({
+        blacklist,
+        callback,
+        debug,
+        eventName,
+        map,
+        rootDatabaseRef,
+      }),
     );
   } else {
     ref.on(
       eventName,
-      createFirebaseHandler({ blacklist, callback, debug, eventName, map, rootDatabaseRef }),
+      createFirebaseHandler({
+        blacklist,
+        callback,
+        debug,
+        eventName,
+        map,
+        rootDatabaseRef,
+      }),
     );
   }
 };
 
-export function watchFirebaseFromMap(
-  { callback, debug = __DEV__, map, once, rootDatabaseRef, ref = rootDatabaseRef, ...rest },
-) {
+export function watchFirebaseFromMap({
+  callback,
+  debug = __DEV__,
+  map,
+  once,
+  rootDatabaseRef,
+  ref = rootDatabaseRef,
+  ...rest
+}) {
   const mapAnalysis = getMapAnalysis(map);
   if (!mapAnalysis) return;
 
@@ -154,21 +189,28 @@ export function watchFirebaseFromMap(
     });
   } else if (whitelist.length) {
     // listen only to the specified children
-    whitelist.forEach(field => addFirebaseListener({
-      ...rest,
-      callback,
-      debug,
-      eventName: 'value',
-      map,
-      once,
-      ref: ref.child(field),
-      rootDatabaseRef,
-    }));
+    whitelist.forEach(field =>
+      addFirebaseListener({
+        ...rest,
+        callback,
+        debug,
+        eventName: 'value',
+        map,
+        once,
+        ref: ref.child(field),
+        rootDatabaseRef,
+      }),
+    );
   }
 }
 
 export const applyPatchOnFirebase = ({
-  debug = __DEV__, depth = -1, patch, rootDatabaseRef, ref = rootDatabaseRef, ...rest
+  debug = __DEV__,
+  depth = -1,
+  patch,
+  rootDatabaseRef,
+  ref = rootDatabaseRef,
+  ...rest
 }) => {
   if (!(ref && patch && isObjectOrMap(patch))) return;
 

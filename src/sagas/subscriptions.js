@@ -4,7 +4,16 @@ import moment from 'moment';
 import { flatten, uniq } from 'lodash';
 import { normalize } from 'normalizr';
 import { delay } from 'redux-saga';
-import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
+import {
+  call,
+  fork,
+  put,
+  race,
+  select,
+  take,
+  takeEvery,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import { EventSchema } from '../utils/normalizr/schemas';
 
@@ -30,7 +39,11 @@ import {
 
 import { dateToHeaderFormat } from '../utils/helpers';
 
-import type { Action, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
+import type {
+  Action,
+  ApiRequestPayload,
+  ApiResponsePayload,
+} from '../utils/types';
 
 import {
   loadSubscriptionDataRequest,
@@ -75,23 +88,41 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
       const subscription = subscriptionSelector(state, { subscriptionId });
       if (!subscription) return;
 
-      const subscriptionUpdatedAt = subscription.get('updatedAt') ? moment(subscription.get('updatedAt')) : null;
+      const subscriptionUpdatedAt = subscription.get('updatedAt')
+        ? moment(subscription.get('updatedAt'))
+        : null;
 
       // remove old events, that were already fetched
       if (subscriptionUpdatedAt && subscriptionUpdatedAt.isValid()) {
-        onlyNewEvents = onlyNewEvents.filter(event => (
-          !event.created_at || moment(event.created_at).isAfter(subscriptionUpdatedAt)
-        ));
+        onlyNewEvents = onlyNewEvents.filter(
+          event =>
+            !event.created_at ||
+            moment(event.created_at).isAfter(subscriptionUpdatedAt),
+        );
       }
 
       finalData = normalize(onlyNewEvents, [EventSchema]);
     }
 
-    yield put(loadSubscriptionDataSuccess(requestPayload, finalData, meta, sagaActionChunk));
+    yield put(
+      loadSubscriptionDataSuccess(
+        requestPayload,
+        finalData,
+        meta,
+        sagaActionChunk,
+      ),
+    );
   } catch (e) {
     console.log('loadSubscriptionData catch', e);
-    const errorMessage = (e.message || {}).message || e.message || e.body || e.status;
-    yield put(loadSubscriptionDataFailure(requestPayload, errorMessage, sagaActionChunk));
+    const errorMessage =
+      (e.message || {}).message || e.message || e.body || e.status;
+    yield put(
+      loadSubscriptionDataFailure(
+        requestPayload,
+        errorMessage,
+        sagaActionChunk,
+      ),
+    );
   }
 }
 
@@ -101,7 +132,7 @@ function* _loadSubscriptions(subscriptionIds) {
 
   const state = yield select();
 
-  yield* subscriptionIds.map(function* (subscriptionId) {
+  yield* subscriptionIds.map(function*(subscriptionId) {
     const subscription = subscriptionSelector(state, { subscriptionId });
     if (!subscription) return;
 
@@ -114,14 +145,20 @@ function* _loadSubscriptions(subscriptionIds) {
       params.headers['If-Modified-Since'] = dateToHeaderFormat(lastModifiedAt);
     }
 
-    yield put(loadSubscriptionDataRequest(requestType, params, sagaActionChunk));
+    yield put(
+      loadSubscriptionDataRequest(requestType, params, sagaActionChunk),
+    );
   });
 }
 
-function* updateSubscriptionsFromColumn({ payload: { columnId } }: Action<ApiRequestPayload>) {
+function* updateSubscriptionsFromColumn({
+  payload: { columnId },
+}: Action<ApiRequestPayload>) {
   const state = yield select();
 
-  const subscriptionIds = columnSubscriptionIdsSelector(state, { columnId }).toJS();
+  const subscriptionIds = columnSubscriptionIdsSelector(state, {
+    columnId,
+  }).toJS();
   yield _loadSubscriptions(subscriptionIds);
 }
 
@@ -131,9 +168,13 @@ function* updateSubscriptionsFromAllColumns() {
   const columnIds = columnIdsSelector(state);
   if (!(columnIds.size > 0)) return;
 
-  const subscriptionIds = uniq(flatten(columnIds.map(columnId => (
-    columnSubscriptionIdsSelector(state, { columnId })
-  )).toJS())).filter(Boolean);
+  const subscriptionIds = uniq(
+    flatten(
+      columnIds
+        .map(columnId => columnSubscriptionIdsSelector(state, { columnId }))
+        .toJS(),
+    ),
+  ).filter(Boolean);
 
   yield _loadSubscriptions(subscriptionIds);
 }
@@ -163,11 +204,14 @@ function* startTimer() {
   }
 }
 
-export default function* () {
+export default function*() {
   return yield [
     yield takeEvery(LOAD_SUBSCRIPTION_DATA_REQUEST, loadSubscriptionData),
     yield takeEvery(UPDATE_COLUMN_SUBSCRIPTIONS, updateSubscriptionsFromColumn),
-    yield takeLatest(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, updateSubscriptionsFromAllColumns),
+    yield takeLatest(
+      UPDATE_ALL_COLUMNS_SUBSCRIPTIONS,
+      updateSubscriptionsFromAllColumns,
+    ),
     yield fork(startTimer),
   ];
 }

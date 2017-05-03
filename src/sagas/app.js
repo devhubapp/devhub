@@ -29,7 +29,8 @@ function* _getUsedSubscriptionIds() {
     .toSet()
     .reduce(
       (resultIds, column) =>
-        resultIds && resultIds.union(
+        resultIds &&
+        resultIds.union(
           columnSubscriptionIdsSelector(state, { columnId: column.get('id') }),
         ),
       Set(),
@@ -46,7 +47,8 @@ function* cleanupEvents() {
 
   const usedEventIds = usedSubscriptionIds
     .map(subscriptionId =>
-      subscriptionEventsSelector(state, { subscriptionId }))
+      subscriptionEventsSelector(state, { subscriptionId }),
+    )
     .filter(Boolean)
     .toSet()
     .reduce((resultIds, currentIds) => resultIds.union(Set(currentIds)), Set());
@@ -95,7 +97,7 @@ export function* start() {
   yield put(cleanupApp(sagaActionChunk));
 }
 
-export default function* () {
+export default function*() {
   return yield [
     yield fork(start),
     yield takeLatest(APP_CLEANUP, onCleanupAppRequest),

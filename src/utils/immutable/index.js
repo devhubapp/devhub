@@ -92,7 +92,11 @@ export function getIn(object, keyPath) {
     return object.getIn(stringifiedArray(keyPath));
   }
 
-  return _.reduce(keyPath: Array<string>, (memo, key) => get(memo, key), object);
+  return _.reduce(
+    (keyPath: Array<string>),
+    (memo, key) => get(memo, key),
+    object,
+  );
 }
 
 /**
@@ -184,7 +188,9 @@ export function filter(object, fn) {
     return object.filter(fn);
   }
 
-  return _.isPlainObject(object) ? _.pick(object, _.filter(object, fn)) : _.filter(object, fn);
+  return _.isPlainObject(object)
+    ? _.pick(object, _.filter(object, fn))
+    : _.filter(object, fn);
 }
 
 export function map(object, fn) {
@@ -247,8 +253,10 @@ export function getEmptyObjectFromTheSameType(object) {
     if (Immutable.List.isList(object)) return Immutable.List();
     else if (Immutable.Seq.isSeq(object)) return Immutable.Seq();
     else if (Immutable.Set.isSet(object)) return Immutable.Set();
-    else if (Immutable.OrderedSet.isOrderedSet(object)) return Immutable.OrderedSet();
-    else if (Immutable.OrderedMap.isOrderedMap(object)) return Immutable.OrderedMap();
+    else if (Immutable.OrderedSet.isOrderedSet(object))
+      return Immutable.OrderedSet();
+    else if (Immutable.OrderedMap.isOrderedMap(object))
+      return Immutable.OrderedMap();
 
     return Immutable.Map();
   }
@@ -266,7 +274,9 @@ export function isList(object) {
 
 export function isObjectOrMap(object) {
   if (isImmutable(object)) {
-    return Immutable.Map.isMap(object) || Immutable.OrderedMap.isOrderedMap(object);
+    return (
+      Immutable.Map.isMap(object) || Immutable.OrderedMap.isOrderedMap(object)
+    );
   }
 
   return !!object && _.isPlainObject(object);
@@ -293,13 +303,17 @@ export const mergeDeepAndRemoveNull = (state, value) => {
   }
 
   let newState = state;
-  forEach(value, (v, k) => {
-    if (v === null) {
-      newState = remove(newState, k);
-    } else {
-      newState = set(newState, k, mergeDeepAndRemoveNull(get(state, k), v));
-    }
-  }, []);
+  forEach(
+    value,
+    (v, k) => {
+      if (v === null) {
+        newState = remove(newState, k);
+      } else {
+        newState = set(newState, k, mergeDeepAndRemoveNull(get(state, k), v));
+      }
+    },
+    [],
+  );
 
   return newState;
 };

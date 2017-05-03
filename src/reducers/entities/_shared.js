@@ -1,4 +1,3 @@
-
 import moment from 'moment';
 import { Map } from 'immutable';
 
@@ -12,32 +11,28 @@ export function updateByIdsUsingFn(state, ids, fn, ...fnArgs) {
 
     const newObj = fn(item, ...fnArgs);
 
-    newState = newObj === null
-      ? newState.delete(id)
-      : newState.set(id, newObj);
+    newState = newObj === null ? newState.delete(id) : newState.set(id, newObj);
   });
 
   return newState;
 }
 
-export const markAsDeleted = (item, deletedAt) => (
+export const markAsDeleted = (item, deletedAt) =>
   // prevent remarking as deleted
   isDeletedFilter(item)
     ? item
-    : Map({ deleted_at: deletedAt || moment().toISOString() })
-);
+    : Map({ deleted_at: deletedAt || moment().toISOString() });
 
 export const deleteByIds = (state, ids, deletedAt, softDelete = false) => {
   const fn = softDelete ? markAsDeleted : () => null;
   return updateByIdsUsingFn(state, ids, fn);
 };
 
-export const markAsArchived = (item, archivedAt) => (
+export const markAsArchived = (item, archivedAt) =>
   // prevent remarking as archived
   isArchivedFilter(item)
     ? item
-    : item.set('archived_at', archivedAt || moment().toISOString())
-);
+    : item.set('archived_at', archivedAt || moment().toISOString());
 
 export const markAsArchivedByIds = (state, ids, archivedAt, ...args) =>
   updateByIdsUsingFn(
@@ -88,9 +83,10 @@ export const undoMarkAsRead = notification =>
 export const undoMarkAsReadByIds = (state, ids, ...args) =>
   updateByIdsUsingFn(state, ids, undoMarkAsRead, ...args);
 
-export const markAsUnread = (notification, lastUnreadAt) => notification
-  // .set('unread', true) // dont!
-  .set('last_unread_at', lastUnreadAt || moment().toISOString());
+export const markAsUnread = (notification, lastUnreadAt) =>
+  notification
+    // .set('unread', true) // dont!
+    .set('last_unread_at', lastUnreadAt || moment().toISOString());
 
 export const markAsUnreadByIds = (state, ids, lastUnreadAt, ...args) =>
   updateByIdsUsingFn(

@@ -75,31 +75,23 @@ export default ({
   ...props
 }: Props) => (
   <Button activeOpacity={1} horizontal={horizontal} radius={radius} {...props}>
-      <Content>
-        {
-          leftIcon && (
-            <IconWrapper>
-              <ButtonIcon name={leftIcon} />
-            </IconWrapper>
-          )
-        }
+    <Content>
+      {leftIcon &&
+        <IconWrapper>
+          <ButtonIcon name={leftIcon} />
+        </IconWrapper>}
 
-        <TextWrapper horizontal={horizontal}>
-          {!!title && (<Text {...textProps}>{title}</Text>)}
-          {!!subtitle && <Text muted {...subtitleProps}>{subtitle}</Text>}
-        </TextWrapper>
+      <TextWrapper horizontal={horizontal}>
+        {!!title && <Text {...textProps}>{title}</Text>}
+        {!!subtitle && <Text muted {...subtitleProps}>{subtitle}</Text>}
+      </TextWrapper>
 
-        {
-          (rightIcon || loading) && (
-            <IconWrapper>
-              {
-                loading
-                  ? <ActivityIndicator />
-                  : <ButtonIcon name={rightIcon} muted />
-              }
-            </IconWrapper>
-          )
-        }
-      </Content>
-    </Button>
-  );
+      {(rightIcon || loading) &&
+        <IconWrapper>
+          {loading
+            ? <ActivityIndicator />
+            : <ButtonIcon name={rightIcon} muted />}
+        </IconWrapper>}
+    </Content>
+  </Button>
+);

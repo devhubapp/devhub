@@ -16,10 +16,10 @@ const makeMapStateToProps = () => {
   });
 };
 
-const mapDispatchToProps = ({
+const mapDispatchToProps = {
   starRepo,
   unstarRepo,
-});
+};
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {

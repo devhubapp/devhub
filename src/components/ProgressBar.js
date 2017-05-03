@@ -42,7 +42,9 @@ export default class ProgressBar extends Component {
     const progress = Math.min(Math.max(props.progress, 0), 1);
 
     this.state = {
-      progress: new Animated.Value(props.indeterminate ? props.indeterminateWidthFactor : progress),
+      progress: new Animated.Value(
+        props.indeterminate ? props.indeterminateWidthFactor : progress,
+      ),
       animationValue: new Animated.Value(this.getBarWidthZeroPosition()),
     };
   }
@@ -67,10 +69,9 @@ export default class ProgressBar extends Component {
       props.indeterminate !== this.props.indeterminate ||
       props.progress !== this.props.progress
     ) {
-      const progress = (props.indeterminate
+      const progress = props.indeterminate
         ? props.indeterminateWidthFactor
-        : Math.min(Math.max(props.progress, 0), 1)
-      );
+        : Math.min(Math.max(props.progress, 0), 1);
 
       if (props.animated) {
         Animated.spring(this.state.progress, {
@@ -84,7 +85,10 @@ export default class ProgressBar extends Component {
   }
 
   getBarWidthZeroPosition() {
-    return this.props.indeterminateWidthFactor / (1 + this.props.indeterminateWidthFactor);
+    return (
+      this.props.indeterminateWidthFactor /
+      (1 + this.props.indeterminateWidthFactor)
+    );
   }
 
   animate() {
@@ -94,7 +98,7 @@ export default class ProgressBar extends Component {
       duration: this.props.duration,
       easing: Easing.linear,
       isInteraction: false,
-    }).start((endState) => {
+    }).start(endState => {
       if (endState.finished) {
         this.animate();
       }
@@ -119,7 +123,7 @@ export default class ProgressBar extends Component {
 
     const color = _color || theme.base07 || 'rgba(0, 122, 255, 1)';
 
-    const innerWidth = width - (borderWidth * 2);
+    const innerWidth = width - borderWidth * 2;
     const containerStyle = {
       width,
       borderWidth,
@@ -132,19 +136,23 @@ export default class ProgressBar extends Component {
       backgroundColor: color,
       height,
       width: innerWidth,
-      transform: [{
-        translateX: this.state.animationValue.interpolate({
-          inputRange: [0, 1],
-          outputRange: [innerWidth * -indeterminateWidthFactor, innerWidth],
-        }),
-      }, {
-        translateX: this.state.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [innerWidth / -2, 0],
-        }),
-      }, {
-        scaleX: this.state.progress,
-      }],
+      transform: [
+        {
+          translateX: this.state.animationValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: [innerWidth * -indeterminateWidthFactor, innerWidth],
+          }),
+        },
+        {
+          translateX: this.state.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [innerWidth / -2, 0],
+          }),
+        },
+        {
+          scaleX: this.state.progress,
+        },
+      ],
     };
 
     return (

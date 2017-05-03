@@ -48,7 +48,7 @@ const indexReducer = (state: Object = initialState, action) => {
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
     case LOAD_NOTIFICATIONS_SUCCESS:
-      return ((_payload) => {
+      return (_payload => {
         const { data: { entities } = {} } = _payload || {};
         if (!entities) return state;
 

@@ -52,7 +52,7 @@ export default class extends React.PureComponent {
     archived?: ?boolean,
     notification: GithubNotification,
     onlyOneRepository?: ?boolean,
-    read?: ?boolean
+    read?: ?boolean,
   };
 
   render() {
@@ -92,9 +92,10 @@ export default class extends React.PureComponent {
     const pullRequest = (subjectType === 'pullrequest' && subject) || null;
     const release = (subjectType === 'release' && subject) || null;
 
-    const { icon: cardIcon, color: cardIconColor } = getNotificationIconAndColor(
-      notification,
-    );
+    const {
+      icon: cardIcon,
+      color: cardIconColor,
+    } = getNotificationIconAndColor(notification);
 
     const toggleNotificationsReadStatus = read
       ? actions.markNotificationsAsUnread
@@ -117,16 +118,12 @@ export default class extends React.PureComponent {
         </FullAbsoluteView>
         <Header>
           <LeftColumn muted={read} center>
-            {
-              avatarUrl &&
-                (
-                  <OwnerAvatar
-                    avatarURL={avatarUrl}
-                    linkURL={repo.get('html_url') || repo.get('url')}
-                    size={smallAvatarWidth}
-                  />
-                )
-            }
+            {avatarUrl &&
+              <OwnerAvatar
+                avatarURL={avatarUrl}
+                linkURL={repo.get('html_url') || repo.get('url')}
+                size={smallAvatarWidth}
+              />}
           </LeftColumn>
           <MainColumn>
             <HeaderRow>
@@ -145,74 +142,53 @@ export default class extends React.PureComponent {
                   interval={1000}
                   onRender={() => {
                     const dateText = getDateSmallText(updatedAt, ' ');
-                    return dateText &&
-                      <SmallText
-                        numberOfLines={1}
-                        muted
-                      >
+                    return (
+                      dateText &&
+                      <SmallText numberOfLines={1} muted>
                         &nbsp;&nbsp;{dateText}
-                      </SmallText>;
+                      </SmallText>
+                    );
                   }}
                 />
               </FullView>
 
-              <CardIcon
-                name={cardIcon}
-                color={cardIconColor}
-                muted={read}
-              />
+              <CardIcon name={cardIcon} color={cardIconColor} muted={read} />
             </HeaderRow>
             <FullAbsoluteView>
               <TouchableWithoutFeedback
-                onPress={() => toggleNotificationsReadStatus({ notificationIds })}
+                onPress={() =>
+                  toggleNotificationsReadStatus({ notificationIds })}
               >
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>
           </MainColumn>
         </Header>
-        {
-          !!repo &&
-            !onlyOneRepository &&
-            <RepositoryRow actions={actions} repo={repo} read={read} narrow />
-        }
+        {!!repo &&
+          !onlyOneRepository &&
+          <RepositoryRow actions={actions} repo={repo} read={read} narrow />}
         {!!commit && <CommitRow commit={commit} read={read} narrow />}
-        {
-          !!issue &&
-            <IssueRow issue={issue} comment={comment} read={read} narrow />
-        }
-        {
-          !!pullRequest &&
-            (
-              <PullRequestRow
-                pullRequest={pullRequest}
-                comment={comment}
-                read={read}
-                narrow
-              />
-            )
-        }
-        {
-          !!release &&
-            <ReleaseRow release={release} read={read} narrow />
-        }
-        {
-          !(commit || issue || pullRequest) &&
-            !!title &&
-            <CommentRow body={title} read={read} narrow />
-        }
-        {
-          !!comment &&
-            (
-              <CommentRow
-                body={comment.get('body')}
-                user={comment.get('user')}
-                url={comment.get('html_url')}
-                read={read}
-                narrow
-              />
-            )
-        }
+        {!!issue &&
+          <IssueRow issue={issue} comment={comment} read={read} narrow />}
+        {!!pullRequest &&
+          <PullRequestRow
+            pullRequest={pullRequest}
+            comment={comment}
+            read={read}
+            narrow
+          />}
+        {!!release && <ReleaseRow release={release} read={read} narrow />}
+        {!(commit || issue || pullRequest) &&
+          !!title &&
+          <CommentRow body={title} read={read} narrow />}
+        {!!comment &&
+          <CommentRow
+            body={comment.get('body')}
+            user={comment.get('user')}
+            url={comment.get('html_url')}
+            read={read}
+            narrow
+          />}
       </CardWrapper>
     );
   }

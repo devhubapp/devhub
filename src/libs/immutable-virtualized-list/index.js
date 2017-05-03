@@ -29,22 +29,20 @@ const propTypes = {
   },
 };
 
-const isMapOrSet = item => (
+const isMapOrSet = item =>
   Immutable.Map.isMap(item) ||
-    Immutable.OrderedMap.isOrderedMap(item) ||
-    Immutable.Set.isSet(item) ||
-    Immutable.OrderedSet.isOrderedSet(item)
-);
+  Immutable.OrderedMap.isOrderedMap(item) ||
+  Immutable.Set.isSet(item) ||
+  Immutable.OrderedSet.isOrderedSet(item);
 
 const getItem = (items, index) => get(items, index);
 const getItemCount = items => items.size;
-const keyExtractor = (item, index) => (
+const keyExtractor = (item, index) =>
   isMapOrSet(item) && (get(item, 'key') || get(item, 'id'))
-    ? (get(item, 'key') || get(item, 'id'))
+    ? get(item, 'key') || get(item, 'id')
     : typeof item === 'string' || typeof item === 'number'
         ? String(item)
-        : String(index)
-);
+        : String(index);
 
 export default class ImmutableVirtualizedList extends PureComponent {
   static propTypes = { ...VirtualizedList.propTypes, ...propTypes };
@@ -70,7 +68,9 @@ export class ImmutableSectionList extends PureComponent {
   render() {
     const { immutableData, sections, ...props } = this.props;
 
-    const _sections = sections && typeof sections.toJS === 'function' ? sections.toJS() : sections;
+    const _sections = sections && typeof sections.toJS === 'function'
+      ? sections.toJS()
+      : sections;
 
     return (
       <SectionList

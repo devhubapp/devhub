@@ -31,7 +31,8 @@ export default class extends React.Component {
 
   getIntervalValue(_interval) {
     const interval = _interval !== undefined ? _interval : this.props.interval;
-    if (typeof interval === 'function') return interval(this.state.updatedTimes);
+    if (typeof interval === 'function')
+      return interval(this.state.updatedTimes);
     return interval;
   }
 
@@ -41,7 +42,10 @@ export default class extends React.Component {
     const interval = this.getIntervalValue(_interval);
     if (!(interval > 0)) return;
 
-    this.timeoutInstance = setTimeout(() => this.tick(this.startTimeout), interval);
+    this.timeoutInstance = setTimeout(
+      () => this.tick(this.startTimeout),
+      interval,
+    );
   };
 
   tick = callback => {

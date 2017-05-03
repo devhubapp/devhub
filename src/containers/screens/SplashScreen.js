@@ -8,7 +8,10 @@ import { connect } from 'react-redux';
 import { resetAppData } from '../../actions';
 
 import Screen from '../../components/Screen';
-import { contentPadding, splashScreenBackgroundColor } from '../../styles/variables';
+import {
+  contentPadding,
+  splashScreenBackgroundColor,
+} from '../../styles/variables';
 import { base04 } from '../../styles/themes/light';
 
 const Root = styled(Screen)`
@@ -30,7 +33,7 @@ const ResetButtonText = styled.Text`
   color: ${base04};
 `;
 
-const mapDispatchToProps = ({ onResetAppData: resetAppData });
+const mapDispatchToProps = { onResetAppData: resetAppData };
 
 type Props = { onResetAppData: Function };
 const SplashScreen = ({ onResetAppData }: Props) => (
@@ -40,7 +43,11 @@ const SplashScreen = ({ onResetAppData }: Props) => (
 
     <ActivityIndicator color={base04} />
 
-    <ResetButton onPress={() => onResetAppData()} activeOpacity={0.1} focusedOpacity={1}>
+    <ResetButton
+      onPress={() => onResetAppData()}
+      activeOpacity={0.1}
+      focusedOpacity={1}
+    >
       <ResetButtonText>Reset app data</ResetButtonText>
     </ResetButton>
   </Root>

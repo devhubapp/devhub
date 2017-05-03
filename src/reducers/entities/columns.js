@@ -6,21 +6,17 @@ import { fromJS, List, Map } from 'immutable';
 
 import { guid } from '../../utils/helpers';
 
-import {
-  CREATE_COLUMN,
-  DELETE_COLUMN,
-} from '../../utils/constants/actions';
+import { CREATE_COLUMN, DELETE_COLUMN } from '../../utils/constants/actions';
 
-import type {
-  Action,
-  Column,
-  Normalized,
-} from '../../utils/types';
+import type { Action, Column, Normalized } from '../../utils/types';
 
 type State = Normalized<Column>;
 const initialState = Map();
 
-export default (state: State = initialState, { type, payload }: ?Action<any> = {}): State => {
+export default (
+  state: State = initialState,
+  { type, payload }: ?Action<any> = {},
+): State => {
   switch (type) {
     case CREATE_COLUMN:
       return (({ order, subscriptionIds, title, ...restOfPayload }: Column) => {
@@ -30,7 +26,7 @@ export default (state: State = initialState, { type, payload }: ?Action<any> = {
 
         // shift columns to right to insert new column in the right order
         if (order >= 0) {
-          newState = newState.map((column) => {
+          newState = newState.map(column => {
             if (column.get('order') >= order) {
               return column.set('order', column.get('order') + 1);
             }
@@ -39,14 +35,17 @@ export default (state: State = initialState, { type, payload }: ?Action<any> = {
           });
         }
 
-        return newState.set(id, fromJS({
+        return newState.set(
           id,
-          title,
-          order,
-          subscriptions: List(subscriptionIds),
-          createdAt: moment().toISOString(),
-          ...restOfPayload,
-        }));
+          fromJS({
+            id,
+            title,
+            order,
+            subscriptions: List(subscriptionIds),
+            createdAt: moment().toISOString(),
+            ...restOfPayload,
+          }),
+        );
       })(payload);
 
     case DELETE_COLUMN:
@@ -62,7 +61,7 @@ export default (state: State = initialState, { type, payload }: ?Action<any> = {
         const order = columnToDelete.get('order');
         // shift columns to left to fix order value
         if (order >= 0) {
-          newState = newState.map((column) => {
+          newState = newState.map(column => {
             if (column.get('order') >= order && column !== columnToDelete) {
               return column.set('order', column.get('order') - 1);
             }

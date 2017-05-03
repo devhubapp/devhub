@@ -17,7 +17,11 @@ import {
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getPullRequestIconAndColor } from '../../utils/helpers/github/shared';
 
-import type { GithubComment, GithubPullRequest, ThemeObject } from '../../utils/types';
+import type {
+  GithubComment,
+  GithubPullRequest,
+  ThemeObject,
+} from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
@@ -47,18 +51,17 @@ export default class extends React.PureComponent {
     // pull request links will send to comment if comment was not loaded by app yet
     const url = comment && !comment.get('body') && comment.get('html_url')
       ? comment.get('html_url')
-      : pullRequest.get('html_url') || pullRequest.get('url')
-    ;
+      : pullRequest.get('html_url') || pullRequest.get('url');
 
     return (
       <TouchableRow
         left={
           user &&
-          <OwnerAvatar
-            avatarURL={user.get('avatar_url')}
-            linkURL={user.get('html_url') || user.get('url')}
-            size={smallAvatarWidth}
-          />
+            <OwnerAvatar
+              avatarURL={user.get('avatar_url')}
+              linkURL={user.get('html_url') || user.get('url')}
+              size={smallAvatarWidth}
+            />
         }
         read={read}
         right={

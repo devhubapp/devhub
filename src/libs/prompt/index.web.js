@@ -31,10 +31,8 @@ export default function prompt(
   callbackOrButtons?: (text: string) => Object,
 ): void {
   // eslint-disable-next-line no-alert
-  const userInput = window.prompt(
-    getPromptText(title, message, callbackOrButtons),
-  ) ||
-    '';
+  const userInput =
+    window.prompt(getPromptText(title, message, callbackOrButtons)) || '';
   if (!userInput) return;
 
   if (typeof callbackOrButtons === 'function') {
@@ -42,14 +40,12 @@ export default function prompt(
     return;
   }
 
-  const buttonsWithCallback = (callbackOrButtons || []).filter(
-    button => typeof button.onPress === 'function',
-  );
+  const buttonsWithCallback = (callbackOrButtons || [])
+    .filter(button => typeof button.onPress === 'function');
 
   const buttons = Array.isArray(callbackOrButtons) ? callbackOrButtons : [];
   const userInputNumber = Number.parseInt(userInput, 10);
-  const callback = userInputNumber >= 0 &&
-    userInputNumber < buttons.length
+  const callback = userInputNumber >= 0 && userInputNumber < buttons.length
     ? (buttons[userInputNumber] || {}).onPress
     : (buttonsWithCallback[0] || {}).onPress;
 

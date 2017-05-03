@@ -5,19 +5,17 @@ import { Text } from 'react-native';
 import styled from 'styled-components/native';
 
 import Icon from '../libs/icon';
-import { contentPadding, mutedOpacity, radius as defaultRadius } from '../styles/variables';
+import {
+  contentPadding,
+  mutedOpacity,
+  radius as defaultRadius,
+} from '../styles/variables';
 
 const LabelContainer = styled.View`
   padding-vertical: 2px;
   padding-horizontal: ${contentPadding};
-  background-color: ${({ color, outline, theme }) => (
-    outline ? 'transparent' : ((color && (theme[color] || color)) || theme.base04)
-  )};
-  border-color: ${({borderColor, color, theme}) =>
-    (borderColor && (theme[borderColor] || borderColor)) ||
-    (color && (theme[color] || color)) ||
-    theme.base04
-  };
+  background-color: ${({ color, outline, theme }) => (outline ? 'transparent' : (color && (theme[color] || color)) || theme.base04)};
+  border-color: ${({ borderColor, color, theme }) => (borderColor && (theme[borderColor] || borderColor)) || (color && (theme[color] || color)) || theme.base04};
   border-width: ${({ borderWidth }) => borderWidth || 1}px;
   border-radius: ${({ radius }) => radius || 0}px;
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
@@ -25,14 +23,7 @@ const LabelContainer = styled.View`
 
 const Label = styled.Text`
   font-size: 14px;
-  color: ${({ color, muted, outline, theme, textColor }) => (
-    (textColor && (theme[textColor] || textColor)) ||
-    (outline
-      ? (color && (theme[color] || color))
-        || (muted ? theme.base05 : theme.base04)
-      : ''
-    ) || '#ffffff'
-  )};
+  color: ${({ color, muted, outline, theme, textColor }) => (textColor && (theme[textColor] || textColor)) || (outline ? (color && (theme[color] || color)) || (muted ? theme.base05 : theme.base04) : '') || '#ffffff'};
 `;
 
 type Props = {

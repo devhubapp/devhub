@@ -21,7 +21,10 @@ type State = {
   version: string,
 };
 
-export default (state: State = initialState, { type }: Action<any> = {}): State => {
+export default (
+  state: State = initialState,
+  { type }: Action<any> = {},
+): State => {
   switch (type) {
     case APP_READY:
       return state.set('ready', true);

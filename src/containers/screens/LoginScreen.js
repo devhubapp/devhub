@@ -43,7 +43,7 @@ const Logo = styled.Image`
   border-radius: ${radius};
 `;
 
-const StyledGithubButton = styled(GithubButton) `
+const StyledGithubButton = styled(GithubButton)`
   margin-top: ${contentPadding / 2}px;
 `;
 
@@ -72,7 +72,9 @@ export default class extends React.PureComponent {
     const { actions: { loginRequest } } = this.props;
 
     this.setState({ loggingInMethod: 'github.public' });
-    loginRequest({ scopes: ['user', 'public_repo', 'notifications', 'read:org'] });
+    loginRequest({
+      scopes: ['user', 'public_repo', 'notifications', 'read:org'],
+    });
   };
 
   loginWithGithubPrivateAccess = () => {
@@ -95,10 +97,8 @@ export default class extends React.PureComponent {
     return (
       <Screen>
         <Main>
-          {
-            error &&
-            <StatusMessage key={`error-${error}`} message={error} error />
-          }
+          {error &&
+            <StatusMessage key={`error-${error}`} message={error} error />}
 
           <MainContent>
             <Logo source={logo} resizeMode="contain" />

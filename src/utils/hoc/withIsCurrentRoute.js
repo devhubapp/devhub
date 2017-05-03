@@ -8,9 +8,11 @@ const makeMapStateToProps = navigatorStateSelector => (state, ownProps) => {
   const { navigation: { state: { key } } } = ownProps;
   const navigationState = navigatorStateSelector(state, ownProps);
 
-  return ({
-    isCurrentRoute: !!key && !!navigationState && key === get(getNavigatorSelectedRoute(state, { navigationState }), 'key'),
-  });
+  return {
+    isCurrentRoute: !!key &&
+      !!navigationState &&
+      key === get(getNavigatorSelectedRoute(state, { navigationState }), 'key'),
+  };
 };
 
 export default navigatorStateSelector => Component => {
@@ -21,4 +23,3 @@ export default navigatorStateSelector => Component => {
 
   return ComponentWithCurrentRoute;
 };
-

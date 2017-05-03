@@ -1,6 +1,13 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
+  ],
   "env": {
     "es6": true,
     "jest": true
@@ -10,7 +17,8 @@
     "flowtype",
     "import",
     "react",
-    "react-native"
+    "react-native",
+    "prettier"
   ],
   "parserOptions": {
     "ecmaVersion": 6,
@@ -20,23 +28,36 @@
     "sourceType": "module"
   },
   "settings": {
-    "import/extensions": [".js", ".jsx", ".android.js", ".ios.js"]
+    "import/extensions": [
+      ".js",
+      ".jsx",
+      ".android.js",
+      ".ios.js"
+    ]
   },
   "rules": {
     "react/jsx-filename-extension": 0,
-    "react/prefer-stateless-function": ["error", {
-      "ignorePureComponents": true
-    }],
+    "react/prefer-stateless-function": [
+      "error",
+      {
+        "ignorePureComponents": true
+      }
+    ],
     "no-case-declarations": 0,
     "no-confusing-arrow": 0,
     "no-underscore-dangle": 0,
     "no-nested-ternary": 0,
-    "arrow-parens": 0,
-    "babel/arrow-parens": 1,
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 2,
-    "react-native/no-inline-styles": 2,
     "react-native/no-color-literals": 2,
-    "no-plusplus": 0
+    "no-plusplus": 0,
+    "prettier/prettier": [
+      "error",
+      {
+        "semi": true,
+        "singleQuote": true,
+        "trailingComma": "all"
+      }
+    ]
   }
 }

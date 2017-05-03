@@ -13,7 +13,10 @@ import {
   StyledText,
 } from './__CardComponents';
 
-import { getOrgAvatar, getOwnerAndRepo } from '../../utils/helpers/github/shared';
+import {
+  getOrgAvatar,
+  getOwnerAndRepo,
+} from '../../utils/helpers/github/shared';
 import type { GithubRepo } from '../../utils/types';
 
 export default class extends React.PureComponent {

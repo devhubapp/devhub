@@ -10,8 +10,10 @@ import ColumnWithList, {
   HeaderButtonsContainer,
 } from './_ColumnWithList';
 import { defaultIcon as summaryIcon } from './NotificationsFilterColumn';
-import NotificationsFilterColumnContainer from '../../containers/NotificationsFilterColumnContainer';
-import NotificationCardContainer from '../../containers/NotificationCardContainer';
+import NotificationsFilterColumnContainer
+  from '../../containers/NotificationsFilterColumnContainer';
+import NotificationCardContainer
+  from '../../containers/NotificationCardContainer';
 import { FullAbsoluteView, FullView } from '../cards/__CardComponents';
 import { getOwnerAndRepo } from '../../utils/helpers/github/shared';
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
@@ -36,7 +38,7 @@ export default class extends React.PureComponent {
     title: undefined,
     style: undefined,
     repo: undefined,
-  }
+  };
 
   state = {
     summary: false,
@@ -53,7 +55,9 @@ export default class extends React.PureComponent {
     const { items = List() } = this.props;
     return typeof items.first() === 'string'
       ? items
-      : items.map(item => (Iterable.isIterable(item) ? item.get('id') : item)).toList();
+      : items
+          .map(item => (Iterable.isIterable(item) ? item.get('id') : item))
+          .toList();
   };
 
   getReadNotificationIds = () => {
@@ -71,7 +75,7 @@ export default class extends React.PureComponent {
     return Set(notificationIds).subtract(readNotificationIds);
   };
 
-  getRightHeader = (isSummary) => (
+  getRightHeader = isSummary => (
     <HeaderButtonsContainer>
       <HeaderButton onPress={this.toggleSummary}>
         <HeaderButtonIcon name={summaryIcon} active={isSummary} />
@@ -123,7 +127,11 @@ export default class extends React.PureComponent {
       case BUTTONS.CLEAR_READ:
         (() => {
           const all = readIds.size === notificationIds.size;
-          actions.deleteNotifications({ all, notificationIds: readIds, repoId });
+          actions.deleteNotifications({
+            all,
+            notificationIds: readIds,
+            repoId,
+          });
         })();
         break;
 
@@ -134,7 +142,7 @@ export default class extends React.PureComponent {
 
   props: {
     actions: ActionCreators,
-    column: {repoId: string},
+    column: { repoId: string },
     icon?: string,
     items: Array<Object>,
     loading: boolean,
@@ -143,7 +151,7 @@ export default class extends React.PureComponent {
     readIds: Array<string>,
     repo?: GithubRepo,
     title?: string,
-    updatedAt: Date
+    updatedAt: Date,
   };
 
   renderItem = ({ index, item: notificationOrNotificationId }) => {
@@ -163,9 +171,7 @@ export default class extends React.PureComponent {
         key={`notification-card-container-${notificationId}`}
         actions={actions}
         notificationOrNotificationId={notificationId}
-        onlyOneRepository={
-          !!(repo || column.get('repoId'))
-        }
+        onlyOneRepository={!!(repo || column.get('repoId'))}
       />
     );
   };
@@ -225,22 +231,21 @@ export default class extends React.PureComponent {
           onSelect={this.handleActionSheetButtonPress}
         />
 
-        {
-          summary && (
-            <FullAbsoluteView key={`notifications-fcc-${column.get('id')}-FullAbsoluteView`}>
-              <NotificationsFilterColumnContainer
-                {...props}
-                key={`notifications-filter-column-container-${column.get('id')}`}
-                column={column}
-                icon={icon}
-                title={title}
-                onRefresh={this.onRefresh}
-                renderItem={this.renderItem}
-                rightHeader={this.getRightHeader(true)}
-              />
-            </FullAbsoluteView>
-          )
-        }
+        {summary &&
+          <FullAbsoluteView
+            key={`notifications-fcc-${column.get('id')}-FullAbsoluteView`}
+          >
+            <NotificationsFilterColumnContainer
+              {...props}
+              key={`notifications-filter-column-container-${column.get('id')}`}
+              column={column}
+              icon={icon}
+              title={title}
+              onRefresh={this.onRefresh}
+              renderItem={this.renderItem}
+              rightHeader={this.getRightHeader(true)}
+            />
+          </FullAbsoluteView>}
       </FullView>
     );
   }

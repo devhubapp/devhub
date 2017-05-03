@@ -5,17 +5,28 @@ import styled from 'styled-components/native';
 import withOrientation from '../../hoc/withOrientation';
 import { Dimensions, Platform } from 'react-native';
 
-import { contentPadding, radius as defaultRadius } from '../../styles/variables';
+import {
+  contentPadding,
+  radius as defaultRadius,
+} from '../../styles/variables';
 
 export const columnMargin = contentPadding / 2;
-export const columnPreviewWidth = Platform.OS === 'web' ? 2 : contentPadding / 2;
+export const columnPreviewWidth = Platform.OS === 'web'
+  ? 2
+  : contentPadding / 2;
 
-export const maxWidth = Platform.select({ default: 360, android: 800, ios: 680, web: 360 });
-export const getColumnWidth = () => Math.min(Dimensions.get('window').width, maxWidth);
-export const getColumnContentWidth = () => getColumnWidth() - (2 * columnPreviewWidth);
-export const getRadius = (
-  ({ radius } = {}) => (typeof radius === 'undefined' ? defaultRadius : radius)
-);
+export const maxWidth = Platform.select({
+  default: 360,
+  android: 800,
+  ios: 680,
+  web: 360,
+});
+export const getColumnWidth = () =>
+  Math.min(Dimensions.get('window').width, maxWidth);
+export const getColumnContentWidth = () =>
+  getColumnWidth() - 2 * columnPreviewWidth;
+export const getRadius = ({ radius } = {}) =>
+  typeof radius === 'undefined' ? defaultRadius : radius;
 
 export const ColumnWrapper = styled.View`
   flex: 1;
@@ -47,12 +58,7 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const {
-      children,
-      radius,
-      width,
-      ...props
-    } = this.props;
+    const { children, radius, width, ...props } = this.props;
 
     const _radius = getRadius({ radius });
 

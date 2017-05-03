@@ -3,7 +3,16 @@
 import moment from 'moment';
 import { normalize } from 'normalizr';
 import { delay } from 'redux-saga';
-import { call, fork, put, race, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
+import {
+  call,
+  fork,
+  put,
+  race,
+  select,
+  take,
+  takeEvery,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import { APP_READY } from '../utils/constants/actions';
 import { TIMEOUT } from '../utils/constants/defaults';
@@ -30,7 +39,11 @@ import {
 
 import type { MarkNotificationsParams } from '../actions/notifications';
 
-import type { Action, ApiRequestPayload, ApiResponsePayload } from '../utils/types';
+import type {
+  Action,
+  ApiRequestPayload,
+  ApiResponsePayload,
+} from '../utils/types';
 
 import {
   loadNotificationsRequest,
@@ -52,7 +65,10 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
 
   try {
     if (!accessToken) {
-      throw new Error('You must be logged in to see this', 'NotAuthorizedException');
+      throw new Error(
+        'You must be logged in to see this',
+        'NotAuthorizedException',
+      );
     }
 
     const { params, requestType } = payload;
@@ -75,15 +91,27 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
       finalData = normalize(data, [NotificationSchema]);
     }
 
-    yield put(loadNotificationsSuccess(requestPayload, finalData, meta, sagaActionChunk));
+    yield put(
+      loadNotificationsSuccess(
+        requestPayload,
+        finalData,
+        meta,
+        sagaActionChunk,
+      ),
+    );
   } catch (e) {
     console.log('onLoadNotificationsRequest catch', e, requestPayload);
-    const errorMessage = (e.message || {}).message || e.message || e.body || e.status;
-    yield put(loadNotificationsFailure(requestPayload, errorMessage, sagaActionChunk));
+    const errorMessage =
+      (e.message || {}).message || e.message || e.body || e.status;
+    yield put(
+      loadNotificationsFailure(requestPayload, errorMessage, sagaActionChunk),
+    );
   }
 }
 
-function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotificationsParams>) {
+function* onMarkNotificationsAsReadRequest({
+  payload,
+}: Action<MarkNotificationsParams>) {
   const state = yield select();
   const accessToken = accessTokenSelector(state);
 
@@ -92,7 +120,10 @@ function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotifications
 
   try {
     if (!accessToken) {
-      throw new Error('You must be logged mark notifications are read', 'NotAuthorizedException');
+      throw new Error(
+        'You must be logged mark notifications are read',
+        'NotAuthorizedException',
+      );
     }
 
     const { all, lastReadAt: _lastReadAt, notificationIds, repoId } = payload;
@@ -120,16 +151,17 @@ function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotifications
     } else {
       requestType = requestTypes.MARK_NOTIFICATION_THREAD_AS_READ;
 
-       // TODO: Improve this. Call for all notifications.
-       // Not important yet because of the way this is triggered
-       // (by toggling one notification each time)
+      // TODO: Improve this. Call for all notifications.
+      // Not important yet because of the way this is triggered
+      // (by toggling one notification each time)
       const notificationId = notificationIds.first();
 
       params = { id: notificationId, last_read_at: lastReadAt };
 
       // dont call api again if it was already marked as read on github
       const notification = notificationSelector(state, { notificationId });
-      if (notification && notification.get('unread') === false) ignoreApiCall = true;
+      if (notification && notification.get('unread') === false)
+        ignoreApiCall = true;
     }
 
     let response;
@@ -147,12 +179,26 @@ function* onMarkNotificationsAsReadRequest({ payload }: Action<MarkNotifications
     }
 
     const { data, meta }: ApiResponsePayload = response || {};
-    yield put(markNotificationsAsReadSuccess(requestPayload, data, meta, sagaActionChunk));
+    yield put(
+      markNotificationsAsReadSuccess(
+        requestPayload,
+        data,
+        meta,
+        sagaActionChunk,
+      ),
+    );
   } catch (e) {
     console.log('onMarkNotificationsAsReadRequest catch', e, requestPayload);
-    let errorMessage = (e.message || {}).message || e.message || e.body || e.status;
+    let errorMessage =
+      (e.message || {}).message || e.message || e.body || e.status;
     if (errorMessage) errorMessage = `Failed to mark as read: ${errorMessage}`;
-    yield put(markNotificationsAsReadFailure(requestPayload, errorMessage, sagaActionChunk));
+    yield put(
+      markNotificationsAsReadFailure(
+        requestPayload,
+        errorMessage,
+        sagaActionChunk,
+      ),
+    );
   }
 }
 
@@ -214,11 +260,14 @@ function* startTimer() {
   }
 }
 
-export default function* () {
+export default function*() {
   return yield [
     yield takeLatest(UPDATE_NOTIFICATIONS, onUpdateNotificationsRequest),
     yield takeEvery(LOAD_NOTIFICATIONS_REQUEST, onLoadNotificationsRequest),
-    yield takeEvery(MARK_NOTIFICATIONS_AS_READ_REQUEST, onMarkNotificationsAsReadRequest),
+    yield takeEvery(
+      MARK_NOTIFICATIONS_AS_READ_REQUEST,
+      onMarkNotificationsAsReadRequest,
+    ),
     yield fork(startTimer),
   ];
 }

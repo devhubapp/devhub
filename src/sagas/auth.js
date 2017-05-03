@@ -34,8 +34,8 @@ function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
     yield put(loginSuccess(payload, result, sagaActionChunk));
   } catch (e) {
     console.log('Login failed', e);
-    const errorMessage = e &&
-      ((e.message || {}).message || e.message || e.body || e.status);
+    const errorMessage =
+      e && ((e.message || {}).message || e.message || e.body || e.status);
     yield put(loginFailure(payload, errorMessage, sagaActionChunk));
   }
 }
@@ -74,7 +74,8 @@ function* onCurrentUserUpdate() {
   if (!bugsnagClient) return;
 
   const user = yield select(userSelector) || {};
-  const id = get(user, 'firebaseId') || get(user, 'githubId') || get(user, 'uid');
+  const id =
+    get(user, 'firebaseId') || get(user, 'githubId') || get(user, 'uid');
   const name = get(user, 'name') || get(user, 'displayName');
   const email = get(user, 'email');
 
@@ -92,9 +93,8 @@ function* watchFirebaseCurrentUser() {
   while (true) {
     if (lastUser !== ignoreValue) {
       // console.log('firebase user', lastUser);
-      const user = lastUser &&
-        lastUser.providerData &&
-        lastUser.providerData[0];
+      const user =
+        lastUser && lastUser.providerData && lastUser.providerData[0];
       lastUser = ignoreValue;
 
       const { uid: firebaseId } = lastUser || {};
@@ -107,13 +107,13 @@ function* watchFirebaseCurrentUser() {
 
       const payload = user
         ? {
-          firebaseId,
-          githubId,
-          name,
-          avatarURL,
-          lastAccessedAt: moment().toISOString(),
-          ...restOfUser,
-        }
+            firebaseId,
+            githubId,
+            name,
+            avatarURL,
+            lastAccessedAt: moment().toISOString(),
+            ...restOfUser,
+          }
         : undefined;
 
       yield put(updateCurrentUser(payload, sagaActionChunk));
@@ -123,7 +123,7 @@ function* watchFirebaseCurrentUser() {
   }
 }
 
-export default function* () {
+export default function*() {
   return yield [
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
     yield takeLatest(UPDATE_CURRENT_USER, onCurrentUserUpdate),

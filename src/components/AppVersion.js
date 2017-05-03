@@ -46,12 +46,9 @@ export default class extends React.PureComponent {
         this.setState({ status }, () => {
           if (isCodePushRunningSomeTask(status)) return;
 
-          this.timeout = setTimeout(
-            () => {
-              this.setState({ status: -1 });
-            },
-            2000,
-          );
+          this.timeout = setTimeout(() => {
+            this.setState({ status: -1 });
+          }, 2000);
         });
       },
     );
@@ -70,8 +67,14 @@ export default class extends React.PureComponent {
     const statusText = getStatusText(status);
 
     return (
-      <Button onPress={this.checkForAppUpdate} style={containerStyle} {...buttonProps}>
-        {showAppName && statusText === appVersionText && <Text {...props}>{appDisplayName} </Text>}
+      <Button
+        onPress={this.checkForAppUpdate}
+        style={containerStyle}
+        {...buttonProps}
+      >
+        {showAppName &&
+          statusText === appVersionText &&
+          <Text {...props}>{appDisplayName} </Text>}
         <Text {...props}>{statusText}</Text>
       </Button>
     );

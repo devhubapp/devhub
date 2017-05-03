@@ -1,4 +1,10 @@
-import { deepMapKeys, fromJS, mergeDeepInAndRemoveNull, removeIn, toJS } from './';
+import {
+  deepMapKeys,
+  fromJS,
+  mergeDeepInAndRemoveNull,
+  removeIn,
+  toJS,
+} from './';
 
 test('Deep map keys', function fn(immutable = false) {
   const obj = {

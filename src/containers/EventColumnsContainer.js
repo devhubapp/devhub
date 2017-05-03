@@ -7,7 +7,11 @@ import { connect } from 'react-redux';
 import EventColumns from '../components/columns/EventColumns';
 import { orderedColumnsSelector } from '../selectors';
 import * as actionCreators from '../actions';
-import type { ActionCreators, Column as ColumnType, State } from '../utils/types';
+import type {
+  ActionCreators,
+  Column as ColumnType,
+  State,
+} from '../utils/types';
 
 const mapStateToProps = (state: State) => ({
   columns: orderedColumnsSelector(state),

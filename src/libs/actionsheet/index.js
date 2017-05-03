@@ -30,14 +30,14 @@ type ActionSheetProps = {
   title: ?string,
   titleContainerStyle: ?any,
   titleTextStyle: ?any,
-  useNativeDriver: ?boolean
+  useNativeDriver: ?boolean,
 };
 
 type ActionSheetState = {
   isAnimating: boolean,
   isVisible: boolean,
   overlayOpacity: any,
-  translateY: any
+  translateY: any,
 };
 
 export const ANIMATION_TIME_HIDE = 200;
@@ -168,19 +168,19 @@ export default class ActionSheet extends PureComponent {
     2 * (props.containerPadding || 0);
 
   hide = (animated = true, callback) =>
-    (animated
+    animated
       ? this.animate(false, callback)
-      : this.setState({ visible: false }, callback));
+      : this.setState({ visible: false }, callback);
 
   show = (animated = true, callback) =>
-    (animated
+    animated
       ? this.animate(true, callback)
-      : this.setState({ visible: true }, callback));
+      : this.setState({ visible: true }, callback);
 
   toggle = (animated = true, callback) =>
-    (this.state.isVisible
+    this.state.isVisible
       ? this.hide(animated, callback)
-      : this.show(animated, callback));
+      : this.show(animated, callback);
 
   select = index => {
     this.hide(true, () => {
@@ -235,11 +235,11 @@ export default class ActionSheet extends PureComponent {
         {React.isValidElement(label)
           ? label
           : <Text
-            style={[styles.optionText, { color }, optionTextStyle, textStyle]}
-            numberOfLines={1}
-          >
-            {label}
-          </Text>}
+              style={[styles.optionText, { color }, optionTextStyle, textStyle]}
+              numberOfLines={1}
+            >
+              {label}
+            </Text>}
       </TouchableOpacity>
     );
   };
@@ -307,11 +307,11 @@ export default class ActionSheet extends PureComponent {
         {React.isValidElement(title)
           ? title
           : <Text
-            style={[styles.titleText, titleTextStyle, textStyle]}
-            numberOfLines={1}
-          >
-            {title}
-          </Text>}
+              style={[styles.titleText, titleTextStyle, textStyle]}
+              numberOfLines={1}
+            >
+              {title}
+            </Text>}
       </View>
     );
   }

@@ -34,7 +34,11 @@ import {
 
 import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url';
 
-import type { ActionCreators, GithubEvent, ThemeObject } from '../../utils/types';
+import type {
+  ActionCreators,
+  GithubEvent,
+  ThemeObject,
+} from '../../utils/types';
 
 import {
   smallAvatarWidth,
@@ -77,13 +81,7 @@ export default class extends React.PureComponent {
     if (!event) return null;
     if (archived) return null;
 
-    const {
-      type,
-      payload,
-      actor,
-      repo,
-      created_at,
-    } = {
+    const { type, payload, actor, repo, created_at } = {
       type: event.get('type'),
       payload: event.get('payload'),
       actor: event.get('actor') || Map(),
@@ -108,13 +106,22 @@ export default class extends React.PureComponent {
 
     const toggleEventsReadStatus = read
       ? actions.markEventsAsUnread
-      : actions.markEventsAsRead
-    ;
+      : actions.markEventsAsRead;
 
     return (
       <CardWrapper {...props}>
-        <FullAbsoluteView style={{ top: contentPadding + avatarWidth, left: contentPadding, right: null, width: avatarWidth - smallAvatarWidth, zIndex: 1 }}>
-          <TouchableWithoutFeedback onPress={() => toggleEventsReadStatus({ eventIds })}>
+        <FullAbsoluteView
+          style={{
+            top: contentPadding + avatarWidth,
+            left: contentPadding,
+            right: null,
+            width: avatarWidth - smallAvatarWidth,
+            zIndex: 1,
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => toggleEventsReadStatus({ eventIds })}
+          >
             <FullAbsoluteView />
           </TouchableWithoutFeedback>
         </FullAbsoluteView>
@@ -131,7 +138,11 @@ export default class extends React.PureComponent {
           <MainColumn>
             <HeaderRow>
               <FullView>
-                <TransparentTextOverlay color={theme.base02} size={contentPadding} from="right">
+                <TransparentTextOverlay
+                  color={theme.base02}
+                  size={contentPadding}
+                  from="right"
+                >
                   <HorizontalView>
                     <StyledText numberOfLines={1}>
                       <OwnerLogin numberOfLines={1} muted={read}>
@@ -140,42 +151,50 @@ export default class extends React.PureComponent {
 
                       <IntervalRefresh
                         interval={1000}
-                        onRender={
-                          () => {
-                            const dateText = getDateSmallText(created_at, '•');
-                            return dateText && (
-                              <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
-                            );
-                          }
-                        }
+                        onRender={() => {
+                          const dateText = getDateSmallText(created_at, '•');
+                          return (
+                            dateText &&
+                            <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
+                          );
+                        }}
                       />
                     </StyledText>
                   </HorizontalView>
                 </TransparentTextOverlay>
 
                 <StyledText numberOfLines={1} muted>
-                  {!!isPrivate && <StyledText muted><Icon name="lock" /></StyledText>}
+                  {!!isPrivate &&
+                    <StyledText muted><Icon name="lock" /></StyledText>}
                   {getEventText(event, { repoIsKnown: onlyOneRepository })}
                 </StyledText>
               </FullView>
 
-              {
-                cardSubIcon
-                ? <CardIcon name={cardSubIcon} color={cardSubIconColor || cardIconColor} muted={read} />
-                : <CardIcon name={cardIcon} color={cardIconColor} muted={read} />
-              }
+              {cardSubIcon
+                ? <CardIcon
+                    name={cardSubIcon}
+                    color={cardSubIconColor || cardIconColor}
+                    muted={read}
+                  />
+                : <CardIcon
+                    name={cardIcon}
+                    color={cardIconColor}
+                    muted={read}
+                  />}
             </HeaderRow>
 
             <FullAbsoluteView>
-              <TouchableWithoutFeedback onPress={() => toggleEventsReadStatus({ eventIds })}>
+              <TouchableWithoutFeedback
+                onPress={() => toggleEventsReadStatus({ eventIds })}
+              >
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>
             </FullAbsoluteView>
           </MainColumn>
         </Header>
 
-        {
-          !!repo && !onlyOneRepository &&
+        {!!repo &&
+          !onlyOneRepository &&
           <RepositoryRow
             actions={actions}
             repo={repo}
@@ -183,41 +202,37 @@ export default class extends React.PureComponent {
             forcePushed={type === 'PushEvent' && payload.get('forced')}
             read={read}
             narrow
-          />
-        }
+          />}
 
-        {
-          (() => {
-            const repos = (payload.get('repos') || List()).filter(Boolean);
+        {(() => {
+          const repos = (payload.get('repos') || List()).filter(Boolean);
 
-            if (!(repos.size > 0)) return null;
+          if (!(repos.size > 0)) return null;
 
-            return (
-              <RepositoryListRow
-                actions={actions}
-                repos={repos}
-                pushed={type === 'PushEvent'}
-                forcePushed={type === 'PushEvent' && payload.get('forced')}
-                read={read}
-                narrow
-              />
-            );
-          })()
-        }
+          return (
+            <RepositoryListRow
+              actions={actions}
+              repos={repos}
+              pushed={type === 'PushEvent'}
+              forcePushed={type === 'PushEvent' && payload.get('forced')}
+              read={read}
+              narrow
+            />
+          );
+        })()}
 
-        {
-          !!payload.get('ref') &&
+        {!!payload.get('ref') &&
           <BranchRow
             type={type}
             branch={payload.get('ref')}
-            repoFullName={getRepoFullNameFromUrl(repo && (repo.get('html_url') || repo.get('url')))}
+            repoFullName={getRepoFullNameFromUrl(
+              repo && (repo.get('html_url') || repo.get('url')),
+            )}
             read={read}
             narrow
-          />
-        }
+          />}
 
-        {
-          !!payload.get('forkee') &&
+        {!!payload.get('forkee') &&
           <RepositoryRow
             actions={actions}
             repo={payload.get('forkee')}
@@ -225,111 +240,93 @@ export default class extends React.PureComponent {
             read={read}
             isFork
             narrow
-          />
-        }
+          />}
 
-        {
-          (() => {
-            const member = payload.get('member');
-            const users = (payload.get('users') || List([member])).filter(Boolean);
+        {(() => {
+          const member = payload.get('member');
+          const users = (payload.get('users') || List([member]))
+            .filter(Boolean);
 
-            if (!(users.size > 0)) return null;
+          if (!(users.size > 0)) return null;
 
-            return (
-              <UserListRow users={users} read={read} narrow />
-            );
-          })()
-        }
+          return <UserListRow users={users} read={read} narrow />;
+        })()}
 
-        {
-          type === 'GollumEvent' &&
+        {type === 'GollumEvent' &&
           !!payload.get('pages') &&
-          <WikiPageListRow pages={payload.get('pages')} read={read} narrow />
-        }
+          <WikiPageListRow pages={payload.get('pages')} read={read} narrow />}
 
-        {
-          !!payload.get('pull_request') &&
+        {!!payload.get('pull_request') &&
           <PullRequestRow
             pullRequest={payload.get('pull_request')}
             comment={payload.get('comment')}
             read={read}
             narrow
-          />
-        }
+          />}
 
-        {
-          (() => {
-            const { commits, headCommit } = {
-              commits: payload.get('commits'),
-              headCommit: payload.get('head_commit'),
-            };
+        {(() => {
+          const { commits, headCommit } = {
+            commits: payload.get('commits'),
+            headCommit: payload.get('head_commit'),
+          };
 
-            const list = (commits || List([headCommit])).filter(Boolean);
-            if (!(list.size > 0)) return null;
+          const list = (commits || List([headCommit])).filter(Boolean);
+          if (!(list.size > 0)) return null;
 
-            return (
-              <CommitListRow commits={list} read={read} narrow />
-            );
-          })()
-        }
+          return <CommitListRow commits={list} read={read} narrow />;
+        })()}
 
-        {
-          !!payload.get('issue') &&
+        {!!payload.get('issue') &&
           <IssueRow
             issue={payload.get('issue')}
             comment={payload.get('comment')}
             read={read}
             narrow
-          />
-        }
+          />}
 
-        {
-          (
-            (type === 'IssuesEvent' && payload.get('action') === 'opened' &&
-            !!payload.getIn(['issue', 'body']) &&
-            <CommentRow
-              body={payload.getIn(['issue', 'body'])}
-              user={actor}
-              url={payload.getIn(['issue', 'html_url']) || payload.getIn(['issue', 'url'])}
-              read={read}
-              narrow
-            />)
-
-            ||
-
-            (type === 'PullRequestEvent' && payload.get('action') === 'opened' &&
+        {(type === 'IssuesEvent' &&
+          payload.get('action') === 'opened' &&
+          !!payload.getIn(['issue', 'body']) &&
+          <CommentRow
+            body={payload.getIn(['issue', 'body'])}
+            user={actor}
+            url={
+              payload.getIn(['issue', 'html_url']) ||
+                payload.getIn(['issue', 'url'])
+            }
+            read={read}
+            narrow
+          />) ||
+          (type === 'PullRequestEvent' &&
+            payload.get('action') === 'opened' &&
             !!payload.getIn(['pull_request', 'body']) &&
             <CommentRow
               body={payload.getIn(['pull_request', 'body'])}
               user={actor}
-              url={payload.getIn(['pull_request', 'html_url']) || payload.getIn(['pull_request', 'url'])}
+              url={
+                payload.getIn(['pull_request', 'html_url']) ||
+                  payload.getIn(['pull_request', 'url'])
+              }
               read={read}
               narrow
-            />)
-
-            ||
-
-            (!!payload.getIn(['comment', 'body']) &&
+            />) ||
+          (!!payload.getIn(['comment', 'body']) &&
             <CommentRow
               body={payload.getIn(['comment', 'body'])}
               user={actor}
               url={payload.getIn(['comment', 'html_url'])}
               read={read}
               narrow
-            />)
-          )
-        }
+            />)}
 
-        {
-          !!payload.get('release') &&
+        {!!payload.get('release') &&
           <ReleaseRow
             release={payload.get('release')}
             type={type}
             user={actor}
             read={read}
             narrow
-          />
-        }
+          />}
       </CardWrapper>
     );
   }

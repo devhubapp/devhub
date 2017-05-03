@@ -2,11 +2,22 @@
 
 import { AsyncStorage } from 'react-native';
 import { delay } from 'redux-saga';
-import { call, fork, put, race, select, take, takeLatest } from 'redux-saga/effects';
+import {
+  call,
+  fork,
+  put,
+  race,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 
 import { resetAppData as resetAppDataAction } from '../actions';
-import { RESET_APP_DATA, RESET_APP_DATA_REQUEST } from '../utils/constants/actions';
+import {
+  RESET_APP_DATA,
+  RESET_APP_DATA_REQUEST,
+} from '../utils/constants/actions';
 import { rehydratedSelector } from '../selectors';
 
 import appSagas from './app';
@@ -39,7 +50,7 @@ function* onResetAppDataRequest() {
   yield put(resetAppDataAction());
 }
 
-export default function* () {
+export default function*() {
   return yield [
     yield takeLatest(RESET_APP_DATA_REQUEST, onResetAppDataRequest),
     yield takeLatest(RESET_APP_DATA, resetAppData),

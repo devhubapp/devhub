@@ -9,27 +9,29 @@ import {
 } from './shared';
 
 export const repoIdSelector = (state, { repoId }) => repoId;
-export const reposEntitiesSelector = state => entitiesSelector(state).get('repos');
+export const reposEntitiesSelector = state =>
+  entitiesSelector(state).get('repos');
 
 export const starredReposSelector = createImmutableSelector(
   reposEntitiesSelector,
-  (repos) => (
+  repos =>
     repos
       .filter(Boolean)
       .filter(isReadFilter)
       .map(repo => repo.get('id'))
-      .toList()
-  ),
+      .toList(),
 );
 
-export const makeRepoSelector = () => createImmutableSelectorCreator(1)(
-  repoIdSelector,
-  reposEntitiesSelector,
-  (repoId, repos) => repos.get(`${repoId}`),
-);
+export const makeRepoSelector = () =>
+  createImmutableSelectorCreator(
+    1,
+  )(repoIdSelector, reposEntitiesSelector, (repoId, repos) =>
+    repos.get(`${repoId}`),
+  );
 
-export const makeIsRepoStarredSelector = () => createImmutableSelector(
-  repoIdSelector,
-  starredReposSelector,
-  (repoId, starredRepos) => starredRepos.includes(repoId),
-);
+export const makeIsRepoStarredSelector = () =>
+  createImmutableSelector(
+    repoIdSelector,
+    starredReposSelector,
+    (repoId, starredRepos) => starredRepos.includes(repoId),
+  );

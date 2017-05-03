@@ -49,7 +49,7 @@ export type Config = {
 };
 
 export type Normalized<T> = {
-  [key: string]: T
+  [key: string]: T,
 };
 
 export type Subscription = {

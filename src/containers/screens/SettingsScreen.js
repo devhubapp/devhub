@@ -66,7 +66,11 @@ class SettingsScreen extends React.PureComponent {
               color={theme.red}
               onPress={() => resetAppData()}
             />
-            <StyledButton title="Logout" color={theme.red} onPress={() => logout()} />
+            <StyledButton
+              title="Logout"
+              color={theme.red}
+              onPress={() => logout()}
+            />
           </Main>
 
           <Footer>

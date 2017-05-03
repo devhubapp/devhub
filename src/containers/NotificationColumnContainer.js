@@ -28,7 +28,7 @@ import type {
 const makeMapStateToProps = () => {
   const repoSelector = makeRepoSelector();
 
-  return (state: State, { column }: {column: Object}) => {
+  return (state: State, { column }: { column: Object }) => {
     const _items = column.get('notificationIds').toList();
 
     // This is not very intuitive, but works. This code is here because
@@ -66,7 +66,7 @@ export default class extends React.PureComponent {
     errors: Array<string>,
     items: Array<string | GithubNotification>,
     loading: boolean,
-    repo?: GithubRepo
+    repo?: GithubRepo,
   };
 
   render() {

@@ -13,12 +13,13 @@ import {
   isReadFilter,
 } from './shared';
 
-import { groupNotificationsByRepository } from '../utils/helpers/github/notifications';
+import {
+  groupNotificationsByRepository,
+} from '../utils/helpers/github/notifications';
 import { NotificationSchema } from '../utils/normalizr/schemas';
 
-export const sortNotificationsByDate = (b, a) => (
-  a.get('updated_at') > b.get('updated_at') ? 1 : -1
-);
+export const sortNotificationsByDate = (b, a) =>
+  a.get('updated_at') > b.get('updated_at') ? 1 : -1;
 
 export const notificationIdSelector = (state, { notificationId }) =>
   notificationId;
@@ -94,7 +95,9 @@ export const makeDenormalizedNotificationSelector = () =>
 
 // with memoization of first argument
 // to prevent calling this again unless new notifications were added
-export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCreator(1)(
+export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCreator(
+  1,
+)(
   unarchivedNotificationIdsSelector,
   notificationEntitiesSelector,
   (notificationIds, notificationEntities) =>
@@ -106,13 +109,14 @@ export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCre
       .sort(sortNotificationsByDate),
 );
 
-export const makeGroupedUnarchivedNotificationsSelector = () => createImmutableSelectorCreator(1)(
-  notificationIdsSelector, // just for memoization purposes
-  orderedUnarchivedNotificationsSelector,
-  (state, params) => params,
-  (notificationIds, notifications, params) =>
-    groupNotificationsByRepository(notifications, params).toList(),
-);
+export const makeGroupedUnarchivedNotificationsSelector = () =>
+  createImmutableSelectorCreator(1)(
+    notificationIdsSelector, // just for memoization purposes
+    orderedUnarchivedNotificationsSelector,
+    (state, params) => params,
+    (notificationIds, notifications, params) =>
+      groupNotificationsByRepository(notifications, params).toList(),
+  );
 
 export const notificationsIsLoadingSelector = createImmutableSelector(
   notificationDetailsSelector,

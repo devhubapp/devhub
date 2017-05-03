@@ -10,8 +10,12 @@ import type { Action, ActionType } from '../types';
  * produces
  * { type: 'SET_THEME', payload: 'dark' }
  */
-export function action<T>(type: ActionType, payload: T = {}, other?: Object = {}): Action<T> {
-  return { ...other, type, payload: payload };
+export function action<T>(
+  type: ActionType,
+  payload: T = {},
+  other?: Object = {},
+): Action<T> {
+  return { ...other, type, payload };
 }
 
 /**
@@ -22,6 +26,11 @@ export function action<T>(type: ActionType, payload: T = {}, other?: Object = {}
  * produces
  * { type: 'LOGIN_FAILURE', error: { message: '...' } }
  */
-export function errorAction(type: ActionType, payload: Object, error: any, other?: Object = {}) {
+export function errorAction(
+  type: ActionType,
+  payload: Object,
+  error: any,
+  other?: Object = {},
+) {
   return { ...other, type, payload, error };
 }

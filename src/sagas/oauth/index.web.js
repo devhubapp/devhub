@@ -16,7 +16,7 @@ function popupWindow(url, title, w, h) {
   );
 }
 
-export default (async function (serverURL, scopes = []) {
+export default (async function(serverURL, scopes = []) {
   const scopesStr = (scopes || []).join(' ');
   const querystring = qs.stringify({
     scope: scopesStr,
@@ -24,7 +24,12 @@ export default (async function (serverURL, scopes = []) {
     origin: window.location.origin || window.location.href,
   });
 
-  const popup = popupWindow(`${serverURL}/?${querystring}`, 'Login with GitHub', 500, 600);
+  const popup = popupWindow(
+    `${serverURL}/?${querystring}`,
+    'Login with GitHub',
+    500,
+    600,
+  );
 
   try {
     const params = await listenForNextUrl();

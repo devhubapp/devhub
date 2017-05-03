@@ -8,15 +8,15 @@ import Icon from '../../libs/icon';
 import OwnerAvatar from './_OwnerAvatar';
 import TouchableRow from './__TouchableRow';
 
-import {
-  CardText,
-  StyledText,
-  smallAvatarWidth,
-} from './__CardComponents';
+import { CardText, StyledText, smallAvatarWidth } from './__CardComponents';
 
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url';
-import type { GithubEventType, GithubUser, ReleaseEvent } from '../../utils/types';
+import type {
+  GithubEventType,
+  GithubUser,
+  ReleaseEvent,
+} from '../../utils/types';
 
 export default class extends React.PureComponent {
   props: {
@@ -32,12 +32,7 @@ export default class extends React.PureComponent {
 
     if (!release) return null;
 
-    const {
-      body,
-      branch,
-      name,
-      tagName,
-    } = {
+    const { body, branch, name, tagName } = {
       body: trimNewLinesAndSpaces(release.get('body')),
       branch: release.get('target_commitish'),
       name: trimNewLinesAndSpaces(release.get('name')),
@@ -48,19 +43,22 @@ export default class extends React.PureComponent {
 
     return (
       <View>
-        {
-          !!branch &&
-          <BranchRow branch={branch} type={type} repoFullName={repoFullName} narrow />
-        }
+        {!!branch &&
+          <BranchRow
+            branch={branch}
+            type={type}
+            repoFullName={repoFullName}
+            narrow
+          />}
 
         <TouchableRow
           left={
             !!user &&
-            <OwnerAvatar
-              avatarURL={user.get('avatar_url')}
-              linkURL={user.get('html_url') || user.get('url')}
-              size={smallAvatarWidth}
-            />
+              <OwnerAvatar
+                avatarURL={user.get('avatar_url')}
+                linkURL={user.get('html_url') || user.get('url')}
+                size={smallAvatarWidth}
+              />
           }
           read={read}
           url={release.get('html_url') || release.get('url')}
@@ -72,27 +70,27 @@ export default class extends React.PureComponent {
           </StyledText>
         </TouchableRow>
 
-        {
-          !!body &&
+        {!!body &&
           <TouchableRow
             left={
               !!user &&
-              <OwnerAvatar
-                avatarURL={user.get('avatar_url')}
-                linkURL={user.get('html_url') || user.get('url')}
-                size={smallAvatarWidth}
-              />
+                <OwnerAvatar
+                  avatarURL={user.get('avatar_url')}
+                  linkURL={user.get('html_url') || user.get('url')}
+                  size={smallAvatarWidth}
+                />
             }
             read={read}
             url={release.get('html_url') || release.get('url')}
             {...props}
           >
             <CardText numberOfLines={1} muted={read}>
-              <StyledText muted={read}><Icon name="megaphone" />&nbsp;</StyledText>
+              <StyledText muted={read}>
+                <Icon name="megaphone" />&nbsp;
+              </StyledText>
               {body}
             </CardText>
-          </TouchableRow>
-        }
+          </TouchableRow>}
       </View>
     );
   }

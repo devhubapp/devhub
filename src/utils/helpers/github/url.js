@@ -4,11 +4,7 @@
 import Browser from '../../../libs/browser';
 import { get } from '../../immutable';
 
-import type {
-  GithubIssue,
-  GithubPullRequest,
-  GithubRepo,
-} from '../../types';
+import type { GithubIssue, GithubPullRequest, GithubRepo } from '../../types';
 
 export const baseURL = 'https://github.com';
 
@@ -43,27 +39,29 @@ export function getReleaseIdFromUrl(url: string) {
 }
 
 /* eslint-disable-next-line no-useless-escape */
-export const getRepoFullNameFromUrl = (url: string): string => (
+export const getRepoFullNameFromUrl = (url: string): string =>
   url
-      ? ((url.match(/(github.com\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i) || [])[3]) || ''
-    : ''
-);
+    ? (url.match(
+        /(github.com\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i,
+      ) || [])[3] || ''
+    : '';
 
-export const getGitHubURLForUser = (user: string) => (
-  user ? `${baseURL}/${user}` : ''
-);
+export const getGitHubURLForUser = (user: string) =>
+  user ? `${baseURL}/${user}` : '';
 
-const objToQueryParams = obj => Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&');
+const objToQueryParams = obj =>
+  Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&');
 
-export const getGitHubSearchURL = (queryParams: Object) => (
-  queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : ''
-);
+export const getGitHubSearchURL = (queryParams: Object) =>
+  queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : '';
 
-export const getGitHubURLForBranch = (repoFullName: string, branch: string) => (
-  repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
-);
+export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
+  repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : '';
 
-export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string {
+export function githubHTMLUrlFromAPIUrl(
+  apiURL: string,
+  { number } = {},
+): string {
   if (!apiURL) return '';
 
   const [, type, restOfURL] = apiURL.match('api.github.com/([a-zA-Z]+)/(.*)');
@@ -71,7 +69,10 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string
 
   if (type === 'repos') {
     const repoFullName = getRepoFullNameFromUrl(apiURL);
-    const [type2, ...restOfURL2] = (apiURL.split(`/repos/${repoFullName}/`)[1] || '').split('/');
+    const [
+      type2,
+      ...restOfURL2
+    ] = (apiURL.split(`/repos/${repoFullName}/`)[1] || '').split('/');
 
     if (restOfURL2[0]) {
       switch (type2) {
@@ -112,9 +113,7 @@ export function githubHTMLUrlFromAPIUrl(apiURL: string, { number } = {}): string
 
 function openURL(
   url: string,
-  {
-    safariOptions = {},
-  }: { safariOptions: Object } = {},
+  { safariOptions = {} }: { safariOptions: Object } = {},
 ) {
   if (!url) return;
 

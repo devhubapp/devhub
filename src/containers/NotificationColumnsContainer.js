@@ -18,7 +18,10 @@ const makeMapStateToProps = () => {
   const denormalizedGNSelectorParams = { includeAllGroup: true };
 
   return (state: State) => ({
-    columns: groupedUnarchivedNotificationsSelector(state, denormalizedGNSelectorParams),
+    columns: groupedUnarchivedNotificationsSelector(
+      state,
+      denormalizedGNSelectorParams,
+    ),
   });
 };
 

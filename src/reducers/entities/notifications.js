@@ -24,25 +24,51 @@ import type { Action, Normalized } from '../../utils/types';
 type State = Normalized<Object>;
 const initialState = Map();
 
-export default (state: State = initialState, { type, payload }: ?Action<any> = {}): State => {
+export default (
+  state: State = initialState,
+  { type, payload }: ?Action<any> = {},
+): State => {
   switch (type) {
     case ARCHIVE_NOTIFICATIONS:
-      return markAsArchivedByIds(state, payload.notificationIds, payload.archivedAt);
+      return markAsArchivedByIds(
+        state,
+        payload.notificationIds,
+        payload.archivedAt,
+      );
 
     case DELETE_NOTIFICATIONS:
-      return deleteByIds(state, payload.notificationIds, payload.deletedAt, true);
+      return deleteByIds(
+        state,
+        payload.notificationIds,
+        payload.deletedAt,
+        true,
+      );
 
     case MARK_NOTIFICATIONS_AS_READ_REQUEST:
-      return markAsReadByIds(state, payload.notificationIds, payload.lastReadAt, false);
+      return markAsReadByIds(
+        state,
+        payload.notificationIds,
+        payload.lastReadAt,
+        false,
+      );
 
     case MARK_NOTIFICATIONS_AS_READ_FAILURE:
       return undoMarkAsReadByIds(state, payload.notificationIds);
 
     case MARK_NOTIFICATIONS_AS_READ_SUCCESS:
-      return markAsReadByIds(state, payload.notificationIds, payload.lastReadAt, true);
+      return markAsReadByIds(
+        state,
+        payload.notificationIds,
+        payload.lastReadAt,
+        true,
+      );
 
     case MARK_NOTIFICATIONS_AS_UNREAD:
-      return markAsUnreadByIds(state, payload.notificationIds, payload.lastUnreadAt);
+      return markAsUnreadByIds(
+        state,
+        payload.notificationIds,
+        payload.lastUnreadAt,
+      );
 
     default:
       return state;

@@ -2,13 +2,15 @@ import React, { PropTypes } from 'react';
 import { View } from 'react-native';
 
 const radToDeg = angle => angle * (180 / Math.PI);
-const pointsToAngle = (p1, p2) => radToDeg(Math.atan2(p2.y - p1.y, p2.x - p1.x)) + 90;
+const pointsToAngle = (p1, p2) =>
+  radToDeg(Math.atan2(p2.y - p1.y, p2.x - p1.x)) + 90;
 
-const propsToDeg = ({ start, end }) =>
-  `${pointsToAngle(start, end)}deg`;
+const propsToDeg = ({ start, end }) => `${pointsToAngle(start, end)}deg`;
 
-const propsToLinearGradient = ({ colors, ...props }) =>
-  `linear-gradient(${propsToDeg(props)}, ${colors.join(', ')})`;
+const propsToLinearGradient = ({
+  colors,
+  ...props
+}) => `linear-gradient(${propsToDeg(props)}, ${colors.join(', ')})`;
 
 const LinearGradient = ({ style, ...props }) => (
   <View

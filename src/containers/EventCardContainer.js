@@ -14,18 +14,17 @@ import {
 } from '../selectors';
 
 import * as actionCreators from '../actions';
-import type {
-  ActionCreators,
-  GithubEvent,
-  State,
-} from '../utils/types';
+import type { ActionCreators, GithubEvent, State } from '../utils/types';
 
 const makeMapStateToProps = () => {
   const denormalizedEventSelector = makeDenormalizedEventSelector();
   const isArchivedEventSelector = makeIsArchivedEventSelector();
   const isReadEventSelector = makeIsReadEventSelector();
 
-  return (state: State, { eventOrEventId }: { eventOrEventId: string|GithubEvent }) => {
+  return (
+    state: State,
+    { eventOrEventId }: { eventOrEventId: string | GithubEvent },
+  ) => {
     const event = Iterable.isIterable(eventOrEventId) ? eventOrEventId : null;
     const eventId = event ? `${event.get('id')}` : eventOrEventId;
 

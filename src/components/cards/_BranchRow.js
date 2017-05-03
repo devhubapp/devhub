@@ -5,9 +5,7 @@ import React from 'react';
 import Icon from '../../libs/icon';
 import TouchableRow from './__TouchableRow';
 
-import {
-  StyledText,
-} from './__CardComponents';
+import { StyledText } from './__CardComponents';
 
 import { getGitHubURLForBranch } from '../../utils/helpers/github/url';
 import type { GithubEventType } from '../../utils/types';
@@ -27,7 +25,8 @@ export default class extends React.PureComponent {
     const branch = (_branch || '').replace('refs/heads/', '');
     if (!branch) return null;
 
-    const isBranchMainEventAction = type === 'CreateEvent' || type === 'DeleteEvent';
+    const isBranchMainEventAction =
+      type === 'CreateEvent' || type === 'DeleteEvent';
     if (branch === 'master' && !isBranchMainEventAction) return null;
 
     return (

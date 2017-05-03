@@ -12,11 +12,13 @@ export default class extends React.PureComponent {
     linkURL: string,
     navigation: Object,
     size?: ?number,
-  } & ({
-    avatarURL: string,
-  } | {
-    email?: ?string,
-  });
+  } & (
+    | {
+        avatarURL: string,
+      }
+    | {
+        email?: ?string,
+      });
 
   render() {
     const { avatarURL, email, linkURL, size, ...props } = this.props;

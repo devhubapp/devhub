@@ -11,7 +11,6 @@ const StyledScrollView = styled.ScrollView`
   align-self: stretch;
 `;
 
-
 type Props = {
   contentContainerStyle?: Object,
   padding?: number,
@@ -21,11 +20,14 @@ type Props = {
 export default ({ contentContainerStyle, padding, style, ...props }: Props) => (
   <StyledScrollView
     style={style}
-    contentContainerStyle={[{
-      marginHorizontal: -padding || -contentPadding,
-      paddingHorizontal: padding || contentPadding,
-      alignItems: 'center',
-    }, contentContainerStyle]}
+    contentContainerStyle={[
+      {
+        marginHorizontal: -padding || -contentPadding,
+        paddingHorizontal: padding || contentPadding,
+        alignItems: 'center',
+      },
+      contentContainerStyle,
+    ]}
     alwaysBounceVertical={false}
     alwaysBounceHorizontal={false}
     horizontal

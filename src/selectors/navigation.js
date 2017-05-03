@@ -14,10 +14,15 @@ export const getNavigationState = createSelector(
 
 export const getMainNavigationState = createSelector(
   getNavigationState,
-  navigation => navigation && get(navigation, 'routes').find(route => get(route, 'routeName') === 'main'),
+  navigation =>
+    navigation &&
+    get(navigation, 'routes').find(route => get(route, 'routeName') === 'main'),
 );
 
-export const getSelectedRouteFromNavigationState = (navigationState, deep = false) => {
+export const getSelectedRouteFromNavigationState = (
+  navigationState,
+  deep = false,
+) => {
   if (!navigationState) return null;
 
   const index = get(navigationState, 'index');

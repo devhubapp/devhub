@@ -12,7 +12,10 @@ import {
 
 import { isPullRequest } from '../helpers/github/shared';
 
-const defaultOptions = { idAttribute: simpleIdAttribute, mergeStrategy: preferNewestMergeStrategy };
+const defaultOptions = {
+  idAttribute: simpleIdAttribute,
+  mergeStrategy: preferNewestMergeStrategy,
+};
 
 const defaultFields = ['id', 'html_url', 'url', 'created_at', 'updated_at'];
 
@@ -31,61 +34,97 @@ const issueOrPullRequestFields = [
 
 const ownerFields = [...defaultFields, 'avatar_url', 'display_login', 'login'];
 
-export const CommentSchema = new schema.Entity('comments', {}, {
-  ...defaultOptions,
-  processStrategy: obj => pick(obj, [...defaultFields, 'body', 'user']),
-});
+export const CommentSchema = new schema.Entity(
+  'comments',
+  {},
+  {
+    ...defaultOptions,
+    processStrategy: obj => pick(obj, [...defaultFields, 'body', 'user']),
+  },
+);
 
-export const CommitSchema = new schema.Entity('commits', {}, {
-  ...defaultOptions,
-  idAttribute: commitIdAttribute,
-});
+export const CommitSchema = new schema.Entity(
+  'commits',
+  {},
+  {
+    ...defaultOptions,
+    idAttribute: commitIdAttribute,
+  },
+);
 
 export const ColumnSchema = new schema.Entity('columns', {}, defaultOptions);
 export const EventSchema = new schema.Entity('events', {}, defaultOptions);
 
-export const IssueSchema = new schema.Entity('issues', {}, {
-  ...defaultOptions,
-  idAttribute: issueOrPullRequestIdAttribute,
-  processStrategy: obj => ({
-    ...pick(obj, issueOrPullRequestFields),
-    type: isPullRequest(obj) ? 'PullRequest' : 'Issue',
-  }),
-});
+export const IssueSchema = new schema.Entity(
+  'issues',
+  {},
+  {
+    ...defaultOptions,
+    idAttribute: issueOrPullRequestIdAttribute,
+    processStrategy: obj => ({
+      ...pick(obj, issueOrPullRequestFields),
+      type: isPullRequest(obj) ? 'PullRequest' : 'Issue',
+    }),
+  },
+);
 
-export const NotificationSchema = new schema.Entity('notifications', {}, {
-  ...defaultOptions,
-  processStrategy: (obj) => notificationProcessStrategy(obj),
-});
+export const NotificationSchema = new schema.Entity(
+  'notifications',
+  {},
+  {
+    ...defaultOptions,
+    processStrategy: obj => notificationProcessStrategy(obj),
+  },
+);
 
-export const OrgSchema = new schema.Entity('orgs', {}, {
-  ...defaultOptions,
-  processStrategy: obj => pick(obj, ownerFields),
-});
+export const OrgSchema = new schema.Entity(
+  'orgs',
+  {},
+  {
+    ...defaultOptions,
+    processStrategy: obj => pick(obj, ownerFields),
+  },
+);
 
 // ps: saving pull requests together with issues
 // because they are the basically the same in githubs databases
 // and because sometimes an pull request cames as an issue by the api
-export const PullRequestSchema = new schema.Entity('issues', {}, {
-  ...defaultOptions,
-  idAttribute: issueOrPullRequestIdAttribute,
-  processStrategy: obj => ({
-    ...pick(obj, issueOrPullRequestFields),
-    type: 'PullRequest',
-  }),
-});
+export const PullRequestSchema = new schema.Entity(
+  'issues',
+  {},
+  {
+    ...defaultOptions,
+    idAttribute: issueOrPullRequestIdAttribute,
+    processStrategy: obj => ({
+      ...pick(obj, issueOrPullRequestFields),
+      type: 'PullRequest',
+    }),
+  },
+);
 
-export const ReleaseSchema = new schema.Entity('releases', {}, {
-  ...defaultOptions,
-  idAttribute: releaseIdAttribute,
-});
+export const ReleaseSchema = new schema.Entity(
+  'releases',
+  {},
+  {
+    ...defaultOptions,
+    idAttribute: releaseIdAttribute,
+  },
+);
 
-export const SubscriptionSchema = new schema.Entity('subscriptions', {}, defaultOptions);
+export const SubscriptionSchema = new schema.Entity(
+  'subscriptions',
+  {},
+  defaultOptions,
+);
 
-export const UserSchema = new schema.Entity('users', {}, {
-  ...defaultOptions,
-  processStrategy: obj => pick(obj, ownerFields),
-});
+export const UserSchema = new schema.Entity(
+  'users',
+  {},
+  {
+    ...defaultOptions,
+    processStrategy: obj => pick(obj, ownerFields),
+  },
+);
 
 export const RepoSchema = new schema.Entity('repos', {}, defaultOptions);
 
@@ -123,12 +162,15 @@ IssueSchema.define({
 NotificationSchema.define({
   comment: CommentSchema,
   repository: RepoSchema,
-  subject: new schema.Union({
-    Commit: CommitSchema,
-    Issue: IssueSchema,
-    PullRequest: PullRequestSchema,
-    Release: ReleaseSchema,
-  }, 'type'),
+  subject: new schema.Union(
+    {
+      Commit: CommitSchema,
+      Issue: IssueSchema,
+      PullRequest: PullRequestSchema,
+      Release: ReleaseSchema,
+    },
+    'type',
+  ),
 });
 
 PullRequestSchema.define({

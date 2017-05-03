@@ -44,15 +44,16 @@ export function fixFirebaseKey(key, encrypt = false) {
 }
 
 export function fixFirebaseKeysFromObject(object, encrypt = false) {
-  return deepMapKeys(object, (value, key) =>
-    fixFirebaseKey(key, encrypt));
+  return deepMapKeys(object, (value, key) => fixFirebaseKey(key, encrypt));
 }
 
 export function getPathFromRef(ref) {
   if (!ref) return '';
 
   let path = ref.toString();
-  while (path.slice(-1) === '/') { path = path.slice(0, -1); }
+  while (path.slice(-1) === '/') {
+    path = path.slice(0, -1);
+  }
 
   return path;
 }
@@ -62,12 +63,18 @@ export function getRelativePathFromRef(ref, rootRef) {
   const rootPath = getPathFromRef(rootRef);
 
   if (!(itemPath && rootPath)) {
-    console.error('Expected both ref and rootRef parameters on getRelativePathFromRef. Received:', ref, rootPath);
+    console.error(
+      'Expected both ref and rootRef parameters on getRelativePathFromRef. Received:',
+      ref,
+      rootPath,
+    );
     return '';
   }
 
   let path = itemPath.replace(rootPath, '');
-  while (path.slice(-1) === '/') { path = path.slice(0, -1); }
+  while (path.slice(-1) === '/') {
+    path = path.slice(0, -1);
+  }
 
   return path;
 }
@@ -136,7 +143,9 @@ export function getObjectFilteredByMap(object, map) {
     if (!object) return object;
 
     const itemMap = get(map, '*');
-    const newObject = mapFn(object, item => getObjectFilteredByMap(item, itemMap));
+    const newObject = mapFn(object, item =>
+      getObjectFilteredByMap(item, itemMap),
+    );
     return newObject;
   }
 
@@ -149,7 +158,7 @@ export function getObjectFilteredByMap(object, map) {
   }
 
   if (objects && objects.length) {
-    forEach(objects, (field) => {
+    forEach(objects, field => {
       const value = getObjectFilteredByMap(get(object, field), get(map, field));
       filteredObject = set(filteredObject, field, value);
     });
@@ -192,9 +201,7 @@ export function getObjectDiff(oldObject, newObject, map, ...rest) {
   if (oldObject === newObject) return null;
 
   if (!isObjectOrMap(newObject)) {
-    console.error(
-      `[OBJECT DIFF] Invalid arguments passed to getObjectDiff. Expected objects, received: ${typeof oldObject} and ${typeof newObject}.`,
-    );
+    console.error(`[OBJECT DIFF] Invalid arguments passed to getObjectDiff. Expected objects, received: ${typeof oldObject} and ${typeof newObject}.`);
   }
 
   const depth = rest[0] || 0;
@@ -242,7 +249,8 @@ export function getObjectDiff(oldObject, newObject, map, ...rest) {
       const oldValue = get(_oldObject, field);
 
       if (
-        oldValue === newValue || deepImmutableEqualityCheck(oldValue, newValue)
+        oldValue === newValue ||
+        deepImmutableEqualityCheck(oldValue, newValue)
       ) {
         result = remove(result, field);
         return;

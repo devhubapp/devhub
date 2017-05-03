@@ -3,11 +3,15 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import type ImageSourcePropType from 'react-native/Libraries/Image/ImageSourcePropType';
+import type ImageSourcePropType
+  from 'react-native/Libraries/Image/ImageSourcePropType';
 
 import { radius as defaultRadius, mutedOpacity } from '../styles/variables';
 
-const bgColorAfterLog = Platform.select({ android: 'transparent', default: '#ffffff' });
+const bgColorAfterLog = Platform.select({
+  android: 'transparent',
+  default: '#ffffff',
+});
 
 const Avatar = styled.Image`
   width: ${({ size }) => size}px;

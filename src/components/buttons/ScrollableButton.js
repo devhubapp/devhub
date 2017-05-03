@@ -20,11 +20,20 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { buttonProps, contentContainerStyle, children, onPress, ...props } = this.props;
+    const {
+      buttonProps,
+      contentContainerStyle,
+      children,
+      onPress,
+      ...props
+    } = this.props;
 
     return (
       <ScrollableContentContainer
-        contentContainerStyle={[{ alignItems: 'stretch' }, contentContainerStyle]}
+        contentContainerStyle={[
+          { alignItems: 'stretch' },
+          contentContainerStyle,
+        ]}
         {...props}
       >
         <StyledButton onPress={onPress} {...buttonProps}>

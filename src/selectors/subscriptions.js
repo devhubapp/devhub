@@ -12,18 +12,19 @@ import {
 
 import { SubscriptionSchema } from '../utils/normalizr/schemas';
 
-export const subscriptionIdSelector = (state, { subscriptionId }) => subscriptionId;
+export const subscriptionIdSelector = (state, { subscriptionId }) =>
+  subscriptionId;
 
-export const subscriptionsEntitySelector = state => entitiesSelector(state).get('subscriptions');
+export const subscriptionsEntitySelector = state =>
+  entitiesSelector(state).get('subscriptions');
 
-export const subscriptionIdsSelector = state => objectKeysMemoized(subscriptionsEntitySelector(state));
+export const subscriptionIdsSelector = state =>
+  objectKeysMemoized(subscriptionsEntitySelector(state));
 
-export const denormalizedSubscriptionsSelector = createImmutableSelectorCreator(1)(
-  subscriptionsEntitySelector,
-  entitiesSelector,
-  (subscriptions, entities) => (
-    denormalize(subscriptions, entities, [SubscriptionSchema])
-  ),
+export const denormalizedSubscriptionsSelector = createImmutableSelectorCreator(
+  1,
+)(subscriptionsEntitySelector, entitiesSelector, (subscriptions, entities) =>
+  denormalize(subscriptions, entities, [SubscriptionSchema]),
 );
 
 export const subscriptionSelector = createImmutableSelector(
@@ -41,5 +42,6 @@ export default denormalizedSubscriptionsSelector;
 
 export const subscriptionsIsLoadingSelector = createImmutableSelector(
   subscriptionsEntitySelector,
-  subscriptions => subscriptions.some(subscription => subscription.get('loading')),
+  subscriptions =>
+    subscriptions.some(subscription => subscription.get('loading')),
 );

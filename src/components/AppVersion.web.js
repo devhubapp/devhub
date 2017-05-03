@@ -16,8 +16,6 @@ export default class extends React.PureComponent {
     delete props.containerStyle;
     delete props.buttonProps;
 
-    return (
-      <Text {...props}>{appVersionText}</Text>
-    );
+    return <Text {...props}>{appVersionText}</Text>;
   }
 }

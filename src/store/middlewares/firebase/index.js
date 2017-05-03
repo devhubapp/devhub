@@ -5,39 +5,48 @@ import { debounce } from 'lodash';
 
 import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions';
 import { firebaseReceivedEvent } from '../../../actions';
-import { mapFirebaseToState, mapStateToFirebase } from '../../../reducers/firebase';
+import {
+  mapFirebaseToState,
+  mapStateToFirebase,
+} from '../../../reducers/firebase';
 import { toJS } from '../../../utils/immutable';
-import { getObjectDiff, getObjectFilteredByMap, fixFirebaseKeysFromObject, getMapSubtractedByMap } from './helpers';
-import { addFirebaseListener, applyPatchOnFirebase, watchFirebaseFromMap } from './lib';
+import {
+  getObjectDiff,
+  getObjectFilteredByMap,
+  fixFirebaseKeysFromObject,
+  getMapSubtractedByMap,
+} from './helpers';
+import {
+  addFirebaseListener,
+  applyPatchOnFirebase,
+  watchFirebaseFromMap,
+} from './lib';
 import { isLoggedSelector, isReadySelector } from '../../../selectors';
 
 let _currentUserId;
 let _databaseRef;
 let _lastState;
 
-const checkDiffAndPatchDebounced = debounce(
-  (stateA, stateB, map, store) => {
-    if (_databaseRef && stateA !== undefined) {
-      const fixedStateA = fixFirebaseKeysFromObject(stateA, true);
-      const fixedStateB = fixFirebaseKeysFromObject(stateB, true);
+const checkDiffAndPatchDebounced = debounce((stateA, stateB, map, store) => {
+  if (_databaseRef && stateA !== undefined) {
+    const fixedStateA = fixFirebaseKeysFromObject(stateA, true);
+    const fixedStateB = fixFirebaseKeysFromObject(stateB, true);
 
-      const stateDiff = toJS(getObjectDiff(fixedStateA, fixedStateB, map));
-      // console.log('state diff', stateDiff);
-      // console.log('states before diff', toJS(fixedStateA), toJS(fixedStateA));
+    const stateDiff = toJS(getObjectDiff(fixedStateA, fixedStateB, map));
+    // console.log('state diff', stateDiff);
+    // console.log('states before diff', toJS(fixedStateA), toJS(fixedStateA));
 
-      if (stateDiff && _currentUserId) {
-        applyPatchOnFirebase({
-          debug: false, // __DEV__,
-          patch: stateDiff,
-          ref: _databaseRef,
-          rootDatabaseRef: _databaseRef,
-        });
-        _lastState = store.getState();
-      }
+    if (stateDiff && _currentUserId) {
+      applyPatchOnFirebase({
+        debug: false, // __DEV__,
+        patch: stateDiff,
+        ref: _databaseRef,
+        rootDatabaseRef: _databaseRef,
+      });
+      _lastState = store.getState();
     }
-  },
-  300,
-);
+  }
+}, 300);
 
 export function stopFirebase() {
   if (!_databaseRef) return;
@@ -64,12 +73,26 @@ export function startFirebase({ store, userId }) {
   // they are more 'local' fields that doesnt make sense to sync.
   addFirebaseListener({
     callback(result) {
-      const missingOnFirebaseMap = getMapSubtractedByMap(mapStateToFirebase, mapFirebaseToState);
-      const firebaseData = getObjectFilteredByMap(result.value, missingOnFirebaseMap);
-      const localData = getObjectFilteredByMap(store.getState(), missingOnFirebaseMap);
+      const missingOnFirebaseMap = getMapSubtractedByMap(
+        mapStateToFirebase,
+        mapFirebaseToState,
+      );
+      const firebaseData = getObjectFilteredByMap(
+        result.value,
+        missingOnFirebaseMap,
+      );
+      const localData = getObjectFilteredByMap(
+        store.getState(),
+        missingOnFirebaseMap,
+      );
 
       // send to firebase some things from the initial state, like app.version, ...
-      checkDiffAndPatchDebounced(firebaseData, localData, missingOnFirebaseMap, store);
+      checkDiffAndPatchDebounced(
+        firebaseData,
+        localData,
+        missingOnFirebaseMap,
+        store,
+      );
 
       // update local state with the initial data received by firebase
       store.dispatch(firebaseReceivedEvent(result));
@@ -77,7 +100,14 @@ export function startFirebase({ store, userId }) {
 
       watchFirebaseFromMap({
         callback({ eventName, firebasePathArr, statePathArr, value }) {
-          store.dispatch(firebaseReceivedEvent({ eventName, firebasePathArr, statePathArr, value }));
+          store.dispatch(
+            firebaseReceivedEvent({
+              eventName,
+              firebasePathArr,
+              statePathArr,
+              value,
+            }),
+          );
           _lastState = store.getState();
         },
         debug: false, // __DEV__,
@@ -117,5 +147,10 @@ export default store => next => (action = {}) => {
     }
   }
 
-  checkDiffAndPatchDebounced(_lastState, store.getState(), mapStateToFirebase, store);
+  checkDiffAndPatchDebounced(
+    _lastState,
+    store.getState(),
+    mapStateToFirebase,
+    store,
+  );
 };

@@ -7,47 +7,65 @@ import { fromJS, List, Map, Set } from 'immutable';
 
 import { get, getIn } from '../../immutable';
 import { isArchivedFilter, isReadFilter } from '../../../selectors';
-import { getIssueIconAndColor, getPullRequestIconAndColor, isPullRequest } from './shared';
+import {
+  getIssueIconAndColor,
+  getPullRequestIconAndColor,
+  isPullRequest,
+} from './shared';
 import * as baseTheme from '../../../styles/themes/base';
 
 import type {
-    GithubEvent,
-    GithubEventType,
-    GithubIcon,
-    ThemeObject,
-  } from '../../types';
+  GithubEvent,
+  GithubEventType,
+  GithubIcon,
+  ThemeObject,
+} from '../../types';
 
-export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = baseTheme):
-{ icon: GithubIcon, color?: string } {
+export function getEventIconAndColor(
+  event: GithubEvent,
+  theme?: ThemeObject = baseTheme,
+): { icon: GithubIcon, color?: string } {
   const eventType = get(event, 'type').split(':')[0];
   const payload = get(event, 'payload');
 
   switch (eventType) {
-    case 'CommitCommentEvent': return { icon: 'git-commit', subIcon: 'comment-discussion' };
+    case 'CommitCommentEvent':
+      return { icon: 'git-commit', subIcon: 'comment-discussion' };
     case 'CreateEvent':
       switch (get(payload, 'ref_type')) {
-        case 'repository': return { icon: 'repo' };
-        case 'branch': return { icon: 'git-branch' };
-        case 'tag': return { icon: 'tag' };
-        default: return { icon: 'plus' };
+        case 'repository':
+          return { icon: 'repo' };
+        case 'branch':
+          return { icon: 'git-branch' };
+        case 'tag':
+          return { icon: 'tag' };
+        default:
+          return { icon: 'plus' };
       }
     case 'DeleteEvent':
       switch (get(payload, 'ref_type')) {
-        case 'repository': return { icon: 'repo', color: theme.red };
-        case 'branch': return { icon: 'git-branch', color: theme.red };
-        case 'tag': return { icon: 'tag', color: theme.red };
-        default: return { icon: 'trashcan' };
+        case 'repository':
+          return { icon: 'repo', color: theme.red };
+        case 'branch':
+          return { icon: 'git-branch', color: theme.red };
+        case 'tag':
+          return { icon: 'tag', color: theme.red };
+        default:
+          return { icon: 'trashcan' };
       }
-    case 'GollumEvent': return { icon: 'book' };
-    case 'ForkEvent': return { icon: 'repo-forked' };
+    case 'GollumEvent':
+      return { icon: 'book' };
+    case 'ForkEvent':
+      return { icon: 'repo-forked' };
 
     case 'IssueCommentEvent':
       return {
-        ...(
-          get(payload, 'pull_request') || isPullRequest(get(payload, 'issue'))
-          ? getPullRequestIconAndColor(get(payload, 'pull_request') || get(payload, 'issue'), theme)
-          : getIssueIconAndColor(get(payload, 'issue'), theme)
-        ),
+        ...(get(payload, 'pull_request') || isPullRequest(get(payload, 'issue'))
+          ? getPullRequestIconAndColor(
+              get(payload, 'pull_request') || get(payload, 'issue'),
+              theme,
+            )
+          : getIssueIconAndColor(get(payload, 'issue'), theme)),
         subIcon: 'comment-discussion',
       };
 
@@ -56,15 +74,16 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
         const issue = get(payload, 'issue');
 
         switch (get(payload, 'action')) {
-          case 'opened': return getIssueIconAndColor(Map({ state: 'open' }), theme);
-          case 'closed': return getIssueIconAndColor(Map({ state: 'closed' }), theme);
+          case 'opened':
+            return getIssueIconAndColor(Map({ state: 'open' }), theme);
+          case 'closed':
+            return getIssueIconAndColor(Map({ state: 'closed' }), theme);
 
           case 'reopened':
             return {
               ...getIssueIconAndColor(Map({ state: 'open' }), theme),
               icon: 'issue-reopened',
             };
-
           // case 'assigned':
           // case 'unassigned':
           // case 'labeled':
@@ -72,11 +91,14 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
           // case 'edited':
           // case 'milestoned':
           // case 'demilestoned':
-          default: return getIssueIconAndColor(issue, theme);
+          default:
+            return getIssueIconAndColor(issue, theme);
         }
       })();
-    case 'MemberEvent': return { icon: 'person' };
-    case 'PublicEvent': return { icon: 'globe', color: theme.blue };
+    case 'MemberEvent':
+      return { icon: 'person' };
+    case 'PublicEvent':
+      return { icon: 'globe', color: theme.blue };
 
     case 'PullRequestEvent':
       return (() => {
@@ -84,8 +106,8 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
 
         switch (get(payload, 'action')) {
           case 'opened':
-          case 'reopened': return getPullRequestIconAndColor(Map({ state: 'open' }), theme);
-
+          case 'reopened':
+            return getPullRequestIconAndColor(Map({ state: 'open' }), theme);
           // case 'closed': return getPullRequestIconAndColor(Map({ state: 'closed' }), theme);
 
           // case 'assigned':
@@ -93,7 +115,8 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
           // case 'labeled':
           // case 'unlabeled':
           // case 'edited':
-          default: return getPullRequestIconAndColor(pullRequest, theme);
+          default:
+            return getPullRequestIconAndColor(pullRequest, theme);
         }
       })();
 
@@ -104,15 +127,25 @@ export function getEventIconAndColor(event: GithubEvent, theme?: ThemeObject = b
         subIcon: 'comment-discussion',
       };
 
-    case 'PushEvent': return { icon: 'code' };
-    case 'ReleaseEvent': return { icon: 'tag' };
-    case 'WatchEvent': return { icon: 'star', color: theme.star };
-    default: return { icon: 'mark-github' };
+    case 'PushEvent':
+      return { icon: 'code' };
+    case 'ReleaseEvent':
+      return { icon: 'tag' };
+    case 'WatchEvent':
+      return { icon: 'star', color: theme.star };
+    default:
+      return { icon: 'mark-github' };
   }
 }
 
-type GetEventTextOptions = { issueOrPullRequestIsKnown: ?boolean, repoIsKnown: ?boolean };
-export function getEventText(event: GithubEvent, options: ?GetEventTextOptions): string {
+type GetEventTextOptions = {
+  issueOrPullRequestIsKnown: ?boolean,
+  repoIsKnown: ?boolean,
+};
+export function getEventText(
+  event: GithubEvent,
+  options: ?GetEventTextOptions,
+): string {
   const eventType = get(event, 'type');
   const payload = get(event, 'payload');
 
@@ -124,80 +157,126 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
 
   const text = (() => {
     switch (eventType) {
-      case 'CommitCommentEvent': return 'commented on a commit';
+      case 'CommitCommentEvent':
+        return 'commented on a commit';
       case 'CreateEvent':
         switch (get(payload, 'ref_type')) {
-          case 'repository': return `created ${repositoryText}`;
-          case 'branch': return 'created a branch';
-          case 'tag': return 'created a tag';
-          default: return 'created something';
+          case 'repository':
+            return `created ${repositoryText}`;
+          case 'branch':
+            return 'created a branch';
+          case 'tag':
+            return 'created a tag';
+          default:
+            return 'created something';
         }
       case 'DeleteEvent':
         switch (get(payload, 'ref_type')) {
-          case 'repository': return `deleted ${repositoryText}`;
-          case 'branch': return 'deleted a branch';
-          case 'tag': return 'deleted a tag';
-          default: return 'deleted something';
+          case 'repository':
+            return `deleted ${repositoryText}`;
+          case 'branch':
+            return 'deleted a branch';
+          case 'tag':
+            return 'deleted a tag';
+          default:
+            return 'deleted something';
         }
       case 'GollumEvent':
         return (() => {
           const count = (get(payload, 'pages') || List([])).size || 1;
           const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page';
-          switch (get(((get(payload, 'pages') || List([]))[0] || Map()), 'action')) {
-            case 'created': return `created ${pagesText}`;
-            default: return `updated ${pagesText}`;
+          switch (get(
+            (get(payload, 'pages') || List([]))[0] || Map(),
+            'action',
+          )) {
+            case 'created':
+              return `created ${pagesText}`;
+            default:
+              return `updated ${pagesText}`;
           }
         })();
-      case 'ForkEvent': return `forked ${repositoryText}`;
+      case 'ForkEvent':
+        return `forked ${repositoryText}`;
       case 'IssueCommentEvent':
         return `commented on ${isPullRequest(get(payload, 'issue')) ? pullRequestText : issueText}`;
       case 'IssuesEvent': // TODO: Fix these texts
         switch (get(payload, 'action')) {
-          case 'closed': return `closed ${issueText}`;
-          case 'reopened': return `reopened ${issueText}`;
-          case 'opened': return `opened ${issueText}`;
-          case 'assigned': return `assigned ${issueText}`;
-          case 'unassigned': return `unassigned ${issueText}`;
-          case 'labeled': return `labeled ${issueText}`;
-          case 'unlabeled': return `unlabeled ${issueText}`;
-          case 'edited': return `edited ${issueText}`;
-          case 'milestoned': return `milestoned ${issueText}`;
-          case 'demilestoned': return `demilestoned ${issueText}`;
-          default: return `interacted with ${issueText}`;
+          case 'closed':
+            return `closed ${issueText}`;
+          case 'reopened':
+            return `reopened ${issueText}`;
+          case 'opened':
+            return `opened ${issueText}`;
+          case 'assigned':
+            return `assigned ${issueText}`;
+          case 'unassigned':
+            return `unassigned ${issueText}`;
+          case 'labeled':
+            return `labeled ${issueText}`;
+          case 'unlabeled':
+            return `unlabeled ${issueText}`;
+          case 'edited':
+            return `edited ${issueText}`;
+          case 'milestoned':
+            return `milestoned ${issueText}`;
+          case 'demilestoned':
+            return `demilestoned ${issueText}`;
+          default:
+            return `interacted with ${issueText}`;
         }
-      case 'MemberEvent': return `added an user ${repositoryText && `to ${repositoryText}`}`;
-      case 'PublicEvent': return `made ${repositoryText} public`;
+      case 'MemberEvent':
+        return `added an user ${repositoryText && `to ${repositoryText}`}`;
+      case 'PublicEvent':
+        return `made ${repositoryText} public`;
       case 'PullRequestEvent':
         switch (get(payload, 'action')) {
-          case 'assigned': return `assigned ${pullRequestText}`;
-          case 'unassigned': return `unassigned ${pullRequestText}`;
-          case 'labeled': return `labeled ${pullRequestText}`;
-          case 'unlabeled': return `unlabeled ${pullRequestText}`;
-          case 'opened': return `opened ${pullRequestText}`;
-          case 'edited': return `edited ${pullRequestText}`;
+          case 'assigned':
+            return `assigned ${pullRequestText}`;
+          case 'unassigned':
+            return `unassigned ${pullRequestText}`;
+          case 'labeled':
+            return `labeled ${pullRequestText}`;
+          case 'unlabeled':
+            return `unlabeled ${pullRequestText}`;
+          case 'opened':
+            return `opened ${pullRequestText}`;
+          case 'edited':
+            return `edited ${pullRequestText}`;
 
           case 'closed':
             return getIn(payload, ['pull_request', 'merged_at'])
               ? `merged ${pullRequestText}`
-              : `closed ${pullRequestText}`
-            ;
+              : `closed ${pullRequestText}`;
 
-          case 'reopened': return `reopened ${pullRequestText}`;
-          default: return `interacted with ${pullRequestText}`;
+          case 'reopened':
+            return `reopened ${pullRequestText}`;
+          default:
+            return `interacted with ${pullRequestText}`;
         }
-      case 'PullRequestReviewEvent': return `reviewed ${pullRequestText}`;
+      case 'PullRequestReviewEvent':
+        return `reviewed ${pullRequestText}`;
       case 'PullRequestReviewCommentEvent':
         switch (get(payload, 'action')) {
-          case 'created': return `commented on ${pullRequestText} review`;
-          case 'edited': return `edited ${pullRequestText} review`;
-          case 'deleted': return `deleted ${pullRequestText} review`;
-          default: return `interacted with ${pullRequestText} review`;
+          case 'created':
+            return `commented on ${pullRequestText} review`;
+          case 'edited':
+            return `edited ${pullRequestText} review`;
+          case 'deleted':
+            return `deleted ${pullRequestText} review`;
+          default:
+            return `interacted with ${pullRequestText} review`;
         }
       case 'PushEvent':
         return (() => {
           const commits = get(payload, 'commits') || List([Map()]);
           // const commit = get(payload, 'head_commit') || commits[0];
-          const count = max([1, get(payload, 'size'), get(payload, 'distinct_size'), commits.size]) || 1;
+          const count =
+            max([
+              1,
+              get(payload, 'size'),
+              get(payload, 'distinct_size'),
+              commits.size,
+            ]) || 1;
           const branch = (get(payload, 'ref') || '').split('/').pop();
 
           const pushedText = get(payload, 'forced') ? 'force pushed' : 'pushed';
@@ -206,13 +285,17 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
 
           return `${pushedText} ${commitText} ${branchText}`;
         })();
-      case 'ReleaseEvent': return 'published a release';
-      case 'WatchEvent': return `starred ${repositoryText}`;
+      case 'ReleaseEvent':
+        return 'published a release';
+      case 'WatchEvent':
+        return `starred ${repositoryText}`;
       case 'WatchEvent:OneRepoMultipleUsers':
         return (() => {
           const otherUsers = get(payload, 'users');
           const otherUsersText = otherUsers && otherUsers.size > 0
-            ? (otherUsers.size > 1 ? `and ${otherUsers.size} others` : 'and 1 other')
+            ? otherUsers.size > 1
+                ? `and ${otherUsers.size} others`
+                : 'and 1 other'
             : '';
 
           return `${otherUsersText} starred ${repositoryText}`;
@@ -222,9 +305,12 @@ export function getEventText(event: GithubEvent, options: ?GetEventTextOptions):
           const otherRepos = get(payload, 'repos');
           const count = (otherRepos && otherRepos.size) || 0;
 
-          return count > 1 ? `starred ${count} repositories` : `starred ${repositoryText}`;
+          return count > 1
+            ? `starred ${count} repositories`
+            : `starred ${repositoryText}`;
         })();
-      default: return 'did something';
+      default:
+        return 'did something';
     }
   })();
 
@@ -240,11 +326,17 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
     const typeA: GithubEventType = get(eventA, 'type');
     const typeB: GithubEventType = get(eventB, 'type');
 
-    const isSameRepo = getIn(eventA, ['repo', 'id']) === getIn(eventB, ['repo', 'id']);
-    const isSameUser = getIn(eventA, ['actor', 'id']) === getIn(eventB, ['actor', 'id']);
-    const isSameArchiveStatus = isArchivedFilter(eventA) === isArchivedFilter(eventB);
+    const isSameRepo =
+      getIn(eventA, ['repo', 'id']) === getIn(eventB, ['repo', 'id']);
+    const isSameUser =
+      getIn(eventA, ['actor', 'id']) === getIn(eventB, ['actor', 'id']);
+    const isSameArchiveStatus =
+      isArchivedFilter(eventA) === isArchivedFilter(eventB);
     const isSameReadStatus = isReadFilter(eventA) === isReadFilter(eventB);
-    const createdAtMinutesDiff = moment(get(eventA, 'created_at')).diff(moment(get(eventB, 'created_at')), 'minutes');
+    const createdAtMinutesDiff = moment(get(eventA, 'created_at')).diff(
+      moment(get(eventB, 'created_at')),
+      'minutes',
+    );
     const merged = get(eventA, 'merged') || List();
 
     // only merge events with same archive and read status
@@ -263,20 +355,24 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
             case 'WatchEvent':
               return (() => {
                 if (isSameRepo) {
-                  return eventA.mergeDeep(fromJS({
-                    type: 'WatchEvent:OneRepoMultipleUsers',
-                    payload: {
-                      users: [get(eventB, 'actor')],
-                    },
-                  }));
+                  return eventA.mergeDeep(
+                    fromJS({
+                      type: 'WatchEvent:OneRepoMultipleUsers',
+                      payload: {
+                        users: [get(eventB, 'actor')],
+                      },
+                    }),
+                  );
                 } else if (isSameUser) {
-                  return eventA.mergeDeep(fromJS({
-                    type: 'WatchEvent:OneUserMultipleRepos',
-                    repo: null,
-                    payload: {
-                      repos: [get(eventA, 'repo'), get(eventB, 'repo')],
-                    },
-                  }));
+                  return eventA.mergeDeep(
+                    fromJS({
+                      type: 'WatchEvent:OneUserMultipleRepos',
+                      repo: null,
+                      payload: {
+                        repos: [get(eventA, 'repo'), get(eventB, 'repo')],
+                      },
+                    }),
+                  );
                 }
 
                 return null;
@@ -296,9 +392,10 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
                   const users = getIn(eventA, ['payload', 'users']) || List();
                   const newUser = getIn(eventB, ['actor']);
 
-                  const alreadyMergedThisUser = users.find(mergedUser => (
-                    `${get(mergedUser, 'id')}` === `${get(newUser, 'id')}`
-                  ));
+                  const alreadyMergedThisUser = users.find(
+                    mergedUser =>
+                      `${get(mergedUser, 'id')}` === `${get(newUser, 'id')}`,
+                  );
 
                   if (!alreadyMergedThisUser) {
                     const newUsers = users.push(newUser);
@@ -325,9 +422,10 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
                   const repos = getIn(eventA, ['payload', 'repos']) || List();
                   const newRepo = getIn(eventB, ['repo']);
 
-                  const alreadyMergedThisRepo = repos.find(mergedRepo => (
-                    `${get(mergedRepo, 'id')}` === `${get(newRepo, 'id')}`
-                  ));
+                  const alreadyMergedThisRepo = repos.find(
+                    mergedRepo =>
+                      `${get(mergedRepo, 'id')}` === `${get(newRepo, 'id')}`,
+                  );
 
                   if (!alreadyMergedThisRepo) {
                     const newRepos = repos.push(newRepo);
@@ -345,7 +443,8 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
           }
         })();
 
-      default: return null;
+      default:
+        return null;
     }
   };
 
@@ -359,7 +458,10 @@ export function groupSimilarEvents(events: Array<GithubEvent>) {
       let allMergedEvents = get(mergedLastEvent, 'merged') || List();
       allMergedEvents = allMergedEvents.push(event);
 
-      const mergedLastEventUpdated = mergedLastEvent.set('merged', allMergedEvents);
+      const mergedLastEventUpdated = mergedLastEvent.set(
+        'merged',
+        allMergedEvents,
+      );
       return newEvents.set(-1, mergedLastEventUpdated);
     }
 

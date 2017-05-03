@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+import { Platform } from 'react-native';
 
 import * as base from './base';
 import { mutedOpacity } from '../variables';
@@ -42,7 +42,10 @@ export const base16 = {
 
 export const cardBackground = base02;
 export const tabBarBackground = base02;
-export const statusBarBackground = Platform.select({ android: tabBarBackground, default: base01 });
+export const statusBarBackground = Platform.select({
+  android: tabBarBackground,
+  default: base01,
+});
 
 export default {
   ...base,

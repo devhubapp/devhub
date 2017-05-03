@@ -5,11 +5,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Map } from 'immutable';
 
-import NotificationsFilterColumn from '../components/columns/NotificationsFilterColumn';
+import NotificationsFilterColumn
+  from '../components/columns/NotificationsFilterColumn';
 
 import * as actionCreators from '../actions';
 
-import { notificationsToFilterColumnData } from '../utils/helpers/github/notifications';
+import {
+  notificationsToFilterColumnData,
+} from '../utils/helpers/github/notifications';
 
 import {
   notificationsErrorSelector,
@@ -22,7 +25,7 @@ import type { State } from '../utils/types';
 
 const makeMapStateToProps = (
   state: State,
-  { column, updatedAt }: {column: Object, updatedAt?: Date},
+  { column, updatedAt }: { column: Object, updatedAt?: Date },
 ) => {
   const denormalizedNotificationsSelector = makeDenormalizedNotificationsSelector();
 
@@ -47,7 +50,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
-  props: {column: Object, loading: boolean, items: Object, updatedAt: Date};
+  props: { column: Object, loading: boolean, items: Object, updatedAt: Date };
 
   render() {
     const { items, ...props } = this.props;

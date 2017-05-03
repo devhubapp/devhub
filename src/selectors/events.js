@@ -19,70 +19,64 @@ import { EventSchema } from '../utils/normalizr/schemas';
 import { groupSimilarEvents } from '../utils/helpers/github/events';
 
 export const eventIdSelector = (state, { eventId }) => eventId;
-export const eventEntitiesSelector = (state) => entitiesSelector(state).get('events');
-export const eventIdsSelector = state => objectKeysMemoized(eventEntitiesSelector(state));
+export const eventEntitiesSelector = state =>
+  entitiesSelector(state).get('events');
+export const eventIdsSelector = state =>
+  objectKeysMemoized(eventEntitiesSelector(state));
 
-export const eventSelector = (state, { eventId }) => eventEntitiesSelector(state).get(eventId);
+export const eventSelector = (state, { eventId }) =>
+  eventEntitiesSelector(state).get(eventId);
 
 export const sortEventsByDate = (b, a) =>
-  (a && b ? (a.get('created_at') > b.get('created_at') ? 1 : -1) : 0);
+  a && b ? (a.get('created_at') > b.get('created_at') ? 1 : -1) : 0;
 
 export const archivedEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
-  (events) => (
-    events
-      .filter(isArchivedFilter)
-      .map(event => event.get('id'))
-      .toList()
-  ),
+  events =>
+    events.filter(isArchivedFilter).map(event => event.get('id')).toList(),
 );
 
 export const readEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
-  (events) => (
-    events
-      .filter(isReadFilter)
-      .map(event => event.get('id'))
-      .toList()
-  ),
+  events => events.filter(isReadFilter).map(event => event.get('id')).toList(),
 );
 
 export const unarchivedEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
-  (events) => (
+  events =>
     events
       .filter(Boolean)
       .filterNot(isDeletedFilter)
       .filterNot(isArchivedFilter)
       .map(event => event.get('id'))
-      .toList()
-  ),
+      .toList(),
 );
 
-export const makeIsArchivedEventSelector = () => createImmutableSelector(
-  eventSelector,
-  isArchivedFilter,
-);
+export const makeIsArchivedEventSelector = () =>
+  createImmutableSelector(eventSelector, isArchivedFilter);
 
-export const makeIsReadEventSelector = () => createImmutableSelector(
-  eventIdSelector,
-  readEventIdsSelector,
-  (eventId, readIds) => !!readIds.includes(eventId),
-);
+export const makeIsReadEventSelector = () =>
+  createImmutableSelector(
+    eventIdSelector,
+    readEventIdsSelector,
+    (eventId, readIds) => !!readIds.includes(eventId),
+  );
 
 export const makeDenormalizedEventSelector = () =>
-  createImmutableSelectorCreator(1)(eventSelector, entitiesSelector, (
-    event,
-    entities,
-  ) =>
+  createImmutableSelectorCreator(
+    1,
+  )(eventSelector, entitiesSelector, (event, entities) =>
     denormalize(event, entities, EventSchema)
       .filter(Boolean)
-      .filterNot(isDeletedFilter));
+      .filterNot(isDeletedFilter),
+  );
 
 export const makeDenormalizedOrderedColumnEventsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector();
 
-  return createImmutableSelectorCreator(1)(
+  return createImmutableSelectorCreator(
+    1,
+  )(
     columnEventIdsSelector,
     unarchivedEventIdsSelector,
     entitiesSelector,
@@ -93,8 +87,7 @@ export const makeDenormalizedOrderedColumnEventsSelector = () => {
         denormalize(notArchivedIds, entities, [EventSchema])
           .filter(Boolean)
           .toList()
-          .sort(sortEventsByDate)
-        ,
+          .sort(sortEventsByDate),
       );
     },
   );

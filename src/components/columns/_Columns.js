@@ -11,7 +11,9 @@ import withOrientation from '../../hoc/withOrientation';
 import { getColumnWidth, getColumnContentWidth } from './_Column';
 import type { ActionCreators } from '../../utils/types';
 
-export const StyledImmutableVirtualizedListListView = styled(ImmutableVirtualizedList) `
+export const StyledImmutableVirtualizedListListView = styled(
+  ImmutableVirtualizedList,
+)`
   flex: 1;
 `;
 
@@ -45,7 +47,10 @@ export default class extends React.PureComponent {
     );
   }
 
-  makeRenderItem = mainRenderItem => ({ index, item: column }, ...otherArgs) => {
+  makeRenderItem = mainRenderItem => (
+    { index, item: column },
+    ...otherArgs
+  ) => {
     if (!column) return null;
 
     if (column.get('id') === 'new') return this.renderNewColumn(column);
@@ -59,7 +64,10 @@ export default class extends React.PureComponent {
       ...props
     } = this.props;
 
-    const initialNumToRender = Math.max(1, Math.ceil(Dimensions.get('window').width / getColumnWidth()));
+    const initialNumToRender = Math.max(
+      1,
+      Math.ceil(Dimensions.get('window').width / getColumnWidth()),
+    );
 
     return (
       <StyledImmutableVirtualizedListListView

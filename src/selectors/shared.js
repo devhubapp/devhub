@@ -3,7 +3,10 @@ import moment from 'moment';
 import { List } from 'immutable';
 import { createSelectorCreator } from 'reselect';
 
-import { deepImmutableEqualityCheck, shallowEqualityCheck } from '../utils/immutable';
+import {
+  deepImmutableEqualityCheck,
+  shallowEqualityCheck,
+} from '../utils/immutable';
 
 export const stateSelector = state => state;
 export const entitiesSelector = state => state.get('entities');
@@ -15,17 +18,15 @@ export function immutableMemoize(
 ) {
   let lastArgs = null;
   let lastResult = null;
-  const isEqualToLastArg = (value, index) => equalityCheck(value, lastArgs[index]);
+  const isEqualToLastArg = (value, index) =>
+    equalityCheck(value, lastArgs[index]);
 
   return (...args) => {
     const slicedArgs = typeof numberOfArgsToMemoize === 'number'
-      ? (
-        numberOfArgsToMemoize < 0
+      ? numberOfArgsToMemoize < 0
           ? args.slice(numberOfArgsToMemoize)
           : args.slice(0, numberOfArgsToMemoize)
-      )
-      : args
-    ;
+      : args;
 
     if (
       lastArgs === null ||
@@ -39,10 +40,8 @@ export function immutableMemoize(
       //   || newResult instanceof Set;
 
       if (
-        !(
-          shallowEqualityCheck(newResult, lastResult) ||
-          (/* isArray && */deepImmutableEqualityCheck(newResult, lastResult))
-        )
+        !(shallowEqualityCheck(newResult, lastResult) ||
+          /* isArray && */ deepImmutableEqualityCheck(newResult, lastResult))
       ) {
         lastResult = newResult;
       }
@@ -53,33 +52,38 @@ export function immutableMemoize(
   };
 }
 
-const getKeysFromImmutableObject = obj => (obj ? obj.keySeq().toList() : List());
+const getKeysFromImmutableObject = obj =>
+  obj ? obj.keySeq().toList() : List();
 export const objectKeysMemoized = immutableMemoize(getKeysFromImmutableObject);
 
-export const createImmutableSelectorCreator = _.memoize((numberOfArgsToMemoize) => (
+export const createImmutableSelectorCreator = _.memoize(numberOfArgsToMemoize =>
   createSelectorCreator(
     _.bind(immutableMemoize, null, _, _, numberOfArgsToMemoize),
     shallowEqualityCheck,
-  )
-));
+  ),
+);
 
 export const createImmutableSelector = createImmutableSelectorCreator();
 
 export function isDeletedFilter(obj) {
   if (!obj) return true;
 
-  return !!obj.get('deleted_at') &&
+  return (
+    !!obj.get('deleted_at') &&
     !(obj.get('updated_at') &&
-      moment(obj.get('updated_at')).isAfter(obj.get('deleted_at')));
+      moment(obj.get('updated_at')).isAfter(obj.get('deleted_at')))
+  );
 }
 
 export function isArchivedFilter(obj) {
   if (!obj) return false;
   if (isDeletedFilter(obj)) return false;
 
-  return !!obj.get('archived_at') &&
+  return (
+    !!obj.get('archived_at') &&
     !(obj.get('updated_at') &&
-      moment(obj.get('updated_at')).isAfter(obj.get('archived_at')));
+      moment(obj.get('updated_at')).isAfter(obj.get('archived_at')))
+  );
 }
 
 export function isReadFilter(obj) {

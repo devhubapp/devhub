@@ -11,9 +11,7 @@ style.type = 'text/css';
 if (style.styleSheet) {
   style.styleSheet.cssText = iconStyles;
 } else {
-  style.appendChild(
-    document.createTextNode(iconStyles),
-  );
+  style.appendChild(document.createTextNode(iconStyles));
 }
 
 document.head.appendChild(style);

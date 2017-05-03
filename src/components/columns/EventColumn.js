@@ -3,9 +3,7 @@
 import React from 'react';
 import { List, Set } from 'immutable';
 
-import {
-  makeColumnReadIdsSelector,
-} from '../../selectors/columns';
+import { makeColumnReadIdsSelector } from '../../selectors/columns';
 
 import ColumnWithList, {
   HeaderButton,
@@ -20,9 +18,15 @@ import { FullView } from '../cards/__CardComponents';
 import { getRequestTypeIcon, requestTypes } from '../../api/github';
 
 import { getDateWithHourAndMinuteText } from '../../utils/helpers';
-import { getEventIdsFromEventsIncludingMerged } from '../../utils/helpers/github/events';
+import {
+  getEventIdsFromEventsIncludingMerged,
+} from '../../utils/helpers/github/events';
 
-import type { ActionCreators, ColumnWithList as ColumnType, Subscription } from '../../utils/types';
+import type {
+  ActionCreators,
+  ColumnWithList as ColumnType,
+  Subscription,
+} from '../../utils/types';
 
 const buttons = [
   'Cancel',
@@ -54,9 +58,8 @@ export default class extends React.PureComponent {
     const { items = List() } = this.props;
     return typeof items.first() === 'string'
       ? items
-      : getEventIdsFromEventsIncludingMerged(items)
-    ;
-  }
+      : getEventIdsFromEventsIncludingMerged(items);
+  };
 
   getReadEventIds = () => {
     const { column } = this.props;
@@ -65,42 +68,43 @@ export default class extends React.PureComponent {
     const state = store.getState();
     const columnId = column.get('id');
 
-    this.columnReadIdsSelector = this.columnReadIdsSelector || makeColumnReadIdsSelector();
+    this.columnReadIdsSelector =
+      this.columnReadIdsSelector || makeColumnReadIdsSelector();
 
     const eventIds = this.getEventIds();
     const readEventsIds = this.columnReadIdsSelector(state, { columnId });
     return Set(readEventsIds).intersect(eventIds);
-  }
+  };
 
   getUnreadEventIds = () => {
     const eventIds = this.getEventIds();
     const readIds = this.getReadEventIds();
     return Set(eventIds).subtract(readIds);
-  }
+  };
 
   hasOnlyOneRepository = () => {
     const { subscriptions } = this.props;
 
-    return subscriptions.size === 1 &&
+    return (
+      subscriptions.size === 1 &&
       subscriptions.first().get('requestType') === requestTypes.REPO_EVENTS
-    ;
+    );
   };
 
   showActionSheet = () => {
     this.ActionSheet.show();
   };
 
-  handleActionSheetButtonPress = (index) => {
+  handleActionSheetButtonPress = index => {
     const { actions, column } = this.props;
 
     const columnId = column.get('id');
 
     switch (index) {
       case BUTTONS.CREATE_NEW_COLUMN:
-        CreateColumnUtils.showColumnTypeSelectAlert(
-          actions,
-          { createColumnOrder: column.get('order') },
-        );
+        CreateColumnUtils.showColumnTypeSelectAlert(actions, {
+          createColumnOrder: column.get('order'),
+        });
         break;
 
       case BUTTONS.MARK_EVENTS_AS_READ_OR_UNREAD:
@@ -110,9 +114,17 @@ export default class extends React.PureComponent {
           const unreadIds = this.getUnreadEventIds();
 
           if (readIds && readIds.size >= eventIds.size) {
-            actions.markEventsAsUnread({ all: true, columnId, eventIds: readIds });
+            actions.markEventsAsUnread({
+              all: true,
+              columnId,
+              eventIds: readIds,
+            });
           } else {
-            actions.markEventsAsRead({ all: true, columnId, eventIds: unreadIds });
+            actions.markEventsAsRead({
+              all: true,
+              columnId,
+              eventIds: unreadIds,
+            });
           }
         })();
 
@@ -152,18 +164,25 @@ export default class extends React.PureComponent {
   // to remember: eventOrEventId cant be an id for merged events
   // (because merged events are totally different than the on in the state)
   // so do the check: if(event.get('merged)) ? event : event.get('id')
-  renderItem = ({ index, item: event }) => (
+  renderItem = ({ index, item: event }) =>
     event &&
     <EventCardContainer
       key={`event-card-container-${event.get('id')}`}
       actions={this.props.actions}
       eventOrEventId={event}
       onlyOneRepository={this.hasOnlyOneRepository()}
-    />
-  );
+    />;
 
   render() {
-    const { column, errors, items, loading, subscriptions, style, ...props } = this.props;
+    const {
+      column,
+      errors,
+      items,
+      loading,
+      subscriptions,
+      style,
+      ...props
+    } = this.props;
 
     if (!column) return null;
 
@@ -173,11 +192,10 @@ export default class extends React.PureComponent {
       ? subscriptions.first().get('updatedAt')
       : null;
 
-    const icon = (
-      subscriptions && subscriptions.size > 0
+    const icon =
+      (subscriptions && subscriptions.size > 0
         ? getRequestTypeIcon(subscriptions.first().get('requestType'))
-        : ''
-    ) || 'mark-github';
+        : '') || 'mark-github';
 
     const dateFromNowText = getDateWithHourAndMinuteText(updatedAt);
     const updatedText = dateFromNowText ? `Updated ${dateFromNowText}` : '';
@@ -205,7 +223,9 @@ export default class extends React.PureComponent {
         />
 
         <ActionSheet
-          innerRef={(ref) => { this.ActionSheet = ref; }}
+          innerRef={ref => {
+            this.ActionSheet = ref;
+          }}
           title={title}
           options={buttons}
           cancelButtonIndex={BUTTONS.CANCEL}

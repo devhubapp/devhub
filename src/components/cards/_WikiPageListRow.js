@@ -13,15 +13,14 @@ export default class extends React.PureComponent {
     maxHeight?: number,
   };
 
-  makeRenderItem = (passProps = {}) => ({ index, item: page }) => (
+  makeRenderItem = (passProps = {}) => ({ index, item: page }) =>
     page &&
     <WikiPageRow
       key={`wiki-page-row-${page.get('sha')}`}
       page={page}
       narrow
       {...passProps}
-    />
-  );
+    />;
 
   render() {
     const { maxHeight, pages, ...props } = this.props;
@@ -29,7 +28,12 @@ export default class extends React.PureComponent {
     if (!(pages && pages.size > 0)) return null;
 
     return (
-      <RowList data={pages} maxHeight={maxHeight} renderItem={this.makeRenderItem(props)} {...props} />
+      <RowList
+        data={pages}
+        maxHeight={maxHeight}
+        renderItem={this.makeRenderItem(props)}
+        {...props}
+      />
     );
   }
 }

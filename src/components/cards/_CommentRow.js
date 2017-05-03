@@ -27,7 +27,15 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { user, body: _body, narrow, numberOfLines = 4, read, url, ...props } = this.props;
+    const {
+      user,
+      body: _body,
+      narrow,
+      numberOfLines = 4,
+      read,
+      url,
+      ...props
+    } = this.props;
 
     const body = trimNewLinesAndSpaces(_body, 400);
     if (!body) return null;
@@ -35,22 +43,22 @@ export default class extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn muted={read}>
-          {
-            user &&
+          {user &&
             <OwnerAvatar
               avatarURL={user.get('avatar_url')}
               linkURL={user.get('html_url') || user.get('url')}
               size={smallAvatarWidth}
-            />
-          }
+            />}
         </LeftColumn>
 
         <MainColumnRowContent center>
           <CardText
             numberOfLines={numberOfLines}
-            onPress={url ? (() => openOnGithub(url)) : null}
+            onPress={url ? () => openOnGithub(url) : null}
             muted={read}
-          >{body}</CardText>
+          >
+            {body}
+          </CardText>
         </MainColumnRowContent>
       </ContentRow>
     );

@@ -6,10 +6,7 @@ import Icon from '../../libs/icon';
 import TouchableRow from './__TouchableRow';
 import OwnerAvatar from './_OwnerAvatar';
 
-import {
-  smallAvatarWidth,
-  StyledText,
-} from './__CardComponents';
+import { smallAvatarWidth, StyledText } from './__CardComponents';
 
 import { trimNewLinesAndSpaces } from '../../utils/helpers';
 import type { User } from '../../utils/types';

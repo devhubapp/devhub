@@ -61,7 +61,7 @@ export default class extends React.PureComponent {
                 radius={radius}
               >
                 <ScrollableButton
-                  onPress={onPress || (url ? (() => openOnGithub(url)) : null)}
+                  onPress={onPress || (url ? () => openOnGithub(url) : null)}
                   horizontal
                 >
                   {children}

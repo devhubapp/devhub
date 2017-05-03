@@ -31,7 +31,13 @@ export default class extends React.PureComponent {
   };
 
   render() {
-    const { dispatch, innerRef, navigationRef, navigationState, ...props } = this.props;
+    const {
+      dispatch,
+      innerRef,
+      navigationRef,
+      navigationState,
+      ...props
+    } = this.props;
     const state = toJS(navigationState);
     const navigation = addNavigationHelpers({ dispatch, state });
 
@@ -39,8 +45,6 @@ export default class extends React.PureComponent {
       navigationRef(navigation);
     }
 
-    return (
-      <Navigator {...props} ref={innerRef} navigation={navigation} />
-    );
+    return <Navigator {...props} ref={innerRef} navigation={navigation} />;
   }
 }

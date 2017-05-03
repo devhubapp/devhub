@@ -56,9 +56,7 @@ const CounterWrapper = styled.View`
   padding-horizontal: ${contentPadding}px;
   padding-vertical: 0.5;
   border-radius: 10px;
-  background-color: ${({ outline, theme }) => (
-    outline ? 'transparent' : theme.base01
-  )};
+  background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base01)};
   border-width: 1px;
   border-color: ${({ outline, theme }) => (outline ? theme.base03 : theme.base01)};
 `;
@@ -74,21 +72,17 @@ const TotalCount = styled(StyledText)`
   color: ${({ theme }) => theme.base05};
 `;
 
-const totalItemNotifications = item => (
-  item ? (get(item, 'read') || 0) + (get(item, 'unread') || 0) : 0
-);
+const totalItemNotifications = item =>
+  item ? (get(item, 'read') || 0) + (get(item, 'unread') || 0) : 0;
 
-const willShowItem = item => (
-  item && (get(item, 'pinned') || totalItemNotifications(item))
-);
+const willShowItem = item =>
+  item && (get(item, 'pinned') || totalItemNotifications(item));
 
-const isSectionEmpty = section => (
-  !section || !sizeOf(section.filter(willShowItem))
-);
+const isSectionEmpty = section =>
+  !section || !sizeOf(section.filter(willShowItem));
 
-const sectionHeaderHasChanged = (prevSectionData, nextSectionData) => (
-  prevSectionData !== nextSectionData
-);
+const sectionHeaderHasChanged = (prevSectionData, nextSectionData) =>
+  prevSectionData !== nextSectionData;
 
 const renderItem = ({ index, item }: { index: number, item: Object }) => {
   if (!willShowItem(item)) {
@@ -101,24 +95,20 @@ const renderItem = ({ index, item }: { index: number, item: Object }) => {
     >
       <ItemTitleWrapper>
         <ItemIcon name={get(item, 'icon')} color={get(item, 'color')} />
-        <ItemTitle numberOfLines={1}>{get(item, 'title') || get(item, 'key')}</ItemTitle>
+        <ItemTitle numberOfLines={1}>
+          {get(item, 'title') || get(item, 'key')}
+        </ItemTitle>
       </ItemTitleWrapper>
       <CounterWrapper outline={!(get(item, 'unread') > 0)}>
-        {
-          get(item, 'unread') >= 0 && (
-            <UnreadCount count={get(item, 'unread')}>
-              {get(item, 'unread')}
-            </UnreadCount>
-          )
-        }
-        {
-          get(item, 'read') >= 0 && (
-            <TotalCount>
-              {get(item, 'unread') >= 0 && ' / '}
-              {totalItemNotifications(item)}
-            </TotalCount>
-          )
-        }
+        {get(item, 'unread') >= 0 &&
+          <UnreadCount count={get(item, 'unread')}>
+            {get(item, 'unread')}
+          </UnreadCount>}
+        {get(item, 'read') >= 0 &&
+          <TotalCount>
+            {get(item, 'unread') >= 0 && ' / '}
+            {totalItemNotifications(item)}
+          </TotalCount>}
       </CounterWrapper>
     </ItemWrapper>
   );
@@ -130,17 +120,20 @@ const formatSectionsIfNecessary = sections => {
   if (!sections) return List();
 
   return sections
-    .map((section, sectionKey) => Map({
-      key: sectionKey,
-      data: section.map((item, itemKey) => item.set('key', itemKey)).toList(),
-    }))
+    .map((section, sectionKey) =>
+      Map({
+        key: sectionKey,
+        data: section.map((item, itemKey) => item.set('key', itemKey)).toList(),
+      }),
+    )
     .toList();
 };
 
 const cleanupItems = memoize(sections =>
   (sections || Map())
     .map(section => section.filter(willShowItem))
-    .filterNot(isSectionEmpty));
+    .filterNot(isSectionEmpty),
+);
 
 const cleanupItemsAndFormat = sections =>
   formatSectionsIfNecessary(cleanupItems(sections));
@@ -188,7 +181,7 @@ export default class extends React.PureComponent {
   renderSectionHeader = ({ section }) =>
     !!section &&
     !(get(section, 'key') === this.state.firstSectionKey) &&
-      <Section />;
+    <Section />;
 
   render() {
     const { items } = this.state;

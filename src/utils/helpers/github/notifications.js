@@ -31,7 +31,7 @@ export const notificationReasons = [
 export function getNotificationReasonTextsAndColor(
   notification: GithubNotification,
   theme?: ThemeObject = baseTheme,
-): {color: string, reason: string, label: string, description: string} {
+): { color: string, reason: string, label: string, description: string } {
   const reason: GithubNotificationReason = get(notification, 'reason');
 
   switch (reason) {
@@ -120,7 +120,7 @@ export function getNotificationReasonTextsAndColor(
 export function getNotificationIconAndColor(
   notification: GithubNotification,
   theme?: ThemeObject,
-): {icon: GithubIcon, color?: string} {
+): { icon: GithubIcon, color?: string } {
   const subject = get(notification, 'subject');
   const type = get(subject, 'type').toLowerCase();
 
@@ -143,14 +143,13 @@ export function groupNotificationsByRepository(
   {
     includeAllGroup = false,
     includeFilterGroup = false,
-  }: {includeAllGroup?: boolean, includeFilterGroup?: boolean} = {},
+  }: { includeAllGroup?: boolean, includeFilterGroup?: boolean } = {},
 ) {
   let groupedNotifications = OrderedMap();
   const notificationIds = notifications
     .filter(Boolean)
     .map(notification => get(notification, 'id'))
-    .toList()
-  ;
+    .toList();
 
   if (includeFilterGroup) {
     groupedNotifications = groupedNotifications.concat(
@@ -217,12 +216,13 @@ const reasonToColorAndTitle = reason => {
 
 const defaultFilterColumnsCounters = { read: 0, unread: 0 };
 
-const getDefaultFilterColumnsRepoData = repoFullName => fromJS({
-  key: repoFullName,
-  title: repoFullName,
-  icon: 'repo',
-  ...defaultFilterColumnsCounters,
-});
+const getDefaultFilterColumnsRepoData = repoFullName =>
+  fromJS({
+    key: repoFullName,
+    title: repoFullName,
+    icon: 'repo',
+    ...defaultFilterColumnsCounters,
+  });
 
 export const defaultFilterColumnsData = OrderedMap({
   inboxes: OrderedMap(
@@ -296,8 +296,7 @@ export const defaultFilterColumnsData = OrderedMap({
   repos: OrderedMap(),
 });
 
-
-export const notificationsToFilterColumnData = memoize((notifications) => {
+export const notificationsToFilterColumnData = memoize(notifications => {
   let result = defaultFilterColumnsData;
   if (!notifications) return result;
 
@@ -339,7 +338,11 @@ export const notificationsToFilterColumnData = memoize((notifications) => {
     const repoFullName = getIn(notification, ['repository', 'full_name']);
     path = ['repos', repoFullName];
     if (!getIn(result, path)) {
-      result = setIn(result, path, getDefaultFilterColumnsRepoData(repoFullName));
+      result = setIn(
+        result,
+        path,
+        getDefaultFilterColumnsRepoData(repoFullName),
+      );
     }
     path = [...path, counterPath];
     count = getIn(result, path) || 0;
@@ -348,4 +351,3 @@ export const notificationsToFilterColumnData = memoize((notifications) => {
 
   return result;
 });
-

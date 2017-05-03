@@ -54,8 +54,17 @@ export default class extends React.PureComponent {
     const { containerStyle, onPress, size = 16, style, ...props } = this.props;
 
     return (
-      <RepositoryStarButton style={containerStyle} onPress={this.onPress(onPress)}>
-        <RepositoryStarIcon name="star" {...props} starred={starred} size={size} style={style} />
+      <RepositoryStarButton
+        style={containerStyle}
+        onPress={this.onPress(onPress)}
+      >
+        <RepositoryStarIcon
+          name="star"
+          {...props}
+          starred={starred}
+          size={size}
+          style={style}
+        />
       </RepositoryStarButton>
     );
   }

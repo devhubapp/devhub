@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 import { contentPadding } from '../styles/variables';
 
 const StatusMessageWrapper = styled.View`
-  background-color: ${({ error, theme }) => error ? theme.red : theme.green};
+  background-color: ${({ error, theme }) => (error ? theme.red : theme.green)};
   padding-horizontal: ${contentPadding}px;
   padding-vertical: ${contentPadding / 3}px;
 `;

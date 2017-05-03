@@ -7,17 +7,22 @@ import { name as appName } from '../../package.json';
 const PUBLIC_EVENTS: 'PUBLIC_EVENTS' = 'PUBLIC_EVENTS';
 const REPO_EVENTS: 'REPO_EVENTS' = 'REPO_EVENTS';
 const REPO_ISSUE_EVENTS: 'REPO_ISSUE_EVENTS' = 'REPO_ISSUE_EVENTS';
-const REPO_NETWORK_PUBLIC_EVENTS: 'REPO_NETWORK_PUBLIC_EVENTS' = 'REPO_NETWORK_PUBLIC_EVENTS';
+const REPO_NETWORK_PUBLIC_EVENTS: 'REPO_NETWORK_PUBLIC_EVENTS' =
+  'REPO_NETWORK_PUBLIC_EVENTS';
 const ORG_PUBLIC_EVENTS: 'ORG_PUBLIC_EVENTS' = 'ORG_PUBLIC_EVENTS';
 const USER_RECEIVED_EVENTS: 'USER_RECEIVED_EVENTS' = 'USER_RECEIVED_EVENTS';
-const USER_RECEIVED_PUBLIC_EVENTS: 'USER_RECEIVED_PUBLIC_EVENTS' = 'USER_RECEIVED_PUBLIC_EVENTS';
+const USER_RECEIVED_PUBLIC_EVENTS: 'USER_RECEIVED_PUBLIC_EVENTS' =
+  'USER_RECEIVED_PUBLIC_EVENTS';
 const USER_EVENTS: 'USER_EVENTS' = 'USER_EVENTS';
 const USER_PUBLIC_EVENTS: 'USER_PUBLIC_EVENTS' = 'USER_PUBLIC_EVENTS';
 const USER_ORG_EVENTS: 'USER_ORG_EVENTS' = 'USER_ORG_EVENTS';
 const NOTIFICATIONS: 'NOTIFICATIONS' = 'NOTIFICATIONS';
-const MARK_ALL_NOTIFICATIONS_AS_READ: 'MARK_ALL_NOTIFICATIONS_AS_READ' = 'MARK_ALL_NOTIFICATIONS_AS_READ';
-const MARK_NOTIFICATION_THREAD_AS_READ: 'MARK_NOTIFICATION_THREAD_AS_READ' = 'MARK_NOTIFICATION_THREAD_AS_READ';
-const MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO: 'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO' = 'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO';
+const MARK_ALL_NOTIFICATIONS_AS_READ: 'MARK_ALL_NOTIFICATIONS_AS_READ' =
+  'MARK_ALL_NOTIFICATIONS_AS_READ';
+const MARK_NOTIFICATION_THREAD_AS_READ: 'MARK_NOTIFICATION_THREAD_AS_READ' =
+  'MARK_NOTIFICATION_THREAD_AS_READ';
+const MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO: 'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO' =
+  'MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO';
 
 const github = new GitHubAPI({
   agent: appName,
@@ -55,8 +60,7 @@ export type ApiRequestType =
   | typeof NOTIFICATIONS
   | typeof MARK_ALL_NOTIFICATIONS_AS_READ
   | typeof MARK_NOTIFICATION_THREAD_AS_READ
-  | typeof MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO
-;
+  | typeof MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO;
 
 export function authenticate(token: string) {
   if (!token) return false;
@@ -75,23 +79,36 @@ export function authenticate(token: string) {
 
 export function getRequestTypeIcon(type: ApiRequestType) {
   switch (type) {
-    case requestTypes.PUBLIC_EVENTS: return 'home';
-    case requestTypes.REPO_EVENTS: return 'repo';
-    case requestTypes.REPO_ISSUE_EVENTS: return 'issue-opened';
-    case requestTypes.REPO_NETWORK_PUBLIC_EVENTS: return 'repo';
-    case requestTypes.ORG_PUBLIC_EVENTS: return 'organization';
-    case requestTypes.USER_RECEIVED_EVENTS: return 'home';
-    case requestTypes.USER_RECEIVED_PUBLIC_EVENTS: return 'home';
-    case requestTypes.USER_EVENTS: return 'person';
-    case requestTypes.USER_PUBLIC_EVENTS: return 'person';
-    case requestTypes.USER_ORG_EVENTS: return 'organization';
+    case requestTypes.PUBLIC_EVENTS:
+      return 'home';
+    case requestTypes.REPO_EVENTS:
+      return 'repo';
+    case requestTypes.REPO_ISSUE_EVENTS:
+      return 'issue-opened';
+    case requestTypes.REPO_NETWORK_PUBLIC_EVENTS:
+      return 'repo';
+    case requestTypes.ORG_PUBLIC_EVENTS:
+      return 'organization';
+    case requestTypes.USER_RECEIVED_EVENTS:
+      return 'home';
+    case requestTypes.USER_RECEIVED_PUBLIC_EVENTS:
+      return 'home';
+    case requestTypes.USER_EVENTS:
+      return 'person';
+    case requestTypes.USER_PUBLIC_EVENTS:
+      return 'person';
+    case requestTypes.USER_ORG_EVENTS:
+      return 'organization';
     default:
       console.error(`No api method configured for type '${type}'`);
       return 'mark-github';
   }
 }
 
-export function getUniquePath(type: ApiRequestType, { org, owner, repo, username }: Object = {}) {
+export function getUniquePath(
+  type: ApiRequestType,
+  { org, owner, repo, username }: Object = {},
+) {
   return (() => {
     switch (type) {
       case requestTypes.PUBLIC_EVENTS:
@@ -130,13 +147,15 @@ export function getUniquePath(type: ApiRequestType, { org, owner, repo, username
         return `/users/${username}/events/public`;
 
       case requestTypes.USER_ORG_EVENTS:
-        if (!(username && org)) throw new Error('Required params: username, org');
+        if (!(username && org))
+          throw new Error('Required params: username, org');
         return `/users/${username}/events/orgs/${org}`;
 
       case requestTypes.NOTIFICATIONS:
         return '/notifications';
 
-      default: throw new Error(`No path configured for type '${type}'`);
+      default:
+        throw new Error(`No path configured for type '${type}'`);
     }
   })().toLowerCase();
 }
@@ -185,7 +204,8 @@ export function getApiMethod(type: ApiRequestType) {
     case requestTypes.MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO:
       return github.activity.markNotificationsAsReadForRepo;
 
-    default: throw new Error(`No api method configured for type '${type}'`);
+    default:
+      throw new Error(`No api method configured for type '${type}'`);
   }
 }
 

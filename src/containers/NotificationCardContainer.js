@@ -14,24 +14,30 @@ import {
 } from '../selectors';
 
 import * as actionCreators from '../actions';
-import type {
-  ActionCreators,
-  GithubNotification,
-  State,
-} from '../utils/types';
+import type { ActionCreators, GithubNotification, State } from '../utils/types';
 
 const makeMapStateToProps = () => {
   const denormalizedNotificationSelector = makeDenormalizedNotificationSelector();
   const isArchivedNotificationSelector = makeIsArchivedNotificationSelector();
   const isReadNotificationSelector = makeIsReadNotificationSelector();
 
-  return (state: State, { notificationOrNotificationId }: { notificationOrNotificationId: string|GithubNotification }) => {
-    const notification = Iterable.isIterable(notificationOrNotificationId) ? notificationOrNotificationId : null;
-    const notificationId = notification ? `${notification.get('id')}` : notificationOrNotificationId;
+  return (
+    state: State,
+    {
+      notificationOrNotificationId,
+    }: { notificationOrNotificationId: string | GithubNotification },
+  ) => {
+    const notification = Iterable.isIterable(notificationOrNotificationId)
+      ? notificationOrNotificationId
+      : null;
+    const notificationId = notification
+      ? `${notification.get('id')}`
+      : notificationOrNotificationId;
 
     return {
       archived: isArchivedNotificationSelector(state, { notificationId }),
-      notification: notification || denormalizedNotificationSelector(state, { notificationId }),
+      notification: notification ||
+        denormalizedNotificationSelector(state, { notificationId }),
       read: isReadNotificationSelector(state, { notificationId }),
     };
   };

@@ -13,15 +13,14 @@ export default class extends React.PureComponent {
     maxHeight?: number,
   };
 
-  makeRenderItem = (passProps = {}) => ({ index, item: commit }) => (
+  makeRenderItem = (passProps = {}) => ({ index, item: commit }) =>
     commit &&
     <CommitRow
       key={`commit-row-${commit.get('sha')}`}
       commit={commit}
       narrow
       {...passProps}
-    />
-  );
+    />;
 
   render() {
     const { maxHeight, commits, ...props } = this.props;
@@ -29,7 +28,12 @@ export default class extends React.PureComponent {
     if (!(commits && commits.size > 0)) return null;
 
     return (
-      <RowList data={commits} maxHeight={maxHeight} renderItem={this.makeRenderItem(props)} {...props} />
+      <RowList
+        data={commits}
+        maxHeight={maxHeight}
+        renderItem={this.makeRenderItem(props)}
+        {...props}
+      />
     );
   }
 }

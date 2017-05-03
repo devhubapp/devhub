@@ -45,16 +45,14 @@ export const HeaderButton = styled.TouchableOpacity`
 
 export const HeaderButtonIcon = styled(Icon)`
   font-size: ${headerFontSize}px;
-  color: ${({ active, muted, theme }) => (
-    muted ? theme.base05 : (active ? theme.brand : theme.base04)
-  )};
+  color: ${({ active, muted, theme }) => (muted ? theme.base05 : active ? theme.brand : theme.base04)};
 `;
 
 export const FixedHeader = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  min-height: ${20 + (2 * contentPadding)}px;
+  min-height: ${20 + 2 * contentPadding}px;
 `;
 
 export const ProgressBarContainer = styled.View`
@@ -113,21 +111,20 @@ export default class extends React.PureComponent {
         </FixedHeader>
 
         <ProgressBarContainer>
-          {
-            loading &&
+          {loading &&
             <ProgressBar
               width={width || getColumnContentWidth()}
               height={1}
               indeterminate
-            />
-          }
+            />}
         </ProgressBarContainer>
 
-        {
-          errors && errors.filter(Boolean).map(error => (
-            <StatusMessage key={`error-${error}`} message={error} error />
-          ))
-        }
+        {errors &&
+          errors
+            .filter(Boolean)
+            .map(error => (
+              <StatusMessage key={`error-${error}`} message={error} error />
+            ))}
 
         {children}
       </Column>
