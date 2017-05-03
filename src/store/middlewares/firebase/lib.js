@@ -1,5 +1,4 @@
 // @flow
-/* global __DEV__ */
 
 import _ from 'lodash'
 import moment from 'moment'

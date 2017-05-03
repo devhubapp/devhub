@@ -1,5 +1,4 @@
 // @flow
-/* global __DEV__ */
 
 /**
  * This file is from https://github.com/gpbl/denormalizr

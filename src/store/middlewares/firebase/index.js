@@ -1,5 +1,3 @@
-/* global __DEV__ */
-
 import * as firebase from 'firebase'
 import { debounce } from 'lodash'
 
@@ -52,7 +50,7 @@ export function stopFirebase() {
   if (!_databaseRef) return
 
   _databaseRef.off()
-  console.debug('[FIREBASE] Disconnected.')
+  if (__DEV__) console.debug('[FIREBASE] Disconnected.')
 
   _databaseRef = undefined
   _lastState = undefined
@@ -62,7 +60,7 @@ export function startFirebase({ store, userId }) {
   stopFirebase()
 
   _databaseRef = firebase.database().ref(`users/${userId}/`)
-  console.debug('[FIREBASE] Connected.')
+  if (__DEV__) console.debug('[FIREBASE] Connected.')
 
   // get all the data on firebase and compare with the local state.
   // upload to firebase the fields that are different, but not all of them,

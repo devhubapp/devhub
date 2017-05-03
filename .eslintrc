@@ -13,6 +13,9 @@
     "jest": true,
     "node": true
   },
+  "globals": {
+    "__DEV__": true
+  },
   "plugins": [
     "babel",
     "flowtype",

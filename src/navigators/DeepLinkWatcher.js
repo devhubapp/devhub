@@ -56,7 +56,7 @@ export default class DeepLinkWatcher extends React.PureComponent {
   }
 
   _handleDeepLinking = url => {
-    console.debug('[DEEP LINK]', url)
+    if (__DEV__) console.debug('[DEEP LINK]', url)
 
     const { path, scheme } = getSchemeAndPathFromURL(url)
     if (scheme !== appName || !path) return

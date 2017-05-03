@@ -28,9 +28,9 @@ import subscriptionsSagas from './subscriptions'
 
 export function* resetAppData() {
   try {
-    console.debug('Reseting app data...')
+    if (__DEV__) console.debug('Reseting app data...')
     yield AsyncStorage.clear()
-    console.debug('Reseted.')
+    if (__DEV__) console.debug('Reseted.')
   } catch (e) {
     console.error('Failed to reset app data', e)
   }
