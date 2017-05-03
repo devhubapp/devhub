@@ -10,7 +10,7 @@ import { contentPadding, radius } from '../../styles/variables'
 import type { ThemeObject } from '../../utils/types'
 
 @withTheme
-export default class extends React.PureComponent {
+export default class RowList extends React.PureComponent {
   props: {
     data: Array<any>,
     maxHeight?: number,

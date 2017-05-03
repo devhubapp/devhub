@@ -19,7 +19,7 @@ import {
 } from '../../utils/helpers/github/shared'
 import type { GithubRepo } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class RepositoryRow extends React.PureComponent {
   props: {
     forcePushed?: boolean,
     isFork?: boolean,

@@ -31,7 +31,7 @@ const NewColumnText = styled.Text`
   color: ${({ theme }) => theme.base05};
 `
 
-export default class extends React.PureComponent {
+export default class NewColumn extends React.PureComponent {
   props: {
     addColumnFn: Function,
     actions: ActionCreators,

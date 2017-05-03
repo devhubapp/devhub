@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react'
 import styled, { ThemeProvider } from 'styled-components/native'
 import { connect } from 'react-redux'
@@ -29,7 +31,7 @@ const mapStateToProps = (state: State) => ({
 })
 
 @connect(mapStateToProps)
-export default class extends React.PureComponent {
+export default class AppContainer extends React.PureComponent {
   static defaultProps = {
     isLogged: false,
     isFetching: false,
@@ -65,9 +67,9 @@ export default class extends React.PureComponent {
   }
 
   props: {
-    isLogged?: boolean,
+    isLogged?: boolean, // eslint-disable-line react/no-unused-prop-types
     isFetching?: boolean,
-    ready?: boolean,
+    ready?: boolean, // eslint-disable-line react/no-unused-prop-types
     theme: ThemeObject,
   }
 

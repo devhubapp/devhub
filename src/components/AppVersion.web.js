@@ -10,7 +10,7 @@ const Text = styled.p`
   text-align: center;
 `
 
-export default class extends React.PureComponent {
+export default class AppVersion extends React.PureComponent {
   render() {
     const { ...props } = this.props
     delete props.containerStyle

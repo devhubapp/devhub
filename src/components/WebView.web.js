@@ -3,6 +3,12 @@
 
 import React from 'react'
 
-export default ({ source: { uri } }, ...props) => (
+type Props = {
+  source: { uri: string }, // eslint-disable-line react/no-unused-prop-types
+}
+
+const WebView = ({ source: { uri } }: Props, ...props) => (
   <iframe {...props} src={uri} />
 )
+
+export default WebView

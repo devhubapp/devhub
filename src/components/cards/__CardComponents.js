@@ -167,7 +167,6 @@ export const CardIcon = styled(Icon)`
 
 type ItemIdProps = {
   icon?: string,
-  theme: Object,
   number: number,
   read?: boolean,
   url: string,

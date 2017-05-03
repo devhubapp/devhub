@@ -10,7 +10,8 @@
   ],
   "env": {
     "es6": true,
-    "jest": true
+    "jest": true,
+    "node": true
   },
   "plugins": [
     "babel",
@@ -28,12 +29,16 @@
     "sourceType": "module"
   },
   "settings": {
-    "import/extensions": [
-      ".js",
-      ".jsx",
-      ".android.js",
-      ".ios.js"
-    ]
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".android.js",
+          ".ios.js"
+        ]
+      }
+    }
   },
   "rules": {
     "react/jsx-filename-extension": 0,
@@ -43,8 +48,19 @@
         "ignorePureComponents": true
       }
     ],
+    "react/require-default-props": 0,
     "no-case-declarations": 0,
     "no-confusing-arrow": 0,
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "debug",
+          "error",
+          "warn"
+        ]
+      }
+    ],
     "no-underscore-dangle": 0,
     "no-nested-ternary": 0,
     "react-native/no-unused-styles": 2,

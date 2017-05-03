@@ -7,13 +7,13 @@ import RowList from './__RowList'
 
 import type { Commit } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class CommitListRow extends React.PureComponent {
   props: {
     commits: Array<Commit>,
     maxHeight?: number,
   }
 
-  makeRenderItem = (passProps = {}) => ({ index, item: commit }) =>
+  makeRenderItem = (passProps = {}) => ({ item: commit }) =>
     commit &&
     <CommitRow
       key={`commit-row-${commit.get('sha')}`}

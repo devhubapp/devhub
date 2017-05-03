@@ -23,7 +23,7 @@ import type {
   ThemeObject,
 } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class PullRequestRow extends React.PureComponent {
   props: {
     comment: GithubComment,
     narrow: boolean,

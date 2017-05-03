@@ -1,8 +1,7 @@
 /* eslint-env browser */
 
-import React, { PropTypes, PureComponent } from 'react'
-import styled, { withTheme } from 'styled-components/native'
-import { Platform, StatusBar } from 'react-native'
+import styled from 'styled-components/native'
+import { Platform } from 'react-native'
 
 const getBackgroundColorFromProps = ({ backgroundColor, theme }) =>
   backgroundColor || (theme || {}).base00

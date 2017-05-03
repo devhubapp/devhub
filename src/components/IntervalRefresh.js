@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-export default class extends React.Component {
+export default class IntervalRefresh extends React.Component {
   state = {
     updatedTimes: 0,
   }
@@ -59,7 +59,7 @@ export default class extends React.Component {
 
   props: {
     interval: number, // in miliseconds
-    onRender: React.PropTypes.func,
+    onRender: Function,
   }
 
   render() {

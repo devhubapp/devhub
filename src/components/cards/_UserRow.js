@@ -11,7 +11,7 @@ import { smallAvatarWidth, StyledText } from './__CardComponents'
 import { trimNewLinesAndSpaces } from '../../utils/helpers'
 import type { User } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class UserRow extends React.PureComponent {
   props: {
     user: User,
     additionalInfo?: ?string,

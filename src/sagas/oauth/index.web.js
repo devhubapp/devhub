@@ -2,7 +2,7 @@
 
 import qs from 'qs'
 
-import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
+import { listenForNextUrl } from './helpers'
 
 const callbackURL = ''
 

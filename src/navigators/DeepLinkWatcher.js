@@ -25,7 +25,7 @@ const getSchemeAndPathFromURL = url => {
 const mapDispatchToProps = { resetAppData: resetAppDataRequest }
 
 @connect(null, mapDispatchToProps)
-export default class extends React.PureComponent {
+export default class DeepLinkWatcher extends React.PureComponent {
   static defaultProps = {
     resetAppData: resetAppDataDirect,
   }

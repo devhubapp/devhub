@@ -34,7 +34,7 @@ export default {
         })
       })
       .catch(error => {
-        console.log('Safari View failed to open url', error, {
+        console.error('Safari View failed to open url', error, {
           url,
           ...options,
         })

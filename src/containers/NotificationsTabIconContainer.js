@@ -12,7 +12,7 @@ const mapStateToProps = (state: State) => ({
 })
 
 @connect(mapStateToProps)
-export default class extends React.PureComponent {
+export default class NotificationsTabIconContainer extends React.PureComponent {
   props: {
     unreadCount: number,
   }

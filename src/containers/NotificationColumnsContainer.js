@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 @connect(makeMapStateToProps, mapDispatchToProps)
-export default class extends React.PureComponent {
+export default class NotificationColumnsContainer extends React.PureComponent {
   props: {
     actions: ActionCreators,
     columns: Object,

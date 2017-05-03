@@ -18,7 +18,7 @@ import { trimNewLinesAndSpaces } from '../../utils/helpers'
 import { getIssueIconAndColor } from '../../utils/helpers/github/shared'
 import type { GithubComment, GithubIssue, ThemeObject } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class IssueRow extends React.PureComponent {
   props: {
     comment?: GithubComment,
     issue: GithubIssue,

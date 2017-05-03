@@ -19,7 +19,6 @@ import WikiPageListRow from './_WikiPageListRow'
 
 import Icon from '../../libs/icon'
 import IntervalRefresh from '../IntervalRefresh'
-import ScrollableContentContainer from '../ScrollableContentContainer'
 import TransparentTextOverlay from '../TransparentTextOverlay'
 import OwnerAvatar from './_OwnerAvatar'
 import { avatarWidth, contentPadding } from '../../styles/variables'
@@ -57,7 +56,7 @@ import {
 } from './__CardComponents'
 
 @withTheme
-export default class extends React.PureComponent {
+export default class EventCard extends React.PureComponent {
   props: {
     actions: ActionCreators,
     archived?: boolean,

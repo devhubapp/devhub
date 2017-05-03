@@ -8,7 +8,7 @@ import EventColumnContainer from '../../containers/EventColumnContainer'
 import CreateColumnUtils from '../utils/CreateColumnUtils'
 import type { ActionCreators, Column as ColumnType } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class EventColumns extends React.PureComponent {
   addColumnFn = ({ order } = {}) => {
     CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions, {
       createColumnOrder: order,
@@ -20,7 +20,7 @@ export default class extends React.PureComponent {
     columns: Array<ColumnType>,
   }
 
-  renderItem = ({ index, item: column }) => {
+  renderItem = ({ item: column }) => {
     if (!column) return null
 
     const columnId = column.get('id')

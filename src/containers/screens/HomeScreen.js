@@ -5,7 +5,7 @@ import styled, { withTheme, ThemeProvider } from 'styled-components/native'
 import { ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 
-import debounce from '../../utils/hoc/debounce'
+import withDebounce from '../../utils/hoc/withDebounce'
 import withIsCurrentRoute from '../../utils/hoc/withIsCurrentRoute'
 import EventColumnsContainer from '../EventColumnsContainer'
 import Screen from '../../components/Screen'
@@ -26,7 +26,7 @@ const mapStateToProps = (state: State) => ({
 @connect(mapStateToProps)
 @withTheme
 @withIsCurrentRoute(getMainNavigationState)
-@debounce(({ isCurrentRoute }) => (isCurrentRoute ? 0 : 10))
+@withDebounce(({ isCurrentRoute }) => (isCurrentRoute ? 0 : 10))
 class HomeScreen extends React.PureComponent {
   static navigationOptions
 
@@ -53,11 +53,13 @@ class HomeScreen extends React.PureComponent {
   }
 }
 
+const tabBarIcon = ({ tintColor }: { tintColor: 'string' }) => (
+  <TabIcon icon="home" color={tintColor} />
+)
+
 HomeScreen.navigationOptions = {
   tabBarLabel: 'Feed',
-  tabBarIcon: ({ tintColor }: { tintColor: 'string' }) => (
-    <TabIcon icon="home" color={tintColor} />
-  ),
+  tabBarIcon,
 }
 
 export default HomeScreen

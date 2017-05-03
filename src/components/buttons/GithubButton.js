@@ -5,7 +5,7 @@ import { ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
 
 import Icon from '../../libs/icon'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 
 export const Button = styled.TouchableOpacity`
   height: ${({ horizontal }) => (horizontal ? 44 : 58)}px;
@@ -62,8 +62,8 @@ type Props = {
   textProps?: Object,
 }
 
-export default ({
-  leftIcon = 'mark-github',
+const GithubButton = ({
+  leftIcon,
   horizontal,
   loading,
   title,
@@ -95,3 +95,17 @@ export default ({
     </Content>
   </Button>
 )
+
+GithubButton.defaultProps = {
+  leftIcon: 'mark-github',
+  horizontal: false,
+  loading: false,
+  radius: defaultRadius,
+  rightIcon: '',
+  title: '',
+  subtitle: '',
+  subtitleProps: undefined,
+  textProps: undefined,
+}
+
+export default GithubButton

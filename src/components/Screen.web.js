@@ -1,6 +1,7 @@
+// @flow
 /* eslint-env browser */
 
-import React, { PropTypes, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import styled, { withTheme } from 'styled-components/native'
 import { Platform } from 'react-native'
 
@@ -19,13 +20,6 @@ export default class Screen extends PureComponent {
     backgroundColor: undefined,
   }
 
-  /* eslint-disable react/no-unused-prop-types */
-  static propTypes = {
-    backgroundColor: PropTypes.string,
-    theme: PropTypes.shape({ base00: PropTypes.string }).isRequired,
-  }
-  /* eslint-enable */
-
   componentDidMount() {
     this.updateBodyBackgroundColor(this.props)
   }
@@ -38,6 +32,13 @@ export default class Screen extends PureComponent {
     const backgroundColor = getBackgroundColorFromProps(props)
     if (backgroundColor) document.body.bgColor = backgroundColor
   }
+
+  /* eslint-disable react/no-unused-prop-types */
+  props: {
+    backgroundColor?: string,
+    theme: { base00: string },
+  }
+  /* eslint-enable */
 
   render() {
     return <BaseScreen {...this.props} />

@@ -5,7 +5,7 @@ import styled, { withTheme, ThemeProvider } from 'styled-components/native'
 import { ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 
-import debounce from '../../utils/hoc/debounce'
+import debounce from '../../utils/hoc/withDebounce'
 import withIsCurrentRoute from '../../utils/hoc/withIsCurrentRoute'
 import NotificationColumnsContainer from '../NotificationColumnsContainer'
 import NotificationsTabIconContainer from '../NotificationsTabIconContainer'
@@ -53,11 +53,13 @@ class NotificationsScreen extends React.PureComponent {
   }
 }
 
+const tabBarIcon = ({ tintColor }: { tintColor: 'string' }) => (
+  <NotificationsTabIconContainer icon="bell" color={tintColor} />
+)
+
 NotificationsScreen.navigationOptions = {
   tabBarLabel: 'Notifications',
-  tabBarIcon: ({ tintColor }: { tintColor: 'string' }) => (
-    <NotificationsTabIconContainer icon="bell" color={tintColor} />
-  ),
+  tabBarIcon,
 }
 
 export default NotificationsScreen

@@ -25,7 +25,6 @@ import {
   isLoggedSelector,
 } from '../selectors'
 
-import { fromJS } from '../utils/immutable'
 import { TIMEOUT } from '../utils/constants/defaults'
 
 import {
@@ -113,7 +112,7 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
       ),
     )
   } catch (e) {
-    console.log('loadSubscriptionData catch', e)
+    console.error('loadSubscriptionData catch', e)
     const errorMessage =
       (e.message || {}).message || e.message || e.body || e.status
     yield put(
@@ -132,6 +131,7 @@ function* _loadSubscriptions(subscriptionIds) {
 
   const state = yield select()
 
+  // eslint-disable-next-line func-names
   yield* subscriptionIds.map(function*(subscriptionId) {
     const subscription = subscriptionSelector(state, { subscriptionId })
     if (!subscription) return
@@ -186,6 +186,7 @@ function* startTimer() {
   // const _state = yield select();
   // alert(byteCount(JSON.stringify(_state)));
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const state = yield select()
     const isLogged = isLoggedSelector(state)

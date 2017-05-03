@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react'
 import styled from 'styled-components/native'
 
@@ -11,12 +13,17 @@ const StyledButton = styled.TouchableOpacity`
   padding-horizontal: ${contentPadding}px;
 `
 
-export default class extends React.PureComponent {
+export default class ScrollableButton extends React.PureComponent {
+  static defaultProps = {
+    buttonProps: undefined,
+    contentContainerStyle: undefined,
+  }
+
   props: {
-    children: React.Element,
+    buttonProps?: Object,
+    children: ReactClass<any>,
     contentContainerStyle?: Object,
     onPress: Function,
-    buttonProps?: Object,
   }
 
   render() {

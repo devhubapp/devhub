@@ -24,7 +24,7 @@ const Text = styled.Text`
   text-align: center;
 `
 
-export default class extends React.PureComponent {
+export default class AppVersion extends React.PureComponent {
   static defaultProps = {
     buttonProps: {},
     containerStyle: undefined,

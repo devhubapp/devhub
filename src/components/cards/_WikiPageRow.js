@@ -9,7 +9,7 @@ import { StyledText } from './__CardComponents'
 
 import { trimNewLinesAndSpaces } from '../../utils/helpers'
 
-export default class extends React.PureComponent {
+export default class WikiPageRow extends React.PureComponent {
   props: {
     narrow?: boolean,
     page: Object,

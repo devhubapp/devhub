@@ -62,11 +62,11 @@ type ComponentState = {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class extends React.PureComponent {
+export default class LoginScreen extends React.PureComponent {
   state = ({
     isLoggingIn: false,
     loggingInMethod: null,
-  }: State)
+  }: ComponentState)
 
   loginWithGithubPublicAccess = () => {
     const { actions: { loginRequest } } = this.props

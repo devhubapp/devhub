@@ -18,7 +18,7 @@ import type {
   ReleaseEvent,
 } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class ReleaseRow extends React.PureComponent {
   props: {
     narrow: boolean,
     release: ReleaseEvent,

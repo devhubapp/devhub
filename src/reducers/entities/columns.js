@@ -1,6 +1,5 @@
 // @flow
 
-moment().toISOString()
 import moment from 'moment'
 import { fromJS, List, Map } from 'immutable'
 

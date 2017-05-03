@@ -1,5 +1,6 @@
 // @flow
 /* eslint-env browser */
+/* eslint-disable no-alert */
 
 import { mapValues, toArray } from 'lodash'
 
@@ -30,7 +31,6 @@ export default function prompt(
   message?: ?string,
   callbackOrButtons?: (text: string) => Object,
 ): void {
-  // eslint-disable-next-line no-alert
   const userInput =
     window.prompt(getPromptText(title, message, callbackOrButtons)) || ''
   if (!userInput) return

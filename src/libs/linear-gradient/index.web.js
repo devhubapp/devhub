@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react'
+// @flow
+
+import React from 'react'
 import { View } from 'react-native'
 
 const radToDeg = angle => angle * (180 / Math.PI)
@@ -12,26 +14,21 @@ const propsToLinearGradient = ({
   ...props
 }) => `linear-gradient(${propsToDeg(props)}, ${colors.join(', ')})`
 
-const LinearGradient = ({ style, ...props }) => (
+type Props = {
+  colors: Array<string>,
+  end: Array<number> | { x: number, y: number },
+  height: number,
+  locations: Array<string>,
+  start: Array<number> | { x: number, y: number },
+  style: object | Array<object>,
+  width: number,
+}
+
+const LinearGradient = ({ style, ...props }: Props) => (
   <View
     style={[style, { background: propsToLinearGradient(props) }]}
     {...props}
   />
 )
-
-LinearGradient.propTypes = {
-  colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-  end: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.number),
-    PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
-  ]),
-  height: PropTypes.number,
-  locations: PropTypes.arrayOf(PropTypes.string),
-  start: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.number),
-    PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
-  ]),
-  width: PropTypes.number,
-}
 
 export default LinearGradient

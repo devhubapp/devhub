@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import StarButton from '../components/buttons/StarButton'
 import { makeIsRepoStarredSelector } from '../selectors'
-import { starRepo, unstarRepo } from '../actions'
+import * as actions from '../actions'
 import type { ActionCreators, State } from '../utils/types'
 
 const makeMapStateToProps = () => {
@@ -17,8 +17,8 @@ const makeMapStateToProps = () => {
 }
 
 const mapDispatchToProps = {
-  starRepo,
-  unstarRepo,
+  starRepo: actions.starRepo,
+  unstarRepo: actions.unstarRepo,
 }
 
 @connect(makeMapStateToProps, mapDispatchToProps)
@@ -39,7 +39,7 @@ export default class extends React.PureComponent {
     }
   }
 
-  bindActionsToRepoId({ repoId, starRepo }) {
+  bindActionsToRepoId({ repoId, starRepo, unstarRepo }) {
     this.starRepoFn = starRepo.bind(null, { repoId })
     this.unstarRepoFn = unstarRepo.bind(null, { repoId })
   }

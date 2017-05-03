@@ -14,11 +14,16 @@ const validateInterval = interval => {
 const validateIntervalOrFn = intervalOrFn =>
   typeof intervalOrFn === 'function' ? true : validateInterval(intervalOrFn)
 
+const getComponentName = Component =>
+  Component.displayName || Component.name || 'Component'
+
 export default (intervalOrFn, ...throttleArgs) => {
   validateIntervalOrFn(intervalOrFn)
 
   return Component =>
-    class extends React.PureComponent {
+    class WithThrottle extends React.PureComponent {
+      static displayName = `WithThrottle(${getComponentName(Component)})`
+
       constructor(props) {
         super(props)
 

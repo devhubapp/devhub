@@ -16,7 +16,7 @@ import { openOnGithub } from '../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../utils/helpers'
 import type { GithubUser } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class CommentRow extends React.PureComponent {
   props: {
     body: string,
     narrow?: boolean,

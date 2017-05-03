@@ -30,7 +30,7 @@ const BUTTONS = {
 export const defaultIcon = 'bell'
 export const defaultTitle = 'notifications'
 
-export default class extends React.PureComponent {
+export default class NotificationColumn extends React.PureComponent {
   static contextTypes = { store: React.PropTypes.object.isRequired }
 
   static defaultProps = {
@@ -154,7 +154,7 @@ export default class extends React.PureComponent {
     updatedAt: Date,
   }
 
-  renderItem = ({ index, item: notificationOrNotificationId }) => {
+  renderItem = ({ item: notificationOrNotificationId }) => {
     const { actions, column, repo } = this.props
 
     const notification = Iterable.isIterable(notificationOrNotificationId)

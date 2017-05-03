@@ -14,7 +14,6 @@ import {
   takeLatest,
 } from 'redux-saga/effects'
 
-import { APP_READY } from '../utils/constants/actions'
 import { TIMEOUT } from '../utils/constants/defaults'
 import { authenticate, getApiMethod, requestTypes } from '../api/github'
 import { dateToHeaderFormat } from '../utils/helpers'
@@ -30,6 +29,7 @@ import {
 } from '../selectors'
 
 import {
+  APP_READY,
   LOAD_NOTIFICATIONS_REQUEST,
   LOGIN_SUCCESS,
   LOGOUT,
@@ -100,7 +100,7 @@ function* onLoadNotificationsRequest({ payload }: Action<ApiRequestPayload>) {
       ),
     )
   } catch (e) {
-    console.log('onLoadNotificationsRequest catch', e, requestPayload)
+    console.error('onLoadNotificationsRequest catch', e, requestPayload)
     const errorMessage =
       (e.message || {}).message || e.message || e.body || e.status
     yield put(
@@ -188,7 +188,7 @@ function* onMarkNotificationsAsReadRequest({
       ),
     )
   } catch (e) {
-    console.log('onMarkNotificationsAsReadRequest catch', e, requestPayload)
+    console.error('onMarkNotificationsAsReadRequest catch', e, requestPayload)
     let errorMessage =
       (e.message || {}).message || e.message || e.body || e.status
     if (errorMessage) errorMessage = `Failed to mark as read: ${errorMessage}`
@@ -238,6 +238,7 @@ function* startTimer() {
   // to optimize polling with If-Modified-Since header
   let params = getParamsToLoadAllNotifications()
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const state = yield select()
     const isLogged = isLoggedSelector(state)

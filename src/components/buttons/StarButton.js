@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react'
 import styled from 'styled-components/native'
 
@@ -17,7 +19,7 @@ const RepositoryStarIcon = styled(Icon)`
   color: ${({ starred, theme }) => (starred ? theme.star : theme.base04)};
 `
 
-export default class extends React.PureComponent {
+export default class StarButton extends React.PureComponent {
   state = {
     starred: this.props.starred,
   }

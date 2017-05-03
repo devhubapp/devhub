@@ -21,13 +21,14 @@ const LabelContainer = styled.View`
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `
 
-const Label = styled.Text`
+const LabelText = styled.Text`
   font-size: 14px;
   color: ${({ color, muted, outline, theme, textColor }) => (textColor && (theme[textColor] || textColor)) || (outline ? (color && (theme[color] || color)) || (muted ? theme.base05 : theme.base04) : '') || '#ffffff'};
 `
 
 type Props = {
-  children: React.Element,
+  children: ReactClass<any>,
+  borderColor?: ?string,
   color?: ?string,
   containerStyle?: Object,
   containerProps?: Object,
@@ -38,7 +39,7 @@ type Props = {
   textColor?: ?string,
 }
 
-export default ({
+const Label = ({
   borderColor,
   color,
   children,
@@ -59,9 +60,11 @@ export default ({
     style={containerStyle}
     {...containerProps}
   >
-    <Label color={color} outline={outline} muted={muted} {...props}>
+    <LabelText color={color} outline={outline} muted={muted} {...props}>
       {!!isPrivate && <Text><Icon name="lock" />&nbsp;</Text>}
       {children}
-    </Label>
+    </LabelText>
   </LabelContainer>
 )
+
+export default Label

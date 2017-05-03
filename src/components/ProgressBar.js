@@ -1,27 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+// @flow
+
+import React, { PureComponent } from 'react'
 import { withTheme } from 'styled-components/native'
 import { Animated, Easing, View } from 'react-native'
 
 @withTheme
-export default class ProgressBar extends Component {
-  static propTypes = {
-    animated: PropTypes.bool,
-    borderColor: PropTypes.string,
-    borderRadius: PropTypes.number,
-    borderWidth: PropTypes.number,
-    children: PropTypes.node,
-    color: PropTypes.string,
-    duration: PropTypes.number,
-    height: PropTypes.number,
-    indeterminate: PropTypes.bool,
-    indeterminateWidthFactor: PropTypes.number,
-    progress: PropTypes.number,
-    style: PropTypes.any,
-    theme: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    unfilledColor: PropTypes.string,
-    width: PropTypes.number,
-  }
-
+export default class ProgressBar extends PureComponent {
   static defaultProps = {
     animated: true,
     borderRadius: 0,
@@ -89,6 +73,23 @@ export default class ProgressBar extends Component {
       this.props.indeterminateWidthFactor /
       (1 + this.props.indeterminateWidthFactor)
     )
+  }
+  props: {
+    animated?: boolean,
+    borderColor?: string,
+    borderRadius?: number,
+    borderWidth?: number,
+    children?: ReactClass<any>,
+    color?: string,
+    duration?: number,
+    height?: number,
+    indeterminate?: boolean,
+    indeterminateWidthFactor?: number,
+    progress?: number,
+    style?: object | Array<object>,
+    theme?: object | Array<object>, // eslint-disable-line react/forbid-prop-types
+    unfilledColor?: string,
+    width?: number,
   }
 
   animate() {

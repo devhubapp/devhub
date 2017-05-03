@@ -1,3 +1,5 @@
+// @flow
+
 export type Orientation = 'PORTRAIT' | 'LANDSCAPE'
 
 // TODO: Implement this for the web

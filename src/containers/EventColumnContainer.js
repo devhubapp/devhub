@@ -45,7 +45,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 @connect(makeMapStateToProps, mapDispatchToProps)
-export default class extends React.PureComponent {
+export default class EventColumnContainer extends React.PureComponent {
   props: {
     actions: ActionCreators,
     column: ColumnType,

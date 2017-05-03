@@ -2,9 +2,9 @@
 
 import React from 'react'
 import styled from 'styled-components/native'
-import withOrientation from '../../hoc/withOrientation'
 import { Dimensions, Platform } from 'react-native'
 
+import withOrientation from '../../hoc/withOrientation'
 import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 
 export const columnMargin = contentPadding / 2
@@ -46,7 +46,7 @@ export const ColumnRoot = styled.View`
 @withOrientation
 export default class extends React.PureComponent {
   props: {
-    children: React.Element,
+    children: ReactClass<any>,
     outline?: boolean,
     radius?: number,
     width?: number,

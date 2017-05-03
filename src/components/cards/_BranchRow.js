@@ -10,7 +10,7 @@ import { StyledText } from './__CardComponents'
 import { getGitHubURLForBranch } from '../../utils/helpers/github/url'
 import type { GithubEventType } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class BranchRow extends React.PureComponent {
   props: {
     branch: string,
     narrow: boolean,

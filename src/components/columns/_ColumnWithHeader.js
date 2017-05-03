@@ -3,13 +3,12 @@
 import React from 'react'
 import styled from 'styled-components/native'
 
-import Column, { getRadius, getColumnContentWidth } from './_Column'
+import Column, { getColumnContentWidth } from './_Column'
 import Icon from '../../libs/icon'
 import ProgressBar from '../ProgressBar'
 import StatusMessage from '../StatusMessage'
 import { iconRightMargin } from '../cards/__CardComponents'
 import { contentPadding } from '../../styles/variables'
-import type { Subscription, ThemeObject } from '../../utils/types'
 
 export * from './_Column'
 
@@ -60,21 +59,13 @@ export const ProgressBarContainer = styled.View`
   background-color: ${({ theme }) => theme.base01};
 `
 
-export default class extends React.PureComponent {
+export default class ColumnWithHeader extends React.PureComponent {
   props: {
+    children: ReactClass<any>,
     errors?: ?Array<string>,
-    rightHeader?: React.Element,
+    rightHeader?: ReactClass<any>,
     icon: string,
-    items: Array<Object>,
     loading?: boolean,
-    radius?: number,
-    onRefresh?: Function,
-    refreshText?: string,
-    renderItem: Function,
-    style?: ?Object,
-    readIds: Array<string>,
-    subscriptions: Array<Subscription>,
-    theme: ThemeObject,
     title: string,
     width?: number,
   }
@@ -85,18 +76,10 @@ export default class extends React.PureComponent {
       errors,
       rightHeader,
       icon,
-      items,
       loading,
-      renderItem,
-      onRefresh,
-      refreshText,
-      theme,
       title,
       width,
-      ...props
     } = this.props
-
-    const _radius = getRadius(props)
 
     return (
       <Column {...this.props}>

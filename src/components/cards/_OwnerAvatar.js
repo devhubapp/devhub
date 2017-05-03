@@ -7,7 +7,7 @@ import Avatar from '../Avatar'
 import { getUserAvatarByEmail } from '../../utils/helpers/github/shared'
 import { openOnGithub } from '../../utils/helpers/github/url'
 
-export default class extends React.PureComponent {
+export default class OwnerAvatar extends React.PureComponent {
   props: {
     linkURL: string,
     navigation: Object,

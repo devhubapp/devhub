@@ -1,4 +1,5 @@
-// flow
+// @flow
+/* eslint-disable react-native/no-color-literals */
 
 import React, { PureComponent } from 'react'
 import {

@@ -41,7 +41,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 @connect(makeMapStateToProps, mapDispatchToProps)
-export default class extends React.PureComponent {
+export default class EventCardContainer extends React.PureComponent {
   props: {
     actions: ActionCreators,
     event: GithubEvent,

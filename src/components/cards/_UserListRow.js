@@ -7,13 +7,13 @@ import RowList from './__RowList'
 
 import type { User } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class UserListRow extends React.PureComponent {
   props: {
     users: Array<User>,
     maxHeight?: number,
   }
 
-  makeRenderItem = (passProps = {}) => ({ index, item: user }) =>
+  makeRenderItem = (passProps = {}) => ({ item: user }) =>
     user &&
     <UserRow
       key={`user-row-${user.get('id')}`}

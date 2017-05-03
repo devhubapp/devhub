@@ -21,7 +21,7 @@ import {
 
 import type { Commit, ThemeObject } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class CommitRow extends React.PureComponent {
   props: {
     commit: Commit,
     narrow?: boolean,

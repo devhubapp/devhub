@@ -4,9 +4,14 @@ import React from 'react'
 
 import orientationListener, { Orientation } from '../libs/orientation-listener'
 
+const getComponentName = Component =>
+  Component.displayName || Component.name || 'Component'
+
 // eslint-disable-next-line
 export default Component =>
-  class extends React.PureComponent {
+  class WithOrientation extends React.PureComponent {
+    static displayName = `WithOrientation(${getComponentName(Component)})`
+
     state = ({
       orientation: 'PORTRAIT',
     }: {

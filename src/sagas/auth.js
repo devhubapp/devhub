@@ -2,9 +2,10 @@
 
 import moment from 'moment'
 import * as firebase from 'firebase'
-import { bugsnagClient } from '../utils/services'
 import { delay } from 'redux-saga'
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects'
+
+import { bugsnagClient } from '../utils/services'
 
 import {
   APP_READY,
@@ -33,7 +34,7 @@ function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
     const result = { accessToken: params.access_token }
     yield put(loginSuccess(payload, result, sagaActionChunk))
   } catch (e) {
-    console.log('Login failed', e)
+    console.error('Login failed', e)
     const errorMessage =
       e && ((e.message || {}).message || e.message || e.body || e.status)
     yield put(loginFailure(payload, errorMessage, sagaActionChunk))
@@ -90,6 +91,7 @@ function* watchFirebaseCurrentUser() {
     lastUser = user
   })
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     if (lastUser !== ignoreValue) {
       // console.log('firebase user', lastUser);

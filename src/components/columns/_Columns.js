@@ -18,7 +18,7 @@ export const StyledImmutableVirtualizedListListView = styled(
 `
 
 @withOrientation
-export default class extends React.PureComponent {
+export default class Columns extends React.PureComponent {
   props: {
     actions: ActionCreators,
     addColumnFn?: ?Function,
@@ -26,6 +26,16 @@ export default class extends React.PureComponent {
     radius?: number,
     renderItem: Function,
     width?: number,
+  }
+
+  makeRenderItem = mainRenderItem => (
+    { index, item: column },
+    ...otherArgs
+  ) => {
+    if (!column) return null
+
+    if (column.get('id') === 'new') return this.renderNewColumn(column)
+    return mainRenderItem({ index, item: column }, ...otherArgs)
   }
 
   renderNewColumn(column) {
@@ -45,16 +55,6 @@ export default class extends React.PureComponent {
         width={width || getColumnContentWidth()}
       />
     )
-  }
-
-  makeRenderItem = mainRenderItem => (
-    { index, item: column },
-    ...otherArgs
-  ) => {
-    if (!column) return null
-
-    if (column.get('id') === 'new') return this.renderNewColumn(column)
-    return mainRenderItem({ index, item: column }, ...otherArgs)
   }
 
   render() {

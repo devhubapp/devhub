@@ -7,13 +7,13 @@ import RowList from './__RowList'
 
 import type { GithubRepo } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class RepositoryListRow extends React.PureComponent {
   props: {
     repos: Array<GithubRepo>,
     maxHeight?: number,
   }
 
-  makeRenderItem = (passProps = {}) => ({ index, item: repo }) =>
+  makeRenderItem = (passProps = {}) => ({ item: repo }) =>
     repo &&
     <RepoRow
       key={`repo-row-${repo.get('id')}`}

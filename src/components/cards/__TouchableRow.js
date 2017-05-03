@@ -19,15 +19,15 @@ import { contentPadding, radius } from '../../styles/variables'
 import type { ThemeObject } from '../../utils/types'
 
 @withTheme
-export default class extends React.PureComponent {
+export default class TouchableRow extends React.PureComponent {
   props: {
-    children: React.Element,
-    left?: React.Element,
+    children: ReactClass<any>,
+    left?: ReactClass<any>,
     narrow?: boolean,
     onPress?: Function,
     pushed?: boolean,
     read?: boolean,
-    right?: React.Element,
+    right?: ReactClass<any>,
     theme?: ThemeObject,
     url?: string,
   }

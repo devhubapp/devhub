@@ -5,17 +5,19 @@ import ImmutableListView from 'react-native-immutable-list-view'
 import { OrderedMap } from 'immutable'
 import type { List } from 'immutable'
 
-import { get } from '../../utils/immutable'
-
 const makeRenderRow = (immutableData, renderItem) => item =>
   !!immutableData && renderItem({ item })
 
 type Props = {
   immutableData: List,
-  renderItem: ({ item: any, index: number }) => ?React.Element<any>,
+  renderItem: ({ item: any, index: number }) => ?ReactClass<any>,
 }
 
-export default ({ immutableData, renderItem, ...props }: Props) => (
+const ImmutableVirtualizedList = ({
+  immutableData,
+  renderItem,
+  ...props
+}: Props) => (
   <ImmutableListView
     immutableData={immutableData}
     renderRow={makeRenderRow(immutableData, renderItem)}
@@ -31,9 +33,10 @@ const makeRenderSectionHeader = renderSectionHeader => (section, key) =>
 type Section = { key: string, data: List }
 
 type SectionListProps = Props & {
-  renderSectionHeader: ({ section: Section }) => ?React.Element<any>,
+  renderSectionHeader: ({ section: Section }) => ?ReactClass<any>,
   sections: List<Section>,
 }
+
 export const ImmutableSectionList = ({
   immutableData,
   renderItem,
@@ -48,3 +51,5 @@ export const ImmutableSectionList = ({
     {...props}
   />
 )
+
+export default ImmutableVirtualizedList

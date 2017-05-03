@@ -17,7 +17,7 @@ const StatusMessageText = styled.Text`
   text-align: center;
 `
 
-export default class extends React.PureComponent {
+export default class StatusMessage extends React.PureComponent {
   props: {
     error?: ?boolean,
     message: string,

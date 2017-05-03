@@ -143,7 +143,7 @@ const getStateForItems = items => ({
   items: cleanupItemsAndFormat(items),
 })
 
-export default class extends React.PureComponent {
+export default class NotificationsFilterColumn extends React.PureComponent {
   static defaultProps = {
     icon: defaultIcon,
     onRefresh: this.onRefresh,

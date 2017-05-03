@@ -13,7 +13,7 @@ const bgColorAfterLog = Platform.select({
   default: '#ffffff',
 })
 
-const Avatar = styled.Image`
+const AvatarImage = styled.Image`
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
   background-color: ${({ error, loading, theme }) => (!loading && !error ? bgColorAfterLog : theme.base03)};
@@ -21,7 +21,7 @@ const Avatar = styled.Image`
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `
 
-export default class extends React.PureComponent {
+export default class Avatar extends React.PureComponent {
   static defaultProps = {
     onLoad: undefined,
     onLoadStart: undefined,
@@ -83,7 +83,7 @@ export default class extends React.PureComponent {
     delete props.loading
 
     return (
-      <Avatar
+      <AvatarImage
         size={size}
         radius={radius}
         error={error}

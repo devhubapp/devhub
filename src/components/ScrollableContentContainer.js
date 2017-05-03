@@ -6,9 +6,9 @@ import styled from 'styled-components/native'
 import { contentPadding } from '../styles/variables'
 
 const StyledScrollView = styled.ScrollView`
-  flex: 1;
-  flex-direction: row;
-  align-self: stretch;
+flex: 1;
+flex-direction: row;
+align-self: stretch;
 `
 
 type Props = {
@@ -17,7 +17,12 @@ type Props = {
   style?: Object,
 }
 
-export default ({ contentContainerStyle, padding, style, ...props }: Props) => (
+const ScrollableContentContainer = ({
+  contentContainerStyle,
+  padding,
+  style,
+  ...props
+}: Props) => (
   <StyledScrollView
     style={style}
     contentContainerStyle={[
@@ -34,3 +39,5 @@ export default ({ contentContainerStyle, padding, style, ...props }: Props) => (
     {...props}
   />
 )
+
+export default ScrollableContentContainer

@@ -11,7 +11,8 @@ const StyledWebView = styled(WebView)`
 `
 
 type Props = { navigation: Object }
-export default ({
+
+const BrowserScreen = ({
   navigation: { state: { params: { uri, ...params } } },
   ...props
 }: Props) => (
@@ -19,3 +20,5 @@ export default ({
     <StyledWebView source={{ uri }} {...params} {...props} />
   </Screen>
 )
+
+export default BrowserScreen

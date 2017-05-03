@@ -49,7 +49,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 @connect(makeMapStateToProps, mapDispatchToProps)
-export default class extends React.PureComponent {
+export default class NotificationsFilterColumnContainer
+  extends React.PureComponent {
   props: { column: Object, loading: boolean, items: Object, updatedAt: Date }
 
   render() {

@@ -1,3 +1,4 @@
+// @flow
 /* global __DEV__ */
 
 /**

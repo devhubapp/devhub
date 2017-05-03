@@ -1,3 +1,6 @@
+/* eslint-disable */
+// TODO: Fix eslint for web imports
+
 import Bugsnag from 'bugsnag-js'
 
 export default apiKey => {

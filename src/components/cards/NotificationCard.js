@@ -29,18 +29,15 @@ import {
   CardWrapper,
   FullView,
   FullAbsoluteView,
-  HorizontalView,
   Header,
-  Icon,
   LeftColumn,
   MainColumn,
   HeaderRow,
   SmallText,
-  StyledText,
   CardIcon,
 } from './__CardComponents'
 
-export default class extends React.PureComponent {
+export default class NotificationCard extends React.PureComponent {
   static defaultProps = {
     archived: false,
     onlyOneRepository: false,

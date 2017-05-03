@@ -21,7 +21,7 @@ export const StyledTextOverlay = styled(TransparentTextOverlay)`
 `
 
 @withTheme
-export default class extends React.PureComponent {
+export default class ColumnWithList extends React.PureComponent {
   state = {
     hasLoadedOnce: false,
   }
@@ -47,7 +47,7 @@ export default class extends React.PureComponent {
     refreshText?: string,
     renderItem: Function,
     renderSectionHeader?: Function,
-    rightHeader?: React.Element,
+    rightHeader?: ReactClass<any>,
     sectionHeaderHasChanged?: Function,
     style?: ?Object,
     subscriptions: Array<Subscription>,

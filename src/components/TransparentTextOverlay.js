@@ -39,7 +39,7 @@ function getProps(from, size) {
 }
 
 type Props = {
-  children?: ?React.Element<*>,
+  children?: ReactClass<any>,
   color: string,
   containerStyle?: ?Object,
   from: 'top' | 'bottom' | 'left' | 'right',
@@ -48,7 +48,7 @@ type Props = {
   style?: ?Object,
 }
 
-export default ({
+const TransparentTextOverlay = ({
   children,
   color,
   containerStyle,
@@ -89,3 +89,5 @@ export default ({
     </View>
   )
 }
+
+export default TransparentTextOverlay

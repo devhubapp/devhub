@@ -48,7 +48,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 @connect(makeMapStateToProps, mapDispatchToProps)
-export default class extends React.PureComponent {
+export default class NotificationCardContainer extends React.PureComponent {
   props: {
     actions: ActionCreators,
     notification?: GithubNotification,

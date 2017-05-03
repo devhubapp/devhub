@@ -53,9 +53,9 @@ export const EmptyColumnContent = props => (
   </Wrapper>
 )
 
-export default class extends React.PureComponent {
+export default class EmptyColumn extends React.PureComponent {
   props: {
-    refreshControl?: React.Element,
+    refreshControl?: ReactClass<any>,
   }
 
   render() {

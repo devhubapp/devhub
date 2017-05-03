@@ -10,7 +10,7 @@ import NotificationColumnContainer
   from '../../containers/NotificationColumnContainer'
 import type { ActionCreators, Column as ColumnType } from '../../utils/types'
 
-export default class extends React.PureComponent {
+export default class NotificationColumns extends React.PureComponent {
   props: {
     actions: ActionCreators,
     columns: Array<ColumnType>,
@@ -20,7 +20,7 @@ export default class extends React.PureComponent {
     <NotificationsFilterColumnContainer column={column} />
   )
 
-  renderItem = ({ index, item: column }) => {
+  renderItem = ({ item: column }) => {
     if (!column) return null
 
     const columnId = column.get('id')
