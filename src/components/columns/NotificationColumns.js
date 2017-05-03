@@ -1,34 +1,34 @@
 // @flow
 
-import React from 'react';
-import { List } from 'immutable';
+import React from 'react'
+import { List } from 'immutable'
 
-import Columns from './_Columns';
+import Columns from './_Columns'
 import NotificationsFilterColumnContainer
-  from '../../containers/NotificationsFilterColumnContainer';
+  from '../../containers/NotificationsFilterColumnContainer'
 import NotificationColumnContainer
-  from '../../containers/NotificationColumnContainer';
-import type { ActionCreators, Column as ColumnType } from '../../utils/types';
+  from '../../containers/NotificationColumnContainer'
+import type { ActionCreators, Column as ColumnType } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
     actions: ActionCreators,
     columns: Array<ColumnType>,
-  };
+  }
 
   renderFilterColumn = column => (
     <NotificationsFilterColumnContainer column={column} />
-  );
+  )
 
   renderItem = ({ index, item: column }) => {
-    if (!column) return null;
+    if (!column) return null
 
-    const columnId = column.get('id');
-    if (!columnId) return null;
+    const columnId = column.get('id')
+    if (!columnId) return null
 
-    if (columnId === 'filter') return this.renderFilterColumn(column);
+    if (columnId === 'filter') return this.renderFilterColumn(column)
 
-    const { actions } = this.props;
+    const { actions } = this.props
 
     return (
       <NotificationColumnContainer
@@ -39,11 +39,11 @@ export default class extends React.PureComponent {
         title={column.get('title')}
         {...column.get('column') || {}}
       />
-    );
-  };
+    )
+  }
 
   render() {
-    const { actions, columns = List(), ...props } = this.props;
+    const { actions, columns = List(), ...props } = this.props
 
     return (
       <Columns
@@ -53,6 +53,6 @@ export default class extends React.PureComponent {
         renderItem={this.renderItem}
         {...props}
       />
-    );
+    )
   }
 }

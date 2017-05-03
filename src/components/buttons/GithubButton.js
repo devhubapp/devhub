@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
-import { ActivityIndicator } from 'react-native';
-import styled from 'styled-components/native';
+import React from 'react'
+import { ActivityIndicator } from 'react-native'
+import styled from 'styled-components/native'
 
-import Icon from '../../libs/icon';
-import { contentPadding } from '../../styles/variables';
+import Icon from '../../libs/icon'
+import { contentPadding } from '../../styles/variables'
 
 export const Button = styled.TouchableOpacity`
   height: ${({ horizontal }) => (horizontal ? 44 : 58)}px;
@@ -13,12 +13,12 @@ export const Button = styled.TouchableOpacity`
   border-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius}px;
   border-width: 1px;
-`;
+`
 
 export const Content = styled.View`
   flex: 1;
   flex-direction: row;
-`;
+`
 
 export const IconWrapper = styled.View`
   align-items: center;
@@ -27,12 +27,12 @@ export const IconWrapper = styled.View`
   border-width: 0px;
   border-right-width: 0.5px;
   border-color: ${({ theme }) => theme.base04};
-`;
+`
 
 export const ButtonIcon = styled(Icon)`
   font-size: 20px;
   color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};
-`;
+`
 
 export const TextWrapper = styled.View`
   flex: 1;
@@ -40,7 +40,7 @@ export const TextWrapper = styled.View`
   align-items: ${({ horizontal }) => (horizontal ? 'center' : 'flex-start')};
   justify-content: center;
   ${({ horizontal }) => horizontal && 'flex-direction: row;'}
-`;
+`
 
 export const Text = styled.Text`
   line-height: 18px;
@@ -48,7 +48,7 @@ export const Text = styled.Text`
   font-weight: 500;
   text-align: left;
   color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};
-`;
+`
 
 type Props = {
   leftIcon?: string,
@@ -60,7 +60,7 @@ type Props = {
   subtitle?: string,
   subtitleProps?: Object,
   textProps?: Object,
-};
+}
 
 export default ({
   leftIcon = 'mark-github',
@@ -94,4 +94,4 @@ export default ({
         </IconWrapper>}
     </Content>
   </Button>
-);
+)

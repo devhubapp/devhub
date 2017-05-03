@@ -1,3 +1,3 @@
 /* eslint-disable import/prefer-default-export */
 
-export const sagaActionChunk = { dispatchedBy: 'saga' };
+export const sagaActionChunk = { dispatchedBy: 'saga' }

@@ -1,10 +1,10 @@
 // @flow
 
-import { SET_THEME } from '../../utils/constants/actions';
-import { loadTheme } from '../../utils/helpers';
-import type { Action, Theme } from '../../utils/types';
+import { SET_THEME } from '../../utils/constants/actions'
+import { loadTheme } from '../../utils/helpers'
+import type { Action, Theme } from '../../utils/types'
 
-const initialState = '';
+const initialState = ''
 
 export default (
   state: Theme = initialState,
@@ -13,15 +13,15 @@ export default (
   switch (type) {
     case SET_THEME:
       return (themeName => {
-        const theme = loadTheme(themeName);
+        const theme = loadTheme(themeName)
         if (!theme.isDark && theme.name && theme.name === payload) {
-          return theme.name;
+          return theme.name
         }
 
-        return state;
-      })(payload);
+        return state
+      })(payload)
 
     default:
-      return state;
+      return state
   }
-};
+}

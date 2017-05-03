@@ -9,16 +9,16 @@ import {
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOAD_SUBSCRIPTION_DATA_SUCCESS,
   LOAD_SUBSCRIPTION_DATA_FAILURE,
-} from '../utils/constants/actions';
+} from '../utils/constants/actions'
 
-import { ApiRequestType } from '../api/github';
-import { generateSubscriptionId } from '../reducers/entities/subscriptions';
-import { action, errorAction } from '../utils/helpers/actions';
+import { ApiRequestType } from '../api/github'
+import { generateSubscriptionId } from '../reducers/entities/subscriptions'
+import { action, errorAction } from '../utils/helpers/actions'
 import type {
   ApiRequestPayload,
   ApiResponsePayload,
   Subscription,
-} from '../utils/types';
+} from '../utils/types'
 
 export const createSubscription = (
   id: string,
@@ -30,23 +30,23 @@ export const createSubscription = (
     CREATE_SUBSCRIPTION,
     ({ id, requestType, params }: Subscription),
     other,
-  );
+  )
 
 export const deleteSubscription = (id: string, other?: Object) =>
-  action(DELETE_SUBSCRIPTION, ({ id }: Subscription), other);
+  action(DELETE_SUBSCRIPTION, ({ id }: Subscription), other)
 
 export const updateAllColumnsSubscriptions = (other?: Object) =>
-  action(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, undefined, other);
+  action(UPDATE_ALL_COLUMNS_SUBSCRIPTIONS, undefined, other)
 
 export const updateColumnSubscriptions = (columnId: string, other?: Object) =>
-  action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ columnId }: Subscription), other);
+  action(UPDATE_COLUMN_SUBSCRIPTIONS, ({ columnId }: Subscription), other)
 
 export const loadSubscriptionDataRequest = (
   requestType: ApiRequestType,
   params: Object,
   other?: Object,
 ) => {
-  const subscriptionId = generateSubscriptionId(requestType, params);
+  const subscriptionId = generateSubscriptionId(requestType, params)
 
   return action(
     LOAD_SUBSCRIPTION_DATA_REQUEST,
@@ -56,8 +56,8 @@ export const loadSubscriptionDataRequest = (
       subscriptionId,
     }: ApiRequestPayload),
     other,
-  );
-};
+  )
+}
 
 export const loadSubscriptionDataSuccess = (
   request: ApiRequestPayload,
@@ -69,10 +69,10 @@ export const loadSubscriptionDataSuccess = (
     LOAD_SUBSCRIPTION_DATA_SUCCESS,
     ({ request, data, meta }: ApiResponsePayload),
     other,
-  );
+  )
 
 export const loadSubscriptionDataFailure = (
   request: ApiRequestPayload,
   error: any,
   other?: Object,
-) => errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, { request }, error, other);
+) => errorAction(LOAD_SUBSCRIPTION_DATA_FAILURE, { request }, error, other)

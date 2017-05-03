@@ -1,8 +1,8 @@
 // @flow
 /*  eslint-disable import/prefer-default-export */
 
-import { denormalize } from 'denormalizr';
-import { Set } from 'immutable';
+import { denormalize } from 'denormalizr'
+import { Set } from 'immutable'
 
 import {
   createImmutableSelectorCreator,
@@ -11,24 +11,24 @@ import {
   isArchivedFilter,
   isDeletedFilter,
   isReadFilter,
-} from './shared';
+} from './shared'
 
 import {
   groupNotificationsByRepository,
-} from '../utils/helpers/github/notifications';
-import { NotificationSchema } from '../utils/normalizr/schemas';
+} from '../utils/helpers/github/notifications'
+import { NotificationSchema } from '../utils/normalizr/schemas'
 
 export const sortNotificationsByDate = (b, a) =>
-  a.get('updated_at') > b.get('updated_at') ? 1 : -1;
+  a.get('updated_at') > b.get('updated_at') ? 1 : -1
 
 export const notificationIdSelector = (state, { notificationId }) =>
-  notificationId;
-export const notificationDetailsSelector = state => state.get('notifications');
+  notificationId
+export const notificationDetailsSelector = state => state.get('notifications')
 export const notificationEntitiesSelector = state =>
-  entitiesSelector(state).get('notifications');
+  entitiesSelector(state).get('notifications')
 
 export const notificationSelector = (state, { notificationId }) =>
-  notificationEntitiesSelector(state).get(notificationId);
+  notificationEntitiesSelector(state).get(notificationId)
 
 export const notificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
@@ -39,7 +39,7 @@ export const notificationIdsSelector = createImmutableSelector(
       .sort(sortNotificationsByDate)
       .map(notification => notification.get('id'))
       .toList(),
-);
+)
 
 export const unarchivedNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
@@ -51,7 +51,7 @@ export const unarchivedNotificationIdsSelector = createImmutableSelector(
       .sort(sortNotificationsByDate)
       .map(notification => notification.get('id'))
       .toList(),
-);
+)
 
 export const makeDenormalizedNotificationsSelector = n =>
   createImmutableSelectorCreator(n)(
@@ -64,7 +64,7 @@ export const makeDenormalizedNotificationsSelector = n =>
         .filterNot(isDeletedFilter)
         .toList()
         .sort(sortNotificationsByDate),
-  );
+  )
 
 export const readNotificationIdsSelector = createImmutableSelector(
   notificationEntitiesSelector,
@@ -73,17 +73,17 @@ export const readNotificationIdsSelector = createImmutableSelector(
       .filter(isReadFilter)
       .map(notification => notification.get('id'))
       .toList(),
-);
+)
 
 export const makeIsArchivedNotificationSelector = () =>
-  createImmutableSelector(notificationSelector, isArchivedFilter);
+  createImmutableSelector(notificationSelector, isArchivedFilter)
 
 export const makeIsReadNotificationSelector = () =>
   createImmutableSelector(
     notificationIdSelector,
     readNotificationIdsSelector,
     (notificationId, readIds) => readIds.includes(notificationId),
-  );
+  )
 
 export const makeDenormalizedNotificationSelector = () =>
   createImmutableSelector(
@@ -91,7 +91,7 @@ export const makeDenormalizedNotificationSelector = () =>
     entitiesSelector,
     (notification, entities) =>
       denormalize(notification, entities, NotificationSchema),
-  );
+  )
 
 // with memoization of first argument
 // to prevent calling this again unless new notifications were added
@@ -107,7 +107,7 @@ export const orderedUnarchivedNotificationsSelector = createImmutableSelectorCre
       .filterNot(isDeletedFilter)
       .toList()
       .sort(sortNotificationsByDate),
-);
+)
 
 export const makeGroupedUnarchivedNotificationsSelector = () =>
   createImmutableSelectorCreator(1)(
@@ -116,31 +116,31 @@ export const makeGroupedUnarchivedNotificationsSelector = () =>
     (state, params) => params,
     (notificationIds, notifications, params) =>
       groupNotificationsByRepository(notifications, params).toList(),
-  );
+  )
 
 export const notificationsIsLoadingSelector = createImmutableSelector(
   notificationDetailsSelector,
   notifications => !!notifications.get('loading'),
-);
+)
 
 export const notificationsLastModifiedAtSelector = createImmutableSelector(
   notificationDetailsSelector,
   notifications => notifications.get('lastModifiedAt'),
-);
+)
 
 export const notificationsUpdatedAtSelector = createImmutableSelector(
   notificationDetailsSelector,
   notifications => notifications.get('updatedAt'),
-);
+)
 
 export const notificationsErrorSelector = createImmutableSelector(
   notificationDetailsSelector,
   notifications => notifications.get('error'),
-);
+)
 
 export const notificationsUnreadCountSelector = createImmutableSelector(
   unarchivedNotificationIdsSelector,
   readNotificationIdsSelector,
   (unarchivedNotificationIds, readNotificationIds) =>
     Set(unarchivedNotificationIds).subtract(readNotificationIds).size,
-);
+)

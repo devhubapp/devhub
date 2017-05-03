@@ -1,44 +1,44 @@
 // @flow
 
-import React from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
-import { List, Map } from 'immutable';
-import { withTheme } from 'styled-components/native';
+import React from 'react'
+import { TouchableWithoutFeedback } from 'react-native'
+import { List, Map } from 'immutable'
+import { withTheme } from 'styled-components/native'
 
 // rows
-import BranchRow from './_BranchRow';
-import CommentRow from './_CommentRow';
-import CommitListRow from './_CommitListRow';
-import IssueRow from './_IssueRow';
-import PullRequestRow from './_PullRequestRow';
-import ReleaseRow from './_ReleaseRow';
-import RepositoryRow from './_RepositoryRow';
-import RepositoryListRow from './_RepositoryListRow';
-import UserListRow from './_UserListRow';
-import WikiPageListRow from './_WikiPageListRow';
+import BranchRow from './_BranchRow'
+import CommentRow from './_CommentRow'
+import CommitListRow from './_CommitListRow'
+import IssueRow from './_IssueRow'
+import PullRequestRow from './_PullRequestRow'
+import ReleaseRow from './_ReleaseRow'
+import RepositoryRow from './_RepositoryRow'
+import RepositoryListRow from './_RepositoryListRow'
+import UserListRow from './_UserListRow'
+import WikiPageListRow from './_WikiPageListRow'
 
-import Icon from '../../libs/icon';
-import IntervalRefresh from '../IntervalRefresh';
-import ScrollableContentContainer from '../ScrollableContentContainer';
-import TransparentTextOverlay from '../TransparentTextOverlay';
-import OwnerAvatar from './_OwnerAvatar';
-import { avatarWidth, contentPadding } from '../../styles/variables';
+import Icon from '../../libs/icon'
+import IntervalRefresh from '../IntervalRefresh'
+import ScrollableContentContainer from '../ScrollableContentContainer'
+import TransparentTextOverlay from '../TransparentTextOverlay'
+import OwnerAvatar from './_OwnerAvatar'
+import { avatarWidth, contentPadding } from '../../styles/variables'
 
-import { getDateSmallText } from '../../utils/helpers';
+import { getDateSmallText } from '../../utils/helpers'
 
 import {
   getEventIconAndColor,
   getEventText,
   getEventIdsFromEventIncludingMerged,
-} from '../../utils/helpers/github/events';
+} from '../../utils/helpers/github/events'
 
-import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url';
+import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url'
 
 import type {
   ActionCreators,
   GithubEvent,
   ThemeObject,
-} from '../../utils/types';
+} from '../../utils/types'
 
 import {
   smallAvatarWidth,
@@ -54,7 +54,7 @@ import {
   SmallText,
   OwnerLogin,
   CardIcon,
-} from './__CardComponents';
+} from './__CardComponents'
 
 @withTheme
 export default class extends React.PureComponent {
@@ -65,7 +65,7 @@ export default class extends React.PureComponent {
     onlyOneRepository?: boolean,
     read?: boolean,
     theme: ThemeObject,
-  };
+  }
 
   render() {
     const {
@@ -76,10 +76,10 @@ export default class extends React.PureComponent {
       read,
       theme,
       ...props
-    } = this.props;
+    } = this.props
 
-    if (!event) return null;
-    if (archived) return null;
+    if (!event) return null
+    if (archived) return null
 
     const { type, payload, actor, repo, created_at } = {
       type: event.get('type'),
@@ -87,26 +87,26 @@ export default class extends React.PureComponent {
       actor: event.get('actor') || Map(),
       repo: event.get('repo'),
       created_at: event.get('created_at'),
-    };
+    }
 
-    if (!payload) return null;
+    if (!payload) return null
 
-    const eventIds = getEventIdsFromEventIncludingMerged(event);
+    const eventIds = getEventIdsFromEventIncludingMerged(event)
 
     const isPrivate = !!(event.get('private') ||
       event.get('public') === false ||
-      (repo && (repo.get('private') || repo.get('public') === false)));
+      (repo && (repo.get('private') || repo.get('public') === false)))
 
     const {
       icon: cardIcon,
       color: cardIconColor,
       subIcon: cardSubIcon,
       subIconColor: cardSubIconColor,
-    } = getEventIconAndColor(event, theme);
+    } = getEventIconAndColor(event, theme)
 
     const toggleEventsReadStatus = read
       ? actions.markEventsAsUnread
-      : actions.markEventsAsRead;
+      : actions.markEventsAsRead
 
     return (
       <CardWrapper {...props}>
@@ -152,11 +152,11 @@ export default class extends React.PureComponent {
                       <IntervalRefresh
                         interval={1000}
                         onRender={() => {
-                          const dateText = getDateSmallText(created_at, '•');
+                          const dateText = getDateSmallText(created_at, '•')
                           return (
                             dateText &&
                             <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
-                          );
+                          )
                         }}
                       />
                     </StyledText>
@@ -205,9 +205,9 @@ export default class extends React.PureComponent {
           />}
 
         {(() => {
-          const repos = (payload.get('repos') || List()).filter(Boolean);
+          const repos = (payload.get('repos') || List()).filter(Boolean)
 
-          if (!(repos.size > 0)) return null;
+          if (!(repos.size > 0)) return null
 
           return (
             <RepositoryListRow
@@ -218,7 +218,7 @@ export default class extends React.PureComponent {
               read={read}
               narrow
             />
-          );
+          )
         })()}
 
         {!!payload.get('ref') &&
@@ -243,13 +243,12 @@ export default class extends React.PureComponent {
           />}
 
         {(() => {
-          const member = payload.get('member');
-          const users = (payload.get('users') || List([member]))
-            .filter(Boolean);
+          const member = payload.get('member')
+          const users = (payload.get('users') || List([member])).filter(Boolean)
 
-          if (!(users.size > 0)) return null;
+          if (!(users.size > 0)) return null
 
-          return <UserListRow users={users} read={read} narrow />;
+          return <UserListRow users={users} read={read} narrow />
         })()}
 
         {type === 'GollumEvent' &&
@@ -268,12 +267,12 @@ export default class extends React.PureComponent {
           const { commits, headCommit } = {
             commits: payload.get('commits'),
             headCommit: payload.get('head_commit'),
-          };
+          }
 
-          const list = (commits || List([headCommit])).filter(Boolean);
-          if (!(list.size > 0)) return null;
+          const list = (commits || List([headCommit])).filter(Boolean)
+          if (!(list.size > 0)) return null
 
-          return <CommitListRow commits={list} read={read} narrow />;
+          return <CommitListRow commits={list} read={read} narrow />
         })()}
 
         {!!payload.get('issue') &&
@@ -328,6 +327,6 @@ export default class extends React.PureComponent {
             narrow
           />}
       </CardWrapper>
-    );
+    )
   }
 }

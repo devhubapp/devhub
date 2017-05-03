@@ -1,38 +1,38 @@
 /* global __DEV__ */
 
-import * as firebase from 'firebase';
-import { debounce } from 'lodash';
+import * as firebase from 'firebase'
+import { debounce } from 'lodash'
 
-import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions';
-import { firebaseReceivedEvent } from '../../../actions';
+import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions'
+import { firebaseReceivedEvent } from '../../../actions'
 import {
   mapFirebaseToState,
   mapStateToFirebase,
-} from '../../../reducers/firebase';
-import { toJS } from '../../../utils/immutable';
+} from '../../../reducers/firebase'
+import { toJS } from '../../../utils/immutable'
 import {
   getObjectDiff,
   getObjectFilteredByMap,
   fixFirebaseKeysFromObject,
   getMapSubtractedByMap,
-} from './helpers';
+} from './helpers'
 import {
   addFirebaseListener,
   applyPatchOnFirebase,
   watchFirebaseFromMap,
-} from './lib';
-import { isLoggedSelector, isReadySelector } from '../../../selectors';
+} from './lib'
+import { isLoggedSelector, isReadySelector } from '../../../selectors'
 
-let _currentUserId;
-let _databaseRef;
-let _lastState;
+let _currentUserId
+let _databaseRef
+let _lastState
 
 const checkDiffAndPatchDebounced = debounce((stateA, stateB, map, store) => {
   if (_databaseRef && stateA !== undefined) {
-    const fixedStateA = fixFirebaseKeysFromObject(stateA, true);
-    const fixedStateB = fixFirebaseKeysFromObject(stateB, true);
+    const fixedStateA = fixFirebaseKeysFromObject(stateA, true)
+    const fixedStateB = fixFirebaseKeysFromObject(stateB, true)
 
-    const stateDiff = toJS(getObjectDiff(fixedStateA, fixedStateB, map));
+    const stateDiff = toJS(getObjectDiff(fixedStateA, fixedStateB, map))
     // console.log('state diff', stateDiff);
     // console.log('states before diff', toJS(fixedStateA), toJS(fixedStateA));
 
@@ -42,27 +42,27 @@ const checkDiffAndPatchDebounced = debounce((stateA, stateB, map, store) => {
         patch: stateDiff,
         ref: _databaseRef,
         rootDatabaseRef: _databaseRef,
-      });
-      _lastState = store.getState();
+      })
+      _lastState = store.getState()
     }
   }
-}, 300);
+}, 300)
 
 export function stopFirebase() {
-  if (!_databaseRef) return;
+  if (!_databaseRef) return
 
-  _databaseRef.off();
-  console.debug('[FIREBASE] Disconnected.');
+  _databaseRef.off()
+  console.debug('[FIREBASE] Disconnected.')
 
-  _databaseRef = undefined;
-  _lastState = undefined;
+  _databaseRef = undefined
+  _lastState = undefined
 }
 
 export function startFirebase({ store, userId }) {
-  stopFirebase();
+  stopFirebase()
 
-  _databaseRef = firebase.database().ref(`users/${userId}/`);
-  console.debug('[FIREBASE] Connected.');
+  _databaseRef = firebase.database().ref(`users/${userId}/`)
+  console.debug('[FIREBASE] Connected.')
 
   // get all the data on firebase and compare with the local state.
   // upload to firebase the fields that are different, but not all of them,
@@ -76,15 +76,15 @@ export function startFirebase({ store, userId }) {
       const missingOnFirebaseMap = getMapSubtractedByMap(
         mapStateToFirebase,
         mapFirebaseToState,
-      );
+      )
       const firebaseData = getObjectFilteredByMap(
         result.value,
         missingOnFirebaseMap,
-      );
+      )
       const localData = getObjectFilteredByMap(
         store.getState(),
         missingOnFirebaseMap,
-      );
+      )
 
       // send to firebase some things from the initial state, like app.version, ...
       checkDiffAndPatchDebounced(
@@ -92,11 +92,11 @@ export function startFirebase({ store, userId }) {
         localData,
         missingOnFirebaseMap,
         store,
-      );
+      )
 
       // update local state with the initial data received by firebase
-      store.dispatch(firebaseReceivedEvent(result));
-      _lastState = store.getState();
+      store.dispatch(firebaseReceivedEvent(result))
+      _lastState = store.getState()
 
       watchFirebaseFromMap({
         callback({ eventName, firebasePathArr, statePathArr, value }) {
@@ -107,14 +107,14 @@ export function startFirebase({ store, userId }) {
               statePathArr,
               value,
             }),
-          );
-          _lastState = store.getState();
+          )
+          _lastState = store.getState()
         },
         debug: false, // __DEV__,
         map: mapFirebaseToState,
         ref: _databaseRef,
         rootDatabaseRef: _databaseRef,
-      });
+      })
     },
     debug: false, // __DEV__,
     eventName: 'value',
@@ -122,28 +122,28 @@ export function startFirebase({ store, userId }) {
     once: true,
     ref: _databaseRef,
     rootDatabaseRef: _databaseRef,
-  });
+  })
 }
 
 export default store => next => (action = {}) => {
-  next(action);
+  next(action)
 
-  const isAppReady = isReadySelector(store.getState());
+  const isAppReady = isReadySelector(store.getState())
 
   if (!isAppReady || action.type === FIREBASE_RECEIVED_EVENT) {
-    return;
+    return
   }
 
-  const isLogged = isLoggedSelector(store.getState());
-  const userId = isLogged && (firebase.auth().currentUser || {}).uid;
+  const isLogged = isLoggedSelector(store.getState())
+  const userId = isLogged && (firebase.auth().currentUser || {}).uid
 
   if (userId !== _currentUserId) {
-    _currentUserId = userId;
+    _currentUserId = userId
 
     if (userId) {
-      startFirebase({ store, userId });
+      startFirebase({ store, userId })
     } else {
-      stopFirebase();
+      stopFirebase()
     }
   }
 
@@ -152,5 +152,5 @@ export default store => next => (action = {}) => {
     store.getState(),
     mapStateToFirebase,
     store,
-  );
-};
+  )
+}

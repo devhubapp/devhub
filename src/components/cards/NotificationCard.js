@@ -1,28 +1,28 @@
 // @flow
 
-import React from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
-import { Set } from 'immutable';
+import React from 'react'
+import { TouchableWithoutFeedback } from 'react-native'
+import { Set } from 'immutable'
 
 // rows
-import CommentRow from './_CommentRow';
-import CommitRow from './_CommitRow';
-import IssueRow from './_IssueRow';
-import PullRequestRow from './_PullRequestRow';
-import RepositoryRow from './_RepositoryRow';
-import ReleaseRow from './_ReleaseRow';
+import CommentRow from './_CommentRow'
+import CommitRow from './_CommitRow'
+import IssueRow from './_IssueRow'
+import PullRequestRow from './_PullRequestRow'
+import RepositoryRow from './_RepositoryRow'
+import ReleaseRow from './_ReleaseRow'
 
-import Label from '../Label';
-import IntervalRefresh from '../IntervalRefresh';
-import OwnerAvatar from './_OwnerAvatar';
-import { contentPadding } from '../../styles/variables';
-import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers';
+import Label from '../Label'
+import IntervalRefresh from '../IntervalRefresh'
+import OwnerAvatar from './_OwnerAvatar'
+import { contentPadding } from '../../styles/variables'
+import { getDateSmallText, trimNewLinesAndSpaces } from '../../utils/helpers'
 import {
   getNotificationIconAndColor,
   getNotificationReasonTextsAndColor,
-} from '../../utils/helpers/github/notifications';
-import { getOrgAvatar } from '../../utils/helpers/github/shared';
-import type { ActionCreators, GithubNotification } from '../../utils/types';
+} from '../../utils/helpers/github/notifications'
+import { getOrgAvatar } from '../../utils/helpers/github/shared'
+import type { ActionCreators, GithubNotification } from '../../utils/types'
 
 import {
   smallAvatarWidth,
@@ -38,14 +38,14 @@ import {
   SmallText,
   StyledText,
   CardIcon,
-} from './__CardComponents';
+} from './__CardComponents'
 
 export default class extends React.PureComponent {
   static defaultProps = {
     archived: false,
     onlyOneRepository: false,
     read: false,
-  };
+  }
 
   props: {
     actions: ActionCreators,
@@ -53,7 +53,7 @@ export default class extends React.PureComponent {
     notification: GithubNotification,
     onlyOneRepository?: ?boolean,
     read?: ?boolean,
-  };
+  }
 
   render() {
     const {
@@ -63,43 +63,43 @@ export default class extends React.PureComponent {
       notification,
       read,
       ...props
-    } = this.props;
+    } = this.props
 
-    if (!notification) return null;
-    if (archived) return null;
+    if (!notification) return null
+    if (archived) return null
 
-    const comment = notification.get('comment');
-    const repo = notification.get('repository');
-    const subject = notification.get('subject');
-    const updatedAt = notification.get('updated_at');
+    const comment = notification.get('comment')
+    const repo = notification.get('repository')
+    const subject = notification.get('subject')
+    const updatedAt = notification.get('updated_at')
 
-    if (!subject) return null;
+    if (!subject) return null
 
     const isPrivate = !!(repo &&
-      (repo.get('private') || repo.get('public') === false));
+      (repo.get('private') || repo.get('public') === false))
 
-    const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']));
-    const notificationIds = Set([notification.get('id')]);
-    const title = trimNewLinesAndSpaces(subject.get('title'));
+    const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']))
+    const notificationIds = Set([notification.get('id')])
+    const title = trimNewLinesAndSpaces(subject.get('title'))
     const { label: _label, color } = getNotificationReasonTextsAndColor(
       notification,
-    );
-    const label = _label.toLowerCase();
+    )
+    const label = _label.toLowerCase()
 
-    const subjectType = (subject.get('type') || '').toLowerCase();
-    const commit = (subjectType === 'commit' && subject) || null;
-    const issue = (subjectType === 'issue' && subject) || null;
-    const pullRequest = (subjectType === 'pullrequest' && subject) || null;
-    const release = (subjectType === 'release' && subject) || null;
+    const subjectType = (subject.get('type') || '').toLowerCase()
+    const commit = (subjectType === 'commit' && subject) || null
+    const issue = (subjectType === 'issue' && subject) || null
+    const pullRequest = (subjectType === 'pullrequest' && subject) || null
+    const release = (subjectType === 'release' && subject) || null
 
     const {
       icon: cardIcon,
       color: cardIconColor,
-    } = getNotificationIconAndColor(notification);
+    } = getNotificationIconAndColor(notification)
 
     const toggleNotificationsReadStatus = read
       ? actions.markNotificationsAsUnread
-      : actions.markNotificationsAsReadRequest;
+      : actions.markNotificationsAsReadRequest
 
     return (
       <CardWrapper {...props} read={read}>
@@ -141,13 +141,13 @@ export default class extends React.PureComponent {
                 <IntervalRefresh
                   interval={1000}
                   onRender={() => {
-                    const dateText = getDateSmallText(updatedAt, ' ');
+                    const dateText = getDateSmallText(updatedAt, ' ')
                     return (
                       dateText &&
                       <SmallText numberOfLines={1} muted>
                         &nbsp;&nbsp;{dateText}
                       </SmallText>
-                    );
+                    )
                   }}
                 />
               </FullView>
@@ -190,6 +190,6 @@ export default class extends React.PureComponent {
             narrow
           />}
       </CardWrapper>
-    );
+    )
   }
 }

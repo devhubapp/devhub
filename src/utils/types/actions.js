@@ -1,49 +1,49 @@
 // @flow
 /*  eslint-disable import/prefer-default-export */
 
-import * as actions from '../constants/actions';
+import * as actions from '../constants/actions'
 
 // app data
-export type RESET_APP_DATA = typeof actions.RESET_APP_DATA;
+export type RESET_APP_DATA = typeof actions.RESET_APP_DATA
 
 // auth
-export type LOGIN_REQUEST = typeof actions.LOGIN_REQUEST;
-export type LOGIN_SUCCESS = typeof actions.LOGIN_SUCCESS;
-export type LOGIN_FAILURE = typeof actions.LOGIN_FAILURE;
-export type LOGOUT = typeof actions.LOGOUT;
-export type UPDATE_CURRENT_USER = typeof actions.UPDATE_CURRENT_USER;
+export type LOGIN_REQUEST = typeof actions.LOGIN_REQUEST
+export type LOGIN_SUCCESS = typeof actions.LOGIN_SUCCESS
+export type LOGIN_FAILURE = typeof actions.LOGIN_FAILURE
+export type LOGOUT = typeof actions.LOGOUT
+export type UPDATE_CURRENT_USER = typeof actions.UPDATE_CURRENT_USER
 
 // columns
-export type CREATE_COLUMN = typeof actions.CREATE_COLUMN;
-export type UPDATE_COLUMN = typeof actions.UPDATE_COLUMN;
-export type DELETE_COLUMN = typeof actions.DELETE_COLUMN;
+export type CREATE_COLUMN = typeof actions.CREATE_COLUMN
+export type UPDATE_COLUMN = typeof actions.UPDATE_COLUMN
+export type DELETE_COLUMN = typeof actions.DELETE_COLUMN
 
 // configs
-export type SET_THEME = typeof actions.SET_THEME;
+export type SET_THEME = typeof actions.SET_THEME
 
 // events
-export type ARCHIVE_EVENTS = typeof actions.ARCHIVE_EVENTS;
-export type MARK_EVENTS_AS_READ = typeof actions.MARK_EVENTS_AS_READ;
-export type MARK_EVENTS_AS_UNREAD = typeof actions.MARK_EVENTS_AS_UNREAD;
+export type ARCHIVE_EVENTS = typeof actions.ARCHIVE_EVENTS
+export type MARK_EVENTS_AS_READ = typeof actions.MARK_EVENTS_AS_READ
+export type MARK_EVENTS_AS_UNREAD = typeof actions.MARK_EVENTS_AS_UNREAD
 
 // notifications
-export type LOAD_NOTIFICATIONS_REQUEST = typeof actions.LOAD_NOTIFICATIONS_REQUEST;
-export type LOAD_NOTIFICATIONS_SUCCESS = typeof actions.LOAD_NOTIFICATIONS_SUCCESS;
-export type LOAD_NOTIFICATIONS_FAILURE = typeof actions.LOAD_NOTIFICATIONS_FAILURE;
+export type LOAD_NOTIFICATIONS_REQUEST = typeof actions.LOAD_NOTIFICATIONS_REQUEST
+export type LOAD_NOTIFICATIONS_SUCCESS = typeof actions.LOAD_NOTIFICATIONS_SUCCESS
+export type LOAD_NOTIFICATIONS_FAILURE = typeof actions.LOAD_NOTIFICATIONS_FAILURE
 
 // repo
-export type STAR_REPO = typeof actions.STAR_REPO;
-export type UNSTAR_REPO = typeof actions.UNSTAR_REPO;
+export type STAR_REPO = typeof actions.STAR_REPO
+export type UNSTAR_REPO = typeof actions.UNSTAR_REPO
 
 // subscriptions
-export type CREATE_SUBSCRIPTION = typeof actions.CREATE_SUBSCRIPTION;
-export type UPDATE_SUBSCRIPTION = typeof actions.UPDATE_SUBSCRIPTION;
-export type DELETE_SUBSCRIPTION = typeof actions.DELETE_SUBSCRIPTION;
-export type UPDATE_COLUMN_SUBSCRIPTIONS = typeof actions.UPDATE_COLUMN_SUBSCRIPTIONS;
-export type UPDATE_ALL_COLUMNS_SUBSCRIPTIONS = typeof actions.UPDATE_ALL_COLUMNS_SUBSCRIPTIONS;
-export type LOAD_SUBSCRIPTION_DATA_REQUEST = typeof actions.LOAD_SUBSCRIPTION_DATA_REQUEST;
-export type LOAD_SUBSCRIPTION_DATA_SUCCESS = typeof actions.LOAD_SUBSCRIPTION_DATA_SUCCESS;
-export type LOAD_SUBSCRIPTION_DATA_FAILURE = typeof actions.LOAD_SUBSCRIPTION_DATA_FAILURE;
+export type CREATE_SUBSCRIPTION = typeof actions.CREATE_SUBSCRIPTION
+export type UPDATE_SUBSCRIPTION = typeof actions.UPDATE_SUBSCRIPTION
+export type DELETE_SUBSCRIPTION = typeof actions.DELETE_SUBSCRIPTION
+export type UPDATE_COLUMN_SUBSCRIPTIONS = typeof actions.UPDATE_COLUMN_SUBSCRIPTIONS
+export type UPDATE_ALL_COLUMNS_SUBSCRIPTIONS = typeof actions.UPDATE_ALL_COLUMNS_SUBSCRIPTIONS
+export type LOAD_SUBSCRIPTION_DATA_REQUEST = typeof actions.LOAD_SUBSCRIPTION_DATA_REQUEST
+export type LOAD_SUBSCRIPTION_DATA_SUCCESS = typeof actions.LOAD_SUBSCRIPTION_DATA_SUCCESS
+export type LOAD_SUBSCRIPTION_DATA_FAILURE = typeof actions.LOAD_SUBSCRIPTION_DATA_FAILURE
 
 export type ActionType =
   // app data
@@ -86,35 +86,35 @@ export type ActionType =
   | UPDATE_ALL_COLUMNS_SUBSCRIPTIONS
   | LOAD_SUBSCRIPTION_DATA_REQUEST
   | LOAD_SUBSCRIPTION_DATA_SUCCESS
-  | LOAD_SUBSCRIPTION_DATA_FAILURE;
+  | LOAD_SUBSCRIPTION_DATA_FAILURE
 
 export type Action<T> = {
   type: ActionType,
   payload: T,
-};
+}
 
-export type ActionCreator = Function;
+export type ActionCreator = Function
 
 export type ActionCreators = {
   [key: string]: ActionCreator,
-};
+}
 
 export type ApiRequestPayload = {
   params: Object,
   requestType: string,
   subscriptionId: string,
-};
+}
 
 export type ApiResponsePayload = {
   request: ApiRequestPayload,
   data: Object,
   meta: Object,
   error?: ?Object,
-};
+}
 
 export type LoginRequestPayload = {
   scopes: string,
-};
+}
 
 export type LoginResponsePayload = {
   request: LoginRequestPayload,
@@ -128,4 +128,4 @@ export type LoginResponsePayload = {
     avatarURL?: string,
   },
   error?: ?Object,
-};
+}

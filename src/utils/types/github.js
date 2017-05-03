@@ -21,7 +21,7 @@ export type GithubUser = {
   repos_url?: string, // https://api.github.com/users/richelbilderbeek/repos
   events_url?: string, // https://api.github.com/users/richelbilderbeek/events{/privacy}
   received_events_url?: string, // https://api.github.com/users/richelbilderbeek/received_events
-};
+}
 
 export type GithubReaction = {
   total_count: number,
@@ -34,7 +34,7 @@ export type GithubReaction = {
 
   // api
   url: string, // 'https://api.github.com/repos/octocat/Hello-World/comments/1/reactions'
-};
+}
 
 export type GithubComment = {
   id: string,
@@ -49,7 +49,7 @@ export type GithubComment = {
   updated_at: string, // 2016-11-24T16:00:16Z
   html_url: string, // https://github.com/richelbilderbeek/pbdmms/commit/6ef64f902613c73251da32d1bc9eb236f38798cc#commitcomment-19954756
   url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
-};
+}
 
 export type GithubCommit = {
   sha: string,
@@ -61,7 +61,7 @@ export type GithubCommit = {
   url: string,
   distinct: boolean, // Whether this commit is distinct from any that have been pushed before.
   forced: boolean,
-};
+}
 
 export type GithubLabel = {
   id: number,
@@ -70,7 +70,7 @@ export type GithubLabel = {
   color: string, // CCCCCC
   'default': boolean,
   url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
-};
+}
 
 export type GithubMilestone = {
   id: number, // 1165557
@@ -89,7 +89,7 @@ export type GithubMilestone = {
   html_url: string, // https://github.com/hasadna/Open-Knesset/milestones/30
   url: string, // https://api.github.com/repos/hasadna/Open-Knesset/milestones/5
   labels_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/milestones/5/labels
-};
+}
 
 export type GithubIssue = {
   id: string,
@@ -113,7 +113,7 @@ export type GithubIssue = {
   labels_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345/labels{/name}
   comments_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345/comments
   events_url: string, // https://api.github.com/repos/hasadna/Open-Knesset/issues/345/events
-};
+}
 
 export type GithubOrg = {
   id: number | string,
@@ -122,7 +122,7 @@ export type GithubOrg = {
 
   // api
   url: string, // https://api.github.com/orgs/DefinitelyTyped
-};
+}
 
 export type GithubPullRequest = {
   id: number, // 95201658
@@ -168,7 +168,7 @@ export type GithubPullRequest = {
   review_comment_url: string, // https://api.github.com/repos/billy0920/hotsite/pulls/comments{/number}
   comments_url: string, // https://api.github.com/repos/billy0920/hotsite/issues/2/comments
   statuses_url: string, // https://api.github.com/repos/billy0920/hotsite/statuses/b8c4838ea4fd5a0153d422ef5c158493fd57254d
-};
+}
 
 export type GithubRepo = {
   id: number | string,
@@ -177,7 +177,7 @@ export type GithubRepo = {
 
   // api
   url: string, // https://api.github.com/repos/facebook/react
-};
+}
 
 /**
  * Triggered when a commit comment is created.
@@ -194,7 +194,7 @@ export type GithubCommitCommentEvent = {
   },
   'public': Boolean,
   created_at: string,
-};
+}
 
 /**
  * Represents a created repository, branch, or tag.
@@ -217,7 +217,7 @@ export type CreateEvent = {
   },
   'public': Boolean,
   created_at: string,
-};
+}
 
 /**
  * Represents a deleted branch or tag.
@@ -236,7 +236,7 @@ export type DeleteEvent = {
   },
   'public': Boolean,
   created_at: string,
-};
+}
 
 /**
  * Triggered when a user forks a repository.
@@ -244,14 +244,14 @@ export type DeleteEvent = {
  */
 export type ForkEvent = {
   forkee: Object, // The created repository.
-};
+}
 
 /**
  * Triggered when a Wiki page is created or updated.
  */
 export type GollumEvent = {
   pages: Array<Object>,
-};
+}
 
 /**
  * Triggered when an issue comment is created, edited, or deleted.
@@ -262,7 +262,7 @@ export type IssueCommentEvent = {
   issue: Object, // The issue the comment belongs to.
   comment: Object, // The comment itself.
   changes: Object, // The changes to the comment if the action was 'edited'.
-};
+}
 
 /**
  * Triggered when an issue is assigned, unassigned, labeled, unlabeled,
@@ -285,7 +285,7 @@ export type IssuesEvent = {
   changes: Object, // The changes to the issue if the action was 'edited'.
   assignee?: Object, // The optional user who was assigned or unassigned from the issue.
   label?: Object, // The optional label that was added or removed from the issue.
-};
+}
 
 /**
  * Triggered when a user is added as a collaborator to a repository.
@@ -294,13 +294,13 @@ export type IssuesEvent = {
 export type MemberEvent = {
   action: 'added', // The action that was performed.
   member: Object, // The user that was added.
-};
+}
 
 /**
  * Triggered when a private repository is open sourced.
  * https://developer.github.com/v3/repos/#edit
  */
-export type PublicEvent = {};
+export type PublicEvent = {}
 
 /**
  * Triggered when a pull request is assigned, unassigned,
@@ -329,7 +329,7 @@ export type PullRequestEvent = {
   number: number,
   pull_request: GithubPullRequest,
   sender: Object,
-};
+}
 
 /**
  * Triggered when a pull request review is submitted into a non-pending state.
@@ -338,7 +338,7 @@ export type PullRequestReviewEvent = {
   action: 'submitted',
   pull_request: GithubPullRequest,
   review: Object,
-};
+}
 
 /**
  * Triggered when a comment on a Pull Request's unified diff is created,
@@ -350,7 +350,7 @@ export type PullRequestReviewCommentEvent = {
   changes: Object,
   pull_request: GithubPullRequest,
   comment: Object,
-};
+}
 
 /**
  * Triggered when a repository branch is pushed to.
@@ -364,7 +364,7 @@ export type PushEvent = {
   size: number, // The number of commits in the push.
   distinct_size: number, // The number of distinct commits in the push.
   commits: Array<GithubCommit>,
-};
+}
 
 /**
  * Triggered when a release is published.
@@ -373,7 +373,7 @@ export type PushEvent = {
 export type ReleaseEvent = {
   action: 'published',
   release: Object, // https://developer.github.com/v3/repos/releases/#get-a-single-release
-};
+}
 
 /**
  * The WatchEvent is related to starring a repository, not watching.
@@ -384,7 +384,7 @@ export type ReleaseEvent = {
  */
 export type WatchEvent = {
   action: 'started',
-};
+}
 
 export type GithubEvent =
   | GithubCommitCommentEvent
@@ -401,7 +401,7 @@ export type GithubEvent =
   | PullRequestReviewCommentEvent
   | PushEvent
   | ReleaseEvent
-  | WatchEvent;
+  | WatchEvent
 
 export type GithubEventType =
   | 'CommitCommentEvent'
@@ -418,7 +418,7 @@ export type GithubEventType =
   | 'PullRequestReviewCommentEvent'
   | 'PushEvent'
   | 'ReleaseEvent'
-  | 'WatchEvent';
+  | 'WatchEvent'
 
 // not visible in timelines
 // | 'DeploymentEvent'
@@ -611,14 +611,14 @@ export type GithubIcon =
   | 'versions'
   | 'watch'
   | 'x'
-  | 'zap';
+  | 'zap'
 
 export type NotificationsOptions = {
   all?: boolean,
   participating?: boolean,
   since?: Date,
   before?: string,
-};
+}
 
 // You were on a team that was mentioned.
 export type GithubNotificationReason =
@@ -630,7 +630,7 @@ export type GithubNotificationReason =
   | 'mention' // You were specifically @mentioned in the content.
   | 'state_change' // You changed the thread state (for example, closing an Issue or merging a PR).
   | 'subscribed' // You're watching the repository.
-  | 'team_mention';
+  | 'team_mention'
 
 export type GithubNotification = {
   id: string,
@@ -647,4 +647,4 @@ export type GithubNotification = {
   last_read_at: string,
   last_unread_at: string, // specific to this app
   url: string,
-};
+}

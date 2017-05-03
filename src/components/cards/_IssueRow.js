@@ -1,9 +1,9 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import OwnerAvatar from './_OwnerAvatar';
-import TouchableRow from './__TouchableRow';
+import OwnerAvatar from './_OwnerAvatar'
+import TouchableRow from './__TouchableRow'
 
 import {
   CardItemId,
@@ -12,15 +12,11 @@ import {
   Icon,
   RightOfScrollableContent,
   StyledText,
-} from './__CardComponents';
+} from './__CardComponents'
 
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import { getIssueIconAndColor } from '../../utils/helpers/github/shared';
-import type {
-  GithubComment,
-  GithubIssue,
-  ThemeObject,
-} from '../../utils/types';
+import { trimNewLinesAndSpaces } from '../../utils/helpers'
+import { getIssueIconAndColor } from '../../utils/helpers/github/shared'
+import type { GithubComment, GithubIssue, ThemeObject } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -29,28 +25,28 @@ export default class extends React.PureComponent {
     narrow?: boolean,
     read?: boolean,
     theme?: ThemeObject,
-  };
+  }
 
   render() {
-    const { comment, issue, read, theme, ...props } = this.props;
+    const { comment, issue, read, theme, ...props } = this.props
 
-    if (!issue) return null;
+    if (!issue) return null
 
-    const user = issue.get('user');
-    const number = issue.get('number');
-    const title = issue.get('title');
+    const user = issue.get('user')
+    const number = issue.get('number')
+    const title = issue.get('title')
 
-    const _title = trimNewLinesAndSpaces(title);
-    if (!_title) return null;
+    const _title = trimNewLinesAndSpaces(title)
+    if (!_title) return null
 
-    const { icon, color } = getIssueIconAndColor(issue, theme);
+    const { icon, color } = getIssueIconAndColor(issue, theme)
 
-    const byText = user && user.get('login') ? `@${user.get('login')}` : '';
+    const byText = user && user.get('login') ? `@${user.get('login')}` : ''
 
     // issue links will send to comment if comment was not loaded by app yet
     const url = comment && !comment.get('body') && comment.get('html_url')
       ? comment.get('html_url')
-      : issue.get('html_url') || issue.get('url');
+      : issue.get('html_url') || issue.get('url')
 
     return (
       <TouchableRow
@@ -83,6 +79,6 @@ export default class extends React.PureComponent {
           {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>
       </TouchableRow>
-    );
+    )
   }
 }

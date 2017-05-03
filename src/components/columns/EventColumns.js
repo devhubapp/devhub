@@ -1,46 +1,46 @@
 // @flow
 
-import React from 'react';
-import { List, Map } from 'immutable';
+import React from 'react'
+import { List, Map } from 'immutable'
 
-import Columns from './_Columns';
-import EventColumnContainer from '../../containers/EventColumnContainer';
-import CreateColumnUtils from '../utils/CreateColumnUtils';
-import type { ActionCreators, Column as ColumnType } from '../../utils/types';
+import Columns from './_Columns'
+import EventColumnContainer from '../../containers/EventColumnContainer'
+import CreateColumnUtils from '../utils/CreateColumnUtils'
+import type { ActionCreators, Column as ColumnType } from '../../utils/types'
 
 export default class extends React.PureComponent {
   addColumnFn = ({ order } = {}) => {
     CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions, {
       createColumnOrder: order,
-    });
-  };
+    })
+  }
 
   props: {
     actions: ActionCreators,
     columns: Array<ColumnType>,
-  };
+  }
 
   renderItem = ({ index, item: column }) => {
-    if (!column) return null;
+    if (!column) return null
 
-    const columnId = column.get('id');
-    if (!columnId) return null;
+    const columnId = column.get('id')
+    if (!columnId) return null
 
     return (
       <EventColumnContainer
         key={`event-column-container-${columnId}`}
         columnId={columnId}
       />
-    );
-  };
+    )
+  }
 
   render() {
-    const { actions, columns: _columns, ...props } = this.props;
+    const { actions, columns: _columns, ...props } = this.props
 
-    let columns = _columns ? _columns.toList() : List();
+    let columns = _columns ? _columns.toList() : List()
 
     if (columns.size === 0 || columns.last().get('id') !== 'new') {
-      columns = columns.push(Map({ id: 'new', order: columns.size }));
+      columns = columns.push(Map({ id: 'new', order: columns.size }))
     }
 
     return (
@@ -52,6 +52,6 @@ export default class extends React.PureComponent {
         renderItem={this.renderItem}
         {...props}
       />
-    );
+    )
   }
 }

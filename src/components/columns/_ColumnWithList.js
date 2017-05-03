@@ -1,35 +1,35 @@
 // @flow
 
-import React from 'react';
-import styled, { withTheme } from 'styled-components/native';
-import { Map } from 'immutable';
-import { RefreshControl } from 'react-native';
+import React from 'react'
+import styled, { withTheme } from 'styled-components/native'
+import { Map } from 'immutable'
+import { RefreshControl } from 'react-native'
 
-import ColumnWithHeader, { getRadius } from './_ColumnWithHeader';
-import ImmutableVirtualizedList from '../../libs/immutable-virtualized-list';
-import TransparentTextOverlay from '../TransparentTextOverlay';
-import { EmptyColumnContent } from './EmptyColumn';
-import { contentPadding } from '../../styles/variables';
-import { getDateWithHourAndMinuteText } from '../../utils/helpers';
-import type { Subscription, ThemeObject } from '../../utils/types';
+import ColumnWithHeader, { getRadius } from './_ColumnWithHeader'
+import ImmutableVirtualizedList from '../../libs/immutable-virtualized-list'
+import TransparentTextOverlay from '../TransparentTextOverlay'
+import { EmptyColumnContent } from './EmptyColumn'
+import { contentPadding } from '../../styles/variables'
+import { getDateWithHourAndMinuteText } from '../../utils/helpers'
+import type { Subscription, ThemeObject } from '../../utils/types'
 
-export * from './_ColumnWithHeader';
+export * from './_ColumnWithHeader'
 
 export const StyledTextOverlay = styled(TransparentTextOverlay)`
   flex: 1;
   border-radius: ${({ radius }) => radius || 0}px;
-`;
+`
 
 @withTheme
 export default class extends React.PureComponent {
   state = {
     hasLoadedOnce: false,
-  };
+  }
 
   componentWillReceiveProps({ loading }) {
     // if finished loading
     if (!loading && !this.state.hasLoadedOnce) {
-      this.setState({ hasLoadedOnce: true });
+      this.setState({ hasLoadedOnce: true })
     }
   }
 
@@ -55,10 +55,10 @@ export default class extends React.PureComponent {
     title: string,
     updatedAt?: Date,
     width?: number,
-  };
+  }
 
   render() {
-    const { hasLoadedOnce } = this.state;
+    const { hasLoadedOnce } = this.state
     const {
       initialNumToRender,
       isEmpty,
@@ -72,15 +72,15 @@ export default class extends React.PureComponent {
       theme,
       updatedAt,
       ...props
-    } = this.props;
+    } = this.props
 
-    const items = _items || Map();
-    const _radius = getRadius(props);
+    const items = _items || Map()
+    const _radius = getRadius(props)
 
-    let refreshText = _refreshText;
+    let refreshText = _refreshText
     if (!refreshText && updatedAt) {
-      const dateFromNowText = getDateWithHourAndMinuteText(updatedAt);
-      refreshText = dateFromNowText ? `Updated ${dateFromNowText}` : '';
+      const dateFromNowText = getDateWithHourAndMinuteText(updatedAt)
+      refreshText = dateFromNowText ? `Updated ${dateFromNowText}` : ''
     }
 
     const refreshControl =
@@ -95,9 +95,9 @@ export default class extends React.PureComponent {
           titleColor={theme.base05}
           progressBackgroundColor={theme.base02}
         />) ||
-      null;
+      null
 
-    const ListComponent = this.props.ListComponent || ImmutableVirtualizedList;
+    const ListComponent = this.props.ListComponent || ImmutableVirtualizedList
 
     return (
       <ColumnWithHeader {...this.props}>
@@ -125,6 +125,6 @@ export default class extends React.PureComponent {
               />}
         </StyledTextOverlay>
       </ColumnWithHeader>
-    );
+    )
   }
 }

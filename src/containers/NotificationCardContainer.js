@@ -1,25 +1,25 @@
 // @flow
 
-import React from 'react';
-import { Iterable } from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React from 'react'
+import { Iterable } from 'immutable'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-import NotificationCard from '../components/cards/NotificationCard';
+import NotificationCard from '../components/cards/NotificationCard'
 
 import {
   makeIsArchivedNotificationSelector,
   makeDenormalizedNotificationSelector,
   makeIsReadNotificationSelector,
-} from '../selectors';
+} from '../selectors'
 
-import * as actionCreators from '../actions';
-import type { ActionCreators, GithubNotification, State } from '../utils/types';
+import * as actionCreators from '../actions'
+import type { ActionCreators, GithubNotification, State } from '../utils/types'
 
 const makeMapStateToProps = () => {
-  const denormalizedNotificationSelector = makeDenormalizedNotificationSelector();
-  const isArchivedNotificationSelector = makeIsArchivedNotificationSelector();
-  const isReadNotificationSelector = makeIsReadNotificationSelector();
+  const denormalizedNotificationSelector = makeDenormalizedNotificationSelector()
+  const isArchivedNotificationSelector = makeIsArchivedNotificationSelector()
+  const isReadNotificationSelector = makeIsReadNotificationSelector()
 
   return (
     state: State,
@@ -29,23 +29,23 @@ const makeMapStateToProps = () => {
   ) => {
     const notification = Iterable.isIterable(notificationOrNotificationId)
       ? notificationOrNotificationId
-      : null;
+      : null
     const notificationId = notification
       ? `${notification.get('id')}`
-      : notificationOrNotificationId;
+      : notificationOrNotificationId
 
     return {
       archived: isArchivedNotificationSelector(state, { notificationId }),
       notification: notification ||
         denormalizedNotificationSelector(state, { notificationId }),
       read: isReadNotificationSelector(state, { notificationId }),
-    };
-  };
-};
+    }
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
-});
+})
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
@@ -54,12 +54,12 @@ export default class extends React.PureComponent {
     notification?: GithubNotification,
     notificationOrNotificationId: string | GithubNotification,
     read: boolean,
-  };
+  }
 
   render() {
-    const { actions, notification, read, ...props } = this.props;
+    const { actions, notification, read, ...props } = this.props
 
-    if (!notification) return null;
+    if (!notification) return null
 
     return (
       <NotificationCard
@@ -70,6 +70,6 @@ export default class extends React.PureComponent {
         read={read}
         {...props}
       />
-    );
+    )
   }
 }

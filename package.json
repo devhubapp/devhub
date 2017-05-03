@@ -4,10 +4,10 @@
   "codeBundleId": "0.5.0",
   "private": true,
   "scripts": {
-    "flow": "flow '{.,src/**,web/src/**}/*.js'",
-    "format": "npm run format_options -- --write '{.,src/**,web/src/**}/*.js'",
-    "format_options": "prettier --trailing-comma all --single-quote",
-    "lint": "eslint '{.,src/**,web/src/**}/*.js'",
+    "flow": "flow '{.,src/**,web/src/**,jest/**}/*.js'",
+    "format": "npm run format_options -- --write '{.,src/**,web/src/**,jest/**}/*.js'",
+    "format_options": "prettier --no-semi --trailing-comma all --single-quote",
+    "lint": "eslint '{.,src/**,web/src/**,jest/**}/*.js'",
     "lint-fix": "npm run lint -- --fix",
     "postinstall": "remotedev-debugger --hostname localhost --port 8805 --injectdebugger --injectserver",
     "precommit": "lint-staged",
@@ -94,7 +94,7 @@
     "setupFiles": [
       "./jest/setup.js"
     ],
-    "testRegex": "<rootDir>/(src/|web/src/|).*\\.test\\.js$",
+    "testRegex": "<rootDir>/(src/|web/src/|jest/|).*\\.test\\.js$",
     "transformIgnorePatterns": [
       "node_modules/(?!react*)/"
     ]

@@ -1,7 +1,7 @@
 // @flow
 
-import moment from 'moment';
-import { Map } from 'immutable';
+import moment from 'moment'
+import { Map } from 'immutable'
 
 import {
   LOGIN_REQUEST,
@@ -9,28 +9,28 @@ import {
   LOGIN_FAILURE,
   LOGOUT,
   UPDATE_CURRENT_USER,
-} from '../../utils/constants/actions';
+} from '../../utils/constants/actions'
 
 import type {
   Action,
   LoginRequestPayload,
   LoginResponsePayload,
-} from '../../utils/types';
+} from '../../utils/types'
 
-const initialState = Map({});
+const initialState = Map({})
 
-type State = { isLogging: boolean, accessToken: string, loggedAt: Object };
-type ActionType = Action<LoginRequestPayload | LoginResponsePayload>;
+type State = { isLogging: boolean, accessToken: string, loggedAt: Object }
+type ActionType = Action<LoginRequestPayload | LoginResponsePayload>
 
 export default (
   state: State = initialState,
   { type, payload: _payload, error }: ?ActionType = {},
 ): State => {
-  const payload = _payload || {};
+  const payload = _payload || {}
 
   switch (type) {
     case LOGIN_REQUEST:
-      return state.set('isLogging', true);
+      return state.set('isLogging', true)
 
     case LOGIN_SUCCESS:
       return state.mergeDeep({
@@ -38,7 +38,7 @@ export default (
         accessToken: payload.data.accessToken,
         loggedAt: moment().toISOString(),
         lastAccessedAt: moment().toISOString(),
-      });
+      })
 
     case UPDATE_CURRENT_USER:
       return state
@@ -46,15 +46,15 @@ export default (
         .set(
           'lastAccessedAt',
           payload.lastAccessedAt || state.get('lastAccessedAt'),
-        );
+        )
 
     case LOGIN_FAILURE:
-      return Map({ isLogging: false, error });
+      return Map({ isLogging: false, error })
 
     case LOGOUT:
-      return Map({ loggedOutAt: moment().toISOString() });
+      return Map({ loggedOutAt: moment().toISOString() })
 
     default:
-      return state;
+      return state
   }
-};
+}

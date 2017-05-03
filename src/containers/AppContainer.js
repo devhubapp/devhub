@@ -1,11 +1,11 @@
-import React from 'react';
-import styled, { ThemeProvider } from 'styled-components/native';
-import { connect } from 'react-redux';
-import { Platform, StatusBar } from 'react-native';
+import React from 'react'
+import styled, { ThemeProvider } from 'styled-components/native'
+import { connect } from 'react-redux'
+import { Platform, StatusBar } from 'react-native'
 
-import AppNavigatorContainer from './navigators/AppNavigatorContainer';
-import { NavigationActions } from '../libs/navigation';
-import { get } from '../utils/immutable';
+import AppNavigatorContainer from './navigators/AppNavigatorContainer'
+import { NavigationActions } from '../libs/navigation'
+import { get } from '../utils/immutable'
 
 import {
   getSelectedRouteFromNavigationState,
@@ -13,20 +13,20 @@ import {
   isLoggedSelector,
   isReadySelector,
   themeSelector,
-} from '../selectors';
+} from '../selectors'
 
-import type { State, ThemeObject } from '../utils/types';
+import type { State, ThemeObject } from '../utils/types'
 
 const View = styled.View`
   flex: 1;
-`;
+`
 
 const mapStateToProps = (state: State) => ({
   isLogged: isLoggedSelector(state),
   isFetching: isFetchingSelector(state),
   ready: isReadySelector(state),
   theme: themeSelector(state),
-});
+})
 
 @connect(mapStateToProps)
 export default class extends React.PureComponent {
@@ -35,33 +35,33 @@ export default class extends React.PureComponent {
     isFetching: false,
     ready: false,
     theme: {},
-  };
+  }
 
   constructor(props) {
-    super(props);
-    this.updateNavigator(props);
+    super(props)
+    this.updateNavigator(props)
   }
 
   componentWillReceiveProps(props) {
-    this.updateNavigator(props);
+    this.updateNavigator(props)
   }
 
   updateNavigator({ isLogged, ready }) {
-    if (!this.navigation) return;
+    if (!this.navigation) return
 
-    const routeName = !ready ? 'splash' : isLogged ? 'main' : 'login';
+    const routeName = !ready ? 'splash' : isLogged ? 'main' : 'login'
 
     const currentRouteState = getSelectedRouteFromNavigationState(
       this.navigation.state,
-    );
-    if (get(currentRouteState, 'routeName') === routeName) return;
+    )
+    if (get(currentRouteState, 'routeName') === routeName) return
 
     this.navigation.dispatch(
       NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName })],
       }),
-    );
+    )
   }
 
   props: {
@@ -69,12 +69,12 @@ export default class extends React.PureComponent {
     isFetching?: boolean,
     ready?: boolean,
     theme: ThemeObject,
-  };
+  }
 
-  navigation = null;
+  navigation = null
 
   render() {
-    const { isFetching, theme } = this.props;
+    const { isFetching, theme } = this.props
 
     return (
       <ThemeProvider theme={theme}>
@@ -88,12 +88,12 @@ export default class extends React.PureComponent {
 
           <AppNavigatorContainer
             navigationRef={ref => {
-              this.navigation = ref;
+              this.navigation = ref
             }}
           />
         </View>
 
       </ThemeProvider>
-    );
+    )
   }
 }

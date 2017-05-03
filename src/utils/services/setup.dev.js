@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import * as firebase from 'firebase'
 
 export default () => ({
   bugsnagClient: null,
@@ -10,7 +10,7 @@ export default () => ({
     storageBucket: 'devhub-65899.appspot.com',
     messagingSenderId: '589579854600',
   }),
-});
+})
 
 // // fetch logger
 // global._fetch = global.fetch;

@@ -1,20 +1,20 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import { capitalize, camelCase, memoize } from 'lodash';
-import { fromJS, Iterable, List, Map, OrderedMap } from 'immutable';
+import { capitalize, camelCase, memoize } from 'lodash'
+import { fromJS, Iterable, List, Map, OrderedMap } from 'immutable'
 
-import { get, getIn, setIn } from '../../immutable';
-import * as baseTheme from '../../../styles/themes/base';
-import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared';
-import { isArchivedFilter, isReadFilter } from '../../../selectors';
+import { get, getIn, setIn } from '../../immutable'
+import * as baseTheme from '../../../styles/themes/base'
+import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared'
+import { isArchivedFilter, isReadFilter } from '../../../selectors'
 
 import type {
   GithubIcon,
   GithubNotification,
   GithubNotificationReason,
   ThemeObject,
-} from '../../types';
+} from '../../types'
 
 export const notificationReasons = [
   'assign',
@@ -26,13 +26,13 @@ export const notificationReasons = [
   'state_change',
   'subscribed',
   'team_mention',
-];
+]
 
 export function getNotificationReasonTextsAndColor(
   notification: GithubNotification,
   theme?: ThemeObject = baseTheme,
 ): { color: string, reason: string, label: string, description: string } {
-  const reason: GithubNotificationReason = get(notification, 'reason');
+  const reason: GithubNotificationReason = get(notification, 'reason')
 
   switch (reason) {
     case 'assign':
@@ -41,7 +41,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Assigned',
         description: 'You were assigned to this thread',
-      };
+      }
 
     case 'author':
       return {
@@ -49,7 +49,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Author',
         description: 'You created this thread',
-      };
+      }
 
     case 'comment':
       return {
@@ -57,7 +57,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Commented',
         description: 'You commented on the thread',
-      };
+      }
 
     case 'invitation':
       return {
@@ -65,7 +65,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Invited',
         description: 'You accepted an invitation to contribute to the repository',
-      };
+      }
 
     case 'manual':
       return {
@@ -73,7 +73,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Subscribed',
         description: 'You subscribed to the thread',
-      };
+      }
 
     case 'mention':
       return {
@@ -81,7 +81,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Mentioned',
         description: 'You were @mentioned',
-      };
+      }
 
     case 'state_change':
       return {
@@ -89,7 +89,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'State changed',
         description: 'You changed the thread state',
-      };
+      }
 
     case 'subscribed':
       return {
@@ -97,7 +97,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Watching',
         description: "You're watching this repository",
-      };
+      }
 
     case 'team_mention':
       return {
@@ -105,7 +105,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Team mentioned',
         description: 'Your team was mentioned',
-      };
+      }
 
     default:
       return {
@@ -113,7 +113,7 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: capitalize(reason),
         description: '',
-      };
+      }
   }
 }
 
@@ -121,20 +121,20 @@ export function getNotificationIconAndColor(
   notification: GithubNotification,
   theme?: ThemeObject,
 ): { icon: GithubIcon, color?: string } {
-  const subject = get(notification, 'subject');
-  const type = get(subject, 'type').toLowerCase();
+  const subject = get(notification, 'subject')
+  const type = get(subject, 'type').toLowerCase()
 
   switch (type) {
     case 'commit':
-      return { icon: 'git-commit' };
+      return { icon: 'git-commit' }
     case 'issue':
-      return getIssueIconAndColor(subject, theme);
+      return getIssueIconAndColor(subject, theme)
     case 'pullrequest':
-      return getPullRequestIconAndColor(subject, theme);
+      return getPullRequestIconAndColor(subject, theme)
     case 'release':
-      return { icon: 'tag' };
+      return { icon: 'tag' }
     default:
-      return { icon: 'bell' };
+      return { icon: 'bell' }
   }
 }
 
@@ -145,11 +145,11 @@ export function groupNotificationsByRepository(
     includeFilterGroup = false,
   }: { includeAllGroup?: boolean, includeFilterGroup?: boolean } = {},
 ) {
-  let groupedNotifications = OrderedMap();
+  let groupedNotifications = OrderedMap()
   const notificationIds = notifications
     .filter(Boolean)
     .map(notification => get(notification, 'id'))
-    .toList();
+    .toList()
 
   if (includeFilterGroup) {
     groupedNotifications = groupedNotifications.concat(
@@ -161,7 +161,7 @@ export function groupNotificationsByRepository(
           title: 'filter',
         }),
       }),
-    );
+    )
   }
 
   if (includeAllGroup) {
@@ -174,47 +174,47 @@ export function groupNotificationsByRepository(
           title: 'notifications',
         }),
       }),
-    );
+    )
   }
 
   notifications.forEach(notification => {
-    const repo = get(notification, 'repository');
-    const repoId = Iterable.isIterable(repo) ? `${get(repo, 'id')}` : repo;
+    const repo = get(notification, 'repository')
+    const repoId = Iterable.isIterable(repo) ? `${get(repo, 'id')}` : repo
 
-    let group = get(groupedNotifications, repoId);
+    let group = get(groupedNotifications, repoId)
     if (!group) {
       group = Map({
         id: repoId,
         repoId,
         // notifications: OrderedMap(),
         notificationIds: List(),
-      });
-      groupedNotifications = groupedNotifications.set(repoId, group);
+      })
+      groupedNotifications = groupedNotifications.set(repoId, group)
     }
 
     groupedNotifications = groupedNotifications.updateIn(
       [repoId, 'notificationIds'],
       notif => notif.push(get(notification, 'id')),
-    );
+    )
 
     // const notificationId = `${get(notification, 'id')}`;
     // groupedNotifications = groupedNotifications.updateIn(
     //   [repoId, 'notifications'],
     //   notif => notif.mergeDeep((Map({ [notificationId]: notification }))),
     // );
-  });
+  })
 
-  return groupedNotifications;
+  return groupedNotifications
 }
 
 const reasonToColorAndTitle = reason => {
   const { color, label: title } = getNotificationReasonTextsAndColor(
     Map({ reason }),
-  );
-  return { color, title };
-};
+  )
+  return { color, title }
+}
 
-const defaultFilterColumnsCounters = { read: 0, unread: 0 };
+const defaultFilterColumnsCounters = { read: 0, unread: 0 }
 
 const getDefaultFilterColumnsRepoData = repoFullName =>
   fromJS({
@@ -222,7 +222,7 @@ const getDefaultFilterColumnsRepoData = repoFullName =>
     title: repoFullName,
     icon: 'repo',
     ...defaultFilterColumnsCounters,
-  });
+  })
 
 export const defaultFilterColumnsData = OrderedMap({
   inboxes: OrderedMap(
@@ -294,60 +294,60 @@ export const defaultFilterColumnsData = OrderedMap({
     ]),
   ),
   repos: OrderedMap(),
-});
+})
 
 export const notificationsToFilterColumnData = memoize(notifications => {
-  let result = defaultFilterColumnsData;
-  if (!notifications) return result;
+  let result = defaultFilterColumnsData
+  if (!notifications) return result
 
   notifications.forEach(notification => {
-    const isArchived = isArchivedFilter(notification);
-    const isRead = isReadFilter(notification);
-    const counterPath = isRead ? 'read' : 'unread';
+    const isArchived = isArchivedFilter(notification)
+    const isRead = isReadFilter(notification)
+    const counterPath = isRead ? 'read' : 'unread'
 
-    let count;
-    let path;
-    let partialPath;
+    let count
+    let path
+    let partialPath
 
     // inboxes
-    partialPath = isArchived ? 'archived' : 'inbox';
-    path = ['inboxes', partialPath, counterPath];
+    partialPath = isArchived ? 'archived' : 'inbox'
+    path = ['inboxes', partialPath, counterPath]
 
-    count = getIn(result, path) || 0;
-    result = setIn(result, path, count + 1);
+    count = getIn(result, path) || 0
+    result = setIn(result, path, count + 1)
 
     // readStatus
-    partialPath = isRead ? 'read' : 'unread';
-    path = ['readStatus', partialPath, counterPath];
-    count = getIn(result, path) || 0;
-    result = setIn(result, path, count + 1);
+    partialPath = isRead ? 'read' : 'unread'
+    path = ['readStatus', partialPath, counterPath]
+    count = getIn(result, path) || 0
+    result = setIn(result, path, count + 1)
 
     // subjectTypes
-    partialPath = camelCase(getIn(notification, ['subject', 'type']));
-    path = ['subjectTypes', partialPath, counterPath];
-    count = getIn(result, path) || 0;
-    result = setIn(result, path, count + 1);
+    partialPath = camelCase(getIn(notification, ['subject', 'type']))
+    path = ['subjectTypes', partialPath, counterPath]
+    count = getIn(result, path) || 0
+    result = setIn(result, path, count + 1)
 
     // reasons
-    partialPath = get(notification, 'reason');
-    path = ['reasons', partialPath, counterPath];
-    count = getIn(result, path) || 0;
-    result = setIn(result, path, count + 1);
+    partialPath = get(notification, 'reason')
+    path = ['reasons', partialPath, counterPath]
+    count = getIn(result, path) || 0
+    result = setIn(result, path, count + 1)
 
     // repos
-    const repoFullName = getIn(notification, ['repository', 'full_name']);
-    path = ['repos', repoFullName];
+    const repoFullName = getIn(notification, ['repository', 'full_name'])
+    path = ['repos', repoFullName]
     if (!getIn(result, path)) {
       result = setIn(
         result,
         path,
         getDefaultFilterColumnsRepoData(repoFullName),
-      );
+      )
     }
-    path = [...path, counterPath];
-    count = getIn(result, path) || 0;
-    result = setIn(result, path, count + 1);
-  });
+    path = [...path, counterPath]
+    count = getIn(result, path) || 0
+    result = setIn(result, path, count + 1)
+  })
 
-  return result;
-});
+  return result
+})

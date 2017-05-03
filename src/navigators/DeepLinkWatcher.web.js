@@ -1,1 +1,1 @@
-export default ({ children }) => children;
+export default ({ children }) => children

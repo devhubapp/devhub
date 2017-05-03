@@ -1,7 +1,7 @@
 // @flow
 
-import moment from 'moment';
-import { Map } from 'immutable';
+import moment from 'moment'
+import { Map } from 'immutable'
 
 import {
   LOAD_NOTIFICATIONS_REQUEST,
@@ -10,9 +10,9 @@ import {
   MARK_NOTIFICATIONS_AS_READ_REQUEST,
   MARK_NOTIFICATIONS_AS_READ_FAILURE,
   MARK_NOTIFICATIONS_AS_READ_SUCCESS,
-} from '../../utils/constants/actions';
+} from '../../utils/constants/actions'
 
-import type { Action, ApiResponsePayload } from '../../utils/types';
+import type { Action, ApiResponsePayload } from '../../utils/types'
 
 type State = {
   updatedAt: Date,
@@ -23,11 +23,11 @@ type State = {
   rateLimitReset?: number,
   loading: boolean,
   error?: string,
-};
+}
 
 const initialState: State = Map({
   lastModifiedAt: undefined,
-});
+})
 
 export default (
   state: State = initialState,
@@ -36,14 +36,14 @@ export default (
   switch (type) {
     case LOAD_NOTIFICATIONS_REQUEST:
     case MARK_NOTIFICATIONS_AS_READ_REQUEST:
-      return state.set('loading', true);
+      return state.set('loading', true)
 
     case LOAD_NOTIFICATIONS_FAILURE:
     case MARK_NOTIFICATIONS_AS_READ_FAILURE:
       return state.mergeDeep({
         loading: false,
         error,
-      });
+      })
 
     case LOAD_NOTIFICATIONS_SUCCESS:
     case MARK_NOTIFICATIONS_AS_READ_SUCCESS:
@@ -67,9 +67,9 @@ export default (
             : {}),
           loading: false,
           error: null,
-        }))(payload || {});
+        }))(payload || {})
 
     default:
-      return state;
+      return state
   }
-};
+}

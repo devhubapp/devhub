@@ -1,9 +1,9 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import OwnerAvatar from './_OwnerAvatar';
-import TouchableRow from './__TouchableRow';
+import OwnerAvatar from './_OwnerAvatar'
+import TouchableRow from './__TouchableRow'
 
 import {
   CardItemId,
@@ -12,16 +12,16 @@ import {
   Icon,
   RightOfScrollableContent,
   StyledText,
-} from './__CardComponents';
+} from './__CardComponents'
 
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import { getPullRequestIconAndColor } from '../../utils/helpers/github/shared';
+import { trimNewLinesAndSpaces } from '../../utils/helpers'
+import { getPullRequestIconAndColor } from '../../utils/helpers/github/shared'
 
 import type {
   GithubComment,
   GithubPullRequest,
   ThemeObject,
-} from '../../utils/types';
+} from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -30,28 +30,28 @@ export default class extends React.PureComponent {
     pullRequest: GithubPullRequest,
     read?: boolean,
     theme?: ThemeObject,
-  };
+  }
 
   render() {
-    const { comment, pullRequest, read, theme, ...props } = this.props;
+    const { comment, pullRequest, read, theme, ...props } = this.props
 
     // TODO: Remove this typeof pullRequest.get === 'function' on next release
-    if (!(pullRequest && typeof pullRequest.get === 'function')) return null;
+    if (!(pullRequest && typeof pullRequest.get === 'function')) return null
 
-    const title = trimNewLinesAndSpaces(pullRequest.get('title'));
-    if (!title) return null;
+    const title = trimNewLinesAndSpaces(pullRequest.get('title'))
+    if (!title) return null
 
-    const number = pullRequest.get('number');
-    const user = pullRequest.get('user');
+    const number = pullRequest.get('number')
+    const user = pullRequest.get('user')
 
-    const { icon, color } = getPullRequestIconAndColor(pullRequest, theme);
+    const { icon, color } = getPullRequestIconAndColor(pullRequest, theme)
 
-    const byText = user && user.get('login') ? `@${user.get('login')}` : '';
+    const byText = user && user.get('login') ? `@${user.get('login')}` : ''
 
     // pull request links will send to comment if comment was not loaded by app yet
     const url = comment && !comment.get('body') && comment.get('html_url')
       ? comment.get('html_url')
-      : pullRequest.get('html_url') || pullRequest.get('url');
+      : pullRequest.get('html_url') || pullRequest.get('url')
 
     return (
       <TouchableRow
@@ -84,6 +84,6 @@ export default class extends React.PureComponent {
           {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>
       </TouchableRow>
-    );
+    )
   }
 }

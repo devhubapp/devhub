@@ -1,14 +1,14 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import Icon from '../../libs/icon';
-import TouchableRow from './__TouchableRow';
+import Icon from '../../libs/icon'
+import TouchableRow from './__TouchableRow'
 
-import { StyledText } from './__CardComponents';
+import { StyledText } from './__CardComponents'
 
-import { getGitHubURLForBranch } from '../../utils/helpers/github/url';
-import type { GithubEventType } from '../../utils/types';
+import { getGitHubURLForBranch } from '../../utils/helpers/github/url'
+import type { GithubEventType } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -17,17 +17,17 @@ export default class extends React.PureComponent {
     repoFullName: string,
     read?: boolean,
     type: GithubEventType,
-  };
+  }
 
   render() {
-    const { branch: _branch, repoFullName, read, type, ...props } = this.props;
+    const { branch: _branch, repoFullName, read, type, ...props } = this.props
 
-    const branch = (_branch || '').replace('refs/heads/', '');
-    if (!branch) return null;
+    const branch = (_branch || '').replace('refs/heads/', '')
+    if (!branch) return null
 
     const isBranchMainEventAction =
-      type === 'CreateEvent' || type === 'DeleteEvent';
-    if (branch === 'master' && !isBranchMainEventAction) return null;
+      type === 'CreateEvent' || type === 'DeleteEvent'
+    if (branch === 'master' && !isBranchMainEventAction) return null
 
     return (
       <TouchableRow
@@ -40,6 +40,6 @@ export default class extends React.PureComponent {
           {branch}
         </StyledText>
       </TouchableRow>
-    );
+    )
   }
 }

@@ -1,44 +1,44 @@
 // @flow
 
-import React from 'react';
-import { Iterable } from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React from 'react'
+import { Iterable } from 'immutable'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-import EventCard from '../components/cards/EventCard';
+import EventCard from '../components/cards/EventCard'
 
 import {
   makeIsArchivedEventSelector,
   makeDenormalizedEventSelector,
   makeIsReadEventSelector,
-} from '../selectors';
+} from '../selectors'
 
-import * as actionCreators from '../actions';
-import type { ActionCreators, GithubEvent, State } from '../utils/types';
+import * as actionCreators from '../actions'
+import type { ActionCreators, GithubEvent, State } from '../utils/types'
 
 const makeMapStateToProps = () => {
-  const denormalizedEventSelector = makeDenormalizedEventSelector();
-  const isArchivedEventSelector = makeIsArchivedEventSelector();
-  const isReadEventSelector = makeIsReadEventSelector();
+  const denormalizedEventSelector = makeDenormalizedEventSelector()
+  const isArchivedEventSelector = makeIsArchivedEventSelector()
+  const isReadEventSelector = makeIsReadEventSelector()
 
   return (
     state: State,
     { eventOrEventId }: { eventOrEventId: string | GithubEvent },
   ) => {
-    const event = Iterable.isIterable(eventOrEventId) ? eventOrEventId : null;
-    const eventId = event ? `${event.get('id')}` : eventOrEventId;
+    const event = Iterable.isIterable(eventOrEventId) ? eventOrEventId : null
+    const eventId = event ? `${event.get('id')}` : eventOrEventId
 
     return {
       archived: isArchivedEventSelector(state, { eventId }),
       event: event || denormalizedEventSelector(state, { eventId }),
       read: isReadEventSelector(state, { eventId }),
-    };
-  };
-};
+    }
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
-});
+})
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
@@ -46,12 +46,12 @@ export default class extends React.PureComponent {
     actions: ActionCreators,
     event: GithubEvent,
     read: boolean,
-  };
+  }
 
   render() {
-    const { actions, event, read, ...props } = this.props;
+    const { actions, event, read, ...props } = this.props
 
-    if (!event) return null;
+    if (!event) return null
 
     return (
       <EventCard
@@ -61,6 +61,6 @@ export default class extends React.PureComponent {
         read={read}
         {...props}
       />
-    );
+    )
   }
 }

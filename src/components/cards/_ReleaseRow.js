@@ -1,22 +1,22 @@
 // @flow
 
-import React from 'react';
-import { View } from 'react-native';
+import React from 'react'
+import { View } from 'react-native'
 
-import BranchRow from './_BranchRow';
-import Icon from '../../libs/icon';
-import OwnerAvatar from './_OwnerAvatar';
-import TouchableRow from './__TouchableRow';
+import BranchRow from './_BranchRow'
+import Icon from '../../libs/icon'
+import OwnerAvatar from './_OwnerAvatar'
+import TouchableRow from './__TouchableRow'
 
-import { CardText, StyledText, smallAvatarWidth } from './__CardComponents';
+import { CardText, StyledText, smallAvatarWidth } from './__CardComponents'
 
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url';
+import { trimNewLinesAndSpaces } from '../../utils/helpers'
+import { getRepoFullNameFromUrl } from '../../utils/helpers/github/url'
 import type {
   GithubEventType,
   GithubUser,
   ReleaseEvent,
-} from '../../utils/types';
+} from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -25,21 +25,21 @@ export default class extends React.PureComponent {
     read?: boolean,
     type: GithubEventType,
     user: GithubUser,
-  };
+  }
 
   render() {
-    const { release, read, type, user, ...props } = this.props;
+    const { release, read, type, user, ...props } = this.props
 
-    if (!release) return null;
+    if (!release) return null
 
     const { body, branch, name, tagName } = {
       body: trimNewLinesAndSpaces(release.get('body')),
       branch: release.get('target_commitish'),
       name: trimNewLinesAndSpaces(release.get('name')),
       tagName: trimNewLinesAndSpaces(release.get('tag_name')),
-    };
+    }
 
-    const repoFullName = getRepoFullNameFromUrl(release.get('url'));
+    const repoFullName = getRepoFullNameFromUrl(release.get('url'))
 
     return (
       <View>
@@ -92,6 +92,6 @@ export default class extends React.PureComponent {
             </CardText>
           </TouchableRow>}
       </View>
-    );
+    )
   }
 }

@@ -1,8 +1,8 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import orientationListener, { Orientation } from '../libs/orientation-listener';
+import orientationListener, { Orientation } from '../libs/orientation-listener'
 
 // eslint-disable-next-line
 export default Component =>
@@ -11,32 +11,32 @@ export default Component =>
       orientation: 'PORTRAIT',
     }: {
       orientation: Orientation,
-    });
+    })
 
-    mounted = false;
+    mounted = false
 
     onOrientationChange = ({ orientation }) => {
-      this.setState({ orientation });
-    };
+      this.setState({ orientation })
+    }
 
     componentDidMount() {
-      this.mounted = true;
+      this.mounted = true
 
       orientationListener.getOrientation(orientation => {
-        if (this.mounted) this.setState({ orientation });
-      });
+        if (this.mounted) this.setState({ orientation })
+      })
 
-      orientationListener.addListener(this.onOrientationChange);
+      orientationListener.addListener(this.onOrientationChange)
     }
 
     componentWillUnmount() {
-      this.mounted = false;
-      orientationListener.removeListener(this.onOrientationChange);
+      this.mounted = false
+      orientationListener.removeListener(this.onOrientationChange)
     }
 
     render() {
-      const { orientation } = this.state;
+      const { orientation } = this.state
 
-      return <Component orientation={orientation} {...this.props} />;
+      return <Component orientation={orientation} {...this.props} />
     }
-  };
+  }

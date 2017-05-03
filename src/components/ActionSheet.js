@@ -1,11 +1,11 @@
-import React from 'react';
-import { Platform } from 'react-native';
-import { withTheme } from 'styled-components/native';
+import React from 'react'
+import { Platform } from 'react-native'
+import { withTheme } from 'styled-components/native'
 
-import ActionSheet from '../libs/actionsheet';
-import { columnMargin } from './columns/_Column';
+import ActionSheet from '../libs/actionsheet'
+import { columnMargin } from './columns/_Column'
 
-import { radius } from '../styles/variables';
+import { radius } from '../styles/variables'
 
 const StyledActionSheet = withTheme(
   ({ innerRef, optionContainerStyle, theme, ...props }) => (
@@ -28,8 +28,8 @@ const StyledActionSheet = withTheme(
       {...props}
     />
   ),
-);
+)
 
-StyledActionSheet.propTypes = ActionSheet.propTypes;
+StyledActionSheet.propTypes = ActionSheet.propTypes
 
-export default StyledActionSheet;
+export default StyledActionSheet

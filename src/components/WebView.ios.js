@@ -1,1 +1,1 @@
-export default from 'react-native-wkwebview-reborn';
+export default from 'react-native-wkwebview-reborn'

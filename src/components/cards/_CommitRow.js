@@ -1,25 +1,25 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import Icon from '../../libs/icon';
-import TouchableRow from './__TouchableRow';
-import OwnerAvatar from './_OwnerAvatar';
+import Icon from '../../libs/icon'
+import TouchableRow from './__TouchableRow'
+import OwnerAvatar from './_OwnerAvatar'
 
-import { CardText, smallAvatarWidth, StyledText } from './__CardComponents';
+import { CardText, smallAvatarWidth, StyledText } from './__CardComponents'
 
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
+import { trimNewLinesAndSpaces } from '../../utils/helpers'
 
 import {
   getGitHubURLForUser,
   getGitHubSearchURL,
-} from '../../utils/helpers/github/url';
+} from '../../utils/helpers/github/url'
 
 import {
   tryGetUsernameFromGithubEmail,
-} from '../../utils/helpers/github/shared';
+} from '../../utils/helpers/github/shared'
 
-import type { Commit, ThemeObject } from '../../utils/types';
+import type { Commit, ThemeObject } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -27,25 +27,25 @@ export default class extends React.PureComponent {
     narrow?: boolean,
     read?: boolean,
     theme?: ThemeObject,
-  };
+  }
 
   render() {
-    const { commit, read, ...props } = this.props;
+    const { commit, read, ...props } = this.props
 
-    if (!commit) return null;
+    if (!commit) return null
 
-    const message = trimNewLinesAndSpaces(commit.get('message'));
-    if (!message) return null;
+    const message = trimNewLinesAndSpaces(commit.get('message'))
+    if (!message) return null
 
-    const authorName = commit.getIn(['author', 'name']);
-    const authorEmail = commit.getIn(['author', 'email']);
-    const authorUsername = tryGetUsernameFromGithubEmail(authorEmail);
+    const authorName = commit.getIn(['author', 'name'])
+    const authorEmail = commit.getIn(['author', 'email'])
+    const authorUsername = tryGetUsernameFromGithubEmail(authorEmail)
 
-    let byText = authorName;
-    if (authorUsername) byText += ` @${authorUsername}`;
+    let byText = authorName
+    if (authorUsername) byText += ` @${authorUsername}`
     if (authorEmail && !authorUsername)
-      byText += byText ? ` <${authorEmail}>` : ` ${authorEmail}`;
-    byText = trimNewLinesAndSpaces(byText);
+      byText += byText ? ` <${authorEmail}>` : ` ${authorEmail}`
+    byText = trimNewLinesAndSpaces(byText)
 
     return (
       <TouchableRow
@@ -71,6 +71,6 @@ export default class extends React.PureComponent {
           {!!byText && <StyledText muted small> by {byText}</StyledText>}
         </CardText>
       </TouchableRow>
-    );
+    )
   }
 }

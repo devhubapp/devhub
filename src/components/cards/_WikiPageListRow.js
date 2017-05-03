@@ -1,17 +1,17 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import WikiPageRow from './_WikiPageRow';
-import RowList from './__RowList';
+import WikiPageRow from './_WikiPageRow'
+import RowList from './__RowList'
 
-import type { Page } from '../../utils/types';
+import type { Page } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
     pages: Array<Page>,
     maxHeight?: number,
-  };
+  }
 
   makeRenderItem = (passProps = {}) => ({ index, item: page }) =>
     page &&
@@ -20,12 +20,12 @@ export default class extends React.PureComponent {
       page={page}
       narrow
       {...passProps}
-    />;
+    />
 
   render() {
-    const { maxHeight, pages, ...props } = this.props;
+    const { maxHeight, pages, ...props } = this.props
 
-    if (!(pages && pages.size > 0)) return null;
+    if (!(pages && pages.size > 0)) return null
 
     return (
       <RowList
@@ -34,6 +34,6 @@ export default class extends React.PureComponent {
         renderItem={this.makeRenderItem(props)}
         {...props}
       />
-    );
+    )
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 
-import pkg from '../../../package.json';
+import pkg from '../../../package.json'
 
-export const appVersionText = `v${pkg.codeBundleId || pkg.version}`;
+export const appVersionText = `v${pkg.codeBundleId || pkg.version}`

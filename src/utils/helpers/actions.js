@@ -1,6 +1,6 @@
 // @flow
 
-import type { Action, ActionType } from '../types';
+import type { Action, ActionType } from '../types'
 
 /**
  * Create an action object
@@ -15,7 +15,7 @@ export function action<T>(
   payload: T = {},
   other?: Object = {},
 ): Action<T> {
-  return { ...other, type, payload };
+  return { ...other, type, payload }
 }
 
 /**
@@ -32,5 +32,5 @@ export function errorAction(
   error: any,
   other?: Object = {},
 ) {
-  return { ...other, type, payload, error };
+  return { ...other, type, payload, error }
 }

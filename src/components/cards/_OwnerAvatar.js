@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
-import Avatar from '../Avatar';
-import { getUserAvatarByEmail } from '../../utils/helpers/github/shared';
-import { openOnGithub } from '../../utils/helpers/github/url';
+import Avatar from '../Avatar'
+import { getUserAvatarByEmail } from '../../utils/helpers/github/shared'
+import { openOnGithub } from '../../utils/helpers/github/url'
 
 export default class extends React.PureComponent {
   props: {
@@ -18,18 +18,18 @@ export default class extends React.PureComponent {
       }
     | {
         email?: ?string,
-      });
+      })
 
   render() {
-    const { avatarURL, email, linkURL, size, ...props } = this.props;
+    const { avatarURL, email, linkURL, size, ...props } = this.props
 
-    const uri = avatarURL || getUserAvatarByEmail(email, { size });
-    if (!uri) return null;
+    const uri = avatarURL || getUserAvatarByEmail(email, { size })
+    if (!uri) return null
 
     return (
       <TouchableOpacity onPress={() => openOnGithub(linkURL)}>
         <Avatar size={size} source={{ uri }} {...props} />
       </TouchableOpacity>
-    );
+    )
   }
 }

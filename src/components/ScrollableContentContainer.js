@@ -1,21 +1,21 @@
 // @flow
 
-import React from 'react';
-import styled from 'styled-components/native';
+import React from 'react'
+import styled from 'styled-components/native'
 
-import { contentPadding } from '../styles/variables';
+import { contentPadding } from '../styles/variables'
 
 const StyledScrollView = styled.ScrollView`
   flex: 1;
   flex-direction: row;
   align-self: stretch;
-`;
+`
 
 type Props = {
   contentContainerStyle?: Object,
   padding?: number,
   style?: Object,
-};
+}
 
 export default ({ contentContainerStyle, padding, style, ...props }: Props) => (
   <StyledScrollView
@@ -33,4 +33,4 @@ export default ({ contentContainerStyle, padding, style, ...props }: Props) => (
     horizontal
     {...props}
   />
-);
+)

@@ -1,17 +1,17 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import RepoRow from './_RepositoryRow';
-import RowList from './__RowList';
+import RepoRow from './_RepositoryRow'
+import RowList from './__RowList'
 
-import type { GithubRepo } from '../../utils/types';
+import type { GithubRepo } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
     repos: Array<GithubRepo>,
     maxHeight?: number,
-  };
+  }
 
   makeRenderItem = (passProps = {}) => ({ index, item: repo }) =>
     repo &&
@@ -20,12 +20,12 @@ export default class extends React.PureComponent {
       repo={repo}
       narrow
       {...passProps}
-    />;
+    />
 
   render() {
-    const { maxHeight, repos, ...props } = this.props;
+    const { maxHeight, repos, ...props } = this.props
 
-    if (!(repos && repos.size > 0)) return null;
+    if (!(repos && repos.size > 0)) return null
 
     return (
       <RowList
@@ -34,6 +34,6 @@ export default class extends React.PureComponent {
         renderItem={this.makeRenderItem(props)}
         {...props}
       />
-    );
+    )
   }
 }

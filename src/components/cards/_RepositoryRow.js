@@ -1,23 +1,23 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import Icon from '../../libs/icon';
-import OwnerAvatar from './_OwnerAvatar';
-import TouchableRow from './__TouchableRow';
+import Icon from '../../libs/icon'
+import OwnerAvatar from './_OwnerAvatar'
+import TouchableRow from './__TouchableRow'
 // import RepositoryStarButtonContainer from '../../containers/RepositoryStarButtonContainer';
 
 import {
   RepositoryName,
   smallAvatarWidth,
   StyledText,
-} from './__CardComponents';
+} from './__CardComponents'
 
 import {
   getOrgAvatar,
   getOwnerAndRepo,
-} from '../../utils/helpers/github/shared';
-import type { GithubRepo } from '../../utils/types';
+} from '../../utils/helpers/github/shared'
+import type { GithubRepo } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -27,24 +27,24 @@ export default class extends React.PureComponent {
     pushed?: boolean,
     repo: GithubRepo,
     read?: boolean,
-  };
+  }
 
   render() {
-    const { forcePushed, isFork, read, pushed, repo, ...props } = this.props;
+    const { forcePushed, isFork, read, pushed, repo, ...props } = this.props
 
-    if (!repo) return null;
+    if (!repo) return null
 
-    const repoFullName = repo.get('full_name') || repo.get('name') || '';
-    const { owner: orgName, repo: repoName } = getOwnerAndRepo(repoFullName);
+    const repoFullName = repo.get('full_name') || repo.get('name') || ''
+    const { owner: orgName, repo: repoName } = getOwnerAndRepo(repoFullName)
 
-    if (!repoName) return null;
+    if (!repoName) return null
 
     const repoIcon = (() => {
-      if (forcePushed) return 'repo-force-push';
-      if (pushed) return 'repo-push';
-      if (isFork) return 'repo-forked';
-      return 'repo';
-    })();
+      if (forcePushed) return 'repo-force-push'
+      if (pushed) return 'repo-push'
+      if (isFork) return 'repo-forked'
+      return 'repo'
+    })()
 
     // const isPrivate = !!repo.get('private') || repo.get('public') === false;
 
@@ -70,6 +70,6 @@ export default class extends React.PureComponent {
 
         {!!orgName && <StyledText muted small> {orgName}</StyledText>}
       </TouchableRow>
-    );
+    )
   }
 }

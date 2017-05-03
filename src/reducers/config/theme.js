@@ -1,9 +1,9 @@
 // @flow
 
-import { SET_THEME } from '../../utils/constants/actions';
-import type { Action, Theme } from '../../utils/types';
+import { SET_THEME } from '../../utils/constants/actions'
+import type { Action, Theme } from '../../utils/types'
 
-const initialState = '';
+const initialState = ''
 
 export default (
   state: Theme = initialState,
@@ -11,9 +11,9 @@ export default (
 ): Theme => {
   switch (type) {
     case SET_THEME:
-      return payload;
+      return payload
 
     default:
-      return state;
+      return state
   }
-};
+}

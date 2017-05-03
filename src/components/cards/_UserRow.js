@@ -1,15 +1,15 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import Icon from '../../libs/icon';
-import TouchableRow from './__TouchableRow';
-import OwnerAvatar from './_OwnerAvatar';
+import Icon from '../../libs/icon'
+import TouchableRow from './__TouchableRow'
+import OwnerAvatar from './_OwnerAvatar'
 
-import { smallAvatarWidth, StyledText } from './__CardComponents';
+import { smallAvatarWidth, StyledText } from './__CardComponents'
 
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { User } from '../../utils/types';
+import { trimNewLinesAndSpaces } from '../../utils/helpers'
+import type { User } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -17,15 +17,15 @@ export default class extends React.PureComponent {
     additionalInfo?: ?string,
     narrow?: boolean,
     read?: boolean,
-  };
+  }
 
   render() {
-    const { additionalInfo, read, user, ...props } = this.props;
+    const { additionalInfo, read, user, ...props } = this.props
 
-    if (!user) return null;
+    if (!user) return null
 
-    const _login = trimNewLinesAndSpaces(user.get('login'));
-    if (!_login) return null;
+    const _login = trimNewLinesAndSpaces(user.get('login'))
+    if (!_login) return null
 
     return (
       <TouchableRow
@@ -46,6 +46,6 @@ export default class extends React.PureComponent {
           {!!additionalInfo && <StyledText muted> {additionalInfo}</StyledText>}
         </StyledText>
       </TouchableRow>
-    );
+    )
   }
 }

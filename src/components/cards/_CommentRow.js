@@ -1,8 +1,8 @@
 // @flow
 
-import React from 'react';
+import React from 'react'
 
-import OwnerAvatar from './_OwnerAvatar';
+import OwnerAvatar from './_OwnerAvatar'
 
 import {
   CardText,
@@ -10,11 +10,11 @@ import {
   LeftColumn,
   MainColumnRowContent,
   smallAvatarWidth,
-} from './__CardComponents';
+} from './__CardComponents'
 
-import { openOnGithub } from '../../utils/helpers/github/url';
-import { trimNewLinesAndSpaces } from '../../utils/helpers';
-import type { GithubUser } from '../../utils/types';
+import { openOnGithub } from '../../utils/helpers/github/url'
+import { trimNewLinesAndSpaces } from '../../utils/helpers'
+import type { GithubUser } from '../../utils/types'
 
 export default class extends React.PureComponent {
   props: {
@@ -24,7 +24,7 @@ export default class extends React.PureComponent {
     read?: boolean,
     url?: string,
     user: GithubUser,
-  };
+  }
 
   render() {
     const {
@@ -35,10 +35,10 @@ export default class extends React.PureComponent {
       read,
       url,
       ...props
-    } = this.props;
+    } = this.props
 
-    const body = trimNewLinesAndSpaces(_body, 400);
-    if (!body) return null;
+    const body = trimNewLinesAndSpaces(_body, 400)
+    if (!body) return null
 
     return (
       <ContentRow narrow={narrow} {...props}>
@@ -61,6 +61,6 @@ export default class extends React.PureComponent {
           </CardText>
         </MainColumnRowContent>
       </ContentRow>
-    );
+    )
   }
 }

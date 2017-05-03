@@ -1,79 +1,79 @@
 // @flow
 
-import React from 'react';
-import { Iterable, List, Set } from 'immutable';
+import React from 'react'
+import { Iterable, List, Set } from 'immutable'
 
-import ActionSheet from '../ActionSheet';
+import ActionSheet from '../ActionSheet'
 import ColumnWithList, {
   HeaderButton,
   HeaderButtonIcon,
   HeaderButtonsContainer,
-} from './_ColumnWithList';
-import { defaultIcon as summaryIcon } from './NotificationsFilterColumn';
+} from './_ColumnWithList'
+import { defaultIcon as summaryIcon } from './NotificationsFilterColumn'
 import NotificationsFilterColumnContainer
-  from '../../containers/NotificationsFilterColumnContainer';
+  from '../../containers/NotificationsFilterColumnContainer'
 import NotificationCardContainer
-  from '../../containers/NotificationCardContainer';
-import { FullAbsoluteView, FullView } from '../cards/__CardComponents';
-import { getOwnerAndRepo } from '../../utils/helpers/github/shared';
-import { getParamsToLoadAllNotifications } from '../../sagas/notifications';
-import { readNotificationIdsSelector } from '../../selectors/notifications';
-import type { ActionCreators, GithubRepo } from '../../utils/types';
+  from '../../containers/NotificationCardContainer'
+import { FullAbsoluteView, FullView } from '../cards/__CardComponents'
+import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
+import { getParamsToLoadAllNotifications } from '../../sagas/notifications'
+import { readNotificationIdsSelector } from '../../selectors/notifications'
+import type { ActionCreators, GithubRepo } from '../../utils/types'
 
-const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read'];
+const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read']
 const BUTTONS = {
   CANCEL: 0,
   MARK_NOTIFICATIONS_AS_READ_OR_UNREAD: 1,
   CLEAR_READ: 2,
-};
+}
 
-export const defaultIcon = 'bell';
-export const defaultTitle = 'notifications';
+export const defaultIcon = 'bell'
+export const defaultTitle = 'notifications'
 
 export default class extends React.PureComponent {
-  static contextTypes = { store: React.PropTypes.object.isRequired };
+  static contextTypes = { store: React.PropTypes.object.isRequired }
 
   static defaultProps = {
     icon: undefined,
     title: undefined,
     style: undefined,
     repo: undefined,
-  };
+  }
 
   state = {
     summary: false,
-  };
+  }
 
   onRefresh = () => {
-    const { actions: { updateNotifications } } = this.props;
+    const { actions: { updateNotifications } } = this.props
 
-    const params = getParamsToLoadAllNotifications();
-    updateNotifications(params);
-  };
+    const params = getParamsToLoadAllNotifications()
+    updateNotifications(params)
+  }
 
   getNotificationIds = () => {
-    const { items = List() } = this.props;
+    const { items = List() } = this.props
     return typeof items.first() === 'string'
       ? items
       : items
           .map(item => (Iterable.isIterable(item) ? item.get('id') : item))
-          .toList();
-  };
+          .toList()
+  }
 
   getReadNotificationIds = () => {
-    const store = this.context.store;
-    const state = store.getState();
+    const store = this.context.store
+    const state = store.getState()
 
-    const notificationIds = this.getNotificationIds();
-    const readNotificationIds = readNotificationIdsSelector(state);
-    return Set(readNotificationIds).intersect(notificationIds);
-  };
+    const notificationIds = this.getNotificationIds()
+    const readNotificationIds = readNotificationIdsSelector(state)
+    return Set(readNotificationIds).intersect(notificationIds)
+  }
 
   getUnreadNotificationIds = () => {
-    const notificationIds = this.getNotificationIds();
-    const readNotificationIds = this.getReadNotificationIds();
-    return Set(notificationIds).subtract(readNotificationIds);
-  };
+    const notificationIds = this.getNotificationIds()
+    const readNotificationIds = this.getReadNotificationIds()
+    return Set(notificationIds).subtract(readNotificationIds)
+  }
 
   getRightHeader = isSummary => (
     <HeaderButtonsContainer>
@@ -85,23 +85,23 @@ export default class extends React.PureComponent {
         <HeaderButtonIcon name="chevron-down" muted={isSummary} />
       </HeaderButton>
     </HeaderButtonsContainer>
-  );
+  )
 
   toggleSummary = () => {
-    this.setState(({ summary }) => ({ summary: !summary }));
-  };
+    this.setState(({ summary }) => ({ summary: !summary }))
+  }
 
   showActionSheet = () => {
-    this.ActionSheet.show();
-  };
+    this.ActionSheet.show()
+  }
 
   handleActionSheetButtonPress = index => {
-    const { actions, column, repo } = this.props;
+    const { actions, column, repo } = this.props
 
-    const repoId = repo ? repo.get('id') : column.get('repoId');
+    const repoId = repo ? repo.get('id') : column.get('repoId')
 
-    const readIds = this.getReadNotificationIds();
-    const notificationIds = this.getNotificationIds();
+    const readIds = this.getReadNotificationIds()
+    const notificationIds = this.getNotificationIds()
 
     switch (index) {
       case BUTTONS.MARK_NOTIFICATIONS_AS_READ_OR_UNREAD:
@@ -111,34 +111,34 @@ export default class extends React.PureComponent {
               all: true,
               notificationIds: readIds,
               repoId,
-            });
+            })
           } else {
-            const unreadIds = this.getUnreadNotificationIds();
+            const unreadIds = this.getUnreadNotificationIds()
             actions.markNotificationsAsReadRequest({
               all: true,
               notificationIds: unreadIds,
               repoId,
-            });
+            })
           }
-        })();
+        })()
 
-        break;
+        break
 
       case BUTTONS.CLEAR_READ:
         (() => {
-          const all = readIds.size === notificationIds.size;
+          const all = readIds.size === notificationIds.size
           actions.deleteNotifications({
             all,
             notificationIds: readIds,
             repoId,
-          });
-        })();
-        break;
+          })
+        })()
+        break
 
       default:
-        break;
+        break
     }
-  };
+  }
 
   props: {
     actions: ActionCreators,
@@ -152,19 +152,19 @@ export default class extends React.PureComponent {
     repo?: GithubRepo,
     title?: string,
     updatedAt: Date,
-  };
+  }
 
   renderItem = ({ index, item: notificationOrNotificationId }) => {
-    const { actions, column, repo } = this.props;
+    const { actions, column, repo } = this.props
 
     const notification = Iterable.isIterable(notificationOrNotificationId)
       ? notificationOrNotificationId
-      : null;
+      : null
 
     const notificationId = notification
       ? `${notification.get('id')}`
-      : notificationOrNotificationId;
-    if (!notificationId) return null;
+      : notificationOrNotificationId
+    if (!notificationId) return null
 
     return (
       <NotificationCardContainer
@@ -173,11 +173,11 @@ export default class extends React.PureComponent {
         notificationOrNotificationId={notificationId}
         onlyOneRepository={!!(repo || column.get('repoId'))}
       />
-    );
-  };
+    )
+  }
 
   render() {
-    const { summary } = this.state;
+    const { summary } = this.state
     const {
       column,
       icon: _icon,
@@ -186,25 +186,25 @@ export default class extends React.PureComponent {
       style,
       title: _title,
       ...props
-    } = this.props;
+    } = this.props
 
-    if (!column) return null;
+    if (!column) return null
 
-    let title = _title;
+    let title = _title
     if (!title) {
       if (repo) {
         const { repo: repoName } = getOwnerAndRepo(
           repo.get('full_name') || repo.get('name'),
-        );
-        title = (repoName || '').toLowerCase();
+        )
+        title = (repoName || '').toLowerCase()
       }
 
-      if (!title) title = defaultTitle;
+      if (!title) title = defaultTitle
     }
 
-    let icon = _icon;
+    let icon = _icon
     if (!icon) {
-      icon = repo || column.get('repoId') ? 'repo' : defaultIcon;
+      icon = repo || column.get('repoId') ? 'repo' : defaultIcon
     }
 
     return (
@@ -222,7 +222,7 @@ export default class extends React.PureComponent {
 
         <ActionSheet
           innerRef={ref => {
-            this.ActionSheet = ref;
+            this.ActionSheet = ref
           }}
           title={title}
           options={buttons}
@@ -247,6 +247,6 @@ export default class extends React.PureComponent {
             />
           </FullAbsoluteView>}
       </FullView>
-    );
+    )
   }
 }

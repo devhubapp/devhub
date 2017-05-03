@@ -1,28 +1,28 @@
 // @flow
 /* eslint-env browser */
 
-import { mapValues, toArray } from 'lodash';
+import { mapValues, toArray } from 'lodash'
 
 const getPromptText = (
   title: ?string,
   message: ?string,
   callbackOrButtons?: (text: string) => Object,
 ) => {
-  let text = title && message ? `${title}\n${message}` : message;
+  let text = title && message ? `${title}\n${message}` : message
 
   if (typeof callbackOrButtons === 'object') {
     const buttonsText = toArray(
       mapValues(callbackOrButtons, (button, key) => `${key}: ${button.text}`),
-    ).join('\n');
+    ).join('\n')
 
     if (buttonsText) {
-      if (text) text += '\n';
-      text += buttonsText;
+      if (text) text += '\n'
+      text += buttonsText
     }
   }
 
-  return text;
-};
+  return text
+}
 
 // TODO: Implement this for the web
 export default function prompt(
@@ -32,26 +32,26 @@ export default function prompt(
 ): void {
   // eslint-disable-next-line no-alert
   const userInput =
-    window.prompt(getPromptText(title, message, callbackOrButtons)) || '';
-  if (!userInput) return;
+    window.prompt(getPromptText(title, message, callbackOrButtons)) || ''
+  if (!userInput) return
 
   if (typeof callbackOrButtons === 'function') {
-    callbackOrButtons(userInput);
-    return;
+    callbackOrButtons(userInput)
+    return
   }
 
   const buttonsWithCallback = (callbackOrButtons || [])
-    .filter(button => typeof button.onPress === 'function');
+    .filter(button => typeof button.onPress === 'function')
 
-  const buttons = Array.isArray(callbackOrButtons) ? callbackOrButtons : [];
-  const userInputNumber = Number.parseInt(userInput, 10);
+  const buttons = Array.isArray(callbackOrButtons) ? callbackOrButtons : []
+  const userInputNumber = Number.parseInt(userInput, 10)
   const callback = userInputNumber >= 0 && userInputNumber < buttons.length
     ? (buttons[userInputNumber] || {}).onPress
-    : (buttonsWithCallback[0] || {}).onPress;
+    : (buttonsWithCallback[0] || {}).onPress
 
   if (typeof callback !== 'function') {
-    return;
+    return
   }
 
-  callback(userInput);
+  callback(userInput)
 }

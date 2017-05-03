@@ -1,7 +1,7 @@
 // @flow
 
-import { AsyncStorage } from 'react-native';
-import { delay } from 'redux-saga';
+import { AsyncStorage } from 'react-native'
+import { delay } from 'redux-saga'
 import {
   call,
   fork,
@@ -10,44 +10,44 @@ import {
   select,
   take,
   takeLatest,
-} from 'redux-saga/effects';
-import { REHYDRATE } from 'redux-persist/constants';
+} from 'redux-saga/effects'
+import { REHYDRATE } from 'redux-persist/constants'
 
-import { resetAppData as resetAppDataAction } from '../actions';
+import { resetAppData as resetAppDataAction } from '../actions'
 import {
   RESET_APP_DATA,
   RESET_APP_DATA_REQUEST,
-} from '../utils/constants/actions';
-import { rehydratedSelector } from '../selectors';
+} from '../utils/constants/actions'
+import { rehydratedSelector } from '../selectors'
 
-import appSagas from './app';
-import authSagas from './auth';
-import columnsSagas from './columns';
-import notificationsSagas from './notifications';
-import subscriptionsSagas from './subscriptions';
+import appSagas from './app'
+import authSagas from './auth'
+import columnsSagas from './columns'
+import notificationsSagas from './notifications'
+import subscriptionsSagas from './subscriptions'
 
 export function* resetAppData() {
   try {
-    console.log('Reseting app data...');
-    yield AsyncStorage.clear();
-    console.log('Reseted.');
+    console.log('Reseting app data...')
+    yield AsyncStorage.clear()
+    console.log('Reseted.')
   } catch (e) {
-    console.error('Failed to reset app data', e);
+    console.error('Failed to reset app data', e)
   }
 }
 
 function* onResetAppDataRequest() {
-  const rehydrated = yield select(rehydratedSelector);
+  const rehydrated = yield select(rehydratedSelector)
 
   // only reset after rehydration otherise it would restore the data after the reset
   if (!rehydrated) {
     yield race({
       rehydrated: take(REHYDRATE),
       timeout: call(delay, 1000),
-    });
+    })
   }
 
-  yield put(resetAppDataAction());
+  yield put(resetAppDataAction())
 }
 
 export default function*() {
@@ -59,5 +59,5 @@ export default function*() {
     yield fork(notificationsSagas),
     yield fork(subscriptionsSagas),
     yield fork(appSagas),
-  ];
+  ]
 }

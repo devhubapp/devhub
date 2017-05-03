@@ -1,43 +1,43 @@
-import React from 'react';
-import styled from 'styled-components/native';
+import React from 'react'
+import styled from 'styled-components/native'
 
-import Icon from '../../libs/icon';
-import { contentPadding } from '../../styles/variables';
+import Icon from '../../libs/icon'
+import { contentPadding } from '../../styles/variables'
 
 const RepositoryStarButton = styled.TouchableOpacity`
   align-self: stretch;
   align-items: center;
   justify-content: center;
   background-color: transparent;
-`;
+`
 
 const RepositoryStarIcon = styled(Icon)`
   margin-horizontal: ${contentPadding}px;
   font-size: ${({ size }) => size}px;
   color: ${({ starred, theme }) => (starred ? theme.star : theme.base04)};
-`;
+`
 
 export default class extends React.PureComponent {
   state = {
     starred: this.props.starred,
-  };
+  }
 
   componentWillReceiveProps({ starred }) {
     if (starred !== this.state.starred) {
-      this.setState({ starred });
+      this.setState({ starred })
     }
   }
 
   onPress = next => () => {
-    const { starRepoFn, unstarRepoFn } = this.props;
+    const { starRepoFn, unstarRepoFn } = this.props
 
-    const starred = !this.state.starred;
-    this.setState({ starred });
+    const starred = !this.state.starred
+    this.setState({ starred })
 
-    if (typeof next === 'function') next(starred);
-    if (starred && typeof starRepoFn === 'function') starRepoFn();
-    if (!starred && typeof unstarRepoFn === 'function') unstarRepoFn();
-  };
+    if (typeof next === 'function') next(starred)
+    if (starred && typeof starRepoFn === 'function') starRepoFn()
+    if (!starred && typeof unstarRepoFn === 'function') unstarRepoFn()
+  }
 
   props: {
     containerStyle?: Object,
@@ -47,11 +47,11 @@ export default class extends React.PureComponent {
     starred: boolean,
     style?: Object,
     unstarRepoFn: Function,
-  };
+  }
 
   render() {
-    const { starred } = this.state;
-    const { containerStyle, onPress, size = 16, style, ...props } = this.props;
+    const { starred } = this.state
+    const { containerStyle, onPress, size = 16, style, ...props } = this.props
 
     return (
       <RepositoryStarButton
@@ -66,6 +66,6 @@ export default class extends React.PureComponent {
           style={style}
         />
       </RepositoryStarButton>
-    );
+    )
   }
 }

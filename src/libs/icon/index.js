@@ -1,1 +1,1 @@
-export default from 'react-native-vector-icons/Octicons';
+export default from 'react-native-vector-icons/Octicons'

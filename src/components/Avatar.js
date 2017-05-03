@@ -1,17 +1,17 @@
 // @flow
 
-import React from 'react';
-import styled from 'styled-components/native';
-import { Platform } from 'react-native';
+import React from 'react'
+import styled from 'styled-components/native'
+import { Platform } from 'react-native'
 import type ImageSourcePropType
-  from 'react-native/Libraries/Image/ImageSourcePropType';
+  from 'react-native/Libraries/Image/ImageSourcePropType'
 
-import { radius as defaultRadius, mutedOpacity } from '../styles/variables';
+import { radius as defaultRadius, mutedOpacity } from '../styles/variables'
 
 const bgColorAfterLog = Platform.select({
   android: 'transparent',
   default: '#ffffff',
-});
+})
 
 const Avatar = styled.Image`
   width: ${({ size }) => size}px;
@@ -19,7 +19,7 @@ const Avatar = styled.Image`
   background-color: ${({ error, loading, theme }) => (!loading && !error ? bgColorAfterLog : theme.base03)};
   border-radius: ${({ radius }) => radius}px;
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
-`;
+`
 
 export default class extends React.PureComponent {
   static defaultProps = {
@@ -29,32 +29,32 @@ export default class extends React.PureComponent {
     onError: undefined,
     radius: defaultRadius,
     size: 50,
-  };
+  }
 
   state = {
     error: false,
     loading: true,
-  };
+  }
 
   onLoad = next => () => {
-    this.setState({ loading: false, error: false });
-    if (typeof next === 'function') next();
-  };
+    this.setState({ loading: false, error: false })
+    if (typeof next === 'function') next()
+  }
 
   onLoadStart = next => () => {
-    this.setState({ loading: true });
-    if (typeof next === 'function') next();
-  };
+    this.setState({ loading: true })
+    if (typeof next === 'function') next()
+  }
 
   onLoadEnd = next => () => {
-    this.setState({ loading: false });
-    if (typeof next === 'function') next();
-  };
+    this.setState({ loading: false })
+    if (typeof next === 'function') next()
+  }
 
   onError = next => () => {
-    this.setState({ loading: false, error: true });
-    if (typeof next === 'function') next();
-  };
+    this.setState({ loading: false, error: true })
+    if (typeof next === 'function') next()
+  }
 
   props: {
     onLoad?: Function,
@@ -64,10 +64,10 @@ export default class extends React.PureComponent {
     size?: number,
     radius?: number,
     source: ImageSourcePropType,
-  };
+  }
 
   render() {
-    const { error, loading } = this.state;
+    const { error, loading } = this.state
 
     const {
       size,
@@ -77,10 +77,10 @@ export default class extends React.PureComponent {
       onLoadEnd,
       onError,
       ...props
-    } = this.props;
+    } = this.props
 
-    delete props.error;
-    delete props.loading;
+    delete props.error
+    delete props.loading
 
     return (
       <Avatar
@@ -95,6 +95,6 @@ export default class extends React.PureComponent {
         onError={this.onError(onError)}
         {...props}
       />
-    );
+    )
   }
 }

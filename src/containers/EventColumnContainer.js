@@ -1,10 +1,10 @@
 // @flow
 
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-import EventColumn from '../components/columns/EventColumn';
+import EventColumn from '../components/columns/EventColumn'
 
 import {
   columnIsLoadingSelector,
@@ -13,22 +13,22 @@ import {
   makeColumnSelector,
   makeColumnSubscriptionsSelector,
   makeDenormalizedOrderedColumnEventsSelector,
-} from '../selectors';
+} from '../selectors'
 
-import * as actionCreators from '../actions';
+import * as actionCreators from '../actions'
 import type {
   ActionCreators,
   Column as ColumnType,
   GithubEvent,
   Subscription,
   State,
-} from '../utils/types';
+} from '../utils/types'
 
 const makeMapStateToProps = () => {
-  const columnIsEmptySelector = makeColumnIsEmptySelector();
-  const columnSelector = makeColumnSelector();
-  const columnSubscriptionsSelector = makeColumnSubscriptionsSelector();
-  const denormalizedOrderedColumnEventsSelector = makeDenormalizedOrderedColumnEventsSelector();
+  const columnIsEmptySelector = makeColumnIsEmptySelector()
+  const columnSelector = makeColumnSelector()
+  const columnSubscriptionsSelector = makeColumnSubscriptionsSelector()
+  const denormalizedOrderedColumnEventsSelector = makeDenormalizedOrderedColumnEventsSelector()
 
   return (state: State, { columnId }: { columnId: string }) => ({
     column: columnSelector(state, { columnId }),
@@ -37,12 +37,12 @@ const makeMapStateToProps = () => {
     isEmpty: columnIsEmptySelector(state, { columnId }),
     loading: columnIsLoadingSelector(state, { columnId }),
     subscriptions: columnSubscriptionsSelector(state, { columnId }),
-  });
-};
+  })
+}
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
-});
+})
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
@@ -53,7 +53,7 @@ export default class extends React.PureComponent {
     events: Array<GithubEvent>,
     loading: boolean,
     subscriptions: Array<Subscription>,
-  };
+  }
 
   render() {
     const {
@@ -64,9 +64,9 @@ export default class extends React.PureComponent {
       loading,
       subscriptions,
       ...props
-    } = this.props;
+    } = this.props
 
-    if (!column) return null;
+    if (!column) return null
 
     return (
       <EventColumn
@@ -79,6 +79,6 @@ export default class extends React.PureComponent {
         subscriptions={subscriptions}
         {...props}
       />
-    );
+    )
   }
 }

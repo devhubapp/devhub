@@ -1,8 +1,8 @@
 // @flow
 /* global __DEV__ */
 
-import _ from 'lodash';
-import moment from 'moment';
+import _ from 'lodash'
+import moment from 'moment'
 
 import {
   fixFirebaseKey,
@@ -10,12 +10,12 @@ import {
   getObjectFilteredByMap,
   getRelativePathFromRef,
   getMapAnalysis,
-} from './helpers';
+} from './helpers'
 
-import { forEach, get, isObjectOrMap } from '../../../utils/immutable';
+import { forEach, get, isObjectOrMap } from '../../../utils/immutable'
 
-export const firebaseCharMap = { '/': '__STRIPE__' };
-export const firebaseInvertedCharMap = _.invert(firebaseCharMap);
+export const firebaseCharMap = { '/': '__STRIPE__' }
+export const firebaseInvertedCharMap = _.invert(firebaseCharMap)
 
 export function createFirebaseHandler({
   blacklist,
@@ -26,34 +26,34 @@ export function createFirebaseHandler({
   rootDatabaseRef,
 }) {
   return snapshot => {
-    const fullPath = getRelativePathFromRef(snapshot.ref, rootDatabaseRef);
-    let value = snapshot.val();
-    let blacklisted = false;
+    const fullPath = getRelativePathFromRef(snapshot.ref, rootDatabaseRef)
+    let value = snapshot.val()
+    let blacklisted = false
 
     if (eventName === 'value' && isObjectOrMap(value)) {
-      value = getObjectFilteredByMap(value, map);
+      value = getObjectFilteredByMap(value, map)
     } else {
       blacklisted =
-        blacklist && blacklist.length && blacklist.includes(snapshot.key);
+        blacklist && blacklist.length && blacklist.includes(snapshot.key)
     }
 
     if (debug) {
-      const suffix = blacklisted ? ', but ignored.' : ':';
+      const suffix = blacklisted ? ', but ignored.' : ':'
       console.debug(
         `[FIREBASE] Received ${eventName} on ${fullPath || '/'}${suffix}`,
         value,
-      );
+      )
     }
 
     if (blacklisted) {
-      return;
+      return
     }
 
-    const firebasePathArr = fullPath.split('/').filter(Boolean);
+    const firebasePathArr = fullPath.split('/').filter(Boolean)
     const statePathArr = firebasePathArr.map(path =>
       fixFirebaseKey(path, false),
-    );
-    value = fixFirebaseKeysFromObject(value, false);
+    )
+    value = fixFirebaseKeysFromObject(value, false)
 
     if (typeof callback === 'function') {
       callback({
@@ -61,9 +61,9 @@ export function createFirebaseHandler({
         firebasePathArr,
         statePathArr,
         value,
-      });
+      })
     }
-  };
+  }
 }
 
 export const addFirebaseListener = ({
@@ -77,19 +77,19 @@ export const addFirebaseListener = ({
   rootDatabaseRef,
   ...rest
 }) => {
-  const fullPath = getRelativePathFromRef(ref, rootDatabaseRef);
-  let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}`;
+  const fullPath = getRelativePathFromRef(ref, rootDatabaseRef)
+  let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}`
 
   if (blacklist && blacklist.length) {
-    message = `${message}, except ${blacklist.join(', ')}`;
+    message = `${message}, except ${blacklist.join(', ')}`
   }
 
-  if (debug && !rest.isRecursiveCall) console.debug(message);
+  if (debug && !rest.isRecursiveCall) console.debug(message)
 
   if (eventName === 'children' || Array.isArray(eventName)) {
     const eventNames = Array.isArray(eventName)
       ? eventName
-      : ['child_added', 'child_changed', 'child_removed'];
+      : ['child_added', 'child_changed', 'child_removed']
 
     eventNames.forEach(realEventName => {
       addFirebaseListener({
@@ -103,10 +103,10 @@ export const addFirebaseListener = ({
         ref,
         rootDatabaseRef,
         isRecursiveCall: true,
-      });
-    });
+      })
+    })
 
-    return;
+    return
   }
 
   if (once) {
@@ -120,7 +120,7 @@ export const addFirebaseListener = ({
         map,
         rootDatabaseRef,
       }),
-    );
+    )
   } else {
     ref.on(
       eventName,
@@ -132,9 +132,9 @@ export const addFirebaseListener = ({
         map,
         rootDatabaseRef,
       }),
-    );
+    )
   }
-};
+}
 
 export function watchFirebaseFromMap({
   callback,
@@ -145,10 +145,10 @@ export function watchFirebaseFromMap({
   ref = rootDatabaseRef,
   ...rest
 }) {
-  const mapAnalysis = getMapAnalysis(map);
-  if (!mapAnalysis) return;
+  const mapAnalysis = getMapAnalysis(map)
+  if (!mapAnalysis) return
 
-  const { blacklist, count, hasAsterisk, objects, whitelist } = mapAnalysis;
+  const { blacklist, count, hasAsterisk, objects, whitelist } = mapAnalysis
 
   objects.forEach(field => {
     watchFirebaseFromMap({
@@ -159,8 +159,8 @@ export function watchFirebaseFromMap({
       once,
       ref: ref.child(field),
       rootDatabaseRef,
-    });
-  });
+    })
+  })
 
   if (count === 0 || (hasAsterisk && count === 1)) {
     // passed an empty object, so listen to it's children
@@ -173,7 +173,7 @@ export function watchFirebaseFromMap({
       once,
       ref,
       rootDatabaseRef,
-    });
+    })
   } else if (blacklist.length) {
     // listen to all children, except the ones specified
     addFirebaseListener({
@@ -186,7 +186,7 @@ export function watchFirebaseFromMap({
       once,
       ref,
       rootDatabaseRef,
-    });
+    })
   } else if (whitelist.length) {
     // listen only to the specified children
     whitelist.forEach(field =>
@@ -200,7 +200,7 @@ export function watchFirebaseFromMap({
         ref: ref.child(field),
         rootDatabaseRef,
       }),
-    );
+    )
   }
 }
 
@@ -212,13 +212,13 @@ export const applyPatchOnFirebase = ({
   ref = rootDatabaseRef,
   ...rest
 }) => {
-  if (!(ref && patch && isObjectOrMap(patch))) return;
+  if (!(ref && patch && isObjectOrMap(patch))) return
 
-  const currentDepth = Number(rest.currentDepth) || 1;
-  const maxDepth = Number(depth) > 0 ? depth : -1;
+  const currentDepth = Number(rest.currentDepth) || 1
+  const maxDepth = Number(depth) > 0 ? depth : -1
 
   forEach(patch, (value, field) => {
-    const fixedPath = fixFirebaseKey(field, true);
+    const fixedPath = fixFirebaseKey(field, true)
 
     if (isObjectOrMap(value) && (currentDepth < maxDepth || maxDepth === -1)) {
       applyPatchOnFirebase({
@@ -228,21 +228,21 @@ export const applyPatchOnFirebase = ({
         ref: ref.child(fixedPath),
         rootDatabaseRef,
         currentDepth: currentDepth + 1,
-      });
+      })
 
-      return;
+      return
     }
 
     if (debug) {
-      const fullPath = `${getRelativePathFromRef(ref, rootDatabaseRef)}/${field}`;
-      console.debug(`[FIREBASE] Patching on ${fullPath || '/'}`, value);
+      const fullPath = `${getRelativePathFromRef(ref, rootDatabaseRef)}/${field}`
+      console.debug(`[FIREBASE] Patching on ${fullPath || '/'}`, value)
     }
 
     // value fixes
-    let _value = value;
-    if (_value instanceof Date) _value = moment(_value).toISOString();
-    if (Number.isNaN(_value)) _value = 0;
+    let _value = value
+    if (_value instanceof Date) _value = moment(_value).toISOString()
+    if (Number.isNaN(_value)) _value = 0
 
-    ref.child(fixedPath).set(_value);
-  });
-};
+    ref.child(fixedPath).set(_value)
+  })
+}

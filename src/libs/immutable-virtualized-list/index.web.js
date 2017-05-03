@@ -1,19 +1,19 @@
 /* @flow */
 
-import React from 'react';
-import ImmutableListView from 'react-native-immutable-list-view';
-import { OrderedMap } from 'immutable';
-import type { List } from 'immutable';
+import React from 'react'
+import ImmutableListView from 'react-native-immutable-list-view'
+import { OrderedMap } from 'immutable'
+import type { List } from 'immutable'
 
-import { get } from '../../utils/immutable';
+import { get } from '../../utils/immutable'
 
 const makeRenderRow = (immutableData, renderItem) => item =>
-  !!immutableData && renderItem({ item });
+  !!immutableData && renderItem({ item })
 
 type Props = {
   immutableData: List,
   renderItem: ({ item: any, index: number }) => ?React.Element<any>,
-};
+}
 
 export default ({ immutableData, renderItem, ...props }: Props) => (
   <ImmutableListView
@@ -21,19 +21,19 @@ export default ({ immutableData, renderItem, ...props }: Props) => (
     renderRow={makeRenderRow(immutableData, renderItem)}
     {...props}
   />
-);
+)
 
 const makeRenderSectionHeader = renderSectionHeader => (section, key) =>
   renderSectionHeader({
     section: OrderedMap({ key, data: section.toList() }),
-  });
+  })
 
-type Section = { key: string, data: List };
+type Section = { key: string, data: List }
 
 type SectionListProps = Props & {
   renderSectionHeader: ({ section: Section }) => ?React.Element<any>,
   sections: List<Section>,
-};
+}
 export const ImmutableSectionList = ({
   immutableData,
   renderItem,
@@ -47,4 +47,4 @@ export const ImmutableSectionList = ({
     renderSectionHeader={makeRenderSectionHeader(renderSectionHeader)}
     {...props}
   />
-);
+)

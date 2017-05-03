@@ -1,6 +1,6 @@
 // flow
 
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from 'react'
 import {
   Animated,
   Dimensions,
@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
+} from 'react-native'
 
 type ActionSheetProps = {
   cancelButtonIndex: ?number,
@@ -31,27 +31,27 @@ type ActionSheetProps = {
   titleContainerStyle: ?any,
   titleTextStyle: ?any,
   useNativeDriver: ?boolean,
-};
+}
 
 type ActionSheetState = {
   isAnimating: boolean,
   isVisible: boolean,
   overlayOpacity: any,
   translateY: any,
-};
+}
 
-export const ANIMATION_TIME_HIDE = 200;
-export const ANIMATION_TIME_SHOW = 400;
-export const CANCEL_MARGIN = 6;
-export const DANGER_COLOR = '#ff3b30';
-export const MAX_HEIGHT = Dimensions.get('window').height * 0.7;
-export const OPTION_HEIGHT = 50;
-export const OPTION_MARGIN = StyleSheet.hairlineWidth;
-export const OVERLAY_OPACITY = 0.4;
-export const TITLE_HEIGHT = 40;
-export const TITLE_MARGIN = OPTION_MARGIN;
+export const ANIMATION_TIME_HIDE = 200
+export const ANIMATION_TIME_SHOW = 400
+export const CANCEL_MARGIN = 6
+export const DANGER_COLOR = '#ff3b30'
+export const MAX_HEIGHT = Dimensions.get('window').height * 0.7
+export const OPTION_HEIGHT = 50
+export const OPTION_MARGIN = StyleSheet.hairlineWidth
+export const OVERLAY_OPACITY = 0.4
+export const TITLE_HEIGHT = 40
+export const TITLE_MARGIN = OPTION_MARGIN
 
-export const DEFAULT_TINT_COLOR = '#007aff';
+export const DEFAULT_TINT_COLOR = '#007aff'
 
 const styles = StyleSheet.create({
   full: {
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
     opacity: 0,
   },
-});
+})
 
 export default class ActionSheet extends PureComponent {
   static defaultProps = {
@@ -104,10 +104,10 @@ export default class ActionSheet extends PureComponent {
     radius: 10,
     tintColor: DEFAULT_TINT_COLOR,
     useNativeDriver: true,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       height: this.calculateHeight(props),
@@ -115,25 +115,25 @@ export default class ActionSheet extends PureComponent {
       isVisible: false,
       overlayOpacity: new Animated.Value(0),
       translateY: new Animated.Value(this.calculateHeight(props)),
-    };
+    }
   }
 
-  state: ActionSheetState;
+  state: ActionSheetState
 
   componentWillReceiveProps(props) {
-    this.setState({ height: this.calculateHeight(props) });
+    this.setState({ height: this.calculateHeight(props) })
   }
 
   animate = (toVisible, callback) => {
     if (this.state.isVisible === toVisible) {
-      return;
+      return
     }
 
-    const duration = toVisible ? ANIMATION_TIME_SHOW : ANIMATION_TIME_HIDE;
-    const easing = Easing.out(Easing.cubic);
-    const overlayOpacity = toVisible ? OVERLAY_OPACITY : 0;
-    const translateY = toVisible ? 0 : this.state.height;
-    const { useNativeDriver } = this.props;
+    const duration = toVisible ? ANIMATION_TIME_SHOW : ANIMATION_TIME_HIDE
+    const easing = Easing.out(Easing.cubic)
+    const overlayOpacity = toVisible ? OVERLAY_OPACITY : 0
+    const translateY = toVisible ? 0 : this.state.height
+    const { useNativeDriver } = this.props
 
     this.setState({ isAnimating: true, isVisible: toVisible }, () => {
       Animated.parallel([
@@ -153,44 +153,44 @@ export default class ActionSheet extends PureComponent {
         if (result.finished) {
           this.setState({ isAnimating: false }, () => {
             if (typeof callback === 'function') {
-              callback();
+              callback()
             }
-          });
+          })
         }
-      });
-    });
-  };
+      })
+    })
+  }
 
   calculateHeight = props =>
     (props.title ? TITLE_HEIGHT + TITLE_MARGIN : 0) +
     (props.options || []).length * (OPTION_HEIGHT + OPTION_MARGIN) +
     CANCEL_MARGIN +
-    2 * (props.containerPadding || 0);
+    2 * (props.containerPadding || 0)
 
   hide = (animated = true, callback) =>
     animated
       ? this.animate(false, callback)
-      : this.setState({ visible: false }, callback);
+      : this.setState({ visible: false }, callback)
 
   show = (animated = true, callback) =>
     animated
       ? this.animate(true, callback)
-      : this.setState({ visible: true }, callback);
+      : this.setState({ visible: true }, callback)
 
   toggle = (animated = true, callback) =>
     this.state.isVisible
       ? this.hide(animated, callback)
-      : this.show(animated, callback);
+      : this.show(animated, callback)
 
   select = index => {
     this.hide(true, () => {
       setTimeout(() => {
-        this.props.onSelect(index);
-      }, 50);
-    });
-  };
+        this.props.onSelect(index)
+      }, 50)
+    })
+  }
 
-  props: ActionSheetProps;
+  props: ActionSheetProps
 
   renderCancelOption({ style, textStyle } = {}) {
     const {
@@ -199,10 +199,10 @@ export default class ActionSheet extends PureComponent {
       optionContainerStyle,
       radius,
       tintColor,
-    } = this.props;
+    } = this.props
 
     if (!(cancelButtonIndex >= 0 && options[cancelButtonIndex])) {
-      return null;
+      return null
     }
 
     return this.renderOption(cancelButtonIndex, options[cancelButtonIndex], {
@@ -213,12 +213,12 @@ export default class ActionSheet extends PureComponent {
         style,
       ],
       textStyle: [{ fontWeight: '600' }, textStyle],
-    });
+    })
   }
 
   renderOption = (index, label, { color, style, textStyle } = {}) => {
-    const { optionContainerStyle, optionTextStyle, options } = this.props;
-    const isLastOption = index === options.length - 1;
+    const { optionContainerStyle, optionTextStyle, options } = this.props
+    const isLastOption = index === options.length - 1
 
     return (
       <TouchableOpacity
@@ -241,8 +241,8 @@ export default class ActionSheet extends PureComponent {
               {label}
             </Text>}
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   renderOptions = () => {
     const {
@@ -252,18 +252,18 @@ export default class ActionSheet extends PureComponent {
       radius,
       tintColor,
       title,
-    } = this.props;
+    } = this.props
 
     const mainOptions = options.filter(
       (label, index) => index !== cancelButtonIndex,
-    );
+    )
 
-    const lastIndex = options.indexOf(mainOptions.pop());
+    const lastIndex = options.indexOf(mainOptions.pop())
 
     return options.map((label, index) => {
-      if (index === cancelButtonIndex) return null;
+      if (index === cancelButtonIndex) return null
 
-      const color = index === destructiveButtonIndex ? DANGER_COLOR : tintColor;
+      const color = index === destructiveButtonIndex ? DANGER_COLOR : tintColor
 
       return this.renderOption(index, label, {
         color,
@@ -273,9 +273,9 @@ export default class ActionSheet extends PureComponent {
           borderBottomLeftRadius: index === lastIndex ? radius : 0,
           borderBottomRightRadius: index === lastIndex ? radius : 0,
         },
-      });
-    });
-  };
+      })
+    })
+  }
 
   renderTitle({ style, textStyle } = {}) {
     const {
@@ -284,10 +284,10 @@ export default class ActionSheet extends PureComponent {
       title,
       titleContainerStyle,
       titleTextStyle,
-    } = this.props;
+    } = this.props
 
     if (!title) {
-      return null;
+      return null
     }
 
     return (
@@ -313,7 +313,7 @@ export default class ActionSheet extends PureComponent {
               {title}
             </Text>}
       </View>
-    );
+    )
   }
 
   render() {
@@ -322,16 +322,16 @@ export default class ActionSheet extends PureComponent {
       containerStyle,
       optionsContainerStyle,
       radius,
-    } = this.props;
+    } = this.props
     const {
       height,
       isAnimating,
       isVisible,
       overlayOpacity,
       translateY,
-    } = this.state;
+    } = this.state
 
-    if (!(isVisible || isAnimating)) return null;
+    if (!(isVisible || isAnimating)) return null
 
     return (
       <Modal
@@ -359,7 +359,7 @@ export default class ActionSheet extends PureComponent {
             },
           ]}
           onLayout={({ nativeEvent: { layout } }) => {
-            if (layout.height > 0) this.setState({ height: layout.height });
+            if (layout.height > 0) this.setState({ height: layout.height })
           }}
         >
           <View
@@ -377,6 +377,6 @@ export default class ActionSheet extends PureComponent {
           {this.renderCancelOption()}
         </Animated.View>
       </Modal>
-    );
+    )
   }
 }

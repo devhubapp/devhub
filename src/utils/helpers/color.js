@@ -1,12 +1,12 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import warna from 'warna';
+import warna from 'warna'
 
-export const darken = warna.darken;
-export const lighten = warna.lighten;
+export const darken = warna.darken
+export const lighten = warna.lighten
 
 export function fade(color: string, opacity: number = 1) {
-  const rgb = warna.parse(color).rgb;
-  return `rgba(${rgb.red}, ${rgb.green}, ${rgb.blue}, ${opacity})`;
+  const rgb = warna.parse(color).rgb
+  return `rgba(${rgb.red}, ${rgb.green}, ${rgb.blue}, ${opacity})`
 }

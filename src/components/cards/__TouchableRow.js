@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
-import { withTheme } from 'styled-components/native';
+import React from 'react'
+import { withTheme } from 'styled-components/native'
 
-import ScrollableButton from '../buttons/ScrollableButton';
-import TransparentTextOverlay from '../TransparentTextOverlay';
-import { openOnGithub } from '../../utils/helpers/github/url';
+import ScrollableButton from '../buttons/ScrollableButton'
+import TransparentTextOverlay from '../TransparentTextOverlay'
+import { openOnGithub } from '../../utils/helpers/github/url'
 
 import {
   ContentRow,
@@ -13,10 +13,10 @@ import {
   HighlightContainerRow1,
   LeftColumn,
   MainColumn,
-} from './__CardComponents';
+} from './__CardComponents'
 
-import { contentPadding, radius } from '../../styles/variables';
-import type { ThemeObject } from '../../utils/types';
+import { contentPadding, radius } from '../../styles/variables'
+import type { ThemeObject } from '../../utils/types'
 
 @withTheme
 export default class extends React.PureComponent {
@@ -30,7 +30,7 @@ export default class extends React.PureComponent {
     right?: React.Element,
     theme?: ThemeObject,
     url?: string,
-  };
+  }
 
   render() {
     const {
@@ -43,7 +43,7 @@ export default class extends React.PureComponent {
       theme,
       url,
       ...props
-    } = this.props;
+    } = this.props
 
     return (
       <ContentRow narrow={narrow} {...props}>
@@ -73,6 +73,6 @@ export default class extends React.PureComponent {
           </HighlightContainerRow1>
         </MainColumn>
       </ContentRow>
-    );
+    )
   }
 }

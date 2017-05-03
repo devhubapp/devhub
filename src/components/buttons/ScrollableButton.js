@@ -1,15 +1,15 @@
-import React from 'react';
-import styled from 'styled-components/native';
+import React from 'react'
+import styled from 'styled-components/native'
 
-import ScrollableContentContainer from '../ScrollableContentContainer';
-import { contentPadding } from '../../styles/variables';
+import ScrollableContentContainer from '../ScrollableContentContainer'
+import { contentPadding } from '../../styles/variables'
 
 const StyledButton = styled.TouchableOpacity`
   flex: 1;
   flex-direction: row;
   align-items: center;
   padding-horizontal: ${contentPadding}px;
-`;
+`
 
 export default class extends React.PureComponent {
   props: {
@@ -17,7 +17,7 @@ export default class extends React.PureComponent {
     contentContainerStyle?: Object,
     onPress: Function,
     buttonProps?: Object,
-  };
+  }
 
   render() {
     const {
@@ -26,7 +26,7 @@ export default class extends React.PureComponent {
       children,
       onPress,
       ...props
-    } = this.props;
+    } = this.props
 
     return (
       <ScrollableContentContainer
@@ -40,6 +40,6 @@ export default class extends React.PureComponent {
           {children}
         </StyledButton>
       </ScrollableContentContainer>
-    );
+    )
   }
 }

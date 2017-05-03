@@ -1,6 +1,6 @@
 // @flow
 
-import { Map } from 'immutable';
+import { Map } from 'immutable'
 
 import {
   ARCHIVE_NOTIFICATIONS,
@@ -9,7 +9,7 @@ import {
   MARK_NOTIFICATIONS_AS_READ_FAILURE,
   MARK_NOTIFICATIONS_AS_READ_SUCCESS,
   MARK_NOTIFICATIONS_AS_UNREAD,
-} from '../../utils/constants/actions';
+} from '../../utils/constants/actions'
 
 import {
   deleteByIds,
@@ -17,12 +17,12 @@ import {
   markAsUnreadByIds,
   markAsArchivedByIds,
   undoMarkAsReadByIds,
-} from './_shared';
+} from './_shared'
 
-import type { Action, Normalized } from '../../utils/types';
+import type { Action, Normalized } from '../../utils/types'
 
-type State = Normalized<Object>;
-const initialState = Map();
+type State = Normalized<Object>
+const initialState = Map()
 
 export default (
   state: State = initialState,
@@ -34,7 +34,7 @@ export default (
         state,
         payload.notificationIds,
         payload.archivedAt,
-      );
+      )
 
     case DELETE_NOTIFICATIONS:
       return deleteByIds(
@@ -42,7 +42,7 @@ export default (
         payload.notificationIds,
         payload.deletedAt,
         true,
-      );
+      )
 
     case MARK_NOTIFICATIONS_AS_READ_REQUEST:
       return markAsReadByIds(
@@ -50,10 +50,10 @@ export default (
         payload.notificationIds,
         payload.lastReadAt,
         false,
-      );
+      )
 
     case MARK_NOTIFICATIONS_AS_READ_FAILURE:
-      return undoMarkAsReadByIds(state, payload.notificationIds);
+      return undoMarkAsReadByIds(state, payload.notificationIds)
 
     case MARK_NOTIFICATIONS_AS_READ_SUCCESS:
       return markAsReadByIds(
@@ -61,16 +61,16 @@ export default (
         payload.notificationIds,
         payload.lastReadAt,
         true,
-      );
+      )
 
     case MARK_NOTIFICATIONS_AS_UNREAD:
       return markAsUnreadByIds(
         state,
         payload.notificationIds,
         payload.lastUnreadAt,
-      );
+      )
 
     default:
-      return state;
+      return state
   }
-};
+}

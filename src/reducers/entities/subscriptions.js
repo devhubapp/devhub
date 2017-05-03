@@ -1,9 +1,9 @@
 // @flow
 
-import moment from 'moment';
-import { fromJS, Map, Set } from 'immutable';
+import moment from 'moment'
+import { fromJS, Map, Set } from 'immutable'
 
-import { ApiRequestType, getUniquePath } from '../../api/github';
+import { ApiRequestType, getUniquePath } from '../../api/github'
 import {
   CREATE_SUBSCRIPTION,
   DELETE_EVENTS,
@@ -11,7 +11,7 @@ import {
   LOAD_SUBSCRIPTION_DATA_REQUEST,
   LOAD_SUBSCRIPTION_DATA_SUCCESS,
   LOAD_SUBSCRIPTION_DATA_FAILURE,
-} from '../../utils/constants/actions';
+} from '../../utils/constants/actions'
 
 import type {
   Action,
@@ -19,13 +19,13 @@ import type {
   ApiResponsePayload,
   Normalized,
   Subscription,
-} from '../../utils/types';
+} from '../../utils/types'
 
 export function generateSubscriptionId(
   requestType: ApiRequestType,
   params: Object,
 ) {
-  return getUniquePath(requestType, params);
+  return getUniquePath(requestType, params)
 }
 
 type State = Normalized<Subscription> & {
@@ -37,9 +37,9 @@ type State = Normalized<Subscription> & {
   rateLimitReset?: number,
   loading: boolean,
   error?: string,
-};
+}
 
-const initialState = Map();
+const initialState = Map()
 
 export default (
   state: State = initialState,
@@ -53,12 +53,11 @@ export default (
         params,
         ...restOfPayload
       }: Subscription) => {
-        const id =
-          subscriptionId || generateSubscriptionId(requestType, params);
-        const subscription = state.get(id);
+        const id = subscriptionId || generateSubscriptionId(requestType, params)
+        const subscription = state.get(id)
 
         // already exists
-        if (subscription) return state;
+        if (subscription) return state
 
         return state.set(
           id,
@@ -69,29 +68,29 @@ export default (
             createdAt: moment().toISOString(),
             ...restOfPayload,
           }),
-        );
-      })(payload || {});
+        )
+      })(payload || {})
 
     case DELETE_EVENTS:
       return state.map(subscription =>
         subscription.update('events', events =>
           (events || Set()).toSet().subtract(payload.eventIds),
         ),
-      );
+      )
 
     case DELETE_SUBSCRIPTION:
       // TODO: Delete all events that are not being used elsewhere
-      return state.delete(payload.id);
+      return state.delete(payload.id)
 
     case LOAD_SUBSCRIPTION_DATA_REQUEST:
       return (({ subscriptionId }: ApiRequestPayload) =>
-        state.setIn([subscriptionId, 'loading'], true))(payload || {});
+        state.setIn([subscriptionId, 'loading'], true))(payload || {})
 
     case LOAD_SUBSCRIPTION_DATA_FAILURE:
       return (({ request: { subscriptionId } }: ApiResponsePayload) =>
         state
           .setIn([subscriptionId, 'loading'], false)
-          .setIn([subscriptionId, 'error'], error))(payload || {});
+          .setIn([subscriptionId, 'error'], error))(payload || {})
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:
       return (({
@@ -99,13 +98,13 @@ export default (
         data,
         meta,
       }: ApiResponsePayload) => {
-        const { result } = data || {};
+        const { result } = data || {}
 
-        const subscription = state.get(subscriptionId);
-        if (!subscription) return state;
+        const subscription = state.get(subscriptionId)
+        if (!subscription) return state
 
-        const eventIds = Set(subscription.get('events'));
-        const newEventIds = result ? Set(result).union(eventIds) : eventIds;
+        const eventIds = Set(subscription.get('events'))
+        const newEventIds = result ? Set(result).union(eventIds) : eventIds
 
         const newSubscription = subscription.mergeDeep(
           fromJS({
@@ -129,12 +128,12 @@ export default (
             loading: false,
             error: null,
           }),
-        );
+        )
 
-        return state.set(subscriptionId, newSubscription);
-      })(payload || {});
+        return state.set(subscriptionId, newSubscription)
+      })(payload || {})
 
     default:
-      return state;
+      return state
   }
-};
+}

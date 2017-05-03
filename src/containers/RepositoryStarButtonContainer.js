@@ -1,32 +1,32 @@
 // @flow
 
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 
-import StarButton from '../components/buttons/StarButton';
-import { makeIsRepoStarredSelector } from '../selectors';
-import { starRepo, unstarRepo } from '../actions';
-import type { ActionCreators, State } from '../utils/types';
+import StarButton from '../components/buttons/StarButton'
+import { makeIsRepoStarredSelector } from '../selectors'
+import { starRepo, unstarRepo } from '../actions'
+import type { ActionCreators, State } from '../utils/types'
 
 const makeMapStateToProps = () => {
-  const isRepoStarredSelector = makeIsRepoStarredSelector();
+  const isRepoStarredSelector = makeIsRepoStarredSelector()
 
   return (state: State, { repoId }: { repoId: string }) => ({
     starred: isRepoStarredSelector(state, { repoId: `${repoId}` }),
-  });
-};
+  })
+}
 
 const mapDispatchToProps = {
   starRepo,
   unstarRepo,
-};
+}
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.bindActionsToRepoId(props);
+    this.bindActionsToRepoId(props)
   }
 
   componentWillReceiveProps(newProps) {
@@ -35,13 +35,13 @@ export default class extends React.PureComponent {
       newProps.starRepo !== this.props.starRepo ||
       newProps.unstarRepo !== this.props.unstarRepo
     ) {
-      this.bindActionsToRepoId(newProps);
+      this.bindActionsToRepoId(newProps)
     }
   }
 
   bindActionsToRepoId({ repoId, starRepo }) {
-    this.starRepoFn = starRepo.bind(null, { repoId });
-    this.unstarRepoFn = unstarRepo.bind(null, { repoId });
+    this.starRepoFn = starRepo.bind(null, { repoId })
+    this.unstarRepoFn = unstarRepo.bind(null, { repoId })
   }
 
   props: {
@@ -50,16 +50,16 @@ export default class extends React.PureComponent {
     starred?: boolean,
     starRepo?: Function,
     unstarRepo?: Function,
-  };
+  }
 
-  starRepoFn = null;
-  unstarRepoFn = null;
+  starRepoFn = null
+  unstarRepoFn = null
 
   render() {
-    const { starred, ...props } = this.props;
-    delete props.actions;
-    delete props.starRepo;
-    delete props.unstarRepo;
+    const { starred, ...props } = this.props
+    delete props.actions
+    delete props.starRepo
+    delete props.unstarRepo
 
     return (
       <StarButton
@@ -68,6 +68,6 @@ export default class extends React.PureComponent {
         unstarRepoFn={this.unstarRepoFn}
         {...props}
       />
-    );
+    )
   }
 }

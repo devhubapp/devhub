@@ -1,5 +1,5 @@
-import pick from 'lodash/pick';
-import { schema } from 'normalizr';
+import pick from 'lodash/pick'
+import { schema } from 'normalizr'
 
 import {
   commitIdAttribute,
@@ -8,16 +8,16 @@ import {
   preferNewestMergeStrategy,
   releaseIdAttribute,
   simpleIdAttribute,
-} from './helpers';
+} from './helpers'
 
-import { isPullRequest } from '../helpers/github/shared';
+import { isPullRequest } from '../helpers/github/shared'
 
 const defaultOptions = {
   idAttribute: simpleIdAttribute,
   mergeStrategy: preferNewestMergeStrategy,
-};
+}
 
-const defaultFields = ['id', 'html_url', 'url', 'created_at', 'updated_at'];
+const defaultFields = ['id', 'html_url', 'url', 'created_at', 'updated_at']
 
 const issueOrPullRequestFields = [
   ...defaultFields,
@@ -30,9 +30,9 @@ const issueOrPullRequestFields = [
   'title',
   'type', // because of the subject field of type Union on notifications
   'user',
-];
+]
 
-const ownerFields = [...defaultFields, 'avatar_url', 'display_login', 'login'];
+const ownerFields = [...defaultFields, 'avatar_url', 'display_login', 'login']
 
 export const CommentSchema = new schema.Entity(
   'comments',
@@ -41,7 +41,7 @@ export const CommentSchema = new schema.Entity(
     ...defaultOptions,
     processStrategy: obj => pick(obj, [...defaultFields, 'body', 'user']),
   },
-);
+)
 
 export const CommitSchema = new schema.Entity(
   'commits',
@@ -50,10 +50,10 @@ export const CommitSchema = new schema.Entity(
     ...defaultOptions,
     idAttribute: commitIdAttribute,
   },
-);
+)
 
-export const ColumnSchema = new schema.Entity('columns', {}, defaultOptions);
-export const EventSchema = new schema.Entity('events', {}, defaultOptions);
+export const ColumnSchema = new schema.Entity('columns', {}, defaultOptions)
+export const EventSchema = new schema.Entity('events', {}, defaultOptions)
 
 export const IssueSchema = new schema.Entity(
   'issues',
@@ -66,7 +66,7 @@ export const IssueSchema = new schema.Entity(
       type: isPullRequest(obj) ? 'PullRequest' : 'Issue',
     }),
   },
-);
+)
 
 export const NotificationSchema = new schema.Entity(
   'notifications',
@@ -75,7 +75,7 @@ export const NotificationSchema = new schema.Entity(
     ...defaultOptions,
     processStrategy: obj => notificationProcessStrategy(obj),
   },
-);
+)
 
 export const OrgSchema = new schema.Entity(
   'orgs',
@@ -84,7 +84,7 @@ export const OrgSchema = new schema.Entity(
     ...defaultOptions,
     processStrategy: obj => pick(obj, ownerFields),
   },
-);
+)
 
 // ps: saving pull requests together with issues
 // because they are the basically the same in githubs databases
@@ -100,7 +100,7 @@ export const PullRequestSchema = new schema.Entity(
       type: 'PullRequest',
     }),
   },
-);
+)
 
 export const ReleaseSchema = new schema.Entity(
   'releases',
@@ -109,13 +109,13 @@ export const ReleaseSchema = new schema.Entity(
     ...defaultOptions,
     idAttribute: releaseIdAttribute,
   },
-);
+)
 
 export const SubscriptionSchema = new schema.Entity(
   'subscriptions',
   {},
   defaultOptions,
-);
+)
 
 export const UserSchema = new schema.Entity(
   'users',
@@ -124,17 +124,17 @@ export const UserSchema = new schema.Entity(
     ...defaultOptions,
     processStrategy: obj => pick(obj, ownerFields),
   },
-);
+)
 
-export const RepoSchema = new schema.Entity('repos', {}, defaultOptions);
+export const RepoSchema = new schema.Entity('repos', {}, defaultOptions)
 
 CommentSchema.define({
   user: UserSchema,
-});
+})
 
 ColumnSchema.define({
   subscriptions: [SubscriptionSchema],
-});
+})
 
 EventSchema.define({
   actor: UserSchema,
@@ -151,13 +151,13 @@ EventSchema.define({
     user: UserSchema,
   },
   merged: [EventSchema],
-});
+})
 
 IssueSchema.define({
   user: UserSchema,
   assignee: UserSchema,
   assignees: [UserSchema],
-});
+})
 
 NotificationSchema.define({
   comment: CommentSchema,
@@ -171,15 +171,15 @@ NotificationSchema.define({
     },
     'type',
   ),
-});
+})
 
 PullRequestSchema.define({
   user: UserSchema,
   assignee: UserSchema,
   assignees: [UserSchema],
   merged_by: UserSchema,
-});
+})
 
 SubscriptionSchema.define({
   events: [EventSchema],
-});
+})

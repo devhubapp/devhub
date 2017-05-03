@@ -1,26 +1,26 @@
 // @flow
 
-import React from 'react';
-import styled from 'styled-components/native';
-import { Platform } from 'react-native';
+import React from 'react'
+import styled from 'styled-components/native'
+import { Platform } from 'react-native'
 
-import Octicon from '../../libs/icon';
+import Octicon from '../../libs/icon'
 
-import ScrollableContentContainer from '../ScrollableContentContainer';
+import ScrollableContentContainer from '../ScrollableContentContainer'
 import {
   avatarWidth,
   contentPadding,
   radius,
   smallAvatarWidth,
   mutedOpacity,
-} from '../../styles/variables';
+} from '../../styles/variables'
 
-import { openOnGithub } from '../../utils/helpers/github/url';
+import { openOnGithub } from '../../utils/helpers/github/url'
 
-export { avatarWidth, smallAvatarWidth };
-export const innerContentPadding = contentPadding;
-export const narrowInnerContentPadding = innerContentPadding / 2;
-export const iconRightMargin = 0; // contentPadding - 2;
+export { avatarWidth, smallAvatarWidth }
+export const innerContentPadding = contentPadding
+export const narrowInnerContentPadding = innerContentPadding / 2
+export const iconRightMargin = 0 // contentPadding - 2;
 
 export const CardWrapper = styled.View`
   padding: ${contentPadding}px;
@@ -28,14 +28,14 @@ export const CardWrapper = styled.View`
   border-bottom-width: 1px;
   border-color: ${({ theme }) => theme.base01};
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
-`;
+`
 
 export const FullView = styled.View`
   flex: 1;
   alignSelf: stretch;
   flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
   align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
-`;
+`
 
 export const FullAbsoluteView = styled.View`
   position: absolute;
@@ -46,7 +46,7 @@ export const FullAbsoluteView = styled.View`
   ${({ width }) => (width ? `width: ${width}px;` : '')}
   ${({ height }) => (height ? `height: ${height}px;` : '')}
   ${({ zIndex }) => (zIndex ? `z-index: ${zIndex};` : '')}
-`;
+`
 
 // export const RowSeparator = styled.View`
 //   flexGrow: 1;
@@ -55,15 +55,15 @@ export const FullAbsoluteView = styled.View`
 
 export const HorizontalView = styled.View`
   flex-direction: row;
-`;
+`
 
 export const RepositoryContentContainer = styled(ScrollableContentContainer)`
   padding-horizontal: ${contentPadding}px;
-`;
+`
 
 export const Header = styled(HorizontalView)`
   align-items: center;
-`;
+`
 
 export const LeftColumn = styled.View`
   align-self: ${({ center }) => (center ? 'center' : 'auto')};
@@ -71,23 +71,23 @@ export const LeftColumn = styled.View`
   justify-content: flex-start;
   width: ${avatarWidth};
   margin-right: ${contentPadding};
-`;
+`
 // opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 
 export const MainColumn = styled.View`
   flex: 1;
   justify-content: center;
-`;
+`
 
 export const MainColumnRowContent = styled(MainColumn)`
   flex-direction: row;
   align-self: ${({ center }) => (center ? 'center' : 'auto')};
-`;
+`
 
 export const HeaderRow = styled(HorizontalView)`
   align-items: flex-start;
   justify-content: space-between;
-`;
+`
 
 export const StyledText = styled.Text`
   background-color: transparent;
@@ -95,75 +95,75 @@ export const StyledText = styled.Text`
   line-height: 20px;
   font-size: ${({ small }) => (small ? 12 : 14)}px;
   font-weight: ${({ read }) => (read === false ? 'bold' : 'normal')};
-`;
+`
 
 export const SmallText = styled(StyledText)`
   font-size: 12px;
-`;
+`
 
 export const OwnerLogin = styled(StyledText)`
   font-weight: bold;
-`;
+`
 
 export const RepositoryName = styled(StyledText)`
-`;
+`
 
 export const CardText = styled(StyledText)`
   flex: 1;
   font-size: 14px;
   ${Platform.select({ web: { wordBreak: 'break-all' } })}
-`;
+`
 
 export const ContentRow = styled(HorizontalView)`
   align-items: flex-start;
   margin-top: ${({ narrow }) => (narrow ? narrowInnerContentPadding : innerContentPadding)};
-`;
+`
 
 export const HighlightContainerBase = styled(HorizontalView)`
   align-items: center;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.base01};
   border-radius: ${radius}px;
-`;
+`
 
 export const HighlightContainer1 = styled(HighlightContainerBase)`
   background-color: ${({ theme }) => theme.base01};
-`;
+`
 
 export const HighlightContainer2 = styled(HighlightContainerBase)`
   background-color: ${({ theme }) => theme.base03};
-`;
+`
 
 export const HighlightContainerRow1 = styled(HighlightContainer1)`
   min-height: 30px;
-`;
+`
 
 export const ItemIdContainer = styled(HighlightContainer2)`
   padding-horizontal: 4px;
-`;
+`
 
 export const ItemId = styled(StyledText)`
   font-weight: bold;
   font-size: 12px;
   opacity: 0.9;
-`;
+`
 
 export const RightOfScrollableContent = styled.View`
   margin-right: ${contentPadding}px;
-`;
+`
 
 export const Icon = styled(Octicon)`
   background-color: transparent;
   color: ${({ color, muted, theme }) => (color && (theme[color] || color)) || (muted ? theme.base05 : theme.base06)};
   opacity: ${({ color, muted }) => (color && muted ? mutedOpacity : 1)};
-`;
+`
 
 export const CardIcon = styled(Icon)`
   align-self: flex-start;
   margin-left: ${contentPadding}px;
   margin-right: ${iconRightMargin}px;
   font-size: 18px;
-`;
+`
 
 type ItemIdProps = {
   icon?: string,
@@ -171,11 +171,11 @@ type ItemIdProps = {
   number: number,
   read?: boolean,
   url: string,
-};
+}
 export const CardItemId = ({ icon, number, read, url }: ItemIdProps) => {
-  if (!number && !icon) return null;
+  if (!number && !icon) return null
 
-  const parsedNumber = parseInt(number, 10) || number;
+  const parsedNumber = parseInt(number, 10) || number
 
   return (
     <ItemIdContainer>
@@ -186,10 +186,10 @@ export const CardItemId = ({ icon, number, read, url }: ItemIdProps) => {
         {parsedNumber}
       </ItemId>
     </ItemIdContainer>
-  );
-};
+  )
+}
 
 CardItemId.defaultProps = {
   icon: undefined,
   read: undefined,
-};
+}

@@ -1,8 +1,8 @@
-import React from 'react';
-import { Platform } from 'react-native';
-import { withTheme } from 'styled-components/native';
+import React from 'react'
+import { Platform } from 'react-native'
+import { withTheme } from 'styled-components/native'
 
-import { TabNavigator } from '../libs/navigation';
+import { TabNavigator } from '../libs/navigation'
 
 const _tabBarOptions = Platform.select({
   default: TabNavigator.Presets.iOSBottomTabs,
@@ -12,9 +12,9 @@ const _tabBarOptions = Platform.select({
     ...TabNavigator.Presets.iOSBottomTabs,
     tabBarPosition: 'top',
   },
-});
+})
 
-const BaseTabBar = _tabBarOptions.tabBarComponent;
+const BaseTabBar = _tabBarOptions.tabBarComponent
 const TabBar = withTheme(({ theme, ...props }) => (
   <BaseTabBar
     {...props}
@@ -33,7 +33,7 @@ const TabBar = withTheme(({ theme, ...props }) => (
       }),
     }}
   />
-));
+))
 
-export const tabBarOptions = { ..._tabBarOptions, tabBarComponent: TabBar };
-export default TabBar;
+export const tabBarOptions = { ..._tabBarOptions, tabBarComponent: TabBar }
+export default TabBar

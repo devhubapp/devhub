@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { OrderedSet } from 'immutable';
+import React from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { OrderedSet } from 'immutable'
 
-import NotificationColumn from '../components/columns/NotificationColumn';
+import NotificationColumn from '../components/columns/NotificationColumn'
 
 import {
   notificationsErrorSelector,
@@ -13,9 +13,9 @@ import {
   makeRepoSelector,
   notificationsUpdatedAtSelector,
   unarchivedNotificationIdsSelector,
-} from '../selectors';
+} from '../selectors'
 
-import * as actionCreators from '../actions';
+import * as actionCreators from '../actions'
 
 import type {
   ActionCreators,
@@ -23,13 +23,13 @@ import type {
   GithubNotification,
   GithubRepo,
   State,
-} from '../utils/types';
+} from '../utils/types'
 
 const makeMapStateToProps = () => {
-  const repoSelector = makeRepoSelector();
+  const repoSelector = makeRepoSelector()
 
   return (state: State, { column }: { column: Object }) => {
-    const _items = column.get('notificationIds').toList();
+    const _items = column.get('notificationIds').toList()
 
     // This is not very intuitive, but works. This code is here because
     // the notifications columns are only being generated once.
@@ -37,8 +37,8 @@ const makeMapStateToProps = () => {
     // column.get('notificationIds') will have the same initial value,
     // so we update it here ignoring the archived ones.
     // (otherwise, the empty message would not show up)
-    const unarchivedIds = unarchivedNotificationIdsSelector(state);
-    const items = OrderedSet(_items).intersect(unarchivedIds).toList();
+    const unarchivedIds = unarchivedNotificationIdsSelector(state)
+    const items = OrderedSet(_items).intersect(unarchivedIds).toList()
 
     return {
       errors: [notificationsErrorSelector(state)],
@@ -48,17 +48,17 @@ const makeMapStateToProps = () => {
       repo: column.get('repo') ||
         repoSelector(state, { repoId: column.get('repoId') }),
       updatedAt: notificationsUpdatedAtSelector(state),
-    };
-  };
-};
+    }
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actionCreators, dispatch),
-});
+})
 
 @connect(makeMapStateToProps, mapDispatchToProps)
 export default class extends React.PureComponent {
-  static defaultProps = { repo: undefined };
+  static defaultProps = { repo: undefined }
 
   props: {
     actions: ActionCreators,
@@ -67,12 +67,12 @@ export default class extends React.PureComponent {
     items: Array<string | GithubNotification>,
     loading: boolean,
     repo?: GithubRepo,
-  };
+  }
 
   render() {
-    const { column, ...props } = this.props;
+    const { column, ...props } = this.props
 
-    if (!column) return null;
+    if (!column) return null
 
     return (
       <NotificationColumn
@@ -80,6 +80,6 @@ export default class extends React.PureComponent {
         key={`notification-column-${column.get('id')}`}
         column={column}
       />
-    );
+    )
   }
 }
