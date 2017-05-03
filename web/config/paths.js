@@ -1,11 +1,15 @@
-var path = require('path');
-var fs = require('fs');
+var path = require('path')
+var fs = require('fs')
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
-var appDirectory = fs.realpathSync(process.cwd());
+var appDirectory = fs.realpathSync(process.cwd())
 function resolveApp(relativePath) {
-  return path.resolve(appDirectory, './web/', relativePath);
+  return path.resolve(
+    appDirectory,
+    process.env.WEB_ROOT_PATH || './',
+    relativePath,
+  )
 }
 
 // We support resolving modules according to `NODE_PATH`.
@@ -27,7 +31,7 @@ var nodePaths = (process.env.NODE_PATH || '')
   .split(process.platform === 'win32' ? ';' : ':')
   .filter(Boolean)
   .filter(folder => !path.isAbsolute(folder))
-  .map(resolveApp);
+  .map(resolveApp)
 
 // config after eject: we're in ./config/
 module.exports = {
@@ -47,4 +51,4 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   ownNodeModules: resolveApp('node_modules'),
   nodePaths: [resolveApp('node_modules'), ...nodePaths],
-};
+}

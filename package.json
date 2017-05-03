@@ -15,10 +15,11 @@
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
     "web": "npm run web:start",
-    "web:build": "node web/scripts/build.js",
-    "web:build:serve": "pushstate-server web/build",
-    "web:start": "node web/scripts/start.js",
-    "web:test": "node web/scripts/test.js",
+    "web:build": "pushd web; npm run build; popd;",
+    "web:build:serve": "pushd web; npm run serve; popd;",
+    "web:deploy": "pushd web; npm run deploy; popd;",
+    "web:start": "pushd web; npm run start; popd;",
+    "web:test": "pushd web; npm run test; popd;",
     "xcode": "open ios/devhub.xcodeproj"
   },
   "dependencies": {
