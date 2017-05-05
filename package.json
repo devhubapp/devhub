@@ -7,7 +7,7 @@
     "flow": "flow '{.,src/**,web/src/**,jest/**}/*.js'",
     "format": "npm run format_options -- --write '{.,src/**,web/src/**,jest/**}/*.js'",
     "format_options": "prettier --no-semi --trailing-comma all --single-quote",
-    "lint": "eslint '{.,src/**,web/src/**,jest/**}/*.js'",
+    "lint": "eslint '{.,src/**,jest/**}/*.js'",
     "lint-fix": "npm run lint -- --fix",
     "postinstall": "remotedev-debugger --hostname localhost --port 8805 --injectdebugger --injectserver",
     "precommit": "lint-staged",
