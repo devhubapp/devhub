@@ -7,7 +7,7 @@
     "flow": "flow '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
     "format": "npm run format_options -- --write '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
     "format_options": "prettier --no-semi --trailing-comma all --single-quote",
-    "lint": "eslint '{.,src/**,jest/**}/*.js'",
+    "lint": "eslint '{.,src/**,web/{config,scripts,src},jest/**}/*.js'",
     "lint-fix": "npm run lint -- --fix",
     "postinstall": "remotedev-debugger --hostname localhost --port 8805 --injectdebugger --injectserver",
     "precommit": "lint-staged",
@@ -67,6 +67,7 @@
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-config-prettier": "^1.7.0",
+    "eslint-config-react-app": "^0.6.2",
     "eslint-plugin-babel": "^4.1.1",
     "eslint-plugin-flowtype": "^2.32.1",
     "eslint-plugin-import": "^2.2.0",
@@ -103,6 +104,7 @@
   "lint-staged": {
     "*.js": [
       "npm run format_options -- --write",
+      "eslint --fix",
       "git add"
     ]
   }

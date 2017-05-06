@@ -1,8 +1,8 @@
 var customizers = require('./customizers')
 
-function getCustomConfig(prod) {
-  var prod = prod || false
-  var env = env || {}
+function getCustomConfig(_prod) {
+  var prod = _prod || false
+  var env = env || {} // eslint-disable-line
   var result = Object.keys(customizers).reduce(
     function(finalConfig, customizerKey) {
       var customizer = customizers[customizerKey]
