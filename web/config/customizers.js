@@ -1,70 +1,70 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
-  'BABEL_STAGE_0': {
+  BABEL_STAGE_0: {
     toArray: 'presets',
-    getDev: function () {
+    getDev: function() {
       return require.resolve('babel-preset-stage-0')
-    }
+    },
   },
-  'DECORATORS': {
+  DECORATORS: {
     toArray: 'babelPlugins',
-    getDev: function () {
+    getDev: function() {
       return require.resolve('babel-plugin-transform-decorators-legacy')
-    }
+    },
   },
-  'SASS': {
+  SASS: {
     toArray: 'loaders',
     fileRegex: /\.(scss|sass)/,
-    getDev: function () {
+    getDev: function() {
       return {
         test: /(\.scss|\.sass)$/,
-        loader: "style!css!postcss!sass"
+        loader: 'style!css!postcss!sass',
       }
     },
-    getProd: function () {
+    getProd: function() {
       return {
         test: /(\.scss|\.sass)$/,
-        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass')
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
       }
-    }
+    },
   },
-  'LESS': {
+  LESS: {
     toArray: 'loaders',
     fileRegex: /\.less$/,
-    getDev: function () {
+    getDev: function() {
       return {
         test: /\.less$/,
-        loader: "style!css!postcss!less"
+        loader: 'style!css!postcss!less',
       }
     },
-    getProd: function () {
+    getProd: function() {
       return {
         test: /\.less/,
-        loader: ExtractTextPlugin.extract('style', 'css!postcss!less')
-      }
-    }
-  },
-  'STYLUS': {
-    toArray: 'loaders',
-    fileRegex: /\.styl$/,
-    getDev: function () {
-      return {
-        test: /\.styl/,
-        loader: 'style!css!postcss!stylus'
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!less'),
       }
     },
-    getProd: function () {
+  },
+  STYLUS: {
+    toArray: 'loaders',
+    fileRegex: /\.styl$/,
+    getDev: function() {
       return {
         test: /\.styl/,
-        loader: ExtractTextPlugin.extract('style', 'css!postcss!stylus')
+        loader: 'style!css!postcss!stylus',
       }
-    }
+    },
+    getProd: function() {
+      return {
+        test: /\.styl/,
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!stylus'),
+      }
+    },
   },
-  'CSS_MODULES': {
+  CSS_MODULES: {
     config: {
       dev: 'style!css?modules&camelCase&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss',
-      prod: 'style!css?modules&camelCase&-autoprefixer&importLoaders=1!postcss'
-    }
-  }
+      prod: 'style!css?modules&camelCase&-autoprefixer&importLoaders=1!postcss',
+    },
+  },
 }

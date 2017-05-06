@@ -3,10 +3,10 @@
 
 module.exports = {
   process() {
-    return 'module.exports = {};';
+    return 'module.exports = {};'
   },
   getCacheKey(fileData, filename) {
     // The output is always the same.
-    return 'cssTransform';
+    return 'cssTransform'
   },
-};
+}

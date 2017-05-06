@@ -40,6 +40,7 @@
     "json-loader": "0.5.4",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
+    "node-babel": "^0.1.2",
     "node-sass": "^3.10.0",
     "object-assign": "4.1.0",
     "postcss-loader": "1.0.0",
@@ -67,12 +68,12 @@
     "react-native-web": "^0.0.71"
   },
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "NODE_ENV=production babel-node scripts/build.js",
     "deploy": "gh-pages -d build",
     "predeploy": "npm run build",
     "serve": "pushstate-server web/build",
-    "start": "node scripts/start.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "start": "NODE_ENV=development babel-node scripts/start.js",
+    "test": "NODE_ENV=test babel-node scripts/test.js --env=jsdom"
   },
   "jest": {
     "collectCoverageFrom": [

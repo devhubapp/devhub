@@ -4,8 +4,8 @@
   "codeBundleId": "0.6.0",
   "private": true,
   "scripts": {
-    "flow": "flow '{.,src/**,web/src/**,jest/**}/*.js'",
-    "format": "npm run format_options -- --write '{.,src/**,web/src/**,jest/**}/*.js'",
+    "flow": "flow '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
+    "format": "npm run format_options -- --write '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
     "format_options": "prettier --no-semi --trailing-comma all --single-quote",
     "lint": "eslint '{.,src/**,jest/**}/*.js'",
     "lint-fix": "npm run lint -- --fix",
@@ -95,14 +95,14 @@
     "setupFiles": [
       "./jest/setup.js"
     ],
-    "testRegex": "<rootDir>/(src/|web/src/|jest/|).*\\.test\\.js$",
+    "testRegex": "<rootDir>/(src/|web/(config|scripts|src)/|jest/|).*\\.test\\.js$",
     "transformIgnorePatterns": [
       "node_modules/(?!react*)/"
     ]
   },
   "lint-staged": {
     "*.js": [
-      "npm run format -- --write",
+      "npm run format_options -- --write",
       "git add"
     ]
   }
