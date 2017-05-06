@@ -1,0 +1,19 @@
+{
+  "name": "DevHub",
+  "short_name": "DevHub",
+  "description": "Tweetdeck for GitHub",
+  "lang": "en-US",
+  "start_url": "https://brunolemos.github.io/devhub/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#49d3b4",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "background_color": "#1c1c1c",
+  "prefer_related_applications": true
+}

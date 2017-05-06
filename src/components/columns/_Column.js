@@ -2,15 +2,16 @@
 
 import React from 'react'
 import styled from 'styled-components/native'
-import { Dimensions, Platform } from 'react-native'
+import { Dimensions } from 'react-native'
 
 import withOrientation from '../../hoc/withOrientation'
+import Platform from '../../libs/platform'
 import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 
 export const columnMargin = contentPadding / 2
 export const columnPreviewWidth = Platform.OS === 'web' ? 2 : contentPadding / 2
 
-export const maxWidth = Platform.select({
+export const maxWidth = Platform.selectUsingRealOS({
   default: 360,
   android: 800,
   ios: 680,

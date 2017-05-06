@@ -6,11 +6,13 @@ import { Button, Platform } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
+import withIsCurrentRoute from '../../utils/hoc/withIsCurrentRoute'
 import AppVersion from '../../components/AppVersion'
 import Screen from '../../components/Screen'
 import TabIcon from '../../components/TabIcon'
-import { contentPadding } from '../../styles/variables'
 import * as actionCreators from '../../actions'
+import { contentPadding } from '../../styles/variables'
+import { getMainNavigationState } from '../../selectors'
 import type { ActionCreators, ThemeObject } from '../../utils/types'
 
 const Wrapper = styled.View`
@@ -41,24 +43,27 @@ const mapDispatchToProps = dispatch => ({
 })
 
 @withTheme
+@withIsCurrentRoute(getMainNavigationState)
 @connect(null, mapDispatchToProps)
 class SettingsScreen extends React.PureComponent {
   static navigationOptions
 
   props: {
     actions: ActionCreators,
+    isCurrentRoute: boolean,
     theme: ThemeObject,
   }
 
   render() {
-    const { actions: { resetAppData, logout, setTheme }, theme } = this.props
+    const { actions, isCurrentRoute, theme } = this.props
+    const { resetAppData, logout, setTheme } = actions
 
     const color = Platform.OS === 'android'
       ? !theme.isDark ? theme.base05 : theme.base02
       : theme.base04
 
     return (
-      <Screen>
+      <Screen isCurrentRoute={isCurrentRoute}>
         <Wrapper>
           <Main>
             <StyledButton

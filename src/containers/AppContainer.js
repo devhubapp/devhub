@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { Platform, StatusBar } from 'react-native'
 
 import AppNavigatorContainer from './navigators/AppNavigatorContainer'
+import { Helmet } from '../libs/helmet'
 import { NavigationActions } from '../libs/navigation'
 import { get } from '../utils/immutable'
 
@@ -81,6 +82,15 @@ export default class AppContainer extends React.PureComponent {
     return (
       <ThemeProvider theme={theme}>
         <View>
+          {Platform.OS === 'web' &&
+            <Helmet>
+              <meta name="theme-color" content={theme.base00} />
+              <meta
+                name="apple-mobile-web-app-status-bar-style"
+                content={theme.isDark ? 'black-translucent' : 'default'}
+              />
+            </Helmet>}
+
           {(Platform.OS === 'ios' || Platform.OS === 'android') &&
             <StatusBar
               backgroundColor={theme.statusBarBackground || theme.base00}

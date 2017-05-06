@@ -31,16 +31,17 @@ class NotificationsScreen extends React.PureComponent {
   static navigationOptions
 
   props: {
+    isCurrentRoute: boolean,
     ready: boolean,
     theme: ThemeObject,
   }
 
   render() {
-    const { ready, theme } = this.props
+    const { isCurrentRoute, ready, theme } = this.props
 
     return (
       <ThemeProvider theme={theme}>
-        <Screen backgroundColor={theme.base01}>
+        <Screen backgroundColor={theme.base01} isCurrentRoute={isCurrentRoute}>
           {!ready &&
             <CenterView>
               <ActivityIndicator color={theme.base04} />

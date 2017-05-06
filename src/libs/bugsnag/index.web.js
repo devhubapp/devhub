@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable import/no-unresolved,import/extensions,import/no-extraneous-dependencies */
 // TODO: Fix eslint for web imports
 
 import Bugsnag from 'bugsnag-js'

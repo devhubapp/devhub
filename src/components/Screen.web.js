@@ -3,14 +3,16 @@
 
 import React, { PureComponent } from 'react'
 import styled, { withTheme } from 'styled-components/native'
-import { Platform } from 'react-native'
+
+import Platform from '../libs/platform'
+import { Helmet } from '../libs/helmet'
 
 const getBackgroundColorFromProps = ({ backgroundColor, theme }) =>
   backgroundColor || (theme || {}).base00
 
 const BaseScreen = styled.View`
   flex: 1;
-  padding-top: ${Platform.OS === 'ios' ? 22 : 0}px;
+  padding-top: ${Platform.realOS === 'ios' && Platform.isStandalone ? 22 : 0}px;
   background-color: ${getBackgroundColorFromProps};
 `
 
@@ -36,11 +38,28 @@ export default class Screen extends PureComponent {
   /* eslint-disable react/no-unused-prop-types */
   props: {
     backgroundColor?: string,
+    children?: ReactClass<any>,
+    helmet?: Array<ReactClass<any>>,
+    isCurrentRoute?: boolean,
     theme: { base00: string },
+    title?: string,
   }
   /* eslint-enable */
 
   render() {
-    return <BaseScreen {...this.props} />
+    const { children, helmet, isCurrentRoute, title, ...props } = this.props
+
+    return (
+      <BaseScreen {...props}>
+        {Boolean(isCurrentRoute) &&
+          Array.isArray(helmet) &&
+          <Helmet>
+            {helmet}
+            {Boolean(title) && <title>{title}</title>}
+          </Helmet>}
+
+        {children}
+      </BaseScreen>
+    )
   }
 }

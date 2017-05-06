@@ -1,10 +1,10 @@
 import React from 'react'
-import { Platform } from 'react-native'
 import { withTheme } from 'styled-components/native'
 
 import { TabNavigator } from '../libs/navigation'
+import Platform from '../libs/platform'
 
-const _tabBarOptions = Platform.select({
+const _tabBarOptions = Platform.selectUsingRealOS({
   default: TabNavigator.Presets.iOSBottomTabs,
   android: TabNavigator.Presets.AndroidTopTabs,
   ios: TabNavigator.Presets.iOSBottomTabs,
@@ -28,7 +28,7 @@ const TabBar = withTheme(({ theme, ...props }) => (
     showIcon
     style={{
       backgroundColor: theme.tabBarBackground || theme.base02,
-      ...Platform.select({
+      ...Platform.selectUsingRealOS({
         ios: { padding: 3, borderTopColor: theme.base01 },
       }),
     }}
