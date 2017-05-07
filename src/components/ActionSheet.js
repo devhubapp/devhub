@@ -8,17 +8,17 @@ import { columnMargin } from './columns/_Column'
 import { radius } from '../styles/variables'
 
 const StyledActionSheet = withTheme(
-  ({ innerRef, optionContainerStyle, theme, ...props }) => (
+  ({ innerRef, buttonContainerStyle, theme, ...props }) => (
     <ActionSheet
       ref={innerRef}
       containerPadding={columnMargin}
-      optionContainerStyle={[
+      buttonContainerStyle={[
         { backgroundColor: theme.base02 },
-        optionContainerStyle,
+        buttonContainerStyle,
       ]}
-      optionsContainerStyle={[
+      buttonsContainerStyle={[
         { backgroundColor: theme.base01 },
-        optionContainerStyle,
+        buttonContainerStyle,
       ]}
       radius={radius}
       tintColor={

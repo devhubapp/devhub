@@ -23,15 +23,8 @@ import { getParamsToLoadAllNotifications } from '../../sagas/notifications'
 import { readNotificationIdsSelector } from '../../selectors/notifications'
 import type { ActionCreators, GithubRepo } from '../../utils/types'
 
-const buttons = ['Cancel', 'Mark all as read / unread', 'Clear read']
-const BUTTONS = {
-  CANCEL: 0,
-  MARK_NOTIFICATIONS_AS_READ_OR_UNREAD: 1,
-  CLEAR_READ: 2,
-}
-
 const isWebWithBigHeight =
-  Platform.realOS === 'web' && Dimensions.get('window').height > 500
+  Platform.realOS === 'web' && Dimensions.get('screen').height > 500
 
 export const defaultIcon = 'bell'
 export const defaultTitle = 'notifications'
@@ -98,52 +91,52 @@ export default class NotificationColumn extends React.PureComponent {
   }
 
   showActionSheet = () => {
-    this.ActionSheet.show()
-  }
-
-  handleActionSheetButtonPress = index => {
     const { actions, column, repo } = this.props
 
     const repoId = repo ? repo.get('id') : column.get('repoId')
 
     const readIds = this.getReadNotificationIds()
     const notificationIds = this.getNotificationIds()
+    const title = (column.get('title') || '').toLowerCase()
 
-    switch (index) {
-      case BUTTONS.MARK_NOTIFICATIONS_AS_READ_OR_UNREAD:
-        (() => {
-          if (readIds && readIds.size >= notificationIds.size) {
-            actions.markNotificationsAsUnread({
-              all: true,
+    this.ActionSheet.show(
+      [
+        {
+          text: 'Mark all as read / unread',
+          onPress: () => {
+            if (readIds && readIds.size >= notificationIds.size) {
+              actions.markNotificationsAsUnread({
+                all: true,
+                notificationIds: readIds,
+                repoId,
+              })
+            } else {
+              const unreadIds = this.getUnreadNotificationIds()
+              actions.markNotificationsAsReadRequest({
+                all: true,
+                notificationIds: unreadIds,
+                repoId,
+              })
+            }
+          },
+        },
+        {
+          text: 'Clear read',
+          onPress: () => {
+            const all = readIds.size === notificationIds.size
+            actions.deleteNotifications({
+              all,
               notificationIds: readIds,
               repoId,
             })
-          } else {
-            const unreadIds = this.getUnreadNotificationIds()
-            actions.markNotificationsAsReadRequest({
-              all: true,
-              notificationIds: unreadIds,
-              repoId,
-            })
-          }
-        })()
-
-        break
-
-      case BUTTONS.CLEAR_READ:
-        (() => {
-          const all = readIds.size === notificationIds.size
-          actions.deleteNotifications({
-            all,
-            notificationIds: readIds,
-            repoId,
-          })
-        })()
-        break
-
-      default:
-        break
-    }
+          },
+        },
+        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+      ],
+      {
+        title: !isWebWithBigHeight && title,
+      },
+    )
   }
 
   props: {
@@ -227,15 +220,10 @@ export default class NotificationColumn extends React.PureComponent {
         />
 
         <ActionSheet
-          cancelButtonIndex={BUTTONS.CANCEL}
           containerStyle={isWebWithBigHeight && { top: headerHeight }}
-          destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
           innerRef={ref => {
             this.ActionSheet = ref
           }}
-          onSelect={this.handleActionSheetButtonPress}
-          options={buttons}
-          title={!isWebWithBigHeight && title}
         />
 
         {summary &&

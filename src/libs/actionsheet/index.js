@@ -18,16 +18,11 @@ import {
 import Modal from '../modal'
 
 type ActionSheetProps = {
-  cancelButtonIndex: ?number,
   containerPadding: ?number,
   containerStyle: ?any,
-  destructiveButtonIndex: ?number,
-  // icons: ?Array<number>,
-  onSelect: ?(i: number) => void,
-  optionContainerStyle: ?any,
-  optionTextStyle: ?any,
-  options: ?Array<string>,
-  optionsContainerStyle: ?any,
+  buttonContainerStyle: ?any,
+  buttonTextStyle: ?any, // eslint-disable-line react/no-unused-prop-types
+  buttonsContainerStyle: ?any,
   radius: ?number,
   tintColor: ?string,
   title: ?string,
@@ -37,10 +32,16 @@ type ActionSheetProps = {
 }
 
 type ActionSheetState = {
+  buttons: Array<{
+    text: string,
+    onPress: Function,
+    style?: 'cancel' | 'destructive',
+  }>,
   isAnimating: boolean,
   isVisible: boolean,
   overlayOpacity: any,
   translateY: any,
+  title: '',
 }
 
 export const ANIMATION_TIME_HIDE = 200
@@ -74,15 +75,15 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
-  optionsContainer: {},
-  optionButton: {
+  buttonsContainer: {},
+  buttonButton: {
     alignItems: 'center',
     justifyContent: 'center',
     height: OPTION_HEIGHT,
     padding: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
   },
-  optionText: {
+  buttonText: {
     fontSize: 18,
   },
   titleContainer: {
@@ -118,13 +119,13 @@ export default class ActionSheet extends PureComponent {
     super(props)
 
     this.state = {
-      height: this.calculateHeight(props),
+      buttons: [],
+      height: 0,
       isAnimating: false,
       isVisible: false,
       overlayOpacity: animatedEnabled ? new Animated.Value(0) : OVERLAY_OPACITY,
-      translateY: animatedEnabled
-        ? new Animated.Value(this.calculateHeight(props))
-        : 0,
+      title: '',
+      translateY: animatedEnabled ? new Animated.Value(0) : 0,
     }
   }
 
@@ -134,16 +135,12 @@ export default class ActionSheet extends PureComponent {
     ActionSheet.allActionSheetRefs.push(this)
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({ height: this.calculateHeight(props) })
-  }
-
   componentWillUnmount() {
     const index = ActionSheet.allActionSheetRefs.indexOf(this)
     if (index >= 0) ActionSheet.allActionSheetRefs.splice(index, 1)
   }
 
-  animate = (toVisible, callback) => {
+  animate = (toVisible, buttons, options, callback) => {
     if (this.state.isVisible === toVisible) {
       return
     }
@@ -180,66 +177,78 @@ export default class ActionSheet extends PureComponent {
     })
   }
 
-  calculateHeight = props =>
-    (props.title ? TITLE_HEIGHT + TITLE_MARGIN : 0) +
-    (props.options || []).length * (OPTION_HEIGHT + OPTION_MARGIN) +
+  calculateHeight = (buttons, { containerPadding, title } = {}) =>
+    (title ? TITLE_HEIGHT + TITLE_MARGIN : 0) +
+    (buttons || []).length * (OPTION_HEIGHT + OPTION_MARGIN) +
     CANCEL_MARGIN +
-    2 * (props.containerPadding || 0)
+    2 * (containerPadding || 0)
 
-  hide = (animated = animatedEnabled, callback) => {
+  hide = (options = {}, callback) => {
+    const { animated = animatedEnabled } = options
+
     if (animated) {
-      this.animate(false, callback)
+      this.animate(false, null, options, callback)
     } else {
       this.setState({ isVisible: false })
       if (callback) callback()
     }
   }
 
-  show = (animated = animatedEnabled, callback) => {
+  show = (buttons, options = {}, callback) => {
+    const { animated = animatedEnabled } = options
+
     ActionSheet.allActionSheetRefs.forEach(ref => {
       if (ref !== this) ref.hide()
     })
 
     if (animated) {
-      this.animate(true, callback)
+      const height = this.calculateHeight(buttons, options)
+      this.setState(
+        { height, buttons, translateY: new Animated.Value(height) },
+        () => {
+          this.animate(true, buttons, options, callback)
+        },
+      )
     } else {
-      this.setState({ isVisible: true })
+      this.setState({ buttons, isVisible: true })
       if (callback) callback()
     }
   }
 
-  toggle = (animated = animatedEnabled, callback) =>
+  toggle = (buttons, options = {}, callback) =>
     this.state.isVisible
-      ? this.hide(animated, callback)
-      : this.show(animated, callback)
+      ? this.hide(options, callback)
+      : this.show(buttons, options, callback)
 
-  select = index => {
-    this.hide(animatedEnabled, () => {
+  select = button => {
+    this.hide({ animated: animatedEnabled }, () => {
       setTimeout(() => {
-        this.props.onSelect(index)
+        button.onPress()
       }, 50)
     })
   }
 
   props: ActionSheetProps
 
-  renderCancelOption({ style, textStyle } = {}) {
-    const {
-      options,
-      cancelButtonIndex,
-      optionContainerStyle,
-      radius,
-      tintColor,
-    } = this.props
+  renderCancelButton({ style, textStyle, ...options } = {}) {
+    const { buttons } = this.state
+    const { buttonContainerStyle, radius, tintColor } = {
+      ...this.props,
+      ...options,
+    }
 
-    if (!(cancelButtonIndex >= 0 && options[cancelButtonIndex])) {
+    const cancelButton = (buttons.filter(
+      button => button.style === 'cancel',
+    ) || [])[0]
+
+    if (!cancelButton) {
       return null
     }
 
-    return this.renderOption(cancelButtonIndex, options[cancelButtonIndex], {
+    return this.renderButton(cancelButton, {
       color: tintColor,
       style: [
-        optionContainerStyle,
+        buttonContainerStyle,
         { marginTop: CANCEL_MARGIN, borderRadius: radius },
         style,
       ],
@@ -247,56 +256,49 @@ export default class ActionSheet extends PureComponent {
     })
   }
 
-  renderOption = (index, label, { color, style, textStyle } = {}) => {
-    const { optionContainerStyle, optionTextStyle, options } = this.props
-    const isLastOption = index === options.length - 1
+  renderButton = (button, { color, style, textStyle, ...options } = {}) => {
+    const { buttons } = this.state
+    const { buttonContainerStyle, buttonTextStyle } = {
+      ...this.props,
+      ...options,
+    }
+    const isLastButton = buttons[button] === buttons.length - 1
 
     return (
       <TouchableOpacity
-        key={index}
+        key={button.text}
         activeOpacity={0.9}
         style={[
-          styles.optionButton,
-          { marginBottom: isLastOption ? 0 : OPTION_MARGIN },
-          optionContainerStyle,
+          styles.buttonButton,
+          { marginBottom: isLastButton ? 0 : OPTION_MARGIN },
+          buttonContainerStyle,
           style,
         ]}
-        onPress={() => this.select(index)}
+        onPress={() => this.select(button)}
       >
-        {React.isValidElement(label)
-          ? label
+        {React.isValidElement(button.text)
+          ? button.text
           : <Text
-              style={[styles.optionText, { color }, optionTextStyle, textStyle]}
+              style={[styles.buttonText, { color }, buttonTextStyle, textStyle]}
               numberOfLines={1}
             >
-              {label}
+              {button.text}
             </Text>}
       </TouchableOpacity>
     )
   }
 
-  renderOptions = () => {
-    const {
-      cancelButtonIndex,
-      destructiveButtonIndex,
-      options,
-      radius,
-      tintColor,
-      title,
-    } = this.props
+  renderButtons = () => {
+    const { buttons } = this.state
+    const { radius, tintColor, title } = this.props
 
-    const mainOptions = options.filter(
-      (label, index) => index !== cancelButtonIndex,
-    )
+    const mainButtons = buttons.filter(button => button.style !== 'cancel')
+    const lastIndex = mainButtons.length - 1
 
-    const lastIndex = options.indexOf(mainOptions.pop())
+    return mainButtons.map((button, index) => {
+      const color = button.style === 'destructive' ? DANGER_COLOR : tintColor
 
-    return options.map((label, index) => {
-      if (index === cancelButtonIndex) return null
-
-      const color = index === destructiveButtonIndex ? DANGER_COLOR : tintColor
-
-      return this.renderOption(index, label, {
+      return this.renderButton(button, {
         color,
         style: {
           borderTopLeftRadius: index === 0 || !title ? radius : 0,
@@ -309,10 +311,10 @@ export default class ActionSheet extends PureComponent {
   }
 
   renderTitle({ style, textStyle } = {}) {
+    const { title } = this.state
     const {
-      optionContainerStyle,
+      buttonContainerStyle,
       radius,
-      title,
       titleContainerStyle,
       titleTextStyle,
     } = this.props
@@ -324,13 +326,13 @@ export default class ActionSheet extends PureComponent {
     return (
       <View
         style={[
-          styles.optionButton,
+          styles.buttonButton,
           styles.titleContainer,
           {
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius,
           },
-          optionContainerStyle,
+          buttonContainerStyle,
           titleContainerStyle,
           style,
         ]}
@@ -351,7 +353,7 @@ export default class ActionSheet extends PureComponent {
     const {
       containerPadding,
       containerStyle,
-      optionsContainerStyle,
+      buttonsContainerStyle,
       radius,
     } = this.props
     const {
@@ -395,17 +397,17 @@ export default class ActionSheet extends PureComponent {
         >
           <View
             style={[
-              styles.optionsContainer,
+              styles.buttonsContainer,
               { backgroundColor: '#ededed', borderRadius: radius },
-              optionsContainerStyle,
+              buttonsContainerStyle,
             ]}
           >
             {this.renderTitle()}
             <ScrollView scrollEnabled={height > MAX_HEIGHT}>
-              {this.renderOptions()}
+              {this.renderButtons()}
             </ScrollView>
           </View>
-          {this.renderCancelOption()}
+          {this.renderCancelButton()}
         </ViewOrAnimatedView>
       </Modal>
     )

@@ -31,24 +31,8 @@ import type {
   Subscription,
 } from '../../utils/types'
 
-const buttons = [
-  'Cancel',
-  'Create a column here',
-  'Mark all as read / unread',
-  'Clear read',
-  'Delete column',
-]
-
-const BUTTONS = {
-  CANCEL: 0,
-  CREATE_NEW_COLUMN: 1,
-  MARK_EVENTS_AS_READ_OR_UNREAD: 2,
-  CLEAR_READ: 3,
-  DELETE_COLUMN: 4,
-}
-
 const isWebWithBigHeight =
-  Platform.realOS === 'web' && Dimensions.get('window').height > 500
+  Platform.realOS === 'web' && Dimensions.get('screen').height > 500
 
 export default class EventColumn extends React.PureComponent {
   static contextTypes = {
@@ -98,61 +82,66 @@ export default class EventColumn extends React.PureComponent {
   }
 
   showActionSheet = () => {
-    this.ActionSheet.show()
-  }
-
-  handleActionSheetButtonPress = index => {
     const { actions, column } = this.props
 
     const columnId = column.get('id')
+    const title = (column.get('title') || '').toLowerCase()
 
-    switch (index) {
-      case BUTTONS.CREATE_NEW_COLUMN:
-        CreateColumnUtils.showColumnTypeSelectAlert(actions, {
-          createColumnOrder: column.get('order'),
-        })
-        break
-
-      case BUTTONS.MARK_EVENTS_AS_READ_OR_UNREAD:
-        (() => {
-          const eventIds = this.getEventIds()
-          const readIds = this.getReadEventIds()
-          const unreadIds = this.getUnreadEventIds()
-
-          if (readIds && readIds.size >= eventIds.size) {
-            actions.markEventsAsUnread({
-              all: true,
-              columnId,
-              eventIds: readIds,
+    this.ActionSheet.show(
+      [
+        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+        {
+          text: 'Create a column here',
+          onPress: () => {
+            CreateColumnUtils.showColumnTypeSelectAlert(actions, {
+              createColumnOrder: column.get('order'),
             })
-          } else {
-            actions.markEventsAsRead({
-              all: true,
-              columnId,
-              eventIds: unreadIds,
-            })
-          }
-        })()
+          },
+        },
+        {
+          text: 'Mark all as read / unread',
+          onPress: () => {
+            const eventIds = this.getEventIds()
+            const readIds = this.getReadEventIds()
+            const unreadIds = this.getUnreadEventIds()
 
-        break
+            if (readIds && readIds.size >= eventIds.size) {
+              actions.markEventsAsUnread({
+                all: true,
+                columnId,
+                eventIds: readIds,
+              })
+            } else {
+              actions.markEventsAsRead({
+                all: true,
+                columnId,
+                eventIds: unreadIds,
+              })
+            }
+          },
+        },
+        {
+          text: 'Clear read',
+          onPress: () => {
+            const eventIds = this.getEventIds()
+            const readIds = this.getReadEventIds()
+            const all = readIds.size === eventIds.size
 
-      case BUTTONS.CLEAR_READ:
-        (() => {
-          const eventIds = this.getEventIds()
-          const readIds = this.getReadEventIds()
-          const all = readIds.size === eventIds.size
-
-          actions.deleteEvents({ all, columnId, eventIds: readIds })
-        })()
-        break
-
-      case BUTTONS.DELETE_COLUMN:
-        actions.deleteColumn(columnId)
-        break
-
-      default:
-        break
-    }
+            actions.deleteEvents({ all, columnId, eventIds: readIds })
+          },
+        },
+        {
+          text: 'Delete column',
+          onPress: () => {
+            actions.deleteColumn(columnId)
+          },
+          style: 'destructive',
+        },
+      ],
+      {
+        title: !isWebWithBigHeight && title,
+      },
+    )
   }
 
   props: {
@@ -229,15 +218,10 @@ export default class EventColumn extends React.PureComponent {
         />
 
         <ActionSheet
-          cancelButtonIndex={BUTTONS.CANCEL}
           containerStyle={isWebWithBigHeight && { top: headerHeight }}
-          destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
           innerRef={ref => {
             this.ActionSheet = ref
           }}
-          onSelect={this.handleActionSheetButtonPress}
-          options={buttons}
-          title={!isWebWithBigHeight && title}
         />
       </FullView>
     )
