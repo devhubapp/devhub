@@ -2,6 +2,7 @@ module.exports = {
   stripPrefix: 'build/',
   staticFileGlobs: [
     'build/*.html',
+    'build/favicon.ico',
     'build/manifest.json',
     'build/static/**/!(*map*)',
   ],
