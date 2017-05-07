@@ -2,7 +2,7 @@
   "name": "devhub-web",
   "version": "0.6.0",
   "private": true,
-  "homepage": "https://brunolemos.github.io/devhub",
+  "homepage": "https://brunolemos.github.io/devhub/",
   "devDependencies": {
     "autoprefixer": "6.5.1",
     "babel-core": "6.17.0",
@@ -54,6 +54,7 @@
     "style-loader": "0.13.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.3.1",
+    "sw-precache": "^5.1.1",
     "url-loader": "0.5.7",
     "webpack": "1.14.0",
     "webpack-bundle-analyzer": "^2.4.0",
@@ -69,10 +70,10 @@
     "react-native-web": "^0.0.94"
   },
   "scripts": {
-    "build": "NODE_ENV=production babel-node scripts/build.js",
+    "build": "NODE_ENV=production babel-node scripts/build.js && sw-precache --config=sw-precache-config.js",
     "deploy": "gh-pages -d build",
     "predeploy": "npm run build",
-    "serve": "pushstate-server web/build",
+    "serve": "pushstate-server build",
     "start": "NODE_ENV=development babel-node scripts/start.js",
     "test": "NODE_ENV=test babel-node scripts/test.js --env=jsdom"
   },

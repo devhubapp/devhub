@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>DevHub</title>
 
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,14 +17,22 @@
   <meta name="msapplication-starturl" content="https://brunolemos.github.io/devhub/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
-  <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="logo.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/logo.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/logo.png">
 
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 </head>
 
 <body>
   <div id="root"></div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('%PUBLIC_URL%/service-worker.js');
+      });
+    }
+  </script>
 </body>
 
 </html>
