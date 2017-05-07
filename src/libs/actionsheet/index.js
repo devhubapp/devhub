@@ -18,14 +18,15 @@ import {
 import Modal from '../modal'
 
 type ActionSheetProps = {
-  containerPadding: ?number,
-  containerStyle: ?any,
   buttonContainerStyle: ?any,
   buttonTextStyle: ?any, // eslint-disable-line react/no-unused-prop-types
   buttonsContainerStyle: ?any,
+  containerPadding: ?number,
+  containerStyle: ?any,
   radius: ?number,
+  subtitleTextStyle: ?any,
   tintColor: ?string,
-  title: ?string,
+  title: ?string, // eslint-disable-line react/no-unused-prop-types
   titleContainerStyle: ?any,
   titleTextStyle: ?any,
   useNativeDriver: ?boolean,
@@ -40,8 +41,9 @@ type ActionSheetState = {
   isAnimating: boolean,
   isVisible: boolean,
   overlayOpacity: any,
+  subtitle: string,
+  title: string,
   translateY: any,
-  title: '',
 }
 
 export const ANIMATION_TIME_HIDE = 200
@@ -53,6 +55,7 @@ export const OPTION_HEIGHT = 50
 export const OPTION_MARGIN = StyleSheet.hairlineWidth
 export const OVERLAY_OPACITY = 0.4
 export const TITLE_HEIGHT = 40
+export const TITLE_WITH_SUBTITLE_HEIGHT = OPTION_HEIGHT
 export const TITLE_MARGIN = OPTION_MARGIN
 
 export const DEFAULT_TINT_COLOR = '#007aff'
@@ -90,8 +93,15 @@ const styles = StyleSheet.create({
     height: TITLE_HEIGHT,
     marginBottom: TITLE_MARGIN,
   },
-  titleText: {
+  subtitleText: {
+    marginVertical: 1,
     fontSize: 12,
+    textAlign: 'center',
+    color: 'gray',
+  },
+  titleText: {
+    marginVertical: 1,
+    fontSize: 14,
     textAlign: 'center',
     color: 'gray',
   },
@@ -124,6 +134,7 @@ export default class ActionSheet extends PureComponent {
       isAnimating: false,
       isVisible: false,
       overlayOpacity: animatedEnabled ? new Animated.Value(0) : OVERLAY_OPACITY,
+      subtitle: '',
       title: '',
       translateY: animatedEnabled ? new Animated.Value(0) : 0,
     }
@@ -139,6 +150,11 @@ export default class ActionSheet extends PureComponent {
     const index = ActionSheet.allActionSheetRefs.indexOf(this)
     if (index >= 0) ActionSheet.allActionSheetRefs.splice(index, 1)
   }
+
+  getTitleButtonHeight = (title, subtitle) =>
+    (title && subtitle
+      ? TITLE_WITH_SUBTITLE_HEIGHT
+      : title || subtitle ? TITLE_HEIGHT : 0) + TITLE_MARGIN
 
   animate = (toVisible, buttons, options, callback) => {
     if (this.state.isVisible === toVisible) {
@@ -177,8 +193,8 @@ export default class ActionSheet extends PureComponent {
     })
   }
 
-  calculateHeight = (buttons, { containerPadding, title } = {}) =>
-    (title ? TITLE_HEIGHT + TITLE_MARGIN : 0) +
+  calculateHeight = (buttons, { containerPadding, subtitle, title } = {}) =>
+    this.getTitleButtonHeight(title, subtitle) +
     (buttons || []).length * (OPTION_HEIGHT + OPTION_MARGIN) +
     CANCEL_MARGIN +
     2 * (containerPadding || 0)
@@ -194,7 +210,7 @@ export default class ActionSheet extends PureComponent {
     }
   }
 
-  show = (buttons, options = {}, callback) => {
+  show = (title, subtitle, buttons, options = {}, callback) => {
     const { animated = animatedEnabled } = options
 
     ActionSheet.allActionSheetRefs.forEach(ref => {
@@ -202,28 +218,44 @@ export default class ActionSheet extends PureComponent {
     })
 
     if (animated) {
-      const height = this.calculateHeight(buttons, options)
+      const height = this.calculateHeight(buttons, {
+        ...options,
+        title,
+        subtitle,
+      })
       this.setState(
-        { height, buttons, translateY: new Animated.Value(height) },
+        {
+          height,
+          buttons,
+          subtitle,
+          title,
+          translateY: new Animated.Value(height),
+        },
         () => {
-          this.animate(true, buttons, options, callback)
+          this.animate(true, buttons, { ...options, title, subtitle }, callback)
         },
       )
     } else {
-      this.setState({ buttons, isVisible: true })
+      this.setState({ buttons, isVisible: true, subtitle, title })
       if (callback) callback()
     }
   }
 
-  toggle = (buttons, options = {}, callback) =>
+  toggle = (title, subtitle, buttons, options = {}, callback) =>
     this.state.isVisible
       ? this.hide(options, callback)
-      : this.show(buttons, options, callback)
+      : this.show(title, subtitle, buttons, options, callback)
 
   select = button => {
     this.hide({ animated: animatedEnabled }, () => {
       setTimeout(() => {
-        button.onPress()
+        if (button.style === 'cancel') {
+          if (button.onPress) {
+            button.onPress()
+          }
+        } else {
+          button.onPress()
+        }
       }, 50)
     })
   }
@@ -289,8 +321,8 @@ export default class ActionSheet extends PureComponent {
   }
 
   renderButtons = () => {
-    const { buttons } = this.state
-    const { radius, tintColor, title } = this.props
+    const { buttons, title } = this.state
+    const { radius, tintColor } = this.props
 
     const mainButtons = buttons.filter(button => button.style !== 'cancel')
     const lastIndex = mainButtons.length - 1
@@ -311,15 +343,16 @@ export default class ActionSheet extends PureComponent {
   }
 
   renderTitle({ style, textStyle } = {}) {
-    const { title } = this.state
+    const { subtitle, title } = this.state
     const {
       buttonContainerStyle,
       radius,
+      subtitleTextStyle,
       titleContainerStyle,
       titleTextStyle,
     } = this.props
 
-    if (!title) {
+    if (!(title || subtitle)) {
       return null
     }
 
@@ -331,6 +364,7 @@ export default class ActionSheet extends PureComponent {
           {
             borderTopLeftRadius: radius,
             borderTopRightRadius: radius,
+            height: this.getTitleButtonHeight(title, subtitle),
           },
           buttonContainerStyle,
           titleContainerStyle,
@@ -339,12 +373,22 @@ export default class ActionSheet extends PureComponent {
       >
         {React.isValidElement(title)
           ? title
-          : <Text
-              style={[styles.titleText, titleTextStyle, textStyle]}
-              numberOfLines={1}
-            >
-              {title}
-            </Text>}
+          : <View>
+              {Boolean(title) &&
+                <Text
+                  style={[styles.titleText, titleTextStyle, textStyle]}
+                  numberOfLines={1}
+                >
+                  {title}
+                </Text>}
+              {Boolean(subtitle) &&
+                <Text
+                  style={[styles.subtitleText, subtitleTextStyle, textStyle]}
+                  numberOfLines={1}
+                >
+                  {subtitle}
+                </Text>}
+            </View>}
       </View>
     )
   }
@@ -384,8 +428,7 @@ export default class ActionSheet extends PureComponent {
         <ViewOrAnimatedView
           style={[
             styles.container,
-            styles.container__bottom,
-            containerStyle,
+            containerStyle || styles.container__bottom,
             {
               padding: containerPadding,
               transform: [{ translateY }],

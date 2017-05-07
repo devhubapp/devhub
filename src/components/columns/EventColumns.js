@@ -9,10 +9,14 @@ import CreateColumnUtils from '../utils/CreateColumnUtils'
 import type { ActionCreators, Column as ColumnType } from '../../utils/types'
 
 export default class EventColumns extends React.PureComponent {
-  addColumnFn = ({ order } = {}) => {
-    CreateColumnUtils.showColumnTypeSelectAlert(this.props.actions, {
-      createColumnOrder: order,
-    })
+  addColumnFn = ({ order } = {}, ...args) => {
+    CreateColumnUtils.showColumnTypeSelectAlert(
+      this.props.actions,
+      {
+        createColumnOrder: order,
+      },
+      ...args,
+    )
   }
 
   props: {

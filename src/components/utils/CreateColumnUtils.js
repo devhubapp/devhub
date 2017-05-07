@@ -11,10 +11,11 @@ export default class {
   static onSelectUserFeedType(
     actions: ActionCreators,
     { createColumnOrder } = {},
+    promptFn = prompt,
   ) {
     const { createColumn, createSubscription, loadUserReceivedEvents } = actions
 
-    prompt(
+    promptFn(
       'User feed',
       'Enter the username of a GitHub user. E.g.: gaearon',
       [
@@ -48,10 +49,14 @@ export default class {
     )
   }
 
-  static onSelectUserType(actions: ActionCreators, { createColumnOrder } = {}) {
+  static onSelectUserType(
+    actions: ActionCreators,
+    { createColumnOrder } = {},
+    promptFn = prompt,
+  ) {
     const { createColumn, createSubscription, loadUserEvents } = actions
 
-    prompt(
+    promptFn(
       'User events',
       'Enter the username of a GitHub user. E.g.: gaearon',
       [
@@ -84,10 +89,11 @@ export default class {
   static onSelectRepositoryType(
     actions: ActionCreators,
     { createColumnOrder } = {},
+    promptFn = prompt,
   ) {
     const { createColumn, createSubscription, loadRepoEvents } = actions
 
-    prompt(
+    promptFn(
       'Repository events',
       'Enter the repository full name. E.g.: facebook/react',
       [
@@ -120,10 +126,14 @@ export default class {
     )
   }
 
-  static onSelectOrgType(actions: ActionCreators, { createColumnOrder } = {}) {
+  static onSelectOrgType(
+    actions: ActionCreators,
+    { createColumnOrder } = {},
+    promptFn = prompt,
+  ) {
     const { createColumn, createSubscription, loadOrgEvents } = actions
 
-    prompt(
+    promptFn(
       'Organization public events',
       'Enter the organization name. E.g.: facebook',
       [
@@ -160,8 +170,8 @@ export default class {
     )
   }
 
-  static showColumnTypeSelectAlert(actions, params) {
-    alert(
+  static showColumnTypeSelectAlert(actions, params, alertFn = alert) {
+    alertFn(
       'Create a column',
       'Select the type of the column',
       [

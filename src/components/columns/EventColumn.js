@@ -87,61 +87,60 @@ export default class EventColumn extends React.PureComponent {
     const columnId = column.get('id')
     const title = (column.get('title') || '').toLowerCase()
 
-    this.ActionSheet.show(
-      [
-        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-        {
-          text: 'Create a column here',
-          onPress: () => {
-            CreateColumnUtils.showColumnTypeSelectAlert(actions, {
-              createColumnOrder: column.get('order'),
-            })
-          },
-        },
-        {
-          text: 'Mark all as read / unread',
-          onPress: () => {
-            const eventIds = this.getEventIds()
-            const readIds = this.getReadEventIds()
-            const unreadIds = this.getUnreadEventIds()
-
-            if (readIds && readIds.size >= eventIds.size) {
-              actions.markEventsAsUnread({
-                all: true,
-                columnId,
-                eventIds: readIds,
-              })
-            } else {
-              actions.markEventsAsRead({
-                all: true,
-                columnId,
-                eventIds: unreadIds,
-              })
-            }
-          },
-        },
-        {
-          text: 'Clear read',
-          onPress: () => {
-            const eventIds = this.getEventIds()
-            const readIds = this.getReadEventIds()
-            const all = readIds.size === eventIds.size
-
-            actions.deleteEvents({ all, columnId, eventIds: readIds })
-          },
-        },
-        {
-          text: 'Delete column',
-          onPress: () => {
-            actions.deleteColumn(columnId)
-          },
-          style: 'destructive',
-        },
-      ],
+    this.ActionSheet.show('', !isWebWithBigHeight && title, [
+      { text: 'Cancel', onPress: () => {}, style: 'cancel' },
       {
-        title: !isWebWithBigHeight && title,
+        text: 'Create a column here',
+        onPress: () => {
+          CreateColumnUtils.showColumnTypeSelectAlert(
+            actions,
+            {
+              createColumnOrder: column.get('order'),
+            },
+            this.ActionSheet.show,
+          )
+        },
       },
-    )
+      {
+        text: 'Mark all as read / unread',
+        onPress: () => {
+          const eventIds = this.getEventIds()
+          const readIds = this.getReadEventIds()
+          const unreadIds = this.getUnreadEventIds()
+
+          if (readIds && readIds.size >= eventIds.size) {
+            actions.markEventsAsUnread({
+              all: true,
+              columnId,
+              eventIds: readIds,
+            })
+          } else {
+            actions.markEventsAsRead({
+              all: true,
+              columnId,
+              eventIds: unreadIds,
+            })
+          }
+        },
+      },
+      {
+        text: 'Clear read',
+        onPress: () => {
+          const eventIds = this.getEventIds()
+          const readIds = this.getReadEventIds()
+          const all = readIds.size === eventIds.size
+
+          actions.deleteEvents({ all, columnId, eventIds: readIds })
+        },
+      },
+      {
+        text: 'Delete column',
+        onPress: () => {
+          actions.deleteColumn(columnId)
+        },
+        style: 'destructive',
+      },
+    ])
   }
 
   props: {
@@ -218,7 +217,14 @@ export default class EventColumn extends React.PureComponent {
         />
 
         <ActionSheet
-          containerStyle={isWebWithBigHeight && { top: headerHeight }}
+          containerStyle={
+            isWebWithBigHeight && {
+              position: 'absolute',
+              top: headerHeight,
+              left: 0,
+              right: 0,
+            }
+          }
           innerRef={ref => {
             this.ActionSheet = ref
           }}

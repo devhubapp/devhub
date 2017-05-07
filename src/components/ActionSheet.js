@@ -24,7 +24,8 @@ const StyledActionSheet = withTheme(
       tintColor={
         !theme.isDark && Platform.OS === 'ios' ? undefined : theme.base04
       }
-      titleTextStyle={{ color: theme.base05 }}
+      titleTextStyle={{ color: theme.brand }}
+      subtitleText={{ color: theme.base05 }}
       {...props}
     />
   ),

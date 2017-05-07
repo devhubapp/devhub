@@ -99,44 +99,39 @@ export default class NotificationColumn extends React.PureComponent {
     const notificationIds = this.getNotificationIds()
     const title = (column.get('title') || '').toLowerCase()
 
-    this.ActionSheet.show(
-      [
-        {
-          text: 'Mark all as read / unread',
-          onPress: () => {
-            if (readIds && readIds.size >= notificationIds.size) {
-              actions.markNotificationsAsUnread({
-                all: true,
-                notificationIds: readIds,
-                repoId,
-              })
-            } else {
-              const unreadIds = this.getUnreadNotificationIds()
-              actions.markNotificationsAsReadRequest({
-                all: true,
-                notificationIds: unreadIds,
-                repoId,
-              })
-            }
-          },
-        },
-        {
-          text: 'Clear read',
-          onPress: () => {
-            const all = readIds.size === notificationIds.size
-            actions.deleteNotifications({
-              all,
+    this.ActionSheet.show('', !isWebWithBigHeight && title, [
+      {
+        text: 'Mark all as read / unread',
+        onPress: () => {
+          if (readIds && readIds.size >= notificationIds.size) {
+            actions.markNotificationsAsUnread({
+              all: true,
               notificationIds: readIds,
               repoId,
             })
-          },
+          } else {
+            const unreadIds = this.getUnreadNotificationIds()
+            actions.markNotificationsAsReadRequest({
+              all: true,
+              notificationIds: unreadIds,
+              repoId,
+            })
+          }
         },
-        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-      ],
-      {
-        title: !isWebWithBigHeight && title,
       },
-    )
+      {
+        text: 'Clear read',
+        onPress: () => {
+          const all = readIds.size === notificationIds.size
+          actions.deleteNotifications({
+            all,
+            notificationIds: readIds,
+            repoId,
+          })
+        },
+      },
+      { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+    ])
   }
 
   props: {
@@ -220,7 +215,14 @@ export default class NotificationColumn extends React.PureComponent {
         />
 
         <ActionSheet
-          containerStyle={isWebWithBigHeight && { top: headerHeight }}
+          containerStyle={
+            isWebWithBigHeight && {
+              position: 'absolute',
+              top: headerHeight,
+              left: 0,
+              right: 0,
+            }
+          }
           innerRef={ref => {
             this.ActionSheet = ref
           }}

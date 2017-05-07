@@ -3,6 +3,7 @@
 import React from 'react'
 import styled from 'styled-components/native'
 
+import ActionSheet from '../ActionSheet'
 import Column from './_Column'
 import Icon from '../../libs/icon'
 import type { ActionCreators } from '../../utils/types'
@@ -38,6 +39,14 @@ export default class NewColumn extends React.PureComponent {
     style?: ?Object,
   }
 
+  _addColumnFn = () => {
+    const { addColumnFn } = this.props
+
+    if (!addColumnFn) return
+
+    addColumnFn(this.ActionSheet.show)
+  }
+
   render() {
     const { addColumnFn, ...props } = this.props
 
@@ -46,13 +55,19 @@ export default class NewColumn extends React.PureComponent {
     return (
       <Column {...props}>
         <Wrapper>
-          <NewColumnButton onPress={addColumnFn}>
+          <NewColumnButton onPress={this._addColumnFn}>
             <NewColumnText>
               <NewColumnIcon name="plus" />{'\n'}
               add new column
             </NewColumnText>
           </NewColumnButton>
         </Wrapper>
+
+        <ActionSheet
+          innerRef={ref => {
+            this.ActionSheet = ref
+          }}
+        />
       </Column>
     )
   }
