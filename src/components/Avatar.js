@@ -93,6 +93,7 @@ export default class Avatar extends React.PureComponent {
         onLoadStart={this.onLoadStart(onLoadStart)}
         onLoadEnd={this.onLoadEnd(onLoadEnd)}
         onError={this.onError(onError)}
+        alt="Avatar"
         {...props}
       />
     )

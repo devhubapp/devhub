@@ -13,6 +13,7 @@ import StatusMessage from '../../components/StatusMessage'
 import * as actionCreators from '../../actions'
 import { isLoggingSelector, userErrorSelector } from '../../selectors/user'
 import { contentPadding, radius } from '../../styles/variables'
+import { displayName as appDisplayName } from '../../../package.json'
 import type { ActionCreators, State } from '../../utils/types'
 
 const Main = styled.View`
@@ -101,7 +102,11 @@ export default class LoginScreen extends React.PureComponent {
             <StatusMessage key={`error-${error}`} message={error} error />}
 
           <MainContent>
-            <Logo source={logo} resizeMode="contain" />
+            <Logo
+              source={logo}
+              resizeMode="contain"
+              alt={`${appDisplayName} Logo`}
+            />
 
             <StyledGithubButton
               onPress={this.loginWithGithubPublicAccess}

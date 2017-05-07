@@ -27,8 +27,11 @@ export default class OwnerAvatar extends React.PureComponent {
     if (!uri) return null
 
     return (
-      <TouchableOpacity onPress={() => openOnGithub(linkURL)}>
-        <Avatar size={size} source={{ uri }} {...props} />
+      <TouchableOpacity
+        onPress={() => openOnGithub(linkURL)}
+        alt="Open on Github"
+      >
+        <Avatar size={size} source={{ uri }} alt="User avatar" {...props} />
       </TouchableOpacity>
     )
   }
