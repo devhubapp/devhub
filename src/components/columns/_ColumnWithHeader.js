@@ -12,6 +12,9 @@ import { contentPadding } from '../../styles/variables'
 
 export * from './_Column'
 
+export const headerFontSize = 18
+export const headerHeight = headerFontSize + 8 + 2 * contentPadding
+
 export const HeaderButtonsContainer = styled.View`
   flex-direction: row;
   padding-right: ${iconRightMargin}px;
@@ -22,7 +25,6 @@ export const TitleWrapper = styled.View`
   flex-direction: row;
 `
 
-export const headerFontSize = 18
 export const Title = styled.Text`
   padding: ${contentPadding}px;
   padding-top: ${contentPadding + 4}px;
@@ -51,7 +53,7 @@ export const FixedHeader = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  min-height: ${20 + 2 * contentPadding}px;
+  min-height: ${headerHeight}px;
 `
 
 export const ProgressBarContainer = styled.View`

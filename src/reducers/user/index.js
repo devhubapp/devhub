@@ -17,7 +17,7 @@ import type {
   LoginResponsePayload,
 } from '../../utils/types'
 
-const initialState = Map({})
+const initialState = Map()
 
 type State = { isLogging: boolean, accessToken: string, loggedAt: Object }
 type ActionType = Action<LoginRequestPayload | LoginResponsePayload>

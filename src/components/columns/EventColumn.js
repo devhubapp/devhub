@@ -1,19 +1,22 @@
 // @flow
 
 import React from 'react'
+import { Dimensions } from 'react-native'
 import { List, Set } from 'immutable'
 
 import { makeColumnReadIdsSelector } from '../../selectors/columns'
 
 import ColumnWithList, {
-  HeaderButton,
-  HeaderButtonIcon,
+  headerHeight,
   HeaderButtonsContainer,
+  HeaderButtonIcon,
+  HeaderButton,
 } from './_ColumnWithList'
 
 import ActionSheet from '../ActionSheet'
-import EventCardContainer from '../../containers/EventCardContainer'
 import CreateColumnUtils from '../utils/CreateColumnUtils'
+import EventCardContainer from '../../containers/EventCardContainer'
+import Platform from '../../libs/platform'
 import { FullView } from '../cards/__CardComponents'
 import { getRequestTypeIcon, requestTypes } from '../../api/github'
 
@@ -43,6 +46,9 @@ const BUTTONS = {
   CLEAR_READ: 3,
   DELETE_COLUMN: 4,
 }
+
+const isWebWithBigHeight =
+  Platform.realOS === 'web' && Dimensions.get('window').height > 500
 
 export default class EventColumn extends React.PureComponent {
   static contextTypes = {
@@ -223,14 +229,15 @@ export default class EventColumn extends React.PureComponent {
         />
 
         <ActionSheet
+          cancelButtonIndex={BUTTONS.CANCEL}
+          containerStyle={isWebWithBigHeight && { top: headerHeight }}
+          destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
           innerRef={ref => {
             this.ActionSheet = ref
           }}
-          title={title}
-          options={buttons}
-          cancelButtonIndex={BUTTONS.CANCEL}
-          destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
           onSelect={this.handleActionSheetButtonPress}
+          options={buttons}
+          title={!isWebWithBigHeight && title}
         />
       </FullView>
     )

@@ -4,6 +4,8 @@ import 'babel-polyfill'
 import { AppRegistry } from 'react-native'
 
 import './web/src/index.css'
+import './web/src/reset.css'
+
 import App from './src/'
 import { name as appName } from './package.json'
 

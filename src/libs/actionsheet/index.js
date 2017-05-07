@@ -6,7 +6,7 @@ import {
   Animated,
   Dimensions,
   Easing,
-  Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,6 +14,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+
+import Modal from '../modal'
 
 type ActionSheetProps = {
   cancelButtonIndex: ?number,
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {},
-  container__full: {
+  overlayContainer: {
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -82,7 +84,6 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 18,
-    padding: 10,
   },
   titleContainer: {
     height: TITLE_HEIGHT,
@@ -99,13 +100,19 @@ const styles = StyleSheet.create({
   },
 })
 
+// TODO: Fix Animated for web
+const animatedEnabled = Platform.OS !== 'web'
+const ViewOrAnimatedView = Platform.OS === 'web' ? View : Animated.View
+
 export default class ActionSheet extends PureComponent {
   static defaultProps = {
     containerPadding: 10,
     radius: 10,
     tintColor: DEFAULT_TINT_COLOR,
-    useNativeDriver: true,
+    useNativeDriver: Platform.OS === 'ios' || Platform.OS === 'android',
   }
+
+  static allActionSheetRefs = []
 
   constructor(props) {
     super(props)
@@ -114,15 +121,26 @@ export default class ActionSheet extends PureComponent {
       height: this.calculateHeight(props),
       isAnimating: false,
       isVisible: false,
-      overlayOpacity: new Animated.Value(0),
-      translateY: new Animated.Value(this.calculateHeight(props)),
+      overlayOpacity: animatedEnabled ? new Animated.Value(0) : OVERLAY_OPACITY,
+      translateY: animatedEnabled
+        ? new Animated.Value(this.calculateHeight(props))
+        : 0,
     }
   }
 
   state: ActionSheetState
 
+  componentDidMount() {
+    ActionSheet.allActionSheetRefs.push(this)
+  }
+
   componentWillReceiveProps(props) {
     this.setState({ height: this.calculateHeight(props) })
+  }
+
+  componentWillUnmount() {
+    const index = ActionSheet.allActionSheetRefs.indexOf(this)
+    if (index >= 0) ActionSheet.allActionSheetRefs.splice(index, 1)
   }
 
   animate = (toVisible, callback) => {
@@ -168,23 +186,35 @@ export default class ActionSheet extends PureComponent {
     CANCEL_MARGIN +
     2 * (props.containerPadding || 0)
 
-  hide = (animated = true, callback) =>
-    animated
-      ? this.animate(false, callback)
-      : this.setState({ visible: false }, callback)
+  hide = (animated = animatedEnabled, callback) => {
+    if (animated) {
+      this.animate(false, callback)
+    } else {
+      this.setState({ isVisible: false })
+      if (callback) callback()
+    }
+  }
 
-  show = (animated = true, callback) =>
-    animated
-      ? this.animate(true, callback)
-      : this.setState({ visible: true }, callback)
+  show = (animated = animatedEnabled, callback) => {
+    ActionSheet.allActionSheetRefs.forEach(ref => {
+      if (ref !== this) ref.hide()
+    })
 
-  toggle = (animated = true, callback) =>
+    if (animated) {
+      this.animate(true, callback)
+    } else {
+      this.setState({ isVisible: true })
+      if (callback) callback()
+    }
+  }
+
+  toggle = (animated = animatedEnabled, callback) =>
     this.state.isVisible
       ? this.hide(animated, callback)
       : this.show(animated, callback)
 
   select = index => {
-    this.hide(true, () => {
+    this.hide(animatedEnabled, () => {
       setTimeout(() => {
         this.props.onSelect(index)
       }, 50)
@@ -269,8 +299,8 @@ export default class ActionSheet extends PureComponent {
       return this.renderOption(index, label, {
         color,
         style: {
-          borderTopLeftRadius: index === 0 && !title ? radius : 0,
-          borderTopRightRadius: index === 0 && !title ? radius : 0,
+          borderTopLeftRadius: index === 0 || !title ? radius : 0,
+          borderTopRightRadius: index === 0 || !title ? radius : 0,
           borderBottomLeftRadius: index === lastIndex ? radius : 0,
           borderBottomRightRadius: index === lastIndex ? radius : 0,
         },
@@ -342,14 +372,14 @@ export default class ActionSheet extends PureComponent {
         visible={isVisible || isAnimating}
       >
         <TouchableWithoutFeedback
-          style={styles.container__full}
+          style={styles.overlayContainer}
           onPress={() => this.hide()}
         >
-          <Animated.View
+          <ViewOrAnimatedView
             style={[styles.full, styles.overlay, { opacity: overlayOpacity }]}
           />
         </TouchableWithoutFeedback>
-        <Animated.View
+        <ViewOrAnimatedView
           style={[
             styles.container,
             styles.container__bottom,
@@ -376,7 +406,7 @@ export default class ActionSheet extends PureComponent {
             </ScrollView>
           </View>
           {this.renderCancelOption()}
-        </Animated.View>
+        </ViewOrAnimatedView>
       </Modal>
     )
   }

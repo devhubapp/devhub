@@ -1,10 +1,12 @@
 // @flow
 
 import React from 'react'
+import { Dimensions } from 'react-native'
 import { Iterable, List, Set } from 'immutable'
 
 import ActionSheet from '../ActionSheet'
 import ColumnWithList, {
+  headerHeight,
   HeaderButton,
   HeaderButtonIcon,
   HeaderButtonsContainer,
@@ -14,6 +16,7 @@ import NotificationsFilterColumnContainer
   from '../../containers/NotificationsFilterColumnContainer'
 import NotificationCardContainer
   from '../../containers/NotificationCardContainer'
+import Platform from '../../libs/platform'
 import { FullAbsoluteView, FullView } from '../cards/__CardComponents'
 import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
 import { getParamsToLoadAllNotifications } from '../../sagas/notifications'
@@ -26,6 +29,9 @@ const BUTTONS = {
   MARK_NOTIFICATIONS_AS_READ_OR_UNREAD: 1,
   CLEAR_READ: 2,
 }
+
+const isWebWithBigHeight =
+  Platform.realOS === 'web' && Dimensions.get('window').height > 500
 
 export const defaultIcon = 'bell'
 export const defaultTitle = 'notifications'
@@ -221,14 +227,15 @@ export default class NotificationColumn extends React.PureComponent {
         />
 
         <ActionSheet
+          cancelButtonIndex={BUTTONS.CANCEL}
+          containerStyle={isWebWithBigHeight && { top: headerHeight }}
+          destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
           innerRef={ref => {
             this.ActionSheet = ref
           }}
-          title={title}
-          options={buttons}
-          cancelButtonIndex={BUTTONS.CANCEL}
-          destructiveButtonIndex={BUTTONS.DELETE_COLUMN}
           onSelect={this.handleActionSheetButtonPress}
+          options={buttons}
+          title={!isWebWithBigHeight && title}
         />
 
         {summary &&

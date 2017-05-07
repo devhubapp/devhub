@@ -62,11 +62,11 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
-    "bugsnag-js": "^3.1.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "bugsnag-js": "^3.2.0",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
     "react-helmet": "^5.0.3",
-    "react-native-web": "^0.0.71"
+    "react-native-web": "^0.0.94"
   },
   "scripts": {
     "build": "NODE_ENV=production babel-node scripts/build.js",
