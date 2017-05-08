@@ -1,8 +1,8 @@
 {
   "name": "devhub",
   "displayName": "DevHub",
-  "version": "0.7.1",
-  "codeBundleId": "0.7.1",
+  "version": "0.7.2",
+  "codeBundleId": "0.7.2",
   "private": true,
   "scripts": {
     "flow": "flow '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
