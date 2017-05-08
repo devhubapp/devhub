@@ -654,6 +654,11 @@
         //if link element
         elms = getLinks()
 
+        // remove all icon links except the last one
+        // this is required to work on chrome
+        elms.slice(0, -1).forEach(elm => elm.remove())
+        elms = elms.slice(-1)
+
         if (elms.length === 0) {
           elms = [_doc.createElement('link')]
           elms[0].setAttribute('rel', 'icon')

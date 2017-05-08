@@ -8,18 +8,18 @@ import { notificationsUnreadCountSelector } from '../selectors'
 import type { State } from '../utils/types'
 
 const mapStateToProps = (state: State) => ({
-  unreadCount: notificationsUnreadCountSelector(state),
+  notificationsCount: notificationsUnreadCountSelector(state),
 })
 
 @connect(mapStateToProps)
 export default class NotificationsTabIconContainer extends React.PureComponent {
   props: {
-    unreadCount: number,
+    notificationsCount: number,
   }
 
   render() {
-    const { unreadCount, ...props } = this.props
+    const { notificationsCount, ...props } = this.props
 
-    return <TabIcon badge={unreadCount} {...props} />
+    return <TabIcon badgeCount={notificationsCount} {...props} />
   }
 }

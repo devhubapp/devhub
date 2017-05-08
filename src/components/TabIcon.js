@@ -25,19 +25,19 @@ const BadgeText = styled.Text`
   color: #ffffff;
 `
 
-type Props = { badge?: number, color: string, icon: string, size?: number }
-const TabIcon = ({ badge, color, icon, size }: Props) => (
+type Props = { badgeCount?: number, color: string, icon: string, size?: number }
+const TabIcon = ({ badgeCount, color, icon, size }: Props) => (
   <View>
     <Icon name={icon} size={size} color={color} />
-    {badge > 0 &&
+    {badgeCount > 0 &&
       <BadgeContainer>
-        <BadgeText>{badge > 99 ? '99+' : badge}</BadgeText>
+        <BadgeText>{badgeCount > 99 ? '99+' : badgeCount}</BadgeText>
       </BadgeContainer>}
   </View>
 )
 
 TabIcon.defaultProps = {
-  badge: 0,
+  badgeCount: 0,
   size: 22,
 }
 
