@@ -8,9 +8,10 @@ import user from '../user'
 import {
   getObjectDiff,
   getObjectFilteredByMap,
+  getSubMapFromPath,
 } from '../../store/middlewares/firebase/helpers'
 import { FIREBASE_RECEIVED_EVENT } from '../../utils/constants/actions'
-import { fromJS, mergeDeepInAndRemoveNull } from '../../utils/immutable'
+import { fromJS, getIn, mergeDeepInAndRemoveNull } from '../../utils/immutable'
 import type { Action } from '../../utils/types'
 
 export const mapFirebaseToState = {
@@ -20,8 +21,13 @@ export const mapFirebaseToState = {
     subscriptions: {
       '*': {
         error: false,
+        events: false,
         lastModifiedAt: false,
+        loading: false,
+        pollInterval: false,
+        rateLimit: false,
         rateLimitRemaining: false,
+        rateLimitReset: false,
         updatedAt: false,
       },
     },
@@ -38,8 +44,15 @@ export const mapStateToFirebase = {
     columns: {},
     subscriptions: {
       '*': {
-        loading: false,
+        error: false,
         events: false,
+        lastModifiedAt: false,
+        loading: false,
+        pollInterval: false,
+        rateLimit: false,
+        rateLimitRemaining: false,
+        rateLimitReset: false,
+        updatedAt: false,
       },
     },
   },
@@ -63,6 +76,11 @@ const initialState = fromJS(
 
 type State = {}
 
+// Improtant: Differently from all other reducers,
+// this one is not on the /firebase path,
+// instead this points to the root state of the whole app.
+// check the file reducers/index.js to understand
+
 export default (
   state: State = initialState,
   { type, payload }: ?Action<any> = {},
@@ -75,21 +93,41 @@ export default (
         switch (eventName) {
           case 'child_removed':
             return state.removeIn(statePathArr)
-          case 'value':
+          default:
             return (() => {
               const filteredState = getObjectFilteredByMap(
                 state,
                 mapFirebaseToState,
               )
-              const diff = getObjectDiff(
-                filteredState,
-                value,
-                mapStateToFirebase,
+
+              const sameLevelFilteredState = getIn(filteredState, statePathArr)
+
+              let valueDiff
+
+              if (
+                eventName === 'child_added' &&
+                sameLevelFilteredState === undefined
+              ) {
+                valueDiff = getObjectFilteredByMap(
+                  value,
+                  getSubMapFromPath(mapStateToFirebase, statePathArr),
+                )
+              } else if (typeof value === 'object') {
+                valueDiff = getObjectDiff(
+                  sameLevelFilteredState,
+                  value,
+                  getSubMapFromPath(mapStateToFirebase, statePathArr),
+                )
+              } else {
+                valueDiff = value
+              }
+
+              return mergeDeepInAndRemoveNull(
+                state,
+                statePathArr,
+                fromJS(valueDiff),
               )
-              return mergeDeepInAndRemoveNull(state, statePathArr, fromJS(diff))
             })()
-          default:
-            return mergeDeepInAndRemoveNull(state, statePathArr, fromJS(value))
         }
       })(payload || {})
 

@@ -25,7 +25,7 @@ export const notificationIdSelector = (state, { notificationId }) =>
   notificationId
 export const notificationDetailsSelector = state => state.get('notifications')
 export const notificationEntitiesSelector = state =>
-  entitiesSelector(state).get('notifications')
+  entitiesSelector(state).get('notifications').filter(Boolean)
 
 export const notificationSelector = (state, { notificationId }) =>
   notificationEntitiesSelector(state).get(notificationId)

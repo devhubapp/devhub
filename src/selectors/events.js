@@ -20,7 +20,7 @@ import { groupSimilarEvents } from '../utils/helpers/github/events'
 
 export const eventIdSelector = (state, { eventId }) => eventId
 export const eventEntitiesSelector = state =>
-  entitiesSelector(state).get('events')
+  entitiesSelector(state).get('events').filter(Boolean)
 export const eventIdsSelector = state =>
   objectKeysMemoized(eventEntitiesSelector(state))
 

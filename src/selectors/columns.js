@@ -16,27 +16,30 @@ import {
   stateSelector,
 } from './shared'
 
+import { get } from '../utils/immutable'
+
 export const columnIdSelector = (state, { columnId }) => columnId
 export const columnsEntitySelector = state =>
-  entitiesSelector(state).get('columns')
+  get(entitiesSelector(state), 'columns').filter(Boolean)
 export const columnIdsSelector = state =>
   objectKeysMemoized(columnsEntitySelector(state))
 
 const sortColumnsByDate = (b, a) =>
-  moment(a.get('createdAt')).isAfter(moment(b.get('createdAt'))) ? 1 : -1
+  a && b
+    ? moment(get(a, 'createdAt')).isAfter(moment(get(b, 'createdAt'))) ? 1 : -1
+    : 0
 
 export const makeColumnSelector = () =>
   createImmutableSelector(
     columnIdSelector,
     columnsEntitySelector,
-    (columnId, columns) => columns.get(columnId),
+    (columnId, columns) => get(columns, columnId),
   )
 
 export const columnSubscriptionIdsSelector = (state, { columnId }) => {
   const columnSelector = makeColumnSelector()
   return (
-    (columnSelector(state, { columnId }) || Map()).get('subscriptions') ||
-    List()
+    get(columnSelector(state, { columnId }) || Map(), 'subscriptions') || List()
   )
 }
 
@@ -52,7 +55,7 @@ export const makeColumnEventIdsSelector = () =>
         const subscription = subscriptionSelector(state, { subscriptionId })
         if (!subscription) return
 
-        const subscriptionEventIds = Set(subscription.get('events'))
+        const subscriptionEventIds = Set(get(subscription, 'events'))
         eventIds = eventIds.union(subscriptionEventIds)
       })
 
@@ -86,7 +89,7 @@ export const makeColumnSubscriptionsSelector = () =>
     subscriptionsEntitySelector,
     (subscriptionIds, subscriptions) =>
       subscriptionIds
-        .map(subscriptionId => subscriptions.get(subscriptionId))
+        .map(subscriptionId => get(subscriptions, subscriptionId))
         .filter(Boolean),
   )
 
@@ -95,7 +98,7 @@ const columnSubscriptionsSelector = makeColumnSubscriptionsSelector()
 export const columnIsLoadingSelector = createImmutableSelector(
   columnSubscriptionsSelector,
   subscriptions =>
-    subscriptions.some(subscription => subscription.get('loading')),
+    subscriptions.some(subscription => get(subscription, 'loading')),
 )
 
 export const columnErrorsSelector = createImmutableSelector(
@@ -103,7 +106,7 @@ export const columnErrorsSelector = createImmutableSelector(
   subscriptions =>
     subscriptions
       .reduce(
-        (errors, subscription) => errors.concat(subscription.get('error')),
+        (errors, subscription) => errors.concat(get(subscription, 'error')),
         [],
       )
       .filter(Boolean),
@@ -115,7 +118,7 @@ export const orderedColumnsSelector = createImmutableSelector(
     columns
       .toList()
       .sort(sortColumnsByDate)
-      .sortBy(column => column.get('order')),
+      .sortBy(column => get(column, 'order')),
 )
 
 export const makeColumnIsEmptySelector = () => {

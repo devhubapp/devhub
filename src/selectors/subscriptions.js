@@ -16,7 +16,7 @@ export const subscriptionIdSelector = (state, { subscriptionId }) =>
   subscriptionId
 
 export const subscriptionsEntitySelector = state =>
-  entitiesSelector(state).get('subscriptions')
+  entitiesSelector(state).get('subscriptions').filter(Boolean)
 
 export const subscriptionIdsSelector = state =>
   objectKeysMemoized(subscriptionsEntitySelector(state))

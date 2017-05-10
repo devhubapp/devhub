@@ -100,7 +100,7 @@ export function getRequestTypeIcon(type: ApiRequestType) {
     case requestTypes.USER_ORG_EVENTS:
       return 'organization'
     default:
-      console.error(`No api method configured for type '${type}'`)
+      if (__DEV__) console.error(`No api method configured for type '${type}'`)
       return 'mark-github'
   }
 }

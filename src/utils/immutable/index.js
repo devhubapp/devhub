@@ -162,7 +162,7 @@ export function updateIn(object, keyPath: Array<string>, updater: Function) {
  * @return {Any}
  */
 export function sizeOf(object) {
-  if (!__DEV__ && !object) return null
+  if (!__DEV__ && !object) return 0
 
   if (isImmutable(object)) {
     return object.size
@@ -172,7 +172,7 @@ export function sizeOf(object) {
     return Object.keys(object).length
   }
 
-  return object.length
+  return object.length || 0
 }
 
 export function forEach(object, fn) {

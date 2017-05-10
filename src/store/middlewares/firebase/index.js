@@ -7,7 +7,7 @@ import {
   mapFirebaseToState,
   mapStateToFirebase,
 } from '../../../reducers/firebase'
-import { toJS } from '../../../utils/immutable'
+import { getIn, toJS } from '../../../utils/immutable'
 import {
   getObjectDiff,
   getObjectFilteredByMap,
@@ -109,8 +109,13 @@ export function startFirebase({ store, userId }) {
           _lastState = store.getState()
         },
         debug: false, // __DEV__,
-        ignoreFn: ({ count, eventName }) =>
-          count === 1 && eventName === 'child_added',
+
+        // ignore the first child_added because it is redundant,
+        // we already got this using ref.once('value')
+        ignoreFn: ({ count, eventName, statePathArr }) =>
+          count === 1 &&
+          eventName === 'child_added' &&
+          getIn(_lastState, statePathArr) !== undefined,
         map: mapFirebaseToState,
         ref: _databaseRef,
         rootDatabaseRef: _databaseRef,

@@ -197,11 +197,44 @@ export function getMapSubtractedByMap(mapA, mapB) {
   return newMap
 }
 
+export function getSubMapFromPath(map, pathArr) {
+  if (!Array.isArray(pathArr)) {
+    console.error(`[SUBMAP] Invalid arguments passed to getSubMapFromPath. Expected an array for pathArr, received: ${typeof pathArr}.`)
+    return null
+  }
+
+  const firstKey = get(pathArr, 0)
+
+  if (map === '*') return true
+  if (map === true || map === false) return map
+  if (isObjectOrMap(map) && get(map, '*'))
+    return sizeOf(pathArr) === 0
+      ? true // omit(map, '*')
+      : getSubMapFromPath(
+          get(map, firstKey) !== undefined ? get(map, firstKey) : get(map, '*'),
+          pathArr.slice(1),
+        )
+  if (sizeOf(pathArr) === 0) return map
+  if (isObjectOrMap(map) && sizeOf(map) === 0) return map
+  if (!isObjectOrMap(map)) return map
+
+  const nextMapValue = get(map, firstKey)
+
+  if (nextMapValue === undefined) {
+    const mapAnalysis = getMapAnalysis(map)
+    if (mapAnalysis && sizeOf(mapAnalysis.blacklist) > 0) return true
+    else if (mapAnalysis && sizeOf(mapAnalysis.whitelist) > 0) return false
+  }
+
+  return getSubMapFromPath(nextMapValue, pathArr.slice(1))
+}
+
 export function getObjectDiff(oldObject, newObject, map, ...rest) {
   if (oldObject === newObject) return null
 
   if (!isObjectOrMap(newObject)) {
     console.error(`[OBJECT DIFF] Invalid arguments passed to getObjectDiff. Expected objects, received: ${typeof oldObject} and ${typeof newObject}.`)
+    return newObject
   }
 
   const depth = rest[0] || 0

@@ -29,6 +29,11 @@ export function createFirebaseHandler({
 
   return snapshot => {
     const fullPath = getRelativePathFromRef(snapshot.ref, rootDatabaseRef)
+    const firebasePathArr = fullPath.split('/').filter(Boolean)
+    const statePathArr = firebasePathArr.map(path =>
+      fixFirebaseKey(path, false),
+    )
+
     let value = snapshot.val()
     let blacklisted = false
     let ignore = false
@@ -42,8 +47,19 @@ export function createFirebaseHandler({
         blacklist && blacklist.length && blacklist.includes(snapshot.key)
     }
 
-    if (ignoreFn && ignoreFn({ count: counterMap[fullPath], eventName }))
+    if (
+      ignoreFn &&
+      ignoreFn({
+        count: counterMap[fullPath],
+        eventName,
+        firebasePathArr,
+        statePathArr,
+      })
+    )
       ignore = true
+
+    // TODO: check map here to prevent unnecessary callback (= redux actions)?
+    // if (dont fits on map) ignore = true
 
     if (debug) {
       const action = blacklisted
@@ -51,7 +67,7 @@ export function createFirebaseHandler({
         : ignore ? 'Ignored' : 'Received'
 
       console.debug(
-        `[FIREBASE] ${action} ${eventName} on ${fullPath || '/'}:`,
+        `[FIREBASE] ${action} ${eventName} on ${fullPath || '/'}`,
         value,
       )
     }
@@ -60,10 +76,6 @@ export function createFirebaseHandler({
       return
     }
 
-    const firebasePathArr = fullPath.split('/').filter(Boolean)
-    const statePathArr = firebasePathArr.map(path =>
-      fixFirebaseKey(path, false),
-    )
     value = fixFirebaseKeysFromObject(value, false)
 
     if (typeof callback === 'function') {

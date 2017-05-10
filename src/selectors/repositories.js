@@ -10,7 +10,7 @@ import {
 
 export const repoIdSelector = (state, { repoId }) => repoId
 export const reposEntitiesSelector = state =>
-  entitiesSelector(state).get('repos')
+  entitiesSelector(state).get('repos').filter(Boolean)
 
 export const starredReposSelector = createImmutableSelector(
   reposEntitiesSelector,
