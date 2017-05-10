@@ -21,13 +21,19 @@ export function createFirebaseHandler({
   callback,
   debug = __DEV__,
   eventName,
+  ignoreFn,
   map,
   rootDatabaseRef,
 }) {
+  const counterMap = {}
+
   return snapshot => {
     const fullPath = getRelativePathFromRef(snapshot.ref, rootDatabaseRef)
     let value = snapshot.val()
     let blacklisted = false
+    let ignore = false
+
+    counterMap[fullPath] = (counterMap[fullPath] || 0) + 1
 
     if (eventName === 'value' && isObjectOrMap(value)) {
       value = getObjectFilteredByMap(value, map)
@@ -36,15 +42,21 @@ export function createFirebaseHandler({
         blacklist && blacklist.length && blacklist.includes(snapshot.key)
     }
 
+    if (ignoreFn && ignoreFn({ count: counterMap[fullPath], eventName }))
+      ignore = true
+
     if (debug) {
-      const suffix = blacklisted ? ', but ignored.' : ':'
+      const action = blacklisted
+        ? 'Blacklisted'
+        : ignore ? 'Ignored' : 'Received'
+
       console.debug(
-        `[FIREBASE] Received ${eventName} on ${fullPath || '/'}${suffix}`,
+        `[FIREBASE] ${action} ${eventName} on ${fullPath || '/'}:`,
         value,
       )
     }
 
-    if (blacklisted) {
+    if (blacklisted || ignore) {
       return
     }
 
@@ -70,6 +82,7 @@ export const addFirebaseListener = ({
   callback,
   debug = __DEV__,
   eventName,
+  ignoreFn,
   map,
   once,
   ref,
@@ -77,7 +90,7 @@ export const addFirebaseListener = ({
   ...rest
 }) => {
   const fullPath = getRelativePathFromRef(ref, rootDatabaseRef)
-  let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}`
+  let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}${once ? ' once' : ''}`
 
   if (blacklist && blacklist.length) {
     message = `${message}, except ${blacklist.join(', ')}`
@@ -97,6 +110,7 @@ export const addFirebaseListener = ({
         callback,
         debug,
         eventName: realEventName,
+        ignoreFn,
         map,
         once,
         ref,
@@ -116,7 +130,9 @@ export const addFirebaseListener = ({
         callback,
         debug,
         eventName,
+        ignoreFn,
         map,
+        once,
         rootDatabaseRef,
       }),
     )
@@ -128,7 +144,9 @@ export const addFirebaseListener = ({
         callback,
         debug,
         eventName,
+        ignoreFn,
         map,
+        once,
         rootDatabaseRef,
       }),
     )
@@ -138,6 +156,7 @@ export const addFirebaseListener = ({
 export function watchFirebaseFromMap({
   callback,
   debug = __DEV__,
+  ignoreFn,
   map,
   once,
   rootDatabaseRef,
@@ -154,6 +173,7 @@ export function watchFirebaseFromMap({
       ...rest,
       callback,
       debug,
+      ignoreFn,
       map: get(map, field),
       once,
       ref: ref.child(field),
@@ -168,6 +188,7 @@ export function watchFirebaseFromMap({
       callback,
       debug,
       eventName: 'children',
+      ignoreFn,
       map,
       once,
       ref,
@@ -181,6 +202,7 @@ export function watchFirebaseFromMap({
       callback,
       debug,
       eventName: 'children',
+      ignoreFn,
       map,
       once,
       ref,
@@ -194,6 +216,7 @@ export function watchFirebaseFromMap({
         callback,
         debug,
         eventName: 'value',
+        ignoreFn,
         map,
         once,
         ref: ref.child(field),

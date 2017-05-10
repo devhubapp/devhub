@@ -109,6 +109,8 @@ export function startFirebase({ store, userId }) {
           _lastState = store.getState()
         },
         debug: false, // __DEV__,
+        ignoreFn: ({ count, eventName }) =>
+          count === 1 && eventName === 'child_added',
         map: mapFirebaseToState,
         ref: _databaseRef,
         rootDatabaseRef: _databaseRef,
