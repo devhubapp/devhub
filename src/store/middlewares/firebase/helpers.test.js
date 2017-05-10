@@ -1,6 +1,7 @@
 import {
   getMapSubtractedByMap,
   getObjectDiff,
+  getObjectFilteredByMap,
   getSubMapFromPath,
 } from './helpers'
 
@@ -18,7 +19,8 @@ const mapA = {
     i2: { '*': { a: false, b: false } },
   },
   j: {
-    jj: { '*': {}, jjj: false },
+    j1: { jj1: false, '*': { jj: false } },
+    j2: { jj2: true, '*': { jj: false } },
   },
 }
 
@@ -47,7 +49,44 @@ test('It subtracts a map from another map', () => {
       i2: { '*': { a: false, b: false } },
     },
     j: {
-      jj: { '*': {}, jjj: false },
+      j1: { jj1: false, '*': { jj: false } },
+      j2: { jj2: true, '*': { jj: false } },
+    },
+  })
+})
+
+test('It filters an object by map', () => {
+  const obj = {
+    a: 'a',
+    b: { bb: { bbb: true } },
+    c: { cc: { ccc: true } },
+    d: { d: 'd', dd: 'dd' },
+    e: { e: 'e', ee: 'eee', eee: 'eee' },
+    f: { f: 'f' },
+    g: { gg: 'gg' },
+    h: { hh: 'hh' },
+    i: { i1: { ii: 'ii' }, i2: { ii2: { c: 'c' } }, i3: 'i3' },
+    j: {
+      j1: { jj1: 'jj1', jjj1: { jj: 'jj', jjj: 'jjj' } },
+      j2: { jj2: 'jj2', jjj2: { jj: 'jj', jjj: 'jjj' } },
+    },
+  }
+
+  expect(getObjectFilteredByMap(obj, mapA)).toEqual({
+    a: 'a',
+    b: { bb: { bbb: true } },
+    // c: { cc: { ccc: true } },
+    d: { /* d: 'd',*/ dd: 'dd' },
+    e: { /* e: 'e', */ ee: 'eee', eee: 'eee' },
+    f: { f: 'f' },
+    g: {
+      /* gg: 'gg' */
+    },
+    h: { hh: 'hh' },
+    i: { i1: { ii: 'ii' }, i2: { ii2: { c: 'c' } } },
+    j: {
+      j1: { /* jj1: 'jj1', */ jjj1: { /* jj: 'jj', */ jjj: 'jjj' } },
+      j2: { jj2: 'jj2', jjj2: { /* jj: 'jj', */ jjj: 'jjj' } },
     },
   })
 })
@@ -94,5 +133,5 @@ test('It gets a sub map from a path', () => {
   expect(getSubMapFromPath(mapA, ['i', 'i2', 'xxx', 'a'])).toEqual(false)
   expect(getSubMapFromPath(mapA, ['i', 'i2', 'xxx', 'a', 'xxx'])).toEqual(false)
   expect(getSubMapFromPath(mapA, ['i', 'i2', 'xxx', 'c'])).toEqual(true)
-  expect(getSubMapFromPath(mapA, ['j', 'jj', 'jjj'])).toEqual(false)
+  expect(getSubMapFromPath(mapA, ['j', 'j1', 'jj1'])).toEqual(false)
 })

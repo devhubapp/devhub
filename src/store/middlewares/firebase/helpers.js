@@ -9,7 +9,7 @@ import {
   get,
   getEmptyObjectFromTheSameType,
   isObjectOrMap,
-  map as mapFn,
+  map as _map,
   omit,
   pick,
   remove,
@@ -139,12 +139,20 @@ export function getObjectFilteredByMap(object, map) {
   if (count === 0) {
     // passed an empty object, so we dont modify anything
     return object
-  } else if (hasAsterisk && count === 1) {
+  } else if (hasAsterisk) {
     if (!object) return object
 
+    let filteredObject = object
+    if (blacklist && blacklist.length) {
+      filteredObject = omit(object, blacklist)
+    }
+
     const itemMap = get(map, '*')
-    const newObject = mapFn(object, item =>
-      getObjectFilteredByMap(item, itemMap),
+    const newObject = _map(filteredObject, (item, key) =>
+      getObjectFilteredByMap(
+        item,
+        get(map, key) !== undefined ? get(map, key) : itemMap,
+      ),
     )
     return newObject
   }
@@ -221,9 +229,9 @@ export function getSubMapFromPath(map, pathArr) {
   const nextMapValue = get(map, firstKey)
 
   if (nextMapValue === undefined) {
-    const mapAnalysis = getMapAnalysis(map)
-    if (mapAnalysis && sizeOf(mapAnalysis.blacklist) > 0) return true
-    else if (mapAnalysis && sizeOf(mapAnalysis.whitelist) > 0) return false
+    const { blacklist, whitelist } = getMapAnalysis(map) || {}
+    if (blacklist && sizeOf(blacklist) > 0) return true
+    else if (whitelist && sizeOf(whitelist) > 0) return false
   }
 
   return getSubMapFromPath(nextMapValue, pathArr.slice(1))
