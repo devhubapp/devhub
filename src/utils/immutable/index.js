@@ -266,7 +266,11 @@ export function getEmptyObjectFromTheSameType(object) {
 
 export function isList(object) {
   if (isImmutable(object)) {
-    return Immutable.List.isList(object) || Immutable.Seq.isSeq(object)
+    return (
+      Immutable.List.isList(object) ||
+      Immutable.Seq.isSeq(object) ||
+      Immutable.Set.isSet(object)
+    )
   }
 
   return !!object && Array.isArray(object)
@@ -299,7 +303,8 @@ export const mergeDeepAndRemoveNull = (state, value) => {
   if (!state || typeof value !== 'object') return value
 
   if (isList(state)) {
-    return state.concat(value)
+    // wrapping on a Set to remove duplicates -- might lead to unwanted things
+    return Immutable.Set(state.concat(value))
   }
 
   let newState = state
