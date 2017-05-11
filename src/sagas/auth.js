@@ -8,7 +8,6 @@ import { call, fork, put, select, takeLatest } from 'redux-saga/effects'
 import { bugsnagClient } from '../utils/services'
 
 import {
-  APP_READY,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
@@ -42,8 +41,7 @@ function* onLoginRequest({ payload }: Action<LoginRequestPayload>) {
 }
 
 function* signInOnFirebase() {
-  const state = yield select()
-  const accessToken = accessTokenSelector(state)
+  const accessToken = yield select(accessTokenSelector)
 
   if (!accessToken) {
     return
@@ -58,7 +56,7 @@ function* signInOnFirebase() {
   }
 }
 
-function* onLoginSuccessOrRestored() {
+function* onLoginSuccess() {
   yield signInOnFirebase()
 }
 
@@ -94,7 +92,7 @@ function* watchFirebaseCurrentUser() {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     if (lastUser !== ignoreValue) {
-      // console.log('firebase user', lastUser);
+      // console.log('firebase user', lastUser)
       const user = lastUser && lastUser.providerData && lastUser.providerData[0]
       lastUser = ignoreValue
 
@@ -106,7 +104,7 @@ function* watchFirebaseCurrentUser() {
         ...restOfUser
       } = user || {}
 
-      const payload = user
+      const payload = user && firebaseId
         ? {
             firebaseId,
             githubId,
@@ -120,7 +118,8 @@ function* watchFirebaseCurrentUser() {
       yield put(updateCurrentUser(payload, sagaActionChunk))
     }
 
-    yield call(delay, 1000)
+    const accessToken = yield select(accessTokenSelector)
+    yield call(delay, accessToken ? 3000 : 300)
   }
 }
 
@@ -128,7 +127,7 @@ export default function*() {
   return yield [
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
     yield takeLatest(UPDATE_CURRENT_USER, onCurrentUserUpdate),
-    yield takeLatest([LOGIN_SUCCESS, APP_READY], onLoginSuccessOrRestored),
+    yield takeLatest(LOGIN_SUCCESS, onLoginSuccess),
     yield takeLatest([LOGIN_FAILURE, LOGOUT, RESET_APP_DATA], onLogoutRequest),
     yield fork(watchFirebaseCurrentUser),
   ]
