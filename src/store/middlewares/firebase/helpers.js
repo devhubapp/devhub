@@ -18,7 +18,15 @@ import {
   toJS,
 } from '../../../utils/immutable'
 
-export const firebaseCharMap = { '/': '__STRIPE__' }
+export const firebaseCharMap = {
+  $: '__DOLLAR__',
+  '#': '__HASH__',
+  '.': '__DOT__',
+  '/': '__STRIPE__',
+  '[': '__BRACKET_OPEN__',
+  ']': '__BRACKET_CLOSE__',
+}
+
 export const firebaseInvertedCharMap = _.invert(firebaseCharMap)
 
 // firebase does not support some characters as object key, like '/'
@@ -242,6 +250,8 @@ export function getObjectDiff(oldObject, newObject, map, ...rest) {
 
   if (!isObjectOrMap(newObject)) {
     console.error(`[OBJECT DIFF] Invalid arguments passed to getObjectDiff. Expected objects, received: ${typeof oldObject} and ${typeof newObject}.`)
+    if (__DEV__)
+      console.debug('getObjectDiff', { oldObject, newObject, map, rest })
     return newObject
   }
 

@@ -1,20 +1,16 @@
 // @flow
 
-import _ from 'lodash'
 import moment from 'moment'
 
 import {
   fixFirebaseKey,
   fixFirebaseKeysFromObject,
+  getMapAnalysis,
   getObjectFilteredByMap,
   getRelativePathFromRef,
-  getMapAnalysis,
 } from './helpers'
 
 import { forEach, get, isObjectOrMap } from '../../../utils/immutable'
-
-export const firebaseCharMap = { '/': '__STRIPE__' }
-export const firebaseInvertedCharMap = _.invert(firebaseCharMap)
 
 export function createFirebaseHandler({
   blacklist,
@@ -254,14 +250,15 @@ export const applyPatchOnFirebase = ({
   forEach(patch, (value, field) => {
     const fixedPath = fixFirebaseKey(field, true)
 
-    if (isObjectOrMap(value) && (currentDepth < maxDepth || maxDepth === -1)) {
+    if (isObjectOrMap(value) && (currentDepth < maxDepth || maxDepth < 0)) {
       applyPatchOnFirebase({
         ...rest,
+        currentDepth: currentDepth + 1,
         debug,
+        depth,
         patch: value,
         ref: ref.child(fixedPath),
         rootDatabaseRef,
-        currentDepth: currentDepth + 1,
       })
 
       return

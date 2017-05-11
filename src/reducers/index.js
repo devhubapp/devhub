@@ -2,6 +2,7 @@
 
 import { Map } from 'immutable'
 import { combineReducers } from 'redux-immutable'
+import { REHYDRATE } from 'redux-persist/constants'
 
 import app from './app'
 import config from './config'
@@ -15,6 +16,7 @@ import {
   FIREBASE_RECEIVED_EVENT,
   RESET_APP_DATA,
 } from '../utils/constants/actions'
+import { fromJS } from '../utils/immutable'
 import type { Action } from '../utils/types'
 
 const reducer = combineReducers({
@@ -38,6 +40,9 @@ const indexReducer = (state: Object = initialState, action) => {
 
     case RESET_APP_DATA:
       return initialState
+
+    case REHYDRATE:
+      return fromJS(state)
 
     default:
       return state

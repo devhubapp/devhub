@@ -299,8 +299,9 @@ export function deepMapKeys(obj, fn) {
   return newObj
 }
 
-export const mergeDeepAndRemoveNull = (state, value) => {
+export const mergeDeep = (state, value, removeNull = false) => {
   if (!state || typeof value !== 'object') return value
+  if (value === null) return state
 
   if (isList(state)) {
     // wrapping on a Set to remove duplicates -- might lead to unwanted things
@@ -311,10 +312,10 @@ export const mergeDeepAndRemoveNull = (state, value) => {
   forEach(
     value,
     (v, k) => {
-      if (v === null) {
+      if (v === null && removeNull) {
         newState = remove(newState, k)
       } else {
-        newState = set(newState, k, mergeDeepAndRemoveNull(get(state, k), v))
+        newState = set(newState, k, mergeDeep(get(state, k), v, removeNull))
       }
     },
     [],
@@ -323,5 +324,5 @@ export const mergeDeepAndRemoveNull = (state, value) => {
   return newState
 }
 
-export const mergeDeepInAndRemoveNull = (state, keyPath, value) =>
-  setIn(state, keyPath, mergeDeepAndRemoveNull(getIn(state, keyPath), value))
+export const mergeDeepIn = (state, keyPath, value, removeNull = false) =>
+  setIn(state, keyPath, mergeDeep(getIn(state, keyPath), value, removeNull))

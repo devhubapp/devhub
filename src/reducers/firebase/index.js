@@ -11,7 +11,7 @@ import {
   getSubMapFromPath,
 } from '../../store/middlewares/firebase/helpers'
 import { FIREBASE_RECEIVED_EVENT } from '../../utils/constants/actions'
-import { fromJS, getIn, mergeDeepInAndRemoveNull } from '../../utils/immutable'
+import { fromJS, getIn, mergeDeepIn } from '../../utils/immutable'
 import type { Action } from '../../utils/types'
 
 export const mapFirebaseToState = {
@@ -122,10 +122,13 @@ export default (
                 valueDiff = value
               }
 
-              return mergeDeepInAndRemoveNull(
-                state,
-                statePathArr,
-                fromJS(valueDiff),
+              return fromJS(
+                mergeDeepIn(
+                  state,
+                  statePathArr,
+                  fromJS(valueDiff),
+                  eventName !== 'value',
+                ),
               )
             })()
         }

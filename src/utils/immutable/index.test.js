@@ -1,10 +1,4 @@
-import {
-  deepMapKeys,
-  fromJS,
-  mergeDeepInAndRemoveNull,
-  removeIn,
-  toJS,
-} from './'
+import { deepMapKeys, fromJS, mergeDeepIn, removeIn, toJS } from './'
 
 test('Deep map keys', function fn(immutable = false) {
   const obj = {
@@ -57,7 +51,7 @@ test('Merge deep and remove item', function fn(immutable = false) {
 
   const _obj1 = immutable ? fromJS(obj1) : obj1
   const _obj2 = immutable ? fromJS(b2) : b2
-  const result = toJS(mergeDeepInAndRemoveNull(_obj1, ['b'], _obj2))
+  const result = toJS(mergeDeepIn(_obj1, ['b'], _obj2))
 
   expect(result).toEqual({
     a: true,

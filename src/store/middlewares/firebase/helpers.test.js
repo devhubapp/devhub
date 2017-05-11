@@ -40,6 +40,7 @@ const mapB = {
 }
 
 test('It subtracts a map from another map', () => {
+  expect(getMapSubtractedByMap(mapA, mapA)).toEqual(null)
   expect(getMapSubtractedByMap(mapA, mapB)).toEqual({
     b: {},
     e: { e: false },
