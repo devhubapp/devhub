@@ -14,6 +14,8 @@ export default apiKey => {
   Bugsnag.notify = Bugsnag.notifyException
   delete Bugsnag.notifyException
 
+  Bugsnag.disableAutoBreadcrumbsConsole()
+
   return Bugsnag
 }
 
