@@ -11,7 +11,6 @@ import { getIn, toJS } from '../../../utils/immutable'
 import {
   getObjectDiff,
   getObjectFilteredByMap,
-  fixFirebaseKeysFromObject,
   getMapSubtractedByMap,
 } from './helpers'
 import {
@@ -27,12 +26,9 @@ let _lastState
 
 const checkDiffAndPatchDebounced = debounce((stateA, stateB, map, store) => {
   if (_databaseRef && stateA !== undefined) {
-    const fixedStateA = fixFirebaseKeysFromObject(stateA, true)
-    const fixedStateB = fixFirebaseKeysFromObject(stateB, true)
-
-    const stateDiff = toJS(getObjectDiff(fixedStateA, fixedStateB, map))
+    const stateDiff = toJS(getObjectDiff(stateA, stateB, map))
     // console.log('state diff', stateDiff)
-    // console.log('states before diff', toJS(fixedStateA), toJS(fixedStateA))
+    // console.log('states before diff', toJS(stateA), toJS(stateA))
 
     if (stateDiff && _currentUserId) {
       applyPatchOnFirebase({

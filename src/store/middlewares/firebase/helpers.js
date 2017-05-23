@@ -215,7 +215,9 @@ export function getMapSubtractedByMap(mapA, mapB) {
 
 export function getSubMapFromPath(map, pathArr) {
   if (!Array.isArray(pathArr)) {
-    console.error(`[SUBMAP] Invalid arguments passed to getSubMapFromPath. Expected an array for pathArr, received: ${typeof pathArr}.`)
+    console.error(
+      `[SUBMAP] Invalid arguments passed to getSubMapFromPath. Expected an array for pathArr, received: ${typeof pathArr}.`,
+    )
     return null
   }
 
@@ -249,7 +251,9 @@ export function getObjectDiff(oldObject, newObject, map, ...rest) {
   if (oldObject === newObject) return null
 
   if (!isObjectOrMap(newObject)) {
-    console.error(`[OBJECT DIFF] Invalid arguments passed to getObjectDiff. Expected objects, received: ${typeof oldObject} and ${typeof newObject}.`)
+    console.error(
+      `[OBJECT DIFF] Invalid arguments passed to getObjectDiff. Expected objects, received: ${typeof oldObject} and ${typeof newObject}.`,
+    )
     if (__DEV__)
       console.debug('getObjectDiff', { oldObject, newObject, map, rest })
     return newObject
@@ -279,7 +283,10 @@ export function getObjectDiff(oldObject, newObject, map, ...rest) {
         return
       }
 
-      if (isObjectOrMap(oldValue)) {
+      if (
+        isObjectOrMap(oldValue) &&
+        isObjectOrMap(newValue || getEmptyObjectFromTheSameType(oldValue))
+      ) {
         result = set(
           result,
           field,
