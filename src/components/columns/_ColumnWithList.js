@@ -3,7 +3,7 @@
 import React from 'react'
 import styled, { withTheme } from 'styled-components/native'
 import { Map } from 'immutable'
-import { RefreshControl } from 'react-native'
+import { RefreshControl, StyleSheet } from 'react-native'
 
 import ColumnWithHeader, { getRadius } from './_ColumnWithHeader'
 import ImmutableVirtualizedList from '../../libs/immutable-virtualized-list'
@@ -19,6 +19,10 @@ export const StyledTextOverlay = styled(TransparentTextOverlay)`
   flex: 1;
   border-radius: ${({ radius }) => radius || 0}px;
 `
+
+const styles = StyleSheet.create({
+  list: { flex: 1, overflow: 'hidden' },
+})
 
 @withTheme
 export default class ColumnWithList extends React.PureComponent {
@@ -119,8 +123,8 @@ export default class ColumnWithList extends React.PureComponent {
                 renderSectionHeader={renderSectionHeader}
                 refreshControl={refreshControl}
                 sectionHeaderHasChanged={sectionHeaderHasChanged}
-                removeClippedSubviews
-                style={{ flex: 1, overflow: 'hidden' }}
+                removeClippedSubviews={false}
+                style={styles.list}
                 {...props}
               />}
         </StyledTextOverlay>

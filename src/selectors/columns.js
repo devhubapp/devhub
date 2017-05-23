@@ -69,7 +69,8 @@ export const makeColumnArchivedIdsSelector = () => {
   return createImmutableSelector(
     archivedEventIdsSelector,
     columnEventIdsSelector,
-    (archivedIds, columnEventIds) => Set(archivedIds).intersect(columnEventIds),
+    (archivedIds, columnEventIds) =>
+      Set(archivedIds).intersect(columnEventIds).toList(),
   )
 }
 
@@ -79,7 +80,8 @@ export const makeColumnReadIdsSelector = () => {
   return createImmutableSelector(
     readEventIdsSelector,
     columnEventIdsSelector,
-    (readIds, columnEventIds) => Set(readIds).intersect(columnEventIds),
+    (readIds, columnEventIds) =>
+      Set(readIds).intersect(columnEventIds).toList(),
   )
 }
 

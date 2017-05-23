@@ -34,7 +34,6 @@ function* _getUsedSubscriptionIds() {
 
   const columns = columnsEntitySelector(state)
   return (columns || Map())
-    .toSet()
     .reduce(
       (resultIds, column) =>
         resultIds &&
@@ -43,12 +42,13 @@ function* _getUsedSubscriptionIds() {
         ),
       Set(),
     )
+    .toList()
 }
 
 function* cleanupEvents() {
   const state = yield select()
 
-  const allEventIds = (eventIdsSelector(state) || Set()).toSet()
+  const allEventIds = Set(eventIdsSelector(state))
   if (!allEventIds.size) return
 
   const usedSubscriptionIds = yield call(_getUsedSubscriptionIds)
@@ -58,12 +58,12 @@ function* cleanupEvents() {
       subscriptionEventsSelector(state, { subscriptionId }),
     )
     .filter(Boolean)
-    .toSet()
-    .reduce((resultIds, currentIds) => resultIds.union(Set(currentIds)), Set())
+    .reduce((resultIds, currentIds) => resultIds.union(currentIds), Set())
 
   const eventIdsToRemove = allEventIds
     .union(usedEventIds)
     .subtract(allEventIds.intersect(usedEventIds))
+    .toList()
   if (!eventIdsToRemove.size) return
 
   yield put(deleteEvents({ eventIds: eventIdsToRemove }, sagaActionChunk))
@@ -76,7 +76,7 @@ function* cleanupSubscription(subscriptionId) {
 function* cleanupSubscriptions() {
   const state = yield select()
 
-  let allSubscriptionIds = (subscriptionIdsSelector(state) || Set()).toSet()
+  let allSubscriptionIds = Set(subscriptionIdsSelector(state))
   if (!allSubscriptionIds.size) return
 
   const usedSubscriptionIds = yield call(_getUsedSubscriptionIds) || Set()
@@ -85,6 +85,8 @@ function* cleanupSubscriptions() {
   const subscriptionIdsToRemove = allSubscriptionIds
     .union(usedSubscriptionIds)
     .subtract(allSubscriptionIds.intersect(usedSubscriptionIds))
+    .toList()
+
   if (!subscriptionIdsToRemove.size) return
 
   yield* subscriptionIdsToRemove.map(cleanupSubscription)

@@ -16,8 +16,8 @@ import { REHYDRATE } from 'redux-persist/constants'
 
 import { resetAppData as resetAppDataAction } from '../actions'
 import {
-  RESET_APP_DATA,
-  RESET_APP_DATA_REQUEST,
+  RESET_ACCOUNT_DATA,
+  RESET_ACCOUNT_DATA_REQUEST,
 } from '../utils/constants/actions'
 import { rehydratedSelector } from '../selectors'
 
@@ -53,8 +53,8 @@ function* onResetAppDataRequest() {
 
 export default function*() {
   return yield all([
-    yield takeLatest(RESET_APP_DATA_REQUEST, onResetAppDataRequest),
-    yield takeLatest(RESET_APP_DATA, resetAppData),
+    yield takeLatest(RESET_ACCOUNT_DATA_REQUEST, onResetAppDataRequest),
+    yield takeLatest(RESET_ACCOUNT_DATA, resetAppData),
     yield fork(authSagas),
     yield fork(columnsSagas),
     yield fork(notificationsSagas),

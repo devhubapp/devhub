@@ -484,7 +484,7 @@ export function getEventIdsFromEventIncludingMerged(event) {
     })
   }
 
-  return eventIds
+  return eventIds.toList()
 }
 
 export function getEventIdsFromEventsIncludingMerged(events) {

@@ -65,13 +65,13 @@ export default class NotificationColumn extends React.PureComponent {
 
     const notificationIds = this.getNotificationIds()
     const readNotificationIds = readNotificationIdsSelector(state)
-    return Set(readNotificationIds).intersect(notificationIds)
+    return Set(readNotificationIds).intersect(notificationIds).toList()
   }
 
   getUnreadNotificationIds = () => {
     const notificationIds = this.getNotificationIds()
     const readNotificationIds = this.getReadNotificationIds()
-    return Set(notificationIds).subtract(readNotificationIds)
+    return Set(notificationIds).subtract(readNotificationIds).toList()
   }
 
   getRightHeader = isSummary => (

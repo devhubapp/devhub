@@ -63,13 +63,13 @@ export default class EventColumn extends React.PureComponent {
 
     const eventIds = this.getEventIds()
     const readEventsIds = this.columnReadIdsSelector(state, { columnId })
-    return Set(readEventsIds).intersect(eventIds)
+    return Set(readEventsIds).intersect(eventIds).toList()
   }
 
   getUnreadEventIds = () => {
     const eventIds = this.getEventIds()
     const readIds = this.getReadEventIds()
-    return Set(eventIds).subtract(readIds)
+    return Set(eventIds).subtract(readIds).toList()
   }
 
   hasOnlyOneRepository = () => {

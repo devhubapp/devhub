@@ -1,7 +1,7 @@
 // @flow
 
 import moment from 'moment'
-import { fromJS, Map, Set } from 'immutable'
+import { List, Map, fromJS } from 'immutable'
 
 import { guid } from '../../utils/helpers'
 
@@ -40,7 +40,7 @@ export default (
             id,
             title,
             order,
-            subscriptions: Set(subscriptionIds),
+            subscriptions: List(subscriptionIds),
             createdAt: moment().toISOString(),
             ...restOfPayload,
           }),

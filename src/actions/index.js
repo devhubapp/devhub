@@ -7,8 +7,8 @@ import {
   CREATE_COLUMN,
   DELETE_COLUMN,
   FIREBASE_RECEIVED_EVENT,
-  RESET_APP_DATA,
-  RESET_APP_DATA_REQUEST,
+  RESET_ACCOUNT_DATA,
+  RESET_ACCOUNT_DATA_REQUEST,
   SET_THEME,
   STAR_REPO,
   UNSTAR_REPO,
@@ -29,10 +29,10 @@ export const cleanupApp = (other?: Object) =>
 export const appReady = (other?: Object) => action(APP_READY, undefined, other)
 
 export const resetAppData = (other?: Object) =>
-  action(RESET_APP_DATA, undefined, other)
+  action(RESET_ACCOUNT_DATA, undefined, other)
 
 export const resetAppDataRequest = (other?: Object) =>
-  action(RESET_APP_DATA_REQUEST, undefined, other)
+  action(RESET_ACCOUNT_DATA_REQUEST, undefined, other)
 
 // COLUMN
 type CreateColumnParams = { title: string, subscriptionIds: Array<string> }

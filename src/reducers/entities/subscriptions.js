@@ -1,7 +1,7 @@
 // @flow
 
 import moment from 'moment'
-import { fromJS, Map, Set } from 'immutable'
+import { List, Map, Set, fromJS } from 'immutable'
 
 import { ApiRequestType, getUniquePath } from '../../api/github'
 import {
@@ -74,7 +74,7 @@ export default (
     case DELETE_EVENTS:
       return state.map(subscription =>
         subscription.update('events', events =>
-          (events || Set()).toSet().subtract(payload.eventIds),
+          Set(events).subtract(payload.eventIds).toList(),
         ),
       )
 
@@ -103,8 +103,10 @@ export default (
         const subscription = state.get(subscriptionId)
         if (!subscription) return state
 
-        const eventIds = Set(subscription.get('events'))
-        const newEventIds = result ? Set(result).union(eventIds) : eventIds
+        const eventIds = List(subscription.get('events'))
+        const newEventIds = result
+          ? Set(result).union(eventIds).toList()
+          : eventIds
 
         const newSubscription = subscription.mergeDeep(
           fromJS({

@@ -67,7 +67,7 @@ class SettingsScreen extends React.PureComponent {
         <Wrapper>
           <Main>
             <StyledButton
-              title="Reset app data"
+              title="Reset account data"
               color={theme.red}
               onPress={() => resetAppData()}
             />

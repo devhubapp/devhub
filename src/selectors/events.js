@@ -81,7 +81,9 @@ export const makeDenormalizedOrderedColumnEventsSelector = () => {
     unarchivedEventIdsSelector,
     entitiesSelector,
     (eventIds, unarchivedEventIds, entities) => {
-      const notArchivedIds = Set(eventIds).intersect(unarchivedEventIds)
+      const notArchivedIds = Set(eventIds)
+        .intersect(unarchivedEventIds)
+        .toList()
 
       return groupSimilarEvents(
         denormalize(notArchivedIds, entities, [EventSchema])

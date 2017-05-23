@@ -304,6 +304,7 @@ export const mergeDeep = (state, value, removeNull = false) => {
   if (value === null) return state
 
   if (isList(state)) {
+    // return state
     // wrapping on a Set to remove duplicates -- might lead to unwanted things
     return Immutable.Set(state.concat(value))
   }

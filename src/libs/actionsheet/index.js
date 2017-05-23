@@ -183,7 +183,7 @@ export default class ActionSheet extends PureComponent {
         }),
       ]).start(result => {
         if (result.finished) {
-          this.setState({ isAnimating: false }, () => {
+          this.setState({ isAnimating: false, isVisible: toVisible }, () => {
             if (typeof callback === 'function') {
               callback()
             }

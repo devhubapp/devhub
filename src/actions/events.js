@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
-import { Set } from 'immutable'
+import { List } from 'immutable'
 
 import { requestTypes } from '../api/github'
 import { loadSubscriptionDataRequest } from './subscriptions'
@@ -46,19 +46,20 @@ export type ReadEvents = { columnId: string, eventIds: Array<string> }
 export const archiveEvents = (
   { columnId, eventIds }: ReadEvents,
   other?: Object,
-) => action(ARCHIVE_EVENTS, { columnId, eventIds: Set(eventIds) }, other)
+) => action(ARCHIVE_EVENTS, { columnId, eventIds: List(eventIds) }, other)
 
 export const deleteEvents = (
   { columnId, eventIds }: ReadEvents,
   other?: Object,
-) => action(DELETE_EVENTS, { columnId, eventIds: Set(eventIds) }, other)
+) => action(DELETE_EVENTS, { columnId, eventIds: List(eventIds) }, other)
 
 export const markEventsAsRead = (
   { columnId, eventIds }: ReadEvents,
   other?: Object,
-) => action(MARK_EVENTS_AS_READ, { columnId, eventIds: Set(eventIds) }, other)
+) => action(MARK_EVENTS_AS_READ, { columnId, eventIds: List(eventIds) }, other)
 
 export const markEventsAsUnread = (
   { columnId, eventIds }: ReadEvents,
   other?: Object,
-) => action(MARK_EVENTS_AS_UNREAD, { columnId, eventIds: Set(eventIds) }, other)
+) =>
+  action(MARK_EVENTS_AS_UNREAD, { columnId, eventIds: List(eventIds) }, other)

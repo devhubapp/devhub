@@ -48,7 +48,7 @@ const SplashScreen = ({ onResetAppData }: Props) => (
       activeOpacity={0.1}
       focusedOpacity={1}
     >
-      <ResetButtonText>Reset app data</ResetButtonText>
+      <ResetButtonText>Reset account data</ResetButtonText>
     </ResetButton>
   </Root>
 )

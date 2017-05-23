@@ -12,7 +12,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT,
-  RESET_APP_DATA,
+  RESET_ACCOUNT_DATA,
   UPDATE_CURRENT_USER,
 } from '../utils/constants/actions'
 
@@ -128,7 +128,10 @@ export default function*() {
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
     yield takeLatest(UPDATE_CURRENT_USER, onCurrentUserUpdate),
     yield takeLatest(LOGIN_SUCCESS, onLoginSuccess),
-    yield takeLatest([LOGIN_FAILURE, LOGOUT, RESET_APP_DATA], onLogoutRequest),
+    yield takeLatest(
+      [LOGIN_FAILURE, LOGOUT, RESET_ACCOUNT_DATA],
+      onLogoutRequest,
+    ),
     yield fork(watchFirebaseCurrentUser),
   ])
 }

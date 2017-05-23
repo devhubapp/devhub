@@ -1,7 +1,10 @@
 import * as firebase from 'firebase'
 import { debounce } from 'lodash'
 
-import { FIREBASE_RECEIVED_EVENT } from '../../../utils/constants/actions'
+import {
+  RESET_ACCOUNT_DATA,
+  FIREBASE_RECEIVED_EVENT,
+} from '../../../utils/constants/actions'
 import { firebaseReceivedEvent } from '../../../actions'
 import {
   mapFirebaseToState,
@@ -117,6 +120,7 @@ export function startFirebase({ store, userId }) {
         ignoreFn: ({ count, eventName, statePathArr }) =>
           count === 1 &&
           eventName === 'child_added' &&
+          _lastState &&
           getIn(_lastState, statePathArr) !== undefined,
         map: mapFirebaseToState,
         ref: _databaseRef,
@@ -141,6 +145,16 @@ export default store => next => (action = {}) => {
     return
   }
 
+  if (action.type === RESET_ACCOUNT_DATA && _databaseRef) {
+    if (__DEV__) console.debug('[FIREBASE] Reseting account data...')
+    _databaseRef.child('entities').remove(e => {
+      if (!__DEV__) return
+
+      if (e) console.error('[FIREBASE] Failed to reset account data', e)
+      else console.debug('[FIREBASE] Reseted.')
+    })
+  }
+
   const isLogged = isLoggedSelector(store.getState())
   const userId = isLogged && (firebase.auth().currentUser || {}).uid
 
@@ -151,6 +165,7 @@ export default store => next => (action = {}) => {
       startFirebase({ store, userId })
     } else {
       stopFirebase()
+      return
     }
   }
 

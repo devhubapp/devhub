@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
-import { Set } from 'immutable'
+import { List } from 'immutable'
 
 // rows
 import CommentRow from './_CommentRow'
@@ -76,7 +76,7 @@ export default class NotificationCard extends React.PureComponent {
       (repo.get('private') || repo.get('public') === false))
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']))
-    const notificationIds = Set([notification.get('id')])
+    const notificationIds = List([notification.get('id')])
     const title = trimNewLinesAndSpaces(subject.get('title'))
     const { label: _label, color } = getNotificationReasonTextsAndColor(
       notification,
