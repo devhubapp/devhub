@@ -5,6 +5,7 @@ import { flatten, uniq } from 'lodash'
 import { normalize } from 'normalizr'
 import { delay } from 'redux-saga'
 import {
+  all,
   call,
   fork,
   put,
@@ -204,7 +205,7 @@ function* startTimer() {
 }
 
 export default function*() {
-  return yield [
+  return yield all([
     yield takeEvery(LOAD_SUBSCRIPTION_DATA_REQUEST, loadSubscriptionData),
     yield takeEvery(UPDATE_COLUMN_SUBSCRIPTIONS, updateSubscriptionsFromColumn),
     yield takeLatest(
@@ -212,5 +213,5 @@ export default function*() {
       updateSubscriptionsFromAllColumns,
     ),
     yield fork(startTimer),
-  ]
+  ])
 }

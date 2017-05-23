@@ -3,6 +3,7 @@
 import { AsyncStorage } from 'react-native'
 import { delay } from 'redux-saga'
 import {
+  all,
   call,
   fork,
   put,
@@ -51,7 +52,7 @@ function* onResetAppDataRequest() {
 }
 
 export default function*() {
-  return yield [
+  return yield all([
     yield takeLatest(RESET_APP_DATA_REQUEST, onResetAppDataRequest),
     yield takeLatest(RESET_APP_DATA, resetAppData),
     yield fork(authSagas),
@@ -59,5 +60,5 @@ export default function*() {
     yield fork(notificationsSagas),
     yield fork(subscriptionsSagas),
     yield fork(appSagas),
-  ]
+  ])
 }

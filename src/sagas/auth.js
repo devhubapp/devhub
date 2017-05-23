@@ -3,7 +3,7 @@
 import moment from 'moment'
 import * as firebase from 'firebase'
 import { delay } from 'redux-saga'
-import { call, fork, put, select, takeLatest } from 'redux-saga/effects'
+import { all, call, fork, put, select, takeLatest } from 'redux-saga/effects'
 
 import { bugsnagClient } from '../utils/services'
 
@@ -124,11 +124,11 @@ function* watchFirebaseCurrentUser() {
 }
 
 export default function*() {
-  return yield [
+  return yield all([
     yield takeLatest(LOGIN_REQUEST, onLoginRequest),
     yield takeLatest(UPDATE_CURRENT_USER, onCurrentUserUpdate),
     yield takeLatest(LOGIN_SUCCESS, onLoginSuccess),
     yield takeLatest([LOGIN_FAILURE, LOGOUT, RESET_APP_DATA], onLogoutRequest),
     yield fork(watchFirebaseCurrentUser),
-  ]
+  ])
 }

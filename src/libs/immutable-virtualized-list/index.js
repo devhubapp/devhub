@@ -3,11 +3,9 @@
 import Immutable from 'immutable'
 import React, { PureComponent } from 'react'
 
-import SectionList
-  from 'react-native/Libraries/CustomComponents/Lists/SectionList'
+import SectionList from 'react-native/Libraries/Lists/SectionList'
 
-import VirtualizedList
-  from 'react-native/Libraries/CustomComponents/Lists/VirtualizedList'
+import VirtualizedList from 'react-native/Libraries/Lists/VirtualizedList'
 
 import { get } from '../../utils/immutable'
 

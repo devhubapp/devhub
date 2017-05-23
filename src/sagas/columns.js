@@ -1,6 +1,6 @@
 // @flow
 
-import { put, takeLatest } from 'redux-saga/effects'
+import { all, put, takeLatest } from 'redux-saga/effects'
 
 import { DELETE_COLUMN } from '../utils/constants/actions'
 import { cleanupApp } from '../actions'
@@ -11,5 +11,5 @@ export function* onDeleteColumn() {
 }
 
 export default function*() {
-  return yield [yield takeLatest(DELETE_COLUMN, onDeleteColumn)]
+  return yield all([yield takeLatest(DELETE_COLUMN, onDeleteColumn)])
 }

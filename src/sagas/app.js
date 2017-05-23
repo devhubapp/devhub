@@ -1,6 +1,14 @@
 // @flow
 
-import { call, fork, put, select, take, takeLatest } from 'redux-saga/effects'
+import {
+  all,
+  call,
+  fork,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects'
 import { REHYDRATE } from 'redux-persist/constants'
 import { Map, Set } from 'immutable'
 
@@ -98,8 +106,8 @@ export function* start() {
 }
 
 export default function*() {
-  return yield [
+  return yield all([
     yield fork(start),
     yield takeLatest(APP_CLEANUP, onCleanupAppRequest),
-  ]
+  ])
 }

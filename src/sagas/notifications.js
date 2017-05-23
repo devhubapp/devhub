@@ -4,6 +4,7 @@ import moment from 'moment'
 import { normalize } from 'normalizr'
 import { delay } from 'redux-saga'
 import {
+  all,
   call,
   fork,
   put,
@@ -126,7 +127,12 @@ function* onMarkNotificationsAsReadRequest({
       )
     }
 
-    const { all, lastReadAt: _lastReadAt, notificationIds, repoId } = payload
+    const {
+      all: allNotifications,
+      lastReadAt: _lastReadAt,
+      notificationIds,
+      repoId,
+    } = payload
     const lastReadAt = moment(_lastReadAt || new Date()).utc().format()
 
     // let callMethods;
@@ -134,7 +140,7 @@ function* onMarkNotificationsAsReadRequest({
     let requestType
     let ignoreApiCall = false
 
-    if (all) {
+    if (allNotifications) {
       if (repoId) {
         const repoSelector = makeRepoSelector()
         const repoEntity = repoSelector(state, { repoId })
@@ -262,7 +268,7 @@ function* startTimer() {
 }
 
 export default function*() {
-  return yield [
+  return yield all([
     yield takeLatest(UPDATE_NOTIFICATIONS, onUpdateNotificationsRequest),
     yield takeEvery(LOAD_NOTIFICATIONS_REQUEST, onLoadNotificationsRequest),
     yield takeEvery(
@@ -270,5 +276,5 @@ export default function*() {
       onMarkNotificationsAsReadRequest,
     ),
     yield fork(startTimer),
-  ]
+  ])
 }
