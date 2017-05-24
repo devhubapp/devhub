@@ -12,6 +12,10 @@ export const routes = {
   settings: { path: 'settings', screen: SettingsScreen },
 }
 
-export const config = { ...tabBarOptions, swipeEnabled: false }
+export const config = {
+  ...tabBarOptions,
+  animationEnabled: false,
+  swipeEnabled: false,
+}
 
 export default TabNavigator(routes, config)

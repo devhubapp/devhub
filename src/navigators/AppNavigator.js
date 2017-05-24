@@ -14,8 +14,10 @@ export const routes = {
 }
 
 export const config = {
+  animationEnabled: false,
   headerMode: 'none',
   initialRouteName: 'splash',
+  swipeEnabled: false,
 }
 
 export default StackNavigator(routes, config)
