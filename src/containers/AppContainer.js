@@ -4,11 +4,11 @@ import React from 'react'
 import styled, { ThemeProvider } from 'styled-components/native'
 import { connect } from 'react-redux'
 import { Platform, StatusBar } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 
 import AppNavigatorContainer from './navigators/AppNavigatorContainer'
 import FaviconBadge from '../libs/favicon-badge'
 import { Helmet } from '../libs/helmet'
-import { NavigationActions } from '../libs/navigation'
 import { get } from '../utils/immutable'
 
 import {

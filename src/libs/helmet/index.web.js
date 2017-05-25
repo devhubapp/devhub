@@ -2,4 +2,3 @@
 // TODO: Fix eslint for web imports
 
 export * from 'react-helmet'
-export default from 'react-helmet'

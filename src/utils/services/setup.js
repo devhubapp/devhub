@@ -1,7 +1,5 @@
 /* eslint-disable global-require */
 
-if (process.env.NODE_ENV === 'production') {
-  module.exports = require('./setup.prod')
-} else {
-  module.exports = require('./setup.dev')
-}
+export default (process.env.NODE_ENV === 'production'
+  ? require('./setup.prod').default
+  : require('./setup.dev').default)

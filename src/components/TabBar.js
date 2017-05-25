@@ -1,7 +1,7 @@
 import React from 'react'
 import { withTheme } from 'styled-components/native'
+import { TabNavigator } from 'react-navigation'
 
-import { TabNavigator } from '../libs/navigation'
 import Platform from '../libs/platform'
 
 const _tabBarOptions = Platform.selectUsingRealOS({

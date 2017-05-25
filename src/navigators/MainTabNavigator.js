@@ -1,9 +1,10 @@
 // @flow
 
+import { TabNavigator } from 'react-navigation'
+
 import HomeScreen from '../containers/screens/HomeScreen'
 import NotificationsScreen from '../containers/screens/NotificationsScreen'
 import SettingsScreen from '../containers/screens/SettingsScreen'
-import { TabNavigator } from '../libs/navigation'
 import { tabBarOptions } from '../components/TabBar'
 
 export const routes = {
