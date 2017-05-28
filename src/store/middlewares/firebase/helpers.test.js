@@ -4,6 +4,7 @@ import {
   getObjectDiff,
   getObjectFilteredByMap,
   getSubMapFromPath,
+  transformObjectToDeepPaths,
 } from './helpers'
 
 const mapA = {
@@ -51,7 +52,7 @@ const mapB = {
     },
     g: {
       'g]g': {
-        ']g]g]': true,
+        '/g/g/': true,
       },
     },
   }
@@ -67,7 +68,7 @@ const mapB = {
     },
     g: {
       g__BRACKET_CLOSE__g: {
-        __BRACKET_CLOSE__g__BRACKET_CLOSE__g__BRACKET_CLOSE__: true,
+        __STRIPE__g__STRIPE__g__STRIPE__: true,
       },
     },
   }
@@ -177,4 +178,37 @@ test('It gets a sub map from a path', () => {
   expect(getSubMapFromPath(mapA, ['i', 'i2', 'xxx', 'a', 'xxx'])).toEqual(false)
   expect(getSubMapFromPath(mapA, ['i', 'i2', 'xxx', 'c'])).toEqual(true)
   expect(getSubMapFromPath(mapA, ['j', 'j1', 'jj1'])).toEqual(false)
+})
+
+test('It should transform an object to the firebase update format', () => {
+  const obj = {
+    a: 10,
+    b: 20,
+    c: { cc: 30 },
+    d: { dd: { ddd: { dddd: 40 } } },
+    e: { ee: { eee1: 51, eee2: 52 } },
+  }
+
+  expect(transformObjectToDeepPaths(obj)).toEqual({
+    a: 10,
+    b: 20,
+    'c/cc': 30,
+    'd/dd/ddd/dddd': 40,
+    'e/ee/eee1': 51,
+    'e/ee/eee2': 52,
+  })
+
+  expect(
+    transformObjectToDeepPaths({
+      a: {
+        'b/c': true,
+        b: {
+          c: 20,
+        },
+      },
+    }),
+  ).toEqual({
+    'a/b/c': 20,
+    'a/b__STRIPE__c': true,
+  })
 })

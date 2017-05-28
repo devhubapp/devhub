@@ -10,6 +10,7 @@ import {
   getEmptyObjectFromTheSameType,
   isObjectOrMap,
   map as _map,
+  mergeDeep,
   omit,
   pick,
   remove,
@@ -329,4 +330,33 @@ export function getObjectDiff(oldObject, newObject, map, ...rest) {
   }
 
   return depth === 0 && result === initialValue ? null : result
+}
+
+export function transformObjectToDeepPaths(
+  obj,
+  { encrypt = true, path = [] } = {},
+) {
+  if (!isObjectOrMap(obj)) return null
+
+  let result = getEmptyObjectFromTheSameType(obj)
+
+  forEach(obj, (value, key) => {
+    const _key = fixFirebaseKey(key, encrypt)
+    const newPath = path.concat([_key])
+
+    if (!isObjectOrMap(value)) {
+      const pathStr = newPath.join('/')
+      result = set(result, pathStr, value)
+      return
+    }
+
+    const resultToMerge = transformObjectToDeepPaths(value, {
+      encrypt,
+      path: newPath,
+    })
+
+    result = mergeDeep(result, resultToMerge)
+  })
+
+  return result
 }

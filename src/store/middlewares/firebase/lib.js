@@ -8,9 +8,10 @@ import {
   getMapAnalysis,
   getObjectFilteredByMap,
   getRelativePathFromRef,
+  transformObjectToDeepPaths,
 } from './helpers'
 
-import { forEach, get, isObjectOrMap } from '../../../utils/immutable'
+import { get, isObjectOrMap, map as _map } from '../../../utils/immutable'
 
 export function createFirebaseHandler({
   blacklist,
@@ -236,44 +237,33 @@ export function watchFirebaseFromMap({
 
 export const applyPatchOnFirebase = ({
   debug = __DEV__,
-  depth = -1,
   patch,
   rootDatabaseRef,
   ref = rootDatabaseRef,
-  ...rest
 }) => {
   if (!(ref && patch && isObjectOrMap(patch))) return
 
-  const currentDepth = Number(rest.currentDepth) || 1
-  const maxDepth = Number(depth) > 0 ? depth : -1
+  const updatePatch = transformObjectToDeepPaths(patch, { encrypt: true })
 
-  forEach(patch, (value, field) => {
-    const fixedPath = fixFirebaseKey(field, true)
+  // console.log('applyPatchOnFirebase', {
+  //   patch: toJS(patch),
+  //   updatePatch: toJS(updatePatch),
+  // })
 
-    if (isObjectOrMap(value) && (currentDepth < maxDepth || maxDepth < 0)) {
-      applyPatchOnFirebase({
-        ...rest,
-        currentDepth: currentDepth + 1,
-        debug,
-        depth,
-        patch: value,
-        ref: ref.child(fixedPath),
-        rootDatabaseRef,
-      })
-
-      return
-    }
-
+  _map(updatePatch, (value, path) => {
     if (debug) {
-      const fullPath = `${getRelativePathFromRef(ref, rootDatabaseRef)}/${field}`
+      const fullPath = `${getRelativePathFromRef(ref, rootDatabaseRef)}/${path}`
       console.debug(`[FIREBASE] Patching on ${fullPath || '/'}`, value)
     }
 
     // value fixes
     let _value = value
-    if (_value instanceof Date) _value = moment(_value).toISOString()
-    if (Number.isNaN(_value)) _value = 0
+    if (isObjectOrMap(_value)) _value = fixFirebaseKeysFromObject(_value, true)
+    else if (_value instanceof Date) _value = moment(_value).toISOString()
+    else if (Number.isNaN(_value)) _value = 0
 
-    ref.child(fixedPath).set(_value)
+    return _value
   })
+
+  ref.update(updatePatch)
 }
