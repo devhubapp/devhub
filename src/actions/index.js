@@ -6,6 +6,7 @@ import {
   APP_READY,
   CREATE_COLUMN,
   DELETE_COLUMN,
+  FIREBASE_AUTH_STATE_CHANGED,
   FIREBASE_RECEIVED_EVENT,
   RESET_ACCOUNT_DATA,
   RESET_ACCOUNT_DATA_REQUEST,
@@ -58,6 +59,9 @@ export const unstarRepo = ({ repoId, repoFullName }, other?: Object) =>
   action(UNSTAR_REPO, { repoId: `${repoId}`, repoFullName }, other)
 
 // FIREBASE
+
+export const firebaseAuthStateChanged = (user, other?: Object) =>
+  action(FIREBASE_AUTH_STATE_CHANGED, { user }, other)
 
 export const firebaseReceivedEvent = (
   { eventName, firebasePathArr, statePathArr, value },

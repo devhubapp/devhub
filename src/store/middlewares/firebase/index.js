@@ -5,7 +5,10 @@ import {
   RESET_ACCOUNT_DATA,
   FIREBASE_RECEIVED_EVENT,
 } from '../../../utils/constants/actions'
-import { firebaseReceivedEvent } from '../../../actions'
+import {
+  firebaseAuthStateChanged,
+  firebaseReceivedEvent,
+} from '../../../actions'
 import {
   mapFirebaseToState,
   mapStateToFirebase,
@@ -136,43 +139,49 @@ export function startFirebase({ store, userId }) {
   })
 }
 
-export default store => next => (action = {}) => {
-  next(action)
+export default store => {
+  firebase.auth().onAuthStateChanged(user => {
+    store.dispatch(firebaseAuthStateChanged(user))
+  })
 
-  const isAppReady = isReadySelector(store.getState())
+  return next => (action = {}) => {
+    next(action)
 
-  if (!isAppReady || action.type === FIREBASE_RECEIVED_EVENT) {
-    return
-  }
+    const isAppReady = isReadySelector(store.getState())
 
-  if (action.type === RESET_ACCOUNT_DATA && _databaseRef) {
-    if (__DEV__) console.debug('[FIREBASE] Reseting account data...')
-    _databaseRef.child('entities').remove(e => {
-      if (!__DEV__) return
-
-      if (e) console.error('[FIREBASE] Failed to reset account data', e)
-      else console.debug('[FIREBASE] Reseted.')
-    })
-  }
-
-  const isLogged = isLoggedSelector(store.getState())
-  const userId = isLogged && (firebase.auth().currentUser || {}).uid
-
-  if (userId !== _currentUserId) {
-    _currentUserId = userId
-
-    if (userId) {
-      startFirebase({ store, userId })
-    } else {
-      stopFirebase()
+    if (!isAppReady || action.type === FIREBASE_RECEIVED_EVENT) {
       return
     }
-  }
 
-  checkDiffAndPatchDebounced(
-    _lastState,
-    store.getState(),
-    mapStateToFirebase,
-    store,
-  )
+    if (action.type === RESET_ACCOUNT_DATA && _databaseRef) {
+      if (__DEV__) console.debug('[FIREBASE] Reseting account data...')
+      _databaseRef.child('entities').remove(e => {
+        if (!__DEV__) return
+
+        if (e) console.error('[FIREBASE] Failed to reset account data', e)
+        else console.debug('[FIREBASE] Reseted.')
+      })
+    }
+
+    const isLogged = isLoggedSelector(store.getState())
+    const userId = isLogged && (firebase.auth().currentUser || {}).uid
+
+    if (userId !== _currentUserId) {
+      _currentUserId = userId
+
+      if (userId) {
+        startFirebase({ store, userId })
+      } else {
+        stopFirebase()
+        return
+      }
+    }
+
+    checkDiffAndPatchDebounced(
+      _lastState,
+      store.getState(),
+      mapStateToFirebase,
+      store,
+    )
+  }
 }
