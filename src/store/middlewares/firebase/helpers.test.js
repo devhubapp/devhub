@@ -1,4 +1,5 @@
 import {
+  fixFirebaseKeysFromObject,
   getMapSubtractedByMap,
   getObjectDiff,
   getObjectFilteredByMap,
@@ -38,6 +39,47 @@ const mapB = {
     i2: { '*': { c: false, d: false } },
   },
 }
+;(() => {
+  const notEncrypted = {
+    a: true,
+    'b--b': true,
+    'c/c': true,
+    'd#d#d': true,
+    $e$e$e$: true,
+    f: {
+      'f[f': true,
+    },
+    g: {
+      'g]g': {
+        ']g]g]': true,
+      },
+    },
+  }
+
+  const encrypted = {
+    a: true,
+    'b--b': true,
+    c__STRIPE__c: true,
+    d__HASH__d__HASH__d: true,
+    __DOLLAR__e__DOLLAR__e__DOLLAR__e__DOLLAR__: true,
+    f: {
+      f__BRACKET_OPEN__f: true,
+    },
+    g: {
+      g__BRACKET_CLOSE__g: {
+        __BRACKET_CLOSE__g__BRACKET_CLOSE__g__BRACKET_CLOSE__: true,
+      },
+    },
+  }
+
+  test('It encrypts object keys to Firebase', () => {
+    expect(fixFirebaseKeysFromObject(notEncrypted, true)).toEqual(encrypted)
+  })
+
+  test('It decrypts object keys from Firebase', () => {
+    expect(fixFirebaseKeysFromObject(encrypted, false)).toEqual(notEncrypted)
+  })
+})()
 
 test('It subtracts a map from another map', () => {
   expect(getMapSubtractedByMap(mapA, mapA)).toEqual(null)

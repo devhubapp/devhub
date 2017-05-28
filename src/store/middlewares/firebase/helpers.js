@@ -41,7 +41,7 @@ export function fixFirebaseKey(key, encrypt = false) {
   let fixedKey = key
   Object.keys(charMap).forEach(char => {
     if (fixedKey.indexOf(char) >= 0) {
-      const find = new RegExp(char, 'g')
+      const find = new RegExp(`\\${char}`, 'g')
       const replace = charMap[char]
 
       fixedKey = fixedKey.replace(find, replace)
