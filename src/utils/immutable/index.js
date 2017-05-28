@@ -88,15 +88,13 @@ export function get(object, keyName) {
 export function getIn(object, keyPath) {
   if (!__DEV__ && !object) return null
 
+  if (keyPath.length === 0) return object
+
   if (isImmutable(object)) {
     return object.getIn(stringifiedArray(keyPath))
   }
 
-  return _.reduce(
-    (keyPath: Array<string>),
-    (memo, key) => get(memo, key),
-    object,
-  )
+  return _.reduce(keyPath, (memo, key) => get(memo, key), object)
 }
 
 /**
@@ -115,7 +113,7 @@ export function set(object, keyName, value) {
     return object.set(keyName, value)
   }
 
-  return { ...object, [keyName]: value }
+  return _.set(object, keyName, value)
 }
 
 /**
@@ -130,17 +128,13 @@ export function set(object, keyName, value) {
 export function setIn(object, keyPath: Array<string>, value) {
   if (!__DEV__ && !object) return null
 
+  if (keyPath.length === 0) return value
+
   if (isImmutable(object)) {
     return object.setIn(stringifiedArray(keyPath), value)
   }
 
-  const lastKeyName = keyPath.pop()
-  const lastKeyLocation = keyPath.length > 0 ? getIn(object, keyPath) : object
-
-  // TODO: Prevent this mutation. Return new instance of all objects instead of only the last one
-  lastKeyLocation[lastKeyName] = set(lastKeyLocation, lastKeyName, value)
-
-  return object
+  return _.set(object, keyPath, value)
 }
 
 export function updateIn(object, keyPath: Array<string>, updater: Function) {
@@ -150,8 +144,7 @@ export function updateIn(object, keyPath: Array<string>, updater: Function) {
     return object.updateIn(stringifiedArray(keyPath), updater)
   }
 
-  const value = getIn(object, keyPath)
-  return setIn(object, keyPath, updater(value))
+  return _.update(object, keyPath, updater)
 }
 
 /**
@@ -241,7 +234,11 @@ export function removeIn(object, keyPath) {
   }
 
   if (keyPath && keyPath.length > 1) {
-    return removeIn(get(object, keyPath.slice(-1)), keyPath.slice(0, -1))
+    const lastKey = keyPath[keyPath.length - 1]
+    const leftKeyPath = keyPath.slice(0, -1)
+    const partialObj = getIn(object, leftKeyPath)
+    const partialObjRemoved = remove(partialObj, lastKey)
+    return setIn(object, leftKeyPath, partialObjRemoved)
   }
 
   const key = Array.isArray(keyPath) ? keyPath[0] : keyPath
