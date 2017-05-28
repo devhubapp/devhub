@@ -135,9 +135,8 @@ export default class NotificationCard extends React.PureComponent {
                   {label}
                 </Label>
 
-                <IntervalRefresh
-                  interval={1000}
-                  onRender={() => {
+                <IntervalRefresh date={updatedAt}>
+                  {() => {
                     const dateText = getDateSmallText(updatedAt, ' ')
                     return (
                       dateText &&
@@ -146,7 +145,7 @@ export default class NotificationCard extends React.PureComponent {
                       </SmallText>
                     )
                   }}
-                />
+                </IntervalRefresh>
               </FullView>
 
               <CardIcon name={cardIcon} color={cardIconColor} muted={read} />

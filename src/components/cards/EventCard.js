@@ -80,12 +80,12 @@ export default class EventCard extends React.PureComponent {
     if (!event) return null
     if (archived) return null
 
-    const { type, payload, actor, repo, created_at } = {
+    const { type, payload, actor, repo, createdAt } = {
       type: event.get('type'),
       payload: event.get('payload'),
       actor: event.get('actor') || Map(),
       repo: event.get('repo'),
-      created_at: event.get('created_at'),
+      createdAt: event.get('created_at'),
     }
 
     if (!payload) return null
@@ -148,16 +148,15 @@ export default class EventCard extends React.PureComponent {
                         {actor.get('display_login') || actor.get('login')}
                       </OwnerLogin>
 
-                      <IntervalRefresh
-                        interval={1000}
-                        onRender={() => {
-                          const dateText = getDateSmallText(created_at, '•')
+                      <IntervalRefresh date={createdAt}>
+                        {() => {
+                          const dateText = getDateSmallText(createdAt, '•')
                           return (
                             dateText &&
                             <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
                           )
                         }}
-                      />
+                      </IntervalRefresh>
                     </StyledText>
                   </HorizontalView>
                 </TransparentTextOverlay>

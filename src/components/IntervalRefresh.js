@@ -1,71 +1,117 @@
 // @flow
 
 import React from 'react'
+import moment from 'moment'
 
 export default class IntervalRefresh extends React.Component {
+  static defaultProps = {
+    interval: 1000,
+  }
+
   state = {
+    currentInterval: 1000,
     updatedTimes: 0,
   }
 
   componentDidMount() {
-    const interval = this.getIntervalValue()
-
-    if (interval < 500) {
-      console.warn(`The interval prop received is too small: ${interval}ms`)
-    }
-
-    this.startTimeout()
+    this.start()
   }
 
-  componentWillReceiveProps({ interval: _interval }) {
-    const interval = this.getIntervalValue(_interval)
+  componentWillReceiveProps(newProps) {
+    const interval = this.getIntervalValue(newProps)
 
-    if (interval !== this.props.interval) {
-      this.startTimeout(interval)
+    if (interval !== this.state.currentInterval) {
+      this.start(newProps)
     }
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timeoutInstance)
+    this.stop()
   }
 
-  getIntervalValue(_interval) {
-    const interval = _interval !== undefined ? _interval : this.props.interval
-    if (typeof interval === 'function') return interval(this.state.updatedTimes)
+  getIntervalValue({ date, interval: _interval } = {}) {
+    let interval
+
+    if (date) {
+      const secondsDiff = moment().diff(date, 's')
+
+      if (secondsDiff >= 3600) {
+        // each hour
+        interval = 3600000
+      } else if (secondsDiff >= 60) {
+        // each minute
+        interval = 60000
+      } else {
+        // each second
+        interval = 1000
+      }
+    } else if (typeof _interval === 'number') interval = _interval
+    else if (typeof _interval === 'function')
+      interval = _interval(this.state.updatedTimes)
+
     return interval
   }
 
-  startTimeout = _interval => {
-    clearTimeout(this.timeoutInstance)
+  start = props => {
+    this.stop()
 
-    const interval = this.getIntervalValue(_interval)
-    if (!(interval > 0)) return
+    const interval = this.getIntervalValue(props || this.props)
+    if (!(interval > 100)) {
+      console.error(
+        `Invalid interval: ${interval}. Expected a number bigger than 100ms.`,
+        { props: this.props },
+      )
+    }
 
-    this.timeoutInstance = setTimeout(
-      () => this.tick(this.startTimeout),
-      interval,
-    )
-  }
-
-  tick = callback => {
-    const updatedTimes = this.state.updatedTimes + 1
-    this.setState({ updatedTimes }, () => {
-      // this.forceUpdate();
-      if (typeof callback === 'function') callback()
+    this.setState({ currentInterval: interval }, () => {
+      this.intervalInstance = setInterval(
+        this.tickAndUpdateIntervalIfNecessary,
+        this.state.currentInterval,
+      )
     })
   }
 
-  timeoutInstance = null
+  stop = () => {
+    clearInterval(this.intervalInstance)
+  }
+
+  tick = callback => {
+    this.setState(
+      ({ updatedTimes }) => ({
+        updatedTimes: updatedTimes + 1,
+      }),
+      () => {
+        if (callback) {
+          const updatedTimes = this.state.updatedTimes
+          callback({ updatedTimes })
+        }
+      },
+    )
+  }
+
+  tickAndUpdateIntervalIfNecessary = () =>
+    this.tick(this.updateIntervalIfNecessary)
+
+  updateIntervalIfNecessary = () => {
+    // interval only change dynamically when date prop is passed
+    if (!this.props.date) return
+
+    const newInterval = this.getIntervalValue(this.props)
+    if (newInterval === this.state.currentInterval) return
+
+    this.start()
+  }
+
+  intervalInstance = null
 
   props: {
-    interval: number, // in miliseconds
-    onRender: Function,
+    children: Function,
+    date?: Date,
+    interval?: number, // in miliseconds
   }
 
   render() {
-    const { onRender, ...props } = this.props
-
-    if (typeof onRender !== 'function') return null
-    return onRender(props)
+    const { children, ...props } = this.props
+    return children(props)
   }
 }
