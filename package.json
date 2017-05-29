@@ -1,8 +1,8 @@
 {
   "name": "devhub",
   "displayName": "DevHub",
-  "version": "0.8.1",
-  "codeBundleId": "0.8.1",
+  "version": "0.8.2",
+  "codeBundleId": "0.8.2",
   "private": true,
   "scripts": {
     "flow": "flow '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
@@ -35,8 +35,8 @@
     "moment": "^2.18.1",
     "normalizr": "^3.2.3",
     "qs": "^6.4.0",
-    "react": "16.0.0-alpha.6",
-    "react-native": "0.44.2",
+    "react": "^16.0.0-alpha.12",
+    "react-native": "^0.45.0-rc.2",
     "react-native-actionsheet": "^2.1.0",
     "react-native-code-push": "^2.0.3-beta",
     "react-native-immutable-list-view": "^0.4.5",
