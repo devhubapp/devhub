@@ -56,7 +56,7 @@ class SettingsScreen extends React.PureComponent {
 
   render() {
     const { actions, isCurrentRoute, theme } = this.props
-    const { resetAppData, logout, setTheme } = actions
+    const { resetAccountData, logout, setTheme } = actions
 
     const color = Platform.OS === 'android'
       ? !theme.isDark ? theme.base05 : theme.base02
@@ -67,9 +67,9 @@ class SettingsScreen extends React.PureComponent {
         <Wrapper>
           <Main>
             <StyledButton
-              title="Reset account data"
+              title="Delete account"
               color={theme.red}
-              onPress={() => resetAppData()}
+              onPress={() => resetAccountData()}
             />
             <StyledButton
               title="Logout"

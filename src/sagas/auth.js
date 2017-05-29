@@ -13,6 +13,7 @@ import {
   LOGIN_SUCCESS,
   LOGOUT,
   RESET_ACCOUNT_DATA,
+  RESET_APP_DATA,
   UPDATE_CURRENT_USER,
 } from '../utils/constants/actions'
 
@@ -20,7 +21,12 @@ import { get } from '../utils/immutable'
 
 import oauth from './oauth'
 import { sagaActionChunk } from './_shared'
-import { loginSuccess, loginFailure, updateCurrentUser } from '../actions'
+import {
+  loginSuccess,
+  loginFailure,
+  resetAppDataRequest,
+  updateCurrentUser,
+} from '../actions'
 import { accessTokenSelector, userSelector } from '../selectors'
 import type { Action, LoginRequestPayload } from '../utils/types'
 
@@ -60,10 +66,13 @@ function* onLoginSuccess() {
   yield signInOnFirebase()
 }
 
-function* onLogoutRequest() {
+function* logout({ type } = {}) {
   try {
     yield firebase.auth().signOut()
     if (bugsnagClient) bugsnagClient.clearUser()
+
+    if (type === 'LOGIN_FAILURE' || type === 'LOGOUT')
+      yield put(resetAppDataRequest(sagaActionChunk))
   } catch (e) {
     console.error(`Failed to logout from Firebase: ${e.message}`, e)
   }
@@ -118,8 +127,8 @@ export default function*() {
     yield takeLatest(LOGIN_SUCCESS, onLoginSuccess),
     yield takeLatest(UPDATE_CURRENT_USER, onCurrentUserUpdate),
     yield takeLatest(
-      [LOGIN_FAILURE, LOGOUT, RESET_ACCOUNT_DATA],
-      onLogoutRequest,
+      [LOGIN_FAILURE, LOGOUT, RESET_ACCOUNT_DATA, RESET_APP_DATA],
+      logout,
     ),
   ])
 }

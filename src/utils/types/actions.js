@@ -5,6 +5,9 @@ import * as actions from '../constants/actions'
 
 // app data
 export type RESET_ACCOUNT_DATA = typeof actions.RESET_ACCOUNT_DATA
+export type RESET_ACCOUNT_DATA_REQUEST = typeof actions.RESET_ACCOUNT_DATA_REQUEST
+export type RESET_APP_DATA = typeof actions.RESET_APP_DATA
+export type RESET_APP_DATA_REQUEST = typeof actions.RESET_APP_DATA_REQUEST
 
 // auth
 export type LOGIN_REQUEST = typeof actions.LOGIN_REQUEST
@@ -48,6 +51,9 @@ export type LOAD_SUBSCRIPTION_DATA_FAILURE = typeof actions.LOAD_SUBSCRIPTION_DA
 export type ActionType =
   // app data
   | RESET_ACCOUNT_DATA
+  | RESET_ACCOUNT_DATA_REQUEST
+  | RESET_APP_DATA
+  | RESET_APP_DATA_REQUEST
 
   // auth
   | LOGIN_REQUEST

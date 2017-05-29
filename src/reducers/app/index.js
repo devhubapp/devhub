@@ -3,7 +3,11 @@
 import { Map } from 'immutable'
 import { REHYDRATE } from 'redux-persist/constants'
 
-import { APP_READY, RESET_ACCOUNT_DATA } from '../../utils/constants/actions'
+import {
+  APP_READY,
+  RESET_ACCOUNT_DATA,
+  RESET_APP_DATA,
+} from '../../utils/constants/actions'
 import pkg from '../../../package.json'
 import type { Action } from '../../utils/types'
 
@@ -30,6 +34,7 @@ export default (
       return state.set('ready', true)
 
     case RESET_ACCOUNT_DATA:
+    case RESET_APP_DATA:
       return state.set('ready', true).set('rehydrated', true)
 
     case REHYDRATE:

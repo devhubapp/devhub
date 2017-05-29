@@ -17,6 +17,7 @@ import users from './users'
 
 import {
   RESET_ACCOUNT_DATA,
+  RESET_APP_DATA,
   LOAD_SUBSCRIPTION_DATA_SUCCESS,
   LOAD_NOTIFICATIONS_SUCCESS,
 } from '../../utils/constants/actions'
@@ -44,6 +45,7 @@ const indexReducer = (state: Object = initialState, action) => {
 
   switch (type) {
     case RESET_ACCOUNT_DATA:
+    case RESET_APP_DATA:
       return initialState
 
     case LOAD_SUBSCRIPTION_DATA_SUCCESS:

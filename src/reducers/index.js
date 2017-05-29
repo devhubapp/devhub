@@ -15,6 +15,7 @@ import user from './user'
 import {
   FIREBASE_RECEIVED_EVENT,
   RESET_ACCOUNT_DATA,
+  RESET_APP_DATA,
 } from '../utils/constants/actions'
 import { fromJS } from '../utils/immutable'
 import type { Action } from '../utils/types'
@@ -39,6 +40,7 @@ const indexReducer = (state: Object = initialState, action) => {
       return firebase(state, action)
 
     case RESET_ACCOUNT_DATA:
+    case RESET_APP_DATA:
       return initialState
 
     case REHYDRATE:

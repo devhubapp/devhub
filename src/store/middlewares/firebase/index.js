@@ -155,7 +155,7 @@ export default store => {
 
     if (action.type === RESET_ACCOUNT_DATA && _databaseRef) {
       if (__DEV__) console.debug('[FIREBASE] Reseting account data...')
-      _databaseRef.child('entities').remove(e => {
+      _databaseRef.update({ config: null, entities: null }, e => {
         if (!__DEV__) return
 
         if (e) console.error('[FIREBASE] Failed to reset account data', e)

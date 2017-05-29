@@ -12,7 +12,12 @@ import {
   getSubMapFromPath,
 } from '../../store/middlewares/firebase/helpers'
 import { FIREBASE_RECEIVED_EVENT } from '../../utils/constants/actions'
-import { fromJS, getIn, mergeDeepIn } from '../../utils/immutable'
+import {
+  fromJS,
+  getIn,
+  isObjectOrMap,
+  mergeDeepIn,
+} from '../../utils/immutable'
 import type { Action } from '../../utils/types'
 
 export const mapFirebaseToState = {
@@ -117,7 +122,7 @@ export default (
                   value,
                   getSubMapFromPath(mapStateToFirebase, statePathArr),
                 )
-              } else if (typeof value === 'object') {
+              } else if (isObjectOrMap(value)) {
                 valueDiff = getObjectDiff(
                   sameLevelFilteredState,
                   value,
