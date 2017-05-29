@@ -64,7 +64,7 @@ export default class NewColumn extends React.PureComponent {
         </Wrapper>
 
         <ActionSheet
-          innerRef={ref => {
+          actionSheetRef={ref => {
             this.ActionSheet = ref
           }}
         />

@@ -223,7 +223,7 @@ export default class NotificationColumn extends React.PureComponent {
               right: 0,
             }
           }
-          innerRef={ref => {
+          actionSheetRef={ref => {
             this.ActionSheet = ref
           }}
         />

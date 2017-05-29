@@ -8,9 +8,9 @@ import { columnMargin } from './columns/_Column'
 import { radius } from '../styles/variables'
 
 const StyledActionSheet = withTheme(
-  ({ innerRef, buttonContainerStyle, theme, ...props }) => (
+  ({ actionSheetRef, buttonContainerStyle, theme, ...props }) => (
     <ActionSheet
-      ref={innerRef}
+      ref={actionSheetRef}
       containerPadding={columnMargin}
       buttonContainerStyle={[
         { backgroundColor: theme.base02 },
