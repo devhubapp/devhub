@@ -109,7 +109,8 @@
     "*.js": [
       "npm run format_options -- --write",
       "eslint --fix",
-      "git add"
+      "git add",
+      "jest --bail --findRelatedTests"
     ]
   }
 }
