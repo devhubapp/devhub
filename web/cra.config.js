@@ -40,8 +40,9 @@ module.exports = {
           'react-navigation': 'react-navigation/lib/react-navigation.js',
         }),
         extensions: ['.web.js'].concat(oldConfig.resolve.extensions),
+        // prettier-ignore
         plugins: oldConfig.resolve.plugins.filter(
-          plugin => !(plugin instanceof ModuleScopePlugin),
+          plugin => !(plugin instanceof ModuleScopePlugin)
         ),
       }),
     })
