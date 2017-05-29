@@ -45,8 +45,22 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('%PUBLIC_URL%/service-worker.js');
-      });
+        navigator.serviceWorker
+          .register('%PUBLIC_URL%/service-worker.js')
+          .then(reg => {
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing
+              installingWorker.onstatechange = () => {
+                if (
+                  installingWorker.state === 'installed' &&
+                  navigator.serviceWorker.controller
+                ) {
+                  location.reload()
+                }
+              }
+            }
+          })
+      })
     }
   </script>
 </body>
