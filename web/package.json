@@ -1,6 +1,6 @@
 {
   "name": "devhub-web",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "private": true,
   "homepage": "https://brunolemos.github.io/devhub/",
   "dependencies": {
