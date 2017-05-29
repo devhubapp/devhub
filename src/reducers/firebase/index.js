@@ -1,5 +1,6 @@
 // @flow
 
+import Platform from '../../libs/platform'
 import app from '../app'
 import config from '../config'
 import entities from '../entities'
@@ -15,7 +16,9 @@ import { fromJS, getIn, mergeDeepIn } from '../../utils/immutable'
 import type { Action } from '../../utils/types'
 
 export const mapFirebaseToState = {
-  config: {},
+  config: {
+    [Platform.realOS]: true,
+  },
   entities: {
     columns: {},
     subscriptions: {
@@ -39,7 +42,9 @@ export const mapStateToFirebase = {
     ready: false,
     rehydrated: false,
   },
-  config: {},
+  config: {
+    [Platform.realOS]: true,
+  },
   entities: {
     columns: {},
     subscriptions: {
