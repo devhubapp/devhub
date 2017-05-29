@@ -27,6 +27,7 @@
     "babel-polyfill": "^6.23.0",
     "bugsnag-react-native": "^2.2.3",
     "denormalizr": "^0.5.2",
+    "extensible-react-scripts": "^1.0.6-5",
     "firebase": "^3.7.5",
     "github": "git+https://github.com/brunolemos/react-native-github-api.git",
     "gravatar": "^1.6.0",
