@@ -49,8 +49,6 @@ export default class Screen extends PureComponent {
   render() {
     const { children, helmet, isCurrentRoute, title, ...props } = this.props
 
-    if (isCurrentRoute === false) return null
-
     return (
       <BaseScreen {...props}>
         {isCurrentRoute === true &&
