@@ -7,10 +7,14 @@ module.exports = {
       resolvePath('../node_modules/react-native-tab-view/src'),
     ])
 
-    return Object.assign({}, paths, { sourcesToCompile })
+    return Object.assign({}, paths, {
+      webNodeModules: resolvePath('node_modules'),
+      mobileNodeModules: resolvePath('../node_modules'),
+      sourcesToCompile,
+    })
   },
 
-  webpack: (oldConfig, { isDevelopment }) => {
+  webpack: (oldConfig, { isDevelopment, paths }) => {
     const babelLoader = require.resolve('babel-loader')
     const webpack = require('webpack')
 
@@ -39,6 +43,10 @@ module.exports = {
           'react-navigation': 'react-navigation/lib/react-navigation.js',
         }),
         extensions: ['.web.js'].concat(oldConfig.resolve.extensions),
+        // prettier-ignore
+        modules: [paths.webNodeModules, paths.mobileNodeModules].concat(
+          oldConfig.resolve.modules
+        ),
         // prettier-ignore
         plugins: oldConfig.resolve.plugins.filter(
           plugin => plugin.constructor.name !== 'ModuleScopePlugin'

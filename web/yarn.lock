@@ -2481,9 +2481,9 @@ extend@~3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
-extensible-react-scripts@^1.0.6-9:
-  version "1.0.6-9"
-  resolved "https://registry.yarnpkg.com/extensible-react-scripts/-/extensible-react-scripts-1.0.6-9.tgz#23e992f6593f5d3a6175187d4c364998a1d0f626"
+extensible-react-scripts@^1.0.6-10:
+  version "1.0.6-10"
+  resolved "https://registry.yarnpkg.com/extensible-react-scripts/-/extensible-react-scripts-1.0.6-10.tgz#a3cbc3ac5ac976af1aa6a28b381185b9cf900dc5"
   dependencies:
     autoprefixer "7.1.0"
     babel-core "6.24.1"
