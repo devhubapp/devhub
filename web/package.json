@@ -2,30 +2,30 @@
   "name": "devhub-web",
   "version": "0.8.6",
   "private": true,
-  "homepage": "https://brunolemos.github.io/devhub/",
+  "homepage": "./",
   "dependencies": {
     "bugsnag-js": "^3.2.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-helmet": "^5.1.3",
-    "react-native-web": "^0.0.94"
+    "react-native-web": "^0.0.97"
   },
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "extensible-react-scripts": "^1.0.6-4",
+    "extensible-react-scripts": "^1.0.6-9",
     "gh-pages": "^1.0.0",
-    "react-dev-utils": "^2.0.1",
-    "serve": "^5.1.5",
+    "react-dev-utils": "^3.0.0",
+    "serve": "^5.2.1",
     "sw-precache": "^5.1.1"
   },
   "scripts": {
-    "build": "NODE_ENV=production react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build": "NODE_ENV=production extensible-react-scripts build && sw-precache --config=sw-precache-config.js",
     "deploy": "gh-pages -d build",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "eject": "extensible-react-scripts eject",
+    "predeploy": "PUBLIC_URL=https://brunolemos.github.io/devhub/ npm run build",
     "serve": "serve build",
-    "start": "react-scripts start",
-    "test": "react-scripts test --env=jsdom"
+    "start": "extensible-react-scripts start",
+    "test": "extensible-react-scripts test --env=jsdom"
   },
   "jest": {
     "collectCoverageFrom": [
