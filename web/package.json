@@ -1,6 +1,6 @@
 {
   "name": "devhub-web",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "private": true,
   "homepage": "./",
   "dependencies": {
