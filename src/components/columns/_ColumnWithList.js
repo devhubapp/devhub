@@ -123,7 +123,7 @@ export default class ColumnWithList extends React.PureComponent {
                 renderSectionHeader={renderSectionHeader}
                 refreshControl={refreshControl}
                 sectionHeaderHasChanged={sectionHeaderHasChanged}
-                removeClippedSubviews={false}
+                removeClippedSubviews
                 style={styles.list}
                 {...props}
               />}

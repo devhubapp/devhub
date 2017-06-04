@@ -74,7 +74,7 @@ export default class Columns extends React.PureComponent {
         immutableData={columns}
         initialNumToRender={initialNumToRender}
         renderItem={this.makeRenderItem(mainRenderItem)}
-        removeClippedSubviews={false}
+        removeClippedSubviews
         horizontal
         pagingEnabled
         {...props}

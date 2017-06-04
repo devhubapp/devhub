@@ -4,8 +4,8 @@ import Immutable from 'immutable'
 import React, { PureComponent } from 'react'
 
 import SectionList from 'react-native/Libraries/Lists/SectionList'
-
 import VirtualizedList from 'react-native/Libraries/Lists/VirtualizedList'
+import OptimizedVirtualizedList from '../optimized-virtualized-list'
 
 import { get } from '../../utils/immutable'
 
@@ -34,7 +34,7 @@ const isMapOrSet = item =>
   Immutable.OrderedSet.isOrderedSet(item)
 
 const getItem = (items, index) => get(items, index)
-const getItemCount = items => items.size
+const getItemCount = items => (items && items.size) || 0
 const keyExtractor = (item, index) =>
   isMapOrSet(item) && (get(item, 'key') || get(item, 'id'))
     ? get(item, 'key') || get(item, 'id')
@@ -48,8 +48,12 @@ export default class ImmutableVirtualizedList extends PureComponent {
   render() {
     const { immutableData, ...props } = this.props
 
+    const VirtualizedListComponent = this.props.removeClippedSubviews
+      ? OptimizedVirtualizedList
+      : VirtualizedList
+
     return (
-      <VirtualizedList
+      <VirtualizedListComponent
         data={immutableData}
         getItem={props.getItem || getItem}
         getItemCount={props.getItemCount || getItemCount}
