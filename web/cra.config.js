@@ -12,7 +12,6 @@ module.exports = {
 
   webpack: (oldConfig, { isDevelopment }) => {
     const babelLoader = require.resolve('babel-loader')
-    const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
     const webpack = require('webpack')
 
     return Object.assign({}, oldConfig, {
@@ -42,7 +41,7 @@ module.exports = {
         extensions: ['.web.js'].concat(oldConfig.resolve.extensions),
         // prettier-ignore
         plugins: oldConfig.resolve.plugins.filter(
-          plugin => !(plugin instanceof ModuleScopePlugin)
+          plugin => plugin.constructor.name !== 'ModuleScopePlugin'
         ),
       }),
     })
