@@ -46,9 +46,9 @@ export default class ImmutableVirtualizedList extends PureComponent {
   static propTypes = { ...VirtualizedList.propTypes, ...propTypes }
 
   render() {
-    const { immutableData, ...props } = this.props
+    const { immutableData, removeClippedSubviews, ...props } = this.props
 
-    const VirtualizedListComponent = this.props.removeClippedSubviews
+    const VirtualizedListComponent = removeClippedSubviews
       ? OptimizedVirtualizedList
       : VirtualizedList
 
@@ -58,6 +58,7 @@ export default class ImmutableVirtualizedList extends PureComponent {
         getItem={props.getItem || getItem}
         getItemCount={props.getItemCount || getItemCount}
         keyExtractor={props.keyExtractor || keyExtractor}
+        removeClippedSubviews={false}
         {...props}
       />
     )
