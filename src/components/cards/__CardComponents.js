@@ -61,7 +61,8 @@ export const RepositoryContentContainer = styled(ScrollableContentContainer)`
   padding-horizontal: ${contentPadding}px;
 `
 
-export const Header = styled(HorizontalView)`
+export const Header = styled.View`
+  flex-direction: row;
   align-items: center;
 `
 
@@ -79,70 +80,77 @@ export const MainColumn = styled.View`
   justify-content: center;
 `
 
-export const MainColumnRowContent = styled(MainColumn)`
+export const MainColumnRowContent = MainColumn.extend`
   flex-direction: row;
   align-self: ${({ center }) => (center ? 'center' : 'auto')};
 `
 
-export const HeaderRow = styled(HorizontalView)`
+export const HeaderRow = styled.View`
+  flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
 `
 
 export const StyledText = styled.Text`
   background-color: transparent;
-  color: ${({ color, muted, read, theme }) => (muted && read !== false ? theme.base05 : (color && (theme[color] || color)) || theme.base04)};
+  color: ${({ color, muted, read, theme }) =>
+    muted && read !== false
+      ? theme.base05
+      : (color && (theme[color] || color)) || theme.base04};
   line-height: 20px;
   font-size: ${({ small }) => (small ? 12 : 14)}px;
   font-weight: ${({ read }) => (read === false ? 'bold' : 'normal')};
 `
 
-export const SmallText = styled(StyledText)`
+export const SmallText = StyledText.extend`
   font-size: 12px;
 `
 
-export const OwnerLogin = styled(StyledText)`
+export const OwnerLogin = StyledText.extend`
   font-weight: bold;
 `
 
-export const RepositoryName = styled(StyledText)`
+export const RepositoryName = StyledText.extend`
 `
 
-export const CardText = styled(StyledText)`
+export const CardText = StyledText.extend`
   flex: 1;
   font-size: 14px;
   ${Platform.select({ web: { wordBreak: 'break-all' } })}
 `
 
-export const ContentRow = styled(HorizontalView)`
+export const ContentRow = styled.View`
+  flex-direction: row;
   align-items: flex-start;
-  margin-top: ${({ narrow }) => (narrow ? narrowInnerContentPadding : innerContentPadding)};
+  margin-top: ${({ narrow }) =>
+    narrow ? narrowInnerContentPadding : innerContentPadding};
 `
 
-export const HighlightContainerBase = styled(HorizontalView)`
+export const HighlightContainerBase = styled.View`
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.base01};
   border-radius: ${radius}px;
 `
 
-export const HighlightContainer1 = styled(HighlightContainerBase)`
+export const HighlightContainer1 = HighlightContainerBase.extend`
   background-color: ${({ theme }) => theme.base01};
 `
 
-export const HighlightContainer2 = styled(HighlightContainerBase)`
+export const HighlightContainer2 = HighlightContainerBase.extend`
   background-color: ${({ theme }) => theme.base03};
 `
 
-export const HighlightContainerRow1 = styled(HighlightContainer1)`
+export const HighlightContainerRow1 = HighlightContainer1.extend`
   min-height: 30px;
 `
 
-export const ItemIdContainer = styled(HighlightContainer2)`
+export const ItemIdContainer = HighlightContainer2.extend`
   padding-horizontal: 4px;
 `
 
-export const ItemId = styled(StyledText)`
+export const ItemId = StyledText.extend`
   font-weight: bold;
   font-size: 12px;
   opacity: 0.9;
@@ -154,11 +162,13 @@ export const RightOfScrollableContent = styled.View`
 
 export const Icon = styled(Octicon)`
   background-color: transparent;
-  color: ${({ color, muted, theme }) => (color && (theme[color] || color)) || (muted ? theme.base05 : theme.base06)};
+  color: ${({ color, muted, theme }) =>
+    (color && (theme[color] || color)) ||
+    (muted ? theme.base05 : theme.base06)};
   opacity: ${({ color, muted }) => (color && muted ? mutedOpacity : 1)};
 `
 
-export const CardIcon = styled(Icon)`
+export const CardIcon = Icon.extend`
   align-self: flex-start;
   margin-left: ${contentPadding}px;
   margin-right: ${iconRightMargin}px;

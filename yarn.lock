@@ -5754,9 +5754,9 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-styled-components@^2.0.0:
+"styled-components@git+https://github.com/brunolemos/styled-components.git#fix/multiple-extending-npm":
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-2.0.0.tgz#0906652b77647e7400ca7e5a6d8d45eba6fa77ec"
+  resolved "git+https://github.com/brunolemos/styled-components.git#2cf68756931f2cb0877d4e4c3fed40f28352a6d4"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
@@ -5766,12 +5766,12 @@ styled-components@^2.0.0:
     is-function "^1.0.1"
     is-plain-object "^2.0.1"
     prop-types "^15.5.4"
-    stylis "^2.0.0"
+    stylis "^3.0.4"
     supports-color "^3.2.3"
 
-stylis@^2.0.0:
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/stylis/-/stylis-2.0.12.tgz#547253055d170f2a7ac2f6d09365d70635f2bec6"
+stylis@^3.0.4:
+  version "3.0.15"
+  resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.0.15.tgz#e0f9bf403048511043b479d39422c835141e0fbb"
 
 superagent-proxy@^1.0.0:
   version "1.0.2"

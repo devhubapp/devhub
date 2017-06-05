@@ -37,7 +37,7 @@ export const ItemTitleWrapper = styled.View`
   justify-content: center;
 `
 
-const ItemTitle = styled(StyledText)`
+const ItemTitle = StyledText.extend`
   flex: 1;
 `
 
@@ -56,18 +56,20 @@ const CounterWrapper = styled.View`
   padding-horizontal: ${contentPadding}px;
   padding-vertical: 0.5;
   border-radius: 10px;
-  background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base01)};
+  background-color: ${({ outline, theme }) =>
+    outline ? 'transparent' : theme.base01};
   border-width: 1px;
-  border-color: ${({ outline, theme }) => (outline ? theme.base03 : theme.base01)};
+  border-color: ${({ outline, theme }) =>
+    outline ? theme.base03 : theme.base01};
 `
 
-const UnreadCount = styled(StyledText)`
+const UnreadCount = StyledText.extend`
   font-size: 12px;
   color: ${({ count, theme }) => (count > 0 ? theme.base04 : theme.base05)};
   text-align: center;
 `
 
-const TotalCount = styled(StyledText)`
+const TotalCount = StyledText.extend`
   font-size: 12px;
   color: ${({ theme }) => theme.base05};
 `
