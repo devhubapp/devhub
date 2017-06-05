@@ -72,8 +72,10 @@ export default class NotificationCard extends React.PureComponent {
 
     if (!subject) return null
 
-    const isPrivate = !!(repo &&
-      (repo.get('private') || repo.get('public') === false))
+    const isPrivate = !!(
+      repo &&
+      (repo.get('private') || repo.get('public') === false)
+    )
 
     const avatarUrl = getOrgAvatar(repo.getIn(['owner', 'login']))
     const notificationIds = List([notification.get('id')])
@@ -126,11 +128,10 @@ export default class NotificationCard extends React.PureComponent {
             <HeaderRow>
               <FullView center horizontal>
                 <Label
-                  color="base01"
+                  color={color}
                   isPrivate={isPrivate}
-                  muted={read}
                   numberOfLines={1}
-                  textColor={color}
+                  outline={read}
                 >
                   {label}
                 </Label>
@@ -148,7 +149,7 @@ export default class NotificationCard extends React.PureComponent {
                 </IntervalRefresh>
               </FullView>
 
-              <CardIcon name={cardIcon} color={cardIconColor} muted={read} />
+              <CardIcon name={cardIcon} color={cardIconColor} />
             </HeaderRow>
             <FullAbsoluteView>
               <TouchableWithoutFeedback

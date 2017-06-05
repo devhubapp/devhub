@@ -2,7 +2,7 @@
 
 import React from 'react'
 import styled from 'styled-components/native'
-import { Platform } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import Octicon from '../../libs/icon'
 
@@ -25,10 +25,10 @@ export const iconRightMargin = 0 // contentPadding - 2;
 export const CardWrapper = styled.View`
   padding: ${contentPadding}px;
   border-width: 0px;
-  border-bottom-width: 1px;
+  border-bottom-width: ${2 * StyleSheet.hairlineWidth}px;
   border-color: ${({ theme }) => theme.base01};
-  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `
+// opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 
 export const FullView = styled.View`
   flex: 1;
@@ -130,16 +130,23 @@ export const HighlightContainerBase = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.base01};
+  background-color: ${({ outline, theme }) =>
+    outline ? 'transparent' : theme.base01};
+  border-width: ${StyleSheet.hairlineWidth};
+  border-color: ${({ theme }) => theme.base01};
   border-radius: ${radius}px;
 `
 
 export const HighlightContainer1 = HighlightContainerBase.extend`
-  background-color: ${({ theme }) => theme.base01};
+  background-color: ${({ outline, theme }) =>
+    outline ? 'transparent' : theme.base01};
+  border-color: ${({ theme }) => theme.base01};
 `
 
 export const HighlightContainer2 = HighlightContainerBase.extend`
-  background-color: ${({ theme }) => theme.base03};
+  background-color: ${({ outline, theme }) =>
+    outline ? 'transparent' : theme.base03};
+  border-color: ${({ theme }) => theme.base03};
 `
 
 export const HighlightContainerRow1 = HighlightContainer1.extend`

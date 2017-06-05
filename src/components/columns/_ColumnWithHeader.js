@@ -2,6 +2,7 @@
 
 import React from 'react'
 import styled from 'styled-components/native'
+import { StyleSheet } from 'react-native'
 
 import Column, { getColumnContentWidth } from './_Column'
 import Icon from '../../libs/icon'
@@ -14,6 +15,7 @@ export * from './_Column'
 
 export const headerFontSize = 18
 export const headerHeight = headerFontSize + 8 + 2 * contentPadding
+export const progressBarHeight = 2 * StyleSheet.hairlineWidth
 
 export const HeaderButtonsContainer = styled.View`
   flex-direction: row;
@@ -46,7 +48,8 @@ export const HeaderButton = styled.TouchableOpacity`
 
 export const HeaderButtonIcon = styled(Icon)`
   font-size: ${headerFontSize}px;
-  color: ${({ active, muted, theme }) => (muted ? theme.base05 : active ? theme.brand : theme.base04)};
+  color: ${({ active, muted, theme }) =>
+    muted ? theme.base05 : active ? theme.brand : theme.base04};
 `
 
 export const FixedHeader = styled.View`
@@ -57,7 +60,7 @@ export const FixedHeader = styled.View`
 `
 
 export const ProgressBarContainer = styled.View`
-  height: 1px;
+  height: ${progressBarHeight}px;
   background-color: ${({ theme }) => theme.base01};
 `
 
@@ -99,7 +102,7 @@ export default class ColumnWithHeader extends React.PureComponent {
           {loading &&
             <ProgressBar
               width={width || getColumnContentWidth()}
-              height={1}
+              height={progressBarHeight}
               indeterminate
             />}
         </ProgressBarContainer>
@@ -107,9 +110,9 @@ export default class ColumnWithHeader extends React.PureComponent {
         {errors &&
           errors
             .filter(Boolean)
-            .map(error => (
-              <StatusMessage key={`error-${error}`} message={error} error />
-            ))}
+            .map(error =>
+              <StatusMessage key={`error-${error}`} message={error} error />,
+            )}
 
         {children}
       </Column>

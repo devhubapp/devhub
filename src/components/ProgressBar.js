@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react'
 import { withTheme } from 'styled-components/native'
-import { Animated, Easing, View } from 'react-native'
+import { Animated, Easing, StyleSheet, View } from 'react-native'
 
 @withTheme
 export default class ProgressBar extends PureComponent {
@@ -12,7 +12,7 @@ export default class ProgressBar extends PureComponent {
     borderWidth: 0,
     color: undefined,
     duration: 800,
-    height: 1,
+    height: StyleSheet.hairlineWidth,
     indeterminate: true,
     indeterminateWidthFactor: 1,
     progress: 0,

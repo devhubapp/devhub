@@ -4,7 +4,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { memoize } from 'lodash'
 import { List, Map } from 'immutable'
-import { Platform } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import ColumnWithList, { headerFontSize } from './_ColumnWithList'
 import Icon from '../../libs/icon'
@@ -58,7 +58,7 @@ const CounterWrapper = styled.View`
   border-radius: 10px;
   background-color: ${({ outline, theme }) =>
     outline ? 'transparent' : theme.base01};
-  border-width: 1px;
+  border-width: ${StyleSheet.hairlineWidth}px;
   border-color: ${({ outline, theme }) =>
     outline ? theme.base03 : theme.base01};
 `

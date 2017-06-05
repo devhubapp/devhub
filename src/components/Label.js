@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { Text } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import styled from 'styled-components/native'
 
 import Icon from '../libs/icon'
@@ -14,16 +14,29 @@ import {
 const LabelContainer = styled.View`
   padding-vertical: 2px;
   padding-horizontal: ${contentPadding};
-  background-color: ${({ color, outline, theme }) => (outline ? 'transparent' : (color && (theme[color] || color)) || theme.base04)};
-  border-color: ${({ borderColor, color, theme }) => (borderColor && (theme[borderColor] || borderColor)) || (color && (theme[color] || color)) || theme.base04};
-  border-width: ${({ borderWidth }) => borderWidth || 1}px;
+  background-color: ${({ color, outline, theme }) =>
+    outline
+      ? 'transparent'
+      : (color && (theme[color] || color)) || theme.base04};
+  border-color: ${({ borderColor, color, theme }) =>
+    (borderColor && (theme[borderColor] || borderColor)) ||
+    (color && (theme[color] || color)) ||
+    theme.base04};
+  border-width: ${({ borderWidth }) =>
+    borderWidth || StyleSheet.hairlineWidth}px;
   border-radius: ${({ radius }) => radius || 0}px;
-  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `
 
 const LabelText = styled.Text`
   font-size: 14px;
-  color: ${({ color, muted, outline, theme, textColor }) => (textColor && (theme[textColor] || textColor)) || (outline ? (color && (theme[color] || color)) || (muted ? theme.base05 : theme.base04) : '') || '#ffffff'};
+  color: ${({ color, muted, outline, theme, textColor }) =>
+    (textColor && (theme[textColor] || textColor)) ||
+    (outline
+      ? (color && (theme[color] || color)) ||
+          (muted ? theme.base05 : theme.base04)
+      : '') ||
+    '#ffffff'};
+  opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `
 
 type Props = {
@@ -50,11 +63,10 @@ const Label = ({
   isPrivate,
   radius = defaultRadius,
   ...props
-}: Props) => (
+}: Props) =>
   <LabelContainer
     borderColor={borderColor}
     color={color}
-    muted={muted}
     outline={outline}
     radius={radius}
     style={containerStyle}
@@ -65,6 +77,5 @@ const Label = ({
       {children}
     </LabelText>
   </LabelContainer>
-)
 
 export default Label

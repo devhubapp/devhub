@@ -52,10 +52,10 @@ export default class TouchableRow extends React.PureComponent {
         </LeftColumn>
 
         <MainColumn>
-          <HighlightContainerRow1>
+          <HighlightContainerRow1 outline>
             <FullView>
               <TransparentTextOverlay
-                color={theme.base01}
+                color={theme.base02}
                 size={contentPadding}
                 from="horizontal"
                 radius={radius}

@@ -92,9 +92,11 @@ export default class EventCard extends React.PureComponent {
 
     const eventIds = getEventIdsFromEventIncludingMerged(event)
 
-    const isPrivate = !!(event.get('private') ||
+    const isPrivate = !!(
+      event.get('private') ||
       event.get('public') === false ||
-      (repo && (repo.get('private') || repo.get('public') === false)))
+      (repo && (repo.get('private') || repo.get('public') === false))
+    )
 
     const {
       icon: cardIcon,
@@ -172,13 +174,8 @@ export default class EventCard extends React.PureComponent {
                 ? <CardIcon
                     name={cardSubIcon}
                     color={cardSubIconColor || cardIconColor}
-                    muted={read}
                   />
-                : <CardIcon
-                    name={cardIcon}
-                    color={cardIconColor}
-                    muted={read}
-                  />}
+                : <CardIcon name={cardIcon} color={cardIconColor} />}
             </HeaderRow>
 
             <FullAbsoluteView>
@@ -289,7 +286,7 @@ export default class EventCard extends React.PureComponent {
             user={actor}
             url={
               payload.getIn(['issue', 'html_url']) ||
-                payload.getIn(['issue', 'url'])
+              payload.getIn(['issue', 'url'])
             }
             read={read}
             narrow
@@ -302,7 +299,7 @@ export default class EventCard extends React.PureComponent {
               user={actor}
               url={
                 payload.getIn(['pull_request', 'html_url']) ||
-                  payload.getIn(['pull_request', 'url'])
+                payload.getIn(['pull_request', 'url'])
               }
               read={read}
               narrow

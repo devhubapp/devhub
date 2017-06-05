@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, StyleSheet } from 'react-native'
 import styled from 'styled-components/native'
 
 import Icon from '../../libs/icon'
@@ -12,7 +12,7 @@ export const Button = styled.TouchableOpacity`
   background-color: ${({ theme }) => theme.invert().base02};
   border-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius}px;
-  border-width: 1px;
+  border-width: ${StyleSheet.hairlineWidth}px;
 `
 
 export const Content = styled.View`
@@ -25,13 +25,14 @@ export const IconWrapper = styled.View`
   justify-content: center;
   padding-horizontal: ${contentPadding}px;
   border-width: 0px;
-  border-right-width: 0.5px;
+  border-right-width: ${StyleSheet.hairlineWidth}px;
   border-color: ${({ theme }) => theme.base04};
 `
 
 export const ButtonIcon = styled(Icon)`
   font-size: 20px;
-  color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};
+  color: ${({ muted, theme }) =>
+    muted ? theme.invert().base05 : theme.invert().base04};
 `
 
 export const TextWrapper = styled.View`
@@ -47,7 +48,8 @@ export const Text = styled.Text`
   font-size: 15px;
   font-weight: 500;
   text-align: left;
-  color: ${({ muted, theme }) => (muted ? theme.invert().base05 : theme.invert().base04)};
+  color: ${({ muted, theme }) =>
+    muted ? theme.invert().base05 : theme.invert().base04};
 `
 
 type Props = {
@@ -73,7 +75,7 @@ const GithubButton = ({
   subtitleProps = {},
   textProps = {},
   ...props
-}: Props) => (
+}: Props) =>
   <Button activeOpacity={1} horizontal={horizontal} radius={radius} {...props}>
     <Content>
       {leftIcon &&
@@ -94,7 +96,6 @@ const GithubButton = ({
         </IconWrapper>}
     </Content>
   </Button>
-)
 
 GithubButton.defaultProps = {
   leftIcon: 'mark-github',
