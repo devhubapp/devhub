@@ -133,6 +133,7 @@ export default class EventCard extends React.PureComponent {
               avatarURL={actor.get('avatar_url')}
               linkURL={actor.get('html_url') || actor.get('url')}
               size={avatarWidth}
+              username={actor.get('login')}
             />
           </LeftColumn>
 

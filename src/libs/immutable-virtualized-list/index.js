@@ -39,8 +39,8 @@ const keyExtractor = (item, index) =>
   isMapOrSet(item) && (get(item, 'key') || get(item, 'id'))
     ? get(item, 'key') || get(item, 'id')
     : typeof item === 'string' || typeof item === 'number'
-        ? String(item)
-        : String(index)
+      ? String(item)
+      : String(index)
 
 export default class ImmutableVirtualizedList extends PureComponent {
   static propTypes = { ...VirtualizedList.propTypes, ...propTypes }
@@ -58,7 +58,6 @@ export default class ImmutableVirtualizedList extends PureComponent {
         getItem={props.getItem || getItem}
         getItemCount={props.getItemCount || getItemCount}
         keyExtractor={props.keyExtractor || keyExtractor}
-        removeClippedSubviews={false}
         {...props}
       />
     )

@@ -1,6 +1,8 @@
 // @flow
 /* eslint-disable import/prefer-default-export */
 
+import { PixelRatio } from 'react-native'
+
 import gravatar from 'gravatar'
 
 import * as baseTheme from '../../../styles/themes/base'
@@ -12,6 +14,15 @@ import type {
   GithubPullRequest,
   ThemeObject,
 } from '../../types'
+
+export function getSteppedSize(size, sizeSteps = 50) {
+  // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
+  const steppedSize = typeof size !== 'number'
+    ? sizeSteps
+    : sizeSteps * Math.max(1, Math.ceil(size / sizeSteps))
+
+  return PixelRatio.getPixelSizeForLayoutSize(steppedSize)
+}
 
 export function isPullRequest(issue: GithubIssue | GithubPullRequest) {
   return (
@@ -85,8 +96,10 @@ export function getOrgAvatar(orgName: string) {
   return orgName ? `https://github.com/${orgName}.png` : ''
 }
 
-export function getUserAvatar(userName: string) {
-  return userName ? `https://github.com/${userName}.png` : ''
+export function getUserAvatarByUsername(userName: string, size?: number) {
+  return userName
+    ? `https://github.com/${userName}.png?size=${getSteppedSize(size)}`
+    : ''
 }
 
 export function tryGetUsernameFromGithubEmail(email: string) {
@@ -103,13 +116,9 @@ export function getUserAvatarByEmail(
   email: string,
   { size, ...otherOptions }: { size?: number },
 ) {
-  const sizeSteps = 50 // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
-  const steppedSize = !size
-    ? sizeSteps
-    : sizeSteps * Math.max(1, Math.ceil(size / sizeSteps))
-
+  const steppedSize = getSteppedSize(size)
   const username = tryGetUsernameFromGithubEmail(email)
-  if (username) return getUserAvatar(username)
+  if (username) return getUserAvatarByUsername(username, { size: steppedSize })
 
   const options = { size: steppedSize, d: 'retro', ...otherOptions }
   return `https:${gravatar.url(email, options)}`.replace('??', '?')

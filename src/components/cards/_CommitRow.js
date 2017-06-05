@@ -15,9 +15,7 @@ import {
   getGitHubSearchURL,
 } from '../../utils/helpers/github/url'
 
-import {
-  tryGetUsernameFromGithubEmail,
-} from '../../utils/helpers/github/shared'
+import { tryGetUsernameFromGithubEmail } from '../../utils/helpers/github/shared'
 
 import type { Commit, ThemeObject } from '../../utils/types'
 
@@ -51,15 +49,16 @@ export default class CommitRow extends React.PureComponent {
       <TouchableRow
         left={
           !!authorEmail &&
-            <OwnerAvatar
-              email={authorEmail}
-              size={smallAvatarWidth}
-              linkURL={
-                authorUsername
-                  ? getGitHubURLForUser(authorUsername)
-                  : getGitHubSearchURL({ q: authorEmail, type: 'Users' })
-              }
-            />
+          <OwnerAvatar
+            email={authorEmail}
+            size={smallAvatarWidth}
+            linkURL={
+              authorUsername
+                ? getGitHubURLForUser(authorUsername)
+                : getGitHubSearchURL({ q: authorEmail, type: 'Users' })
+            }
+            username={authorUsername}
+          />
         }
         read={read}
         url={commit.get('html_url') || commit.get('url')}

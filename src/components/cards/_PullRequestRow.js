@@ -57,11 +57,12 @@ export default class PullRequestRow extends React.PureComponent {
       <TouchableRow
         left={
           user &&
-            <OwnerAvatar
-              avatarURL={user.get('avatar_url')}
-              linkURL={user.get('html_url') || user.get('url')}
-              size={smallAvatarWidth}
-            />
+          <OwnerAvatar
+            avatarURL={user.get('avatar_url')}
+            linkURL={user.get('html_url') || user.get('url')}
+            size={smallAvatarWidth}
+            username={user.get('login')}
+          />
         }
         read={read}
         right={

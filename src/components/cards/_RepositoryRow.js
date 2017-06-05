@@ -59,6 +59,7 @@ export default class RepositoryRow extends React.PureComponent {
             avatarURL={getOrgAvatar(orgName)}
             linkURL={repo.get('html_url') || repo.get('url')}
             size={smallAvatarWidth}
+            username={orgName}
           />
         }
         read={read}

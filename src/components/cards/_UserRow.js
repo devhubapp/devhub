@@ -34,6 +34,7 @@ export default class UserRow extends React.PureComponent {
             avatarURL={user.get('avatar_url')}
             linkURL={user.get('html_url') || user.get('url')}
             size={smallAvatarWidth}
+            username={user.get('login')}
           />
         }
         read={read}

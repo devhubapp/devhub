@@ -21,7 +21,10 @@ import {
   getNotificationIconAndColor,
   getNotificationReasonTextsAndColor,
 } from '../../utils/helpers/github/notifications'
-import { getOrgAvatar } from '../../utils/helpers/github/shared'
+import {
+  getOrgAvatar,
+  getOwnerAndRepo,
+} from '../../utils/helpers/github/shared'
 import type { ActionCreators, GithubNotification } from '../../utils/types'
 
 import {
@@ -122,6 +125,7 @@ export default class NotificationCard extends React.PureComponent {
                 avatarURL={avatarUrl}
                 linkURL={repo.get('html_url') || repo.get('url')}
                 size={smallAvatarWidth}
+                username={getOwnerAndRepo(repo.get('name')).owner}
               />}
           </LeftColumn>
           <MainColumn>

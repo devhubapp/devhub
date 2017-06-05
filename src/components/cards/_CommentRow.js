@@ -48,6 +48,7 @@ export default class CommentRow extends React.PureComponent {
               avatarURL={user.get('avatar_url')}
               linkURL={user.get('html_url') || user.get('url')}
               size={smallAvatarWidth}
+              username={user.get('login')}
             />}
         </LeftColumn>
 
