@@ -1,8 +1,8 @@
 {
   "name": "devhub",
   "displayName": "DevHub",
-  "version": "0.8.9",
-  "codeBundleId": "0.8.9",
+  "version": "0.8.10",
+  "codeBundleId": "0.8.10",
   "private": true,
   "scripts": {
     "flow": "flow '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
@@ -55,7 +55,7 @@
     "redux-saga": "^0.15.3",
     "remote-redux-devtools": "^0.5.11",
     "reselect": "^3.0.1",
-    "styled-components": "git+https://github.com/brunolemos/styled-components.git#fix/multiple-extending-npm",
+    "styled-components": "git+https://github.com/brunolemos/styled-components.git#master-npm",
     "warna": "^0.2.4"
   },
   "devDependencies": {

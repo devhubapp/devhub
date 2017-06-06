@@ -5769,6 +5769,25 @@ strip-json-comments@~2.0.1:
     stylis "^3.0.4"
     supports-color "^3.2.3"
 
+"styled-components@git+https://github.com/brunolemos/styled-components.git#master-npm":
+  version "2.0.0"
+  resolved "git+https://github.com/brunolemos/styled-components.git#344eda29429478a1a119661bb845ba75d695a934"
+  dependencies:
+    buffer "^5.0.3"
+    css-to-react-native "^2.0.3"
+    fbjs "^0.8.9"
+    hoist-non-react-statics "^1.2.0"
+    inline-style-prefixer "^2.0.5"
+    is-function "^1.0.1"
+    is-plain-object "^2.0.1"
+    prop-types "^15.5.4"
+    stylis "^3.0.16"
+    supports-color "^3.2.3"
+
+stylis@^3.0.16:
+  version "3.0.16"
+  resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.0.16.tgz#1059fa270934bc8bffbf06ac37418f0fb479ac04"
+
 stylis@^3.0.4:
   version "3.0.15"
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.0.15.tgz#e0f9bf403048511043b479d39422c835141e0fbb"
