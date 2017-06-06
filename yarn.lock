@@ -2599,7 +2599,7 @@ getport@^0.1.0:
 
 "github@git+https://github.com/brunolemos/react-native-github-api.git":
   version "8.0.0"
-  resolved "git+https://github.com/brunolemos/react-native-github-api.git#2068c68ce3eb17c3f754ffa557efa6100ec4f964"
+  resolved "git+https://github.com/brunolemos/react-native-github-api.git#75076177154002329aca6fdc70feebe4bd67d015"
   dependencies:
     buffer "^5.0.2"
     https-proxy-agent "^1.0.0"
