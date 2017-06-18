@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-color-literals */
 // Source code from https://github.com/necolas/react-native-web/pull/411
 
-import React, { PureComponent, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
 
 const shortAnimTime = 200

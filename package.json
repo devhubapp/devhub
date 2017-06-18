@@ -34,6 +34,7 @@
     "lodash": "^4.17.3",
     "moment": "^2.18.1",
     "normalizr": "^3.2.3",
+    "prop-types": "^15.5.10",
     "qs": "^6.4.0",
     "react": "^16.0.0-alpha.12",
     "react-native": "^0.45.0-rc.2",

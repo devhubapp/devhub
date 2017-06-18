@@ -1,5 +1,6 @@
 // @flow
 
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Dimensions } from 'react-native'
 import { List, Set } from 'immutable'
@@ -21,9 +22,7 @@ import { FullView } from '../cards/__CardComponents'
 import { getRequestTypeIcon, requestTypes } from '../../api/github'
 
 import { getDateWithHourAndMinuteText } from '../../utils/helpers'
-import {
-  getEventIdsFromEventsIncludingMerged,
-} from '../../utils/helpers/github/events'
+import { getEventIdsFromEventsIncludingMerged } from '../../utils/helpers/github/events'
 
 import type {
   ActionCreators,
@@ -36,7 +35,7 @@ const isWebWithBigHeight =
 
 export default class EventColumn extends React.PureComponent {
   static contextTypes = {
-    store: React.PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired,
   }
 
   onRefresh = () => {

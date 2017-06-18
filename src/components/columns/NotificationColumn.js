@@ -1,5 +1,6 @@
 // @flow
 
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Dimensions } from 'react-native'
 import { Iterable, List, Set } from 'immutable'
@@ -12,10 +13,8 @@ import ColumnWithList, {
   HeaderButtonsContainer,
 } from './_ColumnWithList'
 import { defaultIcon as summaryIcon } from './NotificationsFilterColumn'
-import NotificationsFilterColumnContainer
-  from '../../containers/NotificationsFilterColumnContainer'
-import NotificationCardContainer
-  from '../../containers/NotificationCardContainer'
+import NotificationsFilterColumnContainer from '../../containers/NotificationsFilterColumnContainer'
+import NotificationCardContainer from '../../containers/NotificationCardContainer'
 import Platform from '../../libs/platform'
 import { FullAbsoluteView, FullView } from '../cards/__CardComponents'
 import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
@@ -30,7 +29,7 @@ export const defaultIcon = 'bell'
 export const defaultTitle = 'notifications'
 
 export default class NotificationColumn extends React.PureComponent {
-  static contextTypes = { store: React.PropTypes.object.isRequired }
+  static contextTypes = { store: PropTypes.object.isRequired }
 
   static defaultProps = {
     icon: undefined,
@@ -74,7 +73,7 @@ export default class NotificationColumn extends React.PureComponent {
     return Set(notificationIds).subtract(readNotificationIds).toList()
   }
 
-  getRightHeader = isSummary => (
+  getRightHeader = isSummary =>
     <HeaderButtonsContainer>
       <HeaderButton onPress={this.toggleSummary}>
         <HeaderButtonIcon name={summaryIcon} active={isSummary} />
@@ -84,7 +83,6 @@ export default class NotificationColumn extends React.PureComponent {
         <HeaderButtonIcon name="chevron-down" muted={isSummary} />
       </HeaderButton>
     </HeaderButtonsContainer>
-  )
 
   toggleSummary = () => {
     this.setState(({ summary }) => ({ summary: !summary }))
