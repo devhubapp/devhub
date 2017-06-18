@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { createSelectorCreator } from 'reselect'
 
 import {
-  deepImmutableEqualityCheck,
+  // deepImmutableEqualityCheck,
   shallowEqualityCheck,
 } from '../utils/immutable'
 
@@ -24,8 +24,8 @@ export function immutableMemoize(
   return (...args) => {
     const slicedArgs = typeof numberOfArgsToMemoize === 'number'
       ? numberOfArgsToMemoize < 0
-          ? args.slice(numberOfArgsToMemoize)
-          : args.slice(0, numberOfArgsToMemoize)
+        ? args.slice(numberOfArgsToMemoize)
+        : args.slice(0, numberOfArgsToMemoize)
       : args
 
     if (
@@ -40,8 +40,11 @@ export function immutableMemoize(
       //   || newResult instanceof Set;
 
       if (
-        !(shallowEqualityCheck(newResult, lastResult) ||
-          /* isArray && */ deepImmutableEqualityCheck(newResult, lastResult))
+        !shallowEqualityCheck(
+          newResult,
+          lastResult,
+        ) /* ||
+          (isArray && deepImmutableEqualityCheck(newResult, lastResult))*/
       ) {
         lastResult = newResult
       }
@@ -69,8 +72,10 @@ export function isDeletedFilter(obj) {
 
   return (
     !!obj.get('deleted_at') &&
-    !(obj.get('updated_at') &&
-      moment(obj.get('updated_at')).isAfter(obj.get('deleted_at')))
+    !(
+      obj.get('updated_at') &&
+      moment(obj.get('updated_at')).isAfter(obj.get('deleted_at'))
+    )
   )
 }
 
@@ -80,8 +85,10 @@ export function isArchivedFilter(obj) {
 
   return (
     !!obj.get('archived_at') &&
-    !(obj.get('updated_at') &&
-      moment(obj.get('updated_at')).isAfter(obj.get('archived_at')))
+    !(
+      obj.get('updated_at') &&
+      moment(obj.get('updated_at')).isAfter(obj.get('archived_at'))
+    )
   )
 }
 
