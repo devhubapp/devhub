@@ -829,6 +829,10 @@ babel-plugin-transform-regenerator@^6.24.1, babel-plugin-transform-regenerator@^
   dependencies:
     regenerator-transform "0.9.11"
 
+babel-plugin-transform-remove-console@^6.8.4:
+  version "6.8.4"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-remove-console/-/babel-plugin-transform-remove-console-6.8.4.tgz#41fddac19a729a4c3dd7ef2964eac07b096f9a8f"
+
 babel-plugin-transform-strict-mode@^6.24.1:
   version "6.24.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-strict-mode/-/babel-plugin-transform-strict-mode-6.24.1.tgz#d5faf7aa578a65bbe591cf5edae04a0c67020758"
@@ -5754,21 +5758,6 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-"styled-components@git+https://github.com/brunolemos/styled-components.git#fix/multiple-extending-npm":
-  version "2.0.0"
-  resolved "git+https://github.com/brunolemos/styled-components.git#2cf68756931f2cb0877d4e4c3fed40f28352a6d4"
-  dependencies:
-    buffer "^5.0.3"
-    css-to-react-native "^2.0.3"
-    fbjs "^0.8.9"
-    hoist-non-react-statics "^1.2.0"
-    inline-style-prefixer "^2.0.5"
-    is-function "^1.0.1"
-    is-plain-object "^2.0.1"
-    prop-types "^15.5.4"
-    stylis "^3.0.4"
-    supports-color "^3.2.3"
-
 "styled-components@git+https://github.com/brunolemos/styled-components.git#master-npm":
   version "2.0.0"
   resolved "git+https://github.com/brunolemos/styled-components.git#344eda29429478a1a119661bb845ba75d695a934"
@@ -5787,10 +5776,6 @@ strip-json-comments@~2.0.1:
 stylis@^3.0.16:
   version "3.0.16"
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.0.16.tgz#1059fa270934bc8bffbf06ac37418f0fb479ac04"
-
-stylis@^3.0.4:
-  version "3.0.15"
-  resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.0.15.tgz#e0f9bf403048511043b479d39422c835141e0fbb"
 
 superagent-proxy@^1.0.0:
   version "1.0.2"

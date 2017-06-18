@@ -5,5 +5,12 @@
   ],
   "plugins": [
     "transform-es2015-parameters"
-  ]
+  ],
+  "env": {
+    "production": {
+      "plugins": [
+        "transform-remove-console"
+      ]
+    }
+  }
 }
