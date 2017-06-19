@@ -165,25 +165,63 @@ export default class NotificationCard extends React.PureComponent {
             </FullAbsoluteView>
           </MainColumn>
         </Header>
+
         {!!repo &&
           !onlyOneRepository &&
-          <RepositoryRow actions={actions} repo={repo} read={read} narrow />}
-        {!!commit && <CommitRow commit={commit} read={read} narrow />}
+          <RepositoryRow
+            key={`repo-row-${repo.get('id')}`}
+            actions={actions}
+            repo={repo}
+            read={read}
+            narrow
+          />}
+
+        {!!commit &&
+          <CommitRow
+            key={`commit-row-${commit.get('id')}`}
+            commit={commit}
+            read={read}
+            narrow
+          />}
+
         {!!issue &&
-          <IssueRow issue={issue} comment={comment} read={read} narrow />}
+          <IssueRow
+            key={`issue-row-${repo.get('id')}`}
+            issue={issue}
+            comment={comment}
+            read={read}
+            narrow
+          />}
+
         {!!pullRequest &&
           <PullRequestRow
+            key={`pr-row-${repo.get('id')}`}
             pullRequest={pullRequest}
             comment={comment}
             read={read}
             narrow
           />}
-        {!!release && <ReleaseRow release={release} read={read} narrow />}
+
+        {!!release &&
+          <ReleaseRow
+            key={`release-row-${repo.get('id')}`}
+            release={release}
+            read={read}
+            narrow
+          />}
+
         {!(commit || issue || pullRequest) &&
           !!title &&
-          <CommentRow body={title} read={read} narrow />}
+          <CommentRow
+            key={`subject-row-${subject.get('url')}`}
+            body={title}
+            read={read}
+            narrow
+          />}
+
         {!!comment &&
           <CommentRow
+            key={`comment-row-${comment.get('id')}`}
             body={comment.get('body')}
             user={comment.get('user')}
             url={comment.get('html_url')}

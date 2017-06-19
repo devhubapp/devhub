@@ -165,7 +165,7 @@ export default class EventCard extends React.PureComponent {
                 </TransparentTextOverlay>
 
                 <StyledText numberOfLines={1} muted>
-                  {!!isPrivate &&
+                  {Boolean(isPrivate) &&
                     <StyledText muted><Icon name="lock" /></StyledText>}
                   {getEventText(event, { repoIsKnown: onlyOneRepository })}
                 </StyledText>
@@ -189,9 +189,10 @@ export default class EventCard extends React.PureComponent {
           </MainColumn>
         </Header>
 
-        {!!repo &&
+        {Boolean(repo) &&
           !onlyOneRepository &&
           <RepositoryRow
+            key={`repo-row-${repo.get('id')}`}
             actions={actions}
             repo={repo}
             pushed={type === 'PushEvent'}
@@ -204,9 +205,11 @@ export default class EventCard extends React.PureComponent {
           const repos = (payload.get('repos') || List()).filter(Boolean)
 
           if (!(repos.size > 0)) return null
+          const ids = repos.map(_item => _item.get('id'))
 
           return (
             <RepositoryListRow
+              key={`repo-list-row-${ids.join('-')}`}
               actions={actions}
               repos={repos}
               pushed={type === 'PushEvent'}
@@ -217,8 +220,9 @@ export default class EventCard extends React.PureComponent {
           )
         })()}
 
-        {!!payload.get('ref') &&
+        {Boolean(payload.get('ref')) &&
           <BranchRow
+            key={`branch-row-${payload.get('ref')}`}
             type={type}
             branch={payload.get('ref')}
             repoFullName={getRepoFullNameFromUrl(
@@ -228,8 +232,9 @@ export default class EventCard extends React.PureComponent {
             narrow
           />}
 
-        {!!payload.get('forkee') &&
+        {Boolean(payload.get('forkee')) &&
           <RepositoryRow
+            key={`fork-row-${payload.getIn(['forkee', 'id'])}`}
             actions={actions}
             repo={payload.get('forkee')}
             forcePushed={type === 'PushEvent' && payload.get('forced')}
@@ -243,16 +248,38 @@ export default class EventCard extends React.PureComponent {
           const users = (payload.get('users') || List([member])).filter(Boolean)
 
           if (!(users.size > 0)) return null
+          const ids = users.map(_item => _item.get('id'))
 
-          return <UserListRow users={users} read={read} narrow />
+          return (
+            <UserListRow
+              key={`user-list-row-${ids.join('-')}`}
+              users={users}
+              read={read}
+              narrow
+            />
+          )
         })()}
 
         {type === 'GollumEvent' &&
-          !!payload.get('pages') &&
-          <WikiPageListRow pages={payload.get('pages')} read={read} narrow />}
+          (() => {
+            const pages = payload.get('pages')
 
-        {!!payload.get('pull_request') &&
+            if (!(pages.size > 0)) return null
+            const ids = pages.map(_item => _item.get('id'))
+
+            return (
+              <WikiPageListRow
+                key={`wiki-list-row-${ids.join('-')}`}
+                pages={payload.get('pages')}
+                read={read}
+                narrow
+              />
+            )
+          })()}
+
+        {Boolean(payload.get('pull_request')) &&
           <PullRequestRow
+            key={`pr-row-${payload.getIn(['pull_request', 'id'])}`}
             pullRequest={payload.get('pull_request')}
             comment={payload.get('comment')}
             read={read}
@@ -268,11 +295,21 @@ export default class EventCard extends React.PureComponent {
           const list = (commits || List([headCommit])).filter(Boolean)
           if (!(list.size > 0)) return null
 
-          return <CommitListRow commits={list} read={read} narrow />
+          const ids = list.map(_item => _item.get('id'))
+
+          return (
+            <CommitListRow
+              key={`commit-list-row-${ids.join('-')}`}
+              commits={list}
+              read={read}
+              narrow
+            />
+          )
         })()}
 
-        {!!payload.get('issue') &&
+        {Boolean(payload.get('issue')) &&
           <IssueRow
+            key={`issue-row-${payload.getIn(['issue', 'id'])}`}
             issue={payload.get('issue')}
             comment={payload.get('comment')}
             read={read}
@@ -281,8 +318,9 @@ export default class EventCard extends React.PureComponent {
 
         {(type === 'IssuesEvent' &&
           payload.get('action') === 'opened' &&
-          !!payload.getIn(['issue', 'body']) &&
+          Boolean(payload.getIn(['issue', 'body'])) &&
           <CommentRow
+            key={`issue-body-row-${payload.getIn(['issue', 'id'])}`}
             body={payload.getIn(['issue', 'body'])}
             user={actor}
             url={
@@ -294,8 +332,9 @@ export default class EventCard extends React.PureComponent {
           />) ||
           (type === 'PullRequestEvent' &&
             payload.get('action') === 'opened' &&
-            !!payload.getIn(['pull_request', 'body']) &&
+            Boolean(payload.getIn(['pull_request', 'body'])) &&
             <CommentRow
+              key={`pr-body-row-${payload.getIn(['pull_request', 'id'])}`}
               body={payload.getIn(['pull_request', 'body'])}
               user={actor}
               url={
@@ -305,8 +344,9 @@ export default class EventCard extends React.PureComponent {
               read={read}
               narrow
             />) ||
-          (!!payload.getIn(['comment', 'body']) &&
+          (Boolean(payload.getIn(['comment', 'body'])) &&
             <CommentRow
+              key={`comment-row-${payload.getIn(['comment', 'id'])}`}
               body={payload.getIn(['comment', 'body'])}
               user={actor}
               url={payload.getIn(['comment', 'html_url'])}
@@ -314,8 +354,9 @@ export default class EventCard extends React.PureComponent {
               narrow
             />)}
 
-        {!!payload.get('release') &&
+        {Boolean(payload.get('release')) &&
           <ReleaseRow
+            key={`release-row-${payload.getIn(['release', 'id'])}`}
             release={payload.get('release')}
             type={type}
             user={actor}
