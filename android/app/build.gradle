@@ -130,7 +130,6 @@ dependencies {
     compile project(':react-native-code-push')
     compile project(':react-native-vector-icons')
     compile project(':react-native-prompt-android')
-    compile project(':react-native-orientation-listener')
     compile project(':react-native-linear-gradient')
     compile project(':bugsnag-react-native')
     compile fileTree(dir: "libs", include: ["*.jar"])

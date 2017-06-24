@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
 import im.shimo.react.prompt.RNPromptPackage;
-import com.walmartreact.ReactOrientationListener.ReactOrientationListener;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.facebook.react.ReactNativeHost;

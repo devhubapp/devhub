@@ -4,7 +4,6 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { Dimensions } from 'react-native'
 
-import withOrientation from '../../hoc/withOrientation'
 import Platform from '../../libs/platform'
 import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 
@@ -38,13 +37,13 @@ export const ColumnRoot = styled.View`
   width: ${({ width }) => width || getColumnContentWidth()}px;
   margin-horizontal: ${columnMargin}px;
   margin-vertical: ${columnMargin}px;
-  background-color: ${({ outline, theme }) => (outline ? 'transparent' : theme.base02)};
+  background-color: ${({ outline, theme }) =>
+    outline ? 'transparent' : theme.base02};
   border-width: 0px;
   border-color: ${({ theme }) => theme.base02};
   border-radius: ${({ radius }) => radius || 0}px;
 `
 
-@withOrientation
 export default class extends React.PureComponent {
   props: {
     children: ReactClass<any>,

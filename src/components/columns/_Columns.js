@@ -7,7 +7,6 @@ import { List } from 'immutable'
 
 import NewColumn from './NewColumn'
 import ImmutableVirtualizedList from '../../libs/immutable-virtualized-list'
-import withOrientation from '../../hoc/withOrientation'
 import { getColumnWidth, getColumnContentWidth } from './_Column'
 import type { ActionCreators } from '../../utils/types'
 
@@ -17,7 +16,6 @@ export const StyledImmutableVirtualizedListListView = styled(
   flex: 1;
 `
 
-@withOrientation
 export default class Columns extends React.PureComponent {
   props: {
     actions: ActionCreators,

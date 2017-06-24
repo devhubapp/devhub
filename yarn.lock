@@ -4653,10 +4653,6 @@ react-native-linear-gradient@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.0.0.tgz#7442c00e1fcd9fca329119dcbaf744d12bcd1b5a"
 
-"react-native-orientation-listener@git+https://github.com/iRoachie/react-native-orientation-listener.git":
-  version "0.0.4"
-  resolved "git+https://github.com/iRoachie/react-native-orientation-listener.git#b78ca96b5e91949ebdfd2c8ed8ee0db575cb9dbf"
-
 react-native-prompt-android@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/react-native-prompt-android/-/react-native-prompt-android-0.0.5.tgz#dfc5fd2068da3b894d9bd4fe59082e775d141122"
