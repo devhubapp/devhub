@@ -19,7 +19,6 @@ import CreateColumnUtils from '../utils/CreateColumnUtils'
 import EventCardContainer from '../../containers/EventCardContainer'
 import Platform from '../../libs/platform'
 import { FullView } from '../cards/__CardComponents'
-import { getRequestTypeIcon, requestTypes } from '../../api/github'
 
 import { getDateWithHourAndMinuteText } from '../../utils/helpers'
 import { getEventIdsFromEventsIncludingMerged } from '../../utils/helpers/github/events'
@@ -69,15 +68,6 @@ export default class EventColumn extends React.PureComponent {
     const eventIds = this.getEventIds()
     const readIds = this.getReadEventIds()
     return Set(eventIds).subtract(readIds).toList()
-  }
-
-  hasOnlyOneRepository = () => {
-    const { subscriptions } = this.props
-
-    return (
-      subscriptions.size === 1 &&
-      subscriptions.first().get('requestType') === requestTypes.REPO_EVENTS
-    )
   }
 
   showActionSheet = () => {
@@ -146,49 +136,44 @@ export default class EventColumn extends React.PureComponent {
     actions: ActionCreators,
     column: ColumnType,
     errors?: ?Array<string>,
+    hasOnlyOneRepository?: boolean,
+    icon: string,
     items: Array<Object>,
     loading?: boolean,
     radius?: number,
     style?: ?Object,
     readIds: Array<string>,
     subscriptions: Array<Subscription>,
+    updatedAt: string,
   }
 
   // to remember: eventOrEventId cant be an id for merged events
   // (because merged events are totally different than the on in the state)
   // so do the check: if(event.get('merged)) ? event : event.get('id')
   renderItem = ({ item: event }) =>
-    event &&
+    Boolean(event) &&
     <EventCardContainer
       key={`event-card-container-${event.get('id')}`}
       actions={this.props.actions}
-      eventOrEventId={event}
-      onlyOneRepository={this.hasOnlyOneRepository()}
+      eventOrEventId={event.get('merged') ? event : event.get('id')}
+      onlyOneRepository={this.props.hasOnlyOneRepository}
     />
 
   render() {
     const {
       column,
       errors,
+      icon,
       items,
       loading,
-      subscriptions,
       style,
+      updatedAt,
       ...props
     } = this.props
 
     if (!column) return null
 
     const title = (column.get('title') || '').toLowerCase()
-
-    const updatedAt = subscriptions && subscriptions.size > 0
-      ? subscriptions.first().get('updatedAt')
-      : null
-
-    const icon =
-      (subscriptions && subscriptions.size > 0
-        ? getRequestTypeIcon(subscriptions.first().get('requestType'))
-        : '') || 'mark-github'
 
     const dateFromNowText = getDateWithHourAndMinuteText(updatedAt)
     const updatedText = dateFromNowText ? `Updated ${dateFromNowText}` : ''

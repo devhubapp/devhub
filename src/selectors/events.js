@@ -66,9 +66,7 @@ export const makeDenormalizedEventSelector = () =>
   createImmutableSelectorCreator(
     1,
   )(eventSelector, entitiesSelector, (event, entities) =>
-    denormalize(event, entities, EventSchema)
-      .filter(Boolean)
-      .filterNot(isDeletedFilter),
+    denormalize(event, entities, EventSchema),
   )
 
 export const makeDenormalizedOrderedColumnEventsSelector = () => {

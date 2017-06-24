@@ -19,8 +19,14 @@ import {
 import { get } from '../utils/immutable'
 
 export const columnIdSelector = (state, { columnId }) => columnId
-export const columnsEntitySelector = state =>
-  get(entitiesSelector(state), 'columns').filter(Boolean)
+
+export const columnsEntitySelector = state => {
+  let columns = get(entitiesSelector(state), 'columns').filter(Boolean)
+  columns = columns.set('new', Map({ id: 'new', order: columns.size }))
+
+  return columns
+}
+
 export const columnIdsSelector = state =>
   objectKeysMemoized(columnsEntitySelector(state))
 

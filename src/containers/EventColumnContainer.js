@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import EventColumn from '../components/columns/EventColumn'
+import { getRequestTypeIcon, requestTypes } from '../api/github'
 
 import {
   columnIsLoadingSelector,
@@ -20,7 +21,6 @@ import type {
   ActionCreators,
   Column as ColumnType,
   GithubEvent,
-  Subscription,
   State,
 } from '../utils/types'
 
@@ -30,14 +30,34 @@ const makeMapStateToProps = () => {
   const columnSubscriptionsSelector = makeColumnSubscriptionsSelector()
   const denormalizedOrderedColumnEventsSelector = makeDenormalizedOrderedColumnEventsSelector()
 
-  return (state: State, { columnId }: { columnId: string }) => ({
-    column: columnSelector(state, { columnId }),
-    errors: columnErrorsSelector(state, { columnId }),
-    events: denormalizedOrderedColumnEventsSelector(state, { columnId }),
-    isEmpty: columnIsEmptySelector(state, { columnId }),
-    loading: columnIsLoadingSelector(state, { columnId }),
-    subscriptions: columnSubscriptionsSelector(state, { columnId }),
-  })
+  return (state: State, { columnId }: { columnId: string }) => {
+    const column = columnSelector(state, { columnId })
+    const subscriptions = columnSubscriptionsSelector(state, { columnId })
+
+    const hasOnlyOneRepository =
+      subscriptions.size === 1 &&
+      subscriptions.first().get('requestType') === requestTypes.REPO_EVENTS
+
+    const icon =
+      (subscriptions && subscriptions.size > 0
+        ? getRequestTypeIcon(subscriptions.first().get('requestType'))
+        : '') || 'mark-github'
+
+    const updatedAt = subscriptions && subscriptions.size > 0
+      ? subscriptions.first().get('updatedAt')
+      : null
+
+    return {
+      column,
+      errors: columnErrorsSelector(state, { columnId }),
+      hasOnlyOneRepository,
+      icon,
+      events: denormalizedOrderedColumnEventsSelector(state, { columnId }),
+      isEmpty: columnIsEmptySelector(state, { columnId }),
+      loading: columnIsLoadingSelector(state, { columnId }),
+      updatedAt,
+    }
+  }
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -51,8 +71,11 @@ export default class EventColumnContainer extends React.PureComponent {
     column: ColumnType,
     errors: Array<string>,
     events: Array<GithubEvent>,
+    hasOnlyOneRepository: boolean,
+    icon: boolean,
+    isEmpty: boolean,
     loading: boolean,
-    subscriptions: Array<Subscription>,
+    updatedAt: string,
   }
 
   render() {
@@ -61,9 +84,11 @@ export default class EventColumnContainer extends React.PureComponent {
       column,
       errors,
       events,
+      hasOnlyOneRepository,
+      icon,
+      isEmpty,
       loading,
-      subscriptions,
-      ...props
+      updatedAt,
     } = this.props
 
     if (!column) return null
@@ -73,11 +98,13 @@ export default class EventColumnContainer extends React.PureComponent {
         key={`event-column-${column.get('id')}`}
         actions={actions}
         column={column}
-        items={events}
         errors={errors}
+        hasOnlyOneRepository={hasOnlyOneRepository}
+        icon={icon}
+        isEmpty={isEmpty}
+        items={events}
         loading={loading}
-        subscriptions={subscriptions}
-        {...props}
+        updatedAt={updatedAt}
       />
     )
   }

@@ -3,7 +3,7 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { Dimensions } from 'react-native'
-import { List } from 'immutable'
+import { memoize } from 'lodash'
 
 import NewColumn from './NewColumn'
 import ImmutableVirtualizedList from '../../libs/immutable-virtualized-list'
@@ -20,34 +20,29 @@ export default class Columns extends React.PureComponent {
   props: {
     actions: ActionCreators,
     addColumnFn?: ?Function,
-    columns: Array<any>,
+    columnIds: Array<string>,
     radius?: number,
     renderItem: Function,
     width?: number,
   }
 
-  makeRenderItem = mainRenderItem => (
-    { index, item: column },
-    ...otherArgs
-  ) => {
-    if (!column) return null
+  makeRenderItem = memoize(
+    mainRenderItem => ({ index, item: columnId }, ...otherArgs) => {
+      if (!columnId) return null
 
-    if (column.get('id') === 'new') return this.renderNewColumn(column)
-    return mainRenderItem({ index, item: column }, ...otherArgs)
-  }
+      if (columnId === 'new') return this.renderNewColumn()
+      return mainRenderItem({ index, item: columnId }, ...otherArgs)
+    },
+  )
 
-  renderNewColumn(column) {
+  renderNewColumn() {
     const { actions, addColumnFn, radius, width } = this.props
 
     if (!addColumnFn) return null
 
-    const _addColumnFn = column
-      ? addColumnFn.bind(this, { order: column.get('order') })
-      : addColumnFn
-
     return (
       <NewColumn
-        addColumnFn={_addColumnFn}
+        addColumnFn={addColumnFn}
         actions={actions}
         radius={radius}
         width={width || getColumnContentWidth()}
@@ -56,11 +51,7 @@ export default class Columns extends React.PureComponent {
   }
 
   render() {
-    const {
-      columns = List(),
-      renderItem: mainRenderItem,
-      ...props
-    } = this.props
+    const { columnIds, renderItem: mainRenderItem, ...props } = this.props
 
     const initialNumToRender = Math.max(
       1,
@@ -69,7 +60,7 @@ export default class Columns extends React.PureComponent {
 
     return (
       <StyledImmutableVirtualizedListListView
-        immutableData={columns}
+        immutableData={columnIds}
         initialNumToRender={initialNumToRender}
         renderItem={this.makeRenderItem(mainRenderItem)}
         removeClippedSubviews

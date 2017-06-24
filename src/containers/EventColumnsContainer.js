@@ -5,16 +5,12 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import EventColumns from '../components/columns/EventColumns'
-import { orderedColumnsSelector } from '../selectors'
+import { columnIdsSelector } from '../selectors'
 import * as actionCreators from '../actions'
-import type {
-  ActionCreators,
-  Column as ColumnType,
-  State,
-} from '../utils/types'
+import type { ActionCreators, State } from '../utils/types'
 
 const mapStateToProps = (state: State) => ({
-  columns: orderedColumnsSelector(state),
+  columnIds: columnIdsSelector(state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -25,17 +21,17 @@ const mapDispatchToProps = dispatch => ({
 export default class EventColumnContainer extends React.PureComponent {
   props: {
     actions: ActionCreators,
-    columns: Array<ColumnType>,
+    columnIds: Array<string>,
   }
 
   render() {
-    const { actions, columns, ...props } = this.props
+    const { actions, columnIds, ...props } = this.props
 
     return (
       <EventColumns
         key="event-columns"
         actions={actions}
-        columns={columns}
+        columnIds={columnIds}
         {...props}
       />
     )

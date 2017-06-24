@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react'
-import { List, Map } from 'immutable'
 
 import Columns from './_Columns'
 import EventColumnContainer from '../../containers/EventColumnContainer'
 import CreateColumnUtils from '../utils/CreateColumnUtils'
-import type { ActionCreators, Column as ColumnType } from '../../utils/types'
+import type { ActionCreators } from '../../utils/types'
 
 export default class EventColumns extends React.PureComponent {
   addColumnFn = ({ order } = {}, ...args) => {
@@ -21,13 +20,10 @@ export default class EventColumns extends React.PureComponent {
 
   props: {
     actions: ActionCreators,
-    columns: Array<ColumnType>,
+    columnIds: Array<string>,
   }
 
-  renderItem = ({ item: column }) => {
-    if (!column) return null
-
-    const columnId = column.get('id')
+  renderItem = ({ item: columnId }) => {
     if (!columnId) return null
 
     return (
@@ -39,20 +35,14 @@ export default class EventColumns extends React.PureComponent {
   }
 
   render() {
-    const { actions, columns: _columns, ...props } = this.props
-
-    let columns = _columns ? _columns.toList() : List()
-
-    if (columns.size === 0 || columns.last().get('id') !== 'new') {
-      columns = columns.push(Map({ id: 'new', order: columns.size }))
-    }
+    const { actions, columnIds, ...props } = this.props
 
     return (
       <Columns
         key="event-columns"
         actions={actions}
         addColumnFn={this.addColumnFn}
-        columns={columns}
+        columnIds={columnIds}
         renderItem={this.renderItem}
         {...props}
       />
