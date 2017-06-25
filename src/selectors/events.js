@@ -62,9 +62,9 @@ export const makeIsReadEventSelector = () =>
     (eventId, readIds) => !!readIds.includes(eventId),
   )
 
-export const makeDenormalizedEventSelector = () =>
+export const makeDenormalizedEventSelector = (n = 1) =>
   createImmutableSelectorCreator(
-    1,
+    n,
   )(eventSelector, entitiesSelector, (event, entities) =>
     denormalize(event, entities, EventSchema),
   )

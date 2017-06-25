@@ -13,9 +13,7 @@ import {
   isReadFilter,
 } from './shared'
 
-import {
-  groupNotificationsByRepository,
-} from '../utils/helpers/github/notifications'
+import { groupNotificationsByRepository } from '../utils/helpers/github/notifications'
 import { NotificationSchema } from '../utils/normalizr/schemas'
 
 export const sortNotificationsByDate = (b, a) =>
@@ -53,7 +51,7 @@ export const unarchivedNotificationIdsSelector = createImmutableSelector(
       .toList(),
 )
 
-export const makeDenormalizedNotificationsSelector = n =>
+export const makeDenormalizedNotificationsSelector = (n = 1) =>
   createImmutableSelectorCreator(n)(
     (state, { notifications, notificationIds }) =>
       notifications || notificationIds || notificationIdsSelector(state),
@@ -85,12 +83,11 @@ export const makeIsReadNotificationSelector = () =>
     (notificationId, readIds) => readIds.includes(notificationId),
   )
 
-export const makeDenormalizedNotificationSelector = () =>
-  createImmutableSelector(
-    notificationSelector,
-    entitiesSelector,
-    (notification, entities) =>
-      denormalize(notification, entities, NotificationSchema),
+export const makeDenormalizedNotificationSelector = (n = 1) =>
+  createImmutableSelectorCreator(
+    n,
+  )(notificationSelector, entitiesSelector, (notification, entities) =>
+    denormalize(notification, entities, NotificationSchema),
   )
 
 // with memoization of first argument
