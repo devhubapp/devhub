@@ -42,7 +42,7 @@ export default class EventColumns extends React.PureComponent {
         key="event-columns"
         actions={actions}
         addColumnFn={this.addColumnFn}
-        columnIds={columnIds}
+        items={columnIds}
         renderItem={this.renderItem}
         {...props}
       />

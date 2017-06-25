@@ -6,9 +6,7 @@ import { connect } from 'react-redux'
 
 import NotificationColumns from '../components/columns/NotificationColumns'
 
-import {
-  makeGroupedUnarchivedNotificationsSelector,
-} from '../selectors/notifications'
+import { makeGroupedUnarchivedNotificationsSelector } from '../selectors/notifications'
 
 import * as actionCreators from '../actions'
 import type { ActionCreators, State } from '../utils/types'

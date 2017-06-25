@@ -4,10 +4,8 @@ import React from 'react'
 import { List } from 'immutable'
 
 import Columns from './_Columns'
-import NotificationsFilterColumnContainer
-  from '../../containers/NotificationsFilterColumnContainer'
-import NotificationColumnContainer
-  from '../../containers/NotificationColumnContainer'
+import NotificationsFilterColumnContainer from '../../containers/NotificationsFilterColumnContainer'
+import NotificationColumnContainer from '../../containers/NotificationColumnContainer'
 import type { ActionCreators, Column as ColumnType } from '../../utils/types'
 
 export default class NotificationColumns extends React.PureComponent {
@@ -16,9 +14,8 @@ export default class NotificationColumns extends React.PureComponent {
     columns: Array<ColumnType>,
   }
 
-  renderFilterColumn = column => (
+  renderFilterColumn = column =>
     <NotificationsFilterColumnContainer column={column} />
-  )
 
   renderItem = ({ item: column }) => {
     if (!column) return null
@@ -44,12 +41,11 @@ export default class NotificationColumns extends React.PureComponent {
 
   render() {
     const { actions, columns = List(), ...props } = this.props
-
     return (
       <Columns
         key="notification-_Columns"
         actions={actions}
-        columns={columns}
+        items={columns}
         renderItem={this.renderItem}
         {...props}
       />

@@ -45,8 +45,9 @@ const makeMapStateToProps = () => {
       loading: notificationsIsLoadingSelector(state),
       isEmpty: items.size === 0,
       items,
-      repo: column.get('repo') ||
-        repoSelector(state, { repoId: column.get('repoId') }),
+      repo:
+        column.get('repo') ||
+          repoSelector(state, { repoId: column.get('repoId') }),
       updatedAt: notificationsUpdatedAtSelector(state),
     }
   }

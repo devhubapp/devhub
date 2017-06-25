@@ -20,18 +20,18 @@ export default class Columns extends React.PureComponent {
   props: {
     actions: ActionCreators,
     addColumnFn?: ?Function,
-    columnIds: Array<string>,
+    items: Array<any>,
     radius?: number,
     renderItem: Function,
     width?: number,
   }
 
   makeRenderItem = memoize(
-    mainRenderItem => ({ index, item: columnId }, ...otherArgs) => {
-      if (!columnId) return null
+    mainRenderItem => ({ index, item }, ...otherArgs) => {
+      if (!item) return null
 
-      if (columnId === 'new') return this.renderNewColumn()
-      return mainRenderItem({ index, item: columnId }, ...otherArgs)
+      if (item === 'new') return this.renderNewColumn()
+      return mainRenderItem({ index, item }, ...otherArgs)
     },
   )
 
@@ -51,7 +51,7 @@ export default class Columns extends React.PureComponent {
   }
 
   render() {
-    const { columnIds, renderItem: mainRenderItem, ...props } = this.props
+    const { items, renderItem: mainRenderItem, ...props } = this.props
 
     const initialNumToRender = Math.max(
       1,
@@ -60,7 +60,7 @@ export default class Columns extends React.PureComponent {
 
     return (
       <StyledImmutableVirtualizedListListView
-        immutableData={columnIds}
+        immutableData={items}
         initialNumToRender={initialNumToRender}
         renderItem={this.makeRenderItem(mainRenderItem)}
         removeClippedSubviews
