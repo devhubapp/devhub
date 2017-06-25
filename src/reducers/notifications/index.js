@@ -1,6 +1,6 @@
 // @flow
 
-import moment from 'moment'
+// import moment from 'moment'
 import { Map } from 'immutable'
 
 import {
@@ -49,19 +49,22 @@ export default (
     case MARK_NOTIFICATIONS_AS_READ_SUCCESS:
       return (({ meta }: ApiResponsePayload) =>
         state.mergeDeep({
-          updatedAt: moment().toISOString(),
+          // updatedAt: moment().toISOString(),
           ...(meta && meta['last-modified']
             ? {
                 lastModifiedAt: meta['last-modified'],
-                pollInterval: Number(meta['x-poll-interval']) ||
-                  state.get('pollInterval') ||
-                  null,
-                rateLimit: Number(meta['x-ratelimit-limit']) ||
-                  state.get('rateLimit') ||
-                  null,
-                rateLimitRemaining: Number(meta['x-ratelimit-remaining']) ||
-                  state.get('rateLimitRemaining') ||
-                  null,
+                pollInterval:
+                  Number(meta['x-poll-interval']) ||
+                    state.get('pollInterval') ||
+                    null,
+                rateLimit:
+                  Number(meta['x-ratelimit-limit']) ||
+                    state.get('rateLimit') ||
+                    null,
+                rateLimitRemaining:
+                  Number(meta['x-ratelimit-remaining']) ||
+                    state.get('rateLimitRemaining') ||
+                    null,
                 rateLimitReset: meta['x-ratelimit-reset'],
               }
             : {}),

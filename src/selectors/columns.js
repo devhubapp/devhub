@@ -115,7 +115,7 @@ export const columnErrorsSelector = createImmutableSelector(
     subscriptions
       .reduce(
         (errors, subscription) => errors.concat(get(subscription, 'error')),
-        [],
+        List(),
       )
       .filter(Boolean),
 )

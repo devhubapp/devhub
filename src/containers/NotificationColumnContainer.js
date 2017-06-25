@@ -8,9 +8,10 @@ import { OrderedSet } from 'immutable'
 import NotificationColumn from '../components/columns/NotificationColumn'
 
 import {
-  notificationsErrorSelector,
-  notificationsIsLoadingSelector,
+  immutableMemoize,
   makeRepoSelector,
+  notificationsErrorsSelector,
+  notificationsIsLoadingSelector,
   notificationsUpdatedAtSelector,
   unarchivedNotificationIdsSelector,
 } from '../selectors'
@@ -27,21 +28,22 @@ import type {
 
 const makeMapStateToProps = () => {
   const repoSelector = makeRepoSelector()
+  const memoizeItems = immutableMemoize((notificationIds, unarchivedIds) =>
+    OrderedSet(notificationIds).intersect(unarchivedIds).toList(),
+  )
 
   return (state: State, { column }: { column: Object }) => {
-    const _items = column.get('notificationIds').toList()
-
     // This is not very intuitive, but works. This code is here because
     // the notifications columns are only being generated once.
     // This means that, even after clearing the column items,
     // column.get('notificationIds') will have the same initial value,
     // so we update it here ignoring the archived ones.
-    // (otherwise, the empty message would not show up)
+    // (otherwise, the empty column message would not show up)
     const unarchivedIds = unarchivedNotificationIdsSelector(state)
-    const items = OrderedSet(_items).intersect(unarchivedIds).toList()
+    const items = memoizeItems(column.get('notificationIds'), unarchivedIds)
 
     return {
-      errors: [notificationsErrorSelector(state)],
+      errors: notificationsErrorsSelector(state),
       loading: notificationsIsLoadingSelector(state),
       isEmpty: items.size === 0,
       items,

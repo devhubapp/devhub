@@ -3,6 +3,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Dimensions } from 'react-native'
+import { memoize } from 'lodash'
 import { Iterable, List, Set } from 'immutable'
 
 import ActionSheet from '../ActionSheet'
@@ -51,11 +52,7 @@ export default class NotificationColumn extends React.PureComponent {
 
   getNotificationIds = () => {
     const { items = List() } = this.props
-    return typeof items.first() === 'string'
-      ? items
-      : items
-          .map(item => (Iterable.isIterable(item) ? item.get('id') : item))
-          .toList()
+    return this._memoizedGetNotificationIds(items)
   }
 
   getReadNotificationIds = () => {
@@ -83,6 +80,15 @@ export default class NotificationColumn extends React.PureComponent {
         <HeaderButtonIcon name="chevron-down" muted={isSummary} />
       </HeaderButton>
     </HeaderButtonsContainer>
+
+  _memoizedGetNotificationIds = memoize(
+    items =>
+      typeof items.first() === 'string'
+        ? items
+        : items
+            .map(item => (Iterable.isIterable(item) ? item.get('id') : item))
+            .toList(),
+  )
 
   toggleSummary = () => {
     this.setState(({ summary }) => ({ summary: !summary }))
