@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import moment from 'moment'
-import { List } from 'immutable'
+import { List, Set, Seq } from 'immutable'
 import { createSelectorCreator } from 'reselect'
 
 import {
-  // deepImmutableEqualityCheck,
+  deepImmutableEqualityCheck,
   shallowEqualityCheck,
 } from '../utils/immutable'
 
@@ -34,17 +34,15 @@ export function immutableMemoize(
       !slicedArgs.every(isEqualToLastArg)
     ) {
       const newResult = func(...args)
-      // const isArray = Array.isArray(newResult)
-      //   || newResult instanceof List
-      //   || newResult instanceof Seq
-      //   || newResult instanceof Set;
+      const isArray =
+        Array.isArray(newResult) ||
+        newResult instanceof List ||
+        newResult instanceof Seq ||
+        newResult instanceof Set
 
       if (
-        !shallowEqualityCheck(
-          newResult,
-          lastResult,
-        ) /* ||
-          (isArray && deepImmutableEqualityCheck(newResult, lastResult))*/
+        !shallowEqualityCheck(newResult, lastResult) ||
+        (isArray && deepImmutableEqualityCheck(newResult, lastResult))
       ) {
         lastResult = newResult
       }
@@ -55,13 +53,19 @@ export function immutableMemoize(
   }
 }
 
-const getKeysFromImmutableObject = obj => (obj ? obj.keySeq().toList() : List())
+export const getKeysFromImmutableObject = obj =>
+  obj ? obj.keySeq().toList() : List()
 export const objectKeysMemoized = immutableMemoize(getKeysFromImmutableObject)
 
 export const createImmutableSelectorCreator = _.memoize(numberOfArgsToMemoize =>
   createSelectorCreator(
-    _.bind(immutableMemoize, null, _, _, numberOfArgsToMemoize),
-    shallowEqualityCheck,
+    _.bind(
+      immutableMemoize,
+      null,
+      _,
+      shallowEqualityCheck,
+      numberOfArgsToMemoize,
+    ),
   ),
 )
 
