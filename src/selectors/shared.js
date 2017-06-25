@@ -1,19 +1,16 @@
 import _ from 'lodash'
 import moment from 'moment'
-import { List, Set, Seq } from 'immutable'
+import { List } from 'immutable'
 import { createSelectorCreator } from 'reselect'
 
-import {
-  deepImmutableEqualityCheck,
-  shallowEqualityCheck,
-} from '../utils/immutable'
+import { shallowEqualityCheckOrDeepIfArray } from '../utils/immutable'
 
 export const stateSelector = state => state
 export const entitiesSelector = state => state.get('entities')
 
 export function immutableMemoize(
   func,
-  equalityCheck = shallowEqualityCheck,
+  equalityCheck = shallowEqualityCheckOrDeepIfArray,
   numberOfArgsToMemoize = null,
 ) {
   let lastArgs = null
@@ -34,16 +31,8 @@ export function immutableMemoize(
       !slicedArgs.every(isEqualToLastArg)
     ) {
       const newResult = func(...args)
-      const isArray =
-        Array.isArray(newResult) ||
-        newResult instanceof List ||
-        newResult instanceof Seq ||
-        newResult instanceof Set
 
-      if (
-        !shallowEqualityCheck(newResult, lastResult) ||
-        (isArray && deepImmutableEqualityCheck(newResult, lastResult))
-      ) {
+      if (!equalityCheck(newResult, lastResult)) {
         lastResult = newResult
       }
     }
@@ -63,7 +52,7 @@ export const createImmutableSelectorCreator = _.memoize(numberOfArgsToMemoize =>
       immutableMemoize,
       null,
       _,
-      shallowEqualityCheck,
+      shallowEqualityCheckOrDeepIfArray,
       numberOfArgsToMemoize,
     ),
   ),

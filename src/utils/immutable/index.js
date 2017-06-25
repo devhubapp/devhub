@@ -43,20 +43,35 @@ export function toJS(object) {
 }
 
 /**
- * Shallow copy between two variables
+ * Shallow comparison between two variables
  */
 export function shallowEqualityCheck(a, b) {
   return a === b
 }
 
 /**
- * Deep copy between two variables.
+ * Deep comparison between two variables.
  * It uses lodash isEqual for normal objects, and Immutable.is for immutable
  */
 export function deepImmutableEqualityCheck(a, b) {
   return isImmutable(a) || isImmutable(b)
-    ? Immutable.is(Immutable.fromJS(a), Immutable.fromJS(b))
+    ? Immutable.is(fromJS(a), fromJS(b))
     : _.isEqual(toJS(a), toJS(b))
+}
+
+/**
+ * Shallow comparison between two variables or deep comparison if Array/List
+ */
+export function shallowEqualityCheckOrDeepIfArray(a, b) {
+  const isArray =
+    Array.isArray(a) ||
+    Immutable.List.isList(a) ||
+    Immutable.Seq.isSeq(a) ||
+    Immutable.Set.isSet(a)
+
+  return (
+    shallowEqualityCheck(a, b) || (isArray && deepImmutableEqualityCheck(a, b))
+  )
 }
 
 /**

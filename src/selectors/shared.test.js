@@ -56,6 +56,16 @@ test('immutableMemoize -- only check first two arguments', () => {
   expect(result1).not.toBe(result4)
 })
 
+test('immutableMemoize -- check array/List content', () => {
+  const fn = immutableMemoize(list => list)
+
+  const result1 = fn(List(['a', 'b', 'c']))
+  const result2 = fn(List(['a', 'b', 'c']))
+
+  expect(result1).toEqual(List(['a', 'b', 'c']))
+  expect(result1).toBe(result2)
+})
+
 test('createImmutableSelector', () => {
   const immutableSelector = createImmutableSelector(
     (state, params) => params.get('a') + 1,
