@@ -19,11 +19,12 @@ export function immutableMemoize(
     equalityCheck(value, lastArgs[index])
 
   return (...args) => {
-    const slicedArgs = typeof numberOfArgsToMemoize === 'number'
-      ? numberOfArgsToMemoize < 0
-        ? args.slice(numberOfArgsToMemoize)
-        : args.slice(0, numberOfArgsToMemoize)
-      : args
+    const slicedArgs =
+      typeof numberOfArgsToMemoize === 'number'
+        ? numberOfArgsToMemoize < 0
+          ? args.slice(numberOfArgsToMemoize)
+          : args.slice(0, numberOfArgsToMemoize)
+        : args
 
     if (
       lastArgs === null ||
@@ -44,7 +45,9 @@ export function immutableMemoize(
 
 export const getKeysFromImmutableObject = obj =>
   obj ? obj.keySeq().toList() : List()
-export const objectKeysMemoized = immutableMemoize(getKeysFromImmutableObject)
+
+export const createObjectKeysMemoized = () =>
+  immutableMemoize(getKeysFromImmutableObject)
 
 export const createImmutableSelectorCreator = _.memoize(numberOfArgsToMemoize =>
   createSelectorCreator(

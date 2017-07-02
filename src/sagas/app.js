@@ -14,10 +14,10 @@ import { Map, Set } from 'immutable'
 
 import { APP_CLEANUP } from '../utils/constants/actions'
 import {
-  columnSubscriptionIdsSelector,
   columnsEntitySelector,
   eventIdsSelector,
   isReadySelector,
+  makeColumnSubscriptionIdsSelector,
   subscriptionEventsSelector,
   subscriptionIdsSelector,
 } from '../selectors'
@@ -28,6 +28,8 @@ import {
   deleteSubscription,
 } from '../actions'
 import { sagaActionChunk } from './_shared'
+
+const columnSubscriptionIdsSelector = makeColumnSubscriptionIdsSelector()
 
 function* _getUsedSubscriptionIds() {
   const state = yield select()

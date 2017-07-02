@@ -4,28 +4,34 @@
 import moment from 'moment'
 import { List, Map, Set } from 'immutable'
 
-import { archivedEventIdsSelector, readEventIdsSelector } from './events'
+import {
+  archivedEventIdsSelector,
+  readEventIdsSelector,
+  eventIdsSelector,
+} from './events'
 import {
   subscriptionsEntitySelector,
   subscriptionSelector,
 } from './subscriptions'
 import {
   createImmutableSelector,
+  createImmutableSelectorCreator,
+  createObjectKeysMemoized,
   entitiesSelector,
-  objectKeysMemoized,
   stateSelector,
 } from './shared'
 
 import { get } from '../utils/immutable'
 
+const objectKeysMemoized = createObjectKeysMemoized()
+
 export const columnIdSelector = (state, { columnId }) => columnId
 
-export const columnsEntitySelector = state => {
-  let columns = get(entitiesSelector(state), 'columns').filter(Boolean)
-  columns = columns.set('new', Map({ id: 'new', order: columns.size }))
-
-  return columns
-}
+export const columnsEntitySelector = createImmutableSelector(
+  state => get(entitiesSelector(state), 'columns'),
+  columns =>
+    columns.filter(Boolean).set('new', Map({ id: 'new', order: columns.size })),
+)
 
 export const columnIdsSelector = state =>
   objectKeysMemoized(columnsEntitySelector(state))
@@ -42,19 +48,26 @@ export const makeColumnSelector = () =>
     (columnId, columns) => get(columns, columnId),
   )
 
-export const columnSubscriptionIdsSelector = (state, { columnId }) => {
+export const makeColumnSubscriptionIdsSelector = () => {
   const columnSelector = makeColumnSelector()
-  return (
-    get(columnSelector(state, { columnId }) || Map(), 'subscriptions') || List()
+
+  return createImmutableSelector(
+    columnSelector,
+    column => get(column || Map(), 'subscriptions') || List(),
   )
 }
 
-export const makeColumnEventIdsSelector = () =>
-  createImmutableSelector(
-    stateSelector,
+export const makeColumnEventIdsSelector = () => {
+  const columnSubscriptionIdsSelector = makeColumnSubscriptionIdsSelector()
+
+  return createImmutableSelectorCreator(
+    3,
+  )(
     columnIdSelector,
     columnSubscriptionIdsSelector,
-    (state, columnId, subscriptionsIds) => {
+    eventIdsSelector,
+    stateSelector,
+    (columnId, subscriptionsIds, _allEventIds, state) => {
       let eventIds = Set()
 
       subscriptionsIds.forEach(subscriptionId => {
@@ -68,6 +81,7 @@ export const makeColumnEventIdsSelector = () =>
       return eventIds.toList()
     },
   )
+}
 
 export const makeColumnArchivedIdsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector()
@@ -91,8 +105,10 @@ export const makeColumnReadIdsSelector = () => {
   )
 }
 
-export const makeColumnSubscriptionsSelector = () =>
-  createImmutableSelector(
+export const makeColumnSubscriptionsSelector = () => {
+  const columnSubscriptionIdsSelector = makeColumnSubscriptionIdsSelector()
+
+  return createImmutableSelector(
     columnSubscriptionIdsSelector,
     subscriptionsEntitySelector,
     (subscriptionIds, subscriptions) =>
@@ -100,25 +116,28 @@ export const makeColumnSubscriptionsSelector = () =>
         .map(subscriptionId => get(subscriptions, subscriptionId))
         .filter(Boolean),
   )
+}
 
-const columnSubscriptionsSelector = makeColumnSubscriptionsSelector()
+export const makeColumnIsLoadingSelector = () => {
+  const columnSubscriptionsSelector = makeColumnSubscriptionsSelector()
 
-export const columnIsLoadingSelector = createImmutableSelector(
-  columnSubscriptionsSelector,
-  subscriptions =>
+  return createImmutableSelector(columnSubscriptionsSelector, subscriptions =>
     subscriptions.some(subscription => get(subscription, 'loading')),
-)
+  )
+}
 
-export const columnErrorsSelector = createImmutableSelector(
-  columnSubscriptionsSelector,
-  subscriptions =>
+export const makeColumnErrorsSelector = () => {
+  const columnSubscriptionsSelector = makeColumnSubscriptionsSelector()
+
+  return createImmutableSelector(columnSubscriptionsSelector, subscriptions =>
     subscriptions
       .reduce(
         (errors, subscription) => errors.concat(get(subscription, 'error')),
         List(),
       )
       .filter(Boolean),
-)
+  )
+}
 
 export const orderedColumnsSelector = createImmutableSelector(
   columnsEntitySelector,

@@ -5,22 +5,29 @@ import { denormalize } from 'denormalizr'
 import { Set } from 'immutable'
 
 import {
-  createImmutableSelectorCreator,
   createImmutableSelector,
+  createImmutableSelectorCreator,
+  createObjectKeysMemoized,
   entitiesSelector,
   isArchivedFilter,
   isDeletedFilter,
   isReadFilter,
-  objectKeysMemoized,
 } from './shared'
 
 import { makeColumnEventIdsSelector } from './columns'
 import { EventSchema } from '../utils/normalizr/schemas'
 import { groupSimilarEvents } from '../utils/helpers/github/events'
+import { get } from '../utils/immutable'
+
+const objectKeysMemoized = createObjectKeysMemoized()
 
 export const eventIdSelector = (state, { eventId }) => eventId
-export const eventEntitiesSelector = state =>
-  entitiesSelector(state).get('events').filter(Boolean)
+
+export const eventEntitiesSelector = createImmutableSelector(
+  state => get(entitiesSelector(state), 'events'),
+  events => events.filter(Boolean),
+)
+
 export const eventIdsSelector = state =>
   objectKeysMemoized(eventEntitiesSelector(state))
 
@@ -56,11 +63,7 @@ export const makeIsArchivedEventSelector = () =>
   createImmutableSelector(eventSelector, isArchivedFilter)
 
 export const makeIsReadEventSelector = () =>
-  createImmutableSelector(
-    eventIdSelector,
-    readEventIdsSelector,
-    (eventId, readIds) => !!readIds.includes(eventId),
-  )
+  createImmutableSelector(eventSelector, isReadFilter)
 
 export const makeDenormalizedEventSelector = (n = 1) =>
   createImmutableSelectorCreator(

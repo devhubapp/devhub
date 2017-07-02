@@ -14,7 +14,7 @@ export default class CommitListRow extends React.PureComponent {
   }
 
   makeRenderItem = (passProps = {}) => ({ item: commit }) =>
-    commit &&
+    Boolean(commit) &&
     <CommitRow
       key={`commit-row-${commit.get('sha')}`}
       commit={commit}

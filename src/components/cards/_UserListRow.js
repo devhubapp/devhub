@@ -14,7 +14,7 @@ export default class UserListRow extends React.PureComponent {
   }
 
   makeRenderItem = (passProps = {}) => ({ item: user }) =>
-    user &&
+    Boolean(user) &&
     <UserRow
       key={`user-row-${user.get('id')}`}
       user={user}

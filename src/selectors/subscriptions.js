@@ -6,17 +6,22 @@ import { denormalize } from 'denormalizr'
 import {
   createImmutableSelector,
   createImmutableSelectorCreator,
+  createObjectKeysMemoized,
   entitiesSelector,
-  objectKeysMemoized,
 } from './shared'
 
 import { SubscriptionSchema } from '../utils/normalizr/schemas'
+import { get } from '../utils/immutable'
+
+const objectKeysMemoized = createObjectKeysMemoized()
 
 export const subscriptionIdSelector = (state, { subscriptionId }) =>
   subscriptionId
 
-export const subscriptionsEntitySelector = state =>
-  entitiesSelector(state).get('subscriptions').filter(Boolean)
+export const subscriptionsEntitySelector = createImmutableSelector(
+  state => get(entitiesSelector(state), 'subscriptions'),
+  subscriptions => subscriptions.filter(Boolean),
+)
 
 export const subscriptionIdsSelector = state =>
   objectKeysMemoized(subscriptionsEntitySelector(state))

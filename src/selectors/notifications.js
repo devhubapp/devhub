@@ -15,6 +15,7 @@ import {
 
 import { groupNotificationsByRepository } from '../utils/helpers/github/notifications'
 import { NotificationSchema } from '../utils/normalizr/schemas'
+import { get } from '../utils/immutable'
 
 export const sortNotificationsByDate = (b, a) =>
   a.get('updated_at') > b.get('updated_at') ? 1 : -1
@@ -22,8 +23,11 @@ export const sortNotificationsByDate = (b, a) =>
 export const notificationIdSelector = (state, { notificationId }) =>
   notificationId
 export const notificationDetailsSelector = state => state.get('notifications')
-export const notificationEntitiesSelector = state =>
-  entitiesSelector(state).get('notifications').filter(Boolean)
+
+export const notificationEntitiesSelector = createImmutableSelector(
+  state => get(entitiesSelector(state), 'notifications'),
+  notifications => notifications.filter(Boolean),
+)
 
 export const notificationSelector = (state, { notificationId }) =>
   notificationEntitiesSelector(state).get(notificationId)
@@ -77,11 +81,7 @@ export const makeIsArchivedNotificationSelector = () =>
   createImmutableSelector(notificationSelector, isArchivedFilter)
 
 export const makeIsReadNotificationSelector = () =>
-  createImmutableSelector(
-    notificationIdSelector,
-    readNotificationIdsSelector,
-    (notificationId, readIds) => readIds.includes(notificationId),
-  )
+  createImmutableSelector(notificationSelector, isReadFilter)
 
 export const makeDenormalizedNotificationSelector = (n = 1) =>
   createImmutableSelectorCreator(

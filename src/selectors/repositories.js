@@ -8,9 +8,14 @@ import {
   isReadFilter,
 } from './shared'
 
+import { get } from '../utils/immutable'
+
 export const repoIdSelector = (state, { repoId }) => repoId
-export const reposEntitiesSelector = state =>
-  entitiesSelector(state).get('repos').filter(Boolean)
+
+export const reposEntitiesSelector = createImmutableSelector(
+  state => get(entitiesSelector(state), 'repos'),
+  repos => repos.filter(Boolean),
+)
 
 export const starredReposSelector = createImmutableSelector(
   reposEntitiesSelector,

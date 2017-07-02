@@ -198,7 +198,9 @@ export function getEventText(
       case 'ForkEvent':
         return `forked ${repositoryText}`
       case 'IssueCommentEvent':
-        return `commented on ${isPullRequest(get(payload, 'issue')) ? pullRequestText : issueText}`
+        return `commented on ${isPullRequest(get(payload, 'issue'))
+          ? pullRequestText
+          : issueText}`
       case 'IssuesEvent': // TODO: Fix these texts
         switch (get(payload, 'action')) {
           case 'closed':
@@ -292,11 +294,12 @@ export function getEventText(
       case 'WatchEvent:OneRepoMultipleUsers':
         return (() => {
           const otherUsers = get(payload, 'users')
-          const otherUsersText = otherUsers && otherUsers.size > 0
-            ? otherUsers.size > 1
+          const otherUsersText =
+            otherUsers && otherUsers.size > 0
+              ? otherUsers.size > 1
                 ? `and ${otherUsers.size} others`
                 : 'and 1 other'
-            : ''
+              : ''
 
           return `${otherUsersText} starred ${repositoryText}`
         })()

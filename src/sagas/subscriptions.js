@@ -19,11 +19,11 @@ import {
 import { EventSchema } from '../utils/normalizr/schemas'
 
 import {
-  columnIdsSelector,
-  columnSubscriptionIdsSelector,
-  subscriptionSelector,
   accessTokenSelector,
+  columnIdsSelector,
   isLoggedSelector,
+  makeColumnSubscriptionIdsSelector,
+  subscriptionSelector,
 } from '../selectors'
 
 import { TIMEOUT } from '../utils/constants/defaults'
@@ -55,6 +55,8 @@ import {
 import { authenticate, getApiMethod } from '../api/github'
 
 import { sagaActionChunk } from './_shared'
+
+const columnSubscriptionIdsSelector = makeColumnSubscriptionIdsSelector()
 
 function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
   let state = yield select()

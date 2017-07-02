@@ -156,7 +156,9 @@ export default class EventCard extends React.PureComponent {
                           const dateText = getDateSmallText(createdAt, '•')
                           return (
                             dateText &&
-                            <SmallText muted>&nbsp;•&nbsp;{dateText}</SmallText>
+                            <SmallText muted>
+                              &nbsp;•&nbsp;{dateText}
+                            </SmallText>
                           )
                         }}
                       </IntervalRefresh>
@@ -166,7 +168,9 @@ export default class EventCard extends React.PureComponent {
 
                 <StyledText numberOfLines={1} muted>
                   {Boolean(isPrivate) &&
-                    <StyledText muted><Icon name="lock" /></StyledText>}
+                    <StyledText muted>
+                      <Icon name="lock" />
+                    </StyledText>}
                   {getEventText(event, { repoIsKnown: onlyOneRepository })}
                 </StyledText>
               </FullView>
@@ -202,10 +206,10 @@ export default class EventCard extends React.PureComponent {
           />}
 
         {(() => {
-          const repos = (payload.get('repos') || List()).filter(Boolean)
+          const repos = payload.get('repos') || List()
 
           if (!(repos.size > 0)) return null
-          const ids = repos.map(_item => _item.get('id'))
+          const ids = repos.filter(Boolean).map(_item => _item.get('id'))
 
           return (
             <RepositoryListRow
@@ -245,10 +249,10 @@ export default class EventCard extends React.PureComponent {
 
         {(() => {
           const member = payload.get('member')
-          const users = (payload.get('users') || List([member])).filter(Boolean)
+          const users = payload.get('users') || List([member])
 
           if (!(users.size > 0)) return null
-          const ids = users.map(_item => _item.get('id'))
+          const ids = users.filter(Boolean).map(_item => _item.get('id'))
 
           return (
             <UserListRow
@@ -265,7 +269,7 @@ export default class EventCard extends React.PureComponent {
             const pages = payload.get('pages')
 
             if (!(pages.size > 0)) return null
-            const ids = pages.map(_item => _item.get('id'))
+            const ids = pages.filter(Boolean).map(_item => _item.get('id'))
 
             return (
               <WikiPageListRow
@@ -292,10 +296,10 @@ export default class EventCard extends React.PureComponent {
             headCommit: payload.get('head_commit'),
           }
 
-          const list = (commits || List([headCommit])).filter(Boolean)
+          const list = commits || List([headCommit])
           if (!(list.size > 0)) return null
 
-          const ids = list.map(_item => _item.get('id'))
+          const ids = list.filter(Boolean).map(_item => _item.get('id'))
 
           return (
             <CommitListRow

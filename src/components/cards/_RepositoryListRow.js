@@ -14,7 +14,7 @@ export default class RepositoryListRow extends React.PureComponent {
   }
 
   makeRenderItem = (passProps = {}) => ({ item: repo }) =>
-    repo &&
+    Boolean(repo) &&
     <RepoRow
       key={`repo-row-${repo.get('id')}`}
       repo={repo}

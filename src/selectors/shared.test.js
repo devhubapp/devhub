@@ -3,10 +3,12 @@ import { List, Map } from 'immutable'
 import {
   createImmutableSelector,
   createImmutableSelectorCreator,
+  createObjectKeysMemoized,
   getKeysFromImmutableObject,
   immutableMemoize,
-  objectKeysMemoized,
 } from './shared'
+
+const objectKeysMemoized = createObjectKeysMemoized()
 
 const obj = Map({
   a: 10,
@@ -21,9 +23,11 @@ test('getKeysFromImmutableObject', () => {
 test('objectKeysMemoized', () => {
   const result1 = objectKeysMemoized(obj)
   const result2 = objectKeysMemoized(obj)
+  const result3 = objectKeysMemoized(obj.set('c', 33))
 
   expect(result1).toEqual(List(['a', 'b', 'c']))
   expect(result1).toBe(result2)
+  expect(result1).toBe(result3)
 })
 
 test('immutableMemoize -- memoize all arguments', () => {

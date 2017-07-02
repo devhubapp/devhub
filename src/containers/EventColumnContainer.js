@@ -8,9 +8,9 @@ import EventColumn from '../components/columns/EventColumn'
 import { getRequestTypeIcon, requestTypes } from '../api/github'
 
 import {
-  columnIsLoadingSelector,
-  columnErrorsSelector,
+  makeColumnErrorsSelector,
   makeColumnIsEmptySelector,
+  makeColumnIsLoadingSelector,
   makeColumnSelector,
   makeColumnSubscriptionsSelector,
   makeDenormalizedOrderedColumnEventsSelector,
@@ -25,7 +25,9 @@ import type {
 } from '../utils/types'
 
 const makeMapStateToProps = () => {
+  const columnErrorsSelector = makeColumnErrorsSelector()
   const columnIsEmptySelector = makeColumnIsEmptySelector()
+  const columnIsLoadingSelector = makeColumnIsLoadingSelector()
   const columnSelector = makeColumnSelector()
   const columnSubscriptionsSelector = makeColumnSubscriptionsSelector()
   const denormalizedOrderedColumnEventsSelector = makeDenormalizedOrderedColumnEventsSelector()
@@ -43,9 +45,10 @@ const makeMapStateToProps = () => {
         ? getRequestTypeIcon(subscriptions.first().get('requestType'))
         : '') || 'mark-github'
 
-    const updatedAt = subscriptions && subscriptions.size > 0
-      ? subscriptions.first().get('updatedAt')
-      : null
+    const updatedAt =
+      subscriptions && subscriptions.size > 0
+        ? subscriptions.first().get('updatedAt')
+        : null
 
     return {
       column,
