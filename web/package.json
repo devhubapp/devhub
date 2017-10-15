@@ -4,18 +4,18 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "bugsnag-js": "^3.2.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-helmet": "^5.1.3",
-    "react-native-web": "^0.0.108"
+    "bugsnag-js": "^3.3.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-helmet": "^5.2.0",
+    "react-native-web": "^0.1.9"
   },
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "extensible-react-scripts": "^1.0.6-10",
     "gh-pages": "^1.0.0",
-    "react-dev-utils": "^3.0.2",
-    "serve": "^6.0.0",
+    "react-dev-utils": "^4.1.0",
+    "serve": "^6.2.0",
     "sw-precache": "^5.2.0"
   },
   "scripts": {

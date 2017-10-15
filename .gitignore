@@ -33,8 +33,8 @@ local.properties
 # node.js
 #
 node_modules/
-npm-debug.log*
-yarn-error.log*
+npm-debug.log
+yarn-error.log
 
 # BUCK
 buck-out/
@@ -46,21 +46,18 @@ buck-out/
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
 # screenshots whenever they are needed.
 # For more information about the recommended setup visit:
-# https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
+# https://docs.fastlane.tools/best-practices/source-control/
 
-# Fastline (contains beta testers emails)
-ios/fastlane/
-
-# fastlane/report.xml
-# fastlane/Preview.html
-# fastlane/screenshots
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
 
 # Pods
 ios/pods/
 
 # Bundle and source maps
 build
-main.jsbundle*
+*.jsbundle*
 
 .history
 .vscode
