@@ -8,11 +8,12 @@ import CreateColumnUtils from '../utils/CreateColumnUtils'
 import type { ActionCreators } from '../../utils/types'
 
 export default class EventColumns extends React.PureComponent {
-  addColumnFn = ({ order } = {}, ...args) => {
+  createColumnFn = ({ createColumnOrder, ...params } = {}, ...args) => {
     CreateColumnUtils.showColumnTypeSelectAlert(
       this.props.actions,
       {
-        createColumnOrder: order,
+        createColumnOrder,
+        ...params,
       },
       ...args,
     )
@@ -23,12 +24,14 @@ export default class EventColumns extends React.PureComponent {
     columnIds: Array<string>,
   }
 
-  renderItem = ({ item: columnId }) => {
+  renderItem = ({ item: columnId, index }) => {
     if (!columnId) return null
 
     return (
       <EventColumnContainer
         key={`event-column-container-${columnId}`}
+        createColumnFn={this.createColumnFn}
+        createColumnOrder={index}
         columnId={columnId}
       />
     )
@@ -41,7 +44,7 @@ export default class EventColumns extends React.PureComponent {
       <Columns
         key="event-columns"
         actions={actions}
-        addColumnFn={this.addColumnFn}
+        createColumnFn={this.createColumnFn}
         items={columnIds}
         renderItem={this.renderItem}
         {...props}

@@ -15,7 +15,6 @@ import ColumnWithList, {
 } from './_ColumnWithList'
 
 import ActionSheet from '../ActionSheet'
-import CreateColumnUtils from '../utils/CreateColumnUtils'
 import EventCardContainer from '../../containers/EventCardContainer'
 import Platform from '../../libs/platform'
 import { FullView } from '../cards/__CardComponents'
@@ -75,7 +74,7 @@ export default class EventColumn extends React.PureComponent {
   }
 
   showActionSheet = () => {
-    const { actions, column } = this.props
+    const { actions, createColumnFn, createColumnOrder, column } = this.props
 
     const columnId = column.get('id')
     const title = (column.get('title') || '').toLowerCase()
@@ -85,10 +84,12 @@ export default class EventColumn extends React.PureComponent {
       {
         text: 'Create a column here',
         onPress: () => {
-          CreateColumnUtils.showColumnTypeSelectAlert(
-            actions,
+          createColumnFn(
             {
-              createColumnOrder: column.get('order'),
+              createColumnOrder:
+                createColumnOrder >= 0
+                  ? createColumnOrder
+                  : column.get('order'),
             },
             this.ActionSheet.show,
           )
@@ -138,6 +139,8 @@ export default class EventColumn extends React.PureComponent {
 
   props: {
     actions: ActionCreators,
+    createColumnFn: Function,
+    createColumnOrder: Number,
     column: ColumnType,
     errors?: ?Array<string>,
     hasOnlyOneRepository?: boolean,

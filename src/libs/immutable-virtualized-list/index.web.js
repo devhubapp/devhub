@@ -6,7 +6,11 @@ import { OrderedMap } from 'immutable'
 import type { List } from 'immutable'
 
 const makeRenderRow = (immutableData, renderItem) => item =>
-  !!immutableData && renderItem({ item })
+  !!immutableData &&
+  renderItem({
+    item,
+    index: immutableData.indexOf ? immutableData.indexOf(item) : undefined,
+  })
 
 type Props = {
   immutableData: List,

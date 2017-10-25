@@ -19,7 +19,7 @@ export const StyledImmutableVirtualizedListListView = styled(
 export default class Columns extends React.PureComponent {
   props: {
     actions: ActionCreators,
-    addColumnFn?: ?Function,
+    createColumnFn?: ?Function,
     items: Array<any>,
     radius?: number,
     renderItem: Function,
@@ -30,19 +30,20 @@ export default class Columns extends React.PureComponent {
     mainRenderItem => ({ index, item }, ...otherArgs) => {
       if (!item) return null
 
-      if (item === 'new') return this.renderNewColumn()
+      if (item === 'new') return this.renderNewColumn(index)
       return mainRenderItem({ index, item }, ...otherArgs)
     },
   )
 
-  renderNewColumn() {
-    const { actions, addColumnFn, radius, width } = this.props
+  renderNewColumn(order) {
+    const { actions, createColumnFn, radius, width } = this.props
 
-    if (!addColumnFn) return null
+    if (!createColumnFn) return null
 
     return (
       <NewColumn
-        addColumnFn={addColumnFn}
+        createColumnFn={createColumnFn}
+        createColumnOrder={order}
         actions={actions}
         radius={radius}
         width={width || getColumnContentWidth()}

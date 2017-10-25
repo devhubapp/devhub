@@ -34,23 +34,24 @@ const NewColumnText = styled.Text`
 
 export default class NewColumn extends React.PureComponent {
   props: {
-    addColumnFn: Function,
+    createColumnFn: Function,
+    createColumnOrder: Number,
     actions: ActionCreators,
     style?: ?Object,
   }
 
   _addColumnFn = () => {
-    const { addColumnFn } = this.props
+    const { createColumnFn, createColumnOrder } = this.props
 
-    if (!addColumnFn) return
+    if (!createColumnFn) return
 
-    addColumnFn(this.ActionSheet.show)
+    createColumnFn({ createColumnOrder }, this.ActionSheet.show)
   }
 
   render() {
-    const { addColumnFn, ...props } = this.props
+    const { createColumnFn, ...props } = this.props
 
-    if (!addColumnFn) return null
+    if (!createColumnFn) return null
 
     return (
       <Column {...props}>

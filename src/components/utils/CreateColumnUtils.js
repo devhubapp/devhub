@@ -1,6 +1,6 @@
 // @flow
 
-import alert from '../../libs/alert'
+import promptAlert from '../../libs/prompt-alert'
 import prompt from '../../libs/prompt'
 import { requestTypes } from '../../api/github'
 import { generateSubscriptionId } from '../../reducers/entities/subscriptions'
@@ -170,7 +170,7 @@ export default class {
     )
   }
 
-  static showColumnTypeSelectAlert(actions, params, alertFn = alert) {
+  static showColumnTypeSelectAlert(actions, params, alertFn = promptAlert) {
     alertFn(
       'Create a column',
       'Select the type of the column',

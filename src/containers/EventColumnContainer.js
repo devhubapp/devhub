@@ -71,6 +71,8 @@ const mapDispatchToProps = dispatch => ({
 export default class EventColumnContainer extends React.PureComponent {
   props: {
     actions: ActionCreators,
+    createColumnFn: Function,
+    createColumnOrder: Number,
     column: ColumnType,
     errors: Array<string>,
     events: Array<GithubEvent>,
@@ -84,6 +86,8 @@ export default class EventColumnContainer extends React.PureComponent {
   render() {
     const {
       actions,
+      createColumnFn,
+      createColumnOrder,
       column,
       errors,
       events,
@@ -100,6 +104,8 @@ export default class EventColumnContainer extends React.PureComponent {
       <EventColumn
         key={`event-column-${column.get('id')}`}
         actions={actions}
+        createColumnFn={createColumnFn}
+        createColumnOrder={createColumnOrder}
         column={column}
         errors={errors}
         hasOnlyOneRepository={hasOnlyOneRepository}

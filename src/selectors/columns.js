@@ -16,14 +16,14 @@ import {
 import {
   createImmutableSelector,
   createImmutableSelectorCreator,
-  createObjectKeysMemoized,
+  // createObjectKeysMemoized,
   entitiesSelector,
   stateSelector,
 } from './shared'
 
 import { get } from '../utils/immutable'
 
-const objectKeysMemoized = createObjectKeysMemoized()
+// const objectKeysMemoized = createObjectKeysMemoized()
 
 export const columnIdSelector = (state, { columnId }) => columnId
 
@@ -33,13 +33,24 @@ export const columnsEntitySelector = createImmutableSelector(
     columns.filter(Boolean).set('new', Map({ id: 'new', order: columns.size })),
 )
 
-export const columnIdsSelector = state =>
-  objectKeysMemoized(columnsEntitySelector(state))
-
 const sortColumnsByDate = (b, a) =>
   a && b
     ? moment(get(a, 'createdAt')).isAfter(moment(get(b, 'createdAt'))) ? 1 : -1
     : 0
+
+export const orderedColumnsSelector = createImmutableSelector(
+  columnsEntitySelector,
+  columns =>
+    columns
+      .toList()
+      .sort(sortColumnsByDate)
+      .sortBy(column => get(column, 'order')),
+)
+
+export const columnIdsSelector = createImmutableSelector(
+  orderedColumnsSelector,
+  columns => columns.toList().map(column => get(column, 'id')),
+)
 
 export const makeColumnSelector = () =>
   createImmutableSelector(
@@ -140,15 +151,6 @@ export const makeColumnErrorsSelector = () => {
       .filter(Boolean),
   )
 }
-
-export const orderedColumnsSelector = createImmutableSelector(
-  columnsEntitySelector,
-  columns =>
-    columns
-      .toList()
-      .sort(sortColumnsByDate)
-      .sortBy(column => get(column, 'order')),
-)
 
 export const makeColumnIsEmptySelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector()

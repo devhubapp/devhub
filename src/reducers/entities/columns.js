@@ -25,9 +25,14 @@ export default (
 
         // shift columns to right to insert new column in the right order
         if (order >= 0) {
+          let alternativeIndex = 0
           newState = newState.map(column => {
-            if (column.get('order') >= order) {
-              return column.set('order', column.get('order') + 1)
+            const currentColumnOrder =
+              column.get('order') >= 0 ? column.get('order') : alternativeIndex
+            alternativeIndex++
+
+            if (currentColumnOrder >= order) {
+              return column.set('order', currentColumnOrder + 1)
             }
 
             return column
