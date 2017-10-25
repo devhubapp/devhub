@@ -32,7 +32,7 @@ export const CardWrapper = styled.View`
 
 export const FullView = styled.View`
   flex: 1;
-  alignself: stretch;
+  align-self: stretch;
   flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
   align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
 `

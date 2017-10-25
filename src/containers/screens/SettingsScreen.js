@@ -30,11 +30,11 @@ const Footer = styled.View`
 `
 
 const StyledButton = styled(Button)`
-  margintop: ${contentPadding / 2};
+  margin-top: ${contentPadding / 2};
 `
 
 const StyledAppVersion = styled(AppVersion)`
-  margintop: ${contentPadding / 2};
+  margin-top: ${contentPadding / 2};
   text-align: center;
 `
 

@@ -18,8 +18,8 @@ const BadgeContainer = styled.View`
 `
 
 const BadgeText = styled.Text`
-  paddinghorizontal: 4px;
-  paddingvertical: 2px;
+  padding-horizontal: 4px;
+  padding-vertical: 2px;
   font-size: 10px;
   background-color: transparent;
   color: #ffffff;
