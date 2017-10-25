@@ -5,7 +5,6 @@ import React, { PureComponent } from 'react'
 
 import SectionList from 'react-native/Libraries/Lists/SectionList'
 import VirtualizedList from 'react-native/Libraries/Lists/VirtualizedList'
-import OptimizedVirtualizedList from '../optimized-virtualized-list'
 
 import { get } from '../../utils/immutable'
 
@@ -46,14 +45,10 @@ export default class ImmutableVirtualizedList extends PureComponent {
   static propTypes = { ...VirtualizedList.propTypes, ...propTypes }
 
   render() {
-    const { immutableData, removeClippedSubviews, ...props } = this.props
-
-    const VirtualizedListComponent = removeClippedSubviews
-      ? OptimizedVirtualizedList
-      : VirtualizedList
+    const { immutableData, ...props } = this.props
 
     return (
-      <VirtualizedListComponent
+      <VirtualizedList
         data={immutableData}
         getItem={props.getItem || getItem}
         getItemCount={props.getItemCount || getItemCount}
@@ -70,9 +65,10 @@ export class ImmutableSectionList extends PureComponent {
   render() {
     const { immutableData, sections, ...props } = this.props
 
-    const _sections = sections && typeof sections.toJS === 'function'
-      ? sections.toJS()
-      : sections
+    const _sections =
+      sections && typeof sections.toJS === 'function'
+        ? sections.toJS()
+        : sections
 
     return (
       <SectionList
