@@ -36,7 +36,6 @@ public class MainApplication extends Application implements ReactApplication {
                 new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
                 new VectorIconsPackage(),
                 new RNPromptPackage(),
-                new ReactOrientationListener(),
                 new LinearGradientPackage(),
                 BugsnagReactNative.getPackage()
         );

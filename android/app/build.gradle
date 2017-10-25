@@ -64,6 +64,9 @@ import com.android.build.OutputFile
  *   extraPackagerArgs: []
  * ]
  */
+project.ext.react = [
+    nodeExecutableAndArgs : ["/usr/local/bin/node"]
+];
 
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
@@ -84,8 +87,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 25
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "org.brunolemos.devhub"
