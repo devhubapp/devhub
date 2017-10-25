@@ -101,18 +101,20 @@ function* handleFirebaseAuthStateChanged({ user }) {
     displayName: name,
     photoURL: avatarURL,
     ...restOfUser
-  } = githubData || {}
+  } =
+    githubData || {}
 
-  const payload = githubData && firebaseId
-    ? {
-        firebaseId,
-        githubId,
-        name,
-        avatarURL,
-        lastAccessedAt: moment().toISOString(),
-        ...restOfUser,
-      }
-    : undefined
+  const payload =
+    githubData && firebaseId
+      ? {
+          firebaseId,
+          githubId,
+          name,
+          avatarURL,
+          lastAccessedAt: moment().toISOString(),
+          ...restOfUser,
+        }
+      : undefined
 
   yield put(updateCurrentUser(payload, sagaActionChunk))
 }

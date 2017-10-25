@@ -6,9 +6,9 @@ import styled from 'styled-components/native'
 import { contentPadding } from '../styles/variables'
 
 const StyledScrollView = styled.ScrollView`
-flex: 1;
-flex-direction: row;
-align-self: stretch;
+  flex: 1;
+  flex-direction: row;
+  align-self: stretch;
 `
 
 type Props = {

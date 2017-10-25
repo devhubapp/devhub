@@ -29,7 +29,9 @@ import type {
 const makeMapStateToProps = () => {
   const repoSelector = makeRepoSelector()
   const memoizeItems = immutableMemoize((notificationIds, unarchivedIds) =>
-    OrderedSet(notificationIds).intersect(unarchivedIds).toList(),
+    OrderedSet(notificationIds)
+      .intersect(unarchivedIds)
+      .toList(),
   )
 
   return (state: State, { column }: { column: Object }) => {
@@ -49,7 +51,7 @@ const makeMapStateToProps = () => {
       items,
       repo:
         column.get('repo') ||
-          repoSelector(state, { repoId: column.get('repoId') }),
+        repoSelector(state, { repoId: column.get('repoId') }),
       updatedAt: notificationsUpdatedAtSelector(state),
     }
   }

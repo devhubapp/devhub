@@ -30,11 +30,11 @@ const Footer = styled.View`
 `
 
 const StyledButton = styled(Button)`
-  marginTop: ${contentPadding / 2};
+  margintop: ${contentPadding / 2};
 `
 
 const StyledAppVersion = styled(AppVersion)`
-  marginTop: ${contentPadding / 2};
+  margintop: ${contentPadding / 2};
   text-align: center;
 `
 
@@ -58,9 +58,10 @@ class SettingsScreen extends React.PureComponent {
     const { actions, isCurrentRoute, theme } = this.props
     const { resetAccountData, logout, setTheme } = actions
 
-    const color = Platform.OS === 'android'
-      ? !theme.isDark ? theme.base05 : theme.base02
-      : theme.base04
+    const color =
+      Platform.OS === 'android'
+        ? !theme.isDark ? theme.base05 : theme.base02
+        : theme.base04
 
     return (
       <Screen isCurrentRoute={isCurrentRoute}>

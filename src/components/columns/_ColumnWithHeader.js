@@ -99,20 +99,21 @@ export default class ColumnWithHeader extends React.PureComponent {
         </FixedHeader>
 
         <ProgressBarContainer>
-          {loading &&
+          {loading && (
             <ProgressBar
               width={width || getColumnContentWidth()}
               height={progressBarHeight}
               indeterminate
-            />}
+            />
+          )}
         </ProgressBarContainer>
 
         {errors &&
           errors
             .filter(Boolean)
-            .map(error =>
-              <StatusMessage key={`error-${error}`} message={error} error />,
-            )}
+            .map(error => (
+              <StatusMessage key={`error-${error}`} message={error} error />
+            ))}
 
         {children}
       </Column>

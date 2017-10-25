@@ -133,7 +133,9 @@ function* onMarkNotificationsAsReadRequest({
       notificationIds,
       repoId,
     } = payload
-    const lastReadAt = moment(_lastReadAt || new Date()).utc().format()
+    const lastReadAt = moment(_lastReadAt || new Date())
+      .utc()
+      .format()
 
     // let callMethods;
     let params
@@ -209,7 +211,9 @@ function* onMarkNotificationsAsReadRequest({
 }
 
 export function getDefaultSince() {
-  return moment().subtract(1, 'month').format()
+  return moment()
+    .subtract(1, 'month')
+    .format()
 }
 
 export function getParamsToLoadAllNotifications() {

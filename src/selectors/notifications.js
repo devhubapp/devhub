@@ -84,10 +84,11 @@ export const makeIsReadNotificationSelector = () =>
   createImmutableSelector(notificationSelector, isReadFilter)
 
 export const makeDenormalizedNotificationSelector = (n = 1) =>
-  createImmutableSelectorCreator(
-    n,
-  )(notificationSelector, entitiesSelector, (notification, entities) =>
-    denormalize(notification, entities, NotificationSchema),
+  createImmutableSelectorCreator(n)(
+    notificationSelector,
+    entitiesSelector,
+    (notification, entities) =>
+      denormalize(notification, entities, NotificationSchema),
   )
 
 // with memoization of first argument

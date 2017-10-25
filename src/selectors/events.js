@@ -40,12 +40,19 @@ export const sortEventsByDate = (b, a) =>
 export const archivedEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
   events =>
-    events.filter(isArchivedFilter).map(event => event.get('id')).toList(),
+    events
+      .filter(isArchivedFilter)
+      .map(event => event.get('id'))
+      .toList(),
 )
 
 export const readEventIdsSelector = createImmutableSelector(
   eventEntitiesSelector,
-  events => events.filter(isReadFilter).map(event => event.get('id')).toList(),
+  events =>
+    events
+      .filter(isReadFilter)
+      .map(event => event.get('id'))
+      .toList(),
 )
 
 export const unarchivedEventIdsSelector = createImmutableSelector(
@@ -66,18 +73,16 @@ export const makeIsReadEventSelector = () =>
   createImmutableSelector(eventSelector, isReadFilter)
 
 export const makeDenormalizedEventSelector = (n = 1) =>
-  createImmutableSelectorCreator(
-    n,
-  )(eventSelector, entitiesSelector, (event, entities) =>
-    denormalize(event, entities, EventSchema),
+  createImmutableSelectorCreator(n)(
+    eventSelector,
+    entitiesSelector,
+    (event, entities) => denormalize(event, entities, EventSchema),
   )
 
 export const makeDenormalizedOrderedColumnEventsSelector = () => {
   const columnEventIdsSelector = makeColumnEventIdsSelector()
 
-  return createImmutableSelectorCreator(
-    1,
-  )(
+  return createImmutableSelectorCreator(1)(
     columnEventIdsSelector,
     unarchivedEventIdsSelector,
     entitiesSelector,

@@ -32,7 +32,7 @@ export const CardWrapper = styled.View`
 
 export const FullView = styled.View`
   flex: 1;
-  alignSelf: stretch;
+  alignself: stretch;
   flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
   align-items: ${({ center }) => (center ? 'center' : 'flex-start')};
 `
@@ -43,9 +43,9 @@ export const FullAbsoluteView = styled.View`
   bottom: ${({ bottom }) => bottom || 0}px;
   left: ${({ left }) => left || 0}px;
   right: ${({ right }) => right || 0}px;
-  ${({ width }) => (width ? `width: ${width}px;` : '')}
-  ${({ height }) => (height ? `height: ${height}px;` : '')}
-  ${({ zIndex }) => (zIndex ? `z-index: ${zIndex};` : '')}
+  ${({ width }) => (width ? `width: ${width}px;` : '')} ${({ height }) =>
+      height ? `height: ${height}px;` : ''} ${({ zIndex }) =>
+      zIndex ? `z-index: ${zIndex};` : ''};
 `
 
 // export const RowSeparator = styled.View`
@@ -110,13 +110,12 @@ export const OwnerLogin = StyledText.extend`
   font-weight: bold;
 `
 
-export const RepositoryName = StyledText.extend`
-`
+export const RepositoryName = StyledText.extend``
 
 export const CardText = StyledText.extend`
   flex: 1;
   font-size: 14px;
-  ${Platform.select({ web: { wordBreak: 'break-all' } })}
+  ${Platform.select({ web: { wordBreak: 'break-all' } })};
 `
 
 export const ContentRow = styled.View`

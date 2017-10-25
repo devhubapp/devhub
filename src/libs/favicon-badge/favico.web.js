@@ -417,11 +417,12 @@
 		 * Set badge
 		 */
     var badge = function(number, opts) {
-      opts = (typeof opts === 'string'
-        ? {
-            animation: opts,
-          }
-        : opts) || {}
+      opts =
+        (typeof opts === 'string'
+          ? {
+              animation: opts,
+            }
+          : opts) || {}
       _readyCb = function() {
         try {
           if (typeof number === 'number' ? number > 0 : number !== '') {
@@ -587,8 +588,10 @@
     var setOpt = function(key, value) {
       var opts = key
       if (
-        !(value == null &&
-          Object.prototype.toString.call(key) == '[object Object]')
+        !(
+          value == null &&
+          Object.prototype.toString.call(key) == '[object Object]'
+        )
       ) {
         opts = {}
         opts[key] = value
@@ -935,8 +938,8 @@
         o: 0.6,
       },
       {
-        x: 0.50,
-        y: 0.50,
+        x: 0.5,
+        y: 0.5,
         w: 0.4,
         h: 0.4,
         o: 0.8,

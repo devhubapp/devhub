@@ -50,7 +50,9 @@ export const getGitHubURLForUser = (user: string) =>
   user ? `${baseURL}/${user}` : ''
 
 const objToQueryParams = obj =>
-  Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&')
+  Object.keys(obj)
+    .map(key => `${key}=${obj[key]}`)
+    .join('&')
 
 export const getGitHubSearchURL = (queryParams: Object) =>
   queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : ''
@@ -69,10 +71,10 @@ export function githubHTMLUrlFromAPIUrl(
 
   if (type === 'repos') {
     const repoFullName = getRepoFullNameFromUrl(apiURL)
-    const [
-      type2,
-      ...restOfURL2
-    ] = (apiURL.split(`/repos/${repoFullName}/`)[1] || '').split('/')
+    const [type2, ...restOfURL2] = (apiURL.split(
+      `/repos/${repoFullName}/`,
+    )[1] || ''
+    ).split('/')
 
     if (restOfURL2[0]) {
       switch (type2) {
@@ -118,9 +120,8 @@ function openURL(
   if (!url) return
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
-  let uri = url[0] === '/' && url.indexOf('github.com') < 0
-    ? `${baseURL}${url}`
-    : url
+  let uri =
+    url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
   uri = uri.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(uri) : uri
 
   Browser.openURL(uri, safariOptions)
@@ -132,9 +133,8 @@ export function openOnGithub(
 ) {
   if (!obj) return
 
-  const uri = typeof obj === 'string'
-    ? obj
-    : get(obj, 'html_url') || get(obj, 'url')
+  const uri =
+    typeof obj === 'string' ? obj : get(obj, 'html_url') || get(obj, 'url')
   if (!uri) return
 
   openURL(uri, options || {})

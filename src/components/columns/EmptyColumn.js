@@ -49,7 +49,9 @@ export const EmptyColumnContent = props => (
       justifyContent: 'center',
     }}
   >
-    <EmptyColumnText>{clearMessage} {emoji}</EmptyColumnText>
+    <EmptyColumnText>
+      {clearMessage} {emoji}
+    </EmptyColumnText>
   </Wrapper>
 )
 

@@ -74,7 +74,9 @@ export default (
     case DELETE_EVENTS:
       return state.map(subscription =>
         subscription.update('events', events =>
-          Set(events).subtract(payload.eventIds).toList(),
+          Set(events)
+            .subtract(payload.eventIds)
+            .toList(),
         ),
       )
 
@@ -105,7 +107,9 @@ export default (
 
         const eventIds = List(subscription.get('events'))
         const newEventIds = result
-          ? Set(result).union(eventIds).toList()
+          ? Set(result)
+              .union(eventIds)
+              .toList()
           : eventIds
 
         const newSubscription = subscription.mergeDeep(
@@ -115,13 +119,16 @@ export default (
             ...(meta && meta['last-modified']
               ? {
                   lastModifiedAt: meta['last-modified'],
-                  pollInterval: Number(meta['x-poll-interval']) ||
+                  pollInterval:
+                    Number(meta['x-poll-interval']) ||
                     subscription.get('pollInterval') ||
                     null,
-                  rateLimit: Number(meta['x-ratelimit-limit']) ||
+                  rateLimit:
+                    Number(meta['x-ratelimit-limit']) ||
                     subscription.get('rateLimit') ||
                     null,
-                  rateLimitRemaining: Number(meta['x-ratelimit-remaining']) ||
+                  rateLimitRemaining:
+                    Number(meta['x-ratelimit-remaining']) ||
                     subscription.get('rateLimitRemaining') ||
                     null,
                   rateLimitReset: meta['x-ratelimit-reset'],

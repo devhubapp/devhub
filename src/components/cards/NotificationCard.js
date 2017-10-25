@@ -120,13 +120,14 @@ export default class NotificationCard extends React.PureComponent {
         </FullAbsoluteView>
         <Header>
           <LeftColumn muted={read} center>
-            {avatarUrl &&
+            {avatarUrl && (
               <OwnerAvatar
                 avatarURL={avatarUrl}
                 linkURL={repo.get('html_url') || repo.get('url')}
                 size={smallAvatarWidth}
                 username={getOwnerAndRepo(repo.get('name')).owner}
-              />}
+              />
+            )}
           </LeftColumn>
           <MainColumn>
             <HeaderRow>
@@ -144,10 +145,11 @@ export default class NotificationCard extends React.PureComponent {
                   {() => {
                     const dateText = getDateSmallText(updatedAt, ' ')
                     return (
-                      dateText &&
-                      <SmallText numberOfLines={1} muted>
-                        &nbsp;&nbsp;{dateText}
-                      </SmallText>
+                      dateText && (
+                        <SmallText numberOfLines={1} muted>
+                          &nbsp;&nbsp;{dateText}
+                        </SmallText>
+                      )
                     )
                   }}
                 </IntervalRefresh>
@@ -167,59 +169,65 @@ export default class NotificationCard extends React.PureComponent {
         </Header>
 
         {!!repo &&
-          !onlyOneRepository &&
-          <RepositoryRow
-            key={`repo-row-${repo.get('id')}`}
-            actions={actions}
-            repo={repo}
-            read={read}
-            narrow
-          />}
+          !onlyOneRepository && (
+            <RepositoryRow
+              key={`repo-row-${repo.get('id')}`}
+              actions={actions}
+              repo={repo}
+              read={read}
+              narrow
+            />
+          )}
 
-        {!!commit &&
+        {!!commit && (
           <CommitRow
             key={`commit-row-${commit.get('id')}`}
             commit={commit}
             read={read}
             narrow
-          />}
+          />
+        )}
 
-        {!!issue &&
+        {!!issue && (
           <IssueRow
             key={`issue-row-${repo.get('id')}`}
             issue={issue}
             comment={comment}
             read={read}
             narrow
-          />}
+          />
+        )}
 
-        {!!pullRequest &&
+        {!!pullRequest && (
           <PullRequestRow
             key={`pr-row-${repo.get('id')}`}
             pullRequest={pullRequest}
             comment={comment}
             read={read}
             narrow
-          />}
+          />
+        )}
 
-        {!!release &&
+        {!!release && (
           <ReleaseRow
             key={`release-row-${repo.get('id')}`}
             release={release}
             read={read}
             narrow
-          />}
+          />
+        )}
 
         {!(commit || issue || pullRequest) &&
-          !!title &&
-          <CommentRow
-            key={`subject-row-${subject.get('url')}`}
-            body={title}
-            read={read}
-            narrow
-          />}
+          !!title && (
+            <CommentRow
+              key={`subject-row-${subject.get('url')}`}
+              body={title}
+              read={read}
+              narrow
+            />
+          )}
 
-        {!!comment &&
+        {!!comment && (
           <CommentRow
             key={`comment-row-${comment.get('id')}`}
             body={comment.get('body')}
@@ -227,7 +235,8 @@ export default class NotificationCard extends React.PureComponent {
             url={comment.get('html_url')}
             read={read}
             narrow
-          />}
+          />
+        )}
       </CardWrapper>
     )
   }

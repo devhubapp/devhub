@@ -36,7 +36,9 @@ export default class BranchRow extends React.PureComponent {
         {...props}
       >
         <StyledText numberOfLines={1} muted={!isBranchMainEventAction || read}>
-          <StyledText muted={read}><Icon name="git-branch" />&nbsp;</StyledText>
+          <StyledText muted={read}>
+            <Icon name="git-branch" />&nbsp;
+          </StyledText>
           {branch}
         </StyledText>
       </TouchableRow>

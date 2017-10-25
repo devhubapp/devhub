@@ -29,16 +29,17 @@ const makeMapStateToProps = (
   const notifications = denormalizedNotificationsSelector(state, {
     notificationIds:
       column.get('notificationIds') ||
-        (column.get('notifications') || Map()).map(n => n.get('id')).toList(),
+      (column.get('notifications') || Map()).map(n => n.get('id')).toList(),
   })
 
   return {
     errors: notificationsErrorsSelector(state),
     loading: notificationsIsLoadingSelector(state),
     items: notificationsToFilterColumnData(notifications),
-    updatedAt: typeof updatedAt === 'undefined'
-      ? notificationsUpdatedAtSelector(state)
-      : updatedAt,
+    updatedAt:
+      typeof updatedAt === 'undefined'
+        ? notificationsUpdatedAtSelector(state)
+        : updatedAt,
   }
 }
 

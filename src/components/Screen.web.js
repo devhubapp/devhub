@@ -52,11 +52,12 @@ export default class Screen extends PureComponent {
     return (
       <BaseScreen {...props}>
         {isCurrentRoute === true &&
-          Array.isArray(helmet) &&
-          <Helmet>
-            {helmet}
-            {Boolean(title) && <title>{title}</title>}
-          </Helmet>}
+          Array.isArray(helmet) && (
+            <Helmet>
+              {helmet}
+              {Boolean(title) && <title>{title}</title>}
+            </Helmet>
+          )}
 
         {children}
       </BaseScreen>

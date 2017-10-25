@@ -36,7 +36,8 @@ const makeMapStateToProps = () => {
 
     return {
       archived: isArchivedNotificationSelector(state, { notificationId }),
-      notification: notification ||
+      notification:
+        notification ||
         denormalizedNotificationSelector(state, { notificationId }),
       read: isReadNotificationSelector(state, { notificationId }),
     }

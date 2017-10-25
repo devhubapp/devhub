@@ -14,8 +14,9 @@ export default class NotificationColumns extends React.PureComponent {
     columns: Array<ColumnType>,
   }
 
-  renderFilterColumn = column =>
+  renderFilterColumn = column => (
     <NotificationsFilterColumnContainer column={column} />
+  )
 
   renderItem = ({ item: column }) => {
     if (!column) return null

@@ -40,7 +40,7 @@ export const TextWrapper = styled.View`
   padding-horizontal: ${contentPadding}px;
   align-items: ${({ horizontal }) => (horizontal ? 'center' : 'flex-start')};
   justify-content: center;
-  ${({ horizontal }) => horizontal && 'flex-direction: row;'}
+  ${({ horizontal }) => horizontal && 'flex-direction: row;'};
 `
 
 export const Text = styled.Text`
@@ -75,27 +75,36 @@ const GithubButton = ({
   subtitleProps = {},
   textProps = {},
   ...props
-}: Props) =>
+}: Props) => (
   <Button activeOpacity={1} horizontal={horizontal} radius={radius} {...props}>
     <Content>
-      {leftIcon &&
+      {leftIcon && (
         <IconWrapper>
           <ButtonIcon name={leftIcon} />
-        </IconWrapper>}
+        </IconWrapper>
+      )}
 
       <TextWrapper horizontal={horizontal}>
         {!!title && <Text {...textProps}>{title}</Text>}
-        {!!subtitle && <Text muted {...subtitleProps}>{subtitle}</Text>}
+        {!!subtitle && (
+          <Text muted {...subtitleProps}>
+            {subtitle}
+          </Text>
+        )}
       </TextWrapper>
 
-      {(rightIcon || loading) &&
+      {(rightIcon || loading) && (
         <IconWrapper>
-          {loading
-            ? <ActivityIndicator />
-            : <ButtonIcon name={rightIcon} muted />}
-        </IconWrapper>}
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <ButtonIcon name={rightIcon} muted />
+          )}
+        </IconWrapper>
+      )}
     </Content>
   </Button>
+)
 
 GithubButton.defaultProps = {
   leftIcon: 'mark-github',

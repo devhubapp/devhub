@@ -42,7 +42,9 @@ export default class UserRow extends React.PureComponent {
         {...props}
       >
         <StyledText numberOfLines={1} muted={read}>
-          <StyledText muted={read}><Icon name="person" />&nbsp;</StyledText>
+          <StyledText muted={read}>
+            <Icon name="person" />&nbsp;
+          </StyledText>
           {_login}
           {!!additionalInfo && <StyledText muted> {additionalInfo}</StyledText>}
         </StyledText>

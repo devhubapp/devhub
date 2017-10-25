@@ -102,15 +102,17 @@ const renderItem = ({ index, item }: { index: number, item: Object }) => {
         </ItemTitle>
       </ItemTitleWrapper>
       <CounterWrapper outline={!(get(item, 'unread') > 0)}>
-        {get(item, 'unread') >= 0 &&
+        {get(item, 'unread') >= 0 && (
           <UnreadCount count={get(item, 'unread')}>
             {get(item, 'unread')}
-          </UnreadCount>}
-        {get(item, 'read') >= 0 &&
+          </UnreadCount>
+        )}
+        {get(item, 'read') >= 0 && (
           <TotalCount>
             {get(item, 'unread') >= 0 && ' / '}
             {totalItemNotifications(item)}
-          </TotalCount>}
+          </TotalCount>
+        )}
       </CounterWrapper>
     </ItemWrapper>
   )
@@ -182,8 +184,7 @@ export default class NotificationsFilterColumn extends React.PureComponent {
 
   renderSectionHeader = ({ section }) =>
     !!section &&
-    !(get(section, 'key') === this.state.firstSectionKey) &&
-    <Section />
+    !(get(section, 'key') === this.state.firstSectionKey) && <Section />
 
   render() {
     const { items } = this.state

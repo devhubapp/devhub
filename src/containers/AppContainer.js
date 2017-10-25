@@ -29,9 +29,8 @@ const View = styled.View`
 const mapStateToProps = (state: State) => ({
   isLogged: isLoggedSelector(state),
   isFetching: isFetchingSelector(state),
-  notificationsCount: (isLoggedSelector(state) &&
-    notificationsUnreadCountSelector(state)) ||
-    0,
+  notificationsCount:
+    (isLoggedSelector(state) && notificationsUnreadCountSelector(state)) || 0,
   ready: isReadySelector(state),
   theme: themeSelector(state),
 })
@@ -78,7 +77,7 @@ export default class AppContainer extends React.PureComponent {
     isFetching?: boolean,
     notificationsCount?: number,
     ready?: boolean, // eslint-disable-line react/no-unused-prop-types
-    theme: ThemeObject,
+    theme?: ThemeObject,
   }
 
   navigation = null
@@ -89,28 +88,31 @@ export default class AppContainer extends React.PureComponent {
     return (
       <ThemeProvider theme={theme}>
         <View>
-          {Platform.OS === 'web' &&
+          {Platform.OS === 'web' && (
             <Helmet>
               <meta name="theme-color" content={theme.base00} />
               <meta
                 name="apple-mobile-web-app-status-bar-style"
                 content={theme.isDark ? 'black-translucent' : 'default'}
               />
-            </Helmet>}
+            </Helmet>
+          )}
 
-          {Platform.OS === 'web' &&
+          {Platform.OS === 'web' && (
             <FaviconBadge
               animation="none"
               badgeCount={notificationsCount}
               bgColor={theme.red}
-            />}
+            />
+          )}
 
-          {(Platform.OS === 'ios' || Platform.OS === 'android') &&
+          {(Platform.OS === 'ios' || Platform.OS === 'android') && (
             <StatusBar
               backgroundColor={theme.statusBarBackground || theme.base00}
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
               networkActivityIndicatorVisible={isFetching}
-            />}
+            />
+          )}
 
           <AppNavigatorContainer
             navigationRef={ref => {
@@ -118,7 +120,6 @@ export default class AppContainer extends React.PureComponent {
             }}
           />
         </View>
-
       </ThemeProvider>
     )
   }

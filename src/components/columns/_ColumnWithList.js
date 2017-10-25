@@ -89,16 +89,17 @@ export default class ColumnWithList extends React.PureComponent {
 
     const refreshControl =
       (!!(onRefresh || refreshText) &&
-        !!RefreshControl &&
-        <RefreshControl
-          refreshing={false}
-          onRefresh={onRefresh}
-          colors={[loading || !onRefresh ? 'transparent' : theme.base07]}
-          tintColor={loading || !onRefresh ? 'transparent' : theme.base07}
-          title={(refreshText || ' ').toLowerCase()}
-          titleColor={theme.base05}
-          progressBackgroundColor={theme.base02}
-        />) ||
+        !!RefreshControl && (
+          <RefreshControl
+            refreshing={false}
+            onRefresh={onRefresh}
+            colors={[loading || !onRefresh ? 'transparent' : theme.base07]}
+            tintColor={loading || !onRefresh ? 'transparent' : theme.base07}
+            title={(refreshText || ' ').toLowerCase()}
+            titleColor={theme.base05}
+            progressBackgroundColor={theme.base02}
+          />
+        )) ||
       null
 
     const ListComponent = this.props.ListComponent || ImmutableVirtualizedList
@@ -111,22 +112,24 @@ export default class ColumnWithList extends React.PureComponent {
           from="vertical"
           radius={_radius}
         >
-          {isEmpty || (!this.props.ListComponent && !(items.size > 0))
-            ? loading && !hasLoadedOnce
-                ? null
-                : <EmptyColumnContent refreshControl={refreshControl} />
-            : <ListComponent
-                immutableData={items}
-                initialNumToRender={initialNumToRender || 5}
-                rowsDuringInteraction={initialNumToRender || 5}
-                renderItem={renderItem}
-                renderSectionHeader={renderSectionHeader}
-                refreshControl={refreshControl}
-                sectionHeaderHasChanged={sectionHeaderHasChanged}
-                removeClippedSubviews
-                style={styles.list}
-                {...props}
-              />}
+          {isEmpty || (!this.props.ListComponent && !(items.size > 0)) ? (
+            loading && !hasLoadedOnce ? null : (
+              <EmptyColumnContent refreshControl={refreshControl} />
+            )
+          ) : (
+            <ListComponent
+              immutableData={items}
+              initialNumToRender={initialNumToRender || 5}
+              rowsDuringInteraction={initialNumToRender || 5}
+              renderItem={renderItem}
+              renderSectionHeader={renderSectionHeader}
+              refreshControl={refreshControl}
+              sectionHeaderHasChanged={sectionHeaderHasChanged}
+              removeClippedSubviews
+              style={styles.list}
+              {...props}
+            />
+          )}
         </StyledTextOverlay>
       </ColumnWithHeader>
     )

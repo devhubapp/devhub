@@ -14,13 +14,14 @@ export default class CommitListRow extends React.PureComponent {
   }
 
   makeRenderItem = (passProps = {}) => ({ item: commit }) =>
-    Boolean(commit) &&
-    <CommitRow
-      key={`commit-row-${commit.get('sha')}`}
-      commit={commit}
-      narrow
-      {...passProps}
-    />
+    Boolean(commit) && (
+      <CommitRow
+        key={`commit-row-${commit.get('sha')}`}
+        commit={commit}
+        narrow
+        {...passProps}
+      />
+    )
 
   render() {
     const { maxHeight, commits, ...props } = this.props

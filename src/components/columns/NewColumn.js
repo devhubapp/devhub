@@ -57,7 +57,8 @@ export default class NewColumn extends React.PureComponent {
         <Wrapper>
           <NewColumnButton onPress={this._addColumnFn}>
             <NewColumnText>
-              <NewColumnIcon name="plus" />{'\n'}
+              <NewColumnIcon name="plus" />
+              {'\n'}
               add new column
             </NewColumnText>
           </NewColumnButton>

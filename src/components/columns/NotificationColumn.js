@@ -56,21 +56,25 @@ export default class NotificationColumn extends React.PureComponent {
   }
 
   getReadNotificationIds = () => {
-    const store = this.context.store
+    const { store } = this.context
     const state = store.getState()
 
     const notificationIds = this.getNotificationIds()
     const readNotificationIds = readNotificationIdsSelector(state)
-    return Set(readNotificationIds).intersect(notificationIds).toList()
+    return Set(readNotificationIds)
+      .intersect(notificationIds)
+      .toList()
   }
 
   getUnreadNotificationIds = () => {
     const notificationIds = this.getNotificationIds()
     const readNotificationIds = this.getReadNotificationIds()
-    return Set(notificationIds).subtract(readNotificationIds).toList()
+    return Set(notificationIds)
+      .subtract(readNotificationIds)
+      .toList()
   }
 
-  getRightHeader = isSummary =>
+  getRightHeader = isSummary => (
     <HeaderButtonsContainer>
       <HeaderButton onPress={this.toggleSummary}>
         <HeaderButtonIcon name={summaryIcon} active={isSummary} />
@@ -80,6 +84,7 @@ export default class NotificationColumn extends React.PureComponent {
         <HeaderButtonIcon name="chevron-down" muted={isSummary} />
       </HeaderButton>
     </HeaderButtonsContainer>
+  )
 
   _memoizedGetNotificationIds = memoize(
     items =>
@@ -232,7 +237,7 @@ export default class NotificationColumn extends React.PureComponent {
           }}
         />
 
-        {summary &&
+        {summary && (
           <FullAbsoluteView
             key={`notifications-fcc-${column.get('id')}-FullAbsoluteView`}
           >
@@ -246,7 +251,8 @@ export default class NotificationColumn extends React.PureComponent {
               renderItem={this.renderItem}
               rightHeader={this.getRightHeader(true)}
             />
-          </FullAbsoluteView>}
+          </FullAbsoluteView>
+        )}
       </FullView>
     )
   }

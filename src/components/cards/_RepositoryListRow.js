@@ -14,13 +14,14 @@ export default class RepositoryListRow extends React.PureComponent {
   }
 
   makeRenderItem = (passProps = {}) => ({ item: repo }) =>
-    Boolean(repo) &&
-    <RepoRow
-      key={`repo-row-${repo.get('id')}`}
-      repo={repo}
-      narrow
-      {...passProps}
-    />
+    Boolean(repo) && (
+      <RepoRow
+        key={`repo-row-${repo.get('id')}`}
+        repo={repo}
+        narrow
+        {...passProps}
+      />
+    )
 
   render() {
     const { maxHeight, repos, ...props } = this.props

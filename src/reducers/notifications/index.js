@@ -55,16 +55,16 @@ export default (
                 lastModifiedAt: meta['last-modified'],
                 pollInterval:
                   Number(meta['x-poll-interval']) ||
-                    state.get('pollInterval') ||
-                    null,
+                  state.get('pollInterval') ||
+                  null,
                 rateLimit:
                   Number(meta['x-ratelimit-limit']) ||
-                    state.get('rateLimit') ||
-                    null,
+                  state.get('rateLimit') ||
+                  null,
                 rateLimitRemaining:
                   Number(meta['x-ratelimit-remaining']) ||
-                    state.get('rateLimitRemaining') ||
-                    null,
+                  state.get('rateLimitRemaining') ||
+                  null,
                 rateLimitReset: meta['x-ratelimit-reset'],
               }
             : {}),

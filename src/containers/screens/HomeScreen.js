@@ -42,10 +42,11 @@ class HomeScreen extends React.PureComponent {
     return (
       <ThemeProvider theme={theme}>
         <Screen backgroundColor={theme.base01} isCurrentRoute={isCurrentRoute}>
-          {!ready &&
+          {!ready && (
             <CenterView>
               <ActivityIndicator color={theme.base04} />
-            </CenterView>}
+            </CenterView>
+          )}
 
           {ready && <EventColumnsContainer />}
         </Screen>

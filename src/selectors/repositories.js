@@ -28,10 +28,10 @@ export const starredReposSelector = createImmutableSelector(
 )
 
 export const makeRepoSelector = () =>
-  createImmutableSelectorCreator(
-    1,
-  )(repoIdSelector, reposEntitiesSelector, (repoId, repos) =>
-    repos.get(`${repoId}`),
+  createImmutableSelectorCreator(1)(
+    repoIdSelector,
+    reposEntitiesSelector,
+    (repoId, repos) => repos.get(`${repoId}`),
   )
 
 export const makeIsRepoStarredSelector = () =>

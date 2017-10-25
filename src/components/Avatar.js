@@ -3,8 +3,7 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { Platform } from 'react-native'
-import type ImageSourcePropType
-  from 'react-native/Libraries/Image/ImageSourcePropType'
+import type ImageSourcePropType from 'react-native/Libraries/Image/ImageSourcePropType'
 
 import { radius as defaultRadius, mutedOpacity } from '../styles/variables'
 
@@ -16,7 +15,8 @@ const bgColorAfterLog = Platform.select({
 const AvatarImage = styled.Image`
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
-  background-color: ${({ error, loading, theme }) => (!loading && !error ? bgColorAfterLog : theme.base03)};
+  background-color: ${({ error, loading, theme }) =>
+    !loading && !error ? bgColorAfterLog : theme.base03};
   border-radius: ${({ radius }) => radius}px;
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
 `

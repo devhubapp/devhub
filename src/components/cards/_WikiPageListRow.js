@@ -14,13 +14,14 @@ export default class WikiPageListRow extends React.PureComponent {
   }
 
   makeRenderItem = (passProps = {}) => ({ item: page }) =>
-    page &&
-    <WikiPageRow
-      key={`wiki-page-row-${page.get('sha')}`}
-      page={page}
-      narrow
-      {...passProps}
-    />
+    page && (
+      <WikiPageRow
+        key={`wiki-page-row-${page.get('sha')}`}
+        page={page}
+        narrow
+        {...passProps}
+      />
+    )
 
   render() {
     const { maxHeight, pages, ...props } = this.props

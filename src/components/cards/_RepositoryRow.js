@@ -66,10 +66,17 @@ export default class RepositoryRow extends React.PureComponent {
         url={repo.get('html_url') || repo.get('url')}
         {...props}
       >
-        <StyledText muted={read}><Icon name={repoIcon} />&nbsp;</StyledText>
+        <StyledText muted={read}>
+          <Icon name={repoIcon} />&nbsp;
+        </StyledText>
         <RepositoryName muted={read}>{repoName}</RepositoryName>
 
-        {!!orgName && <StyledText muted small> {orgName}</StyledText>}
+        {!!orgName && (
+          <StyledText muted small>
+            {' '}
+            {orgName}
+          </StyledText>
+        )}
       </TouchableRow>
     )
   }

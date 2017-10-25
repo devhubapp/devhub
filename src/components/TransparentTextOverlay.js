@@ -75,17 +75,21 @@ const TransparentTextOverlay = ({
     <View style={[{ flex: 1, alignSelf: 'stretch' }, containerStyle]}>
       {children}
 
-      {(from === 'vertical' || from === 'top') &&
-        <GradientLayerOverlay style={style} from="top" />}
+      {(from === 'vertical' || from === 'top') && (
+        <GradientLayerOverlay style={style} from="top" />
+      )}
 
-      {(from === 'vertical' || from === 'bottom') &&
-        <GradientLayerOverlay style={style} from="bottom" />}
+      {(from === 'vertical' || from === 'bottom') && (
+        <GradientLayerOverlay style={style} from="bottom" />
+      )}
 
-      {(from === 'horizontal' || from === 'left') &&
-        <GradientLayerOverlay style={style} from="left" />}
+      {(from === 'horizontal' || from === 'left') && (
+        <GradientLayerOverlay style={style} from="left" />
+      )}
 
-      {(from === 'horizontal' || from === 'right') &&
-        <GradientLayerOverlay style={style} from="right" />}
+      {(from === 'horizontal' || from === 'right') && (
+        <GradientLayerOverlay style={style} from="right" />
+      )}
     </View>
   )
 }

@@ -17,9 +17,10 @@ import type {
 
 export function getSteppedSize(size, sizeSteps = 50) {
   // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
-  const steppedSize = typeof size !== 'number'
-    ? sizeSteps
-    : sizeSteps * Math.max(1, Math.ceil(size / sizeSteps))
+  const steppedSize =
+    typeof size !== 'number'
+      ? sizeSteps
+      : sizeSteps * Math.max(1, Math.ceil(size / sizeSteps))
 
   return PixelRatio.getPixelSizeForLayoutSize(steppedSize)
 }

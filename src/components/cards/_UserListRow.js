@@ -14,13 +14,14 @@ export default class UserListRow extends React.PureComponent {
   }
 
   makeRenderItem = (passProps = {}) => ({ item: user }) =>
-    Boolean(user) &&
-    <UserRow
-      key={`user-row-${user.get('id')}`}
-      user={user}
-      narrow
-      {...passProps}
-    />
+    Boolean(user) && (
+      <UserRow
+        key={`user-row-${user.get('id')}`}
+        user={user}
+        narrow
+        {...passProps}
+      />
+    )
 
   render() {
     const { maxHeight, users, ...props } = this.props

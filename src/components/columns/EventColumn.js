@@ -51,8 +51,8 @@ export default class EventColumn extends React.PureComponent {
 
   getReadEventIds = () => {
     const { column } = this.props
+    const { store } = this.context
 
-    const store = this.context.store
     const state = store.getState()
     const columnId = column.get('id')
 
@@ -61,13 +61,17 @@ export default class EventColumn extends React.PureComponent {
 
     const eventIds = this.getEventIds()
     const readEventsIds = this.columnReadIdsSelector(state, { columnId })
-    return Set(readEventsIds).intersect(eventIds).toList()
+    return Set(readEventsIds)
+      .intersect(eventIds)
+      .toList()
   }
 
   getUnreadEventIds = () => {
     const eventIds = this.getEventIds()
     const readIds = this.getReadEventIds()
-    return Set(eventIds).subtract(readIds).toList()
+    return Set(eventIds)
+      .subtract(readIds)
+      .toList()
   }
 
   showActionSheet = () => {
@@ -151,13 +155,14 @@ export default class EventColumn extends React.PureComponent {
   // (because merged events are totally different than the on in the state)
   // so do the check: if(event.get('merged)) ? event : event.get('id')
   renderItem = ({ item: event }) =>
-    Boolean(event) &&
-    <EventCardContainer
-      key={`event-card-container-${event.get('id')}`}
-      actions={this.props.actions}
-      eventOrEventId={event.get('merged') ? event : event.get('id')}
-      onlyOneRepository={this.props.hasOnlyOneRepository}
-    />
+    Boolean(event) && (
+      <EventCardContainer
+        key={`event-card-container-${event.get('id')}`}
+        actions={this.props.actions}
+        eventOrEventId={event.get('merged') ? event : event.get('id')}
+        onlyOneRepository={this.props.hasOnlyOneRepository}
+      />
+    )
 
   render() {
     const {

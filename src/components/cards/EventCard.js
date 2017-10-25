@@ -155,10 +155,11 @@ export default class EventCard extends React.PureComponent {
                         {() => {
                           const dateText = getDateSmallText(createdAt, '•')
                           return (
-                            dateText &&
-                            <SmallText muted>
-                              &nbsp;•&nbsp;{dateText}
-                            </SmallText>
+                            dateText && (
+                              <SmallText muted>
+                                &nbsp;•&nbsp;{dateText}
+                              </SmallText>
+                            )
                           )
                         }}
                       </IntervalRefresh>
@@ -167,20 +168,23 @@ export default class EventCard extends React.PureComponent {
                 </TransparentTextOverlay>
 
                 <StyledText numberOfLines={1} muted>
-                  {Boolean(isPrivate) &&
+                  {Boolean(isPrivate) && (
                     <StyledText muted>
                       <Icon name="lock" />
-                    </StyledText>}
+                    </StyledText>
+                  )}
                   {getEventText(event, { repoIsKnown: onlyOneRepository })}
                 </StyledText>
               </FullView>
 
-              {cardSubIcon
-                ? <CardIcon
-                    name={cardSubIcon}
-                    color={cardSubIconColor || cardIconColor}
-                  />
-                : <CardIcon name={cardIcon} color={cardIconColor} />}
+              {cardSubIcon ? (
+                <CardIcon
+                  name={cardSubIcon}
+                  color={cardSubIconColor || cardIconColor}
+                />
+              ) : (
+                <CardIcon name={cardIcon} color={cardIconColor} />
+              )}
             </HeaderRow>
 
             <FullAbsoluteView>
@@ -194,16 +198,17 @@ export default class EventCard extends React.PureComponent {
         </Header>
 
         {Boolean(repo) &&
-          !onlyOneRepository &&
-          <RepositoryRow
-            key={`repo-row-${repo.get('id')}`}
-            actions={actions}
-            repo={repo}
-            pushed={type === 'PushEvent'}
-            forcePushed={type === 'PushEvent' && payload.get('forced')}
-            read={read}
-            narrow
-          />}
+          !onlyOneRepository && (
+            <RepositoryRow
+              key={`repo-row-${repo.get('id')}`}
+              actions={actions}
+              repo={repo}
+              pushed={type === 'PushEvent'}
+              forcePushed={type === 'PushEvent' && payload.get('forced')}
+              read={read}
+              narrow
+            />
+          )}
 
         {(() => {
           const repos = payload.get('repos') || List()
@@ -224,7 +229,7 @@ export default class EventCard extends React.PureComponent {
           )
         })()}
 
-        {Boolean(payload.get('ref')) &&
+        {Boolean(payload.get('ref')) && (
           <BranchRow
             key={`branch-row-${payload.get('ref')}`}
             type={type}
@@ -234,9 +239,10 @@ export default class EventCard extends React.PureComponent {
             )}
             read={read}
             narrow
-          />}
+          />
+        )}
 
-        {Boolean(payload.get('forkee')) &&
+        {Boolean(payload.get('forkee')) && (
           <RepositoryRow
             key={`fork-row-${payload.getIn(['forkee', 'id'])}`}
             actions={actions}
@@ -245,7 +251,8 @@ export default class EventCard extends React.PureComponent {
             read={read}
             isFork
             narrow
-          />}
+          />
+        )}
 
         {(() => {
           const member = payload.get('member')
@@ -281,14 +288,15 @@ export default class EventCard extends React.PureComponent {
             )
           })()}
 
-        {Boolean(payload.get('pull_request')) &&
+        {Boolean(payload.get('pull_request')) && (
           <PullRequestRow
             key={`pr-row-${payload.getIn(['pull_request', 'id'])}`}
             pullRequest={payload.get('pull_request')}
             comment={payload.get('comment')}
             read={read}
             narrow
-          />}
+          />
+        )}
 
         {(() => {
           const { commits, headCommit } = {
@@ -311,44 +319,47 @@ export default class EventCard extends React.PureComponent {
           )
         })()}
 
-        {Boolean(payload.get('issue')) &&
+        {Boolean(payload.get('issue')) && (
           <IssueRow
             key={`issue-row-${payload.getIn(['issue', 'id'])}`}
             issue={payload.get('issue')}
             comment={payload.get('comment')}
             read={read}
             narrow
-          />}
+          />
+        )}
 
         {(type === 'IssuesEvent' &&
           payload.get('action') === 'opened' &&
-          Boolean(payload.getIn(['issue', 'body'])) &&
-          <CommentRow
-            key={`issue-body-row-${payload.getIn(['issue', 'id'])}`}
-            body={payload.getIn(['issue', 'body'])}
-            user={actor}
-            url={
-              payload.getIn(['issue', 'html_url']) ||
-              payload.getIn(['issue', 'url'])
-            }
-            read={read}
-            narrow
-          />) ||
-          (type === 'PullRequestEvent' &&
-            payload.get('action') === 'opened' &&
-            Boolean(payload.getIn(['pull_request', 'body'])) &&
+          Boolean(payload.getIn(['issue', 'body'])) && (
             <CommentRow
-              key={`pr-body-row-${payload.getIn(['pull_request', 'id'])}`}
-              body={payload.getIn(['pull_request', 'body'])}
+              key={`issue-body-row-${payload.getIn(['issue', 'id'])}`}
+              body={payload.getIn(['issue', 'body'])}
               user={actor}
               url={
-                payload.getIn(['pull_request', 'html_url']) ||
-                payload.getIn(['pull_request', 'url'])
+                payload.getIn(['issue', 'html_url']) ||
+                payload.getIn(['issue', 'url'])
               }
               read={read}
               narrow
-            />) ||
-          (Boolean(payload.getIn(['comment', 'body'])) &&
+            />
+          )) ||
+          (type === 'PullRequestEvent' &&
+            payload.get('action') === 'opened' &&
+            Boolean(payload.getIn(['pull_request', 'body'])) && (
+              <CommentRow
+                key={`pr-body-row-${payload.getIn(['pull_request', 'id'])}`}
+                body={payload.getIn(['pull_request', 'body'])}
+                user={actor}
+                url={
+                  payload.getIn(['pull_request', 'html_url']) ||
+                  payload.getIn(['pull_request', 'url'])
+                }
+                read={read}
+                narrow
+              />
+            )) ||
+          (Boolean(payload.getIn(['comment', 'body'])) && (
             <CommentRow
               key={`comment-row-${payload.getIn(['comment', 'id'])}`}
               body={payload.getIn(['comment', 'body'])}
@@ -356,9 +367,10 @@ export default class EventCard extends React.PureComponent {
               url={payload.getIn(['comment', 'html_url'])}
               read={read}
               narrow
-            />)}
+            />
+          ))}
 
-        {Boolean(payload.get('release')) &&
+        {Boolean(payload.get('release')) && (
           <ReleaseRow
             key={`release-row-${payload.getIn(['release', 'id'])}`}
             release={payload.get('release')}
@@ -366,7 +378,8 @@ export default class EventCard extends React.PureComponent {
             user={actor}
             read={read}
             narrow
-          />}
+          />
+        )}
       </CardWrapper>
     )
   }

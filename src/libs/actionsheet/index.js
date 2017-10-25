@@ -21,15 +21,15 @@ type ActionSheetProps = {
   buttonContainerStyle: ?any,
   buttonTextStyle: ?any, // eslint-disable-line react/no-unused-prop-types
   buttonsContainerStyle: ?any,
-  containerPadding: ?number,
+  containerPadding?: ?number,
   containerStyle: ?any,
-  radius: ?number,
+  radius?: ?number,
   subtitleTextStyle: ?any,
-  tintColor: ?string,
+  tintColor?: ?string,
   title: ?string, // eslint-disable-line react/no-unused-prop-types
   titleContainerStyle: ?any,
   titleTextStyle: ?any,
-  useNativeDriver: ?boolean,
+  useNativeDriver?: ?boolean,
 }
 
 type ActionSheetState = {
@@ -269,9 +269,8 @@ export default class ActionSheet extends PureComponent {
       ...options,
     }
 
-    const cancelButton = (buttons.filter(
-      button => button.style === 'cancel',
-    ) || [])[0]
+    const cancelButton = (buttons.filter(button => button.style === 'cancel') ||
+      [])[0]
 
     if (!cancelButton) {
       return null
@@ -308,14 +307,16 @@ export default class ActionSheet extends PureComponent {
         ]}
         onPress={() => this.select(button)}
       >
-        {React.isValidElement(button.text)
-          ? button.text
-          : <Text
-              style={[styles.buttonText, { color }, buttonTextStyle, textStyle]}
-              numberOfLines={1}
-            >
-              {button.text}
-            </Text>}
+        {React.isValidElement(button.text) ? (
+          button.text
+        ) : (
+          <Text
+            style={[styles.buttonText, { color }, buttonTextStyle, textStyle]}
+            numberOfLines={1}
+          >
+            {button.text}
+          </Text>
+        )}
       </TouchableOpacity>
     )
   }
@@ -371,24 +372,28 @@ export default class ActionSheet extends PureComponent {
           style,
         ]}
       >
-        {React.isValidElement(title)
-          ? title
-          : <View>
-              {Boolean(title) &&
-                <Text
-                  style={[styles.titleText, titleTextStyle, textStyle]}
-                  numberOfLines={1}
-                >
-                  {title}
-                </Text>}
-              {Boolean(subtitle) &&
-                <Text
-                  style={[styles.subtitleText, subtitleTextStyle, textStyle]}
-                  numberOfLines={1}
-                >
-                  {subtitle}
-                </Text>}
-            </View>}
+        {React.isValidElement(title) ? (
+          title
+        ) : (
+          <View>
+            {Boolean(title) && (
+              <Text
+                style={[styles.titleText, titleTextStyle, textStyle]}
+                numberOfLines={1}
+              >
+                {title}
+              </Text>
+            )}
+            {Boolean(subtitle) && (
+              <Text
+                style={[styles.subtitleText, subtitleTextStyle, textStyle]}
+                numberOfLines={1}
+              >
+                {subtitle}
+              </Text>
+            )}
+          </View>
+        )}
       </View>
     )
   }

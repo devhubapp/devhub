@@ -43,23 +43,25 @@ export default class ReleaseRow extends React.PureComponent {
 
     return (
       <View>
-        {!!branch &&
+        {!!branch && (
           <BranchRow
             branch={branch}
             type={type}
             repoFullName={repoFullName}
             narrow
-          />}
+          />
+        )}
 
         <TouchableRow
           left={
-            !!user &&
-            <OwnerAvatar
-              avatarURL={user.get('avatar_url')}
-              linkURL={user.get('html_url') || user.get('url')}
-              size={smallAvatarWidth}
-              username={user.get('login')}
-            />
+            !!user && (
+              <OwnerAvatar
+                avatarURL={user.get('avatar_url')}
+                linkURL={user.get('html_url') || user.get('url')}
+                size={smallAvatarWidth}
+                username={user.get('login')}
+              />
+            )
           }
           read={read}
           url={release.get('html_url') || release.get('url')}
@@ -71,16 +73,17 @@ export default class ReleaseRow extends React.PureComponent {
           </StyledText>
         </TouchableRow>
 
-        {!!body &&
+        {!!body && (
           <TouchableRow
             left={
-              !!user &&
-              <OwnerAvatar
-                avatarURL={user.get('avatar_url')}
-                linkURL={user.get('html_url') || user.get('url')}
-                size={smallAvatarWidth}
-                username={user.get('login')}
-              />
+              !!user && (
+                <OwnerAvatar
+                  avatarURL={user.get('avatar_url')}
+                  linkURL={user.get('html_url') || user.get('url')}
+                  size={smallAvatarWidth}
+                  username={user.get('login')}
+                />
+              )
             }
             read={read}
             url={release.get('html_url') || release.get('url')}
@@ -92,7 +95,8 @@ export default class ReleaseRow extends React.PureComponent {
               </StyledText>
               {body}
             </CardText>
-          </TouchableRow>}
+          </TouchableRow>
+        )}
       </View>
     )
   }

@@ -49,20 +49,22 @@ export default class PullRequestRow extends React.PureComponent {
     const byText = user && user.get('login') ? `@${user.get('login')}` : ''
 
     // pull request links will send to comment if comment was not loaded by app yet
-    const url = comment && !comment.get('body') && comment.get('html_url')
-      ? comment.get('html_url')
-      : pullRequest.get('html_url') || pullRequest.get('url')
+    const url =
+      comment && !comment.get('body') && comment.get('html_url')
+        ? comment.get('html_url')
+        : pullRequest.get('html_url') || pullRequest.get('url')
 
     return (
       <TouchableRow
         left={
-          user &&
-          <OwnerAvatar
-            avatarURL={user.get('avatar_url')}
-            linkURL={user.get('html_url') || user.get('url')}
-            size={smallAvatarWidth}
-            username={user.get('login')}
-          />
+          user && (
+            <OwnerAvatar
+              avatarURL={user.get('avatar_url')}
+              linkURL={user.get('html_url') || user.get('url')}
+              size={smallAvatarWidth}
+              username={user.get('login')}
+            />
+          )
         }
         read={read}
         right={
@@ -82,7 +84,12 @@ export default class PullRequestRow extends React.PureComponent {
             <Icon name={icon} color={color} muted={read} />&nbsp;
           </StyledText>
           {title}
-          {!!byText && <StyledText muted small> by {byText}</StyledText>}
+          {!!byText && (
+            <StyledText muted small>
+              {' '}
+              by {byText}
+            </StyledText>
+          )}
         </CardText>
       </TouchableRow>
     )

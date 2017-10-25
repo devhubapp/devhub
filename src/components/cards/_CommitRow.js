@@ -48,26 +48,34 @@ export default class CommitRow extends React.PureComponent {
     return (
       <TouchableRow
         left={
-          !!authorEmail &&
-          <OwnerAvatar
-            email={authorEmail}
-            size={smallAvatarWidth}
-            linkURL={
-              authorUsername
-                ? getGitHubURLForUser(authorUsername)
-                : getGitHubSearchURL({ q: authorEmail, type: 'Users' })
-            }
-            username={authorUsername}
-          />
+          !!authorEmail && (
+            <OwnerAvatar
+              email={authorEmail}
+              size={smallAvatarWidth}
+              linkURL={
+                authorUsername
+                  ? getGitHubURLForUser(authorUsername)
+                  : getGitHubSearchURL({ q: authorEmail, type: 'Users' })
+              }
+              username={authorUsername}
+            />
+          )
         }
         read={read}
         url={commit.get('html_url') || commit.get('url')}
         {...props}
       >
         <CardText numberOfLines={1} muted={read}>
-          <StyledText muted={read}><Icon name="git-commit" />&nbsp;</StyledText>
+          <StyledText muted={read}>
+            <Icon name="git-commit" />&nbsp;
+          </StyledText>
           {message}
-          {!!byText && <StyledText muted small> by {byText}</StyledText>}
+          {!!byText && (
+            <StyledText muted small>
+              {' '}
+              by {byText}
+            </StyledText>
+          )}
         </CardText>
       </TouchableRow>
     )

@@ -33,7 +33,7 @@ const LabelText = styled.Text`
     (textColor && (theme[textColor] || textColor)) ||
     (outline
       ? (color && (theme[color] || color)) ||
-          (muted ? theme.base05 : theme.base04)
+        (muted ? theme.base05 : theme.base04)
       : '') ||
     '#ffffff'};
   opacity: ${({ muted }) => (muted ? mutedOpacity : 1)};
@@ -63,7 +63,7 @@ const Label = ({
   isPrivate,
   radius = defaultRadius,
   ...props
-}: Props) =>
+}: Props) => (
   <LabelContainer
     borderColor={borderColor}
     color={color}
@@ -73,9 +73,14 @@ const Label = ({
     {...containerProps}
   >
     <LabelText color={color} outline={outline} muted={muted} {...props}>
-      {!!isPrivate && <Text><Icon name="lock" />&nbsp;</Text>}
+      {!!isPrivate && (
+        <Text>
+          <Icon name="lock" />&nbsp;
+        </Text>
+      )}
       {children}
     </LabelText>
   </LabelContainer>
+)
 
 export default Label

@@ -64,7 +64,8 @@ export function getNotificationReasonTextsAndColor(
         color: theme.brown,
         reason,
         label: 'Invited',
-        description: 'You accepted an invitation to contribute to the repository',
+        description:
+          'You accepted an invitation to contribute to the repository',
       }
 
     case 'manual':
@@ -283,15 +284,17 @@ export const defaultFilterColumnsData = OrderedMap({
     }),
   ),
   reasons: OrderedMap(
-    List(notificationReasons).toOrderedMap().mapEntries(([, reason]) => [
-      reason,
-      fromJS({
-        key: reason,
-        icon: 'primitive-dot',
-        ...reasonToColorAndTitle(reason),
-        ...defaultFilterColumnsCounters,
-      }),
-    ]),
+    List(notificationReasons)
+      .toOrderedMap()
+      .mapEntries(([, reason]) => [
+        reason,
+        fromJS({
+          key: reason,
+          icon: 'primitive-dot',
+          ...reasonToColorAndTitle(reason),
+          ...defaultFilterColumnsCounters,
+        }),
+      ]),
   ),
   repos: OrderedMap(),
 })

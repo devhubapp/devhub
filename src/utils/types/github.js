@@ -68,7 +68,7 @@ export type GithubLabel = {
   url: string, // "https://api.github.com/repos/hasadna/Open-Knesset/labels/4%20-%20Prioritized",
   name: string,
   color: string, // CCCCCC
-  'default': boolean,
+  default: boolean,
   url: string, // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 }
 
@@ -192,7 +192,7 @@ export type GithubCommitCommentEvent = {
   payload: {
     comment: GithubComment,
   },
-  'public': Boolean,
+  public: Boolean,
   created_at: string,
 }
 
@@ -215,7 +215,7 @@ export type CreateEvent = {
     description: string, // The reposit ory's current description.
     pusher_type: 'user' | string,
   },
-  'public': Boolean,
+  public: Boolean,
   created_at: string,
 }
 
@@ -234,7 +234,7 @@ export type DeleteEvent = {
     ref_type: 'branch' | 'tag', // The object that was deleted.
     pusher_type: 'user' | string,
   },
-  'public': Boolean,
+  public: Boolean,
   created_at: string,
 }
 

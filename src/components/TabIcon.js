@@ -18,8 +18,8 @@ const BadgeContainer = styled.View`
 `
 
 const BadgeText = styled.Text`
-  paddingHorizontal: 4px;
-  paddingVertical: 2px;
+  paddinghorizontal: 4px;
+  paddingvertical: 2px;
   font-size: 10px;
   background-color: transparent;
   color: #ffffff;
@@ -29,10 +29,11 @@ type Props = { badgeCount?: number, color: string, icon: string, size?: number }
 const TabIcon = ({ badgeCount, color, icon, size }: Props) => (
   <View>
     <Icon name={icon} size={size} color={color} />
-    {badgeCount > 0 &&
+    {badgeCount > 0 && (
       <BadgeContainer>
         <BadgeText>{badgeCount > 99 ? '99+' : badgeCount}</BadgeText>
-      </BadgeContainer>}
+      </BadgeContainer>
+    )}
   </View>
 )
 

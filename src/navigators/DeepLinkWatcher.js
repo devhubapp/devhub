@@ -17,8 +17,8 @@ const getSchemeAndPathFromURL = url => {
     return { scheme: null, path: url || '' }
   }
 
-  const [, scheme = null, path = null] = (url || '')
-    .match('([^:]+)://(.*)') || []
+  const [, scheme = null, path = null] =
+    (url || '').match('([^:]+)://(.*)') || []
   return { path, scheme }
 }
 
@@ -48,9 +48,10 @@ export default class DeepLinkWatcher extends React.PureComponent {
     if ((path || '').indexOf('github.com') === -1) return
 
     const httpText = scheme === 'http' ? 'http' : 'https'
-    const _url = path.indexOf('api.github.com') >= 0
-      ? githubHTMLUrlFromAPIUrl(path)
-      : `${httpText}://${path}`
+    const _url =
+      path.indexOf('api.github.com') >= 0
+        ? githubHTMLUrlFromAPIUrl(path)
+        : `${httpText}://${path}`
 
     Linking.openURL(_url)
   }

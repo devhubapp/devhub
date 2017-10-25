@@ -9,10 +9,8 @@ const pointsToAngle = (p1, p2) =>
 
 const propsToDeg = ({ start, end }) => `${pointsToAngle(start, end)}deg`
 
-const propsToLinearGradient = ({
-  colors,
-  ...props
-}) => `linear-gradient(${propsToDeg(props)}, ${colors.join(', ')})`
+const propsToLinearGradient = ({ colors, ...props }) =>
+  `linear-gradient(${propsToDeg(props)}, ${colors.join(', ')})`
 
 type Props = {
   colors: Array<string>,

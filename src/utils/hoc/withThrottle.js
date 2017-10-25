@@ -30,14 +30,11 @@ export default (intervalOrFn, ...throttleArgs) => {
         this.state = { props }
       }
 
-      updateStateWithProps = props => {
-        this.setState({ props: props || this.props })
-      }
-
       componentWillReceiveProps = props => {
-        const interval = typeof intervalOrFn === 'function'
-          ? intervalOrFn(props)
-          : intervalOrFn
+        const interval =
+          typeof intervalOrFn === 'function'
+            ? intervalOrFn(props)
+            : intervalOrFn
         validateInterval(interval)
 
         if (interval === 0) {
@@ -45,6 +42,10 @@ export default (intervalOrFn, ...throttleArgs) => {
         } else {
           throttle(this.updateStateWithProps, interval, ...throttleArgs)(props)
         }
+      }
+
+      updateStateWithProps = props => {
+        this.setState({ props: props || this.props })
       }
 
       render = () => <Component {...this.state.props} />

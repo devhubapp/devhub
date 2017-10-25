@@ -73,8 +73,9 @@ export default class AppVersion extends React.PureComponent {
         {...buttonProps}
       >
         {showAppName &&
-          statusText === appVersionText &&
-          <Text {...props}>{appDisplayName} </Text>}
+          statusText === appVersionText && (
+            <Text {...props}>{appDisplayName} </Text>
+          )}
         <Text {...props}>{statusText}</Text>
       </Button>
     )

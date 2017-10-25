@@ -20,9 +20,10 @@ export default (initialState = Map()) => {
     hostname: 'localhost',
     port: 8805,
   }
-  const composeEnhancers = Platform.OS === 'web'
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-    : composeWithDevTools(devToolsOptions)
+  const composeEnhancers =
+    Platform.OS === 'web'
+      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+      : composeWithDevTools(devToolsOptions)
 
   const store = createStore(
     reducer,

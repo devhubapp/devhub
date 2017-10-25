@@ -40,14 +40,16 @@ export default function prompt(
     return
   }
 
-  const buttonsWithCallback = (callbackOrButtons || [])
-    .filter(button => typeof button.onPress === 'function')
+  const buttonsWithCallback = (callbackOrButtons || []).filter(
+    button => typeof button.onPress === 'function',
+  )
 
   const buttons = Array.isArray(callbackOrButtons) ? callbackOrButtons : []
   const userInputNumber = Number.parseInt(userInput, 10)
-  const callback = userInputNumber >= 0 && userInputNumber < buttons.length
-    ? (buttons[userInputNumber] || {}).onPress
-    : (buttonsWithCallback[0] || {}).onPress
+  const callback =
+    userInputNumber >= 0 && userInputNumber < buttons.length
+      ? (buttons[userInputNumber] || {}).onPress
+      : (buttonsWithCallback[0] || {}).onPress
 
   if (typeof callback !== 'function') {
     return

@@ -98,8 +98,9 @@ export default class LoginScreen extends React.PureComponent {
     return (
       <Screen>
         <Main>
-          {error &&
-            <StatusMessage key={`error-${error}`} message={error} error />}
+          {error && (
+            <StatusMessage key={`error-${error}`} message={error} error />
+          )}
 
           <MainContent>
             <Logo

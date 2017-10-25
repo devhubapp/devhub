@@ -38,8 +38,9 @@ const mapDispatchToProps = { onResetAppDataRequest: resetAppDataRequest }
 type Props = { onResetAppDataRequest: Function }
 const SplashScreen = ({ onResetAppDataRequest }: Props) => (
   <Root backgroundColor={splashScreenBackgroundColor}>
-    {(Platform.OS === 'ios' || Platform.OS === 'android') &&
-      <StatusBar hidden />}
+    {(Platform.OS === 'ios' || Platform.OS === 'android') && (
+      <StatusBar hidden />
+    )}
 
     <ActivityIndicator color={base04} />
 

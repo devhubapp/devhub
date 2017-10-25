@@ -43,13 +43,14 @@ export default class CommentRow extends React.PureComponent {
     return (
       <ContentRow narrow={narrow} {...props}>
         <LeftColumn muted={read}>
-          {user &&
+          {user && (
             <OwnerAvatar
               avatarURL={user.get('avatar_url')}
               linkURL={user.get('html_url') || user.get('url')}
               size={smallAvatarWidth}
               username={user.get('login')}
-            />}
+            />
+          )}
         </LeftColumn>
 
         <MainColumnRowContent center>
