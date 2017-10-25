@@ -37,7 +37,7 @@
     "prop-types": "^15.6.0",
     "qs": "^6.5.1",
     "react": "^16.0.0",
-    "react-native": "0.49.3",
+    "react-native": "^0.50.0-rc.1",
     "react-native-code-push": "^5.1.3-beta",
     "react-native-immutable-list-view": "^0.6.2",
     "react-native-linear-gradient": "^2.3.0",
