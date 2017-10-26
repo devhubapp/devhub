@@ -125,7 +125,9 @@ export default class ColumnWithList extends React.PureComponent {
               renderSectionHeader={renderSectionHeader}
               refreshControl={refreshControl}
               sectionHeaderHasChanged={sectionHeaderHasChanged}
-              removeClippedSubviews
+              removeClippedSubviews={
+                false /* unfortunately react native still have the fucking blank screen bug  after all these fucking years */
+              }
               style={styles.list}
               {...props}
             />
