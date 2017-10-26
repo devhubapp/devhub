@@ -45,7 +45,7 @@
     "react-native-safari-view": "^2.1.0",
     "react-native-vector-icons": "^4.4.2",
     "react-native-wkwebview-reborn": "^1.8.0",
-    "react-navigation": "1.0.0-beta.12",
+    "react-navigation": "^1.0.0-beta.15",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-immutable": "^4.0.0",

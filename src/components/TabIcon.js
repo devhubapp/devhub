@@ -27,7 +27,7 @@ const BadgeText = styled.Text`
 
 type Props = { badgeCount?: number, color: string, icon: string, size?: number }
 const TabIcon = ({ badgeCount, color, icon, size }: Props) => (
-  <View>
+  <View style={{ height: size }}>
     <Icon name={icon} size={size} color={color} />
     {badgeCount > 0 && (
       <BadgeContainer>
