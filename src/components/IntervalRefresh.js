@@ -35,10 +35,11 @@ export default class IntervalRefresh extends React.Component {
     if (date) {
       const secondsDiff = moment().diff(date, 's')
 
-      if (secondsDiff >= 3600) {
-        // each hour
-        interval = 3600000
-      } else if (secondsDiff >= 60) {
+      // if (secondsDiff >= 3600) {
+      //   // each hour
+      //   interval = 3600000
+      // } else
+      if (secondsDiff >= 60) {
         // each minute
         interval = 60000
       } else {
@@ -82,7 +83,7 @@ export default class IntervalRefresh extends React.Component {
       }),
       () => {
         if (callback) {
-          const updatedTimes = this.state.updatedTimes
+          const { updatedTimes } = this.state
           callback({ updatedTimes })
         }
       },
