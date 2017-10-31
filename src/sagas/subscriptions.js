@@ -52,7 +52,7 @@ import {
   updateAllColumnsSubscriptions,
 } from '../actions'
 
-import { authenticate, getApiMethod } from '../api/github'
+import { authenticate, getApiMethod, requestTypes } from '../api/github'
 
 import { sagaActionChunk } from './_shared'
 
@@ -69,6 +69,12 @@ function* loadSubscriptionData({ payload }: Action<ApiRequestPayload>) {
 
   try {
     const { params, requestType, subscriptionId } = payload
+
+    // TODO: Revisit this. Why github api is returning 404 if a token is passed?
+    // Is this a temporary github bug or a breaking change?
+    // Any way to fix this other than the one below? (that removes the token from the request)
+    if (requestType === requestTypes.ORG_PUBLIC_EVENTS)
+      yield call(authenticate, null)
 
     const { response, timeout } = yield race({
       response: call(getApiMethod(requestType), params),

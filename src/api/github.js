@@ -63,9 +63,12 @@ export type ApiRequestType =
   | typeof MARK_ALL_NOTIFICATIONS_AS_READ_FOR_REPO
 
 export function authenticate(token: string) {
-  if (!token) return false
-
   try {
+    if (!token) {
+      github.authenticate(null)
+      return false
+    }
+
     github.authenticate({
       type: 'oauth',
       token,
