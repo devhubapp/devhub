@@ -29,8 +29,7 @@ export const columnIdSelector = (state, { columnId }) => columnId
 
 export const columnsEntitySelector = createImmutableSelector(
   state => get(entitiesSelector(state), 'columns'),
-  columns =>
-    columns.filter(Boolean).set('new', Map({ id: 'new', order: columns.size })),
+  columns => columns.filter(Boolean).set('new', Map({ id: 'new', order: 999 })),
 )
 
 const sortColumnsByDate = (b, a) =>
@@ -44,7 +43,8 @@ export const orderedColumnsSelector = createImmutableSelector(
     columns
       .toList()
       .sort(sortColumnsByDate)
-      .sortBy(column => get(column, 'order')),
+      .sortBy(column => get(column, 'order'))
+      .sort(column => (get(column, 'id') === 'new' ? 1 : 0)), // put new column at the end
 )
 
 export const columnIdsSelector = createImmutableSelector(
