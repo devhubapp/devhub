@@ -1,0 +1,22 @@
+{
+	"name": "devhub",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "jest"
+	},
+	"dependencies": {
+		"react": "16.0.0",
+		"react-native": "0.50.3"
+	},
+	"devDependencies": {
+		"babel-jest": "21.2.0",
+		"babel-preset-react-native": "4.0.0",
+		"jest": "21.2.1",
+		"react-test-renderer": "16.0.0"
+	},
+	"jest": {
+		"preset": "react-native"
+	}
+}
