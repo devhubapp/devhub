@@ -51,3 +51,10 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+
+# Code
+#
+.vscode
+
+.history
+.jest
