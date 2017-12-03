@@ -160,7 +160,8 @@ export default class NotificationCard extends React.PureComponent {
             <FullAbsoluteView>
               <TouchableWithoutFeedback
                 onPress={() =>
-                  toggleNotificationsReadStatus({ notificationIds })}
+                  toggleNotificationsReadStatus({ notificationIds })
+                }
               >
                 <FullAbsoluteView />
               </TouchableWithoutFeedback>

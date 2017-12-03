@@ -71,9 +71,8 @@ export function githubHTMLUrlFromAPIUrl(
 
   if (type === 'repos') {
     const repoFullName = getRepoFullNameFromUrl(apiURL)
-    const [type2, ...restOfURL2] = (apiURL.split(
-      `/repos/${repoFullName}/`,
-    )[1] || ''
+    const [type2, ...restOfURL2] = (
+      apiURL.split(`/repos/${repoFullName}/`)[1] || ''
     ).split('/')
 
     if (restOfURL2[0]) {
@@ -84,7 +83,9 @@ export function githubHTMLUrlFromAPIUrl(
         case 'issues':
           if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
             return number
-              ? `${baseURL}/${repoFullName}/pull/${number}/comments#issuecomment-${restOfURL2[1]}`
+              ? `${baseURL}/${repoFullName}/pull/${
+                  number
+                }/comments#issuecomment-${restOfURL2[1]}`
               : ''
           }
 
@@ -93,7 +94,9 @@ export function githubHTMLUrlFromAPIUrl(
         case 'pulls':
           if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
             return number
-              ? `${baseURL}/${repoFullName}/pull/${number}/comments#discussion_r${restOfURL2[1]}`
+              ? `${baseURL}/${repoFullName}/pull/${
+                  number
+                }/comments#discussion_r${restOfURL2[1]}`
               : ''
           }
 

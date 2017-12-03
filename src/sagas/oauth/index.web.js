@@ -7,8 +7,8 @@ import { listenForNextUrl } from './helpers'
 const callbackURL = ''
 
 function popupWindow(url, title, w, h) {
-  const left = (screen.width - w) / 2
-  const top = (screen.height - h) / 2
+  const left = (window.screen.width - w) / 2
+  const top = (window.screen.height - h) / 2
   return window.open(
     url,
     title,
@@ -16,7 +16,7 @@ function popupWindow(url, title, w, h) {
   )
 }
 
-export default (async function(serverURL, scopes = []) {
+export default async (serverURL, scopes = []) => {
   const scopesStr = (scopes || []).join(' ')
   const querystring = qs.stringify({
     scope: scopesStr,
@@ -46,4 +46,4 @@ export default (async function(serverURL, scopes = []) {
     popup.close()
     throw e
   }
-})
+}

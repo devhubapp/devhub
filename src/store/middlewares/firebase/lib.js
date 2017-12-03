@@ -99,9 +99,9 @@ export const addFirebaseListener = ({
   ...rest
 }) => {
   const fullPath = getRelativePathFromRef(ref, rootDatabaseRef)
-  let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}${once
-    ? ' once'
-    : ''}`
+  let message = `[FIREBASE] Watching ${fullPath || '/'} ${eventName}${
+    once ? ' once' : ''
+  }`
 
   if (blacklist && blacklist.length) {
     message = `${message}, except ${blacklist.join(', ')}`

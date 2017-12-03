@@ -198,9 +198,9 @@ export function getEventText(
       case 'ForkEvent':
         return `forked ${repositoryText}`
       case 'IssueCommentEvent':
-        return `commented on ${isPullRequest(get(payload, 'issue'))
-          ? pullRequestText
-          : issueText}`
+        return `commented on ${
+          isPullRequest(get(payload, 'issue')) ? pullRequestText : issueText
+        }`
       case 'IssuesEvent': // TODO: Fix these texts
         switch (get(payload, 'action')) {
           case 'closed':

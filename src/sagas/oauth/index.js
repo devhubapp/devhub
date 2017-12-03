@@ -6,7 +6,7 @@ import { name as appName } from '../../../package.json'
 
 const callbackURL = `${appName}://oauth/github`
 
-export default (async function(serverURL, scopes = []) {
+export default async (serverURL, scopes = []) => {
   const scopesStr = (scopes || []).join(' ')
   const querystring = qs.stringify({
     scope: scopesStr,
@@ -28,4 +28,4 @@ export default (async function(serverURL, scopes = []) {
   }
 
   return params
-})
+}

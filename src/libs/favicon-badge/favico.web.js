@@ -76,8 +76,8 @@
     _readyCb = function() {}
     _ready = _stop = false
     /**
-		 * Initialize favico
-		 */
+     * Initialize favico
+     */
     var init = function() {
       //merge initial options
       _opt = merge(_def, opt)
@@ -151,20 +151,20 @@
       }
     }
     /**
-		 * Icon namespace
-		 */
+     * Icon namespace
+     */
     var icon = {}
     /**
-		 * Icon is ready (reset icon) and start animation (if ther is any)
-		 */
+     * Icon is ready (reset icon) and start animation (if ther is any)
+     */
     icon.ready = function() {
       _ready = true
       icon.reset()
       _readyCb()
     }
     /**
-		 * Reset icon to default state
-		 */
+     * Reset icon to default state
+     */
     icon.reset = function() {
       //reset
       if (!_ready) {
@@ -183,8 +183,8 @@
       window.clearTimeout(_drawTimeout)
     }
     /**
-		 * Start animation
-		 */
+     * Start animation
+     */
     icon.start = function() {
       if (!_ready || _running) {
         return
@@ -237,8 +237,8 @@
     }
 
     /**
-		 * Badge types
-		 */
+     * Badge types
+     */
     var type = {}
     var options = function(opt) {
       opt.n = typeof opt.n === 'number' ? Math.abs(opt.n | 0) : opt.n
@@ -250,9 +250,9 @@
       return opt
     }
     /**
-		 * Generate circle
-		 * @param {Object} opt Badge options
-		 */
+     * Generate circle
+     * @param {Object} opt Badge options
+     */
     type.circle = function(opt) {
       opt = options(opt)
       var more = false
@@ -350,9 +350,9 @@
       _context.closePath()
     }
     /**
-		 * Generate rectangle
-		 * @param {Object} opt Badge options
-		 */
+     * Generate rectangle
+     * @param {Object} opt Badge options
+     */
     type.rectangle = function(opt) {
       opt = options(opt)
       var more = false
@@ -414,8 +414,8 @@
     }
 
     /**
-		 * Set badge
-		 */
+     * Set badge
+     */
     var badge = function(number, opts) {
       opts =
         (typeof opts === 'string'
@@ -466,8 +466,8 @@
     }
 
     /**
-		 * Set image as icon
-		 */
+     * Set image as icon
+     */
     var image = function(imageElement) {
       _readyCb = function() {
         try {
@@ -493,8 +493,8 @@
       }
     }
     /**
-		 * Set the icon from a source url. Won't work with badges.
-		 */
+     * Set the icon from a source url. Won't work with badges.
+     */
     var rawImageSrc = function(url) {
       _readyCb = function() {
         link.setIconSrc(url)
@@ -504,8 +504,8 @@
       }
     }
     /**
-		 * Set video as icon
-		 */
+     * Set video as icon
+     */
     var video = function(videoElement) {
       _readyCb = function() {
         try {
@@ -534,8 +534,8 @@
       }
     }
     /**
-		 * Set video as icon
-		 */
+     * Set video as icon
+     */
     var webcam = function(action) {
       //UR
       if (!window.URL || !window.URL.createObjectURL) {
@@ -611,8 +611,8 @@
     }
 
     /**
-		 * Draw video to context and repeat :)
-		 */
+     * Draw video to context and repeat :)
+     */
     function drawVideo(video) {
       if (video.paused || video.ended || _stop) {
         return false
@@ -630,8 +630,8 @@
 
     var link = {}
     /**
-		 * Get icons from HEAD tag or create a new <link> element
-		 */
+     * Get icons from HEAD tag or create a new <link> element
+     */
     link.getIcons = function() {
       var elms = []
       //get link element
@@ -735,8 +735,8 @@
     }
 
     /**
-		 * Merge options
-		 */
+     * Merge options
+     */
     function merge(def, opt) {
       var mergedOpt = {}
       var attrname
@@ -750,24 +750,24 @@
     }
 
     /**
-		 * Cross-browser page visibility shim
-		 * http://stackoverflow.com/questions/12536562/detect-whether-a-window-is-visible
-		 */
+     * Cross-browser page visibility shim
+     * http://stackoverflow.com/questions/12536562/detect-whether-a-window-is-visible
+     */
     function isPageHidden() {
       return _doc.hidden || _doc.msHidden || _doc.webkitHidden || _doc.mozHidden
     }
 
     /**
-		 * @namespace animation
-		 */
+     * @namespace animation
+     */
     var animation = {}
     /**
-		 * Animation "frame" duration
-		 */
+     * Animation "frame" duration
+     */
     animation.duration = 40
     /**
-		 * Animation types (none,fade,pop,slide)
-		 */
+     * Animation types (none,fade,pop,slide)
+     */
     animation.types = {}
     animation.types.fade = [
       {
@@ -1018,12 +1018,12 @@
       },
     ]
     /**
-		 * Run animation
-		 * @param {Object} opt Animation options
-		 * @param {Object} cb Callabak after all steps are done
-		 * @param {Object} revert Reverse order? true|false
-		 * @param {Object} step Optional step number (frame bumber)
-		 */
+     * Run animation
+     * @param {Object} opt Animation options
+     * @param {Object} cb Callabak after all steps are done
+     * @param {Object} revert Reverse order? true|false
+     * @param {Object} step Optional step number (frame bumber)
+     */
     animation.run = function(opt, cb, revert, step) {
       var animationType =
         animation.types[isPageHidden() ? 'none' : _opt.animation]

@@ -120,7 +120,7 @@ test('It filters an object by map', () => {
     a: 'a',
     b: { bb: { bbb: true } },
     // c: { cc: { ccc: true } },
-    d: { /* d: 'd',*/ dd: 'dd' },
+    d: { /* d: 'd', */ dd: 'dd' },
     e: { /* e: 'e', */ ee: 'eee', eee: 'eee' },
     f: { f: 'f' },
     g: {

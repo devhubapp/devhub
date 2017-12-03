@@ -16,14 +16,7 @@
   "globals": {
     "__DEV__": true
   },
-  "plugins": [
-    "babel",
-    "flowtype",
-    "import",
-    "react",
-    "react-native",
-    "prettier"
-  ],
+  "plugins": ["babel", "flowtype", "import", "react", "react-native", "prettier"],
   "parserOptions": {
     "ecmaVersion": 6,
     "ecmaFeatures": {
@@ -34,12 +27,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".android.js",
-          ".ios.js"
-        ]
+        "extensions": [".js", ".jsx", ".android.js", ".ios.js"]
       }
     }
   },
@@ -57,16 +45,14 @@
     "no-console": [
       "error",
       {
-        "allow": [
-          "debug",
-          "error",
-          "warn"
-        ]
+        "allow": ["debug", "error", "warn"]
       }
     ],
     "no-underscore-dangle": 0,
     "no-nested-ternary": 0,
     "react/default-props-match-prop-types": 0,
+    "react/prop-types": 0,
+    "react/no-unused-prop-types": 0,
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 2,
     "react-native/no-color-literals": 2,
