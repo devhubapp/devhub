@@ -20,6 +20,11 @@ public class MainApplication extends Application implements ReactApplication {
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
     @Override
+    protected String getJSMainModuleName() {
+        return "index";
+    }
+
+    @Override
     protected String getJSBundleFile() {
         return CodePush.getJSBundleFile();
     }
