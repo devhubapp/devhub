@@ -1,6 +1,6 @@
-import * as firebase from 'firebase'
 import { debounce } from 'lodash'
 
+import firebase from '../../../libs/firebase'
 import {
   RESET_ACCOUNT_DATA,
   FIREBASE_RECEIVED_EVENT,

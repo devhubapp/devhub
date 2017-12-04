@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "589579854600",
+    "firebase_url": "https://devhub-65899.firebaseio.com",
+    "project_id": "devhub-65899",
+    "storage_bucket": "devhub-65899.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589579854600:android:9e47b631a5be6ed3",
+        "android_client_info": {
+          "package_name": "org.brunolemos.devhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589579854600-6aqpf7hs07lgmu50vvqer3cr7ebbcci9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.brunolemos.devhub",
+            "certificate_hash": "de90c81a791b4f6c17ab170051683e9ebc99eebe"
+          }
+        },
+        {
+          "client_id": "589579854600-vcf6q5kovufi6jmf905k3hh76754jgdv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhCQmv6cXRxu9bUQcvsVBlP4cwJvLwo0U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589579854600-nd8bv6fcdjvfg0ke6j4cu44brnqdhs55.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.brunolemos.devhub"
+              }
+            },
+            {
+              "client_id": "589579854600-vcf6q5kovufi6jmf905k3hh76754jgdv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

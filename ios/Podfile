@@ -1,0 +1,8 @@
+platform :ios, '9.0'
+
+target 'devhub' do
+  pod 'Firebase/Auth'
+  pod 'Firebase/Core'
+  pod 'Firebase/Database'
+  pod 'Firebase/Performance'
+end

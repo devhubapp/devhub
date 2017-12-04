@@ -65,8 +65,8 @@ import com.android.build.OutputFile
  * ]
  */
 project.ext.react = [
-    entryFile: "index.js",
-    nodeExecutableAndArgs : ["/usr/local/bin/node"]
+        entryFile            : "index.js",
+        nodeExecutableAndArgs: ["/usr/local/bin/node"]
 ];
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -120,7 +120,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -131,6 +131,14 @@ android {
 }
 
 dependencies {
+    compile "com.google.android.gms:play-services-base:11.6.2"
+
+    implementation 'com.google.firebase:firebase-auth:11.6.2'
+    implementation 'com.google.firebase:firebase-core:11.6.2'
+    implementation 'com.google.firebase:firebase-database:11.6.2'
+    compile(project(':react-native-firebase')) {
+        transitive = false
+    }
     compile project(':react-native-code-push')
     compile project(':react-native-vector-icons')
     compile project(':react-native-prompt-android')
@@ -147,3 +155,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'

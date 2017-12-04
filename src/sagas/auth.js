@@ -1,9 +1,9 @@
 // @flow
 
 import moment from 'moment'
-import * as firebase from 'firebase'
 import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
+import firebase from '../libs/firebase'
 import { bugsnagClient } from '../utils/services'
 
 import {

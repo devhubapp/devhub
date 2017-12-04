@@ -5,6 +5,7 @@
   "homepage": "./",
   "dependencies": {
     "bugsnag-js": "^3.3.3",
+    "firebase": "^4.7.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-helmet": "^5.2.0",
@@ -19,8 +20,7 @@
     "sw-precache": "^5.2.0"
   },
   "scripts": {
-    "build":
-      "NODE_ENV=production extensible-react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build": "NODE_ENV=production extensible-react-scripts build && sw-precache --config=sw-precache-config.js",
     "deploy": "gh-pages -d build",
     "eject": "extensible-react-scripts eject",
     "predeploy": "PUBLIC_URL=https://brunolemos.github.io/devhub/ npm run build",
@@ -29,9 +29,15 @@
     "test": "extensible-react-scripts test --env=jsdom"
   },
   "jest": {
-    "collectCoverageFrom": ["src/**/*.{js,jsx}"],
-    "setupFiles": ["<rootDir>/config/polyfills.js"],
-    "testPathIgnorePatterns": ["<rootDir>[/\\\\](build|docs|node_modules|scripts)[/\\\\]"],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>[/\\\\](build|docs|node_modules|scripts)[/\\\\]"
+    ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
@@ -39,13 +45,17 @@
       "^.+\\.(styl|sass|less|css)$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|styl|sass|less|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"],
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+    ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     }
   },
   "babel": {
-    "presets": ["react-app"]
+    "presets": [
+      "react-app"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -3,6 +3,9 @@ package org.brunolemos.devhub;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
 import im.shimo.react.prompt.RNPromptPackage;
@@ -38,6 +41,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+                new RNFirebasePackage(),
+                new RNFirebaseAuthPackage(),
+                new RNFirebaseDatabasePackage(),
                 new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
                 new VectorIconsPackage(),
                 new RNPromptPackage(),

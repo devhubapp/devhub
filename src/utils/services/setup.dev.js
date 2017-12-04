@@ -1,4 +1,4 @@
-import * as firebase from 'firebase'
+import firebase from '../../libs/firebase'
 
 export default () => ({
   bugsnagClient: null,
