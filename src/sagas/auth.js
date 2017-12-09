@@ -69,13 +69,18 @@ function* onLoginSuccess() {
 function* logout({ type } = {}) {
   try {
     yield firebase.auth().signOut()
-    if (bugsnagClient) bugsnagClient.clearUser()
-
-    if (type === 'LOGIN_FAILURE' || type === 'LOGOUT')
-      yield put(resetAppDataRequest(sagaActionChunk))
   } catch (e) {
     console.error(`Failed to logout from Firebase: ${e.message}`, e)
   }
+
+  try {
+    if (bugsnagClient) bugsnagClient.clearUser()
+  } catch (e) {
+    console.error(`Failed to logout from Bugsnag: ${e.message}`, e)
+  }
+
+  if (type === 'LOGIN_FAILURE' || type === 'LOGOUT')
+    yield put(resetAppDataRequest(sagaActionChunk))
 }
 
 function* onCurrentUserUpdate() {
@@ -90,8 +95,7 @@ function* onCurrentUserUpdate() {
   bugsnagClient.setUser(id, name, email)
 }
 
-function* handleFirebaseAuthStateChanged({ user }) {
-  // console.log('handleFirebaseAuthStateChanged', user)
+function* handleFirebaseAuthStateChanged({ payload: { user } = {} }) {
   const githubData = (user || {}).providerData && user.providerData[0]
 
   const { uid: firebaseId } = user || {}
