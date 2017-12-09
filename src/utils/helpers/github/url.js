@@ -83,9 +83,9 @@ export function githubHTMLUrlFromAPIUrl(
         case 'issues':
           if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
             return number
-              ? `${baseURL}/${repoFullName}/pull/${
-                  number
-                }/comments#issuecomment-${restOfURL2[1]}`
+              ? `${baseURL}/${repoFullName}/pull/${number}/comments#issuecomment-${
+                  restOfURL2[1]
+                }`
               : ''
           }
 
@@ -94,9 +94,9 @@ export function githubHTMLUrlFromAPIUrl(
         case 'pulls':
           if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
             return number
-              ? `${baseURL}/${repoFullName}/pull/${
-                  number
-                }/comments#discussion_r${restOfURL2[1]}`
+              ? `${baseURL}/${repoFullName}/pull/${number}/comments#discussion_r${
+                  restOfURL2[1]
+                }`
               : ''
           }
 

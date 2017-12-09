@@ -6,9 +6,7 @@ import throttle from 'lodash/throttle'
 const validateInterval = interval => {
   if (!(typeof interval === 'number' && interval >= 0)) {
     throw new Error(
-      `[throttle] Interval parameter must be a number (ms) or a function(props) => number. Received ${
-        interval
-      }.`,
+      `[throttle] Interval parameter must be a number (ms) or a function(props) => number. Received ${interval}.`,
     )
   }
 }

@@ -18,9 +18,7 @@ const propTypes = {
     // } else
     if (!Immutable.Iterable.isIterable(props[propName])) {
       return new Error(
-        `Invalid prop ${propName} supplied to ${
-          componentName
-        }: Must be instance of Immutable.Iterable.`,
+        `Invalid prop ${propName} supplied to ${componentName}: Must be instance of Immutable.Iterable.`,
       )
     }
 

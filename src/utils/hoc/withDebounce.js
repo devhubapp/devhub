@@ -6,9 +6,7 @@ import debounce from 'lodash/debounce'
 const validateInterval = interval => {
   if (!(typeof interval === 'number' && interval >= 0)) {
     throw new Error(
-      `[debounce] Interval parameter must be a number (ms) or a function(props) => number. Received ${
-        interval
-      }.`,
+      `[debounce] Interval parameter must be a number (ms) or a function(props) => number. Received ${interval}.`,
     )
   }
 }
