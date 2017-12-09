@@ -38,7 +38,7 @@ const checkDiffAndPatchDebounced = debounce((stateA, stateB, map, store) => {
 
     if (stateDiff && _currentUserId) {
       applyPatchOnFirebase({
-        debug: false, // __DEV__,
+        debug: __DEV__,
         patch: stateDiff,
         ref: _databaseRef,
         rootDatabaseRef: _databaseRef,
@@ -116,7 +116,7 @@ export function startFirebase({ store, userId }) {
           )
           _lastState = store.getState()
         },
-        debug: false, // __DEV__,
+        debug: __DEV__,
 
         // ignore the first child_added because it is redundant,
         // we already got this using ref.once('value')
@@ -130,7 +130,7 @@ export function startFirebase({ store, userId }) {
         rootDatabaseRef: _databaseRef,
       })
     },
-    debug: false, // __DEV__,
+    debug: __DEV__,
     eventName: 'value',
     map: mapFirebaseToState,
     once: true,
