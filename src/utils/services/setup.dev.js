@@ -3,13 +3,16 @@ import firebase from '../../libs/firebase'
 export default () => ({
   bugsnagClient: null,
 
-  firebaseApp: firebase.initializeApp({
-    apiKey: 'AIzaSyDsTWehKARyK8RKSFCKuVoG_m00j1OGhDQ',
-    authDomain: 'devhub-65899.firebaseapp.com',
-    databaseURL: 'https://devhub-65899.firebaseio.com',
-    storageBucket: 'devhub-65899.appspot.com',
-    messagingSenderId: '589579854600',
-  }),
+  firebaseApp:
+    firebase.apps.length === 0
+      ? firebase.initializeApp({
+          apiKey: 'AIzaSyDsTWehKARyK8RKSFCKuVoG_m00j1OGhDQ',
+          authDomain: 'devhub-65899.firebaseapp.com',
+          databaseURL: 'https://devhub-65899.firebaseio.com',
+          storageBucket: 'devhub-65899.appspot.com',
+          messagingSenderId: '589579854600',
+        })
+      : firebase.app(),
 })
 
 // // fetch logger
