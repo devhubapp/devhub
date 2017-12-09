@@ -61,7 +61,7 @@ export function stopFirebase() {
 export function startFirebase({ store, userId }) {
   stopFirebase()
 
-  _databaseRef = firebase.database().ref(`users/${userId}/`)
+  _databaseRef = firebase.database().ref(`users/${userId}`)
   if (__DEV__) console.debug('[FIREBASE] Connected.')
 
   // get all the data on firebase and compare with the local state.

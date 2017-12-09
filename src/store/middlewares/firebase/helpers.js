@@ -30,6 +30,10 @@ export const firebaseCharMap = {
 
 export const firebaseInvertedCharMap = _.invert(firebaseCharMap)
 
+export function fixPath(path) {
+  return `${path || ''}`.replace(/\/\//g, '/').replace(/(^\/|\/$)/g, '')
+}
+
 // firebase does not support some characters as object key, like '/'
 export function fixFirebaseKey(key, encrypt = false) {
   if (!key || typeof key !== 'string') {
@@ -59,12 +63,7 @@ export function fixFirebaseKeysFromObject(object, encrypt = false) {
 export function getPathFromRef(ref) {
   if (!ref) return ''
 
-  let path = ref.toString()
-  while (path.slice(-1) === '/') {
-    path = path.slice(0, -1)
-  }
-
-  return path
+  return fixPath(ref.toString())
 }
 
 export function getRelativePathFromRef(ref, rootRef) {
@@ -80,12 +79,7 @@ export function getRelativePathFromRef(ref, rootRef) {
     return ''
   }
 
-  let path = itemPath.replace(rootPath, '')
-  while (path.slice(-1) === '/') {
-    path = path.slice(0, -1)
-  }
-
-  return path
+  return fixPath(itemPath.replace(rootPath, ''))
 }
 
 export function getMapAnalysis(map) {
