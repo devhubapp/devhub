@@ -6,13 +6,11 @@
   "private": true,
   "scripts": {
     "flow": "flow '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
-    "format":
-      "npm run format_options -- --write '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
+    "format": "npm run format_options -- --write '{.,src/**,web/{config,scripts,src}/**,jest/**}/*.js'",
     "format_options": "prettier --no-semi --trailing-comma all --single-quote",
     "lint": "eslint '{.,src/**,web/{config,scripts,src},jest/**}/*.js'",
     "lint-fix": "npm run lint -- --fix",
-    "postinstall":
-      "remotedev-debugger --hostname localhost --port 8805 --injectdebugger --injectserver",
+    "postinstall": "remotedev-debugger --hostname localhost --port 8805 --injectdebugger --injectserver",
     "precommit": "lint-staged",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
@@ -82,18 +80,28 @@
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "^6.0.0",
-    "prettier": "^1.8.2",
+    "prettier": "^1.9.1",
     "react-test-renderer": "^16.2.0",
     "remote-redux-devtools-on-debugger": "^0.8.3",
     "whatwg-fetch": "^2.0.3"
   },
   "jest": {
     "preset": "react-native",
-    "moduleFileExtensions": ["js"],
-    "moduleDirectories": ["node_modules", "web/node_modules"],
-    "setupFiles": ["./jest/setup.js"],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "web/node_modules"
+    ],
+    "setupFiles": [
+      "./jest/setup.js"
+    ],
     "testRegex": "(src/|web/(config|scripts|src)/|jest/|).*\\.test\\.js$",
-    "transformIgnorePatterns": ["node_modules/(?!react*)/", "web/node_modules/(?!react*)/"]
+    "transformIgnorePatterns": [
+      "node_modules/(?!react*)/",
+      "web/node_modules/(?!react*)/"
+    ]
   },
   "lint-staged": {
     "*.js": [
