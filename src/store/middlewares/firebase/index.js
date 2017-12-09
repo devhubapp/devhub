@@ -90,7 +90,7 @@ export function startFirebase({ store, userId }) {
         missingOnFirebaseMap,
       )
 
-      if (!firebaseData || !localData) return
+      // if (!firebaseData || !localData) return
 
       // send to firebase some things from the initial state, like app.version, ...
       checkDiffAndPatchDebounced(
