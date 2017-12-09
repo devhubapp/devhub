@@ -23,7 +23,7 @@
     "web:deploy": "pushd web; npm run deploy; popd;",
     "web:start": "pushd web; npm run start; popd;",
     "web:test": "pushd web; npm run test; popd;",
-    "xcode": "open ios/devhub.xcodeproj"
+    "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
