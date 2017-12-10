@@ -630,7 +630,8 @@ export type GithubNotificationReason =
   | 'mention' // You were specifically @mentioned in the content.
   | 'state_change' // You changed the thread state (for example, closing an Issue or merging a PR).
   | 'subscribed' // You're watching the repository.
-  | 'team_mention'
+  | 'team_mention' // A team you are part of were @mentioned in the content.
+  | 'review_requested' // Someone requested your review on a pull request
 
 export type GithubNotification = {
   id: string,

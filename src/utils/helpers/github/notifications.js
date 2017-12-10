@@ -26,6 +26,7 @@ export const notificationReasons = [
   'state_change',
   'subscribed',
   'team_mention',
+  'review_requested',
 ]
 
 export function getNotificationReasonTextsAndColor(
@@ -106,6 +107,14 @@ export function getNotificationReasonTextsAndColor(
         reason,
         label: 'Team mentioned',
         description: 'Your team was mentioned',
+      }
+
+    case 'review_requested':
+      return {
+        color: theme.yellow,
+        reason,
+        label: 'Review requested',
+        description: 'Someone requested you a review',
       }
 
     default:
