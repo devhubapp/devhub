@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native'
 import Platform from '../libs/platform'
 
 const getBackgroundColorFromProps = ({ backgroundColor, theme }) =>
-  backgroundColor || (theme || {}).base00
+  backgroundColor || (theme || {}).base00 || '#FFFFFF'
 
 export default styled(SafeAreaView)`
   flex: 1;
