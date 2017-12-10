@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "studio": "open -a /Applications/Android\\ Studio.app ./android/",
+    "test": "jest",
+    "xcode": "open ios/devhub.xcodeproj"
   },
   "dependencies": {
     "react": "^16.2.0",
