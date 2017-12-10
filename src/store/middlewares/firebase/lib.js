@@ -228,7 +228,7 @@ export function watchFirebaseFromMap({
         debug,
         eventName: 'value',
         ignoreFn,
-        map,
+        map: get(map, field),
         once,
         ref: ref.child(field),
         rootDatabaseRef,
