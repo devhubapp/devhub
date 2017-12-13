@@ -137,6 +137,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-gesture-handler')
+    compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules

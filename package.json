@@ -8,10 +8,16 @@
     "xcode": "open ios/devhub.xcodeproj"
   },
   "dependencies": {
+    "@types/react-native-vector-icons": "^4.4.2",
+    "gravatar": "^1.6.0",
     "react": "^16.2.0",
-    "react-native": "^0.51.0"
+    "react-native": "^0.51.0",
+    "react-native-gesture-handler": "^1.0.0-alpha.35",
+    "react-native-vector-icons": "^4.4.2",
+    "warna": "^0.2.4"
   },
   "devDependencies": {
+    "@types/gravatar": "^1.4.28",
     "@types/jest": "^21.1.5",
     "@types/react": "^16.0.21",
     "@types/react-native": "^0.50.2",
@@ -25,7 +31,8 @@
     "tslint": "^5.8.0",
     "tslint-config-airbnb": "^5.3.0",
     "tslint-react": "^3.2.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "why-did-you-update": "^0.1.0"
   },
   "jest": {
     "preset": "react-native",
@@ -34,13 +41,22 @@
         "useBabelrc": true
       }
     },
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
     "transform": {
       "^.+\\.(jsx?)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.(tsx?)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/.history/"],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/.history/"
+    ],
     "cacheDirectory": ".jest/cache"
   }
 }

@@ -3,12 +3,21 @@
   "extends": ["tslint:recommended", "tslint-config-airbnb", "tslint-react"],
   "jsRules": {},
   "rules": {
-    "semicolon": false,
+    "curly": false,
+    "import-name": false,
+    "jsx-boolean-value": false,
+    "jsx-no-multiline-js": false,
     "member-access": false,
     "no-empty-interface": false,
-    "import-name": false,
-    "curly": false,
-    "ter-arrow-parens": false
+    "semicolon": false,
+    "ter-arrow-parens": false,
+    "variable-name": [
+      true,
+      "allow-leading-underscore",
+      "allow-pascal-case",
+      "ban-keywords",
+      "check-format"
+    ]
   },
   "rulesDirectory": []
 }
