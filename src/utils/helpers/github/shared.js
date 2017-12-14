@@ -119,7 +119,7 @@ export function getUserAvatarByEmail(
 ) {
   const steppedSize = getSteppedSize(size)
   const username = tryGetUsernameFromGithubEmail(email)
-  if (username) return getUserAvatarByUsername(username, { size: steppedSize })
+  if (username) return getUserAvatarByUsername(username, steppedSize)
 
   const options = { size: steppedSize, d: 'retro', ...otherOptions }
   return `https:${gravatar.url(email, options)}`.replace('??', '?')
