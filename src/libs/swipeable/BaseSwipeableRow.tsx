@@ -1,5 +1,6 @@
-import React, { PureComponent } from 'react'
-import { View } from 'react-native'
+import React, { PureComponent, ReactNode } from 'react'
+import { Animated, View } from 'react-native'
+import { Swipeable, SwipeableProperties } from 'react-native-gesture-handler'
 
 enum BaseActionType {
   BUTTON = 'BUTTON',
@@ -22,37 +23,42 @@ export interface IBaseProps {
 
 export interface IBaseState {}
 
-export enum Placement {
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT',
-}
+export type Placement = 'LEFT' | 'RIGHT'
 
 export const defaultWidth = 64
 
-export default class BaseSwipeableRow extends PureComponent<IBaseProps, IBaseState> {
-  _swipeableRow = null
+export default abstract class BaseSwipeableRow<P = {}, S = {}> extends PureComponent<
+  IBaseProps & P,
+  IBaseState & S
+> {
+  _swipeableRow: Swipeable | null = null
 
-  renderButtonAction = (
+  abstract renderButtonAction: (
     action: IBaseAction,
-    { dragX, placement, progress, x }: { x: number; placement: Placement; progress: number },
-  ) => {
-    throw new Error('Not implemented: renderButtonAction')
-  }
+    {
+      dragX,
+      placement,
+      progress,
+      x,
+    }: { x: number; placement: Placement; progress: Animated.Value; dragX: Animated.Value },
+  ) => ReactNode
 
-  renderFullAction = (
+  abstract renderFullAction: (
     action: IBaseAction,
-    { dragX, placement, progress }: { placement: Placement },
-  ) => {
-    throw new Error('Not implemented: renderFullAction')
-  }
+    {
+      dragX,
+      placement,
+      progress,
+    }: { dragX: Animated.Value; placement: Placement; progress: Animated.Value },
+  ) => ReactNode
 
-  renderLeftActions = (progress: number, dragX) => {
+  renderLeftActions: SwipeableProperties['renderLeftActions'] = (progress, dragX) => {
     const { leftActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
     const buttonActions = actions.filter(action => action.type !== 'FULL')
 
-    if (fullAction) return this.renderFullAction(fullAction, { dragX, placement: 'LEFT', progress })
+    if (fullAction) return this.renderFullAction(fullAction, { dragX, progress, placement: 'LEFT' })
 
     const width = buttonActions.reduce((total, action) => total + (action.width || defaultWidth), 0)
     let x = 0
@@ -61,20 +67,20 @@ export default class BaseSwipeableRow extends PureComponent<IBaseProps, IBaseSta
       <View style={{ width, flexDirection: 'row' }}>
         {buttonActions.map(action => {
           x += action.width || defaultWidth
-          return this.renderButtonAction(action, { placement: 'LEFT', progress, x })
+          return this.renderButtonAction(action, { dragX, progress, x, placement: 'LEFT' })
         })}
       </View>
     )
   }
 
-  renderRightActions = (progress: number, dragX) => {
+  renderRightActions: SwipeableProperties['renderRightActions'] = (progress, dragX) => {
     const { rightActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
     const buttonActions = actions.filter(action => action.type !== 'FULL')
 
     if (fullAction)
-      return this.renderFullAction(fullAction, { dragX, placement: 'RIGHT', progress })
+      return this.renderFullAction(fullAction, { dragX, progress, placement: 'RIGHT' })
 
     const width = buttonActions.reduce((total, action) => total + (action.width || defaultWidth), 0)
     let x = width
@@ -84,8 +90,8 @@ export default class BaseSwipeableRow extends PureComponent<IBaseProps, IBaseSta
         {buttonActions.map(action => {
           const component = this.renderButtonAction(action, {
             dragX,
-            placement: 'RIGHT',
             progress,
+            placement: 'RIGHT',
             x,
           })
           x -= action.width || defaultWidth
@@ -95,15 +101,13 @@ export default class BaseSwipeableRow extends PureComponent<IBaseProps, IBaseSta
     )
   }
 
-  updateRef = ref => {
+  updateRef = (ref: Swipeable) => {
     this._swipeableRow = ref
   }
 
   close = () => {
-    this._swipeableRow.close()
+    if (this._swipeableRow) this._swipeableRow.close()
   }
 
-  render() {
-    throw new Error('Not implemented: render')
-  }
+  abstract render(): ReactNode
 }

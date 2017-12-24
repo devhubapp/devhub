@@ -1,12 +1,16 @@
-import React from 'react'
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import React, { PureComponent } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
 
+import theme from '../../../styles/themes/dark'
+import { IGitHubEvent } from '../../../types/index'
+import { getEventIconAndColor, getEventText } from '../../../utils/helpers/github/events';
 import Avatar from '../../common/Avatar'
 import cardStyles from '../styles'
 import CardIcon from './CardIcon'
+import { getUserPressHandler } from './rows/helpers'
 
 export interface IProps {
-  username: string
+  event: IGitHubEvent
 }
 
 export interface IState {}
@@ -32,27 +36,35 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-const CardHeader = ({ username }: IProps) => (
-  <View style={styles.container}>
-    <View style={cardStyles.leftColumn}>
-      <Avatar username={username} style={cardStyles.avatar} />
-    </View>
+export default class CardHeader extends PureComponent<IProps> {
+  render() {
+    const { event } = this.props
 
-    <View style={styles.rightColumnCentered}>
-      <View style={styles.outerContainer}>
-        <View style={styles.innerContainer}>
-          <View style={cardStyles.horizontal}>
-            <Text style={cardStyles.usernameText}>{username}</Text>
-            <Text style={cardStyles.timestampText}>&nbsp;•&nbsp;2h (13:59)</Text>
-          </View>
+    const cardIcon = getEventIconAndColor(event, theme)
 
-          <Text style={cardStyles.descriptionText}>starred a repository</Text>
+    return (
+      <View style={styles.container}>
+        <View style={cardStyles.leftColumn}>
+          <Avatar username={event.actor.login} style={cardStyles.avatar} />
         </View>
 
-        <CardIcon name="star" color="#FFC107" />
-      </View>
-    </View>
-  </View>
-)
+        <View style={styles.rightColumnCentered}>
+          <View style={styles.outerContainer}>
+            <View style={styles.innerContainer}>
+              <View style={cardStyles.horizontal}>
+                <TouchableOpacity onPress={getUserPressHandler(event.actor.login)}>
+                  <Text style={cardStyles.usernameText}>{event.actor.login}</Text>
+                </TouchableOpacity>
+                <Text style={cardStyles.timestampText}>&nbsp;•&nbsp;2h (13:59)</Text>
+              </View>
 
-export default CardHeader
+              <Text style={cardStyles.descriptionText}>{getEventText(event)}</Text>
+            </View>
+
+            <CardIcon name={cardIcon.icon} color={cardIcon.color || theme.base04} />
+          </View>
+        </View>
+      </View>
+    )
+  }
+}

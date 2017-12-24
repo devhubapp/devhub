@@ -1,12 +1,13 @@
-import React, { ReactNode } from 'react'
-import { SafeAreaView, StyleSheet, ViewStyle } from 'react-native'
+import React, { ReactNode, SFC } from 'react'
+import { SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native'
 
-import theme from '../../styles/themes/light'
+import theme from '../../styles/themes/dark'
 
 export const size = 48
 
 export interface IProps {
   children: ReactNode
+  useSafeArea?: boolean
   style?: ViewStyle
 }
 
@@ -17,8 +18,15 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-const Screen = (props: IProps) => (
-  <SafeAreaView {...props} style={[styles.container, props.style]} />
-)
+const Screen: SFC<IProps> = ({ useSafeArea, ...props }) =>
+  useSafeArea ? (
+    <SafeAreaView {...props} style={[styles.container, props.style]} />
+  ) : (
+    <View {...props} style={[styles.container, props.style]} />
+  )
+
+Screen.defaultProps = {
+  useSafeArea: true,
+}
 
 export default Screen

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { SFC } from 'react'
 import { StyleSheet, ViewStyle } from 'react-native'
 import { IconProps } from 'react-native-vector-icons/Icon'
 import Icon from 'react-native-vector-icons/Octicons'
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-const CardIcon = (props: IProps) => {
+const CardIcon: SFC<IProps> = props => {
   return <Icon {...props} style={[styles.container, props.style]} />
 }
 

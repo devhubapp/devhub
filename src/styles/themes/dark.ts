@@ -40,7 +40,7 @@ export const base16 = {
   base0F,
 }
 
-export const cardBackground = base03
+export const cardBackground = base02
 export const tabBarBackground = Platform.select({
   android: base01,
   default: base02,

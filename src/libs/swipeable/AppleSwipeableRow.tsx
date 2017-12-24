@@ -1,7 +1,6 @@
 import React from 'react'
 import { Animated, StyleSheet, Text } from 'react-native'
-import { RectButton } from 'react-native-gesture-handler'
-import Swipeable from 'react-native-gesture-handler/Swipeable'
+import { RectButton, Swipeable } from 'react-native-gesture-handler'
 
 import BaseSwipeableRow, { IBaseAction, IBaseProps, Placement } from './BaseSwipeableRow'
 
@@ -13,12 +12,12 @@ export interface IAction extends IBaseAction {
 
 export interface IProps extends IBaseProps {}
 
-export default class AppleSwipeableRow extends BaseSwipeableRow {
+export default class AppleSwipeableRow extends BaseSwipeableRow<IAction> {
   _swipeableRow = null
 
   renderButtonAction = (
     action: IAction,
-    { x, placement, progress }: { x: number; placement: Placement; progress },
+    { x, placement, progress }: { x: number; placement: Placement; progress: Animated.Value },
   ) => {
     const transform = {
       translateX:
@@ -36,7 +35,6 @@ export default class AppleSwipeableRow extends BaseSwipeableRow {
     const pressHandler = () => {
       action.onPress()
       this.close()
-      alert(action.label)
     }
 
     return (
@@ -64,7 +62,10 @@ export default class AppleSwipeableRow extends BaseSwipeableRow {
     )
   }
 
-  renderFullAction = (action: IAction, { dragX, placement }: { placement: Placement }) => {
+  renderFullAction = (
+    action: IAction,
+    { dragX, placement }: { dragX: Animated.Value; placement: Placement },
+  ) => {
     const transform = {
       translateX:
         placement === 'LEFT'

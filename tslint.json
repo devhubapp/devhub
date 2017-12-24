@@ -1,6 +1,6 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended", "tslint-config-airbnb", "tslint-react"],
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-airbnb"],
   "jsRules": {},
   "rules": {
     "curly": false,
@@ -10,14 +10,17 @@
     "member-access": false,
     "no-empty-interface": false,
     "semicolon": false,
+    "strict-boolean-expressions": false,
     "ter-arrow-parens": false,
+    "ter-indent": false,
     "variable-name": [
       true,
       "allow-leading-underscore",
       "allow-pascal-case",
       "ban-keywords",
       "check-format"
-    ]
+    ],
+    "quotemark": false
   },
   "rulesDirectory": []
 }

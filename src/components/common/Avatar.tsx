@@ -1,8 +1,9 @@
-import React from 'react'
-import { Image, ImageStyle, StyleSheet, ViewStyle } from 'react-native'
+import React, { SFC } from 'react'
+import { Image, ImageStyle, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
 
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
-import { getUserAvatarByEmail, getUserAvatarByUsername } from '../../utils/helpers/github'
+import { getUserAvatarByEmail, getUserAvatarByUsername } from '../../utils/helpers/github/shared'
+import { getUserPressHandler } from '../cards/partials/rows/helpers'
 
 export interface IProps {
   avatarURL?: string
@@ -21,7 +22,15 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-const Avatar = ({ avatarURL, email, size: _size, small, style, username, ...props }: IProps) => {
+const Avatar: SFC<IProps> = ({
+  avatarURL,
+  email,
+  size: _size,
+  small,
+  style,
+  username,
+  ...props
+}) => {
   const finalSize = _size || (small ? smallAvatarSize : avatarSize)
   const uri =
     (username && getUserAvatarByUsername(username, { size: finalSize })) ||
@@ -30,18 +39,20 @@ const Avatar = ({ avatarURL, email, size: _size, small, style, username, ...prop
   if (!uri) return null
 
   return (
-    <Image
-      {...props}
-      source={{ uri }}
-      style={[
-        styles.image,
-        {
-          height: finalSize,
-          width: finalSize,
-        },
-        style,
-      ]}
-    />
+    <TouchableOpacity onPress={getUserPressHandler(username)}>
+      <Image
+        {...props}
+        source={{ uri }}
+        style={[
+          styles.image,
+          {
+            height: finalSize,
+            width: finalSize,
+          },
+          style,
+        ]}
+      />
+    </TouchableOpacity>
   )
 }
 

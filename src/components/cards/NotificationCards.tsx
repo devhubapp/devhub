@@ -1,21 +1,21 @@
 import React from 'react'
 import { FlatList } from 'react-native'
 
-import { INotification } from '../../utils/types'
+import { IGitHubNotification } from '../../types'
 import NotificationCard from './NotificationCard'
 import CardItemSeparator from './partials/CardItemSeparator'
 
 export interface IProps {
-  notifications: INotification[]
+  notifications: IGitHubNotification[]
 }
 
 class NotificationCards extends React.PureComponent<IProps> {
-  keyExtractor(notification: INotification) {
+  keyExtractor(notification: IGitHubNotification) {
     return notification.id
   }
 
-  renderItem({ item: { actor: { username } } }: { item: INotification }) {
-    return <NotificationCard username={username} />
+  renderItem({ item }: { item: IGitHubNotification }) {
+    return <NotificationCard />
   }
 
   render() {
@@ -23,8 +23,6 @@ class NotificationCards extends React.PureComponent<IProps> {
     return (
       <FlatList
         data={notifications}
-        ListHeaderComponent={CardItemSeparator}
-        ListFooterComponent={CardItemSeparator}
         ItemSeparatorComponent={CardItemSeparator}
         keyExtractor={this.keyExtractor}
         renderItem={this.renderItem}

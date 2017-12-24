@@ -1,11 +1,11 @@
 export const lightBlue = '#49d3b4'
 export const purple = '#6e5494'
 
-export const brand = lightBlue
-export const brandSecondary = purple
+export const brand = purple
+export const brandSecondary = lightBlue
 
 export const star = '#edb800'
-export const blue = '#2196F3'
+export const blue = '#497AFC'
 export const blueGray = '#607D8B'
 export const brown = '#795548'
 export const darkGray = '#444444'
