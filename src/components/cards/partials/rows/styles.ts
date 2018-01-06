@@ -1,7 +1,11 @@
 import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import theme from '../../../../styles/themes/dark'
-import { contentPadding, radius, smallTextSize } from '../../../../styles/variables'
+import {
+  contentPadding,
+  radius,
+  smallTextSize,
+} from '../../../../styles/variables'
 
 export default StyleSheet.create({
   container: {

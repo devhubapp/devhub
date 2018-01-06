@@ -1,18 +1,29 @@
 import gravatar from 'gravatar'
 
 import * as baseTheme from '../../../styles/themes/base'
-import { IBaseTheme, IGitHubIcon, IGitHubIssue, IGitHubPullRequest } from '../../../types'
+import {
+  IBaseTheme,
+  IGitHubIcon,
+  IGitHubIssue,
+  IGitHubPullRequest,
+} from '../../../types'
 import { getSteppedSize } from '../shared'
 
-export function getUserAvatarByUsername(username: string, { size }: { size?: number } = {}) {
-  return username ? `https://github.com/${username}.png?size=${getSteppedSize(size)}` : ''
+export function getUserAvatarByUsername(
+  username: string,
+  { size }: { size?: number } = {},
+) {
+  return username
+    ? `https://github.com/${username}.png?size=${getSteppedSize(size)}`
+    : ''
 }
 
 export function tryGetUsernameFromGitHubEmail(email: string) {
   if (!email) return ''
 
   const emailSplit = email.split('@')
-  if (emailSplit.length === 2 && emailSplit[1] === 'users.noreply.github.com') return emailSplit[0]
+  if (emailSplit.length === 2 && emailSplit[1] === 'users.noreply.github.com')
+    return emailSplit[0]
 
   return ''
 }
@@ -40,7 +51,7 @@ export function isPullRequest(issue: IGitHubIssue | IGitHubPullRequest) {
 
 export function getOwnerAndRepo(
   repoFullName: string,
-): { owner: string | undefined, repo: string | undefined } {
+): { owner: string | undefined; repo: string | undefined } {
   const repoSplitedNames = (repoFullName || '')
     .trim()
     .split('/')

@@ -1,8 +1,17 @@
 import React, { SFC } from 'react'
-import { Image, ImageStyle, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
+import {
+  Image,
+  ImageStyle,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native'
 
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
-import { getUserAvatarByEmail, getUserAvatarByUsername } from '../../utils/helpers/github/shared'
+import {
+  getUserAvatarByEmail,
+  getUserAvatarByUsername,
+} from '../../utils/helpers/github/shared'
 import { getUserPressHandler } from '../cards/partials/rows/helpers'
 
 export interface IProps {

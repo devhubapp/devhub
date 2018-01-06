@@ -1,5 +1,9 @@
 import * as baseTheme from '../../../styles/themes/base'
-import { getIssueIconAndColor, getPullRequestIconAndColor, isPullRequest } from './shared'
+import {
+  getIssueIconAndColor,
+  getPullRequestIconAndColor,
+  isPullRequest,
+} from './shared'
 
 import {
   IBaseTheme,
@@ -50,7 +54,10 @@ export function getEventIconAndColor(
     case 'IssueCommentEvent':
       return {
         ...payload.pull_request || isPullRequest(payload.issue)
-          ? getPullRequestIconAndColor(payload.pull_request || payload.issue, theme)
+          ? getPullRequestIconAndColor(
+              payload.pull_request || payload.issue,
+              theme,
+            )
           : getIssueIconAndColor(payload.issue, theme),
         subIcon: 'comment-discussion',
       }
@@ -62,7 +69,10 @@ export function getEventIconAndColor(
         case 'opened':
           return getIssueIconAndColor({ state: 'open' } as IGitHubIssue, theme)
         case 'closed':
-          return getIssueIconAndColor({ state: 'closed' } as IGitHubIssue, theme)
+          return getIssueIconAndColor(
+            { state: 'closed' } as IGitHubIssue,
+            theme,
+          )
 
         case 'reopened':
           return {
@@ -92,7 +102,10 @@ export function getEventIconAndColor(
         switch (payload.action) {
           case 'opened':
           case 'reopened':
-            return getPullRequestIconAndColor({ state: 'open' } as IGitHubPullRequest, theme)
+            return getPullRequestIconAndColor(
+              { state: 'open' } as IGitHubPullRequest,
+              theme,
+            )
           // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as IGitHubPullRequest, theme);
 
           // case 'assigned':
@@ -178,7 +191,9 @@ export function getEventText(
       case 'ForkEvent':
         return `forked ${repositoryText}`
       case 'IssueCommentEvent':
-        return `commented on ${isPullRequest(event.payload.issue) ? pullRequestText : issueText}`
+        return `commented on ${
+          isPullRequest(event.payload.issue) ? pullRequestText : issueText
+        }`
       case 'IssuesEvent': // TODO: Fix these texts
         switch (event.payload.action) {
           case 'closed':
@@ -251,7 +266,14 @@ export function getEventText(
           const commits = event.payload.commits || [{}]
           // const commit = payload.head_commit || commits[0];
           const count =
-            Math.max(...[1, event.payload.size, event.payload.distinct_size, commits.size]) || 1
+            Math.max(
+              ...[
+                1,
+                event.payload.size,
+                event.payload.distinct_size,
+                commits.size,
+              ],
+            ) || 1
           const branch = (event.payload.ref || '').split('/').pop()
 
           const pushedText = event.payload.forced ? 'force pushed' : 'pushed'
@@ -269,7 +291,9 @@ export function getEventText(
           const otherUsers = event.payload.users
           const otherUsersText =
             otherUsers && otherUsers.size > 0
-              ? otherUsers.size > 1 ? `and ${otherUsers.size} others` : 'and 1 other'
+              ? otherUsers.size > 1
+                ? `and ${otherUsers.size} others`
+                : 'and 1 other'
               : ''
 
           return `${otherUsersText} starred ${repositoryText}`
@@ -279,7 +303,9 @@ export function getEventText(
           const otherRepos = event.payload.repos
           const count = (otherRepos && otherRepos.size) || 0
 
-          return count > 1 ? `starred ${count} repositories` : `starred ${repositoryText}`
+          return count > 1
+            ? `starred ${count} repositories`
+            : `starred ${repositoryText}`
         })()
       default:
         return 'did something'

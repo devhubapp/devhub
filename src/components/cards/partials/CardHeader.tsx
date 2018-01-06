@@ -1,9 +1,18 @@
 import React, { PureComponent } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import theme from '../../../styles/themes/dark'
 import { IGitHubEvent } from '../../../types/index'
-import { getEventIconAndColor, getEventText } from '../../../utils/helpers/github/events';
+import {
+  getEventIconAndColor,
+  getEventText,
+} from '../../../utils/helpers/github/events'
 import Avatar from '../../common/Avatar'
 import cardStyles from '../styles'
 import CardIcon from './CardIcon'
@@ -52,16 +61,27 @@ export default class CardHeader extends PureComponent<IProps> {
           <View style={styles.outerContainer}>
             <View style={styles.innerContainer}>
               <View style={cardStyles.horizontal}>
-                <TouchableOpacity onPress={getUserPressHandler(event.actor.login)}>
-                  <Text style={cardStyles.usernameText}>{event.actor.login}</Text>
+                <TouchableOpacity
+                  onPress={getUserPressHandler(event.actor.login)}
+                >
+                  <Text style={cardStyles.usernameText}>
+                    {event.actor.login}
+                  </Text>
                 </TouchableOpacity>
-                <Text style={cardStyles.timestampText}>&nbsp;•&nbsp;2h (13:59)</Text>
+                <Text style={cardStyles.timestampText}>
+                  &nbsp;•&nbsp;2h (13:59)
+                </Text>
               </View>
 
-              <Text style={cardStyles.descriptionText}>{getEventText(event)}</Text>
+              <Text style={cardStyles.descriptionText}>
+                {getEventText(event)}
+              </Text>
             </View>
 
-            <CardIcon name={cardIcon.icon} color={cardIcon.color || theme.base04} />
+            <CardIcon
+              name={cardIcon.icon}
+              color={cardIcon.color || theme.base04}
+            />
           </View>
         </View>
       </View>

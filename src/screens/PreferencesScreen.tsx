@@ -1,9 +1,14 @@
 import React, { PureComponent } from 'react'
+import { View } from 'react-native'
 
 import Screen from '../components/common/Screen'
 import theme from '../styles/themes/dark'
 
-export default class NotificationsScreen extends PureComponent {
+export interface IProps {
+  navigator: object
+}
+
+export default class NotificationsScreen extends PureComponent<IProps> {
   static componentId = 'org.brunolemos.devhub.PreferencesScreen'
 
   static navigatorStyle = {
@@ -16,6 +21,10 @@ export default class NotificationsScreen extends PureComponent {
   }
 
   render() {
-    return <Screen />
+    return (
+      <Screen>
+        <View />
+      </Screen>
+    )
   }
 }

@@ -42,9 +42,12 @@ const _data: IGitHubEvent[] = [
       issue: {
         url: 'https://api.github.com/repos/facebook/Docusaurus/issues/305',
         repository_url: 'https://api.github.com/repos/facebook/Docusaurus',
-        labels_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/305/labels{/name}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/305/comments',
-        events_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/305/events',
+        labels_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/305/labels{/name}',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/305/comments',
+        events_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/305/events',
         html_url: 'https://github.com/facebook/Docusaurus/issues/305',
         id: 282735251,
         number: 305,
@@ -57,14 +60,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -91,9 +99,12 @@ const _data: IGitHubEvent[] = [
           '### Is this a bug report?\r\n\r\nYes. In the example `index.js` we have a line `let language = this.props.language...`. However, in `generate.js` and particularly `metadata.js` we are actually setting the permalink on the assumption that the language isn\'t set.\r\n\r\n```\r\nif (languages.length === 1 && !siteConfig.useEnglishUrl) {\r\n    metadata.permalink = \'docs/\' + metadata.id + \'.html\';\r\n  } else {\r\n    metadata.permalink = \'docs/\' + language + \'/\' + metadata.id + \'.html\';\r\n  }\r\n```\r\n\r\nBut in the code before this, we are actually setting this.props.language to `en` by default, I think. So we are conflicting.\r\n\r\nThere are a few ways I can fix this, but I need to come up with the best way.\r\n\r\n### Have you read the [Contributing Guidelines]\r\n\r\nYes, of course. I helped right them :)\r\n\r\n### Environment\r\n\r\nN/A\r\n\r\n### Steps to Reproduce\r\n\r\n1. `yarn global add docusaurus-init`\r\n2. `docusaurus-init`\r\n3. `mv docs-examples-from-docusaurus docs` && `mv website/blog-examples-from-docusaurus website/blog`\r\n4. `cd website`\r\n5. `yarn run start`\r\n6. Go to http://localhost:3000\r\n7. Click on the `Example Link` Button\r\n8. See 404.\r\n\r\n### Expected Behavior\r\n\r\nThe button links should go to an actual docs page.\r\n\r\n### Actual Behavior\r\n\r\nThe button links go to a 404-ish page.\r\n\r\n<img width="1324" alt="screenshot 2017-12-17 15 53 41" src="https://user-images.githubusercontent.com/3757713/34085287-1aaa43ce-e343-11e7-9e04-4edb68d232e7.png">\r\n\r\n<img width="563" alt="screenshot 2017-12-17 15 54 00" src="https://user-images.githubusercontent.com/3757713/34085290-2361cc80-e343-11e7-9957-3a7b39114f83.png">\r\n\r\n### Reproducible Demo\r\n\r\nRun the steps above.\r\n',
       },
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299371',
-        html_url: 'https://github.com/facebook/Docusaurus/issues/305#issuecomment-352299371',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/305',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299371',
+        html_url:
+          'https://github.com/facebook/Docusaurus/issues/305#issuecomment-352299371',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/305',
         id: 352299371,
         user: {
           login: 'neilsutcliffe',
@@ -103,14 +114,20 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/neilsutcliffe',
           html_url: 'https://github.com/neilsutcliffe',
           followers_url: 'https://api.github.com/users/neilsutcliffe/followers',
-          following_url: 'https://api.github.com/users/neilsutcliffe/following{/other_user}',
-          gists_url: 'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/neilsutcliffe/subscriptions',
+          following_url:
+            'https://api.github.com/users/neilsutcliffe/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/neilsutcliffe/subscriptions',
           organizations_url: 'https://api.github.com/users/neilsutcliffe/orgs',
           repos_url: 'https://api.github.com/users/neilsutcliffe/repos',
-          events_url: 'https://api.github.com/users/neilsutcliffe/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/neilsutcliffe/received_events',
+          events_url:
+            'https://api.github.com/users/neilsutcliffe/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/neilsutcliffe/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -281,7 +298,8 @@ const _data: IGitHubEvent[] = [
         html_url: 'https://github.com/facebook/Docusaurus/pull/299',
         diff_url: 'https://github.com/facebook/Docusaurus/pull/299.diff',
         patch_url: 'https://github.com/facebook/Docusaurus/pull/299.patch',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299',
         number: 299,
         state: 'closed',
         locked: false,
@@ -294,14 +312,20 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/richardzcode',
           html_url: 'https://github.com/richardzcode',
           followers_url: 'https://api.github.com/users/richardzcode/followers',
-          following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-          gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+          following_url:
+            'https://api.github.com/users/richardzcode/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/richardzcode/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/richardzcode/subscriptions',
           organizations_url: 'https://api.github.com/users/richardzcode/orgs',
           repos_url: 'https://api.github.com/users/richardzcode/repos',
-          events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+          events_url:
+            'https://api.github.com/users/richardzcode/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/richardzcode/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -316,11 +340,14 @@ const _data: IGitHubEvent[] = [
         assignees: [],
         requested_reviewers: [],
         milestone: null,
-        commits_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/299/commits',
-        review_comments_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/299/comments',
+        commits_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/299/commits',
+        review_comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/299/comments',
         review_comment_url:
           'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
         statuses_url:
           'https://api.github.com/repos/facebook/Docusaurus/statuses/029c3f68b7e053f9a554b60dc785885d8c994e95',
         head: {
@@ -334,15 +361,22 @@ const _data: IGitHubEvent[] = [
             gravatar_id: '',
             url: 'https://api.github.com/users/richardzcode',
             html_url: 'https://github.com/richardzcode',
-            followers_url: 'https://api.github.com/users/richardzcode/followers',
-            following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-            gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+            followers_url:
+              'https://api.github.com/users/richardzcode/followers',
+            following_url:
+              'https://api.github.com/users/richardzcode/following{/other_user}',
+            gists_url:
+              'https://api.github.com/users/richardzcode/gists{/gist_id}',
+            starred_url:
+              'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/richardzcode/subscriptions',
             organizations_url: 'https://api.github.com/users/richardzcode/orgs',
             repos_url: 'https://api.github.com/users/richardzcode/repos',
-            events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+            events_url:
+              'https://api.github.com/users/richardzcode/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/richardzcode/received_events',
             type: 'User',
             site_admin: false,
           },
@@ -353,19 +387,28 @@ const _data: IGitHubEvent[] = [
             owner: {
               login: 'richardzcode',
               id: 1006903,
-              avatar_url: 'https://avatars3.githubusercontent.com/u/1006903?v=4',
+              avatar_url:
+                'https://avatars3.githubusercontent.com/u/1006903?v=4',
               gravatar_id: '',
               url: 'https://api.github.com/users/richardzcode',
               html_url: 'https://github.com/richardzcode',
-              followers_url: 'https://api.github.com/users/richardzcode/followers',
-              following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-              gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
-              organizations_url: 'https://api.github.com/users/richardzcode/orgs',
+              followers_url:
+                'https://api.github.com/users/richardzcode/followers',
+              following_url:
+                'https://api.github.com/users/richardzcode/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/richardzcode/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/richardzcode/subscriptions',
+              organizations_url:
+                'https://api.github.com/users/richardzcode/orgs',
               repos_url: 'https://api.github.com/users/richardzcode/repos',
-              events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+              events_url:
+                'https://api.github.com/users/richardzcode/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/richardzcode/received_events',
               type: 'User',
               site_admin: false,
             },
@@ -374,50 +417,78 @@ const _data: IGitHubEvent[] = [
             description: 'Easy to maintain open source documentation websites.',
             fork: true,
             url: 'https://api.github.com/repos/richardzcode/Docusaurus',
-            forks_url: 'https://api.github.com/repos/richardzcode/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/richardzcode/Docusaurus/keys{/key_id}',
+            forks_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/forks',
+            keys_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/collaborators{/collaborator}',
-            teams_url: 'https://api.github.com/repos/richardzcode/Docusaurus/teams',
-            hooks_url: 'https://api.github.com/repos/richardzcode/Docusaurus/hooks',
+            teams_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/teams',
+            hooks_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/richardzcode/Docusaurus/events',
-            assignees_url: 'https://api.github.com/repos/richardzcode/Docusaurus/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/richardzcode/Docusaurus/branches{/branch}',
-            tags_url: 'https://api.github.com/repos/richardzcode/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/richardzcode/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/richardzcode/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/richardzcode/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/richardzcode/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/richardzcode/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/richardzcode/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/richardzcode/Docusaurus/commits{/sha}',
+            events_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/events',
+            assignees_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/branches{/branch}',
+            tags_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/tags',
+            blobs_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/commits{/sha}',
             git_commits_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/richardzcode/Docusaurus/comments{/number}',
+            comments_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/richardzcode/Docusaurus/contents/{+path}',
+            contents_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/contents/{+path}',
             compare_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/richardzcode/Docusaurus/merges',
+            merges_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/merges',
             archive_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/richardzcode/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/richardzcode/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/richardzcode/Docusaurus/pulls{/number}',
+            downloads_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/pulls{/number}',
             milestones_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/richardzcode/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/richardzcode/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/richardzcode/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/deployments',
             created_at: '2017-12-14T20:01:21Z',
             updated_at: '2017-12-14T20:01:23Z',
             pushed_at: '2017-12-15T17:27:22Z',
@@ -458,14 +529,19 @@ const _data: IGitHubEvent[] = [
             url: 'https://api.github.com/users/facebook',
             html_url: 'https://github.com/facebook',
             followers_url: 'https://api.github.com/users/facebook/followers',
-            following_url: 'https://api.github.com/users/facebook/following{/other_user}',
+            following_url:
+              'https://api.github.com/users/facebook/following{/other_user}',
             gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+            starred_url:
+              'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/facebook/subscriptions',
             organizations_url: 'https://api.github.com/users/facebook/orgs',
             repos_url: 'https://api.github.com/users/facebook/repos',
-            events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/facebook/received_events',
+            events_url:
+              'https://api.github.com/users/facebook/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/facebook/received_events',
             type: 'Organization',
             site_admin: false,
           },
@@ -481,14 +557,20 @@ const _data: IGitHubEvent[] = [
               url: 'https://api.github.com/users/facebook',
               html_url: 'https://github.com/facebook',
               followers_url: 'https://api.github.com/users/facebook/followers',
-              following_url: 'https://api.github.com/users/facebook/following{/other_user}',
-              gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+              following_url:
+                'https://api.github.com/users/facebook/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/facebook/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/facebook/subscriptions',
               organizations_url: 'https://api.github.com/users/facebook/orgs',
               repos_url: 'https://api.github.com/users/facebook/repos',
-              events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/facebook/received_events',
+              events_url:
+                'https://api.github.com/users/facebook/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/facebook/received_events',
               type: 'Organization',
               site_admin: false,
             },
@@ -498,45 +580,73 @@ const _data: IGitHubEvent[] = [
             fork: false,
             url: 'https://api.github.com/repos/facebook/Docusaurus',
             forks_url: 'https://api.github.com/repos/facebook/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
+            keys_url:
+              'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/facebook/Docusaurus/collaborators{/collaborator}',
             teams_url: 'https://api.github.com/repos/facebook/Docusaurus/teams',
             hooks_url: 'https://api.github.com/repos/facebook/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/facebook/Docusaurus/events',
-            assignees_url: 'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
+            events_url:
+              'https://api.github.com/repos/facebook/Docusaurus/events',
+            assignees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
             tags_url: 'https://api.github.com/repos/facebook/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/facebook/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/facebook/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/facebook/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/facebook/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/facebook/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
-            git_commits_url: 'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
+            blobs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/facebook/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
+            git_commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
+            comments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
-            compare_url: 'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/facebook/Docusaurus/merges',
-            archive_url: 'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/facebook/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
-            milestones_url: 'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
+            contents_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
+            compare_url:
+              'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
+            merges_url:
+              'https://api.github.com/repos/facebook/Docusaurus/merges',
+            archive_url:
+              'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
+            downloads_url:
+              'https://api.github.com/repos/facebook/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
+            milestones_url:
+              'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/facebook/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/facebook/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/deployments',
             created_at: '2017-06-20T16:13:53Z',
             updated_at: '2017-12-18T00:34:21Z',
             pushed_at: '2017-12-18T00:35:40Z',
@@ -576,16 +686,20 @@ const _data: IGitHubEvent[] = [
             href: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
           },
           comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
           },
           review_comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/299/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/299/comments',
           },
           review_comment: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
           },
           commits: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/299/commits',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/299/commits',
           },
           statuses: {
             href:
@@ -605,14 +719,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -656,9 +775,12 @@ const _data: IGitHubEvent[] = [
       issue: {
         url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
         repository_url: 'https://api.github.com/repos/facebook/Docusaurus',
-        labels_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/labels{/name}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
-        events_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/events',
+        labels_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/labels{/name}',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
+        events_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/events',
         html_url: 'https://github.com/facebook/Docusaurus/pull/299',
         id: 282496123,
         number: 299,
@@ -671,21 +793,28 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/richardzcode',
           html_url: 'https://github.com/richardzcode',
           followers_url: 'https://api.github.com/users/richardzcode/followers',
-          following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-          gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+          following_url:
+            'https://api.github.com/users/richardzcode/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/richardzcode/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/richardzcode/subscriptions',
           organizations_url: 'https://api.github.com/users/richardzcode/orgs',
           repos_url: 'https://api.github.com/users/richardzcode/repos',
-          events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+          events_url:
+            'https://api.github.com/users/richardzcode/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/richardzcode/received_events',
           type: 'User',
           site_admin: false,
         },
         labels: [
           {
             id: 630651545,
-            url: 'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
+            url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
             name: 'CLA Signed',
             color: '009900',
             default: false,
@@ -711,9 +840,12 @@ const _data: IGitHubEvent[] = [
           '<!--\r\nThank you for sending the PR! We appreciate you spending the time to work on these changes.\r\n\r\nHelp us understand your motivation by explaining why you decided to make this change.\r\n\r\nYou can learn more about contributing to Docusaurus here: https://github.com/facebook/Docusaurus/blob/master/CONTRIBUTING.md\r\n\r\nHappy contributing!\r\n\r\n-->\r\n\r\n## Motivation\r\n\r\nFix the issue. In mobile mode, instead of `display: none`, do `display: flex; flex-direction: column` on sitemap. Also added margin\r\n\r\n## Test Plan\r\n\r\nTested in local build\r\n\r\n## Related PRs\r\n\r\n(If this PR adds or changes functionality, please take some time to update the docs at https://github.com/facebook/docusaurus, and link to your PR here.)\r\n',
       },
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299217',
-        html_url: 'https://github.com/facebook/Docusaurus/pull/299#issuecomment-352299217',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299217',
+        html_url:
+          'https://github.com/facebook/Docusaurus/pull/299#issuecomment-352299217',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299',
         id: 352299217,
         user: {
           login: 'JoelMarcey',
@@ -723,14 +855,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -800,9 +937,12 @@ const _data: IGitHubEvent[] = [
       issue: {
         url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
         repository_url: 'https://api.github.com/repos/facebook/Docusaurus',
-        labels_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/labels{/name}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
-        events_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/events',
+        labels_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/labels{/name}',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
+        events_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/events',
         html_url: 'https://github.com/facebook/Docusaurus/pull/299',
         id: 282496123,
         number: 299,
@@ -815,21 +955,28 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/richardzcode',
           html_url: 'https://github.com/richardzcode',
           followers_url: 'https://api.github.com/users/richardzcode/followers',
-          following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-          gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+          following_url:
+            'https://api.github.com/users/richardzcode/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/richardzcode/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/richardzcode/subscriptions',
           organizations_url: 'https://api.github.com/users/richardzcode/orgs',
           repos_url: 'https://api.github.com/users/richardzcode/repos',
-          events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+          events_url:
+            'https://api.github.com/users/richardzcode/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/richardzcode/received_events',
           type: 'User',
           site_admin: false,
         },
         labels: [
           {
             id: 630651545,
-            url: 'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
+            url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
             name: 'CLA Signed',
             color: '009900',
             default: false,
@@ -855,9 +1002,12 @@ const _data: IGitHubEvent[] = [
           '<!--\r\nThank you for sending the PR! We appreciate you spending the time to work on these changes.\r\n\r\nHelp us understand your motivation by explaining why you decided to make this change.\r\n\r\nYou can learn more about contributing to Docusaurus here: https://github.com/facebook/Docusaurus/blob/master/CONTRIBUTING.md\r\n\r\nHappy contributing!\r\n\r\n-->\r\n\r\n## Motivation\r\n\r\nFix the issue. In mobile mode, instead of `display: none`, do `display: flex; flex-direction: column` on sitemap. Also added margin\r\n\r\n## Test Plan\r\n\r\nTested in local build\r\n\r\n## Related PRs\r\n\r\n(If this PR adds or changes functionality, please take some time to update the docs at https://github.com/facebook/docusaurus, and link to your PR here.)\r\n',
       },
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299162',
-        html_url: 'https://github.com/facebook/Docusaurus/pull/299#issuecomment-352299162',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299162',
+        html_url:
+          'https://github.com/facebook/Docusaurus/pull/299#issuecomment-352299162',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299',
         id: 352299162,
         user: {
           login: 'JoelMarcey',
@@ -867,14 +1017,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -945,9 +1100,12 @@ const _data: IGitHubEvent[] = [
       issue: {
         url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
         repository_url: 'https://api.github.com/repos/facebook/Docusaurus',
-        labels_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/labels{/name}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
-        events_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299/events',
+        labels_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/labels{/name}',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/comments',
+        events_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299/events',
         html_url: 'https://github.com/facebook/Docusaurus/pull/299',
         id: 282496123,
         number: 299,
@@ -960,21 +1118,28 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/richardzcode',
           html_url: 'https://github.com/richardzcode',
           followers_url: 'https://api.github.com/users/richardzcode/followers',
-          following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-          gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+          following_url:
+            'https://api.github.com/users/richardzcode/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/richardzcode/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/richardzcode/subscriptions',
           organizations_url: 'https://api.github.com/users/richardzcode/orgs',
           repos_url: 'https://api.github.com/users/richardzcode/repos',
-          events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+          events_url:
+            'https://api.github.com/users/richardzcode/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/richardzcode/received_events',
           type: 'User',
           site_admin: false,
         },
         labels: [
           {
             id: 630651545,
-            url: 'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
+            url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
             name: 'CLA Signed',
             color: '009900',
             default: false,
@@ -1000,9 +1165,12 @@ const _data: IGitHubEvent[] = [
           '<!--\r\nThank you for sending the PR! We appreciate you spending the time to work on these changes.\r\n\r\nHelp us understand your motivation by explaining why you decided to make this change.\r\n\r\nYou can learn more about contributing to Docusaurus here: https://github.com/facebook/Docusaurus/blob/master/CONTRIBUTING.md\r\n\r\nHappy contributing!\r\n\r\n-->\r\n\r\n## Motivation\r\n\r\nFix the issue. In mobile mode, instead of `display: none`, do `display: flex; flex-direction: column` on sitemap. Also added margin\r\n\r\n## Test Plan\r\n\r\nTested in local build\r\n\r\n## Related PRs\r\n\r\n(If this PR adds or changes functionality, please take some time to update the docs at https://github.com/facebook/docusaurus, and link to your PR here.)\r\n',
       },
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299052',
-        html_url: 'https://github.com/facebook/Docusaurus/pull/299#issuecomment-352299052',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/299',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352299052',
+        html_url:
+          'https://github.com/facebook/Docusaurus/pull/299#issuecomment-352299052',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/299',
         id: 352299052,
         user: {
           login: 'JoelMarcey',
@@ -1012,14 +1180,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -1069,7 +1242,8 @@ const _data: IGitHubEvent[] = [
             email: 'teddy@prosauce.org',
             name: 'Teddy Reed',
           },
-          message: 'extensions: watchdog: Opt-in to monitor extension performance (#4003)',
+          message:
+            'extensions: watchdog: Opt-in to monitor extension performance (#4003)',
           distinct: true,
           url:
             'https://api.github.com/repos/facebook/osquery/commits/a6998b75180b87cda416557a90eb6a567fb26006',
@@ -1124,14 +1298,18 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/theopolis',
           html_url: 'https://github.com/theopolis',
           followers_url: 'https://api.github.com/users/theopolis/followers',
-          following_url: 'https://api.github.com/users/theopolis/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/theopolis/following{/other_user}',
           gists_url: 'https://api.github.com/users/theopolis/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/theopolis/subscriptions',
+          starred_url:
+            'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/theopolis/subscriptions',
           organizations_url: 'https://api.github.com/users/theopolis/orgs',
           repos_url: 'https://api.github.com/users/theopolis/repos',
           events_url: 'https://api.github.com/users/theopolis/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/theopolis/received_events',
+          received_events_url:
+            'https://api.github.com/users/theopolis/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -1146,10 +1324,14 @@ const _data: IGitHubEvent[] = [
         assignees: [],
         requested_reviewers: [],
         milestone: null,
-        commits_url: 'https://api.github.com/repos/facebook/osquery/pulls/4003/commits',
-        review_comments_url: 'https://api.github.com/repos/facebook/osquery/pulls/4003/comments',
-        review_comment_url: 'https://api.github.com/repos/facebook/osquery/pulls/comments{/number}',
-        comments_url: 'https://api.github.com/repos/facebook/osquery/issues/4003/comments',
+        commits_url:
+          'https://api.github.com/repos/facebook/osquery/pulls/4003/commits',
+        review_comments_url:
+          'https://api.github.com/repos/facebook/osquery/pulls/4003/comments',
+        review_comment_url:
+          'https://api.github.com/repos/facebook/osquery/pulls/comments{/number}',
+        comments_url:
+          'https://api.github.com/repos/facebook/osquery/issues/4003/comments',
         statuses_url:
           'https://api.github.com/repos/facebook/osquery/statuses/090085760dc1516db1ecffbc73c5a6a89f0bb842',
         head: {
@@ -1164,14 +1346,19 @@ const _data: IGitHubEvent[] = [
             url: 'https://api.github.com/users/theopolis',
             html_url: 'https://github.com/theopolis',
             followers_url: 'https://api.github.com/users/theopolis/followers',
-            following_url: 'https://api.github.com/users/theopolis/following{/other_user}',
+            following_url:
+              'https://api.github.com/users/theopolis/following{/other_user}',
             gists_url: 'https://api.github.com/users/theopolis/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/theopolis/subscriptions',
+            starred_url:
+              'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/theopolis/subscriptions',
             organizations_url: 'https://api.github.com/users/theopolis/orgs',
             repos_url: 'https://api.github.com/users/theopolis/repos',
-            events_url: 'https://api.github.com/users/theopolis/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/theopolis/received_events',
+            events_url:
+              'https://api.github.com/users/theopolis/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/theopolis/received_events',
             type: 'User',
             site_admin: false,
           },
@@ -1187,24 +1374,32 @@ const _data: IGitHubEvent[] = [
               url: 'https://api.github.com/users/theopolis',
               html_url: 'https://github.com/theopolis',
               followers_url: 'https://api.github.com/users/theopolis/followers',
-              following_url: 'https://api.github.com/users/theopolis/following{/other_user}',
-              gists_url: 'https://api.github.com/users/theopolis/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/theopolis/subscriptions',
+              following_url:
+                'https://api.github.com/users/theopolis/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/theopolis/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/theopolis/subscriptions',
               organizations_url: 'https://api.github.com/users/theopolis/orgs',
               repos_url: 'https://api.github.com/users/theopolis/repos',
-              events_url: 'https://api.github.com/users/theopolis/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/theopolis/received_events',
+              events_url:
+                'https://api.github.com/users/theopolis/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/theopolis/received_events',
               type: 'User',
               site_admin: false,
             },
             private: false,
             html_url: 'https://github.com/theopolis/osquery',
-            description: 'SQL powered operating system instrumentation and monitoring.',
+            description:
+              'SQL powered operating system instrumentation and monitoring.',
             fork: true,
             url: 'https://api.github.com/repos/theopolis/osquery',
             forks_url: 'https://api.github.com/repos/theopolis/osquery/forks',
-            keys_url: 'https://api.github.com/repos/theopolis/osquery/keys{/key_id}',
+            keys_url:
+              'https://api.github.com/repos/theopolis/osquery/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/theopolis/osquery/collaborators{/collaborator}',
             teams_url: 'https://api.github.com/repos/theopolis/osquery/teams',
@@ -1212,37 +1407,62 @@ const _data: IGitHubEvent[] = [
             issue_events_url:
               'https://api.github.com/repos/theopolis/osquery/issues/events{/number}',
             events_url: 'https://api.github.com/repos/theopolis/osquery/events',
-            assignees_url: 'https://api.github.com/repos/theopolis/osquery/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/theopolis/osquery/branches{/branch}',
+            assignees_url:
+              'https://api.github.com/repos/theopolis/osquery/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/theopolis/osquery/branches{/branch}',
             tags_url: 'https://api.github.com/repos/theopolis/osquery/tags',
-            blobs_url: 'https://api.github.com/repos/theopolis/osquery/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/theopolis/osquery/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/theopolis/osquery/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/theopolis/osquery/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/theopolis/osquery/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/theopolis/osquery/languages',
-            stargazers_url: 'https://api.github.com/repos/theopolis/osquery/stargazers',
-            contributors_url: 'https://api.github.com/repos/theopolis/osquery/contributors',
-            subscribers_url: 'https://api.github.com/repos/theopolis/osquery/subscribers',
-            subscription_url: 'https://api.github.com/repos/theopolis/osquery/subscription',
-            commits_url: 'https://api.github.com/repos/theopolis/osquery/commits{/sha}',
-            git_commits_url: 'https://api.github.com/repos/theopolis/osquery/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/theopolis/osquery/comments{/number}',
+            blobs_url:
+              'https://api.github.com/repos/theopolis/osquery/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/theopolis/osquery/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/theopolis/osquery/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/theopolis/osquery/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/theopolis/osquery/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/theopolis/osquery/languages',
+            stargazers_url:
+              'https://api.github.com/repos/theopolis/osquery/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/theopolis/osquery/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/theopolis/osquery/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/theopolis/osquery/subscription',
+            commits_url:
+              'https://api.github.com/repos/theopolis/osquery/commits{/sha}',
+            git_commits_url:
+              'https://api.github.com/repos/theopolis/osquery/git/commits{/sha}',
+            comments_url:
+              'https://api.github.com/repos/theopolis/osquery/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/theopolis/osquery/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/theopolis/osquery/contents/{+path}',
-            compare_url: 'https://api.github.com/repos/theopolis/osquery/compare/{base}...{head}',
+            contents_url:
+              'https://api.github.com/repos/theopolis/osquery/contents/{+path}',
+            compare_url:
+              'https://api.github.com/repos/theopolis/osquery/compare/{base}...{head}',
             merges_url: 'https://api.github.com/repos/theopolis/osquery/merges',
-            archive_url: 'https://api.github.com/repos/theopolis/osquery/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/theopolis/osquery/downloads',
-            issues_url: 'https://api.github.com/repos/theopolis/osquery/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/theopolis/osquery/pulls{/number}',
-            milestones_url: 'https://api.github.com/repos/theopolis/osquery/milestones{/number}',
+            archive_url:
+              'https://api.github.com/repos/theopolis/osquery/{archive_format}{/ref}',
+            downloads_url:
+              'https://api.github.com/repos/theopolis/osquery/downloads',
+            issues_url:
+              'https://api.github.com/repos/theopolis/osquery/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/theopolis/osquery/pulls{/number}',
+            milestones_url:
+              'https://api.github.com/repos/theopolis/osquery/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/theopolis/osquery/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/theopolis/osquery/labels{/name}',
-            releases_url: 'https://api.github.com/repos/theopolis/osquery/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/theopolis/osquery/deployments',
+            labels_url:
+              'https://api.github.com/repos/theopolis/osquery/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/theopolis/osquery/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/theopolis/osquery/deployments',
             created_at: '2014-11-03T03:56:14Z',
             updated_at: '2016-10-31T07:32:01Z',
             pushed_at: '2017-12-17T19:01:55Z',
@@ -1288,14 +1508,19 @@ const _data: IGitHubEvent[] = [
             url: 'https://api.github.com/users/facebook',
             html_url: 'https://github.com/facebook',
             followers_url: 'https://api.github.com/users/facebook/followers',
-            following_url: 'https://api.github.com/users/facebook/following{/other_user}',
+            following_url:
+              'https://api.github.com/users/facebook/following{/other_user}',
             gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+            starred_url:
+              'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/facebook/subscriptions',
             organizations_url: 'https://api.github.com/users/facebook/orgs',
             repos_url: 'https://api.github.com/users/facebook/repos',
-            events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/facebook/received_events',
+            events_url:
+              'https://api.github.com/users/facebook/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/facebook/received_events',
             type: 'Organization',
             site_admin: false,
           },
@@ -1311,24 +1536,32 @@ const _data: IGitHubEvent[] = [
               url: 'https://api.github.com/users/facebook',
               html_url: 'https://github.com/facebook',
               followers_url: 'https://api.github.com/users/facebook/followers',
-              following_url: 'https://api.github.com/users/facebook/following{/other_user}',
-              gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+              following_url:
+                'https://api.github.com/users/facebook/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/facebook/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/facebook/subscriptions',
               organizations_url: 'https://api.github.com/users/facebook/orgs',
               repos_url: 'https://api.github.com/users/facebook/repos',
-              events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/facebook/received_events',
+              events_url:
+                'https://api.github.com/users/facebook/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/facebook/received_events',
               type: 'Organization',
               site_admin: false,
             },
             private: false,
             html_url: 'https://github.com/facebook/osquery',
-            description: 'SQL powered operating system instrumentation, monitoring, and analytics.',
+            description:
+              'SQL powered operating system instrumentation, monitoring, and analytics.',
             fork: false,
             url: 'https://api.github.com/repos/facebook/osquery',
             forks_url: 'https://api.github.com/repos/facebook/osquery/forks',
-            keys_url: 'https://api.github.com/repos/facebook/osquery/keys{/key_id}',
+            keys_url:
+              'https://api.github.com/repos/facebook/osquery/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/facebook/osquery/collaborators{/collaborator}',
             teams_url: 'https://api.github.com/repos/facebook/osquery/teams',
@@ -1336,37 +1569,62 @@ const _data: IGitHubEvent[] = [
             issue_events_url:
               'https://api.github.com/repos/facebook/osquery/issues/events{/number}',
             events_url: 'https://api.github.com/repos/facebook/osquery/events',
-            assignees_url: 'https://api.github.com/repos/facebook/osquery/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/facebook/osquery/branches{/branch}',
+            assignees_url:
+              'https://api.github.com/repos/facebook/osquery/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/facebook/osquery/branches{/branch}',
             tags_url: 'https://api.github.com/repos/facebook/osquery/tags',
-            blobs_url: 'https://api.github.com/repos/facebook/osquery/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/facebook/osquery/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/facebook/osquery/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/facebook/osquery/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/facebook/osquery/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/facebook/osquery/languages',
-            stargazers_url: 'https://api.github.com/repos/facebook/osquery/stargazers',
-            contributors_url: 'https://api.github.com/repos/facebook/osquery/contributors',
-            subscribers_url: 'https://api.github.com/repos/facebook/osquery/subscribers',
-            subscription_url: 'https://api.github.com/repos/facebook/osquery/subscription',
-            commits_url: 'https://api.github.com/repos/facebook/osquery/commits{/sha}',
-            git_commits_url: 'https://api.github.com/repos/facebook/osquery/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/facebook/osquery/comments{/number}',
+            blobs_url:
+              'https://api.github.com/repos/facebook/osquery/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/facebook/osquery/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/facebook/osquery/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/facebook/osquery/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/facebook/osquery/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/facebook/osquery/languages',
+            stargazers_url:
+              'https://api.github.com/repos/facebook/osquery/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/facebook/osquery/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/facebook/osquery/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/facebook/osquery/subscription',
+            commits_url:
+              'https://api.github.com/repos/facebook/osquery/commits{/sha}',
+            git_commits_url:
+              'https://api.github.com/repos/facebook/osquery/git/commits{/sha}',
+            comments_url:
+              'https://api.github.com/repos/facebook/osquery/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/facebook/osquery/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/facebook/osquery/contents/{+path}',
-            compare_url: 'https://api.github.com/repos/facebook/osquery/compare/{base}...{head}',
+            contents_url:
+              'https://api.github.com/repos/facebook/osquery/contents/{+path}',
+            compare_url:
+              'https://api.github.com/repos/facebook/osquery/compare/{base}...{head}',
             merges_url: 'https://api.github.com/repos/facebook/osquery/merges',
-            archive_url: 'https://api.github.com/repos/facebook/osquery/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/facebook/osquery/downloads',
-            issues_url: 'https://api.github.com/repos/facebook/osquery/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/facebook/osquery/pulls{/number}',
-            milestones_url: 'https://api.github.com/repos/facebook/osquery/milestones{/number}',
+            archive_url:
+              'https://api.github.com/repos/facebook/osquery/{archive_format}{/ref}',
+            downloads_url:
+              'https://api.github.com/repos/facebook/osquery/downloads',
+            issues_url:
+              'https://api.github.com/repos/facebook/osquery/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/facebook/osquery/pulls{/number}',
+            milestones_url:
+              'https://api.github.com/repos/facebook/osquery/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/facebook/osquery/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/facebook/osquery/labels{/name}',
-            releases_url: 'https://api.github.com/repos/facebook/osquery/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/facebook/osquery/deployments',
+            labels_url:
+              'https://api.github.com/repos/facebook/osquery/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/facebook/osquery/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/facebook/osquery/deployments',
             created_at: '2014-07-29T20:27:33Z',
             updated_at: '2017-12-17T17:54:32Z',
             pushed_at: '2017-12-18T00:33:21Z',
@@ -1411,16 +1669,20 @@ const _data: IGitHubEvent[] = [
             href: 'https://api.github.com/repos/facebook/osquery/issues/4003',
           },
           comments: {
-            href: 'https://api.github.com/repos/facebook/osquery/issues/4003/comments',
+            href:
+              'https://api.github.com/repos/facebook/osquery/issues/4003/comments',
           },
           review_comments: {
-            href: 'https://api.github.com/repos/facebook/osquery/pulls/4003/comments',
+            href:
+              'https://api.github.com/repos/facebook/osquery/pulls/4003/comments',
           },
           review_comment: {
-            href: 'https://api.github.com/repos/facebook/osquery/pulls/comments{/number}',
+            href:
+              'https://api.github.com/repos/facebook/osquery/pulls/comments{/number}',
           },
           commits: {
-            href: 'https://api.github.com/repos/facebook/osquery/pulls/4003/commits',
+            href:
+              'https://api.github.com/repos/facebook/osquery/pulls/4003/commits',
           },
           statuses: {
             href:
@@ -1440,14 +1702,18 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/theopolis',
           html_url: 'https://github.com/theopolis',
           followers_url: 'https://api.github.com/users/theopolis/followers',
-          following_url: 'https://api.github.com/users/theopolis/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/theopolis/following{/other_user}',
           gists_url: 'https://api.github.com/users/theopolis/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/theopolis/subscriptions',
+          starred_url:
+            'https://api.github.com/users/theopolis/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/theopolis/subscriptions',
           organizations_url: 'https://api.github.com/users/theopolis/orgs',
           repos_url: 'https://api.github.com/users/theopolis/repos',
           events_url: 'https://api.github.com/users/theopolis/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/theopolis/received_events',
+          received_events_url:
+            'https://api.github.com/users/theopolis/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -1491,9 +1757,12 @@ const _data: IGitHubEvent[] = [
       issue: {
         url: 'https://api.github.com/repos/facebook/Docusaurus/issues/274',
         repository_url: 'https://api.github.com/repos/facebook/Docusaurus',
-        labels_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/274/labels{/name}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/274/comments',
-        events_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/274/events',
+        labels_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/274/labels{/name}',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/274/comments',
+        events_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/274/events',
         html_url: 'https://github.com/facebook/Docusaurus/issues/274',
         id: 281215451,
         number: 274,
@@ -1506,21 +1775,27 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
         labels: [
           {
             id: 772755961,
-            url: 'https://api.github.com/repos/facebook/Docusaurus/labels/good%20first%20issue',
+            url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels/good%20first%20issue',
             name: 'good first issue',
             color: '7057ff',
             default: true,
@@ -1540,9 +1815,12 @@ const _data: IGitHubEvent[] = [
           'Check the middle of https://facebook.github.io/relay/docs/en/mutations.html\r\n\r\n<img width="1055" alt="screenshot 2017-12-11 16 31 14" src="https://user-images.githubusercontent.com/3757713/33861084-b8f1b7fe-de90-11e7-9562-ce6db4255fa6.png">\r\n',
       },
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352298927',
-        html_url: 'https://github.com/facebook/Docusaurus/issues/274#issuecomment-352298927',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/274',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352298927',
+        html_url:
+          'https://github.com/facebook/Docusaurus/issues/274#issuecomment-352298927',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/274',
         id: 352298927,
         user: {
           login: 'neilsutcliffe',
@@ -1552,14 +1830,20 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/neilsutcliffe',
           html_url: 'https://github.com/neilsutcliffe',
           followers_url: 'https://api.github.com/users/neilsutcliffe/followers',
-          following_url: 'https://api.github.com/users/neilsutcliffe/following{/other_user}',
-          gists_url: 'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/neilsutcliffe/subscriptions',
+          following_url:
+            'https://api.github.com/users/neilsutcliffe/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/neilsutcliffe/subscriptions',
           organizations_url: 'https://api.github.com/users/neilsutcliffe/orgs',
           repos_url: 'https://api.github.com/users/neilsutcliffe/repos',
-          events_url: 'https://api.github.com/users/neilsutcliffe/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/neilsutcliffe/received_events',
+          events_url:
+            'https://api.github.com/users/neilsutcliffe/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/neilsutcliffe/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -1599,7 +1883,8 @@ const _data: IGitHubEvent[] = [
     payload: {
       action: 'created',
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/comments/157385623',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/comments/157385623',
         pull_request_review_id: 84017221,
         id: 157385623,
         diff_hunk:
@@ -1617,14 +1902,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -1632,15 +1922,19 @@ const _data: IGitHubEvent[] = [
           '@azu Hi. Are you saying that this PR is wrong by rethrowing? Or that this PR is ok, but we could consider using `unhandledRejection` in the future?',
         created_at: '2017-12-18T00:30:54Z',
         updated_at: '2017-12-18T00:30:54Z',
-        html_url: 'https://github.com/facebook/Docusaurus/pull/296#discussion_r157385623',
-        pull_request_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/296',
+        html_url:
+          'https://github.com/facebook/Docusaurus/pull/296#discussion_r157385623',
+        pull_request_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/296',
         author_association: 'CONTRIBUTOR',
         _links: {
           self: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/comments/157385623',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/comments/157385623',
           },
           html: {
-            href: 'https://github.com/facebook/Docusaurus/pull/296#discussion_r157385623',
+            href:
+              'https://github.com/facebook/Docusaurus/pull/296#discussion_r157385623',
           },
           pull_request: {
             href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/296',
@@ -1654,7 +1948,8 @@ const _data: IGitHubEvent[] = [
         html_url: 'https://github.com/facebook/Docusaurus/pull/296',
         diff_url: 'https://github.com/facebook/Docusaurus/pull/296.diff',
         patch_url: 'https://github.com/facebook/Docusaurus/pull/296.patch',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/296',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/296',
         number: 296,
         state: 'open',
         locked: false,
@@ -1666,15 +1961,22 @@ const _data: IGitHubEvent[] = [
           gravatar_id: '',
           url: 'https://api.github.com/users/ForbesLindesay',
           html_url: 'https://github.com/ForbesLindesay',
-          followers_url: 'https://api.github.com/users/ForbesLindesay/followers',
-          following_url: 'https://api.github.com/users/ForbesLindesay/following{/other_user}',
-          gists_url: 'https://api.github.com/users/ForbesLindesay/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/ForbesLindesay/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/ForbesLindesay/subscriptions',
+          followers_url:
+            'https://api.github.com/users/ForbesLindesay/followers',
+          following_url:
+            'https://api.github.com/users/ForbesLindesay/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/ForbesLindesay/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/ForbesLindesay/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/ForbesLindesay/subscriptions',
           organizations_url: 'https://api.github.com/users/ForbesLindesay/orgs',
           repos_url: 'https://api.github.com/users/ForbesLindesay/repos',
-          events_url: 'https://api.github.com/users/ForbesLindesay/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/ForbesLindesay/received_events',
+          events_url:
+            'https://api.github.com/users/ForbesLindesay/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/ForbesLindesay/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -1689,11 +1991,14 @@ const _data: IGitHubEvent[] = [
         assignees: [],
         requested_reviewers: [],
         milestone: null,
-        commits_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/296/commits',
-        review_comments_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/296/comments',
+        commits_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/296/commits',
+        review_comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/296/comments',
         review_comment_url:
           'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/296/comments',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/296/comments',
         statuses_url:
           'https://api.github.com/repos/facebook/Docusaurus/statuses/4ce850b0db666bb93b9a6f046cf2bb2eceb6fbaf',
         head: {
@@ -1707,15 +2012,23 @@ const _data: IGitHubEvent[] = [
             gravatar_id: '',
             url: 'https://api.github.com/users/ForbesLindesay',
             html_url: 'https://github.com/ForbesLindesay',
-            followers_url: 'https://api.github.com/users/ForbesLindesay/followers',
-            following_url: 'https://api.github.com/users/ForbesLindesay/following{/other_user}',
-            gists_url: 'https://api.github.com/users/ForbesLindesay/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/ForbesLindesay/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/ForbesLindesay/subscriptions',
-            organizations_url: 'https://api.github.com/users/ForbesLindesay/orgs',
+            followers_url:
+              'https://api.github.com/users/ForbesLindesay/followers',
+            following_url:
+              'https://api.github.com/users/ForbesLindesay/following{/other_user}',
+            gists_url:
+              'https://api.github.com/users/ForbesLindesay/gists{/gist_id}',
+            starred_url:
+              'https://api.github.com/users/ForbesLindesay/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/ForbesLindesay/subscriptions',
+            organizations_url:
+              'https://api.github.com/users/ForbesLindesay/orgs',
             repos_url: 'https://api.github.com/users/ForbesLindesay/repos',
-            events_url: 'https://api.github.com/users/ForbesLindesay/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/ForbesLindesay/received_events',
+            events_url:
+              'https://api.github.com/users/ForbesLindesay/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/ForbesLindesay/received_events',
             type: 'User',
             site_admin: false,
           },
@@ -1726,19 +2039,28 @@ const _data: IGitHubEvent[] = [
             owner: {
               login: 'ForbesLindesay',
               id: 1260646,
-              avatar_url: 'https://avatars0.githubusercontent.com/u/1260646?v=4',
+              avatar_url:
+                'https://avatars0.githubusercontent.com/u/1260646?v=4',
               gravatar_id: '',
               url: 'https://api.github.com/users/ForbesLindesay',
               html_url: 'https://github.com/ForbesLindesay',
-              followers_url: 'https://api.github.com/users/ForbesLindesay/followers',
-              following_url: 'https://api.github.com/users/ForbesLindesay/following{/other_user}',
-              gists_url: 'https://api.github.com/users/ForbesLindesay/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/ForbesLindesay/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/ForbesLindesay/subscriptions',
-              organizations_url: 'https://api.github.com/users/ForbesLindesay/orgs',
+              followers_url:
+                'https://api.github.com/users/ForbesLindesay/followers',
+              following_url:
+                'https://api.github.com/users/ForbesLindesay/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/ForbesLindesay/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/ForbesLindesay/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/ForbesLindesay/subscriptions',
+              organizations_url:
+                'https://api.github.com/users/ForbesLindesay/orgs',
               repos_url: 'https://api.github.com/users/ForbesLindesay/repos',
-              events_url: 'https://api.github.com/users/ForbesLindesay/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/ForbesLindesay/received_events',
+              events_url:
+                'https://api.github.com/users/ForbesLindesay/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/ForbesLindesay/received_events',
               type: 'User',
               site_admin: false,
             },
@@ -1747,53 +2069,78 @@ const _data: IGitHubEvent[] = [
             description: 'Easy to maintain open source documentation websites.',
             fork: true,
             url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus',
-            forks_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/keys{/key_id}',
+            forks_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/forks',
+            keys_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/collaborators{/collaborator}',
-            teams_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/teams',
-            hooks_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/hooks',
+            teams_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/teams',
+            hooks_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/events',
+            events_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/events',
             assignees_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/assignees{/user}',
             branches_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/branches{/branch}',
-            tags_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/commits{/sha}',
+            tags_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/tags',
+            blobs_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/commits{/sha}',
             git_commits_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/git/commits{/sha}',
             comments_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/contents/{+path}',
+            contents_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/contents/{+path}',
             compare_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/merges',
+            merges_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/merges',
             archive_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/pulls{/number}',
+            downloads_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/pulls{/number}',
             milestones_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/ForbesLindesay/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/ForbesLindesay/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/ForbesLindesay/Docusaurus/deployments',
             created_at: '2017-12-15T15:03:10Z',
             updated_at: '2017-12-15T15:03:12Z',
             pushed_at: '2017-12-15T15:27:20Z',
@@ -1834,14 +2181,19 @@ const _data: IGitHubEvent[] = [
             url: 'https://api.github.com/users/facebook',
             html_url: 'https://github.com/facebook',
             followers_url: 'https://api.github.com/users/facebook/followers',
-            following_url: 'https://api.github.com/users/facebook/following{/other_user}',
+            following_url:
+              'https://api.github.com/users/facebook/following{/other_user}',
             gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+            starred_url:
+              'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/facebook/subscriptions',
             organizations_url: 'https://api.github.com/users/facebook/orgs',
             repos_url: 'https://api.github.com/users/facebook/repos',
-            events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/facebook/received_events',
+            events_url:
+              'https://api.github.com/users/facebook/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/facebook/received_events',
             type: 'Organization',
             site_admin: false,
           },
@@ -1857,14 +2209,20 @@ const _data: IGitHubEvent[] = [
               url: 'https://api.github.com/users/facebook',
               html_url: 'https://github.com/facebook',
               followers_url: 'https://api.github.com/users/facebook/followers',
-              following_url: 'https://api.github.com/users/facebook/following{/other_user}',
-              gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+              following_url:
+                'https://api.github.com/users/facebook/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/facebook/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/facebook/subscriptions',
               organizations_url: 'https://api.github.com/users/facebook/orgs',
               repos_url: 'https://api.github.com/users/facebook/repos',
-              events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/facebook/received_events',
+              events_url:
+                'https://api.github.com/users/facebook/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/facebook/received_events',
               type: 'Organization',
               site_admin: false,
             },
@@ -1874,45 +2232,73 @@ const _data: IGitHubEvent[] = [
             fork: false,
             url: 'https://api.github.com/repos/facebook/Docusaurus',
             forks_url: 'https://api.github.com/repos/facebook/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
+            keys_url:
+              'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/facebook/Docusaurus/collaborators{/collaborator}',
             teams_url: 'https://api.github.com/repos/facebook/Docusaurus/teams',
             hooks_url: 'https://api.github.com/repos/facebook/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/facebook/Docusaurus/events',
-            assignees_url: 'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
+            events_url:
+              'https://api.github.com/repos/facebook/Docusaurus/events',
+            assignees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
             tags_url: 'https://api.github.com/repos/facebook/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/facebook/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/facebook/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/facebook/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/facebook/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/facebook/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
-            git_commits_url: 'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
+            blobs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/facebook/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
+            git_commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
+            comments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
-            compare_url: 'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/facebook/Docusaurus/merges',
-            archive_url: 'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/facebook/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
-            milestones_url: 'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
+            contents_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
+            compare_url:
+              'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
+            merges_url:
+              'https://api.github.com/repos/facebook/Docusaurus/merges',
+            archive_url:
+              'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
+            downloads_url:
+              'https://api.github.com/repos/facebook/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
+            milestones_url:
+              'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/facebook/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/facebook/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/deployments',
             created_at: '2017-06-20T16:13:53Z',
             updated_at: '2017-12-18T00:29:42Z',
             pushed_at: '2017-12-18T00:30:11Z',
@@ -1952,16 +2338,20 @@ const _data: IGitHubEvent[] = [
             href: 'https://api.github.com/repos/facebook/Docusaurus/issues/296',
           },
           comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/issues/296/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/issues/296/comments',
           },
           review_comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/296/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/296/comments',
           },
           review_comment: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
           },
           commits: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/296/commits',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/296/commits',
           },
           statuses: {
             href:
@@ -2006,7 +2396,8 @@ const _data: IGitHubEvent[] = [
         html_url: 'https://github.com/facebook/Docusaurus/pull/306',
         diff_url: 'https://github.com/facebook/Docusaurus/pull/306.diff',
         patch_url: 'https://github.com/facebook/Docusaurus/pull/306.patch',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/306',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/306',
         number: 306,
         state: 'open',
         locked: false,
@@ -2019,14 +2410,20 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/neilsutcliffe',
           html_url: 'https://github.com/neilsutcliffe',
           followers_url: 'https://api.github.com/users/neilsutcliffe/followers',
-          following_url: 'https://api.github.com/users/neilsutcliffe/following{/other_user}',
-          gists_url: 'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/neilsutcliffe/subscriptions',
+          following_url:
+            'https://api.github.com/users/neilsutcliffe/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/neilsutcliffe/subscriptions',
           organizations_url: 'https://api.github.com/users/neilsutcliffe/orgs',
           repos_url: 'https://api.github.com/users/neilsutcliffe/repos',
-          events_url: 'https://api.github.com/users/neilsutcliffe/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/neilsutcliffe/received_events',
+          events_url:
+            'https://api.github.com/users/neilsutcliffe/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/neilsutcliffe/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -2041,11 +2438,14 @@ const _data: IGitHubEvent[] = [
         assignees: [],
         requested_reviewers: [],
         milestone: null,
-        commits_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/306/commits',
-        review_comments_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/306/comments',
+        commits_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/306/commits',
+        review_comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/306/comments',
         review_comment_url:
           'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/306/comments',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/306/comments',
         statuses_url:
           'https://api.github.com/repos/facebook/Docusaurus/statuses/d25307fe4d430cd6dcba2a887e75cc4de4a795fb',
         head: {
@@ -2059,15 +2459,23 @@ const _data: IGitHubEvent[] = [
             gravatar_id: '',
             url: 'https://api.github.com/users/neilsutcliffe',
             html_url: 'https://github.com/neilsutcliffe',
-            followers_url: 'https://api.github.com/users/neilsutcliffe/followers',
-            following_url: 'https://api.github.com/users/neilsutcliffe/following{/other_user}',
-            gists_url: 'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/neilsutcliffe/subscriptions',
-            organizations_url: 'https://api.github.com/users/neilsutcliffe/orgs',
+            followers_url:
+              'https://api.github.com/users/neilsutcliffe/followers',
+            following_url:
+              'https://api.github.com/users/neilsutcliffe/following{/other_user}',
+            gists_url:
+              'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
+            starred_url:
+              'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/neilsutcliffe/subscriptions',
+            organizations_url:
+              'https://api.github.com/users/neilsutcliffe/orgs',
             repos_url: 'https://api.github.com/users/neilsutcliffe/repos',
-            events_url: 'https://api.github.com/users/neilsutcliffe/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/neilsutcliffe/received_events',
+            events_url:
+              'https://api.github.com/users/neilsutcliffe/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/neilsutcliffe/received_events',
             type: 'User',
             site_admin: false,
           },
@@ -2078,19 +2486,28 @@ const _data: IGitHubEvent[] = [
             owner: {
               login: 'neilsutcliffe',
               id: 13319277,
-              avatar_url: 'https://avatars0.githubusercontent.com/u/13319277?v=4',
+              avatar_url:
+                'https://avatars0.githubusercontent.com/u/13319277?v=4',
               gravatar_id: '',
               url: 'https://api.github.com/users/neilsutcliffe',
               html_url: 'https://github.com/neilsutcliffe',
-              followers_url: 'https://api.github.com/users/neilsutcliffe/followers',
-              following_url: 'https://api.github.com/users/neilsutcliffe/following{/other_user}',
-              gists_url: 'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/neilsutcliffe/subscriptions',
-              organizations_url: 'https://api.github.com/users/neilsutcliffe/orgs',
+              followers_url:
+                'https://api.github.com/users/neilsutcliffe/followers',
+              following_url:
+                'https://api.github.com/users/neilsutcliffe/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/neilsutcliffe/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/neilsutcliffe/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/neilsutcliffe/subscriptions',
+              organizations_url:
+                'https://api.github.com/users/neilsutcliffe/orgs',
               repos_url: 'https://api.github.com/users/neilsutcliffe/repos',
-              events_url: 'https://api.github.com/users/neilsutcliffe/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/neilsutcliffe/received_events',
+              events_url:
+                'https://api.github.com/users/neilsutcliffe/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/neilsutcliffe/received_events',
               type: 'User',
               site_admin: false,
             },
@@ -2099,50 +2516,78 @@ const _data: IGitHubEvent[] = [
             description: 'Easy to maintain open source documentation websites.',
             fork: true,
             url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus',
-            forks_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/keys{/key_id}',
+            forks_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/forks',
+            keys_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/collaborators{/collaborator}',
-            teams_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/teams',
-            hooks_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/hooks',
+            teams_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/teams',
+            hooks_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/events',
-            assignees_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/branches{/branch}',
-            tags_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/commits{/sha}',
+            events_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/events',
+            assignees_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/branches{/branch}',
+            tags_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/tags',
+            blobs_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/commits{/sha}',
             git_commits_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/comments{/number}',
+            comments_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/contents/{+path}',
+            contents_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/contents/{+path}',
             compare_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/merges',
+            merges_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/merges',
             archive_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/pulls{/number}',
+            downloads_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/pulls{/number}',
             milestones_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/neilsutcliffe/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/neilsutcliffe/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/neilsutcliffe/Docusaurus/deployments',
             created_at: '2017-12-15T21:05:04Z',
             updated_at: '2017-12-15T21:05:05Z',
             pushed_at: '2017-12-18T00:29:01Z',
@@ -2183,14 +2628,19 @@ const _data: IGitHubEvent[] = [
             url: 'https://api.github.com/users/facebook',
             html_url: 'https://github.com/facebook',
             followers_url: 'https://api.github.com/users/facebook/followers',
-            following_url: 'https://api.github.com/users/facebook/following{/other_user}',
+            following_url:
+              'https://api.github.com/users/facebook/following{/other_user}',
             gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+            starred_url:
+              'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/facebook/subscriptions',
             organizations_url: 'https://api.github.com/users/facebook/orgs',
             repos_url: 'https://api.github.com/users/facebook/repos',
-            events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/facebook/received_events',
+            events_url:
+              'https://api.github.com/users/facebook/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/facebook/received_events',
             type: 'Organization',
             site_admin: false,
           },
@@ -2206,14 +2656,20 @@ const _data: IGitHubEvent[] = [
               url: 'https://api.github.com/users/facebook',
               html_url: 'https://github.com/facebook',
               followers_url: 'https://api.github.com/users/facebook/followers',
-              following_url: 'https://api.github.com/users/facebook/following{/other_user}',
-              gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+              following_url:
+                'https://api.github.com/users/facebook/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/facebook/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/facebook/subscriptions',
               organizations_url: 'https://api.github.com/users/facebook/orgs',
               repos_url: 'https://api.github.com/users/facebook/repos',
-              events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/facebook/received_events',
+              events_url:
+                'https://api.github.com/users/facebook/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/facebook/received_events',
               type: 'Organization',
               site_admin: false,
             },
@@ -2223,45 +2679,73 @@ const _data: IGitHubEvent[] = [
             fork: false,
             url: 'https://api.github.com/repos/facebook/Docusaurus',
             forks_url: 'https://api.github.com/repos/facebook/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
+            keys_url:
+              'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/facebook/Docusaurus/collaborators{/collaborator}',
             teams_url: 'https://api.github.com/repos/facebook/Docusaurus/teams',
             hooks_url: 'https://api.github.com/repos/facebook/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/facebook/Docusaurus/events',
-            assignees_url: 'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
+            events_url:
+              'https://api.github.com/repos/facebook/Docusaurus/events',
+            assignees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
             tags_url: 'https://api.github.com/repos/facebook/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/facebook/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/facebook/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/facebook/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/facebook/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/facebook/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
-            git_commits_url: 'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
+            blobs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/facebook/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
+            git_commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
+            comments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
-            compare_url: 'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/facebook/Docusaurus/merges',
-            archive_url: 'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/facebook/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
-            milestones_url: 'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
+            contents_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
+            compare_url:
+              'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
+            merges_url:
+              'https://api.github.com/repos/facebook/Docusaurus/merges',
+            archive_url:
+              'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
+            downloads_url:
+              'https://api.github.com/repos/facebook/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
+            milestones_url:
+              'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/facebook/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/facebook/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/deployments',
             created_at: '2017-06-20T16:13:53Z',
             updated_at: '2017-12-18T00:29:42Z',
             pushed_at: '2017-12-18T00:10:34Z',
@@ -2301,16 +2785,20 @@ const _data: IGitHubEvent[] = [
             href: 'https://api.github.com/repos/facebook/Docusaurus/issues/306',
           },
           comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/issues/306/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/issues/306/comments',
           },
           review_comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/306/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/306/comments',
           },
           review_comment: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
           },
           commits: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/306/commits',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/306/commits',
           },
           statuses: {
             href:
@@ -2392,9 +2880,12 @@ const _data: IGitHubEvent[] = [
       issue: {
         url: 'https://api.github.com/repos/facebook/Docusaurus/issues/294',
         repository_url: 'https://api.github.com/repos/facebook/Docusaurus',
-        labels_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/294/labels{/name}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/294/comments',
-        events_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/294/events',
+        labels_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/294/labels{/name}',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/294/comments',
+        events_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/294/events',
         html_url: 'https://github.com/facebook/Docusaurus/pull/294',
         id: 282414654,
         number: 294,
@@ -2407,21 +2898,26 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/cowlingj',
           html_url: 'https://github.com/cowlingj',
           followers_url: 'https://api.github.com/users/cowlingj/followers',
-          following_url: 'https://api.github.com/users/cowlingj/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/cowlingj/following{/other_user}',
           gists_url: 'https://api.github.com/users/cowlingj/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/cowlingj/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/cowlingj/subscriptions',
+          starred_url:
+            'https://api.github.com/users/cowlingj/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/cowlingj/subscriptions',
           organizations_url: 'https://api.github.com/users/cowlingj/orgs',
           repos_url: 'https://api.github.com/users/cowlingj/repos',
           events_url: 'https://api.github.com/users/cowlingj/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/cowlingj/received_events',
+          received_events_url:
+            'https://api.github.com/users/cowlingj/received_events',
           type: 'User',
           site_admin: false,
         },
         labels: [
           {
             id: 630651545,
-            url: 'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
+            url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
             name: 'CLA Signed',
             color: '009900',
             default: false,
@@ -2447,9 +2943,12 @@ const _data: IGitHubEvent[] = [
           '## Motivation\r\n\r\nissue: #220\r\n\r\n## Test Plan\r\n\r\n1. Edit siteConfig.js to include fonts object with keys mapped to arrays of font names\r\n```js\r\nfonts: {\r\n  myKey: [\r\n    "Times New Roman",\r\n    "Serif"\r\n  ],\r\n  myOtherKey: [\r\n    "-apple-system",\r\n    "system-ui"\r\n  ]\r\n},\r\n```\r\n2. add the corresponding keys as font-family variables in a css file in the form $<key>\r\n```css\r\nh1 {\r\n  font-family: $myKey;\r\n}\r\n```\r\n3. run server\r\n',
       },
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352298368',
-        html_url: 'https://github.com/facebook/Docusaurus/pull/294#issuecomment-352298368',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/294',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352298368',
+        html_url:
+          'https://github.com/facebook/Docusaurus/pull/294#issuecomment-352298368',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/294',
         id: 352298368,
         user: {
           login: 'JoelMarcey',
@@ -2459,14 +2958,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -2752,7 +3256,8 @@ const _data: IGitHubEvent[] = [
         html_url: 'https://github.com/facebook/Docusaurus/pull/293',
         diff_url: 'https://github.com/facebook/Docusaurus/pull/293.diff',
         patch_url: 'https://github.com/facebook/Docusaurus/pull/293.patch',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/293',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/293',
         number: 293,
         state: 'closed',
         locked: false,
@@ -2765,14 +3270,20 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/richardzcode',
           html_url: 'https://github.com/richardzcode',
           followers_url: 'https://api.github.com/users/richardzcode/followers',
-          following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-          gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+          following_url:
+            'https://api.github.com/users/richardzcode/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/richardzcode/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/richardzcode/subscriptions',
           organizations_url: 'https://api.github.com/users/richardzcode/orgs',
           repos_url: 'https://api.github.com/users/richardzcode/repos',
-          events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+          events_url:
+            'https://api.github.com/users/richardzcode/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/richardzcode/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -2787,11 +3298,14 @@ const _data: IGitHubEvent[] = [
         assignees: [],
         requested_reviewers: [],
         milestone: null,
-        commits_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/293/commits',
-        review_comments_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls/293/comments',
+        commits_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/293/commits',
+        review_comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/pulls/293/comments',
         review_comment_url:
           'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/293/comments',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/293/comments',
         statuses_url:
           'https://api.github.com/repos/facebook/Docusaurus/statuses/58f7bba0cef6ab7f77bb82bc5fffc10065a3da28',
         head: {
@@ -2805,15 +3319,22 @@ const _data: IGitHubEvent[] = [
             gravatar_id: '',
             url: 'https://api.github.com/users/richardzcode',
             html_url: 'https://github.com/richardzcode',
-            followers_url: 'https://api.github.com/users/richardzcode/followers',
-            following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-            gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+            followers_url:
+              'https://api.github.com/users/richardzcode/followers',
+            following_url:
+              'https://api.github.com/users/richardzcode/following{/other_user}',
+            gists_url:
+              'https://api.github.com/users/richardzcode/gists{/gist_id}',
+            starred_url:
+              'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/richardzcode/subscriptions',
             organizations_url: 'https://api.github.com/users/richardzcode/orgs',
             repos_url: 'https://api.github.com/users/richardzcode/repos',
-            events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+            events_url:
+              'https://api.github.com/users/richardzcode/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/richardzcode/received_events',
             type: 'User',
             site_admin: false,
           },
@@ -2824,19 +3345,28 @@ const _data: IGitHubEvent[] = [
             owner: {
               login: 'richardzcode',
               id: 1006903,
-              avatar_url: 'https://avatars3.githubusercontent.com/u/1006903?v=4',
+              avatar_url:
+                'https://avatars3.githubusercontent.com/u/1006903?v=4',
               gravatar_id: '',
               url: 'https://api.github.com/users/richardzcode',
               html_url: 'https://github.com/richardzcode',
-              followers_url: 'https://api.github.com/users/richardzcode/followers',
-              following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-              gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
-              organizations_url: 'https://api.github.com/users/richardzcode/orgs',
+              followers_url:
+                'https://api.github.com/users/richardzcode/followers',
+              following_url:
+                'https://api.github.com/users/richardzcode/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/richardzcode/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/richardzcode/subscriptions',
+              organizations_url:
+                'https://api.github.com/users/richardzcode/orgs',
               repos_url: 'https://api.github.com/users/richardzcode/repos',
-              events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+              events_url:
+                'https://api.github.com/users/richardzcode/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/richardzcode/received_events',
               type: 'User',
               site_admin: false,
             },
@@ -2845,50 +3375,78 @@ const _data: IGitHubEvent[] = [
             description: 'Easy to maintain open source documentation websites.',
             fork: true,
             url: 'https://api.github.com/repos/richardzcode/Docusaurus',
-            forks_url: 'https://api.github.com/repos/richardzcode/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/richardzcode/Docusaurus/keys{/key_id}',
+            forks_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/forks',
+            keys_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/collaborators{/collaborator}',
-            teams_url: 'https://api.github.com/repos/richardzcode/Docusaurus/teams',
-            hooks_url: 'https://api.github.com/repos/richardzcode/Docusaurus/hooks',
+            teams_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/teams',
+            hooks_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/richardzcode/Docusaurus/events',
-            assignees_url: 'https://api.github.com/repos/richardzcode/Docusaurus/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/richardzcode/Docusaurus/branches{/branch}',
-            tags_url: 'https://api.github.com/repos/richardzcode/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/richardzcode/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/richardzcode/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/richardzcode/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/richardzcode/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/richardzcode/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/richardzcode/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/richardzcode/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/richardzcode/Docusaurus/commits{/sha}',
+            events_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/events',
+            assignees_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/branches{/branch}',
+            tags_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/tags',
+            blobs_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/commits{/sha}',
             git_commits_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/richardzcode/Docusaurus/comments{/number}',
+            comments_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/richardzcode/Docusaurus/contents/{+path}',
+            contents_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/contents/{+path}',
             compare_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/richardzcode/Docusaurus/merges',
+            merges_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/merges',
             archive_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/richardzcode/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/richardzcode/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/richardzcode/Docusaurus/pulls{/number}',
+            downloads_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/pulls{/number}',
             milestones_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/richardzcode/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/richardzcode/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/richardzcode/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/richardzcode/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/richardzcode/Docusaurus/deployments',
             created_at: '2017-12-14T20:01:21Z',
             updated_at: '2017-12-14T20:01:23Z',
             pushed_at: '2017-12-15T17:27:22Z',
@@ -2929,14 +3487,19 @@ const _data: IGitHubEvent[] = [
             url: 'https://api.github.com/users/facebook',
             html_url: 'https://github.com/facebook',
             followers_url: 'https://api.github.com/users/facebook/followers',
-            following_url: 'https://api.github.com/users/facebook/following{/other_user}',
+            following_url:
+              'https://api.github.com/users/facebook/following{/other_user}',
             gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-            subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+            starred_url:
+              'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+            subscriptions_url:
+              'https://api.github.com/users/facebook/subscriptions',
             organizations_url: 'https://api.github.com/users/facebook/orgs',
             repos_url: 'https://api.github.com/users/facebook/repos',
-            events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-            received_events_url: 'https://api.github.com/users/facebook/received_events',
+            events_url:
+              'https://api.github.com/users/facebook/events{/privacy}',
+            received_events_url:
+              'https://api.github.com/users/facebook/received_events',
             type: 'Organization',
             site_admin: false,
           },
@@ -2952,14 +3515,20 @@ const _data: IGitHubEvent[] = [
               url: 'https://api.github.com/users/facebook',
               html_url: 'https://github.com/facebook',
               followers_url: 'https://api.github.com/users/facebook/followers',
-              following_url: 'https://api.github.com/users/facebook/following{/other_user}',
-              gists_url: 'https://api.github.com/users/facebook/gists{/gist_id}',
-              starred_url: 'https://api.github.com/users/facebook/starred{/owner}{/repo}',
-              subscriptions_url: 'https://api.github.com/users/facebook/subscriptions',
+              following_url:
+                'https://api.github.com/users/facebook/following{/other_user}',
+              gists_url:
+                'https://api.github.com/users/facebook/gists{/gist_id}',
+              starred_url:
+                'https://api.github.com/users/facebook/starred{/owner}{/repo}',
+              subscriptions_url:
+                'https://api.github.com/users/facebook/subscriptions',
               organizations_url: 'https://api.github.com/users/facebook/orgs',
               repos_url: 'https://api.github.com/users/facebook/repos',
-              events_url: 'https://api.github.com/users/facebook/events{/privacy}',
-              received_events_url: 'https://api.github.com/users/facebook/received_events',
+              events_url:
+                'https://api.github.com/users/facebook/events{/privacy}',
+              received_events_url:
+                'https://api.github.com/users/facebook/received_events',
               type: 'Organization',
               site_admin: false,
             },
@@ -2969,45 +3538,73 @@ const _data: IGitHubEvent[] = [
             fork: false,
             url: 'https://api.github.com/repos/facebook/Docusaurus',
             forks_url: 'https://api.github.com/repos/facebook/Docusaurus/forks',
-            keys_url: 'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
+            keys_url:
+              'https://api.github.com/repos/facebook/Docusaurus/keys{/key_id}',
             collaborators_url:
               'https://api.github.com/repos/facebook/Docusaurus/collaborators{/collaborator}',
             teams_url: 'https://api.github.com/repos/facebook/Docusaurus/teams',
             hooks_url: 'https://api.github.com/repos/facebook/Docusaurus/hooks',
             issue_events_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/events{/number}',
-            events_url: 'https://api.github.com/repos/facebook/Docusaurus/events',
-            assignees_url: 'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
-            branches_url: 'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
+            events_url:
+              'https://api.github.com/repos/facebook/Docusaurus/events',
+            assignees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/assignees{/user}',
+            branches_url:
+              'https://api.github.com/repos/facebook/Docusaurus/branches{/branch}',
             tags_url: 'https://api.github.com/repos/facebook/Docusaurus/tags',
-            blobs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
-            git_tags_url: 'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
-            git_refs_url: 'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
-            trees_url: 'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
-            statuses_url: 'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
-            languages_url: 'https://api.github.com/repos/facebook/Docusaurus/languages',
-            stargazers_url: 'https://api.github.com/repos/facebook/Docusaurus/stargazers',
-            contributors_url: 'https://api.github.com/repos/facebook/Docusaurus/contributors',
-            subscribers_url: 'https://api.github.com/repos/facebook/Docusaurus/subscribers',
-            subscription_url: 'https://api.github.com/repos/facebook/Docusaurus/subscription',
-            commits_url: 'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
-            git_commits_url: 'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
-            comments_url: 'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
+            blobs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/blobs{/sha}',
+            git_tags_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/tags{/sha}',
+            git_refs_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/refs{/sha}',
+            trees_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/trees{/sha}',
+            statuses_url:
+              'https://api.github.com/repos/facebook/Docusaurus/statuses/{sha}',
+            languages_url:
+              'https://api.github.com/repos/facebook/Docusaurus/languages',
+            stargazers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/stargazers',
+            contributors_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contributors',
+            subscribers_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscribers',
+            subscription_url:
+              'https://api.github.com/repos/facebook/Docusaurus/subscription',
+            commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/commits{/sha}',
+            git_commits_url:
+              'https://api.github.com/repos/facebook/Docusaurus/git/commits{/sha}',
+            comments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/comments{/number}',
             issue_comment_url:
               'https://api.github.com/repos/facebook/Docusaurus/issues/comments{/number}',
-            contents_url: 'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
-            compare_url: 'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
-            merges_url: 'https://api.github.com/repos/facebook/Docusaurus/merges',
-            archive_url: 'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
-            downloads_url: 'https://api.github.com/repos/facebook/Docusaurus/downloads',
-            issues_url: 'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
-            pulls_url: 'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
-            milestones_url: 'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
+            contents_url:
+              'https://api.github.com/repos/facebook/Docusaurus/contents/{+path}',
+            compare_url:
+              'https://api.github.com/repos/facebook/Docusaurus/compare/{base}...{head}',
+            merges_url:
+              'https://api.github.com/repos/facebook/Docusaurus/merges',
+            archive_url:
+              'https://api.github.com/repos/facebook/Docusaurus/{archive_format}{/ref}',
+            downloads_url:
+              'https://api.github.com/repos/facebook/Docusaurus/downloads',
+            issues_url:
+              'https://api.github.com/repos/facebook/Docusaurus/issues{/number}',
+            pulls_url:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls{/number}',
+            milestones_url:
+              'https://api.github.com/repos/facebook/Docusaurus/milestones{/number}',
             notifications_url:
               'https://api.github.com/repos/facebook/Docusaurus/notifications{?since,all,participating}',
-            labels_url: 'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
-            releases_url: 'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
-            deployments_url: 'https://api.github.com/repos/facebook/Docusaurus/deployments',
+            labels_url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels{/name}',
+            releases_url:
+              'https://api.github.com/repos/facebook/Docusaurus/releases{/id}',
+            deployments_url:
+              'https://api.github.com/repos/facebook/Docusaurus/deployments',
             created_at: '2017-06-20T16:13:53Z',
             updated_at: '2017-12-18T00:03:15Z',
             pushed_at: '2017-12-18T00:07:12Z',
@@ -3047,16 +3644,20 @@ const _data: IGitHubEvent[] = [
             href: 'https://api.github.com/repos/facebook/Docusaurus/issues/293',
           },
           comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/issues/293/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/issues/293/comments',
           },
           review_comments: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/293/comments',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/293/comments',
           },
           review_comment: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/comments{/number}',
           },
           commits: {
-            href: 'https://api.github.com/repos/facebook/Docusaurus/pulls/293/commits',
+            href:
+              'https://api.github.com/repos/facebook/Docusaurus/pulls/293/commits',
           },
           statuses: {
             href:
@@ -3076,14 +3677,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },
@@ -3127,9 +3733,12 @@ const _data: IGitHubEvent[] = [
       issue: {
         url: 'https://api.github.com/repos/facebook/Docusaurus/issues/293',
         repository_url: 'https://api.github.com/repos/facebook/Docusaurus',
-        labels_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/293/labels{/name}',
-        comments_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/293/comments',
-        events_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/293/events',
+        labels_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/293/labels{/name}',
+        comments_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/293/comments',
+        events_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/293/events',
         html_url: 'https://github.com/facebook/Docusaurus/pull/293',
         id: 282353838,
         number: 293,
@@ -3142,21 +3751,28 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/richardzcode',
           html_url: 'https://github.com/richardzcode',
           followers_url: 'https://api.github.com/users/richardzcode/followers',
-          following_url: 'https://api.github.com/users/richardzcode/following{/other_user}',
-          gists_url: 'https://api.github.com/users/richardzcode/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/richardzcode/subscriptions',
+          following_url:
+            'https://api.github.com/users/richardzcode/following{/other_user}',
+          gists_url:
+            'https://api.github.com/users/richardzcode/gists{/gist_id}',
+          starred_url:
+            'https://api.github.com/users/richardzcode/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/richardzcode/subscriptions',
           organizations_url: 'https://api.github.com/users/richardzcode/orgs',
           repos_url: 'https://api.github.com/users/richardzcode/repos',
-          events_url: 'https://api.github.com/users/richardzcode/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/richardzcode/received_events',
+          events_url:
+            'https://api.github.com/users/richardzcode/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/richardzcode/received_events',
           type: 'User',
           site_admin: false,
         },
         labels: [
           {
             id: 630651545,
-            url: 'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
+            url:
+              'https://api.github.com/repos/facebook/Docusaurus/labels/CLA%20Signed',
             name: 'CLA Signed',
             color: '009900',
             default: false,
@@ -3182,9 +3798,12 @@ const _data: IGitHubEvent[] = [
           '<!--\r\nThank you for sending the PR! We appreciate you spending the time to work on these changes.\r\n\r\nHelp us understand your motivation by explaining why you decided to make this change.\r\n\r\nYou can learn more about contributing to Docusaurus here: https://github.com/facebook/Docusaurus/blob/master/CONTRIBUTING.md\r\n\r\nHappy contributing!\r\n\r\n-->\r\n\r\n## Motivation\r\n\r\nI was using Docusaurus to create website for one of my projects to try out. I find customizing index page took me a bit more time, mainly because of the pretty big, nested, render() method. Splitting into small components as React always recommended would help users to customize the page easier.\r\n\r\nI tried to move those small components into a common place so potentially could be shared but failed. I think it is because the way template generation works. Inside index.js file is still an improvement, but if there is a better place please do that and close this request.\r\n\r\nBTW, this PR also fixed the showcase links `key` issue on this page.\r\n\r\n## Test Plan\r\n\r\nI tested by creating a new website and copy the changed files over then manual test the site.\r\n\r\n## Related PRs\r\n\r\n(If this PR adds or changes functionality, please take some time to update the docs at https://github.com/facebook/docusaurus, and link to your PR here.)\r\n',
       },
       comment: {
-        url: 'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352297285',
-        html_url: 'https://github.com/facebook/Docusaurus/pull/293#issuecomment-352297285',
-        issue_url: 'https://api.github.com/repos/facebook/Docusaurus/issues/293',
+        url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/comments/352297285',
+        html_url:
+          'https://github.com/facebook/Docusaurus/pull/293#issuecomment-352297285',
+        issue_url:
+          'https://api.github.com/repos/facebook/Docusaurus/issues/293',
         id: 352297285,
         user: {
           login: 'JoelMarcey',
@@ -3194,14 +3813,19 @@ const _data: IGitHubEvent[] = [
           url: 'https://api.github.com/users/JoelMarcey',
           html_url: 'https://github.com/JoelMarcey',
           followers_url: 'https://api.github.com/users/JoelMarcey/followers',
-          following_url: 'https://api.github.com/users/JoelMarcey/following{/other_user}',
+          following_url:
+            'https://api.github.com/users/JoelMarcey/following{/other_user}',
           gists_url: 'https://api.github.com/users/JoelMarcey/gists{/gist_id}',
-          starred_url: 'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
-          subscriptions_url: 'https://api.github.com/users/JoelMarcey/subscriptions',
+          starred_url:
+            'https://api.github.com/users/JoelMarcey/starred{/owner}{/repo}',
+          subscriptions_url:
+            'https://api.github.com/users/JoelMarcey/subscriptions',
           organizations_url: 'https://api.github.com/users/JoelMarcey/orgs',
           repos_url: 'https://api.github.com/users/JoelMarcey/repos',
-          events_url: 'https://api.github.com/users/JoelMarcey/events{/privacy}',
-          received_events_url: 'https://api.github.com/users/JoelMarcey/received_events',
+          events_url:
+            'https://api.github.com/users/JoelMarcey/events{/privacy}',
+          received_events_url:
+            'https://api.github.com/users/JoelMarcey/received_events',
           type: 'User',
           site_admin: false,
         },

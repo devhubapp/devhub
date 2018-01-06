@@ -10,7 +10,11 @@ import Screen from '../components/common/Screen'
 import EventCardsContainer from '../containers/EventCardsContainer'
 import theme from '../styles/themes/dark'
 
-export default class FeedScreen extends PureComponent {
+export interface IProps {
+  navigator: object
+}
+
+export default class FeedScreen extends PureComponent<IProps> {
   static componentId = 'org.brunolemos.devhub.FeedScreen'
 
   static navigatorStyle = {}

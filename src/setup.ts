@@ -6,7 +6,7 @@ export async function setup() {
   if (__DEV__) {
     const { whyDidYouUpdate } = require('why-did-you-update')
     whyDidYouUpdate(React, {
-      exclude:  /[^a-zA-Z0-9]|CellRenderer|Icon|Swipeable/,
+      exclude: /[^a-zA-Z0-9]|CellRenderer|Icon|Swipeable/,
     })
   }
 

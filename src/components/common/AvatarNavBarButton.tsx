@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { TextStyle, TouchableOpacity } from 'react-native'
 
-import Avatar from './Avatar';
+import Avatar from './Avatar'
 
 const defaultIconSize = 24
 
@@ -13,11 +13,19 @@ export interface IScreenIconProps {
   style: TextStyle
 }
 
-export default class AvatarNavBarButton extends PureComponent<IScreenIconProps> {
+export default class AvatarNavBarButton extends PureComponent<
+  IScreenIconProps
+> {
   static componentId = 'org.brunolemos.devhub.AvatarNavBarButton'
 
   render() {
-    const { onPress, username, size = defaultIconSize, style, ...props } = this.props
+    const {
+      onPress,
+      username,
+      size = defaultIconSize,
+      style,
+      ...props
+    } = this.props
 
     return (
       <TouchableOpacity onPress={onPress} {...props}>

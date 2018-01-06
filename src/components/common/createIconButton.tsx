@@ -16,7 +16,14 @@ const createIconButton = (IconFont: any) =>
     static componentId = `org.brunolemos.devhub.${IconFont.name}`
 
     render() {
-      const { color, name, onPress, size = defaultIconSize, style, ...props } = this.props
+      const {
+        color,
+        name,
+        onPress,
+        size = defaultIconSize,
+        style,
+        ...props
+      } = this.props
 
       return (
         <TouchableOpacity onPress={onPress} {...props}>

@@ -9,9 +9,18 @@ import theme from './styles/themes/dark'
 
 export function registerComponents() {
   Navigation.registerComponent(FeedScreen.componentId, () => FeedScreen)
-  Navigation.registerComponent(NotificationsScreen.componentId, () => NotificationsScreen)
-  Navigation.registerComponent(PreferencesScreen.componentId, () => PreferencesScreen)
-  Navigation.registerComponent(AvatarNavBarButton.componentId, () => AvatarNavBarButton)
+  Navigation.registerComponent(
+    NotificationsScreen.componentId,
+    () => NotificationsScreen,
+  )
+  Navigation.registerComponent(
+    PreferencesScreen.componentId,
+    () => PreferencesScreen,
+  )
+  Navigation.registerComponent(
+    AvatarNavBarButton.componentId,
+    () => AvatarNavBarButton,
+  )
 }
 
 export async function init() {

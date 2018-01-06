@@ -27,10 +27,10 @@ export type Placement = 'LEFT' | 'RIGHT'
 
 export const defaultWidth = 64
 
-export default abstract class BaseSwipeableRow<P = {}, S = {}> extends PureComponent<
-  IBaseProps & P,
-  IBaseState & S
-> {
+export default abstract class BaseSwipeableRow<
+  P = {},
+  S = {}
+> extends PureComponent<IBaseProps & P, IBaseState & S> {
   _swipeableRow: Swipeable | null = null
 
   abstract renderButtonAction: (
@@ -40,7 +40,12 @@ export default abstract class BaseSwipeableRow<P = {}, S = {}> extends PureCompo
       placement,
       progress,
       x,
-    }: { x: number; placement: Placement; progress: Animated.Value; dragX: Animated.Value },
+    }: {
+      x: number
+      placement: Placement
+      progress: Animated.Value
+      dragX: Animated.Value
+    },
   ) => ReactNode
 
   abstract renderFullAction: (
@@ -49,40 +54,70 @@ export default abstract class BaseSwipeableRow<P = {}, S = {}> extends PureCompo
       dragX,
       placement,
       progress,
-    }: { dragX: Animated.Value; placement: Placement; progress: Animated.Value },
+    }: {
+      dragX: Animated.Value
+      placement: Placement
+      progress: Animated.Value
+    },
   ) => ReactNode
 
-  renderLeftActions: SwipeableProperties['renderLeftActions'] = (progress, dragX) => {
+  renderLeftActions: SwipeableProperties['renderLeftActions'] = (
+    progress,
+    dragX,
+  ) => {
     const { leftActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
     const buttonActions = actions.filter(action => action.type !== 'FULL')
 
-    if (fullAction) return this.renderFullAction(fullAction, { dragX, progress, placement: 'LEFT' })
+    if (fullAction)
+      return this.renderFullAction(fullAction, {
+        dragX,
+        progress,
+        placement: 'LEFT',
+      })
 
-    const width = buttonActions.reduce((total, action) => total + (action.width || defaultWidth), 0)
+    const width = buttonActions.reduce(
+      (total, action) => total + (action.width || defaultWidth),
+      0,
+    )
     let x = 0
 
     return (
       <View style={{ width, flexDirection: 'row' }}>
         {buttonActions.map(action => {
           x += action.width || defaultWidth
-          return this.renderButtonAction(action, { dragX, progress, x, placement: 'LEFT' })
+          return this.renderButtonAction(action, {
+            dragX,
+            progress,
+            x,
+            placement: 'LEFT',
+          })
         })}
       </View>
     )
   }
 
-  renderRightActions: SwipeableProperties['renderRightActions'] = (progress, dragX) => {
+  renderRightActions: SwipeableProperties['renderRightActions'] = (
+    progress,
+    dragX,
+  ) => {
     const { rightActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
     const buttonActions = actions.filter(action => action.type !== 'FULL')
 
     if (fullAction)
-      return this.renderFullAction(fullAction, { dragX, progress, placement: 'RIGHT' })
+      return this.renderFullAction(fullAction, {
+        dragX,
+        progress,
+        placement: 'RIGHT',
+      })
 
-    const width = buttonActions.reduce((total, action) => total + (action.width || defaultWidth), 0)
+    const width = buttonActions.reduce(
+      (total, action) => total + (action.width || defaultWidth),
+      0,
+    )
     let x = width
 
     return (

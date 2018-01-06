@@ -1,7 +1,11 @@
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import theme from '../../styles/themes/dark'
-import { avatarSize, contentPadding, smallTextSize } from '../../styles/variables'
+import {
+  avatarSize,
+  contentPadding,
+  smallTextSize,
+} from '../../styles/variables'
 
 export default StyleSheet.create({
   horizontal: {

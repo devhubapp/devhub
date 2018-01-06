@@ -11,7 +11,12 @@ export enum IconField {
 }
 
 const iconDetails: {
-  [key in IconField]: { Font: typeof Octicons; color?: string; icon: string; size?: number }
+  [key in IconField]: {
+    Font: typeof Octicons
+    color?: string
+    icon: string
+    size?: number
+  }
 } = {
   feed: { Font: Octicons, icon: 'home', size: 24 },
   notifications: { Font: Octicons, icon: 'globe', size: 24 },
@@ -21,8 +26,14 @@ const iconDetails: {
 const icons: { [key in IconField]?: ImageSource } = {}
 
 function registerIconComponents() {
-  Navigation.registerComponent(IoniconsIconButton.componentId, () => IoniconsIconButton)
-  Navigation.registerComponent(OcticonsIconButton.componentId, () => OcticonsIconButton)
+  Navigation.registerComponent(
+    IoniconsIconButton.componentId,
+    () => IoniconsIconButton,
+  )
+  Navigation.registerComponent(
+    OcticonsIconButton.componentId,
+    () => OcticonsIconButton,
+  )
 }
 
 export async function initIcons() {
@@ -30,8 +41,9 @@ export async function initIcons() {
 
   const fields = Object.keys(iconDetails) as IconField[]
   const imageSources = await Promise.all(
-    Object.values(iconDetails).map(({ Font, color = 'black', icon, size = 24 }) =>
-      Font.getImageSource(icon, size, color),
+    Object.values(iconDetails).map(
+      ({ Font, color = 'black', icon, size = 24 }) =>
+        Font.getImageSource(icon, size, color),
     ),
   )
 

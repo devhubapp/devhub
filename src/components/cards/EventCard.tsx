@@ -33,7 +33,10 @@ export default class EventCard extends PureComponent<IProps> {
       <View style={styles.container}>
         <CardHeader event={event} />
         {Boolean(event.repo && orgName && repoName) && (
-          <RepositoryRow owner={orgName as string} repository={repoName as string} />
+          <RepositoryRow
+            owner={orgName as string}
+            repository={repoName as string}
+          />
         )}
       </View>
     )

@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'
-import { getRepositoryPressHandler } from './helpers';
+import { getRepositoryPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {

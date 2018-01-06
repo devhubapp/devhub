@@ -2,7 +2,11 @@ import React from 'react'
 import { Animated, StyleSheet, Text } from 'react-native'
 import { RectButton, Swipeable } from 'react-native-gesture-handler'
 
-import BaseSwipeableRow, { IBaseAction, IBaseProps, Placement } from './BaseSwipeableRow'
+import BaseSwipeableRow, {
+  IBaseAction,
+  IBaseProps,
+  Placement,
+} from './BaseSwipeableRow'
 
 export { defaultWidth } from './BaseSwipeableRow'
 
@@ -17,7 +21,11 @@ export default class AppleSwipeableRow extends BaseSwipeableRow<IAction> {
 
   renderButtonAction = (
     action: IAction,
-    { x, placement, progress }: { x: number; placement: Placement; progress: Animated.Value },
+    {
+      x,
+      placement,
+      progress,
+    }: { x: number; placement: Placement; progress: Animated.Value },
   ) => {
     const transform = {
       translateX:
