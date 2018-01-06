@@ -91,8 +91,8 @@ export default abstract class BaseSwipeableRow<P = {}, S = {}> extends PureCompo
           const component = this.renderButtonAction(action, {
             dragX,
             progress,
-            placement: 'RIGHT',
             x,
+            placement: 'RIGHT',
           })
           x -= action.width || defaultWidth
           return component

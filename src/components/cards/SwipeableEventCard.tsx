@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 
 import SwipeableRow from '../../libs/swipeable'
-import EventCard, { IProps as ICardProps } from './EventCard'
 import theme from '../../styles/themes/dark'
+import EventCard, { IProps as ICardProps } from './EventCard'
 
 export interface IProps extends ICardProps {}
 

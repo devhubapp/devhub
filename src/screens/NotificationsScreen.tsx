@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react'
 
-// import AvatarNavBarButton, {
-//   IScreenIconProps as IAvatarNavBarButtonIconProps,
-// } from '../components/common/AvatarNavBarButton'
 import OcticonsIconButton, {
   IScreenIconProps as IOcticonsIconButtonIconProps,
 } from '../components/common/OcticonsIconButton'
-import NotificationCardsContainer from '../containers/NotificationCardsContainer'
-import theme from '../styles/themes/dark'
 import Screen from '../components/common/Screen'
+import theme from '../styles/themes/dark'
 
-export default class NotificationsScreen extends PureComponent {
+export interface IProps {
+  navigator: object
+}
+
+export default class NotificationsScreen extends PureComponent<IProps> {
   static componentId = 'org.brunolemos.devhub.NotificationsScreen'
 
   static navigatorStyle = {

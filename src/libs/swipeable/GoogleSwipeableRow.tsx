@@ -1,10 +1,13 @@
 import React from 'react'
-import { Animated, StyleSheet, Text } from 'react-native'
-import { RectButton } from 'react-native-gesture-handler'
-import Swipeable from 'react-native-gesture-handler/Swipeable'
+import { Animated, StyleSheet } from 'react-native'
+import { RectButton, Swipeable } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-import BaseSwipeableRow, { IBaseAction, IBaseProps, Placement } from './BaseSwipeableRow'
+import BaseSwipeableRow, {
+  IBaseAction,
+  IBaseProps,
+  Placement,
+} from './BaseSwipeableRow'
 
 export { defaultWidth } from './BaseSwipeableRow'
 
@@ -21,27 +24,31 @@ export default class GoogleSwipeableRow extends BaseSwipeableRow {
 
   renderButtonAction = (
     action: IAction,
-    { dragX, x, placement }: { x: number; placement: Placement },
+    {
+      dragX,
+      placement,
+      x,
+    }: { dragX: Animated.Value; placement: Placement; x: number },
   ) => {
     const transform = {
       scale:
         placement === 'LEFT'
           ? dragX.interpolate({
+              extrapolate: 'clamp',
               inputRange: [x - 80, x],
               outputRange: [0, 1],
-              extrapolate: 'clamp',
             })
           : dragX.interpolate({
+              extrapolate: 'clamp',
               inputRange: [-x, -x + 80],
               outputRange: [1, 0],
-              extrapolate: 'clamp',
             }),
     }
 
     const pressHandler = () => {
       action.onPress()
       this.close()
-      alert(action.label)
+      // alert(action.label)
     }
 
     return (
@@ -63,20 +70,23 @@ export default class GoogleSwipeableRow extends BaseSwipeableRow {
     )
   }
 
-  renderFullAction = (action: IAction, { dragX, placement }: { placement: Placement }) => {
+  renderFullAction = (
+    action: IAction,
+    { dragX, placement }: { dragX: Animated.Value; placement: Placement },
+  ) => {
     const transform = {
       scale:
         placement === 'LEFT'
           ? dragX.interpolate({
-            inputRange: [0, 80],
-            outputRange: [0, 1],
-            extrapolate: 'clamp',
-          })
+              extrapolate: 'clamp',
+              inputRange: [0, 80],
+              outputRange: [0, 1],
+            })
           : dragX.interpolate({
-            inputRange: [-80, 0],
-            outputRange: [1, 0],
-            extrapolate: 'clamp',
-          }),
+              extrapolate: 'clamp',
+              inputRange: [-80, 0],
+              outputRange: [1, 0],
+            }),
     }
 
     const pressHandler = () => {
