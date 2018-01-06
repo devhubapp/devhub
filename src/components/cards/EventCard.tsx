@@ -4,8 +4,12 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import { IGitHubEvent } from '../../types/index'
+import {
+  getEventIconAndColor,
+  getEventText,
+} from '../../utils/helpers/github/events'
 import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
-import CardHeader from './partials/CardHeader'
+import EventCardHeader from './partials/EventCardHeader'
 import RepositoryRow from './partials/rows/RepositoryRow'
 
 export interface IProps {
@@ -29,9 +33,20 @@ export default class EventCard extends PureComponent<IProps> {
     const repoFullName = event.repo.full_name || event.repo.name || ''
     const { owner: orgName, repo: repoName } = getOwnerAndRepo(repoFullName)
 
+    const cardIconDetails = getEventIconAndColor(event, theme)
+    const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
+    const cardIconColor = cardIconDetails.color || theme.base04
+
+    const actionText = getEventText(event)
+
     return (
       <View style={styles.container}>
-        <CardHeader event={event} />
+        <EventCardHeader
+          actionText={actionText}
+          cardIconColor={cardIconColor}
+          cardIconName={cardIconName}
+          username={event.actor.login}
+        />
         {Boolean(event.repo && orgName && repoName) && (
           <RepositoryRow
             owner={orgName as string}

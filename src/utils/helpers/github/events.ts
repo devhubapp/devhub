@@ -1,4 +1,5 @@
 import * as baseTheme from '../../../styles/themes/base'
+
 import {
   getIssueIconAndColor,
   getPullRequestIconAndColor,

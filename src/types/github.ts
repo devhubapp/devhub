@@ -1,7 +1,7 @@
 export interface IGitHubUser {
-  id: string
+  id: number
   login: string
-  display_login: string
+  display_login?: string
   html_url?: string // https://github.com/brunolemos
   url?: string // https://api.github.com/users/brunolemos
 }
@@ -18,8 +18,8 @@ export interface IGitHubReaction {
 }
 
 export interface IGitHubComment {
-  id: string
-  commit_id: string // 6ef64f902613c73251da32d1bc9eb236f38798cc
+  id: number
+  commit_id?: string // 6ef64f902613c73251da32d1bc9eb236f38798cc
   user: IGitHubUser
   body: string
   position?: number | null
@@ -70,17 +70,17 @@ export interface IGitHubMilestone {
 }
 
 export interface IGitHubIssue {
-  id: string
+  id: number
   user: IGitHubUser
-  assignee: IGitHubUser
-  assignees: IGitHubUser[]
+  assignee?: IGitHubUser | null
+  assignees?: IGitHubUser[]
   number: number
   body: string
   title: string
   labels: IGitHubLabel[]
   state: 'open' | 'closed'
   locked: boolean
-  milestone: IGitHubMilestone
+  milestone?: IGitHubMilestone | null
   comments: number
   created_at: string // 2016-11-24T16:00:16Z
   updated_at: string // 2016-11-24T16:00:16Z
@@ -108,9 +108,9 @@ export interface IGitHubPullRequest {
   closed_at: string | null // 2016-11-24T16:00:02Z
   merged_at: string | null // 2016-11-24T16:00:02Z
   merge_commit_sha: string | null // e94fd3c0ed8b1fe095acad353ef27c43dfd7ce9b
-  assignee: IGitHubUser | null // null
-  assignees: IGitHubUser | null[] // []
-  milestone: IGitHubMilestone | null // null
+  assignee?: IGitHubUser | null // null
+  assignees?: IGitHubUser[] | null // []
+  milestone?: IGitHubMilestone | null // null
   head: object // object
   base: object // object
   _links: {
@@ -251,7 +251,7 @@ export interface IIssueCommentEvent {
     action: 'created' | 'edited' | 'deleted'
     issue: IGitHubIssue // The issue the comment belongs to.
     comment: IGitHubComment // The comment itself.
-    changes: object // The changes to the comment if the action was 'edited'.
+    changes?: object // The changes to the comment if the action was 'edited'.
   }
   created_at: string
 }
@@ -279,8 +279,8 @@ export interface IIssuesEvent {
       | 'closed'
       | 'reopened'
     issue: IGitHubIssue // The issue itself.
-    changes: object // The changes to the issue if the action was 'edited'.
-    assignee?: IGitHubUser // The optional user who was assigned or unassigned from the issue.
+    changes?: object // The changes to the issue if the action was 'edited'.
+    assignee?: IGitHubUser | null // The optional user who was assigned or unassigned from the issue.
     label?: IGitHubLabel // The optional label that was added or removed from the issue.
   }
 }
@@ -376,7 +376,7 @@ export interface IPullRequestReviewCommentEvent {
   repo: IGitHubRepo
   payload: {
     action: 'created' | 'edited' | 'deleted'
-    changes: object
+    changes?: object
     pull_request: IGitHubPullRequest
     comment: IGitHubComment
   }
@@ -400,6 +400,7 @@ export interface IPushEvent {
     distinct_size: number // The number of distinct commits in the push.
     commits: IGitHubCommit[]
   }
+  public?: boolean
 }
 
 /**
@@ -426,7 +427,7 @@ export interface IReleaseEvent {
  */
 export interface IWatchEvent {
   id: string
-  type: 'PullRequestEvent'
+  type: 'WatchEvent'
   actor: IGitHubUser
   repo: IGitHubRepo
   payload: {
@@ -682,7 +683,7 @@ export type IGitHubNotificationReason =
   | 'review_requested' // Someone requested your review on a pull request
 
 export interface IGitHubNotification {
-  id: string
+  id: number
   repository: IGitHubRepo
   subject: {
     title: string

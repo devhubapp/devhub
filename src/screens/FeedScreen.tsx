@@ -62,7 +62,7 @@ export default class FeedScreen extends PureComponent<IProps> {
 
   render() {
     return (
-      <Screen style={{ flex: 1 }}>
+      <Screen>
         <EventCardsContainer />
       </Screen>
     )

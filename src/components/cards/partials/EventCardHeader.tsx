@@ -7,19 +7,17 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import theme from '../../../styles/themes/dark'
-import { IGitHubEvent } from '../../../types/index'
-import {
-  getEventIconAndColor,
-  getEventText,
-} from '../../../utils/helpers/github/events'
+import { IGitHubIcon } from '../../../types/index'
 import Avatar from '../../common/Avatar'
 import cardStyles from '../styles'
 import CardIcon from './CardIcon'
 import { getUserPressHandler } from './rows/helpers'
 
 export interface IProps {
-  event: IGitHubEvent
+  actionText: string
+  cardIconColor: string
+  cardIconName: IGitHubIcon
+  username: string
 }
 
 export interface IState {}
@@ -45,43 +43,32 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class CardHeader extends PureComponent<IProps> {
+export default class EventCardHeader extends PureComponent<IProps> {
   render() {
-    const { event } = this.props
-
-    const cardIcon = getEventIconAndColor(event, theme)
+    const { actionText, cardIconColor, cardIconName, username } = this.props
 
     return (
       <View style={styles.container}>
         <View style={cardStyles.leftColumn}>
-          <Avatar username={event.actor.login} style={cardStyles.avatar} />
+          <Avatar username={username} style={cardStyles.avatar} />
         </View>
 
         <View style={styles.rightColumnCentered}>
           <View style={styles.outerContainer}>
             <View style={styles.innerContainer}>
               <View style={cardStyles.horizontal}>
-                <TouchableOpacity
-                  onPress={getUserPressHandler(event.actor.login)}
-                >
-                  <Text style={cardStyles.usernameText}>
-                    {event.actor.login}
-                  </Text>
+                <TouchableOpacity onPress={getUserPressHandler(username)}>
+                  <Text style={cardStyles.usernameText}>{username}</Text>
                 </TouchableOpacity>
                 <Text style={cardStyles.timestampText}>
                   &nbsp;•&nbsp;2h (13:59)
                 </Text>
               </View>
 
-              <Text style={cardStyles.descriptionText}>
-                {getEventText(event)}
-              </Text>
+              <Text style={cardStyles.descriptionText}>{actionText}</Text>
             </View>
 
-            <CardIcon
-              name={cardIcon.icon}
-              color={cardIcon.color || theme.base04}
-            />
+            <CardIcon name={cardIconName} color={cardIconColor} />
           </View>
         </View>
       </View>

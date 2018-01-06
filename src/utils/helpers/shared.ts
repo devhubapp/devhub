@@ -1,4 +1,9 @@
+import R from 'ramda'
 import { PixelRatio } from 'react-native'
+
+export function capitalize(str: string) {
+  return str.toLowerCase().replace(/^.| ./g, R.toUpper)
+}
 
 // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
 export function getSteppedSize(size?: number, sizeSteps = 50) {

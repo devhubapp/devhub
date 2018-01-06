@@ -14,8 +14,13 @@ class NotificationCards extends React.PureComponent<IProps> {
     return notification.id
   }
 
-  renderItem({ item }: { item: IGitHubNotification }) {
-    return <NotificationCard />
+  renderItem({ item: notification }: { item: IGitHubNotification }) {
+    return (
+      <NotificationCard
+        key={`notification-card-${notification.id}`}
+        notification={notification}
+      />
+    )
   }
 
   render() {

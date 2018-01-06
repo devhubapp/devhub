@@ -3,8 +3,10 @@ import gravatar from 'gravatar'
 import * as baseTheme from '../../../styles/themes/base'
 import {
   IBaseTheme,
+  IGitHubCommit,
   IGitHubIcon,
   IGitHubIssue,
+  IGitHubNotification,
   IGitHubPullRequest,
 } from '../../../types'
 import { getSteppedSize } from '../shared'
@@ -85,11 +87,15 @@ export function getPullRequestIconAndColor(
   }
 }
 
+export function getCommitIconAndColor(): { icon: IGitHubIcon; color?: string } {
+  return { icon: 'git-commit' }
+}
+
 export function getIssueIconAndColor(
   issue: IGitHubIssue | IGitHubPullRequest,
   theme: IBaseTheme | undefined = baseTheme,
 ): { icon: IGitHubIcon; color?: string } {
-  const state = issue.state
+  const { state } = issue
 
   if (isPullRequest(issue)) {
     return getPullRequestIconAndColor(issue as IGitHubPullRequest, theme)
@@ -104,5 +110,27 @@ export function getIssueIconAndColor(
 
     default:
       return { icon: 'issue-opened' }
+  }
+}
+
+export function getNotificationIconAndColor(
+  notification: IGitHubNotification,
+  payload: IGitHubCommit | IGitHubIssue | IGitHubPullRequest,
+  theme: IBaseTheme | undefined = baseTheme,
+): { icon: IGitHubIcon; color?: string } {
+  const { subject } = notification
+  const { type } = subject
+
+  switch (type.toLowerCase()) {
+    case 'commit':
+      return getCommitIconAndColor()
+    case 'issue':
+      return getIssueIconAndColor(payload as IGitHubIssue, theme)
+    case 'pullrequest':
+      return getPullRequestIconAndColor(payload as IGitHubPullRequest, theme)
+    case 'release':
+      return { icon: 'tag' }
+    default:
+      return { icon: 'bell' }
   }
 }
