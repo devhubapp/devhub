@@ -5,10 +5,18 @@ import { fixURL } from '../../../../utils/helpers/github/url'
 
 const baseURL = 'https://github.com'
 
-export const getGithubURLPressHandler = R.memoize((url?: string) => {
-  const fixedURL = fixURL(url)
-  return fixedURL ? () => SafariView.show({ url: fixedURL }) : undefined
-}) as (url?: string) => () => void | undefined
+export const getGithubURLPressHandler = R.memoize(
+  (
+    url?: string,
+    { issueOrPullRequestNumber }: { issueOrPullRequestNumber?: number } = {},
+  ) => {
+    const fixedURL = fixURL(url, { issueOrPullRequestNumber })
+    return fixedURL ? () => SafariView.show({ url: fixedURL }) : undefined
+  },
+) as (
+  url?: string,
+  options?: { issueOrPullRequestNumber?: number },
+) => () => void | undefined
 
 export const getBranchPressHandler = R.memoize(
   (ownerName?: string, repositoryName?: string, branch?: string) =>

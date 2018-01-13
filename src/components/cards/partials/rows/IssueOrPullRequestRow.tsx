@@ -62,7 +62,9 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
 
       <View style={cardStyles.rightColumn}>
         <TouchableOpacity
-          onPress={getGithubURLPressHandler(url)}
+          onPress={getGithubURLPressHandler(url, {
+            issueOrPullRequestNumber: issueNumber,
+          })}
           style={rowStyles.mainContentContainer}
         >
           <Text

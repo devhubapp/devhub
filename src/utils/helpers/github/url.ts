@@ -20,9 +20,11 @@ export function getIssueOrPullRequestNumberFromUrl(url: string) {
   if (!url) return null
 
   const matches = url.match(/\/(issues|pulls)\/([0-9]+)([?].+)?$/)
-  const n = matches && matches[2]
+  const issueOrPullRequestNumber = matches && matches[2]
 
-  return (n && parseInt(n, 10)) || null
+  return (
+    (issueOrPullRequestNumber && parseInt(issueOrPullRequestNumber, 10)) || null
+  )
 }
 
 export function getReleaseIdFromUrl(url: string) {
@@ -64,7 +66,7 @@ export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
 
 export function githubHTMLUrlFromAPIUrl(
   apiURL: string,
-  { n }: { n?: number } = {},
+  { issueOrPullRequestNumber }: { issueOrPullRequestNumber?: number } = {},
 ): string {
   if (!apiURL) return ''
 
@@ -86,8 +88,8 @@ export function githubHTMLUrlFromAPIUrl(
 
         case 'issues':
           if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
-            return n
-              ? `${baseURL}/${repoFullName}/pull/${n}/comments#issuecomment-${
+            return issueOrPullRequestNumber
+              ? `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}/comments#issuecomment-${
                   restOfURL2[1]
                 }`
               : ''
@@ -97,8 +99,8 @@ export function githubHTMLUrlFromAPIUrl(
 
         case 'pulls':
           if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
-            return n
-              ? `${baseURL}/${repoFullName}/pull/${n}/comments#discussion_r${
+            return issueOrPullRequestNumber
+              ? `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}/comments#discussion_r${
                   restOfURL2[1]
                 }`
               : ''
@@ -120,13 +122,19 @@ export function githubHTMLUrlFromAPIUrl(
   return `${baseURL}/${restOfURL}`
 }
 
-export function fixURL(url?: string) {
+export function fixURL(
+  url?: string,
+  { issueOrPullRequestNumber }: { issueOrPullRequestNumber?: number } = {},
+) {
   if (!url) return
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
   let uri =
     url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
-  uri = uri.indexOf('api.github.com') >= 0 ? githubHTMLUrlFromAPIUrl(uri) : uri
+  uri =
+    uri.indexOf('api.github.com') >= 0
+      ? githubHTMLUrlFromAPIUrl(uri, { issueOrPullRequestNumber })
+      : uri
 
   return uri
 }
