@@ -7,7 +7,7 @@ import { getUserPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
-  isRead?: boolean
+  isRead: boolean
   username: string
 }
 

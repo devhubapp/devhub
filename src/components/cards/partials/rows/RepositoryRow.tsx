@@ -11,7 +11,7 @@ export interface IProps {
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
-  isRead?: boolean
+  isRead: boolean
   ownerName: string
   repositoryName: string
 }
@@ -48,7 +48,11 @@ const RepositoryRow: SFC<IProps> = ({
             style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
           >
             <Icon name={repoIcon} />{' '}
-            <Text style={rowStyles.repositoryText}>{repositoryName}</Text>
+            <Text
+              style={[rowStyles.repositoryText, isRead && cardStyles.mutedText]}
+            >
+              {repositoryName}
+            </Text>
             <Text
               style={[
                 rowStyles.repositorySecondaryText,

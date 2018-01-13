@@ -8,7 +8,7 @@ import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
-  isRead?: boolean
+  isRead: boolean
   name?: string
   title: string
   url: string

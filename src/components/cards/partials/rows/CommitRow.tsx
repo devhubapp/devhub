@@ -17,7 +17,7 @@ export interface IProps {
   authorEmail?: string
   authorName?: string
   authorUsername?: string
-  isRead?: boolean
+  isRead: boolean
   message: string
   url: string
 }

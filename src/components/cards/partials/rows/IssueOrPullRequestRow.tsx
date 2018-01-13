@@ -21,7 +21,7 @@ import rowStyles from './styles'
 export interface IProps {
   iconColor?: string
   iconName: string
-  isRead?: boolean
+  isRead: boolean
   issueNumber: number
   theme: ITheme
   title: string
@@ -65,24 +65,27 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
           onPress={getGithubURLPressHandler(url)}
           style={rowStyles.mainContentContainer}
         >
-          <Text numberOfLines={1} style={defaultStyles.full}>
-            <Text
-              style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
-            >
-              <Icon color={iconColor} name={iconName} /> {title}
-              {Boolean(byText) && (
-                <Text
-                  style={[
-                    cardStyles.normalText,
-                    cardStyles.smallText,
-                    cardStyles.mutedText,
-                  ]}
-                >
-                  {' '}
-                  by {byText}
-                </Text>
-              )}
-            </Text>
+          <Text
+            numberOfLines={1}
+            style={[
+              defaultStyles.full,
+              cardStyles.normalText,
+              isRead && cardStyles.mutedText,
+            ]}
+          >
+            <Icon color={iconColor} name={iconName} /> {title}
+            {Boolean(byText) && (
+              <Text
+                style={[
+                  cardStyles.normalText,
+                  cardStyles.smallText,
+                  cardStyles.mutedText,
+                ]}
+              >
+                {' '}
+                by {byText}
+              </Text>
+            )}
           </Text>
         </TouchableOpacity>
 

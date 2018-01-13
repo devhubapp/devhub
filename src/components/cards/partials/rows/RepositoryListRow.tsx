@@ -11,7 +11,7 @@ export interface IProps {
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
-  isRead?: boolean
+  isRead: boolean
   maxHeight?: number
   repos: IGitHubRepo[]
   theme: ITheme

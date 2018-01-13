@@ -9,7 +9,7 @@ import rowStyles from './styles'
 
 export interface IProps {
   body: string
-  isRead?: boolean
+  isRead: boolean
   numberOfLines?: number
   username: string
   url?: string

@@ -6,7 +6,7 @@ import WikiPageRow from './WikiPageRow'
 import { IGitHubPage, ITheme } from '../../../../types'
 
 export interface IProps {
-  isRead?: boolean
+  isRead: boolean
   maxHeight?: number
   pages: IGitHubPage[]
   theme: ITheme

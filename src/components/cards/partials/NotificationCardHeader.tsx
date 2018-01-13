@@ -11,7 +11,7 @@ export interface IProps {
   cardIconColor: string
   cardIconName: IGitHubIcon
   isPrivate?: boolean
-  isRead?: boolean
+  isRead: boolean
   labelColor: string
   labelText: string
   repoOwnerName: string

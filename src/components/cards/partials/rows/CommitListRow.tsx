@@ -6,7 +6,7 @@ import RowList from './RowList'
 import { IGitHubCommit, ITheme } from '../../../../types'
 
 export interface IProps {
-  isRead?: boolean
+  isRead: boolean
   maxHeight?: number
   commits: IGitHubCommit[]
   theme: ITheme

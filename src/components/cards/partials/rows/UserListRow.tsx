@@ -6,7 +6,7 @@ import UserRow from './UserRow'
 import { IGitHubUser, ITheme } from '../../../../types'
 
 export interface IProps {
-  isRead?: boolean
+  isRead: boolean
   maxHeight?: number
   users: IGitHubUser[]
   theme: ITheme

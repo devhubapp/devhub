@@ -15,7 +15,7 @@ import rowStyles from './styles'
 export interface IProps {
   branch?: string
   body: string
-  isRead?: boolean
+  isRead: boolean
   name: string
   ownerName: string
   repositoryName: string

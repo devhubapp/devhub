@@ -10,7 +10,7 @@ import rowStyles from './styles'
 
 export interface IProps {
   branch: string
-  isRead?: boolean
+  isRead: boolean
   ownerName: string
   repositoryName: string
   type: IGitHubEventType

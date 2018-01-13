@@ -16,7 +16,7 @@ import { getGithubURLPressHandler } from './rows/helpers'
 export interface IProps {
   icon?: IGitHubIcon
   id: number | string
-  isRead?: boolean
+  isRead: boolean
   style?: ViewStyle
   theme: ITheme
   url: string

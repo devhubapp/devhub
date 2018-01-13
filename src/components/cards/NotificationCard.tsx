@@ -46,11 +46,12 @@ export default class NotificationCard extends PureComponent<IProps> {
       repository: repo,
       subject,
       // updated_at: updatedAt,
+      unread,
     } = notification
 
     if (!subject) return null
 
-    const isRead = true // TODO
+    const isRead = unread === false // TODO
     const isPrivate = Boolean(repo && repo.private)
     const title = trimNewLinesAndSpaces(subject.title)
 
@@ -121,6 +122,7 @@ export default class NotificationCard extends PureComponent<IProps> {
         {Boolean(commit) && (
           <CommitRow
             key={`commit-row-${commit!.latest_comment_url}`}
+            isRead={isRead}
             message={commit!.title}
             url={commit!.latest_comment_url || commit!.url}
           />
@@ -131,6 +133,7 @@ export default class NotificationCard extends PureComponent<IProps> {
             key={`issue-row-${issueOrPullRequestNumber}`}
             iconColor={issueIconColor}
             iconName={issueIconName}
+            isRead={isRead}
             issueNumber={issueOrPullRequestNumber!}
             theme={theme}
             title={issue.title}
@@ -143,6 +146,7 @@ export default class NotificationCard extends PureComponent<IProps> {
             key={`pr-row-${issueOrPullRequestNumber}`}
             iconColor={pullRequestIconColor}
             iconName={pullRequestIconName}
+            isRead={isRead}
             issueNumber={issueOrPullRequestNumber!}
             theme={theme}
             title={pullRequest.title}
@@ -154,6 +158,7 @@ export default class NotificationCard extends PureComponent<IProps> {
           <ReleaseRow
             key={`release-row-${repo.id}`}
             body={release.title}
+            isRead={isRead}
             ownerName={repoOwnerName!}
             repositoryName={repoName!}
             url={release.latest_comment_url || release.url}

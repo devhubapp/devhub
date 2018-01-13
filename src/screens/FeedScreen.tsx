@@ -20,7 +20,7 @@ export default class FeedScreen extends PureComponent<IProps> {
   static navigatorStyle = {}
 
   componentWillMount() {
-    this.props.navigator.setTitle({ title: 'brunolemos' }) // , subtitle: 'dashboard'
+    this.props.navigator.setTitle({ title: 'react-native' }) // , subtitle: 'dashboard'
 
     this.props.navigator.setButtons({
       leftButtons: [
@@ -49,7 +49,7 @@ export default class FeedScreen extends PureComponent<IProps> {
           passProps: {
             onPress: this.handlePress,
             size: 24,
-            username: 'brunolemos',
+            username: 'facebook',
           } as IAvatarNavBarButtonIconProps,
         },
       ],
