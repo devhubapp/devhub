@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
 export default class EventCard extends PureComponent<IProps> {
   render() {
     const { event } = this.props
+    if (!event) return null
+
     const { actor, payload, repo: _repo, type } = event
 
     const { comment } = payload as IGitHubCommitCommentEvent['payload']
@@ -233,7 +235,6 @@ export default class EventCard extends PureComponent<IProps> {
               }`}
               body={(payload as IIssuesEvent['payload']).issue.body}
               isRead={isRead}
-              type={type}
               url={
                 (payload as IIssuesEvent['payload']).issue.html_url ||
                 (payload as IIssuesEvent['payload']).issue.url
@@ -250,7 +251,6 @@ export default class EventCard extends PureComponent<IProps> {
                 isRead={isRead}
                 url={pullRequest.html_url || pullRequest.url}
                 username={actor.login}
-                type={type}
               />
             )) ||
           (Boolean(comment && comment.body) && (
@@ -258,7 +258,6 @@ export default class EventCard extends PureComponent<IProps> {
               key={`comment-row-${comment.id}`}
               body={comment.body}
               isRead={isRead}
-              type={type}
               url={comment.html_url || comment.url}
               username={actor.login}
             />

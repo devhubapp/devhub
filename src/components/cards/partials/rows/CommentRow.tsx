@@ -1,7 +1,6 @@
 import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
-import { IGitHubEventType } from '../../../../types'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'
@@ -13,7 +12,6 @@ export interface IProps {
   isRead?: boolean
   numberOfLines?: number
   username: string
-  type: IGitHubEventType
   url?: string
 }
 

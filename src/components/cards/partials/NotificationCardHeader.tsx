@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 import { IGitHubIcon } from '../../../types/index'
+import Avatar from '../../common/Avatar'
 import Label from '../../common/Label'
 import cardStyles from '../styles'
 import CardIcon from './CardIcon'
@@ -13,6 +14,7 @@ export interface IProps {
   isRead?: boolean
   labelColor: string
   labelText: string
+  repoOwnerName: string
 }
 
 export interface IState {}
@@ -47,11 +49,14 @@ export default class EventCardHeader extends PureComponent<IProps> {
       isRead,
       labelColor,
       labelText,
+      repoOwnerName,
     } = this.props
 
     return (
       <View style={styles.container}>
-        <View style={cardStyles.leftColumn} />
+        <View style={cardStyles.leftColumn}>
+          <Avatar username={repoOwnerName} small style={cardStyles.avatar} />
+        </View>
 
         <View style={styles.rightColumnCentered}>
           <View style={styles.outerContainer}>
@@ -61,8 +66,7 @@ export default class EventCardHeader extends PureComponent<IProps> {
                   color={labelColor}
                   isPrivate={isPrivate}
                   numberOfLines={1}
-                  // outline={isRead}
-                  outline
+                  outline={isRead}
                 >
                   {labelText}
                 </Label>

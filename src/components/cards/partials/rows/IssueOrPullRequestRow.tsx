@@ -26,7 +26,7 @@ export interface IProps {
   theme: ITheme
   title: string
   url: string
-  username: string
+  username?: string
 }
 
 export interface IState {}
@@ -55,7 +55,9 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
   return (
     <View style={rowStyles.container}>
       <View style={cardStyles.leftColumn}>
-        <Avatar username={username} small style={cardStyles.avatar} />
+        {Boolean(username) && (
+          <Avatar username={username} small style={cardStyles.avatar} />
+        )}
       </View>
 
       <View style={cardStyles.rightColumn}>

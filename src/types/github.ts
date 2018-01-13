@@ -136,6 +136,8 @@ export interface IGitHubRepo {
   id: number | string
   name: string
   full_name?: string
+  fork: boolean
+  private: boolean
   url: string // https://api.github.com/repos/facebook/react
   html_url: string // https://github.com/facebook/react
 }
@@ -705,17 +707,18 @@ export type IGitHubNotificationReason =
 
 export interface IGitHubNotification {
   id: number
+  // archived_at: string // specific to this app
+  last_read_at: string
+  // last_unread_at: string // specific to this app
+  reason: IGitHubNotificationReason
   repository: IGitHubRepo
   subject: {
     title: string
     url: string
     latest_comment_url: string
-    type: string
+    type: 'Commit' | 'Issue' | 'PullRequest' | 'Release'
   }
-  reason: IGitHubNotificationReason
+  unread: boolean
   updated_at: string
-  archived_at: string // specific to this app
-  last_read_at: string
-  last_unread_at: string // specific to this app
   url: string
 }

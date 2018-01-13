@@ -13,7 +13,7 @@ import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
-  branch: string
+  branch?: string
   body: string
   isRead?: boolean
   name: string
@@ -45,7 +45,7 @@ const ReleaseRow: SFC<IProps> = ({
 
   return (
     <View>
-      {Boolean(branch && ownerName && repositoryName) && (
+      {!!(branch && ownerName && repositoryName) && (
         <BranchRow
           key={`branch-row-${branch}`}
           branch={branch}
