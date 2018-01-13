@@ -18,13 +18,18 @@ export default StyleSheet.create({
     width: avatarSize,
   } as ViewStyle,
 
-  avatar: {
-    alignSelf: 'flex-end',
-  } as ImageStyle,
+  leftColumnAlignTop: {
+    alignSelf: 'flex-start',
+  } as ViewStyle,
 
   rightColumn: {
     flex: 1,
+    flexDirection: 'row',
   } as ViewStyle,
+
+  avatar: {
+    alignSelf: 'flex-end',
+  } as ImageStyle,
 
   usernameText: {
     alignSelf: 'center',
@@ -41,6 +46,14 @@ export default StyleSheet.create({
 
   mutedText: {
     color: theme.base05,
+  } as TextStyle,
+
+  normalText: {
+    color: theme.base04,
+  } as TextStyle,
+
+  smallText: {
+    fontSize: smallTextSize,
   } as TextStyle,
 
   descriptionText: {

@@ -2,6 +2,25 @@ export * from './github'
 
 export type Theme = '' | 'auto' | 'light' | 'dark' | 'dark-blue'
 
+export interface IBase16 {
+  base00: string
+  base01: string
+  base02: string
+  base03: string
+  base04: string
+  base05: string
+  base06: string | undefined
+  base07: string
+  base08: string
+  base09: string | undefined
+  base0A: string | undefined
+  base0B: string | undefined
+  base0C: string | undefined
+  base0D: string | undefined
+  base0E: string | undefined
+  base0F: string | undefined
+}
+
 export interface IBaseTheme {
   blue: string
   blueGray: string
@@ -23,21 +42,11 @@ export interface IBaseTheme {
   yellow: string
 }
 
-export interface ITheme extends IBaseTheme {
-  base00: string
-  base01: string
-  base02: string
-  base03: string
-  base04: string
-  base05: string
-  base06: string | undefined
-  base07: string
-  base08: string
-  base09: string | undefined
-  base0A: string | undefined
-  base0B: string | undefined
-  base0C: string | undefined
-  base0D: string | undefined
-  base0E: string | undefined
-  base0F: string | undefined
+export interface ITheme extends IBaseTheme, IBase16 {
+  cardBackground: string
+  invert: () => string
+  isDark: boolean
+  name: Theme
+  statusBarBackground: string
+  tabBarBackground: string
 }

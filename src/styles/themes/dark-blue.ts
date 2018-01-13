@@ -1,5 +1,6 @@
 import Platform from '../../libs/platform'
 
+import { ITheme } from '../../types'
 import * as base from './base'
 
 export const base00 = '#141c26' // page background
@@ -57,4 +58,4 @@ export default {
   invert: () => require('./light').default, // tslint:disable-line
   isDark: true,
   name: 'dark-blue',
-}
+} as ITheme

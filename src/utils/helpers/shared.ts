@@ -18,3 +18,14 @@ export function getSteppedSize(size?: number, sizeSteps = 50) {
 export function randomBetween(minNumber: number, maxNumber: number) {
   return Math.floor(Math.random() * maxNumber) + minNumber
 }
+
+export function trimNewLinesAndSpaces(text?: string, maxLength: number = 100) {
+  if (!text || typeof text !== 'string') return ''
+
+  let newText = text.replace(/\s+/g, ' ').trim()
+  if (maxLength > 0 && newText.length > maxLength) {
+    newText = `${newText.substr(0, maxLength).trim()}...`
+  }
+
+  return newText
+}

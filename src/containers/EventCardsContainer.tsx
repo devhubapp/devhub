@@ -96,7 +96,7 @@ const _data: IGitHubEvent[] = [
         closed_at: null,
         author_association: 'CONTRIBUTOR',
         body:
-          '### Is this a bug report?\r\n\r\nYes. In the example `index.js` we have a line `let language = this.props.language...`. However, in `generate.js` and particularly `metadata.js` we are actually setting the permalink on the assumption that the language isn\'t set.\r\n\r\n```\r\nif (languages.length === 1 && !siteConfig.useEnglishUrl) {\r\n    metadata.permalink = \'docs/\' + metadata.id + \'.html\';\r\n  } else {\r\n    metadata.permalink = \'docs/\' + language + \'/\' + metadata.id + \'.html\';\r\n  }\r\n```\r\n\r\nBut in the code before this, we are actually setting this.props.language to `en` by default, I think. So we are conflicting.\r\n\r\nThere are a few ways I can fix this, but I need to come up with the best way.\r\n\r\n### Have you read the [Contributing Guidelines]\r\n\r\nYes, of course. I helped right them :)\r\n\r\n### Environment\r\n\r\nN/A\r\n\r\n### Steps to Reproduce\r\n\r\n1. `yarn global add docusaurus-init`\r\n2. `docusaurus-init`\r\n3. `mv docs-examples-from-docusaurus docs` && `mv website/blog-examples-from-docusaurus website/blog`\r\n4. `cd website`\r\n5. `yarn run start`\r\n6. Go to http://localhost:3000\r\n7. Click on the `Example Link` Button\r\n8. See 404.\r\n\r\n### Expected Behavior\r\n\r\nThe button links should go to an actual docs page.\r\n\r\n### Actual Behavior\r\n\r\nThe button links go to a 404-ish page.\r\n\r\n<img width="1324" alt="screenshot 2017-12-17 15 53 41" src="https://user-images.githubusercontent.com/3757713/34085287-1aaa43ce-e343-11e7-9e04-4edb68d232e7.png">\r\n\r\n<img width="563" alt="screenshot 2017-12-17 15 54 00" src="https://user-images.githubusercontent.com/3757713/34085290-2361cc80-e343-11e7-9957-3a7b39114f83.png">\r\n\r\n### Reproducible Demo\r\n\r\nRun the steps above.\r\n',
+          '### Is this a bug report?\r\n\r\nYes. In the example `index.js` we have a line `let language = this.props.language...`. However, in `generate.js` and particularly `metadata.js` we are actually setting the permalink on the assumption that the language isn\'t set.\r\n\r\n```\r\nif (languages.length === 1 && !siteConfig.useEnglishUrl) {\r\n    metadata.permalink = \'docs/\' + metadata.id + \'.html\';\r\n  } else {\r\n    metadata.permalink = \'docs/\' + language + \'/\' + metadata.id + \'.html\';\r\n  }\r\n```\r\n\r\nBut in the code before this, we are actually setting this.props.language to `en` by default, I think. So we are conflicting.\r\n\r\nThere are a few ways I can fix this, but I need to come up with the best way.\r\n\r\n### Have you isRead the [Contributing Guidelines]\r\n\r\nYes, of course. I helped right them :)\r\n\r\n### Environment\r\n\r\nN/A\r\n\r\n### Steps to Reproduce\r\n\r\n1. `yarn global add docusaurus-init`\r\n2. `docusaurus-init`\r\n3. `mv docs-examples-from-docusaurus docs` && `mv website/blog-examples-from-docusaurus website/blog`\r\n4. `cd website`\r\n5. `yarn run start`\r\n6. Go to http://localhost:3000\r\n7. Click on the `Example Link` Button\r\n8. See 404.\r\n\r\n### Expected Behavior\r\n\r\nThe button links should go to an actual docs page.\r\n\r\n### Actual Behavior\r\n\r\nThe button links go to a 404-ish page.\r\n\r\n<img width="1324" alt="screenshot 2017-12-17 15 53 41" src="https://user-images.githubusercontent.com/3757713/34085287-1aaa43ce-e343-11e7-9e04-4edb68d232e7.png">\r\n\r\n<img width="563" alt="screenshot 2017-12-17 15 54 00" src="https://user-images.githubusercontent.com/3757713/34085290-2361cc80-e343-11e7-9957-3a7b39114f83.png">\r\n\r\n### Reproducible Demo\r\n\r\nRun the steps above.\r\n',
       },
       comment: {
         url:
@@ -148,83 +148,83 @@ const _data: IGitHubEvent[] = [
       avatar_url: 'https://avatars.githubusercontent.com/u/69631?',
     },
   },
-  {
-    id: '6999953726',
-    type: 'PushEvent',
-    actor: {
-      id: 3757713,
-      login: 'JoelMarcey',
-      display_login: 'JoelMarcey',
-      gravatar_id: '',
-      url: 'https://api.github.com/users/JoelMarcey',
-      avatar_url: 'https://avatars.githubusercontent.com/u/3757713?',
-    },
-    repo: {
-      id: 94911145,
-      name: 'facebook/Docusaurus',
-      url: 'https://api.github.com/repos/facebook/Docusaurus',
-    },
-    payload: {
-      push_id: 2201568216,
-      size: 1,
-      distinct_size: 1,
-      ref: 'refs/heads/gh-pages',
-      head: '043929ac2164d24dbe0b87fed506c67cfa0a5846',
-      before: '6b3d635cc6cdde1a84e4ce9bfc2b3fe95f866f43',
-      commits: [
-        {
-          sha: '043929ac2164d24dbe0b87fed506c67cfa0a5846',
-          author: {
-            email: 'docusaurus@users.noreply.github.com',
-            name: 'Website Deployment Script',
-          },
-          message:
-            'Deploy website\n\nDeploy website version based on 6b3d635cc6cdde1a84e4ce9bfc2b3fe95f866f43',
-          distinct: true,
-          url:
-            'https://api.github.com/repos/facebook/Docusaurus/commits/043929ac2164d24dbe0b87fed506c67cfa0a5846',
-        },
-      ],
-    },
-    public: true,
-    created_at: '2017-12-18T00:36:40Z',
-    org: {
-      id: 69631,
-      login: 'facebook',
-      gravatar_id: '',
-      url: 'https://api.github.com/orgs/facebook',
-      avatar_url: 'https://avatars.githubusercontent.com/u/69631?',
-    },
-  },
-  {
-    id: '6999952659',
-    type: 'WatchEvent',
-    actor: {
-      id: 16931088,
-      login: 'wagaman',
-      display_login: 'wagaman',
-      gravatar_id: '',
-      url: 'https://api.github.com/users/wagaman',
-      avatar_url: 'https://avatars.githubusercontent.com/u/16931088?',
-    },
-    repo: {
-      id: 29028775,
-      name: 'facebook/react-native',
-      url: 'https://api.github.com/repos/facebook/react-native',
-    },
-    payload: {
-      action: 'started',
-    },
-    public: true,
-    created_at: '2017-12-18T00:35:54Z',
-    org: {
-      id: 69631,
-      login: 'facebook',
-      gravatar_id: '',
-      url: 'https://api.github.com/orgs/facebook',
-      avatar_url: 'https://avatars.githubusercontent.com/u/69631?',
-    },
-  },
+  // {
+  //   id: '6999953726',
+  //   type: 'PushEvent',
+  //   actor: {
+  //     id: 3757713,
+  //     login: 'JoelMarcey',
+  //     display_login: 'JoelMarcey',
+  //     gravatar_id: '',
+  //     url: 'https://api.github.com/users/JoelMarcey',
+  //     avatar_url: 'https://avatars.githubusercontent.com/u/3757713?',
+  //   },
+  //   repo: {
+  //     id: 94911145,
+  //     name: 'facebook/Docusaurus',
+  //     url: 'https://api.github.com/repos/facebook/Docusaurus',
+  //   },
+  //   payload: {
+  //     push_id: 2201568216,
+  //     size: 1,
+  //     distinct_size: 1,
+  //     ref: 'refs/heads/gh-pages',
+  //     head: '043929ac2164d24dbe0b87fed506c67cfa0a5846',
+  //     before: '6b3d635cc6cdde1a84e4ce9bfc2b3fe95f866f43',
+  //     commits: [
+  //       {
+  //         sha: '043929ac2164d24dbe0b87fed506c67cfa0a5846',
+  //         author: {
+  //           email: 'docusaurus@users.noreply.github.com',
+  //           name: 'Website Deployment Script',
+  //         },
+  //         message:
+  //           'Deploy website\n\nDeploy website version based on 6b3d635cc6cdde1a84e4ce9bfc2b3fe95f866f43',
+  //         distinct: true,
+  //         url:
+  //           'https://api.github.com/repos/facebook/Docusaurus/commits/043929ac2164d24dbe0b87fed506c67cfa0a5846',
+  //       },
+  //     ],
+  //   },
+  //   public: true,
+  //   created_at: '2017-12-18T00:36:40Z',
+  //   org: {
+  //     id: 69631,
+  //     login: 'facebook',
+  //     gravatar_id: '',
+  //     url: 'https://api.github.com/orgs/facebook',
+  //     avatar_url: 'https://avatars.githubusercontent.com/u/69631?',
+  //   },
+  // },
+  // {
+  //   id: '6999952659',
+  //   type: 'WatchEvent',
+  //   actor: {
+  //     id: 16931088,
+  //     login: 'wagaman',
+  //     display_login: 'wagaman',
+  //     gravatar_id: '',
+  //     url: 'https://api.github.com/users/wagaman',
+  //     avatar_url: 'https://avatars.githubusercontent.com/u/16931088?',
+  //   },
+  //   repo: {
+  //     id: 29028775,
+  //     name: 'facebook/react-native',
+  //     url: 'https://api.github.com/repos/facebook/react-native',
+  //   },
+  //   payload: {
+  //     action: 'started',
+  //   },
+  //   public: true,
+  //   created_at: '2017-12-18T00:35:54Z',
+  //   org: {
+  //     id: 69631,
+  //     login: 'facebook',
+  //     gravatar_id: '',
+  //     url: 'https://api.github.com/orgs/facebook',
+  //     avatar_url: 'https://avatars.githubusercontent.com/u/69631?',
+  //   },
+  // },
   {
     id: '6999952360',
     type: 'PushEvent',

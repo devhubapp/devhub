@@ -17,6 +17,7 @@
     "react": "^16.2.0",
     "react-native": "^0.51.0",
     "react-native-gesture-handler": "^1.0.0-alpha.37",
+    "react-native-linear-gradient": "^2.4.0",
     "react-native-navigation": "^1.1.334",
     "react-native-safari-view": "^2.1.0",
     "react-native-vector-icons": "^4.4.3",
@@ -50,7 +51,9 @@
   },
   "jest": {
     "preset": "react-native",
-    "setupFiles": ["./jest/setup.js"],
+    "setupFiles": [
+      "./jest/setup.js"
+    ],
     "globals": {
       "ts-jest": {
         "useBabelrc": true

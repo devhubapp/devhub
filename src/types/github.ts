@@ -137,6 +137,7 @@ export interface IGitHubRepo {
   name: string
   full_name?: string
   url: string // https://api.github.com/repos/facebook/react
+  html_url: string // https://github.com/facebook/react
 }
 
 export interface IGitHubPage {
@@ -145,6 +146,23 @@ export interface IGitHubPage {
   sha: string
   title: string
   html_url: string
+  url: string
+}
+
+export interface IGitHubRelease {
+  id: number // 1
+  tag_name: string // "v1.0.0"
+  target_commitish: string // "master"
+  name: string // "v1.0.0"
+  body: string // "Description of the release"
+  draft: boolean
+  prerelease: boolean
+  created_at: string // "2013-02-27T19:35:32Z"
+  published_at: string // "2013-02-27T19:35:32Z"
+  author: IGitHubUser
+  assets: any[] // see https://developer.github.com/v3/repos/releases/#get-a-single-release
+  url: string // "https://api.github.com/repos/octocat/Hello-World/releases/1"
+  html_url: string // "https://github.com/octocat/Hello-World/releases/v1.0.0"
 }
 
 /**
@@ -283,6 +301,8 @@ export interface IIssuesEvent {
     assignee?: IGitHubUser | null // The optional user who was assigned or unassigned from the issue.
     label?: IGitHubLabel // The optional label that was added or removed from the issue.
   }
+  url: string
+  html_url: string
 }
 
 /**
@@ -401,6 +421,7 @@ export interface IPushEvent {
     commits: IGitHubCommit[]
   }
   public?: boolean
+  forced?: boolean
 }
 
 /**
@@ -414,7 +435,7 @@ export interface IReleaseEvent {
   repo: IGitHubRepo
   payload: {
     action: 'published'
-    release: object // https://developer.github.com/v3/repos/releases/#get-a-single-release
+    release: IGitHubRelease // https://developer.github.com/v3/repos/releases/#get-a-single-release
   }
 }
 

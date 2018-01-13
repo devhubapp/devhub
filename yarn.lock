@@ -4153,6 +4153,12 @@ react-native-gesture-handler@^1.0.0-alpha.37:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
+react-native-linear-gradient@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.4.0.tgz#51d8ea12bb72a59bede9edc87b694b16b64cf435"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-navigation@^1.1.334:
   version "1.1.334"
   resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.334.tgz#255cfe35ea5d7e6edd9d3583dd7a65b9d87736bd"

@@ -12,11 +12,15 @@ import {
   getUserAvatarByEmail,
   getUserAvatarByUsername,
 } from '../../utils/helpers/github/shared'
-import { getUserPressHandler } from '../cards/partials/rows/helpers'
+import {
+  getGithubURLPressHandler,
+  getUserPressHandler,
+} from '../cards/partials/rows/helpers'
 
 export interface IProps {
   avatarURL?: string
   email?: string
+  linkURL?: string
   size?: number
   small?: boolean
   style?: ImageStyle
@@ -34,6 +38,7 @@ const styles = StyleSheet.create({
 const Avatar: SFC<IProps> = ({
   avatarURL,
   email,
+  linkURL,
   size: _size,
   small,
   style,
@@ -48,7 +53,13 @@ const Avatar: SFC<IProps> = ({
   if (!uri) return null
 
   return (
-    <TouchableOpacity onPress={getUserPressHandler(username)}>
+    <TouchableOpacity
+      onPress={
+        username
+          ? getUserPressHandler(username)
+          : linkURL ? getGithubURLPressHandler(linkURL) : undefined
+      }
+    >
       <Image
         {...props}
         source={{ uri }}

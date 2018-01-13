@@ -32,7 +32,9 @@ export default class NotificationCard extends PureComponent<IProps> {
 
     const repoFullName =
       notification.repository.full_name || notification.repository.name || ''
-    const { owner: orgName, repo: repoName } = getOwnerAndRepo(repoFullName)
+    const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
+      repoFullName,
+    )
 
     const cardIconDetails = getNotificationIconAndColor(
       notification,
@@ -54,10 +56,10 @@ export default class NotificationCard extends PureComponent<IProps> {
           labelColor={labelColor}
           labelText={labelText}
         />
-        {Boolean(orgName && repoName) && (
+        {Boolean(repoOwnerName && repoName) && (
           <RepositoryRow
-            owner={orgName as string}
-            repository={repoName as string}
+            ownerName={repoOwnerName as string}
+            repositoryName={repoName as string}
           />
         )}
       </View>

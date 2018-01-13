@@ -3,7 +3,7 @@ import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
 import theme from '../../../../styles/themes/dark'
 import {
   contentPadding,
-  radius,
+  // radius,
   smallTextSize,
 } from '../../../../styles/variables'
 
@@ -17,12 +17,12 @@ export default StyleSheet.create({
   mainContentContainer: {
     alignItems: 'center',
     borderColor: theme.base01,
-    borderRadius: radius,
+    // borderRadius: radius,
     // borderWidth: 1,
     flexDirection: 'row',
     flexGrow: 1,
     // paddingHorizontal: contentPadding,
-    paddingVertical: contentPadding / 2,
+    // paddingVertical: contentPadding / 2,
   } as ViewStyle,
 
   repositoryText: {

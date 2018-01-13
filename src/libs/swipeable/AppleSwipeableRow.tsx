@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, StyleSheet, Text } from 'react-native'
+import { Animated, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 import { RectButton, Swipeable } from 'react-native-gesture-handler'
 
 import BaseSwipeableRow, {
@@ -137,13 +137,14 @@ export default class AppleSwipeableRow extends BaseSwipeableRow<IAction> {
 }
 
 const styles = StyleSheet.create({
+  baseActionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  } as ViewStyle,
+
   actionText: {
     backgroundColor: 'transparent',
     fontSize: 16,
     padding: 10,
-  },
-  baseActionContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
+  } as TextStyle,
 })

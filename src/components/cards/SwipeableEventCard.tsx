@@ -21,8 +21,8 @@ export default class SwipeableEventCard extends PureComponent<IProps> {
         leftActions={[
           {
             color: theme.blue,
-            icon: 'read',
-            key: 'read',
+            icon: 'isRead',
+            key: 'isRead',
             label: 'Read',
             onPress: this.onMarkAsRead,
             type: 'FULL',

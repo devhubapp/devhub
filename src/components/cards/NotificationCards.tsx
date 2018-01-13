@@ -1,7 +1,10 @@
 import React from 'react'
 import { FlatList } from 'react-native'
 
+import theme from '../../styles/themes/dark'
+import { contentPadding } from '../../styles/variables'
 import { IGitHubNotification } from '../../types'
+import TransparentTextOverlay from '../common/TransparentTextOverlay'
 import NotificationCard from './NotificationCard'
 import CardItemSeparator from './partials/CardItemSeparator'
 
@@ -11,7 +14,7 @@ export interface IProps {
 
 class NotificationCards extends React.PureComponent<IProps> {
   keyExtractor(notification: IGitHubNotification) {
-    return notification.id
+    return `${notification.id}`
   }
 
   renderItem({ item: notification }: { item: IGitHubNotification }) {
@@ -26,12 +29,19 @@ class NotificationCards extends React.PureComponent<IProps> {
   render() {
     const { notifications } = this.props
     return (
-      <FlatList
-        data={notifications}
-        ItemSeparatorComponent={CardItemSeparator}
-        keyExtractor={this.keyExtractor}
-        renderItem={this.renderItem}
-      />
+      <TransparentTextOverlay
+        color={theme.base02}
+        size={contentPadding}
+        from="vertical"
+      >
+        <FlatList
+          key="notification-cards-flat-list"
+          data={notifications}
+          ItemSeparatorComponent={CardItemSeparator}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+        />
+      </TransparentTextOverlay>
     )
   }
 }

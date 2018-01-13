@@ -1,5 +1,6 @@
 import { Platform } from 'react-native'
 
+import { ITheme } from '../../types'
 import { lighten } from '../../utils/helpers/color'
 import { mutedOpacity } from '../variables'
 import * as base from './base'
@@ -56,4 +57,4 @@ export default {
   invert: () => require('./dark').default, // tslint:disable-line
   isDark: false,
   name: 'light',
-}
+} as ITheme

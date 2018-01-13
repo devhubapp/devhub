@@ -20,7 +20,7 @@ export function getUserAvatarByUsername(
     : ''
 }
 
-export function tryGetUsernameFromGitHubEmail(email: string) {
+export function tryGetUsernameFromGitHubEmail(email?: string) {
   if (!email) return ''
 
   const emailSplit = email.split('@')
@@ -54,6 +54,8 @@ export function isPullRequest(issue: IGitHubIssue | IGitHubPullRequest) {
 export function getOwnerAndRepo(
   repoFullName: string,
 ): { owner: string | undefined; repo: string | undefined } {
+  if (!repoFullName) return { owner: '', repo: '' }
+
   const repoSplitedNames = (repoFullName || '')
     .trim()
     .split('/')

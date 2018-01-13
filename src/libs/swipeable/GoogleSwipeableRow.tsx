@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import { Animated, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 import { RectButton, Swipeable } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -136,13 +136,14 @@ export default class GoogleSwipeableRow extends BaseSwipeableRow {
 }
 
 const styles = StyleSheet.create({
+  baseActionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  } as TextStyle,
+
   actionIcon: {
     backgroundColor: 'transparent',
     marginHorizontal: 10,
     width: 30,
-  },
-  baseActionContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
+  } as ViewStyle,
 })

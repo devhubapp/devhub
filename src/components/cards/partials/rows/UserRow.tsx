@@ -7,12 +7,13 @@ import { getUserPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
+  isRead?: boolean
   username: string
 }
 
 export interface IState {}
 
-const UserRow: SFC<IProps> = ({ username }) => (
+const UserRow: SFC<IProps> = ({ isRead, username }) => (
   <View style={rowStyles.container}>
     <View style={cardStyles.leftColumn}>
       <Avatar username={username} small style={cardStyles.avatar} />
@@ -23,7 +24,9 @@ const UserRow: SFC<IProps> = ({ username }) => (
         onPress={getUserPressHandler(username)}
         style={rowStyles.mainContentContainer}
       >
-        <Text style={rowStyles.usernameText}>{username}</Text>
+        <Text style={[rowStyles.usernameText, isRead && cardStyles.mutedText]}>
+          {username}
+        </Text>
       </TouchableOpacity>
     </View>
   </View>

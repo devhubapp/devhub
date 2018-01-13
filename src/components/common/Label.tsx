@@ -1,5 +1,3 @@
-// @flow
-
 import React, { ReactNode, SFC } from 'react'
 import {
   StyleSheet,
@@ -39,6 +37,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: contentPadding,
     paddingVertical: 2,
   } as ViewStyle,
+
   labelText: {
     fontSize: 14,
   } as TextStyle,
@@ -70,6 +69,7 @@ const Label: SFC<IProps> = ({
     {...containerProps}
   >
     <Text
+      numberOfLines={1}
       style={[
         styles.labelText,
         {
@@ -85,7 +85,7 @@ const Label: SFC<IProps> = ({
     >
       {Boolean(isPrivate) && (
         <Text>
-          <Icon name="lock" />&nbsp,
+          <Icon name="lock" />{' '}
         </Text>
       )}
       {children}

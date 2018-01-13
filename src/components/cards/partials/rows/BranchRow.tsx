@@ -2,35 +2,35 @@ import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Octicons'
 
+import { IGitHubEventType } from '../../../../types'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'
-import { getRepositoryPressHandler } from './helpers'
+import { getBranchPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
-  isForcePush?: boolean
-  isFork?: boolean
-  isPush?: boolean
+  branch: string
   isRead?: boolean
   ownerName: string
   repositoryName: string
+  type: IGitHubEventType
 }
 
 export interface IState {}
 
-const RepositoryRow: SFC<IProps> = ({
-  isForcePush,
-  isFork,
-  isPush,
+const BranchRow: SFC<IProps> = ({
+  branch: _branch,
   isRead,
   ownerName,
   repositoryName,
+  type,
 }) => {
-  const repoIcon =
-    (isForcePush && 'repo-force-push') ||
-    (isPush && 'repo-push') ||
-    (isFork && 'repo-forked') ||
-    'repo'
+  const branch = (_branch || '').replace('refs/heads/', '')
+  if (!branch) return null
+
+  const isBranchMainEventAction =
+    type === 'CreateEvent' || type === 'DeleteEvent'
+  if (branch === 'master' && !isBranchMainEventAction) return null
 
   return (
     <View style={rowStyles.container}>
@@ -40,23 +40,22 @@ const RepositoryRow: SFC<IProps> = ({
 
       <View style={cardStyles.rightColumn}>
         <TouchableOpacity
-          onPress={getRepositoryPressHandler(ownerName, repositoryName)}
+          onPress={getBranchPressHandler(ownerName, repositoryName, branch)}
           style={rowStyles.mainContentContainer}
         >
           <Text
-            numberOfLines={1}
-            style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
+            style={[
+              cardStyles.normalText,
+              (isRead || !isBranchMainEventAction) && cardStyles.mutedText,
+            ]}
           >
-            <Icon name={repoIcon} />{' '}
-            <Text style={rowStyles.repositoryText}>{repositoryName}</Text>
             <Text
-              style={[
-                rowStyles.repositorySecondaryText,
-                isRead && cardStyles.mutedText,
-              ]}
+              numberOfLines={1}
+              style={isRead ? cardStyles.mutedText : cardStyles.normalText}
             >
-              {` ${ownerName}`}
+              <Icon name="git-branch" />{' '}
             </Text>
+            {branch}
           </Text>
         </TouchableOpacity>
       </View>
@@ -64,4 +63,4 @@ const RepositoryRow: SFC<IProps> = ({
   )
 }
 
-export default RepositoryRow
+export default BranchRow
