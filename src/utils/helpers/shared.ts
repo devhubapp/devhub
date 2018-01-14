@@ -1,8 +1,52 @@
+import moment, { MomentInput } from 'moment'
 import R from 'ramda'
 import { PixelRatio } from 'react-native'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, R.toUpper)
+}
+
+export function getDateSmallText(date: MomentInput) {
+  if (!date) return ''
+
+  const momentDate = moment(date)
+  if (!momentDate.isValid()) return ''
+  // return `${moment(new Date()).diff(momentDate, 'seconds')}s`;
+
+  const momentNow = moment(new Date())
+  const daysDiff = momentNow.diff(momentDate, 'days')
+  const timeText = momentDate.format('HH:mm')
+
+  if (daysDiff < 1) {
+    const hoursDiff = momentNow.diff(momentDate, 'hours')
+
+    if (hoursDiff < 1) {
+      const minutesDiff = momentNow.diff(momentDate, 'minutes')
+
+      if (minutesDiff < 1) {
+        const secondsDiff = momentNow.diff(momentDate, 'seconds')
+        if (secondsDiff < 10) {
+          return 'now'
+        }
+
+        return `${secondsDiff}s`
+      }
+
+      // if (minutesDiff < 30) {
+      //   return `${minutesDiff}m`;
+      // }
+
+      return `${minutesDiff}m (${timeText})`
+    }
+
+    return `${hoursDiff}h (${timeText})`
+  }
+
+  if (daysDiff <= 3) {
+    return `${daysDiff}d (${timeText})`
+  }
+
+  return momentDate.format('MMM Do').toLowerCase()
 }
 
 // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)

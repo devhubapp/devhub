@@ -109,6 +109,7 @@ export default class NotificationCard extends PureComponent<IProps> {
           isRead={isRead}
           isPrivate={isPrivate}
           repoOwnerName={repoOwnerName!}
+          updatedAt={notification.updated_at}
         />
 
         {!!(repoOwnerName && repoName && !onlyOneRepository) && (

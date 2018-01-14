@@ -137,6 +137,7 @@ export default class EventCard extends PureComponent<IProps> {
           avatarURL={actor.avatar_url}
           cardIconColor={cardIconColor}
           cardIconName={cardIconName}
+          createdAt={event.created_at}
           isBot={Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)}
           userLinkURL={actor.html_url || ''}
           username={actor.display_login || actor.login}

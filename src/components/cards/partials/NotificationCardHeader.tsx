@@ -1,8 +1,11 @@
+import { MomentInput } from 'moment'
 import React, { PureComponent } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 import { IGitHubIcon } from '../../../types/index'
+import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
+import IntervalRefresh from '../../common/IntervalRefresh'
 import Label from '../../common/Label'
 import cardStyles from '../styles'
 import CardIcon from './CardIcon'
@@ -15,6 +18,7 @@ export interface IProps {
   labelColor: string
   labelText: string
   repoOwnerName: string
+  updatedAt: MomentInput
 }
 
 export interface IState {}
@@ -50,6 +54,7 @@ export default class EventCardHeader extends PureComponent<IProps> {
       labelColor,
       labelText,
       repoOwnerName,
+      updatedAt,
     } = this.props
 
     return (
@@ -78,9 +83,18 @@ export default class EventCardHeader extends PureComponent<IProps> {
                 >
                   {labelText}
                 </Label>
-                <Text style={cardStyles.timestampText}>
-                  &nbsp;•&nbsp;2h (13:59)
-                </Text>
+                <IntervalRefresh date={updatedAt}>
+                  {() => {
+                    const dateText = getDateSmallText(updatedAt)
+                    if (!dateText) return null
+
+                    return (
+                      <Text style={cardStyles.timestampText}>
+                        {` • ${dateText}`}
+                      </Text>
+                    )
+                  }}
+                </IntervalRefresh>
               </View>
             </View>
 

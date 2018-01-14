@@ -256,6 +256,7 @@ export interface IGollumEvent {
   payload: {
     pages: IGitHubPage[]
   }
+  created_at: string
 }
 
 /**
@@ -305,6 +306,7 @@ export interface IIssuesEvent {
     assignee?: IGitHubUser | null // The optional user who was assigned or unassigned from the issue.
     label?: IGitHubLabel // The optional label that was added or removed from the issue.
   }
+  created_at: string
   url: string
   html_url: string
 }
@@ -322,6 +324,7 @@ export interface IMemberEvent {
     action: 'added' // The action that was performed.
     member: IGitHubUser // The user that was added.
   }
+  created_at: string
 }
 
 /**
@@ -371,6 +374,7 @@ export interface IPullRequestEvent {
     pull_request: IGitHubPullRequest
     sender: object
   }
+  created_at: string
 }
 
 /**
@@ -386,6 +390,7 @@ export interface IPullRequestReviewEvent {
     pull_request: IGitHubPullRequest
     review: object
   }
+  created_at: string
 }
 
 /**
@@ -404,6 +409,7 @@ export interface IPullRequestReviewCommentEvent {
     pull_request: IGitHubPullRequest
     comment: IGitHubComment
   }
+  created_at: string
 }
 
 /**
@@ -426,6 +432,7 @@ export interface IPushEvent {
   }
   public?: boolean
   forced?: boolean
+  created_at: string
 }
 
 /**
@@ -441,6 +448,7 @@ export interface IReleaseEvent {
     action: 'published'
     release: IGitHubRelease // https://developer.github.com/v3/repos/releases/#get-a-single-release
   }
+  created_at: string
 }
 
 /**
@@ -458,6 +466,7 @@ export interface IWatchEvent {
   payload: {
     action: 'started'
   }
+  created_at: string
 }
 
 export type IGitHubEvent =

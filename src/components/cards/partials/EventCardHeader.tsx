@@ -1,3 +1,4 @@
+import { MomentInput } from 'moment'
 import React, { PureComponent } from 'react'
 import {
   StyleSheet,
@@ -8,7 +9,9 @@ import {
 } from 'react-native'
 
 import { IGitHubIcon } from '../../../types/index'
+import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
+import IntervalRefresh from '../../common/IntervalRefresh'
 import cardStyles from '../styles'
 import CardIcon from './CardIcon'
 import { getUserPressHandler } from './rows/helpers'
@@ -18,6 +21,7 @@ export interface IProps {
   avatarURL: string
   cardIconColor: string
   cardIconName: IGitHubIcon
+  createdAt: MomentInput
   isBot: boolean
   username: string
   userLinkURL: string
@@ -53,6 +57,7 @@ export default class EventCardHeader extends PureComponent<IProps> {
       avatarURL,
       cardIconColor,
       cardIconName,
+      createdAt,
       isBot,
       username: _username,
       userLinkURL,
@@ -84,9 +89,18 @@ export default class EventCardHeader extends PureComponent<IProps> {
                 {!!isBot && (
                   <Text style={cardStyles.timestampText}>{` • BOT`}</Text>
                 )}
-                <Text style={cardStyles.timestampText}>
-                  &nbsp;•&nbsp;2h (13:59)
-                </Text>
+                <IntervalRefresh date={createdAt}>
+                  {() => {
+                    const dateText = getDateSmallText(createdAt)
+                    if (!dateText) return null
+
+                    return (
+                      <Text style={cardStyles.timestampText}>
+                        {` • ${dateText}`}
+                      </Text>
+                    )
+                  }}
+                </IntervalRefresh>
               </View>
 
               <Text style={cardStyles.descriptionText}>{actionText}</Text>
