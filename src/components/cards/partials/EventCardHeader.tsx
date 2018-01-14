@@ -15,9 +15,12 @@ import { getUserPressHandler } from './rows/helpers'
 
 export interface IProps {
   actionText: string
+  avatarURL: string
   cardIconColor: string
   cardIconName: IGitHubIcon
+  isBot: boolean
   username: string
+  userLinkURL: string
 }
 
 export interface IState {}
@@ -45,21 +48,42 @@ const styles = StyleSheet.create({
 
 export default class EventCardHeader extends PureComponent<IProps> {
   render() {
-    const { actionText, cardIconColor, cardIconName, username } = this.props
+    const {
+      actionText,
+      avatarURL,
+      cardIconColor,
+      cardIconName,
+      isBot,
+      username: _username,
+      userLinkURL,
+    } = this.props
+
+    const username = isBot ? _username!.replace('[bot]', '') : _username
 
     return (
       <View style={styles.container}>
         <View style={cardStyles.leftColumn}>
-          <Avatar username={username} style={cardStyles.avatar} />
+          <Avatar
+            avatarURL={avatarURL}
+            isBot={isBot}
+            linkURL={userLinkURL}
+            username={username}
+            style={cardStyles.avatar}
+          />
         </View>
 
         <View style={styles.rightColumnCentered}>
           <View style={styles.outerContainer}>
             <View style={styles.innerContainer}>
               <View style={cardStyles.horizontal}>
-                <TouchableOpacity onPress={getUserPressHandler(username)}>
+                <TouchableOpacity
+                  onPress={getUserPressHandler(username, { isBot })}
+                >
                   <Text style={cardStyles.usernameText}>{username}</Text>
                 </TouchableOpacity>
+                {!!isBot && (
+                  <Text style={cardStyles.timestampText}>{` • BOT`}</Text>
+                )}
                 <Text style={cardStyles.timestampText}>
                   &nbsp;•&nbsp;2h (13:59)
                 </Text>

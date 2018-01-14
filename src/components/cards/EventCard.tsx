@@ -132,10 +132,14 @@ export default class EventCard extends PureComponent<IProps> {
     return (
       <View style={styles.container}>
         <EventCardHeader
+          key={`event-card-header-${event.id}`}
           actionText={actionText}
+          avatarURL={actor.avatar_url}
           cardIconColor={cardIconColor}
           cardIconName={cardIconName}
-          username={event.actor.login}
+          isBot={Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)}
+          userLinkURL={actor.html_url || ''}
+          username={actor.display_login || actor.login}
         />
 
         {repos.length > 0 && (
@@ -192,6 +196,7 @@ export default class EventCard extends PureComponent<IProps> {
         {Boolean(pullRequest) && (
           <IssueOrPullRequestRow
             key={`pr-row-${pullRequest.id}`}
+            avatarURL={pullRequest.user.avatar_url}
             iconColor={pullRequestIconColor!}
             iconName={pullRequestIconName!}
             isRead={isRead}
@@ -199,7 +204,8 @@ export default class EventCard extends PureComponent<IProps> {
             theme={theme}
             title={pullRequest.title}
             url={pullRequestURL}
-            username={pullRequest.user.login}
+            userLinkURL={pullRequest.user.html_url || ''}
+            username={pullRequest.user.display_login || pullRequest.user.login}
           />
         )}
 
@@ -215,6 +221,7 @@ export default class EventCard extends PureComponent<IProps> {
         {Boolean(issue) && (
           <IssueOrPullRequestRow
             key={`issue-row-${issue.id}`}
+            avatarURL={issue.user.avatar_url}
             iconColor={issueIconColor!}
             iconName={issueIconName!}
             isRead={isRead}
@@ -222,24 +229,22 @@ export default class EventCard extends PureComponent<IProps> {
             theme={theme}
             title={issue.title}
             url={issueURL}
-            username={issue.user.login}
+            userLinkURL={issue.user.html_url || ''}
+            username={issue.user.display_login || issue.user.login}
           />
         )}
 
         {(type === 'IssuesEvent' &&
           (payload as IIssuesEvent['payload']).action === 'opened' &&
-          Boolean((payload as IIssuesEvent['payload']).issue.body) && (
+          Boolean(issue.body) && (
             <CommentRow
-              key={`issue-body-row-${
-                (payload as IIssuesEvent['payload']).issue.id
-              }`}
-              body={(payload as IIssuesEvent['payload']).issue.body}
+              key={`issue-body-row-${issue.id}`}
+              avatarURL={issue.user.avatar_url}
+              body={issue.body}
               isRead={isRead}
-              url={
-                (payload as IIssuesEvent['payload']).issue.html_url ||
-                (payload as IIssuesEvent['payload']).issue.url
-              }
-              username={actor.login}
+              url={issue.html_url || issue.url}
+              userLinkURL={issue.user.html_url || ''}
+              username={issue.user.display_login || issue.user.login}
             />
           )) ||
           (type === 'PullRequestEvent' &&
@@ -247,25 +252,32 @@ export default class EventCard extends PureComponent<IProps> {
             Boolean(pullRequest.body) && (
               <CommentRow
                 key={`pr-body-row-${pullRequest.id}`}
+                avatarURL={pullRequest.user.avatar_url}
                 body={pullRequest.body}
                 isRead={isRead}
                 url={pullRequest.html_url || pullRequest.url}
-                username={actor.login}
+                userLinkURL={pullRequest.user.html_url || ''}
+                username={
+                  pullRequest.user.display_login || pullRequest.user.login
+                }
               />
             )) ||
           (Boolean(comment && comment.body) && (
             <CommentRow
               key={`comment-row-${comment.id}`}
+              avatarURL={comment.user.avatar_url}
               body={comment.body}
               isRead={isRead}
               url={comment.html_url || comment.url}
-              username={actor.login}
+              userLinkURL={comment.user.html_url || ''}
+              username={comment.user.display_login || comment.user.login}
             />
           ))}
 
         {Boolean(release) && (
           <ReleaseRow
             key={`release-row-${release.id}`}
+            avatarURL={release.author.avatar_url}
             body={release.body}
             branch={release.target_commitish}
             isRead={isRead}
@@ -275,6 +287,8 @@ export default class EventCard extends PureComponent<IProps> {
             tagName={release.tag_name}
             type={type}
             url={release.html_url || release.url}
+            userLinkURL={release.author.html_url || ''}
+            username={release.author.display_login || release.author.login}
           />
         )}
       </View>

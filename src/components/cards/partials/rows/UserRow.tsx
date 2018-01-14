@@ -7,16 +7,25 @@ import { getUserPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
+  avatarURL: string
   isRead: boolean
   username: string
+  userLinkURL: string
 }
 
 export interface IState {}
 
-const UserRow: SFC<IProps> = ({ isRead, username }) => (
+const UserRow: SFC<IProps> = ({ avatarURL, isRead, username, userLinkURL }) => (
   <View style={rowStyles.container}>
     <View style={cardStyles.leftColumn}>
-      <Avatar username={username} small style={cardStyles.avatar} />
+      <Avatar
+        avatarURL={avatarURL}
+        isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+        linkURL={userLinkURL}
+        small
+        style={cardStyles.avatar}
+        username={username}
+      />
     </View>
 
     <View style={cardStyles.rightColumn}>

@@ -55,7 +55,15 @@ export default class EventCardHeader extends PureComponent<IProps> {
     return (
       <View style={styles.container}>
         <View style={cardStyles.leftColumn}>
-          <Avatar username={repoOwnerName} small style={cardStyles.avatar} />
+          <Avatar
+            isBot={Boolean(
+              repoOwnerName && repoOwnerName.indexOf('[bot]') >= 0,
+            )}
+            linkURL=""
+            small
+            style={cardStyles.avatar}
+            username={repoOwnerName}
+          />
         </View>
 
         <View style={styles.rightColumnCentered}>
@@ -65,8 +73,8 @@ export default class EventCardHeader extends PureComponent<IProps> {
                 <Label
                   color={labelColor}
                   isPrivate={isPrivate}
-                  numberOfLines={1}
                   outline={isRead}
+                  textProps={{ numberOfLines: 1 }}
                 >
                   {labelText}
                 </Label>

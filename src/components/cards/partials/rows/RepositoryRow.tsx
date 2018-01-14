@@ -35,7 +35,13 @@ const RepositoryRow: SFC<IProps> = ({
   return (
     <View style={rowStyles.container}>
       <View style={cardStyles.leftColumn}>
-        <Avatar username={ownerName} small style={cardStyles.avatar} />
+        <Avatar
+          isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+          linkURL=""
+          small
+          style={cardStyles.avatar}
+          username={ownerName}
+        />
       </View>
 
       <View style={cardStyles.rightColumn}>

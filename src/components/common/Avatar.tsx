@@ -9,6 +9,7 @@ import {
 
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import {
+  getUserAvatarByAvatarURL,
   getUserAvatarByEmail,
   getUserAvatarByUsername,
 } from '../../utils/helpers/github/shared'
@@ -20,7 +21,8 @@ import {
 export interface IProps {
   avatarURL?: string
   email?: string
-  linkURL?: string
+  isBot: boolean
+  linkURL: string
   size?: number
   small?: boolean
   style?: ImageStyle
@@ -36,8 +38,9 @@ const styles = StyleSheet.create({
 })
 
 const Avatar: SFC<IProps> = ({
-  avatarURL,
+  avatarURL: _avatarURL,
   email,
+  isBot,
   linkURL,
   size: _size,
   small,
@@ -46,18 +49,24 @@ const Avatar: SFC<IProps> = ({
   ...props
 }) => {
   const finalSize = _size || (small ? smallAvatarSize : avatarSize)
+
+  const avatarURL = _avatarURL
+    ? getUserAvatarByAvatarURL(_avatarURL, { size: finalSize })
+    : ''
+
   const uri =
-    (username && getUserAvatarByUsername(username, { size: finalSize })) ||
     avatarURL ||
+    (username && getUserAvatarByUsername(username, { size: finalSize })) ||
     (email && getUserAvatarByEmail(email, { size: finalSize }))
+
   if (!uri) return null
 
   return (
     <TouchableOpacity
       onPress={
-        username
-          ? getUserPressHandler(username)
-          : linkURL ? getGithubURLPressHandler(linkURL) : undefined
+        linkURL
+          ? getGithubURLPressHandler(linkURL)
+          : username ? getUserPressHandler(username, { isBot }) : undefined
       }
     >
       <Image

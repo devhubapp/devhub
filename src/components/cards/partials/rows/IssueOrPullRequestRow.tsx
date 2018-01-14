@@ -19,6 +19,7 @@ import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
+  avatarURL: string
   iconColor?: string
   iconName: string
   isRead: boolean
@@ -26,7 +27,8 @@ export interface IProps {
   theme: ITheme
   title: string
   url: string
-  username?: string
+  username: string
+  userLinkURL: string
 }
 
 export interface IState {}
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
 })
 
 const IssueOrPullRequestRow: SFC<IProps> = ({
+  avatarURL,
   iconColor,
   iconName,
   isRead,
@@ -46,6 +49,7 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
   title: _title,
   url,
   username,
+  userLinkURL,
 }) => {
   const title = trimNewLinesAndSpaces(_title)
   if (!title) return null
@@ -56,7 +60,14 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
     <View style={rowStyles.container}>
       <View style={cardStyles.leftColumn}>
         {Boolean(username) && (
-          <Avatar username={username} small style={cardStyles.avatar} />
+          <Avatar
+            avatarURL={avatarURL}
+            isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+            linkURL={userLinkURL}
+            small
+            style={cardStyles.avatar}
+            username={username}
+          />
         )}
       </View>
 

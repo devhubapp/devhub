@@ -49,6 +49,9 @@ const CommitRow: SFC<IProps> = ({
       <View style={cardStyles.leftColumn}>
         <Avatar
           email={authorEmail}
+          isBot={Boolean(
+            authorUsername && authorUsername.indexOf('[bot]') >= 0,
+          )}
           username={authorUsername}
           small
           style={cardStyles.avatar}

@@ -39,6 +39,10 @@ export const getRepositoryPressHandler = R.memoize(
 ) as (owner?: string, repositoryName?: string) => () => void | undefined
 
 export const getUserPressHandler = R.memoize(
-  (username?: string) =>
-    username ? getGithubURLPressHandler(`${baseURL}/${username}`) : undefined,
-) as (username?: string) => () => void | undefined
+  (username: string, { isBot }: { isBot?: boolean } = {}) =>
+    username
+      ? getGithubURLPressHandler(
+          `${baseURL}/${isBot ? 'apps/' : ''}${username}`,
+        )
+      : undefined,
+) as (username: string, options?: { isBot?: boolean }) => () => void | undefined

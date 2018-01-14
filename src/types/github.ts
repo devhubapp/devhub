@@ -1,9 +1,11 @@
 export interface IGitHubUser {
   id: number
   login: string
-  display_login?: string
+  display_login: string
+  gravatar_id: string
   html_url?: string // https://github.com/brunolemos
-  url?: string // https://api.github.com/users/brunolemos
+  url: string // https://api.github.com/users/brunolemos
+  avatar_url: string // https://avatars.githubusercontent.com/u/2118189?
 }
 
 export interface IGitHubReaction {

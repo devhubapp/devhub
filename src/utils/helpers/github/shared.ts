@@ -11,6 +11,16 @@ import {
 } from '../../../types'
 import { getSteppedSize } from '../shared'
 
+export function getUserAvatarByAvatarURL(
+  avatarURL: string,
+  { size }: { size?: number } = {},
+) {
+  if (!avatarURL) return ''
+
+  const _avatarURL = avatarURL.indexOf('?') > 0 ? avatarURL : `${avatarURL}?`
+  return `${_avatarURL}&s=${getSteppedSize(size)}`
+}
+
 export function getUserAvatarByUsername(
   username: string,
   { size }: { size?: number } = {},

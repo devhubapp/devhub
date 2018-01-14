@@ -5,6 +5,7 @@ import {
   TextProperties,
   TextStyle,
   View,
+  ViewProperties,
   ViewStyle,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Octicons'
@@ -17,17 +18,18 @@ import {
 
 import theme from '../../styles/themes/dark'
 
-export interface IProps extends TextProperties {
+export interface IProps {
   borderColor?: string
   children: ReactNode
   color?: string
-  containerProps?: object
+  containerProps?: ViewProperties
   containerStyle?: ViewStyle
   isPrivate?: boolean
   muted?: boolean
   outline?: boolean
   radius?: number
   textColor?: string
+  textProps?: TextProperties
 }
 
 const styles = StyleSheet.create({
@@ -54,7 +56,7 @@ const Label: SFC<IProps> = ({
   isPrivate,
   radius = defaultRadius,
   textColor,
-  ...props
+  textProps = {},
 }) => (
   <View
     style={[
@@ -81,7 +83,7 @@ const Label: SFC<IProps> = ({
         },
         muted && { opacity: mutedOpacity },
       ]}
-      {...props}
+      {...textProps}
     >
       {Boolean(isPrivate) && (
         <Text>

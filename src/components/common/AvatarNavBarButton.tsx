@@ -29,7 +29,13 @@ export default class AvatarNavBarButton extends PureComponent<
 
     return (
       <TouchableOpacity onPress={onPress} {...props}>
-        <Avatar username={username} size={size} style={style} />
+        <Avatar
+          isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+          linkURL=""
+          size={size}
+          style={style}
+          username={username}
+        />
       </TouchableOpacity>
     )
   }

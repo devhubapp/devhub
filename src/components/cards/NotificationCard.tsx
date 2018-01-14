@@ -101,6 +101,7 @@ export default class NotificationCard extends PureComponent<IProps> {
     return (
       <View style={styles.container}>
         <NotificationCardHeader
+          key={`notification-card-header-${notification.id}`}
           cardIconColor={cardIconColor}
           cardIconName={cardIconName}
           labelColor={labelColor}
@@ -131,6 +132,7 @@ export default class NotificationCard extends PureComponent<IProps> {
         {!!issue && (
           <IssueOrPullRequestRow
             key={`issue-row-${issueOrPullRequestNumber}`}
+            avatarURL=""
             iconColor={issueIconColor}
             iconName={issueIconName}
             isRead={isRead}
@@ -138,12 +140,15 @@ export default class NotificationCard extends PureComponent<IProps> {
             theme={theme}
             title={issue.title}
             url={issue.latest_comment_url || issue.url}
+            userLinkURL=""
+            username=""
           />
         )}
 
         {!!pullRequest && (
           <IssueOrPullRequestRow
             key={`pr-row-${issueOrPullRequestNumber}`}
+            avatarURL=""
             iconColor={pullRequestIconColor}
             iconName={pullRequestIconName}
             isRead={isRead}
@@ -151,12 +156,15 @@ export default class NotificationCard extends PureComponent<IProps> {
             theme={theme}
             title={pullRequest.title}
             url={pullRequest.latest_comment_url || pullRequest.url}
+            userLinkURL=""
+            username=""
           />
         )}
 
         {!!release && (
           <ReleaseRow
             key={`release-row-${repo.id}`}
+            avatarURL=""
             body={release.title}
             isRead={isRead}
             ownerName={repoOwnerName!}
@@ -165,6 +173,8 @@ export default class NotificationCard extends PureComponent<IProps> {
             type="ReleaseEvent"
             name={release.title}
             tagName={release.title}
+            userLinkURL=""
+            username=""
           />
         )}
 
@@ -172,8 +182,10 @@ export default class NotificationCard extends PureComponent<IProps> {
           !!title && (
             <CommentRow
               key={`subject-row-${subject.url}`}
+              avatarURL=""
               body={title}
               isRead={isRead}
+              userLinkURL=""
               username=""
             />
           )}
@@ -183,7 +195,8 @@ export default class NotificationCard extends PureComponent<IProps> {
             key={`comment-row-${comment.id}`}
             body={comment.body}
             url={comment.html_url}
-            username={comment.user.login}
+            userLinkURL={comment.user.html_url}
+            username={comment.user.display_login || comment.user.login}
           />
         )} */}
       </View>

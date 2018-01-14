@@ -20,7 +20,9 @@ export default class UserListRow extends React.PureComponent<IProps> {
       <UserRow
         key={`user-row-${user.id}`}
         {...this.props}
-        username={user.login}
+        avatarURL={user.avatar_url}
+        userLinkURL={user.html_url || ''}
+        username={user.display_login || user.login}
       />
     )
   }

@@ -13,8 +13,9 @@ import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
-  branch?: string
+  avatarURL: string
   body: string
+  branch?: string
   isRead: boolean
   name: string
   ownerName: string
@@ -22,26 +23,29 @@ export interface IProps {
   tagName: string
   type: IGitHubEventType
   url: string
+  userLinkURL: string
+  username: string
 }
 
 export interface IState {}
 
 const ReleaseRow: SFC<IProps> = ({
+  avatarURL,
   body: _body,
   branch,
   isRead,
   name: _name,
+  ownerName,
+  repositoryName,
   tagName: _tagName,
   type,
   url,
+  username,
+  userLinkURL,
 }) => {
   const body = trimNewLinesAndSpaces(_body)
   const name = trimNewLinesAndSpaces(_name)
   const tagName = trimNewLinesAndSpaces(_tagName)
-
-  const { owner: ownerName, repo: repositoryName } = getOwnerAndRepo(
-    getRepoFullNameFromUrl(url),
-  )
 
   return (
     <View>
@@ -58,7 +62,13 @@ const ReleaseRow: SFC<IProps> = ({
 
       <View style={rowStyles.container}>
         <View style={cardStyles.leftColumn}>
-          <Avatar username={ownerName} small style={cardStyles.avatar} />
+          <Avatar
+            isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+            linkURL=""
+            small
+            style={cardStyles.avatar}
+            username={ownerName}
+          />
         </View>
 
         <View style={cardStyles.rightColumn}>
@@ -83,7 +93,14 @@ const ReleaseRow: SFC<IProps> = ({
 
       <View style={rowStyles.container}>
         <View style={cardStyles.leftColumn}>
-          <Avatar username={ownerName} small style={cardStyles.avatar} />
+          <Avatar
+            avatarURL={avatarURL}
+            isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+            linkURL={userLinkURL}
+            small
+            style={cardStyles.avatar}
+            username={username}
+          />
         </View>
 
         <View style={cardStyles.rightColumn}>
