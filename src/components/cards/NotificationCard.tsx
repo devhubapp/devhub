@@ -63,7 +63,7 @@ export default class NotificationCard extends PureComponent<IProps> {
 
     const cardIconDetails = getNotificationIconAndColor(
       notification,
-      subject, // TODO: Load commit/issue/pullrequest details
+      // subject, // TODO: Load commit/issue/pullrequest details
       theme,
     )
     const cardIconName = cardIconDetails.icon
@@ -86,11 +86,11 @@ export default class NotificationCard extends PureComponent<IProps> {
       icon: pullRequestIconName,
       color: pullRequestIconColor,
     } = pullRequest
-      ? getPullRequestIconAndColor(pullRequest) // TODO: Load pull request details
+      ? getPullRequestIconAndColor({}) // TODO: Load pull request details
       : { icon: undefined, color: undefined }
 
     const { icon: issueIconName, color: issueIconColor } = issue
-      ? getIssueIconAndColor(issue) // TODO: Load issue details
+      ? getIssueIconAndColor({}) // TODO: Load issue details
       : { icon: undefined, color: undefined }
 
     const issueOrPullRequestNumber =
@@ -134,8 +134,8 @@ export default class NotificationCard extends PureComponent<IProps> {
           <IssueOrPullRequestRow
             key={`issue-row-${issueOrPullRequestNumber}`}
             avatarURL=""
-            iconColor={issueIconColor}
-            iconName={issueIconName}
+            iconColor={issueIconColor!}
+            iconName={issueIconName!}
             isRead={isRead}
             issueNumber={issueOrPullRequestNumber!}
             theme={theme}
@@ -150,8 +150,8 @@ export default class NotificationCard extends PureComponent<IProps> {
           <IssueOrPullRequestRow
             key={`pr-row-${issueOrPullRequestNumber}`}
             avatarURL=""
-            iconColor={pullRequestIconColor}
-            iconName={pullRequestIconName}
+            iconColor={pullRequestIconColor!}
+            iconName={pullRequestIconName!}
             isRead={isRead}
             issueNumber={issueOrPullRequestNumber!}
             theme={theme}

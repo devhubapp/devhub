@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import { FlatList } from 'react-native'
 
 import theme from '../../styles/themes/dark'
@@ -12,7 +12,7 @@ export interface IProps {
   notifications: IGitHubNotification[]
 }
 
-class NotificationCards extends React.PureComponent<IProps> {
+class NotificationCards extends PureComponent<IProps> {
   keyExtractor(notification: IGitHubNotification) {
     return `${notification.id}`
   }

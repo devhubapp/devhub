@@ -3,8 +3,6 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Octicons'
 
 import { IGitHubEventType } from '../../../../types'
-import { getOwnerAndRepo } from '../../../../utils/helpers/github/shared'
-import { getRepoFullNameFromUrl } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { init, startMainApp } from './screens'
 
 export async function setup() {

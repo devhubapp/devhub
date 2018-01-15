@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react'
+import { Alert } from 'react-native'
+import { INavigator } from 'react-native-navigation'
 
 import OcticonsIconButton, {
   IScreenIconProps as IOcticonsIconButtonIconProps,
@@ -8,7 +10,7 @@ import NotificationCardsContainer from '../containers/NotificationCardsContainer
 import theme from '../styles/themes/dark'
 
 export interface IProps {
-  navigator: object
+  navigator: INavigator
 }
 
 export default class NotificationsScreen extends PureComponent<IProps> {
@@ -23,6 +25,7 @@ export default class NotificationsScreen extends PureComponent<IProps> {
       leftButtons: [
         {
           component: OcticonsIconButton.componentId,
+          id: 'settings',
           passProps: {
             color: theme.base04,
             name: 'settings',
@@ -34,6 +37,7 @@ export default class NotificationsScreen extends PureComponent<IProps> {
       rightButtons: [
         {
           component: OcticonsIconButton.componentId,
+          id: 'more',
           passProps: {
             color: theme.base04,
             name: 'chevron-down',
@@ -46,7 +50,7 @@ export default class NotificationsScreen extends PureComponent<IProps> {
   }
 
   handlePress = () => {
-    alert('Pressed!')
+    Alert.alert('Pressed!', 'Not implemented.')
   }
 
   render() {

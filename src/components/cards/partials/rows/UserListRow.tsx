@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 
 import RowList from './RowList'
 import UserRow from './UserRow'
@@ -12,7 +12,7 @@ export interface IProps {
   theme: ITheme
 }
 
-export default class UserListRow extends React.PureComponent<IProps> {
+export default class UserListRow extends PureComponent<IProps> {
   renderItem = ({ item: user }: { item: IGitHubUser }) => {
     if (!(user && user.id && user.login)) return null
 

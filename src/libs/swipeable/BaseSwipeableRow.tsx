@@ -2,23 +2,23 @@ import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
 import { Swipeable, SwipeableProperties } from 'react-native-gesture-handler'
 
-enum BaseActionType {
-  BUTTON = 'BUTTON',
-  FULL = 'FULL',
-}
+export type BaseActionType = 'BUTTON' | 'FULL'
 
 export interface IBaseAction {
   color: string
+  icon?: string
   key: string
+  label?: string
   onPress: () => void
   textColor?: string
   type?: BaseActionType
   width?: number
 }
 
-export interface IBaseProps {
-  leftActions: IBaseAction[]
-  rightActions: IBaseAction[]
+export interface IBaseProps<IAction = IBaseAction> {
+  children: ReactNode
+  leftActions: Array<IBaseAction & IAction> // tslint:disable-line prefer-array-literal
+  rightActions: Array<IBaseAction & IAction> // tslint:disable-line prefer-array-literal
 }
 
 export interface IBaseState {}
@@ -29,12 +29,13 @@ export const defaultWidth = 64
 
 export default abstract class BaseSwipeableRow<
   P = {},
-  S = {}
-> extends PureComponent<IBaseProps & P, IBaseState & S> {
+  S = {},
+  IAction = IBaseAction
+> extends PureComponent<IBaseProps<IAction> & P, IBaseState & S> {
   _swipeableRow: Swipeable | null = null
 
   abstract renderButtonAction: (
-    action: IBaseAction,
+    action: IAction,
     {
       dragX,
       placement,
@@ -49,7 +50,7 @@ export default abstract class BaseSwipeableRow<
   ) => ReactNode
 
   abstract renderFullAction: (
-    action: IBaseAction,
+    action: IAction,
     {
       dragX,
       placement,

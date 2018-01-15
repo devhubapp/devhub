@@ -4,8 +4,8 @@ import { View, ViewStyle } from 'react-native'
 import LinearGradient from '../../libs/linear-gradient'
 import { fade } from '../../utils/helpers/color'
 
-type From = 'top' | 'bottom' | 'left' | 'right'
-type FromWithVH = 'vertical' | 'horizontal' | From
+export type From = 'top' | 'bottom' | 'left' | 'right'
+export type FromWithVH = 'vertical' | 'horizontal' | From
 
 export interface IProps {
   children?: ReactNode

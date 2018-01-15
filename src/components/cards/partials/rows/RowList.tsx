@@ -1,4 +1,4 @@
-import React, { ReactNode, SFC } from 'react'
+import React, { ReactElement, ReactNode, SFC } from 'react'
 import { ScrollView } from 'react-native'
 
 import { contentPadding } from '../../../../styles/variables'
@@ -23,7 +23,8 @@ const RowList: SFC<IProps> = ({
 }) => {
   if (!(data && data.length > 0)) return null
 
-  if (data.length === 1) return renderItem({ item: data[0], index: 0 })
+  if (data.length === 1)
+    return renderItem({ item: data[0], index: 0 }) as ReactElement<{}>
 
   return (
     <TransparentTextOverlay

@@ -11,12 +11,17 @@ import BaseSwipeableRow, {
 export { defaultWidth } from './BaseSwipeableRow'
 
 export interface IAction extends IBaseAction {
+  icon: undefined
   label: string
 }
 
-export interface IProps extends IBaseProps {}
+export interface IProps extends IBaseProps<IAction> {}
 
-export default class AppleSwipeableRow extends BaseSwipeableRow<IAction> {
+export default class AppleSwipeableRow extends BaseSwipeableRow<
+  IProps,
+  void,
+  IAction
+> {
   _swipeableRow = null
 
   renderButtonAction = (
@@ -51,11 +56,11 @@ export default class AppleSwipeableRow extends BaseSwipeableRow<IAction> {
         style={{ flex: 1, transform: [transform] }}
       >
         <RectButton
+          onPress={pressHandler}
           style={[
             styles.baseActionContainer,
             { backgroundColor: action.color, width: action.width },
           ]}
-          onPress={pressHandler}
         >
           <Text
             style={[

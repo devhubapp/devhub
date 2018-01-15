@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 
 import RepositoryRow from './RepositoryRow'
 import RowList from './RowList'
@@ -17,7 +17,7 @@ export interface IProps {
   theme: ITheme
 }
 
-export default class RepositoryListRow extends React.PureComponent<IProps> {
+export default class RepositoryListRow extends PureComponent<IProps> {
   renderItem({ item: repo }: { item: IGitHubRepo }) {
     if (!(repo && repo.id)) return null
 

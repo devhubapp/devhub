@@ -1,11 +1,14 @@
+import { ComponentClass } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import createIconButton from './createIconButton'
+import createIconButton, { IScreenIconProps } from './createIconButton'
 
-export { IScreenIconProps } from './createIconButton'
-
-const IoniconsIconButton = createIconButton(Ionicons)
+const IoniconsIconButton = createIconButton(Ionicons) as ComponentClass<
+  IScreenIconProps
+> & { componentId: string }
 
 IoniconsIconButton.componentId = 'org.brunolemos.devhub.IoniconsIconButton'
+
+export { IScreenIconProps }
 
 export default IoniconsIconButton

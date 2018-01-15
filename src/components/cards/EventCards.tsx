@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import { FlatList } from 'react-native'
 
 import theme from '../../styles/themes/dark'
@@ -12,7 +12,7 @@ export interface IProps {
   events: IGitHubEvent[]
 }
 
-class EventCards extends React.PureComponent<IProps> {
+class EventCards extends PureComponent<IProps> {
   keyExtractor(event: IGitHubEvent) {
     return `${event.id}`
   }

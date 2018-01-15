@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 
 import CommitRow from './CommitRow'
 import RowList from './RowList'
@@ -12,7 +12,7 @@ export interface IProps {
   theme: ITheme
 }
 
-export default class CommitListRow extends React.PureComponent<IProps> {
+export default class CommitListRow extends PureComponent<IProps> {
   renderItem({ item: commit }: { item: IGitHubCommit }) {
     if (!(commit && commit.sha && commit.message)) return null
 

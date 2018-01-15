@@ -13,13 +13,18 @@ export { defaultWidth } from './BaseSwipeableRow'
 
 export interface IAction extends IBaseAction {
   icon: string
+  label: undefined
 }
 
 export interface IProps extends IBaseProps {}
 
 const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
-export default class GoogleSwipeableRow extends BaseSwipeableRow {
+export default class GoogleSwipeableRow extends BaseSwipeableRow<
+  IProps,
+  void,
+  IAction
+> {
   _swipeableRow = null
 
   renderButtonAction = (

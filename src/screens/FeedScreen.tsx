@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react'
+import { Alert } from 'react-native'
+import { INavigator } from 'react-native-navigation'
 
 import AvatarNavBarButton, {
   IScreenIconProps as IAvatarNavBarButtonIconProps,
@@ -11,7 +13,7 @@ import EventCardsContainer from '../containers/EventCardsContainer'
 import theme from '../styles/themes/dark'
 
 export interface IProps {
-  navigator: object
+  navigator: INavigator
 }
 
 export default class FeedScreen extends PureComponent<IProps> {
@@ -26,6 +28,7 @@ export default class FeedScreen extends PureComponent<IProps> {
       leftButtons: [
         {
           component: OcticonsIconButton.componentId,
+          id: 'settings',
           passProps: {
             color: theme.base04,
             name: 'settings',
@@ -37,6 +40,7 @@ export default class FeedScreen extends PureComponent<IProps> {
       rightButtons: [
         {
           component: OcticonsIconButton.componentId,
+          id: 'more',
           passProps: {
             color: theme.base04,
             name: 'chevron-down',
@@ -46,6 +50,7 @@ export default class FeedScreen extends PureComponent<IProps> {
         },
         {
           component: AvatarNavBarButton.componentId,
+          id: 'profile',
           passProps: {
             onPress: this.handlePress,
             size: 24,
@@ -57,7 +62,7 @@ export default class FeedScreen extends PureComponent<IProps> {
   }
 
   handlePress = () => {
-    alert('Pressed!')
+    Alert.alert('Pressed!', 'Not implemented.')
   }
 
   render() {

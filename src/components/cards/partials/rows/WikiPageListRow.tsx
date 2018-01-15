@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 
 import RowList from './RowList'
 import WikiPageRow from './WikiPageRow'
@@ -12,7 +12,7 @@ export interface IProps {
   theme: ITheme
 }
 
-export default class WikiPageListRow extends React.PureComponent<IProps> {
+export default class WikiPageListRow extends PureComponent<IProps> {
   renderItem = ({ item: page }: { item: IGitHubPage }) => {
     if (!(page && page.sha && page.title)) return null
 

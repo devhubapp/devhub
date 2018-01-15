@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
+import { INavigator } from 'react-native-navigation'
 
 import Screen from '../components/common/Screen'
 import theme from '../styles/themes/dark'
 
 export interface IProps {
-  navigator: object
+  navigator: INavigator
 }
 
 export default class NotificationsScreen extends PureComponent<IProps> {

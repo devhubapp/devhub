@@ -12,21 +12,17 @@ import {
   IGitHubIcon,
   IGitHubIssue,
   IGitHubPullRequest,
-  IPullRequestEvent,
 } from '../../../types'
 
 export function getEventIconAndColor(
   event: IGitHubEvent,
   theme: IBaseTheme | undefined = baseTheme,
 ): { color?: string; icon: IGitHubIcon; subIcon?: IGitHubIcon } {
-  const eventType = event.type.split(':')[0]
-  const payload = event.payload
-
-  switch (eventType) {
+  switch (event.type) {
     case 'CommitCommentEvent':
       return { icon: 'git-commit', subIcon: 'comment-discussion' }
-    case 'CreateEvent':
-      switch (payload.ref_type) {
+    case 'CreateEvent': {
+      switch (event.payload.ref_type) {
         case 'repository':
           return { icon: 'repo' }
         case 'branch':
@@ -36,8 +32,9 @@ export function getEventIconAndColor(
         default:
           return { icon: 'plus' }
       }
-    case 'DeleteEvent':
-      switch (payload.ref_type) {
+    }
+    case 'DeleteEvent': {
+      switch (event.payload.ref_type) {
         case 'repository':
           return { icon: 'repo', color: theme.red }
         case 'branch':
@@ -47,26 +44,25 @@ export function getEventIconAndColor(
         default:
           return { icon: 'trashcan' }
       }
+    }
     case 'GollumEvent':
       return { icon: 'book' }
     case 'ForkEvent':
       return { icon: 'repo-forked' }
 
-    case 'IssueCommentEvent':
+    case 'IssueCommentEvent': {
       return {
-        ...payload.pull_request || isPullRequest(payload.issue)
-          ? getPullRequestIconAndColor(
-              payload.pull_request || payload.issue,
-              theme,
-            )
-          : getIssueIconAndColor(payload.issue, theme),
+        ...(isPullRequest(event.payload.issue)
+          ? getPullRequestIconAndColor(event.payload.issue, theme)
+          : getIssueIconAndColor(event.payload.issue, theme)),
         subIcon: 'comment-discussion',
       }
+    }
 
     case 'IssuesEvent': {
-      const issue = payload.issue
+      const issue = event.payload.issue
 
-      switch (payload.action) {
+      switch (event.payload.action) {
         case 'opened':
           return getIssueIconAndColor({ state: 'open' } as IGitHubIssue, theme)
         case 'closed':
@@ -98,9 +94,9 @@ export function getEventIconAndColor(
 
     case 'PullRequestEvent':
       return (() => {
-        const pullRequest = payload.pull_request
+        const pullRequest = event.payload.pull_request
 
-        switch (payload.action) {
+        switch (event.payload.action) {
           case 'opened':
           case 'reopened':
             return getPullRequestIconAndColor(
@@ -120,11 +116,12 @@ export function getEventIconAndColor(
       })()
 
     case 'PullRequestReviewEvent':
-    case 'PullRequestReviewCommentEvent':
+    case 'PullRequestReviewCommentEvent': {
       return {
-        ...getPullRequestIconAndColor(payload.pull_request, theme),
+        ...getPullRequestIconAndColor(event.payload.pull_request, theme),
         subIcon: 'comment-discussion',
       }
+    }
 
     case 'PushEvent':
       return { icon: 'code' }
@@ -225,7 +222,7 @@ export function getEventText(
       case 'PublicEvent':
         return `made ${repositoryText} public`
       case 'PullRequestEvent':
-        switch ((event as IPullRequestEvent).payload.action) {
+        switch (event.payload.action) {
           case 'assigned':
             return `assigned ${pullRequestText}`
           case 'unassigned':
@@ -262,52 +259,53 @@ export function getEventText(
           default:
             return `interacted with ${pullRequestText} review`
         }
-      case 'PushEvent':
+      case 'PushEvent': {
         return (() => {
           const commits = event.payload.commits || [{}]
-          // const commit = payload.head_commit || commits[0];
+          // const commit = event.payload.head_commit || commits[0];
           const count =
             Math.max(
               ...[
                 1,
                 event.payload.size,
                 event.payload.distinct_size,
-                commits.size,
+                commits.length,
               ],
             ) || 1
           const branch = (event.payload.ref || '').split('/').pop()
 
-          const pushedText = event.payload.forced ? 'force pushed' : 'pushed'
+          const pushedText = event.forced ? 'force pushed' : 'pushed'
           const commitText = count > 1 ? `${count} commits` : 'a commit'
           const branchText = branch === 'master' ? `to ${branch}` : ''
 
           return `${pushedText} ${commitText} ${branchText}`
         })()
+      }
       case 'ReleaseEvent':
         return 'published a release'
       case 'WatchEvent':
         return `starred ${repositoryText}`
-      case 'WatchEvent:OneRepoMultipleUsers':
-        return (() => {
-          const otherUsers = event.payload.users
-          const otherUsersText =
-            otherUsers && otherUsers.size > 0
-              ? otherUsers.size > 1
-                ? `and ${otherUsers.size} others`
-                : 'and 1 other'
-              : ''
+      // case 'WatchEvent:OneRepoMultipleUsers':
+      //   return (() => {
+      //     const otherUsers = event.payload.users
+      //     const otherUsersText =
+      //       otherUsers && otherUsers.size > 0
+      //         ? otherUsers.size > 1
+      //           ? `and ${otherUsers.size} others`
+      //           : 'and 1 other'
+      //         : ''
 
-          return `${otherUsersText} starred ${repositoryText}`
-        })()
-      case 'WatchEvent:OneUserMultipleRepos':
-        return (() => {
-          const otherRepos = event.payload.repos
-          const count = (otherRepos && otherRepos.size) || 0
+      //     return `${otherUsersText} starred ${repositoryText}`
+      //   })()
+      // case 'WatchEvent:OneUserMultipleRepos':
+      //   return (() => {
+      //     const otherRepos = event.payload.repos
+      //     const count = (otherRepos && otherRepos.size) || 0
 
-          return count > 1
-            ? `starred ${count} repositories`
-            : `starred ${repositoryText}`
-        })()
+      //     return count > 1
+      //       ? `starred ${count} repositories`
+      //       : `starred ${repositoryText}`
+      //   })()
       default:
         return 'did something'
     }

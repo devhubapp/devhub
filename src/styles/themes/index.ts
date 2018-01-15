@@ -1,10 +1,11 @@
+import { ITheme } from 'src/types'
 import darkTheme from './dark'
 import darkBlueTheme from './dark-blue'
 import lightTheme from './light'
 
-export const DARK_THEME = darkTheme
-export const DARK_BLUE_THEME = darkBlueTheme
-export const LIGHT_THEME = lightTheme
+export const DARK_THEME: ITheme = darkTheme
+export const DARK_BLUE_THEME: ITheme = darkBlueTheme
+export const LIGHT_THEME: ITheme = lightTheme
 
 export default {
   [DARK_THEME.name]: DARK_THEME,

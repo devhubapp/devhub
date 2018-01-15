@@ -1,5 +1,5 @@
 import moment, { MomentInput } from 'moment'
-import React, { ReactNode } from 'react'
+import { PureComponent, ReactNode } from 'react'
 
 export interface IProps {
   children: () => ReactNode
@@ -14,15 +14,12 @@ export interface IState {
 
 const defaultInterval = 1000
 
-export default class IntervalRefresh extends React.PureComponent<
-  IProps,
-  IState
-> {
+export default class IntervalRefresh extends PureComponent<IProps, IState> {
   static defaultProps = {
     interval: defaultInterval,
   }
 
-  intervalInstance: NodeJS.Timer | null = null
+  intervalInstance: number | null = null
 
   state = {
     currentInterval: 1000,

@@ -3,9 +3,7 @@ import gravatar from 'gravatar'
 import * as baseTheme from '../../../styles/themes/base'
 import {
   IBaseTheme,
-  IGitHubCommit,
   IGitHubIcon,
-  IGitHubIssue,
   IGitHubNotification,
   IGitHubPullRequest,
 } from '../../../types'
@@ -52,7 +50,11 @@ export function getUserAvatarByEmail(
   return `https:${gravatar.url(email, options)}`.replace('??', '?')
 }
 
-export function isPullRequest(issue: IGitHubIssue | IGitHubPullRequest) {
+export function isPullRequest(issue: {
+  merged_at?: IGitHubPullRequest['merged_at']
+  html_url?: IGitHubPullRequest['html_url']
+  url?: IGitHubPullRequest['url']
+}) {
   return (
     issue &&
     ((issue as IGitHubPullRequest).merged_at ||
@@ -78,7 +80,10 @@ export function getOwnerAndRepo(
 }
 
 export function getPullRequestIconAndColor(
-  pullRequest: IGitHubPullRequest,
+  pullRequest: {
+    state?: IGitHubPullRequest['state']
+    merged_at?: IGitHubPullRequest['merged_at']
+  },
   theme: IBaseTheme | undefined = baseTheme,
 ): { icon: IGitHubIcon; color?: string } {
   const merged = pullRequest.merged_at
@@ -104,7 +109,10 @@ export function getCommitIconAndColor(): { icon: IGitHubIcon; color?: string } {
 }
 
 export function getIssueIconAndColor(
-  issue: IGitHubIssue | IGitHubPullRequest,
+  issue: {
+    state?: IGitHubPullRequest['state']
+    merged_at?: IGitHubPullRequest['merged_at']
+  },
   theme: IBaseTheme | undefined = baseTheme,
 ): { icon: IGitHubIcon; color?: string } {
   const { state } = issue
@@ -127,7 +135,7 @@ export function getIssueIconAndColor(
 
 export function getNotificationIconAndColor(
   notification: IGitHubNotification,
-  payload: IGitHubCommit | IGitHubIssue | IGitHubPullRequest,
+  // payload: IGitHubCommit | IGitHubIssue | IGitHubPullRequest,
   theme: IBaseTheme | undefined = baseTheme,
 ): { icon: IGitHubIcon; color?: string } {
   const { subject } = notification
@@ -137,9 +145,9 @@ export function getNotificationIconAndColor(
     case 'commit':
       return getCommitIconAndColor()
     case 'issue':
-      return getIssueIconAndColor(payload as IGitHubIssue, theme)
+      return getIssueIconAndColor({}, theme)
     case 'pullrequest':
-      return getPullRequestIconAndColor(payload as IGitHubPullRequest, theme)
+      return getPullRequestIconAndColor({}, theme)
     case 'release':
       return { icon: 'tag' }
     default:
