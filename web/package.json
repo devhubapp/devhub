@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "extensible-react-scripts": "^1.0.6-10",
+    "extensible-react-scripts": "github:brunolemos/extensible-react-scripts",
     "gh-pages": "^1.1.0",
     "react-dev-utils": "^4.2.1",
     "serve": "^6.3.1",
