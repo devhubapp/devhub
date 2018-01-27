@@ -4373,15 +4373,19 @@ react-native-linear-gradient@^2.4.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-navigation@^1.1.349:
-  version "1.1.349"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.349.tgz#eb1a54c09460d62c1d700ab0a1fab13b8bc6a579"
+react-native-navigation@^1.1.354:
+  version "1.1.354"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.354.tgz#27a8bb3fbd2cff5cfc27c6376c81dc45f7b567c2"
   dependencies:
     lodash "4.x.x"
 
 react-native-safari-view@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.1.0.tgz#1e0cd12c62bce79bc1759c7e281646b08b61c959"
+
+react-native-splash-screen@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-3.0.6.tgz#c0bbf2c8ae40a313c4c7044f55e569414ff68332"
 
 react-native-typescript-transformer@^1.2.2:
   version "1.2.2"

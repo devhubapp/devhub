@@ -16,7 +16,7 @@ export default class EventCardsContainer extends PureComponent<IProps, IState> {
   async componentDidMount() {
     try {
       const response = await fetch(
-        'https://api.github.com/repos/facebook/react-native/events?access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160',
+        'https://api.github.com/users/brunolemos/received_events?access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160',
       )
       const events = await response.json()
       if (Array.isArray(events)) this.setState({ events })

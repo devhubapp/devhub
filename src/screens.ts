@@ -1,3 +1,5 @@
+import { PureComponent } from 'react'
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 import { Navigation } from 'react-native-navigation'
 
 import AvatarNavBarButton from './components/common/AvatarNavBarButton'
@@ -7,25 +9,32 @@ import NotificationsScreen from './screens/NotificationsScreen'
 import PreferencesScreen from './screens/PreferencesScreen'
 import theme from './styles/themes/dark'
 
-export function registerComponents() {
-  Navigation.registerComponent(FeedScreen.componentId, () => FeedScreen)
-  Navigation.registerComponent(
-    NotificationsScreen.componentId,
-    () => NotificationsScreen,
-  )
-  Navigation.registerComponent(
-    PreferencesScreen.componentId,
-    () => PreferencesScreen,
-  )
-  Navigation.registerComponent(
-    AvatarNavBarButton.componentId,
-    () => AvatarNavBarButton,
-  )
+export interface IScreenComponent extends PureComponent {
+  componentId: string
+}
+
+function register(screenComponents: { [key: string]: IScreenComponent }) {
+  Object.values(screenComponents).forEach(ScreenComponent => {
+    Navigation.registerComponent(ScreenComponent.componentId, () =>
+      gestureHandlerRootHOC(ScreenComponent),
+    )
+  })
+}
+
+export const screens: { [key: string]: IScreenComponent } = {
+  FeedScreen,
+  NotificationsScreen,
+  PreferencesScreen,
+}
+
+const components: { [key: string]: IScreenComponent } = {
+  AvatarNavBarButton,
 }
 
 export async function init() {
-  registerComponents()
   await initIcons()
+  register(screens)
+  register(components)
 }
 
 const appStyle = {

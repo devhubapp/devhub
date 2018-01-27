@@ -94,13 +94,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.devhub"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         ndk {
@@ -116,6 +116,8 @@ android {
         }
     }
     buildTypes {
+        debug {
+        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -137,12 +139,14 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-linear-gradient')
+    compile project(':react-native-splash-screen')
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
+    compile "com.android.support:appcompat-v7:27.0.2"
     compile "com.facebook.react:react-native:+"  // From node_modules
-    compile project(':react-native-gesture-handler')
+
     compile project(':react-native-navigation')
+    compile project(':react-native-gesture-handler')
+    compile project(':react-native-linear-gradient')
     compile project(':react-native-vector-icons')
 }
 

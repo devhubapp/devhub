@@ -19,8 +19,9 @@
     "react-native": "0.52.0",
     "react-native-gesture-handler": "^1.0.0-alpha.40",
     "react-native-linear-gradient": "^2.4.0",
-    "react-native-navigation": "^1.1.349",
+    "react-native-navigation": "^1.1.354",
     "react-native-safari-view": "^2.1.0",
+    "react-native-splash-screen": "^3.0.6",
     "react-native-vector-icons": "^4.4.3",
     "warna": "^0.2.4"
   },
