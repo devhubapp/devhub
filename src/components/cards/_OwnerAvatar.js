@@ -25,7 +25,8 @@ export default class OwnerAvatar extends React.PureComponent {
       }
     | {
         email?: ?string,
-      })
+      }
+  )
 
   render() {
     const {

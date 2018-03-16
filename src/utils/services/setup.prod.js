@@ -1,11 +1,11 @@
 import firebase from '../../libs/firebase'
 
-import Bugsnag from '../../libs/bugsnag'
+import bugsnag from '../../libs/bugsnag'
 import pkg from '../../../package.json'
 
 export default () => ({
   bugsnagClient: (() => {
-    const bugsnagClient = Bugsnag('231f337f6090422c611017d3dab3d32e')
+    const bugsnagClient = bugsnag('231f337f6090422c611017d3dab3d32e')
     bugsnagClient.codeBundleId = pkg.codeBundleId
     return bugsnagClient
   })(),

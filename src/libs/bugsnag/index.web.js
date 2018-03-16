@@ -1,25 +1,23 @@
 /* eslint-disable import/no-unresolved,import/extensions,import/no-extraneous-dependencies */
 // TODO: Fix eslint for web imports
 
-import Bugsnag from 'bugsnag-js'
+import bugsnag from 'bugsnag-js'
 
 export default apiKey => {
-  Bugsnag.apiKey = apiKey
+  const bugsnagClient = bugsnag(apiKey)
 
-  Bugsnag.clearUser = () => {
-    Bugsnag.user = null
+  bugsnagClient.apiKey = apiKey
+  bugsnagClient.autoBreadcrumbs = false
+
+  bugsnagClient.clearUser = () => {
+    bugsnagClient.user = null
   }
 
-  Bugsnag.setUser = (id, name, email, other = {}) => {
-    Bugsnag.user = { id, name, email, ...other }
+  bugsnagClient.setUser = (id, name, email, other = {}) => {
+    bugsnagClient.user = { id, name, email, ...other }
   }
 
-  Bugsnag.notify = Bugsnag.notifyException
-  delete Bugsnag.notifyException
-
-  Bugsnag.disableAutoBreadcrumbsConsole()
-
-  return Bugsnag
+  return bugsnagClient
 }
 
 export * from 'bugsnag-js'

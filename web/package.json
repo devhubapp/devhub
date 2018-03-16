@@ -4,23 +4,22 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "bugsnag-js": "^3.3.3",
-    "firebase": "^4.7.0",
+    "bugsnag-js": "^4.4.0",
+    "firebase": "^4.11.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-helmet": "^5.2.0",
-    "react-native-web": "^0.1.12"
+    "react-native-web": "^0.5.3"
   },
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "extensible-react-scripts": "github:brunolemos/extensible-react-scripts",
     "gh-pages": "^1.1.0",
-    "react-dev-utils": "^4.2.1",
-    "serve": "^6.3.1",
-    "sw-precache": "^5.2.0"
+    "react-dev-utils": "^5.0.0",
+    "serve": "^6.5.3"
   },
   "scripts": {
-    "build": "NODE_ENV=production extensible-react-scripts build && sw-precache --config=sw-precache-config.js",
+    "build": "NODE_ENV=production extensible-react-scripts build",
     "deploy": "gh-pages -d build",
     "eject": "extensible-react-scripts eject",
     "predeploy": "PUBLIC_URL=https://brunolemos.github.io/devhub/ npm run build",

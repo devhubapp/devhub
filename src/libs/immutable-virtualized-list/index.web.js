@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react'
-import ImmutableListView from 'react-native-immutable-list-view'
+import { ImmutableListView } from 'react-native-immutable-list-view'
 import { OrderedMap } from 'immutable'
 import type { List } from 'immutable'
 

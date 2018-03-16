@@ -29,6 +29,8 @@ module.exports = {
       resolvePath('../index.web.js'),
       resolvePath('../node_modules/react-native-vector-icons'),
       resolvePath('../node_modules/react-native-tab-view/src'),
+      resolvePath('../node_modules/react-navigation/src'),
+      resolvePath('../node_modules/react-native-safe-area-view'),
     ])
 
     return Object.assign({}, paths, {
@@ -43,15 +45,35 @@ module.exports = {
 
     return Object.assign({}, oldConfig, {
       module: Object.assign({}, oldConfig.module, {
-        rules: oldConfig.module.rules.map(
-          rule =>
+        rules: oldConfig.module.rules.map(rule => {
+          let _lastRule
+
+          let updatedRule =
             (rule.oneOf && {
               ...rule,
-              oneOf: rule.oneOf.map(ruleTransformer),
+              oneOf: rule.oneOf.map(rule => {
+                _lastRule = ruleTransformer(rule)
+                return _lastRule
+              }),
             }) ||
-            (rule.use && { ...rule, use: rule.use.map(ruleTransformer) }) ||
-            ruleTransformer(rule),
-        ),
+            (rule.use && {
+              ...rule,
+              use: rule.use.map(rule => {
+                _lastRule = ruleTransformer(rule)
+                return _lastRule
+              }),
+            }) ||
+            (() => {
+              _lastRule = ruleTransformer(rule, paths)
+              return _lastRule
+            })()
+
+          if (_lastRule && _lastRule.loader === eslintLoader) {
+            updatedRule = { ...updatedRule, include: [paths.appSrc] }
+          }
+
+          return updatedRule
+        }),
       }),
       plugins: [
         new webpack.DefinePlugin({ __DEV__: isDevelopment }),
@@ -59,7 +81,7 @@ module.exports = {
       ],
       resolve: Object.assign({}, oldConfig.resolve, {
         alias: Object.assign({}, oldConfig.resolve.alias, {
-          'react-navigation': 'react-navigation/lib/react-navigation.js',
+          'react-navigation': 'react-navigation/src/react-navigation.js',
         }),
         extensions: ['.web.js'].concat(oldConfig.resolve.extensions),
         modules: [paths.webNodeModules, paths.mobileNodeModules].concat(

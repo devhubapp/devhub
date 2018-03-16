@@ -44,8 +44,8 @@ export const FullAbsoluteView = styled.View`
   left: ${({ left }) => left || 0}px;
   right: ${({ right }) => right || 0}px;
   ${({ width }) => (width ? `width: ${width}px;` : '')} ${({ height }) =>
-      height ? `height: ${height}px;` : ''} ${({ zIndex }) =>
-      zIndex ? `z-index: ${zIndex};` : ''};
+  height ? `height: ${height}px;` : ''} ${({ zIndex }) =>
+  zIndex ? `z-index: ${zIndex};` : ''};
 `
 
 // export const RowSeparator = styled.View`
