@@ -1,4 +1,4 @@
-package com.devhub;
+package org.brunolemos.devhub;
 
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.facebook.react.ReactPackage;
