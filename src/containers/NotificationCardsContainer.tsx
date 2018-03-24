@@ -14,7 +14,9 @@ export default class NotificationCardsContainer extends PureComponent<
   IProps,
   IState
 > {
-  state = { notifications: [] }
+  state: IState = {
+    notifications: [],
+  }
 
   async componentDidMount() {
     try {

@@ -1,63 +1,56 @@
 import React, { PureComponent } from 'react'
 import { Alert } from 'react-native'
-import { INavigator } from 'react-native-navigation'
+import Octicons from 'react-native-vector-icons/Octicons'
+import { NavigationScreenConfig, NavigationScreenProps } from 'react-navigation'
+import HeaderButtons from 'react-navigation-header-buttons'
 
-import AvatarNavBarButton, {
-  IScreenIconProps as IAvatarNavBarButtonIconProps,
-} from '../components/common/AvatarNavBarButton'
-import OcticonsIconButton, {
-  IScreenIconProps as IOcticonsIconButtonIconProps,
-} from '../components/common/OcticonsIconButton'
+import Avatar from '../components/common/Avatar'
 import Screen from '../components/common/Screen'
 import EventCardsContainer from '../containers/EventCardsContainer'
 import theme from '../styles/themes/dark'
+import { contentPadding } from '../styles/variables'
 
-export interface IProps {
-  navigator: INavigator
-}
+export default class FeedScreen extends PureComponent<NavigationScreenProps> {
+  static navigationOptions: NavigationScreenConfig<any> = ({ navigation }) => {
+    const params = navigation.state.params || {}
 
-export default class FeedScreen extends PureComponent<IProps> {
-  static componentId = 'org.brunolemos.devhub.FeedScreen'
-
-  static navigatorStyle = {}
+    return {
+      headerLeft: (
+        <HeaderButtons
+          IconComponent={Octicons}
+          color={theme.base04}
+          iconSize={24}
+        >
+          <HeaderButtons.Item
+            IconElement={<Avatar linkURL="" size={24} username="brunolemos" />}
+            buttonWrapperStyle={{ marginLeft: contentPadding }}
+            title="select"
+          />
+        </HeaderButtons>
+      ),
+      headerRight: (
+        <HeaderButtons
+          IconComponent={Octicons}
+          color={theme.base04}
+          iconSize={24}
+        >
+          <HeaderButtons.Item
+            title="Settings"
+            iconName="settings"
+            onPress={params.handlePress}
+          />
+        </HeaderButtons>
+      ),
+      headerTitle: 'brunolemos',
+      title: 'Feed',
+    }
+  }
 
   componentWillMount() {
-    this.props.navigator.setTitle({ title: 'brunolemos' }) // , subtitle: 'dashboard'
-
-    this.props.navigator.setButtons({
-      leftButtons: [
-        {
-          component: OcticonsIconButton.componentId,
-          id: 'settings',
-          passProps: {
-            color: theme.base04,
-            name: 'settings',
-            onPress: this.handlePress,
-            size: 24,
-          } as IOcticonsIconButtonIconProps,
-        },
-      ],
-      rightButtons: [
-        {
-          component: OcticonsIconButton.componentId,
-          id: 'more',
-          passProps: {
-            color: theme.base04,
-            name: 'chevron-down',
-            onPress: this.handlePress,
-            size: 24,
-          } as IOcticonsIconButtonIconProps,
-        },
-        {
-          component: AvatarNavBarButton.componentId,
-          id: 'profile',
-          passProps: {
-            onPress: this.handlePress,
-            size: 24,
-            username: 'brunolemos',
-          } as IAvatarNavBarButtonIconProps,
-        },
-      ],
+    this.props.navigation.setParams({
+      handlePress: this.handlePress,
+      subtitle: 'dashboard',
+      title: 'brunolemos',
     })
   }
 

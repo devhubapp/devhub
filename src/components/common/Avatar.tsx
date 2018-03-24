@@ -21,7 +21,7 @@ import {
 export interface IProps {
   avatarURL?: string
   email?: string
-  isBot: boolean
+  isBot?: boolean
   linkURL: string
   size?: number
   small?: boolean
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 const Avatar: SFC<IProps> = ({
   avatarURL: _avatarURL,
   email,
-  isBot,
+  isBot: _isBot,
   linkURL,
   size: _size,
   small,
@@ -49,6 +49,7 @@ const Avatar: SFC<IProps> = ({
   ...props
 }) => {
   const finalSize = _size || (small ? smallAvatarSize : avatarSize)
+  const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
 
   const avatarURL = _avatarURL
     ? getUserAvatarByAvatarURL(_avatarURL, { size: finalSize })

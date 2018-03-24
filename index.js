@@ -1,3 +1,5 @@
-import { setup } from './src/setup'
+import { AppRegistry } from 'react-native'
 
-setup()
+import App from './src/components/App.tsx'
+
+AppRegistry.registerComponent('devhub', () => App)

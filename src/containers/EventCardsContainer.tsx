@@ -11,7 +11,9 @@ export interface IState {
 }
 
 export default class EventCardsContainer extends PureComponent<IProps, IState> {
-  state = { events: [] }
+  state: IState = {
+    events: [],
+  }
 
   async componentDidMount() {
     try {

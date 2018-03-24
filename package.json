@@ -19,10 +19,11 @@
     "react-native": "0.54.2",
     "react-native-gesture-handler": "^1.0.0-alpha.41",
     "react-native-linear-gradient": "^2.4.0",
-    "react-native-navigation": "^1.1.409",
     "react-native-safari-view": "^2.1.0",
     "react-native-splash-screen": "^3.0.6",
     "react-native-vector-icons": "^4.4.3",
+    "react-navigation": "^1.5.8",
+    "react-navigation-header-buttons": "^0.0.5",
     "warna": "^0.2.4"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "@types/react": "^16.0.40",
     "@types/react-native": "^0.52.18",
     "@types/react-native-vector-icons": "^4.4.3",
+    "@types/react-navigation": "^1.2.3",
     "@types/react-test-renderer": "^16.0.1",
     "babel-jest": "^23.0.0-alpha.0",
     "babel-preset-react-native": "4.0.0",

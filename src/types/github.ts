@@ -729,7 +729,7 @@ export interface IGitHubNotification {
     latest_comment_url: string
     type: 'Commit' | 'Issue' | 'PullRequest' | 'Release'
   }
-  unread: boolean
+  unread?: boolean
   updated_at: string
   url: string
 }

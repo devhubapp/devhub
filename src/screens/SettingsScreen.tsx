@@ -1,28 +1,25 @@
 import React, { PureComponent } from 'react'
-import { Alert } from 'react-native'
+import { View } from 'react-native'
 import {
   NavigationScreenProps,
   NavigationStackScreenOptions,
 } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
-import NotificationCardsContainer from '../containers/NotificationCardsContainer'
+import theme from '../styles/themes/dark'
 
-export default class NotificationsScreen extends PureComponent<
+export default class SettingsScreen extends PureComponent<
   NavigationScreenProps
 > {
   static navigationOptions: NavigationStackScreenOptions = {
-    headerTitle: 'Notifications',
-  }
-
-  handlePress = () => {
-    Alert.alert('Pressed!', 'Not implemented.')
+    headerBackground: theme.base00,
+    headerTitle: 'Settings',
   }
 
   render() {
     return (
       <Screen>
-        <NotificationCardsContainer />
+        <View />
       </Screen>
     )
   }

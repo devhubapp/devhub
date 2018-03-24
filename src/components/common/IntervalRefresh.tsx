@@ -21,7 +21,7 @@ export default class IntervalRefresh extends PureComponent<IProps, IState> {
 
   intervalInstance: number | null = null
 
-  state = {
+  state: IState = {
     currentInterval: 1000,
     updatedTimes: 0,
   }

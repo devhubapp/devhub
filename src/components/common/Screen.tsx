@@ -1,13 +1,14 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
+import { SafeAreaView } from 'react-navigation'
 
 import theme from '../../styles/themes/dark'
 
 let isSplashScreenVisible = true
 
 export interface IProps {
-  children: ReactNode
+  children?: ReactNode
   useSafeArea?: boolean
   style?: ViewStyle
 }
@@ -25,7 +26,7 @@ export default class Screen extends PureComponent<IProps> {
   }
 
   componentDidMount() {
-    if (isSplashScreenVisible) {
+    if (isSplashScreenVisible && SplashScreen) {
       SplashScreen.hide()
       isSplashScreenVisible = false
     }
