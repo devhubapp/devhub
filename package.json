@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "gravatar": "^1.6.0",
+    "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "ramda": "^0.25.0",
     "react": "^16.3.0-alpha.1",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/gravatar": "^1.4.28",
     "@types/jest": "^22.2.0",
+    "@types/lodash": "^4.14.106",
     "@types/ramda": "^0.25.20",
     "@types/react": "^16.0.40",
     "@types/react-native": "^0.52.18",
