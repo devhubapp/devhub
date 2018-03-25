@@ -44,7 +44,7 @@ export interface IBaseTheme {
 
 export interface ITheme extends IBaseTheme, IBase16 {
   cardBackground: string
-  invert: () => string
+  invert: () => ITheme
   isDark: boolean
   name: Theme
   statusBarBackground: string

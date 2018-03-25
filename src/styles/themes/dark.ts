@@ -57,7 +57,7 @@ export default {
   cardBackground,
   statusBarBackground,
   tabBarBackground,
-  invert: () => require('./light').default, // tslint:disable-line
+  invert: () => require('./light').default as ITheme,
   isDark: true,
   name: 'dark',
 } as ITheme

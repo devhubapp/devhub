@@ -4,10 +4,13 @@ import {
   StackNavigatorConfig,
 } from 'react-navigation'
 
-// import Screen from '../components/common/Screen'
+import LoginScreen from '../screens/LoginScreen'
 
 export const routes: NavigationRouteConfigMap = {
-  // SignIn: Screen,
+  Login: {
+    path: 'login',
+    screen: LoginScreen,
+  },
 }
 
 export const options: StackNavigatorConfig = {}

@@ -1,8 +1,8 @@
 export const lightBlue = '#49d3b4'
 export const purple = '#6e5494'
 
-export const brand = purple
-export const brandSecondary = lightBlue
+export const brand = lightBlue
+export const brandSecondary = purple
 
 export const star = '#edb800'
 export const blue = '#497AFC'
