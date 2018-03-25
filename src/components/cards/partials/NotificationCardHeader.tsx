@@ -2,7 +2,7 @@ import { MomentInput } from 'moment'
 import React, { PureComponent } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
-import { IGitHubIcon } from '../../../types/index'
+import { IGitHubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
 import IntervalRefresh from '../../common/IntervalRefresh'

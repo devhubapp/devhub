@@ -3,7 +3,7 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
-import { IGitHubNotification } from '../../types/index'
+import { IGitHubNotification } from '../../types'
 import { getNotificationReasonTextsAndColor } from '../../utils/helpers/github/notifications'
 import {
   getIssueIconAndColor,

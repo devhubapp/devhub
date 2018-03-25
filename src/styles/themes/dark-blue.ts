@@ -1,6 +1,7 @@
 import Platform from '../../libs/platform'
 
 import { ITheme } from '../../types'
+import { fade } from '../../utils/helpers/color'
 import * as base from './base'
 
 export const base00 = '#141c26' // page background
@@ -12,7 +13,7 @@ export const base05 = '#6b7d8c' // muted color
 export const base06 = '#ffffff' // color high contrast
 export const base07 = base.brand // brand 1
 export const base08 = base.brandSecondary // brand 2
-export const base09 = undefined
+export const base09 = fade(base04, 0.05) // image background when loading
 export const base0A = undefined
 export const base0B = undefined
 export const base0C = undefined

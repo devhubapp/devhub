@@ -17,7 +17,7 @@ import {
   IPullRequestEvent,
   IPushEvent,
   IReleaseEvent,
-} from '../../types/index'
+} from '../../types'
 import {
   getEventIconAndColor,
   getEventText,

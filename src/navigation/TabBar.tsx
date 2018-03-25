@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ComponentType } from 'react'
 import { ViewStyle } from 'react-native'
 import {
   TabBarBottom,
@@ -28,8 +28,8 @@ type BaseTabBarProps = (TabBarBottomProps | TabBarTopProps) & {
 }
 
 const BaseTabBar = Platform.selectUsingRealOS({
-  android: TabBarTop as React.ComponentType<BaseTabBarProps>,
-  default: TabBarBottom as React.ComponentType<BaseTabBarProps>,
+  android: TabBarTop as ComponentType<BaseTabBarProps>,
+  default: TabBarBottom as ComponentType<BaseTabBarProps>,
 })
 
 const TabBar = (props: BaseTabBarProps) => (

@@ -12,7 +12,7 @@ export interface IBase16 {
   base06: string | undefined
   base07: string
   base08: string
-  base09: string | undefined
+  base09: string
   base0A: string | undefined
   base0B: string | undefined
   base0C: string | undefined

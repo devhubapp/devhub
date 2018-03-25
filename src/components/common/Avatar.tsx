@@ -1,12 +1,12 @@
 import React, { SFC } from 'react'
 import {
-  Image,
   ImageStyle,
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
 } from 'react-native'
 
+import theme from '../../styles/themes/dark'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import {
   getUserAvatarByAvatarURL,
@@ -17,6 +17,7 @@ import {
   getGithubURLPressHandler,
   getUserPressHandler,
 } from '../cards/partials/rows/helpers'
+import ImageWithLoading from './ImageWithLoading'
 
 export interface IProps {
   avatarURL?: string
@@ -70,8 +71,11 @@ const Avatar: SFC<IProps> = ({
           : username ? getUserPressHandler(username, { isBot }) : undefined
       }
     >
-      <Image
+      <ImageWithLoading
         {...props}
+        backgroundColorFailed="#FFFFFF"
+        backgroundColorLoaded="#FFFFFF"
+        backgroundColorLoading={theme.base09}
         source={{ uri }}
         style={[
           styles.image,

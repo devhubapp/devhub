@@ -1,7 +1,7 @@
 import { Platform } from 'react-native'
 
 import { ITheme } from '../../types'
-import { lighten } from '../../utils/helpers/color'
+import { fade, lighten } from '../../utils/helpers/color'
 import { mutedOpacity } from '../variables'
 import * as base from './base'
 
@@ -14,7 +14,7 @@ export const base05 = lighten('#222222', mutedOpacity).hex // muted color
 export const base06 = '#000000' // color high contrast
 export const base07 = base.brand // brand 1
 export const base08 = base.brandSecondary // brand 2
-export const base09 = undefined
+export const base09 = fade(base04, 0.05) // image background when loading
 export const base0A = undefined
 export const base0B = undefined
 export const base0C = undefined
