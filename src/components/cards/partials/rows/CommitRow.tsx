@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Octicons'
 
 import { tryGetUsernameFromGitHubEmail } from '../../../../utils/helpers/github/shared'
 import {
+  getCommentIdFromUrl,
   getGitHubSearchURL,
   getGitHubURLForUser,
 } from '../../../../utils/helpers/github/url'
@@ -18,6 +19,7 @@ export interface IProps {
   authorName?: string
   authorUsername?: string
   isRead: boolean
+  latestCommentUrl?: string
   message: string
   url: string
 }
@@ -29,6 +31,7 @@ const CommitRow: SFC<IProps> = ({
   authorName,
   authorUsername: _authorUsername,
   isRead,
+  latestCommentUrl,
   message: _message,
   url,
 }) => {
@@ -65,7 +68,10 @@ const CommitRow: SFC<IProps> = ({
 
       <View style={cardStyles.rightColumn}>
         <TouchableOpacity
-          onPress={getGithubURLPressHandler(url)}
+          onPress={getGithubURLPressHandler(url, {
+            commentId:
+              latestCommentUrl && getCommentIdFromUrl(latestCommentUrl),
+          })}
           style={rowStyles.mainContentContainer}
         >
           <Text

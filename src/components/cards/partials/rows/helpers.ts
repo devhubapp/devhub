@@ -1,16 +1,13 @@
 import R from 'ramda'
 import SafariView from 'react-native-safari-view'
 
-import { fixURL } from '../../../../utils/helpers/github/url'
+import { fixURL, IURLOptions } from '../../../../utils/helpers/github/url'
 
 const baseURL = 'https://github.com'
 
 export const getGithubURLPressHandler = R.memoize(
-  (
-    url?: string,
-    { issueOrPullRequestNumber }: { issueOrPullRequestNumber?: number } = {},
-  ) => {
-    const fixedURL = fixURL(url, { issueOrPullRequestNumber })
+  (url?: string, { commentId, issueOrPullRequestNumber }: IURLOptions = {}) => {
+    const fixedURL = fixURL(url, { commentId, issueOrPullRequestNumber })
     return fixedURL ? () => SafariView.show({ url: fixedURL }) : undefined
   },
 ) as (

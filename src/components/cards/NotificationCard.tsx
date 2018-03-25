@@ -123,10 +123,11 @@ export default class NotificationCard extends PureComponent<IProps> {
 
         {Boolean(commit) && (
           <CommitRow
-            key={`commit-row-${commit!.latest_comment_url}`}
+            key={`commit-row-${commit!.url}`}
             isRead={isRead}
+            latestCommentUrl={commit!.latest_comment_url}
             message={commit!.title}
-            url={commit!.latest_comment_url || commit!.url}
+            url={commit!.url}
           />
         )}
 

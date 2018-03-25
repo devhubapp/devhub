@@ -1,4 +1,10 @@
+import Platform from '../../../libs/platform'
 import { IGitHubRepo } from '../../../types'
+
+export interface IURLOptions {
+  commentId?: number
+  issueOrPullRequestNumber?: number
+}
 
 export const baseURL = 'https://github.com'
 
@@ -66,7 +72,7 @@ export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
 
 export function githubHTMLUrlFromAPIUrl(
   apiURL: string,
-  { issueOrPullRequestNumber }: { issueOrPullRequestNumber?: number } = {},
+  { commentId, issueOrPullRequestNumber }: IURLOptions = {},
 ): string {
   if (!apiURL) return ''
 
@@ -83,27 +89,47 @@ export function githubHTMLUrlFromAPIUrl(
 
     if (restOfURL2[0]) {
       switch (type2) {
-        case 'commits':
+        case 'commits': {
+          if (commentId) {
+            const elementId = Platform.selectUsingRealOS({
+              default: `comment-${commentId}`,
+              web: `commitcomment-${commentId}`,
+            })
+
+            return `${baseURL}/${repoFullName}/commit/${
+              restOfURL2[0]
+            }#${elementId}`
+          }
+
           return `${baseURL}/${repoFullName}/commit/${restOfURL2.join('/')}`
+        }
 
         case 'issues':
-          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
-            return issueOrPullRequestNumber
-              ? `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}/comments#issuecomment-${
-                  restOfURL2[1]
-                }`
-              : ''
+          if (
+            issueOrPullRequestNumber &&
+            (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
+          ) {
+            const elementId = Platform.selectUsingRealOS({
+              default: `comment-${commentId || restOfURL2[1]}`,
+              web: `issuecomment-${commentId || restOfURL2[1]}`,
+            })
+
+            return `${baseURL}/${repoFullName}/issues/${issueOrPullRequestNumber}#${elementId}`
           }
 
           return `${baseURL}/${repoFullName}/issues/${restOfURL2.join('/')}`
 
         case 'pulls':
-          if (restOfURL2[0] === 'comments' && restOfURL2[1]) {
-            return issueOrPullRequestNumber
-              ? `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}/comments#discussion_r${
-                  restOfURL2[1]
-                }`
-              : ''
+          if (
+            issueOrPullRequestNumber &&
+            (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
+          ) {
+            const elementId = Platform.selectUsingRealOS({
+              default: `comment-${commentId || restOfURL2[1]}`,
+              web: `discussion_r${commentId || restOfURL2[1]}`,
+            })
+
+            return `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}#${elementId}`
           }
 
           return `${baseURL}/${repoFullName}/pull/${restOfURL2.join('/')}`
@@ -122,10 +148,7 @@ export function githubHTMLUrlFromAPIUrl(
   return `${baseURL}/${restOfURL}`
 }
 
-export function fixURL(
-  url?: string,
-  { issueOrPullRequestNumber }: { issueOrPullRequestNumber?: number } = {},
-) {
+export function fixURL(url?: string, options: IURLOptions = {}) {
   if (!url) return
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
@@ -133,7 +156,7 @@ export function fixURL(
     url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
   uri =
     uri.indexOf('api.github.com') >= 0
-      ? githubHTMLUrlFromAPIUrl(uri, { issueOrPullRequestNumber })
+      ? githubHTMLUrlFromAPIUrl(uri, options)
       : uri
 
   return uri
