@@ -1,10 +1,10 @@
 import { ComponentClass } from 'react'
-import { ViewProperties, ViewStyle } from 'react-native'
+import { StyleProp, ViewProperties, ViewStyle } from 'react-native'
 import 'react-navigation'
 
 declare module 'react-navigation' {
   export interface TabBarTopProps {
-    indicatorStyle: ViewStyle
+    indicatorStyle: StyleProp<ViewStyle>
   }
 
   export type SafeAreaViewForceInsetValue = 'always' | 'never'

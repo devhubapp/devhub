@@ -1,9 +1,9 @@
 import moment, { MomentInput } from 'moment'
-import R from 'ramda'
+import { toUpper } from 'ramda'
 import { PixelRatio } from 'react-native'
 
 export function capitalize(str: string) {
-  return str.toLowerCase().replace(/^.| ./g, R.toUpper)
+  return str.toLowerCase().replace(/^.| ./g, toUpper)
 }
 
 export function getDateSmallText(date: MomentInput) {

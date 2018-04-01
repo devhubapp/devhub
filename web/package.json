@@ -1,0 +1,33 @@
+{
+  "name": "devhub-web",
+  "version": "0.10.0",
+  "private": true,
+  "scripts": {
+    "build": "react-app-rewired build --scripts-version react-scripts-ts",
+    "deploy": "gh-pages -d build",
+    "eject": "react-app-rewired eject --scripts-version react-scripts-ts",
+    "predeploy": "PUBLIC_URL=https://brunolemos.github.io/devhub/ npm run build",
+    "prepare": "patch-package",
+    "serve": "serve build",
+    "start": "react-app-rewired start --scripts-version react-scripts-ts",
+    "test": "react-app-rewired test --scripts-version react-scripts-ts --env=jsdomreact-scripts-ts test --env=jsdom"
+  },
+  "dependencies": {
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
+    "react-native-web": "^0.5.3",
+    "react-scripts-ts": "2.14.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "@types/node": "^9.6.1",
+    "@types/react": "^16.1.0",
+    "@types/react-dom": "^16.0.4",
+    "gh-pages": "^1.1.0",
+    "patch-package": "^5.1.1",
+    "postinstall-prepare": "^1.0.1",
+    "react-app-rewired": "^1.5.0",
+    "serve": "^6.5.3",
+    "typescript": "^2.8.1"
+  }
+}

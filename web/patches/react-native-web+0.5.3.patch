@@ -1,0 +1,32 @@
+patch-package
+--- a/node_modules/react-native-web/dist/exports/Linking/index.js
++++ b/node_modules/react-native-web/dist/exports/Linking/index.js
+@@ -35,11 +35,7 @@ var Linking = {
+ };
+ 
+ var open = function open(url) {
+-  var anchor = document.createElement('a');
+-  anchor.target = '_blank'; // :(
+-  anchor.rel = 'noopener';
+-  anchor.href = url;
+-  anchor.click();
++  window.open(url, '_blank');
+ };
+ 
+ exports.default = Linking;
+\ No newline at end of file
+--- a/node_modules/react-native-web/src/exports/Linking/index.js
++++ b/node_modules/react-native-web/src/exports/Linking/index.js
+@@ -33,11 +33,7 @@ const Linking = {
+ };
+ 
+ const open = url => {
+-  const anchor = document.createElement('a');
+-  anchor.target = '_blank'; // :(
+-  anchor.rel = 'noopener';
+-  anchor.href = url;
+-  anchor.click();
++  window.open(url, '_blank');
+ };
+ 
+ export default Linking;

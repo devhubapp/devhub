@@ -18,7 +18,7 @@ export interface IProps {
 }
 
 export default class RepositoryListRow extends PureComponent<IProps> {
-  renderItem({ item: repo }: { item: IGitHubRepo }) {
+  renderItem = ({ item: repo }: { item: IGitHubRepo }) => {
     if (!(repo && repo.id)) return null
 
     const repoFullName = getRepoFullNameFromObject(repo)

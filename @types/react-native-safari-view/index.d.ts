@@ -12,7 +12,7 @@ declare module 'react-native-safari-view' {
 
   export function show(options: ISafaryOptions): void
   export function dismiss(): void
-  export function isAvailable(): boolean
+  export function isAvailable(): Promise<boolean>
   export function addEventListener(
     event: Event,
     listener: () => any,

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Alert } from 'react-native'
+// import { Alert } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import { NavigationScreenConfig, NavigationScreenProps } from 'react-navigation'
 import HeaderButtons from 'react-navigation-header-buttons'
@@ -55,7 +55,7 @@ export default class FeedScreen extends PureComponent<NavigationScreenProps> {
   }
 
   handlePress = () => {
-    Alert.alert('Pressed!', 'Not implemented.')
+    // Alert.alert('Pressed!', 'Not implemented.')
   }
 
   render() {

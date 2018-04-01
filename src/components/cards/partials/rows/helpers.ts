@@ -1,18 +1,18 @@
-import R from 'ramda'
-import SafariView from 'react-native-safari-view'
+import { memoize } from 'ramda'
 
+import Browser from '../../../../libs/browser'
 import { fixURL, IURLOptions } from '../../../../utils/helpers/github/url'
 
 const baseURL = 'https://github.com'
 
-export const getGithubURLPressHandler = R.memoize(
+export const getGithubURLPressHandler = memoize(
   (url?: string, { commentId, issueOrPullRequestNumber }: IURLOptions = {}) => {
     const fixedURL = fixURL(url, { commentId, issueOrPullRequestNumber })
-    return fixedURL ? () => SafariView.show({ url: fixedURL }) : undefined
+    return fixedURL ? () => Browser.openURL(fixedURL) : undefined
   },
 )
 
-export const getBranchPressHandler = R.memoize(
+export const getBranchPressHandler = memoize(
   (ownerName?: string, repositoryName?: string, branch?: string) =>
     ownerName && repositoryName && branch
       ? getGithubURLPressHandler(
@@ -21,14 +21,14 @@ export const getBranchPressHandler = R.memoize(
       : undefined,
 )
 
-export const getRepositoryPressHandler = R.memoize(
+export const getRepositoryPressHandler = memoize(
   (ownerName?: string, repositoryName?: string) =>
     ownerName && repositoryName
       ? getGithubURLPressHandler(`${baseURL}/${ownerName}/${repositoryName}`)
       : undefined,
 )
 
-export const getUserPressHandler = R.memoize(
+export const getUserPressHandler = memoize(
   (username: string, { isBot }: { isBot?: boolean } = {}) =>
     username
       ? getGithubURLPressHandler(

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Alert } from 'react-native'
+// import { Alert } from 'react-native'
 import {
   NavigationScreenProps,
   NavigationStackScreenOptions,
@@ -16,7 +16,7 @@ export default class NotificationsScreen extends PureComponent<
   }
 
   handlePress = () => {
-    Alert.alert('Pressed!', 'Not implemented.')
+    // Alert.alert('Pressed!', 'Not implemented.')
   }
 
   render() {

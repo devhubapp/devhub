@@ -4,6 +4,7 @@
   "jsRules": {},
   "rules": {
     "curly": false,
+    "function-name": false,
     "import-name": false,
     "interface-name": false,
     "jsx-boolean-value": false,

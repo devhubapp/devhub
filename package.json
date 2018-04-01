@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "version": "0.0.1",
+  "version": "0.10.0",
   "scripts": {
     "format": "prettier --write '{.,__tests__,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
@@ -9,7 +9,13 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
-    "xcode": "open ios/devhub.xcodeproj"
+    "web": "npm run web:start",
+    "web:build": "pushd web; npm run build; popd;",
+    "web:deploy": "pushd web; npm run deploy; popd;",
+    "web:serve": "pushd web; npm run serve; popd;",
+    "web:start": "pushd web; npm run start; popd;",
+    "web:test": "pushd web; npm run test; popd;",
+    "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
     "gravatar": "^1.6.0",

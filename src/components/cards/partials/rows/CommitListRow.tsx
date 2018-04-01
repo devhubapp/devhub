@@ -13,7 +13,7 @@ export interface IProps {
 }
 
 export default class CommitListRow extends PureComponent<IProps> {
-  renderItem({ item: commit }: { item: IGitHubCommit }) {
+  renderItem = ({ item: commit }: { item: IGitHubCommit }) => {
     if (!(commit && commit.sha && commit.message)) return null
 
     return (

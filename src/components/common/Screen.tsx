@@ -3,6 +3,7 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { SafeAreaView } from 'react-navigation'
 
+import Platform from '../../../src/libs/platform'
 import theme from '../../styles/themes/dark'
 
 let isSplashScreenVisible = true
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
 
 export default class Screen extends PureComponent<IProps> {
   static defaultProps = {
-    useSafeArea: true,
+    useSafeArea: Platform.OS !== 'web',
   }
 
   componentDidMount() {
@@ -35,7 +36,7 @@ export default class Screen extends PureComponent<IProps> {
   render() {
     const { useSafeArea, ...props } = this.props
 
-    if (useSafeArea)
+    if (useSafeArea && Platform.OS !== 'web')
       return <SafeAreaView {...props} style={[styles.container, props.style]} />
 
     return <View {...props} style={[styles.container, props.style]} />

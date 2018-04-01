@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
-import { FlatList } from 'react-native'
 
+import { FlatList } from '../../libs/lists'
 import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import { IGitHubEvent } from '../../types'

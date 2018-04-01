@@ -33,9 +33,12 @@ export interface IState {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
+    alignSelf: 'center',
     flex: 1,
     justifyContent: 'center',
+    maxWidth: 400,
     padding: contentPadding,
+    width: '100%',
   } as ViewStyle,
 
   header: {
