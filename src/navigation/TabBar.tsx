@@ -1,5 +1,4 @@
 import React, { ComponentType } from 'react'
-import { ViewStyle } from 'react-native'
 import {
   TabBarBottom,
   TabBarBottomProps,
@@ -23,9 +22,7 @@ interface IWithThemeProps {
 const WithTheme = ({ children }: IWithThemeProps) =>
   children({ theme: darkTheme })
 
-type BaseTabBarProps = (TabBarBottomProps | TabBarTopProps) & {
-  indicatorStyle: ViewStyle
-}
+type BaseTabBarProps = TabBarBottomProps | TabBarTopProps
 
 const BaseTabBar = Platform.selectUsingRealOS({
   android: TabBarTop as ComponentType<BaseTabBarProps>,

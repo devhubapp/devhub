@@ -10,10 +10,7 @@ export const getGithubURLPressHandler = R.memoize(
     const fixedURL = fixURL(url, { commentId, issueOrPullRequestNumber })
     return fixedURL ? () => SafariView.show({ url: fixedURL }) : undefined
   },
-) as (
-  url?: string,
-  options?: { issueOrPullRequestNumber?: number },
-) => () => void | undefined
+)
 
 export const getBranchPressHandler = R.memoize(
   (ownerName?: string, repositoryName?: string, branch?: string) =>
@@ -22,18 +19,14 @@ export const getBranchPressHandler = R.memoize(
           `${baseURL}/${ownerName}/${repositoryName}/tree/${branch}`,
         )
       : undefined,
-) as (
-  ownerName?: string,
-  repositoryName?: string,
-  branch?: string,
-) => () => void | undefined
+)
 
 export const getRepositoryPressHandler = R.memoize(
   (ownerName?: string, repositoryName?: string) =>
     ownerName && repositoryName
       ? getGithubURLPressHandler(`${baseURL}/${ownerName}/${repositoryName}`)
       : undefined,
-) as (owner?: string, repositoryName?: string) => () => void | undefined
+)
 
 export const getUserPressHandler = R.memoize(
   (username: string, { isBot }: { isBot?: boolean } = {}) =>
@@ -42,4 +35,4 @@ export const getUserPressHandler = R.memoize(
           `${baseURL}/${isBot ? 'apps/' : ''}${username}`,
         )
       : undefined,
-) as (username: string, options?: { isBot?: boolean }) => () => void | undefined
+)

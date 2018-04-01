@@ -11,7 +11,7 @@ import theme from '../styles/themes/dark'
 import { contentPadding } from '../styles/variables'
 
 export default class FeedScreen extends PureComponent<NavigationScreenProps> {
-  static navigationOptions: NavigationScreenConfig<any> = ({ navigation }) => {
+  static navigationOptions: NavigationScreenConfig<void> = ({ navigation }) => {
     const params = navigation.state.params || {}
 
     return {

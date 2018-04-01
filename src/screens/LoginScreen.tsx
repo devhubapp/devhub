@@ -13,12 +13,13 @@ import {
   NavigationStackScreenOptions,
 } from 'react-navigation'
 
-import logo from '../../assets/logo.png'
-import pkg from '../../package.json'
 import GitHubLoginButton from '../components/buttons/GitHubLoginButton'
 import Screen from '../components/common/Screen'
 import theme from '../styles/themes/dark'
 import { contentPadding, radius } from '../styles/variables'
+
+const logo = require('../../assets/logo.png') // tslint:disable-line
+const pkg = require('../../package.json') // tslint:disable-line
 
 export interface IProps extends NavigationScreenProps {
   error: string

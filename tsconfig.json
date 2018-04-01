@@ -9,6 +9,7 @@
     ],
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
+    "skipLibCheck": false,                    /* Skip type checking of all declaration files. */
     "jsx": "react-native",                    /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
     "sourceMap": true,                        /* Generates corresponding '.map' file. */

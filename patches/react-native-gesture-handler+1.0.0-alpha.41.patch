@@ -1,0 +1,21 @@
+patch-package
+--- a/node_modules/react-native-gesture-handler/react-native-gesture-handler.d.ts
++++ b/node_modules/react-native-gesture-handler/react-native-gesture-handler.d.ts
+@@ -165,8 +165,6 @@ export interface GestureHandlerProperties {
+         vertical?: number;
+         horizontal?: number;
+       };
+-  onGestureEvent?: (event: GestureHandlerGestureEvent) => void;
+-  onHandlerStateChange?: (event: GestureHandlerStateChangeEvent) => void;
+ }
+ 
+ export interface NativeViewGestureHandlerProperties
+@@ -191,6 +189,8 @@ export interface LongPressGestureHandlerProperties
+   extends GestureHandlerProperties {
+   minDurationMs?: number;
+   maxDist?: number;
++  onGestureEvent?: (event: GestureHandlerGestureEvent) => void;
++  onHandlerStateChange?: (event: GestureHandlerStateChangeEvent) => void;
+ }
+ 
+ export interface PanGestureHandlerProperties extends GestureHandlerProperties {

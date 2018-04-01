@@ -5,6 +5,7 @@
   "rules": {
     "curly": false,
     "import-name": false,
+    "interface-name": false,
     "jsx-boolean-value": false,
     "jsx-no-multiline-js": false,
     "member-access": false,
