@@ -15,7 +15,7 @@
     "web:serve": "pushd web; npm run serve; popd;",
     "web:start": "pushd web; npm run start; popd;",
     "web:test": "pushd web; npm run test; popd;",
-    "xcode": "open ios/devhub.xcworkspace"
+    "xcode": "open ios/devhub.xcodeproj"
   },
   "dependencies": {
     "gravatar": "^1.6.0",
