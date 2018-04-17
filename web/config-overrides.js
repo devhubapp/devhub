@@ -9,7 +9,6 @@ const appIncludes = [
   resolveApp('src'),
   resolveApp('../src'),
   resolveApp('../node_modules/react-navigation/src'),
-  resolveApp('../node_modules/react-navigation-header-buttons'),
   resolveApp('../node_modules/react-native-web-lists/src'),
   resolveApp('../node_modules/react-native-vector-icons/lib'),
   resolveApp('../node_modules/react-native-tab-view/src'),

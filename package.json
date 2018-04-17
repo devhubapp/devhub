@@ -30,7 +30,6 @@
     "react-native-splash-screen": "^3.0.6",
     "react-native-vector-icons": "^4.4.3",
     "react-navigation": "^1.5.9",
-    "react-navigation-header-buttons": "^0.0.5",
     "warna": "^0.2.4"
   },
   "devDependencies": {

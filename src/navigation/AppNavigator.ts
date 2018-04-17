@@ -19,7 +19,7 @@ export const routes: NavigationRouteConfigMap = {
 }
 
 export const options: SwitchNavigatorConfig = {
-  initialRouteName: 'Auth',
+  initialRouteName: 'Main',
 }
 
 export default SwitchNavigator(routes, options)

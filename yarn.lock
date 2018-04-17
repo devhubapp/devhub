@@ -5082,10 +5082,6 @@ react-native-linear-gradient@^2.4.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-platform-touchable@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-platform-touchable/-/react-native-platform-touchable-1.1.1.tgz#fde4acc65eea585d28b164d0c3716a42129a68e4"
-
 react-native-safari-view@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.1.0.tgz#1e0cd12c62bce79bc1759c7e281646b08b61c959"
@@ -5185,12 +5181,6 @@ react-native@0.54.4:
     xcode "^0.9.1"
     xmldoc "^0.4.0"
     yargs "^9.0.0"
-
-react-navigation-header-buttons@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/react-navigation-header-buttons/-/react-navigation-header-buttons-0.0.5.tgz#b88a9c6e73ba9dea93bff1fc76ebc1c71b46caa2"
-  dependencies:
-    react-native-platform-touchable "^1.1.1"
 
 react-navigation@^1.5.9:
   version "1.5.9"

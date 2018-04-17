@@ -1,0 +1,30 @@
+import React, { PureComponent, ReactNode } from 'react'
+import { StyleSheet, View, ViewProperties, ViewStyle } from 'react-native'
+
+export interface IProps extends ViewProperties {
+  children?: ReactNode
+  maxWidth?: number
+  style?: ViewStyle
+}
+
+const styles = StyleSheet.create({
+  container: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    height: 48,
+  } as ViewStyle,
+
+  buttonContainer: {} as ViewStyle,
+})
+
+export default class ColumnHeader extends PureComponent<IProps> {
+  render() {
+    const { children, style, ...props } = this.props
+
+    return (
+      <View {...props} style={[styles.container, style]}>
+        {children}
+      </View>
+    )
+  }
+}

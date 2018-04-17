@@ -34,11 +34,11 @@ export default class Screen extends PureComponent<IProps> {
   }
 
   render() {
-    const { useSafeArea, ...props } = this.props
+    const { useSafeArea, style, ...props } = this.props
 
     if (useSafeArea && Platform.OS !== 'web')
-      return <SafeAreaView {...props} style={[styles.container, props.style]} />
+      return <SafeAreaView {...props} style={[styles.container, style]} />
 
-    return <View {...props} style={[styles.container, props.style]} />
+    return <View {...props} style={[styles.container, style]} />
   }
 }

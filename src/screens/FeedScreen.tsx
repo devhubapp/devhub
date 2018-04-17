@@ -1,49 +1,20 @@
 import React, { PureComponent } from 'react'
-// import { Alert } from 'react-native'
-import Octicons from 'react-native-vector-icons/Octicons'
-import { NavigationScreenConfig, NavigationScreenProps } from 'react-navigation'
-import HeaderButtons from 'react-navigation-header-buttons'
+import {
+  NavigationScreenConfig,
+  NavigationScreenProps,
+  NavigationStackScreenOptions,
+} from 'react-navigation'
 
-import Avatar from '../components/common/Avatar'
+import Columns from '../components/columns/Columns'
+import EventColumn from '../components/columns/EventColumn'
 import Screen from '../components/common/Screen'
-import EventCardsContainer from '../containers/EventCardsContainer'
-import theme from '../styles/themes/dark'
-import { contentPadding } from '../styles/variables'
 
 export default class FeedScreen extends PureComponent<NavigationScreenProps> {
-  static navigationOptions: NavigationScreenConfig<void> = ({ navigation }) => {
-    const params = navigation.state.params || {}
-
-    return {
-      headerLeft: (
-        <HeaderButtons
-          IconComponent={Octicons}
-          color={theme.base04}
-          iconSize={24}
-        >
-          <HeaderButtons.Item
-            IconElement={<Avatar linkURL="" size={24} username="brunolemos" />}
-            buttonWrapperStyle={{ marginLeft: contentPadding }}
-            title="select"
-          />
-        </HeaderButtons>
-      ),
-      headerRight: (
-        <HeaderButtons
-          IconComponent={Octicons}
-          color={theme.base04}
-          iconSize={24}
-        >
-          <HeaderButtons.Item
-            title="Settings"
-            iconName="settings"
-            onPress={params.handlePress}
-          />
-        </HeaderButtons>
-      ),
-      headerTitle: 'brunolemos',
-      title: 'Feed',
-    }
+  static navigationOptions: NavigationScreenConfig<
+    NavigationStackScreenOptions
+  > = {
+    header: null,
+    title: 'Feed',
   }
 
   componentWillMount() {
@@ -61,7 +32,14 @@ export default class FeedScreen extends PureComponent<NavigationScreenProps> {
   render() {
     return (
       <Screen>
-        <EventCardsContainer />
+        <Columns>
+          <EventColumn />
+          <EventColumn />
+          <EventColumn />
+          <EventColumn />
+          <EventColumn />
+          <EventColumn />
+        </Columns>
       </Screen>
     )
   }
