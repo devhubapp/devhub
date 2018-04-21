@@ -28,7 +28,7 @@
     "react-native-linear-gradient": "^2.4.0",
     "react-native-safari-view": "^2.1.0",
     "react-native-splash-screen": "^3.0.6",
-    "react-native-vector-icons": "^4.6.0",
+    "react-native-vector-icons": "4.5.0",
     "react-navigation": "^1.5.11",
     "warna": "^0.2.4"
   },
