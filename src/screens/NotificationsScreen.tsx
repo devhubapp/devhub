@@ -21,10 +21,6 @@ export default class NotificationsScreen extends PureComponent<
         <Columns>
           <NotificationColumn />
           <NotificationColumn />
-          <NotificationColumn />
-          <NotificationColumn />
-          <NotificationColumn />
-          <NotificationColumn />
         </Columns>
       </Screen>
     )

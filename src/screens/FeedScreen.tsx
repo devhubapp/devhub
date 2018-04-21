@@ -35,10 +35,6 @@ export default class FeedScreen extends PureComponent<NavigationScreenProps> {
         <Columns>
           <EventColumn />
           <EventColumn />
-          <EventColumn />
-          <EventColumn />
-          <EventColumn />
-          <EventColumn />
         </Columns>
       </Screen>
     )
