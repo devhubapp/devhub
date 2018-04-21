@@ -33,6 +33,7 @@ export default class Columns extends PureComponent<IProps> {
       <ScrollView
         contentContainerStyle={[styles.contentContainer, style]}
         horizontal
+        pagingEnabled
         {...props}
         style={[styles.container, style]}
       >
