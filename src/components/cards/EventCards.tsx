@@ -5,20 +5,29 @@ import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import { IGitHubEvent } from '../../types'
 import TransparentTextOverlay from '../common/TransparentTextOverlay'
+import EventCard from './EventCard'
 import CardItemSeparator from './partials/CardItemSeparator'
 import SwipeableEventCard from './SwipeableEventCard'
 
-export interface IProps {
+export interface EventCardsProperties {
   events: IGitHubEvent[]
+  swipeable?: boolean
 }
 
-class EventCards extends PureComponent<IProps> {
+export interface EventCardsState {}
+
+export default class EventCards extends PureComponent<
+  EventCardsProperties,
+  EventCardsState
+> {
   keyExtractor(event: IGitHubEvent) {
     return `${event.id}`
   }
 
-  renderItem({ item: event }: { item: IGitHubEvent }) {
-    return <SwipeableEventCard key={`event-card-${event.id}`} event={event} />
+  renderItem = ({ item: event }: { item: IGitHubEvent }) => {
+    if (this.props.swipeable)
+      return <SwipeableEventCard key={`event-card-${event.id}`} event={event} />
+    return <EventCard key={`event-card-${event.id}`} event={event} />
   }
 
   render() {
@@ -40,5 +49,3 @@ class EventCards extends PureComponent<IProps> {
     )
   }
 }
-
-export default EventCards

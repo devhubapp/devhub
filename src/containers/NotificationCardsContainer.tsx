@@ -2,25 +2,48 @@ import _ from 'lodash'
 import React, { PureComponent } from 'react'
 // import { Alert } from 'react-native'
 
-import NotificationCards from '../components/cards/NotificationCards'
-import { IGitHubNotification } from '../types'
+import NotificationCards, {
+  NotificationCardsProperties,
+} from '../components/cards/NotificationCards'
+import { Omit } from '../types'
 
-export interface IProps {}
+export type NotificationCardsContainerProperties = Omit<
+  NotificationCardsProperties,
+  'notifications'
+> & {
+  notifications?: NotificationCardsProperties['notifications']
+}
 
-export interface IState {
-  notifications: IGitHubNotification[]
+export interface NotificationCardsContainerState {
+  notifications: NotificationCardsProperties['notifications']
 }
 
 export default class NotificationCardsContainer extends PureComponent<
-  IProps,
-  IState
+  NotificationCardsContainerProperties,
+  NotificationCardsContainerState
 > {
-  state: IState = {
-    notifications: [],
+  static getDerivedStateFromProps(
+    nextProps: NotificationCardsContainerProperties,
+    prevState: NotificationCardsContainerState,
+  ) {
+    if (
+      nextProps.notifications &&
+      nextProps.notifications !== prevState.notifications
+    ) {
+      return {
+        notifications: nextProps.notifications,
+      }
+    }
+
+    return null
+  }
+
+  state: NotificationCardsContainerState = {
+    notifications: this.props.notifications || [],
   }
 
   componentDidMount() {
-    this.fetchData()
+    if (!this.state.notifications.length) this.fetchData()
   }
 
   fetchData = async () => {
@@ -43,6 +66,6 @@ export default class NotificationCardsContainer extends PureComponent<
   render() {
     const { notifications } = this.state
 
-    return <NotificationCards notifications={notifications} />
+    return <NotificationCards {...this.props} notifications={notifications} />
   }
 }

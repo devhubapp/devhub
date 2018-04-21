@@ -19,8 +19,7 @@ export default class NotificationsScreen extends PureComponent<
     return (
       <Screen>
         <Columns>
-          <NotificationColumn />
-          <NotificationColumn />
+          <NotificationColumn swipeable />
         </Columns>
       </Screen>
     )

@@ -2,22 +2,45 @@ import _ from 'lodash'
 import React, { PureComponent } from 'react'
 // import { Alert } from 'react-native'
 
-import EventCards from '../components/cards/EventCards'
-import { IGitHubEvent } from '../types'
+import EventCards, {
+  EventCardsProperties,
+} from '../components/cards/EventCards'
+import { Omit } from '../types'
 
-export interface IProps {}
-
-export interface IState {
-  events: IGitHubEvent[]
+export type EventCardsContainerProperties = Omit<
+  EventCardsProperties,
+  'events'
+> & {
+  events?: EventCardsProperties['events']
 }
 
-export default class EventCardsContainer extends PureComponent<IProps, IState> {
-  state: IState = {
-    events: [],
+export interface EventCardsContainerState {
+  events: EventCardsProperties['events']
+}
+
+export default class EventCardsContainer extends PureComponent<
+  EventCardsContainerProperties,
+  EventCardsContainerState
+> {
+  static getDerivedStateFromProps(
+    nextProps: EventCardsContainerProperties,
+    prevState: EventCardsContainerState,
+  ) {
+    if (nextProps.events && nextProps.events !== prevState.events) {
+      return {
+        events: nextProps.events,
+      }
+    }
+
+    return null
+  }
+
+  state: EventCardsContainerState = {
+    events: this.props.events || [],
   }
 
   componentDidMount() {
-    this.fetchData()
+    if (!this.state.events.length) this.fetchData()
   }
 
   fetchData = async () => {
@@ -38,6 +61,6 @@ export default class EventCardsContainer extends PureComponent<IProps, IState> {
   render() {
     const { events } = this.state
 
-    return <EventCards events={events} />
+    return <EventCards {...this.props} events={events} />
   }
 }

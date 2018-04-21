@@ -1,14 +1,23 @@
 import React, { PureComponent } from 'react'
 
 import FlexSeparator from '../../components/common/FlexSeparator'
-import EventCardsContainer from '../../containers/EventCardsContainer'
+import EventCardsContainer, {
+  EventCardsContainerProperties,
+} from '../../containers/EventCardsContainer'
 import theme from '../../styles/themes/dark'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
 import ColumnHeader from './ColumnHeader'
 import ColumnHeaderItem from './ColumnHeaderItem'
 
-export default class EventColumn extends PureComponent {
+export interface EventColumnProperties extends EventCardsContainerProperties {}
+
+export interface EventColumnState {}
+
+export default class EventColumn extends PureComponent<
+  EventColumnProperties,
+  EventColumnState
+> {
   handlePress = () => {
     alert('Not implemented')
   }
@@ -32,8 +41,10 @@ export default class EventColumn extends PureComponent {
             onPress={this.handlePress}
           />
         </ColumnHeader>
+
         <CardItemSeparator />
-        <EventCardsContainer />
+
+        <EventCardsContainer {...this.props} />
       </Column>
     )
   }

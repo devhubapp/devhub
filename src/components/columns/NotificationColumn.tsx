@@ -1,14 +1,24 @@
 import React, { PureComponent } from 'react'
 
 import FlexSeparator from '../../components/common/FlexSeparator'
-import NotificationCardsContainer from '../../containers/NotificationCardsContainer'
+import NotificationCardsContainer, {
+  NotificationCardsContainerProperties,
+} from '../../containers/NotificationCardsContainer'
 import theme from '../../styles/themes/dark'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
 import ColumnHeader from './ColumnHeader'
 import ColumnHeaderItem from './ColumnHeaderItem'
 
-export default class NotificationColumn extends PureComponent {
+export interface NotificationColumnProperties
+  extends NotificationCardsContainerProperties {}
+
+export interface NotificationColumnState {}
+
+export default class NotificationColumn extends PureComponent<
+  NotificationColumnProperties,
+  NotificationColumnState
+> {
   handlePress = () => {
     alert('Not implemented')
   }
@@ -32,8 +42,10 @@ export default class NotificationColumn extends PureComponent {
             onPress={this.handlePress}
           />
         </ColumnHeader>
+
         <CardItemSeparator />
-        <NotificationCardsContainer />
+
+        <NotificationCardsContainer {...this.props} />
       </Column>
     )
   }

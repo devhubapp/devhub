@@ -39,11 +39,11 @@ import RepositoryRow from './partials/rows/RepositoryRow'
 import UserListRow from './partials/rows/UserListRow'
 import WikiPageListRow from './partials/rows/WikiPageListRow'
 
-export interface IProps {
+export interface EventCardProperties {
   event: IGitHubEvent
 }
 
-export interface IState {}
+export interface EventCardState {}
 
 const styles = StyleSheet.create({
   container: {
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class EventCard extends PureComponent<IProps> {
+export default class EventCard extends PureComponent<EventCardProperties> {
   render() {
     const { event } = this.props
     if (!event) return null
