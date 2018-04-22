@@ -5,13 +5,9 @@ import React, { PureComponent } from 'react'
 import EventCards, {
   EventCardsProperties,
 } from '../components/cards/EventCards'
-import { Omit } from '../types'
 
-export type EventCardsContainerProperties = Omit<
-  EventCardsProperties,
-  'events'
-> & {
-  events?: EventCardsProperties['events']
+export type EventCardsContainerProperties = {
+  [key in keyof EventCardsProperties]?: EventCardsProperties[key]
 }
 
 export interface EventCardsContainerState {

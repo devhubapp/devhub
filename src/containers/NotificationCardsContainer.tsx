@@ -5,13 +5,9 @@ import React, { PureComponent } from 'react'
 import NotificationCards, {
   NotificationCardsProperties,
 } from '../components/cards/NotificationCards'
-import { Omit } from '../types'
 
-export type NotificationCardsContainerProperties = Omit<
-  NotificationCardsProperties,
-  'notifications'
-> & {
-  notifications?: NotificationCardsProperties['notifications']
+export type NotificationCardsContainerProperties = {
+  [key in keyof NotificationCardsProperties]?: NotificationCardsProperties[key]
 }
 
 export interface NotificationCardsContainerState {
