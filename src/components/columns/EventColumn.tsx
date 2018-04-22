@@ -5,6 +5,7 @@ import EventCardsContainer, {
   EventCardsContainerProperties,
 } from '../../containers/EventCardsContainer'
 import theme from '../../styles/themes/dark'
+import { getRequestTypeIconAndData } from '../../utils/helpers/github/events'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
 import ColumnHeader from './ColumnHeader'
@@ -23,15 +24,19 @@ export default class EventColumn extends PureComponent<
   }
 
   render() {
+    const { events, subtype, swipeable, type, username } = this.props
+
+    const requestTypeIconAndData = getRequestTypeIconAndData(type, subtype)
+
     return (
       <Column>
         <ColumnHeader>
           <ColumnHeaderItem
             backgroundColor={theme.base00}
             foregroundColor={theme.base04}
-            icon="home"
+            icon={requestTypeIconAndData.icon}
             title="brunolemos"
-            subtitle="Dashboard"
+            subtitle={requestTypeIconAndData.subtitle}
           />
           <FlexSeparator />
           <ColumnHeaderItem
@@ -44,7 +49,13 @@ export default class EventColumn extends PureComponent<
 
         <CardItemSeparator />
 
-        <EventCardsContainer {...this.props} />
+        <EventCardsContainer
+          events={events}
+          subtype={subtype}
+          swipeable={swipeable}
+          type={type}
+          username={username}
+        />
       </Column>
     )
   }

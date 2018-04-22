@@ -12,7 +12,43 @@ import {
   IGitHubIcon,
   IGitHubIssue,
   IGitHubPullRequest,
+  IGitHubRequestSubType,
+  IGitHubRequestType,
 } from '../../../types'
+
+export function getRequestTypeIconAndData(
+  type: IGitHubRequestType,
+  subtype: IGitHubRequestSubType,
+): { icon: IGitHubIcon; subtitle?: string } {
+  const subtitle = (() => {
+    switch (subtype) {
+      case 'events':
+        return 'Activity'
+
+      case 'received_events':
+        return 'Dashboard'
+
+      default:
+        return ''
+    }
+  })()
+
+  switch (type) {
+    case 'users':
+      return {
+        subtitle,
+        icon: subtype === 'received_events' ? 'home' : 'person',
+      }
+
+    case 'orgs':
+      return { icon: 'organization', subtitle }
+
+    default:
+      if (__DEV__)
+        console.error(`No icon configured for request type '${type}'`)
+      return { icon: 'mark-github' }
+  }
+}
 
 export function getEventIconAndColor(
   event: IGitHubEvent,

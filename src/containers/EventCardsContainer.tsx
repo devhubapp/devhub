@@ -5,9 +5,14 @@ import React, { PureComponent } from 'react'
 import EventCards, {
   EventCardsProperties,
 } from '../components/cards/EventCards'
+import { IGitHubRequestSubType, IGitHubRequestType } from '../types'
 
 export type EventCardsContainerProperties = {
   [key in keyof EventCardsProperties]?: EventCardsProperties[key]
+} & {
+  subtype: IGitHubRequestSubType
+  type: IGitHubRequestType
+  username: string
 }
 
 export interface EventCardsContainerState {
@@ -40,9 +45,11 @@ export default class EventCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
+    const { subtype, type, username } = this.props
+
     try {
       const response = await fetch(
-        `https://api.github.com/users/brunolemos/received_events?access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160&timestamp=${Date.now()}`,
+        `https://api.github.com/${type}/${username}/${subtype}?access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160&timestamp=${Date.now()}`,
       )
       const events = await response.json()
       if (Array.isArray(events)) {

@@ -1,3 +1,6 @@
+export type IGitHubRequestType = 'users' | 'orgs'
+export type IGitHubRequestSubType = 'events' | 'received_events'
+
 export interface IGitHubUser {
   id: number
   login: string
