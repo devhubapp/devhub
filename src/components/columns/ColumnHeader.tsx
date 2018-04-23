@@ -1,5 +1,6 @@
 import React, { PureComponent, ReactNode } from 'react'
 import { StyleSheet, View, ViewProperties, ViewStyle } from 'react-native'
+import { contentPadding } from '../../styles/variables'
 
 export interface IProps extends ViewProperties {
   children?: ReactNode
@@ -11,7 +12,8 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'stretch',
     flexDirection: 'row',
-    height: 48,
+    minHeight: 48,
+    paddingVertical: contentPadding,
   } as ViewStyle,
 
   buttonContainer: {} as ViewStyle,
