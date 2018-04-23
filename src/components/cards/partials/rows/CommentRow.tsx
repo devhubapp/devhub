@@ -51,7 +51,7 @@ const CommentRow: SFC<IProps> = ({
         >
           <Text
             numberOfLines={numberOfLines}
-            style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
+            style={[cardStyles.commentText, isRead && cardStyles.mutedText]}
           >
             {body}
           </Text>

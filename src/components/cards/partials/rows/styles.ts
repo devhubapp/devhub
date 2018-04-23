@@ -15,12 +15,11 @@ export default StyleSheet.create({
   } as ViewStyle,
 
   mainContentContainer: {
-    alignItems: 'center',
     borderColor: theme.base01,
     // borderRadius: radius,
     // borderWidth: 1,
     flex: 1,
-    flexDirection: 'row',
+    justifyContent: 'center',
     // paddingHorizontal: contentPadding,
     // paddingVertical: contentPadding / 2,
   } as ViewStyle,

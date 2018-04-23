@@ -42,6 +42,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     color: theme.base05,
     fontSize: smallTextSize,
+    lineHeight: smallTextSize + 4,
   } as TextStyle,
 
   mutedText: {
@@ -50,14 +51,23 @@ export default StyleSheet.create({
 
   normalText: {
     color: theme.base04,
+    lineHeight: 20,
   } as TextStyle,
 
   smallText: {
     fontSize: smallTextSize,
+    lineHeight: smallTextSize + 4,
   } as TextStyle,
 
   descriptionText: {
     color: theme.base05,
     lineHeight: 20,
+  } as TextStyle,
+
+  commentText: {
+    color: theme.base04,
+    // flex: 1,
+    lineHeight: 20,
+    // textAlign: 'justify',
   } as TextStyle,
 })
