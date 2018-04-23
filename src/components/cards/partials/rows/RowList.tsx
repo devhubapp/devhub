@@ -29,7 +29,6 @@ const RowList: SFC<RowListProperties<any>> = ({
   narrow,
   renderItem,
   theme,
-  ...props
 }) => {
   if (!(data && data.length > 0)) return null
 
@@ -45,7 +44,6 @@ const RowList: SFC<RowListProperties<any>> = ({
 
   return (
     <TransparentTextOverlay
-      {...props}
       color={theme.base02}
       size={narrow ? contentPadding / 2 : contentPadding}
       from="vertical"
