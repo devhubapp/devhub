@@ -1,6 +1,12 @@
 import { Platform as _Platform } from 'react-native'
 
-function getOSName(): 'android' | 'ios' | 'web' {
+import {
+  PlataformSelectSpecifics,
+  PlatformOSType,
+  PlatformSelectOptions,
+} from './index.shared'
+
+function getOSName(): PlatformOSType {
   const userAgent =
     navigator.userAgent || navigator.vendor || (window as any).opera
 
@@ -16,13 +22,19 @@ const Platform = {
   realOS,
   ..._Platform,
   isStandalone: (window.navigator as any).standalone,
-  selectUsingRealOS: (obj: {
-    android?: any
-    ios?: any
-    web?: any
-    default?: any
-  }) =>
-    Platform.realOS in obj ? obj[realOS] : 'web' in obj ? obj.web : obj.default,
+  selectUsingRealOS<T>(
+    specifics: PlataformSelectSpecifics<T>,
+    { fallbackToWeb = true }: PlatformSelectOptions = {},
+  ) {
+    const result =
+      Platform.realOS in specifics
+        ? specifics[realOS]
+        : fallbackToWeb && 'web' in specifics
+          ? specifics.web
+          : specifics.default
+
+    return result
+  },
 }
 
 export default Platform
