@@ -2,11 +2,12 @@
   "name": "devhub-web",
   "version": "0.10.0",
   "private": true,
+  "homepage": "https://brunolemos.github.io/devhub_ts",
   "scripts": {
     "build": "react-app-rewired build --scripts-version react-scripts-ts",
     "deploy": "gh-pages -d build",
     "eject": "react-app-rewired eject --scripts-version react-scripts-ts",
-    "predeploy": "PUBLIC_URL=https://brunolemos.github.io/devhub/ npm run build",
+    "predeploy": "npm run build",
     "prepare": "patch-package",
     "serve": "serve build",
     "start": "react-app-rewired start --scripts-version react-scripts-ts",
