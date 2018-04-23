@@ -21,12 +21,12 @@ import { contentPadding, radius } from '../styles/variables'
 const logo = require('../../assets/logo.png') // tslint:disable-line
 const pkg = require('../../package.json') // tslint:disable-line
 
-export interface IProps extends NavigationScreenProps {
+export interface LoginScreenProperties extends NavigationScreenProps {
   error: string
   isLoggingIn: boolean
 }
 
-export interface IState {
+export interface LoginScreenState {
   loggingInMethod: 'github.public' | 'github.private' | null
 }
 
@@ -91,12 +91,15 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-export default class LoginScreen extends PureComponent<IProps, IState> {
+export default class LoginScreen extends PureComponent<
+  LoginScreenProperties,
+  LoginScreenState
+> {
   static navigationOptions: NavigationStackScreenOptions = {
     header: null,
   }
 
-  state: IState = {
+  state: LoginScreenState = {
     loggingInMethod: null,
   }
 

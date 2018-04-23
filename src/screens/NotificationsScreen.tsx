@@ -4,23 +4,20 @@ import {
   NavigationStackScreenOptions,
 } from 'react-navigation'
 
-import Columns from '../components/columns/Columns'
-import NotificationColumn from '../components/columns/NotificationColumn'
 import Screen from '../components/common/Screen'
+import NotificationCardsContainer from '../containers/NotificationCardsContainer'
 
 export default class NotificationsScreen extends PureComponent<
   NavigationScreenProps
 > {
   static navigationOptions: NavigationStackScreenOptions = {
-    header: null,
+    headerTitle: 'Notifications',
   }
 
   render() {
     return (
       <Screen>
-        <Columns>
-          <NotificationColumn swipeable />
-        </Columns>
+        <NotificationCardsContainer swipeable />
       </Screen>
     )
   }
