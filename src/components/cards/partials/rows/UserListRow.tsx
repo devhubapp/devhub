@@ -1,19 +1,22 @@
 import React, { PureComponent } from 'react'
 
-import RowList from './RowList'
+import RowList, { RenderItem } from './RowList'
 import UserRow from './UserRow'
 
 import { IGitHubUser, ITheme } from '../../../../types'
 
-export interface IProps {
+export interface UserListRowProperties {
   isRead: boolean
   maxHeight?: number
   users: IGitHubUser[]
   theme: ITheme
 }
 
-export default class UserListRow extends PureComponent<IProps> {
-  renderItem = ({ item: user }: { item: IGitHubUser }) => {
+export default class UserListRow extends PureComponent<UserListRowProperties> {
+  renderItem: RenderItem<IGitHubUser> = ({
+    item: user,
+    showMoreItemsIndicator,
+  }) => {
     if (!(user && user.id && user.login)) return null
 
     return (
@@ -21,6 +24,7 @@ export default class UserListRow extends PureComponent<IProps> {
         key={`user-row-${user.id}`}
         {...this.props}
         avatarURL={user.avatar_url}
+        showMoreItemsIndicator={showMoreItemsIndicator}
         userLinkURL={user.html_url || ''}
         username={user.display_login || user.login}
       />

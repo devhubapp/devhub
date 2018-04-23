@@ -1,19 +1,24 @@
 import React, { PureComponent } from 'react'
 
 import CommitRow from './CommitRow'
-import RowList from './RowList'
+import RowList, { RenderItem } from './RowList'
 
 import { IGitHubCommit, ITheme } from '../../../../types'
 
-export interface IProps {
+export interface CommitListRowProperties {
   isRead: boolean
   maxHeight?: number
   commits: IGitHubCommit[]
   theme: ITheme
 }
 
-export default class CommitListRow extends PureComponent<IProps> {
-  renderItem = ({ item: commit }: { item: IGitHubCommit }) => {
+export default class CommitListRow extends PureComponent<
+  CommitListRowProperties
+> {
+  renderItem: RenderItem<IGitHubCommit> = ({
+    showMoreItemsIndicator,
+    item: commit,
+  }) => {
     if (!(commit && commit.sha && commit.message)) return null
 
     return (
@@ -23,6 +28,7 @@ export default class CommitListRow extends PureComponent<IProps> {
         authorEmail={commit.author.email}
         authorName={commit.author.name}
         message={commit.message}
+        showMoreItemsIndicator={showMoreItemsIndicator}
         url={commit.url}
       />
     )

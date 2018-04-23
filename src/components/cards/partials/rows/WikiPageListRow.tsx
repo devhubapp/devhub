@@ -1,25 +1,31 @@
 import React, { PureComponent } from 'react'
 
-import RowList from './RowList'
+import RowList, { RenderItem } from './RowList'
 import WikiPageRow from './WikiPageRow'
 
 import { IGitHubPage, ITheme } from '../../../../types'
 
-export interface IProps {
+export interface WikiPageListRowProperties {
   isRead: boolean
   maxHeight?: number
   pages: IGitHubPage[]
   theme: ITheme
 }
 
-export default class WikiPageListRow extends PureComponent<IProps> {
-  renderItem = ({ item: page }: { item: IGitHubPage }) => {
+export default class WikiPageListRow extends PureComponent<
+  WikiPageListRowProperties
+> {
+  renderItem: RenderItem<IGitHubPage> = ({
+    item: page,
+    showMoreItemsIndicator,
+  }) => {
     if (!(page && page.sha && page.title)) return null
 
     return (
       <WikiPageRow
         key={`page-row-${page.sha}`}
         {...this.props}
+        showMoreItemsIndicator={showMoreItemsIndicator}
         title={page.title}
         url={page.html_url || page.url}
       />

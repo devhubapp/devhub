@@ -7,24 +7,26 @@ import cardStyles from '../../styles'
 import { getRepositoryPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface IProps {
+export interface RepositoryRowProperties {
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
   isRead: boolean
   ownerName: string
   repositoryName: string
+  showMoreItemsIndicator?: boolean
 }
 
-export interface IState {}
+export interface RepositoryRowState {}
 
-const RepositoryRow: SFC<IProps> = ({
+const RepositoryRow: SFC<RepositoryRowProperties> = ({
   isForcePush,
   isFork,
   isPush,
   isRead,
   ownerName,
   repositoryName,
+  showMoreItemsIndicator,
 }) => {
   const repoIcon =
     (isForcePush && 'repo-force-push') ||
@@ -46,7 +48,11 @@ const RepositoryRow: SFC<IProps> = ({
 
       <View style={cardStyles.rightColumn}>
         <TouchableOpacity
-          onPress={getRepositoryPressHandler(ownerName, repositoryName)}
+          onPress={
+            showMoreItemsIndicator
+              ? undefined
+              : getRepositoryPressHandler(ownerName, repositoryName)
+          }
           style={rowStyles.mainContentContainer}
         >
           <Text
@@ -57,15 +63,15 @@ const RepositoryRow: SFC<IProps> = ({
             <Text
               style={[rowStyles.repositoryText, isRead && cardStyles.mutedText]}
             >
-              {repositoryName}
+              {showMoreItemsIndicator ? '' : repositoryName}
             </Text>
             <Text
               style={[
                 rowStyles.repositorySecondaryText,
-                isRead && cardStyles.mutedText,
+                (isRead || showMoreItemsIndicator) && cardStyles.mutedText,
               ]}
             >
-              {` ${ownerName}`}
+              {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
             </Text>
           </Text>
         </TouchableOpacity>

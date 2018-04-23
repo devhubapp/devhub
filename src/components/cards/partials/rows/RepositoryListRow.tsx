@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react'
 
 import RepositoryRow from './RepositoryRow'
-import RowList from './RowList'
+import RowList, { RenderItem } from './RowList'
 
 import { IGitHubRepo, ITheme } from '../../../../types'
 import { getOwnerAndRepo } from '../../../../utils/helpers/github/shared'
 import { getRepoFullNameFromObject } from '../../../../utils/helpers/github/url'
 
-export interface IProps {
+export interface RepositoryListRowProperties {
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
@@ -17,8 +17,13 @@ export interface IProps {
   theme: ITheme
 }
 
-export default class RepositoryListRow extends PureComponent<IProps> {
-  renderItem = ({ item: repo }: { item: IGitHubRepo }) => {
+export default class RepositoryListRow extends PureComponent<
+  RepositoryListRowProperties
+> {
+  renderItem: RenderItem<IGitHubRepo> = ({
+    item: repo,
+    showMoreItemsIndicator,
+  }) => {
     if (!(repo && repo.id)) return null
 
     const repoFullName = getRepoFullNameFromObject(repo)
@@ -34,6 +39,7 @@ export default class RepositoryListRow extends PureComponent<IProps> {
         {...this.props}
         ownerName={repoOwnerName!}
         repositoryName={repoName!}
+        showMoreItemsIndicator={showMoreItemsIndicator}
       />
     )
   }

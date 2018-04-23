@@ -7,16 +7,23 @@ import cardStyles from '../../styles'
 import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface IProps {
+export interface WikiPageRowProperties {
   isRead: boolean
   name?: string
+  showMoreItemsIndicator?: boolean
   title: string
   url: string
 }
 
-export interface IState {}
+export interface WikiPageRowState {}
 
-const WikiPageRow: SFC<IProps> = ({ isRead, name, title: _title, url }) => {
+const WikiPageRow: SFC<WikiPageRowProperties> = ({
+  isRead,
+  name,
+  showMoreItemsIndicator,
+  title: _title,
+  url,
+}) => {
   const title = trimNewLinesAndSpaces(_title || name)
   if (!title) return null
 
@@ -26,14 +33,24 @@ const WikiPageRow: SFC<IProps> = ({ isRead, name, title: _title, url }) => {
 
       <View style={cardStyles.rightColumn}>
         <TouchableOpacity
-          onPress={getGithubURLPressHandler(url)}
+          onPress={
+            showMoreItemsIndicator ? undefined : getGithubURLPressHandler(url)
+          }
           style={rowStyles.mainContentContainer}
         >
           <Text
             numberOfLines={1}
             style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
           >
-            <Icon name="book" /> {title}
+            <Icon name="book" /> {showMoreItemsIndicator ? '' : title}
+            {!!showMoreItemsIndicator && (
+              <Text
+                numberOfLines={1}
+                style={[cardStyles.normalText, cardStyles.mutedText]}
+              >
+                ...
+              </Text>
+            )}
           </Text>
         </TouchableOpacity>
       </View>

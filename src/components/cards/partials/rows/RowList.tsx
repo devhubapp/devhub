@@ -5,17 +5,27 @@ import { contentPadding } from '../../../../styles/variables'
 import { ITheme } from '../../../../types'
 import TransparentTextOverlay from '../../../common/TransparentTextOverlay'
 
-export interface IProps {
+export type RenderItem<Item> = (
+  {
+    item,
+    index,
+    showMoreItemsIndicator,
+  }: { item: Item; index: number; showMoreItemsIndicator?: boolean },
+) => ReactNode
+
+export interface RowListProperties<Item> {
   data: any[]
   maxHeight?: number
+  maxLength?: number
   narrow?: boolean
-  renderItem: ({ item, index }: { item: any; index: number }) => ReactNode
+  renderItem: RenderItem<Item>
   theme: ITheme
 }
 
-const RowList: SFC<IProps> = ({
+const RowList: SFC<RowListProperties<any>> = ({
   data,
-  maxHeight = 200,
+  maxHeight = 220,
+  maxLength = 5,
   narrow,
   renderItem,
   theme,
@@ -26,6 +36,13 @@ const RowList: SFC<IProps> = ({
   if (data.length === 1)
     return renderItem({ item: data[0], index: 0 }) as ReactElement<{}>
 
+  const slicedData =
+    maxLength >= 1 && data.length > maxLength
+      ? data.slice(0, maxLength - 1)
+      : data
+
+  const isSliced = data.length > slicedData.length
+
   return (
     <TransparentTextOverlay
       {...props}
@@ -35,13 +52,19 @@ const RowList: SFC<IProps> = ({
       containerStyle={{ flex: 0 }}
     >
       <ScrollView
-        style={{ maxHeight }}
+        alwaysBounceVertical={false}
         contentContainerStyle={{
           paddingBottom: narrow ? contentPadding / 2 : contentPadding,
         }}
-        alwaysBounceVertical={false}
+        style={{ maxHeight }}
       >
-        {data.map((item, index) => renderItem({ item, index }))}
+        {slicedData.map((item, index) => renderItem({ item, index }))}
+        {isSliced &&
+          renderItem({
+            index: slicedData.length,
+            item: data[slicedData.length],
+            showMoreItemsIndicator: true,
+          })}
       </ScrollView>
     </TransparentTextOverlay>
   )

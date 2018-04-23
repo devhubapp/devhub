@@ -14,25 +14,27 @@ import cardStyles from '../../styles'
 import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface IProps {
+export interface CommitRowProperties {
   authorEmail?: string
   authorName?: string
   authorUsername?: string
   isRead: boolean
   latestCommentUrl?: string
   message: string
+  showMoreItemsIndicator?: boolean
   url: string
 }
 
-export interface IState {}
+export interface CommitRowState {}
 
-const CommitRow: SFC<IProps> = ({
+const CommitRow: SFC<CommitRowProperties> = ({
   authorEmail,
   authorName,
   authorUsername: _authorUsername,
   isRead,
   latestCommentUrl,
   message: _message,
+  showMoreItemsIndicator,
   url,
 }) => {
   const message = trimNewLinesAndSpaces(_message)
@@ -68,17 +70,21 @@ const CommitRow: SFC<IProps> = ({
 
       <View style={cardStyles.rightColumn}>
         <TouchableOpacity
-          onPress={getGithubURLPressHandler(url, {
-            commentId:
-              latestCommentUrl && getCommentIdFromUrl(latestCommentUrl),
-          })}
+          onPress={
+            showMoreItemsIndicator
+              ? undefined
+              : getGithubURLPressHandler(url, {
+                  commentId:
+                    latestCommentUrl && getCommentIdFromUrl(latestCommentUrl),
+                })
+          }
           style={rowStyles.mainContentContainer}
         >
           <Text
             numberOfLines={1}
             style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
           >
-            <Icon name="git-commit" /> {message}
+            <Icon name="git-commit" /> {showMoreItemsIndicator ? '' : message}
             {Boolean(byText) && (
               <Text
                 style={[
@@ -87,7 +93,7 @@ const CommitRow: SFC<IProps> = ({
                   cardStyles.mutedText,
                 ]}
               >
-                {` by ${byText}`}
+                {showMoreItemsIndicator ? '...' : ` by ${byText}`}
               </Text>
             )}
           </Text>

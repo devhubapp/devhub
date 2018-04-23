@@ -6,16 +6,23 @@ import cardStyles from '../../styles'
 import { getUserPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface IProps {
+export interface UserRowProperties {
   avatarURL: string
   isRead: boolean
-  username: string
+  showMoreItemsIndicator?: boolean
   userLinkURL: string
+  username: string
 }
 
-export interface IState {}
+export interface UserRowState {}
 
-const UserRow: SFC<IProps> = ({ avatarURL, isRead, username, userLinkURL }) => (
+const UserRow: SFC<UserRowProperties> = ({
+  avatarURL,
+  isRead,
+  showMoreItemsIndicator,
+  userLinkURL,
+  username,
+}) => (
   <View style={rowStyles.container}>
     <View style={cardStyles.leftColumn}>
       <Avatar
@@ -30,11 +37,18 @@ const UserRow: SFC<IProps> = ({ avatarURL, isRead, username, userLinkURL }) => (
 
     <View style={cardStyles.rightColumn}>
       <TouchableOpacity
-        onPress={getUserPressHandler(username)}
+        onPress={
+          showMoreItemsIndicator ? undefined : getUserPressHandler(username)
+        }
         style={rowStyles.mainContentContainer}
       >
-        <Text style={[rowStyles.usernameText, isRead && cardStyles.mutedText]}>
-          {username}
+        <Text
+          style={[
+            rowStyles.usernameText,
+            (isRead || showMoreItemsIndicator) && cardStyles.mutedText,
+          ]}
+        >
+          {showMoreItemsIndicator ? '...' : username}
         </Text>
       </TouchableOpacity>
     </View>
