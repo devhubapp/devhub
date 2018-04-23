@@ -7,6 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import Icon from 'react-native-vector-icons/Octicons'
 
 import { IGitHubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
@@ -16,15 +17,16 @@ import cardStyles from '../styles'
 import CardIcon from './CardIcon'
 import { getUserPressHandler } from './rows/helpers'
 
-export interface IProps {
+export interface EventCardHeaderProperties {
   actionText: string
   avatarURL: string
   cardIconColor: string
   cardIconName: IGitHubIcon
   createdAt: MomentInput
   isBot: boolean
-  username: string
+  isPrivate?: boolean
   userLinkURL: string
+  username: string
 }
 
 export interface IState {}
@@ -50,7 +52,9 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class EventCardHeader extends PureComponent<IProps> {
+export default class EventCardHeader extends PureComponent<
+  EventCardHeaderProperties
+> {
   render() {
     const {
       actionText,
@@ -59,8 +63,9 @@ export default class EventCardHeader extends PureComponent<IProps> {
       cardIconName,
       createdAt,
       isBot,
-      username: _username,
+      isPrivate,
       userLinkURL,
+      username: _username,
     } = this.props
 
     const username = isBot ? _username!.replace('[bot]', '') : _username
@@ -103,7 +108,14 @@ export default class EventCardHeader extends PureComponent<IProps> {
                 </IntervalRefresh>
               </View>
 
-              <Text style={cardStyles.descriptionText}>{actionText}</Text>
+              <Text style={cardStyles.descriptionText}>
+                {!!isPrivate && (
+                  <Text style={cardStyles.mutedText}>
+                    <Icon name="lock" />{' '}
+                  </Text>
+                )}
+                {actionText}
+              </Text>
             </View>
 
             <CardIcon name={cardIconName} color={cardIconColor} />

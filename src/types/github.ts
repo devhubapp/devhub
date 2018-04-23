@@ -185,7 +185,7 @@ export interface IGitHubCommitCommentEvent {
   payload: {
     comment: IGitHubComment
   }
-  public: boolean
+  public?: boolean
   created_at: string
 }
 
@@ -208,7 +208,7 @@ export interface ICreateEvent {
     description: string // The reposit ory's current description.
     pusher_type: 'user' | string
   }
-  public: boolean
+  public?: boolean
   created_at: string
 }
 
@@ -227,7 +227,7 @@ export interface IDeleteEvent {
     ref_type: 'branch' | 'repository' | 'tag' // The object that was deleted.
     pusher_type: 'user' | string
   }
-  public: boolean
+  public?: boolean
   created_at: string
 }
 
@@ -244,7 +244,7 @@ export interface IForkEvent {
   payload: {
     forkee: IGitHubRepo // The created repository.
   }
-  public: boolean
+  public?: boolean
   created_at: string
 }
 
@@ -259,6 +259,7 @@ export interface IGollumEvent {
   payload: {
     pages: IGitHubPage[]
   }
+  public?: boolean
   created_at: string
 }
 
@@ -272,7 +273,7 @@ export interface IIssueCommentEvent {
   actor: IGitHubUser & { username?: undefined }
   repo: IGitHubRepo
   org: IGitHubOrg
-  public: boolean
+  public?: boolean
   payload: {
     action: 'created' | 'edited' | 'deleted'
     issue: IGitHubIssue // The issue the comment belongs to.
@@ -309,6 +310,7 @@ export interface IIssuesEvent {
     assignee?: IGitHubUser | null // The optional user who was assigned or unassigned from the issue.
     label?: IGitHubLabel // The optional label that was added or removed from the issue.
   }
+  public?: boolean
   created_at: string
   url: string
   html_url: string
@@ -327,6 +329,7 @@ export interface IMemberEvent {
     action: 'added' // The action that was performed.
     member: IGitHubUser // The user that was added.
   }
+  public?: boolean
   created_at: string
 }
 
@@ -340,7 +343,7 @@ export interface IPublicEvent {
   actor: IGitHubUser
   created_at: string
   payload: {}
-  public: boolean
+  public?: boolean
   repo: IGitHubRepo
 }
 
@@ -377,6 +380,7 @@ export interface IPullRequestEvent {
     pull_request: IGitHubPullRequest
     sender: object
   }
+  public?: boolean
   created_at: string
 }
 
@@ -393,6 +397,7 @@ export interface IPullRequestReviewEvent {
     pull_request: IGitHubPullRequest
     review: object
   }
+  public?: boolean
   created_at: string
 }
 
@@ -412,6 +417,7 @@ export interface IPullRequestReviewCommentEvent {
     pull_request: IGitHubPullRequest
     comment: IGitHubComment
   }
+  public?: boolean
   created_at: string
 }
 
@@ -451,6 +457,7 @@ export interface IReleaseEvent {
     action: 'published'
     release: IGitHubRelease // https://developer.github.com/v3/repos/releases/#get-a-single-release
   }
+  public?: boolean
   created_at: string
 }
 
@@ -469,6 +476,7 @@ export interface IWatchEvent {
   payload: {
     action: 'started'
   }
+  public?: boolean
   created_at: string
 }
 

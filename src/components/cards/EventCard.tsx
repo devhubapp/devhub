@@ -105,6 +105,7 @@ export default class EventCard extends PureComponent<EventCardProperties> {
 
     const isPush = type === 'PushEvent'
     const isForcePush = isPush && (payload as IPushEvent).forced
+    const isPrivate = !!(event.public === false || (repo && repo.private))
 
     const {
       icon: pullRequestIconName,
@@ -139,6 +140,7 @@ export default class EventCard extends PureComponent<EventCardProperties> {
           cardIconName={cardIconName}
           createdAt={event.created_at}
           isBot={Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)}
+          isPrivate={isPrivate}
           userLinkURL={actor.html_url || ''}
           username={actor.display_login || actor.login}
         />
