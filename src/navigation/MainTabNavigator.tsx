@@ -66,7 +66,7 @@ export const options: TabNavigatorConfig = {
     },
   }),
   swipeEnabled: false,
-  tabBarComponent: TabBar,
+  tabBarComponent: Platform.realOS === 'web' ? undefined : TabBar,
   tabBarPosition: Platform.selectUsingRealOS({
     default: 'top',
     ios: 'bottom',
