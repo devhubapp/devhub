@@ -36,12 +36,18 @@ export default class EventCardsContainer extends PureComponent<
     return null
   }
 
+  fetchDataInterval?: number
+
   state: EventCardsContainerState = {
     events: this.props.events || [],
   }
 
   componentDidMount() {
-    if (!this.state.events.length) this.fetchData()
+    this.startFetchDataInterval()
+  }
+
+  componentWillMount() {
+    this.clearFetchDataInterval()
   }
 
   fetchData = async () => {
@@ -59,6 +65,16 @@ export default class EventCardsContainer extends PureComponent<
       console.error(error)
       // Alert.alert('Failed to load events', `${error}`)
     }
+  }
+
+  startFetchDataInterval = () => {
+    this.clearFetchDataInterval()
+    this.fetchDataInterval = setInterval(this.fetchData, 1000 * 60)
+    this.fetchData()
+  }
+
+  clearFetchDataInterval = () => {
+    if (this.fetchDataInterval) clearInterval(this.fetchDataInterval)
   }
 
   render() {

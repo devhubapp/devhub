@@ -34,12 +34,18 @@ export default class NotificationCardsContainer extends PureComponent<
     return null
   }
 
+  fetchDataInterval?: number
+
   state: NotificationCardsContainerState = {
     notifications: this.props.notifications || [],
   }
 
   componentDidMount() {
-    if (!this.state.notifications.length) this.fetchData()
+    this.startFetchDataInterval()
+  }
+
+  componentWillMount() {
+    this.clearFetchDataInterval()
   }
 
   fetchData = async () => {
@@ -61,6 +67,16 @@ export default class NotificationCardsContainer extends PureComponent<
       console.error(error)
       // Alert.alert('Failed to load notifications', `${error}`)
     }
+  }
+
+  startFetchDataInterval = () => {
+    this.clearFetchDataInterval()
+    this.fetchDataInterval = setInterval(this.fetchData, 1000 * 60)
+    this.fetchData()
+  }
+
+  clearFetchDataInterval = () => {
+    if (this.fetchDataInterval) clearInterval(this.fetchDataInterval)
   }
 
   render() {
