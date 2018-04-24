@@ -50,7 +50,11 @@ export default class NotificationCardsContainer extends PureComponent<
       const notifications = await response.json()
       if (Array.isArray(notifications)) {
         this.setState({
-          notifications: _.orderBy(notifications, ['updated_at'], ['desc']),
+          notifications: _.orderBy(
+            notifications,
+            ['unread', 'updated_at'],
+            ['desc', 'desc'],
+          ),
         })
       }
     } catch (error) {
