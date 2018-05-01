@@ -44,7 +44,7 @@ export default class NotificationCardsContainer extends PureComponent<
     this.startFetchDataInterval()
   }
 
-  componentWillMount() {
+  componentWillUnmount() {
     this.clearFetchDataInterval()
   }
 

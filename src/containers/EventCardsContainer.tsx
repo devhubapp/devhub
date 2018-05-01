@@ -46,7 +46,7 @@ export default class EventCardsContainer extends PureComponent<
     this.startFetchDataInterval()
   }
 
-  componentWillMount() {
+  componentWillUnmount() {
     this.clearFetchDataInterval()
   }
 
