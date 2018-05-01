@@ -1,6 +1,7 @@
 import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
+import Platform from '../../../../libs/platform'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'
@@ -28,7 +29,10 @@ const CommentRow: SFC<IProps> = ({
   username,
   userLinkURL,
 }) => {
-  const body = trimNewLinesAndSpaces(_body, 400)
+  const body = trimNewLinesAndSpaces(
+    _body,
+    Platform.select({ default: 400, web: 150 }),
+  )
   if (!body) return null
 
   return (

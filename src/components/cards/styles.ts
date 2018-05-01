@@ -1,5 +1,6 @@
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
+import Platform from '../../libs/platform'
 import theme from '../../styles/themes/dark'
 import {
   avatarSize,
@@ -66,8 +67,15 @@ export default StyleSheet.create({
 
   commentText: {
     color: theme.base04,
-    // flex: 1,
     lineHeight: 20,
-    // textAlign: 'justify',
+    ...Platform.select({
+      default: {},
+      web: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'pre-line',
+        wordWrap: 'normal',
+      },
+    }),
   } as TextStyle,
 })
