@@ -1,0 +1,159 @@
+patch-package
+--- a/node_modules/react-native-linear-gradient/README.md
++++ b/node_modules/react-native-linear-gradient/README.md
+@@ -132,18 +132,18 @@ In addition to regular `View` props, you can also provide additional props to cu
+ #### colors
+ An array of at least two color values that represent gradient colors. Example: `['red', 'blue']` sets gradient from red to blue.
+   
+-#### start
++#### startPoint
+ An optional object of the following type: `{ x: number, y: number }`. Coordinates declare the position that the gradient starts at, as a fraction of the overall size of the gradient, starting from the top left corner. Example: `{ x: 0.1, y: 0.1 }` means that the gradient will start 10% from the top and 10% from the left.
+  
+-#### end
+-Same as start, but for the end of the gradient.
++#### endPoint
++Same as `startPoint`, but for the end of the gradient.
+  
+ #### locations
+ An optional array of numbers defining the location of each gradient color stop, mapping to the color with the same index in `colors` prop. Example: `[0.1, 0.75, 1]` means that first color will take 0% - 10%, second color will take 10% - 75% and finally third color will occupy 75% - 100%.
+ 
+ ```javascript
+ <LinearGradient
+-  start={{x: 0.0, y: 0.25}} end={{x: 0.5, y: 1.0}}
++  startPoint={{x: 0.0, y: 0.25}} endPoint={{x: 0.5, y: 1.0}}
+   locations={[0,0.5,0.6]}
+   colors={['#4c669f', '#3b5998', '#192f6a']}
+   style={styles.linearGradient}>
+--- a/node_modules/react-native-linear-gradient/index.android.js
++++ b/node_modules/react-native-linear-gradient/index.android.js
+@@ -18,22 +18,22 @@ const convertPoint = (name, point) => {
+ };
+ 
+ type PropsType = {
+-  start?: Array<number> | {x: number, y: number};
+-  end?: Array<number> | {x: number, y: number};
++  startPoint?: Array<number> | {x: number, y: number};
++  endPoint?: Array<number> | {x: number, y: number};
+   colors: Array<string>;
+   locations?: Array<number>;
+ } & typeof(View);
+ 
+ export default class LinearGradient extends Component {
+   static propTypes = {
+-    start: PropTypes.oneOfType([
++    startPoint: PropTypes.oneOfType([
+       PointPropType,
+       deprecatedPropType(
+         PropTypes.arrayOf(PropTypes.number),
+         'Use point object with {x, y} instead.'
+       )
+     ]),
+-    end: PropTypes.oneOfType([
++    endPoint: PropTypes.oneOfType([
+       PointPropType,
+       deprecatedPropType(
+         PropTypes.arrayOf(PropTypes.number),
+@@ -55,9 +55,9 @@ export default class LinearGradient extends Component {
+     const {
+       children,
+       colors,
+-      end,
++      endPoint,
+       locations,
+-      start,
++      startPoint,
+       style,
+       ...otherProps
+     } = this.props;
+@@ -89,8 +89,8 @@ export default class LinearGradient extends Component {
+         <NativeLinearGradient
+           style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0}}
+           colors={colors.map(processColor)}
+-          startPoint={convertPoint('start', start)}
+-          endPoint={convertPoint('end', end)}
++          startPoint={convertPoint('startPoint', startPoint)}
++          endPoint={convertPoint('endPoint', endPoint)}
+           locations={locations ? locations.slice(0, colors.length) : null}
+           borderRadii={borderRadiiPerCorner}
+         />
+--- a/node_modules/react-native-linear-gradient/index.d.ts
++++ b/node_modules/react-native-linear-gradient/index.d.ts
+@@ -1,14 +1,16 @@
+-import * as React from "react";
+-import * as ReactNative from "react-native";
++import * as React from 'react'
++import * as ReactNative from 'react-native'
+ 
+-declare module "react-native-linear-gradient" {
++declare module 'react-native-linear-gradient' {
++  interface LinearGradientProps extends ReactNative.ViewProperties {
++    colors: string[]
++    startPoint?: { x: number; y: number }
++    endPoint?: { x: number; y: number }
++    locations?: number[]
++  }
+ 
+-    interface LinearGradientProps extends ReactNative.ViewProperties {
+-        colors: string[],
+-        start?: { x: number, y: number },
+-        end?: { x: number, y: number },
+-        locations?: number[]
+-    }
+-
+-    export default class LinearGradient extends React.Component<LinearGradientProps, any> { }
++  export default class LinearGradient extends React.Component<
++    LinearGradientProps,
++    any
++  > {}
+ }
+--- a/node_modules/react-native-linear-gradient/index.ios.js
++++ b/node_modules/react-native-linear-gradient/index.ios.js
+@@ -23,22 +23,22 @@ const convertPoint = (name, point) => {
+ };
+ 
+ type PropsType = {
+-  start?: Array<number> | {x: number, y: number};
+-  end?: Array<number> | {x: number, y: number};
++  startPoint?: Array<number> | {x: number, y: number};
++  endPoint?: Array<number> | {x: number, y: number};
+   colors: Array<string>;
+   locations?: Array<number>;
+ } & typeof(View);
+ 
+ export default class LinearGradient extends Component {
+   static propTypes = {
+-    start: PropTypes.oneOfType([
++    startPoint: PropTypes.oneOfType([
+       PointPropType,
+       deprecatedPropType(
+         PropTypes.arrayOf(PropTypes.number),
+         'Use point object with {x, y} instead.'
+       )
+     ]),
+-    end: PropTypes.oneOfType([
++    endPoint: PropTypes.oneOfType([
+       PointPropType,
+       deprecatedPropType(
+         PropTypes.arrayOf(PropTypes.number),
+@@ -58,8 +58,8 @@ export default class LinearGradient extends Component {
+ 
+   render() {
+     const {
+-      start,
+-      end,
++      startPoint,
++      endPoint,
+       colors,
+       locations,
+       ...otherProps
+@@ -72,8 +72,8 @@ export default class LinearGradient extends Component {
+       <NativeLinearGradient
+         ref={(component) => { this.gradientRef = component; }}
+         {...otherProps}
+-        startPoint={convertPoint('start', start)}
+-        endPoint={convertPoint('end', end)}
++        startPoint={convertPoint('startPoint', startPoint)}
++        endPoint={convertPoint('endPoint', endPoint)}
+         colors={colors.map(processColor)}
+         locations={locations ? locations.slice(0, colors.length) : null}
+       />

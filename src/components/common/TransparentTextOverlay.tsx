@@ -59,13 +59,29 @@ function getStyle(from: From, size: number): ViewStyle {
 function getProps(from: From, size: number) {
   switch (from) {
     case 'top':
-      return { start: { x: 0, y: 1 }, end: { x: 0, y: 0 }, height: size }
+      return {
+        endPoint: { x: 0, y: 0 },
+        height: size,
+        startPoint: { x: 0, y: 1 },
+      }
     case 'bottom':
-      return { start: { x: 0, y: 0 }, end: { x: 0, y: 1 }, height: size }
+      return {
+        endPoint: { x: 0, y: 1 },
+        height: size,
+        startPoint: { x: 0, y: 0 },
+      }
     case 'left':
-      return { start: { x: 1, y: 0 }, end: { x: 0, y: 0 }, width: size }
+      return {
+        endPoint: { x: 0, y: 0 },
+        startPoint: { x: 1, y: 0 },
+        width: size,
+      }
     default:
-      return { start: { x: 0, y: 0 }, end: { x: 1, y: 0 }, width: size }
+      return {
+        endPoint: { x: 1, y: 0 },
+        startPoint: { x: 0, y: 0 },
+        width: size,
+      }
   }
 }
 
