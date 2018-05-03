@@ -8,7 +8,7 @@ const Platform = {
   realOS: _Platform.OS,
   selectUsingRealOS<T>(
     specifics: PlataformSelectSpecifics<T>,
-    options?: PlatformSelectOptions,
+    _options?: PlatformSelectOptions,
   ) {
     return _Platform.select(specifics)
   },

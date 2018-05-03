@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 
-import MetroListView, { IProps as IMetroProps } from './MetroListView'
+import MetroListView, { IProps as IMetroProps } from './MetroListView.web'
 
 export interface IProps extends IMetroProps {
   data: IMetroProps['items']

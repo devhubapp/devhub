@@ -1,3 +1,3 @@
-import MetroListView from './MetroListView'
+import MetroListView from './MetroListView.web'
 
 export default MetroListView

@@ -1,4 +1,4 @@
-import FlatList from './FlatList'
-import SectionList from './SectionList'
+import FlatList from './FlatList.web'
+import SectionList from './SectionList.web'
 
 export { FlatList, SectionList }
