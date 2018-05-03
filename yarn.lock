@@ -445,30 +445,30 @@
   version "22.2.3"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.2.3.tgz#0157c0316dc3722c43a7b71de3fdf3acbccef10d"
 
-"@types/lodash@^4.14.107":
-  version "4.14.107"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.107.tgz#b2d2ae3958bfb8ff828495cbe12214af9e4d035e"
+"@types/lodash@^4.14.108":
+  version "4.14.108"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.108.tgz#02656af3add2e5b3174f830862c47421c00ef817"
 
 "@types/ramda@^0.25.24":
   version "0.25.24"
   resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.24.tgz#2f64ce2100271163247f93fa7b4b052db40ce155"
 
-"@types/react-native-vector-icons@^4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-4.6.0.tgz#121bfcedffca18ffdf25f7db8ab9a8d88c932666"
+"@types/react-native-vector-icons@^4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-4.6.1.tgz#a9b2ee1a4b297b87a9917337aeee404c36fda8c2"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native@*", "@types/react-native@^0.55.4":
-  version "0.55.4"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.4.tgz#866005d86490e2fd60543b143b2a5ac208aa925b"
+"@types/react-native@*", "@types/react-native@^0.55.11":
+  version "0.55.11"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.11.tgz#26aea9a9708cf1d10a8bce34d1e39425870b9706"
   dependencies:
     "@types/react" "*"
 
-"@types/react-navigation@^1.5.7":
-  version "1.5.7"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.5.7.tgz#58acf549a65ec5d5c50602dcf705358c257251b2"
+"@types/react-navigation@^1.5.9":
+  version "1.5.9"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.5.9.tgz#a3e6d0646131ffbc3ee228a82fa1f19b140edfd7"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -479,9 +479,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.3.12":
-  version "16.3.12"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.3.12.tgz#68d9146f3e9797e38ffbf22f7ed1dde91a2cfd2e"
+"@types/react@*", "@types/react@^16.3.13":
+  version "16.3.13"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.3.13.tgz#47d466462b774556c1174ea0eda22c0578643362"
   dependencies:
     csstype "^2.2.0"
 

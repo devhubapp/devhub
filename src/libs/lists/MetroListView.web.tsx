@@ -16,7 +16,6 @@ import {
   ListViewProperties,
   RefreshControl,
   ScrollView,
-  ScrollViewStatic,
 } from 'react-native'
 
 const invariant = require('fbjs/lib/invariant') // tslint:disable-line
@@ -106,7 +105,7 @@ export default class MetroListView extends React.Component<IProps, IState> {
 
   _listRef:
     | React.Component<ListViewProperties, React.ComponentState> & {
-        scrollTo: ScrollViewStatic['scrollTo']
+        scrollTo: ScrollView['scrollTo']
       }
     | null = null
 
@@ -200,7 +199,7 @@ export default class MetroListView extends React.Component<IProps, IState> {
   _captureRef = (
     ref:
       | React.Component<ListViewProperties, React.ComponentState> & {
-          scrollTo: ScrollViewStatic['scrollTo']
+          scrollTo: ScrollView['scrollTo']
         }
       | null,
   ) => {

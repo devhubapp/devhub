@@ -86,7 +86,7 @@ patch-package
  
 -declare module "react-native-linear-gradient" {
 +declare module 'react-native-linear-gradient' {
-+  interface LinearGradientProps extends ReactNative.ViewProperties {
++  export interface LinearGradientProps extends ReactNative.ViewProperties {
 +    colors: string[]
 +    startPoint?: { x: number; y: number }
 +    endPoint?: { x: number; y: number }
