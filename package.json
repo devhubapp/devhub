@@ -9,6 +9,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
+    "tsc": "tsc -p .",
     "web": "npm run web:start",
     "web:build": "pushd web; npm run build; popd;",
     "web:deploy": "pushd web; npm run deploy; popd;",
@@ -92,6 +93,7 @@
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
       "tslint --fix",
+      "tsc --noEmit --skipLibCheck --strict",
       "git add"
     ]
   }
