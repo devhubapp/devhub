@@ -14,9 +14,9 @@
     "test": "react-app-rewired test --scripts-version react-scripts-ts --env=jsdomreact-scripts-ts test --env=jsdom"
   },
   "dependencies": {
-    "react": "^16.4.0",
-    "react-art": "^16.4.0",
-    "react-dom": "^16.4.0",
+    "react": "^16.3.2",
+    "react-art": "^16.3.2",
+    "react-dom": "^16.3.2",
     "react-native-web": "0.6.0",
     "react-scripts-ts": "^2.16.0"
   },
