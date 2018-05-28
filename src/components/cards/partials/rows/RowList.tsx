@@ -13,7 +13,7 @@ export type RenderItem<Item> = (
   }: { item: Item; index: number; showMoreItemsIndicator?: boolean },
 ) => ReactNode
 
-export interface RowListProperties<Item> {
+export interface RowListProps<Item> {
   data: any[]
   maxHeight?: number
   maxLength?: number
@@ -22,7 +22,7 @@ export interface RowListProperties<Item> {
   theme: ITheme
 }
 
-const RowList: SFC<RowListProperties<any>> = ({
+const RowList: SFC<RowListProps<any>> = ({
   data,
   maxHeight = 220,
   maxLength = 5,

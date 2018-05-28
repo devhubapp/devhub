@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native'
-import Octicons from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../libs/vector-icons'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { IGitHubIcon } from '../../types'
 import { fade } from '../../utils/helpers/color'
@@ -71,7 +71,7 @@ export default class ColumnHeaderItem extends PureComponent<IProps> {
       >
         <Fragment>
           {!!icon && (
-            <Octicons
+            <Icon
               color={foregroundColor}
               name={icon}
               style={[

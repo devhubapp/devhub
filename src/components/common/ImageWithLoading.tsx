@@ -1,15 +1,15 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react'
-import { Image, ImageProperties } from 'react-native'
+import { Image, ImageProps } from 'react-native'
 
-export interface IProps extends ImageProperties {
+export interface IProps extends ImageProps {
   backgroundColorFailed: string
   backgroundColorLoaded: string
   backgroundColorLoading: string
-  onError?: ImageProperties['onError']
-  onLoad?: ImageProperties['onLoad']
-  onLoadEnd?: ImageProperties['onLoadEnd']
-  onLoadStart?: ImageProperties['onLoadStart']
+  onError?: ImageProps['onError']
+  onLoad?: ImageProps['onLoad']
+  onLoadEnd?: ImageProps['onLoadEnd']
+  onLoadStart?: ImageProps['onLoadStart']
 }
 
 export default class Avatar extends PureComponent<IProps> {
@@ -26,32 +26,28 @@ export default class Avatar extends PureComponent<IProps> {
   }
 
   onLoad = _.memoize(
-    (next: ImageProperties['onLoad']): ImageProperties['onLoad'] => () => {
+    (next: ImageProps['onLoad']): ImageProps['onLoad'] => () => {
       this.setState({ loading: false, error: false })
       if (typeof next === 'function') next()
     },
   )
 
   onLoadStart = _.memoize(
-    (
-      next: ImageProperties['onLoadStart'],
-    ): ImageProperties['onLoadStart'] => () => {
+    (next: ImageProps['onLoadStart']): ImageProps['onLoadStart'] => () => {
       this.setState({ loading: true })
       if (typeof next === 'function') next()
     },
   )
 
   onLoadEnd = _.memoize(
-    (
-      next: ImageProperties['onLoadEnd'],
-    ): ImageProperties['onLoadEnd'] => () => {
+    (next: ImageProps['onLoadEnd']): ImageProps['onLoadEnd'] => () => {
       this.setState({ loading: false })
       if (typeof next === 'function') next()
     },
   )
 
   onError = _.memoize(
-    (next: ImageProperties['onError']): ImageProperties['onError'] => error => {
+    (next: ImageProps['onError']): ImageProps['onError'] => error => {
       this.setState({ loading: false, error: true })
       if (typeof next === 'function') next(error)
     },
@@ -83,7 +79,9 @@ export default class Avatar extends PureComponent<IProps> {
           {
             backgroundColor: error
               ? backgroundColorFailed
-              : loading ? backgroundColorLoading : backgroundColorLoaded,
+              : loading
+                ? backgroundColorLoading
+                : backgroundColorLoaded,
           },
         ]}
       />

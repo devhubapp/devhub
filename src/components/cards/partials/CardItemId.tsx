@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../../libs/vector-icons'
 import { radius } from '../../../styles/variables'
 import { IGitHubIcon, ITheme } from '../../../types'
 import cardStyles from '../styles'

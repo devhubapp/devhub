@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 
 import FlexSeparator from '../../components/common/FlexSeparator'
 import EventCardsContainer, {
-  EventCardsContainerProperties,
+  EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
 import theme from '../../styles/themes/dark'
 import { getRequestTypeIconAndData } from '../../utils/helpers/github/events'
@@ -11,12 +11,12 @@ import Column from './Column'
 import ColumnHeader from './ColumnHeader'
 import ColumnHeaderItem from './ColumnHeaderItem'
 
-export interface EventColumnProperties extends EventCardsContainerProperties {}
+export interface EventColumnProps extends EventCardsContainerProps {}
 
 export interface EventColumnState {}
 
 export default class EventColumn extends PureComponent<
-  EventColumnProperties,
+  EventColumnProps,
   EventColumnState
 > {
   handlePress = () => {

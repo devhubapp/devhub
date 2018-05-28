@@ -1,8 +1,8 @@
 import React from 'react'
 import { Animated, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 import { RectButton, Swipeable } from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/MaterialIcons'
 
+import { MaterialIcons as Icon } from '../../libs/vector-icons'
 import BaseSwipeableRow, {
   IBaseAction,
   IBaseProps,

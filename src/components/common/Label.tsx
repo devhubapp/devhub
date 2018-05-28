@@ -2,14 +2,14 @@ import React, { ReactNode, SFC } from 'react'
 import {
   StyleSheet,
   Text,
-  TextProperties,
+  TextProps,
   TextStyle,
   View,
-  ViewProperties,
+  ViewProps,
   ViewStyle,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../libs/vector-icons'
 import {
   contentPadding,
   mutedOpacity,
@@ -22,14 +22,14 @@ export interface IProps {
   borderColor?: string
   children: ReactNode
   color?: string
-  containerProps?: ViewProperties
+  containerProps?: ViewProps
   containerStyle?: ViewStyle
   isPrivate?: boolean
   muted?: boolean
   outline?: boolean
   radius?: number
   textColor?: string
-  textProps?: TextProperties
+  textProps?: TextProps
 }
 
 const styles = StyleSheet.create({

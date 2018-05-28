@@ -1,4 +1,5 @@
-patch-package
+diff --git a/node_modules/react-native-linear-gradient/README.md b/node_modules/react-native-linear-gradient/README.md
+index 6605ed0..6105dc0 100644
 --- a/node_modules/react-native-linear-gradient/README.md
 +++ b/node_modules/react-native-linear-gradient/README.md
 @@ -132,18 +132,18 @@ In addition to regular `View` props, you can also provide additional props to cu
@@ -24,6 +25,8 @@ patch-package
    locations={[0,0.5,0.6]}
    colors={['#4c669f', '#3b5998', '#192f6a']}
    style={styles.linearGradient}>
+diff --git a/node_modules/react-native-linear-gradient/index.android.js b/node_modules/react-native-linear-gradient/index.android.js
+index 2c4643e..c81e0ba 100644
 --- a/node_modules/react-native-linear-gradient/index.android.js
 +++ b/node_modules/react-native-linear-gradient/index.android.js
 @@ -18,22 +18,22 @@ const convertPoint = (name, point) => {
@@ -76,36 +79,26 @@ patch-package
            locations={locations ? locations.slice(0, colors.length) : null}
            borderRadii={borderRadiiPerCorner}
          />
+diff --git a/node_modules/react-native-linear-gradient/index.d.ts b/node_modules/react-native-linear-gradient/index.d.ts
+index 1380673..8c62527 100644
 --- a/node_modules/react-native-linear-gradient/index.d.ts
 +++ b/node_modules/react-native-linear-gradient/index.d.ts
-@@ -1,14 +1,16 @@
--import * as React from "react";
--import * as ReactNative from "react-native";
-+import * as React from 'react'
-+import * as ReactNative from 'react-native'
+@@ -3,10 +3,10 @@ import * as ReactNative from "react-native";
  
--declare module "react-native-linear-gradient" {
-+declare module 'react-native-linear-gradient' {
-+  export interface LinearGradientProps extends ReactNative.ViewProperties {
-+    colors: string[]
-+    startPoint?: { x: number; y: number }
-+    endPoint?: { x: number; y: number }
-+    locations?: number[]
-+  }
+ declare module "react-native-linear-gradient" {
  
 -    interface LinearGradientProps extends ReactNative.ViewProperties {
--        colors: string[],
++    export interface LinearGradientProps extends ReactNative.ViewProperties {
+         colors: string[],
 -        start?: { x: number, y: number },
 -        end?: { x: number, y: number },
--        locations?: number[]
--    }
--
--    export default class LinearGradient extends React.Component<LinearGradientProps, any> { }
-+  export default class LinearGradient extends React.Component<
-+    LinearGradientProps,
-+    any
-+  > {}
- }
++        startPoint?: { x: number, y: number },
++        endPoint?: { x: number, y: number },
+         locations?: number[]
+     }
+ 
+diff --git a/node_modules/react-native-linear-gradient/index.ios.js b/node_modules/react-native-linear-gradient/index.ios.js
+index 31bf50d..8942ef2 100644
 --- a/node_modules/react-native-linear-gradient/index.ios.js
 +++ b/node_modules/react-native-linear-gradient/index.ios.js
 @@ -23,22 +23,22 @@ const convertPoint = (name, point) => {

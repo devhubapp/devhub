@@ -5,7 +5,7 @@ import WikiPageRow from './WikiPageRow'
 
 import { IGitHubPage, ITheme } from '../../../../types'
 
-export interface WikiPageListRowProperties {
+export interface WikiPageListRowProps {
   isRead: boolean
   maxHeight?: number
   pages: IGitHubPage[]
@@ -13,7 +13,7 @@ export interface WikiPageListRowProperties {
 }
 
 export default class WikiPageListRow extends PureComponent<
-  WikiPageListRowProperties
+  WikiPageListRowProps
 > {
   renderItem: RenderItem<IGitHubPage> = ({
     item: page,

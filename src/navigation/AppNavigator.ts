@@ -1,6 +1,6 @@
 import {
+  createSwitchNavigator,
   NavigationRouteConfigMap,
-  SwitchNavigator,
   SwitchNavigatorConfig,
 } from 'react-navigation'
 
@@ -22,4 +22,4 @@ export const options: SwitchNavigatorConfig = {
   initialRouteName: 'Main',
 }
 
-export default SwitchNavigator(routes, options)
+export default createSwitchNavigator(routes, options)

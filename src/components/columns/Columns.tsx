@@ -1,14 +1,14 @@
 import React, { PureComponent, ReactFragment } from 'react'
 import {
   ScrollView,
-  ScrollViewProperties,
+  ScrollViewProps,
   StyleProp,
   StyleSheet,
   ViewStyle,
 } from 'react-native'
 import theme from '../../styles/themes/dark'
 
-export interface IProps extends ScrollViewProperties {
+export interface IProps extends ScrollViewProps {
   children: ReactFragment
   contentContainerStyle?: StyleProp<ViewStyle>
   style?: StyleProp<ViewStyle>

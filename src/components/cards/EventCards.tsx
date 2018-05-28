@@ -9,7 +9,7 @@ import EventCard from './EventCard'
 import CardItemSeparator from './partials/CardItemSeparator'
 import SwipeableEventCard from './SwipeableEventCard'
 
-export interface EventCardsProperties {
+export interface EventCardsProps {
   events: IGitHubEvent[]
   swipeable?: boolean
 }
@@ -17,7 +17,7 @@ export interface EventCardsProperties {
 export interface EventCardsState {}
 
 export default class EventCards extends PureComponent<
-  EventCardsProperties,
+  EventCardsProps,
   EventCardsState
 > {
   keyExtractor(event: IGitHubEvent) {

@@ -12,7 +12,7 @@ export function getCommentIdFromUrl(url: string) {
   if (!url) return null
 
   const matches = url.match(/\/comments\/([0-9]+)([?].+)?$/)
-  return (matches && matches[1]) || null
+  return (matches && matches[1] && parseInt(matches[1], 10)) || null
 }
 
 export function getCommitShaFromUrl(url: string) {

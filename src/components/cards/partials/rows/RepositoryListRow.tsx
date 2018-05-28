@@ -7,7 +7,7 @@ import { IGitHubRepo, ITheme } from '../../../../types'
 import { getOwnerAndRepo } from '../../../../utils/helpers/github/shared'
 import { getRepoFullNameFromObject } from '../../../../utils/helpers/github/url'
 
-export interface RepositoryListRowProperties {
+export interface RepositoryListRowProps {
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
@@ -18,7 +18,7 @@ export interface RepositoryListRowProperties {
 }
 
 export default class RepositoryListRow extends PureComponent<
-  RepositoryListRowProperties
+  RepositoryListRowProps
 > {
   renderItem: RenderItem<IGitHubRepo> = ({
     item: repo,

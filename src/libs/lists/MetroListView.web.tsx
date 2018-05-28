@@ -13,7 +13,7 @@ import React from 'react'
 import {
   ListView,
   ListViewDataSource,
-  ListViewProperties,
+  ListViewProps,
   RefreshControl,
   ScrollView,
 } from 'react-native'
@@ -26,7 +26,7 @@ interface SectionItem {
   data: Item[]
 }
 
-export interface IProps extends ListViewProperties {
+export interface IProps extends ListViewProps {
   FooterComponent: React.ComponentType
   ItemSeparatorComponent: React.ComponentType // not supported yet
   ListEmptyComponent: React.ComponentType
@@ -104,7 +104,7 @@ export default class MetroListView extends React.Component<IProps, IState> {
   })
 
   _listRef:
-    | React.Component<ListViewProperties, React.ComponentState> & {
+    | React.Component<ListViewProps, React.ComponentState> & {
         scrollTo: ScrollView['scrollTo']
       }
     | null = null
@@ -198,7 +198,7 @@ export default class MetroListView extends React.Component<IProps, IState> {
 
   _captureRef = (
     ref:
-      | React.Component<ListViewProperties, React.ComponentState> & {
+      | React.Component<ListViewProps, React.ComponentState> & {
           scrollTo: ScrollView['scrollTo']
         }
       | null,

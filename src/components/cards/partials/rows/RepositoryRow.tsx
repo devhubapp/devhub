@@ -1,13 +1,13 @@
 import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../../../libs/vector-icons'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'
 import { getRepositoryPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface RepositoryRowProperties {
+export interface RepositoryRowProps {
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
@@ -19,7 +19,7 @@ export interface RepositoryRowProperties {
 
 export interface RepositoryRowState {}
 
-const RepositoryRow: SFC<RepositoryRowProperties> = ({
+const RepositoryRow: SFC<RepositoryRowProps> = ({
   isForcePush,
   isFork,
   isPush,

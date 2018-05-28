@@ -7,8 +7,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../../libs/vector-icons'
 import { IGitHubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
@@ -17,7 +17,7 @@ import cardStyles from '../styles'
 import CardIcon from './CardIcon'
 import { getUserPressHandler } from './rows/helpers'
 
-export interface EventCardHeaderProperties {
+export interface EventCardHeaderProps {
   actionText: string
   avatarURL: string
   cardIconColor: string
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
 })
 
 export default class EventCardHeader extends PureComponent<
-  EventCardHeaderProperties
+  EventCardHeaderProps
 > {
   render() {
     const {

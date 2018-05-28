@@ -5,16 +5,14 @@ import RowList, { RenderItem } from './RowList'
 
 import { IGitHubCommit, ITheme } from '../../../../types'
 
-export interface CommitListRowProperties {
+export interface CommitListRowProps {
   isRead: boolean
   maxHeight?: number
   commits: IGitHubCommit[]
   theme: ITheme
 }
 
-export default class CommitListRow extends PureComponent<
-  CommitListRowProperties
-> {
+export default class CommitListRow extends PureComponent<CommitListRowProps> {
   renderItem: RenderItem<IGitHubCommit> = ({
     showMoreItemsIndicator,
     item: commit,

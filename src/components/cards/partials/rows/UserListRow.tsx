@@ -5,14 +5,14 @@ import UserRow from './UserRow'
 
 import { IGitHubUser, ITheme } from '../../../../types'
 
-export interface UserListRowProperties {
+export interface UserListRowProps {
   isRead: boolean
   maxHeight?: number
   users: IGitHubUser[]
   theme: ITheme
 }
 
-export default class UserListRow extends PureComponent<UserListRowProperties> {
+export default class UserListRow extends PureComponent<UserListRowProps> {
   renderItem: RenderItem<IGitHubUser> = ({
     item: user,
     showMoreItemsIndicator,

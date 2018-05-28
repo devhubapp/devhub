@@ -1,6 +1,6 @@
 import {
+  createStackNavigator,
   NavigationRouteConfigMap,
-  StackNavigator,
   StackNavigatorConfig,
 } from 'react-navigation'
 
@@ -15,4 +15,4 @@ export const routes: NavigationRouteConfigMap = {
 
 export const options: StackNavigatorConfig = {}
 
-export default StackNavigator(routes, options)
+export default createStackNavigator(routes, options)

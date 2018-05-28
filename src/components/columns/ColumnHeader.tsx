@@ -1,8 +1,8 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { StyleSheet, View, ViewProperties, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import { contentPadding } from '../../styles/variables'
 
-export interface IProps extends ViewProperties {
+export interface IProps extends ViewProps {
   children?: ReactNode
   maxWidth?: number
   style?: ViewStyle

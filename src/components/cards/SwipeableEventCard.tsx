@@ -2,14 +2,14 @@ import React, { PureComponent } from 'react'
 
 import SwipeableRow from '../../libs/swipeable'
 import theme from '../../styles/themes/dark'
-import EventCard, { EventCardProperties } from './EventCard'
+import EventCard, { EventCardProps } from './EventCard'
 
-export interface SwipeableEventCardProperties extends EventCardProperties {}
+export interface SwipeableEventCardProps extends EventCardProps {}
 
 export interface SwipeableEventCardState {}
 
 export default class SwipeableEventCard extends PureComponent<
-  SwipeableEventCardProperties,
+  SwipeableEventCardProps,
   SwipeableEventCardState
 > {
   onArchive = () => {

@@ -21,7 +21,7 @@ import { contentPadding, radius } from '../styles/variables'
 const logo = require('../../assets/logo.png') // tslint:disable-line
 const pkg = require('../../package.json') // tslint:disable-line
 
-export interface LoginScreenProperties extends NavigationScreenProps {
+export interface LoginScreenProps extends NavigationScreenProps {
   error: string
   isLoggingIn: boolean
 }
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
 })
 
 export default class LoginScreen extends PureComponent<
-  LoginScreenProperties,
+  LoginScreenProps,
   LoginScreenState
 > {
   static navigationOptions: NavigationStackScreenOptions = {

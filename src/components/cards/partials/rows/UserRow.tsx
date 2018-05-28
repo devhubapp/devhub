@@ -6,7 +6,7 @@ import cardStyles from '../../styles'
 import { getUserPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface UserRowProperties {
+export interface UserRowProps {
   avatarURL: string
   isRead: boolean
   showMoreItemsIndicator?: boolean
@@ -16,7 +16,7 @@ export interface UserRowProperties {
 
 export interface UserRowState {}
 
-const UserRow: SFC<UserRowProperties> = ({
+const UserRow: SFC<UserRowProps> = ({
   avatarURL,
   isRead,
   showMoreItemsIndicator,

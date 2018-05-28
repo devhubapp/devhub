@@ -6,8 +6,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../../../libs/vector-icons'
 import defaultStyles from '../../../../styles/styles'
 import { contentPadding } from '../../../../styles/variables'
 import { ITheme } from '../../../../types'

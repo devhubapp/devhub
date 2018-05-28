@@ -3,7 +3,7 @@ export * from 'react-native'
 declare module 'react-native' {
   export interface TouchableNativeFeedbackStatic
     extends TouchableMixin,
-      React.ClassicComponentClass<TouchableNativeFeedbackProperties> {
+      React.ClassicComponentClass<TouchableNativeFeedbackProps> {
     /**
      * Creates an object that represents android theme's default background for
      * selectable elements (?android:attr/selectableItemBackground).

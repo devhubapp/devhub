@@ -1,8 +1,8 @@
 import React, { SFC } from 'react'
 import { StyleSheet, ViewStyle } from 'react-native'
-import { IconProps } from 'react-native-vector-icons/Icon'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { IconProps } from 'react-native-vector-icons/Icon'
+import { Octicons as Icon } from '../../../libs/vector-icons'
 import { contentPadding } from '../../../styles/variables'
 
 export interface IProps extends IconProps {}

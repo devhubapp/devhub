@@ -9,7 +9,7 @@ import NotificationCard from './NotificationCard'
 import CardItemSeparator from './partials/CardItemSeparator'
 import SwipeableNotificationCard from './SwipeableNotificationCard'
 
-export interface NotificationCardsProperties {
+export interface NotificationCardsProps {
   notifications: IGitHubNotification[]
   swipeable?: boolean
 }
@@ -17,7 +17,7 @@ export interface NotificationCardsProperties {
 export interface NotificationCardsState {}
 
 export default class NotificationCards extends PureComponent<
-  NotificationCardsProperties,
+  NotificationCardsProps,
   NotificationCardsState
 > {
   keyExtractor(notification: IGitHubNotification) {

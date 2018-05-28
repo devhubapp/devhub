@@ -1,7 +1,7 @@
 import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { IGitHubEventType } from '../../../../types'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'

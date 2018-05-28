@@ -3,23 +3,23 @@ import React, { PureComponent } from 'react'
 // import { Alert } from 'react-native'
 
 import NotificationCards, {
-  NotificationCardsProperties,
+  NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 
-export type NotificationCardsContainerProperties = {
-  [key in keyof NotificationCardsProperties]?: NotificationCardsProperties[key]
+export type NotificationCardsContainerProps = {
+  [key in keyof NotificationCardsProps]?: NotificationCardsProps[key]
 }
 
 export interface NotificationCardsContainerState {
-  notifications: NotificationCardsProperties['notifications']
+  notifications: NotificationCardsProps['notifications']
 }
 
 export default class NotificationCardsContainer extends PureComponent<
-  NotificationCardsContainerProperties,
+  NotificationCardsContainerProps,
   NotificationCardsContainerState
 > {
   static getDerivedStateFromProps(
-    nextProps: NotificationCardsContainerProperties,
+    nextProps: NotificationCardsContainerProps,
     prevState: NotificationCardsContainerState,
   ) {
     if (

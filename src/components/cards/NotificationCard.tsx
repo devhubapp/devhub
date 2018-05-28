@@ -20,7 +20,7 @@ import IssueOrPullRequestRow from './partials/rows/IssueOrPullRequestRow'
 import ReleaseRow from './partials/rows/ReleaseRow'
 import RepositoryRow from './partials/rows/RepositoryRow'
 
-export interface NotificationCardProperties {
+export interface NotificationCardProps {
   archived?: boolean
   notification: IGitHubNotification
   onlyOneRepository?: boolean
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 })
 
 export default class NotificationCard extends PureComponent<
-  NotificationCardProperties
+  NotificationCardProps
 > {
   render() {
     const { archived, notification, onlyOneRepository } = this.props

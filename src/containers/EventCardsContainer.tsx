@@ -2,13 +2,11 @@ import _ from 'lodash'
 import React, { PureComponent } from 'react'
 // import { Alert } from 'react-native'
 
-import EventCards, {
-  EventCardsProperties,
-} from '../components/cards/EventCards'
+import EventCards, { EventCardsProps } from '../components/cards/EventCards'
 import { IGitHubRequestSubType, IGitHubRequestType } from '../types'
 
-export type EventCardsContainerProperties = {
-  [key in keyof EventCardsProperties]?: EventCardsProperties[key]
+export type EventCardsContainerProps = {
+  [key in keyof EventCardsProps]?: EventCardsProps[key]
 } & {
   subtype: IGitHubRequestSubType
   type: IGitHubRequestType
@@ -16,15 +14,15 @@ export type EventCardsContainerProperties = {
 }
 
 export interface EventCardsContainerState {
-  events: EventCardsProperties['events']
+  events: EventCardsProps['events']
 }
 
 export default class EventCardsContainer extends PureComponent<
-  EventCardsContainerProperties,
+  EventCardsContainerProps,
   EventCardsContainerState
 > {
   static getDerivedStateFromProps(
-    nextProps: EventCardsContainerProperties,
+    nextProps: EventCardsContainerProps,
     prevState: EventCardsContainerState,
   ) {
     if (nextProps.events && nextProps.events !== prevState.events) {

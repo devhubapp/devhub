@@ -68,7 +68,9 @@ const Avatar: SFC<IProps> = ({
       onPress={
         linkURL
           ? getGithubURLPressHandler(linkURL)
-          : username ? getUserPressHandler(username, { isBot }) : undefined
+          : username
+            ? getUserPressHandler(username, { isBot })
+            : undefined
       }
     >
       <ImageWithLoading

@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { StyleSheet, View, ViewProperties, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import Platform from '../../../src/libs/platform'
 import theme from '../../styles/themes/dark'
@@ -8,7 +8,7 @@ import DimensionsWatcher from '../render-props/DimensionsWatcher'
 
 export const columnMargin = contentPadding / 2
 
-export interface IProps extends ViewProperties {
+export interface IProps extends ViewProps {
   children?: ReactNode
   maxWidth?: number
   minWidth?: number

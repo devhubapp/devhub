@@ -1,7 +1,7 @@
 import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { tryGetUsernameFromGitHubEmail } from '../../../../utils/helpers/github/shared'
 import {
   getCommentIdFromUrl,
@@ -14,7 +14,7 @@ import cardStyles from '../../styles'
 import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface CommitRowProperties {
+export interface CommitRowProps {
   authorEmail?: string
   authorName?: string
   authorUsername?: string
@@ -27,7 +27,7 @@ export interface CommitRowProperties {
 
 export interface CommitRowState {}
 
-const CommitRow: SFC<CommitRowProperties> = ({
+const CommitRow: SFC<CommitRowProps> = ({
   authorEmail,
   authorName,
   authorUsername: _authorUsername,
@@ -75,7 +75,9 @@ const CommitRow: SFC<CommitRowProperties> = ({
               ? undefined
               : getGithubURLPressHandler(url, {
                   commentId:
-                    latestCommentUrl && getCommentIdFromUrl(latestCommentUrl),
+                    (latestCommentUrl &&
+                      getCommentIdFromUrl(latestCommentUrl)) ||
+                    undefined,
                 })
           }
           style={rowStyles.mainContentContainer}

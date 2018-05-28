@@ -3,27 +3,27 @@ import {
   ActivityIndicator,
   StyleSheet,
   Text,
-  TextProperties,
+  TextProps,
   TextStyle,
   TouchableOpacity,
-  TouchableOpacityProperties,
+  TouchableOpacityProps,
   View,
   ViewStyle,
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../libs/vector-icons'
 import theme from '../../styles/themes/dark'
 import { contentPadding, radius as defaultRadius } from '../../styles/variables'
 
-export interface IProps extends TouchableOpacityProperties {
+export interface IProps extends TouchableOpacityProps {
   horizontal?: boolean
   leftIcon?: string
   loading?: boolean
   radius?: number
   rightIcon?: string
   subtitle?: string
-  subtitleProps?: TextProperties
-  textProps?: TextProperties
+  subtitleProps?: TextProps
+  textProps?: TextProps
   title?: string
 }
 

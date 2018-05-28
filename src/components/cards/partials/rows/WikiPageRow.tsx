@@ -1,13 +1,13 @@
 import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/Octicons'
 
+import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import cardStyles from '../../styles'
 import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
-export interface WikiPageRowProperties {
+export interface WikiPageRowProps {
   isRead: boolean
   name?: string
   showMoreItemsIndicator?: boolean
@@ -17,7 +17,7 @@ export interface WikiPageRowProperties {
 
 export interface WikiPageRowState {}
 
-const WikiPageRow: SFC<WikiPageRowProperties> = ({
+const WikiPageRow: SFC<WikiPageRowProps> = ({
   isRead,
   name,
   showMoreItemsIndicator,
