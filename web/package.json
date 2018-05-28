@@ -17,7 +17,7 @@
     "react": "^16.3.2",
     "react-art": "^16.3.2",
     "react-dom": "^16.3.2",
-    "react-native-web": "0.6.0",
+    "react-native-web": "^0.7.3",
     "react-scripts-ts": "^2.16.0"
   },
   "devDependencies": {
