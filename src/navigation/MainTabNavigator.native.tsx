@@ -4,9 +4,9 @@ import {
   NavigationRouteConfigMap,
   NavigationStackScreenOptions,
   StackNavigator,
-  TabNavigator,
   TabNavigatorConfig,
 } from 'react-navigation'
+import createTabNavigator from 'react-navigation-deprecated-tab-navigator/src/createTabNavigator'
 
 import Platform from '../libs/platform'
 import FeedScreen from '../screens/FeedScreen'
@@ -74,4 +74,4 @@ export const options: TabNavigatorConfig = {
   }) as 'top' | 'bottom',
 }
 
-export default TabNavigator(routes, options)
+export default createTabNavigator(routes, options)

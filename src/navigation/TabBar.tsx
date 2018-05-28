@@ -1,10 +1,7 @@
 import React, { ComponentType } from 'react'
-import {
-  TabBarBottom,
-  TabBarBottomProps,
-  TabBarTop,
-  TabBarTopProps,
-} from 'react-navigation'
+import { TabBarBottomProps, TabBarTopProps } from 'react-navigation'
+import TabBarBottom from 'react-navigation-deprecated-tab-navigator/src/views/TabBarBottom'
+import TabBarTop from 'react-navigation-deprecated-tab-navigator/src/views/TabBarTop'
 
 import Platform from '../libs/platform'
 import darkTheme from '../styles/themes/dark'
