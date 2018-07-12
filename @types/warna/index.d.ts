@@ -1,11 +1,45 @@
 declare module 'warna' {
-  export class Gradient {
-    constructor(begin: any, end: any)
-    getPosition(pos: any): any
-    getSlices(slice: any, type: any): any
+  interface RGB {
+    red: number
+    green: number
+    blue: number
+    alpha?: number
   }
 
-  export function darken(color: any, pos: any): any
-  export function lighten(color: any, pos: any): any
-  export function parse(color: any): any
+  interface HSV {
+    hue: number
+    saturation: number
+    value: number
+    alpha?: number
+  }
+
+  interface HSL {
+    hue: number
+    saturation: number
+    luminosity: number
+    alpha?: number
+  }
+
+  type Color = string | RGB | HSV | HSL
+
+  interface ParsedColor {
+    rgb: RGB
+    hex: string
+    hsv: string
+    hsl: string
+    alpha: number
+  }
+
+  export class Gradient {
+    static getPosition(pos: number): ParsedColor
+    static getSlices(
+      slice: number,
+      type: 'rgb' | 'hsv' | 'hsl' | undefined,
+    ): ParsedColor[] | ((RGB[] | string[]) & { alpha: string })
+    constructor(begin: number, end: number)
+  }
+
+  export function darken(color: Color, pos: number): ParsedColor
+  export function lighten(color: Color, pos: number): ParsedColor
+  export function parse(color: Color): ParsedColor
 }
