@@ -5,6 +5,7 @@ import React, { PureComponent } from 'react'
 import NotificationCards, {
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
+import { IGitHubNotification } from '../types'
 
 export type NotificationCardsContainerProps = {
   [key in keyof NotificationCardsProps]?: NotificationCardsProps[key]
@@ -53,7 +54,7 @@ export default class NotificationCardsContainer extends PureComponent<
       const response = await fetch(
         `https://api.github.com/notifications?all=1&access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160&timestamp=${Date.now()}`,
       )
-      const notifications = await response.json()
+      const notifications: IGitHubNotification[] = await response.json()
       if (Array.isArray(notifications)) {
         this.setState({
           notifications: _.orderBy(

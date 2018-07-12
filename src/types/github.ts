@@ -1,3 +1,5 @@
+import { Omit } from './typescript'
+
 export type IGitHubRequestType = 'users' | 'orgs'
 export type IGitHubRequestSubType = 'events' | 'received_events'
 
@@ -480,6 +482,17 @@ export interface IWatchEvent {
   created_at: string
 }
 
+export interface IEnhancedEventBase {
+  merged: string[]
+}
+
+export interface IMultipleStarEvent
+  extends IEnhancedEventBase,
+    Omit<IWatchEvent, 'type' | 'repo'> {
+  type: 'WatchEvent:OneUserMultipleRepos'
+  repos: IGitHubRepo[]
+}
+
 export type IGitHubEvent =
   | ICreateEvent
   | IDeleteEvent
@@ -497,22 +510,7 @@ export type IGitHubEvent =
   | IReleaseEvent
   | IWatchEvent
 
-export type IGitHubEventType =
-  | 'CommitCommentEvent'
-  | 'CreateEvent'
-  | 'DeleteEvent'
-  | 'ForkEvent'
-  | 'GollumEvent'
-  | 'IssueCommentEvent'
-  | 'IssuesEvent'
-  | 'MemberEvent'
-  | 'PublicEvent'
-  | 'PullRequestEvent'
-  | 'PullRequestReviewCommentEvent'
-  | 'PullRequestReviewEvent'
-  | 'PushEvent'
-  | 'ReleaseEvent'
-  | 'WatchEvent'
+export type IEnhancedGitHubEvent = IGitHubEvent | IMultipleStarEvent
 
 // not visible in timelines
 // | 'DeploymentEvent'

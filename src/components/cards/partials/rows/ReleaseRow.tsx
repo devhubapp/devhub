@@ -2,7 +2,7 @@ import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
-import { IGitHubEventType } from '../../../../types'
+import { IEnhancedGitHubEvent } from '../../../../types'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'
@@ -19,7 +19,7 @@ export interface IProps {
   ownerName: string
   repositoryName: string
   tagName: string
-  type: IGitHubEventType
+  type: IEnhancedGitHubEvent['type']
   url: string
   userLinkURL: string
   username: string

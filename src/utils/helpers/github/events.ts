@@ -1,3 +1,6 @@
+import moment from 'moment'
+import { omit, uniq, uniqBy } from 'ramda'
+
 import * as baseTheme from '../../../styles/themes/base'
 
 import {
@@ -8,12 +11,14 @@ import {
 
 import {
   IBaseTheme,
+  IEnhancedGitHubEvent,
   IGitHubEvent,
   IGitHubIcon,
   IGitHubIssue,
   IGitHubPullRequest,
   IGitHubRequestSubType,
   IGitHubRequestType,
+  IMultipleStarEvent,
 } from '../../../types'
 
 export function getRequestTypeIconAndData(
@@ -51,7 +56,7 @@ export function getRequestTypeIconAndData(
 }
 
 export function getEventIconAndColor(
-  event: IGitHubEvent,
+  event: IEnhancedGitHubEvent,
   theme: IBaseTheme | undefined = baseTheme,
 ): { color?: string; icon: IGitHubIcon; subIcon?: IGitHubIcon } {
   switch (event.type) {
@@ -164,6 +169,7 @@ export function getEventIconAndColor(
     case 'ReleaseEvent':
       return { icon: 'tag' }
     case 'WatchEvent':
+    case 'WatchEvent:OneUserMultipleRepos':
       return { icon: 'star', color: theme.star }
     default:
       return { icon: 'mark-github' }
@@ -171,7 +177,7 @@ export function getEventIconAndColor(
 }
 
 export function getEventText(
-  event: IGitHubEvent,
+  event: IEnhancedGitHubEvent,
   options:
     | {
         issueOrPullRequestIsKnown?: boolean
@@ -321,31 +327,101 @@ export function getEventText(
         return 'published a release'
       case 'WatchEvent':
         return `starred ${repositoryText}`
-      // case 'WatchEvent:OneRepoMultipleUsers':
-      //   return (() => {
-      //     const otherUsers = event.payload.users
-      //     const otherUsersText =
-      //       otherUsers && otherUsers.size > 0
-      //         ? otherUsers.size > 1
-      //           ? `and ${otherUsers.size} others`
-      //           : 'and 1 other'
-      //         : ''
-
-      //     return `${otherUsersText} starred ${repositoryText}`
-      //   })()
-      // case 'WatchEvent:OneUserMultipleRepos':
-      //   return (() => {
-      //     const otherRepos = event.payload.repos
-      //     const count = (otherRepos && otherRepos.size) || 0
-
-      //     return count > 1
-      //       ? `starred ${count} repositories`
-      //       : `starred ${repositoryText}`
-      //   })()
+      case 'WatchEvent:OneUserMultipleRepos':
+        return (() => {
+          return event.repos.length > 1
+            ? `starred ${event.repos.length} repositories`
+            : `starred ${repositoryText}`
+        })()
       default:
         return 'did something'
     }
   })()
 
   return text.replace(/ {2}/g, ' ').trim()
+}
+
+function tryMerge(eventA: IEnhancedGitHubEvent, eventB: IGitHubEvent) {
+  if (!eventA || !eventB) return null
+
+  const isSameUser =
+    eventA.actor && eventB.actor && eventA.actor.id === eventB.actor.id
+
+  // const isSameRepo =
+  //   'repo' in eventA &&
+  //   eventA.repo &&
+  //   eventB.repo &&
+  //   eventA.repo.id === eventB.repo.id
+
+  const createdAtMinutesDiff = moment(eventA.created_at).diff(
+    moment(eventB.created_at),
+    'minutes',
+  )
+
+  // only merge events from the same user
+  if (!isSameUser) return null
+
+  // only merge events that were created in the same hour
+  if (createdAtMinutesDiff >= 24 * 60) return null
+
+  // only merge 5 events at max
+  if ('merged' in eventA && eventA.merged && eventA.merged.length >= 5 - 1)
+    return null
+
+  switch (eventA.type) {
+    case 'WatchEvent': {
+      if (eventB.type === 'WatchEvent') {
+        return {
+          ...omit(['repo', 'type'], eventA),
+          type: 'WatchEvent:OneUserMultipleRepos',
+          repos: [eventA.repo, eventB.repo],
+          merged: [eventA.id, eventB.id],
+        } as IMultipleStarEvent
+      }
+
+      return null
+    }
+
+    case 'WatchEvent:OneUserMultipleRepos': {
+      if (eventB.type === 'WatchEvent') {
+        return {
+          ...eventA,
+          repos: uniqBy(repo => repo.id, [...eventA.repos, eventB.repo]),
+          merged: uniq([...eventA.merged, eventB.id]),
+        } as IMultipleStarEvent
+      }
+
+      return null
+    }
+
+    default:
+      return null
+  }
+}
+
+export function mergeSimilarEvent(events: IGitHubEvent[]) {
+  const enhancedEvents: IEnhancedGitHubEvent[] = []
+
+  let enhancedEvent: IEnhancedGitHubEvent | null = null
+
+  events.filter(Boolean).forEach(event => {
+    if (!enhancedEvent) {
+      enhancedEvent = event
+      return
+    }
+
+    const mergedEvent = tryMerge(enhancedEvent, event)
+
+    if (!mergedEvent) {
+      enhancedEvents.push(enhancedEvent)
+      enhancedEvent = event
+      return
+    }
+
+    enhancedEvent = mergedEvent
+  })
+
+  if (enhancedEvent) enhancedEvents.push(enhancedEvent)
+
+  return enhancedEvents.length === events.length ? events : enhancedEvents
 }

@@ -2,7 +2,7 @@ import React, { SFC } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
-import { IGitHubEventType } from '../../../../types'
+import { IEnhancedGitHubEvent } from '../../../../types'
 import Avatar from '../../../common/Avatar'
 import cardStyles from '../../styles'
 import { getBranchPressHandler } from './helpers'
@@ -13,7 +13,7 @@ export interface IProps {
   isRead: boolean
   ownerName: string
   repositoryName: string
-  type: IGitHubEventType
+  type: IEnhancedGitHubEvent['type']
 }
 
 export interface IState {}

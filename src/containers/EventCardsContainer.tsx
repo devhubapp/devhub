@@ -3,7 +3,12 @@ import React, { PureComponent } from 'react'
 // import { Alert } from 'react-native'
 
 import EventCards, { EventCardsProps } from '../components/cards/EventCards'
-import { IGitHubRequestSubType, IGitHubRequestType } from '../types'
+import {
+  IGitHubEvent,
+  IGitHubRequestSubType,
+  IGitHubRequestType,
+} from '../types'
+import { mergeSimilarEvent } from '../utils/helpers/github/events'
 
 export type EventCardsContainerProps = {
   [key in keyof EventCardsProps]?: EventCardsProps[key]
@@ -55,9 +60,11 @@ export default class EventCardsContainer extends PureComponent<
       const response = await fetch(
         `https://api.github.com/${type}/${username}/${subtype}?access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160&timestamp=${Date.now()}`,
       )
-      const events = await response.json()
+      const events: IGitHubEvent[] = await response.json()
       if (Array.isArray(events)) {
-        this.setState({ events: _.orderBy(events, ['updated_at'], ['desc']) })
+        const orderedEvents = _.orderBy(events, ['updated_at'], ['desc'])
+        const mergedEvents = mergeSimilarEvent(orderedEvents)
+        this.setState({ events: mergedEvents })
       }
     } catch (error) {
       console.error(error)

@@ -4,6 +4,8 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import {
+  IEnhancedEventBase,
+  IEnhancedGitHubEvent,
   IForkEvent,
   IGitHubCommit,
   IGitHubCommitCommentEvent,
@@ -14,6 +16,7 @@ import {
   IGollumEvent,
   IIssuesEvent,
   IMemberEvent,
+  IMultipleStarEvent,
   IPullRequestEvent,
   IPushEvent,
   IReleaseEvent,
@@ -40,7 +43,7 @@ import UserListRow from './partials/rows/UserListRow'
 import WikiPageListRow from './partials/rows/WikiPageListRow'
 
 export interface EventCardProps {
-  event: IGitHubEvent
+  event: IEnhancedGitHubEvent
 }
 
 export interface EventCardState {}
@@ -58,7 +61,8 @@ export default class EventCard extends PureComponent<EventCardProps> {
     const { event } = this.props
     if (!event) return null
 
-    const { actor, payload, repo: _repo, type } = event
+    const { actor, payload, repo: _repo, type } = event as IGitHubEvent
+    const { repos: _repos } = event as IMultipleStarEvent
 
     const { comment } = payload as IGitHubCommitCommentEvent['payload']
     const { commits: _commits } = payload as IPushEvent['payload']
@@ -74,7 +78,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
     const isRead = false // TODO
     const commits: IGitHubCommit[] = (_commits || []).filter(Boolean)
-    const repos: IGitHubRepo[] = [_repo].filter(Boolean) // TODO
+    const repos: IGitHubRepo[] = (_repos || [_repo]).filter(Boolean)
     const users: IGitHubUser[] = [_member].filter(Boolean) // TODO
     const pages: IGitHubPage[] = (_pages || []).filter(Boolean)
 

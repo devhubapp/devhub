@@ -12,7 +12,7 @@
     "member-access": false,
     "no-console": [true, "debug", "dir", "log", "trace", "warn"],
     "no-empty-interface": false,
-    "object-literal-sort-keys": [true, "shorthand-first"],
+    "object-literal-sort-keys": false,
     "object-shorthand-properties-first": false,
     "semicolon": false,
     "strict-boolean-expressions": false,
