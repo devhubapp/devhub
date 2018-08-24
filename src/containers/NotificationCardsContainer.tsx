@@ -7,8 +7,10 @@ import NotificationCards, {
 } from '../components/cards/NotificationCards'
 import { IGitHubNotification } from '../types'
 
-export type NotificationCardsContainerProps = {
-  [key in keyof NotificationCardsProps]?: NotificationCardsProps[key]
+export type NotificationCardsContainerProps = Partial<
+  NotificationCardsProps
+> & {
+  accessToken: string
 }
 
 export interface NotificationCardsContainerState {
@@ -50,9 +52,11 @@ export default class NotificationCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
+    const { accessToken } = this.props
+
     try {
       const response = await fetch(
-        `https://api.github.com/notifications?all=1&access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160&timestamp=${Date.now()}`,
+        `https://api.github.com/notifications?all=1&access_token=${accessToken}&timestamp=${Date.now()}`,
       )
       const notifications: IGitHubNotification[] = await response.json()
       if (Array.isArray(notifications)) {

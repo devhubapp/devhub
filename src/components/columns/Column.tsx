@@ -4,7 +4,7 @@ import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import Platform from '../../../src/libs/platform'
 import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
-import DimensionsWatcher from '../render-props/DimensionsWatcher'
+import { DimensionsConsumer } from '../context/DimensionsContext'
 
 export const columnMargin = contentPadding / 2
 
@@ -32,14 +32,14 @@ export default class Column extends PureComponent<IProps> {
       ios: 680,
       web: 360,
     }),
-    minWidth: 300,
+    minWidth: 320,
   }
 
   render() {
     const { children, maxWidth, minWidth, style, ...props } = this.props
 
     return (
-      <DimensionsWatcher>
+      <DimensionsConsumer>
         {({ width }) => (
           <View
             {...props}
@@ -54,7 +54,7 @@ export default class Column extends PureComponent<IProps> {
             {children}
           </View>
         )}
-      </DimensionsWatcher>
+      </DimensionsConsumer>
     )
   }
 }

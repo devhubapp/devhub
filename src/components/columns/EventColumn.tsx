@@ -24,7 +24,7 @@ export default class EventColumn extends PureComponent<
   }
 
   render() {
-    const { events, subtype, swipeable, type, username } = this.props
+    const { subtype, type, username } = this.props
 
     const requestTypeIconAndData = getRequestTypeIconAndData(type, subtype)
 
@@ -35,7 +35,7 @@ export default class EventColumn extends PureComponent<
             backgroundColor={theme.base00}
             foregroundColor={theme.base04}
             icon={requestTypeIconAndData.icon}
-            title="brunolemos"
+            title={username}
             subtitle={requestTypeIconAndData.subtitle}
           />
           <FlexSeparator />
@@ -49,13 +49,7 @@ export default class EventColumn extends PureComponent<
 
         <CardItemSeparator />
 
-        <EventCardsContainer
-          events={events}
-          subtype={subtype}
-          swipeable={swipeable}
-          type={type}
-          username={username}
-        />
+        <EventCardsContainer {...this.props} />
       </Column>
     )
   }

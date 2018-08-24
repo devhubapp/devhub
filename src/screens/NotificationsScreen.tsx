@@ -5,6 +5,7 @@ import {
 } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
+import { UserConsumer } from '../components/context/UserContext'
 import NotificationCardsContainer from '../containers/NotificationCardsContainer'
 
 export default class NotificationsScreen extends PureComponent<
@@ -17,7 +18,16 @@ export default class NotificationsScreen extends PureComponent<
   render() {
     return (
       <Screen>
-        <NotificationCardsContainer swipeable />
+        <UserConsumer>
+          {({ user }) =>
+            !(user && user.accessToken) ? null : (
+              <NotificationCardsContainer
+                accessToken={user.accessToken}
+                swipeable
+              />
+            )
+          }
+        </UserConsumer>
       </Screen>
     )
   }

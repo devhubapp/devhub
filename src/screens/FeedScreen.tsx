@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Fragment, PureComponent } from 'react'
 import {
   NavigationScreenConfig,
   NavigationScreenProps,
@@ -8,6 +8,7 @@ import {
 import Columns from '../components/columns/Columns'
 import EventColumn from '../components/columns/EventColumn'
 import Screen from '../components/common/Screen'
+import { UserConsumer } from '../components/context/UserContext'
 
 export default class FeedScreen extends PureComponent<NavigationScreenProps> {
   static navigationOptions: NavigationScreenConfig<
@@ -20,12 +21,26 @@ export default class FeedScreen extends PureComponent<NavigationScreenProps> {
     return (
       <Screen>
         <Columns>
-          <EventColumn
-            subtype="received_events"
-            type="users"
-            username="brunolemos"
-          />
-          <EventColumn subtype="events" type="users" username="brunolemos" />
+          <UserConsumer>
+            {({ user }) =>
+              !(user && user.accessToken) ? null : (
+                <Fragment>
+                  <EventColumn
+                    accessToken={user.accessToken}
+                    subtype="received_events"
+                    type="users"
+                    username={user.usernameToSee}
+                  />
+                  <EventColumn
+                    accessToken={user.accessToken}
+                    subtype="events"
+                    type="users"
+                    username={user.usernameToSee}
+                  />
+                </Fragment>
+              )
+            }
+          </UserConsumer>
         </Columns>
       </Screen>
     )

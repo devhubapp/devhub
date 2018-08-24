@@ -10,9 +10,8 @@ import {
 } from '../types'
 import { mergeSimilarEvent } from '../utils/helpers/github/events'
 
-export type EventCardsContainerProps = {
-  [key in keyof EventCardsProps]?: EventCardsProps[key]
-} & {
+export type EventCardsContainerProps = Partial<EventCardsProps> & {
+  accessToken: string
   subtype: IGitHubRequestSubType
   type: IGitHubRequestType
   username: string
@@ -54,11 +53,11 @@ export default class EventCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
-    const { subtype, type, username } = this.props
+    const { accessToken, subtype, type, username } = this.props
 
     try {
       const response = await fetch(
-        `https://api.github.com/${type}/${username}/${subtype}?access_token=fae0e8d5d55b71afb4c59d6abb89fce457c48160&timestamp=${Date.now()}`,
+        `https://api.github.com/${type}/${username}/${subtype}?access_token=${accessToken}&timestamp=${Date.now()}`,
       )
       const events: IGitHubEvent[] = await response.json()
       if (Array.isArray(events)) {
