@@ -24,7 +24,7 @@ export default class EventColumn extends PureComponent<
   }
 
   render() {
-    const { subtype, type, username } = this.props
+    const { showAvatarAsIcon, subtype, type, username } = this.props
 
     const requestTypeIconAndData = getRequestTypeIconAndData(type, subtype)
 
@@ -34,16 +34,19 @@ export default class EventColumn extends PureComponent<
           <ColumnHeaderItem
             backgroundColor={theme.base00}
             foregroundColor={theme.base04}
-            icon={requestTypeIconAndData.icon}
-            title={username}
+            iconName={requestTypeIconAndData.icon}
+            showAvatarAsIcon={showAvatarAsIcon}
             subtitle={requestTypeIconAndData.subtitle}
+            title={username}
+            username={username.split('/')[0]}
           />
           <FlexSeparator />
           <ColumnHeaderItem
             backgroundColor={theme.base00}
             foregroundColor={theme.base04}
-            icon="chevron-down"
+            iconName="chevron-down"
             onPress={this.handlePress}
+            username={username}
           />
         </ColumnHeader>
 

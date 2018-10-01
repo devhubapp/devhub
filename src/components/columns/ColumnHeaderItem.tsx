@@ -12,18 +12,21 @@ import { Octicons as Icon } from '../../libs/vector-icons'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { IGitHubIcon } from '../../types'
 import { fade } from '../../utils/helpers/color'
+import Avatar from '../common/Avatar'
 
 export interface IProps {
   backgroundColor: string
   foregroundColor: string
-  icon?: IGitHubIcon
+  iconName?: IGitHubIcon
   iconStyle?: StyleProp<TextStyle>
   onPress?: () => void
+  showAvatarAsIcon?: boolean
   style?: StyleProp<ViewStyle>
   subtitle?: string
   subtitleStyle?: StyleProp<TextStyle>
   title?: string
   titleStyle?: StyleProp<TextStyle>
+  username?: string
 }
 
 const styles = StyleSheet.create({
@@ -52,14 +55,16 @@ export default class ColumnHeaderItem extends PureComponent<IProps> {
     const {
       backgroundColor,
       foregroundColor,
-      icon,
+      iconName,
       iconStyle,
       onPress,
+      showAvatarAsIcon,
       style,
       subtitle,
       subtitleStyle,
       title,
       titleStyle,
+      username,
       ...props
     } = this.props
 
@@ -70,19 +75,39 @@ export default class ColumnHeaderItem extends PureComponent<IProps> {
         style={[styles.container, { backgroundColor }, style]}
       >
         <Fragment>
-          {!!icon && (
-            <Icon
-              color={foregroundColor}
-              name={icon}
-              style={[
-                styles.icon,
-                (!!title || !!subtitle) && {
-                  marginRight: 4,
-                },
-                iconStyle,
-              ]}
-            />
-          )}
+          {showAvatarAsIcon
+            ? !!username && (
+                <Avatar
+                  isBot={false}
+                  linkURL=""
+                  username={username}
+                  style={[
+                    {
+                      width: 20,
+                      height: 20,
+                    },
+                    !!title || !!subtitle
+                      ? {
+                          marginRight: 8,
+                        }
+                      : undefined,
+                  ]}
+                />
+              )
+            : !!iconName && (
+                <Icon
+                  color={foregroundColor}
+                  name={iconName}
+                  style={[
+                    styles.icon,
+                    (!!title || !!subtitle) && {
+                      marginRight: 4,
+                    },
+                    iconStyle,
+                  ]}
+                />
+              )}
+
           {!!title && (
             <Text
               style={[styles.title, { color: foregroundColor }, titleStyle]}

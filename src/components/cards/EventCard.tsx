@@ -4,7 +4,6 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import {
-  IEnhancedEventBase,
   IEnhancedGitHubEvent,
   IForkEvent,
   IGitHubCommit,
@@ -44,6 +43,7 @@ import WikiPageListRow from './partials/rows/WikiPageListRow'
 
 export interface EventCardProps {
   event: IEnhancedGitHubEvent
+  repoIsKnown?: boolean
 }
 
 export interface EventCardState {}
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 
 export default class EventCard extends PureComponent<EventCardProps> {
   render() {
-    const { event } = this.props
+    const { event, repoIsKnown } = this.props
     if (!event) return null
 
     const { actor, payload, repo: _repo, type } = event as IGitHubEvent
@@ -78,7 +78,9 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
     const isRead = false // TODO
     const commits: IGitHubCommit[] = (_commits || []).filter(Boolean)
-    const repos: IGitHubRepo[] = (_repos || [_repo]).filter(Boolean)
+    const repos: IGitHubRepo[] = (_repos || [_repo]).filter(
+      (r, index) => !!(r && !(repoIsKnown && index === 0)),
+    )
     const users: IGitHubUser[] = [_member].filter(Boolean) // TODO
     const pages: IGitHubPage[] = (_pages || []).filter(Boolean)
 
@@ -105,7 +107,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
     const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
     const cardIconColor = cardIconDetails.color || theme.base04
 
-    const actionText = getEventText(event)
+    const actionText = getEventText(event, { repoIsKnown })
 
     const isPush = type === 'PushEvent'
     const isForcePush = isPush && (payload as IPushEvent).forced

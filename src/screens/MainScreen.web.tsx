@@ -28,6 +28,14 @@ export default class MainScreen extends PureComponent {
                     type="users"
                     username={user.usernameToSee}
                   />
+                  <EventColumn
+                    accessToken={user.accessToken}
+                    repoIsKnown
+                    showAvatarAsIcon
+                    subtype="events"
+                    type="repos"
+                    username="facebook/react"
+                  />
                 </Fragment>
               )
             }

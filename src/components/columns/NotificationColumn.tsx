@@ -30,7 +30,7 @@ export default class NotificationColumn extends PureComponent<
           <ColumnHeaderItem
             backgroundColor={theme.base00}
             foregroundColor={theme.base04}
-            icon="bell"
+            iconName="bell"
             title="Notifications"
             subtitle="All"
           />
@@ -38,7 +38,7 @@ export default class NotificationColumn extends PureComponent<
           <ColumnHeaderItem
             backgroundColor={theme.base00}
             foregroundColor={theme.base04}
-            icon="chevron-down"
+            iconName="chevron-down"
             onPress={this.handlePress}
           />
         </ColumnHeader>

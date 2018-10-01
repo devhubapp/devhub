@@ -1,6 +1,6 @@
 import { Omit } from './typescript'
 
-export type IGitHubRequestType = 'users' | 'orgs'
+export type IGitHubRequestType = 'users' | 'orgs' | 'repos'
 export type IGitHubRequestSubType = 'events' | 'received_events'
 
 export interface IGitHubUser {

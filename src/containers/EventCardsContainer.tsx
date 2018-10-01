@@ -12,6 +12,7 @@ import { mergeSimilarEvent } from '../utils/helpers/github/events'
 
 export type EventCardsContainerProps = Partial<EventCardsProps> & {
   accessToken: string
+  showAvatarAsIcon?: boolean
   subtype: IGitHubRequestSubType
   type: IGitHubRequestType
   username: string
@@ -83,7 +84,8 @@ export default class EventCardsContainer extends PureComponent<
 
   render() {
     const { events } = this.state
+    const { repoIsKnown } = this.props
 
-    return <EventCards {...this.props} events={events} />
+    return <EventCards events={events} repoIsKnown={repoIsKnown} />
   }
 }

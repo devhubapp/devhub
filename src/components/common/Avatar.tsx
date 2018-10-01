@@ -1,6 +1,7 @@
 import React, { SFC } from 'react'
 import {
   ImageStyle,
+  StyleProp,
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
@@ -26,7 +27,7 @@ export interface IProps {
   linkURL: string
   size?: number
   small?: boolean
-  style?: ImageStyle
+  style?: StyleProp<ImageStyle>
   username?: string
 }
 

@@ -24,7 +24,9 @@ import {
 export function getRequestTypeIconAndData(
   type: IGitHubRequestType,
   subtype: IGitHubRequestSubType,
-): { icon: IGitHubIcon; subtitle?: string } {
+): { subtitle?: string } & (
+  | { icon: IGitHubIcon; showAvatarAsIcon?: false }
+  | { icon?: undefined; showAvatarAsIcon?: boolean }) {
   const subtitle = (() => {
     switch (subtype) {
       case 'events':
@@ -39,14 +41,17 @@ export function getRequestTypeIconAndData(
   })()
 
   switch (type) {
+    case 'orgs':
+      return { icon: 'organization', subtitle }
+
+    case 'repos':
+      return { showAvatarAsIcon: true, subtitle }
+
     case 'users':
       return {
         subtitle,
         icon: subtype === 'received_events' ? 'home' : 'person',
       }
-
-    case 'orgs':
-      return { icon: 'organization', subtitle }
 
     default:
       if (__DEV__)

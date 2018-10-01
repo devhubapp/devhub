@@ -11,6 +11,7 @@ import SwipeableEventCard from './SwipeableEventCard'
 
 export interface EventCardsProps {
   events: IEnhancedGitHubEvent[]
+  repoIsKnown?: boolean
   swipeable?: boolean
 }
 
@@ -25,9 +26,23 @@ export default class EventCards extends PureComponent<
   }
 
   renderItem = ({ item: event }: { item: IEnhancedGitHubEvent }) => {
-    if (this.props.swipeable)
-      return <SwipeableEventCard key={`event-card-${event.id}`} event={event} />
-    return <EventCard key={`event-card-${event.id}`} event={event} />
+    if (this.props.swipeable) {
+      return (
+        <SwipeableEventCard
+          key={`event-card-${event.id}`}
+          event={event}
+          repoIsKnown={this.props.repoIsKnown}
+        />
+      )
+    }
+
+    return (
+      <EventCard
+        key={`event-card-${event.id}`}
+        event={event}
+        repoIsKnown={this.props.repoIsKnown}
+      />
+    )
   }
 
   render() {
