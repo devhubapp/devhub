@@ -1,5 +1,5 @@
 import React, { ReactNode, SFC } from 'react'
-import { View, ViewStyle } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 
 import LinearGradient from '../../libs/linear-gradient'
 import { fade } from '../../utils/helpers/color'
@@ -10,11 +10,11 @@ export type FromWithVH = 'vertical' | 'horizontal' | From
 export interface IProps {
   children?: ReactNode
   color: string
-  containerStyle?: ViewStyle
+  containerStyle?: StyleProp<ViewStyle>
   from: FromWithVH
   radius?: number
   size: number
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 function getStyle(from: From, size: number): ViewStyle {

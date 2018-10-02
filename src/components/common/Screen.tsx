@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { SafeAreaView } from 'react-navigation'
 
@@ -10,7 +10,7 @@ let isSplashScreenVisible = true
 export interface IProps {
   children?: ReactNode
   useSafeArea?: boolean
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 const styles = StyleSheet.create({

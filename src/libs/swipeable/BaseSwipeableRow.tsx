@@ -1,6 +1,8 @@
 import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
-import { Swipeable, SwipeableProperties } from 'react-native-gesture-handler'
+import Swipeable, {
+  SwipeableProperties,
+} from 'react-native-gesture-handler/Swipeable'
 
 export type BaseActionType = 'BUTTON' | 'FULL'
 

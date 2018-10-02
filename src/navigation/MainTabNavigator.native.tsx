@@ -1,12 +1,12 @@
 import React from 'react'
 import Octicons from 'react-native-vector-icons/Octicons'
 import {
+  createBottomTabNavigator,
   NavigationRouteConfigMap,
   NavigationStackScreenOptions,
   StackNavigator,
   TabNavigatorConfig,
 } from 'react-navigation'
-import createTabNavigator from 'react-navigation-deprecated-tab-navigator/src/createTabNavigator'
 
 import Platform from '../libs/platform'
 import FeedScreen from '../screens/FeedScreen'
@@ -74,4 +74,4 @@ export const options: TabNavigatorConfig = {
   }) as 'top' | 'bottom',
 }
 
-export default createTabNavigator(routes, options)
+export default createBottomTabNavigator(routes, options)

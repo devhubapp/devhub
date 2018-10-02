@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import Platform from '../../../src/libs/platform'
 import theme from '../../styles/themes/dark'
@@ -12,7 +12,7 @@ export interface IProps extends ViewProps {
   children?: ReactNode
   maxWidth?: number
   minWidth?: number
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 const styles = StyleSheet.create({

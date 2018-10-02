@@ -1,5 +1,6 @@
 import React, { SFC } from 'react'
 import {
+  StyleProp,
   StyleSheet,
   Text,
   TextStyle,
@@ -17,7 +18,7 @@ export interface IProps {
   icon?: IGitHubIcon
   id: number | string
   isRead: boolean
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
   theme: ITheme
   url: string
 }

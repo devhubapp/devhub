@@ -1,5 +1,6 @@
 import React, { ReactNode, SFC } from 'react'
 import {
+  StyleProp,
   StyleSheet,
   Text,
   TextProps,
@@ -23,7 +24,7 @@ export interface IProps {
   children: ReactNode
   color?: string
   containerProps?: ViewProps
-  containerStyle?: ViewStyle
+  containerStyle?: StyleProp<ViewStyle>
   isPrivate?: boolean
   muted?: boolean
   outline?: boolean

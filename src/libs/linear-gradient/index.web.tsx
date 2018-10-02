@@ -1,5 +1,5 @@
 import React, { SFC } from 'react'
-import { View, ViewStyle } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
 
 type LinearGradientPoint =
@@ -8,7 +8,7 @@ type LinearGradientPoint =
 
 export interface LinearGradientProps extends OriginalLinearGradientProps {
   height: number
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
   width: number
 }
 

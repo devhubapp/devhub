@@ -5550,7 +5550,7 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-gesture-handler@^1.0.1:
+react-native-gesture-handler@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.7.tgz#86677c709c42d04555210cad9759b09e2c657720"
   integrity sha512-lu4RizR3iBJ6qq8UfcHQKbf+HaiQHMGaQPSMSy8i7ij6tsOxatKuzxuEZRMblQ2Ma7op4CpfssD29yo1AjI7PQ==

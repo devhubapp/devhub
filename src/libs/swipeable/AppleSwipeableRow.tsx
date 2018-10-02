@@ -1,6 +1,7 @@
 import React from 'react'
 import { Animated, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
-import { RectButton, Swipeable } from 'react-native-gesture-handler'
+import { RectButton } from 'react-native-gesture-handler'
+import Swipeable from 'react-native-gesture-handler/Swipeable'
 
 import BaseSwipeableRow, {
   IBaseAction,

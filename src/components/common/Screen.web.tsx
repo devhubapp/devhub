@@ -1,12 +1,18 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { SafeAreaView, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  SafeAreaView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import theme from '../../styles/themes/dark'
 
 export interface IProps {
   children?: ReactNode
   useSafeArea?: boolean
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 const styles = StyleSheet.create({

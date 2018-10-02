@@ -1,8 +1,12 @@
 import React, { ComponentType } from 'react'
-import { TabBarBottomProps, TabBarTopProps } from 'react-navigation'
-import TabBarBottom from 'react-navigation-deprecated-tab-navigator/src/views/TabBarBottom'
-import TabBarTop from 'react-navigation-deprecated-tab-navigator/src/views/TabBarTop'
+import {
+  BottomTabBar,
+  BottomTabBarProps,
+  MaterialTopTabBar,
+  MaterialTopTabBarProps,
+} from 'react-navigation-tabs'
 
+import { StyleProp, ViewStyle } from 'react-native'
 import Platform from '../libs/platform'
 import darkTheme from '../styles/themes/dark'
 import { ITheme } from '../types'
@@ -19,14 +23,16 @@ interface IWithThemeProps {
 const WithTheme = ({ children }: IWithThemeProps) =>
   children({ theme: darkTheme })
 
-type BaseTabBarProps = TabBarBottomProps | TabBarTopProps
+type BaseTabBarProps = (BottomTabBarProps | MaterialTopTabBarProps) & {
+  indicatorStyle: StyleProp<ViewStyle>
+}
 
 const BaseTabBar = Platform.selectUsingRealOS({
-  android: TabBarTop as ComponentType<BaseTabBarProps>,
-  default: TabBarBottom as ComponentType<BaseTabBarProps>,
+  android: MaterialTopTabBar as ComponentType<BaseTabBarProps>,
+  default: BottomTabBar as ComponentType<BaseTabBarProps>,
 })
 
-const TabBar = (props: BaseTabBarProps) => (
+const TabBar = (props: BottomTabBarProps) => (
   <WithTheme>
     {({ theme }: IWithThemeRenderProps) => (
       <BaseTabBar
