@@ -1,19 +1,19 @@
 diff --git a/node_modules/react-native-vector-icons/lib/create-icon-set.js b/node_modules/react-native-vector-icons/lib/create-icon-set.js
-index 019313b..5b93bf2 100644
+index a0421cc..1fa78ba 100644
 --- a/node_modules/react-native-vector-icons/lib/create-icon-set.js
 +++ b/node_modules/react-native-vector-icons/lib/create-icon-set.js
-@@ -9,8 +9,8 @@ import {
- } from './react-native';
+@@ -10,8 +10,8 @@ import {
  
+ import ensureNativeModuleAvailable from './ensure-native-module-available';
  import createIconButtonComponent from './icon-button';
 -import createTabBarItemIOSComponent from './tab-bar-item-ios';
 -import createToolbarAndroidComponent from './toolbar-android';
 +// import createTabBarItemIOSComponent from './tab-bar-item-ios';
 +// import createToolbarAndroidComponent from './toolbar-android';
  
- const NativeIconAPI =
+ export const NativeIconAPI =
    NativeModules.RNVectorIconsManager || NativeModules.RNVectorIconsModule;
-@@ -164,6 +164,7 @@ export default function createIconSet(glyphMap, fontFamily, fontFile) {
+@@ -167,6 +167,7 @@ export default function createIconSet(
    }
  
    Icon.Button = createIconButtonComponent(Icon);
@@ -21,7 +21,7 @@ index 019313b..5b93bf2 100644
    Icon.TabBarItem = createTabBarItemIOSComponent(
      IconNamePropType,
      getImageSource
-@@ -173,6 +174,7 @@ export default function createIconSet(glyphMap, fontFamily, fontFile) {
+@@ -176,6 +177,7 @@ export default function createIconSet(
      IconNamePropType,
      getImageSource
    );

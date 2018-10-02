@@ -1,4 +1,5 @@
 import React from 'react'
+import { Linking, Platform } from 'react-native'
 
 export interface User {
   accessToken: string
@@ -25,8 +26,14 @@ export class UserProvider extends React.PureComponent<
     this.state = {}
   }
 
-  getParameterFromURL(parameter: string) {
-    const url = new URL(window.location.href)
+  async getParameterFromURL(parameter: string) {
+    const initialURL = await Linking.getInitialURL()
+    if (!initialURL && parameter === 'username') return 'brunolemos'
+    if (!initialURL && parameter === 'access_token')
+      return '6ffd13a5c28199fe1737b999a62ab15fd469c62b'
+    if (!initialURL) return ''
+
+    const url = new URL(initialURL)
     return url.searchParams.get(parameter)
   }
 
@@ -39,7 +46,7 @@ export class UserProvider extends React.PureComponent<
   }
 
   updateUser = async () => {
-    const accessToken = this.getParameterFromURL('access_token')
+    const accessToken = await this.getParameterFromURL('access_token')
 
     if (!accessToken) {
       alert(
@@ -56,7 +63,8 @@ export class UserProvider extends React.PureComponent<
     }
 
     const username = userData.login
-    const usernameToSee = this.getParameterFromURL('username') || username
+    const usernameToSee =
+      (await this.getParameterFromURL('username')) || username
 
     const user: User = {
       accessToken,

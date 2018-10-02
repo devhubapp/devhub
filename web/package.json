@@ -17,21 +17,22 @@
     "react": "^16.3.2",
     "react-art": "^16.3.2",
     "react-dom": "^16.3.2",
-    "react-native-web": "^0.7.3",
+    "react-native-web": "^0.9.1",
     "react-navigation-deprecated-tab-navigator": "^1.3.0",
-    "react-scripts-ts": "^2.16.0"
+    "react-scripts-ts": "^3.1.0",
+    "whatwg-url": "^7.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^22.2.3",
+    "@types/jest": "^23.3.2",
     "@types/node": "^10.1.3",
     "@types/react": "^16.3.14",
     "@types/react-dom": "^16.0.5",
-    "babel-plugin-react-native-web": "0.7.3",
-    "gh-pages": "^1.1.0",
+    "babel-plugin-react-native-web": "0.9.1",
+    "gh-pages": "^2.0.0",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "react-app-rewired": "^1.5.2",
-    "serve": "^6.5.8",
-    "typescript": "^2.8.3"
+    "serve": "^10.0.2",
+    "typescript": "^3.1.1"
   }
 }

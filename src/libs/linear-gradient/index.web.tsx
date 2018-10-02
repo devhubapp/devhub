@@ -3,8 +3,8 @@ import { View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
 
 type LinearGradientPoint =
-  | OriginalLinearGradientProps['startPoint']
-  | OriginalLinearGradientProps['endPoint']
+  | OriginalLinearGradientProps['start']
+  | OriginalLinearGradientProps['end']
 
 export interface LinearGradientProps extends OriginalLinearGradientProps {
   height: number
@@ -21,23 +21,21 @@ const pointsToAngle = (p1: LinearGradientPoint, p2: LinearGradientPoint) =>
     ),
   ) + 90
 
-const pointsToDeg = (
-  startPoint: LinearGradientPoint,
-  endPoint: LinearGradientPoint,
-) => `${pointsToAngle(startPoint, endPoint)}deg`
+const pointsToDeg = (start: LinearGradientPoint, end: LinearGradientPoint) =>
+  `${pointsToAngle(start, end)}deg`
 
 const propsToLinearGradient = ({
   colors,
-  endPoint,
-  startPoint,
-}: Pick<LinearGradientProps, 'colors' | 'endPoint' | 'startPoint'>) =>
-  `linear-gradient(${pointsToDeg(startPoint, endPoint)}, ${colors.join(', ')})`
+  end,
+  start,
+}: Pick<LinearGradientProps, 'colors' | 'end' | 'start'>) =>
+  `linear-gradient(${pointsToDeg(start, end)}, ${colors.join(', ')})`
 
 const LinearGradient: SFC<LinearGradientProps> = ({
   colors,
-  endPoint,
+  end,
   // locations,
-  startPoint,
+  start,
   style,
   ...props
 }) => (
@@ -48,9 +46,9 @@ const LinearGradient: SFC<LinearGradientProps> = ({
       {
         backgroundColor: propsToLinearGradient({
           colors,
-          endPoint,
+          end,
           // locations,
-          startPoint,
+          start,
         }),
       },
     ]}

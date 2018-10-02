@@ -10,10 +10,13 @@ const appIncludes = [
   resolveApp('../src'),
   resolveApp('../node_modules/react-native-platform-touchable'),
   resolveApp('../node_modules/react-native-safe-area-view'),
+  resolveApp('../node_modules/react-native-screens/src/'),
   resolveApp('../node_modules/react-native-tab-view/src'),
   resolveApp('../node_modules/react-native-vector-icons/lib'),
   resolveApp('../node_modules/react-native-web-lists/src'),
   resolveApp('../node_modules/react-navigation-deprecated-tab-navigator/src/'),
+  resolveApp('../node_modules/react-navigation-drawer/dist'),
+  resolveApp('../node_modules/react-navigation-stack/dist'),
   resolveApp('../node_modules/react-navigation-tabs/dist'),
   resolveApp(
     '../node_modules/react-navigation-tabs/node_modules/react-native-safe-area-view/',

@@ -60,26 +60,26 @@ function getProps(from: From, size: number) {
   switch (from) {
     case 'top':
       return {
-        endPoint: { x: 0, y: 0 },
+        end: { x: 0, y: 0 },
         height: size,
-        startPoint: { x: 0, y: 1 },
+        start: { x: 0, y: 1 },
       }
     case 'bottom':
       return {
-        endPoint: { x: 0, y: 1 },
+        end: { x: 0, y: 1 },
         height: size,
-        startPoint: { x: 0, y: 0 },
+        start: { x: 0, y: 0 },
       }
     case 'left':
       return {
-        endPoint: { x: 0, y: 0 },
-        startPoint: { x: 1, y: 0 },
+        end: { x: 0, y: 0 },
+        start: { x: 1, y: 0 },
         width: size,
       }
     default:
       return {
-        endPoint: { x: 1, y: 0 },
-        startPoint: { x: 0, y: 0 },
+        end: { x: 1, y: 0 },
+        start: { x: 0, y: 0 },
         width: size,
       }
   }
