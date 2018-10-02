@@ -4,7 +4,6 @@ import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
-  ViewStyle,
 } from 'react-native'
 
 import theme from '../../styles/themes/dark'
@@ -18,7 +17,7 @@ import {
   getGithubURLPressHandler,
   getUserPressHandler,
 } from '../cards/partials/rows/helpers'
-import ImageWithLoading from './ImageWithLoading'
+import { ImageWithLoading } from './ImageWithLoading'
 
 export interface IProps {
   avatarURL?: string
@@ -36,7 +35,7 @@ export const size = avatarSize
 const styles = StyleSheet.create({
   image: {
     borderRadius: radius,
-  } as ViewStyle,
+  },
 })
 
 const Avatar: SFC<IProps> = ({

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import { Image, ImageProps } from 'react-native'
 
-export interface IProps extends ImageProps {
+export interface ImageWithLoadingProps extends ImageProps {
   backgroundColorFailed: string
   backgroundColorLoaded: string
   backgroundColorLoading: string
@@ -12,7 +12,7 @@ export interface IProps extends ImageProps {
   onLoadStart?: ImageProps['onLoadStart']
 }
 
-export default class Avatar extends PureComponent<IProps> {
+export class ImageWithLoading extends PureComponent<ImageWithLoadingProps> {
   static defaultProps = {
     onError: undefined,
     onLoad: undefined,
@@ -26,14 +26,16 @@ export default class Avatar extends PureComponent<IProps> {
   }
 
   onLoad = _.memoize(
-    (next: ImageProps['onLoad']): ImageProps['onLoad'] => () => {
+    (next: ImageProps['onLoad']): ImageProps['onLoad'] => e => {
+      if (!this.mounted) return
       this.setState({ loading: false, error: false })
-      if (typeof next === 'function') next()
+      if (typeof next === 'function') next(e)
     },
   )
 
   onLoadStart = _.memoize(
     (next: ImageProps['onLoadStart']): ImageProps['onLoadStart'] => () => {
+      if (!this.mounted) return
       this.setState({ loading: true })
       if (typeof next === 'function') next()
     },
@@ -41,6 +43,7 @@ export default class Avatar extends PureComponent<IProps> {
 
   onLoadEnd = _.memoize(
     (next: ImageProps['onLoadEnd']): ImageProps['onLoadEnd'] => () => {
+      if (!this.mounted) return
       this.setState({ loading: false })
       if (typeof next === 'function') next()
     },
@@ -48,10 +51,21 @@ export default class Avatar extends PureComponent<IProps> {
 
   onError = _.memoize(
     (next: ImageProps['onError']): ImageProps['onError'] => error => {
+      if (!this.mounted) return
       this.setState({ loading: false, error: true })
       if (typeof next === 'function') next(error)
     },
   )
+
+  private mounted = false
+
+  componentDidMount() {
+    this.mounted = true
+  }
+
+  componentWillUnmount() {
+    this.mounted = false
+  }
 
   render() {
     const { error, loading } = this.state
