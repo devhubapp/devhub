@@ -5576,9 +5576,15 @@ react-native-safe-area-view@0.11.0:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-react-native-screens@^1.0.0-alpha.11, "react-native-screens@git://github.com/brunolemos/react-native-screens#fix-other-platforms":
+react-native-screens@^1.0.0-alpha.11:
   version "1.0.0-alpha.12"
   resolved "git://github.com/brunolemos/react-native-screens#3b75e0a72e57437301058d90ebf576913573473b"
+  integrity sha512-n/XyqUStDjtCymXUhAxG98asvgI8/OSH+v9AaAzUFEqfBwJLY8/UjY6m8PIJSgqRt4aR/Z9nO+A1mcMXw6dMdA==
+
+react-native-screens@^1.0.0-alpha.14:
+  version "1.0.0-alpha.14"
+  resolved "https://registry.npmjs.org/react-native-screens/-/react-native-screens-1.0.0-alpha.14.tgz#fe3ccdcec7be8e1ada090c34a7f8951337adf653"
+  integrity sha512-SXVl5dnN5ZgV7jF2NdqScp91qW3QOZipBPp8f0CpAtb/ucEQkteiQnTGb4BNS5OvpMVi1UNw4BXWhUsKRPqzPw==
 
 react-native-splash-screen@^3.0.6:
   version "3.1.1"
@@ -5698,6 +5704,16 @@ react-navigation-stack@0.7.0:
 react-navigation-tabs@0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.8.2.tgz#65f8a6ce368684227603345b4d312da2ef3366e1"
+  integrity sha512-q2xfY79ERj4XJek3rceveifUny3Qcg7y6bNlN6wQg6c7D/pMFOGZsSALGenF7CuNDhYyEkijlnGTHl1laZgbDw==
+  dependencies:
+    hoist-non-react-statics "^2.5.0"
+    prop-types "^15.6.1"
+    react-lifecycles-compat "^3.0.4"
+    react-native-tab-view "^1.0.0"
+
+react-navigation-tabs@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.npmjs.org/react-navigation-tabs/-/react-navigation-tabs-0.8.2.tgz#65f8a6ce368684227603345b4d312da2ef3366e1"
   integrity sha512-q2xfY79ERj4XJek3rceveifUny3Qcg7y6bNlN6wQg6c7D/pMFOGZsSALGenF7CuNDhYyEkijlnGTHl1laZgbDw==
   dependencies:
     hoist-non-react-statics "^2.5.0"

@@ -29,10 +29,11 @@
     "react-native-gesture-handler": "^1.0.7",
     "react-native-linear-gradient": "^2.4.0",
     "react-native-safari-view": "^2.1.0",
-    "react-native-screens": "git://github.com/brunolemos/react-native-screens#fix-other-platforms",
+    "react-native-screens": "^1.0.0-alpha.14",
     "react-native-splash-screen": "^3.0.6",
     "react-native-vector-icons": "5.0.0",
     "react-navigation": "^2.0.4",
+    "react-navigation-tabs": "^0.8.2",
     "warna": "^0.2.4",
     "whatwg-url": "^7.0.0"
   },
