@@ -19,8 +19,7 @@
     "react-dom": "^16.3.2",
     "react-native-web": "^0.9.1",
     "react-navigation-tabs": "^0.8.2",
-    "react-scripts-ts": "^3.1.0",
-    "whatwg-url": "^7.0.0"
+    "react-scripts-ts": "^3.1.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",

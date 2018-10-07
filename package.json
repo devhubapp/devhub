@@ -34,8 +34,7 @@
     "react-native-vector-icons": "5.0.0",
     "react-navigation": "^2.0.4",
     "react-navigation-tabs": "^0.8.2",
-    "warna": "^0.2.4",
-    "whatwg-url": "^7.0.0"
+    "warna": "^0.2.4"
   },
   "devDependencies": {
     "@types/gravatar": "^1.4.28",
