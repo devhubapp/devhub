@@ -13,13 +13,12 @@ import {
 
 import { Octicons as Icon } from '../../libs/vector-icons'
 import theme from '../../styles/themes/dark'
-import { contentPadding, radius as defaultRadius } from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 
 export interface IProps extends TouchableOpacityProps {
   horizontal?: boolean
   leftIcon?: string
   loading?: boolean
-  radius?: number
   rightIcon?: string
   subtitle?: string
   subtitleProps?: TextProps
@@ -31,8 +30,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: theme.invert().base02,
     borderColor: theme.base02,
-    borderRadius: defaultRadius,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 58 / 2,
     height: 58,
   } as ViewStyle,
 
@@ -44,10 +42,8 @@ const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
     borderColor: theme.base04,
-    borderRightWidth: StyleSheet.hairlineWidth,
     borderWidth: 0,
     justifyContent: 'center',
-    paddingHorizontal: contentPadding,
   } as ViewStyle,
 
   icon: {
@@ -64,16 +60,17 @@ const styles = StyleSheet.create({
 
   title: {
     color: theme.invert().base04,
-    fontSize: 15,
     fontWeight: '600',
+    fontSize: 15,
     lineHeight: 20,
     textAlign: 'left',
   } as TextStyle,
 
   subtitleText: {
     color: theme.invert().base05,
-    fontSize: 14,
-    lineHeight: 20,
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 16,
     textAlign: 'left',
   } as TextStyle,
 })
@@ -95,7 +92,7 @@ const GithubButton: SFC<IProps> = ({
   >
     <View style={styles.content}>
       {Boolean(leftIcon) && (
-        <View style={styles.iconWrapper}>
+        <View style={[styles.iconWrapper, { paddingLeft: contentPadding }]}>
           <Icon name={leftIcon!} style={styles.icon} />
         </View>
       )}
@@ -118,7 +115,7 @@ const GithubButton: SFC<IProps> = ({
       </View>
 
       {Boolean(rightIcon || loading) && (
-        <View style={styles.iconWrapper}>
+        <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
           {loading ? (
             <ActivityIndicator />
           ) : (
@@ -133,7 +130,6 @@ const GithubButton: SFC<IProps> = ({
 GithubButton.defaultProps = {
   leftIcon: 'mark-github',
   loading: false,
-  radius: defaultRadius,
   rightIcon: '',
   subtitle: '',
   subtitleProps: undefined,

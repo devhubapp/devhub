@@ -1,5 +1,5 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { StatusBar, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { SafeAreaView } from 'react-navigation'
 
@@ -32,12 +32,21 @@ export default class Screen extends PureComponent<IProps> {
     }
   }
 
-  render() {
+  renderContent() {
     const { useSafeArea, style, ...props } = this.props
 
     if (useSafeArea)
       return <SafeAreaView {...props} style={[styles.container, style]} />
 
     return <View {...props} style={[styles.container, style]} />
+  }
+
+  render() {
+    return (
+      <>
+        <StatusBar barStyle="light-content" />
+        {this.renderContent()}
+      </>
+    )
   }
 }

@@ -16,7 +16,7 @@ import {
 import GitHubLoginButton from '../components/buttons/GitHubLoginButton'
 import Screen from '../components/common/Screen'
 import theme from '../styles/themes/dark'
-import { contentPadding, radius } from '../styles/variables'
+import { contentPadding } from '../styles/variables'
 
 const logo = require('../../assets/logo.png') // tslint:disable-line
 const pkg = require('../../package.json') // tslint:disable-line
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
   logo: {
     alignSelf: 'center',
-    borderRadius: radius,
+    borderRadius: 100 / 8,
     height: 100,
     marginBottom: contentPadding / 2,
     width: 100,
@@ -68,15 +68,15 @@ const styles = StyleSheet.create({
 
   title: {
     color: theme.base04,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    lineHeight: 30,
+    lineHeight: 26,
   } as TextStyle,
 
   subtitle: {
     color: theme.base04,
-    fontSize: 15,
-    lineHeight: 20,
+    fontSize: 14,
+    lineHeight: 18,
   } as TextStyle,
 
   button: {
@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
 
   appVersion: {
     color: theme.base05,
-    fontSize: 13,
-    lineHeight: 20,
+    fontSize: 14,
+    lineHeight: 18,
   } as TextStyle,
 })
 
@@ -136,7 +136,6 @@ export default class LoginScreen extends PureComponent<
             <GitHubLoginButton
               loading={isLoggingIn && loggingInMethod === 'github.public'}
               onPress={this.loginWithGithubPublicAccess}
-              radius={radius}
               rightIcon="globe"
               style={styles.button}
               subtitle="Public access"
@@ -146,7 +145,6 @@ export default class LoginScreen extends PureComponent<
             <GitHubLoginButton
               loading={isLoggingIn && loggingInMethod === 'github.private'}
               onPress={this.loginWithGithubPrivateAccess}
-              radius={radius}
               rightIcon="lock"
               style={styles.button}
               subtitle="Private access"
