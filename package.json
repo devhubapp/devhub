@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "version": "0.10.0",
+  "version": "0.0.1",
   "scripts": {
     "format": "prettier --write '{.,__tests__,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
