@@ -30,6 +30,13 @@ export default class MainScreen extends PureComponent {
                   />
                   <EventColumn
                     accessToken={user.accessToken}
+                    showAvatarAsIcon
+                    subtype="events"
+                    type="orgs"
+                    username="facebook"
+                  />
+                  <EventColumn
+                    accessToken={user.accessToken}
                     repoIsKnown
                     showAvatarAsIcon
                     subtype="events"
