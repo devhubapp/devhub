@@ -22,20 +22,20 @@ export default class FeedScreen extends PureComponent<NavigationScreenProps> {
       <Screen>
         <Columns>
           <UserConsumer>
-            {({ user }) =>
-              !(user && user.accessToken) ? null : (
+            {({ accessToken, user }) =>
+              !(user && accessToken) ? null : (
                 <Fragment>
                   <EventColumn
-                    accessToken={user.accessToken}
+                    accessToken={accessToken}
                     subtype="received_events"
                     type="users"
-                    username={user.usernameToSee}
+                    username={user.login}
                   />
                   <EventColumn
-                    accessToken={user.accessToken}
+                    accessToken={accessToken}
                     subtype="events"
                     type="users"
-                    username={user.usernameToSee}
+                    username={user.login}
                   />
                 </Fragment>
               )

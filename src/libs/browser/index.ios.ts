@@ -1,26 +1,10 @@
 import { Linking, StatusBar } from 'react-native'
-import SafariView from 'react-native-safari-view'
-
-interface SafariOptions {
-  // A Boolean indicating to use Safari's Reader Mode if available
-  readerMode?: boolean
-
-  // A String containing a hex, rgba or rgba color to use for the browser controls
-  tintColor?: string
-
-  // A String containing a hex, rgba or rgba color
-  // to use for the background of the browser controls
-  // (only available on iOS 10 and higher)
-  barTintColor?: string
-
-  // A Boolean indicating to open the Safari View from the bottom
-  fromBottom?: boolean
-}
+import SafariView, { ISafaryOptions } from 'react-native-safari-view'
 
 export default {
   ...Linking,
   ...SafariView,
-  openURL: (url: string, options: SafariOptions = {}) => {
+  openURL: (url: string, options?: ISafaryOptions) => {
     SafariView.isAvailable()
       .then(isAvailable => {
         if (!isAvailable) throw new Error('SafariView not available.')

@@ -117,7 +117,7 @@ const GithubButton: SFC<IProps> = ({
       {Boolean(rightIcon || loading) && (
         <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
           {loading ? (
-            <ActivityIndicator />
+            <ActivityIndicator color={theme.invert().base04} />
           ) : (
             <Icon name={rightIcon!} style={styles.icon} />
           )}

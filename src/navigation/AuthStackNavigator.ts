@@ -4,7 +4,7 @@ import {
   StackNavigatorConfig,
 } from 'react-navigation'
 
-import LoginScreen from '../screens/LoginScreen'
+import { LoginScreen } from '../screens/LoginScreen'
 
 export const routes: NavigationRouteConfigMap = {
   Login: {

@@ -1,21 +1,32 @@
 import React from 'react'
-import { Linking, Platform } from 'react-native'
+import { AsyncStorage } from 'react-native'
 
-export interface User {
-  accessToken: string
-  username: string
-  usernameToSee: string
-}
+import { IGitHubUser } from '../../types'
 
 export interface UserProviderProps {
   children?: React.ReactNode
 }
 
 export interface UserProviderState {
-  user?: User
+  accessToken: string | null
+  hasLoadedFromCache: boolean
+  refetchUser: () => Promise<IGitHubUser>
+  setAccessToken: (accessToken: string | null) => Promise<void>
+  user?: IGitHubUser | null
 }
 
-const UserContext = React.createContext<UserProviderState>({})
+const defaultState = {
+  accessToken: null,
+  hasLoadedFromCache: false,
+  refetchUser: async () => {
+    throw new Error('Not implemented')
+  },
+  setAccessToken: async () => {
+    throw new Error('Not implemented')
+  },
+}
+
+const UserContext = React.createContext<UserProviderState>(defaultState)
 
 export class UserProvider extends React.PureComponent<
   UserProviderProps,
@@ -23,18 +34,22 @@ export class UserProvider extends React.PureComponent<
 > {
   constructor(props: any) {
     super(props)
-    this.state = {}
+    this.state = {
+      ...defaultState,
+      refetchUser: this.refetchUser,
+      setAccessToken: this.setAccessToken,
+    }
+
+    this.updateFromCache()
   }
 
-  async getParameterFromURL(parameter: string) {
-    const initialURL = await Linking.getInitialURL()
-    if (!initialURL && parameter === 'username') return 'brunolemos'
-    if (!initialURL && parameter === 'access_token')
-      return '6ffd13a5c28199fe1737b999a62ab15fd469c62b'
-    if (!initialURL) return ''
+  updateFromCache = async () => {
+    const accessToken = await this.getAccessToken()
+    const user = await this.getUser()
 
-    const url = new URL(initialURL)
-    return url.searchParams.get(parameter)
+    await new Promise(resolve =>
+      this.setState({ accessToken, hasLoadedFromCache: true, user }, resolve),
+    )
   }
 
   async getGitHubUserDataForToken(accessToken: string) {
@@ -45,38 +60,57 @@ export class UserProvider extends React.PureComponent<
     return await response.json()
   }
 
-  updateUser = async () => {
-    const accessToken = await this.getParameterFromURL('access_token')
+  getUser = async () => {
+    if (this.state.user) return this.state.user
 
-    if (!accessToken) {
-      alert(
-        'Please set the access_token parameter URL. You can also optionally set an username parameter.',
-      )
-      return
+    try {
+      const user = await AsyncStorage.getItem('user')
+      return user ? JSON.parse(user) : null
+    } catch (e) {
+      return null
     }
-
-    const userData = await this.getGitHubUserDataForToken(accessToken!)
-
-    if (!(userData && userData.login)) {
-      alert('Failed to load user. Please confirm the provided token is valid.')
-      return
-    }
-
-    const username = userData.login
-    const usernameToSee =
-      (await this.getParameterFromURL('username')) || username
-
-    const user: User = {
-      accessToken,
-      username,
-      usernameToSee,
-    }
-
-    this.setState({ user })
   }
 
-  componentDidMount() {
-    this.updateUser()
+  setAccessToken = async (accessToken: string | null) => {
+    await AsyncStorage.setItem('access_token', accessToken || '')
+    await new Promise(resolve =>
+      this.setState(
+        state => ({
+          accessToken,
+          user: accessToken === state.accessToken ? state.user : null,
+        }),
+        resolve,
+      ),
+    )
+  }
+
+  refetchUser = async () => {
+    const accessToken = await this.getAccessToken()
+
+    if (!accessToken) {
+      throw new Error('Not authenticated.')
+    }
+
+    const userData = await this.getGitHubUserDataForToken(accessToken)
+
+    if (!(userData && userData.login)) {
+      throw new Error('Failed to load user. Please try logging in again.')
+    }
+
+    const user: IGitHubUser = {
+      id: userData.id,
+      avatar_url: userData.avatar_url,
+      display_login: userData.display_login,
+      gravatar_id: userData.gravatar_id,
+      login: userData.login,
+      name: userData.name,
+      url: userData.url,
+      html_url: userData.html_url,
+    }
+
+    await this.setUser(user)
+
+    return user
   }
 
   render() {
@@ -85,6 +119,17 @@ export class UserProvider extends React.PureComponent<
         {this.props.children}
       </UserContext.Provider>
     )
+  }
+
+  private getAccessToken = async () => {
+    if (this.state.accessToken) return this.state.accessToken
+
+    return (await AsyncStorage.getItem('access_token')) || null
+  }
+
+  private setUser = async (user: IGitHubUser) => {
+    await AsyncStorage.setItem('user', JSON.stringify(user))
+    await new Promise(resolve => this.setState({ user }, resolve))
   }
 }
 

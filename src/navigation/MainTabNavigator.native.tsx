@@ -2,9 +2,9 @@ import React from 'react'
 import Octicons from 'react-native-vector-icons/Octicons'
 import {
   createBottomTabNavigator,
+  createStackNavigator,
   NavigationRouteConfigMap,
   NavigationStackScreenOptions,
-  StackNavigator,
   TabNavigatorConfig,
 } from 'react-navigation'
 
@@ -27,15 +27,15 @@ const navigationOptions: NavigationStackScreenOptions = {
 export const routes: NavigationRouteConfigMap = {
   Feed: {
     path: '',
-    screen: StackNavigator({ FeedScreen }, { navigationOptions }),
+    screen: createStackNavigator({ FeedScreen }, { navigationOptions }),
   },
   Notifications: {
     path: 'notifications',
-    screen: StackNavigator({ NotificationsScreen }, { navigationOptions }),
+    screen: createStackNavigator({ NotificationsScreen }, { navigationOptions }),
   },
   Settings: {
     path: 'settings',
-    screen: StackNavigator({ SettingsScreen }, { navigationOptions }),
+    screen: createStackNavigator({ SettingsScreen }, { navigationOptions }),
   },
 }
 

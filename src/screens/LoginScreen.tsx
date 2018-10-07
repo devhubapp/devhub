@@ -15,18 +15,27 @@ import {
 
 import GitHubLoginButton from '../components/buttons/GitHubLoginButton'
 import Screen from '../components/common/Screen'
+import {
+  UserConsumer,
+  UserProviderState,
+} from '../components/context/UserContext'
+import { executeOAuth } from '../libs/oauth'
 import theme from '../styles/themes/dark'
 import { contentPadding } from '../styles/variables'
 
 const logo = require('../../assets/logo.png') // tslint:disable-line
 const pkg = require('../../package.json') // tslint:disable-line
 
-export interface LoginScreenProps extends NavigationScreenProps {
+const serverURL = 'https://micro-oauth-pmkvlpfaua.now.sh'
+
+export interface LoginScreenProps {
   error: string
-  isLoggingIn: boolean
+  refetchUser: UserProviderState['refetchUser']
+  setAccessToken: UserProviderState['setAccessToken']
 }
 
 export interface LoginScreenState {
+  isLoggingIn: boolean
   loggingInMethod: 'github.public' | 'github.private' | null
 }
 
@@ -91,8 +100,8 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-export default class LoginScreen extends PureComponent<
-  LoginScreenProps,
+export class LoginScreenComponent extends PureComponent<
+  LoginScreenProps & NavigationScreenProps,
   LoginScreenState
 > {
   static navigationOptions: NavigationStackScreenOptions = {
@@ -100,30 +109,68 @@ export default class LoginScreen extends PureComponent<
   }
 
   state: LoginScreenState = {
+    isLoggingIn: false,
     loggingInMethod: null,
   }
 
-  loginWithGithubPrivateAccess = () => {
-    this.setState({ loggingInMethod: 'github.private' })
+  loginWithGithubPrivateAccess = async () => {
+    this.setState({ isLoggingIn: true, loggingInMethod: 'github.private' })
 
-    // loginRequest({ scopes: ['user', 'repo', 'notifications', 'read:org'] })
+    try {
+      const params = await executeOAuth(serverURL, [
+        'user',
+        'repo',
+        'notifications',
+        'read:org',
+      ])
 
-    this.props.navigation.navigate('Main')
+      // this.props.navigation.navigate('AuthLoading')
+
+      await this.props.setAccessToken((params && params.access_token) || null)
+      const user = await this.props.refetchUser()
+
+      if (user) {
+        this.props.navigation.navigate('App')
+        return
+      }
+    } catch (e) {
+      console.error(e)
+      alert(`Login failed. ${e || ''}`)
+    }
+
+    this.setState({ isLoggingIn: false })
   }
 
-  loginWithGithubPublicAccess = () => {
-    this.setState({ loggingInMethod: 'github.public' })
+  loginWithGithubPublicAccess = async () => {
+    this.setState({ isLoggingIn: true, loggingInMethod: 'github.public' })
 
-    // loginRequest({
-    //   scopes: ['user', 'public_repo', 'notifications', 'read:org'],
-    // })
+    try {
+      const params = await executeOAuth(serverURL, [
+        'user',
+        'public_repo',
+        'notifications',
+        'read:org',
+      ])
 
-    this.props.navigation.navigate('Main')
+      // this.props.navigation.navigate('AuthLoading')
+
+      await this.props.setAccessToken((params && params.access_token) || null)
+      const user = await this.props.refetchUser()
+
+      if (user) {
+        this.props.navigation.navigate('App')
+        return
+      }
+    } catch (e) {
+      console.error(e)
+      alert(`Login failed. ${e}`)
+    }
+
+    this.setState({ isLoggingIn: false })
   }
 
   render() {
-    const { loggingInMethod } = this.state
-    const { isLoggingIn } = this.props
+    const { isLoggingIn, loggingInMethod } = this.state
 
     return (
       <Screen>
@@ -162,3 +209,19 @@ export default class LoginScreen extends PureComponent<
     )
   }
 }
+
+export const LoginScreen = (
+  props: typeof LoginScreenComponent.prototype.props,
+) => (
+  <UserConsumer>
+    {({ refetchUser, setAccessToken }) => (
+      <LoginScreenComponent
+        {...props}
+        refetchUser={refetchUser}
+        setAccessToken={setAccessToken}
+      />
+    )}
+  </UserConsumer>
+)
+
+LoginScreen.navigationOptions = LoginScreenComponent.navigationOptions

@@ -5,12 +5,13 @@ export type IGitHubRequestSubType = 'events' | 'received_events'
 
 export interface IGitHubUser {
   id: number
-  login: string
-  display_login: string
-  gravatar_id: string
-  html_url?: string // https://github.com/brunolemos
-  url: string // https://api.github.com/users/brunolemos
   avatar_url: string // https://avatars.githubusercontent.com/u/2118189?
+  display_login?: string
+  gravatar_id: string
+  login: string
+  name: string
+  url: string // https://api.github.com/users/brunolemos
+  html_url?: string // https://github.com/brunolemos
 }
 
 export interface IGitHubReaction {

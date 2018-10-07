@@ -12,31 +12,31 @@ export default class MainScreen extends PureComponent {
       <Screen>
         <Columns>
           <UserConsumer>
-            {({ user }) =>
-              !(user && user.accessToken) ? null : (
+            {({ accessToken, user }) =>
+              !(user && accessToken) ? null : (
                 <Fragment>
-                  <NotificationColumn accessToken={user.accessToken} />
+                  <NotificationColumn accessToken={accessToken} />
                   <EventColumn
-                    accessToken={user.accessToken}
+                    accessToken={accessToken}
                     subtype="received_events"
                     type="users"
-                    username={user.usernameToSee}
+                    username={user.login}
                   />
                   <EventColumn
-                    accessToken={user.accessToken}
+                    accessToken={accessToken}
                     subtype="events"
                     type="users"
-                    username={user.usernameToSee}
+                    username={user.login}
                   />
                   <EventColumn
-                    accessToken={user.accessToken}
+                    accessToken={accessToken}
                     showAvatarAsIcon
                     subtype="events"
                     type="orgs"
                     username="facebook"
                   />
                   <EventColumn
-                    accessToken={user.accessToken}
+                    accessToken={accessToken}
                     repoIsKnown
                     showAvatarAsIcon
                     subtype="events"
