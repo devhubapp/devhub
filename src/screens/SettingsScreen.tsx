@@ -6,34 +6,47 @@ import {
 } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
-import { UserConsumer } from '../components/context/UserContext'
+import {
+  UserConsumer,
+  UserProviderState,
+} from '../components/context/UserContext'
 import theme from '../styles/themes/dark'
 
-export default class SettingsScreen extends PureComponent<
-  NavigationScreenProps
+export interface LoginScreenProps {
+  setAccessToken: UserProviderState['setAccessToken']
+}
+
+class SettingsScreenComponent extends PureComponent<
+  LoginScreenProps & NavigationScreenProps
 > {
   static navigationOptions: NavigationStackScreenOptions = {
     headerTitle: 'Settings',
   }
 
+  logout = () => {
+    this.props.setAccessToken(null)
+    this.props.navigation.navigate('Login')
+  }
+
   render() {
     return (
-      <UserConsumer>
-        {({ setAccessToken }) => (
-          <Screen>
-            <View>
-              <Button
-                color={theme.red}
-                title="Logout"
-                onPress={() => {
-                  setAccessToken(null)
-                  this.props.navigation.navigate('Login')
-                }}
-              />
-            </View>
-          </Screen>
-        )}
-      </UserConsumer>
+      <Screen>
+        <View>
+          <Button color={theme.red} title="Logout" onPress={this.logout} />
+        </View>
+      </Screen>
     )
   }
 }
+
+export const SettingsScreen = (
+  props: typeof SettingsScreenComponent.prototype.props,
+) => (
+  <UserConsumer>
+    {({ setAccessToken }) => (
+      <SettingsScreenComponent {...props} setAccessToken={setAccessToken} />
+    )}
+  </UserConsumer>
+)
+
+SettingsScreen.navigationOptions = SettingsScreenComponent.navigationOptions

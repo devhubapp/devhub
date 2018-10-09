@@ -214,7 +214,7 @@ export default class MetroListView extends React.Component<IProps, IState> {
       const sections: { [key: string]: SectionItem['data'] } = {}
 
       props.sections.forEach((sectionIn, ii) => {
-        const sectionID = 's' + ii
+        const sectionID = `s${ii}`
         sections[sectionID] = sectionIn.data
         sectionHeaderData[sectionID] = sectionIn
       })

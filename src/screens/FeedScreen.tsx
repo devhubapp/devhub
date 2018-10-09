@@ -10,7 +10,7 @@ import EventColumn from '../components/columns/EventColumn'
 import Screen from '../components/common/Screen'
 import { UserConsumer } from '../components/context/UserContext'
 
-export default class FeedScreen extends PureComponent<NavigationScreenProps> {
+export class FeedScreen extends PureComponent<NavigationScreenProps> {
   static navigationOptions: NavigationScreenConfig<
     NavigationStackScreenOptions
   > = {

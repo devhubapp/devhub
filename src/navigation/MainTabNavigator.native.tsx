@@ -9,9 +9,9 @@ import {
 } from 'react-navigation'
 
 import Platform from '../libs/platform'
-import FeedScreen from '../screens/FeedScreen'
-import NotificationsScreen from '../screens/NotificationsScreen'
-import SettingsScreen from '../screens/SettingsScreen'
+import { FeedScreen } from '../screens/FeedScreen'
+import { NotificationsScreen } from '../screens/NotificationsScreen'
+import { SettingsScreen } from '../screens/SettingsScreen'
 import theme from '../styles/themes/dark'
 import { IGitHubIcon } from '../types'
 import TabBar from './TabBar'
