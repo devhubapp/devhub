@@ -153,7 +153,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {repos.length > 0 && (
           <RepositoryListRow
-            key={`repo-list-row-${repoIds.join('-')}`}
+            key={`event-repo-list-row-${repoIds.join('-')}`}
             isForcePush={isForcePush}
             isPush={isPush}
             isRead={isRead}
@@ -164,7 +164,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {Boolean(repo && repoOwnerName && repoName && branchName) && (
           <BranchRow
-            key={`branch-row-${branchName}`}
+            key={`event-branch-row-${branchName}`}
             branch={branchName}
             isRead={isRead}
             ownerName={repoOwnerName!}
@@ -175,7 +175,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {Boolean(forkee && forkRepoOwnerName && forkRepoName) && (
           <RepositoryRow
-            key={`fork-row-${forkee.id}`}
+            key={`event-fork-row-${forkee.id}`}
             isForcePush={isForcePush}
             isFork
             isRead={isRead}
@@ -186,7 +186,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {users.length > 0 && (
           <UserListRow
-            key={`user-list-row-${userIds.join('-')}`}
+            key={`event-user-list-row-${userIds.join('-')}`}
             isRead={isRead}
             users={users}
             theme={theme}
@@ -195,7 +195,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {pages.length > 0 && (
           <WikiPageListRow
-            key={`wiki-page-list-row-${pageIds.join('-')}`}
+            key={`event-wiki-page-list-row-${pageIds.join('-')}`}
             isRead={isRead}
             pages={pages}
             theme={theme}
@@ -204,7 +204,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {Boolean(pullRequest) && (
           <IssueOrPullRequestRow
-            key={`pr-row-${pullRequest.id}`}
+            key={`event-pr-row-${pullRequest.id}`}
             avatarURL={pullRequest.user.avatar_url}
             iconColor={pullRequestIconColor!}
             iconName={pullRequestIconName!}
@@ -220,7 +220,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {commits.length > 0 && (
           <CommitListRow
-            key={`commit-list-row-${commitIds.join('-')}`}
+            key={`event-commit-list-row-${commitIds.join('-')}`}
             commits={commits}
             isRead={isRead}
             theme={theme}
@@ -229,7 +229,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {Boolean(issue) && (
           <IssueOrPullRequestRow
-            key={`issue-row-${issue.id}`}
+            key={`event-issue-row-${issue.id}`}
             avatarURL={issue.user.avatar_url}
             iconColor={issueIconColor!}
             iconName={issueIconName!}
@@ -247,7 +247,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
           (payload as IIssuesEvent['payload']).action === 'opened' &&
           Boolean(issue.body) && (
             <CommentRow
-              key={`issue-body-row-${issue.id}`}
+              key={`event-issue-body-row-${issue.id}`}
               avatarURL={issue.user.avatar_url}
               body={issue.body}
               isRead={isRead}
@@ -260,7 +260,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
             (payload as IPullRequestEvent['payload']).action === 'opened' &&
             Boolean(pullRequest.body) && (
               <CommentRow
-                key={`pr-body-row-${pullRequest.id}`}
+                key={`event-pr-body-row-${pullRequest.id}`}
                 avatarURL={pullRequest.user.avatar_url}
                 body={pullRequest.body}
                 isRead={isRead}
@@ -273,7 +273,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
             )) ||
           (Boolean(comment && comment.body) && (
             <CommentRow
-              key={`comment-row-${comment.id}`}
+              key={`event-comment-row-${comment.id}`}
               avatarURL={comment.user.avatar_url}
               body={comment.body}
               isRead={isRead}
@@ -285,7 +285,7 @@ export default class EventCard extends PureComponent<EventCardProps> {
 
         {Boolean(release) && (
           <ReleaseRow
-            key={`release-row-${release.id}`}
+            key={`event-release-row-${release.id}`}
             avatarURL={release.author.avatar_url}
             body={release.body}
             branch={release.target_commitish}

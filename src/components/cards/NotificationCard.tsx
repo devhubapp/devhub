@@ -116,7 +116,7 @@ export default class NotificationCard extends PureComponent<
 
         {!!(repoOwnerName && repoName && !onlyOneRepository) && (
           <RepositoryRow
-            key={`repo-row-${repo.id}`}
+            key={`notification-repo-row-${repo.id}`}
             isRead={isRead}
             ownerName={repoOwnerName}
             repositoryName={repoName}
@@ -125,7 +125,7 @@ export default class NotificationCard extends PureComponent<
 
         {Boolean(commit) && (
           <CommitRow
-            key={`commit-row-${commit!.url}`}
+            key={`notification-commit-row-${commit!.url}`}
             isRead={isRead}
             latestCommentUrl={commit!.latest_comment_url}
             message={commit!.title}
@@ -135,7 +135,7 @@ export default class NotificationCard extends PureComponent<
 
         {!!issue && (
           <IssueOrPullRequestRow
-            key={`issue-row-${issueOrPullRequestNumber}`}
+            key={`notification-issue-row-${issueOrPullRequestNumber}`}
             avatarURL=""
             iconColor={issueIconColor!}
             iconName={issueIconName!}
@@ -151,7 +151,7 @@ export default class NotificationCard extends PureComponent<
 
         {!!pullRequest && (
           <IssueOrPullRequestRow
-            key={`pr-row-${issueOrPullRequestNumber}`}
+            key={`notification-pr-row-${issueOrPullRequestNumber}`}
             avatarURL=""
             iconColor={pullRequestIconColor!}
             iconName={pullRequestIconName!}
@@ -167,7 +167,7 @@ export default class NotificationCard extends PureComponent<
 
         {!!release && (
           <ReleaseRow
-            key={`release-row-${repo.id}`}
+            key={`notification-release-row-${repo.id}`}
             avatarURL=""
             body={release.title}
             isRead={isRead}
@@ -185,7 +185,7 @@ export default class NotificationCard extends PureComponent<
         {!(commit || issue || pullRequest) &&
           !!title && (
             <CommentRow
-              key={`subject-row-${subject.url}`}
+              key={`notification-subject-row-${subject.url}`}
               avatarURL=""
               body={title}
               isRead={isRead}
@@ -196,7 +196,7 @@ export default class NotificationCard extends PureComponent<
 
         {/* {!!comment && (
           <CommentRow
-            key={`comment-row-${comment.id}`}
+            key={`notification-comment-row-${comment.id}`}
             body={comment.body}
             url={comment.html_url}
             userLinkURL={comment.user.html_url}
