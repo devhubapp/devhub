@@ -57,9 +57,9 @@ const CommitRow: SFC<CommitRowProps> = ({
           isBot={Boolean(
             authorUsername && authorUsername.indexOf('[bot]') >= 0,
           )}
-          username={authorUsername}
           small
           style={cardStyles.avatar}
+          username={authorUsername}
           linkURL={
             authorUsername
               ? getGitHubURLForUser(authorUsername)

@@ -57,14 +57,15 @@ export default class EventCardHeader extends PureComponent<IProps> {
       updatedAt,
     } = this.props
 
+    const isBot = Boolean(repoOwnerName && repoOwnerName.indexOf('[bot]') >= 0)
+
     return (
       <View style={styles.container}>
         <View style={cardStyles.leftColumn}>
           <Avatar
-            isBot={Boolean(
-              repoOwnerName && repoOwnerName.indexOf('[bot]') >= 0,
-            )}
+            isBot={isBot}
             linkURL=""
+            shape={isBot ? 'rounded' : undefined}
             small
             style={cardStyles.avatar}
             username={repoOwnerName}

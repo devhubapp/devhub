@@ -34,11 +34,13 @@ const RepositoryRow: SFC<RepositoryRowProps> = ({
     (isFork && 'repo-forked') ||
     'repo'
 
+  const isBot = Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)
+
   return (
     <View style={rowStyles.container}>
       <View style={cardStyles.leftColumn}>
         <Avatar
-          isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+          isBot={isBot}
           linkURL=""
           small
           style={cardStyles.avatar}

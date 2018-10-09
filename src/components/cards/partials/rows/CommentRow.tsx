@@ -35,13 +35,16 @@ const CommentRow: SFC<IProps> = ({
   )
   if (!body) return null
 
+  const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
+
   return (
     <View style={rowStyles.container}>
       <View style={[cardStyles.leftColumn, cardStyles.leftColumnAlignTop]}>
         <Avatar
           avatarURL={avatarURL}
-          isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+          isBot={isBot}
           linkURL={userLinkURL}
+          shape={isBot ? 'rounded' : undefined}
           small
           style={cardStyles.avatar}
           username={username}

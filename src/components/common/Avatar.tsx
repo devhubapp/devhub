@@ -1,10 +1,5 @@
 import React, { SFC } from 'react'
-import {
-  ImageStyle,
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native'
+import { ImageStyle, StyleProp, TouchableOpacity } from 'react-native'
 
 import theme from '../../styles/themes/dark'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
@@ -19,11 +14,12 @@ import {
 } from '../cards/partials/rows/helpers'
 import { ImageWithLoading } from './ImageWithLoading'
 
-export interface IProps {
+export interface AvatarProps {
   avatarURL?: string
   email?: string
   isBot?: boolean
   linkURL: string
+  shape?: 'circle' | 'rounded' | 'square'
   size?: number
   small?: boolean
   style?: StyleProp<ImageStyle>
@@ -32,17 +28,12 @@ export interface IProps {
 
 export const size = avatarSize
 
-const styles = StyleSheet.create({
-  image: {
-    borderRadius: radius,
-  },
-})
-
-const Avatar: SFC<IProps> = ({
+const Avatar: SFC<AvatarProps> = ({
   avatarURL: _avatarURL,
   email,
   isBot: _isBot,
   linkURL,
+  shape,
   size: _size,
   small,
   style,
@@ -80,10 +71,15 @@ const Avatar: SFC<IProps> = ({
         backgroundColorLoading={theme.base09}
         source={{ uri }}
         style={[
-          styles.image,
           {
             height: finalSize,
             width: finalSize,
+            borderRadius:
+              shape === 'circle'
+                ? finalSize / 2
+                : shape === 'square'
+                  ? 0
+                  : radius,
           },
           style,
         ]}

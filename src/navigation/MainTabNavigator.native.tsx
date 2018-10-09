@@ -31,7 +31,10 @@ export const routes: NavigationRouteConfigMap = {
   },
   Notifications: {
     path: 'notifications',
-    screen: createStackNavigator({ NotificationsScreen }, { navigationOptions }),
+    screen: createStackNavigator(
+      { NotificationsScreen },
+      { navigationOptions },
+    ),
   },
   Settings: {
     path: 'settings',

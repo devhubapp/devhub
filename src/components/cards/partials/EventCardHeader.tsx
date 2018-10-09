@@ -77,8 +77,9 @@ export default class EventCardHeader extends PureComponent<
             avatarURL={avatarURL}
             isBot={isBot}
             linkURL={userLinkURL}
-            username={username}
+            shape={isBot ? 'rounded' : 'circle'}
             style={cardStyles.avatar}
+            username={username}
           />
         </View>
 

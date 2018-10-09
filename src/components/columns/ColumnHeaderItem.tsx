@@ -12,9 +12,10 @@ import { Octicons as Icon } from '../../libs/vector-icons'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { IGitHubIcon } from '../../types'
 import { fade } from '../../utils/helpers/color'
-import Avatar from '../common/Avatar'
+import Avatar, { AvatarProps } from '../common/Avatar'
 
-export interface IProps {
+export interface ColumnHeaderItemProps {
+  avatarShape?: AvatarProps['shape']
   backgroundColor: string
   foregroundColor: string
   iconName?: IGitHubIcon
@@ -50,9 +51,12 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-export default class ColumnHeaderItem extends PureComponent<IProps> {
+export default class ColumnHeaderItem extends PureComponent<
+  ColumnHeaderItemProps
+> {
   render() {
     const {
+      avatarShape,
       backgroundColor,
       foregroundColor,
       iconName,
@@ -80,7 +84,7 @@ export default class ColumnHeaderItem extends PureComponent<IProps> {
                 <Avatar
                   isBot={false}
                   linkURL=""
-                  username={username}
+                  shape={avatarShape}
                   style={[
                     {
                       width: 20,
@@ -92,6 +96,7 @@ export default class ColumnHeaderItem extends PureComponent<IProps> {
                         }
                       : undefined,
                   ]}
+                  username={username}
                 />
               )
             : !!iconName && (
