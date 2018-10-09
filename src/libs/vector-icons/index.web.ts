@@ -20,4 +20,4 @@ if ((style as any).styleSheet) {
   style.appendChild(document.createTextNode(iconStyles))
 }
 
-document.head.appendChild(style)
+if (document.head) document.head.appendChild(style)
