@@ -1,4 +1,4 @@
-import { ITheme } from 'src/types'
+import { ITheme } from '../../types'
 import darkTheme from './dark'
 import darkBlueTheme from './dark-blue'
 import lightTheme from './light'
