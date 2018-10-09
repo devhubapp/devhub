@@ -19,12 +19,9 @@ export default class NotificationsScreen extends PureComponent<
     return (
       <Screen>
         <UserConsumer>
-          {({ user }) =>
-            !(user && user.accessToken) ? null : (
-              <NotificationCardsContainer
-                accessToken={user.accessToken}
-                swipeable
-              />
+          {({ accessToken }) =>
+            !!accessToken && (
+              <NotificationCardsContainer accessToken={accessToken} swipeable />
             )
           }
         </UserConsumer>
