@@ -1,11 +1,6 @@
 import { MomentInput } from 'moment'
 import React, { PureComponent } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { IGitHubIcon } from '../../../types'

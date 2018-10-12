@@ -62,7 +62,7 @@ const RepositoryRow: SFC<RepositoryRowProps> = ({
             numberOfLines={1}
             style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
           >
-            <Icon name={repoIcon}/>{' '}
+            <Icon name={repoIcon} />{' '}
             <Text
               style={[rowStyles.repositoryText, isRead && cardStyles.mutedText]}
             >

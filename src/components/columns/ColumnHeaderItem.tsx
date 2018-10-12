@@ -65,6 +65,7 @@ export default class ColumnHeaderItem extends PureComponent<
       iconName,
       iconStyle,
       onPress,
+      repo,
       showAvatarAsIcon,
       style,
       subtitle,
@@ -103,6 +104,7 @@ export default class ColumnHeaderItem extends PureComponent<
                 <Avatar
                   isBot={false}
                   linkURL=""
+                  repo={repo}
                   shape={avatarShape}
                   style={[
                     {

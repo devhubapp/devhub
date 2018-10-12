@@ -18,6 +18,7 @@ export interface AvatarProps {
   email?: string
   isBot?: boolean
   linkURL: string
+  repo?: string
   shape?: 'circle' | 'rounded' | 'square'
   size?: number
   small?: boolean
@@ -32,6 +33,7 @@ const Avatar: SFC<AvatarProps> = ({
   email,
   isBot: _isBot,
   linkURL,
+  repo,
   shape,
   size: _size,
   small,
@@ -59,7 +61,9 @@ const Avatar: SFC<AvatarProps> = ({
         linkURL
           ? fixURL(linkURL)
           : username
-            ? getUserURL(username, { isBot })
+            ? repo
+              ? getRepositoryURL(username, repo)
+              : getUserURL(username, { isBot })
             : undefined
       }
     >

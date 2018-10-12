@@ -36,6 +36,7 @@ export default class EventColumn extends PureComponent<
             backgroundColor={theme.base00}
             foregroundColor={theme.base04}
             iconName={requestTypeIconAndData.icon}
+            repo={getOwnerAndRepo(username).repo}
             showAvatarAsIcon={showAvatarAsIcon}
             subtitle={requestTypeIconAndData.subtitle}
             title={username}
