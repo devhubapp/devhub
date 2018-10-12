@@ -1,5 +1,5 @@
 import React, { SFC } from 'react'
-import { ImageStyle, StyleProp, TouchableOpacity } from 'react-native'
+import { ImageStyle, StyleProp } from 'react-native'
 
 import theme from '../../styles/themes/dark'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
@@ -8,11 +8,10 @@ import {
   getUserAvatarByEmail,
   getUserAvatarByUsername,
 } from '../../utils/helpers/github/shared'
-import {
-  getGithubURLPressHandler,
-  getUserPressHandler,
-} from '../cards/partials/rows/helpers'
+import { fixURL } from '../../utils/helpers/github/url'
+import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
 import { ImageWithLoading } from './ImageWithLoading'
+import { Link } from './Link'
 
 export interface AvatarProps {
   avatarURL?: string
@@ -55,12 +54,12 @@ const Avatar: SFC<AvatarProps> = ({
   if (!uri) return null
 
   return (
-    <TouchableOpacity
-      onPress={
+    <Link
+      href={
         linkURL
-          ? getGithubURLPressHandler(linkURL)
+          ? fixURL(linkURL)
           : username
-            ? getUserPressHandler(username, { isBot })
+            ? getUserURL(username, { isBot })
             : undefined
       }
     >
@@ -84,7 +83,7 @@ const Avatar: SFC<AvatarProps> = ({
           style,
         ]}
       />
-    </TouchableOpacity>
+    </Link>
   )
 }
 

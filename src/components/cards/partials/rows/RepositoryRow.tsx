@@ -1,10 +1,11 @@
 import React, { SFC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import Avatar from '../../../common/Avatar'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
-import { getRepositoryPressHandler } from './helpers'
+import { getRepositoryURL } from './helpers'
 import rowStyles from './styles'
 
 export interface RepositoryRowProps {
@@ -49,11 +50,11 @@ const RepositoryRow: SFC<RepositoryRowProps> = ({
       </View>
 
       <View style={cardStyles.rightColumn}>
-        <TouchableOpacity
-          onPress={
+        <Link
+          href={
             showMoreItemsIndicator
               ? undefined
-              : getRepositoryPressHandler(ownerName, repositoryName)
+              : getRepositoryURL(ownerName, repositoryName)
           }
           style={rowStyles.mainContentContainer}
         >
@@ -61,7 +62,7 @@ const RepositoryRow: SFC<RepositoryRowProps> = ({
             numberOfLines={1}
             style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
           >
-            <Icon name={repoIcon} />{' '}
+            <Icon name={repoIcon}/>{' '}
             <Text
               style={[rowStyles.repositoryText, isRead && cardStyles.mutedText]}
             >
@@ -76,7 +77,7 @@ const RepositoryRow: SFC<RepositoryRowProps> = ({
               {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
             </Text>
           </Text>
-        </TouchableOpacity>
+        </Link>
       </View>
     </View>
   )

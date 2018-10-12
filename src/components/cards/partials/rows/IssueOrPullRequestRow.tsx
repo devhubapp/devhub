@@ -1,21 +1,16 @@
 import React, { SFC } from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import defaultStyles from '../../../../styles/styles'
 import { contentPadding } from '../../../../styles/variables'
 import { ITheme } from '../../../../types'
+import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
 import { CardItemId } from '../CardItemId'
-import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
@@ -72,8 +67,8 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
       </View>
 
       <View style={cardStyles.rightColumn}>
-        <TouchableOpacity
-          onPress={getGithubURLPressHandler(url, {
+        <Link
+          href={fixURL(url, {
             issueOrPullRequestNumber: issueNumber,
           })}
           style={rowStyles.mainContentContainer}
@@ -100,7 +95,7 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
               </Text>
             )}
           </Text>
-        </TouchableOpacity>
+        </Link>
 
         <CardItemId
           id={issueNumber}

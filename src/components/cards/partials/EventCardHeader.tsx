@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react'
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
@@ -13,9 +12,10 @@ import { IGitHubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
 import IntervalRefresh from '../../common/IntervalRefresh'
+import { Link } from '../../common/Link'
 import cardStyles from '../styles'
 import CardIcon from './CardIcon'
-import { getUserPressHandler } from './rows/helpers'
+import { getUserURL } from './rows/helpers'
 
 export interface EventCardHeaderProps {
   actionText: string
@@ -87,11 +87,9 @@ export default class EventCardHeader extends PureComponent<
           <View style={styles.outerContainer}>
             <View style={styles.innerContainer}>
               <View style={cardStyles.horizontal}>
-                <TouchableOpacity
-                  onPress={getUserPressHandler(username, { isBot })}
-                >
+                <Link href={getUserURL(username, { isBot })}>
                   <Text style={cardStyles.usernameText}>{username}</Text>
-                </TouchableOpacity>
+                </Link>
                 {!!isBot && (
                   <Text style={cardStyles.timestampText}>{` • BOT`}</Text>
                 )}

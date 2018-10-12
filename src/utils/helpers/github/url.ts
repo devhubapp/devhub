@@ -149,7 +149,7 @@ export function githubHTMLUrlFromAPIUrl(
 }
 
 export function fixURL(url?: string, options: IURLOptions = {}) {
-  if (!url) return
+  if (!url) return ''
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
   let uri =

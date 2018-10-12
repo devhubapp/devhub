@@ -1,10 +1,11 @@
 import React, { SFC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
+import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
-import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface WikiPageRowProps {
@@ -32,10 +33,8 @@ const WikiPageRow: SFC<WikiPageRowProps> = ({
       <View style={cardStyles.leftColumn} />
 
       <View style={cardStyles.rightColumn}>
-        <TouchableOpacity
-          onPress={
-            showMoreItemsIndicator ? undefined : getGithubURLPressHandler(url)
-          }
+        <Link
+          href={showMoreItemsIndicator ? undefined : fixURL(url)}
           style={rowStyles.mainContentContainer}
         >
           <Text
@@ -52,7 +51,7 @@ const WikiPageRow: SFC<WikiPageRowProps> = ({
               </Text>
             )}
           </Text>
-        </TouchableOpacity>
+        </Link>
       </View>
     </View>
   )

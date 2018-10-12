@@ -5,6 +5,7 @@ import {
   Text,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from 'react-native'
 
@@ -13,6 +14,7 @@ import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { IGitHubIcon } from '../../types'
 import { fade } from '../../utils/helpers/color'
 import Avatar, { AvatarProps } from '../common/Avatar'
+import { ConditionalWrap } from '../common/ConditionalWrap'
 
 export interface ColumnHeaderItemProps {
   avatarShape?: AvatarProps['shape']
@@ -21,6 +23,7 @@ export interface ColumnHeaderItemProps {
   iconName?: IGitHubIcon
   iconStyle?: StyleProp<TextStyle>
   onPress?: () => void
+  repo?: string
   showAvatarAsIcon?: boolean
   style?: StyleProp<ViewStyle>
   subtitle?: string
@@ -73,10 +76,26 @@ export default class ColumnHeaderItem extends PureComponent<
     } = this.props
 
     return (
-      <TouchableOpacity
-        {...props}
-        onPress={onPress}
-        style={[styles.container, { backgroundColor }, style]}
+      <ConditionalWrap
+        condition
+        wrap={children =>
+          onPress ? (
+            <TouchableOpacity
+              {...props}
+              onPress={onPress}
+              style={[styles.container, { backgroundColor }, style]}
+            >
+              {children}
+            </TouchableOpacity>
+          ) : (
+            <View
+              {...props}
+              style={[styles.container, { backgroundColor }, style]}
+            >
+              {children}
+            </View>
+          )
+        }
       >
         <Fragment>
           {showAvatarAsIcon
@@ -133,7 +152,7 @@ export default class ColumnHeaderItem extends PureComponent<
             </Text>
           )}
         </Fragment>
-      </TouchableOpacity>
+      </ConditionalWrap>
     )
   }
 }

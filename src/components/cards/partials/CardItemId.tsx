@@ -1,18 +1,12 @@
 import React, { SFC } from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { radius } from '../../../styles/variables'
 import { IGitHubIcon, ITheme } from '../../../types'
+import { fixURL } from '../../../utils/helpers/github/url'
+import { Link } from '../../common/Link'
 import cardStyles from '../styles'
-import { getGithubURLPressHandler } from './rows/helpers'
 
 export interface IProps {
   icon?: IGitHubIcon
@@ -55,8 +49,8 @@ export const CardItemId: SFC<IProps> = ({
   const parsedNumber = parseInt(`${id}`, 10) || id
 
   return (
-    <TouchableOpacity
-      onPress={url ? getGithubURLPressHandler(url) : undefined}
+    <Link
+      href={fixURL(url)}
       style={[
         styles.container,
         {
@@ -79,6 +73,6 @@ export const CardItemId: SFC<IProps> = ({
         {typeof parsedNumber === 'number' ? '#' : ''}
         {parsedNumber}
       </Text>
-    </TouchableOpacity>
+    </Link>
   )
 }

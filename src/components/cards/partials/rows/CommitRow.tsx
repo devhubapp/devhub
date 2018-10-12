@@ -1,17 +1,18 @@
 import React, { SFC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { tryGetUsernameFromGitHubEmail } from '../../../../utils/helpers/github/shared'
 import {
+  fixURL,
   getCommentIdFromUrl,
   getGitHubSearchURL,
   getGitHubURLForUser,
 } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
-import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface CommitRowProps {
@@ -69,11 +70,11 @@ const CommitRow: SFC<CommitRowProps> = ({
       </View>
 
       <View style={cardStyles.rightColumn}>
-        <TouchableOpacity
-          onPress={
+        <Link
+          href={
             showMoreItemsIndicator
               ? undefined
-              : getGithubURLPressHandler(url, {
+              : fixURL(url, {
                   commentId:
                     (latestCommentUrl &&
                       getCommentIdFromUrl(latestCommentUrl)) ||
@@ -99,7 +100,7 @@ const CommitRow: SFC<CommitRowProps> = ({
               </Text>
             )}
           </Text>
-        </TouchableOpacity>
+        </Link>
       </View>
     </View>
   )

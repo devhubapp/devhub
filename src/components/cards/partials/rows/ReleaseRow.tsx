@@ -1,13 +1,14 @@
 import React, { SFC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { IEnhancedGitHubEvent } from '../../../../types'
+import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
 import BranchRow from './BranchRow'
-import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
@@ -70,10 +71,7 @@ const ReleaseRow: SFC<IProps> = ({
         </View>
 
         <View style={cardStyles.rightColumn}>
-          <TouchableOpacity
-            onPress={getGithubURLPressHandler(url)}
-            style={rowStyles.mainContentContainer}
-          >
+          <Link href={fixURL(url)} style={rowStyles.mainContentContainer}>
             <Text
               style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
             >
@@ -85,7 +83,7 @@ const ReleaseRow: SFC<IProps> = ({
               </Text>
               {name || tagName}
             </Text>
-          </TouchableOpacity>
+          </Link>
         </View>
       </View>
 
@@ -102,10 +100,7 @@ const ReleaseRow: SFC<IProps> = ({
         </View>
 
         <View style={cardStyles.rightColumn}>
-          <TouchableOpacity
-            onPress={getGithubURLPressHandler(url)}
-            style={rowStyles.mainContentContainer}
-          >
+          <Link href={fixURL(url)} style={rowStyles.mainContentContainer}>
             <Text
               style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
             >
@@ -117,7 +112,7 @@ const ReleaseRow: SFC<IProps> = ({
               </Text>
               {body}
             </Text>
-          </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </View>

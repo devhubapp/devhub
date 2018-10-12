@@ -12,27 +12,21 @@ export const getGithubURLPressHandler = memoize(
   },
 )
 
-export const getBranchPressHandler = memoize(
+export const getBranchURL = memoize(
   (ownerName?: string, repositoryName?: string, branch?: string) =>
     ownerName && repositoryName && branch
-      ? getGithubURLPressHandler(
-          `${baseURL}/${ownerName}/${repositoryName}/tree/${branch}`,
-        )
+      ? `${baseURL}/${ownerName}/${repositoryName}/tree/${branch}`
       : undefined,
 )
 
-export const getRepositoryPressHandler = memoize(
+export const getRepositoryURL = memoize(
   (ownerName?: string, repositoryName?: string) =>
     ownerName && repositoryName
-      ? getGithubURLPressHandler(`${baseURL}/${ownerName}/${repositoryName}`)
+      ? `${baseURL}/${ownerName}/${repositoryName}`
       : undefined,
 )
 
-export const getUserPressHandler = memoize(
+export const getUserURL = memoize(
   (username: string, { isBot }: { isBot?: boolean } = {}) =>
-    username
-      ? getGithubURLPressHandler(
-          `${baseURL}/${isBot ? 'apps/' : ''}${username}`,
-        )
-      : undefined,
+    username ? `${baseURL}/${isBot ? 'apps/' : ''}${username}` : undefined,
 )

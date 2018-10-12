@@ -6,6 +6,7 @@ import EventCardsContainer, {
 } from '../../containers/EventCardsContainer'
 import theme from '../../styles/themes/dark'
 import { getRequestTypeIconAndData } from '../../utils/helpers/github/events'
+import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
 import ColumnHeader from './ColumnHeader'
@@ -38,7 +39,7 @@ export default class EventColumn extends PureComponent<
             showAvatarAsIcon={showAvatarAsIcon}
             subtitle={requestTypeIconAndData.subtitle}
             title={username}
-            username={username.split('/')[0]}
+            username={getOwnerAndRepo(username).owner}
           />
           <FlexSeparator />
           <ColumnHeaderItem

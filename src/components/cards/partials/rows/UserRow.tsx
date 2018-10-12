@@ -1,9 +1,10 @@
 import React, { SFC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import Avatar from '../../../common/Avatar'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
-import { getUserPressHandler } from './helpers'
+import { getUserURL } from './helpers'
 import rowStyles from './styles'
 
 export interface UserRowProps {
@@ -36,10 +37,8 @@ const UserRow: SFC<UserRowProps> = ({
     </View>
 
     <View style={cardStyles.rightColumn}>
-      <TouchableOpacity
-        onPress={
-          showMoreItemsIndicator ? undefined : getUserPressHandler(username)
-        }
+      <Link
+        href={showMoreItemsIndicator ? undefined : getUserURL(username)}
         style={rowStyles.mainContentContainer}
       >
         <Text
@@ -50,7 +49,7 @@ const UserRow: SFC<UserRowProps> = ({
         >
           {showMoreItemsIndicator ? '...' : username}
         </Text>
-      </TouchableOpacity>
+      </Link>
     </View>
   </View>
 )

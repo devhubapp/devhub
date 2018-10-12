@@ -1,11 +1,12 @@
 import React, { SFC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { IEnhancedGitHubEvent } from '../../../../types'
 import Avatar from '../../../common/Avatar'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
-import { getBranchPressHandler } from './helpers'
+import { getBranchURL } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
@@ -45,8 +46,8 @@ const BranchRow: SFC<IProps> = ({
       </View>
 
       <View style={cardStyles.rightColumn}>
-        <TouchableOpacity
-          onPress={getBranchPressHandler(ownerName, repositoryName, branch)}
+        <Link
+          href={getBranchURL(ownerName, repositoryName, branch)}
           style={rowStyles.mainContentContainer}
         >
           <Text
@@ -63,7 +64,7 @@ const BranchRow: SFC<IProps> = ({
             </Text>
             {branch}
           </Text>
-        </TouchableOpacity>
+        </Link>
       </View>
     </View>
   )

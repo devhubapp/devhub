@@ -1,11 +1,12 @@
 import React, { SFC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import Platform from '../../../../libs/platform'
+import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
+import { Link } from '../../../common/Link'
 import cardStyles from '../../styles'
-import { getGithubURLPressHandler } from './helpers'
 import rowStyles from './styles'
 
 export interface IProps {
@@ -52,17 +53,14 @@ const CommentRow: SFC<IProps> = ({
       </View>
 
       <View style={cardStyles.rightColumn}>
-        <TouchableOpacity
-          onPress={getGithubURLPressHandler(url)}
-          style={rowStyles.mainContentContainer}
-        >
+        <Link href={fixURL(url)} style={rowStyles.mainContentContainer}>
           <Text
             numberOfLines={numberOfLines}
             style={[cardStyles.commentText, isRead && cardStyles.mutedText]}
           >
             {body}
           </Text>
-        </TouchableOpacity>
+        </Link>
       </View>
     </View>
   )
