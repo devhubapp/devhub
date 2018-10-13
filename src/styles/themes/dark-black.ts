@@ -1,3 +1,3 @@
 import { createThemeFromColor } from './custom'
 
-export default createThemeFromColor('#1c1c1c', 'dark-black')
+export default createThemeFromColor('#000000', 'dark-black')
