@@ -36,7 +36,7 @@ const TabBar = (props: BottomTabBarProps) => (
           backgroundColor:
             theme.backgroundColor || theme.backgroundColorTransparent10,
           ...Platform.selectUsingRealOS({
-            ios: { padding: 3, borderTopColor: theme.backgroundColor2 },
+            ios: { padding: 3, borderTopColor: theme.backgroundColorLess08 },
           }),
         }}
       />

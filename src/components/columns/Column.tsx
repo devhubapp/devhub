@@ -47,7 +47,7 @@ export default class Column extends PureComponent<IProps> {
                   styles.container,
                   {
                     backgroundColor: theme.backgroundColor,
-                    borderRightColor: theme.backgroundColor1,
+                    borderRightColor: theme.backgroundColorMore08,
                     width: Math.max(minWidth!, Math.min(maxWidth!, width)),
                   },
                   style,

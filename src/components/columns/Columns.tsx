@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native'
-import { ThemeConsumer } from '../context/ThemeContext'
 
 export interface IProps extends ScrollViewProps {
   children: ReactFragment
@@ -26,22 +25,15 @@ export default class Columns extends PureComponent<IProps> {
     const { children, style, ...props } = this.props
 
     return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <ScrollView
-            contentContainerStyle={[
-              { backgroundColor: theme.backgroundColor },
-              style,
-            ]}
-            horizontal
-            pagingEnabled
-            {...props}
-            style={[styles.container, style]}
-          >
-            {children}
-          </ScrollView>
-        )}
-      </ThemeConsumer>
+      <ScrollView
+        contentContainerStyle={style}
+        horizontal
+        pagingEnabled
+        {...props}
+        style={[styles.container, style]}
+      >
+        {children}
+      </ScrollView>
     )
   }
 }

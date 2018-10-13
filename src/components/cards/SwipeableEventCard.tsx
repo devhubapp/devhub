@@ -38,7 +38,7 @@ export default class SwipeableEventCard extends PureComponent<
             ]}
             rightActions={[
               {
-                color: theme.backgroundColor1,
+                color: theme.backgroundColorMore08,
                 icon: 'archive',
                 key: 'archive',
                 label: 'Archive',

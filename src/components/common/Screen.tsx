@@ -1,7 +1,9 @@
+import { darken } from 'polished'
 import React, { PureComponent, ReactNode } from 'react'
 import { StatusBar, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { SafeAreaView } from 'react-navigation'
+
 import { ThemeConsumer } from '../context/ThemeContext'
 
 let isSplashScreenVisible = true
@@ -51,7 +53,7 @@ export default class Screen extends PureComponent<ScreenProps> {
               ...this.props,
               style: [
                 this.props.style,
-                { backgroundColor: theme.backgroundColor },
+                { backgroundColor: darken(0.01, theme.backgroundColor) },
               ],
             })}
           </>

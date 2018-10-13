@@ -12,8 +12,8 @@ export interface Theme {
   invert: () => Theme
 
   backgroundColor: string
-  backgroundColor1: string
-  backgroundColor2: string
+  backgroundColorLess08: string
+  backgroundColorMore08: string
   backgroundColorTransparent10: string
   foregroundColor: string
   foregroundColorMuted50: string

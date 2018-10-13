@@ -73,7 +73,7 @@ const Avatar: SFC<AvatarProps> = ({
             {...props}
             backgroundColorFailed="#FFFFFF"
             backgroundColorLoaded="#FFFFFF"
-            backgroundColorLoading={theme.backgroundColor2}
+            backgroundColorLoading={theme.backgroundColorLess08}
             source={{ uri }}
             style={[
               {

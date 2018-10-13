@@ -1,3 +1,4 @@
+import { darken } from 'polished'
 import React, { PureComponent, ReactNode } from 'react'
 import {
   SafeAreaView,
@@ -42,7 +43,7 @@ export default class Screen extends PureComponent<ScreenProps> {
             ...this.props,
             style: [
               this.props.style,
-              { backgroundColor: theme.backgroundColor },
+              { backgroundColor: darken(0.01, theme.backgroundColor) },
             ],
           })
         }

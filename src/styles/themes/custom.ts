@@ -10,15 +10,15 @@ export function createThemeFromColor(
   const isDark = luminance <= 0.5
 
   const backgroundColor = color
-  const backgroundColor1 =
+  const backgroundColorMore08 =
     luminance >= 0.8
-      ? luminance >= 0.95
+      ? luminance >= 0.99
         ? darken(0.08, color)
         : lighten(0.08, color)
-      : luminance <= 0.05
+      : luminance <= 0.01
         ? lighten(0.08, color)
         : darken(0.08, color)
-  const backgroundColor2 =
+  const backgroundColorLess08 =
     luminance >= 0.8 ? darken(0.08, color) : lighten(0.08, color)
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
   const foregroundColor = isDark ? lighten(0.8, color) : darken(0.8, color)
@@ -38,8 +38,8 @@ export function createThemeFromColor(
       return invertedTheme
     },
     backgroundColor,
-    backgroundColor1,
-    backgroundColor2,
+    backgroundColorLess08,
+    backgroundColorMore08,
     backgroundColorTransparent10,
     foregroundColor,
     foregroundColorMuted50,

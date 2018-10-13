@@ -17,7 +17,7 @@ export const getCardRowStylesForTheme = _.memoize((theme: Theme) => {
     } as ViewStyle,
 
     mainContentContainer: {
-      borderColor: theme.backgroundColor1,
+      borderColor: theme.backgroundColorMore08,
       flex: 1,
       justifyContent: 'center',
     } as ViewStyle,

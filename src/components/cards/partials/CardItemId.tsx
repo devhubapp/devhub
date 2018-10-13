@@ -54,8 +54,8 @@ export const CardItemId: SFC<CardItemIdProps> = ({
           style={[
             styles.container,
             {
-              backgroundColor: theme.backgroundColor2,
-              borderColor: theme.backgroundColor2,
+              backgroundColor: theme.backgroundColorLess08,
+              borderColor: theme.backgroundColorLess08,
             },
             style,
           ]}

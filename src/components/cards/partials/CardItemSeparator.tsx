@@ -19,7 +19,7 @@ export default class CardItemSeparator extends PureComponent {
           <View
             style={[
               styles.separator,
-              { borderBottomColor: theme.backgroundColor1 },
+              { borderBottomColor: theme.backgroundColorMore08 },
             ]}
           />
         )}
