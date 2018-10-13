@@ -2,8 +2,8 @@ import React, { ReactElement, ReactNode, SFC } from 'react'
 import { ScrollView } from 'react-native'
 
 import { contentPadding } from '../../../../styles/variables'
-import { ITheme } from '../../../../types'
 import TransparentTextOverlay from '../../../common/TransparentTextOverlay'
+import { ThemeConsumer } from '../../../context/ThemeContext'
 
 export type RenderItem<Item> = (
   {
@@ -19,7 +19,6 @@ export interface RowListProps<Item> {
   maxLength?: number
   narrow?: boolean
   renderItem: RenderItem<Item>
-  theme: ITheme
 }
 
 const RowList: SFC<RowListProps<any>> = ({
@@ -28,7 +27,6 @@ const RowList: SFC<RowListProps<any>> = ({
   maxLength = 5,
   narrow,
   renderItem,
-  theme,
 }) => {
   if (!(data && data.length > 0)) return null
 
@@ -43,28 +41,32 @@ const RowList: SFC<RowListProps<any>> = ({
   const isSliced = data.length > slicedData.length
 
   return (
-    <TransparentTextOverlay
-      color={theme.base02}
-      size={narrow ? contentPadding / 2 : contentPadding}
-      from="vertical"
-      containerStyle={{ flex: 0 }}
-    >
-      <ScrollView
-        alwaysBounceVertical={false}
-        contentContainerStyle={{
-          paddingBottom: narrow ? contentPadding / 2 : contentPadding,
-        }}
-        style={{ maxHeight }}
-      >
-        {slicedData.map((item, index) => renderItem({ item, index }))}
-        {isSliced &&
-          renderItem({
-            index: slicedData.length,
-            item: data[slicedData.length],
-            showMoreItemsIndicator: true,
-          })}
-      </ScrollView>
-    </TransparentTextOverlay>
+    <ThemeConsumer>
+      {({ theme }) => (
+        <TransparentTextOverlay
+          color={theme.backgroundColor}
+          size={narrow ? contentPadding / 2 : contentPadding}
+          from="vertical"
+          containerStyle={{ flex: 0 }}
+        >
+          <ScrollView
+            alwaysBounceVertical={false}
+            contentContainerStyle={{
+              paddingBottom: narrow ? contentPadding / 2 : contentPadding,
+            }}
+            style={{ maxHeight }}
+          >
+            {slicedData.map((item, index) => renderItem({ item, index }))}
+            {isSliced &&
+              renderItem({
+                index: slicedData.length,
+                item: data[slicedData.length],
+                showMoreItemsIndicator: true,
+              })}
+          </ScrollView>
+        </TransparentTextOverlay>
+      )}
+    </ThemeConsumer>
   )
 }
 

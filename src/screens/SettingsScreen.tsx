@@ -10,7 +10,7 @@ import {
   UserConsumer,
   UserProviderState,
 } from '../components/context/UserContext'
-import theme from '../styles/themes/dark'
+import * as colors from '../styles/colors'
 
 export interface LoginScreenProps {
   setAccessToken: UserProviderState['setAccessToken']
@@ -32,7 +32,7 @@ class SettingsScreenComponent extends PureComponent<
     return (
       <Screen>
         <View>
-          <Button color={theme.red} title="Logout" onPress={this.logout} />
+          <Button color={colors.red} title="Logout" onPress={this.logout} />
         </View>
       </Screen>
     )

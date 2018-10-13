@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 
 import AppNavigator from '../navigation/AppNavigator'
 import { DimensionsProvider } from './context/DimensionsContext'
+import { ThemeProvider } from './context/ThemeContext'
 import { UserProvider } from './context/UserContext'
 
 export default class App extends PureComponent {
@@ -9,7 +10,9 @@ export default class App extends PureComponent {
     return (
       <DimensionsProvider>
         <UserProvider>
-          <AppNavigator />
+          <ThemeProvider>
+            <AppNavigator />
+          </ThemeProvider>
         </UserProvider>
       </DimensionsProvider>
     )

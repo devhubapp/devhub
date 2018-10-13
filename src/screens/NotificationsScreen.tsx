@@ -8,9 +8,7 @@ import Screen from '../components/common/Screen'
 import { UserConsumer } from '../components/context/UserContext'
 import NotificationCardsContainer from '../containers/NotificationCardsContainer'
 
-export class NotificationsScreen extends PureComponent<
-  NavigationScreenProps
-> {
+export class NotificationsScreen extends PureComponent<NavigationScreenProps> {
   static navigationOptions: NavigationStackScreenOptions = {
     headerTitle: 'Notifications',
   }

@@ -1,7 +1,6 @@
 import React, { SFC } from 'react'
 import { ImageStyle, StyleProp } from 'react-native'
 
-import theme from '../../styles/themes/dark'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import {
   getUserAvatarByAvatarURL,
@@ -10,6 +9,7 @@ import {
 } from '../../utils/helpers/github/shared'
 import { fixURL } from '../../utils/helpers/github/url'
 import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
+import { ThemeConsumer } from '../context/ThemeContext'
 import { ImageWithLoading } from './ImageWithLoading'
 import { Link } from './Link'
 
@@ -56,38 +56,42 @@ const Avatar: SFC<AvatarProps> = ({
   if (!uri) return null
 
   return (
-    <Link
-      href={
-        linkURL
-          ? fixURL(linkURL)
-          : username
-            ? repo
-              ? getRepositoryURL(username, repo)
-              : getUserURL(username, { isBot })
-            : undefined
-      }
-    >
-      <ImageWithLoading
-        {...props}
-        backgroundColorFailed="#FFFFFF"
-        backgroundColorLoaded="#FFFFFF"
-        backgroundColorLoading={theme.base09}
-        source={{ uri }}
-        style={[
-          {
-            height: finalSize,
-            width: finalSize,
-            borderRadius:
-              shape === 'circle'
-                ? finalSize / 2
-                : shape === 'square'
-                  ? 0
-                  : radius,
-          },
-          style,
-        ]}
-      />
-    </Link>
+    <ThemeConsumer>
+      {({ theme }) => (
+        <Link
+          href={
+            linkURL
+              ? fixURL(linkURL)
+              : username
+                ? repo
+                  ? getRepositoryURL(username, repo)
+                  : getUserURL(username, { isBot })
+                : undefined
+          }
+        >
+          <ImageWithLoading
+            {...props}
+            backgroundColorFailed="#FFFFFF"
+            backgroundColorLoaded="#FFFFFF"
+            backgroundColorLoading={theme.backgroundColor2}
+            source={{ uri }}
+            style={[
+              {
+                height: finalSize,
+                width: finalSize,
+                borderRadius:
+                  shape === 'circle'
+                    ? finalSize / 2
+                    : shape === 'square'
+                      ? 0
+                      : radius,
+              },
+              style,
+            ]}
+          />
+        </Link>
+      )}
+    </ThemeConsumer>
   )
 }
 

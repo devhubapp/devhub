@@ -5,8 +5,9 @@ import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import { Link } from '../../../common/Link'
-import cardStyles from '../../styles'
-import rowStyles from './styles'
+import { ThemeConsumer } from '../../../context/ThemeContext'
+import { getCardStylesForTheme } from '../../styles'
+import { getCardRowStylesForTheme } from './styles'
 
 export interface WikiPageRowProps {
   isRead: boolean
@@ -29,31 +30,41 @@ const WikiPageRow: SFC<WikiPageRowProps> = ({
   if (!title) return null
 
   return (
-    <View style={rowStyles.container}>
-      <View style={cardStyles.leftColumn} />
+    <ThemeConsumer>
+      {({ theme }) => (
+        <View style={getCardRowStylesForTheme(theme).container}>
+          <View style={getCardStylesForTheme(theme).leftColumn} />
 
-      <View style={cardStyles.rightColumn}>
-        <Link
-          href={showMoreItemsIndicator ? undefined : fixURL(url)}
-          style={rowStyles.mainContentContainer}
-        >
-          <Text
-            numberOfLines={1}
-            style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
-          >
-            <Icon name="book" /> {showMoreItemsIndicator ? '' : title}
-            {!!showMoreItemsIndicator && (
+          <View style={getCardStylesForTheme(theme).rightColumn}>
+            <Link
+              href={showMoreItemsIndicator ? undefined : fixURL(url)}
+              style={getCardRowStylesForTheme(theme).mainContentContainer}
+            >
               <Text
                 numberOfLines={1}
-                style={[cardStyles.normalText, cardStyles.mutedText]}
+                style={[
+                  getCardStylesForTheme(theme).normalText,
+                  isRead && getCardStylesForTheme(theme).mutedText,
+                ]}
               >
-                ...
+                <Icon name="book" /> {showMoreItemsIndicator ? '' : title}
+                {!!showMoreItemsIndicator && (
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      getCardStylesForTheme(theme).normalText,
+                      getCardStylesForTheme(theme).mutedText,
+                    ]}
+                  >
+                    ...
+                  </Text>
+                )}
               </Text>
-            )}
-          </Text>
-        </Link>
-      </View>
-    </View>
+            </Link>
+          </View>
+        </View>
+      )}
+    </ThemeConsumer>
   )
 }
 

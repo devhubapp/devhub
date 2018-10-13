@@ -10,7 +10,7 @@ import {
   UserConsumer,
   UserProviderState,
 } from '../components/context/UserContext'
-import theme from '../styles/themes/dark'
+import * as colors from '../styles/colors'
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +49,7 @@ export class AuthLoadingScreenComponent extends PureComponent<
     return (
       <Screen style={styles.container}>
         <StatusBar hidden />
-        <ActivityIndicator color={theme.brand} />
+        <ActivityIndicator color={colors.brand} />
       </Screen>
     )
   }

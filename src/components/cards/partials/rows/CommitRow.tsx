@@ -12,8 +12,9 @@ import {
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import cardStyles from '../../styles'
-import rowStyles from './styles'
+import { ThemeConsumer } from '../../../context/ThemeContext'
+import { getCardStylesForTheme } from '../../styles'
+import { getCardRowStylesForTheme } from './styles'
 
 export interface CommitRowProps {
   authorEmail?: string
@@ -51,58 +52,66 @@ const CommitRow: SFC<CommitRowProps> = ({
   byText = trimNewLinesAndSpaces(byText)
 
   return (
-    <View style={rowStyles.container}>
-      <View style={cardStyles.leftColumn}>
-        <Avatar
-          email={authorEmail}
-          isBot={Boolean(
-            authorUsername && authorUsername.indexOf('[bot]') >= 0,
-          )}
-          small
-          style={cardStyles.avatar}
-          username={authorUsername}
-          linkURL={
-            authorUsername
-              ? getGitHubURLForUser(authorUsername)
-              : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
-          }
-        />
-      </View>
+    <ThemeConsumer>
+      {({ theme }) => (
+        <View style={getCardRowStylesForTheme(theme).container}>
+          <View style={getCardStylesForTheme(theme).leftColumn}>
+            <Avatar
+              email={authorEmail}
+              isBot={Boolean(
+                authorUsername && authorUsername.indexOf('[bot]') >= 0,
+              )}
+              small
+              style={getCardStylesForTheme(theme).avatar}
+              username={authorUsername}
+              linkURL={
+                authorUsername
+                  ? getGitHubURLForUser(authorUsername)
+                  : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
+              }
+            />
+          </View>
 
-      <View style={cardStyles.rightColumn}>
-        <Link
-          href={
-            showMoreItemsIndicator
-              ? undefined
-              : fixURL(url, {
-                  commentId:
-                    (latestCommentUrl &&
-                      getCommentIdFromUrl(latestCommentUrl)) ||
-                    undefined,
-                })
-          }
-          style={rowStyles.mainContentContainer}
-        >
-          <Text
-            numberOfLines={1}
-            style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
-          >
-            <Icon name="git-commit" /> {showMoreItemsIndicator ? '' : message}
-            {Boolean(byText) && (
+          <View style={getCardStylesForTheme(theme).rightColumn}>
+            <Link
+              href={
+                showMoreItemsIndicator
+                  ? undefined
+                  : fixURL(url, {
+                      commentId:
+                        (latestCommentUrl &&
+                          getCommentIdFromUrl(latestCommentUrl)) ||
+                        undefined,
+                    })
+              }
+              style={getCardRowStylesForTheme(theme).mainContentContainer}
+            >
               <Text
+                numberOfLines={1}
                 style={[
-                  cardStyles.normalText,
-                  cardStyles.smallText,
-                  cardStyles.mutedText,
+                  getCardStylesForTheme(theme).normalText,
+                  isRead && getCardStylesForTheme(theme).mutedText,
                 ]}
               >
-                {showMoreItemsIndicator ? '...' : ` by ${byText}`}
+                <Icon name="git-commit" />{' '}
+                {showMoreItemsIndicator ? '' : message}
+                {Boolean(byText) && (
+                  <Text
+                    style={[
+                      getCardStylesForTheme(theme).normalText,
+                      getCardStylesForTheme(theme).smallText,
+                      getCardStylesForTheme(theme).mutedText,
+                    ]}
+                  >
+                    {showMoreItemsIndicator ? '...' : ` by ${byText}`}
+                  </Text>
+                )}
               </Text>
-            )}
-          </Text>
-        </Link>
-      </View>
-    </View>
+            </Link>
+          </View>
+        </View>
+      )}
+    </ThemeConsumer>
   )
 }
 

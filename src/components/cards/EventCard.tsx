@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import {
   IEnhancedGitHubEvent,
@@ -30,6 +29,7 @@ import {
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
 import { getRepoFullNameFromObject } from '../../utils/helpers/github/url'
+import { ThemeConsumer } from '../context/ThemeContext'
 import EventCardHeader from './partials/EventCardHeader'
 import BranchRow from './partials/rows/BranchRow'
 import CommentRow from './partials/rows/CommentRow'
@@ -50,7 +50,6 @@ export interface EventCardState {}
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.cardBackground,
     paddingHorizontal: contentPadding,
     paddingVertical: 1.5 * contentPadding,
   } as ViewStyle,
@@ -103,9 +102,9 @@ export default class EventCard extends PureComponent<EventCardProps> {
       forkRepoFullName,
     )
 
-    const cardIconDetails = getEventIconAndColor(event, theme)
+    const cardIconDetails = getEventIconAndColor(event)
     const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
-    const cardIconColor = cardIconDetails.color || theme.base04
+    const cardIconColor = cardIconDetails.color
 
     const actionText = getEventText(event, { repoIsKnown })
 
@@ -137,170 +136,175 @@ export default class EventCard extends PureComponent<EventCardProps> {
         : issue.html_url || issue.url)
 
     return (
-      <View style={styles.container}>
-        <EventCardHeader
-          key={`event-card-header-${event.id}`}
-          actionText={actionText}
-          avatarURL={actor.avatar_url}
-          cardIconColor={cardIconColor}
-          cardIconName={cardIconName}
-          createdAt={event.created_at}
-          isBot={Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)}
-          isPrivate={isPrivate}
-          userLinkURL={actor.html_url || ''}
-          username={actor.display_login || actor.login}
-        />
-
-        {repos.length > 0 && (
-          <RepositoryListRow
-            key={`event-repo-list-row-${repoIds.join('-')}`}
-            isForcePush={isForcePush}
-            isPush={isPush}
-            isRead={isRead}
-            repos={repos}
-            theme={theme}
-          />
-        )}
-
-        {Boolean(repo && repoOwnerName && repoName && branchName) && (
-          <BranchRow
-            key={`event-branch-row-${branchName}`}
-            branch={branchName}
-            isRead={isRead}
-            ownerName={repoOwnerName!}
-            repositoryName={repoName!}
-            type={type}
-          />
-        )}
-
-        {Boolean(forkee && forkRepoOwnerName && forkRepoName) && (
-          <RepositoryRow
-            key={`event-fork-row-${forkee.id}`}
-            isForcePush={isForcePush}
-            isFork
-            isRead={isRead}
-            ownerName={forkRepoOwnerName!}
-            repositoryName={forkRepoName!}
-          />
-        )}
-
-        {users.length > 0 && (
-          <UserListRow
-            key={`event-user-list-row-${userIds.join('-')}`}
-            isRead={isRead}
-            users={users}
-            theme={theme}
-          />
-        )}
-
-        {pages.length > 0 && (
-          <WikiPageListRow
-            key={`event-wiki-page-list-row-${pageIds.join('-')}`}
-            isRead={isRead}
-            pages={pages}
-            theme={theme}
-          />
-        )}
-
-        {Boolean(pullRequest) && (
-          <IssueOrPullRequestRow
-            key={`event-pr-row-${pullRequest.id}`}
-            avatarURL={pullRequest.user.avatar_url}
-            iconColor={pullRequestIconColor!}
-            iconName={pullRequestIconName!}
-            isRead={isRead}
-            issueNumber={pullRequest.number}
-            theme={theme}
-            title={pullRequest.title}
-            url={pullRequestURL}
-            userLinkURL={pullRequest.user.html_url || ''}
-            username={pullRequest.user.display_login || pullRequest.user.login}
-          />
-        )}
-
-        {commits.length > 0 && (
-          <CommitListRow
-            key={`event-commit-list-row-${commitIds.join('-')}`}
-            commits={commits}
-            isRead={isRead}
-            theme={theme}
-          />
-        )}
-
-        {Boolean(issue) && (
-          <IssueOrPullRequestRow
-            key={`event-issue-row-${issue.id}`}
-            avatarURL={issue.user.avatar_url}
-            iconColor={issueIconColor!}
-            iconName={issueIconName!}
-            isRead={isRead}
-            issueNumber={issue.number}
-            theme={theme}
-            title={issue.title}
-            url={issueURL}
-            userLinkURL={issue.user.html_url || ''}
-            username={issue.user.display_login || issue.user.login}
-          />
-        )}
-
-        {(type === 'IssuesEvent' &&
-          (payload as IIssuesEvent['payload']).action === 'opened' &&
-          Boolean(issue.body) && (
-            <CommentRow
-              key={`event-issue-body-row-${issue.id}`}
-              avatarURL={issue.user.avatar_url}
-              body={issue.body}
-              isRead={isRead}
-              url={issue.html_url || issue.url}
-              userLinkURL={issue.user.html_url || ''}
-              username={issue.user.display_login || issue.user.login}
+      <ThemeConsumer>
+        {({ theme }) => (
+          <View
+            style={[
+              styles.container,
+              { backgroundColor: theme.backgroundColor },
+            ]}
+          >
+            <EventCardHeader
+              key={`event-card-header-${event.id}`}
+              actionText={actionText}
+              avatarURL={actor.avatar_url}
+              cardIconColor={cardIconColor || theme.foregroundColor}
+              cardIconName={cardIconName}
+              createdAt={event.created_at}
+              isBot={Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)}
+              isPrivate={isPrivate}
+              userLinkURL={actor.html_url || ''}
+              username={actor.display_login || actor.login}
             />
-          )) ||
-          (type === 'PullRequestEvent' &&
-            (payload as IPullRequestEvent['payload']).action === 'opened' &&
-            Boolean(pullRequest.body) && (
-              <CommentRow
-                key={`event-pr-body-row-${pullRequest.id}`}
-                avatarURL={pullRequest.user.avatar_url}
-                body={pullRequest.body}
+
+            {repos.length > 0 && (
+              <RepositoryListRow
+                key={`event-repo-list-row-${repoIds.join('-')}`}
+                isForcePush={isForcePush}
+                isPush={isPush}
                 isRead={isRead}
-                url={pullRequest.html_url || pullRequest.url}
+                repos={repos}
+              />
+            )}
+
+            {Boolean(repo && repoOwnerName && repoName && branchName) && (
+              <BranchRow
+                key={`event-branch-row-${branchName}`}
+                branch={branchName}
+                isRead={isRead}
+                ownerName={repoOwnerName!}
+                repositoryName={repoName!}
+                type={type}
+              />
+            )}
+
+            {Boolean(forkee && forkRepoOwnerName && forkRepoName) && (
+              <RepositoryRow
+                key={`event-fork-row-${forkee.id}`}
+                isForcePush={isForcePush}
+                isFork
+                isRead={isRead}
+                ownerName={forkRepoOwnerName!}
+                repositoryName={forkRepoName!}
+              />
+            )}
+
+            {users.length > 0 && (
+              <UserListRow
+                key={`event-user-list-row-${userIds.join('-')}`}
+                isRead={isRead}
+                users={users}
+              />
+            )}
+
+            {pages.length > 0 && (
+              <WikiPageListRow
+                key={`event-wiki-page-list-row-${pageIds.join('-')}`}
+                isRead={isRead}
+                pages={pages}
+              />
+            )}
+
+            {Boolean(pullRequest) && (
+              <IssueOrPullRequestRow
+                key={`event-pr-row-${pullRequest.id}`}
+                avatarURL={pullRequest.user.avatar_url}
+                iconColor={pullRequestIconColor!}
+                iconName={pullRequestIconName!}
+                isRead={isRead}
+                issueNumber={pullRequest.number}
+                title={pullRequest.title}
+                url={pullRequestURL}
                 userLinkURL={pullRequest.user.html_url || ''}
                 username={
                   pullRequest.user.display_login || pullRequest.user.login
                 }
               />
-            )) ||
-          (Boolean(comment && comment.body) && (
-            <CommentRow
-              key={`event-comment-row-${comment.id}`}
-              avatarURL={comment.user.avatar_url}
-              body={comment.body}
-              isRead={isRead}
-              url={comment.html_url || comment.url}
-              userLinkURL={comment.user.html_url || ''}
-              username={comment.user.display_login || comment.user.login}
-            />
-          ))}
+            )}
 
-        {Boolean(release) && (
-          <ReleaseRow
-            key={`event-release-row-${release.id}`}
-            avatarURL={release.author.avatar_url}
-            body={release.body}
-            branch={release.target_commitish}
-            isRead={isRead}
-            name={release.name}
-            ownerName={repoOwnerName!}
-            repositoryName={repoName!}
-            tagName={release.tag_name}
-            type={type}
-            url={release.html_url || release.url}
-            userLinkURL={release.author.html_url || ''}
-            username={release.author.display_login || release.author.login}
-          />
+            {commits.length > 0 && (
+              <CommitListRow
+                key={`event-commit-list-row-${commitIds.join('-')}`}
+                commits={commits}
+                isRead={isRead}
+              />
+            )}
+
+            {Boolean(issue) && (
+              <IssueOrPullRequestRow
+                key={`event-issue-row-${issue.id}`}
+                avatarURL={issue.user.avatar_url}
+                iconColor={issueIconColor!}
+                iconName={issueIconName!}
+                isRead={isRead}
+                issueNumber={issue.number}
+                title={issue.title}
+                url={issueURL}
+                userLinkURL={issue.user.html_url || ''}
+                username={issue.user.display_login || issue.user.login}
+              />
+            )}
+
+            {(type === 'IssuesEvent' &&
+              (payload as IIssuesEvent['payload']).action === 'opened' &&
+              Boolean(issue.body) && (
+                <CommentRow
+                  key={`event-issue-body-row-${issue.id}`}
+                  avatarURL={issue.user.avatar_url}
+                  body={issue.body}
+                  isRead={isRead}
+                  url={issue.html_url || issue.url}
+                  userLinkURL={issue.user.html_url || ''}
+                  username={issue.user.display_login || issue.user.login}
+                />
+              )) ||
+              (type === 'PullRequestEvent' &&
+                (payload as IPullRequestEvent['payload']).action === 'opened' &&
+                Boolean(pullRequest.body) && (
+                  <CommentRow
+                    key={`event-pr-body-row-${pullRequest.id}`}
+                    avatarURL={pullRequest.user.avatar_url}
+                    body={pullRequest.body}
+                    isRead={isRead}
+                    url={pullRequest.html_url || pullRequest.url}
+                    userLinkURL={pullRequest.user.html_url || ''}
+                    username={
+                      pullRequest.user.display_login || pullRequest.user.login
+                    }
+                  />
+                )) ||
+              (Boolean(comment && comment.body) && (
+                <CommentRow
+                  key={`event-comment-row-${comment.id}`}
+                  avatarURL={comment.user.avatar_url}
+                  body={comment.body}
+                  isRead={isRead}
+                  url={comment.html_url || comment.url}
+                  userLinkURL={comment.user.html_url || ''}
+                  username={comment.user.display_login || comment.user.login}
+                />
+              ))}
+
+            {Boolean(release) && (
+              <ReleaseRow
+                key={`event-release-row-${release.id}`}
+                avatarURL={release.author.avatar_url}
+                body={release.body}
+                branch={release.target_commitish}
+                isRead={isRead}
+                name={release.name}
+                ownerName={repoOwnerName!}
+                repositoryName={repoName!}
+                tagName={release.tag_name}
+                type={type}
+                url={release.html_url || release.url}
+                userLinkURL={release.author.html_url || ''}
+                username={release.author.display_login || release.author.login}
+              />
+            )}
+          </View>
         )}
-      </View>
+      </ThemeConsumer>
     )
   }
 }

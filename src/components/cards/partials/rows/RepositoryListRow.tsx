@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import RepositoryRow from './RepositoryRow'
 import RowList, { RenderItem } from './RowList'
 
-import { IGitHubRepo, ITheme } from '../../../../types'
+import { IGitHubRepo } from '../../../../types'
 import { getOwnerAndRepo } from '../../../../utils/helpers/github/shared'
 import { getRepoFullNameFromObject } from '../../../../utils/helpers/github/url'
 
@@ -14,7 +14,6 @@ export interface RepositoryListRowProps {
   isRead: boolean
   maxHeight?: number
   repos: IGitHubRepo[]
-  theme: ITheme
 }
 
 export default class RepositoryListRow extends PureComponent<

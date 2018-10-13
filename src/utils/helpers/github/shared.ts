@@ -1,8 +1,7 @@
 import gravatar from 'gravatar'
 
-import * as baseTheme from '../../../styles/themes/base'
+import * as colors from '../../../styles/colors'
 import {
-  IBaseTheme,
   IGitHubIcon,
   IGitHubNotification,
   IGitHubPullRequest,
@@ -79,25 +78,22 @@ export function getOwnerAndRepo(
   return { owner, repo }
 }
 
-export function getPullRequestIconAndColor(
-  pullRequest: {
-    state?: IGitHubPullRequest['state']
-    merged_at?: IGitHubPullRequest['merged_at']
-  },
-  theme: IBaseTheme | undefined = baseTheme,
-): { icon: IGitHubIcon; color?: string } {
+export function getPullRequestIconAndColor(pullRequest: {
+  state?: IGitHubPullRequest['state']
+  merged_at?: IGitHubPullRequest['merged_at']
+}): { icon: IGitHubIcon; color?: string } {
   const merged = pullRequest.merged_at
   const state = merged ? 'merged' : pullRequest.state
 
   switch (state) {
     case 'open':
-      return { icon: 'git-pull-request', color: theme.green }
+      return { icon: 'git-pull-request', color: colors.green }
 
     case 'closed':
-      return { icon: 'git-pull-request', color: theme.red }
+      return { icon: 'git-pull-request', color: colors.red }
 
     case 'merged':
-      return { icon: 'git-merge', color: theme.purple }
+      return { icon: 'git-merge', color: colors.purple }
 
     default:
       return { icon: 'git-pull-request' }
@@ -108,25 +104,22 @@ export function getCommitIconAndColor(): { icon: IGitHubIcon; color?: string } {
   return { icon: 'git-commit' }
 }
 
-export function getIssueIconAndColor(
-  issue: {
-    state?: IGitHubPullRequest['state']
-    merged_at?: IGitHubPullRequest['merged_at']
-  },
-  theme: IBaseTheme | undefined = baseTheme,
-): { icon: IGitHubIcon; color?: string } {
+export function getIssueIconAndColor(issue: {
+  state?: IGitHubPullRequest['state']
+  merged_at?: IGitHubPullRequest['merged_at']
+}): { icon: IGitHubIcon; color?: string } {
   const { state } = issue
 
   if (isPullRequest(issue)) {
-    return getPullRequestIconAndColor(issue as IGitHubPullRequest, theme)
+    return getPullRequestIconAndColor(issue as IGitHubPullRequest)
   }
 
   switch (state) {
     case 'open':
-      return { icon: 'issue-opened', color: theme.green }
+      return { icon: 'issue-opened', color: colors.green }
 
     case 'closed':
-      return { icon: 'issue-closed', color: theme.red }
+      return { icon: 'issue-closed', color: colors.red }
 
     default:
       return { icon: 'issue-opened' }
@@ -136,7 +129,6 @@ export function getIssueIconAndColor(
 export function getNotificationIconAndColor(
   notification: IGitHubNotification,
   // payload: IGitHubCommit | IGitHubIssue | IGitHubPullRequest,
-  theme: IBaseTheme | undefined = baseTheme,
 ): { icon: IGitHubIcon; color?: string } {
   const { subject } = notification
   const { type } = subject
@@ -145,9 +137,9 @@ export function getNotificationIconAndColor(
     case 'commit':
       return getCommitIconAndColor()
     case 'issue':
-      return getIssueIconAndColor({}, theme)
+      return getIssueIconAndColor({})
     case 'pullrequest':
-      return getPullRequestIconAndColor({}, theme)
+      return getPullRequestIconAndColor({})
     case 'release':
       return { icon: 'tag' }
     default:

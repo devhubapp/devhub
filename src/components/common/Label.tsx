@@ -16,8 +16,7 @@ import {
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
-
-import theme from '../../styles/themes/dark'
+import { ThemeConsumer } from '../context/ThemeContext'
 
 export interface IProps {
   borderColor?: string
@@ -59,41 +58,48 @@ const Label: SFC<IProps> = ({
   textColor,
   textProps = {},
 }) => (
-  <View
-    style={[
-      styles.labelContainer,
-      containerStyle,
-      { borderColor: borderColor || color || theme.base04 },
-      !outline && {
-        backgroundColor: color || theme.base04,
-      },
-      Boolean(radius) && { borderRadius: radius },
-    ]}
-    {...containerProps}
-  >
-    <Text
-      numberOfLines={1}
-      style={[
-        styles.labelText,
-        {
-          color:
-            textColor ||
-            (outline
-              ? color || (muted ? theme.base05 : theme.base04)
-              : '#FFFFFF'),
-        },
-        muted && { opacity: mutedOpacity },
-      ]}
-      {...textProps}
-    >
-      {Boolean(isPrivate) && (
-        <Text>
-          <Icon name="lock" />{' '}
+  <ThemeConsumer>
+    {({ theme }) => (
+      <View
+        style={[
+          styles.labelContainer,
+          containerStyle,
+          { borderColor: borderColor || color || theme.foregroundColor },
+          !outline && {
+            backgroundColor: color || theme.foregroundColor,
+          },
+          Boolean(radius) && { borderRadius: radius },
+        ]}
+        {...containerProps}
+      >
+        <Text
+          numberOfLines={1}
+          style={[
+            styles.labelText,
+            {
+              color:
+                textColor ||
+                (outline
+                  ? color ||
+                    (muted
+                      ? theme.foregroundColorMuted50
+                      : theme.foregroundColor)
+                  : '#FFFFFF'),
+            },
+            muted && { opacity: mutedOpacity },
+          ]}
+          {...textProps}
+        >
+          {Boolean(isPrivate) && (
+            <Text>
+              <Icon name="lock" />{' '}
+            </Text>
+          )}
+          {children}
         </Text>
-      )}
-      {children}
-    </Text>
-  </View>
+      </View>
+    )}
+  </ThemeConsumer>
 )
 
 export default Label

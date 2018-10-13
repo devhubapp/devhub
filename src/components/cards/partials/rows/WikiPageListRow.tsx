@@ -3,13 +3,12 @@ import React, { PureComponent } from 'react'
 import RowList, { RenderItem } from './RowList'
 import WikiPageRow from './WikiPageRow'
 
-import { IGitHubPage, ITheme } from '../../../../types'
+import { IGitHubPage } from '../../../../types'
 
 export interface WikiPageListRowProps {
   isRead: boolean
   maxHeight?: number
   pages: IGitHubPage[]
-  theme: ITheme
 }
 
 export default class WikiPageListRow extends PureComponent<

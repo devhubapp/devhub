@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react'
 
 import SwipeableRow from '../../libs/swipeable'
-import theme from '../../styles/themes/dark'
+import * as colors from '../../styles/colors'
+import { ThemeConsumer } from '../context/ThemeContext'
 import NotificationCard, { NotificationCardProps } from './NotificationCard'
 
 export interface SwipeableNotificationCardProps extends NotificationCardProps {}
@@ -26,36 +27,40 @@ export default class SwipeableNotificationCard extends PureComponent<
 
   render() {
     return (
-      <SwipeableRow
-        leftActions={[
-          {
-            color: theme.blue,
-            icon: 'isRead',
-            key: 'isRead',
-            label: 'Read',
-            onPress: this.handleMarkAsRead,
-            type: 'FULL',
-          },
-        ]}
-        rightActions={[
-          {
-            color: theme.orange,
-            icon: 'snooze',
-            key: 'snooze',
-            label: 'Snooze',
-            onPress: this.handleSnooze,
-          },
-          {
-            color: theme.base01,
-            icon: 'archive',
-            key: 'archive',
-            label: 'Archive',
-            onPress: this.handleArchive,
-          },
-        ]}
-      >
-        <NotificationCard {...this.props} />
-      </SwipeableRow>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <SwipeableRow
+            leftActions={[
+              {
+                color: colors.blue,
+                icon: 'isRead',
+                key: 'isRead',
+                label: 'Read',
+                onPress: this.handleMarkAsRead,
+                type: 'FULL',
+              },
+            ]}
+            rightActions={[
+              {
+                color: colors.orange,
+                icon: 'snooze',
+                key: 'snooze',
+                label: 'Snooze',
+                onPress: this.handleSnooze,
+              },
+              {
+                color: theme.foregroundColorMuted50,
+                icon: 'archive',
+                key: 'archive',
+                label: 'Archive',
+                onPress: this.handleArchive,
+              },
+            ]}
+          >
+            <NotificationCard {...this.props} />
+          </SwipeableRow>
+        )}
+      </ThemeConsumer>
     )
   }
 }

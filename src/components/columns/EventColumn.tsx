@@ -4,7 +4,6 @@ import FlexSeparator from '../../components/common/FlexSeparator'
 import EventCardsContainer, {
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
-import theme from '../../styles/themes/dark'
 import { getRequestTypeIconAndData } from '../../utils/helpers/github/events'
 import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
@@ -33,8 +32,6 @@ export default class EventColumn extends PureComponent<
       <Column>
         <ColumnHeader>
           <ColumnHeaderItem
-            backgroundColor={theme.base00}
-            foregroundColor={theme.base04}
             iconName={requestTypeIconAndData.icon}
             repo={getOwnerAndRepo(username).repo}
             showAvatarAsIcon={showAvatarAsIcon}
@@ -44,8 +41,6 @@ export default class EventColumn extends PureComponent<
           />
           <FlexSeparator />
           <ColumnHeaderItem
-            backgroundColor={theme.base00}
-            foregroundColor={theme.base04}
             iconName="chevron-down"
             onPress={this.handlePress}
             username={username}

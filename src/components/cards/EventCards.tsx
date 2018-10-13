@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
 
 import { FlatList } from '../../libs/lists'
-import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import { IEnhancedGitHubEvent } from '../../types'
 import TransparentTextOverlay from '../common/TransparentTextOverlay'
+import { ThemeConsumer } from '../context/ThemeContext'
 import EventCard from './EventCard'
 import CardItemSeparator from './partials/CardItemSeparator'
 import SwipeableEventCard from './SwipeableEventCard'
@@ -49,18 +49,22 @@ export default class EventCards extends PureComponent<
     const { events } = this.props
 
     return (
-      <TransparentTextOverlay
-        color={theme.base02}
-        size={contentPadding}
-        from="vertical"
-      >
-        <FlatList
-          data={events}
-          ItemSeparatorComponent={CardItemSeparator}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderItem}
-        />
-      </TransparentTextOverlay>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <TransparentTextOverlay
+            color={theme.backgroundColor}
+            size={contentPadding}
+            from="vertical"
+          >
+            <FlatList
+              data={events}
+              ItemSeparatorComponent={CardItemSeparator}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+            />
+          </TransparentTextOverlay>
+        )}
+      </ThemeConsumer>
     )
   }
 }

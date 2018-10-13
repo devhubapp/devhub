@@ -1,4 +1,5 @@
 import React, { ComponentType } from 'react'
+import { StyleProp, ViewStyle } from 'react-native'
 import {
   BottomTabBar,
   BottomTabBarProps,
@@ -6,22 +7,9 @@ import {
   MaterialTopTabBarProps,
 } from 'react-navigation-tabs'
 
-import { StyleProp, ViewStyle } from 'react-native'
+import { ThemeConsumer } from '../components/context/ThemeContext'
 import Platform from '../libs/platform'
-import darkTheme from '../styles/themes/dark'
-import { ITheme } from '../types'
-
-// TODO: Use real theme coming from state management library
-interface IWithThemeRenderProps {
-  theme: ITheme
-}
-
-interface IWithThemeProps {
-  children: (args: IWithThemeRenderProps) => any
-}
-
-const WithTheme = ({ children }: IWithThemeProps) =>
-  children({ theme: darkTheme })
+import * as colors from '../styles/colors'
 
 type BaseTabBarProps = (BottomTabBarProps | MaterialTopTabBarProps) & {
   indicatorStyle: StyleProp<ViewStyle>
@@ -33,26 +21,27 @@ const BaseTabBar = Platform.selectUsingRealOS({
 })
 
 const TabBar = (props: BottomTabBarProps) => (
-  <WithTheme>
-    {({ theme }: IWithThemeRenderProps) => (
+  <ThemeConsumer>
+    {({ theme }) => (
       <BaseTabBar
         {...props}
-        activeTintColor={theme.brand}
-        inactiveTintColor={theme.base05}
+        activeTintColor={colors.brand}
+        inactiveTintColor={theme.foregroundColorMuted50}
         indicatorStyle={{
-          backgroundColor: theme.brand,
+          backgroundColor: colors.brand,
         }}
         showLabel={Platform.OS === 'ios'}
         showIcon
         style={{
-          backgroundColor: theme.tabBarBackground || theme.base02,
+          backgroundColor:
+            theme.backgroundColor || theme.backgroundColorTransparent10,
           ...Platform.selectUsingRealOS({
-            ios: { padding: 3, borderTopColor: theme.base01 },
+            ios: { padding: 3, borderTopColor: theme.backgroundColor2 },
           }),
         }}
       />
     )}
-  </WithTheme>
+  </ThemeConsumer>
 )
 
 export default TabBar

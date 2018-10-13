@@ -7,7 +7,8 @@ import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
 import IntervalRefresh from '../../common/IntervalRefresh'
 import Label from '../../common/Label'
-import cardStyles from '../styles'
+import { ThemeConsumer } from '../../context/ThemeContext'
+import { getCardStylesForTheme } from '../styles'
 import CardIcon from './CardIcon'
 
 export interface IProps {
@@ -60,49 +61,55 @@ export default class EventCardHeader extends PureComponent<IProps> {
     const isBot = Boolean(repoOwnerName && repoOwnerName.indexOf('[bot]') >= 0)
 
     return (
-      <View style={styles.container}>
-        <View style={cardStyles.leftColumn}>
-          <Avatar
-            isBot={isBot}
-            linkURL=""
-            shape={isBot ? 'rounded' : undefined}
-            small
-            style={cardStyles.avatar}
-            username={repoOwnerName}
-          />
-        </View>
-
-        <View style={styles.rightColumnCentered}>
-          <View style={styles.outerContainer}>
-            <View style={styles.innerContainer}>
-              <View style={cardStyles.horizontal}>
-                <Label
-                  color={labelColor}
-                  isPrivate={isPrivate}
-                  outline={isRead}
-                  textProps={{ numberOfLines: 1 }}
-                >
-                  {labelText}
-                </Label>
-                <IntervalRefresh date={updatedAt}>
-                  {() => {
-                    const dateText = getDateSmallText(updatedAt)
-                    if (!dateText) return null
-
-                    return (
-                      <Text style={cardStyles.timestampText}>
-                        {` • ${dateText}`}
-                      </Text>
-                    )
-                  }}
-                </IntervalRefresh>
-              </View>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <View style={styles.container}>
+            <View style={getCardStylesForTheme(theme).leftColumn}>
+              <Avatar
+                isBot={isBot}
+                linkURL=""
+                shape={isBot ? 'rounded' : undefined}
+                small
+                style={getCardStylesForTheme(theme).avatar}
+                username={repoOwnerName}
+              />
             </View>
 
-            <CardIcon name={cardIconName} color={cardIconColor} />
+            <View style={styles.rightColumnCentered}>
+              <View style={styles.outerContainer}>
+                <View style={styles.innerContainer}>
+                  <View style={getCardStylesForTheme(theme).horizontal}>
+                    <Label
+                      color={labelColor}
+                      isPrivate={isPrivate}
+                      outline={isRead}
+                      textProps={{ numberOfLines: 1 }}
+                    >
+                      {labelText}
+                    </Label>
+                    <IntervalRefresh date={updatedAt}>
+                      {() => {
+                        const dateText = getDateSmallText(updatedAt)
+                        if (!dateText) return null
+
+                        return (
+                          <Text
+                            style={getCardStylesForTheme(theme).timestampText}
+                          >
+                            {` • ${dateText}`}
+                          </Text>
+                        )
+                      }}
+                    </IntervalRefresh>
+                  </View>
+                </View>
+
+                <CardIcon name={cardIconName} color={cardIconColor} />
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
+        )}
+      </ThemeConsumer>
     )
   }
 }

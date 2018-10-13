@@ -1,11 +1,10 @@
-import * as baseTheme from '../../../styles/themes/base'
+import * as colors from '../../../styles/colors'
 
-import { IBaseTheme, IGitHubNotification } from '../../../types'
+import { IGitHubNotification } from '../../../types'
 import { capitalize } from '../shared'
 
 export function getNotificationReasonTextsAndColor(
   notification: IGitHubNotification,
-  theme: IBaseTheme | undefined = baseTheme,
 ): { color: string; reason: string; label: string; description: string } {
   const { reason }: IGitHubNotification = notification
 
@@ -13,7 +12,7 @@ export function getNotificationReasonTextsAndColor(
     case 'assign':
       return {
         reason,
-        color: theme.pink,
+        color: colors.pink,
         description: 'You were assigned to this thread',
         label: 'Assigned',
       }
@@ -21,7 +20,7 @@ export function getNotificationReasonTextsAndColor(
     case 'author':
       return {
         reason,
-        color: theme.lightRed,
+        color: colors.lightRed,
         description: 'You created this thread',
         label: 'Author',
       }
@@ -29,7 +28,7 @@ export function getNotificationReasonTextsAndColor(
     case 'comment':
       return {
         reason,
-        color: theme.blue,
+        color: colors.blue,
         description: 'You commented on the thread',
         label: 'Commented',
       }
@@ -37,7 +36,7 @@ export function getNotificationReasonTextsAndColor(
     case 'invitation':
       return {
         reason,
-        color: theme.brown,
+        color: colors.brown,
         description:
           'You accepted an invitation to contribute to the repository',
         label: 'Invited',
@@ -46,7 +45,7 @@ export function getNotificationReasonTextsAndColor(
     case 'manual':
       return {
         reason,
-        color: theme.teal,
+        color: colors.teal,
         description: 'You subscribed to the thread',
         label: 'Subscribed',
       }
@@ -54,7 +53,7 @@ export function getNotificationReasonTextsAndColor(
     case 'mention':
       return {
         reason,
-        color: theme.orange,
+        color: colors.orange,
         description: 'You were @mentioned',
         label: 'Mentioned',
       }
@@ -62,7 +61,7 @@ export function getNotificationReasonTextsAndColor(
     case 'state_change':
       return {
         reason,
-        color: theme.purple,
+        color: colors.purple,
         description: 'You changed the thread state',
         label: 'State changed',
       }
@@ -70,7 +69,7 @@ export function getNotificationReasonTextsAndColor(
     case 'subscribed':
       return {
         reason,
-        color: theme.blueGray,
+        color: colors.blueGray,
         description: "You're watching this repository",
         label: 'Watching',
       }
@@ -78,7 +77,7 @@ export function getNotificationReasonTextsAndColor(
     case 'team_mention':
       return {
         reason,
-        color: theme.yellow,
+        color: colors.yellow,
         description: 'Your team was mentioned',
         label: 'Team mentioned',
       }
@@ -86,7 +85,7 @@ export function getNotificationReasonTextsAndColor(
     case 'review_requested':
       return {
         reason,
-        color: theme.yellow,
+        color: colors.yellow,
         description: 'Someone requested you a review',
         label: 'Review requested',
       }
@@ -94,7 +93,7 @@ export function getNotificationReasonTextsAndColor(
     default:
       return {
         reason,
-        color: theme.gray,
+        color: colors.gray,
         description: '',
         label: capitalize(reason),
       }

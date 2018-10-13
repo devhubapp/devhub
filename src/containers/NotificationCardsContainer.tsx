@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react'
-// import { Alert } from 'react-native'
 
 import NotificationCards, {
   NotificationCardsProps,

@@ -3,13 +3,12 @@ import React, { PureComponent } from 'react'
 import CommitRow from './CommitRow'
 import RowList, { RenderItem } from './RowList'
 
-import { IGitHubCommit, ITheme } from '../../../../types'
+import { IGitHubCommit } from '../../../../types'
 
 export interface CommitListRowProps {
   isRead: boolean
   maxHeight?: number
   commits: IGitHubCommit[]
-  theme: ITheme
 }
 
 export default class CommitListRow extends PureComponent<CommitListRowProps> {

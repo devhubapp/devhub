@@ -1,8 +1,8 @@
+import { rgba } from 'polished'
 import React, { ReactNode, SFC } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 
 import LinearGradient from '../../libs/linear-gradient'
-import { fade } from '../../utils/helpers/color'
 
 export type From = 'top' | 'bottom' | 'left' | 'right'
 export type FromWithVH = 'vertical' | 'horizontal' | From
@@ -94,7 +94,7 @@ const GradientLayerOverlay: SFC<IProps & { from: From }> = ({
   ...props
 }) => (
   <LinearGradient
-    colors={[fade(color, 0), color]}
+    colors={[rgba(color, 0), color]}
     style={[
       getStyle(from, size),
       Boolean(radius) && { borderRadius: radius },

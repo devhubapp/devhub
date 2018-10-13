@@ -7,9 +7,10 @@ import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import cardStyles from '../../styles'
+import { ThemeConsumer } from '../../../context/ThemeContext'
+import { getCardStylesForTheme } from '../../styles'
 import BranchRow from './BranchRow'
-import rowStyles from './styles'
+import { getCardRowStylesForTheme } from './styles'
 
 export interface IProps {
   avatarURL: string
@@ -47,75 +48,99 @@ const ReleaseRow: SFC<IProps> = ({
   const tagName = trimNewLinesAndSpaces(_tagName)
 
   return (
-    <View>
-      {!!(branch && ownerName && repositoryName) && (
-        <BranchRow
-          key={`branch-row-${branch}`}
-          branch={branch}
-          ownerName={ownerName!}
-          repositoryName={repositoryName!}
-          type={type}
-          isRead={isRead}
-        />
+    <ThemeConsumer>
+      {({ theme }) => (
+        <View>
+          {!!(branch && ownerName && repositoryName) && (
+            <BranchRow
+              key={`branch-row-${branch}`}
+              branch={branch}
+              ownerName={ownerName!}
+              repositoryName={repositoryName!}
+              type={type}
+              isRead={isRead}
+            />
+          )}
+
+          <View style={getCardRowStylesForTheme(theme).container}>
+            <View style={getCardStylesForTheme(theme).leftColumn}>
+              <Avatar
+                isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+                linkURL=""
+                small
+                style={getCardStylesForTheme(theme).avatar}
+                username={ownerName}
+              />
+            </View>
+
+            <View style={getCardStylesForTheme(theme).rightColumn}>
+              <Link
+                href={fixURL(url)}
+                style={getCardRowStylesForTheme(theme).mainContentContainer}
+              >
+                <Text
+                  style={[
+                    getCardStylesForTheme(theme).normalText,
+                    isRead && getCardStylesForTheme(theme).mutedText,
+                  ]}
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={
+                      isRead
+                        ? getCardStylesForTheme(theme).mutedText
+                        : getCardStylesForTheme(theme).normalText
+                    }
+                  >
+                    <Icon name="tag" />{' '}
+                  </Text>
+                  {name || tagName}
+                </Text>
+              </Link>
+            </View>
+          </View>
+
+          <View style={getCardRowStylesForTheme(theme).container}>
+            <View style={getCardStylesForTheme(theme).leftColumn}>
+              <Avatar
+                avatarURL={avatarURL}
+                isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+                linkURL={userLinkURL}
+                small
+                style={getCardStylesForTheme(theme).avatar}
+                username={username}
+              />
+            </View>
+
+            <View style={getCardStylesForTheme(theme).rightColumn}>
+              <Link
+                href={fixURL(url)}
+                style={getCardRowStylesForTheme(theme).mainContentContainer}
+              >
+                <Text
+                  style={[
+                    getCardStylesForTheme(theme).normalText,
+                    isRead && getCardStylesForTheme(theme).mutedText,
+                  ]}
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={
+                      isRead
+                        ? getCardStylesForTheme(theme).mutedText
+                        : getCardStylesForTheme(theme).normalText
+                    }
+                  >
+                    <Icon name="megaphone" />{' '}
+                  </Text>
+                  {body}
+                </Text>
+              </Link>
+            </View>
+          </View>
+        </View>
       )}
-
-      <View style={rowStyles.container}>
-        <View style={cardStyles.leftColumn}>
-          <Avatar
-            isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
-            linkURL=""
-            small
-            style={cardStyles.avatar}
-            username={ownerName}
-          />
-        </View>
-
-        <View style={cardStyles.rightColumn}>
-          <Link href={fixURL(url)} style={rowStyles.mainContentContainer}>
-            <Text
-              style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
-            >
-              <Text
-                numberOfLines={1}
-                style={isRead ? cardStyles.mutedText : cardStyles.normalText}
-              >
-                <Icon name="tag" />{' '}
-              </Text>
-              {name || tagName}
-            </Text>
-          </Link>
-        </View>
-      </View>
-
-      <View style={rowStyles.container}>
-        <View style={cardStyles.leftColumn}>
-          <Avatar
-            avatarURL={avatarURL}
-            isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
-            linkURL={userLinkURL}
-            small
-            style={cardStyles.avatar}
-            username={username}
-          />
-        </View>
-
-        <View style={cardStyles.rightColumn}>
-          <Link href={fixURL(url)} style={rowStyles.mainContentContainer}>
-            <Text
-              style={[cardStyles.normalText, isRead && cardStyles.mutedText]}
-            >
-              <Text
-                numberOfLines={1}
-                style={isRead ? cardStyles.mutedText : cardStyles.normalText}
-              >
-                <Icon name="megaphone" />{' '}
-              </Text>
-              {body}
-            </Text>
-          </Link>
-        </View>
-      </View>
-    </View>
+    </ThemeConsumer>
   )
 }
 

@@ -2,12 +2,11 @@ import React, { PureComponent, ReactNode } from 'react'
 import { StatusBar, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { SafeAreaView } from 'react-navigation'
-
-import theme from '../../styles/themes/dark'
+import { ThemeConsumer } from '../context/ThemeContext'
 
 let isSplashScreenVisible = true
 
-export interface IProps {
+export interface ScreenProps {
   children?: ReactNode
   useSafeArea?: boolean
   style?: StyleProp<ViewStyle>
@@ -15,12 +14,12 @@ export interface IProps {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.base00,
+    backgroundColor: 'black',
     flex: 1,
   } as ViewStyle,
 })
 
-export default class Screen extends PureComponent<IProps> {
+export default class Screen extends PureComponent<ScreenProps> {
   static defaultProps = {
     useSafeArea: true,
   }
@@ -32,9 +31,7 @@ export default class Screen extends PureComponent<IProps> {
     }
   }
 
-  renderContent() {
-    const { useSafeArea, style, ...props } = this.props
-
+  renderContent({ useSafeArea, style, ...props }: ScreenProps) {
     if (useSafeArea)
       return <SafeAreaView {...props} style={[styles.container, style]} />
 
@@ -43,10 +40,23 @@ export default class Screen extends PureComponent<IProps> {
 
   render() {
     return (
-      <>
-        <StatusBar barStyle="light-content" />
-        {this.renderContent()}
-      </>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <>
+            <StatusBar
+              barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+            />
+
+            {this.renderContent({
+              ...this.props,
+              style: [
+                this.props.style,
+                { backgroundColor: theme.backgroundColor },
+              ],
+            })}
+          </>
+        )}
+      </ThemeConsumer>
     )
   }
 }

@@ -4,14 +4,14 @@ import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import defaultStyles from '../../../../styles/styles'
 import { contentPadding } from '../../../../styles/variables'
-import { ITheme } from '../../../../types'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import cardStyles from '../../styles'
+import { ThemeConsumer } from '../../../context/ThemeContext'
+import { getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
-import rowStyles from './styles'
+import { getCardRowStylesForTheme } from './styles'
 
 export interface IProps {
   avatarURL: string
@@ -19,7 +19,6 @@ export interface IProps {
   iconName: string
   isRead: boolean
   issueNumber: number
-  theme: ITheme
   title: string
   url: string
   username: string
@@ -40,7 +39,6 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
   iconName,
   isRead,
   issueNumber,
-  theme,
   title: _title,
   url,
   username,
@@ -52,60 +50,63 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
   const byText = username ? `@${username}` : ''
 
   return (
-    <View style={rowStyles.container}>
-      <View style={cardStyles.leftColumn}>
-        {Boolean(username) && (
-          <Avatar
-            avatarURL={avatarURL}
-            isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
-            linkURL={userLinkURL}
-            small
-            style={cardStyles.avatar}
-            username={username}
-          />
-        )}
-      </View>
+    <ThemeConsumer>
+      {({ theme }) => (
+        <View style={getCardRowStylesForTheme(theme).container}>
+          <View style={getCardStylesForTheme(theme).leftColumn}>
+            {Boolean(username) && (
+              <Avatar
+                avatarURL={avatarURL}
+                isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+                linkURL={userLinkURL}
+                small
+                style={getCardStylesForTheme(theme).avatar}
+                username={username}
+              />
+            )}
+          </View>
 
-      <View style={cardStyles.rightColumn}>
-        <Link
-          href={fixURL(url, {
-            issueOrPullRequestNumber: issueNumber,
-          })}
-          style={rowStyles.mainContentContainer}
-        >
-          <Text
-            numberOfLines={1}
-            style={[
-              defaultStyles.full,
-              cardStyles.normalText,
-              isRead && cardStyles.mutedText,
-            ]}
-          >
-            <Icon color={iconColor} name={iconName} /> {title}
-            {Boolean(byText) && (
+          <View style={getCardStylesForTheme(theme).rightColumn}>
+            <Link
+              href={fixURL(url, {
+                issueOrPullRequestNumber: issueNumber,
+              })}
+              style={getCardRowStylesForTheme(theme).mainContentContainer}
+            >
               <Text
+                numberOfLines={1}
                 style={[
-                  cardStyles.normalText,
-                  cardStyles.smallText,
-                  cardStyles.mutedText,
+                  defaultStyles.full,
+                  getCardStylesForTheme(theme).normalText,
+                  isRead && getCardStylesForTheme(theme).mutedText,
                 ]}
               >
-                {' '}
-                by {byText}
+                <Icon color={iconColor} name={iconName} /> {title}
+                {Boolean(byText) && (
+                  <Text
+                    style={[
+                      getCardStylesForTheme(theme).normalText,
+                      getCardStylesForTheme(theme).smallText,
+                      getCardStylesForTheme(theme).mutedText,
+                    ]}
+                  >
+                    {' '}
+                    by {byText}
+                  </Text>
+                )}
               </Text>
-            )}
-          </Text>
-        </Link>
+            </Link>
 
-        <CardItemId
-          id={issueNumber}
-          isRead={isRead}
-          style={styles.cardItemId}
-          theme={theme}
-          url={url}
-        />
-      </View>
-    </View>
+            <CardItemId
+              id={issueNumber}
+              isRead={isRead}
+              style={styles.cardItemId}
+              url={url}
+            />
+          </View>
+        </View>
+      )}
+    </ThemeConsumer>
   )
 }
 

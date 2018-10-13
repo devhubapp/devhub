@@ -4,7 +4,6 @@ import {
   createBottomTabNavigator,
   createStackNavigator,
   NavigationRouteConfigMap,
-  NavigationStackScreenOptions,
   TabNavigatorConfig,
 } from 'react-navigation'
 
@@ -12,16 +11,11 @@ import Platform from '../libs/platform'
 import { FeedScreen } from '../screens/FeedScreen'
 import { NotificationsScreen } from '../screens/NotificationsScreen'
 import { SettingsScreen } from '../screens/SettingsScreen'
-import theme from '../styles/themes/dark'
 import { IGitHubIcon } from '../types'
 import TabBar from './TabBar'
 
-const navigationOptions: NavigationStackScreenOptions = {
-  headerStyle: {
-    backgroundColor: theme.base00,
-    borderBottomColor: theme.base01,
-  },
-  headerTintColor: theme.base04,
+const navigationOptions = {
+  header: null,
 }
 
 export const routes: NavigationRouteConfigMap = {

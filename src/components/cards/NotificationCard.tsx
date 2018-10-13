@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import { IGitHubNotification } from '../../types'
 import { getNotificationReasonTextsAndColor } from '../../utils/helpers/github/notifications'
@@ -13,6 +12,7 @@ import {
 } from '../../utils/helpers/github/shared'
 import { getIssueOrPullRequestNumberFromUrl } from '../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../utils/helpers/shared'
+import { ThemeConsumer } from '../context/ThemeContext'
 import NotificationCardHeader from './partials/NotificationCardHeader'
 import CommentRow from './partials/rows/CommentRow'
 import CommitRow from './partials/rows/CommitRow'
@@ -30,7 +30,6 @@ export interface NotificationCardState {}
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.cardBackground,
     paddingHorizontal: contentPadding,
     paddingVertical: 1.5 * contentPadding,
   } as ViewStyle,
@@ -66,10 +65,9 @@ export default class NotificationCard extends PureComponent<
     const cardIconDetails = getNotificationIconAndColor(
       notification,
       // subject, // TODO: Load commit/issue/pullrequest details
-      theme,
     )
     const cardIconName = cardIconDetails.icon
-    const cardIconColor = cardIconDetails.color || theme.base04
+    const cardIconColor = cardIconDetails.color
 
     const labelDetails = getNotificationReasonTextsAndColor(notification)
     const labelText = labelDetails.label.toLowerCase()
@@ -101,100 +99,105 @@ export default class NotificationCard extends PureComponent<
         : undefined
 
     return (
-      <View style={styles.container}>
-        <NotificationCardHeader
-          key={`notification-card-header-${notification.id}`}
-          cardIconColor={cardIconColor}
-          cardIconName={cardIconName}
-          labelColor={labelColor}
-          labelText={labelText}
-          isRead={isRead}
-          isPrivate={isPrivate}
-          repoOwnerName={repoOwnerName!}
-          updatedAt={notification.updated_at}
-        />
-
-        {!!(repoOwnerName && repoName && !onlyOneRepository) && (
-          <RepositoryRow
-            key={`notification-repo-row-${repo.id}`}
-            isRead={isRead}
-            ownerName={repoOwnerName}
-            repositoryName={repoName}
-          />
-        )}
-
-        {Boolean(commit) && (
-          <CommitRow
-            key={`notification-commit-row-${commit!.url}`}
-            isRead={isRead}
-            latestCommentUrl={commit!.latest_comment_url}
-            message={commit!.title}
-            url={commit!.url}
-          />
-        )}
-
-        {!!issue && (
-          <IssueOrPullRequestRow
-            key={`notification-issue-row-${issueOrPullRequestNumber}`}
-            avatarURL=""
-            iconColor={issueIconColor!}
-            iconName={issueIconName!}
-            isRead={isRead}
-            issueNumber={issueOrPullRequestNumber!}
-            theme={theme}
-            title={issue.title}
-            url={issue.latest_comment_url || issue.url}
-            userLinkURL=""
-            username=""
-          />
-        )}
-
-        {!!pullRequest && (
-          <IssueOrPullRequestRow
-            key={`notification-pr-row-${issueOrPullRequestNumber}`}
-            avatarURL=""
-            iconColor={pullRequestIconColor!}
-            iconName={pullRequestIconName!}
-            isRead={isRead}
-            issueNumber={issueOrPullRequestNumber!}
-            theme={theme}
-            title={pullRequest.title}
-            url={pullRequest.latest_comment_url || pullRequest.url}
-            userLinkURL=""
-            username=""
-          />
-        )}
-
-        {!!release && (
-          <ReleaseRow
-            key={`notification-release-row-${repo.id}`}
-            avatarURL=""
-            body={release.title}
-            isRead={isRead}
-            ownerName={repoOwnerName!}
-            repositoryName={repoName!}
-            url={release.latest_comment_url || release.url}
-            type="ReleaseEvent"
-            name={release.title}
-            tagName={release.title}
-            userLinkURL=""
-            username=""
-          />
-        )}
-
-        {!(commit || issue || pullRequest) &&
-          !!title && (
-            <CommentRow
-              key={`notification-subject-row-${subject.url}`}
-              avatarURL=""
-              body={title}
+      <ThemeConsumer>
+        {({ theme }) => (
+          <View
+            style={[
+              styles.container,
+              { backgroundColor: theme.backgroundColor },
+            ]}
+          >
+            <NotificationCardHeader
+              key={`notification-card-header-${notification.id}`}
+              cardIconColor={cardIconColor || theme.foregroundColor}
+              cardIconName={cardIconName}
+              labelColor={labelColor}
+              labelText={labelText}
               isRead={isRead}
-              userLinkURL=""
-              username=""
+              isPrivate={isPrivate}
+              repoOwnerName={repoOwnerName!}
+              updatedAt={notification.updated_at}
             />
-          )}
 
-        {/* {!!comment && (
+            {!!(repoOwnerName && repoName && !onlyOneRepository) && (
+              <RepositoryRow
+                key={`notification-repo-row-${repo.id}`}
+                isRead={isRead}
+                ownerName={repoOwnerName}
+                repositoryName={repoName}
+              />
+            )}
+
+            {Boolean(commit) && (
+              <CommitRow
+                key={`notification-commit-row-${commit!.url}`}
+                isRead={isRead}
+                latestCommentUrl={commit!.latest_comment_url}
+                message={commit!.title}
+                url={commit!.url}
+              />
+            )}
+
+            {!!issue && (
+              <IssueOrPullRequestRow
+                key={`notification-issue-row-${issueOrPullRequestNumber}`}
+                avatarURL=""
+                iconColor={issueIconColor!}
+                iconName={issueIconName!}
+                isRead={isRead}
+                issueNumber={issueOrPullRequestNumber!}
+                title={issue.title}
+                url={issue.latest_comment_url || issue.url}
+                userLinkURL=""
+                username=""
+              />
+            )}
+
+            {!!pullRequest && (
+              <IssueOrPullRequestRow
+                key={`notification-pr-row-${issueOrPullRequestNumber}`}
+                avatarURL=""
+                iconColor={pullRequestIconColor!}
+                iconName={pullRequestIconName!}
+                isRead={isRead}
+                issueNumber={issueOrPullRequestNumber!}
+                title={pullRequest.title}
+                url={pullRequest.latest_comment_url || pullRequest.url}
+                userLinkURL=""
+                username=""
+              />
+            )}
+
+            {!!release && (
+              <ReleaseRow
+                key={`notification-release-row-${repo.id}`}
+                avatarURL=""
+                body={release.title}
+                isRead={isRead}
+                ownerName={repoOwnerName!}
+                repositoryName={repoName!}
+                url={release.latest_comment_url || release.url}
+                type="ReleaseEvent"
+                name={release.title}
+                tagName={release.title}
+                userLinkURL=""
+                username=""
+              />
+            )}
+
+            {!(commit || issue || pullRequest) &&
+              !!title && (
+                <CommentRow
+                  key={`notification-subject-row-${subject.url}`}
+                  avatarURL=""
+                  body={title}
+                  isRead={isRead}
+                  userLinkURL=""
+                  username=""
+                />
+              )}
+
+            {/* {!!comment && (
           <CommentRow
             key={`notification-comment-row-${comment.id}`}
             body={comment.body}
@@ -203,7 +206,9 @@ export default class NotificationCard extends PureComponent<
             username={comment.user.display_login || comment.user.login}
           />
         )} */}
-      </View>
+          </View>
+        )}
+      </ThemeConsumer>
     )
   }
 }

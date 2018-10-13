@@ -5,9 +5,10 @@ import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { IEnhancedGitHubEvent } from '../../../../types'
 import Avatar from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import cardStyles from '../../styles'
+import { ThemeConsumer } from '../../../context/ThemeContext'
+import { getCardStylesForTheme } from '../../styles'
 import { getBranchURL } from './helpers'
-import rowStyles from './styles'
+import { getCardRowStylesForTheme } from './styles'
 
 export interface IProps {
   branch: string
@@ -34,39 +35,48 @@ const BranchRow: SFC<IProps> = ({
   if (branch === 'master' && !isBranchMainEventAction) return null
 
   return (
-    <View style={rowStyles.container}>
-      <View style={cardStyles.leftColumn}>
-        <Avatar
-          isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
-          linkURL=""
-          small
-          style={cardStyles.avatar}
-          username={ownerName}
-        />
-      </View>
+    <ThemeConsumer>
+      {({ theme }) => (
+        <View style={getCardRowStylesForTheme(theme).container}>
+          <View style={getCardStylesForTheme(theme).leftColumn}>
+            <Avatar
+              isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+              linkURL=""
+              small
+              style={getCardStylesForTheme(theme).avatar}
+              username={ownerName}
+            />
+          </View>
 
-      <View style={cardStyles.rightColumn}>
-        <Link
-          href={getBranchURL(ownerName, repositoryName, branch)}
-          style={rowStyles.mainContentContainer}
-        >
-          <Text
-            style={[
-              cardStyles.normalText,
-              (isRead || !isBranchMainEventAction) && cardStyles.mutedText,
-            ]}
-          >
-            <Text
-              numberOfLines={1}
-              style={isRead ? cardStyles.mutedText : cardStyles.normalText}
+          <View style={getCardStylesForTheme(theme).rightColumn}>
+            <Link
+              href={getBranchURL(ownerName, repositoryName, branch)}
+              style={getCardRowStylesForTheme(theme).mainContentContainer}
             >
-              <Icon name="git-branch" />{' '}
-            </Text>
-            {branch}
-          </Text>
-        </Link>
-      </View>
-    </View>
+              <Text
+                style={[
+                  getCardStylesForTheme(theme).normalText,
+                  (isRead || !isBranchMainEventAction) &&
+                    getCardStylesForTheme(theme).mutedText,
+                ]}
+              >
+                <Text
+                  numberOfLines={1}
+                  style={
+                    isRead
+                      ? getCardStylesForTheme(theme).mutedText
+                      : getCardStylesForTheme(theme).normalText
+                  }
+                >
+                  <Icon name="git-branch" />{' '}
+                </Text>
+                {branch}
+              </Text>
+            </Link>
+          </View>
+        </View>
+      )}
+    </ThemeConsumer>
   )
 }
 

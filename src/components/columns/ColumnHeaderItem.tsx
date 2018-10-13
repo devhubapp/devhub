@@ -1,3 +1,4 @@
+import { rgba } from 'polished'
 import React, { Fragment, PureComponent } from 'react'
 import {
   StyleProp,
@@ -12,14 +13,15 @@ import {
 import { Octicons as Icon } from '../../libs/vector-icons'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { IGitHubIcon } from '../../types'
-import { fade } from '../../utils/helpers/color'
 import Avatar, { AvatarProps } from '../common/Avatar'
-import { ConditionalWrap } from '../common/ConditionalWrap'
+import {
+  ConditionalWrap,
+  ConditionalWrapProps,
+} from '../common/ConditionalWrap'
+import { ThemeConsumer } from '../context/ThemeContext'
 
 export interface ColumnHeaderItemProps {
   avatarShape?: AvatarProps['shape']
-  backgroundColor: string
-  foregroundColor: string
   iconName?: IGitHubIcon
   iconStyle?: StyleProp<TextStyle>
   onPress?: () => void
@@ -57,104 +59,99 @@ const styles = StyleSheet.create({
 export default class ColumnHeaderItem extends PureComponent<
   ColumnHeaderItemProps
 > {
+  wrap: ConditionalWrapProps['wrap'] = children =>
+    this.props.onPress ? (
+      <TouchableOpacity
+        onPress={this.props.onPress}
+        style={[styles.container, this.props.style]}
+      >
+        {children}
+      </TouchableOpacity>
+    ) : (
+      <View style={[styles.container, this.props.style]}>{children}</View>
+    )
+
   render() {
     const {
       avatarShape,
-      backgroundColor,
-      foregroundColor,
       iconName,
       iconStyle,
-      onPress,
       repo,
       showAvatarAsIcon,
-      style,
       subtitle,
       subtitleStyle,
       title,
       titleStyle,
       username,
-      ...props
     } = this.props
 
     return (
-      <ConditionalWrap
-        condition
-        wrap={children =>
-          onPress ? (
-            <TouchableOpacity
-              {...props}
-              onPress={onPress}
-              style={[styles.container, { backgroundColor }, style]}
-            >
-              {children}
-            </TouchableOpacity>
-          ) : (
-            <View
-              {...props}
-              style={[styles.container, { backgroundColor }, style]}
-            >
-              {children}
-            </View>
-          )
-        }
-      >
-        <Fragment>
-          {showAvatarAsIcon
-            ? !!username && (
-                <Avatar
-                  isBot={false}
-                  linkURL=""
-                  repo={repo}
-                  shape={avatarShape}
-                  style={[
-                    {
-                      width: 20,
-                      height: 20,
-                    },
-                    !!title || !!subtitle
-                      ? {
-                          marginRight: 8,
-                        }
-                      : undefined,
-                  ]}
-                  username={username}
-                />
-              )
-            : !!iconName && (
-                <Icon
-                  color={foregroundColor}
-                  name={iconName}
-                  style={[
-                    styles.icon,
-                    (!!title || !!subtitle) && {
-                      marginRight: 4,
-                    },
-                    iconStyle,
-                  ]}
-                />
-              )}
+      <ThemeConsumer>
+        {({ theme }) => (
+          <ConditionalWrap condition wrap={this.wrap}>
+            <Fragment>
+              {showAvatarAsIcon
+                ? !!username && (
+                    <Avatar
+                      isBot={false}
+                      linkURL=""
+                      repo={repo}
+                      shape={avatarShape}
+                      style={[
+                        {
+                          width: 20,
+                          height: 20,
+                        },
+                        !!title || !!subtitle
+                          ? {
+                              marginRight: 8,
+                            }
+                          : undefined,
+                      ]}
+                      username={username}
+                    />
+                  )
+                : !!iconName && (
+                    <Icon
+                      color={theme.foregroundColor}
+                      name={iconName}
+                      style={[
+                        styles.icon,
+                        (!!title || !!subtitle) && {
+                          marginRight: 4,
+                        },
+                        iconStyle,
+                      ]}
+                    />
+                  )}
 
-          {!!title && (
-            <Text
-              style={[styles.title, { color: foregroundColor }, titleStyle]}
-            >
-              {title.toLowerCase()}
-            </Text>
-          )}
-          {!!subtitle && (
-            <Text
-              style={[
-                styles.subtitle,
-                { color: fade(foregroundColor, mutedOpacity) },
-                subtitleStyle,
-              ]}
-            >
-              {!!title && '  '}
-              {subtitle.toLowerCase()}
-            </Text>
-          )}
-        </Fragment>
-      </ConditionalWrap>
+              {!!title && (
+                <Text
+                  style={[
+                    styles.title,
+                    { color: theme.foregroundColor },
+                    titleStyle,
+                  ]}
+                >
+                  {title.toLowerCase()}
+                </Text>
+              )}
+              {!!subtitle && (
+                <Text
+                  style={[
+                    styles.subtitle,
+                    { color: rgba(theme.foregroundColor, mutedOpacity) },
+                    subtitleStyle,
+                  ]}
+                >
+                  {!!title && '  '}
+                  {subtitle.toLowerCase()}
+                </Text>
+              )}
+            </Fragment>
+          </ConditionalWrap>
+        )}
+      </ThemeConsumer>
     )
   }
 }

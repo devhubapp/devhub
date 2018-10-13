@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
 
 import { FlatList } from '../../libs/lists'
-import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
 import { IGitHubNotification } from '../../types'
 import TransparentTextOverlay from '../common/TransparentTextOverlay'
+import { ThemeConsumer } from '../context/ThemeContext'
 import NotificationCard from './NotificationCard'
 import CardItemSeparator from './partials/CardItemSeparator'
 import SwipeableNotificationCard from './SwipeableNotificationCard'
@@ -45,19 +45,23 @@ export default class NotificationCards extends PureComponent<
   render() {
     const { notifications } = this.props
     return (
-      <TransparentTextOverlay
-        color={theme.base02}
-        size={contentPadding}
-        from="vertical"
-      >
-        <FlatList
-          key="notification-cards-flat-list"
-          data={notifications}
-          ItemSeparatorComponent={CardItemSeparator}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderItem}
-        />
-      </TransparentTextOverlay>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <TransparentTextOverlay
+            color={theme.backgroundColor}
+            size={contentPadding}
+            from="vertical"
+          >
+            <FlatList
+              key="notification-cards-flat-list"
+              data={notifications}
+              ItemSeparatorComponent={CardItemSeparator}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+            />
+          </TransparentTextOverlay>
+        )}
+      </ThemeConsumer>
     )
   }
 }

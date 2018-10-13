@@ -3,17 +3,17 @@ import { StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { radius } from '../../../styles/variables'
-import { IGitHubIcon, ITheme } from '../../../types'
+import { IGitHubIcon } from '../../../types'
 import { fixURL } from '../../../utils/helpers/github/url'
 import { Link } from '../../common/Link'
-import cardStyles from '../styles'
+import { ThemeConsumer } from '../../context/ThemeContext'
+import { getCardStylesForTheme } from '../styles'
 
-export interface IProps {
+export interface CardItemIdProps {
   icon?: IGitHubIcon
   id: number | string
   isRead: boolean
   style?: StyleProp<ViewStyle>
-  theme: ITheme
   url: string
 }
 
@@ -30,18 +30,16 @@ const styles = StyleSheet.create({
   text: {
     backgroundColor: 'transparent',
     fontSize: 12,
-    fontWeight: 'bold',
     lineHeight: 20,
     opacity: 0.9,
   } as TextStyle,
 })
 
-export const CardItemId: SFC<IProps> = ({
+export const CardItemId: SFC<CardItemIdProps> = ({
   icon,
   id,
   isRead,
   style,
-  theme,
   url,
 }) => {
   if (!id && !icon) return null
@@ -49,30 +47,37 @@ export const CardItemId: SFC<IProps> = ({
   const parsedNumber = parseInt(`${id}`, 10) || id
 
   return (
-    <Link
-      href={fixURL(url)}
-      style={[
-        styles.container,
-        {
-          backgroundColor: theme.base03,
-          borderColor: theme.base03,
-        },
-        style,
-      ]}
-    >
-      <Text
-        style={[
-          styles.text,
-          { color: isRead ? theme.base05 : theme.base04 },
-          isRead && cardStyles.mutedText,
-          isRead && { fontWeight: 'normal' },
-        ]}
-      >
-        {icon ? <Icon name={icon} /> : ''}
-        {parsedNumber && icon ? ' ' : ''}
-        {typeof parsedNumber === 'number' ? '#' : ''}
-        {parsedNumber}
-      </Text>
-    </Link>
+    <ThemeConsumer>
+      {({ theme }) => (
+        <Link
+          href={fixURL(url)}
+          style={[
+            styles.container,
+            {
+              backgroundColor: theme.backgroundColor2,
+              borderColor: theme.backgroundColor2,
+            },
+            style,
+          ]}
+        >
+          <Text
+            style={[
+              styles.text,
+              {
+                color: isRead
+                  ? theme.foregroundColorTransparent50
+                  : theme.foregroundColor,
+              },
+              isRead && getCardStylesForTheme(theme).mutedText,
+            ]}
+          >
+            {icon ? <Icon name={icon} /> : ''}
+            {parsedNumber && icon ? ' ' : ''}
+            {typeof parsedNumber === 'number' ? '#' : ''}
+            {parsedNumber}
+          </Text>
+        </Link>
+      )}
+    </ThemeConsumer>
   )
 }

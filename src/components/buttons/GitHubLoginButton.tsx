@@ -12,10 +12,10 @@ import {
 } from 'react-native'
 
 import { Octicons as Icon } from '../../libs/vector-icons'
-import theme from '../../styles/themes/dark'
 import { contentPadding } from '../../styles/variables'
+import { ThemeConsumer } from '../context/ThemeContext'
 
-export interface IProps extends TouchableOpacityProps {
+export interface GitHubLoginButtonProps extends TouchableOpacityProps {
   horizontal?: boolean
   leftIcon?: string
   loading?: boolean
@@ -28,8 +28,6 @@ export interface IProps extends TouchableOpacityProps {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: theme.invert().base02,
-    borderColor: theme.base02,
     borderRadius: 58 / 2,
     height: 58,
   } as ViewStyle,
@@ -41,13 +39,11 @@ const styles = StyleSheet.create({
 
   iconWrapper: {
     alignItems: 'center',
-    borderColor: theme.base04,
     borderWidth: 0,
     justifyContent: 'center',
   } as ViewStyle,
 
   icon: {
-    color: theme.invert().base04,
     fontSize: 20,
   } as TextStyle,
 
@@ -59,7 +55,6 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 
   title: {
-    color: theme.invert().base04,
     fontWeight: '600',
     fontSize: 15,
     lineHeight: 20,
@@ -67,7 +62,6 @@ const styles = StyleSheet.create({
   } as TextStyle,
 
   subtitleText: {
-    color: theme.invert().base05,
     fontWeight: '400',
     fontSize: 13,
     lineHeight: 16,
@@ -75,7 +69,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-const GithubButton: SFC<IProps> = ({
+const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
   leftIcon,
   loading,
   rightIcon,
@@ -85,49 +79,93 @@ const GithubButton: SFC<IProps> = ({
   title,
   ...props
 }) => (
-  <TouchableOpacity
-    activeOpacity={0.9}
-    {...props}
-    style={[styles.button, props.style]}
-  >
-    <View style={styles.content}>
-      {Boolean(leftIcon) && (
-        <View style={[styles.iconWrapper, { paddingLeft: contentPadding }]}>
-          <Icon name={leftIcon!} style={styles.icon} />
-        </View>
-      )}
+  <ThemeConsumer>
+    {({ theme }) => (
+      <TouchableOpacity
+        activeOpacity={0.9}
+        {...props}
+        style={[
+          styles.button,
+          {
+            backgroundColor: theme.invert().backgroundColor,
+            borderColor: theme.backgroundColor,
+          },
+          props.style,
+        ]}
+      >
+        <View style={styles.content}>
+          {Boolean(leftIcon) && (
+            <View
+              style={[
+                styles.iconWrapper,
+                {
+                  borderColor: theme.foregroundColor,
+                  paddingLeft: contentPadding,
+                },
+              ]}
+            >
+              <Icon
+                name={leftIcon!}
+                style={[
+                  styles.icon,
+                  {
+                    color: theme.invert().foregroundColor,
+                  },
+                ]}
+              />
+            </View>
+          )}
 
-      <View style={styles.mainContentContainer}>
-        {Boolean(title) && (
-          <Text {...textProps} style={[styles.title, textProps.style]}>
-            {title}
-          </Text>
-        )}
+          <View style={styles.mainContentContainer}>
+            {Boolean(title) && (
+              <Text
+                {...textProps}
+                style={[
+                  styles.title,
+                  {
+                    color: theme.invert().foregroundColor,
+                  },
+                  textProps.style,
+                ]}
+              >
+                {title}
+              </Text>
+            )}
 
-        {Boolean(subtitle) && (
-          <Text
-            {...subtitleProps}
-            style={[styles.subtitleText, subtitleProps.style]}
-          >
-            {subtitle}
-          </Text>
-        )}
-      </View>
+            {Boolean(subtitle) && (
+              <Text
+                {...subtitleProps}
+                style={[
+                  styles.subtitleText,
+                  {
+                    color: theme.invert().foregroundColorMuted50,
+                  },
+                  subtitleProps.style,
+                ]}
+              >
+                {subtitle}
+              </Text>
+            )}
+          </View>
 
-      {Boolean(rightIcon || loading) && (
-        <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
-          {loading ? (
-            <ActivityIndicator color={theme.invert().base04} />
-          ) : (
-            <Icon name={rightIcon!} style={styles.icon} />
+          {Boolean(rightIcon || loading) && (
+            <View
+              style={[styles.iconWrapper, { paddingRight: contentPadding }]}
+            >
+              {loading ? (
+                <ActivityIndicator color={theme.invert().foregroundColor} />
+              ) : (
+                <Icon name={rightIcon!} style={styles.icon} />
+              )}
+            </View>
           )}
         </View>
-      )}
-    </View>
-  </TouchableOpacity>
+      </TouchableOpacity>
+    )}
+  </ThemeConsumer>
 )
 
-GithubButton.defaultProps = {
+GitHubLoginButton.defaultProps = {
   leftIcon: 'mark-github',
   loading: false,
   rightIcon: '',
@@ -137,4 +175,4 @@ GithubButton.defaultProps = {
   title: '',
 }
 
-export default GithubButton
+export default GitHubLoginButton

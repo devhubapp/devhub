@@ -3,13 +3,12 @@ import React, { PureComponent } from 'react'
 import RowList, { RenderItem } from './RowList'
 import UserRow from './UserRow'
 
-import { IGitHubUser, ITheme } from '../../../../types'
+import { IGitHubUser } from '../../../../types'
 
 export interface UserListRowProps {
   isRead: boolean
   maxHeight?: number
   users: IGitHubUser[]
-  theme: ITheme
 }
 
 export default class UserListRow extends PureComponent<UserListRowProps> {

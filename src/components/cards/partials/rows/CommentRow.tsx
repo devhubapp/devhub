@@ -6,8 +6,9 @@ import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import Avatar from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import cardStyles from '../../styles'
-import rowStyles from './styles'
+import { ThemeConsumer } from '../../../context/ThemeContext'
+import { getCardStylesForTheme } from '../../styles'
+import { getCardRowStylesForTheme } from './styles'
 
 export interface IProps {
   avatarURL: string
@@ -39,30 +40,45 @@ const CommentRow: SFC<IProps> = ({
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
 
   return (
-    <View style={rowStyles.container}>
-      <View style={[cardStyles.leftColumn, cardStyles.leftColumnAlignTop]}>
-        <Avatar
-          avatarURL={avatarURL}
-          isBot={isBot}
-          linkURL={userLinkURL}
-          shape={isBot ? 'rounded' : undefined}
-          small
-          style={cardStyles.avatar}
-          username={username}
-        />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
-        <Link href={fixURL(url)} style={rowStyles.mainContentContainer}>
-          <Text
-            numberOfLines={numberOfLines}
-            style={[cardStyles.commentText, isRead && cardStyles.mutedText]}
+    <ThemeConsumer>
+      {({ theme }) => (
+        <View style={getCardRowStylesForTheme(theme).container}>
+          <View
+            style={[
+              getCardStylesForTheme(theme).leftColumn,
+              getCardStylesForTheme(theme).leftColumnAlignTop,
+            ]}
           >
-            {body}
-          </Text>
-        </Link>
-      </View>
-    </View>
+            <Avatar
+              avatarURL={avatarURL}
+              isBot={isBot}
+              linkURL={userLinkURL}
+              shape={isBot ? 'rounded' : undefined}
+              small
+              style={getCardStylesForTheme(theme).avatar}
+              username={username}
+            />
+          </View>
+
+          <View style={getCardStylesForTheme(theme).rightColumn}>
+            <Link
+              href={fixURL(url)}
+              style={getCardRowStylesForTheme(theme).mainContentContainer}
+            >
+              <Text
+                numberOfLines={numberOfLines}
+                style={[
+                  getCardStylesForTheme(theme).commentText,
+                  isRead && getCardStylesForTheme(theme).mutedText,
+                ]}
+              >
+                {body}
+              </Text>
+            </Link>
+          </View>
+        </View>
+      )}
+    </ThemeConsumer>
   )
 }
 

@@ -8,7 +8,8 @@ import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
 import IntervalRefresh from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
-import cardStyles from '../styles'
+import { ThemeConsumer } from '../../context/ThemeContext'
+import { getCardStylesForTheme } from '../styles'
 import CardIcon from './CardIcon'
 import { getUserURL } from './rows/helpers'
 
@@ -66,56 +67,66 @@ export default class EventCardHeader extends PureComponent<
     const username = isBot ? _username!.replace('[bot]', '') : _username
 
     return (
-      <View style={styles.container}>
-        <View style={cardStyles.leftColumn}>
-          <Avatar
-            avatarURL={avatarURL}
-            isBot={isBot}
-            linkURL={userLinkURL}
-            shape={isBot ? 'rounded' : 'circle'}
-            style={cardStyles.avatar}
-            username={username}
-          />
-        </View>
-
-        <View style={styles.rightColumnCentered}>
-          <View style={styles.outerContainer}>
-            <View style={styles.innerContainer}>
-              <View style={cardStyles.horizontal}>
-                <Link href={getUserURL(username, { isBot })}>
-                  <Text style={cardStyles.usernameText}>{username}</Text>
-                </Link>
-                {!!isBot && (
-                  <Text style={cardStyles.timestampText}>{` • BOT`}</Text>
-                )}
-                <IntervalRefresh date={createdAt}>
-                  {() => {
-                    const dateText = getDateSmallText(createdAt)
-                    if (!dateText) return null
-
-                    return (
-                      <Text style={cardStyles.timestampText}>
-                        {` • ${dateText}`}
-                      </Text>
-                    )
-                  }}
-                </IntervalRefresh>
-              </View>
-
-              <Text style={cardStyles.descriptionText}>
-                {!!isPrivate && (
-                  <Text style={cardStyles.mutedText}>
-                    <Icon name="lock" />{' '}
-                  </Text>
-                )}
-                {actionText}
-              </Text>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <View style={styles.container}>
+            <View style={getCardStylesForTheme(theme).leftColumn}>
+              <Avatar
+                avatarURL={avatarURL}
+                isBot={isBot}
+                linkURL={userLinkURL}
+                shape={isBot ? 'rounded' : 'circle'}
+                style={getCardStylesForTheme(theme).avatar}
+                username={username}
+              />
             </View>
 
-            <CardIcon name={cardIconName} color={cardIconColor} />
+            <View style={styles.rightColumnCentered}>
+              <View style={styles.outerContainer}>
+                <View style={styles.innerContainer}>
+                  <View style={getCardStylesForTheme(theme).horizontal}>
+                    <Link href={getUserURL(username, { isBot })}>
+                      <Text style={getCardStylesForTheme(theme).usernameText}>
+                        {username}
+                      </Text>
+                    </Link>
+                    {!!isBot && (
+                      <Text
+                        style={getCardStylesForTheme(theme).timestampText}
+                      >{` • BOT`}</Text>
+                    )}
+                    <IntervalRefresh date={createdAt}>
+                      {() => {
+                        const dateText = getDateSmallText(createdAt)
+                        if (!dateText) return null
+
+                        return (
+                          <Text
+                            style={getCardStylesForTheme(theme).timestampText}
+                          >
+                            {` • ${dateText}`}
+                          </Text>
+                        )
+                      }}
+                    </IntervalRefresh>
+                  </View>
+
+                  <Text style={getCardStylesForTheme(theme).descriptionText}>
+                    {!!isPrivate && (
+                      <Text style={getCardStylesForTheme(theme).mutedText}>
+                        <Icon name="lock" />{' '}
+                      </Text>
+                    )}
+                    {actionText}
+                  </Text>
+                </View>
+
+                <CardIcon name={cardIconName} color={cardIconColor} />
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
+        )}
+      </ThemeConsumer>
     )
   }
 }

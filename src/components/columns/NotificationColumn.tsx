@@ -4,7 +4,6 @@ import FlexSeparator from '../../components/common/FlexSeparator'
 import NotificationCardsContainer, {
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
-import theme from '../../styles/themes/dark'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
 import ColumnHeader from './ColumnHeader'
@@ -28,16 +27,12 @@ export default class NotificationColumn extends PureComponent<
       <Column>
         <ColumnHeader>
           <ColumnHeaderItem
-            backgroundColor={theme.base00}
-            foregroundColor={theme.base04}
             iconName="bell"
             title="Notifications"
             subtitle="All"
           />
           <FlexSeparator />
           <ColumnHeaderItem
-            backgroundColor={theme.base00}
-            foregroundColor={theme.base04}
             iconName="chevron-down"
             onPress={this.handlePress}
           />
