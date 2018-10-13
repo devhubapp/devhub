@@ -81,6 +81,7 @@ export class ColumnsContainer extends PureComponent<
                   <NotificationColumn
                     key={`event-column-${index}`}
                     accessToken={accessToken}
+                    swipeable={columns.length === 1}
                     {...column}
                   />
                 ) : (
