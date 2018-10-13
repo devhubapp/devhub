@@ -6,7 +6,7 @@ import {
 } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
-import { EventColumnsContainer } from '../containers/EventColumnsContainer'
+import { ColumnsContainer } from '../containers/ColumnsContainer'
 
 export class FeedScreen extends PureComponent<NavigationScreenProps> {
   static navigationOptions: NavigationScreenConfig<
@@ -18,7 +18,7 @@ export class FeedScreen extends PureComponent<NavigationScreenProps> {
   render() {
     return (
       <Screen>
-        <EventColumnsContainer />
+        <ColumnsContainer onlyEvents />
       </Screen>
     )
   }

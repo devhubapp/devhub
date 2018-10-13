@@ -14,7 +14,7 @@ export interface NotificationColumnProps
 
 export interface NotificationColumnState {}
 
-export default class NotificationColumn extends PureComponent<
+export class NotificationColumn extends PureComponent<
   NotificationColumnProps,
   NotificationColumnState
 > {

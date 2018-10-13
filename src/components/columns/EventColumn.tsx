@@ -26,7 +26,7 @@ export default class EventColumn extends PureComponent<
   render() {
     const { showAvatarAsIcon, subtype, type, username } = this.props
 
-    const requestTypeIconAndData = getRequestTypeIconAndData(type, subtype)
+    const requestTypeIconAndData = getRequestTypeIconAndData(type, subtype!)
 
     return (
       <Column>

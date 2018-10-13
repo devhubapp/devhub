@@ -1,28 +1,24 @@
 import React, { PureComponent } from 'react'
 import {
+  NavigationScreenConfig,
   NavigationScreenProps,
   NavigationStackScreenOptions,
 } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
-import { UserConsumer } from '../components/context/UserContext'
-import NotificationCardsContainer from '../containers/NotificationCardsContainer'
+import { ColumnsContainer } from '../containers/ColumnsContainer'
 
 export class NotificationsScreen extends PureComponent<NavigationScreenProps> {
-  static navigationOptions: NavigationStackScreenOptions = {
-    headerTitle: 'Notifications',
+  static navigationOptions: NavigationScreenConfig<
+    NavigationStackScreenOptions
+  > = {
+    header: null,
   }
 
   render() {
     return (
       <Screen>
-        <UserConsumer>
-          {({ accessToken }) =>
-            !!accessToken && (
-              <NotificationCardsContainer accessToken={accessToken} swipeable />
-            )
-          }
-        </UserConsumer>
+        <ColumnsContainer onlyNotifications />
       </Screen>
     )
   }
