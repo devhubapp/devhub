@@ -20,6 +20,8 @@ import {
 } from '../common/ConditionalWrap'
 import { ThemeConsumer } from '../context/ThemeContext'
 
+export const columnHeaderItemContentSize = 20
+
 export interface ColumnHeaderItemProps {
   avatarShape?: AvatarProps['shape']
   iconName?: IGitHubIcon
@@ -44,15 +46,15 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 
   icon: {
-    fontSize: 20,
+    fontSize: columnHeaderItemContentSize,
   } as TextStyle,
 
   title: {
-    fontSize: 18,
+    fontSize: columnHeaderItemContentSize - 2,
   } as TextStyle,
 
   subtitle: {
-    fontSize: 14,
+    fontSize: columnHeaderItemContentSize - 6,
   } as TextStyle,
 })
 
@@ -99,8 +101,8 @@ export default class ColumnHeaderItem extends PureComponent<
                       shape={avatarShape}
                       style={[
                         {
-                          width: 20,
-                          height: 20,
+                          width: columnHeaderItemContentSize,
+                          height: columnHeaderItemContentSize,
                         },
                         !!title || !!subtitle
                           ? {
@@ -118,7 +120,7 @@ export default class ColumnHeaderItem extends PureComponent<
                       style={[
                         styles.icon,
                         (!!title || !!subtitle) && {
-                          marginRight: 4,
+                          marginRight: 8,
                         },
                         iconStyle,
                       ]}

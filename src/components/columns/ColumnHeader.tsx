@@ -5,7 +5,7 @@ import { contentPadding } from '../../styles/variables'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { columnHeaderItemContentSize } from './ColumnHeaderItem'
 
-export const columnHeaderHeight = 64
+export const columnHeaderHeight = contentPadding * 2 + columnHeaderItemContentSize
 
 export interface ColumnHeaderProps extends ViewProps {
   children?: ReactNode
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'stretch',
     flexDirection: 'row',
-    height: contentPadding * 2 + columnHeaderItemContentSize,
+    height: columnHeaderHeight,
     paddingVertical: contentPadding,
   },
 

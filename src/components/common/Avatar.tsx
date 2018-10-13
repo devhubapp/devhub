@@ -17,7 +17,7 @@ export interface AvatarProps {
   avatarURL?: string
   email?: string
   isBot?: boolean
-  linkURL: string
+  linkURL?: string
   repo?: string
   shape?: 'circle' | 'rounded' | 'square'
   size?: number
