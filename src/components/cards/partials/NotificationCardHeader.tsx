@@ -8,6 +8,7 @@ import Avatar from '../../common/Avatar'
 import IntervalRefresh from '../../common/IntervalRefresh'
 import Label from '../../common/Label'
 import { ThemeConsumer } from '../../context/ThemeContext'
+import { UserConsumer } from '../../context/UserContext'
 import { getCardStylesForTheme } from '../styles'
 import CardIcon from './CardIcon'
 
@@ -18,7 +19,6 @@ export interface IProps {
   isRead: boolean
   labelColor: string
   labelText: string
-  repoOwnerName: string
   updatedAt: MomentInput
 }
 
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class EventCardHeader extends PureComponent<IProps> {
+export class NotificationCardHeader extends PureComponent<IProps> {
   render() {
     const {
       cardIconColor,
@@ -54,25 +54,24 @@ export default class EventCardHeader extends PureComponent<IProps> {
       isRead,
       labelColor,
       labelText,
-      repoOwnerName,
       updatedAt,
     } = this.props
-
-    const isBot = Boolean(repoOwnerName && repoOwnerName.indexOf('[bot]') >= 0)
 
     return (
       <ThemeConsumer>
         {({ theme }) => (
           <View style={styles.container}>
             <View style={getCardStylesForTheme(theme).leftColumn}>
-              <Avatar
-                isBot={isBot}
-                linkURL=""
-                shape={isBot ? 'rounded' : undefined}
-                small
-                style={getCardStylesForTheme(theme).avatar}
-                username={repoOwnerName}
-              />
+              <UserConsumer>
+                {({ user }) => (
+                  <Avatar
+                    shape="circle"
+                    small
+                    style={getCardStylesForTheme(theme).avatar}
+                    username={(user && user.login) || ''}
+                  />
+                )}
+              </UserConsumer>
             </View>
 
             <View style={styles.rightColumnCentered}>

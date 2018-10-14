@@ -13,7 +13,7 @@ import {
 import { getIssueOrPullRequestNumberFromUrl } from '../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../utils/helpers/shared'
 import { ThemeConsumer } from '../context/ThemeContext'
-import NotificationCardHeader from './partials/NotificationCardHeader'
+import {NotificationCardHeader} from './partials/NotificationCardHeader'
 import CommentRow from './partials/rows/CommentRow'
 import CommitRow from './partials/rows/CommitRow'
 import IssueOrPullRequestRow from './partials/rows/IssueOrPullRequestRow'
@@ -115,7 +115,6 @@ export default class NotificationCard extends PureComponent<
               labelText={labelText}
               isRead={isRead}
               isPrivate={isPrivate}
-              repoOwnerName={repoOwnerName!}
               updatedAt={notification.updated_at}
             />
 
