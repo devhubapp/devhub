@@ -4,39 +4,8 @@ import React, { PureComponent } from 'react'
 import Columns from '../components/columns/Columns'
 import EventColumn from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
+import { ColumnsConsumer } from '../components/context/ColumnsContext'
 import { UserConsumer } from '../components/context/UserContext'
-import { Column } from '../types'
-
-function getFakeColumns(username: string): Column[] {
-  return [
-    {
-      type: 'notifications',
-    },
-    {
-      subtype: 'received_events',
-      type: 'users',
-      username,
-    },
-    {
-      subtype: 'events',
-      type: 'users',
-      username,
-    },
-    {
-      showAvatarAsIcon: true,
-      subtype: 'events',
-      type: 'orgs',
-      username: 'facebook',
-    },
-    {
-      repoIsKnown: true,
-      showAvatarAsIcon: true,
-      subtype: 'events',
-      type: 'repos',
-      username: 'facebook/react',
-    },
-  ]
-}
 
 export type ColumnsContainerProps =
   | {
@@ -60,41 +29,45 @@ export class ColumnsContainer extends PureComponent<
     const { onlyEvents, onlyNotifications } = this.props
 
     return (
-      <Columns>
-        <UserConsumer>
-          {({ accessToken, user }) => {
-            if (!(user && accessToken)) return null
+      <UserConsumer>
+        {({ accessToken }) => (
+          <ColumnsConsumer>
+            {({ columns: _columns }) => {
+              if (!(accessToken && _columns)) return null
 
-            const columns = onlyNotifications
-              ? getFakeColumns(user.login).filter(
-                  column => column.type === 'notifications',
-                )
-              : onlyEvents
-                ? getFakeColumns(user.login).filter(
-                    column => column.type !== 'notifications',
-                  )
-                : getFakeColumns(user.login)
+              const columns = onlyNotifications
+                ? _columns.filter(column => column.type === 'notifications')
+                : onlyEvents
+                  ? _columns.filter(column => column.type !== 'notifications')
+                  : _columns
 
-            return columns.map(
-              (column, index) =>
-                column.type === 'notifications' ? (
-                  <NotificationColumn
-                    key={`event-column-${index}`}
-                    accessToken={accessToken}
-                    swipeable={columns.length === 1}
-                    {...column}
-                  />
-                ) : (
-                  <EventColumn
-                    key={`event-column-${index}`}
-                    accessToken={accessToken}
-                    {...column}
-                  />
-                ),
-            )
-          }}
-        </UserConsumer>
-      </Columns>
+              const swipeable = columns.length === 1
+
+              return (
+                <Columns bounces={!swipeable} scrollEnabled={!swipeable}>
+                  {columns.map(
+                    (column, index) =>
+                      column.type === 'notifications' ? (
+                        <NotificationColumn
+                          key={`event-column-${index}`}
+                          accessToken={accessToken}
+                          swipeable={swipeable}
+                          {...column}
+                        />
+                      ) : (
+                        <EventColumn
+                          key={`event-column-${index}`}
+                          accessToken={accessToken}
+                          {...column}
+                        />
+                      ),
+                  )}
+                </Columns>
+              )
+            }}
+          </ColumnsConsumer>
+        )}
+      </UserConsumer>
     )
   }
 }

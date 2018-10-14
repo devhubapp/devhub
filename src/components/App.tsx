@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react'
 
 import AppNavigator from '../navigation/AppNavigator'
+import { ColumnsProvider } from './context/ColumnsContext'
 import { DimensionsProvider } from './context/DimensionsContext'
 import { ThemeProvider } from './context/ThemeContext'
-import { UserProvider } from './context/UserContext'
+import { UserConsumer, UserProvider } from './context/UserContext'
 
 export default class App extends PureComponent {
   render() {
@@ -11,7 +12,13 @@ export default class App extends PureComponent {
       <DimensionsProvider>
         <UserProvider>
           <ThemeProvider>
-            <AppNavigator />
+            <UserConsumer>
+              {({ user }) => (
+                <ColumnsProvider username={(user && user.login) || null}>
+                  <AppNavigator />
+                </ColumnsProvider>
+              )}
+            </UserConsumer>
           </ThemeProvider>
         </UserProvider>
       </DimensionsProvider>
