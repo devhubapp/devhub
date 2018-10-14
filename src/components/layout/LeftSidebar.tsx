@@ -120,6 +120,7 @@ class LeftSidebarComponent extends PureComponent<
                 {
                   width: '100%',
                   height: columnHeaderHeight + StyleSheet.hairlineWidth,
+                  paddingLeft: 3,
                 },
               ]}
             >
