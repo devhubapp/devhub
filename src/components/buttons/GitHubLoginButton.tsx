@@ -87,7 +87,7 @@ const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
         style={[
           styles.button,
           {
-            backgroundColor: theme.invert().backgroundColor,
+            backgroundColor: theme.backgroundColorLess08,
             borderColor: theme.backgroundColor,
           },
           props.style,
@@ -105,13 +105,9 @@ const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
               ]}
             >
               <Icon
+                color={theme.foregroundColor}
                 name={leftIcon!}
-                style={[
-                  styles.icon,
-                  {
-                    color: theme.invert().foregroundColor,
-                  },
-                ]}
+                style={styles.icon}
               />
             </View>
           )}
@@ -123,7 +119,7 @@ const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
                 style={[
                   styles.title,
                   {
-                    color: theme.invert().foregroundColor,
+                    color: theme.foregroundColor,
                   },
                   textProps.style,
                 ]}
@@ -138,7 +134,7 @@ const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
                 style={[
                   styles.subtitleText,
                   {
-                    color: theme.invert().foregroundColorMuted50,
+                    color: theme.foregroundColorMuted50,
                   },
                   subtitleProps.style,
                 ]}
@@ -153,9 +149,13 @@ const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
               style={[styles.iconWrapper, { paddingRight: contentPadding }]}
             >
               {loading ? (
-                <ActivityIndicator color={theme.invert().foregroundColor} />
+                <ActivityIndicator color={theme.foregroundColor} />
               ) : (
-                <Icon name={rightIcon!} style={styles.icon} />
+                <Icon
+                  color={theme.foregroundColor}
+                  name={rightIcon!}
+                  style={styles.icon}
+                />
               )}
             </View>
           )}
