@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { NavigationScreenProps } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
 import { LeftSidebar } from '../components/layout/LeftSidebar'
@@ -12,12 +13,12 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class MainScreen extends PureComponent {
+export default class MainScreen extends PureComponent<NavigationScreenProps> {
   render() {
     return (
       <Screen>
         <View style={styles.container}>
-          <LeftSidebar />
+          <LeftSidebar navigation={this.props.navigation} />
           <ColumnsContainer />
         </View>
       </Screen>

@@ -1,5 +1,12 @@
 import React, { PureComponent } from 'react'
-import { Image, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import { NavigationScreenProps } from 'react-navigation'
 
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
@@ -8,6 +15,7 @@ import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import Avatar from '../common/Avatar'
 import { ColumnsConsumer } from '../context/ColumnsContext'
 import { ThemeConsumer } from '../context/ThemeContext'
+import { UserConsumer, UserProviderState } from '../context/UserContext'
 
 const logo = require('../../../assets/logo.png') // tslint:disable-line
 
@@ -19,7 +27,20 @@ const styles = StyleSheet.create({
   },
 })
 
-export class LeftSidebar extends PureComponent {
+export interface LeftSidebarProps {
+  navigation: NavigationScreenProps['navigation']
+}
+
+class LeftSidebarComponent extends PureComponent<
+  LeftSidebarProps & {
+    setAccessToken: UserProviderState['setAccessToken']
+  }
+> {
+  logout = () => {
+    this.props.setAccessToken(null)
+    this.props.navigation.navigate('Login')
+  }
+
   render() {
     return (
       <ThemeConsumer>
@@ -77,9 +98,9 @@ export class LeftSidebar extends PureComponent {
                           >
                             <ColumnHeaderItem
                               iconName={requestTypeIconAndData.icon}
-                                showAvatarAsIcon={
-                                  requestTypeIconAndData.showAvatarAsIcon
-                                }
+                              showAvatarAsIcon={
+                                requestTypeIconAndData.showAvatarAsIcon
+                              }
                               username={
                                 column.username &&
                                 getOwnerAndRepo(column.username).owner
@@ -91,6 +112,19 @@ export class LeftSidebar extends PureComponent {
                 }
               </ColumnsConsumer>
             </ScrollView>
+
+            <TouchableOpacity
+              onPress={this.logout}
+              style={[
+                styles.centerContainer,
+                {
+                  width: '100%',
+                  height: columnHeaderHeight + StyleSheet.hairlineWidth,
+                },
+              ]}
+            >
+              <ColumnHeaderItem iconName="sign-out" />
+            </TouchableOpacity>
 
             <View
               style={[
@@ -117,3 +151,11 @@ export class LeftSidebar extends PureComponent {
     )
   }
 }
+
+export const LeftSidebar = (props: LeftSidebarProps) => (
+  <UserConsumer>
+    {({ setAccessToken }) => (
+      <LeftSidebarComponent {...props} setAccessToken={setAccessToken} />
+    )}
+  </UserConsumer>
+)

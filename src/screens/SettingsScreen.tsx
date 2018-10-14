@@ -12,12 +12,13 @@ import {
 } from '../components/context/UserContext'
 import * as colors from '../styles/colors'
 
-export interface LoginScreenProps {
-  setAccessToken: UserProviderState['setAccessToken']
-}
+export interface SettingsScreenProps {}
 
 class SettingsScreenComponent extends PureComponent<
-  LoginScreenProps & NavigationScreenProps
+  SettingsScreenProps &
+    NavigationScreenProps & {
+      setAccessToken: UserProviderState['setAccessToken']
+    }
 > {
   static navigationOptions: NavigationStackScreenOptions = {
     headerTitle: 'Settings',
@@ -40,7 +41,7 @@ class SettingsScreenComponent extends PureComponent<
 }
 
 export const SettingsScreen = (
-  props: typeof SettingsScreenComponent.prototype.props,
+  props: SettingsScreenProps & NavigationScreenProps,
 ) => (
   <UserConsumer>
     {({ setAccessToken }) => (
