@@ -63,7 +63,7 @@ export default class EventCardsContainer extends PureComponent<
       if (Array.isArray(events)) {
         const orderedEvents = _(events)
           .uniqBy('id')
-          .orderBy(['updated_at'], ['desc'])
+          .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
           .value()
         const mergedEvents = mergeSimilarEvent(orderedEvents)
         this.setState({ events: mergedEvents })

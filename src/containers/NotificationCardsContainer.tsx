@@ -64,7 +64,10 @@ export default class NotificationCardsContainer extends PureComponent<
         this.setState({
           notifications: _(notifications)
             .uniqBy('id')
-            .orderBy(['unread', 'updated_at'], ['desc', 'desc'])
+            .orderBy(
+              ['unread', 'updated_at', 'created_at'],
+              ['desc', 'desc', 'desc'],
+            )
             .value(),
         })
       }

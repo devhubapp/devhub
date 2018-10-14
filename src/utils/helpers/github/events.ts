@@ -393,7 +393,7 @@ function tryMerge(eventA: IEnhancedGitHubEvent, eventB: IGitHubEvent) {
   if (createdAtMinutesDiff >= 24 * 60) return null
 
   // only merge 5 events at max
-  if ('merged' in eventA && eventA.merged && eventA.merged.length >= 5 - 1)
+  if ('merged' in eventA && eventA.merged && eventA.merged.length >= 5)
     return null
 
   switch (eventA.type) {
