@@ -12,7 +12,6 @@ import { mergeSimilarEvent } from '../utils/helpers/github/events'
 
 export type EventCardsContainerProps = Partial<EventCardsProps> & {
   accessToken: string
-  showAvatarAsIcon?: boolean
   subtype?: IGitHubRequestSubType
   type: IGitHubRequestType
   username: string

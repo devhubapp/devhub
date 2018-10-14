@@ -1,6 +1,7 @@
 import { rgba } from 'polished'
-import React, { Fragment, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import {
+  ImageStyle,
   StyleProp,
   StyleSheet,
   Text,
@@ -19,11 +20,13 @@ import {
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
 import { ThemeConsumer } from '../context/ThemeContext'
+import { UserConsumer } from '../context/UserContext'
 
 export const columnHeaderItemContentSize = 20
 
 export interface ColumnHeaderItemProps {
   avatarShape?: AvatarProps['shape']
+  avatarStyle?: StyleProp<ImageStyle>
   iconName?: IGitHubIcon
   iconStyle?: StyleProp<TextStyle>
   onPress?: () => void
@@ -58,9 +61,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-export default class ColumnHeaderItem extends PureComponent<
-  ColumnHeaderItemProps
-> {
+export class ColumnHeaderItem extends PureComponent<ColumnHeaderItemProps> {
   wrap: ConditionalWrapProps['wrap'] = children =>
     this.props.onPress ? (
       <TouchableOpacity
@@ -76,6 +77,7 @@ export default class ColumnHeaderItem extends PureComponent<
   render() {
     const {
       avatarShape,
+      avatarStyle,
       iconName,
       iconStyle,
       repo,
@@ -84,76 +86,131 @@ export default class ColumnHeaderItem extends PureComponent<
       subtitleStyle,
       title,
       titleStyle,
-      username,
+      username: _username,
     } = this.props
 
     return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <ConditionalWrap condition wrap={this.wrap}>
-            <Fragment>
-              {showAvatarAsIcon
-                ? !!username && (
-                    <Avatar
-                      isBot={false}
-                      linkURL=""
-                      repo={repo}
-                      shape={avatarShape}
-                      style={[
-                        {
-                          width: columnHeaderItemContentSize,
-                          height: columnHeaderItemContentSize,
-                        },
-                        !!title || !!subtitle
-                          ? {
-                              marginRight: 8,
-                            }
-                          : undefined,
-                      ]}
-                      username={username}
-                    />
-                  )
-                : !!iconName && (
-                    <Icon
-                      color={theme.foregroundColor}
-                      name={iconName}
-                      style={[
-                        styles.icon,
-                        (!!title || !!subtitle) && {
-                          marginRight: 8,
-                        },
-                        iconStyle,
-                      ]}
-                    />
-                  )}
+      <UserConsumer>
+        {({ user }) => {
+          const username =
+            user && user.login === _username ? undefined : _username
 
-              {!!title && (
-                <Text
-                  style={[
-                    styles.title,
-                    { color: theme.foregroundColor },
-                    titleStyle,
-                  ]}
-                >
-                  {title.toLowerCase()}
-                </Text>
+          const smallAvatarSpacing = 5
+
+          return (
+            <ThemeConsumer>
+              {({ theme }) => (
+                <ConditionalWrap condition wrap={this.wrap}>
+                  <>
+                    {(!!iconName || (showAvatarAsIcon && !!username)) && (
+                      <View
+                        style={{
+                          position: 'relative',
+                          alignContent: 'center',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginRight:
+                            title || subtitle
+                              ? 8 +
+                                (showAvatarAsIcon && username
+                                  ? smallAvatarSpacing
+                                  : 0)
+                              : 0,
+                        }}
+                      >
+                        {iconName ? (
+                          <>
+                            <Icon
+                              color={theme.foregroundColor}
+                              name={iconName}
+                              style={[styles.icon, iconStyle]}
+                            />
+
+                            {showAvatarAsIcon &&
+                              !!username && (
+                                <Avatar
+                                  hitSlop={{
+                                    top:
+                                      columnHeaderItemContentSize +
+                                      smallAvatarSpacing,
+                                    bottom: smallAvatarSpacing,
+                                    left:
+                                      columnHeaderItemContentSize / 2 +
+                                      smallAvatarSpacing,
+                                    right:
+                                      columnHeaderItemContentSize / 2 +
+                                      smallAvatarSpacing,
+                                  }}
+                                  isBot={false}
+                                  linkURL=""
+                                  repo={repo}
+                                  shape={avatarShape}
+                                  style={[
+                                    {
+                                      position: 'absolute',
+                                      bottom: 0,
+                                      marginLeft: smallAvatarSpacing,
+                                      width: 10,
+                                      height: 10,
+                                    },
+                                    avatarStyle,
+                                  ]}
+                                  username={username}
+                                />
+                              )}
+                          </>
+                        ) : (
+                          showAvatarAsIcon &&
+                          !!username && (
+                            <Avatar
+                              isBot={false}
+                              linkURL=""
+                              repo={repo}
+                              shape={avatarShape}
+                              style={[
+                                {
+                                  width: columnHeaderItemContentSize,
+                                  height: columnHeaderItemContentSize,
+                                },
+                                avatarStyle,
+                              ]}
+                              username={username}
+                            />
+                          )
+                        )}
+                      </View>
+                    )}
+
+                    {!!title && (
+                      <Text
+                        style={[
+                          styles.title,
+                          { color: theme.foregroundColor },
+                          titleStyle,
+                        ]}
+                      >
+                        {title.toLowerCase()}
+                      </Text>
+                    )}
+                    {!!subtitle && (
+                      <Text
+                        style={[
+                          styles.subtitle,
+                          { color: rgba(theme.foregroundColor, mutedOpacity) },
+                          subtitleStyle,
+                        ]}
+                      >
+                        {!!title && '  '}
+                        {subtitle.toLowerCase()}
+                      </Text>
+                    )}
+                  </>
+                </ConditionalWrap>
               )}
-              {!!subtitle && (
-                <Text
-                  style={[
-                    styles.subtitle,
-                    { color: rgba(theme.foregroundColor, mutedOpacity) },
-                    subtitleStyle,
-                  ]}
-                >
-                  {!!title && '  '}
-                  {subtitle.toLowerCase()}
-                </Text>
-              )}
-            </Fragment>
-          </ConditionalWrap>
-        )}
-      </ThemeConsumer>
+            </ThemeConsumer>
+          )
+        }}
+      </UserConsumer>
     )
   }
 }

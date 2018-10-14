@@ -10,6 +10,8 @@ export type NotificationCardsContainerProps = Partial<
   NotificationCardsProps
 > & {
   accessToken: string
+  subtype?: undefined
+  type: 'notifications'
 }
 
 export interface NotificationCardsContainerState {

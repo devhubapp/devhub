@@ -5,6 +5,7 @@ import * as colors from '../../../styles/colors'
 
 import {
   getIssueIconAndColor,
+  getOwnerAndRepo,
   getPullRequestIconAndColor,
   isPullRequest,
 } from './shared'
@@ -20,12 +21,30 @@ import {
   IMultipleStarEvent,
 } from '../../../types'
 
-export function getRequestTypeIconAndData(
-  type: IGitHubRequestType,
-  subtype: IGitHubRequestSubType,
-): { subtitle?: string } & (
-  | { icon: IGitHubIcon; showAvatarAsIcon?: false }
-  | { icon?: undefined; showAvatarAsIcon?: boolean }) {
+export function getColumnHeaderDetails(params: {
+  subtype?: IGitHubRequestSubType
+  type: IGitHubRequestType | 'notifications'
+  username?: string
+}): {
+  icon: IGitHubIcon
+  showAvatarAsIcon?: boolean
+  subtitle?: string
+  title: string
+} {
+  const { subtype, type, username } = params
+
+  const title = (() => {
+    switch (type) {
+      case 'notifications':
+        return 'Notifications'
+
+      default: {
+        const ownerAndRepo = getOwnerAndRepo(username || '')
+        return ownerAndRepo.repo || ownerAndRepo.owner || username || ''
+      }
+    }
+  })()
+
   const subtitle = (() => {
     switch (subtype) {
       case 'events':
@@ -40,22 +59,32 @@ export function getRequestTypeIconAndData(
   })()
 
   switch (type) {
+    case 'notifications':
+      return {
+        icon: 'bell',
+        showAvatarAsIcon: !!username,
+        subtitle: 'All',
+        title,
+      }
+
     case 'orgs':
-      return { icon: 'organization', subtitle }
+      return { icon: 'organization', showAvatarAsIcon: true, subtitle, title }
 
     case 'repos':
-      return { showAvatarAsIcon: true, subtitle }
+      return { icon: 'repo', showAvatarAsIcon: true, subtitle, title }
 
     case 'users':
       return {
-        subtitle,
         icon: subtype === 'received_events' ? 'home' : 'person',
+        showAvatarAsIcon: true,
+        subtitle,
+        title,
       }
 
     default:
       if (__DEV__)
         console.error(`No icon configured for request type '${type}'`)
-      return { icon: 'mark-github' }
+      return { icon: 'mark-github', showAvatarAsIcon: !!username, title }
   }
 }
 

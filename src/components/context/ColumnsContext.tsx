@@ -7,6 +7,7 @@ function getDefaultColumns(username: string): Column[] {
   return [
     {
       type: 'notifications',
+      subtype: 'all',
     },
     {
       subtype: 'received_events',

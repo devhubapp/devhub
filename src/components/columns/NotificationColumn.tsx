@@ -4,10 +4,11 @@ import FlexSeparator from '../../components/common/FlexSeparator'
 import NotificationCardsContainer, {
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
+import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
-import ColumnHeader from './ColumnHeader'
-import ColumnHeaderItem from './ColumnHeaderItem'
+import { ColumnHeader } from './ColumnHeader'
+import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface NotificationColumnProps
   extends NotificationCardsContainerProps {}
@@ -23,13 +24,16 @@ export class NotificationColumn extends PureComponent<
   }
 
   render() {
+    const { subtype, type } = this.props
+    const requestTypeIconAndData = getColumnHeaderDetails({ type, subtype })
+
     return (
       <Column>
         <ColumnHeader>
           <ColumnHeaderItem
-            iconName="bell"
-            title="Notifications"
-            subtitle="All"
+            iconName={requestTypeIconAndData.icon}
+            subtitle={requestTypeIconAndData.subtitle}
+            title={requestTypeIconAndData.title}
           />
           <FlexSeparator />
           <ColumnHeaderItem

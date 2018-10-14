@@ -4,12 +4,12 @@ import FlexSeparator from '../../components/common/FlexSeparator'
 import EventCardsContainer, {
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
-import { getRequestTypeIconAndData } from '../../utils/helpers/github/events'
+import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
-import ColumnHeader from './ColumnHeader'
-import ColumnHeaderItem from './ColumnHeaderItem'
+import { ColumnHeader } from './ColumnHeader'
+import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface EventColumnProps extends EventCardsContainerProps {}
 
@@ -24,9 +24,13 @@ export default class EventColumn extends PureComponent<
   }
 
   render() {
-    const { showAvatarAsIcon, subtype, type, username } = this.props
+    const { subtype, type, username } = this.props
 
-    const requestTypeIconAndData = getRequestTypeIconAndData(type, subtype!)
+    const requestTypeIconAndData = getColumnHeaderDetails({
+      subtype,
+      type,
+      username,
+    })
 
     return (
       <Column>
@@ -34,9 +38,9 @@ export default class EventColumn extends PureComponent<
           <ColumnHeaderItem
             iconName={requestTypeIconAndData.icon}
             repo={getOwnerAndRepo(username).repo}
-            showAvatarAsIcon={showAvatarAsIcon}
+            showAvatarAsIcon={requestTypeIconAndData.showAvatarAsIcon}
             subtitle={requestTypeIconAndData.subtitle}
-            title={username}
+            title={requestTypeIconAndData.title}
             username={getOwnerAndRepo(username).owner}
           />
           <FlexSeparator />

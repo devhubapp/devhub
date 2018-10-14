@@ -1,14 +1,18 @@
 import React, { PureComponent } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, View } from 'react-native'
 
+import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
+import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
 import { columnHeaderHeight } from '../columns/ColumnHeader'
+import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import Avatar from '../common/Avatar'
+import { ColumnsConsumer } from '../context/ColumnsContext'
 import { ThemeConsumer } from '../context/ThemeContext'
 
 const logo = require('../../../assets/logo.png') // tslint:disable-line
 
 const styles = StyleSheet.create({
-  logoContainer: {
+  centerContainer: {
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -30,7 +34,7 @@ export class LeftSidebar extends PureComponent {
           >
             <View
               style={[
-                styles.logoContainer,
+                styles.centerContainer,
                 {
                   backgroundColor: theme.backgroundColorLess08,
                   width: '100%',
@@ -47,11 +51,50 @@ export class LeftSidebar extends PureComponent {
               />
             </View>
 
-            <View style={{ flex: 1 }} />
+            <ScrollView style={{ flex: 1 }}>
+              <ColumnsConsumer>
+                {({ columns }) =>
+                  !columns
+                    ? null
+                    : columns.map((column, index) => {
+                        const requestTypeIconAndData = getColumnHeaderDetails({
+                          type: column.type,
+                          subtype: column.subtype,
+                          username: column.username,
+                        })
+
+                        return (
+                          <View
+                            key={`left-sidebar-column-${index}`}
+                            style={[
+                              styles.centerContainer,
+                              {
+                                width: '100%',
+                                height:
+                                  columnHeaderHeight + StyleSheet.hairlineWidth,
+                              },
+                            ]}
+                          >
+                            <ColumnHeaderItem
+                              iconName={requestTypeIconAndData.icon}
+                                showAvatarAsIcon={
+                                  requestTypeIconAndData.showAvatarAsIcon
+                                }
+                              username={
+                                column.username &&
+                                getOwnerAndRepo(column.username).owner
+                              }
+                            />
+                          </View>
+                        )
+                      })
+                }
+              </ColumnsConsumer>
+            </ScrollView>
 
             <View
               style={[
-                styles.logoContainer,
+                styles.centerContainer,
                 {
                   width: '100%',
                   height: columnHeaderHeight + StyleSheet.hairlineWidth,

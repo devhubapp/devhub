@@ -1,5 +1,5 @@
 import React, { SFC } from 'react'
-import { ImageStyle, StyleProp } from 'react-native'
+import { ImageStyle, StyleProp, TouchableOpacityProps } from 'react-native'
 
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import {
@@ -16,6 +16,7 @@ import { Link } from './Link'
 export interface AvatarProps {
   avatarURL?: string
   email?: string
+  hitSlop?: TouchableOpacityProps['hitSlop']
   isBot?: boolean
   linkURL?: string
   repo?: string
@@ -31,6 +32,7 @@ export const size = avatarSize
 const Avatar: SFC<AvatarProps> = ({
   avatarURL: _avatarURL,
   email,
+  hitSlop,
   isBot: _isBot,
   linkURL,
   repo,
@@ -59,6 +61,7 @@ const Avatar: SFC<AvatarProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <Link
+          hitSlop={hitSlop}
           href={
             linkURL
               ? fixURL(linkURL)

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   buttonContainer: {},
 })
 
-export default class ColumnHeader extends PureComponent<ColumnHeaderProps> {
+export class ColumnHeader extends PureComponent<ColumnHeaderProps> {
   render() {
     const { children, style, ...props } = this.props
 
