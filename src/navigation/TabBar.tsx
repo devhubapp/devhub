@@ -33,8 +33,7 @@ const TabBar = (props: BottomTabBarProps) => (
         showLabel={Platform.OS === 'ios'}
         showIcon
         style={{
-          backgroundColor:
-            theme.backgroundColor || theme.backgroundColorTransparent10,
+          backgroundColor: theme.backgroundColorLess08,
           ...Platform.selectUsingRealOS({
             ios: { padding: 3, borderTopColor: theme.backgroundColorLess08 },
           }),

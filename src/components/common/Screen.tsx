@@ -1,6 +1,13 @@
 import { darken } from 'polished'
 import React, { PureComponent, ReactNode } from 'react'
-import { StatusBar, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  Platform,
+  StatusBar,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { SafeAreaView } from 'react-navigation'
 
@@ -10,8 +17,9 @@ let isSplashScreenVisible = true
 
 export interface ScreenProps {
   children?: ReactNode
-  useSafeArea?: boolean
+  statusBarBackgroundColor?: string
   style?: StyleProp<ViewStyle>
+  useSafeArea?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -41,13 +49,27 @@ export default class Screen extends PureComponent<ScreenProps> {
   }
 
   render() {
+    const { statusBarBackgroundColor } = this.props
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
           <>
             <StatusBar
               barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+              backgroundColor={statusBarBackgroundColor}
             />
+
+            {Platform.OS === 'ios' &&
+              !!statusBarBackgroundColor && (
+                <View
+                  style={{
+                    width: '100%',
+                    height: StatusBar.currentHeight || 21,
+                    backgroundColor: statusBarBackgroundColor,
+                  }}
+                />
+              )}
 
             {this.renderContent({
               ...this.props,

@@ -48,7 +48,7 @@ export const options: TabNavigatorConfig = {
             return 'home'
 
           case 'Notifications':
-            return 'globe'
+            return 'bell'
 
           case 'Settings':
             return 'gear'

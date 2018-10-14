@@ -6,6 +6,7 @@ import {
 } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
+import { ThemeConsumer } from '../components/context/ThemeContext'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 
 export class FeedScreen extends PureComponent<NavigationScreenProps> {
@@ -17,9 +18,13 @@ export class FeedScreen extends PureComponent<NavigationScreenProps> {
 
   render() {
     return (
-      <Screen>
-        <ColumnsContainer onlyEvents />
-      </Screen>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
+            <ColumnsContainer onlyEvents />
+          </Screen>
+        )}
+      </ThemeConsumer>
     )
   }
 }
