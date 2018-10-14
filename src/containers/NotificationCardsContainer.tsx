@@ -60,11 +60,10 @@ export default class NotificationCardsContainer extends PureComponent<
       const notifications: IGitHubNotification[] = await response.json()
       if (Array.isArray(notifications)) {
         this.setState({
-          notifications: _.orderBy(
-            notifications,
-            ['unread', 'updated_at'],
-            ['desc', 'desc'],
-          ),
+          notifications: _(notifications)
+            .uniqBy('id')
+            .orderBy(['unread', 'updated_at'], ['desc', 'desc'])
+            .value(),
         })
       }
     } catch (error) {

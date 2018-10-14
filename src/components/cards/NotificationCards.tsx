@@ -21,25 +21,15 @@ export default class NotificationCards extends PureComponent<
   NotificationCardsState
 > {
   keyExtractor(notification: IGitHubNotification) {
-    return `${notification.id}`
+    return `notification-card-${notification.id}`
   }
 
   renderItem = ({ item: notification }: { item: IGitHubNotification }) => {
     if (this.props.swipeable) {
-      return (
-        <SwipeableNotificationCard
-          key={`notification-card-${notification.id}`}
-          notification={notification}
-        />
-      )
+      return <SwipeableNotificationCard notification={notification} />
     }
 
-    return (
-      <NotificationCard
-        key={`notification-card-${notification.id}`}
-        notification={notification}
-      />
-    )
+    return <NotificationCard notification={notification} />
   }
 
   render() {

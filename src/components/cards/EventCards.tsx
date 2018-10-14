@@ -22,27 +22,20 @@ export default class EventCards extends PureComponent<
   EventCardsState
 > {
   keyExtractor(event: IEnhancedGitHubEvent) {
-    return `${event.id}`
+    return `event-card-${event.id}`
   }
 
   renderItem = ({ item: event }: { item: IEnhancedGitHubEvent }) => {
     if (this.props.swipeable) {
       return (
         <SwipeableEventCard
-          key={`event-card-${event.id}`}
           event={event}
           repoIsKnown={this.props.repoIsKnown}
         />
       )
     }
 
-    return (
-      <EventCard
-        key={`event-card-${event.id}`}
-        event={event}
-        repoIsKnown={this.props.repoIsKnown}
-      />
-    )
+    return <EventCard event={event} repoIsKnown={this.props.repoIsKnown} />
   }
 
   render() {

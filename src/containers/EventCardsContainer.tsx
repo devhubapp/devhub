@@ -62,7 +62,10 @@ export default class EventCardsContainer extends PureComponent<
       )
       const events: IGitHubEvent[] = await response.json()
       if (Array.isArray(events)) {
-        const orderedEvents = _.orderBy(events, ['updated_at'], ['desc'])
+        const orderedEvents = _(events)
+          .uniqBy('id')
+          .orderBy(['updated_at'], ['desc'])
+          .value()
         const mergedEvents = mergeSimilarEvent(orderedEvents)
         this.setState({ events: mergedEvents })
       }
