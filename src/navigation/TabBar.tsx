@@ -30,7 +30,7 @@ const TabBar = (props: BottomTabBarProps) => (
         indicatorStyle={{
           backgroundColor: colors.brand,
         }}
-        showLabel={Platform.OS === 'ios'}
+        showLabel={Platform.realOS === 'ios'}
         showIcon
         style={{
           backgroundColor: theme.backgroundColorLess08,
