@@ -18,19 +18,6 @@ function getDefaultColumns(username: string): Column[] {
       type: 'users',
       username,
     },
-    {
-      showAvatarAsIcon: true,
-      subtype: 'events',
-      type: 'orgs',
-      username: 'facebook',
-    },
-    {
-      repoIsKnown: true,
-      showAvatarAsIcon: true,
-      subtype: 'events',
-      type: 'repos',
-      username: 'facebook/react',
-    },
   ]
 }
 
