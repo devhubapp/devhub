@@ -12,10 +12,10 @@ export function createThemeFromColor(
   const backgroundColor = color
   const backgroundColorMore08 =
     luminance >= 0.8
-      ? luminance >= 0.99
+      ? luminance >= 0.95
         ? darken(0.08, color)
         : lighten(0.08, color)
-      : luminance <= 0.01
+      : luminance <= 0.05
         ? lighten(0.08, color)
         : darken(0.08, color)
   const backgroundColorLess08 =
