@@ -42,22 +42,26 @@ export interface ColumnHeaderItemProps {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'center',
     paddingHorizontal: contentPadding,
   } as ViewStyle,
 
   icon: {
     fontSize: columnHeaderItemContentSize,
+    lineHeight: columnHeaderItemContentSize,
   } as TextStyle,
 
   title: {
     fontSize: columnHeaderItemContentSize - 2,
+    lineHeight: columnHeaderItemContentSize,
   } as TextStyle,
 
   subtitle: {
     fontSize: columnHeaderItemContentSize - 6,
+    lineHeight: columnHeaderItemContentSize,
   } as TextStyle,
 })
 
