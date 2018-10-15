@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 
 import AppNavigator from '../navigation/AppNavigator'
+import { AppGlobalStyles } from './AppGlobalStyles'
 import { ColumnsProvider } from './context/ColumnsContext'
 import { DimensionsProvider } from './context/DimensionsContext'
 import { ThemeProvider } from './context/ThemeContext'
@@ -15,7 +16,10 @@ export default class App extends PureComponent {
             <UserConsumer>
               {({ user }) => (
                 <ColumnsProvider username={(user && user.login) || null}>
-                  <AppNavigator />
+                  <>
+                    <AppGlobalStyles />
+                    <AppNavigator />
+                  </>
                 </ColumnsProvider>
               )}
             </UserConsumer>
