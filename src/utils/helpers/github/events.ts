@@ -27,6 +27,7 @@ export function getColumnHeaderDetails(
     repo?: string
   }
   icon: GitHubIcon
+  repoIsKnown: boolean
   subtitle?: string
   title: string
 } {
@@ -37,6 +38,7 @@ export function getColumnHeaderDetails(
           return {
             avatarDetails: { owner: column.params.org },
             icon: 'organization',
+            repoIsKnown: false,
             subtitle: 'Events',
             title: column.params.org,
           }
@@ -44,6 +46,7 @@ export function getColumnHeaderDetails(
         case 'PUBLIC_EVENTS': {
           return {
             icon: 'rss',
+            repoIsKnown: false,
             subtitle: 'Public',
             title: 'Events',
           }
@@ -55,6 +58,7 @@ export function getColumnHeaderDetails(
               repo: column.params.repo,
             },
             icon: 'repo',
+            repoIsKnown: true,
             subtitle: 'Events',
             title: column.params.repo,
           }
@@ -66,6 +70,7 @@ export function getColumnHeaderDetails(
               repo: column.params.repo,
             },
             icon: 'repo',
+            repoIsKnown: true,
             subtitle: 'Network',
             title: column.params.repo,
           }
@@ -74,6 +79,7 @@ export function getColumnHeaderDetails(
           return {
             avatarDetails: { owner: column.params.username },
             icon: 'person',
+            repoIsKnown: false,
             subtitle: 'Activity',
             title: column.params.username,
           }
@@ -82,6 +88,7 @@ export function getColumnHeaderDetails(
           return {
             avatarDetails: { owner: column.params.org },
             icon: 'organization',
+            repoIsKnown: false,
             subtitle: 'Activity',
             title: column.params.org,
           }
@@ -92,6 +99,7 @@ export function getColumnHeaderDetails(
           return {
             avatarDetails: { owner: column.params.username },
             icon: 'person',
+            repoIsKnown: false,
             subtitle: 'Activity',
             title: column.params.username,
           }
@@ -103,6 +111,7 @@ export function getColumnHeaderDetails(
             )
           return {
             icon: 'mark-github',
+            repoIsKnown: false,
             subtitle: (column as any).subtype || '',
             title: 'Unknown',
           }
@@ -113,6 +122,7 @@ export function getColumnHeaderDetails(
     case 'notifications': {
       return {
         icon: 'bell',
+        repoIsKnown: false,
         subtitle: column.params.all ? 'All' : '',
         title: 'Notifications',
       }
@@ -123,6 +133,7 @@ export function getColumnHeaderDetails(
         console.error(`Invalid column type: '${(column as any).type}'.`)
       return {
         icon: 'mark-github',
+        repoIsKnown: false,
         subtitle: (column as any).type || '',
         title: 'Unknown',
       }

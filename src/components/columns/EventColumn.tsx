@@ -46,7 +46,10 @@ export class EventColumn extends PureComponent<
 
         <CardItemSeparator />
 
-        <EventCardsContainer {...this.props} />
+        <EventCardsContainer
+          repoIsKnown={requestTypeIconAndData.repoIsKnown}
+          {...this.props}
+        />
       </Column>
     )
   }

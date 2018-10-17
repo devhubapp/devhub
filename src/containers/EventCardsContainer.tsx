@@ -65,8 +65,7 @@ export class EventCardsContainer extends PureComponent<
 
   render() {
     const { events } = this.state
-    const { repoIsKnown } = this.props
 
-    return <EventCards events={events} repoIsKnown={repoIsKnown} />
+    return <EventCards {...this.props} events={events} />
   }
 }

@@ -24,6 +24,7 @@ export interface NotificationCardProps {
   archived?: boolean
   notification: ActivityGetNotificationsResponseItem
   onlyOneRepository?: boolean
+  repoIsKnown?: boolean
 }
 
 export interface NotificationCardState {}

@@ -46,7 +46,10 @@ export class NotificationColumn extends PureComponent<
 
         <CardItemSeparator />
 
-        <NotificationCardsContainer {...this.props} />
+        <NotificationCardsContainer
+          repoIsKnown={requestTypeIconAndData.repoIsKnown}
+          {...this.props}
+        />
       </Column>
     )
   }

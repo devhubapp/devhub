@@ -11,6 +11,7 @@ import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
   notifications: ActivityGetNotificationsResponseItem[]
+  repoIsKnown?: boolean
   swipeable?: boolean
 }
 
@@ -30,10 +31,20 @@ export class NotificationCards extends PureComponent<
     item: ActivityGetNotificationsResponseItem
   }) => {
     if (this.props.swipeable) {
-      return <SwipeableNotificationCard notification={notification} />
+      return (
+        <SwipeableNotificationCard
+          notification={notification}
+          repoIsKnown={this.props.repoIsKnown}
+        />
+      )
     }
 
-    return <NotificationCard notification={notification} />
+    return (
+      <NotificationCard
+        notification={notification}
+        repoIsKnown={this.props.repoIsKnown}
+      />
+    )
   }
 
   render() {
