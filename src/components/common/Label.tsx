@@ -18,7 +18,7 @@ import {
 } from '../../styles/variables'
 import { ThemeConsumer } from '../context/ThemeContext'
 
-export interface IProps {
+export interface LabelProps {
   borderColor?: string
   children: ReactNode
   color?: string
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-export const Label: SFC<IProps> = ({
+export const Label: SFC<LabelProps> = ({
   borderColor,
   color,
   children,

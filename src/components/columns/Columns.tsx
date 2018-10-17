@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-export interface IProps extends ScrollViewProps {
+export interface ColumnsProps extends ScrollViewProps {
   children: ReactFragment
   contentContainerStyle?: StyleProp<ViewStyle>
   style?: StyleProp<ViewStyle>
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export class Columns extends PureComponent<IProps> {
+export class Columns extends PureComponent<ColumnsProps> {
   render() {
     const { children, style, ...props } = this.props
 

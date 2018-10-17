@@ -8,7 +8,7 @@ import { ThemeConsumer } from '../context/ThemeContext'
 
 export const columnMargin = contentPadding / 2
 
-export interface IProps extends ViewProps {
+export interface ColumnProps extends ViewProps {
   children?: ReactNode
   maxWidth?: number
   minWidth?: number
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export class Column extends PureComponent<IProps> {
+export class Column extends PureComponent<ColumnProps> {
   static defaultProps = {
     maxWidth: Platform.selectUsingRealOS({
       android: 800,

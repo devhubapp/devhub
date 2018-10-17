@@ -2,7 +2,7 @@ import React, { SFC } from 'react'
 import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
-import { IEnhancedGitHubEvent } from '../../../../types'
+import { EnhancedGitHubEvent } from '../../../../types'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
 import { Avatar } from '../../../common/Avatar'
@@ -12,7 +12,7 @@ import { getCardStylesForTheme } from '../../styles'
 import { BranchRow } from './BranchRow'
 import { getCardRowStylesForTheme } from './styles'
 
-export interface IProps {
+export interface ReleaseRowProps {
   avatarURL: string
   body: string
   branch?: string
@@ -21,15 +21,15 @@ export interface IProps {
   ownerName: string
   repositoryName: string
   tagName: string
-  type: IEnhancedGitHubEvent['type']
+  type: EnhancedGitHubEvent['type']
   url: string
   userLinkURL: string
   username: string
 }
 
-export interface IState {}
+export interface ReleaseRowState {}
 
-export const ReleaseRow: SFC<IProps> = ({
+export const ReleaseRow: SFC<ReleaseRowProps> = ({
   avatarURL,
   body: _body,
   branch,

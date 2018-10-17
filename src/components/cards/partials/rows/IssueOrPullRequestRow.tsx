@@ -13,7 +13,7 @@ import { getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
 import { getCardRowStylesForTheme } from './styles'
 
-export interface IProps {
+export interface IssueOrPullRequestRowProps {
   avatarURL: string
   iconColor?: string
   iconName: string
@@ -25,7 +25,7 @@ export interface IProps {
   userLinkURL: string
 }
 
-export interface IState {}
+export interface IssueOrPullRequestRowState {}
 
 const styles = StyleSheet.create({
   cardItemId: {
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export const IssueOrPullRequestRow: SFC<IProps> = ({
+export const IssueOrPullRequestRow: SFC<IssueOrPullRequestRowProps> = ({
   avatarURL,
   iconColor,
   iconName,

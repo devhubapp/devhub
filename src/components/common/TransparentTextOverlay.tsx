@@ -7,7 +7,7 @@ import { LinearGradient } from '../../libs/linear-gradient'
 export type From = 'top' | 'bottom' | 'left' | 'right'
 export type FromWithVH = 'vertical' | 'horizontal' | From
 
-export interface IProps {
+export interface TransparentTextOverlayProps {
   children?: ReactNode
   color: string
   containerStyle?: StyleProp<ViewStyle>
@@ -85,7 +85,7 @@ function getProps(from: From, size: number) {
   }
 }
 
-const GradientLayerOverlay: SFC<IProps & { from: From }> = ({
+const GradientLayerOverlay: SFC<TransparentTextOverlayProps & { from: From }> = ({
   color,
   from,
   radius,
@@ -105,7 +105,7 @@ const GradientLayerOverlay: SFC<IProps & { from: From }> = ({
   />
 )
 
-export const TransparentTextOverlay: SFC<IProps> = ({
+export const TransparentTextOverlay: SFC<TransparentTextOverlayProps> = ({
   children,
   containerStyle,
   from,

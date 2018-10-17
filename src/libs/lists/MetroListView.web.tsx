@@ -26,7 +26,7 @@ interface SectionItem {
   data: Item[]
 }
 
-export interface IProps extends ListViewProps {
+export interface MetroListViewProps extends ListViewProps {
   FooterComponent: React.ComponentType
   ItemSeparatorComponent: React.ComponentType // not supported yet
   ListEmptyComponent: React.ComponentType
@@ -57,7 +57,7 @@ export interface IProps extends ListViewProps {
   horizontal?: boolean | undefined
 }
 
-export interface IState {
+export interface MetroListViewState {
   ds: ListViewDataSource
   sectionHeaderData: any
 }
@@ -67,14 +67,17 @@ export interface IState {
  * some section support tacked on. It is recommended to just use FlatList directly, this component
  * is mostly for debugging and performance comparison.
  */
-export class MetroListView extends React.Component<IProps, IState> {
+export class MetroListView extends React.Component<
+  MetroListViewProps,
+  MetroListViewState
+> {
   static defaultProps = {
     FooterComponent: () => null,
     ItemSeparatorComponent: () => null,
     ListEmptyComponent: () => null,
     ListHeaderComponent: () => null,
     keyExtractor: (item: Item, index: number) => item.key || String(index),
-    renderScrollComponent: (props: IProps) => {
+    renderScrollComponent: (props: MetroListViewProps) => {
       if (props.onRefresh) {
         return (
           <ScrollView
@@ -93,7 +96,7 @@ export class MetroListView extends React.Component<IProps, IState> {
     },
   }
 
-  state: IState = this._computeState(this.props, {
+  state: MetroListViewState = this._computeState(this.props, {
     ds: new ListView.DataSource({
       getSectionHeaderData: (_, sectionID) =>
         this.state.sectionHeaderData[sectionID],
@@ -161,7 +164,7 @@ export class MetroListView extends React.Component<IProps, IState> {
   //   }
   // }
 
-  componentWillReceiveProps(newProps: IProps) {
+  componentWillReceiveProps(newProps: MetroListViewProps) {
     this.setState(state => this._computeState(newProps, state))
   }
 
@@ -206,7 +209,7 @@ export class MetroListView extends React.Component<IProps, IState> {
     if (ref) this._listRef = ref
   }
 
-  _computeState(props: IProps, state: IState) {
+  _computeState(props: MetroListViewProps, state: MetroListViewState) {
     const sectionHeaderData: { [key: string]: Item } = {}
 
     if (props.sections) {

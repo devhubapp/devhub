@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 import { Octicons as Icon } from '../../../libs/vector-icons'
-import { GithubIcon } from '../../../types'
+import { GitHubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
@@ -17,7 +17,7 @@ export interface EventCardHeaderProps {
   actionText: string
   avatarURL: string
   cardIconColor: string
-  cardIconName: GithubIcon
+  cardIconName: GitHubIcon
   createdAt: MomentInput
   isBot: boolean
   isPrivate?: boolean
@@ -25,7 +25,7 @@ export interface EventCardHeaderProps {
   username: string
 }
 
-export interface IState {}
+export interface EventCardHeaderState {}
 
 const styles = StyleSheet.create({
   container: {

@@ -6,7 +6,7 @@ import Swipeable, {
 
 export type BaseActionType = 'BUTTON' | 'FULL'
 
-export interface IBaseAction {
+export interface BaseSwipeableRowAction {
   color: string
   icon?: string
   key: string
@@ -17,13 +17,13 @@ export interface IBaseAction {
   width?: number
 }
 
-export interface IBaseProps<IAction = IBaseAction> {
+export interface BaseSwipeableRowProps<IAction = BaseSwipeableRowAction> {
   children: ReactNode
-  leftActions: Array<IBaseAction & IAction> // tslint:disable-line prefer-array-literal
-  rightActions: Array<IBaseAction & IAction> // tslint:disable-line prefer-array-literal
+  leftActions: Array<BaseSwipeableRowAction & IAction> // tslint:disable-line prefer-array-literal
+  rightActions: Array<BaseSwipeableRowAction & IAction> // tslint:disable-line prefer-array-literal
 }
 
-export interface IBaseState {}
+export interface BaseSwipeableRowBaseState {}
 
 export type Placement = 'LEFT' | 'RIGHT'
 
@@ -32,8 +32,11 @@ export const defaultWidth = 64
 export abstract class BaseSwipeableRow<
   P = {},
   S = {},
-  IAction = IBaseAction
-> extends PureComponent<IBaseProps<IAction> & P, IBaseState & S> {
+  IAction = BaseSwipeableRowAction
+> extends PureComponent<
+  BaseSwipeableRowProps<IAction> & P,
+  BaseSwipeableRowBaseState & S
+> {
   _swipeableRow: Swipeable | null = null
 
   abstract renderButtonAction: (

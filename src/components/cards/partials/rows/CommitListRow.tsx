@@ -3,16 +3,16 @@ import React, { PureComponent } from 'react'
 import { CommitRow } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
 
-import { IGitHubCommit } from '../../../../types'
+import { GitHubCommit } from '../../../../types'
 
 export interface CommitListRowProps {
   isRead: boolean
   maxHeight?: number
-  commits: IGitHubCommit[]
+  commits: GitHubCommit[]
 }
 
 export class CommitListRow extends PureComponent<CommitListRowProps> {
-  renderItem: RenderItem<IGitHubCommit> = ({
+  renderItem: RenderItem<GitHubCommit> = ({
     showMoreItemsIndicator,
     item: commit,
   }) => {

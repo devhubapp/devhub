@@ -1,6 +1,6 @@
 import { Omit } from './typescript'
 
-export type GithubActivityType =
+export type GitHubActivityType =
   | 'ORG_PUBLIC_EVENTS'
   | 'PUBLIC_EVENTS'
   | 'REPO_EVENTS'
@@ -11,14 +11,14 @@ export type GithubActivityType =
   | 'USER_RECEIVED_EVENTS'
   | 'USER_RECEIVED_PUBLIC_EVENTS'
 
-export type ExtractParamsFromActivityMethod<F> = F extends (
+export type GitHubExtractParamsFromActivityMethod<F> = F extends (
   params: infer P,
   callback: any,
 ) => any
   ? P
   : never
 
-export interface IGitHubUser {
+export interface GitHubUser {
   id: number
   avatar_url: string // https://avatars.githubusercontent.com/u/2118189?
   display_login?: string
@@ -29,7 +29,7 @@ export interface IGitHubUser {
   html_url?: string // https://github.com/brunolemos
 }
 
-export interface IGitHubReaction {
+export interface GitHubReaction {
   total_count: number
   '+1': number
   '-1': number
@@ -40,22 +40,22 @@ export interface IGitHubReaction {
   url: string // 'https://api.github.com/repos/octocat/Hello-World/comments/1/reactions'
 }
 
-export interface IGitHubComment {
+export interface GitHubComment {
   id: number
   commit_id?: string // 6ef64f902613c73251da32d1bc9eb236f38798cc
-  user: IGitHubUser
+  user: GitHubUser
   body: string
   position?: number | null
   line?: number | null
   path?: number | null
-  reactions?: IGitHubReaction[]
+  reactions?: GitHubReaction[]
   created_at: string // 2016-11-24T16:00:16Z
   updated_at: string // 2016-11-24T16:00:16Z
   html_url: string // https://github.com/richelbilderbeek/pbdmms/commit/6ef64f902613c73251da32d1bc9eb236f38798cc#commitcomment-19954756
   url: string // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 }
 
-export interface IGitHubCommit {
+export interface GitHubCommit {
   sha: string
   message: string
   author: {
@@ -67,7 +67,7 @@ export interface IGitHubCommit {
   url: string
 }
 
-export interface IGitHubLabel {
+export interface GitHubLabel {
   id: number
   name: string
   color: string // CCCCCC
@@ -75,12 +75,12 @@ export interface IGitHubLabel {
   url: string // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 }
 
-export interface IGitHubMilestone {
+export interface GitHubMilestone {
   id: number // 1165557
   number: number // 5
   title: string // 30
   description: string // Knesset 30 - future issues / will be fixed later
-  creator: IGitHubUser
+  creator: GitHubUser
   open_issues: number // 17
   closed_issues: number // 1
   state: 'open' | 'closed' // open
@@ -92,18 +92,18 @@ export interface IGitHubMilestone {
   url: string // https://api.github.com/repos/hasadna/Open-Knesset/milestones/5
 }
 
-export interface IGitHubIssue {
+export interface GitHubIssue {
   id: number
-  user: IGitHubUser
-  assignee?: IGitHubUser | null
-  assignees?: IGitHubUser[]
+  user: GitHubUser
+  assignee?: GitHubUser | null
+  assignees?: GitHubUser[]
   number: number
   body: string
   title: string
-  labels: IGitHubLabel[]
+  labels: GitHubLabel[]
   state: 'open' | 'closed'
   locked: boolean
-  milestone?: IGitHubMilestone | null
+  milestone?: GitHubMilestone | null
   comments: number
   created_at: string // 2016-11-24T16:00:16Z
   updated_at: string // 2016-11-24T16:00:16Z
@@ -111,29 +111,29 @@ export interface IGitHubIssue {
   url: string // https://api.github.com/repos/hasadna/Open-Knesset/issues/345
 }
 
-export interface IGitHubOrg {
+export interface GitHubOrg {
   id: number | string
   login: string
   avatar_url: string
   url: string // https://api.github.com/orgs/DefinitelyTyped
 }
 
-export interface IGitHubPullRequest {
+export interface GitHubPullRequest {
   id: number // 95201658
   number: number // 2
   state: 'open' | 'closed' // closed
   locked: boolean // false
   title: string // ok
-  user: IGitHubUser
+  user: GitHubUser
   body: string //
   created_at: string // 2016-11-24T15:59:50Z
   updated_at: string // 2016-11-24T16:00:02Z
   closed_at: string | null // 2016-11-24T16:00:02Z
   merged_at: string | null // 2016-11-24T16:00:02Z
   merge_commit_sha: string | null // e94fd3c0ed8b1fe095acad353ef27c43dfd7ce9b
-  assignee?: IGitHubUser | null // null
-  assignees?: IGitHubUser[] | null // []
-  milestone?: IGitHubMilestone | null // null
+  assignee?: GitHubUser | null // null
+  assignees?: GitHubUser[] | null // []
+  milestone?: GitHubMilestone | null // null
   head: object // object
   base: object // object
   _links: {
@@ -144,7 +144,7 @@ export interface IGitHubPullRequest {
   merged: boolean // true
   mergeable: boolean // null
   mergeable_state: string // unknown
-  merged_by: IGitHubUser // User
+  merged_by: GitHubUser // User
   comments: number // 0
   review_comments: number // 0
   commits: number // 2
@@ -155,7 +155,7 @@ export interface IGitHubPullRequest {
   url: string // https://api.github.com/repos/billy0920/hotsite/pulls/2
 }
 
-export interface IGitHubRepo {
+export interface GitHubRepo {
   id: number | string
   name: string
   full_name?: string
@@ -165,7 +165,7 @@ export interface IGitHubRepo {
   html_url: string // https://github.com/facebook/react
 }
 
-export interface IGitHubPage {
+export interface GitHubPage {
   action: 'created' | 'edited'
   page_name: string
   sha: string
@@ -174,7 +174,7 @@ export interface IGitHubPage {
   url: string
 }
 
-export interface IGitHubRelease {
+export interface GitHubRelease {
   id: number // 1
   tag_name: string // "v1.0.0"
   target_commitish: string // "master"
@@ -184,7 +184,7 @@ export interface IGitHubRelease {
   prerelease: boolean
   created_at: string // "2013-02-27T19:35:32Z"
   published_at: string // "2013-02-27T19:35:32Z"
-  author: IGitHubUser
+  author: GitHubUser
   assets: any[] // see https://developer.github.com/v3/repos/releases/#get-a-single-release
   url: string // "https://api.github.com/repos/octocat/Hello-World/releases/1"
   html_url: string // "https://github.com/octocat/Hello-World/releases/v1.0.0"
@@ -194,14 +194,14 @@ export interface IGitHubRelease {
  * Triggered when a commit comment is created.
  * https://developer.github.com/v3/repos/comments/#list-commit-comments-for-a-repository
  */
-export interface IGitHubCommitCommentEvent {
+export interface GitHubCommitCommentEvent {
   id: string
   type: 'CommitCommentEvent'
-  actor: IGitHubUser
-  org?: IGitHubOrg
-  repo: IGitHubRepo
+  actor: GitHubUser
+  org?: GitHubOrg
+  repo: GitHubRepo
   payload: {
-    comment: IGitHubComment
+    comment: GitHubComment
   }
   public?: boolean
   created_at: string
@@ -213,12 +213,12 @@ export interface IGitHubCommitCommentEvent {
  * Additionally, webhooks will not receive this event for tags
  * if more than three tags are pushed at once.
  */
-export interface ICreateEvent {
+export interface GitHubCreateEvent {
   id: string
   type: 'CreateEvent'
-  actor: IGitHubUser
-  org?: IGitHubOrg
-  repo: IGitHubRepo
+  actor: GitHubUser
+  org?: GitHubOrg
+  repo: GitHubRepo
   payload: {
     ref: string | null // The git ref (or null if only a repository was created).
     ref_type: 'repository' | 'branch' | 'tag' // The object that was created.
@@ -234,12 +234,12 @@ export interface ICreateEvent {
  * Represents a deleted branch or tag.
  * Note: webhooks will not receive this event for tags if more than three tags are deleted at once.
  */
-export interface IDeleteEvent {
+export interface GitHubDeleteEvent {
   id: string
   type: 'DeleteEvent'
-  actor: IGitHubUser
-  org?: IGitHubOrg
-  repo: IGitHubRepo
+  actor: GitHubUser
+  org?: GitHubOrg
+  repo: GitHubRepo
   payload: {
     ref: string // The full git ref.
     ref_type: 'branch' | 'repository' | 'tag' // The object that was deleted.
@@ -253,14 +253,14 @@ export interface IDeleteEvent {
  * Triggered when a user forks a repository.
  * https://developer.github.com/v3/repos/forks/#create-a-fork
  */
-export interface IForkEvent {
+export interface GitHubForkEvent {
   id: string
   type: 'ForkEvent'
-  actor: IGitHubUser
-  org?: IGitHubOrg
-  repo: IGitHubRepo
+  actor: GitHubUser
+  org?: GitHubOrg
+  repo: GitHubRepo
   payload: {
-    forkee: IGitHubRepo // The created repository.
+    forkee: GitHubRepo // The created repository.
   }
   public?: boolean
   created_at: string
@@ -269,13 +269,13 @@ export interface IForkEvent {
 /**
  * Triggered when a Wiki page is created or updated.
  */
-export interface IGollumEvent {
+export interface GitHubGollumEvent {
   id: string
   type: 'GollumEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
-    pages: IGitHubPage[]
+    pages: GitHubPage[]
   }
   public?: boolean
   created_at: string
@@ -285,17 +285,17 @@ export interface IGollumEvent {
  * Triggered when an issue comment is created, edited, or deleted.
  * https://developer.github.com/v3/issues/comments/
  */
-export interface IIssueCommentEvent {
+export interface GitHubIssueCommentEvent {
   id: string
   type: 'IssueCommentEvent'
-  actor: IGitHubUser & { username?: undefined }
-  repo: IGitHubRepo
-  org: IGitHubOrg
+  actor: GitHubUser & { username?: undefined }
+  repo: GitHubRepo
+  org: GitHubOrg
   public?: boolean
   payload: {
     action: 'created' | 'edited' | 'deleted'
-    issue: IGitHubIssue // The issue the comment belongs to.
-    comment: IGitHubComment // The comment itself.
+    issue: GitHubIssue // The issue the comment belongs to.
+    comment: GitHubComment // The comment itself.
     changes?: object // The changes to the comment if the action was 'edited'.
   }
   created_at: string
@@ -306,11 +306,11 @@ export interface IIssueCommentEvent {
  * opened, edited, milestoned, demilestoned, closed, or reopened.
  * https://developer.github.com/v3/issues
  */
-export interface IIssuesEvent {
+export interface GitHubIssuesEvent {
   id: string
   type: 'IssuesEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     action:
       | 'assigned'
@@ -323,10 +323,10 @@ export interface IIssuesEvent {
       | 'demilestoned'
       | 'closed'
       | 'reopened'
-    issue: IGitHubIssue // The issue itself.
+    issue: GitHubIssue // The issue itself.
     changes?: object // The changes to the issue if the action was 'edited'.
-    assignee?: IGitHubUser | null // The optional user who was assigned or unassigned from the issue.
-    label?: IGitHubLabel // The optional label that was added or removed from the issue.
+    assignee?: GitHubUser | null // The optional user who was assigned or unassigned from the issue.
+    label?: GitHubLabel // The optional label that was added or removed from the issue.
   }
   public?: boolean
   created_at: string
@@ -338,14 +338,14 @@ export interface IIssuesEvent {
  * Triggered when a user is added as a collaborator to a repository.
  * https://developer.github.com/v3/repos/collaborators/#add-user-as-a-collaborator
  */
-export interface IMemberEvent {
+export interface GitHubMemberEvent {
   id: string
   type: 'MemberEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     action: 'added' // The action that was performed.
-    member: IGitHubUser // The user that was added.
+    member: GitHubUser // The user that was added.
   }
   public?: boolean
   created_at: string
@@ -355,14 +355,14 @@ export interface IMemberEvent {
  * Triggered when a private repository is open sourced.
  * https://developer.github.com/v3/repos/#edit
  */
-export interface IPublicEvent {
+export interface GitHubPublicEvent {
   id: string
   type: 'PublicEvent'
-  actor: IGitHubUser
+  actor: GitHubUser
   created_at: string
   payload: {}
   public?: boolean
-  repo: IGitHubRepo
+  repo: GitHubRepo
 }
 
 /**
@@ -379,11 +379,11 @@ export interface IPublicEvent {
  * While webhooks are also triggered when a pull request is synchronized,
  * Events API timelines don't include pull request events with the 'synchronize' action.
  */
-export interface IPullRequestEvent {
+export interface GitHubPullRequestEvent {
   id: string
   type: 'PullRequestEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     action:
       | 'assigned'
@@ -395,7 +395,7 @@ export interface IPullRequestEvent {
       | 'closed'
       | 'reopened'
     number: number
-    pull_request: IGitHubPullRequest
+    pull_request: GitHubPullRequest
     sender: object
   }
   public?: boolean
@@ -405,14 +405,14 @@ export interface IPullRequestEvent {
 /**
  * Triggered when a pull request review is submitted into a non-pending state.
  */
-export interface IPullRequestReviewEvent {
+export interface GitHubPullRequestReviewEvent {
   id: string
   type: 'PullRequestReviewEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     action: 'submitted'
-    pull_request: IGitHubPullRequest
+    pull_request: GitHubPullRequest
     review: object
   }
   public?: boolean
@@ -424,16 +424,16 @@ export interface IPullRequestReviewEvent {
  * edited, or deleted (in the Files Changed tab).
  * https://developer.github.com/v3/pulls/comments
  */
-export interface IPullRequestReviewCommentEvent {
+export interface GitHubPullRequestReviewCommentEvent {
   id: string
   type: 'PullRequestReviewCommentEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     action: 'created' | 'edited' | 'deleted'
     changes?: object
-    pull_request: IGitHubPullRequest
-    comment: IGitHubComment
+    pull_request: GitHubPullRequest
+    comment: GitHubComment
   }
   public?: boolean
   created_at: string
@@ -444,18 +444,18 @@ export interface IPullRequestReviewCommentEvent {
  * In addition to branch pushes, webhook push events
  * are also triggered when repository tags are pushed.
  */
-export interface IPushEvent {
+export interface GitHubPushEvent {
   id: string
   type: 'PushEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     ref: string // The full Git ref that was pushed. Example: 'refs/heads/master'.
     head: string // The SHA of the most recent commit on ref after the push.
     before: string // The SHA of the most recent commit on ref before the push.
     size: number // The number of commits in the push.
     distinct_size: number // The number of distinct commits in the push.
-    commits: IGitHubCommit[]
+    commits: GitHubCommit[]
   }
   public?: boolean
   forced?: boolean
@@ -466,14 +466,14 @@ export interface IPushEvent {
  * Triggered when a release is published.
  * https://developer.github.com/v3/repos/releases/#get-a-single-release
  */
-export interface IReleaseEvent {
+export interface GitHubReleaseEvent {
   id: string
   type: 'ReleaseEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     action: 'published'
-    release: IGitHubRelease // https://developer.github.com/v3/repos/releases/#get-a-single-release
+    release: GitHubRelease // https://developer.github.com/v3/repos/releases/#get-a-single-release
   }
   public?: boolean
   created_at: string
@@ -486,11 +486,11 @@ export interface IReleaseEvent {
  * The event’s actor is the user who starred a repository,
  * and the event’s repository is the repository that was starred.
  */
-export interface IWatchEvent {
+export interface GitHubWatchEvent {
   id: string
   type: 'WatchEvent'
-  actor: IGitHubUser
-  repo: IGitHubRepo
+  actor: GitHubUser
+  repo: GitHubRepo
   payload: {
     action: 'started'
   }
@@ -498,35 +498,35 @@ export interface IWatchEvent {
   created_at: string
 }
 
-export interface IEnhancedEventBase {
+export interface GitHubEnhancedEventBase {
   merged: string[]
 }
 
-export interface IMultipleStarEvent
-  extends IEnhancedEventBase,
-    Omit<IWatchEvent, 'type' | 'repo'> {
+export interface MultipleStarEvent
+  extends GitHubEnhancedEventBase,
+    Omit<GitHubWatchEvent, 'type' | 'repo'> {
   type: 'WatchEvent:OneUserMultipleRepos'
-  repos: IGitHubRepo[]
+  repos: GitHubRepo[]
 }
 
-export type IGitHubEvent =
-  | ICreateEvent
-  | IDeleteEvent
-  | IForkEvent
-  | IGitHubCommitCommentEvent
-  | IGollumEvent
-  | IIssueCommentEvent
-  | IIssuesEvent
-  | IMemberEvent
-  | IPublicEvent
-  | IPullRequestEvent
-  | IPullRequestReviewCommentEvent
-  | IPullRequestReviewEvent
-  | IPushEvent
-  | IReleaseEvent
-  | IWatchEvent
+export type GitHubEvent =
+  | GitHubCreateEvent
+  | GitHubDeleteEvent
+  | GitHubForkEvent
+  | GitHubCommitCommentEvent
+  | GitHubGollumEvent
+  | GitHubIssueCommentEvent
+  | GitHubIssuesEvent
+  | GitHubMemberEvent
+  | GitHubPublicEvent
+  | GitHubPullRequestEvent
+  | GitHubPullRequestReviewCommentEvent
+  | GitHubPullRequestReviewEvent
+  | GitHubPushEvent
+  | GitHubReleaseEvent
+  | GitHubWatchEvent
 
-export type IEnhancedGitHubEvent = IGitHubEvent | IMultipleStarEvent
+export type EnhancedGitHubEvent = GitHubEvent | MultipleStarEvent
 
 // not visible in timelines
 // | 'DeploymentEvent'
@@ -543,7 +543,7 @@ export type IEnhancedGitHubEvent = IGitHubEvent | IMultipleStarEvent
 // | 'StatusEvent'
 // | 'TeamAddEvent'
 
-export type GithubIcon =
+export type GitHubIcon =
   | 'alert'
   | 'arrow-down'
   | 'arrow-left'
@@ -721,7 +721,7 @@ export type GithubIcon =
   | 'x'
   | 'zap'
 
-export interface INotificationsOptions {
+export interface GitHubNotificationsOptions {
   all?: boolean
   participating?: boolean
   since?: Date
@@ -729,7 +729,7 @@ export interface INotificationsOptions {
 }
 
 // You were on a team that was mentioned.
-export type IGitHubNotificationReason =
+export type GitHubNotificationReason =
   | 'assign' // You were assigned to the Issue.
   | 'author' // You created the thread.
   | 'comment' // You commented on the thread.
@@ -741,13 +741,13 @@ export type IGitHubNotificationReason =
   | 'team_mention' // A team you are part of were @mentioned in the content.
   | 'review_requested' // Someone requested your review on a pull request
 
-export interface IGitHubNotification {
+export interface GitHubNotification {
   id: number
   // archived_at: string // specific to this app
   last_read_at: string
   // last_unread_at: string // specific to this app
-  reason: IGitHubNotificationReason
-  repository: IGitHubRepo
+  reason: GitHubNotificationReason
+  repository: GitHubRepo
   subject: {
     title: string
     url: string

@@ -2,7 +2,7 @@ import React from 'react'
 import { AsyncStorage } from 'react-native'
 
 import * as github from '../../libs/github'
-import { IGitHubUser } from '../../types'
+import { GitHubUser } from '../../types'
 
 export interface UserProviderProps {
   children?: React.ReactNode
@@ -11,9 +11,9 @@ export interface UserProviderProps {
 export interface UserProviderState {
   accessToken: string | null
   hasLoadedFromCache: boolean
-  refetchUser: () => Promise<IGitHubUser>
+  refetchUser: () => Promise<GitHubUser>
   setAccessToken: (accessToken: string | null) => Promise<void>
-  user?: IGitHubUser | null
+  user?: GitHubUser | null
 }
 
 const defaultState = {
@@ -57,7 +57,7 @@ export class UserProvider extends React.PureComponent<
 
   async getGitHubUser() {
     const response = await github.octokit.users.get({})
-    return response.data as IGitHubUser
+    return response.data as GitHubUser
   }
 
   getUser = async () => {
@@ -98,7 +98,7 @@ export class UserProvider extends React.PureComponent<
       throw new Error('Failed to load user. Please try logging in again.')
     }
 
-    const user: IGitHubUser = {
+    const user: GitHubUser = {
       id: userData.id,
       avatar_url: userData.avatar_url,
       display_login: userData.display_login,
@@ -128,7 +128,7 @@ export class UserProvider extends React.PureComponent<
     return (await AsyncStorage.getItem('access_token')) || null
   }
 
-  private setUser = async (user: IGitHubUser) => {
+  private setUser = async (user: GitHubUser) => {
     await AsyncStorage.setItem('user', JSON.stringify(user))
     await new Promise(resolve => this.setState({ user }, resolve))
   }

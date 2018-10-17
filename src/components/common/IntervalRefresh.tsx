@@ -1,27 +1,27 @@
 import moment, { MomentInput } from 'moment'
 import { PureComponent, ReactNode } from 'react'
 
-export interface IProps {
+export interface IntervalRefreshProps {
   children: () => ReactNode
   date?: MomentInput
   interval?: number
 }
 
-export interface IState {
+export interface IntervalRefreshState {
   currentInterval: number
   updatedTimes: number
 }
 
 const defaultInterval = 1000
 
-export class IntervalRefresh extends PureComponent<IProps, IState> {
+export class IntervalRefresh extends PureComponent<IntervalRefreshProps, IntervalRefreshState> {
   static defaultProps = {
     interval: defaultInterval,
   }
 
   intervalInstance: number | null = null
 
-  state: IState = {
+  state: IntervalRefreshState = {
     currentInterval: 1000,
     updatedTimes: 0,
   }
@@ -30,7 +30,7 @@ export class IntervalRefresh extends PureComponent<IProps, IState> {
     this.start(this.props)
   }
 
-  componentWillReceiveProps(newProps: IProps) {
+  componentWillReceiveProps(newProps: IntervalRefreshProps) {
     const interval = this.getIntervalValue(newProps)
 
     if (interval !== this.state.currentInterval) {
@@ -42,7 +42,7 @@ export class IntervalRefresh extends PureComponent<IProps, IState> {
     this.stop()
   }
 
-  getIntervalValue({ date, interval: _interval }: IProps) {
+  getIntervalValue({ date, interval: _interval }: IntervalRefreshProps) {
     let interval = _interval || defaultInterval
 
     if (date) {
@@ -64,7 +64,7 @@ export class IntervalRefresh extends PureComponent<IProps, IState> {
     return interval
   }
 
-  start = (props: IProps) => {
+  start = (props: IntervalRefreshProps) => {
     this.stop()
 
     const interval = this.getIntervalValue(props)

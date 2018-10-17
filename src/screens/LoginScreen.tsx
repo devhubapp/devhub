@@ -110,7 +110,7 @@ export class LoginScreenComponent extends PureComponent<
     loggingInMethod: null,
   }
 
-  loginWithGithubPrivateAccess = async () => {
+  loginWithGitHubPrivateAccess = async () => {
     this.setState({ isLoggingIn: true, loggingInMethod: 'github.private' })
 
     try {
@@ -138,7 +138,7 @@ export class LoginScreenComponent extends PureComponent<
     this.setState({ isLoggingIn: false })
   }
 
-  loginWithGithubPublicAccess = async () => {
+  loginWithGitHubPublicAccess = async () => {
     this.setState({ isLoggingIn: true, loggingInMethod: 'github.public' })
 
     try {
@@ -181,7 +181,7 @@ export class LoginScreenComponent extends PureComponent<
 
                 <GitHubLoginButton
                   loading={isLoggingIn && loggingInMethod === 'github.public'}
-                  onPress={this.loginWithGithubPublicAccess}
+                  onPress={this.loginWithGitHubPublicAccess}
                   rightIcon="globe"
                   style={styles.button}
                   subtitle="Public access"
@@ -190,7 +190,7 @@ export class LoginScreenComponent extends PureComponent<
 
                 <GitHubLoginButton
                   loading={isLoggingIn && loggingInMethod === 'github.private'}
-                  onPress={this.loginWithGithubPrivateAccess}
+                  onPress={this.loginWithGitHubPrivateAccess}
                   rightIcon="lock"
                   style={styles.button}
                   subtitle="Private access"

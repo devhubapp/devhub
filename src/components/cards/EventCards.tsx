@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 
 import { FlatList } from '../../libs/lists'
 import { contentPadding } from '../../styles/variables'
-import { IEnhancedGitHubEvent } from '../../types'
+import { EnhancedGitHubEvent } from '../../types'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { EventCard } from './EventCard'
@@ -10,7 +10,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps {
-  events: IEnhancedGitHubEvent[]
+  events: EnhancedGitHubEvent[]
   repoIsKnown?: boolean
   swipeable?: boolean
 }
@@ -21,11 +21,11 @@ export class EventCards extends PureComponent<
   EventCardsProps,
   EventCardsState
 > {
-  keyExtractor(event: IEnhancedGitHubEvent) {
+  keyExtractor(event: EnhancedGitHubEvent) {
     return `event-card-${event.id}`
   }
 
-  renderItem = ({ item: event }: { item: IEnhancedGitHubEvent }) => {
+  renderItem = ({ item: event }: { item: EnhancedGitHubEvent }) => {
     if (this.props.swipeable) {
       return (
         <SwipeableEventCard

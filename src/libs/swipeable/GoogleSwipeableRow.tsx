@@ -6,31 +6,31 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { MaterialIcons as Icon } from '../../libs/vector-icons'
 import {
   BaseSwipeableRow,
-  IBaseAction,
-  IBaseProps,
+  BaseSwipeableRowAction,
+  BaseSwipeableRowProps,
   Placement,
 } from './BaseSwipeableRow'
 
 export { defaultWidth } from './BaseSwipeableRow'
 
-export interface IAction extends IBaseAction {
+export interface GoogleSwipeableRowAction extends BaseSwipeableRowAction {
   icon: string
   label: undefined
 }
 
-export interface IProps extends IBaseProps {}
+export interface GoogleSwipeableRowProps extends BaseSwipeableRowProps {}
 
 const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
 export class GoogleSwipeableRow extends BaseSwipeableRow<
-  IProps,
+  GoogleSwipeableRowProps,
   void,
-  IAction
+  GoogleSwipeableRowAction
 > {
   _swipeableRow = null
 
   renderButtonAction = (
-    action: IAction,
+    action: GoogleSwipeableRowAction,
     {
       dragX,
       placement,
@@ -78,7 +78,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
   }
 
   renderFullAction = (
-    action: IAction,
+    action: GoogleSwipeableRowAction,
     { dragX, placement }: { dragX: Animated.Value; placement: Placement },
   ) => {
     const transform = {

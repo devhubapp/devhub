@@ -13,7 +13,7 @@ import {
 
 import { Octicons as Icon } from '../../libs/vector-icons'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
-import { GithubIcon } from '../../types'
+import { GitHubIcon } from '../../types'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
@@ -31,7 +31,7 @@ export interface ColumnHeaderItemProps {
   }
   avatarShape?: AvatarProps['shape']
   avatarStyle?: StyleProp<ImageStyle>
-  iconName?: GithubIcon
+  iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   onPress?: () => void
   style?: StyleProp<ViewStyle>

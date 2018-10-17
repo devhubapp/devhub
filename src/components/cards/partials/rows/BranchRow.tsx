@@ -2,7 +2,7 @@ import React, { SFC } from 'react'
 import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
-import { IEnhancedGitHubEvent } from '../../../../types'
+import { EnhancedGitHubEvent } from '../../../../types'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
@@ -10,17 +10,17 @@ import { getCardStylesForTheme } from '../../styles'
 import { getBranchURL } from './helpers'
 import { getCardRowStylesForTheme } from './styles'
 
-export interface IProps {
+export interface BranchRowProps {
   branch: string
   isRead: boolean
   ownerName: string
   repositoryName: string
-  type: IEnhancedGitHubEvent['type']
+  type: EnhancedGitHubEvent['type']
 }
 
-export interface IState {}
+export interface BranchRowState {}
 
-export const BranchRow: SFC<IProps> = ({
+export const BranchRow: SFC<BranchRowProps> = ({
   branch: _branch,
   isRead,
   ownerName,

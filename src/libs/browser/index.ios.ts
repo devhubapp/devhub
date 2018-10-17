@@ -1,10 +1,10 @@
 import { Linking, StatusBar } from 'react-native'
-import SafariView, { ISafaryOptions } from 'react-native-safari-view'
+import SafariView, { SafaryOptions } from 'react-native-safari-view'
 
 export const Browser = {
   ...Linking,
   ...SafariView,
-  openURL: (url: string, options?: ISafaryOptions) => {
+  openURL: (url: string, options?: SafaryOptions) => {
     SafariView.isAvailable()
       .then(isAvailable => {
         if (!isAvailable) throw new Error('SafariView not available.')

@@ -1,17 +1,17 @@
 import React, { PureComponent } from 'react'
 
-import { IGitHubPage } from '../../../../types'
+import { GitHubPage } from '../../../../types'
 import { RenderItem, RowList } from './RowList'
 import { WikiPageRow } from './WikiPageRow'
 
 export interface WikiPageListRowProps {
   isRead: boolean
   maxHeight?: number
-  pages: IGitHubPage[]
+  pages: GitHubPage[]
 }
 
 export class WikiPageListRow extends PureComponent<WikiPageListRowProps> {
-  renderItem: RenderItem<IGitHubPage> = ({
+  renderItem: RenderItem<GitHubPage> = ({
     item: page,
     showMoreItemsIndicator,
   }) => {

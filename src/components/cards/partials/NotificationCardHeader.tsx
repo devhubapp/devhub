@@ -2,7 +2,7 @@ import { MomentInput } from 'moment'
 import React, { PureComponent } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
-import { GithubIcon } from '../../../types'
+import { GitHubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
@@ -12,9 +12,9 @@ import { UserConsumer } from '../../context/UserContext'
 import { getCardStylesForTheme } from '../styles'
 import { CardIcon } from './CardIcon'
 
-export interface IProps {
+export interface NotificationCardHeaderProps {
   cardIconColor: string
-  cardIconName: GithubIcon
+  cardIconName: GitHubIcon
   isPrivate?: boolean
   isRead: boolean
   labelColor: string
@@ -22,7 +22,7 @@ export interface IProps {
   updatedAt: MomentInput
 }
 
-export interface IState {}
+export interface NotificationCardHeaderState {}
 
 const styles = StyleSheet.create({
   container: {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export class NotificationCardHeader extends PureComponent<IProps> {
+export class NotificationCardHeader extends PureComponent<NotificationCardHeaderProps> {
   render() {
     const {
       cardIconColor,

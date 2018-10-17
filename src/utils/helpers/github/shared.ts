@@ -2,7 +2,7 @@ import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
 import gravatar from 'gravatar'
 
 import * as colors from '../../../styles/colors'
-import { GithubIcon, IGitHubPullRequest } from '../../../types'
+import { GitHubIcon, GitHubPullRequest } from '../../../types'
 import { getSteppedSize } from '../shared'
 
 export function getUserAvatarByAvatarURL(
@@ -47,13 +47,13 @@ export function getUserAvatarByEmail(
 }
 
 export function isPullRequest(issue: {
-  merged_at?: IGitHubPullRequest['merged_at']
-  html_url?: IGitHubPullRequest['html_url']
-  url?: IGitHubPullRequest['url']
+  merged_at?: GitHubPullRequest['merged_at']
+  html_url?: GitHubPullRequest['html_url']
+  url?: GitHubPullRequest['url']
 }) {
   return (
     issue &&
-    ((issue as IGitHubPullRequest).merged_at ||
+    ((issue as GitHubPullRequest).merged_at ||
       (issue.html_url && issue.html_url.indexOf('pull') >= 0) ||
       (issue.url && issue.url.indexOf('pull') >= 0))
   )
@@ -76,9 +76,9 @@ export function getOwnerAndRepo(
 }
 
 export function getPullRequestIconAndColor(pullRequest: {
-  state?: IGitHubPullRequest['state']
-  merged_at?: IGitHubPullRequest['merged_at']
-}): { icon: GithubIcon; color?: string } {
+  state?: GitHubPullRequest['state']
+  merged_at?: GitHubPullRequest['merged_at']
+}): { icon: GitHubIcon; color?: string } {
   const merged = pullRequest.merged_at
   const state = merged ? 'merged' : pullRequest.state
 
@@ -97,18 +97,18 @@ export function getPullRequestIconAndColor(pullRequest: {
   }
 }
 
-export function getCommitIconAndColor(): { icon: GithubIcon; color?: string } {
+export function getCommitIconAndColor(): { icon: GitHubIcon; color?: string } {
   return { icon: 'git-commit' }
 }
 
 export function getIssueIconAndColor(issue: {
-  state?: IGitHubPullRequest['state']
-  merged_at?: IGitHubPullRequest['merged_at']
-}): { icon: GithubIcon; color?: string } {
+  state?: GitHubPullRequest['state']
+  merged_at?: GitHubPullRequest['merged_at']
+}): { icon: GitHubIcon; color?: string } {
   const { state } = issue
 
   if (isPullRequest(issue)) {
-    return getPullRequestIconAndColor(issue as IGitHubPullRequest)
+    return getPullRequestIconAndColor(issue as GitHubPullRequest)
   }
 
   switch (state) {
@@ -125,8 +125,8 @@ export function getIssueIconAndColor(issue: {
 
 export function getNotificationIconAndColor(
   notification: ActivityGetNotificationsResponseItem,
-  // payload: IGitHubCommit | IGitHubIssue | IGitHubPullRequest,
-): { icon: GithubIcon; color?: string } {
+  // payload: GitHubCommit | GitHubIssue | GitHubPullRequest,
+): { icon: GitHubIcon; color?: string } {
   const { subject } = notification
   const { type } = subject
 

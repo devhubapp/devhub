@@ -11,12 +11,12 @@ import {
 
 import {
   Column,
-  GithubIcon,
-  IEnhancedGitHubEvent,
-  IGitHubEvent,
-  IGitHubIssue,
-  IGitHubPullRequest,
-  IMultipleStarEvent,
+  EnhancedGitHubEvent,
+  GitHubEvent,
+  GitHubIcon,
+  GitHubIssue,
+  GitHubPullRequest,
+  MultipleStarEvent,
 } from '../../../types'
 
 export function getColumnHeaderDetails(
@@ -26,7 +26,7 @@ export function getColumnHeaderDetails(
     owner: string
     repo?: string
   }
-  icon: GithubIcon
+  icon: GitHubIcon
   subtitle?: string
   title: string
 } {
@@ -131,8 +131,8 @@ export function getColumnHeaderDetails(
 }
 
 export function getEventIconAndColor(
-  event: IEnhancedGitHubEvent,
-): { color?: string; icon: GithubIcon; subIcon?: GithubIcon } {
+  event: EnhancedGitHubEvent,
+): { color?: string; icon: GitHubIcon; subIcon?: GitHubIcon } {
   switch (event.type) {
     case 'CommitCommentEvent':
       return { icon: 'git-commit', subIcon: 'comment-discussion' }
@@ -179,13 +179,13 @@ export function getEventIconAndColor(
 
       switch (event.payload.action) {
         case 'opened':
-          return getIssueIconAndColor({ state: 'open' } as IGitHubIssue)
+          return getIssueIconAndColor({ state: 'open' } as GitHubIssue)
         case 'closed':
-          return getIssueIconAndColor({ state: 'closed' } as IGitHubIssue)
+          return getIssueIconAndColor({ state: 'closed' } as GitHubIssue)
 
         case 'reopened':
           return {
-            ...getIssueIconAndColor({ state: 'open' } as IGitHubIssue),
+            ...getIssueIconAndColor({ state: 'open' } as GitHubIssue),
             icon: 'issue-reopened',
           }
         // case 'assigned':
@@ -213,8 +213,8 @@ export function getEventIconAndColor(
           case 'reopened':
             return getPullRequestIconAndColor({
               state: 'open',
-            } as IGitHubPullRequest)
-          // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as IGitHubPullRequest);
+            } as GitHubPullRequest)
+          // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as GitHubPullRequest);
 
           // case 'assigned':
           // case 'unassigned':
@@ -247,7 +247,7 @@ export function getEventIconAndColor(
 }
 
 export function getEventText(
-  event: IEnhancedGitHubEvent,
+  event: EnhancedGitHubEvent,
   options:
     | {
         issueOrPullRequestIsKnown?: boolean
@@ -411,7 +411,7 @@ export function getEventText(
   return text.replace(/ {2}/g, ' ').trim()
 }
 
-function tryMerge(eventA: IEnhancedGitHubEvent, eventB: IGitHubEvent) {
+function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
   if (!eventA || !eventB) return null
 
   const isSameUser =
@@ -446,7 +446,7 @@ function tryMerge(eventA: IEnhancedGitHubEvent, eventB: IGitHubEvent) {
           type: 'WatchEvent:OneUserMultipleRepos',
           repos: [eventA.repo, eventB.repo],
           merged: [eventA.id, eventB.id],
-        } as IMultipleStarEvent
+        } as MultipleStarEvent
       }
 
       return null
@@ -458,7 +458,7 @@ function tryMerge(eventA: IEnhancedGitHubEvent, eventB: IGitHubEvent) {
           ...eventA,
           repos: uniqBy(repo => repo.id, [...eventA.repos, eventB.repo]),
           merged: uniq([...eventA.merged, eventB.id]),
-        } as IMultipleStarEvent
+        } as MultipleStarEvent
       }
 
       return null
@@ -469,10 +469,10 @@ function tryMerge(eventA: IEnhancedGitHubEvent, eventB: IGitHubEvent) {
   }
 }
 
-export function mergeSimilarEvent(events: IGitHubEvent[]) {
-  const enhancedEvents: IEnhancedGitHubEvent[] = []
+export function mergeSimilarEvent(events: GitHubEvent[]) {
+  const enhancedEvents: EnhancedGitHubEvent[] = []
 
-  let enhancedEvent: IEnhancedGitHubEvent | null = null
+  let enhancedEvent: EnhancedGitHubEvent | null = null
 
   events.filter(Boolean).forEach(event => {
     if (!enhancedEvent) {

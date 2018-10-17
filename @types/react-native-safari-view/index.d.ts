@@ -2,7 +2,7 @@ declare module 'react-native-safari-view' {
   import { EmitterSubscription } from 'react-native'
 
   export type Event = 'onShow' | 'onDismiss'
-  export interface ISafaryOptions {
+  export interface SafaryOptions {
     url: string
     readerMode?: boolean
     tintColor?: string
@@ -10,7 +10,7 @@ declare module 'react-native-safari-view' {
     fromBottom?: boolean
   }
 
-  export function show(options: ISafaryOptions): void
+  export function show(options: SafaryOptions): void
   export function dismiss(): void
   export function isAvailable(): Promise<boolean>
   export function addEventListener(

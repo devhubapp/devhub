@@ -5,7 +5,7 @@ import { IconProps } from 'react-native-vector-icons/Icon'
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { contentPadding } from '../../../styles/variables'
 
-export interface IProps extends IconProps {}
+export interface CardIconProps extends IconProps {}
 
 const styles = StyleSheet.create({
   container: {
@@ -14,6 +14,6 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export const CardIcon: SFC<IProps> = props => {
+export const CardIcon: SFC<CardIconProps> = props => {
   return <Icon {...props} style={[styles.container, props.style]} />
 }

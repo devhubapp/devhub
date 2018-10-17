@@ -1,12 +1,20 @@
 import { ReactNode } from 'react'
 
-import { BaseSwipeableRow, IBaseAction, IBaseProps } from './BaseSwipeableRow'
+import {
+  BaseSwipeableRow,
+  BaseSwipeableRowAction,
+  BaseSwipeableRowProps,
+} from './BaseSwipeableRow'
 
-export interface IAction extends IBaseAction {}
+export interface SwipeableRowAction extends BaseSwipeableRowAction {}
 
-export interface IProps extends IBaseProps {}
+export interface SwipeableRowProps extends BaseSwipeableRowProps {}
 
-export class SwipeableRow extends BaseSwipeableRow<IProps, void, IAction> {
+export class SwipeableRow extends BaseSwipeableRow<
+  SwipeableRowProps,
+  void,
+  SwipeableRowAction
+> {
   renderButtonAction = () => {
     return null
   }

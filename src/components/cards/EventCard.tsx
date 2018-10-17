@@ -3,21 +3,21 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
 import {
-  IEnhancedGitHubEvent,
-  IForkEvent,
-  IGitHubCommit,
-  IGitHubCommitCommentEvent,
-  IGitHubEvent,
-  IGitHubPage,
-  IGitHubRepo,
-  IGitHubUser,
-  IGollumEvent,
-  IIssuesEvent,
-  IMemberEvent,
-  IMultipleStarEvent,
-  IPullRequestEvent,
-  IPushEvent,
-  IReleaseEvent,
+  EnhancedGitHubEvent,
+  GitHubCommit,
+  GitHubCommitCommentEvent,
+  GitHubEvent,
+  GitHubForkEvent,
+  GitHubGollumEvent,
+  GitHubIssuesEvent,
+  GitHubMemberEvent,
+  GitHubPage,
+  GitHubPullRequestEvent,
+  GitHubPushEvent,
+  GitHubReleaseEvent,
+  GitHubRepo,
+  GitHubUser,
+  MultipleStarEvent,
 } from '../../types'
 import {
   getEventIconAndColor,
@@ -42,7 +42,7 @@ import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 
 export interface EventCardProps {
-  event: IEnhancedGitHubEvent
+  event: EnhancedGitHubEvent
   repoIsKnown?: boolean
 }
 
@@ -60,37 +60,37 @@ export class EventCard extends PureComponent<EventCardProps> {
     const { event, repoIsKnown } = this.props
     if (!event) return null
 
-    const { actor, payload, repo: _repo, type } = event as IGitHubEvent
-    const { repos: _repos } = event as IMultipleStarEvent
+    const { actor, payload, repo: _repo, type } = event as GitHubEvent
+    const { repos: _repos } = event as MultipleStarEvent
 
-    const { comment } = payload as IGitHubCommitCommentEvent['payload']
-    const { commits: _commits } = payload as IPushEvent['payload']
-    const { forkee } = payload as IForkEvent['payload']
-    const { member: _member } = payload as IMemberEvent['payload']
-    const { release } = payload as IReleaseEvent['payload']
-    const { pages: _pages } = payload as IGollumEvent['payload']
+    const { comment } = payload as GitHubCommitCommentEvent['payload']
+    const { commits: _commits } = payload as GitHubPushEvent['payload']
+    const { forkee } = payload as GitHubForkEvent['payload']
+    const { member: _member } = payload as GitHubMemberEvent['payload']
+    const { release } = payload as GitHubReleaseEvent['payload']
+    const { pages: _pages } = payload as GitHubGollumEvent['payload']
     const {
       pull_request: pullRequest,
-    } = payload as IPullRequestEvent['payload']
-    const { issue } = payload as IIssuesEvent['payload']
-    const { ref: branchName } = payload as IPushEvent['payload']
+    } = payload as GitHubPullRequestEvent['payload']
+    const { issue } = payload as GitHubIssuesEvent['payload']
+    const { ref: branchName } = payload as GitHubPushEvent['payload']
 
     const isRead = false // TODO
-    const commits: IGitHubCommit[] = (_commits || []).filter(Boolean)
-    const repos: IGitHubRepo[] = (_repos || [_repo]).filter(
+    const commits: GitHubCommit[] = (_commits || []).filter(Boolean)
+    const repos: GitHubRepo[] = (_repos || [_repo]).filter(
       (r, index) => !!(r && !(repoIsKnown && index === 0)),
     )
-    const users: IGitHubUser[] = [_member].filter(Boolean) // TODO
-    const pages: IGitHubPage[] = (_pages || []).filter(Boolean)
+    const users: GitHubUser[] = [_member].filter(Boolean) // TODO
+    const pages: GitHubPage[] = (_pages || []).filter(Boolean)
 
     const repo = repos.length === 1 ? repos[0] : undefined
 
     const commitIds = commits
       .filter(Boolean)
-      .map((item: IGitHubCommit) => item.sha)
-    const pageIds = pages.filter(Boolean).map((item: IGitHubPage) => item.sha)
-    const repoIds = repos.filter(Boolean).map((item: IGitHubRepo) => item.id)
-    const userIds = users.filter(Boolean).map((item: IGitHubUser) => item.id)
+      .map((item: GitHubCommit) => item.sha)
+    const pageIds = pages.filter(Boolean).map((item: GitHubPage) => item.sha)
+    const repoIds = repos.filter(Boolean).map((item: GitHubRepo) => item.id)
+    const userIds = users.filter(Boolean).map((item: GitHubUser) => item.id)
 
     const repoFullName = repo && getRepoFullNameFromObject(repo)
     const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
@@ -109,7 +109,7 @@ export class EventCard extends PureComponent<EventCardProps> {
     const actionText = getEventText(event, { repoIsKnown })
 
     const isPush = type === 'PushEvent'
-    const isForcePush = isPush && (payload as IPushEvent).forced
+    const isForcePush = isPush && (payload as GitHubPushEvent).forced
     const isPrivate = !!(event.public === false || (repo && repo.private))
 
     const {
@@ -246,7 +246,7 @@ export class EventCard extends PureComponent<EventCardProps> {
             )}
 
             {(type === 'IssuesEvent' &&
-              (payload as IIssuesEvent['payload']).action === 'opened' &&
+              (payload as GitHubIssuesEvent['payload']).action === 'opened' &&
               Boolean(issue.body) && (
                 <CommentRow
                   key={`event-issue-body-row-${issue.id}`}
@@ -259,7 +259,8 @@ export class EventCard extends PureComponent<EventCardProps> {
                 />
               )) ||
               (type === 'PullRequestEvent' &&
-                (payload as IPullRequestEvent['payload']).action === 'opened' &&
+                (payload as GitHubPullRequestEvent['payload']).action ===
+                  'opened' &&
                 Boolean(pullRequest.body) && (
                   <CommentRow
                     key={`event-pr-body-row-${pullRequest.id}`}

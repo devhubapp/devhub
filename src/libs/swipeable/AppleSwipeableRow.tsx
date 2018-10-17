@@ -5,25 +5,30 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 
 import {
   BaseSwipeableRow,
-  IBaseAction,
-  IBaseProps,
+  BaseSwipeableRowAction,
+  BaseSwipeableRowProps,
   Placement,
 } from './BaseSwipeableRow'
 
 export { defaultWidth } from './BaseSwipeableRow'
 
-export interface IAction extends IBaseAction {
+export interface AppleSwipeableRowAction extends BaseSwipeableRowAction {
   icon: undefined
   label: string
 }
 
-export interface IProps extends IBaseProps<IAction> {}
+export interface AppleSwipeableRowProps
+  extends BaseSwipeableRowProps<AppleSwipeableRowAction> {}
 
-export class AppleSwipeableRow extends BaseSwipeableRow<IProps, void, IAction> {
+export class AppleSwipeableRow extends BaseSwipeableRow<
+  AppleSwipeableRowProps,
+  void,
+  AppleSwipeableRowAction
+> {
   _swipeableRow = null
 
   renderButtonAction = (
-    action: IAction,
+    action: AppleSwipeableRowAction,
     {
       x,
       placement,
@@ -74,7 +79,7 @@ export class AppleSwipeableRow extends BaseSwipeableRow<IProps, void, IAction> {
   }
 
   renderFullAction = (
-    action: IAction,
+    action: AppleSwipeableRowAction,
     { dragX, placement }: { dragX: Animated.Value; placement: Placement },
   ) => {
     const transform = {

@@ -1,6 +1,6 @@
 import Octokit from '@octokit/rest'
 
-import { GithubActivityType } from '../../types'
+import { GitHubActivityType } from '../../types'
 
 export const octokit = new Octokit()
 
@@ -22,7 +22,7 @@ export function authenticate(token: string) {
   }
 }
 
-export function getActivity<T extends GithubActivityType>(
+export function getActivity<T extends GitHubActivityType>(
   type: T,
   params: any,
 ) {

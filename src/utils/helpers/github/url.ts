@@ -1,7 +1,7 @@
 import { Platform } from '../../../libs/platform'
-import { IGitHubRepo } from '../../../types'
+import { GitHubRepo } from '../../../types'
 
-export interface IURLOptions {
+export interface GitHubURLOptions {
   commentId?: number
   issueOrPullRequestNumber?: number
 }
@@ -48,7 +48,7 @@ export const getRepoFullNameFromUrl = (url: string): string =>
       ) || [])[3] || ''
     : ''
 
-export const getRepoFullNameFromObject = (repo: IGitHubRepo): string =>
+export const getRepoFullNameFromObject = (repo: GitHubRepo): string =>
   (repo &&
     (repo.full_name ||
       repo.name ||
@@ -72,7 +72,7 @@ export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
 
 export function githubHTMLUrlFromAPIUrl(
   apiURL: string,
-  { commentId, issueOrPullRequestNumber }: IURLOptions = {},
+  { commentId, issueOrPullRequestNumber }: GitHubURLOptions = {},
 ): string {
   if (!apiURL) return ''
 
@@ -148,7 +148,7 @@ export function githubHTMLUrlFromAPIUrl(
   return `${baseURL}/${restOfURL}`
 }
 
-export function fixURL(url?: string, options: IURLOptions = {}) {
+export function fixURL(url?: string, options: GitHubURLOptions = {}) {
   if (!url) return ''
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com

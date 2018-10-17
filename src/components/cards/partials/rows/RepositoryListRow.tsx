@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 
-import { IGitHubRepo } from '../../../../types'
+import { GitHubRepo } from '../../../../types'
 import { getOwnerAndRepo } from '../../../../utils/helpers/github/shared'
 import { getRepoFullNameFromObject } from '../../../../utils/helpers/github/url'
 import { RepositoryRow } from './RepositoryRow'
@@ -12,11 +12,11 @@ export interface RepositoryListRowProps {
   isPush?: boolean
   isRead: boolean
   maxHeight?: number
-  repos: IGitHubRepo[]
+  repos: GitHubRepo[]
 }
 
 export class RepositoryListRow extends PureComponent<RepositoryListRowProps> {
-  renderItem: RenderItem<IGitHubRepo> = ({
+  renderItem: RenderItem<GitHubRepo> = ({
     item: repo,
     showMoreItemsIndicator,
   }) => {

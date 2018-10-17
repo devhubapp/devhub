@@ -3,16 +3,16 @@ import React, { PureComponent } from 'react'
 import { RenderItem, RowList } from './RowList'
 import { UserRow } from './UserRow'
 
-import { IGitHubUser } from '../../../../types'
+import { GitHubUser } from '../../../../types'
 
 export interface UserListRowProps {
   isRead: boolean
   maxHeight?: number
-  users: IGitHubUser[]
+  users: GitHubUser[]
 }
 
 export class UserListRow extends PureComponent<UserListRowProps> {
-  renderItem: RenderItem<IGitHubUser> = ({
+  renderItem: RenderItem<GitHubUser> = ({
     item: user,
     showMoreItemsIndicator,
   }) => {

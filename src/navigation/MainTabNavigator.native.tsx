@@ -11,7 +11,7 @@ import { Platform } from '../libs/platform'
 import { FeedScreen } from '../screens/FeedScreen'
 import { NotificationsScreen } from '../screens/NotificationsScreen'
 import { SettingsScreen } from '../screens/SettingsScreen'
-import { GithubIcon } from '../types'
+import { GitHubIcon } from '../types'
 import { TabBar } from './TabBar'
 
 const navigationOptions = {
@@ -42,7 +42,7 @@ export const options: TabNavigatorConfig = {
     tabBarIcon: ({ tintColor }) => {
       const { routeName } = navigation.state
 
-      const iconName = ((): GithubIcon => {
+      const iconName = ((): GitHubIcon => {
         switch (routeName) {
           case 'Feed':
             return 'home'

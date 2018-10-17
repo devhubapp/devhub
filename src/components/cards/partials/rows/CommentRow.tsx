@@ -10,7 +10,7 @@ import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
 
-export interface IProps {
+export interface CommentRowProps {
   avatarURL: string
   body: string
   isRead: boolean
@@ -20,9 +20,9 @@ export interface IProps {
   username: string
 }
 
-export interface IState {}
+export interface CommentRowState {}
 
-export const CommentRow: SFC<IProps> = ({
+export const CommentRow: SFC<CommentRowProps> = ({
   avatarURL,
   body: _body,
   isRead,
