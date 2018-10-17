@@ -4,14 +4,14 @@ import React, { PureComponent } from 'react'
 import NotificationCards, {
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
-import { IGitHubNotification } from '../types'
+import { octokit } from '../libs/github'
+import { NotificationColumn, Omit } from '../types'
 
-export type NotificationCardsContainerProps = Partial<
-  NotificationCardsProps
+export type NotificationCardsContainerProps = Omit<
+  NotificationCardsProps,
+  'notifications'
 > & {
-  accessToken: string
-  subtype?: undefined
-  type: 'notifications'
+  column: NotificationColumn
 }
 
 export interface NotificationCardsContainerState {
@@ -22,26 +22,10 @@ export default class NotificationCardsContainer extends PureComponent<
   NotificationCardsContainerProps,
   NotificationCardsContainerState
 > {
-  static getDerivedStateFromProps(
-    nextProps: NotificationCardsContainerProps,
-    prevState: NotificationCardsContainerState,
-  ) {
-    if (
-      nextProps.notifications &&
-      nextProps.notifications !== prevState.notifications
-    ) {
-      return {
-        notifications: nextProps.notifications,
-      }
-    }
-
-    return null
-  }
-
   fetchDataInterval?: number
 
   state: NotificationCardsContainerState = {
-    notifications: this.props.notifications || [],
+    notifications: [],
   }
 
   componentDidMount() {
@@ -53,13 +37,14 @@ export default class NotificationCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
-    const { accessToken } = this.props
+    const { column } = this.props
 
     try {
-      const response = await fetch(
-        `https://api.github.com/notifications?all=1&access_token=${accessToken}&timestamp=${Date.now()}`,
-      )
-      const notifications: IGitHubNotification[] = await response.json()
+      const response = await octokit.activity.getNotifications({
+        all: column.params.all,
+      })
+
+      const notifications = response.data
       if (Array.isArray(notifications)) {
         this.setState({
           notifications: _(notifications)
@@ -73,7 +58,7 @@ export default class NotificationCardsContainer extends PureComponent<
       }
     } catch (error) {
       console.error(error)
-      // Alert.alert('Failed to load notifications', `${error}`)
+      // alert('Failed to load notifications', `${error}`)
     }
   }
 

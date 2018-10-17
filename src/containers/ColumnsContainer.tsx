@@ -47,20 +47,20 @@ export class ColumnsContainer extends PureComponent<
                 <Columns bounces={!swipeable} scrollEnabled={!swipeable}>
                   {columns.map(
                     (column, index) =>
-                      column.type === 'notifications' ? (
+                      (column.type === 'notifications' && (
                         <NotificationColumn
                           key={`event-column-${index}`}
-                          accessToken={accessToken}
+                          column={column}
                           swipeable={swipeable}
-                          {...column}
                         />
-                      ) : (
+                      )) ||
+                      (column.type === 'activity' && (
                         <EventColumn
                           key={`event-column-${index}`}
-                          accessToken={accessToken}
-                          {...column}
+                          column={column}
+                          swipeable={swipeable}
                         />
-                      ),
+                      )),
                   )}
                 </Columns>
               )

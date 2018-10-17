@@ -3,14 +3,14 @@ import { StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { radius } from '../../../styles/variables'
-import { IGitHubIcon } from '../../../types'
+import { GithubIcon } from '../../../types'
 import { fixURL } from '../../../utils/helpers/github/url'
 import { Link } from '../../common/Link'
 import { ThemeConsumer } from '../../context/ThemeContext'
 import { getCardStylesForTheme } from '../styles'
 
 export interface CardItemIdProps {
-  icon?: IGitHubIcon
+  icon?: GithubIcon
   id: number | string
   isRead: boolean
   style?: StyleProp<ViewStyle>

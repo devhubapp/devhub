@@ -1,7 +1,22 @@
 import { Omit } from './typescript'
 
-export type IGitHubRequestType = 'orgs' | 'repos' | 'users'
-export type IGitHubRequestSubType = 'events' | 'received_events'
+export type GithubActivityType =
+  | 'ORG_PUBLIC_EVENTS'
+  | 'PUBLIC_EVENTS'
+  | 'REPO_EVENTS'
+  | 'REPO_NETWORK_EVENTS'
+  | 'USER_EVENTS'
+  | 'USER_ORG_EVENTS'
+  | 'USER_PUBLIC_EVENTS'
+  | 'USER_RECEIVED_EVENTS'
+  | 'USER_RECEIVED_PUBLIC_EVENTS'
+
+export type ExtractParamsFromActivityMethod<F> = F extends (
+  params: infer P,
+  callback: any,
+) => any
+  ? P
+  : never
 
 export interface IGitHubUser {
   id: number
@@ -528,7 +543,7 @@ export type IEnhancedGitHubEvent = IGitHubEvent | IMultipleStarEvent
 // | 'StatusEvent'
 // | 'TeamAddEvent'
 
-export type IGitHubIcon =
+export type GithubIcon =
   | 'alert'
   | 'arrow-down'
   | 'arrow-left'

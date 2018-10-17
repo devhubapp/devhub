@@ -1,11 +1,8 @@
+import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
 import gravatar from 'gravatar'
 
 import * as colors from '../../../styles/colors'
-import {
-  IGitHubIcon,
-  IGitHubNotification,
-  IGitHubPullRequest,
-} from '../../../types'
+import { GithubIcon, IGitHubPullRequest } from '../../../types'
 import { getSteppedSize } from '../shared'
 
 export function getUserAvatarByAvatarURL(
@@ -81,7 +78,7 @@ export function getOwnerAndRepo(
 export function getPullRequestIconAndColor(pullRequest: {
   state?: IGitHubPullRequest['state']
   merged_at?: IGitHubPullRequest['merged_at']
-}): { icon: IGitHubIcon; color?: string } {
+}): { icon: GithubIcon; color?: string } {
   const merged = pullRequest.merged_at
   const state = merged ? 'merged' : pullRequest.state
 
@@ -100,14 +97,14 @@ export function getPullRequestIconAndColor(pullRequest: {
   }
 }
 
-export function getCommitIconAndColor(): { icon: IGitHubIcon; color?: string } {
+export function getCommitIconAndColor(): { icon: GithubIcon; color?: string } {
   return { icon: 'git-commit' }
 }
 
 export function getIssueIconAndColor(issue: {
   state?: IGitHubPullRequest['state']
   merged_at?: IGitHubPullRequest['merged_at']
-}): { icon: IGitHubIcon; color?: string } {
+}): { icon: GithubIcon; color?: string } {
   const { state } = issue
 
   if (isPullRequest(issue)) {
@@ -127,9 +124,9 @@ export function getIssueIconAndColor(issue: {
 }
 
 export function getNotificationIconAndColor(
-  notification: IGitHubNotification,
+  notification: ActivityGetNotificationsResponseItem,
   // payload: IGitHubCommit | IGitHubIssue | IGitHubPullRequest,
-): { icon: IGitHubIcon; color?: string } {
+): { icon: GithubIcon; color?: string } {
   const { subject } = notification
   const { type } = subject
 

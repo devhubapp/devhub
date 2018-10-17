@@ -2,7 +2,7 @@ import { MomentInput } from 'moment'
 import React, { PureComponent } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
-import { IGitHubIcon } from '../../../types'
+import { GithubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
 import Avatar from '../../common/Avatar'
 import IntervalRefresh from '../../common/IntervalRefresh'
@@ -14,7 +14,7 @@ import CardIcon from './CardIcon'
 
 export interface IProps {
   cardIconColor: string
-  cardIconName: IGitHubIcon
+  cardIconName: GithubIcon
   isPrivate?: boolean
   isRead: boolean
   labelColor: string

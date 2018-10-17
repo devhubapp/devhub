@@ -20,6 +20,7 @@
     "xcode": "open ios/devhub.xcodeproj"
   },
   "dependencies": {
+    "@octokit/rest": "^15.13.1",
     "gravatar": "^1.6.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.1",

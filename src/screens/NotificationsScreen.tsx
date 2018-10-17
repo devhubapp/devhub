@@ -6,7 +6,7 @@ import {
 } from 'react-navigation'
 
 import Screen from '../components/common/Screen'
-import { ThemeConsumer } from '../components/context/ThemeContext';
+import { ThemeConsumer } from '../components/context/ThemeContext'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 
 export class NotificationsScreen extends PureComponent<NavigationScreenProps> {

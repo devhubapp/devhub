@@ -1,0 +1,41 @@
+diff --git a/node_modules/@octokit/rest/lib/parse-client-options.js b/node_modules/@octokit/rest/lib/parse-client-options.js
+index 84cd9ff..eceffc6 100644
+--- a/node_modules/@octokit/rest/lib/parse-client-options.js
++++ b/node_modules/@octokit/rest/lib/parse-client-options.js
+@@ -67,7 +67,7 @@ function parseOptions (userOptions) {
+   }
+   /* istanbul ignore else */
+ 
+-  if (!process.browser) {
++  if (process.title === 'node') {
+     clientDefaults.request.agent = getRequestAgent(clientDefaults.baseUrl, userOptions)
+   }
+ 
+diff --git a/node_modules/@octokit/rest/lib/request/request.js b/node_modules/@octokit/rest/lib/request/request.js
+index 40a6451..2b1d612 100644
+--- a/node_modules/@octokit/rest/lib/request/request.js
++++ b/node_modules/@octokit/rest/lib/request/request.js
+@@ -2,7 +2,13 @@
+ 
+ module.exports = request
+ 
+-const fetch = require('node-fetch').default
++let _fetch
++try {
++  _fetch = fetch
++} catch(e) {
++  _fetch = require('node-fetch').default
++}
++
+ const debug = require('debug')('octokit:rest')
+ const defaults = require('lodash/defaults')
+ const isPlainObject = require('lodash/isPlainObject')
+@@ -39,7 +45,7 @@ function request (requestOptions) {
+   let headers = {}
+   let status
+ 
+-  return fetch(requestOptions.url, pick(requestOptions, 'method', 'body', 'headers', 'timeout', 'agent'))
++  return _fetch(requestOptions.url, pick(requestOptions, 'method', 'body', 'headers', 'timeout', 'agent'))
+ 
+     .then(response => {
+       status = response.status

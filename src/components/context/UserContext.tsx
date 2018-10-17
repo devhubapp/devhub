@@ -1,6 +1,7 @@
 import React from 'react'
 import { AsyncStorage } from 'react-native'
 
+import * as github from '../../libs/github'
 import { IGitHubUser } from '../../types'
 
 export interface UserProviderProps {
@@ -47,17 +48,16 @@ export class UserProvider extends React.PureComponent<
     const accessToken = await this.getAccessToken()
     const user = await this.getUser()
 
+    github.authenticate(accessToken || '')
+
     await new Promise(resolve =>
       this.setState({ accessToken, hasLoadedFromCache: true, user }, resolve),
     )
   }
 
-  async getGitHubUserDataForToken(accessToken: string) {
-    const response = await fetch(
-      `https://api.github.com/user?access_token=${accessToken}&timestamp=${Date.now()}`,
-    )
-
-    return await response.json()
+  async getGitHubUser() {
+    const response = await github.octokit.users.get({})
+    return response.data as IGitHubUser
   }
 
   getUser = async () => {
@@ -73,6 +73,7 @@ export class UserProvider extends React.PureComponent<
 
   setAccessToken = async (accessToken: string | null) => {
     await AsyncStorage.setItem('access_token', accessToken || '')
+    github.authenticate(accessToken || '')
     await new Promise(resolve =>
       this.setState(
         state => ({
@@ -91,7 +92,7 @@ export class UserProvider extends React.PureComponent<
       throw new Error('Not authenticated.')
     }
 
-    const userData = await this.getGitHubUserDataForToken(accessToken)
+    const userData = await this.getGitHubUser()
 
     if (!(userData && userData.login)) {
       throw new Error('Failed to load user. Please try logging in again.')

@@ -24,30 +24,36 @@ export default class EventColumn extends PureComponent<
   }
 
   render() {
-    const { subtype, type, username } = this.props
+    const { column } = this.props
 
-    const requestTypeIconAndData = getColumnHeaderDetails({
-      subtype,
-      type,
-      username,
-    })
+    const requestTypeIconAndData = getColumnHeaderDetails(column)
 
     return (
       <Column>
         <ColumnHeader>
           <ColumnHeaderItem
             iconName={requestTypeIconAndData.icon}
-            repo={getOwnerAndRepo(username).repo}
+            repo={
+              'username' in column.params
+                ? getOwnerAndRepo(column.params.username).repo
+                : undefined
+            }
             showAvatarAsIcon={requestTypeIconAndData.showAvatarAsIcon}
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}
-            username={getOwnerAndRepo(username).owner}
+            username={
+              'username' in column.params
+                ? getOwnerAndRepo(column.params.username).owner
+                : undefined
+            }
           />
           <FlexSeparator />
           <ColumnHeaderItem
             iconName="chevron-down"
             onPress={this.handlePress}
-            username={username}
+            username={
+              'username' in column.params ? column.params.username : undefined
+            }
           />
         </ColumnHeader>
 

@@ -1,8 +1,8 @@
+import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
-import { IGitHubNotification } from '../../types'
 import { getNotificationReasonTextsAndColor } from '../../utils/helpers/github/notifications'
 import {
   getIssueIconAndColor,
@@ -13,7 +13,7 @@ import {
 import { getIssueOrPullRequestNumberFromUrl } from '../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../utils/helpers/shared'
 import { ThemeConsumer } from '../context/ThemeContext'
-import {NotificationCardHeader} from './partials/NotificationCardHeader'
+import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import CommentRow from './partials/rows/CommentRow'
 import CommitRow from './partials/rows/CommitRow'
 import IssueOrPullRequestRow from './partials/rows/IssueOrPullRequestRow'
@@ -22,7 +22,7 @@ import RepositoryRow from './partials/rows/RepositoryRow'
 
 export interface NotificationCardProps {
   archived?: boolean
-  notification: IGitHubNotification
+  notification: ActivityGetNotificationsResponseItem
   onlyOneRepository?: boolean
 }
 

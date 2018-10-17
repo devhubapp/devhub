@@ -5,92 +5,128 @@ import * as colors from '../../../styles/colors'
 
 import {
   getIssueIconAndColor,
-  getOwnerAndRepo,
   getPullRequestIconAndColor,
   isPullRequest,
 } from './shared'
 
 import {
+  Column,
+  GithubIcon,
   IEnhancedGitHubEvent,
   IGitHubEvent,
-  IGitHubIcon,
   IGitHubIssue,
   IGitHubPullRequest,
-  IGitHubRequestSubType,
-  IGitHubRequestType,
   IMultipleStarEvent,
 } from '../../../types'
 
-export function getColumnHeaderDetails(params: {
-  subtype?: IGitHubRequestSubType
-  type: IGitHubRequestType | 'notifications'
-  username?: string
-}): {
-  icon: IGitHubIcon
+export function getColumnHeaderDetails(
+  column: Column,
+): {
+  icon: GithubIcon
   showAvatarAsIcon?: boolean
   subtitle?: string
   title: string
 } {
-  const { subtype, type, username } = params
-
-  const title = (() => {
-    switch (type) {
-      case 'notifications':
-        return 'Notifications'
-
-      default: {
-        const ownerAndRepo = getOwnerAndRepo(username || '')
-        return ownerAndRepo.repo || ownerAndRepo.owner || username || ''
+  switch (column.type) {
+    case 'activity': {
+      switch (column.subtype) {
+        case 'ORG_PUBLIC_EVENTS': {
+          return {
+            icon: 'organization',
+            showAvatarAsIcon: true,
+            subtitle: 'Events',
+            title: column.params.org,
+          }
+        }
+        case 'PUBLIC_EVENTS': {
+          return {
+            icon: 'rss',
+            subtitle: 'Public',
+            title: 'Events',
+          }
+        }
+        case 'REPO_EVENTS': {
+          return {
+            icon: 'repo',
+            showAvatarAsIcon: true,
+            subtitle: 'Events',
+            title: column.params.repo,
+          }
+        }
+        case 'REPO_NETWORK_EVENTS': {
+          return {
+            icon: 'repo',
+            showAvatarAsIcon: true,
+            subtitle: 'Network',
+            title: column.params.repo,
+          }
+        }
+        case 'USER_EVENTS': {
+          return {
+            icon: 'person',
+            showAvatarAsIcon: true,
+            subtitle: 'Activity',
+            title: column.params.username,
+          }
+        }
+        case 'USER_ORG_EVENTS': {
+          return {
+            icon: 'organization',
+            showAvatarAsIcon: true,
+            subtitle: 'Activity',
+            title: column.params.org,
+          }
+        }
+        case 'USER_PUBLIC_EVENTS':
+        case 'USER_RECEIVED_EVENTS':
+        case 'USER_RECEIVED_PUBLIC_EVENTS': {
+          return {
+            icon: 'person',
+            showAvatarAsIcon: true,
+            subtitle: 'Activity',
+            title: column.params.username,
+          }
+        }
+        default: {
+          if (__DEV__)
+            console.error(
+              `Invalid activity type: '${(column as any).subtype}'.`,
+            )
+          return {
+            icon: 'mark-github',
+            showAvatarAsIcon: false,
+            subtitle: (column as any).subtype || '',
+            title: 'Unknown',
+          }
+        }
       }
     }
-  })()
 
-  const subtitle = (() => {
-    switch (subtype) {
-      case 'events':
-        return 'Activity'
-
-      case 'received_events':
-        return 'Dashboard'
-
-      default:
-        return ''
-    }
-  })()
-
-  switch (type) {
-    case 'notifications':
+    case 'notifications': {
       return {
         icon: 'bell',
-        showAvatarAsIcon: !!username,
-        subtitle: 'All',
-        title,
+        showAvatarAsIcon: false,
+        title: 'Notifications',
+        subtitle: column.params.all ? 'All' : '',
       }
+    }
 
-    case 'orgs':
-      return { icon: 'organization', showAvatarAsIcon: true, subtitle, title }
-
-    case 'repos':
-      return { icon: 'repo', showAvatarAsIcon: true, subtitle, title }
-
-    case 'users':
-      return {
-        icon: subtype === 'received_events' ? 'home' : 'person',
-        showAvatarAsIcon: true,
-        subtitle,
-        title,
-      }
-
-    default:
+    default: {
       if (__DEV__)
-        console.error(`No icon configured for request type '${type}'`)
-      return { icon: 'mark-github', showAvatarAsIcon: !!username, title }
+        console.error(`Invalid column type: '${(column as any).type}'.`)
+      return {
+        icon: 'mark-github',
+        showAvatarAsIcon: false,
+        subtitle: (column as any).type || '',
+        title: 'Unknown',
+      }
+    }
   }
 }
 
 export function getEventIconAndColor(
   event: IEnhancedGitHubEvent,
-): { color?: string; icon: IGitHubIcon; subIcon?: IGitHubIcon } {
+): { color?: string; icon: GithubIcon; subIcon?: GithubIcon } {
   switch (event.type) {
     case 'CommitCommentEvent':
       return { icon: 'git-commit', subIcon: 'comment-discussion' }

@@ -7,30 +7,38 @@ function getDefaultColumns(username: string): Column[] {
   return [
     {
       type: 'notifications',
-      subtype: 'all',
+      params: {
+        all: true,
+      },
     },
     {
-      subtype: 'received_events',
-      type: 'users',
-      username,
+      type: 'activity',
+      subtype: 'USER_RECEIVED_EVENTS',
+      params: {
+        username,
+      },
     },
     {
-      subtype: 'events',
-      type: 'users',
-      username,
+      type: 'activity',
+      subtype: 'USER_EVENTS',
+      params: {
+        username,
+      },
     },
     {
-      showAvatarAsIcon: true,
-      subtype: 'events',
-      type: 'orgs',
-      username: 'facebook',
+      type: 'activity',
+      subtype: 'ORG_PUBLIC_EVENTS',
+      params: {
+        org: 'facebook',
+      },
     },
     {
-      repoIsKnown: true,
-      showAvatarAsIcon: true,
-      subtype: 'events',
-      type: 'repos',
-      username: 'facebook/react',
+      type: 'activity',
+      subtype: 'REPO_EVENTS',
+      params: {
+        owner: 'facebook',
+        repo: 'react',
+      },
     },
   ]
 }
@@ -84,14 +92,14 @@ export class ColumnsProvider extends React.PureComponent<
     )
   }
 
+  getStorageKey = () => `${this.props.username}_columns_v2`
+
   getColumns = async () => {
     if (!this.props.username) return null
     if (this.state.columns) return this.state.columns
 
     try {
-      const _columnsStr = await AsyncStorage.getItem(
-        `${this.props.username}_columns`,
-      )
+      const _columnsStr = await AsyncStorage.getItem(this.getStorageKey())
       const columns: Column[] | null = _columnsStr
         ? JSON.parse(_columnsStr)
         : null
@@ -114,10 +122,7 @@ export class ColumnsProvider extends React.PureComponent<
     if (!this.props.username)
       throw new Error('[ColumnsContext][setColumns] No username specified.')
 
-    await AsyncStorage.setItem(
-      `${this.props.username}_columns`,
-      JSON.stringify(columns),
-    )
+    await AsyncStorage.setItem(this.getStorageKey(), JSON.stringify(columns))
     await new Promise(resolve => this.setState({ columns }, resolve))
   }
 }

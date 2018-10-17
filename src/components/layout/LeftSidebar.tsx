@@ -78,11 +78,9 @@ class LeftSidebarComponent extends PureComponent<
                   !columns
                     ? null
                     : columns.map((column, index) => {
-                        const requestTypeIconAndData = getColumnHeaderDetails({
-                          type: column.type,
-                          subtype: column.subtype,
-                          username: column.username,
-                        })
+                        const requestTypeIconAndData = getColumnHeaderDetails(
+                          column,
+                        )
 
                         return (
                           <View
@@ -102,8 +100,10 @@ class LeftSidebarComponent extends PureComponent<
                                 requestTypeIconAndData.showAvatarAsIcon
                               }
                               username={
-                                column.username &&
-                                getOwnerAndRepo(column.username).owner
+                                'username' in column.params
+                                  ? getOwnerAndRepo(column.params.username)
+                                      .owner
+                                  : undefined
                               }
                             />
                           </View>

@@ -1,12 +1,12 @@
+import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
 import * as colors from '../../../styles/colors'
 
-import { IGitHubNotification } from '../../../types'
 import { capitalize } from '../shared'
 
 export function getNotificationReasonTextsAndColor(
-  notification: IGitHubNotification,
+  notification: ActivityGetNotificationsResponseItem,
 ): { color: string; reason: string; label: string; description: string } {
-  const { reason }: IGitHubNotification = notification
+  const { reason }: ActivityGetNotificationsResponseItem = notification
 
   switch (reason) {
     case 'assign':

@@ -1,20 +1,13 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react'
-// import { Alert } from 'react-native'
 
 import EventCards, { EventCardsProps } from '../components/cards/EventCards'
-import {
-  IGitHubEvent,
-  IGitHubRequestSubType,
-  IGitHubRequestType,
-} from '../types'
+import { getActivity } from '../libs/github'
+import { ActivityColumn, Omit } from '../types'
 import { mergeSimilarEvent } from '../utils/helpers/github/events'
 
-export type EventCardsContainerProps = Partial<EventCardsProps> & {
-  accessToken: string
-  subtype?: IGitHubRequestSubType
-  type: IGitHubRequestType
-  username: string
+export type EventCardsContainerProps = Omit<EventCardsProps, 'events'> & {
+  column: ActivityColumn
 }
 
 export interface EventCardsContainerState {
@@ -25,23 +18,10 @@ export default class EventCardsContainer extends PureComponent<
   EventCardsContainerProps,
   EventCardsContainerState
 > {
-  static getDerivedStateFromProps(
-    nextProps: EventCardsContainerProps,
-    prevState: EventCardsContainerState,
-  ) {
-    if (nextProps.events && nextProps.events !== prevState.events) {
-      return {
-        events: nextProps.events,
-      }
-    }
-
-    return null
-  }
-
   fetchDataInterval?: number
 
   state: EventCardsContainerState = {
-    events: this.props.events || [],
+    events: [],
   }
 
   componentDidMount() {
@@ -53,13 +33,12 @@ export default class EventCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
-    const { accessToken, subtype, type, username } = this.props
+    const { params, subtype: activityType } = this.props.column
 
     try {
-      const response = await fetch(
-        `https://api.github.com/${type}/${username}/${subtype}?access_token=${accessToken}&timestamp=${Date.now()}`,
-      )
-      const events: IGitHubEvent[] = await response.json()
+      const response = await getActivity(activityType, params)
+      const events = response.data
+
       if (Array.isArray(events)) {
         const orderedEvents = _(events)
           .uniqBy('id')
@@ -70,7 +49,7 @@ export default class EventCardsContainer extends PureComponent<
       }
     } catch (error) {
       console.error(error)
-      // Alert.alert('Failed to load events', `${error}`)
+      // alert('Failed to load events', `${error}`)
     }
   }
 

@@ -24,8 +24,9 @@ export class NotificationColumn extends PureComponent<
   }
 
   render() {
-    const { subtype, type } = this.props
-    const requestTypeIconAndData = getColumnHeaderDetails({ type, subtype })
+    const { column } = this.props
+
+    const requestTypeIconAndData = getColumnHeaderDetails(column)
 
     return (
       <Column>
