@@ -1,5 +1,5 @@
 import React, { SFC } from 'react'
-import { ImageStyle, StyleProp, TouchableOpacityProps } from 'react-native'
+import { StyleProp, TouchableOpacityProps } from 'react-native'
 
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import {
@@ -10,10 +10,10 @@ import {
 import { fixURL } from '../../utils/helpers/github/url'
 import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
 import { ThemeConsumer } from '../context/ThemeContext'
-import { ImageWithLoading } from './ImageWithLoading'
+import { ImageWithLoading, ImageWithLoadingProps } from './ImageWithLoading'
 import { Link } from './Link'
 
-export interface AvatarProps {
+export interface AvatarProps extends Partial<ImageWithLoadingProps> {
   avatarURL?: string
   email?: string
   hitSlop?: TouchableOpacityProps['hitSlop']
@@ -23,7 +23,7 @@ export interface AvatarProps {
   shape?: 'circle' | 'rounded' | 'square'
   size?: number
   small?: boolean
-  style?: StyleProp<ImageStyle>
+  style?: StyleProp<any>
   username?: string
 }
 
