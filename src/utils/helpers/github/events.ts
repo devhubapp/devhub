@@ -22,8 +22,11 @@ import {
 export function getColumnHeaderDetails(
   column: Column,
 ): {
+  avatarDetails?: {
+    owner: string
+    repo?: string
+  }
   icon: GithubIcon
-  showAvatarAsIcon?: boolean
   subtitle?: string
   title: string
 } {
@@ -32,8 +35,8 @@ export function getColumnHeaderDetails(
       switch (column.subtype) {
         case 'ORG_PUBLIC_EVENTS': {
           return {
+            avatarDetails: { owner: column.params.org },
             icon: 'organization',
-            showAvatarAsIcon: true,
             subtitle: 'Events',
             title: column.params.org,
           }
@@ -47,32 +50,38 @@ export function getColumnHeaderDetails(
         }
         case 'REPO_EVENTS': {
           return {
+            avatarDetails: {
+              owner: column.params.owner,
+              repo: column.params.repo,
+            },
             icon: 'repo',
-            showAvatarAsIcon: true,
             subtitle: 'Events',
             title: column.params.repo,
           }
         }
         case 'REPO_NETWORK_EVENTS': {
           return {
+            avatarDetails: {
+              owner: column.params.owner,
+              repo: column.params.repo,
+            },
             icon: 'repo',
-            showAvatarAsIcon: true,
             subtitle: 'Network',
             title: column.params.repo,
           }
         }
         case 'USER_EVENTS': {
           return {
+            avatarDetails: { owner: column.params.username },
             icon: 'person',
-            showAvatarAsIcon: true,
             subtitle: 'Activity',
             title: column.params.username,
           }
         }
         case 'USER_ORG_EVENTS': {
           return {
+            avatarDetails: { owner: column.params.org },
             icon: 'organization',
-            showAvatarAsIcon: true,
             subtitle: 'Activity',
             title: column.params.org,
           }
@@ -81,8 +90,8 @@ export function getColumnHeaderDetails(
         case 'USER_RECEIVED_EVENTS':
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
+            avatarDetails: { owner: column.params.username },
             icon: 'person',
-            showAvatarAsIcon: true,
             subtitle: 'Activity',
             title: column.params.username,
           }
@@ -94,7 +103,6 @@ export function getColumnHeaderDetails(
             )
           return {
             icon: 'mark-github',
-            showAvatarAsIcon: false,
             subtitle: (column as any).subtype || '',
             title: 'Unknown',
           }
@@ -105,9 +113,8 @@ export function getColumnHeaderDetails(
     case 'notifications': {
       return {
         icon: 'bell',
-        showAvatarAsIcon: false,
-        title: 'Notifications',
         subtitle: column.params.all ? 'All' : '',
+        title: 'Notifications',
       }
     }
 
@@ -116,7 +123,6 @@ export function getColumnHeaderDetails(
         console.error(`Invalid column type: '${(column as any).type}'.`)
       return {
         icon: 'mark-github',
-        showAvatarAsIcon: false,
         subtitle: (column as any).type || '',
         title: 'Unknown',
       }

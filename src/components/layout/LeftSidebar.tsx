@@ -9,7 +9,6 @@ import {
 import { NavigationScreenProps } from 'react-navigation'
 
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
-import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
 import { columnHeaderHeight } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import Avatar from '../common/Avatar'
@@ -95,16 +94,10 @@ class LeftSidebarComponent extends PureComponent<
                             ]}
                           >
                             <ColumnHeaderItem
+                              avatarDetails={
+                                requestTypeIconAndData.avatarDetails
+                              }
                               iconName={requestTypeIconAndData.icon}
-                              showAvatarAsIcon={
-                                requestTypeIconAndData.showAvatarAsIcon
-                              }
-                              username={
-                                'username' in column.params
-                                  ? getOwnerAndRepo(column.params.username)
-                                      .owner
-                                  : undefined
-                              }
                             />
                           </View>
                         )

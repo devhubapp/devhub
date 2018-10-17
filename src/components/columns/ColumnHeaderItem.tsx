@@ -25,19 +25,20 @@ import { UserConsumer } from '../context/UserContext'
 export const columnHeaderItemContentSize = 20
 
 export interface ColumnHeaderItemProps {
+  avatarDetails?: {
+    owner: string
+    repo?: string
+  }
   avatarShape?: AvatarProps['shape']
   avatarStyle?: StyleProp<ImageStyle>
   iconName?: GithubIcon
   iconStyle?: StyleProp<TextStyle>
   onPress?: () => void
-  repo?: string
-  showAvatarAsIcon?: boolean
   style?: StyleProp<ViewStyle>
   subtitle?: string
   subtitleStyle?: StyleProp<TextStyle>
   title?: string
   titleStyle?: StyleProp<TextStyle>
-  username?: string
 }
 
 const styles = StyleSheet.create({
@@ -80,24 +81,26 @@ export class ColumnHeaderItem extends PureComponent<ColumnHeaderItemProps> {
 
   render() {
     const {
+      avatarDetails,
       avatarShape,
       avatarStyle,
       iconName,
       iconStyle,
-      repo,
-      showAvatarAsIcon,
       subtitle,
       subtitleStyle,
       title,
       titleStyle,
-      username: _username,
     } = this.props
 
     return (
       <UserConsumer>
         {({ user }) => {
           const username =
-            user && user.login === _username ? undefined : _username
+            avatarDetails &&
+            avatarDetails.owner &&
+            !(user && user.login === avatarDetails.owner)
+              ? avatarDetails.owner
+              : undefined
 
           const smallAvatarSpacing = 5
 
@@ -106,7 +109,7 @@ export class ColumnHeaderItem extends PureComponent<ColumnHeaderItemProps> {
               {({ theme }) => (
                 <ConditionalWrap condition wrap={this.wrap}>
                   <>
-                    {(!!iconName || (showAvatarAsIcon && !!username)) && (
+                    {(!!iconName || !!username) && (
                       <View
                         style={{
                           position: 'relative',
@@ -115,10 +118,7 @@ export class ColumnHeaderItem extends PureComponent<ColumnHeaderItemProps> {
                           justifyContent: 'center',
                           marginRight:
                             title || subtitle
-                              ? 8 +
-                                (showAvatarAsIcon && username
-                                  ? smallAvatarSpacing
-                                  : 0)
+                              ? 8 + (username ? smallAvatarSpacing : 0)
                               : 0,
                         }}
                       >
@@ -130,46 +130,44 @@ export class ColumnHeaderItem extends PureComponent<ColumnHeaderItemProps> {
                               style={[styles.icon, iconStyle]}
                             />
 
-                            {showAvatarAsIcon &&
-                              !!username && (
-                                <Avatar
-                                  hitSlop={{
-                                    top:
-                                      columnHeaderItemContentSize +
-                                      smallAvatarSpacing,
-                                    bottom: smallAvatarSpacing,
-                                    left:
-                                      columnHeaderItemContentSize / 2 +
-                                      smallAvatarSpacing,
-                                    right:
-                                      columnHeaderItemContentSize / 2 +
-                                      smallAvatarSpacing,
-                                  }}
-                                  isBot={false}
-                                  linkURL=""
-                                  repo={repo}
-                                  shape={avatarShape}
-                                  style={[
-                                    {
-                                      position: 'absolute',
-                                      bottom: 0,
-                                      marginLeft: smallAvatarSpacing,
-                                      width: 10,
-                                      height: 10,
-                                    },
-                                    avatarStyle,
-                                  ]}
-                                  username={username}
-                                />
-                              )}
+                            {!!username && (
+                              <Avatar
+                                hitSlop={{
+                                  top:
+                                    columnHeaderItemContentSize +
+                                    smallAvatarSpacing,
+                                  bottom: smallAvatarSpacing,
+                                  left:
+                                    columnHeaderItemContentSize / 2 +
+                                    smallAvatarSpacing,
+                                  right:
+                                    columnHeaderItemContentSize / 2 +
+                                    smallAvatarSpacing,
+                                }}
+                                isBot={false}
+                                linkURL=""
+                                repo={avatarDetails && avatarDetails.repo}
+                                shape={avatarShape}
+                                style={[
+                                  {
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    marginLeft: smallAvatarSpacing,
+                                    width: 10,
+                                    height: 10,
+                                  },
+                                  avatarStyle,
+                                ]}
+                                username={username}
+                              />
+                            )}
                           </>
                         ) : (
-                          showAvatarAsIcon &&
                           !!username && (
                             <Avatar
                               isBot={false}
                               linkURL=""
-                              repo={repo}
+                              repo={avatarDetails && avatarDetails.repo}
                               shape={avatarShape}
                               style={[
                                 {

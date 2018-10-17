@@ -5,7 +5,6 @@ import EventCardsContainer, {
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
-import { getOwnerAndRepo } from '../../utils/helpers/github/shared'
 import CardItemSeparator from '../cards/partials/CardItemSeparator'
 import Column from './Column'
 import { ColumnHeader } from './ColumnHeader'
@@ -32,28 +31,15 @@ export default class EventColumn extends PureComponent<
       <Column>
         <ColumnHeader>
           <ColumnHeaderItem
+            avatarDetails={requestTypeIconAndData.avatarDetails}
             iconName={requestTypeIconAndData.icon}
-            repo={
-              'username' in column.params
-                ? getOwnerAndRepo(column.params.username).repo
-                : undefined
-            }
-            showAvatarAsIcon={requestTypeIconAndData.showAvatarAsIcon}
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}
-            username={
-              'username' in column.params
-                ? getOwnerAndRepo(column.params.username).owner
-                : undefined
-            }
           />
           <FlexSeparator />
           <ColumnHeaderItem
             iconName="chevron-down"
             onPress={this.handlePress}
-            username={
-              'username' in column.params ? column.params.username : undefined
-            }
           />
         </ColumnHeader>
 
