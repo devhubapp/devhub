@@ -1,16 +1,10 @@
 import { darken } from 'polished'
 import React, { PureComponent, ReactNode } from 'react'
-import {
-  Platform,
-  StatusBar,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { StatusBar, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import { SafeAreaView } from 'react-navigation'
 
+import { Platform } from '../../libs/platform'
 import { ThemeConsumer } from '../context/ThemeContext'
 
 let isSplashScreenVisible = true
@@ -29,7 +23,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class Screen extends PureComponent<ScreenProps> {
+export class Screen extends PureComponent<ScreenProps> {
   static defaultProps = {
     useSafeArea: true,
   }

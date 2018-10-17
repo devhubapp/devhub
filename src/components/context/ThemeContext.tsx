@@ -1,6 +1,6 @@
 import React from 'react'
 
-import defaultTheme from '../../styles/themes/dark-gray'
+import { theme as defaultTheme } from '../../styles/themes/dark-gray'
 import { Theme } from '../../styles/utils'
 
 export interface ThemeProviderProps {

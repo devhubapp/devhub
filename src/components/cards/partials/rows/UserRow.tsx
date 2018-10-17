@@ -1,7 +1,7 @@
 import React, { SFC } from 'react'
 import { Text, View } from 'react-native'
 
-import Avatar from '../../../common/Avatar'
+import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
@@ -18,7 +18,7 @@ export interface UserRowProps {
 
 export interface UserRowState {}
 
-const UserRow: SFC<UserRowProps> = ({
+export const UserRow: SFC<UserRowProps> = ({
   avatarURL,
   isRead,
   showMoreItemsIndicator,
@@ -59,5 +59,3 @@ const UserRow: SFC<UserRowProps> = ({
     )}
   </ThemeConsumer>
 )
-
-export default UserRow

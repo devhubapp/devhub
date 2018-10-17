@@ -5,11 +5,11 @@ import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { IEnhancedGitHubEvent } from '../../../../types'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
-import Avatar from '../../../common/Avatar'
+import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
-import BranchRow from './BranchRow'
+import { BranchRow } from './BranchRow'
 import { getCardRowStylesForTheme } from './styles'
 
 export interface IProps {
@@ -29,7 +29,7 @@ export interface IProps {
 
 export interface IState {}
 
-const ReleaseRow: SFC<IProps> = ({
+export const ReleaseRow: SFC<IProps> = ({
   avatarURL,
   body: _body,
   branch,
@@ -143,5 +143,3 @@ const ReleaseRow: SFC<IProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default ReleaseRow

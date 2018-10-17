@@ -3,7 +3,8 @@ import { Animated, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
-import BaseSwipeableRow, {
+import {
+  BaseSwipeableRow,
   IBaseAction,
   IBaseProps,
   Placement,
@@ -18,11 +19,7 @@ export interface IAction extends IBaseAction {
 
 export interface IProps extends IBaseProps<IAction> {}
 
-export default class AppleSwipeableRow extends BaseSwipeableRow<
-  IProps,
-  void,
-  IAction
-> {
+export class AppleSwipeableRow extends BaseSwipeableRow<IProps, void, IAction> {
   _swipeableRow = null
 
   renderButtonAction = (

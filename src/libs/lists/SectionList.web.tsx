@@ -1,3 +1,3 @@
-import MetroListView from './MetroListView.web'
+import { MetroListView } from './MetroListView.web'
 
-export default MetroListView
+export const SectionList = MetroListView

@@ -2,7 +2,7 @@ import React, { SFC } from 'react'
 import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
-import Avatar from '../../../common/Avatar'
+import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
@@ -21,7 +21,7 @@ export interface RepositoryRowProps {
 
 export interface RepositoryRowState {}
 
-const RepositoryRow: SFC<RepositoryRowProps> = ({
+export const RepositoryRow: SFC<RepositoryRowProps> = ({
   isForcePush,
   isFork,
   isPush,
@@ -94,5 +94,3 @@ const RepositoryRow: SFC<RepositoryRowProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default RepositoryRow

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Columns extends PureComponent<IProps> {
+export class Columns extends PureComponent<IProps> {
   render() {
     const { children, style, ...props } = this.props
 

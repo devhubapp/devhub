@@ -3,11 +3,11 @@ import React, { PureComponent } from 'react'
 import { FlatList } from '../../libs/lists'
 import { contentPadding } from '../../styles/variables'
 import { IEnhancedGitHubEvent } from '../../types'
-import TransparentTextOverlay from '../common/TransparentTextOverlay'
+import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../context/ThemeContext'
-import EventCard from './EventCard'
-import CardItemSeparator from './partials/CardItemSeparator'
-import SwipeableEventCard from './SwipeableEventCard'
+import { EventCard } from './EventCard'
+import { CardItemSeparator } from './partials/CardItemSeparator'
+import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps {
   events: IEnhancedGitHubEvent[]
@@ -17,7 +17,7 @@ export interface EventCardsProps {
 
 export interface EventCardsState {}
 
-export default class EventCards extends PureComponent<
+export class EventCards extends PureComponent<
   EventCardsProps,
   EventCardsState
 > {

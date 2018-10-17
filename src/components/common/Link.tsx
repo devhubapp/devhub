@@ -1,7 +1,8 @@
 import React, { AnchorHTMLAttributes, SFC } from 'react'
-import { Platform, TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
-import Browser from '../../libs/browser'
+import { Browser } from '../../libs/browser'
+import { Platform } from '../../libs/platform'
 
 export interface LinkProps extends TouchableOpacityProps {
   webProps?: AnchorHTMLAttributes<HTMLAnchorElement>

@@ -31,7 +31,7 @@ const propsToLinearGradient = ({
 }: Pick<LinearGradientProps, 'colors' | 'end' | 'start'>) =>
   `linear-gradient(${pointsToDeg(start, end)}, ${colors.join(', ')})`
 
-const LinearGradient: SFC<LinearGradientProps> = ({
+export const LinearGradient: SFC<LinearGradientProps> = ({
   colors,
   end,
   // locations,
@@ -54,5 +54,3 @@ const LinearGradient: SFC<LinearGradientProps> = ({
     ]}
   />
 )
-
-export default LinearGradient

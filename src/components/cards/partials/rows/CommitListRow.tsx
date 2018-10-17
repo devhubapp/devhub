@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 
-import CommitRow from './CommitRow'
-import RowList, { RenderItem } from './RowList'
+import { CommitRow } from './CommitRow'
+import { RenderItem, RowList } from './RowList'
 
 import { IGitHubCommit } from '../../../../types'
 
@@ -11,7 +11,7 @@ export interface CommitListRowProps {
   commits: IGitHubCommit[]
 }
 
-export default class CommitListRow extends PureComponent<CommitListRowProps> {
+export class CommitListRow extends PureComponent<CommitListRowProps> {
   renderItem: RenderItem<IGitHubCommit> = ({
     showMoreItemsIndicator,
     item: commit,

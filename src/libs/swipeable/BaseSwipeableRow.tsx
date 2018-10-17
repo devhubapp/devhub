@@ -29,7 +29,7 @@ export type Placement = 'LEFT' | 'RIGHT'
 
 export const defaultWidth = 64
 
-export default abstract class BaseSwipeableRow<
+export abstract class BaseSwipeableRow<
   P = {},
   S = {},
   IAction = IBaseAction

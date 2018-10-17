@@ -3,11 +3,11 @@ import React, { PureComponent } from 'react'
 
 import { FlatList } from '../../libs/lists'
 import { contentPadding } from '../../styles/variables'
-import TransparentTextOverlay from '../common/TransparentTextOverlay'
+import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../context/ThemeContext'
-import NotificationCard from './NotificationCard'
-import CardItemSeparator from './partials/CardItemSeparator'
-import SwipeableNotificationCard from './SwipeableNotificationCard'
+import { NotificationCard } from './NotificationCard'
+import { CardItemSeparator } from './partials/CardItemSeparator'
+import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
   notifications: ActivityGetNotificationsResponseItem[]
@@ -16,7 +16,7 @@ export interface NotificationCardsProps {
 
 export interface NotificationCardsState {}
 
-export default class NotificationCards extends PureComponent<
+export class NotificationCards extends PureComponent<
   NotificationCardsProps,
   NotificationCardsState
 > {

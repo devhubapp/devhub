@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react'
 
-import MetroListView, { IProps as IMetroProps } from './MetroListView.web'
+import { IProps as IMetroProps, MetroListView } from './MetroListView.web'
 
 export interface IProps extends IMetroProps {
   data: IMetroProps['items']
 }
 
-export default class FlatList extends PureComponent<IProps> {
+export class FlatList extends PureComponent<IProps> {
   render() {
     return <MetroListView {...this.props} items={this.props.data} />
   }

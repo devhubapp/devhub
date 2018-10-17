@@ -14,11 +14,11 @@ import { getIssueOrPullRequestNumberFromUrl } from '../../utils/helpers/github/u
 import { trimNewLinesAndSpaces } from '../../utils/helpers/shared'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
-import CommentRow from './partials/rows/CommentRow'
-import CommitRow from './partials/rows/CommitRow'
-import IssueOrPullRequestRow from './partials/rows/IssueOrPullRequestRow'
-import ReleaseRow from './partials/rows/ReleaseRow'
-import RepositoryRow from './partials/rows/RepositoryRow'
+import { CommentRow } from './partials/rows/CommentRow'
+import { CommitRow } from './partials/rows/CommitRow'
+import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { ReleaseRow } from './partials/rows/ReleaseRow'
+import { RepositoryRow } from './partials/rows/RepositoryRow'
 
 export interface NotificationCardProps {
   archived?: boolean
@@ -35,9 +35,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class NotificationCard extends PureComponent<
-  NotificationCardProps
-> {
+export class NotificationCard extends PureComponent<NotificationCardProps> {
   render() {
     const { archived, notification, onlyOneRepository } = this.props
     if (!notification || archived) return null
@@ -52,7 +50,7 @@ export default class NotificationCard extends PureComponent<
 
     if (!subject) return null
 
-    const isRead = unread === false // TODO
+    const isRead = !unread // TODO
     const isPrivate = Boolean(repo && repo.private)
     const title = trimNewLinesAndSpaces(subject.title)
 

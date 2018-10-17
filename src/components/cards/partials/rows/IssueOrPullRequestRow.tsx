@@ -2,11 +2,11 @@ import React, { SFC } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
-import defaultStyles from '../../../../styles/styles'
+import { defaultStyles } from '../../../../styles/styles'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
-import Avatar from '../../../common/Avatar'
+import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-const IssueOrPullRequestRow: SFC<IProps> = ({
+export const IssueOrPullRequestRow: SFC<IProps> = ({
   avatarURL,
   iconColor,
   iconName,
@@ -109,5 +109,3 @@ const IssueOrPullRequestRow: SFC<IProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default IssueOrPullRequestRow

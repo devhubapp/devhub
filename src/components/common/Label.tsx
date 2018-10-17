@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-const Label: SFC<IProps> = ({
+export const Label: SFC<IProps> = ({
   borderColor,
   color,
   children,
@@ -101,5 +101,3 @@ const Label: SFC<IProps> = ({
     )}
   </ThemeConsumer>
 )
-
-export default Label

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { View, ViewStyle } from 'react-native'
 
-export default class FlexSeparator extends PureComponent<ViewStyle> {
+export class FlexSeparator extends PureComponent<ViewStyle> {
   static defaultProps: ViewStyle = {
     flex: 1,
   }

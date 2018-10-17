@@ -1,17 +1,17 @@
 import React, { SFC } from 'react'
 import { NavigationScreenProps } from 'react-navigation'
 
-import Platform from '../libs/platform'
-import MainScreen from '../screens/MainScreen.web'
+import { Platform } from '../libs/platform'
+import { MainScreen } from '../screens/MainScreen.web'
 
-const MainTabNavigator: SFC<NavigationScreenProps> = props => (
+const MainTabNavigatorComponent: SFC<NavigationScreenProps> = props => (
   <MainScreen {...props} />
 )
 
-export default Platform.selectUsingRealOS(
+export const MainTabNavigator = Platform.selectUsingRealOS(
   {
     default: () => require('./MainTabNavigator.native').default,
-    web: () => MainTabNavigator,
+    web: () => MainTabNavigatorComponent,
   },
   { fallbackToWeb: false },
 )()

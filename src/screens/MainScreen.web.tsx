@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 
-import Screen from '../components/common/Screen'
+import { Screen } from '../components/common/Screen'
 import { LeftSidebar } from '../components/layout/LeftSidebar'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class MainScreen extends PureComponent<NavigationScreenProps> {
+export class MainScreen extends PureComponent<NavigationScreenProps> {
   render() {
     return (
       <Screen>

@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react'
 
-import FlexSeparator from '../../components/common/FlexSeparator'
-import NotificationCardsContainer, {
+import { FlexSeparator } from '../../components/common/FlexSeparator'
+import {
+  NotificationCardsContainer,
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
-import CardItemSeparator from '../cards/partials/CardItemSeparator'
-import Column from './Column'
+import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
+import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 

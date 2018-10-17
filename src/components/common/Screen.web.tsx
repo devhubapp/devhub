@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class Screen extends PureComponent<ScreenProps> {
+export class Screen extends PureComponent<ScreenProps> {
   static defaultProps = {
     useSafeArea: true,
   }

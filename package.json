@@ -2,7 +2,7 @@
   "name": "devhub",
   "version": "0.0.1",
   "scripts": {
-    "format": "prettier --write '{.,__tests__,src/**}/*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write '{.,__tests__,src/**,web,web/src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "postinstall": "patch-package",
     "precommit": "lint-staged",
@@ -61,11 +61,11 @@
     "react-native-typescript-transformer": "^1.2.9",
     "react-test-renderer": "^16.4.0",
     "ts-jest": "^23.10.3",
-    "tslint": "^5.10.0",
+    "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.9.2",
     "tslint-config-prettier": "^1.13.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.1.1",
+    "typescript": "^3.1.3",
     "why-did-you-update": "^0.1.1"
   },
   "jest": {

@@ -13,8 +13,8 @@ import {
   NavigationStackScreenOptions,
 } from 'react-navigation'
 
-import GitHubLoginButton from '../components/buttons/GitHubLoginButton'
-import Screen from '../components/common/Screen'
+import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
+import { Screen } from '../components/common/Screen'
 import { ThemeConsumer } from '../components/context/ThemeContext'
 import {
   UserConsumer,

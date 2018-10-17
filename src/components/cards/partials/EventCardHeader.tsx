@@ -5,12 +5,12 @@ import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { GithubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
-import Avatar from '../../common/Avatar'
-import IntervalRefresh from '../../common/IntervalRefresh'
+import { Avatar } from '../../common/Avatar'
+import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
 import { ThemeConsumer } from '../../context/ThemeContext'
 import { getCardStylesForTheme } from '../styles'
-import CardIcon from './CardIcon'
+import { CardIcon } from './CardIcon'
 import { getUserURL } from './rows/helpers'
 
 export interface EventCardHeaderProps {
@@ -48,9 +48,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class EventCardHeader extends PureComponent<
-  EventCardHeaderProps
-> {
+export class EventCardHeader extends PureComponent<EventCardHeaderProps> {
   render() {
     const {
       actionText,

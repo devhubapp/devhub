@@ -14,7 +14,7 @@ import {
 import { Octicons as Icon } from '../../libs/vector-icons'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { GithubIcon } from '../../types'
-import Avatar, { AvatarProps } from '../common/Avatar'
+import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
   ConditionalWrapProps,

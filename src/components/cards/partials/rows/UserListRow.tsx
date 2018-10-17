@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 
-import RowList, { RenderItem } from './RowList'
-import UserRow from './UserRow'
+import { RenderItem, RowList } from './RowList'
+import { UserRow } from './UserRow'
 
 import { IGitHubUser } from '../../../../types'
 
@@ -11,7 +11,7 @@ export interface UserListRowProps {
   users: IGitHubUser[]
 }
 
-export default class UserListRow extends PureComponent<UserListRowProps> {
+export class UserListRow extends PureComponent<UserListRowProps> {
   renderItem: RenderItem<IGitHubUser> = ({
     item: user,
     showMoreItemsIndicator,

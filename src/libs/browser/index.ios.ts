@@ -1,7 +1,7 @@
 import { Linking, StatusBar } from 'react-native'
 import SafariView, { ISafaryOptions } from 'react-native-safari-view'
 
-export default {
+export const Browser = {
   ...Linking,
   ...SafariView,
   openURL: (url: string, options?: ISafaryOptions) => {

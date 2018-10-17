@@ -1,4 +1,4 @@
-import MainTabNavigator from './MainTabNavigator.native'
+import { MainTabNavigator } from './MainTabNavigator.native'
 
 export * from './MainTabNavigator.native'
-export default MainTabNavigator
+export { MainTabNavigator }

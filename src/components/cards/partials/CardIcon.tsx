@@ -14,8 +14,6 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-const CardIcon: SFC<IProps> = props => {
+export const CardIcon: SFC<IProps> = props => {
   return <Icon {...props} style={[styles.container, props.style]} />
 }
-
-export default CardIcon

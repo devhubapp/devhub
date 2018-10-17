@@ -29,7 +29,7 @@ export interface AvatarProps {
 
 export const size = avatarSize
 
-const Avatar: SFC<AvatarProps> = ({
+export const Avatar: SFC<AvatarProps> = ({
   avatarURL: _avatarURL,
   email,
   hitSlop,
@@ -97,5 +97,3 @@ const Avatar: SFC<AvatarProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default Avatar

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react'
 
-import EventCards, { EventCardsProps } from '../components/cards/EventCards'
+import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { getActivity } from '../libs/github'
 import { ActivityColumn, Omit } from '../types'
 import { mergeSimilarEvent } from '../utils/helpers/github/events'
@@ -14,7 +14,7 @@ export interface EventCardsContainerState {
   events: EventCardsProps['events']
 }
 
-export default class EventCardsContainer extends PureComponent<
+export class EventCardsContainer extends PureComponent<
   EventCardsContainerProps,
   EventCardsContainerState
 > {

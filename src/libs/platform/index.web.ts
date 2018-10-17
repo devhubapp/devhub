@@ -18,7 +18,7 @@ function getOSName(): PlatformOSType {
 
 const realOS = getOSName()
 
-const Platform = {
+export const Platform = {
   realOS,
   ..._Platform,
   isStandalone: (window.navigator as any).standalone,
@@ -36,5 +36,3 @@ const Platform = {
     return result
   },
 }
-
-export default Platform

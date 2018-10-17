@@ -10,7 +10,7 @@ import {
   getGitHubURLForUser,
 } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
-import Avatar from '../../../common/Avatar'
+import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
@@ -29,7 +29,7 @@ export interface CommitRowProps {
 
 export interface CommitRowState {}
 
-const CommitRow: SFC<CommitRowProps> = ({
+export const CommitRow: SFC<CommitRowProps> = ({
   authorEmail,
   authorName,
   authorUsername: _authorUsername,
@@ -114,5 +114,3 @@ const CommitRow: SFC<CommitRowProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default CommitRow

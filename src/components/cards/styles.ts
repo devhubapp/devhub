@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { StyleSheet } from 'react-native'
 
-import Platform from '../../libs/platform'
+import { Platform } from '../../libs/platform'
 import { Theme } from '../../styles/utils'
 import {
   avatarSize,

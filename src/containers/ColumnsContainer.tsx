@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react'
 
-import Columns from '../components/columns/Columns'
-import EventColumn from '../components/columns/EventColumn'
+import { Columns } from '../components/columns/Columns'
+import { EventColumn } from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
 import { ColumnsConsumer } from '../components/context/ColumnsContext'
 import { UserConsumer } from '../components/context/UserContext'

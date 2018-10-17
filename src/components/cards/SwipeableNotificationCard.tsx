@@ -1,15 +1,15 @@
 import React, { PureComponent } from 'react'
 
-import SwipeableRow from '../../libs/swipeable'
+import { SwipeableRow } from '../../libs/swipeable'
 import * as colors from '../../styles/colors'
 import { ThemeConsumer } from '../context/ThemeContext'
-import NotificationCard, { NotificationCardProps } from './NotificationCard'
+import { NotificationCard, NotificationCardProps } from './NotificationCard'
 
 export interface SwipeableNotificationCardProps extends NotificationCardProps {}
 
 export interface SwipeableNotificationCardState {}
 
-export default class SwipeableNotificationCard extends PureComponent<
+export class SwipeableNotificationCard extends PureComponent<
   SwipeableNotificationCardProps,
   SwipeableNotificationCardState
 > {

@@ -67,7 +67,7 @@ export interface IState {
  * some section support tacked on. It is recommended to just use FlatList directly, this component
  * is mostly for debugging and performance comparison.
  */
-export default class MetroListView extends React.Component<IProps, IState> {
+export class MetroListView extends React.Component<IProps, IState> {
   static defaultProps = {
     FooterComponent: () => null,
     ItemSeparatorComponent: () => null,

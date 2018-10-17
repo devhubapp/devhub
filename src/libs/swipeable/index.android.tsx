@@ -1,3 +1,3 @@
-import GoogleSwipeableRow from './GoogleSwipeableRow'
+import { GoogleSwipeableRow } from './GoogleSwipeableRow'
 
-export default GoogleSwipeableRow
+export { GoogleSwipeableRow }

@@ -4,7 +4,8 @@ import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
 import { MaterialIcons as Icon } from '../../libs/vector-icons'
-import BaseSwipeableRow, {
+import {
+  BaseSwipeableRow,
   IBaseAction,
   IBaseProps,
   Placement,
@@ -21,7 +22,7 @@ export interface IProps extends IBaseProps {}
 
 const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
-export default class GoogleSwipeableRow extends BaseSwipeableRow<
+export class GoogleSwipeableRow extends BaseSwipeableRow<
   IProps,
   void,
   IAction

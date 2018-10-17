@@ -4,13 +4,13 @@ import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 
 import { GithubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
-import Avatar from '../../common/Avatar'
-import IntervalRefresh from '../../common/IntervalRefresh'
-import Label from '../../common/Label'
+import { Avatar } from '../../common/Avatar'
+import { IntervalRefresh } from '../../common/IntervalRefresh'
+import { Label } from '../../common/Label'
 import { ThemeConsumer } from '../../context/ThemeContext'
 import { UserConsumer } from '../../context/UserContext'
 import { getCardStylesForTheme } from '../styles'
-import CardIcon from './CardIcon'
+import { CardIcon } from './CardIcon'
 
 export interface IProps {
   cardIconColor: string

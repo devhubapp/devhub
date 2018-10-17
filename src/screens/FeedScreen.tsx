@@ -5,7 +5,7 @@ import {
   NavigationStackScreenOptions,
 } from 'react-navigation'
 
-import Screen from '../components/common/Screen'
+import { Screen } from '../components/common/Screen'
 import { ThemeConsumer } from '../components/context/ThemeContext'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 

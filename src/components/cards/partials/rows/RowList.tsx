@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode, SFC } from 'react'
 import { ScrollView } from 'react-native'
 
 import { contentPadding } from '../../../../styles/variables'
-import TransparentTextOverlay from '../../../common/TransparentTextOverlay'
+import { TransparentTextOverlay } from '../../../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 
 export type RenderItem<Item> = (
@@ -21,7 +21,7 @@ export interface RowListProps<Item> {
   renderItem: RenderItem<Item>
 }
 
-const RowList: SFC<RowListProps<any>> = ({
+export const RowList: SFC<RowListProps<any>> = ({
   data,
   maxHeight = 220,
   maxLength = 5,
@@ -69,5 +69,3 @@ const RowList: SFC<RowListProps<any>> = ({
     </ThemeConsumer>
   )
 }
-
-export default RowList

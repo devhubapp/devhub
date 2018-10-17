@@ -5,7 +5,7 @@ import {
   NavigationStackScreenOptions,
 } from 'react-navigation'
 
-import Screen from '../components/common/Screen'
+import { Screen } from '../components/common/Screen'
 import {
   UserConsumer,
   UserProviderState,

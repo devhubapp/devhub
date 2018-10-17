@@ -1,4 +1,4 @@
-import Platform from '../../../libs/platform'
+import { Platform } from '../../../libs/platform'
 import { IGitHubRepo } from '../../../types'
 
 export interface IURLOptions {

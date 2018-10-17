@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
 })
 
-const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
+export const GitHubLoginButton: SFC<GitHubLoginButtonProps> = ({
   leftIcon,
   loading,
   rightIcon,
@@ -174,5 +174,3 @@ GitHubLoginButton.defaultProps = {
   textProps: undefined,
   title: '',
 }
-
-export default GitHubLoginButton

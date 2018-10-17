@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import Browser from '../browser'
+import { Browser } from '../browser'
 import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
 
 const pkg = require('../../../package.json') // tslint:disable-line

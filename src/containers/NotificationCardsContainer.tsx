@@ -1,7 +1,8 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react'
 
-import NotificationCards, {
+import {
+  NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 import { octokit } from '../libs/github'
@@ -18,7 +19,7 @@ export interface NotificationCardsContainerState {
   notifications: NotificationCardsProps['notifications']
 }
 
-export default class NotificationCardsContainer extends PureComponent<
+export class NotificationCardsContainer extends PureComponent<
   NotificationCardsContainerProps,
   NotificationCardsContainerState
 > {

@@ -1,6 +1,6 @@
 import { Linking } from 'react-native'
 
-export default {
+export const Browser = {
   ...Linking,
   dismiss: () => undefined,
 }

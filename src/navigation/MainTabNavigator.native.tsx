@@ -7,12 +7,12 @@ import {
   TabNavigatorConfig,
 } from 'react-navigation'
 
-import Platform from '../libs/platform'
+import { Platform } from '../libs/platform'
 import { FeedScreen } from '../screens/FeedScreen'
 import { NotificationsScreen } from '../screens/NotificationsScreen'
 import { SettingsScreen } from '../screens/SettingsScreen'
 import { GithubIcon } from '../types'
-import TabBar from './TabBar'
+import { TabBar } from './TabBar'
 
 const navigationOptions = {
   header: null,
@@ -71,4 +71,4 @@ export const options: TabNavigatorConfig = {
   }) as 'top' | 'bottom',
 }
 
-export default createBottomTabNavigator(routes, options)
+export const MainTabNavigator = createBottomTabNavigator(routes, options)

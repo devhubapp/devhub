@@ -1,11 +1,11 @@
-import { StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet } from 'react-native'
 
-export default StyleSheet.create({
+export const defaultStyles = StyleSheet.create({
   full: {
     flex: 1,
-  } as ViewStyle,
+  },
 
   horizontal: {
     flexDirection: 'row',
-  } as ViewStyle,
+  },
 })

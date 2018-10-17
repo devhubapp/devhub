@@ -2,7 +2,7 @@ import { rgba } from 'polished'
 import React, { ReactNode, SFC } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 
-import LinearGradient from '../../libs/linear-gradient'
+import { LinearGradient } from '../../libs/linear-gradient'
 
 export type From = 'top' | 'bottom' | 'left' | 'right'
 export type FromWithVH = 'vertical' | 'horizontal' | From
@@ -105,7 +105,7 @@ const GradientLayerOverlay: SFC<IProps & { from: From }> = ({
   />
 )
 
-const TransparentTextOverlay: SFC<IProps> = ({
+export const TransparentTextOverlay: SFC<IProps> = ({
   children,
   containerStyle,
   from,
@@ -133,5 +133,3 @@ const TransparentTextOverlay: SFC<IProps> = ({
     </View>
   )
 }
-
-export default TransparentTextOverlay

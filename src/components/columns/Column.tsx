@@ -1,7 +1,7 @@
 import React, { PureComponent, ReactNode } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
-import Platform from '../../../src/libs/platform'
+import { Platform } from '../../../src/libs/platform'
 import { contentPadding } from '../../styles/variables'
 import { DimensionsConsumer } from '../context/DimensionsContext'
 import { ThemeConsumer } from '../context/ThemeContext'
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class Column extends PureComponent<IProps> {
+export class Column extends PureComponent<IProps> {
   static defaultProps = {
     maxWidth: Platform.selectUsingRealOS({
       android: 800,

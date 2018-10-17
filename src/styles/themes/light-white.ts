@@ -1,3 +1,3 @@
 import { createThemeFromColor } from './custom'
 
-export default createThemeFromColor('#FBFBFB')
+export const theme = createThemeFromColor('#FBFBFB')

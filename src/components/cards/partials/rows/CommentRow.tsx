@@ -1,10 +1,10 @@
 import React, { SFC } from 'react'
 import { Text, View } from 'react-native'
 
-import Platform from '../../../../libs/platform'
+import { Platform } from '../../../../libs/platform'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../../../utils/helpers/shared'
-import Avatar from '../../../common/Avatar'
+import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
@@ -22,7 +22,7 @@ export interface IProps {
 
 export interface IState {}
 
-const CommentRow: SFC<IProps> = ({
+export const CommentRow: SFC<IProps> = ({
   avatarURL,
   body: _body,
   isRead,
@@ -81,5 +81,3 @@ const CommentRow: SFC<IProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default CommentRow

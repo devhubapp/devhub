@@ -5,8 +5,8 @@ import {
 } from 'react-navigation'
 
 import { AuthLoadingScreen } from '../screens/AuthLoadingScreen'
-import AuthStackNavigator from './AuthStackNavigator'
-import MainTabNavigator from './MainTabNavigator'
+import { AuthStackNavigator } from './AuthStackNavigator'
+import { MainTabNavigator } from './MainTabNavigator'
 
 export const routes: NavigationRouteConfigMap = {
   AuthLoading: {
@@ -27,4 +27,4 @@ export const options: SwitchNavigatorConfig = {
   initialRouteName: 'AuthLoading',
 }
 
-export default createSwitchNavigator(routes, options)
+export const AppNavigator = createSwitchNavigator(routes, options)

@@ -1,3 +1,3 @@
-import AppleSwipeableRow from './AppleSwipeableRow'
+import { AppleSwipeableRow } from './AppleSwipeableRow'
 
-export default AppleSwipeableRow
+export { AppleSwipeableRow }

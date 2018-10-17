@@ -8,7 +8,7 @@ import {
 } from 'react-navigation-tabs'
 
 import { ThemeConsumer } from '../components/context/ThemeContext'
-import Platform from '../libs/platform'
+import { Platform } from '../libs/platform'
 import * as colors from '../styles/colors'
 
 type BaseTabBarProps = (BottomTabBarProps | MaterialTopTabBarProps) & {
@@ -20,7 +20,7 @@ const BaseTabBar = Platform.selectUsingRealOS({
   default: BottomTabBar as ComponentType<BaseTabBarProps>,
 })
 
-const TabBar = (props: BottomTabBarProps) => (
+export const TabBar = (props: BottomTabBarProps) => (
   <ThemeConsumer>
     {({ theme }) => (
       <BaseTabBar
@@ -42,5 +42,3 @@ const TabBar = (props: BottomTabBarProps) => (
     )}
   </ThemeConsumer>
 )
-
-export default TabBar

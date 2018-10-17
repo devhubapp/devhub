@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class CardItemSeparator extends PureComponent {
+export class CardItemSeparator extends PureComponent {
   render() {
     return (
       <ThemeConsumer>

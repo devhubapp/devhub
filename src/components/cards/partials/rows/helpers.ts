@@ -1,6 +1,6 @@
 import { memoize } from 'ramda'
 
-import Browser from '../../../../libs/browser'
+import { Browser } from '../../../../libs/browser'
 import { fixURL, IURLOptions } from '../../../../utils/helpers/github/url'
 
 const baseURL = 'https://github.com'

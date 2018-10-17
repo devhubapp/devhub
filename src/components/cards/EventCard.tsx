@@ -30,16 +30,16 @@ import {
 } from '../../utils/helpers/github/shared'
 import { getRepoFullNameFromObject } from '../../utils/helpers/github/url'
 import { ThemeConsumer } from '../context/ThemeContext'
-import EventCardHeader from './partials/EventCardHeader'
-import BranchRow from './partials/rows/BranchRow'
-import CommentRow from './partials/rows/CommentRow'
-import CommitListRow from './partials/rows/CommitListRow'
-import IssueOrPullRequestRow from './partials/rows/IssueOrPullRequestRow'
-import ReleaseRow from './partials/rows/ReleaseRow'
-import RepositoryListRow from './partials/rows/RepositoryListRow'
-import RepositoryRow from './partials/rows/RepositoryRow'
-import UserListRow from './partials/rows/UserListRow'
-import WikiPageListRow from './partials/rows/WikiPageListRow'
+import { EventCardHeader } from './partials/EventCardHeader'
+import { BranchRow } from './partials/rows/BranchRow'
+import { CommentRow } from './partials/rows/CommentRow'
+import { CommitListRow } from './partials/rows/CommitListRow'
+import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { ReleaseRow } from './partials/rows/ReleaseRow'
+import { RepositoryListRow } from './partials/rows/RepositoryListRow'
+import { RepositoryRow } from './partials/rows/RepositoryRow'
+import { UserListRow } from './partials/rows/UserListRow'
+import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 
 export interface EventCardProps {
   event: IEnhancedGitHubEvent
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export default class EventCard extends PureComponent<EventCardProps> {
+export class EventCard extends PureComponent<EventCardProps> {
   render() {
     const { event, repoIsKnown } = this.props
     if (!event) return null

@@ -19,7 +19,7 @@ export interface WikiPageRowProps {
 
 export interface WikiPageRowState {}
 
-const WikiPageRow: SFC<WikiPageRowProps> = ({
+export const WikiPageRow: SFC<WikiPageRowProps> = ({
   isRead,
   name,
   showMoreItemsIndicator,
@@ -67,5 +67,3 @@ const WikiPageRow: SFC<WikiPageRowProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default WikiPageRow

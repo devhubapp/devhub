@@ -3,7 +3,7 @@ import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { IEnhancedGitHubEvent } from '../../../../types'
-import Avatar from '../../../common/Avatar'
+import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
@@ -20,7 +20,7 @@ export interface IProps {
 
 export interface IState {}
 
-const BranchRow: SFC<IProps> = ({
+export const BranchRow: SFC<IProps> = ({
   branch: _branch,
   isRead,
   ownerName,
@@ -79,5 +79,3 @@ const BranchRow: SFC<IProps> = ({
     </ThemeConsumer>
   )
 }
-
-export default BranchRow

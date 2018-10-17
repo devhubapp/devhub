@@ -1,6 +1,6 @@
 import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
-import * as colors from '../../../styles/colors'
 
+import * as colors from '../../../styles/colors'
 import { capitalize } from '../shared'
 
 export function getNotificationReasonTextsAndColor(
