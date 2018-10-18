@@ -56,8 +56,8 @@ export class NotificationCardsContainer extends PureComponent<
         })
       }
     } catch (error) {
-      console.error(error)
-      // alert('Failed to load notifications', `${error}`)
+      if (error && error.code === 304) return
+      console.error('Failed to load GitHub notifications', error)
     }
   }
 

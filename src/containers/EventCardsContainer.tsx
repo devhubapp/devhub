@@ -48,8 +48,8 @@ export class EventCardsContainer extends PureComponent<
         this.setState({ events: mergedEvents })
       }
     } catch (error) {
-      console.error(error)
-      // alert('Failed to load events', `${error}`)
+      if (error && error.code === 304) return
+      console.error('Failed to load GitHub activity', error)
     }
   }
 
