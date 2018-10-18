@@ -1,3 +1,3 @@
-import { AppleSwipeableRow } from './AppleSwipeableRow'
+import { GoogleSwipeableRow } from './GoogleSwipeableRow'
 
-export const SwipeableRow = AppleSwipeableRow
+export const SwipeableRow = GoogleSwipeableRow

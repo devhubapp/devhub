@@ -39,7 +39,7 @@ export function getColumnHeaderDetails(
             avatarDetails: { owner: column.params.org },
             icon: 'organization',
             repoIsKnown: false,
-            subtitle: 'Events',
+            subtitle: 'Activity',
             title: column.params.org,
           }
         }
@@ -47,8 +47,8 @@ export function getColumnHeaderDetails(
           return {
             icon: 'rss',
             repoIsKnown: false,
-            subtitle: 'Public',
-            title: 'Events',
+            subtitle: 'Activity',
+            title: 'Public',
           }
         }
         case 'REPO_EVENTS': {
@@ -59,7 +59,7 @@ export function getColumnHeaderDetails(
             },
             icon: 'repo',
             repoIsKnown: true,
-            subtitle: 'Events',
+            subtitle: 'Activity',
             title: column.params.repo,
           }
         }
@@ -93,14 +93,22 @@ export function getColumnHeaderDetails(
             title: column.params.org,
           }
         }
-        case 'USER_PUBLIC_EVENTS':
+        case 'USER_PUBLIC_EVENTS': {
+          return {
+            avatarDetails: { owner: column.params.username },
+            icon: 'person',
+            repoIsKnown: false,
+            subtitle: 'Activity',
+            title: column.params.username,
+          }
+        }
         case 'USER_RECEIVED_EVENTS':
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
             avatarDetails: { owner: column.params.username },
             icon: 'person',
             repoIsKnown: false,
-            subtitle: 'Activity',
+            subtitle: 'Dashboard',
             title: column.params.username,
           }
         }
