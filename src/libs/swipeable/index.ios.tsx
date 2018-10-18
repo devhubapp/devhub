@@ -1,3 +1,3 @@
 import { AppleSwipeableRow } from './AppleSwipeableRow'
 
-export { AppleSwipeableRow }
+export const SwipeableRow = AppleSwipeableRow

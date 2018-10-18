@@ -1,3 +1,3 @@
 import { GoogleSwipeableRow } from './GoogleSwipeableRow'
 
-export { GoogleSwipeableRow }
+export const SwipeableRow = GoogleSwipeableRow
