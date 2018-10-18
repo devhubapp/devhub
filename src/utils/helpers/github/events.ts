@@ -106,7 +106,7 @@ export function getColumnHeaderDetails(
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
             avatarDetails: { owner: column.params.username },
-            icon: 'person',
+            icon: 'home',
             repoIsKnown: false,
             subtitle: 'Dashboard',
             title: column.params.username,
