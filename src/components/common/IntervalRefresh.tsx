@@ -14,7 +14,10 @@ export interface IntervalRefreshState {
 
 const defaultInterval = 1000
 
-export class IntervalRefresh extends PureComponent<IntervalRefreshProps, IntervalRefreshState> {
+export class IntervalRefresh extends PureComponent<
+  IntervalRefreshProps,
+  IntervalRefreshState
+> {
   static defaultProps = {
     interval: defaultInterval,
   }

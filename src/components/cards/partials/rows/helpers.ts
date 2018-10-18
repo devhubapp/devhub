@@ -6,7 +6,10 @@ import { fixURL, GitHubURLOptions } from '../../../../utils/helpers/github/url'
 const baseURL = 'https://github.com'
 
 export const getGitHubURLPressHandler = memoize(
-  (url?: string, { commentId, issueOrPullRequestNumber }: GitHubURLOptions = {}) => {
+  (
+    url?: string,
+    { commentId, issueOrPullRequestNumber }: GitHubURLOptions = {},
+  ) => {
     const fixedURL = fixURL(url, { commentId, issueOrPullRequestNumber })
     return fixedURL ? () => Browser.openURL(fixedURL) : undefined
   },

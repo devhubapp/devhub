@@ -85,14 +85,9 @@ function getProps(from: From, size: number) {
   }
 }
 
-const GradientLayerOverlay: SFC<TransparentTextOverlayProps & { from: From }> = ({
-  color,
-  from,
-  radius,
-  size,
-  style,
-  ...props
-}) => (
+const GradientLayerOverlay: SFC<
+  TransparentTextOverlayProps & { from: From }
+> = ({ color, from, radius, size, style, ...props }) => (
   <LinearGradient
     colors={[rgba(color, 0), color]}
     style={[

@@ -45,7 +45,9 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export class NotificationCardHeader extends PureComponent<NotificationCardHeaderProps> {
+export class NotificationCardHeader extends PureComponent<
+  NotificationCardHeaderProps
+> {
   render() {
     const {
       cardIconColor,
