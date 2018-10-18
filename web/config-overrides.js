@@ -16,6 +16,7 @@ const appIncludes = [
   resolveApp('../node_modules/react-native-web-lists/src'),
   resolveApp('../node_modules/react-navigation-deprecated-tab-navigator/src/'),
   resolveApp('../node_modules/react-navigation-drawer/dist'),
+  resolveApp('../node_modules/react-navigation-stack/dist'),
   resolveApp(
     '../node_modules/react-navigation/node_modules/react-navigation-stack/dist',
   ),

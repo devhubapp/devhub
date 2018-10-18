@@ -1,5 +1,5 @@
 diff --git a/node_modules/@octokit/rest/lib/parse-client-options.js b/node_modules/@octokit/rest/lib/parse-client-options.js
-index 84cd9ff..eceffc6 100644
+index 84cd9ff..0b00148 100644
 --- a/node_modules/@octokit/rest/lib/parse-client-options.js
 +++ b/node_modules/@octokit/rest/lib/parse-client-options.js
 @@ -67,7 +67,7 @@ function parseOptions (userOptions) {
@@ -7,30 +7,24 @@ index 84cd9ff..eceffc6 100644
    /* istanbul ignore else */
  
 -  if (!process.browser) {
-+  if (process.title === 'node') {
++  if (!process.browser && typeof getRequestAgent === 'function') {
      clientDefaults.request.agent = getRequestAgent(clientDefaults.baseUrl, userOptions)
    }
  
 diff --git a/node_modules/@octokit/rest/lib/request/request.js b/node_modules/@octokit/rest/lib/request/request.js
-index 40a6451..2b1d612 100644
+index 40a6451..cf9312c 100644
 --- a/node_modules/@octokit/rest/lib/request/request.js
 +++ b/node_modules/@octokit/rest/lib/request/request.js
-@@ -2,7 +2,13 @@
+@@ -2,7 +2,7 @@
  
  module.exports = request
  
 -const fetch = require('node-fetch').default
-+let _fetch
-+try {
-+  _fetch = fetch
-+} catch(e) {
-+  _fetch = require('node-fetch').default
-+}
-+
++const _fetch = typeof fetch === 'undefined' ? require('node-fetch').default : fetch
  const debug = require('debug')('octokit:rest')
  const defaults = require('lodash/defaults')
  const isPlainObject = require('lodash/isPlainObject')
-@@ -39,7 +45,7 @@ function request (requestOptions) {
+@@ -39,7 +39,7 @@ function request (requestOptions) {
    let headers = {}
    let status
  
