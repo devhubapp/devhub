@@ -5,7 +5,7 @@ import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
-import { octokit } from '../libs/github'
+import { getNotifications } from '../libs/github'
 import { NotificationColumn, Omit } from '../types'
 
 export type NotificationCardsContainerProps = Omit<
@@ -41,9 +41,7 @@ export class NotificationCardsContainer extends PureComponent<
     const { column } = this.props
 
     try {
-      const response = await octokit.activity.getNotifications({
-        all: column.params.all,
-      })
+      const response = await getNotifications({ all: column.params.all })
 
       const notifications = response.data
       if (Array.isArray(notifications)) {

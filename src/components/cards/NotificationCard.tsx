@@ -1,4 +1,4 @@
-import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
+import Octokit from '@octokit/rest'
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
@@ -22,7 +22,7 @@ import { RepositoryRow } from './partials/rows/RepositoryRow'
 
 export interface NotificationCardProps {
   archived?: boolean
-  notification: ActivityGetNotificationsResponseItem
+  notification: Octokit.ActivityGetNotificationsResponseItem
   onlyOneRepository?: boolean
   repoIsKnown?: boolean
 }

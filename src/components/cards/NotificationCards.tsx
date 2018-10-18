@@ -1,4 +1,4 @@
-import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
+import Octokit from '@octokit/rest'
 import React, { PureComponent } from 'react'
 
 import { FlatList } from '../../libs/lists'
@@ -10,7 +10,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
-  notifications: ActivityGetNotificationsResponseItem[]
+  notifications: Octokit.ActivityGetNotificationsResponseItem[]
   repoIsKnown?: boolean
   swipeable?: boolean
 }
@@ -21,14 +21,14 @@ export class NotificationCards extends PureComponent<
   NotificationCardsProps,
   NotificationCardsState
 > {
-  keyExtractor(notification: ActivityGetNotificationsResponseItem) {
+  keyExtractor(notification: Octokit.ActivityGetNotificationsResponseItem) {
     return `notification-card-${notification.id}`
   }
 
   renderItem = ({
     item: notification,
   }: {
-    item: ActivityGetNotificationsResponseItem
+    item: Octokit.ActivityGetNotificationsResponseItem
   }) => {
     if (this.props.swipeable) {
       return (

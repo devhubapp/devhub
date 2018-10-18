@@ -1,12 +1,12 @@
-import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
+import Octokit from '@octokit/rest'
 
 import * as colors from '../../../styles/colors'
 import { capitalize } from '../shared'
 
 export function getNotificationReasonTextsAndColor(
-  notification: ActivityGetNotificationsResponseItem,
+  notification: Octokit.ActivityGetNotificationsResponseItem,
 ): { color: string; reason: string; label: string; description: string } {
-  const { reason }: ActivityGetNotificationsResponseItem = notification
+  const { reason }: Octokit.ActivityGetNotificationsResponseItem = notification
 
   switch (reason) {
     case 'assign':

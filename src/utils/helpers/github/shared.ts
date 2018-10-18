@@ -1,4 +1,4 @@
-import { ActivityGetNotificationsResponseItem } from '@octokit/rest'
+import Octokit from '@octokit/rest'
 import gravatar from 'gravatar'
 
 import * as colors from '../../../styles/colors'
@@ -124,7 +124,7 @@ export function getIssueIconAndColor(issue: {
 }
 
 export function getNotificationIconAndColor(
-  notification: ActivityGetNotificationsResponseItem,
+  notification: Octokit.ActivityGetNotificationsResponseItem,
   // payload: GitHubCommit | GitHubIssue | GitHubPullRequest,
 ): { icon: GitHubIcon; color?: string } {
   const { subject } = notification
