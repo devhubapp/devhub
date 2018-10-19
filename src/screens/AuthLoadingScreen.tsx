@@ -30,11 +30,7 @@ export class AuthLoadingScreenComponent extends PureComponent<
   }
 
   async componentDidUpdate(prevProps: AuthLoadingScreenProps) {
-    if (this.props.user !== prevProps.user) {
-      this.props.navigation.navigate(
-        this.props.accessToken && this.props.user ? 'App' : 'Auth',
-      )
-    } else if (this.props.accessToken !== prevProps.accessToken) {
+    if (this.props.accessToken !== prevProps.accessToken) {
       if (this.props.accessToken) {
         this.props.navigation.navigate('AuthLoading')
         const user = await this.props.refetchUser()
@@ -42,6 +38,10 @@ export class AuthLoadingScreenComponent extends PureComponent<
       } else {
         this.props.navigation.navigate('Auth')
       }
+    } else if (this.props.user !== prevProps.user) {
+      this.props.navigation.navigate(
+        this.props.accessToken && this.props.user ? 'App' : 'Auth',
+      )
     }
   }
 
