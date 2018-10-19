@@ -1,19 +1,18 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    /* Basic Options */
-    "target": "ES5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
-    "jsx": "react",                           /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
-    "outDir": "build/dist",                   /* Redirect output structure to the directory. */
-    "rootDir": "src"                          /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+    "target": "es5",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true
   },
-  "exclude": [
-    "acceptance-tests",
-    "build",
-    "jest",
-    "node_modules",
-    "scripts",
-    "src/setupTests.ts",
-    "webpack"
-  ]
+  "include": ["src/index.tsx", "devhub-native/src"]
 }

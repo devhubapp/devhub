@@ -1,7 +1,7 @@
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons'
+import Octicons from 'react-native-vector-icons/dist/Octicons'
 import MaterialIconFont from 'react-native-vector-icons/Fonts/MaterialIcons.ttf'
 import OcticonsFont from 'react-native-vector-icons/Fonts/Octicons.ttf'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Octicons from 'react-native-vector-icons/Octicons'
 
 export * from 'react-native-vector-icons'
 export { MaterialIcons, Octicons }

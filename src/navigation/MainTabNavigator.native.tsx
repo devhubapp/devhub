@@ -1,5 +1,4 @@
 import React from 'react'
-import Octicons from 'react-native-vector-icons/Octicons'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -8,6 +7,7 @@ import {
 } from 'react-navigation'
 
 import { Platform } from '../libs/platform'
+import { Octicons } from '../libs/vector-icons'
 import { FeedScreen } from '../screens/FeedScreen'
 import { NotificationsScreen } from '../screens/NotificationsScreen'
 import { SettingsScreen } from '../screens/SettingsScreen'

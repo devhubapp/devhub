@@ -7,6 +7,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath)
 
 const appIncludes = [
   resolveApp('src'),
+  resolveApp('../index.web.js'),
   resolveApp('../src'),
   resolveApp('../node_modules/react-native-platform-touchable'),
   resolveApp('../node_modules/react-native-safe-area-view'),
@@ -34,19 +35,18 @@ const appIncludes = [
 ]
 
 module.exports = function override(config, env) {
+  config.resolve.alias['react-native'] = resolveApp(
+    './node_modules/react-native-web',
+  )
+
   // allow importing from outside of src folder
   config.resolve.plugins = config.resolve.plugins.filter(
     plugin => plugin.constructor.name !== 'ModuleScopePlugin',
   )
 
-  config.module.rules[0].include = appIncludes
-  config.module.rules[1].oneOf[1].include = appIncludes
-  config.module.rules[1].oneOf[2].include = appIncludes
-
-  // https://github.com/wmonk/create-react-app-typescript/issues/245#issue-293342718
-  config.plugins = config.plugins.filter(
-    plugin => plugin.constructor.name !== 'ForkTsCheckerWebpackPlugin',
-  )
+  config.module.rules[1] = null
+  config.module.rules[2].oneOf[1].include = appIncludes
+  config.module.rules = config.module.rules.filter(Boolean)
 
   config.plugins.push(
     new webpack.DefinePlugin({ __DEV__: env !== 'production' }),

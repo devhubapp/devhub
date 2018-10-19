@@ -41,12 +41,7 @@ export abstract class BaseSwipeableRow<
 
   abstract renderButtonAction: (
     action: IAction,
-    {
-      dragX,
-      placement,
-      progress,
-      x,
-    }: {
+    params: {
       x: number
       placement: Placement
       progress: Animated.Value
@@ -56,11 +51,7 @@ export abstract class BaseSwipeableRow<
 
   abstract renderFullAction: (
     action: IAction,
-    {
-      dragX,
-      placement,
-      progress,
-    }: {
+    params: {
       dragX: Animated.Value
       placement: Placement
       progress: Animated.Value

@@ -6,11 +6,7 @@ import { TransparentTextOverlay } from '../../../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../../../context/ThemeContext'
 
 export type RenderItem<Item> = (
-  {
-    item,
-    index,
-    showMoreItemsIndicator,
-  }: { item: Item; index: number; showMoreItemsIndicator?: boolean },
+  params: { item: Item; index: number; showMoreItemsIndicator?: boolean },
 ) => ReactNode
 
 export interface RowListProps<Item> {
