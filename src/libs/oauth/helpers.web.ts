@@ -38,7 +38,7 @@ export const listenForNextMessageData = (
         window.removeEventListener('message', handleMessage)
         finished = true
       }
-    }, 60 * 1000)
+    }, 120 * 1000)
 
     if (popup) {
       popup.onbeforeunload = () => {
