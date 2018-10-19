@@ -31,8 +31,10 @@ export async function getNotifications(
   const cacheValue = cache[cacheKey]
 
   const params = (_params || {}) as any
+  params.headers = params.headers || {}
+  params.headers['If-None-Match'] = ''
+
   if (cacheValue) {
-    params.headers = params.headers || {}
     params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
     params.headers['If-None-Match'] = cacheValue.headers.etag
   }
@@ -54,8 +56,10 @@ export async function getActivity<T extends GitHubActivityType>(
   const cacheValue = cache[cacheKey]
 
   const params = _params || {}
+  params.headers = params.headers || {}
+  params.headers['If-None-Match'] = ''
+
   if (cacheValue) {
-    params.headers = params.headers || {}
     params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
     params.headers['If-None-Match'] = cacheValue.headers.etag
   }
