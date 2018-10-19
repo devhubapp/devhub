@@ -10,7 +10,7 @@ const MainTabNavigatorComponent: SFC<NavigationScreenProps> = props => (
 
 export const MainTabNavigator = Platform.selectUsingRealOS(
   {
-    default: () => require('./MainTabNavigator.native').default,
+    default: () => require('./MainTabNavigator.native').MainTabNavigator,
     web: () => MainTabNavigatorComponent,
   },
   { fallbackToWeb: false },
