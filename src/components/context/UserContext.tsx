@@ -11,7 +11,7 @@ export interface UserProviderProps {
 export interface UserProviderState {
   accessToken: string | null
   hasLoadedFromCache: boolean
-  refetchUser: () => Promise<GitHubUser>
+  refetchUser: () => Promise<GitHubUser | null>
   setAccessToken: (accessToken: string | null) => Promise<void>
   user?: GitHubUser | null
 }
@@ -92,10 +92,19 @@ export class UserProvider extends React.PureComponent<
       throw new Error('Not authenticated.')
     }
 
-    const userData = await this.getGitHubUser()
+    let userData
 
-    if (!(userData && userData.login)) {
-      throw new Error('Failed to load user. Please try logging in again.')
+    try {
+      userData = await this.getGitHubUser()
+      if (!(userData && userData.login)) throw new Error('Invalid response.')
+    } catch (e) {
+      if (e.code === 401) {
+        this.setAccessToken(null)
+        return null
+      }
+
+      alert('Failed to load user. Please try logging in again.')
+      return null
     }
 
     const user: GitHubUser = {
