@@ -27,23 +27,23 @@ const cache: Record<string, Pick<Octokit.AnyResponse, 'headers'>> = {}
 export async function getNotifications(
   _params: Octokit.ActivityGetNotificationsParams = {},
 ) {
-  const cacheKey = JSON.stringify(['NOTIFICATIONS', _params])
-  const cacheValue = cache[cacheKey]
+  // const cacheKey = JSON.stringify(['NOTIFICATIONS', _params])
+  // const cacheValue = cache[cacheKey]
 
   const params = (_params || {}) as any
   params.headers = params.headers || {}
   params.headers['If-None-Match'] = ''
 
-  if (cacheValue) {
-    params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
-    params.headers['If-None-Match'] = cacheValue.headers.etag
-  }
+  // if (cacheValue) {
+  //   params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
+  //   params.headers['If-None-Match'] = cacheValue.headers.etag
+  // }
 
   const response = await octokit.activity.getNotifications(params)
 
-  cache[cacheKey] = {
-    headers: response.headers,
-  }
+  // cache[cacheKey] = {
+  //   headers: response.headers,
+  // }
 
   return response
 }
