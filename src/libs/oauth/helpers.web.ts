@@ -41,7 +41,7 @@ export const listenForNextMessageData = (
     }, 120 * 1000)
 
     if (popup) {
-      popup.onbeforeunload = () => {
+      popup.onclose = () => {
         if (!finished) {
           window.removeEventListener('message', handleMessage)
           reject('Canceled')
