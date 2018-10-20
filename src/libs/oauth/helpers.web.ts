@@ -15,9 +15,8 @@ export const listenForNextMessageData = (
     const handleMessage = (e?: {
       data?: OAuthResponseData & { error?: boolean }
     }) => {
-      if (!(e && e.data)) {
-        reject('Invalid response')
-        finished = true
+      // Can be messages from other places, e.g. from the redux devtools
+      if (!(e && e.data && (e.data.access_token || e.data.error))) {
         return
       }
 
