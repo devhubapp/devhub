@@ -30,6 +30,7 @@
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
     "babel-plugin-react-native-web": "0.9.3",
+    "fork-ts-checker-webpack-plugin": "^0.4.10",
     "gh-pages": "^2.0.1",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
