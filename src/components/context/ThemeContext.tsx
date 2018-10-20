@@ -1,44 +1,59 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-import { theme as defaultTheme } from '../../styles/themes/dark-gray'
-import { Theme } from '../../styles/utils'
+import * as actions from '../../redux/actions'
+import { themeSelector } from '../../redux/selectors/config'
+import { loadTheme } from '../../styles/utils'
+import { defaultThemeName } from '../../styles/variables'
+import { ExtractDispatcherFromActionCreator, Theme } from '../../types'
+import { ExtractPropsFromConnector } from '../../types/redux'
 
 export interface ThemeProviderProps {
   children?: React.ReactNode
-  initialTheme?: Theme
 }
 
 export interface ThemeProviderState {
-  setTheme: (theme: Theme) => void
+  setTheme: ExtractDispatcherFromActionCreator<typeof actions.setTheme>
   theme: Theme
 }
 
+const defaultTheme = loadTheme({ name: defaultThemeName, color: '' })
+
 const ThemeContext = React.createContext<ThemeProviderState>({
-  setTheme: _theme => {
+  setTheme: () => {
     throw new Error('[setTheme] Not implemented')
   },
   theme: defaultTheme,
 })
 
-export class ThemeProvider extends React.PureComponent<
-  ThemeProviderProps,
+export const ThemeConsumer = ThemeContext.Consumer
+
+const connectToStore = connect(state => ({
+  theme: themeSelector(state),
+}))
+
+type Props = ThemeProviderProps &
+  ExtractPropsFromConnector<typeof connectToStore>
+class ThemeProviderComponent extends React.PureComponent<
+  Props,
   ThemeProviderState
 > {
-  static defaultProps = {
-    initialTheme: defaultTheme,
-  }
-
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
       setTheme: this.setTheme,
-      theme: props.initialTheme || defaultTheme,
+      theme: props.theme || defaultTheme,
     }
   }
 
-  setTheme = (theme: Theme) => {
-    this.setState({ theme: theme || this.props.initialTheme || defaultTheme })
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.theme !== prevProps.theme)
+      this.setState({ theme: this.props.theme })
+  }
+
+  setTheme: ThemeProviderState['setTheme'] = payload => {
+    this.props.dispatch({ type: 'SET_THEME', payload })
   }
 
   render() {
@@ -50,4 +65,4 @@ export class ThemeProvider extends React.PureComponent<
   }
 }
 
-export const ThemeConsumer = ThemeContext.Consumer
+export const ThemeProvider = connectToStore(ThemeProviderComponent)

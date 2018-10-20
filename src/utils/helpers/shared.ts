@@ -6,6 +6,11 @@ export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, toUpper)
 }
 
+export function isNight() {
+  const hours = new Date().getHours()
+  return hours >= 18 || hours <= 6
+}
+
 export function getDateSmallText(date: MomentInput) {
   if (!date) return ''
 

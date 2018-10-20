@@ -2,12 +2,12 @@ import _ from 'lodash'
 import { StyleSheet } from 'react-native'
 
 import { Platform } from '../../libs/platform'
-import { Theme } from '../../styles/utils'
 import {
   avatarSize,
   contentPadding,
   smallTextSize,
 } from '../../styles/variables'
+import { Theme } from '../../types/themes'
 
 export const getCardStylesForTheme = _.memoize((theme: Theme) => {
   return StyleSheet.create({

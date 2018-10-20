@@ -1,14 +1,8 @@
-import { Reducer } from 'redux'
+import { Reducer } from '../../../types'
 
-import pkg from '../../../../package.json'
+interface State {}
 
-interface State {
-  version: string
-}
-
-const initialState: State = {
-  version: pkg.version,
-}
+const initialState: State = {}
 
 export const appReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {

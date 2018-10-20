@@ -1,6 +1,10 @@
 import { darken, getLuminance, invert, lighten, rgba } from 'polished'
 
-import { createTheme, Theme } from '../utils'
+import { Theme } from '../../types/themes'
+
+function createTheme(theme: Theme): Theme {
+  return theme
+}
 
 export function createThemeFromColor(
   color: string,

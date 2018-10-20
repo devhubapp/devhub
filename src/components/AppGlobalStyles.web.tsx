@@ -1,13 +1,13 @@
 import React from 'react'
 
-import { Theme } from '../styles/utils'
+import { Theme } from '../types/themes'
 import { ThemeConsumer } from './context/ThemeContext'
 
-function getStyles({ theme }: { theme: Theme }) {
+function getStyles(params: { theme: Theme }) {
   return `
     ::-webkit-scrollbar-thumb
     {
-      background-color: ${theme.backgroundColorMore08};
+      background-color: ${params.theme.backgroundColorMore08};
     }
   `
 }
