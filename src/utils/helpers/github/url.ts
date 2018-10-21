@@ -91,10 +91,13 @@ export function githubHTMLUrlFromAPIUrl(
       switch (type2) {
         case 'commits': {
           if (commentId) {
-            const elementId = Platform.selectUsingRealOS({
-              default: `comment-${commentId}`,
-              web: `commitcomment-${commentId}`,
-            })
+            const elementId = Platform.selectUsingRealOS(
+              {
+                default: `comment-${commentId}`,
+                web: `commitcomment-${commentId}`,
+              },
+              { fallbackToWeb: true },
+            )
 
             return `${baseURL}/${repoFullName}/commit/${
               restOfURL2[0]
@@ -109,10 +112,13 @@ export function githubHTMLUrlFromAPIUrl(
             issueOrPullRequestNumber &&
             (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
           ) {
-            const elementId = Platform.selectUsingRealOS({
-              default: `comment-${commentId || restOfURL2[1]}`,
-              web: `issuecomment-${commentId || restOfURL2[1]}`,
-            })
+            const elementId = Platform.selectUsingRealOS(
+              {
+                default: `comment-${commentId || restOfURL2[1]}`,
+                web: `issuecomment-${commentId || restOfURL2[1]}`,
+              },
+              { fallbackToWeb: true },
+            )
 
             return `${baseURL}/${repoFullName}/issues/${issueOrPullRequestNumber}#${elementId}`
           }
@@ -124,10 +130,13 @@ export function githubHTMLUrlFromAPIUrl(
             issueOrPullRequestNumber &&
             (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
           ) {
-            const elementId = Platform.selectUsingRealOS({
-              default: `comment-${commentId || restOfURL2[1]}`,
-              web: `discussion_r${commentId || restOfURL2[1]}`,
-            })
+            const elementId = Platform.selectUsingRealOS(
+              {
+                default: `comment-${commentId || restOfURL2[1]}`,
+                web: `discussion_r${commentId || restOfURL2[1]}`,
+              },
+              { fallbackToWeb: true },
+            )
 
             return `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}#${elementId}`
           }

@@ -25,3 +25,11 @@ html, body, #root, #root > div {
 body {
   background-color: #1c1c1c;
 }
+
+.snap-container {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-item-start {
+  scroll-snap-align: start;
+}

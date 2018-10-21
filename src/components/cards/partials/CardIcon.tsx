@@ -4,8 +4,9 @@ import { StyleSheet, ViewStyle } from 'react-native'
 import { IconProps } from 'react-native-vector-icons/Icon'
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { contentPadding } from '../../../styles/variables'
+import { Omit } from '../../../types'
 
-export interface CardIconProps extends IconProps {}
+export interface CardIconProps extends Omit<IconProps, 'accessibilityRole'> {}
 
 const styles = StyleSheet.create({
   container: {

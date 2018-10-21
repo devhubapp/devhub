@@ -5,6 +5,7 @@ import { Platform } from '../../../src/libs/platform'
 import { contentPadding } from '../../styles/variables'
 import { DimensionsConsumer } from '../context/DimensionsContext'
 import { ThemeConsumer } from '../context/ThemeContext'
+import { sidebarSize } from '../layout/LeftSidebar'
 
 export const columnMargin = contentPadding / 2
 
@@ -24,12 +25,15 @@ const styles = StyleSheet.create({
 
 export class Column extends PureComponent<ColumnProps> {
   static defaultProps = {
-    maxWidth: Platform.selectUsingRealOS({
-      android: 800,
-      default: 360,
-      ios: 680,
-      web: 360,
-    }),
+    maxWidth: Platform.selectUsingRealOS(
+      {
+        android: 800,
+        default: 360,
+        ios: 680,
+        web: 360,
+      },
+      { fallbackToWeb: true },
+    ),
     minWidth: 320,
   }
 
@@ -43,12 +47,26 @@ export class Column extends PureComponent<ColumnProps> {
             {({ width }) => (
               <View
                 {...props}
+                className={width <= 600 ? 'snap-item-start' : ''}
                 style={[
                   styles.container,
                   {
                     backgroundColor: theme.backgroundColor,
                     borderRightColor: theme.backgroundColorDarker08,
-                    width: Math.max(minWidth!, Math.min(maxWidth!, width)),
+                    width: Math.max(
+                      minWidth!,
+                      Math.min(
+                        maxWidth!,
+                        width -
+                          Platform.selectUsingRealOS(
+                            {
+                              default: 0,
+                              web: sidebarSize,
+                            },
+                            { fallbackToWeb: false },
+                          ),
+                      ),
+                    ),
                   },
                   style,
                 ]}

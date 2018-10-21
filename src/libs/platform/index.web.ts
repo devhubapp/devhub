@@ -24,7 +24,7 @@ export const Platform = {
   isStandalone: (window.navigator as any).standalone,
   selectUsingRealOS<T>(
     specifics: PlataformSelectSpecifics<T>,
-    { fallbackToWeb = true }: PlatformSelectOptions = {},
+    { fallbackToWeb = false }: PlatformSelectOptions = {},
   ) {
     const result =
       Platform.realOS in specifics

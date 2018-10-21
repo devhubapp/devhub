@@ -18,6 +18,8 @@ import { UserConsumer, UserProviderState } from '../context/UserContext'
 
 const logo = require('../../../assets/logo.png') // tslint:disable-line
 
+export const sidebarSize = columnHeaderHeight
+
 const styles = StyleSheet.create({
   centerContainer: {
     alignContent: 'center',
@@ -46,7 +48,7 @@ class LeftSidebarComponent extends PureComponent<
         {({ theme }) => (
           <View
             style={{
-              width: columnHeaderHeight,
+              width: sidebarSize,
               backgroundColor: theme.backgroundColor,
               borderRightWidth: StyleSheet.hairlineWidth,
               borderRightColor: theme.backgroundColorDarker08,
@@ -58,7 +60,7 @@ class LeftSidebarComponent extends PureComponent<
                 {
                   backgroundColor: theme.backgroundColorLess08,
                   width: '100%',
-                  height: columnHeaderHeight + StyleSheet.hairlineWidth,
+                  height: sidebarSize + StyleSheet.hairlineWidth,
                   borderBottomWidth: StyleSheet.hairlineWidth,
                   borderColor: theme.backgroundColorDarker08,
                 },
@@ -66,7 +68,7 @@ class LeftSidebarComponent extends PureComponent<
             >
               <Avatar
                 shape="circle"
-                size={columnHeaderHeight / 2}
+                size={sidebarSize / 2}
                 username="brunolemos"
               />
             </View>
@@ -88,8 +90,7 @@ class LeftSidebarComponent extends PureComponent<
                               styles.centerContainer,
                               {
                                 width: '100%',
-                                height:
-                                  columnHeaderHeight + StyleSheet.hairlineWidth,
+                                height: sidebarSize + StyleSheet.hairlineWidth,
                               },
                             ]}
                           >
@@ -112,7 +113,7 @@ class LeftSidebarComponent extends PureComponent<
                 styles.centerContainer,
                 {
                   width: '100%',
-                  height: columnHeaderHeight + StyleSheet.hairlineWidth,
+                  height: sidebarSize + StyleSheet.hairlineWidth,
                   paddingLeft: 3,
                 },
               ]}
@@ -125,7 +126,7 @@ class LeftSidebarComponent extends PureComponent<
                 styles.centerContainer,
                 {
                   width: '100%',
-                  height: columnHeaderHeight + StyleSheet.hairlineWidth,
+                  height: sidebarSize + StyleSheet.hairlineWidth,
                 },
               ]}
             >
@@ -133,9 +134,9 @@ class LeftSidebarComponent extends PureComponent<
                 resizeMode="contain"
                 source={logo}
                 style={{
-                  width: columnHeaderHeight / 2,
-                  height: columnHeaderHeight / 2,
-                  borderRadius: columnHeaderHeight / (2 * 2),
+                  width: sidebarSize / 2,
+                  height: sidebarSize / 2,
+                  borderRadius: sidebarSize / (2 * 2),
                 }}
               />
             </View>

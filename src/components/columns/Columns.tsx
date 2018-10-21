@@ -26,6 +26,7 @@ export class Columns extends PureComponent<ColumnsProps> {
 
     return (
       <ScrollView
+        className="snap-container"
         contentContainerStyle={style}
         horizontal
         pagingEnabled
