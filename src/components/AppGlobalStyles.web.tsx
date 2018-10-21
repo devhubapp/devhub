@@ -7,7 +7,7 @@ function getStyles(params: { theme: Theme }) {
   return `
     ::-webkit-scrollbar-thumb
     {
-      background-color: ${params.theme.backgroundColorMore08};
+      background-color: ${params.theme.backgroundColorDarker08};
     }
   `
 }

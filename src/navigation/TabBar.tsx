@@ -9,7 +9,6 @@ import {
 
 import { ThemeConsumer } from '../components/context/ThemeContext'
 import { Platform } from '../libs/platform'
-import * as colors from '../styles/colors'
 
 type BaseTabBarProps = (BottomTabBarProps | MaterialTopTabBarProps) & {
   indicatorStyle: StyleProp<ViewStyle>
@@ -25,17 +24,17 @@ export const TabBar = (props: BottomTabBarProps) => (
     {({ theme }) => (
       <BaseTabBar
         {...props}
-        activeTintColor={colors.brand}
+        activeTintColor={theme.foregroundColor}
         inactiveTintColor={theme.foregroundColorMuted50}
         indicatorStyle={{
-          backgroundColor: colors.brand,
+          backgroundColor: theme.foregroundColor,
         }}
         showLabel={Platform.realOS === 'ios'}
         showIcon
         style={{
-          backgroundColor: theme.backgroundColorLess08,
+          backgroundColor: theme.backgroundColor,
           ...Platform.selectUsingRealOS({
-            ios: { padding: 3, borderTopColor: theme.backgroundColorLess08 },
+            ios: { padding: 3, borderTopColor: theme.backgroundColorDarker08 },
           }),
         }}
       />

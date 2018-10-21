@@ -49,7 +49,7 @@ class LeftSidebarComponent extends PureComponent<
               width: columnHeaderHeight,
               backgroundColor: theme.backgroundColor,
               borderRightWidth: StyleSheet.hairlineWidth,
-              borderRightColor: theme.backgroundColorMore08,
+              borderRightColor: theme.backgroundColorDarker08,
             }}
           >
             <View
@@ -60,7 +60,7 @@ class LeftSidebarComponent extends PureComponent<
                   width: '100%',
                   height: columnHeaderHeight + StyleSheet.hairlineWidth,
                   borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderColor: theme.backgroundColorMore08,
+                  borderColor: theme.backgroundColorDarker08,
                 },
               ]}
             >

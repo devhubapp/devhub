@@ -6,11 +6,11 @@ import {
 } from 'react-navigation'
 
 import { Screen } from '../components/common/Screen'
+import { ThemeConsumer } from '../components/context/ThemeContext'
 import {
   UserConsumer,
   UserProviderState,
 } from '../components/context/UserContext'
-import * as colors from '../styles/colors'
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +49,10 @@ export class AuthLoadingScreenComponent extends PureComponent<
     return (
       <Screen style={styles.container}>
         <StatusBar hidden />
-        <ActivityIndicator color={colors.brand} />
+
+        <ThemeConsumer>
+          {({ theme }) => <ActivityIndicator color={theme.foregroundColor} />}
+        </ThemeConsumer>
       </Screen>
     )
   }
