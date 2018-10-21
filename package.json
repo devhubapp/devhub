@@ -5,7 +5,6 @@
     "format": "prettier --write '{.,__tests__,src/**,web,web/src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "postinstall": "patch-package",
-    "precommit": "tsc && lint-staged",
     "prepare": "patch-package",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
@@ -109,5 +108,10 @@
       "tslint --fix",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsc && lint-staged"
+    }
   }
 }
