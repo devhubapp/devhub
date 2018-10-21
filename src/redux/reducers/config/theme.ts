@@ -1,8 +1,8 @@
 import { Reducer, ThemePair } from '../../../types'
 
-type State = ThemePair | ''
+type State = ThemePair | null
 
-const initialState: State = ''
+const initialState: State = null
 
 export const themeReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {

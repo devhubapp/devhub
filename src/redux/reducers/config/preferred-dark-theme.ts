@@ -1,9 +1,9 @@
 import { loadTheme } from '../../../styles/utils'
 import { Reducer, ThemePair } from '../../../types'
 
-type State = ThemePair | ''
+type State = ThemePair | null
 
-const initialState: State = ''
+const initialState: State = null
 
 export const preferredDarkThemeReducer: Reducer<State> = (
   state = initialState,
