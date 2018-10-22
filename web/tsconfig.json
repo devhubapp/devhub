@@ -4,15 +4,28 @@
     "target": "es5",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["esnext", "dom", "dom.iterable"],
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "noEmit": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["src/index.tsx", "devhub-native/src"]
+  "include": [
+    "src/index.tsx",
+    "devhub-native/src"
+  ],
+  "exclude": [
+    "**/__tests__/**",
+    "**/?*test.*",
+    "**/?*spec.*"
+  ]
 }

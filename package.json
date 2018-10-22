@@ -103,11 +103,14 @@
     "cacheDirectory": ".jest/cache"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "tslint --fix",
-      "git add"
-    ]
+    "linters": {
+      "*.{js,jsx,ts,tsx}": [
+        "prettier --write",
+        "tslint --fix",
+        "git add"
+      ]
+    },
+    "ignore": ["web/src/react-app.d.ts"]
   },
   "husky": {
     "hooks": {
