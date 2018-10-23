@@ -12,6 +12,10 @@ import { UserConsumer, UserProvider } from './context/UserContext'
 
 const { persistor, store } = configureStore()
 
+// TODO: Enable StrictMode after react-redux fixes it
+// @see https://github.com/reduxjs/react-redux/issues/897
+// @see https://github.com/reduxjs/react-redux/issues/890
+// @see https://github.com/reduxjs/react-redux/issues/950
 export class App extends PureComponent {
   render() {
     return (

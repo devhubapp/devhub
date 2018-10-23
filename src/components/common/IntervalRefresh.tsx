@@ -33,11 +33,11 @@ export class IntervalRefresh extends PureComponent<
     this.start(this.props)
   }
 
-  componentWillReceiveProps(newProps: IntervalRefreshProps) {
-    const interval = this.getIntervalValue(newProps)
+  componentDidUpdate(prevProps: IntervalRefreshProps) {
+    const interval = this.getIntervalValue(prevProps)
 
     if (interval !== this.state.currentInterval) {
-      this.start(newProps)
+      this.start(this.props)
     }
   }
 

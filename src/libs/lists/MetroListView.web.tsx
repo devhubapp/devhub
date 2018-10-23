@@ -96,7 +96,40 @@ export class MetroListView extends React.Component<
     },
   }
 
-  state: MetroListViewState = this._computeState(this.props, {
+  static getDerivedStateFromProps(
+    props: MetroListViewProps,
+    state: MetroListViewState,
+  ) {
+    return MetroListView._computeState(props, state)
+  }
+
+  static _computeState(props: MetroListViewProps, state: MetroListViewState) {
+    const sectionHeaderData: { [key: string]: Item } = {}
+
+    if (props.sections) {
+      invariant(!props.items, 'Cannot have both sections and items props.')
+      const sections: { [key: string]: SectionItem['data'] } = {}
+
+      props.sections.forEach((sectionIn, ii) => {
+        const sectionID = `s${ii}`
+        sections[sectionID] = sectionIn.data
+        sectionHeaderData[sectionID] = sectionIn
+      })
+
+      return {
+        sectionHeaderData,
+        ds: state.ds.cloneWithRowsAndSections(sections),
+      }
+    }
+
+    invariant(!props.sections, 'Cannot have both sections and items props.')
+    return {
+      sectionHeaderData,
+      ds: state.ds.cloneWithRows(props.items),
+    }
+  }
+
+  state: MetroListViewState = MetroListView._computeState(this.props, {
     ds: new ListView.DataSource({
       getSectionHeaderData: (_, sectionID) =>
         this.state.sectionHeaderData[sectionID],
@@ -164,10 +197,6 @@ export class MetroListView extends React.Component<
   //   }
   // }
 
-  componentWillReceiveProps(newProps: MetroListViewProps) {
-    this.setState(state => this._computeState(newProps, state))
-  }
-
   render() {
     const {
       FooterComponent,
@@ -207,32 +236,6 @@ export class MetroListView extends React.Component<
       | null,
   ) => {
     if (ref) this._listRef = ref
-  }
-
-  _computeState(props: MetroListViewProps, state: MetroListViewState) {
-    const sectionHeaderData: { [key: string]: Item } = {}
-
-    if (props.sections) {
-      invariant(!props.items, 'Cannot have both sections and items props.')
-      const sections: { [key: string]: SectionItem['data'] } = {}
-
-      props.sections.forEach((sectionIn, ii) => {
-        const sectionID = `s${ii}`
-        sections[sectionID] = sectionIn.data
-        sectionHeaderData[sectionID] = sectionIn
-      })
-
-      return {
-        sectionHeaderData,
-        ds: state.ds.cloneWithRowsAndSections(sections),
-      }
-    }
-
-    invariant(!props.sections, 'Cannot have both sections and items props.')
-    return {
-      sectionHeaderData,
-      ds: state.ds.cloneWithRows(props.items),
-    }
   }
 
   _renderEmpty = () => <this.props.ListEmptyComponent key="$empty" />
