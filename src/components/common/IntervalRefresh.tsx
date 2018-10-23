@@ -22,7 +22,7 @@ export class IntervalRefresh extends PureComponent<
     interval: defaultInterval,
   }
 
-  intervalInstance: number | null = null
+  intervalInstance?: number
 
   state: IntervalRefreshState = {
     currentInterval: 1000,
@@ -87,10 +87,15 @@ export class IntervalRefresh extends PureComponent<
   }
 
   stop = () => {
-    if (this.intervalInstance) clearInterval(this.intervalInstance)
+    if (this.intervalInstance) {
+      clearInterval(this.intervalInstance)
+      this.intervalInstance = undefined
+    }
   }
 
   tick = (callback: () => void) => {
+    if (!this.intervalInstance) return
+
     this.setState(
       ({ updatedTimes }) => ({
         updatedTimes: updatedTimes + 1,

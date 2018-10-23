@@ -60,7 +60,10 @@ export class EventCardsContainer extends PureComponent<
   }
 
   clearFetchDataInterval = () => {
-    if (this.fetchDataInterval) clearInterval(this.fetchDataInterval)
+    if (this.fetchDataInterval) {
+      clearInterval(this.fetchDataInterval)
+      this.fetchDataInterval = undefined
+    }
   }
 
   render() {
