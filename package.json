@@ -23,10 +23,10 @@
     "gravatar": "^1.6.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
-    "polished": "^2.2.0",
+    "polished": "^2.3.0",
     "qs": "^6.5.2",
     "ramda": "^0.25.0",
-    "react": "^16.5.2",
+    "react": "^16.6.0",
     "react-native": "0.56.1",
     "react-native-gesture-handler": "^1.0.8",
     "react-native-linear-gradient": "^2.4.2",
@@ -34,7 +34,7 @@
     "react-native-screens": "^1.0.0-alpha.15",
     "react-native-splash-screen": "^3.1.1",
     "react-native-vector-icons": "^6.0.2",
-    "react-navigation": "^2.18.0",
+    "react-navigation": "^2.18.1",
     "react-navigation-tabs": "^0.8.4",
     "react-redux": "^5.0.7",
     "redux": "^4.0.1",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/gravatar": "^1.4.28",
-    "@types/jest": "^23.3.5",
+    "@types/jest": "^23.3.7",
     "@types/lodash": "^4.14.117",
     "@types/qs": "^6.5.1",
     "@types/ramda": "^0.25.39",
@@ -62,10 +62,10 @@
     "jest": "^23.6.0",
     "lint-staged": "^7.3.0",
     "patch-package": "^6.0.0-10",
-    "postinstall-postinstall": "^1.0.0",
+    "postinstall-postinstall": "^2.0.0",
     "prettier": "^1.14.3",
     "react-native-typescript-transformer": "^1.2.10",
-    "react-test-renderer": "^16.5.2",
+    "react-test-renderer": "^16.6.0",
     "ts-jest": "^23.10.4",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
@@ -110,7 +110,9 @@
         "git add"
       ]
     },
-    "ignore": ["web/src/react-app.d.ts"]
+    "ignore": [
+      "web/src/react-app.d.ts"
+    ]
   },
   "husky": {
     "hooks": {
