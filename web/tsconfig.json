@@ -17,7 +17,11 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "typeRoots": [
+      "../@types",
+      "../node_modules/@types"
+    ]
   },
   "include": [
     "src/index.tsx",

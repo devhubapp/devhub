@@ -1,8 +1,6 @@
 import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
-import Swipeable, {
-  SwipeableProperties,
-} from 'react-native-gesture-handler/Swipeable'
+import { Swipeable } from 'react-native-gesture-handler'
 
 export type BaseActionType = 'BUTTON' | 'FULL'
 
@@ -58,10 +56,7 @@ export abstract class BaseSwipeableRow<
     },
   ) => ReactNode
 
-  renderLeftActions: SwipeableProperties['renderLeftActions'] = (
-    progress,
-    dragX,
-  ) => {
+  renderLeftActions = (progress: Animated.Value, dragX: Animated.Value) => {
     const { leftActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
@@ -95,10 +90,7 @@ export abstract class BaseSwipeableRow<
     )
   }
 
-  renderRightActions: SwipeableProperties['renderRightActions'] = (
-    progress,
-    dragX,
-  ) => {
+  renderRightActions = (progress: Animated.Value, dragX: Animated.Value) => {
     const { rightActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
