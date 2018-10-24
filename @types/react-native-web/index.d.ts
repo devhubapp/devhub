@@ -3,8 +3,10 @@ declare module 'react-native-web' {
 }
 
 namespace JSX {
+  import * as ReactNative from 'react-native'
   interface IntrinsicAttributes extends React.Attributes {
     accessibilityRole?:
+      | ReactNative.AccessibilityRole
       | 'article' // article
       | 'banner' // header
       | 'button' // button

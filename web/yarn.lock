@@ -8277,7 +8277,7 @@ react-timer-mixin@^0.13.3:
   resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
-react@16.6.0:
+react@^16.6.0:
   version "16.6.0"
   resolved "https://registry.npmjs.org/react/-/react-16.6.0.tgz#b34761cfaf3e30f5508bc732fb4736730b7da246"
   integrity sha512-zJPnx/jKtuOEXCbQ9BKaxDMxR0001/hzxXwYxG8septeyYGfsgAei6NgfbVgOhbY1WOP2o3VPs/E9HaN+9hV3Q==
