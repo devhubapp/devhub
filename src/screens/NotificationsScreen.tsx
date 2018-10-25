@@ -21,7 +21,7 @@ export class NotificationsScreen extends PureComponent<NavigationScreenProps> {
       <ThemeConsumer>
         {({ theme }) => (
           <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
-            <ColumnsContainer onlyNotifications />
+            <ColumnsContainer only="notifications" />
           </Screen>
         )}
       </ThemeConsumer>

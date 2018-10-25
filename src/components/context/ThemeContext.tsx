@@ -28,7 +28,7 @@ const ThemeContext = React.createContext<ThemeProviderState>({
 
 export const ThemeConsumer = ThemeContext.Consumer
 
-const connectToStore = connect(state => ({
+const connectToStore = connect((state: any) => ({
   theme: themeSelector(state),
 }))
 

@@ -1,73 +1,62 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 
 import { Columns } from '../components/columns/Columns'
 import { EventColumn } from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
-import { ColumnsConsumer } from '../components/context/ColumnsContext'
-import { UserConsumer } from '../components/context/UserContext'
+import * as selectors from '../redux/selectors'
+import { ExtractPropsFromConnector } from '../types'
 
-export type ColumnsContainerProps =
-  | {
-      onlyEvents?: true
-      onlyNotifications?: false
-    }
-  | {
-      onlyEvents?: false
-      onlyNotifications?: true
-    }
+export interface ColumnsContainerProps {
+  only?: 'events' | 'notifications'
+}
 
 export interface ColumnsContainerState {}
 
-export class ColumnsContainer extends PureComponent<
-  ColumnsContainerProps,
+const connectToStore = connect((state: any) => ({
+  columns: selectors.columnsSelector(state),
+}))
+
+class ColumnsContainerComponent extends PureComponent<
+  ColumnsContainerProps & ExtractPropsFromConnector<typeof connectToStore>,
   ColumnsContainerState
 > {
-  state = {}
-
   render() {
-    const { onlyEvents, onlyNotifications } = this.props
+    const { only } = this.props
+    const _columns = this.props.columns || []
+
+    const columns =
+      only === 'notifications'
+        ? _columns.filter(column => column.type === 'notifications')
+        : only === 'events'
+          ? _columns.filter(column => column.type !== 'notifications')
+          : _columns
+
+    const swipeable = columns.length === 1
 
     return (
-      <UserConsumer>
-        {({ accessToken }) => (
-          <ColumnsConsumer>
-            {({ columns: _columns }) => {
-              if (!(accessToken && _columns)) return null
-
-              const columns = onlyNotifications
-                ? _columns.filter(column => column.type === 'notifications')
-                : onlyEvents
-                  ? _columns.filter(column => column.type !== 'notifications')
-                  : _columns
-
-              const swipeable = columns.length === 1
-
-              return (
-                <Columns bounces={!swipeable} scrollEnabled={!swipeable}>
-                  {columns.map(
-                    (column, index) =>
-                      (column.type === 'notifications' && (
-                        <NotificationColumn
-                          key={`event-column-${index}`}
-                          column={column}
-                          swipeable={swipeable}
-                        />
-                      )) ||
-                      (column.type === 'activity' && (
-                        <EventColumn
-                          key={`event-column-${index}`}
-                          column={column}
-                          swipeable={swipeable}
-                        />
-                      )),
-                  )}
-                </Columns>
-              )
-            }}
-          </ColumnsConsumer>
+      <Columns bounces={!swipeable} scrollEnabled={!swipeable}>
+        {columns.map(
+          (column, index) =>
+            (column.type === 'notifications' && (
+              <NotificationColumn
+                key={`event-column-${index}`}
+                column={column}
+                swipeable={swipeable}
+              />
+            )) ||
+            (column.type === 'activity' && (
+              <EventColumn
+                key={`event-column-${index}`}
+                column={column}
+                swipeable={swipeable}
+              />
+            )),
         )}
-      </UserConsumer>
+      </Columns>
     )
   }
 }
+
+export const ColumnsContainer = connectToStore(ColumnsContainerComponent)

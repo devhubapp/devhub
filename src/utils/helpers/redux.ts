@@ -1,16 +1,39 @@
-import { Action, ActionWithPayload } from '../../types'
+import { Action, ActionWithError } from '../../types'
 
-export function createAction<T extends string>(type: T): Action<T>
+export function createAction<T extends string>(type: T): Action<T, void>
 export function createAction<T extends string, P>(
   type: T,
   payload: P,
-): ActionWithPayload<T, P>
+): Action<T, P>
 export function createAction<T extends string, P>(type: T, payload?: P) {
   return typeof payload === 'undefined' ? { type } : { type, payload }
 }
 
+export function createErrorAction<T extends string, E extends object>(
+  type: T,
+  error: E,
+): ActionWithError<T, void, E>
+export function createErrorAction<
+  T extends string,
+  E extends object = Record<string, any>
+>(type: T, error?: E) {
+  return { type, error }
+}
+
 export function createActionCreator<T extends string, P = void>(type: T) {
-  return (payload: P) => createAction(type, payload)
+  const withoutPayload = () => createAction(type)
+  const withPayload = (payload: P) => createAction(type, payload)
+
+  return withPayload as P extends void
+    ? typeof withoutPayload
+    : typeof withPayload
+}
+
+export function createErrorActionCreator<
+  T extends string,
+  E extends object = Record<string, any>
+>(type: T) {
+  return (error: E) => createErrorAction(type, error)
 }
 
 // just a workaround for a good type checking without having to duplicate code

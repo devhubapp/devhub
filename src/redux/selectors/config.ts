@@ -1,15 +1,18 @@
 import { createSelector } from 'reselect'
 
 import { loadTheme } from '../../styles/utils'
+import { RootState } from '../../types'
 import { isNight } from '../../utils/helpers/shared'
 
-export const themePairSelector = (state: any) => state.config.theme
+const s = (state: RootState) => state.config
 
-export const preferredDarkThemePairSelector = (state: any) =>
-  state.config.preferredDarkTheme
+export const themePairSelector = (state: RootState) => s(state).theme
 
-export const preferredLightThemePairSelector = (state: any) =>
-  state.config.preferredLightTheme
+export const preferredDarkThemePairSelector = (state: RootState) =>
+  s(state).preferredDarkTheme
+
+export const preferredLightThemePairSelector = (state: RootState) =>
+  s(state).preferredLightTheme
 
 export const themeSelector = createSelector(
   themePairSelector,

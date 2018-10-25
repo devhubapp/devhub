@@ -21,7 +21,7 @@ export class FeedScreen extends PureComponent<NavigationScreenProps> {
       <ThemeConsumer>
         {({ theme }) => (
           <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
-            <ColumnsContainer onlyEvents />
+            <ColumnsContainer only="events" />
           </Screen>
         )}
       </ThemeConsumer>

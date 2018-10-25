@@ -7,14 +7,16 @@ import {
   View,
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
+import { connect } from 'react-redux'
 
+import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
+import { ExtractPropsFromConnector } from '../../types'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { columnHeaderHeight } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
-import { ColumnsConsumer } from '../context/ColumnsContext'
 import { ThemeConsumer } from '../context/ThemeContext'
-import { UserConsumer, UserProviderState } from '../context/UserContext'
 
 const logo = require('../../../assets/logo.png') // tslint:disable-line
 
@@ -32,17 +34,25 @@ export interface LeftSidebarProps {
   navigation: NavigationScreenProps['navigation']
 }
 
+const connectToStore = connect(
+  (state: any) => ({
+    columns: selectors.columnsSelector(state),
+  }),
+  { logout: actions.logout },
+)
+
 class LeftSidebarComponent extends PureComponent<
-  LeftSidebarProps & {
-    setAccessToken: UserProviderState['setAccessToken']
-  }
+  LeftSidebarProps &
+    ExtractPropsFromConnector<typeof connectToStore> &
+    NavigationScreenProps
 > {
   logout = () => {
-    this.props.setAccessToken(null)
-    this.props.navigation.navigate('Login')
+    this.props.logout()
   }
 
   render() {
+    const { columns } = this.props
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
@@ -74,37 +84,31 @@ class LeftSidebarComponent extends PureComponent<
             </View>
 
             <ScrollView style={{ flex: 1 }}>
-              <ColumnsConsumer>
-                {({ columns }) =>
-                  !columns
-                    ? null
-                    : columns.map((column, index) => {
-                        const requestTypeIconAndData = getColumnHeaderDetails(
-                          column,
-                        )
+              {!columns
+                ? null
+                : columns.map((column, index) => {
+                    const requestTypeIconAndData = getColumnHeaderDetails(
+                      column,
+                    )
 
-                        return (
-                          <View
-                            key={`left-sidebar-column-${index}`}
-                            style={[
-                              styles.centerContainer,
-                              {
-                                width: '100%',
-                                height: sidebarSize + StyleSheet.hairlineWidth,
-                              },
-                            ]}
-                          >
-                            <ColumnHeaderItem
-                              avatarDetails={
-                                requestTypeIconAndData.avatarDetails
-                              }
-                              iconName={requestTypeIconAndData.icon}
-                            />
-                          </View>
-                        )
-                      })
-                }
-              </ColumnsConsumer>
+                    return (
+                      <View
+                        key={`left-sidebar-column-${index}`}
+                        style={[
+                          styles.centerContainer,
+                          {
+                            width: '100%',
+                            height: sidebarSize + StyleSheet.hairlineWidth,
+                          },
+                        ]}
+                      >
+                        <ColumnHeaderItem
+                          avatarDetails={requestTypeIconAndData.avatarDetails}
+                          iconName={requestTypeIconAndData.icon}
+                        />
+                      </View>
+                    )
+                  })}
             </ScrollView>
 
             <TouchableOpacity
@@ -147,10 +151,4 @@ class LeftSidebarComponent extends PureComponent<
   }
 }
 
-export const LeftSidebar = (props: LeftSidebarProps) => (
-  <UserConsumer>
-    {({ setAccessToken }) => (
-      <LeftSidebarComponent {...props} setAccessToken={setAccessToken} />
-    )}
-  </UserConsumer>
-)
+export const LeftSidebar = connectToStore(LeftSidebarComponent)

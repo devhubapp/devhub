@@ -55,7 +55,7 @@ export async function getActivity<T extends GitHubActivityType>(
   const cacheKey = JSON.stringify([type, _params])
   const cacheValue = cache[cacheKey]
 
-  const params = _params || {}
+  const params = { ..._params }
   params.headers = params.headers || {}
   params.headers['If-None-Match'] = ''
 

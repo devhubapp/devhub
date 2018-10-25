@@ -1,14 +1,15 @@
 import { MomentInput } from 'moment'
 import React, { PureComponent } from 'react'
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import { connect } from 'react-redux'
 
-import { GitHubIcon } from '../../../types'
+import * as selectors from '../../../redux/selectors'
+import { ExtractPropsFromConnector, GitHubIcon } from '../../../types'
 import { getDateSmallText } from '../../../utils/helpers/shared'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Label } from '../../common/Label'
 import { ThemeConsumer } from '../../context/ThemeContext'
-import { UserConsumer } from '../../context/UserContext'
 import { getCardStylesForTheme } from '../styles'
 import { CardIcon } from './CardIcon'
 
@@ -45,8 +46,16 @@ const styles = StyleSheet.create({
   } as ViewStyle,
 })
 
-export class NotificationCardHeader extends PureComponent<
-  NotificationCardHeaderProps
+const connectToStore = connect((state: any) => {
+  const user = selectors.currentUserSelector(state)
+
+  return {
+    username: (user && user.login) || '',
+  }
+})
+
+class NotificationCardHeaderComponent extends PureComponent<
+  NotificationCardHeaderProps & ExtractPropsFromConnector<typeof connectToStore>
 > {
   render() {
     const {
@@ -57,6 +66,7 @@ export class NotificationCardHeader extends PureComponent<
       labelColor,
       labelText,
       updatedAt,
+      username,
     } = this.props
 
     return (
@@ -64,16 +74,12 @@ export class NotificationCardHeader extends PureComponent<
         {({ theme }) => (
           <View style={styles.container}>
             <View style={getCardStylesForTheme(theme).leftColumn}>
-              <UserConsumer>
-                {({ user }) => (
-                  <Avatar
-                    shape="circle"
-                    small
-                    style={getCardStylesForTheme(theme).avatar}
-                    username={(user && user.login) || ''}
-                  />
-                )}
-              </UserConsumer>
+              <Avatar
+                shape="circle"
+                small
+                style={getCardStylesForTheme(theme).avatar}
+                username={username}
+              />
             </View>
 
             <View style={styles.rightColumnCentered}>
@@ -114,3 +120,7 @@ export class NotificationCardHeader extends PureComponent<
     )
   }
 }
+
+export const NotificationCardHeader = connectToStore(
+  NotificationCardHeaderComponent,
+)

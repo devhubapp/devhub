@@ -9,7 +9,7 @@ export function loadCustomTheme(color: string) {
 }
 
 export function loadTheme(
-  theme: ThemePair,
+  theme?: ThemePair,
   preferredDarkTheme?: ThemePair,
   preferredLightTheme?: ThemePair,
 ): Theme {

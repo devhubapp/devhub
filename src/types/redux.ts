@@ -1,12 +1,20 @@
 import { InferableComponentEnhancerWithProps } from 'react-redux'
-import { Action as ReduxAction } from 'redux'
+import { Action as ReduxAction, Reducer as ReduxReducer } from 'redux'
 
 import * as actions from '../redux/actions'
+import { rootReducer } from '../redux/reducers'
 
-export interface Action<T extends string> extends ReduxAction<T> {}
-
-export interface ActionWithPayload<T extends string, P> extends Action<T> {
+export interface Action<T extends string, P> extends ReduxAction<T> {
   payload: P
+}
+
+export interface ActionWithError<
+  T extends string,
+  P,
+  E extends object = Record<string, any>
+> extends Action<T, P> {
+  payload: P
+  error: E
 }
 
 export type ExtractPayloadFromActionCreator<AC> = AC extends () => any
@@ -34,3 +42,7 @@ export type AllActions = ExtractActionFromActionCreator<
 >
 
 export type Reducer<S = any> = (state: S | undefined, action: AllActions) => S
+
+export type RootState = typeof rootReducer extends ReduxReducer<infer S>
+  ? S
+  : never

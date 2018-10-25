@@ -4,29 +4,32 @@ import {
   NavigationScreenProps,
   NavigationStackScreenOptions,
 } from 'react-navigation'
+import { connect } from 'react-redux'
+
+import * as actions from '../redux/actions'
 
 import { Screen } from '../components/common/Screen'
-import {
-  UserConsumer,
-  UserProviderState,
-} from '../components/context/UserContext'
 import * as colors from '../styles/colors'
+import { ExtractPropsFromConnector } from '../types'
 
 export interface SettingsScreenProps {}
 
+const connectToStore = connect(
+  null,
+  { logout: actions.logout },
+)
+
 class SettingsScreenComponent extends PureComponent<
   SettingsScreenProps &
-    NavigationScreenProps & {
-      setAccessToken: UserProviderState['setAccessToken']
-    }
+    ExtractPropsFromConnector<typeof connectToStore> &
+    NavigationScreenProps
 > {
   static navigationOptions: NavigationStackScreenOptions = {
     headerTitle: 'Settings',
   }
 
   logout = () => {
-    this.props.setAccessToken(null)
-    this.props.navigation.navigate('Login')
+    this.props.logout()
   }
 
   render() {
@@ -40,14 +43,4 @@ class SettingsScreenComponent extends PureComponent<
   }
 }
 
-export const SettingsScreen = (
-  props: SettingsScreenProps & NavigationScreenProps,
-) => (
-  <UserConsumer>
-    {({ setAccessToken }) => (
-      <SettingsScreenComponent {...props} setAccessToken={setAccessToken} />
-    )}
-  </UserConsumer>
-)
-
-SettingsScreen.navigationOptions = SettingsScreenComponent.navigationOptions
+export const SettingsScreen = connectToStore(SettingsScreenComponent)

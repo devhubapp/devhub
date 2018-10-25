@@ -1,41 +1,28 @@
 import React, { PureComponent } from 'react'
-import {
-  Image,
-  ImageStyle,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import {
   NavigationScreenProps,
   NavigationStackScreenOptions,
 } from 'react-navigation'
+import { connect } from 'react-redux'
 
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { Screen } from '../components/common/Screen'
 import { ThemeConsumer } from '../components/context/ThemeContext'
-import {
-  UserConsumer,
-  UserProviderState,
-} from '../components/context/UserContext'
 import { executeOAuth } from '../libs/oauth'
+import * as actions from '../redux/actions'
+import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
+import { ExtractPropsFromConnector } from '../types'
 
 const logo = require('../../assets/logo.png') // tslint:disable-line
 const pkg = require('../../package.json') // tslint:disable-line
 
 const serverURL = 'https://micro-oauth-pmkvlpfaua.now.sh'
 
-export interface LoginScreenProps {
-  error: string
-  refetchUser: UserProviderState['refetchUser']
-  setAccessToken: UserProviderState['setAccessToken']
-}
+export interface LoginScreenProps {}
 
 export interface LoginScreenState {
-  isLoggingIn: boolean
   loggingInMethod: 'github.public' | 'github.private' | null
 }
 
@@ -48,24 +35,24 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     padding: contentPadding,
     width: '100%',
-  } as ViewStyle,
+  },
 
   header: {
     alignItems: 'center',
     justifyContent: 'center',
-  } as ViewStyle,
+  },
 
   mainContentContainer: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-  } as ViewStyle,
+  },
 
   footer: {
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: contentPadding,
-  } as ViewStyle,
+  },
 
   logo: {
     alignSelf: 'center',
@@ -73,32 +60,44 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: contentPadding / 2,
     width: 100,
-  } as ImageStyle,
+  },
 
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     lineHeight: 26,
-  } as TextStyle,
+  },
 
   subtitle: {
     fontSize: 14,
     lineHeight: 18,
-  } as TextStyle,
+  },
 
   button: {
     alignSelf: 'stretch',
     marginTop: contentPadding / 2,
-  } as ImageStyle,
+  },
 
   appVersion: {
     fontSize: 14,
     lineHeight: 18,
-  } as TextStyle,
+  },
 })
 
+const connectToStore = connect(
+  (state: any) => ({
+    isLoggingIn: selectors.isLoggingInSelector(state),
+    user: selectors.currentUserSelector(state),
+  }),
+  {
+    login: actions.loginRequest,
+  },
+)
+
 export class LoginScreenComponent extends PureComponent<
-  LoginScreenProps & NavigationScreenProps,
+  LoginScreenProps &
+    ExtractPropsFromConnector<typeof connectToStore> &
+    NavigationScreenProps,
   LoginScreenState
 > {
   static navigationOptions: NavigationStackScreenOptions = {
@@ -106,68 +105,42 @@ export class LoginScreenComponent extends PureComponent<
   }
 
   state: LoginScreenState = {
-    isLoggingIn: false,
     loggingInMethod: null,
   }
 
-  loginWithGitHubPrivateAccess = async () => {
-    this.setState({ isLoggingIn: true, loggingInMethod: 'github.private' })
+  _loginWithGitHub = async (
+    loggingInMethod: LoginScreenState['loggingInMethod'],
+  ) => {
+    this.setState({ loggingInMethod })
 
+    const permissions =
+      loggingInMethod === 'github.private'
+        ? ['user', 'repo', 'notifications', 'read:org']
+        : ['user', 'public_repo', 'notifications', 'read:org']
+
+    let token
     try {
-      const params = await executeOAuth(serverURL, [
-        'user',
-        'repo',
-        'notifications',
-        'read:org',
-      ])
+      const params = await executeOAuth(serverURL, permissions)
+      if (!(params && params.access_token))
+        throw new Error('No token received.')
 
-      // this.props.navigation.navigate('AuthLoading')
-
-      await this.props.setAccessToken((params && params.access_token) || null)
-      const user = await this.props.refetchUser()
-
-      if (user) {
-        this.props.navigation.navigate('App')
-        return
-      }
+      token = params.access_token
     } catch (e) {
       console.error(e)
       alert(`Login failed. ${e || ''}`)
+      return
     }
 
-    this.setState({ isLoggingIn: false })
+    await this.props.login({ token })
   }
 
-  loginWithGitHubPublicAccess = async () => {
-    this.setState({ isLoggingIn: true, loggingInMethod: 'github.public' })
+  loginWithGitHubPrivateAccess = () => this._loginWithGitHub('github.private')
 
-    try {
-      const params = await executeOAuth(serverURL, [
-        'user',
-        'public_repo',
-        'notifications',
-        'read:org',
-      ])
-
-      // this.props.navigation.navigate('AuthLoading')
-
-      await this.props.setAccessToken((params && params.access_token) || null)
-      const user = await this.props.refetchUser()
-
-      if (user) {
-        this.props.navigation.navigate('App')
-        return
-      }
-    } catch (e) {
-      console.error(e)
-      alert(`Login failed. ${e}`)
-    }
-
-    this.setState({ isLoggingIn: false })
-  }
+  loginWithGitHubPublicAccess = () => this._loginWithGitHub('github.public')
 
   render() {
-    const { isLoggingIn, loggingInMethod } = this.state
+    const { loggingInMethod } = this.state
+    const { isLoggingIn } = this.props
 
     return (
       <ThemeConsumer>
@@ -177,7 +150,11 @@ export class LoginScreenComponent extends PureComponent<
               <View style={styles.header} />
 
               <View style={styles.mainContentContainer}>
-                <Image resizeMode="contain" source={logo} style={styles.logo} />
+                <Image
+                  resizeMode="contain"
+                  source={logo}
+                  style={styles.logo as any}
+                />
 
                 <GitHubLoginButton
                   loading={isLoggingIn && loggingInMethod === 'github.public'}
@@ -222,18 +199,4 @@ export class LoginScreenComponent extends PureComponent<
   }
 }
 
-export const LoginScreen = (
-  props: typeof LoginScreenComponent.prototype.props,
-) => (
-  <UserConsumer>
-    {({ refetchUser, setAccessToken }) => (
-      <LoginScreenComponent
-        {...props}
-        refetchUser={refetchUser}
-        setAccessToken={setAccessToken}
-      />
-    )}
-  </UserConsumer>
-)
-
-LoginScreen.navigationOptions = LoginScreenComponent.navigationOptions
+export const LoginScreen = connectToStore(LoginScreenComponent)

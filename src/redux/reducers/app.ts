@@ -1,4 +1,4 @@
-import { Reducer } from '../../../types'
+import { Reducer } from '../../types'
 
 interface State {}
 
