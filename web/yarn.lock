@@ -406,6 +406,13 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
 
+"@babel/plugin-syntax-typescript@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@babel/plugin-syntax-typescript/-/plugin-syntax-typescript-7.0.0.tgz#90f4fe0a741ae9c0dcdc3017717c05a0cbbd5158"
+  integrity sha512-5fxmdqiAQVQTIS+KSvYeZuTt91wKtBTYi6JlIkvbQ6hmO+9fZE81ezxmMiFMIsxE7CdRSgzn7nQ1BChcvK9OpA==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
+
 "@babel/plugin-transform-arrow-functions@^7.0.0":
   version "7.0.0"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-arrow-functions/-/plugin-transform-arrow-functions-7.0.0.tgz#a6c14875848c68a3b4b3163a486535ef25c7e749"
@@ -677,6 +684,14 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
 
+"@babel/plugin-transform-typescript@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.npmjs.org/@babel/plugin-transform-typescript/-/plugin-transform-typescript-7.1.0.tgz#81e7b4be90e7317cbd04bf1163ebf06b2adee60b"
+  integrity sha512-TOTtVeT+fekAesiCHnPz+PSkYSdOSLyLn42DI45nxg6iCdlQY6LIj/tYqpMB0y+YicoTUiYiXqF8rG6SKfhw6Q==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/plugin-syntax-typescript" "^7.0.0"
+
 "@babel/plugin-transform-unicode-regex@^7.0.0":
   version "7.0.0"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-unicode-regex/-/plugin-transform-unicode-regex-7.0.0.tgz#c6780e5b1863a76fe792d90eded9fcd5b51d68fc"
@@ -751,6 +766,14 @@
     "@babel/plugin-transform-react-jsx" "^7.0.0"
     "@babel/plugin-transform-react-jsx-self" "^7.0.0"
     "@babel/plugin-transform-react-jsx-source" "^7.0.0"
+
+"@babel/preset-typescript@7.1.0":
+  version "7.1.0"
+  resolved "https://registry.npmjs.org/@babel/preset-typescript/-/preset-typescript-7.1.0.tgz#49ad6e2084ff0bfb5f1f7fb3b5e76c434d442c7f"
+  integrity sha512-LYveByuF9AOM8WrsNne5+N79k1YxjNB6gmpCQsnuSBAcV8QUeB+ZUxQzL7Rz7HksPbahymKkq2qBR+o36ggFZA==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/plugin-transform-typescript" "^7.1.0"
 
 "@babel/runtime@7.0.0":
   version "7.0.0"
@@ -831,6 +854,19 @@
   version "1.4.0"
   resolved "https://registry.npmjs.org/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
+
+"@mrmlnc/readdir-enhanced@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
+  integrity sha512-bPHp6Ji8b41szTOcaP63VlnbbO5Ny6dwAATtY6JTjh5N2OLrb5Qk/Th5cRkRQhkWCt+EJsYrNB0MiL+Gpn6e3g==
+  dependencies:
+    call-me-maybe "^1.0.1"
+    glob-to-regexp "^0.3.0"
+
+"@nodelib/fs.stat@^1.0.1":
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/@nodelib/fs.stat/-/fs.stat-1.1.2.tgz#54c5a964462be3d4d78af631363c18d6fa91ac26"
+  integrity sha512-yprFYuno9FtNsSHVlSWd+nRlmGoAbqbeCwOryP6sC/zoCjhpArcRMYp19EvpSUSizJAlsXEwJv+wcWS9XaXdMw==
 
 "@svgr/core@^2.4.1":
   version "2.4.1"
@@ -1463,7 +1499,7 @@ axobject-query@^2.0.1:
   dependencies:
     ast-types-flow "0.0.7"
 
-babel-code-frame@^6.26.0:
+babel-code-frame@^6.22.0, babel-code-frame@^6.26.0:
   version "6.26.0"
   resolved "https://registry.npmjs.org/babel-code-frame/-/babel-code-frame-6.26.0.tgz#63fd43f7dc1e3bb7ce35947db8fe369a3f58c74b"
   integrity sha1-Y/1D99weO7fONZR9uP42mj9Yx0s=
@@ -1610,10 +1646,10 @@ babel-plugin-macros@2.4.2:
     cosmiconfig "^5.0.5"
     resolve "^1.8.1"
 
-babel-plugin-named-asset-import@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/babel-plugin-named-asset-import/-/babel-plugin-named-asset-import-0.2.2.tgz#af1290f77e073411ef1a12f17fc458f1111122eb"
-  integrity sha512-NtESBqk8LZuNhBd1BMLxDOh0JPytMs88LwAZFmHg1ZyuGrIAO40dw7p624w+flj0uuhfKTNY8tYKsUEAZGRRFA==
+babel-plugin-named-asset-import@0.2.3-next.c662dfb0:
+  version "0.2.3-next.c662dfb0"
+  resolved "https://registry.npmjs.org/babel-plugin-named-asset-import/-/babel-plugin-named-asset-import-0.2.3-next.c662dfb0.tgz#23efe6018caa98d89c763bff01c2a127a970fd9d"
+  integrity sha512-U6P1GgDg9Bp2udKRax12rh56vnUonuj4sD1FJblBxS3QozjD9FEwNJctMlHNcOTqgIstEtOUPl0oI5IxJuAmJw==
 
 babel-plugin-react-native-web@0.9.4:
   version "0.9.4"
@@ -1646,10 +1682,10 @@ babel-preset-jest@^23.2.0:
     babel-plugin-jest-hoist "^23.2.0"
     babel-plugin-syntax-object-rest-spread "^6.13.0"
 
-babel-preset-react-app@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.npmjs.org/babel-preset-react-app/-/babel-preset-react-app-5.0.4.tgz#e64a875071af1637a712b68f429551988ec5ebe4"
-  integrity sha512-NQ344N1BXY4ur8c7iRqj1JQvcI6tiLbNB8W2z0Vanmc6xld+EG9CYk9cfIFTPgk5RCkughimt+0uw2nd2CyevQ==
+babel-preset-react-app@5.0.5-next.c662dfb0:
+  version "5.0.5-next.c662dfb0"
+  resolved "https://registry.npmjs.org/babel-preset-react-app/-/babel-preset-react-app-5.0.5-next.c662dfb0.tgz#8e20f1bc8ece8cc07531104a181aacf1511dc351"
+  integrity sha512-q2lvYkTo3acoO0TPtqks927r3ooz05qsEy5q0JHkkeX7vHC4yGQv1Tge/6FCXIdQYTpYGSUXTtmVXyjEFjr/tw==
   dependencies:
     "@babel/core" "7.1.0"
     "@babel/plugin-proposal-class-properties" "7.1.0"
@@ -1663,6 +1699,7 @@ babel-preset-react-app@^5.0.4:
     "@babel/plugin-transform-runtime" "7.1.0"
     "@babel/preset-env" "7.1.0"
     "@babel/preset-react" "7.0.0"
+    "@babel/preset-typescript" "7.1.0"
     "@babel/runtime" "7.0.0"
     babel-loader "8.0.4"
     babel-plugin-dynamic-import-node "2.2.0"
@@ -2079,6 +2116,11 @@ cache-base@^1.0.1:
     union-value "^1.0.0"
     unset-value "^1.0.0"
 
+call-me-maybe@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/call-me-maybe/-/call-me-maybe-1.0.1.tgz#26d208ea89e37b5cbde60250a15f031c16a4d66b"
+  integrity sha1-JtII6onje1y95gJQoV8DHBak1ms=
+
 caller-path@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/caller-path/-/caller-path-0.1.0.tgz#94085ef63581ecd3daa92444a8fe94e82577751f"
@@ -2181,7 +2223,7 @@ check-types@^7.3.0:
   resolved "https://registry.npmjs.org/check-types/-/check-types-7.4.0.tgz#0378ec1b9616ec71f774931a3c6516fad8c152f4"
   integrity sha512-YbulWHdfP99UfZ73NcUDlNJhEIDgm9Doq9GhpyXbF+7Aegi3CVV7qqMCKTTqJxlvEvnQBp9IA+dxsGN6xK/nSg==
 
-chokidar@^2.0.0, chokidar@^2.0.2:
+chokidar@^2.0.0, chokidar@^2.0.2, chokidar@^2.0.4:
   version "2.0.4"
   resolved "https://registry.npmjs.org/chokidar/-/chokidar-2.0.4.tgz#356ff4e2b0e8e43e322d18a372460bbcf3accd26"
   integrity sha512-z9n7yt9rOvIJrMhvDtDictKrkFHeihkNl6uWMmZlmL6tJtX9Cs+87oK+teBx+JIgzvbX3yZHT3eF8vpbDxHJXQ==
@@ -2450,10 +2492,10 @@ configstore@^3.0.0:
     write-file-atomic "^2.0.0"
     xdg-basedir "^3.0.0"
 
-confusing-browser-globals@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/confusing-browser-globals/-/confusing-browser-globals-1.0.4.tgz#7d3ae232117abdf158f968c1ebeeab42ea980991"
-  integrity sha512-oS1wYNQBHNxM7xnwetiG8X4QjEbWwSzQjcBTtsz0HTNLCTBsepo12z557p9I9F9gYCHaVGQ3rcJD/tQgprGlRA==
+confusing-browser-globals@1.0.5-next.c662dfb0:
+  version "1.0.5-next.c662dfb0"
+  resolved "https://registry.npmjs.org/confusing-browser-globals/-/confusing-browser-globals-1.0.5-next.c662dfb0.tgz#199c59dfc07beb468b876168ca5189f0b8afe160"
+  integrity sha512-YspMJIJrzo2ptRxMXd/utjBa1KA9Xfw82LEilGTVBTh5rHg+aTDXQRdYejzJ5urqKNaDjeKxjBLrx2igmuD1DQ==
 
 connect-history-api-fallback@^1.3.0:
   version "1.5.0"
@@ -3097,6 +3139,14 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
+dir-glob@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/dir-glob/-/dir-glob-2.0.0.tgz#0b205d2b6aef98238ca286598a8204d29d0a0034"
+  integrity sha512-37qirFDz8cA5fimp9feo43fSuRo2gHwaIn6dXL8Ber1dGwUosDrGZeCCXq57WnIqE4aQ+u3eQZzsk1yOzhdwag==
+  dependencies:
+    arrify "^1.0.1"
+    path-type "^3.0.0"
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/dns-equal/-/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"
@@ -3376,12 +3426,12 @@ escodegen@^1.11.0, escodegen@^1.9.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-react-app@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.npmjs.org/eslint-config-react-app/-/eslint-config-react-app-3.0.4.tgz#83f394d765e7d5af623d773e64609e9c9f2cbeb5"
-  integrity sha512-Fos37wkB5QNc8Qh7HUq/ChMUi1njLE78Y2U0RD3MOtYRtPNrMyYw1pLufb8GwNSphMSgRgOkIdakc3d0yXbWyQ==
+eslint-config-react-app@3.0.5-next.c662dfb0:
+  version "3.0.5-next.c662dfb0"
+  resolved "https://registry.npmjs.org/eslint-config-react-app/-/eslint-config-react-app-3.0.5-next.c662dfb0.tgz#cb2509446219553fffb7dfffd496a6f2cf9d8454"
+  integrity sha512-WZTq49BMje+HCMEOjvGpFcVsKgq05ju8G9DUBStWoW+qNpr/xNg1wa6kipdGeenXVCbru5u4Kh6FkDEHprTSZA==
   dependencies:
-    confusing-browser-globals "^1.0.4"
+    confusing-browser-globals "1.0.5-next.c662dfb0"
 
 eslint-import-resolver-node@^0.3.1:
   version "0.3.2"
@@ -3803,6 +3853,18 @@ fast-deep-equal@^2.0.1:
   resolved "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
   integrity sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
 
+fast-glob@^2.0.2:
+  version "2.2.3"
+  resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-2.2.3.tgz#d09d378e9ef6b0076a0fa1ba7519d9d4d9699c28"
+  integrity sha512-NiX+JXjnx43RzvVFwRWfPKo4U+1BrK5pJPsHQdKMlLoFHrrGktXglQhHliSihWAq+m1z6fHk3uwGHrtRbS9vLA==
+  dependencies:
+    "@mrmlnc/readdir-enhanced" "^2.2.1"
+    "@nodelib/fs.stat" "^1.0.1"
+    glob-parent "^3.1.0"
+    is-glob "^4.0.0"
+    merge2 "^1.2.1"
+    micromatch "^3.1.10"
+
 fast-json-stable-stringify@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/fast-json-stable-stringify/-/fast-json-stable-stringify-2.0.0.tgz#d5142c0caee6b1189f87d3a76111064f86c8bbf2"
@@ -4069,6 +4131,22 @@ forever-agent@~0.6.1:
   resolved "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
+fork-ts-checker-webpack-plugin-alt@0.4.10:
+  version "0.4.10"
+  resolved "https://registry.npmjs.org/fork-ts-checker-webpack-plugin-alt/-/fork-ts-checker-webpack-plugin-alt-0.4.10.tgz#7c7bbb7c1a34d15d586eed00f4e1b772d8f46756"
+  integrity sha512-buNFzJE3QKI6fjnwP/OXmGlMlpaHc/74PZ+XhZr+WQH3dAvQ3Zq4nhlNzMCfyLSBilh7tzSd0GUEWLvMiP1r3Q==
+  dependencies:
+    babel-code-frame "^6.22.0"
+    chalk "^2.4.1"
+    chokidar "^2.0.4"
+    lodash.endswith "^4.2.1"
+    lodash.isfunction "^3.0.8"
+    lodash.isstring "^4.0.1"
+    lodash.startswith "^4.2.1"
+    minimatch "^3.0.4"
+    resolve "^1.5.0"
+    tapable "^1.0.0"
+
 form-data@~2.3.2:
   version "2.3.3"
   resolved "https://registry.npmjs.org/form-data/-/form-data-2.3.3.tgz#dcce52c05f644f298c6a7ab936bd724ceffbf3a6"
@@ -4244,6 +4322,11 @@ glob-slash@1.0.0:
   resolved "https://registry.npmjs.org/glob-slash/-/glob-slash-1.0.0.tgz#fe52efa433233f74a2fe64c7abb9bc848202ab95"
   integrity sha1-/lLvpDMjP3Si/mTHq7m8hIICq5U=
 
+glob-to-regexp@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npmjs.org/glob-to-regexp/-/glob-to-regexp-0.3.0.tgz#8c5a1494d2066c570cc3bfe4496175acc4d502ab"
+  integrity sha1-jFoUlNIGbFcMw7/kSWF1rMTVAqs=
+
 glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@^7.1.2:
   version "7.1.3"
   resolved "https://registry.npmjs.org/glob/-/glob-7.1.3.tgz#3960832d3f1574108342dafd3a67b332c0969df1"
@@ -4292,6 +4375,19 @@ globals@^9.18.0:
   version "9.18.0"
   resolved "https://registry.npmjs.org/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
   integrity sha512-S0nG3CLEQiY/ILxqtztTWH/3iRRdyBLw6KMDxnKMchrtbj2OFmehVh0WUCfW3DUrIgx/qFrJPICrq4Z4sTR9UQ==
+
+globby@8.0.1:
+  version "8.0.1"
+  resolved "https://registry.npmjs.org/globby/-/globby-8.0.1.tgz#b5ad48b8aa80b35b814fc1281ecc851f1d2b5b50"
+  integrity sha512-oMrYrJERnKBLXNLVTqhm3vPEdJ/b2ZE28xN4YARiix1NOIOBPEpOUnm844K1iu/BkphCaf2WNFwMszv8Soi1pw==
+  dependencies:
+    array-union "^1.0.1"
+    dir-glob "^2.0.0"
+    fast-glob "^2.0.2"
+    glob "^7.1.2"
+    ignore "^3.3.5"
+    pify "^3.0.0"
+    slash "^1.0.0"
 
 globby@^5.0.0:
   version "5.0.0"
@@ -4752,10 +4848,20 @@ ignore-walk@^3.0.1:
   dependencies:
     minimatch "^3.0.4"
 
+ignore@^3.3.5:
+  version "3.3.10"
+  resolved "https://registry.npmjs.org/ignore/-/ignore-3.3.10.tgz#0a97fb876986e8081c631160f8f9f389157f0043"
+  integrity sha512-Pgs951kaMm5GXP7MOvxERINe3gsaVjUWFm+UZPSq9xYriQAksyhg0csnS0KXSNRD5NmNdapXEpjxG49+AKh/ug==
+
 ignore@^4.0.6:
   version "4.0.6"
   resolved "https://registry.npmjs.org/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
+
+immer@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npmjs.org/immer/-/immer-1.7.2.tgz#a51e9723c50b27e132f6566facbec1c85fc69547"
+  integrity sha512-4Urocwu9+XLDJw4Tc6ZCg7APVjjLInCFvO4TwGsAYV5zT6YYSor14dsZR0+0tHlDIN92cFUOq+i7fC00G5vTxA==
 
 import-cwd@^2.0.0:
   version "2.1.0"
@@ -6051,6 +6157,21 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
+lodash.endswith@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.npmjs.org/lodash.endswith/-/lodash.endswith-4.2.1.tgz#fed59ac1738ed3e236edd7064ec456448b37bc09"
+  integrity sha1-/tWawXOO0+I27dcGTsRWRIs3vAk=
+
+lodash.isfunction@^3.0.8:
+  version "3.0.9"
+  resolved "https://registry.npmjs.org/lodash.isfunction/-/lodash.isfunction-3.0.9.tgz#06de25df4db327ac931981d1bdb067e5af68d051"
+  integrity sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==
+
+lodash.isstring@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
+  integrity sha1-1SfftUVuynzJu5XV2ur4i6VKVFE=
+
 lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npmjs.org/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -6060,6 +6181,11 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.npmjs.org/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
+
+lodash.startswith@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.npmjs.org/lodash.startswith/-/lodash.startswith-4.2.1.tgz#c598c4adce188a27e53145731cdc6c0e7177600c"
+  integrity sha1-xZjErc4YiiflMUVzHNxsDnF3YAw=
 
 lodash.tail@^4.1.1:
   version "4.1.1"
@@ -6227,6 +6353,11 @@ merge-stream@^1.0.1:
   integrity sha1-QEEgLVCKNCugAXQAjfDCUbjBNeE=
   dependencies:
     readable-stream "^2.0.1"
+
+merge2@^1.2.1:
+  version "1.2.3"
+  resolved "https://registry.npmjs.org/merge2/-/merge2-1.2.3.tgz#7ee99dbd69bb6481689253f018488a1b902b0ed5"
+  integrity sha512-gdUU1Fwj5ep4kplwcmftruWofEFt6lfpkkr3h860CXbAB9c3hGb55EOL2ali0Td5oebvW0E1+3Sr+Ur7XfKpRA==
 
 merge@^1.2.0:
   version "1.2.0"
@@ -7138,6 +7269,13 @@ path-type@^2.0.0:
   integrity sha1-8BLMuEFbcJb8LaoQVMPXI4lZTHM=
   dependencies:
     pify "^2.0.0"
+
+path-type@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/path-type/-/path-type-3.0.0.tgz#cef31dc8e0a1a3bb0d105c0cd97cf3bf47f4e36f"
+  integrity sha512-T2ZUsdZFHgA3u4e5PfPbjd7HDDpxPnQb5jN0SrDsjNSuVXHJqtwTnWqG0B1jZrgmJ/7lj1EmVIByWt1gxGkWvg==
+  dependencies:
+    pify "^3.0.0"
 
 pbkdf2@^3.0.3:
   version "3.0.17"
@@ -8106,6 +8244,17 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-app-polyfill@0.1.4-next.c662dfb0:
+  version "0.1.4-next.c662dfb0"
+  resolved "https://registry.npmjs.org/react-app-polyfill/-/react-app-polyfill-0.1.4-next.c662dfb0.tgz#762e5c9ccfe08a8a6ed9a38604789337517d345c"
+  integrity sha512-+Zzso8VBvAgUmLK+Nxx+wcZwhrX8FkYbd64Rlfy/UC9qxm81B20+v7KvSND1c18s377btTkeXBNbAKEPxvA2tg==
+  dependencies:
+    core-js "2.5.7"
+    object-assign "4.1.1"
+    promise "8.0.2"
+    raf "3.4.0"
+    whatwg-fetch "3.0.0"
+
 react-app-polyfill@^0.1.3:
   version "0.1.3"
   resolved "https://registry.npmjs.org/react-app-polyfill/-/react-app-polyfill-0.1.3.tgz#e57bb50f3751dac0e6b3ac27673812c68c679a1d"
@@ -8137,10 +8286,10 @@ react-art@^16.6.0:
     prop-types "^15.6.2"
     scheduler "^0.10.0"
 
-react-dev-utils@^6.0.5:
-  version "6.0.5"
-  resolved "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-6.0.5.tgz#6ef34d0a416dc1c97ac20025031ea1f0d819b21d"
-  integrity sha512-X3/q2y8GHvcn6qzqlFhFNoIQgU4TfyerYpBTc5BrMtrSO0q1ctIheAaxDQawNeRgsm2W7L3QSQ9po+YLAGcYFQ==
+react-dev-utils@6.0.6-next.c662dfb0:
+  version "6.0.6-next.c662dfb0"
+  resolved "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-6.0.6-next.c662dfb0.tgz#48c967bb78e773270ee7245448dd3d55022f6053"
+  integrity sha512-pAoMbldL74Vd04HZw6qXLL3njHzi7mUTzxef8ls+51eFH5EXKcd5q/VYj5Rcn42sMgF2pFWYC9YYBR2x4Myhuw==
   dependencies:
     "@babel/code-frame" "7.0.0"
     address "1.0.3"
@@ -8152,13 +8301,15 @@ react-dev-utils@^6.0.5:
     filesize "3.6.1"
     find-up "3.0.0"
     global-modules "1.0.0"
+    globby "8.0.1"
     gzip-size "5.0.0"
+    immer "1.7.2"
     inquirer "6.2.0"
     is-root "2.0.0"
     loader-utils "1.1.0"
     opn "5.4.0"
     pkg-up "2.0.0"
-    react-error-overlay "^5.0.5"
+    react-error-overlay "5.0.6-next.c662dfb0"
     recursive-readdir "2.2.2"
     shell-quote "1.6.1"
     sockjs-client "1.1.5"
@@ -8175,10 +8326,10 @@ react-dom@^16.6.0:
     prop-types "^15.6.2"
     scheduler "^0.10.0"
 
-react-error-overlay@^5.0.5:
-  version "5.0.5"
-  resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-5.0.5.tgz#716ff1a92fda76bb89a39adf9ce046a5d740e71a"
-  integrity sha512-ab0HWBgxdIsngHtMGU8+8gYFdTBXpUGd4AE4lN2VZvOIlBmWx9dtaWEViihuGSIGosCKPeHCnzFoRWB42UtnLg==
+react-error-overlay@5.0.6-next.c662dfb0:
+  version "5.0.6-next.c662dfb0"
+  resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-5.0.6-next.c662dfb0.tgz#084583fcd6344767609f046a7e0de585edc51678"
+  integrity sha512-fnbUFl7oyId1SbL22o7uqgc1b98n6yFARw+qKwszSwSi7/MbXQeVy38GDqcglZ45XnkxY/XiDJxNGRupGF20Bg==
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -8218,10 +8369,10 @@ react-navigation-tabs@^0.8.4:
     react-lifecycles-compat "^3.0.4"
     react-native-tab-view "^1.0.0"
 
-react-scripts@2.0.5:
-  version "2.0.5"
-  resolved "https://registry.npmjs.org/react-scripts/-/react-scripts-2.0.5.tgz#74b8e9fa6a7c5f0f11221dd18c10df2ae3df3d69"
-  integrity sha512-ApwQM91U5FK9CPktUJQu+UhGIdgcBqqw0pvCUPYshW1jBhIgl8N3SJtd+o+I+jwRXPWAXcbJNvzsBAFDW5HHAQ==
+react-scripts@2.0.6-next.c662dfb0:
+  version "2.0.6-next.c662dfb0"
+  resolved "https://registry.npmjs.org/react-scripts/-/react-scripts-2.0.6-next.c662dfb0.tgz#fd65d224f7130f1f375c1422db0f1dee74eddd75"
+  integrity sha512-WEvsxoq6VVgtmUEug7ETIQ7urj2pGFwOh0/D618yCu+WlqRL2KFcDsdRXEOVXrqFmvFNOfft2vlQ5+Z2MbPvFQ==
   dependencies:
     "@babel/core" "7.1.0"
     "@svgr/webpack" "2.4.1"
@@ -8229,8 +8380,8 @@ react-scripts@2.0.5:
     babel-eslint "9.0.0"
     babel-jest "23.6.0"
     babel-loader "8.0.4"
-    babel-plugin-named-asset-import "^0.2.2"
-    babel-preset-react-app "^5.0.4"
+    babel-plugin-named-asset-import "0.2.3-next.c662dfb0"
+    babel-preset-react-app "5.0.5-next.c662dfb0"
     bfj "6.1.1"
     case-sensitive-paths-webpack-plugin "2.1.2"
     chalk "2.4.1"
@@ -8238,13 +8389,14 @@ react-scripts@2.0.5:
     dotenv "6.0.0"
     dotenv-expand "4.2.0"
     eslint "5.6.0"
-    eslint-config-react-app "^3.0.4"
+    eslint-config-react-app "3.0.5-next.c662dfb0"
     eslint-loader "2.1.1"
     eslint-plugin-flowtype "2.50.1"
     eslint-plugin-import "2.14.0"
     eslint-plugin-jsx-a11y "6.1.2"
     eslint-plugin-react "7.11.1"
     file-loader "2.0.0"
+    fork-ts-checker-webpack-plugin-alt "0.4.10"
     fs-extra "7.0.0"
     html-webpack-plugin "4.0.0-alpha.2"
     identity-obj-proxy "3.0.0"
@@ -8258,8 +8410,8 @@ react-scripts@2.0.5:
     postcss-loader "3.0.0"
     postcss-preset-env "6.0.6"
     postcss-safe-parser "4.0.1"
-    react-app-polyfill "^0.1.3"
-    react-dev-utils "^6.0.5"
+    react-app-polyfill "0.1.4-next.c662dfb0"
+    react-dev-utils "6.0.6-next.c662dfb0"
     resolve "1.8.1"
     sass-loader "7.1.0"
     style-loader "0.23.0"
@@ -8268,7 +8420,7 @@ react-scripts@2.0.5:
     webpack "4.19.1"
     webpack-dev-server "3.1.9"
     webpack-manifest-plugin "2.0.4"
-    workbox-webpack-plugin "3.6.2"
+    workbox-webpack-plugin "3.6.3"
   optionalDependencies:
     fsevents "1.2.4"
 
@@ -10196,24 +10348,24 @@ wordwrap@~1.0.0:
   resolved "https://registry.npmjs.org/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
   integrity sha1-J1hIEIkUVqQXHI0CJkQa3pDLyus=
 
-workbox-background-sync@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-background-sync/-/workbox-background-sync-3.6.2.tgz#a8e95c6ed0e267fa100aaebd81568b86d81e032e"
-  integrity sha512-K34wiTM50gSpzJUuRmGRqbd91IpJj0vwMBSHCpixw/jiTg10uytSfnixMNGzeTK0i7LTd/bkA8ptx4HXP+MliA==
+workbox-background-sync@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-background-sync/-/workbox-background-sync-3.6.3.tgz#6609a0fac9eda336a7c52e6aa227ba2ae532ad94"
+  integrity sha512-ypLo0B6dces4gSpaslmDg5wuoUWrHHVJfFWwl1udvSylLdXvnrfhFfriCS42SNEe5lsZtcNZF27W/SMzBlva7Q==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-broadcast-cache-update@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-broadcast-cache-update/-/workbox-broadcast-cache-update-3.6.2.tgz#a08cf843484665e2c8e0c7e4b23b1608c0c6f787"
-  integrity sha512-wmN3k94Kv3/lYOqRy08ymp8RyTPCpgLI9UW/BrQ1XuZHJyFejWnBoy/pCKk9mRZYZX7EyvnzA4O1PLILgLC43g==
+workbox-broadcast-cache-update@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-broadcast-cache-update/-/workbox-broadcast-cache-update-3.6.3.tgz#3f5dff22ada8c93e397fb38c1dc100606a7b92da"
+  integrity sha512-pJl4lbClQcvp0SyTiEw0zLSsVYE1RDlCPtpKnpMjxFtu8lCFTAEuVyzxp9w7GF4/b3P4h5nyQ+q7V9mIR7YzGg==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-build@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-build/-/workbox-build-3.6.2.tgz#8171283cd82076e166c34f28e1d0bd1d7034450c"
-  integrity sha512-PYw4SRbfbUE/+DDhb89zbspDLBi86hpra+l6SsX7yBqCthw4sHyH8IIQw5MMHI04HPV5ZDYru8A5SNLXVDGMcg==
+workbox-build@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-build/-/workbox-build-3.6.3.tgz#77110f9f52dc5d82fa6c1c384c6f5e2225adcbd8"
+  integrity sha512-w0clZ/pVjL8VXy6GfthefxpEXs0T8uiRuopZSFVQ8ovfbH6c6kUpEh6DcYwm/Y6dyWPiCucdyAZotgjz+nRz8g==
   dependencies:
     babel-runtime "^6.26.0"
     common-tags "^1.4.0"
@@ -10224,104 +10376,104 @@ workbox-build@^3.6.2:
     pretty-bytes "^4.0.2"
     stringify-object "^3.2.2"
     strip-comments "^1.0.2"
-    workbox-background-sync "^3.6.2"
-    workbox-broadcast-cache-update "^3.6.2"
-    workbox-cache-expiration "^3.6.2"
-    workbox-cacheable-response "^3.6.2"
-    workbox-core "^3.6.2"
-    workbox-google-analytics "^3.6.2"
-    workbox-navigation-preload "^3.6.2"
-    workbox-precaching "^3.6.2"
-    workbox-range-requests "^3.6.2"
-    workbox-routing "^3.6.2"
-    workbox-strategies "^3.6.2"
-    workbox-streams "^3.6.2"
-    workbox-sw "^3.6.2"
+    workbox-background-sync "^3.6.3"
+    workbox-broadcast-cache-update "^3.6.3"
+    workbox-cache-expiration "^3.6.3"
+    workbox-cacheable-response "^3.6.3"
+    workbox-core "^3.6.3"
+    workbox-google-analytics "^3.6.3"
+    workbox-navigation-preload "^3.6.3"
+    workbox-precaching "^3.6.3"
+    workbox-range-requests "^3.6.3"
+    workbox-routing "^3.6.3"
+    workbox-strategies "^3.6.3"
+    workbox-streams "^3.6.3"
+    workbox-sw "^3.6.3"
 
-workbox-cache-expiration@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-cache-expiration/-/workbox-cache-expiration-3.6.2.tgz#0471cfe5231518a98a9ae791909d71cee1275f08"
-  integrity sha512-LJLYfqG7ItYucppun5I92fcN21kDZFEVqZ8uAOz5t8piOsHh1ThAiiLv/4ubG/d7CUgqW/1bmcX6DM4xqackzg==
+workbox-cache-expiration@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-cache-expiration/-/workbox-cache-expiration-3.6.3.tgz#4819697254a72098a13f94b594325a28a1e90372"
+  integrity sha512-+ECNph/6doYx89oopO/UolYdDmQtGUgo8KCgluwBF/RieyA1ZOFKfrSiNjztxOrGJoyBB7raTIOlEEwZ1LaHoA==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-cacheable-response@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-cacheable-response/-/workbox-cacheable-response-3.6.2.tgz#db12a1cf330514fd48ce94399cdf08ed83217636"
-  integrity sha512-WvICMN3SfEi48C96KEfkLDIqnU0rkQeajdLjYXuzbUID3EX31gzUVlIbqQGrc+9xtIlvxs2+ZoaTR3Rjdtbh/Q==
+workbox-cacheable-response@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-cacheable-response/-/workbox-cacheable-response-3.6.3.tgz#869f1a68fce9063f6869ddbf7fa0a2e0a868b3aa"
+  integrity sha512-QpmbGA9SLcA7fklBLm06C4zFg577Dt8u3QgLM0eMnnbaVv3rhm4vbmDpBkyTqvgK/Ly8MBDQzlXDtUCswQwqqg==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-core@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-core/-/workbox-core-3.6.2.tgz#4c79a15685970efc2e86dc31bf25900dd405a3e5"
-  integrity sha512-5T5WBFy5nMm7zx+P2RwdzEVu5CK++bqwiEsGF+INwUxsOKpH9oXUlUdJE/KfUaMsKcZtHXEb74mMB6vvE88a/w==
+workbox-core@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-core/-/workbox-core-3.6.3.tgz#69abba70a4f3f2a5c059295a6f3b7c62bd00e15c"
+  integrity sha512-cx9cx0nscPkIWs8Pt98HGrS9/aORuUcSkWjG25GqNWdvD/pSe7/5Oh3BKs0fC+rUshCiyLbxW54q0hA+GqZeSQ==
 
-workbox-google-analytics@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-google-analytics/-/workbox-google-analytics-3.6.2.tgz#e6fcbf6c77b215a556c4e342aa20c378205a9f63"
-  integrity sha512-NXBbo9xyHQvkHcvYoZkNJw7DB53dJUnmusKdSPg138A6HGt2ilycwTUuXNDWpkXXp3YHxcslrBMdptolwbzidg==
+workbox-google-analytics@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-google-analytics/-/workbox-google-analytics-3.6.3.tgz#99df2a3d70d6e91961e18a6752bac12e91fbf727"
+  integrity sha512-RQBUo/6SXtIaQTRFj4RQZ9e1gAl7D8oS5S+Hi173Kk70/BgJjzPwXpC5A249Jv5YfkCOLMQCeF9A27BiD0b0ig==
   dependencies:
-    workbox-background-sync "^3.6.2"
-    workbox-core "^3.6.2"
-    workbox-routing "^3.6.2"
-    workbox-strategies "^3.6.2"
+    workbox-background-sync "^3.6.3"
+    workbox-core "^3.6.3"
+    workbox-routing "^3.6.3"
+    workbox-strategies "^3.6.3"
 
-workbox-navigation-preload@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-navigation-preload/-/workbox-navigation-preload-3.6.2.tgz#b124606cdffe7a87c341d5da53611740ebd91ef1"
-  integrity sha512-fN/CWSFZiySQH/OEJQsIizAM4ob6IgZVDfWvA58jAwiyI5QziqfFtL/EiHHNvmIa5jTdcoXfuNNv1WUdpRV18A==
+workbox-navigation-preload@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-navigation-preload/-/workbox-navigation-preload-3.6.3.tgz#a2c34eb7c17e7485b795125091215f757b3c4964"
+  integrity sha512-dd26xTX16DUu0i+MhqZK/jQXgfIitu0yATM4jhRXEmpMqQ4MxEeNvl2CgjDMOHBnCVMax+CFZQWwxMx/X/PqCw==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-precaching@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-precaching/-/workbox-precaching-3.6.2.tgz#409c991bbb56299a148dd0f232cdbe2a947ac917"
-  integrity sha512-oQmBfvCzCUfLcwTokfbVhIIcyNS9aF692EhdqAz/SB2e40ehUgcctAUhQOezsedZFqBBnwphJQUhs+hD3mu72A==
+workbox-precaching@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-precaching/-/workbox-precaching-3.6.3.tgz#5341515e9d5872c58ede026a31e19bafafa4e1c1"
+  integrity sha512-aBqT66BuMFviPTW6IpccZZHzpA8xzvZU2OM1AdhmSlYDXOJyb1+Z6blVD7z2Q8VNtV1UVwQIdImIX+hH3C3PIw==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-range-requests@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-range-requests/-/workbox-range-requests-3.6.2.tgz#049a58244043b64a204d5d95917109bfc851943a"
-  integrity sha512-y1MFB97ydbT8PxBiihndLzG66sNIRzL0lkyoeaWPGfaPGWTP8ghMe4SkGqqdiY+E54rhd7lTdb7RZdv3Av1lTg==
+workbox-range-requests@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-range-requests/-/workbox-range-requests-3.6.3.tgz#3cc21cba31f2dd8c43c52a196bcc8f6cdbcde803"
+  integrity sha512-R+yLWQy7D9aRF9yJ3QzwYnGFnGDhMUij4jVBUVtkl67oaVoP1ymZ81AfCmfZro2kpPRI+vmNMfxxW531cqdx8A==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-routing@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-routing/-/workbox-routing-3.6.2.tgz#a074a5291d8c4bec1af36b4ce269e7585ae59dea"
-  integrity sha512-rhoH1AlETUfffJXJSlc0/T5rBB6vatxpD/8IZgxgHByBnYokV+/HxO7It6wBbxIzdO31UrWVroYm0iVa5sO7Jw==
+workbox-routing@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-routing/-/workbox-routing-3.6.3.tgz#659cd8f9274986cfa98fda0d050de6422075acf7"
+  integrity sha512-bX20i95OKXXQovXhFOViOK63HYmXvsIwZXKWbSpVeKToxMrp0G/6LZXnhg82ijj/S5yhKNRf9LeGDzaqxzAwMQ==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-strategies@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-strategies/-/workbox-strategies-3.6.2.tgz#38fac856b49f4e578b3bc66729e68a03d39a1f78"
-  integrity sha512-4jAyL3n0Fl1BLB3QDUoUoBTzBsE8FwH0K7He1JvLzFiDtYp1ewcKjDecYCNZyTsFVgaLL7WClEQCOKSBquBfOg==
+workbox-strategies@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-strategies/-/workbox-strategies-3.6.3.tgz#11a0dc249a7bc23d3465ec1322d28fa6643d64a0"
+  integrity sha512-Pg5eulqeKet2y8j73Yw6xTgLdElktcWExGkzDVCGqfV9JCvnGuEpz5eVsCIK70+k4oJcBCin9qEg3g3CwEIH3g==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-streams@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-streams/-/workbox-streams-3.6.2.tgz#2e1ed4eb88446fdcd11c48d4399c2fb91a9ee731"
-  integrity sha512-lKTh5fOAf+Qae7GHYXZve40ZXULCf9kxlkrWjTXqGcTh6cxeibuWl6Mnt4aroChNB8jOEbHfGOy0iaG0R159ew==
+workbox-streams@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-streams/-/workbox-streams-3.6.3.tgz#beaea5d5b230239836cc327b07d471aa6101955a"
+  integrity sha512-rqDuS4duj+3aZUYI1LsrD2t9hHOjwPqnUIfrXSOxSVjVn83W2MisDF2Bj+dFUZv4GalL9xqErcFW++9gH+Z27w==
   dependencies:
-    workbox-core "^3.6.2"
+    workbox-core "^3.6.3"
 
-workbox-sw@^3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-sw/-/workbox-sw-3.6.2.tgz#6b2a069baff510da4fe1b74ab6861a9c702f65e3"
-  integrity sha512-EwQZaeGB+tEogABMj9FaEDuszaSBQgjAUEqTFiizZWSU8owZrt0BFfi69TMAhILOfWLFh3aASMzQnPMDY7id4w==
+workbox-sw@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-sw/-/workbox-sw-3.6.3.tgz#278ea4c1831b92bbe2d420da8399176c4b2789ff"
+  integrity sha512-IQOUi+RLhvYCiv80RP23KBW/NTtIvzvjex28B8NW1jOm+iV4VIu3VXKXTA6er5/wjjuhmtB28qEAUqADLAyOSg==
 
-workbox-webpack-plugin@3.6.2:
-  version "3.6.2"
-  resolved "https://registry.npmjs.org/workbox-webpack-plugin/-/workbox-webpack-plugin-3.6.2.tgz#fc94124b71e7842e09972f2fe3ec98766223d887"
-  integrity sha512-FGSkcaiMDM41uTGkYf7O6hf2W7UvkNc+iUIltfGiRp+qeQfXKOOh5fJCz+a6AFkeuGELSSYROsQRuOqX8LytcQ==
+workbox-webpack-plugin@3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmjs.org/workbox-webpack-plugin/-/workbox-webpack-plugin-3.6.3.tgz#a807bb891b4e4e3c808df07e58f17de2d5ba6182"
+  integrity sha512-RwmKjc7HFHUFHoOlKoZUq9349u0QN3F8W5tZZU0vc1qsBZDINWXRiIBCAKvo/Njgay5sWz7z4I2adnyTo97qIQ==
   dependencies:
     babel-runtime "^6.26.0"
     json-stable-stringify "^1.0.1"
-    workbox-build "^3.6.2"
+    workbox-build "^3.6.3"
 
 worker-farm@^1.5.2:
   version "1.6.0"

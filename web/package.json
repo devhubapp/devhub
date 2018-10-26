@@ -21,7 +21,7 @@
     "react-dom": "^16.6.0",
     "react-native-web": "^0.9.4",
     "react-navigation-tabs": "^0.8.4",
-    "react-scripts": "2.0.5",
+    "react-scripts": "2.0.6-next.c662dfb0",
     "resize-observer-polyfill": "^1.5.0"
   },
   "devDependencies": {
