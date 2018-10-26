@@ -12,6 +12,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "noEmit": true,
@@ -28,8 +29,6 @@
     "devhub-native/src"
   ],
   "exclude": [
-    "**/__tests__/**",
-    "**/?*test.*",
-    "**/?*spec.*"
+    "src/setupProxy.js"
   ]
 }
