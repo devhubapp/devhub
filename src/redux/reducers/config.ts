@@ -25,6 +25,17 @@ export const configReducer: Reducer<State> = (state = initialState, action) => {
         draft.theme = action.payload
       })
 
+    case 'SET_PREFERRABLE_THEME':
+      return immer(state, draft => {
+        const theme = loadTheme(action.payload)
+
+        if (theme.isDark) draft.preferredDarkTheme = action.payload
+        else draft.preferredLightTheme = action.payload
+
+        if (state.theme && state.theme.id !== 'auto')
+          draft.theme = action.payload
+      })
+
     default:
       return state
   }

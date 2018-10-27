@@ -38,6 +38,7 @@ const connectToStore = connect(
   },
   {
     logout: actions.logout,
+    setPreferrableTheme: actions.setPreferrableTheme,
     setTheme: actions.setTheme,
   },
 )
@@ -65,12 +66,19 @@ class ThemePreferenceComponent extends PureComponent<
     return (
       <TouchableOpacity
         key={`theme-button-${theme.id}`}
-        onPress={() =>
-          this.props.setTheme({
-            id: theme.id,
-            color: theme.backgroundColor,
-          })
-        }
+        onPress={() => {
+          if (currentThemeId === 'auto') {
+            this.props.setPreferrableTheme({
+              id: theme.id,
+              color: theme.backgroundColor,
+            })
+          } else {
+            this.props.setTheme({
+              id: theme.id,
+              color: theme.backgroundColor,
+            })
+          }
+        }}
       >
         <View
           style={{
