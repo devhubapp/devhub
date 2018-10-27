@@ -21,6 +21,7 @@
   "dependencies": {
     "@octokit/rest": "^15.15.1",
     "gravatar": "^1.6.0",
+    "hoist-non-react-statics": "^3.0.1",
     "immer": "^1.7.3",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@types/gravatar": "^1.4.28",
+    "@types/hoist-non-react-statics": "^3.0.1",
     "@types/jest": "^23.3.7",
     "@types/lodash": "^4.14.117",
     "@types/qs": "^6.5.1",

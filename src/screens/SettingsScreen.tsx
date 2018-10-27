@@ -1,5 +1,6 @@
+import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
-import { Button, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import {
   NavigationScreenProps,
   NavigationStackScreenOptions,
@@ -8,15 +9,27 @@ import { connect } from 'react-redux'
 
 import * as actions from '../redux/actions'
 
+import { CardItemSeparator } from '../components/cards/partials/CardItemSeparator'
+import { Column } from '../components/columns/Column'
+import { ColumnHeader } from '../components/columns/ColumnHeader'
+import { ColumnHeaderItem } from '../components/columns/ColumnHeaderItem'
 import { Screen } from '../components/common/Screen'
+import { Spacer } from '../components/common/Spacer'
+import { ThemeConsumer } from '../components/context/ThemeContext'
+import { ThemePreference } from '../components/widgets/ThemePreference'
+import { Platform } from '../libs/platform'
 import * as colors from '../styles/colors'
+import { contentPadding } from '../styles/variables'
 import { ExtractPropsFromConnector } from '../types'
 
 export interface SettingsScreenProps {}
 
 const connectToStore = connect(
   null,
-  { logout: actions.logout },
+  {
+    logout: actions.logout,
+    setTheme: actions.setTheme,
+  },
 )
 
 class SettingsScreenComponent extends PureComponent<
@@ -25,7 +38,7 @@ class SettingsScreenComponent extends PureComponent<
     NavigationScreenProps
 > {
   static navigationOptions: NavigationStackScreenOptions = {
-    headerTitle: 'Settings',
+    header: null,
   }
 
   logout = () => {
@@ -34,13 +47,43 @@ class SettingsScreenComponent extends PureComponent<
 
   render() {
     return (
-      <Screen>
-        <View>
-          <Button color={colors.red} title="Logout" onPress={this.logout} />
-        </View>
-      </Screen>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
+            <Column>
+              <ColumnHeader>
+                <ColumnHeaderItem iconName="gear" title="Preferences" />
+              </ColumnHeader>
+
+              <CardItemSeparator />
+
+              <View style={{ flex: 1 }}>
+                <ScrollView
+                  style={{ flex: 1 }}
+                  contentContainerStyle={{ padding: contentPadding }}
+                >
+                  <ThemePreference />
+                </ScrollView>
+
+                {Platform.realOS !== 'web' && (
+                  <View style={{ padding: contentPadding, paddingTop: 0 }}>
+                    <TouchableOpacity
+                      key="logout-button"
+                      onPress={() => this.props.logout()}
+                    >
+                      <Text style={{ color: colors.red }}>Logout</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            </Column>
+          </Screen>
+        )}
+      </ThemeConsumer>
     )
   }
 }
 
 export const SettingsScreen = connectToStore(SettingsScreenComponent)
+
+hoistNonReactStatics(SettingsScreen, SettingsScreenComponent as any)

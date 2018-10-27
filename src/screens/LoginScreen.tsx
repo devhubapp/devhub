@@ -1,3 +1,4 @@
+import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import {
@@ -200,3 +201,5 @@ export class LoginScreenComponent extends PureComponent<
 }
 
 export const LoginScreen = connectToStore(LoginScreenComponent)
+
+hoistNonReactStatics(LoginScreen, LoginScreenComponent as any)

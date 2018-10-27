@@ -12,7 +12,7 @@ import { ThemeConsumer } from '../context/ThemeContext'
 
 export interface ScreenProps {
   children?: ReactNode
-  useSafeArea?: boolean
+  // useSafeArea?: boolean
   style?: StyleProp<ViewStyle>
 }
 
@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
 })
 
 export class Screen extends PureComponent<ScreenProps> {
-  static defaultProps = {
-    useSafeArea: true,
-  }
+  // static defaultProps = {
+  //   useSafeArea: true,
+  // }
 
-  renderContent({ useSafeArea, style, ...props }: ScreenProps) {
-    if (useSafeArea)
-      return <SafeAreaView {...props} style={[styles.container, style]} />
+  renderContent({ style, ...props }: ScreenProps) {
+    // if (useSafeArea)
+    //   return <SafeAreaView {...props} style={[styles.container, style]} />
 
     return <View {...props} style={[styles.container, style]} />
   }

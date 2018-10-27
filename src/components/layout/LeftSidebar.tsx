@@ -112,6 +112,19 @@ class LeftSidebarComponent extends PureComponent<
             </ScrollView>
 
             <TouchableOpacity
+              onPress={() => alert('Not implemented')}
+              style={[
+                styles.centerContainer,
+                {
+                  width: '100%',
+                  height: sidebarSize + StyleSheet.hairlineWidth,
+                },
+              ]}
+            >
+              <ColumnHeaderItem iconName="gear" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
               onPress={this.logout}
               style={[
                 styles.centerContainer,

@@ -17,7 +17,7 @@ export interface ThemeProviderState {
   theme: Theme
 }
 
-const defaultTheme = loadTheme({ name: defaultThemeName, color: '' })
+const defaultTheme = loadTheme({ id: defaultThemeName, color: '' })
 
 const ThemeContext = React.createContext<ThemeProviderState>({
   setTheme: () => {

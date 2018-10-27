@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 
-import { FlexSeparator } from '../../components/common/FlexSeparator'
+import { Spacer } from '../../components/common/Spacer'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
@@ -37,7 +37,7 @@ export class NotificationColumn extends PureComponent<
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}
           />
-          <FlexSeparator />
+          <Spacer flex={1} />
           <ColumnHeaderItem
             iconName="chevron-down"
             onPress={this.handlePress}

@@ -9,12 +9,13 @@ export type ThemeName =
   | 'light-white'
 
 export interface ThemePair {
-  name: ThemeName
+  id: ThemeName
   color?: string
 }
 
 export interface Theme {
-  name: ThemeName
+  id: ThemeName
+  displayName: string
   isDark: boolean
   invert: () => Theme
 

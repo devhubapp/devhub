@@ -30,7 +30,7 @@ export const routes: NavigationRouteConfigMap = {
       { navigationOptions },
     ),
   },
-  Settings: {
+  Preferences: {
     path: 'settings',
     screen: createStackNavigator({ SettingsScreen }, { navigationOptions }),
   },
@@ -50,7 +50,7 @@ export const options: TabNavigatorConfig = {
           case 'Notifications':
             return 'bell'
 
-          case 'Settings':
+          case 'Preferences':
             return 'gear'
 
           default:

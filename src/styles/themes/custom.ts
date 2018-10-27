@@ -8,7 +8,8 @@ function createTheme(theme: Theme): Theme {
 
 export function createThemeFromColor(
   color: string,
-  name: Theme['name'] = 'custom',
+  id: Theme['id'],
+  displayName: Theme['displayName'],
 ): Theme {
   const luminance = getLuminance(color)
   const isDark = luminance <= 0.5
@@ -33,12 +34,13 @@ export function createThemeFromColor(
 
   let invertedTheme: Theme
   return createTheme({
-    name,
+    id: id || 'custom',
+    displayName: displayName || 'Custom',
     isDark,
     invert: () => {
       if (invertedTheme) return invertedTheme
 
-      invertedTheme = createThemeFromColor(invert(color))
+      invertedTheme = createThemeFromColor(invert(color), id, displayName)
       return invertedTheme
     },
     backgroundColor,

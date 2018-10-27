@@ -5,7 +5,7 @@ import { createThemeFromColor } from './themes/custom'
 import { defaultThemeName } from './variables'
 
 export function loadCustomTheme(color: string) {
-  return createThemeFromColor(color)
+  return createThemeFromColor(color, 'custom', 'Custom')
 }
 
 export function loadTheme(
@@ -13,23 +13,23 @@ export function loadTheme(
   preferredDarkTheme?: ThemePair,
   preferredLightTheme?: ThemePair,
 ): Theme {
-  const _theme = theme || { name: defaultThemeName }
+  const _theme = theme || { id: defaultThemeName }
 
-  if (_theme.name === 'custom' && _theme.color) {
+  if (_theme.id === 'custom' && _theme.color) {
     return loadCustomTheme(_theme.color)
   }
 
-  if (_theme.name === 'auto' || !_theme.name) {
+  if (_theme.id === 'auto' || !_theme.id) {
     const _preferredDarkTheme = preferredDarkTheme
-      ? preferredDarkTheme.name === 'custom' && preferredDarkTheme.color
+      ? preferredDarkTheme.id === 'custom' && preferredDarkTheme.color
         ? loadCustomTheme(preferredDarkTheme.color)
-        : themes[preferredDarkTheme.name]
+        : themes[preferredDarkTheme.id]
       : undefined
 
     const _preferredLightTheme = preferredLightTheme
-      ? preferredLightTheme.name === 'custom' && preferredLightTheme.color
+      ? preferredLightTheme.id === 'custom' && preferredLightTheme.color
         ? loadCustomTheme(preferredLightTheme.color)
-        : themes[preferredLightTheme.name]
+        : themes[preferredLightTheme.id]
       : undefined
 
     const darkTheme: Theme = _preferredDarkTheme || themes['dark-gray']!
@@ -39,9 +39,9 @@ export function loadTheme(
   }
 
   return (
-    themes[_theme.name] ||
+    themes[_theme.id] ||
     loadTheme(
-      { name: 'auto', color: _theme.color },
+      { id: 'auto', color: _theme.color },
       preferredDarkTheme,
       preferredLightTheme,
     )
