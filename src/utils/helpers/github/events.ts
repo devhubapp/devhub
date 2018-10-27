@@ -310,7 +310,11 @@ export function getEventText(
         return (() => {
           const count = (event.payload.pages || []).length || 1
           const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page'
-          switch (((event.payload.pages || [])[0] || {}).action) {
+          switch (
+            event.payload.pages &&
+              event.payload.pages[0] &&
+              event.payload.pages[0].action
+          ) {
             case 'created':
               return `created ${pagesText}`
             default:

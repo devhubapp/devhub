@@ -9,10 +9,10 @@ export const listenForNextUrl = () => {
     const handleUrl = (e: { url: string }) => {
       Linking.removeEventListener('url', handleUrl)
 
-      const url = (e || {}).url || ''
-      return url ? resolve(url) : reject()
-
       finished = true
+
+      const url = (e && e.url) || ''
+      return url ? resolve(url) : reject()
     }
 
     Linking.addEventListener('url', handleUrl)
