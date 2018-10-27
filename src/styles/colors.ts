@@ -15,5 +15,5 @@ export const star = '#edb800'
 export const teal = '#009688'
 export const yellow = '#FFC107'
 
-// export const brand = lightBlue
-// export const brandSecondary = purple
+export const brand = lightBlue
+export const brandSecondary = purple

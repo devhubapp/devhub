@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import {
   StyleSheet,
-  Switch,
   Text,
   TextProps,
   TouchableOpacity,
@@ -17,10 +16,12 @@ import {
   preferredLightThemePairSelector,
   themePairSelector,
 } from '../../redux/selectors'
+import * as colors from '../../styles/colors'
 import { themes } from '../../styles/themes'
 import { contentPadding } from '../../styles/variables'
 import { ExtractPropsFromConnector, Theme } from '../../types'
 import { Spacer } from '../common/Spacer'
+import { Switch } from '../common/Switch'
 
 export interface ThemePreferenceProps {}
 
@@ -170,12 +171,12 @@ class ThemePreferenceComponent extends PureComponent<
             </H3>
             <Spacer height={contentPadding / 2} />
             <Switch
-              value={this.props.currentThemeId === 'auto'}
               onValueChange={enableAutoTheme =>
                 this.props.setTheme({
                   id: enableAutoTheme ? 'auto' : appTheme.id,
                 })
               }
+              value={this.props.currentThemeId === 'auto'}
             />
           </View>
         )}
