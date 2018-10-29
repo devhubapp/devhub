@@ -4,12 +4,14 @@ import { appReducer } from './app'
 import { authReducer } from './auth'
 import { columnsReducer } from './columns'
 import { configReducer } from './config'
+import { navigationReducer } from './navigation'
 
 const _rootReducer = combineReducers({
   app: appReducer,
   auth: authReducer,
   columns: columnsReducer,
   config: configReducer,
+  navigation: navigationReducer,
 })
 
 export const rootReducer = (state: any, action: any) => {

@@ -2,13 +2,10 @@ import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import { Column } from '../components/columns/Column'
 import { Columns } from '../components/columns/Columns'
 import { EventColumn } from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
-import { Platform } from '../libs/platform'
 import * as selectors from '../redux/selectors'
-import { SettingsScreen } from '../screens/SettingsScreen'
 import { ExtractPropsFromConnector } from '../types'
 
 export interface ColumnsContainerProps {
@@ -40,12 +37,6 @@ class ColumnsContainerComponent extends PureComponent<
 
     return (
       <Columns bounces={!swipeable} scrollEnabled={!swipeable}>
-        {Platform.realOS === 'web' && (
-          <Column>
-            <SettingsScreen navigation={{} as any} />
-          </Column>
-        )}
-
         {columns.map(
           (column, index) =>
             (column.type === 'notifications' && (

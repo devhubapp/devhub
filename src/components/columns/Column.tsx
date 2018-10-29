@@ -19,7 +19,6 @@ export interface ColumnProps extends ViewProps {
 const styles = StyleSheet.create({
   container: {
     borderRightWidth: StyleSheet.hairlineWidth,
-    flex: 1,
   } as ViewStyle,
 })
 

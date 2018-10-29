@@ -9,6 +9,7 @@ import { rootSaga } from './sagas'
 
 export function configureStore(key = 'root') {
   const persistConfig: PersistConfig = {
+    blacklist: ['navigation'],
     key,
     storage,
     version: 1,

@@ -38,7 +38,10 @@ const connectToStore = connect(
   (state: any) => ({
     columns: selectors.columnsSelector(state),
   }),
-  { logout: actions.logout },
+  {
+    logout: actions.logout,
+    showModal: actions.showModal,
+  },
 )
 
 class LeftSidebarComponent extends PureComponent<
@@ -51,7 +54,7 @@ class LeftSidebarComponent extends PureComponent<
   }
 
   render() {
-    const { columns } = this.props
+    const { columns, showModal } = this.props
 
     return (
       <ThemeConsumer>
@@ -112,7 +115,7 @@ class LeftSidebarComponent extends PureComponent<
             </ScrollView>
 
             <TouchableOpacity
-              onPress={() => alert('Not implemented')}
+              onPress={() => showModal('SETTINGS')}
               style={[
                 styles.centerContainer,
                 {

@@ -28,6 +28,7 @@ const connectToStore = connect(
   null,
   {
     logout: actions.logout,
+    popModal: actions.popModal,
     setTheme: actions.setTheme,
   },
 )
@@ -46,6 +47,8 @@ class SettingsScreenComponent extends PureComponent<
   }
 
   render() {
+    const { popModal } = this.props
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
@@ -53,6 +56,14 @@ class SettingsScreenComponent extends PureComponent<
             <Column>
               <ColumnHeader>
                 <ColumnHeaderItem iconName="gear" title="Preferences" />
+
+                {Platform.realOS === 'web' && (
+                  <>
+                    <Spacer flex={1} />
+
+                    <ColumnHeaderItem iconName="x" onPress={() => popModal()} />
+                  </>
+                )}
               </ColumnHeader>
 
               <CardItemSeparator />
