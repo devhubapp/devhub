@@ -7,8 +7,6 @@ import {
 } from 'react-navigation'
 import { connect } from 'react-redux'
 
-import * as actions from '../redux/actions'
-
 import { CardItemSeparator } from '../components/cards/partials/CardItemSeparator'
 import { Column } from '../components/columns/Column'
 import { ColumnHeader } from '../components/columns/ColumnHeader'
@@ -18,6 +16,7 @@ import { Spacer } from '../components/common/Spacer'
 import { ThemeConsumer } from '../components/context/ThemeContext'
 import { ThemePreference } from '../components/widgets/ThemePreference'
 import { Platform } from '../libs/platform'
+import * as actions from '../redux/actions'
 import * as colors from '../styles/colors'
 import { contentPadding } from '../styles/variables'
 import { ExtractPropsFromConnector } from '../types'

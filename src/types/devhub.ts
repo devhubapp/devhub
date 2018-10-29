@@ -70,3 +70,5 @@ export type ActivityColumn = {
     })
 
 export type Column = NotificationColumn | ActivityColumn
+
+export type Modal = 'SETTINGS'

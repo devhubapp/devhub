@@ -2,5 +2,7 @@ import { RootState } from '../../types'
 
 const s = (state: RootState) => state.navigation
 
+export const modalStack = (state: RootState) => s(state).modalStack
+
 export const currentOpenedModal = (state: RootState) =>
-  s(state).modalStack.slice(-1)[0]
+  modalStack(state).slice(-1)[0]

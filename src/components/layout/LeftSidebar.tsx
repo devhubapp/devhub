@@ -40,7 +40,7 @@ const connectToStore = connect(
   }),
   {
     logout: actions.logout,
-    showModal: actions.showModal,
+    replaceModal: actions.replaceModal,
   },
 )
 
@@ -54,7 +54,7 @@ class LeftSidebarComponent extends PureComponent<
   }
 
   render() {
-    const { columns, showModal } = this.props
+    const { columns, replaceModal } = this.props
 
     return (
       <ThemeConsumer>
@@ -115,7 +115,7 @@ class LeftSidebarComponent extends PureComponent<
             </ScrollView>
 
             <TouchableOpacity
-              onPress={() => showModal('SETTINGS')}
+              onPress={() => replaceModal('SETTINGS')}
               style={[
                 styles.centerContainer,
                 {
