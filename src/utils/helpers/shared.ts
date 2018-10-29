@@ -6,6 +6,13 @@ export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, toUpper)
 }
 
+export function guid() {
+  const str4 = () =>
+    (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1) // tslint:disable-line
+  return `${str4() +
+    str4()}-${str4()}-${str4()}-${str4()}-${str4()}${str4()}${str4()}`
+}
+
 export function isNight() {
   const hours = new Date().getHours()
   return hours >= 18 || hours <= 6

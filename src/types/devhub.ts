@@ -6,12 +6,14 @@ export interface NotificationParams {
 }
 
 export interface NotificationColumn {
+  id: string
   type: 'notifications'
   subtype?: undefined
   params: NotificationParams
 }
 
 export type ActivityColumn = {
+  id: string
   type: 'activity'
 } & (
   | {
