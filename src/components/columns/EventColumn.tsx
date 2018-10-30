@@ -1,10 +1,15 @@
+import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 
 import { Spacer } from '../../components/common/Spacer'
 import {
   EventCardsContainer,
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
+import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
+import { ExtractPropsFromConnector } from '../../types'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Column } from './Column'
@@ -15,12 +20,21 @@ export interface EventColumnProps extends EventCardsContainerProps {}
 
 export interface EventColumnState {}
 
-export class EventColumn extends PureComponent<
-  EventColumnProps,
-  EventColumnState
+const connectToStore = connect(
+  (state: any) => ({
+    isLoggingIn: selectors.isLoggingInSelector(state),
+    user: selectors.currentUserSelector(state),
+  }),
+  {
+    deleteColumn: actions.deleteColumn,
+  },
+)
+
+export class EventColumnComponent extends PureComponent<
+  EventColumnProps & ExtractPropsFromConnector<typeof connectToStore>
 > {
-  handlePress = () => {
-    alert('Not implemented')
+  handleDeleteColumn = (id: string) => {
+    this.props.deleteColumn(id)
   }
 
   render() {
@@ -39,8 +53,8 @@ export class EventColumn extends PureComponent<
           />
           <Spacer flex={1} />
           <ColumnHeaderItem
-            iconName="chevron-down"
-            onPress={this.handlePress}
+            iconName="trashcan"
+            onPress={() => this.handleDeleteColumn(this.props.column.id)}
           />
         </ColumnHeader>
 
@@ -54,3 +68,7 @@ export class EventColumn extends PureComponent<
     )
   }
 }
+
+export const EventColumn = connectToStore(EventColumnComponent)
+
+hoistNonReactStatics(EventColumn, EventColumnComponent as any)

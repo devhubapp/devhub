@@ -13,6 +13,20 @@ export const columnsReducer: Reducer<State> = (
   action,
 ) => {
   switch (action.type) {
+    case 'ADD_COLUMN':
+      return immer(state, draft => {
+        draft.columns = draft.columns || []
+        draft.columns = [action.payload, ...draft.columns]
+      })
+
+    case 'DELETE_COLUMN':
+      return immer(state, draft => {
+        if (!draft.columns) return
+        draft.columns = draft.columns.filter(
+          column => column.id !== action.payload,
+        )
+      })
+
     case 'REPLACE_COLUMNS':
       return immer(state, draft => {
         draft.columns = action.payload

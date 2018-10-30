@@ -73,4 +73,4 @@ export type ActivityColumn = {
 
 export type Column = NotificationColumn | ActivityColumn
 
-export type Modal = 'SETTINGS'
+export type Modal = 'ADD_COLUMN' | 'ADD_COLUMN_DETAILS' | 'SETTINGS'

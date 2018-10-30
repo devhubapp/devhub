@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import * as selectors from '../../redux/selectors'
 import { ExtractPropsFromConnector } from '../../types'
+import { AddColumnDetailsModal } from './AddColumnDetailsModal'
+import { AddColumnModal } from './AddColumnModal'
 
 const connectToStore = connect((state: any) => ({
   currentOpenedModal: selectors.currentOpenedModal(state),
@@ -19,6 +21,12 @@ class ModalRendererComponent extends PureComponent<
     if (!currentOpenedModal) return null
 
     switch (currentOpenedModal) {
+      case 'ADD_COLUMN':
+        return <AddColumnModal />
+
+      case 'ADD_COLUMN_DETAILS':
+        return <AddColumnDetailsModal />
+
       case 'SETTINGS':
         return <SettingsModal />
 

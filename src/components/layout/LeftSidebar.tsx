@@ -40,7 +40,7 @@ const connectToStore = connect(
   }),
   {
     logout: actions.logout,
-    replaceModal: actions.replaceModal,
+    replaceModal: actions.replaceModal as any, // TODO: Fix this shit
   },
 )
 
@@ -85,6 +85,19 @@ class LeftSidebarComponent extends PureComponent<
                 username="brunolemos"
               />
             </View>
+
+            <TouchableOpacity
+              onPress={() => replaceModal('ADD_COLUMN')}
+              style={[
+                styles.centerContainer,
+                {
+                  width: '100%',
+                  height: sidebarSize + StyleSheet.hairlineWidth,
+                },
+              ]}
+            >
+              <ColumnHeaderItem iconName="plus" />
+            </TouchableOpacity>
 
             <ScrollView style={{ flex: 1 }}>
               {!columns
