@@ -18,26 +18,26 @@ interface ColumnType {
 }
 
 const columnTypes: ColumnType[] = [
-  {
-    name: 'Notifications',
-    icon: 'bell',
-  },
+  // {
+  //   name: 'Notifications',
+  //   icon: 'bell',
+  // },
   {
     name: 'User Dashboard',
     icon: 'home',
   },
-  {
-    name: 'User Events',
-    icon: 'person',
-  },
-  {
-    name: 'Repo Events',
-    icon: 'repo',
-  },
-  {
-    name: 'Org Events',
-    icon: 'organization',
-  },
+  // {
+  //   name: 'User Events',
+  //   icon: 'person',
+  // },
+  // {
+  //   name: 'Repo Events',
+  //   icon: 'repo',
+  // },
+  // {
+  //   name: 'Org Events',
+  //   icon: 'organization',
+  // },
   // TODO: add other types
 ]
 
@@ -73,6 +73,10 @@ class AddColumnModalComponent extends PureComponent<
                   padding: contentPadding,
                 }}
               >
+                <Text style={{ color: theme.foregroundColor }}>
+                  THIS SCREEN IS A WORK IN PROGRESS.
+                </Text>
+
                 {columnTypes.map(columnType => (
                   <TouchableOpacity
                     onPress={() => pushModal('ADD_COLUMN_DETAILS')}
