@@ -752,7 +752,12 @@ export interface GitHubNotification {
     title: string
     url: string
     latest_comment_url: string
-    type: 'Commit' | 'Issue' | 'PullRequest' | 'Release'
+    type:
+      | 'Commit'
+      | 'RepositoryInvitation'
+      | 'Issue'
+      | 'PullRequest'
+      | 'Release'
   }
   unread?: boolean
   updated_at: string

@@ -130,16 +130,20 @@ export function getNotificationIconAndColor(
   const { subject } = notification
   const { type } = subject
 
-  switch (type.toLowerCase()) {
-    case 'commit':
+  switch (type) {
+    case 'Commit':
       return getCommitIconAndColor()
-    case 'issue':
+    case 'RepositoryInvitation':
+      return { icon: 'mail' }
+    case 'Issue':
       return getIssueIconAndColor({})
-    case 'pullrequest':
+    case 'PullRequest':
       return getPullRequestIconAndColor({})
-    case 'release':
+    case 'Release':
       return { icon: 'tag' }
-    default:
+    default: {
+      console.error('Unknown notification type', type)
       return { icon: 'bell' }
+    }
   }
 }

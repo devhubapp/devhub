@@ -70,6 +70,9 @@ export const getGitHubSearchURL = (queryParams: {
 export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
   repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
 
+export const getGitHubURLForRepoInvitation = (repoFullName: string) =>
+  repoFullName ? `${baseURL}/${repoFullName}/invitations` : ''
+
 export function githubHTMLUrlFromAPIUrl(
   apiURL: string,
   { commentId, issueOrPullRequestNumber }: GitHubURLOptions = {},

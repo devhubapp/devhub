@@ -10,7 +10,10 @@ import {
   getOwnerAndRepo,
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
-import { getIssueOrPullRequestNumberFromUrl } from '../../utils/helpers/github/url'
+import {
+  getGitHubURLForRepoInvitation,
+  getIssueOrPullRequestNumberFromUrl,
+} from '../../utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '../../utils/helpers/shared'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
@@ -75,11 +78,12 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
     // const notificationIds = [notification.id]
 
     // TODO: Load commit/issue/pullrequest details
-    const subjectType = (subject.type || '').toLowerCase()
-    const commit = (subjectType === 'commit' && subject) || null
-    const issue = (subjectType === 'issue' && subject) || null
-    const pullRequest = (subjectType === 'pullrequest' && subject) || null
-    const release = (subjectType === 'release' && subject) || null
+    const subjectType = subject.type || ''
+    const commit = (subjectType === 'Commit' && subject) || null
+    const issue = (subjectType === 'Issue' && subject) || null
+    const pullRequest = (subjectType === 'PullRequest' && subject) || null
+    const release = (subjectType === 'Release' && subject) || null
+    const isRepoInvitation = subjectType === 'RepositoryInvitation'
 
     const {
       icon: pullRequestIconName,
@@ -186,12 +190,17 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
             {!(commit || issue || pullRequest) &&
               !!title && (
                 <CommentRow
-                  key={`notification-subject-row-${subject.url}`}
+                  key={`notification-${notification.id}-comment-row`}
                   avatarURL=""
                   body={title}
                   isRead={isRead}
                   userLinkURL=""
                   username=""
+                  url={
+                    isRepoInvitation && repo
+                      ? getGitHubURLForRepoInvitation(repo.full_name)
+                      : undefined
+                  }
                 />
               )}
 
