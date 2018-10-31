@@ -5,8 +5,9 @@ import { connect } from 'react-redux'
 import { Columns } from '../components/columns/Columns'
 import { EventColumn } from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
+import { DimensionsConsumer } from '../components/context/DimensionsContext'
 import * as selectors from '../redux/selectors'
-import { ExtractPropsFromConnector } from '../types'
+import { Column, ExtractPropsFromConnector } from '../types'
 
 export interface ColumnsContainerProps {
   only?: 'events' | 'notifications'
@@ -22,39 +23,61 @@ class ColumnsContainerComponent extends PureComponent<
   ColumnsContainerProps & ExtractPropsFromConnector<typeof connectToStore>,
   ColumnsContainerState
 > {
+  pagingEnabled: boolean = true
+  swipeable: boolean = false
+
+  renderColumn = (column: Column, index: number) => {
+    switch (column.type) {
+      case 'notifications': {
+        return (
+          <NotificationColumn
+            key={`event-column-${index}`}
+            column={column}
+            pagingEnabled={this.pagingEnabled}
+            swipeable={this.swipeable}
+          />
+        )
+      }
+
+      case 'activity': {
+        return (
+          <EventColumn
+            key={`event-column-${index}`}
+            column={column}
+            pagingEnabled={this.pagingEnabled}
+            swipeable={this.swipeable}
+          />
+        )
+      }
+
+      default: {
+        console.error('Invalid Column type: ', (column as any).type)
+        return null
+      }
+    }
+  }
+
   render() {
-    const { only } = this.props
-    const _columns = this.props.columns || []
+    const columns = this.props.columns || []
 
-    const columns =
-      only === 'notifications'
-        ? _columns.filter(column => column.type === 'notifications')
-        : only === 'events'
-          ? _columns.filter(column => column.type !== 'notifications')
-          : _columns
-
-    const swipeable = columns.length === 1
+    this.swipeable = columns.length === 1
 
     return (
-      <Columns bounces={!swipeable} scrollEnabled={!swipeable}>
-        {columns.map(
-          (column, index) =>
-            (column.type === 'notifications' && (
-              <NotificationColumn
-                key={`event-column-${index}`}
-                column={column}
-                swipeable={swipeable}
-              />
-            )) ||
-            (column.type === 'activity' && (
-              <EventColumn
-                key={`event-column-${index}`}
-                column={column}
-                swipeable={swipeable}
-              />
-            )),
-        )}
-      </Columns>
+      <DimensionsConsumer>
+        {({ width }) => {
+          this.pagingEnabled = width <= 400
+
+          return (
+            <Columns
+              bounces={!this.swipeable}
+              pagingEnabled={this.pagingEnabled}
+              scrollEnabled={!this.swipeable}
+            >
+              {columns.map(this.renderColumn)}
+            </Columns>
+          )
+        }}
+      </DimensionsConsumer>
     )
   }
 }

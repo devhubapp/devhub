@@ -37,7 +37,6 @@
     "react-native-splash-screen": "^3.1.1",
     "react-native-vector-icons": "^6.0.2",
     "react-navigation": "^2.18.2",
-    "react-navigation-tabs": "^0.8.4",
     "react-redux": "^5.1.0",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.5",

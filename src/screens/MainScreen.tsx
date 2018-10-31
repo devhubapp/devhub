@@ -1,10 +1,14 @@
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { NavigationScreenProps } from 'react-navigation'
+import {
+  NavigationScreenProps,
+  NavigationStackScreenOptions,
+} from 'react-navigation'
 import { connect } from 'react-redux'
 
 import { Screen } from '../components/common/Screen'
+import { ThemeConsumer } from '../components/context/ThemeContext'
 import { LeftSidebar } from '../components/layout/LeftSidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
@@ -25,15 +29,23 @@ const connectToStore = connect((state: any) => ({
 class MainScreenComponent extends PureComponent<
   NavigationScreenProps & ExtractPropsFromConnector<typeof connectToStore>
 > {
+  static navigationOptions: NavigationStackScreenOptions = {
+    header: null,
+  }
+
   render() {
     return (
-      <Screen>
-        <View style={styles.container}>
-          <LeftSidebar navigation={this.props.navigation} />
-          <ModalRenderer />
-          <ColumnsContainer />
-        </View>
-      </Screen>
+      <ThemeConsumer>
+        {({ theme }) => (
+          <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
+            <View style={styles.container}>
+              <LeftSidebar navigation={this.props.navigation} />
+              <ModalRenderer />
+              <ColumnsContainer />
+            </View>
+          </Screen>
+        )}
+      </ThemeConsumer>
     )
   }
 }

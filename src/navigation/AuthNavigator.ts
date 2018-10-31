@@ -15,4 +15,4 @@ export const routes: NavigationRouteConfigMap = {
 
 export const options: StackNavigatorConfig = {}
 
-export const AuthStackNavigator = createStackNavigator(routes, options)
+export const AuthNavigator = createStackNavigator(routes, options)

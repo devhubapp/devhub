@@ -12,7 +12,9 @@ import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface NotificationColumnProps
-  extends NotificationCardsContainerProps {}
+  extends NotificationCardsContainerProps {
+  pagingEnabled?: boolean
+}
 
 export interface NotificationColumnState {}
 
@@ -25,12 +27,12 @@ export class NotificationColumn extends PureComponent<
   }
 
   render() {
-    const { column } = this.props
+    const { column, pagingEnabled } = this.props
 
     const requestTypeIconAndData = getColumnHeaderDetails(column)
 
     return (
-      <Column>
+      <Column pagingEnabled={pagingEnabled}>
         <ColumnHeader>
           <ColumnHeaderItem
             iconName={requestTypeIconAndData.icon}

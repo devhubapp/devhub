@@ -13,6 +13,7 @@ export interface ColumnProps extends ViewProps {
   children?: ReactNode
   maxWidth?: number
   minWidth?: number
+  pagingEnabled?: boolean
   style?: StyleProp<ViewStyle>
 }
 
@@ -27,9 +28,9 @@ export class Column extends PureComponent<ColumnProps> {
   static defaultProps = {
     maxWidth: Platform.selectUsingRealOS(
       {
-        android: 800,
+        android: 400,
         default: 360,
-        ios: 680,
+        ios: 400,
         web: 360,
       },
       { fallbackToWeb: true },
@@ -38,7 +39,14 @@ export class Column extends PureComponent<ColumnProps> {
   }
 
   render() {
-    const { children, maxWidth, minWidth, style, ...props } = this.props
+    const {
+      children,
+      maxWidth,
+      minWidth,
+      pagingEnabled,
+      style,
+      ...props
+    } = this.props
 
     return (
       <ThemeConsumer>
@@ -47,7 +55,7 @@ export class Column extends PureComponent<ColumnProps> {
             {({ width }) => (
               <View
                 {...props}
-                className={width <= 600 ? 'snap-item-start' : ''}
+                className={pagingEnabled ? 'snap-item-start' : ''}
                 style={[
                   styles.container,
                   {
@@ -55,17 +63,7 @@ export class Column extends PureComponent<ColumnProps> {
                     borderRightColor: theme.backgroundColorDarker08,
                     width: Math.max(
                       minWidth!,
-                      Math.min(
-                        maxWidth!,
-                        width -
-                          Platform.selectUsingRealOS(
-                            {
-                              default: 0,
-                              web: sidebarSize,
-                            },
-                            { fallbackToWeb: false },
-                          ),
-                      ),
+                      Math.min(maxWidth!, width - sidebarSize),
                     ),
                   },
                   style,

@@ -16,7 +16,9 @@ import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 
-export interface EventColumnProps extends EventCardsContainerProps {}
+export interface EventColumnProps extends EventCardsContainerProps {
+  pagingEnabled?: boolean
+}
 
 export interface EventColumnState {}
 
@@ -38,12 +40,12 @@ export class EventColumnComponent extends PureComponent<
   }
 
   render() {
-    const { column } = this.props
+    const { column, pagingEnabled } = this.props
 
     const requestTypeIconAndData = getColumnHeaderDetails(column)
 
     return (
-      <Column>
+      <Column pagingEnabled={pagingEnabled}>
         <ColumnHeader>
           <ColumnHeaderItem
             avatarDetails={requestTypeIconAndData.avatarDetails}
