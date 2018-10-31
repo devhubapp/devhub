@@ -46,7 +46,7 @@ const connectToStore = connect(
     currentOpenedModal: selectors.currentOpenedModal(state),
   }),
   {
-    pushModal: actions.pushModal as any, // TODO: fix this shit later
+    pushModal: actions.pushModal,
   },
 )
 

@@ -21,12 +21,7 @@ export function createErrorAction<
 }
 
 export function createActionCreator<T extends string, P = void>(type: T) {
-  const withoutPayload = () => createAction(type)
-  const withPayload = (payload: P) => createAction(type, payload)
-
-  return withPayload as P extends void
-    ? typeof withoutPayload
-    : typeof withPayload
+  return (...args: P extends void ? [] : [P]) => createAction(type, args[0])
 }
 
 export function createErrorActionCreator<

@@ -40,7 +40,7 @@ const connectToStore = connect(
   }),
   {
     logout: actions.logout,
-    replaceModal: actions.replaceModal as any, // TODO: Fix this shit
+    replaceModal: actions.replaceModal,
   },
 )
 
