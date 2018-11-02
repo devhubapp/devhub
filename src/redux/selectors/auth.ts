@@ -1,6 +1,6 @@
 import { RootState } from '../../types'
 
-const s = (state: RootState) => state.auth
+const s = (state: RootState) => state.auth || {}
 
 export const errorSelector = (state: RootState) => s(state).error
 

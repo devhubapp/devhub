@@ -1,6 +1,6 @@
 import { RootState } from '../../types'
 
-const s = (state: RootState) => state.navigation
+const s = (state: RootState) => state.navigation || {}
 
 export const modalStack = (state: RootState) => s(state).modalStack
 

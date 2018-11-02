@@ -17,7 +17,7 @@ export const columnsReducer: Reducer<State> = (
   switch (action.type) {
     case REHYDRATE as any:
       return immer(state, draft => {
-        const columns = columnsSelector(action.payload as any)
+        const columns = columnsSelector((action.payload as any) || {})
 
         draft.columns = columns || []
         draft.columns = draft.columns.filter(c => c && c.id)
