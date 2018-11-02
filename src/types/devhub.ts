@@ -1,4 +1,4 @@
-import { GitHubExtractParamsFromActivityMethod } from '.'
+import { GitHubExtractParamsFromActivityMethod, GitHubIcon, Omit } from '.'
 import { octokit } from '../libs/github'
 
 export interface NotificationParams {
@@ -8,7 +8,7 @@ export interface NotificationParams {
 export interface NotificationColumn {
   id: string
   type: 'notifications'
-  subtype?: undefined
+  subtype?: undefined | ''
   params: NotificationParams
 }
 
@@ -73,4 +73,26 @@ export type ActivityColumn = {
 
 export type Column = NotificationColumn | ActivityColumn
 
-export type Modal = 'ADD_COLUMN' | 'ADD_COLUMN_DETAILS' | 'SETTINGS'
+export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
+
+export interface ColumnType {
+  name: string
+  icon: GitHubIcon
+  column: Omit<Column, 'id' | 'params'>
+  paramList: ColumnParamField[]
+  defaultParams?: Partial<Record<ColumnParamField, any>>
+}
+
+export type ModalPayload =
+  | {
+      name: 'ADD_COLUMN'
+      params?: undefined
+    }
+  | {
+      name: 'ADD_COLUMN_DETAILS'
+      params: ColumnType
+    }
+  | {
+      name: 'SETTINGS'
+      params?: undefined
+    }

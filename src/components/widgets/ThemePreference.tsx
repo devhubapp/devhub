@@ -1,11 +1,5 @@
 import React, { PureComponent } from 'react'
-import {
-  StyleSheet,
-  Text,
-  TextProps,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import * as actions from '../../redux/actions'
@@ -16,10 +10,10 @@ import {
   preferredLightThemePairSelector,
   themePairSelector,
 } from '../../redux/selectors'
-import * as colors from '../../styles/colors'
 import { themes } from '../../styles/themes'
 import { contentPadding } from '../../styles/variables'
 import { ExtractPropsFromConnector, Theme } from '../../types'
+import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { Switch } from '../common/Switch'
 
@@ -131,45 +125,21 @@ class ThemePreferenceComponent extends PureComponent<
     const darkThemesArr = _themesArr.filter(theme => theme.isDark)
     const lightThemesArr = _themesArr.filter(theme => !theme.isDark)
 
-    const H3 = ({
-      children,
-      style,
-      ...props
-    }: TextProps & { children: string }) => (
-      <Text
-        {...props}
-        style={[
-          {
-            marginBottom: contentPadding / 2,
-            fontWeight: '500',
-          },
-          style,
-        ]}
-      >
-        {typeof children === 'string' ? children.toUpperCase() : children}
-      </Text>
-    )
-
     return (
       <ThemeConsumer>
         {({ theme: appTheme }) => (
           <View>
-            <H3 style={{ color: appTheme.foregroundColor }}>Dark Theme</H3>
-            <Spacer height={contentPadding / 2} />
+            <H3 withMargin>Dark Theme</H3>
             {darkThemesArr.map(t => this.renderThemeButton(t, appTheme))}
 
             <Spacer height={contentPadding} />
 
-            <H3 style={{ color: appTheme.foregroundColor }}>Light Theme</H3>
-            <Spacer height={contentPadding / 2} />
+            <H3 withMargin>Light Theme</H3>
             {lightThemesArr.map(t => this.renderThemeButton(t, appTheme))}
 
             <Spacer height={contentPadding} />
 
-            <H3 style={{ color: appTheme.foregroundColor }}>
-              Auto toggle on day/night
-            </H3>
-            <Spacer height={contentPadding / 2} />
+            <H3 withMargin>Auto toggle on day/night</H3>
             <Switch
               onValueChange={enableAutoTheme =>
                 this.props.setTheme({

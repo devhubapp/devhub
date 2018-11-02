@@ -20,13 +20,12 @@ import {
 
 const invariant = require('fbjs/lib/invariant') // tslint:disable-line
 
-type Item = any
-interface SectionItem {
+interface SectionItem<Item = any> {
   key: string
   data: Item[]
 }
 
-export interface MetroListViewProps extends ListViewProps {
+export interface MetroListViewProps<Item = any> extends ListViewProps {
   FooterComponent: React.ComponentType
   ItemSeparatorComponent: React.ComponentType // not supported yet
   ListEmptyComponent: React.ComponentType
@@ -67,8 +66,8 @@ export interface MetroListViewState {
  * some section support tacked on. It is recommended to just use FlatList directly, this component
  * is mostly for debugging and performance comparison.
  */
-export class MetroListView extends React.Component<
-  MetroListViewProps,
+export class MetroListView<Item = any> extends React.Component<
+  MetroListViewProps<Item>,
   MetroListViewState
 > {
   static defaultProps = {
@@ -76,7 +75,7 @@ export class MetroListView extends React.Component<
     ItemSeparatorComponent: () => null,
     ListEmptyComponent: () => null,
     ListHeaderComponent: () => null,
-    keyExtractor: (item: Item, index: number) => item.key || String(index),
+    keyExtractor: (item: any, index: number) => item.key || String(index),
     renderScrollComponent: (props: MetroListViewProps) => {
       if (props.onRefresh) {
         return (
@@ -104,7 +103,7 @@ export class MetroListView extends React.Component<
   }
 
   static _computeState(props: MetroListViewProps, state: MetroListViewState) {
-    const sectionHeaderData: { [key: string]: Item } = {}
+    const sectionHeaderData: { [key: string]: any } = {}
 
     if (props.sections) {
       invariant(!props.items, 'Cannot have both sections and items props.')

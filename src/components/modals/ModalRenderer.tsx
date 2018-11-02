@@ -20,12 +20,12 @@ class ModalRendererComponent extends PureComponent<
 
     if (!currentOpenedModal) return null
 
-    switch (currentOpenedModal) {
+    switch (currentOpenedModal.name) {
       case 'ADD_COLUMN':
         return <AddColumnModal />
 
       case 'ADD_COLUMN_DETAILS':
-        return <AddColumnDetailsModal />
+        return <AddColumnDetailsModal {...currentOpenedModal.params} />
 
       case 'SETTINGS':
         return <SettingsModal />

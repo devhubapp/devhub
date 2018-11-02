@@ -31,7 +31,7 @@ class ColumnsContainerComponent extends PureComponent<
       case 'notifications': {
         return (
           <NotificationColumn
-            key={`event-column-${index}`}
+            key={`notification-column-${column.id}`}
             column={column}
             pagingEnabled={this.pagingEnabled}
             swipeable={this.swipeable}
@@ -42,7 +42,7 @@ class ColumnsContainerComponent extends PureComponent<
       case 'activity': {
         return (
           <EventColumn
-            key={`event-column-${index}`}
+            key={`event-column-${column.id}`}
             column={column}
             pagingEnabled={this.pagingEnabled}
             swipeable={this.swipeable}

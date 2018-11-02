@@ -2,11 +2,11 @@ import React, { PureComponent } from 'react'
 
 import { MetroListView, MetroListViewProps } from './MetroListView.web'
 
-export interface FlatListProps extends MetroListViewProps {
-  data: MetroListViewProps['items']
+export interface FlatListProps<Item = any> extends MetroListViewProps<Item> {
+  data: MetroListViewProps<Item>['items']
 }
 
-export class FlatList extends PureComponent<FlatListProps> {
+export class FlatList<Item = any> extends PureComponent<FlatListProps<Item>> {
   render() {
     return <MetroListView {...this.props} items={this.props.data} />
   }

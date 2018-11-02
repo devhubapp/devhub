@@ -11,7 +11,10 @@ import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
-export interface ModalColumnProps extends ColumnHeaderItemProps {}
+export interface ModalColumnProps extends ColumnHeaderItemProps {
+  minWidth?: number
+  maxWidth?: number
+}
 
 export interface ModalColumnState {}
 
@@ -42,20 +45,26 @@ class ModalColumnComponent extends PureComponent<
   }
 
   render() {
-    const { children, canGoBack, ...props } = this.props
+    const { canGoBack, children, maxWidth, minWidth, ...props } = this.props
     delete props.popModal
 
     return (
-      <Column>
+      <Column
+        style={[
+          typeof maxWidth !== 'undefined' && { maxWidth },
+          typeof minWidth !== 'undefined' && { minWidth },
+        ]}
+      >
         <ColumnHeader>
           {canGoBack && (
             <ColumnHeaderItem
               iconName="chevron-left"
               onPress={this.handleBack}
+              style={{ paddingRight: 0 }}
             />
           )}
 
-          <ColumnHeaderItem {...props} />
+          <ColumnHeaderItem {...props} iconName={undefined} />
 
           <Spacer flex={1} />
 

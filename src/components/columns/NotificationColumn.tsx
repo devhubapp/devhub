@@ -1,10 +1,14 @@
+import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 
 import { Spacer } from '../../components/common/Spacer'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
+import * as actions from '../../redux/actions'
+import { ExtractPropsFromConnector } from '../../types'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Column } from './Column'
@@ -18,12 +22,19 @@ export interface NotificationColumnProps
 
 export interface NotificationColumnState {}
 
-export class NotificationColumn extends PureComponent<
-  NotificationColumnProps,
+const connectToStore = connect(
+  null,
+  {
+    deleteColumn: actions.deleteColumn,
+  },
+)
+
+class NotificationColumnComponent extends PureComponent<
+  NotificationColumnProps & ExtractPropsFromConnector<typeof connectToStore>,
   NotificationColumnState
 > {
-  handlePress = () => {
-    alert('Not implemented')
+  handleDeleteColumn = (id: string) => {
+    this.props.deleteColumn(id)
   }
 
   render() {
@@ -32,7 +43,10 @@ export class NotificationColumn extends PureComponent<
     const requestTypeIconAndData = getColumnHeaderDetails(column)
 
     return (
-      <Column pagingEnabled={pagingEnabled}>
+      <Column
+        key={`notification-column-${this.props.column.id}-inner`}
+        pagingEnabled={pagingEnabled}
+      >
         <ColumnHeader>
           <ColumnHeaderItem
             iconName={requestTypeIconAndData.icon}
@@ -41,8 +55,8 @@ export class NotificationColumn extends PureComponent<
           />
           <Spacer flex={1} />
           <ColumnHeaderItem
-            iconName="chevron-down"
-            onPress={this.handlePress}
+            iconName="trashcan"
+            onPress={() => this.handleDeleteColumn(this.props.column.id)}
           />
         </ColumnHeader>
 
@@ -56,3 +70,7 @@ export class NotificationColumn extends PureComponent<
     )
   }
 }
+
+export const NotificationColumn = connectToStore(NotificationColumnComponent)
+
+hoistNonReactStatics(NotificationColumn, NotificationColumnComponent as any)

@@ -1,9 +1,9 @@
 import immer from 'immer'
 
-import { Modal, Reducer } from '../../types'
+import { ModalPayload, Reducer } from '../../types'
 
 interface State {
-  modalStack: Modal[]
+  modalStack: ModalPayload[]
 }
 
 const initialState: State = {
@@ -17,7 +17,8 @@ export const navigationReducer: Reducer<State> = (
   switch (action.type) {
     case 'PUSH_MODAL':
       return immer(state, draft => {
-        if (draft.modalStack.slice(-1)[0] === action.payload) return
+        const currentModal = draft.modalStack.slice(-1)[0]
+        if (currentModal && currentModal.name === action.payload.name) return
         draft.modalStack.push(action.payload)
       })
 
@@ -25,7 +26,8 @@ export const navigationReducer: Reducer<State> = (
       return immer(state, draft => {
         draft.modalStack =
           draft.modalStack.length === 1 &&
-          draft.modalStack[0] === action.payload
+          draft.modalStack[0] &&
+          draft.modalStack[0].name === action.payload.name
             ? []
             : [action.payload]
       })

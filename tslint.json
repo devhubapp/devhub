@@ -16,6 +16,7 @@
     "no-namespace": false,
     "object-literal-sort-keys": false,
     "object-shorthand-properties-first": false,
+    "prefer-array-literal": false,
     "semicolon": false,
     "strict-boolean-expressions": false,
     "ter-arrow-parens": false,

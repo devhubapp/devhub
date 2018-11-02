@@ -87,7 +87,7 @@ class LeftSidebarComponent extends PureComponent<
             </View>
 
             <TouchableOpacity
-              onPress={() => replaceModal('ADD_COLUMN')}
+              onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
               style={[
                 styles.centerContainer,
                 {
@@ -128,7 +128,7 @@ class LeftSidebarComponent extends PureComponent<
             </ScrollView>
 
             <TouchableOpacity
-              onPress={() => replaceModal('SETTINGS')}
+              onPress={() => replaceModal({ name: 'SETTINGS' })}
               style={[
                 styles.centerContainer,
                 {

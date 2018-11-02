@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
 
   icon: {
     fontSize: columnHeaderItemContentSize,
-    lineHeight: columnHeaderItemContentSize,
   } as TextStyle,
 
   title: {
