@@ -1,0 +1,19 @@
+{
+  "name": "devhub",
+  "alias": "devhubapp.com",
+  "scale": {
+    "bru1": {
+      "min": 1,
+      "max": "auto"
+    }
+  },
+  "public": true,
+  "static": {
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
