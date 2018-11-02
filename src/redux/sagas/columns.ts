@@ -30,23 +30,6 @@ function getDefaultColumns(username: string): Column[] {
         username,
       },
     },
-    {
-      id: guid(),
-      type: 'activity',
-      subtype: 'ORG_PUBLIC_EVENTS',
-      params: {
-        org: 'facebook',
-      },
-    },
-    {
-      id: guid(),
-      type: 'activity',
-      subtype: 'REPO_EVENTS',
-      params: {
-        owner: 'facebook',
-        repo: 'react',
-      },
-    },
   ]
 }
 
