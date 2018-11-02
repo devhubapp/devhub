@@ -17,10 +17,10 @@ export const columnsReducer: Reducer<State> = (
   switch (action.type) {
     case REHYDRATE as any:
       return immer(state, draft => {
-        const columns = columnsSelector((action.payload as any) || {})
+        const columns =
+          columnsSelector((action.payload as any) || {}) || draft.columns
 
-        draft.columns = columns || []
-        draft.columns = draft.columns.filter(c => c && c.id)
+        if (columns) draft.columns = columns.filter(c => c && c.id)
       })
     case 'ADD_COLUMN':
       return immer(state, draft => {
