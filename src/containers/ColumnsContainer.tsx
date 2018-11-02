@@ -33,6 +33,7 @@ class ColumnsContainerComponent extends PureComponent<
           <NotificationColumn
             key={`notification-column-${column.id}`}
             column={column}
+            columnIndex={index}
             pagingEnabled={this.pagingEnabled}
             swipeable={this.swipeable}
           />
@@ -44,6 +45,7 @@ class ColumnsContainerComponent extends PureComponent<
           <EventColumn
             key={`event-column-${column.id}`}
             column={column}
+            columnIndex={index}
             pagingEnabled={this.pagingEnabled}
             swipeable={this.swipeable}
           />

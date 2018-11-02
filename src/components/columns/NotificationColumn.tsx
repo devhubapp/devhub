@@ -2,12 +2,12 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import { Spacer } from '../../components/common/Spacer'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
 import * as actions from '../../redux/actions'
+import { contentPadding } from '../../styles/variables'
 import { ExtractPropsFromConnector } from '../../types'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
@@ -17,6 +17,7 @@ import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface NotificationColumnProps
   extends NotificationCardsContainerProps {
+  columnIndex: number
   pagingEnabled?: boolean
 }
 
@@ -26,6 +27,7 @@ const connectToStore = connect(
   null,
   {
     deleteColumn: actions.deleteColumn,
+    moveColumn: actions.moveColumn,
   },
 )
 
@@ -37,8 +39,12 @@ class NotificationColumnComponent extends PureComponent<
     this.props.deleteColumn(id)
   }
 
+  handleMoveColumn = (id: string, newColumnIndex: number) => {
+    this.props.moveColumn({ id, index: newColumnIndex })
+  }
+
   render() {
-    const { column, pagingEnabled } = this.props
+    const { column, columnIndex, pagingEnabled } = this.props
 
     const requestTypeIconAndData = getColumnHeaderDetails(column)
 
@@ -53,6 +59,21 @@ class NotificationColumnComponent extends PureComponent<
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}
             style={{ flex: 1 }}
+          />
+
+          <ColumnHeaderItem
+            iconName="chevron-left"
+            onPress={() =>
+              this.handleMoveColumn(this.props.column.id, columnIndex - 1)
+            }
+            style={{ paddingHorizontal: contentPadding / 2 }}
+          />
+          <ColumnHeaderItem
+            iconName="chevron-right"
+            onPress={() =>
+              this.handleMoveColumn(this.props.column.id, columnIndex + 1)
+            }
+            style={{ paddingHorizontal: contentPadding / 2 }}
           />
 
           <ColumnHeaderItem
