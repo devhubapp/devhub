@@ -55,8 +55,9 @@ export class EventColumnComponent extends PureComponent<
             iconName={requestTypeIconAndData.icon}
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}
+            style={{ flex: 1 }}
           />
-          <Spacer flex={1} />
+
           <ColumnHeaderItem
             iconName="trashcan"
             onPress={() => this.handleDeleteColumn(this.props.column.id)}

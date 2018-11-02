@@ -64,9 +64,11 @@ class ModalColumnComponent extends PureComponent<
             />
           )}
 
-          <ColumnHeaderItem {...props} iconName={undefined} />
-
-          <Spacer flex={1} />
+          <ColumnHeaderItem
+            {...props}
+            iconName={undefined}
+            style={{ flex: 1 }}
+          />
 
           <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
         </ColumnHeader>

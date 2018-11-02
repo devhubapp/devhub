@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
-    justifyContent: 'center',
     paddingHorizontal: contentPadding,
   } as ViewStyle,
 
@@ -189,28 +188,33 @@ class ColumnHeaderItemComponent extends PureComponent<
                   )}
                 </View>
               )}
-
-              {!!title && (
+              {!!(title || subtitle) && (
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.title,
                     { color: theme.foregroundColor },
                     titleStyle,
                   ]}
                 >
-                  {title.toLowerCase()}
-                </Text>
-              )}
-              {!!subtitle && (
-                <Text
-                  style={[
-                    styles.subtitle,
-                    { color: rgba(theme.foregroundColor, mutedOpacity) },
-                    subtitleStyle,
-                  ]}
-                >
-                  {!!title && '  '}
-                  {subtitle.toLowerCase()}
+                  {!!title && (
+                    <Text>
+                      {title.toLowerCase()}
+                      {!!subtitle && '  '}
+                    </Text>
+                  )}
+
+                  {!!subtitle && (
+                    <Text
+                      style={[
+                        styles.subtitle,
+                        { color: rgba(theme.foregroundColor, mutedOpacity) },
+                        subtitleStyle,
+                      ]}
+                    >
+                      {subtitle.toLowerCase()}
+                    </Text>
+                  )}
                 </Text>
               )}
             </>
