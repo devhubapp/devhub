@@ -1,6 +1,7 @@
 import Octokit from '@octokit/rest'
 import React, { PureComponent } from 'react'
 
+import { ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList } from '../../libs/lists'
 import { contentPadding } from '../../styles/variables'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
@@ -40,10 +41,12 @@ export class NotificationCards extends PureComponent<
     }
 
     return (
-      <NotificationCard
-        notification={notification}
-        repoIsKnown={this.props.repoIsKnown}
-      />
+      <ErrorBoundary>
+        <NotificationCard
+          notification={notification}
+          repoIsKnown={this.props.repoIsKnown}
+        />
+      </ErrorBoundary>
     )
   }
 

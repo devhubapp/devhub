@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 
+import { ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList } from '../../libs/lists'
 import { contentPadding } from '../../styles/variables'
 import { EnhancedGitHubEvent } from '../../types'
@@ -35,7 +36,11 @@ export class EventCards extends PureComponent<
       )
     }
 
-    return <EventCard event={event} repoIsKnown={this.props.repoIsKnown} />
+    return (
+      <ErrorBoundary>
+        <EventCard event={event} repoIsKnown={this.props.repoIsKnown} />
+      </ErrorBoundary>
+    )
   }
 
   render() {

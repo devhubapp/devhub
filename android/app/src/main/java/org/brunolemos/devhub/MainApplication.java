@@ -3,6 +3,7 @@ package org.brunolemos.devhub;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.bugsnag.BugsnagReactNative;
 import com.oblador.vectoricons.VectorIconsPackage;
 //import org.devio.rn.splashscreen.SplashScreenReactPackage;
 //import com.swmansion.rnscreens.RNScreenPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            BugsnagReactNative.getPackage(),
             new VectorIconsPackage(),
 //            new SplashScreenReactPackage(),
 //            new RNScreenPackage(),

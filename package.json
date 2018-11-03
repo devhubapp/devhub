@@ -20,6 +20,9 @@
   },
   "dependencies": {
     "@octokit/rest": "^15.15.1",
+    "bugsnag-js": "^4.7.3",
+    "bugsnag-react": "^1.1.1",
+    "bugsnag-react-native": "^2.12.2",
     "gravatar": "^1.6.0",
     "hoist-non-react-statics": "^3.0.1",
     "immer": "^1.7.3",
