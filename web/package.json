@@ -1,6 +1,6 @@
 {
   "name": "devhub-web",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "private": true,
   "scripts": {
     "build": "react-app-rewired build",
