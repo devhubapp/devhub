@@ -1,8 +1,8 @@
 import { Theme, ThemePair } from '../types/themes'
+import * as constants from '../utils/constants'
 import { isNight } from '../utils/helpers/shared'
 import { themes } from './themes'
 import { createThemeFromColor } from './themes/custom'
-import { defaultThemeName } from './variables'
 
 export function loadCustomTheme(color: string) {
   return createThemeFromColor(color, 'custom', 'Custom')
@@ -13,7 +13,7 @@ export function loadTheme(
   preferredDarkTheme?: ThemePair,
   preferredLightTheme?: ThemePair,
 ): Theme {
-  const _theme = theme || { id: defaultThemeName }
+  const _theme = theme || { id: constants.DEFAULT_THEME }
 
   if (_theme.id === 'custom' && _theme.color) {
     return loadCustomTheme(_theme.color)
@@ -32,8 +32,10 @@ export function loadTheme(
         : themes[preferredLightTheme.id]
       : undefined
 
-    const darkTheme: Theme = _preferredDarkTheme || themes['dark-gray']!
-    const lightTheme: Theme = _preferredLightTheme || themes['light-gray']!
+    const darkTheme: Theme =
+      _preferredDarkTheme || themes[constants.DEFAULT_DARK_THEME]!
+    const lightTheme: Theme =
+      _preferredLightTheme || themes[constants.DEFAULT_LIGHT_THEME]!
 
     return isNight() ? darkTheme : lightTheme
   }

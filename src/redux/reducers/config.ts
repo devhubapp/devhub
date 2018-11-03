@@ -2,6 +2,7 @@ import immer from 'immer'
 
 import { loadTheme } from '../../styles/utils'
 import { Reducer, ThemePair } from '../../types'
+import { DEFAULT_DARK_THEME, DEFAULT_LIGHT_THEME } from '../../utils/constants'
 
 interface State {
   preferredDarkTheme?: ThemePair
@@ -9,7 +10,11 @@ interface State {
   theme?: ThemePair
 }
 
-const initialState: State = {}
+const initialState: State = {
+  preferredDarkTheme: { id: DEFAULT_DARK_THEME },
+  preferredLightTheme: { id: DEFAULT_LIGHT_THEME },
+  theme: { id: 'auto' },
+}
 
 export const configReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {

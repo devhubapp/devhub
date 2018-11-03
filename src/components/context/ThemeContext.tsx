@@ -2,9 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import * as actions from '../../redux/actions'
-import { themeSelector } from '../../redux/selectors/config'
+import { defaultThemePair, themeSelector } from '../../redux/selectors/config'
 import { loadTheme } from '../../styles/utils'
-import { defaultThemeName } from '../../styles/variables'
 import { ExtractDispatcherFromActionCreator, Theme } from '../../types'
 import { ExtractPropsFromConnector } from '../../types/redux'
 
@@ -17,7 +16,7 @@ export interface ThemeProviderState {
   theme: Theme
 }
 
-const defaultTheme = loadTheme({ id: defaultThemeName, color: '' })
+const defaultTheme = loadTheme(defaultThemePair)
 
 const ThemeContext = React.createContext<ThemeProviderState>({
   setTheme: () => {
