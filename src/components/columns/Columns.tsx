@@ -1,14 +1,14 @@
-import React, { PureComponent, ReactFragment } from 'react'
-import {
-  ScrollView,
-  ScrollViewProps,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native'
+import React, { PureComponent } from 'react'
+import { FlatListProps, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-export interface ColumnsProps extends ScrollViewProps {
-  children: ReactFragment
+import { FlatList } from '../../libs/lists/index'
+import { Column, Omit } from '../../types'
+import { DimensionsConsumer } from '../context/DimensionsContext'
+import { EventColumn } from './EventColumn'
+import { NotificationColumn } from './NotificationColumn'
+
+export interface ColumnsProps
+  extends Omit<FlatListProps<Column>, 'renderItem'> {
   contentContainerStyle?: StyleProp<ViewStyle>
   style?: StyleProp<ViewStyle>
 }
@@ -21,20 +21,74 @@ const styles = StyleSheet.create({
 })
 
 export class Columns extends PureComponent<ColumnsProps> {
+  pagingEnabled: boolean = true
+  swipeable: boolean = false
+
+  keyExtractor(column: Column) {
+    return `column-container-${column.id}`
+  }
+
+  renderItem: FlatListProps<Column>['renderItem'] = ({
+    item: column,
+    index,
+  }) => {
+    switch (column.type) {
+      case 'notifications': {
+        return (
+          <NotificationColumn
+            key={`notification-column-${column.id}`}
+            column={column}
+            columnIndex={index}
+            pagingEnabled={this.pagingEnabled}
+            swipeable={this.swipeable}
+          />
+        )
+      }
+
+      case 'activity': {
+        return (
+          <EventColumn
+            key={`event-column-${column.id}`}
+            column={column}
+            columnIndex={index}
+            pagingEnabled={this.pagingEnabled}
+            swipeable={this.swipeable}
+          />
+        )
+      }
+
+      default: {
+        console.error('Invalid Column type: ', (column as any).type)
+        return null
+      }
+    }
+  }
+
   render() {
-    const { children, style, ...props } = this.props
+    const { data, style, ...props } = this.props
 
     return (
-      <ScrollView
-        className="snap-container"
-        contentContainerStyle={style}
-        horizontal
-        pagingEnabled
-        {...props}
-        style={[styles.container, style]}
-      >
-        {children}
-      </ScrollView>
+      <DimensionsConsumer>
+        {({ width }) => {
+          this.pagingEnabled = width <= 400
+
+          return (
+            <FlatList
+              key="columns-flat-list"
+              bounces={!this.swipeable}
+              className="snap-container"
+              data={data}
+              horizontal
+              keyExtractor={this.keyExtractor}
+              pagingEnabled={this.pagingEnabled}
+              scrollEnabled={!this.swipeable}
+              {...props}
+              renderItem={this.renderItem}
+              style={[styles.container, style]}
+            />
+          )
+        }}
+      </DimensionsConsumer>
     )
   }
 }
