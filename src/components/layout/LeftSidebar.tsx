@@ -35,9 +35,14 @@ export interface LeftSidebarProps {
 }
 
 const connectToStore = connect(
-  (state: any) => ({
-    columns: selectors.columnsSelector(state),
-  }),
+  (state: any) => {
+    const user = selectors.currentUserSelector(state)
+
+    return {
+      columns: selectors.columnsSelector(state),
+      username: (user && user.login) || '',
+    }
+  },
   {
     logout: actions.logout,
     replaceModal: actions.replaceModal,
@@ -54,7 +59,7 @@ class LeftSidebarComponent extends PureComponent<
   }
 
   render() {
-    const { columns, replaceModal } = this.props
+    const { columns, replaceModal, username } = this.props
 
     return (
       <ThemeConsumer>
@@ -82,7 +87,7 @@ class LeftSidebarComponent extends PureComponent<
               <Avatar
                 shape="circle"
                 size={sidebarSize / 2}
-                username="brunolemos"
+                username={username}
               />
             </View>
 
