@@ -103,9 +103,10 @@ class ColumnHeaderItemComponent extends PureComponent<
     } = this.props
 
     const username =
+      _username &&
       avatarDetails &&
       avatarDetails.owner &&
-      !(_username === avatarDetails.owner)
+      !(_username.toLowerCase() === avatarDetails.owner.toLowerCase())
         ? avatarDetails.owner
         : undefined
 
