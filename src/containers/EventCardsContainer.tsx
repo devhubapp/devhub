@@ -41,6 +41,7 @@ export class EventCardsContainer extends PureComponent<
 
       if (Array.isArray(events)) {
         const orderedEvents = _(events)
+          .concat(this.state.events)
           .uniqBy('id')
           .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
           .value()

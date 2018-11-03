@@ -47,6 +47,7 @@ export class NotificationCardsContainer extends PureComponent<
       if (Array.isArray(notifications)) {
         this.setState({
           notifications: _(notifications)
+            .concat(this.state.notifications)
             .uniqBy('id')
             .orderBy(
               ['unread', 'updated_at', 'created_at'],
