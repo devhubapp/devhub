@@ -1,0 +1,11 @@
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/brand_background</item>
+        <item name="colorPrimaryDark">@color/brand_background</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/brand_background</item>
+        <item name="colorPrimaryDark">@color/brand_foreground</item>
+    </style>
+</resources>

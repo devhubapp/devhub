@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- required by react-native-splash-screen -->
+    <color name="primary_dark">@color/brand_background</color>
+
+    <color name="brand_background">#49D3B4</color>
+    <color name="brand_foreground">#141C26</color>
+</resources>
