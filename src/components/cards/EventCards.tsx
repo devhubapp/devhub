@@ -58,6 +58,7 @@ export class EventCards extends PureComponent<
               data={events}
               ItemSeparatorComponent={CardItemSeparator}
               keyExtractor={this.keyExtractor}
+              removeClippedSubviews
               renderItem={this.renderItem}
             />
           </TransparentTextOverlay>

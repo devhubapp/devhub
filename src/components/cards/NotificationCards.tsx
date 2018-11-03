@@ -62,9 +62,10 @@ export class NotificationCards extends PureComponent<
           >
             <FlatList
               key="notification-cards-flat-list"
-              data={notifications}
               ItemSeparatorComponent={CardItemSeparator}
+              data={notifications}
               keyExtractor={this.keyExtractor}
+              removeClippedSubviews
               renderItem={this.renderItem}
             />
           </TransparentTextOverlay>

@@ -86,6 +86,7 @@ export class Columns extends PureComponent<ColumnsProps> {
               horizontal
               keyExtractor={this.keyExtractor}
               pagingEnabled={this.pagingEnabled}
+              removeClippedSubviews
               scrollEnabled={!this.swipeable}
               {...props}
               renderItem={this.renderItem}
