@@ -91,13 +91,15 @@ Similar projects:
 
 ## License
 
-Copyright (c) 2017 [Bruno Lemos](https://twitter.com/brunolemos), licensed under the AGPL-3.0 license.
+Copyright (c) 2018 [Bruno Lemos](https://twitter.com/brunolemos).
 
-> ✅ This project is 100% free to use and provided  as is without any warranties.
-You are encouraged to use, share and submit pull requests with improvements.
+This project provided as is without any warranties.<br/>
+By using this app you agree with the [license](LICENSE.md) and [privacy](PRIVACY.md) policies.
 
-> ⚠️ If you create a fork or project based on it, is must also be free, open source, under the same license and give credits to this repository and author.
+- ✅ You are encouraged to use, share and submit pull requests with improvements.
 
-> 🚫 You are not allowed to distribute this application anywhere, including but not limited to Apple Store, Google Play or any web hosts.
+- ✅ You are allowed to use this code for non-commercial purposes only, like studing or contributing.
 
-See [LICENSE.md](LICENSE.md) for a super long, detailed and serious information.
+- 🚫 You are not allowed to distribute this code anywhere, including but not limited to Apple Store, Google Play or Web.
+
+- 🚫 You are not allowed to charge people for this app, neither remove its paid features, if any.
