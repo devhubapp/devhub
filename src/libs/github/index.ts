@@ -26,15 +26,16 @@ const cache: Record<string, Pick<Octokit.AnyResponse, 'headers'>> = {}
 
 export async function getNotifications(
   _params: Octokit.ActivityGetNotificationsParams = {},
+  // { columnId = '', useCache = true } = {},
 ) {
-  // const cacheKey = JSON.stringify(['NOTIFICATIONS', _params])
+  // const cacheKey = JSON.stringify(['NOTIFICATIONS', _params, columnId])
   // const cacheValue = cache[cacheKey]
 
   const params = (_params || {}) as any
   params.headers = params.headers || {}
   params.headers['If-None-Match'] = ''
 
-  // if (cacheValue) {
+  // if (cacheValue && useCache) {
   //   params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
   //   params.headers['If-None-Match'] = cacheValue.headers.etag
   // }
@@ -51,15 +52,16 @@ export async function getNotifications(
 export async function getActivity<T extends GitHubActivityType>(
   type: T,
   _params: any = {},
+  { columnId = '', useCache = true } = {},
 ) {
-  const cacheKey = JSON.stringify([type, _params])
+  const cacheKey = JSON.stringify([type, _params, columnId])
   const cacheValue = cache[cacheKey]
 
   const params = { ..._params }
   params.headers = params.headers || {}
   params.headers['If-None-Match'] = ''
 
-  if (cacheValue) {
+  if (cacheValue && useCache) {
     params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
     params.headers['If-None-Match'] = cacheValue.headers.etag
   }

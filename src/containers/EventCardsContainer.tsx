@@ -33,10 +33,10 @@ export class EventCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
-    const { params, subtype: activityType } = this.props.column
+    const { id: columnId, params, subtype: activityType } = this.props.column
 
     try {
-      const response = await getActivity(activityType, params)
+      const response = await getActivity(activityType, params, { columnId })
       const events = response.data
 
       if (Array.isArray(events)) {
