@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
+import { FlatList } from 'react-native'
 
 import { ErrorBoundary } from '../../libs/bugsnag'
-import { FlatList } from '../../libs/lists'
 import { contentPadding } from '../../styles/variables'
 import { EnhancedGitHubEvent } from '../../types'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'

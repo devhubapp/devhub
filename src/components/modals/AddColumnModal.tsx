@@ -1,6 +1,12 @@
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
-import { Text, TouchableOpacity, View, ViewProps } from 'react-native'
+import {
+  FlatListProps,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import * as actions from '../../redux/actions'
@@ -8,7 +14,6 @@ import * as selectors from '../../redux/selectors'
 import { ColumnType, ExtractPropsFromConnector } from '../../types'
 import { ModalColumn } from '../columns/ModalColumn'
 
-import { FlatListProps } from '../../libs/lists/FlatList.web'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ThemeConsumer } from '../context/ThemeContext'
@@ -124,7 +129,7 @@ class AddColumnModalComponent extends PureComponent<
   )
 
   renderColumnType = (item: ColumnType, index: number) =>
-    this.renderItem({ item, index })
+    this.renderItem({ item, index } as any)
 
   render() {
     return (

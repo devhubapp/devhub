@@ -1,7 +1,12 @@
 import React, { PureComponent } from 'react'
-import { FlatListProps, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import {
+  FlatList,
+  FlatListProps,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native'
 
-import { FlatList } from '../../libs/lists/index'
 import { Column, Omit } from '../../types'
 import { DimensionsConsumer } from '../context/DimensionsContext'
 import { EventColumn } from './EventColumn'
