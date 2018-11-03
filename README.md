@@ -1,21 +1,21 @@
 <p align="center">
-  <img src="ios/devhub/Images.xcassets/iTunesArtwork@1x.png" height="100" /><br/>
-  <span><b>DevHub</b>: <span>GitHub native client for Android, iOS & Web</span><br/>
-  <span>with <b>95%+ code sharing</b> between them</span>
+  <img src="ios/devhub/Images.xcassets/iTunesArtwork@1x.png" height="100" style="border-radius: 12px;" /><br/>
+  <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
+  <span>Android, iOS & Web with <b>99% code sharing</b> between them</span>
 </p>
+
+## Screenshot
+
+![devhub](https://user-images.githubusercontent.com/619186/47956109-5c2b1200-df7e-11e8-9c2f-f44d130561f0.png)
+
+<br/>
 
 ## Why
 
-If you have one or more repositories on GitHub that you work on or that you really like, the `watch` feature on GitHub is great to follow all their activities.
-It's like Dan said:
-
-<a href="https://twitter.com/dan_abramov/status/819555257055322112" target="_blank">
-  <img src="https://cloud.githubusercontent.com/assets/619186/23582032/035a42a8-0100-11e7-8065-8ba1462bf157.png" height="180" />
-</a>
+If you have one or more repositories on GitHub that you work on or that you really like, the `watch` feature on GitHub is great to follow their activities. The problem is that your notifications on GitHub would get **really** cluttered, with hundreds of new items per week.
 
 
-The problem is that your notifications on GitHub may get **really** cluttered.
-And I believe the notifications should be only for important things, like `@mentions` and issues `assigned to you`.
+So instead of using the built-in `watch` feature, create columns here instead.
 
 <br/>
 
@@ -24,68 +24,49 @@ And I believe the notifications should be only for important things, like `@ment
 Current implementations:
 
 - [x] **GitHub watcher**: Follow GitHub activity without needing to `watch` a repository neither `follow` the user
-  - [x] **User feed**: See the exact content the user see on their home page
+  - [x] **Dashboard**: See the exact content the user see on their home page
   - [x] **User events**: See all activity made by an user _(starred a repo, ...)_
   - [x] **Repository events**: See all activity happening on a single repo _(released a new version, ...)_
   - [x] **Organization events**: See all activity happening on the whole organization _(merged a pull request, ...)_
 - [x] **Notifications manager**
   - [x] **TweetDeck column-style**: Overview all your notifications with easy
-  - [x] **Mark as read/unread**: Differently than GitHub, the notification doesn't disappear after opening it
 
 Other features:
 
 - [x] **Inbox Zero**: Keep your mind clean by archiving all seem items
-- [x] **Theme**: Light, Dark or Dark-Blue
+- [x] **Theme**: Light or Dark, with the option to automatically change on day/night
 
 Next features:
 
-- [ ] **Notifications content**: See the relevant notification content before opening it
-- [ ] **More complete GitHub client**: Native views for `Issues`, `Pull Requests`, `User Profiles`, etc
-- [ ] **Push Notifications**
+- [ ] **Notification content**: See the relevant notification content before opening it
+- [ ] **Filter**: [soon] Create filters for each column;
+- [ ] **Push notification**: [soon] Enable push notifications for your filtered notifications;
 
 > Pull Requests more than welcome!
 
 <br/>
 
-## Screenshots
+## Similar projects
 
-### Android
+- [DevSpace](https://devspace.io/) by [@zenorocha](https://github.com/zenorocha)
 
-<div>
-  <img src="https://cloud.githubusercontent.com/assets/619186/23582517/d9627f46-010a-11e7-8117-66e6c2219091.png" height="600" />
-  <img src="https://cloud.githubusercontent.com/assets/619186/23582531/0d06d716-010b-11e7-9555-e41cbbe8ca6e.png" height="600" />
-</div>
+  ### DevSpace vs DevHub
+  
+  DevSpace and DevHub started at a similar time.
+  One of the main differences between them is that DevHub shows more details about each event (see image below).
+  Another difference is that DevHub has native mobile apps, while DevSpace uses only web technologies.
+  
+  <img src="https://user-images.githubusercontent.com/619186/47956200-a95bb380-df7f-11e8-9058-80243ed46e1f.png"  width="500" />
 
-### iOS
-
-<div>
-  <img src="https://cloud.githubusercontent.com/assets/619186/23582307/8f1935f0-0106-11e7-954a-38d3002870fe.png" height="600" />
-  <img src="https://cloud.githubusercontent.com/assets/619186/23582300/3f10e8be-0106-11e7-8b72-463f56eeee90.png" height="600" />
-</div>
-
-<br/>
-
-### Web
-
-<div>
-  <img src="https://cloud.githubusercontent.com/assets/619186/23582571/1397607c-010c-11e7-82ac-7dec19781db8.png" />
-</div>
+- [Octobox](https://github.com/octobox/octobox) by [@andrew](https://github.com/andrew)
+  
+  Octobox is great to manage notifications. We will certainly bring some power features from it to DevHub in the future.
 
 <br/>
 
 ## Author
 
-🇧🇷 Bruno Lemos, Remote Software Engineer<br/>
-🐦 Follow me on Twitter ([@brunolemos](https://twitter.com/brunolemos))
-
-<br/>
-
-## Inspired by
-
-Similar projects:
-
-- [DevSpace](https://devspace.io/) by [@zenorocha](https://github.com/zenorocha)
-- [Octobox](https://github.com/octobox/octobox) by [@andrew](https://github.com/andrew)
+Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
 
 <br/>
 
@@ -93,8 +74,8 @@ Similar projects:
 
 Copyright (c) 2018 [Bruno Lemos](https://twitter.com/brunolemos).
 
-This project provided as is without any warranties.<br/>
-By using this app you agree with the [license](LICENSE.md) and [privacy](PRIVACY.md) policies.
+This is project provided as is without any warranties.<br/>
+By using this app you agree with its [privacy](PRIVACY.md) policy and the  [license](LICENSE.md) below:
 
 - ✅ You are encouraged to use, share and submit pull requests with improvements.
 
