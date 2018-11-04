@@ -35,7 +35,8 @@
     "postinstall-prepare": "^1.0.1",
     "react-app-rewired": "^1.6.2",
     "serve": "^10.0.2",
-    "typescript": "^3.1.6"
+    "typescript": "^3.1.6",
+    "webpack-bundle-analyzer": "^3.0.3"
   },
   "browserslist": [
     ">0.2%",
