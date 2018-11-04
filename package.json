@@ -45,8 +45,7 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.2",
-    "reselect": "^4.0.0",
-    "warna": "^0.2.4"
+    "reselect": "^4.0.0"
   },
   "devDependencies": {
     "@types/gravatar": "^1.4.28",
