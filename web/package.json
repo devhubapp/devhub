@@ -29,7 +29,7 @@
     "@types/node": "^10.12.2",
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
-    "babel-plugin-react-native-web": "0.9.6",
+    "babel-plugin-react-native-web": "^0.9.6",
     "now": "^11.5.2",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
