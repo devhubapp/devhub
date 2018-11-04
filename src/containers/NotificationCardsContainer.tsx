@@ -23,7 +23,7 @@ export class NotificationCardsContainer extends PureComponent<
   NotificationCardsContainerProps,
   NotificationCardsContainerState
 > {
-  fetchDataInterval?: number
+  fetchDataInterval?: ReturnType<typeof setInterval>
 
   state: NotificationCardsContainerState = {
     notifications: [],

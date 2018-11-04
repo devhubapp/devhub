@@ -18,7 +18,7 @@ export class EventCardsContainer extends PureComponent<
   EventCardsContainerProps,
   EventCardsContainerState
 > {
-  fetchDataInterval?: number
+  fetchDataInterval?: ReturnType<typeof setInterval>
 
   state: EventCardsContainerState = {
     events: [],

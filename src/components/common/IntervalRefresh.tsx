@@ -22,7 +22,7 @@ export class IntervalRefresh extends PureComponent<
     interval: defaultInterval,
   }
 
-  intervalInstance?: number
+  intervalInstance?: ReturnType<typeof setInterval>
 
   state: IntervalRefreshState = {
     currentInterval: 1000,
