@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { combineReducers } from 'redux'
 
 import { appReducer } from './app'
@@ -17,7 +18,7 @@ const _rootReducer = combineReducers({
 export const rootReducer = (state: any, action: any) => {
   switch (action.type) {
     case 'LOGOUT':
-      return _rootReducer(undefined, action)
+      return _rootReducer(_.pick(state, 'config') as any, action)
 
     default:
       return _rootReducer(state, action)
