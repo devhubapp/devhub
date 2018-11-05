@@ -1,0 +1,15 @@
+patch-package
+--- a/node_modules/react-native/scripts/react-native-xcode.sh
++++ b/node_modules/react-native/scripts/react-native-xcode.sh
+@@ -47,7 +47,10 @@ cd "${REACT_NATIVE_DIR}"/../..
+ [ -z "$NVM_DIR" ] && export NVM_DIR="$HOME/.nvm"
+ 
+ # Define entry file
+-if [[ -s "index.ios.js" ]]; then
++if [[ "$ENTRY_FILE" ]]; then
++  # Use ENTRY_FILE defined by user
++  :
++elif [[ -s "index.ios.js" ]]; then
+   ENTRY_FILE=${1:-index.ios.js}
+ else
+   ENTRY_FILE=${1:-index.js}
