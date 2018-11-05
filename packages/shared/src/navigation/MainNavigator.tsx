@@ -5,16 +5,11 @@ import {
 } from 'react-navigation'
 
 import { MainScreen } from '../screens/MainScreen'
-import { SettingsScreen } from '../screens/SettingsScreen'
 
 export const routes: NavigationRouteConfigMap = {
   Main: {
     path: '',
     screen: MainScreen,
-  },
-  Settings: {
-    path: 'settings',
-    screen: SettingsScreen,
   },
 }
 

@@ -75,7 +75,7 @@ export class Columns extends PureComponent<ColumnsProps> {
     return (
       <DimensionsConsumer>
         {({ width }) => {
-          this.pagingEnabled = width <= 400
+          this.pagingEnabled = width <= 420
 
           return (
             <FlatList

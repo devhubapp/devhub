@@ -5,7 +5,7 @@ import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
 import { DimensionsConsumer } from '../context/DimensionsContext'
 import { ThemeConsumer } from '../context/ThemeContext'
-import { sidebarSize } from '../layout/LeftSidebar'
+import { sidebarSize } from '../layout/Sidebar'
 
 export const columnMargin = contentPadding / 2
 
@@ -63,7 +63,10 @@ export class Column extends PureComponent<ColumnProps> {
                     borderRightColor: theme.backgroundColorDarker08,
                     width: Math.max(
                       minWidth!,
-                      Math.min(maxWidth!, width - sidebarSize),
+                      Math.min(
+                        maxWidth!,
+                        width - (width <= 420 ? 0 : sidebarSize), // TODO: Improve this
+                      ),
                     ),
                   },
                   style,

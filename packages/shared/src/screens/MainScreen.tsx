@@ -8,8 +8,9 @@ import {
 import { connect } from 'react-redux'
 
 import { Screen } from '../components/common/Screen'
+import { DimensionsConsumer } from '../components/context/DimensionsContext'
 import { ThemeConsumer } from '../components/context/ThemeContext'
-import { LeftSidebar } from '../components/layout/LeftSidebar'
+import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 import * as selectors from '../redux/selectors'
@@ -17,6 +18,9 @@ import { ExtractPropsFromConnector } from '../types'
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  innerContainer: {
     flex: 1,
     flexDirection: 'row',
   },
@@ -37,13 +41,29 @@ class MainScreenComponent extends PureComponent<
     return (
       <ThemeConsumer>
         {({ theme }) => (
-          <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
-            <View style={styles.container}>
-              <LeftSidebar navigation={this.props.navigation} />
-              <ModalRenderer />
-              <ColumnsContainer />
-            </View>
-          </Screen>
+          <DimensionsConsumer>
+            {({ width }) => {
+              const small = width <= 420
+
+              return (
+                <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
+                  <View
+                    style={[
+                      styles.container,
+                      { flexDirection: small ? 'column-reverse' : 'row' },
+                    ]}
+                  >
+                    <Sidebar key="main-screen-sidebar" horizontal={small} />
+
+                    <View style={styles.innerContainer}>
+                      <ModalRenderer />
+                      <ColumnsContainer />
+                    </View>
+                  </View>
+                </Screen>
+              )
+            }}
+          </DimensionsConsumer>
         )}
       </ThemeConsumer>
     )

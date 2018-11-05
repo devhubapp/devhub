@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 
 import * as actions from '../../redux/actions'
@@ -30,8 +29,8 @@ const styles = StyleSheet.create({
   },
 })
 
-export interface LeftSidebarProps {
-  navigation: NavigationScreenProps['navigation']
+export interface SidebarProps {
+  horizontal?: boolean
 }
 
 const connectToStore = connect(
@@ -49,62 +48,67 @@ const connectToStore = connect(
   },
 )
 
-class LeftSidebarComponent extends PureComponent<
-  LeftSidebarProps &
-    ExtractPropsFromConnector<typeof connectToStore> &
-    NavigationScreenProps
+class SidebarComponent extends PureComponent<
+  SidebarProps & ExtractPropsFromConnector<typeof connectToStore>
 > {
   logout = () => {
     this.props.logout()
   }
 
   render() {
-    const { columns, replaceModal, username } = this.props
+    const { columns, horizontal, replaceModal, username } = this.props
+
+    const squareStyle = {
+      width: horizontal ? sidebarSize + StyleSheet.hairlineWidth : '100%',
+      height: horizontal ? '100%' : sidebarSize + StyleSheet.hairlineWidth,
+    }
 
     return (
       <ThemeConsumer>
         {({ theme }) => (
           <View
             style={{
-              width: sidebarSize,
+              flexDirection: horizontal ? 'row' : 'column',
+              width: horizontal ? undefined : sidebarSize,
+              height: horizontal ? sidebarSize : undefined,
               backgroundColor: theme.backgroundColor,
               borderRightWidth: StyleSheet.hairlineWidth,
               borderRightColor: theme.backgroundColorDarker08,
             }}
           >
-            <View
-              style={[
-                styles.centerContainer,
-                {
-                  backgroundColor: theme.backgroundColorLess08,
-                  width: '100%',
-                  height: sidebarSize + StyleSheet.hairlineWidth,
-                  borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderColor: theme.backgroundColorDarker08,
-                },
-              ]}
-            >
-              <Avatar
-                shape="circle"
-                size={sidebarSize / 2}
-                username={username}
-              />
-            </View>
+            {!horizontal && (
+              <View
+                style={[
+                  styles.centerContainer,
+                  {
+                    ...squareStyle,
+                    backgroundColor: theme.backgroundColorLess08,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderColor: theme.backgroundColorDarker08,
+                  },
+                ]}
+              >
+                <Avatar
+                  shape="circle"
+                  size={sidebarSize / 2}
+                  username={username}
+                />
+              </View>
+            )}
 
             <TouchableOpacity
               onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-              style={[
-                styles.centerContainer,
-                {
-                  width: '100%',
-                  height: sidebarSize + StyleSheet.hairlineWidth,
-                },
-              ]}
+              style={[styles.centerContainer, squareStyle]}
             >
               <ColumnHeaderItem iconName="plus" />
             </TouchableOpacity>
 
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView
+              alwaysBounceHorizontal={false}
+              alwaysBounceVertical={false}
+              horizontal={horizontal}
+              style={{ flex: 1 }}
+            >
               {!columns
                 ? null
                 : columns.map((column, index) => {
@@ -115,13 +119,7 @@ class LeftSidebarComponent extends PureComponent<
                     return (
                       <View
                         key={`left-sidebar-column-${index}`}
-                        style={[
-                          styles.centerContainer,
-                          {
-                            width: '100%',
-                            height: sidebarSize + StyleSheet.hairlineWidth,
-                          },
-                        ]}
+                        style={[styles.centerContainer, squareStyle]}
                       >
                         <ColumnHeaderItem
                           avatarDetails={requestTypeIconAndData.avatarDetails}
@@ -134,50 +132,39 @@ class LeftSidebarComponent extends PureComponent<
 
             <TouchableOpacity
               onPress={() => replaceModal({ name: 'SETTINGS' })}
-              style={[
-                styles.centerContainer,
-                {
-                  width: '100%',
-                  height: sidebarSize + StyleSheet.hairlineWidth,
-                },
-              ]}
+              style={[styles.centerContainer, squareStyle]}
             >
               <ColumnHeaderItem iconName="gear" />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={this.logout}
-              style={[
-                styles.centerContainer,
-                {
-                  width: '100%',
-                  height: sidebarSize + StyleSheet.hairlineWidth,
-                  paddingLeft: 3,
-                },
-              ]}
-            >
-              <ColumnHeaderItem iconName="sign-out" />
-            </TouchableOpacity>
+            {!horizontal && (
+              <>
+                <TouchableOpacity
+                  onPress={this.logout}
+                  style={[
+                    styles.centerContainer,
+                    squareStyle,
+                    {
+                      paddingLeft: 3,
+                    },
+                  ]}
+                >
+                  <ColumnHeaderItem iconName="sign-out" />
+                </TouchableOpacity>
 
-            <View
-              style={[
-                styles.centerContainer,
-                {
-                  width: '100%',
-                  height: sidebarSize + StyleSheet.hairlineWidth,
-                },
-              ]}
-            >
-              <Image
-                resizeMode="contain"
-                source={logo}
-                style={{
-                  width: sidebarSize / 2,
-                  height: sidebarSize / 2,
-                  borderRadius: sidebarSize / (2 * 2),
-                }}
-              />
-            </View>
+                <View style={[styles.centerContainer, squareStyle]}>
+                  <Image
+                    resizeMode="contain"
+                    source={logo}
+                    style={{
+                      width: sidebarSize / 2,
+                      height: sidebarSize / 2,
+                      borderRadius: sidebarSize / (2 * 2),
+                    }}
+                  />
+                </View>
+              </>
+            )}
           </View>
         )}
       </ThemeConsumer>
@@ -185,4 +172,4 @@ class LeftSidebarComponent extends PureComponent<
   }
 }
 
-export const LeftSidebar = connectToStore(LeftSidebarComponent)
+export const Sidebar = connectToStore(SidebarComponent)
