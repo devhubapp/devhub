@@ -24,6 +24,7 @@ export interface CommitRowProps {
   latestCommentUrl?: string
   message: string
   showMoreItemsIndicator?: boolean
+  smallLeftColumn?: boolean
   url: string
 }
 
@@ -37,6 +38,7 @@ export const CommitRow: SFC<CommitRowProps> = ({
   latestCommentUrl,
   message: _message,
   showMoreItemsIndicator,
+  smallLeftColumn,
   url,
 }) => {
   const message = trimNewLinesAndSpaces(_message)
@@ -55,7 +57,14 @@ export const CommitRow: SFC<CommitRowProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <View style={getCardRowStylesForTheme(theme).container}>
-          <View style={getCardStylesForTheme(theme).leftColumn}>
+          <View
+            style={[
+              getCardStylesForTheme(theme).leftColumn,
+              smallLeftColumn
+                ? getCardStylesForTheme(theme).leftColumn__small
+                : getCardStylesForTheme(theme).leftColumn__big,
+            ]}
+          >
             <Avatar
               email={authorEmail}
               isBot={Boolean(

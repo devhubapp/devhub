@@ -20,6 +20,7 @@ export interface ReleaseRowProps {
   name: string
   ownerName: string
   repositoryName: string
+  smallLeftColumn?: boolean
   tagName: string
   type: EnhancedGitHubEvent['type']
   url: string
@@ -37,11 +38,12 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
   name: _name,
   ownerName,
   repositoryName,
+  smallLeftColumn,
   tagName: _tagName,
   type,
   url,
-  username,
   userLinkURL,
+  username,
 }) => {
   const body = trimNewLinesAndSpaces(_body)
   const name = trimNewLinesAndSpaces(_name)
@@ -63,7 +65,14 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
           )}
 
           <View style={getCardRowStylesForTheme(theme).container}>
-            <View style={getCardStylesForTheme(theme).leftColumn}>
+            <View
+              style={[
+                getCardStylesForTheme(theme).leftColumn,
+                smallLeftColumn
+                  ? getCardStylesForTheme(theme).leftColumn__small
+                  : getCardStylesForTheme(theme).leftColumn__big,
+              ]}
+            >
               <Avatar
                 isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
                 linkURL=""
@@ -101,7 +110,14 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
           </View>
 
           <View style={getCardRowStylesForTheme(theme).container}>
-            <View style={getCardStylesForTheme(theme).leftColumn}>
+            <View
+              style={[
+                getCardStylesForTheme(theme).leftColumn,
+                smallLeftColumn
+                  ? getCardStylesForTheme(theme).leftColumn__small
+                  : getCardStylesForTheme(theme).leftColumn__big,
+              ]}
+            >
               <Avatar
                 avatarURL={avatarURL}
                 isBot={Boolean(username && username.indexOf('[bot]') >= 0)}

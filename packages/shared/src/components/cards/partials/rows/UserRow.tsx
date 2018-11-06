@@ -12,6 +12,7 @@ export interface UserRowProps {
   avatarURL: string
   isRead: boolean
   showMoreItemsIndicator?: boolean
+  smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
@@ -22,13 +23,21 @@ export const UserRow: SFC<UserRowProps> = ({
   avatarURL,
   isRead,
   showMoreItemsIndicator,
+  smallLeftColumn,
   userLinkURL,
   username,
 }) => (
   <ThemeConsumer>
     {({ theme }) => (
       <View style={getCardRowStylesForTheme(theme).container}>
-        <View style={getCardStylesForTheme(theme).leftColumn}>
+        <View
+          style={[
+            getCardStylesForTheme(theme).leftColumn,
+            smallLeftColumn
+              ? getCardStylesForTheme(theme).leftColumn__small
+              : getCardStylesForTheme(theme).leftColumn__big,
+          ]}
+        >
           <Avatar
             avatarURL={avatarURL}
             isBot={Boolean(username && username.indexOf('[bot]') >= 0)}

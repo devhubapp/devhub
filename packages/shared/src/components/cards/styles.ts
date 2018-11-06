@@ -5,80 +5,94 @@ import { Platform } from '../../libs/platform'
 import {
   avatarSize,
   contentPadding,
+  smallAvatarSize,
   smallTextSize,
 } from '../../styles/variables'
 import { Theme } from '../../types/themes'
 
+const styles = StyleSheet.create({
+  horizontal: {
+    flexDirection: 'row',
+  },
+
+  leftColumn: {
+    justifyContent: 'center',
+    marginRight: contentPadding,
+    width: avatarSize,
+  },
+
+  leftColumn__small: {
+    width: smallAvatarSize,
+  },
+
+  leftColumn__big: {
+    width: avatarSize,
+  },
+
+  leftColumnAlignTop: {
+    alignSelf: 'flex-start',
+  },
+
+  rightColumn: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+
+  avatar: {
+    alignSelf: 'flex-end',
+  },
+
+  smallText: {
+    fontSize: smallTextSize,
+    lineHeight: smallTextSize + 4,
+  },
+})
+
 export const getCardStylesForTheme = _.memoize((theme: Theme) => {
-  return StyleSheet.create({
-    horizontal: {
-      flexDirection: 'row',
-    },
+  return {
+    ...styles,
+    ...StyleSheet.create({
+      usernameText: {
+        alignSelf: 'center',
+        color: theme.foregroundColor,
+        fontWeight: 'bold',
+        lineHeight: 20,
+      },
 
-    leftColumn: {
-      justifyContent: 'center',
-      marginRight: contentPadding,
-      width: avatarSize,
-    },
+      timestampText: {
+        alignSelf: 'center',
+        color: theme.foregroundColorMuted50,
+        fontSize: smallTextSize,
+        lineHeight: smallTextSize + 4,
+      },
 
-    leftColumnAlignTop: {
-      alignSelf: 'flex-start',
-    },
+      mutedText: {
+        color: theme.foregroundColorMuted50,
+      },
 
-    rightColumn: {
-      flex: 1,
-      flexDirection: 'row',
-    },
+      normalText: {
+        color: theme.foregroundColor,
+        lineHeight: 20,
+      },
 
-    avatar: {
-      alignSelf: 'flex-end',
-    },
+      descriptionText: {
+        color: theme.foregroundColorMuted50,
+        lineHeight: 20,
+      },
 
-    usernameText: {
-      alignSelf: 'center',
-      color: theme.foregroundColor,
-      fontWeight: 'bold',
-      lineHeight: 20,
-    },
-
-    timestampText: {
-      alignSelf: 'center',
-      color: theme.foregroundColorMuted50,
-      fontSize: smallTextSize,
-      lineHeight: smallTextSize + 4,
-    },
-
-    mutedText: {
-      color: theme.foregroundColorMuted50,
-    },
-
-    normalText: {
-      color: theme.foregroundColor,
-      lineHeight: 20,
-    },
-
-    smallText: {
-      fontSize: smallTextSize,
-      lineHeight: smallTextSize + 4,
-    },
-
-    descriptionText: {
-      color: theme.foregroundColorMuted50,
-      lineHeight: 20,
-    },
-
-    commentText: {
-      color: theme.foregroundColor,
-      lineHeight: 20,
-      ...(Platform.select({
-        default: {},
-        web: {
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'pre-line',
-          wordWrap: 'normal',
-        },
-      }) as any),
-    },
-  })
+      commentText: {
+        color: theme.foregroundColor,
+        lineHeight: 20,
+        ...(Platform.select({
+          default: {},
+          web: {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'pre-line',
+            wordWrap: 'normal',
+          },
+        }) as any),
+      },
+    }),
+  }
 })

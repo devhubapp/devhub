@@ -17,6 +17,7 @@ export interface RepositoryRowProps {
   ownerName: string
   repositoryName: string
   showMoreItemsIndicator?: boolean
+  smallLeftColumn?: boolean
 }
 
 export interface RepositoryRowState {}
@@ -29,6 +30,7 @@ export const RepositoryRow: SFC<RepositoryRowProps> = ({
   ownerName,
   repositoryName,
   showMoreItemsIndicator,
+  smallLeftColumn,
 }) => {
   const repoIcon =
     (isForcePush && 'repo-force-push') ||
@@ -42,7 +44,14 @@ export const RepositoryRow: SFC<RepositoryRowProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <View style={getCardRowStylesForTheme(theme).container}>
-          <View style={getCardStylesForTheme(theme).leftColumn}>
+          <View
+            style={[
+              getCardStylesForTheme(theme).leftColumn,
+              smallLeftColumn
+                ? getCardStylesForTheme(theme).leftColumn__small
+                : getCardStylesForTheme(theme).leftColumn__big,
+            ]}
+          >
             <Avatar
               isBot={isBot}
               linkURL=""

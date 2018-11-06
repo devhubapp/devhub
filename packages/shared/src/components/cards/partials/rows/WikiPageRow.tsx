@@ -13,6 +13,7 @@ export interface WikiPageRowProps {
   isRead: boolean
   name?: string
   showMoreItemsIndicator?: boolean
+  smallLeftColumn?: boolean
   title: string
   url: string
 }
@@ -23,6 +24,7 @@ export const WikiPageRow: SFC<WikiPageRowProps> = ({
   isRead,
   name,
   showMoreItemsIndicator,
+  smallLeftColumn,
   title: _title,
   url,
 }) => {
@@ -33,7 +35,14 @@ export const WikiPageRow: SFC<WikiPageRowProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <View style={getCardRowStylesForTheme(theme).container}>
-          <View style={getCardStylesForTheme(theme).leftColumn} />
+          <View
+            style={[
+              getCardStylesForTheme(theme).leftColumn,
+              smallLeftColumn
+                ? getCardStylesForTheme(theme).leftColumn__small
+                : getCardStylesForTheme(theme).leftColumn__big,
+            ]}
+          />
 
           <View style={getCardStylesForTheme(theme).rightColumn}>
             <Link

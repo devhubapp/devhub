@@ -15,6 +15,7 @@ export interface CommentRowProps {
   body: string
   isRead: boolean
   numberOfLines?: number
+  smallLeftColumn?: boolean
   url?: string
   userLinkURL: string
   username: string
@@ -27,9 +28,10 @@ export const CommentRow: SFC<CommentRowProps> = ({
   body: _body,
   isRead,
   numberOfLines = 4,
+  smallLeftColumn,
   url,
-  username,
   userLinkURL,
+  username,
 }) => {
   const body = trimNewLinesAndSpaces(
     _body,
@@ -46,6 +48,9 @@ export const CommentRow: SFC<CommentRowProps> = ({
           <View
             style={[
               getCardStylesForTheme(theme).leftColumn,
+              smallLeftColumn
+                ? getCardStylesForTheme(theme).leftColumn__small
+                : getCardStylesForTheme(theme).leftColumn__big,
               getCardStylesForTheme(theme).leftColumnAlignTop,
             ]}
           >

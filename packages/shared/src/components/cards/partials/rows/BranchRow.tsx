@@ -15,6 +15,7 @@ export interface BranchRowProps {
   isRead: boolean
   ownerName: string
   repositoryName: string
+  smallLeftColumn?: boolean
   type: EnhancedGitHubEvent['type']
 }
 
@@ -25,6 +26,7 @@ export const BranchRow: SFC<BranchRowProps> = ({
   isRead,
   ownerName,
   repositoryName,
+  smallLeftColumn,
   type,
 }) => {
   const branch = (_branch || '').replace('refs/heads/', '')
@@ -38,7 +40,14 @@ export const BranchRow: SFC<BranchRowProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <View style={getCardRowStylesForTheme(theme).container}>
-          <View style={getCardStylesForTheme(theme).leftColumn}>
+          <View
+            style={[
+              getCardStylesForTheme(theme).leftColumn,
+              smallLeftColumn
+                ? getCardStylesForTheme(theme).leftColumn__small
+                : getCardStylesForTheme(theme).leftColumn__big,
+            ]}
+          >
             <Avatar
               isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
               linkURL=""

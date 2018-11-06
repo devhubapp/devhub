@@ -19,10 +19,11 @@ export interface IssueOrPullRequestRowProps {
   iconName: string
   isRead: boolean
   issueNumber: number
+  smallLeftColumn?: boolean
   title: string
   url: string
-  username: string
   userLinkURL: string
+  username: string
 }
 
 export interface IssueOrPullRequestRowState {}
@@ -39,10 +40,11 @@ export const IssueOrPullRequestRow: SFC<IssueOrPullRequestRowProps> = ({
   iconName,
   isRead,
   issueNumber,
+  smallLeftColumn,
   title: _title,
   url,
-  username,
   userLinkURL,
+  username,
 }) => {
   const title = trimNewLinesAndSpaces(_title)
   if (!title) return null
@@ -53,7 +55,14 @@ export const IssueOrPullRequestRow: SFC<IssueOrPullRequestRowProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <View style={getCardRowStylesForTheme(theme).container}>
-          <View style={getCardStylesForTheme(theme).leftColumn}>
+          <View
+            style={[
+              getCardStylesForTheme(theme).leftColumn,
+              smallLeftColumn
+                ? getCardStylesForTheme(theme).leftColumn__small
+                : getCardStylesForTheme(theme).leftColumn__big,
+            ]}
+          >
             {Boolean(username) && (
               <Avatar
                 avatarURL={avatarURL}

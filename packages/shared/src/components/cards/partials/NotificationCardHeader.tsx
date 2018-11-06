@@ -20,6 +20,7 @@ export interface NotificationCardHeaderProps {
   isRead: boolean
   labelColor: string
   labelText: string
+  smallLeftColumn?: boolean
   updatedAt: MomentInput
 }
 
@@ -65,6 +66,7 @@ class NotificationCardHeaderComponent extends PureComponent<
       isRead,
       labelColor,
       labelText,
+      smallLeftColumn,
       updatedAt,
       username,
     } = this.props
@@ -73,7 +75,14 @@ class NotificationCardHeaderComponent extends PureComponent<
       <ThemeConsumer>
         {({ theme }) => (
           <View style={styles.container}>
-            <View style={getCardStylesForTheme(theme).leftColumn}>
+            <View
+              style={[
+                getCardStylesForTheme(theme).leftColumn,
+                smallLeftColumn
+                  ? getCardStylesForTheme(theme).leftColumn__small
+                  : getCardStylesForTheme(theme).leftColumn__big,
+              ]}
+            >
               <Avatar
                 shape="circle"
                 small

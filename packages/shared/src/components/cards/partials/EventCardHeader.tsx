@@ -21,6 +21,7 @@ export interface EventCardHeaderProps {
   createdAt: MomentInput
   isBot: boolean
   isPrivate?: boolean
+  smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
@@ -58,6 +59,7 @@ export class EventCardHeader extends PureComponent<EventCardHeaderProps> {
       createdAt,
       isBot,
       isPrivate,
+      smallLeftColumn,
       userLinkURL,
       username: _username,
     } = this.props
@@ -68,7 +70,14 @@ export class EventCardHeader extends PureComponent<EventCardHeaderProps> {
       <ThemeConsumer>
         {({ theme }) => (
           <View style={styles.container}>
-            <View style={getCardStylesForTheme(theme).leftColumn}>
+            <View
+              style={[
+                getCardStylesForTheme(theme).leftColumn,
+                smallLeftColumn
+                  ? getCardStylesForTheme(theme).leftColumn__small
+                  : getCardStylesForTheme(theme).leftColumn__big,
+              ]}
+            >
               <Avatar
                 avatarURL={avatarURL}
                 isBot={isBot}

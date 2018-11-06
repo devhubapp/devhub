@@ -114,10 +114,11 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
               key={`notification-card-header-${notification.id}`}
               cardIconColor={cardIconColor || theme.foregroundColor}
               cardIconName={cardIconName}
+              isPrivate={isPrivate}
+              isRead={isRead}
               labelColor={labelColor}
               labelText={labelText}
-              isRead={isRead}
-              isPrivate={isPrivate}
+              smallLeftColumn
               updatedAt={notification.updated_at}
             />
 
@@ -127,6 +128,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 isRead={isRead}
                 ownerName={repoOwnerName}
                 repositoryName={repoName}
+                smallLeftColumn
               />
             )}
 
@@ -136,6 +138,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 isRead={isRead}
                 latestCommentUrl={commit!.latest_comment_url}
                 message={commit!.title}
+                smallLeftColumn
                 url={commit!.url}
               />
             )}
@@ -148,6 +151,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 iconName={issueIconName!}
                 isRead={isRead}
                 issueNumber={issueOrPullRequestNumber!}
+                smallLeftColumn
                 title={issue.title}
                 url={issue.latest_comment_url || issue.url}
                 userLinkURL=""
@@ -163,6 +167,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 iconName={pullRequestIconName!}
                 isRead={isRead}
                 issueNumber={issueOrPullRequestNumber!}
+                smallLeftColumn
                 title={pullRequest.title}
                 url={pullRequest.latest_comment_url || pullRequest.url}
                 userLinkURL=""
@@ -176,12 +181,13 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 avatarURL=""
                 body={release.title}
                 isRead={isRead}
+                name={release.title}
                 ownerName={repoOwnerName!}
                 repositoryName={repoName!}
-                url={release.latest_comment_url || release.url}
-                type="ReleaseEvent"
-                name={release.title}
+                smallLeftColumn
                 tagName={release.title}
+                type="ReleaseEvent"
+                url={release.latest_comment_url || release.url}
                 userLinkURL=""
                 username=""
               />
@@ -194,6 +200,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                   avatarURL=""
                   body={title}
                   isRead={isRead}
+                  smallLeftColumn
                   userLinkURL=""
                   username=""
                   url={
@@ -205,14 +212,15 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
               )}
 
             {/* {!!comment && (
-          <CommentRow
-            key={`notification-comment-row-${comment.id}`}
-            body={comment.body}
-            url={comment.html_url}
-            userLinkURL={comment.user.html_url}
-            username={comment.user.display_login || comment.user.login}
-          />
-        )} */}
+              <CommentRow
+                key={`notification-comment-row-${comment.id}`}
+                body={comment.body}
+                smallLeftColumn
+                url={comment.html_url}
+                userLinkURL={comment.user.html_url}
+                username={comment.user.display_login || comment.user.login}
+              />
+            )} */}
           </View>
         )}
       </ThemeConsumer>
