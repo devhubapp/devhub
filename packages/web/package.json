@@ -16,8 +16,6 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "bugsnag-js": "^4.7.3",
-    "bugsnag-react": "^1.1.1",
     "react": "16.6.0-alpha.8af6728",
     "react-app-polyfill": "^0.1.3",
     "react-art": "16.6.0-alpha.8af6728",

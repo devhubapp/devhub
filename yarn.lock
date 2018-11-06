@@ -11703,7 +11703,7 @@ throat@^4.0.0, throat@^4.1.0:
 
 through2@0.6.3:
   version "0.6.3"
-  resolved "https://registry.npmjs.org/through2/-/through2-0.6.3.tgz#795292fde9f254c2a368b38f9cc5d1bd4663afb6"
+  resolved "http://registry.npmjs.org/through2/-/through2-0.6.3.tgz#795292fde9f254c2a368b38f9cc5d1bd4663afb6"
   integrity sha1-eVKS/enyVMKjaLOPnMXRvUZjr7Y=
   dependencies:
     readable-stream ">=1.0.33-1 <1.1.0-0"
