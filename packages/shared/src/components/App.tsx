@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, StrictMode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
@@ -20,18 +20,20 @@ bugsnag.setup('231f337f6090422c611017d3dab3d32e')
 export class App extends PureComponent {
   render() {
     return (
-      <ReduxProvider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <DimensionsProvider>
-            <ThemeProvider>
-              <>
-                <AppGlobalStyles />
-                <AppNavigator />
-              </>
-            </ThemeProvider>
-          </DimensionsProvider>
-        </PersistGate>
-      </ReduxProvider>
+      <StrictMode>
+        <ReduxProvider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <DimensionsProvider>
+              <ThemeProvider>
+                <>
+                  <AppGlobalStyles />
+                  <AppNavigator />
+                </>
+              </ThemeProvider>
+            </DimensionsProvider>
+          </PersistGate>
+        </ReduxProvider>
+      </StrictMode>
     )
   }
 }
