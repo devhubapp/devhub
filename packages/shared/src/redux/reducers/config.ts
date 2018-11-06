@@ -3,14 +3,17 @@ import immer from 'immer'
 import { loadTheme } from '../../styles/utils'
 import { Reducer, ThemePair } from '../../types'
 import { DEFAULT_DARK_THEME, DEFAULT_LIGHT_THEME } from '../../utils/constants'
+import { isNight } from '../../utils/helpers/shared'
 
 export interface State {
+  isNight: boolean
   preferredDarkTheme?: ThemePair
   preferredLightTheme?: ThemePair
   theme?: ThemePair
 }
 
 const initialState: State = {
+  isNight: isNight(),
   preferredDarkTheme: { id: DEFAULT_DARK_THEME },
   preferredLightTheme: { id: DEFAULT_LIGHT_THEME },
   theme: { id: 'auto' },
@@ -18,6 +21,11 @@ const initialState: State = {
 
 export const configReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {
+    case 'DAY_NIGHT_SWITCH':
+      return immer(state, draft => {
+        draft.isNight = isNight()
+      })
+
     case 'SET_THEME':
       return immer(state, draft => {
         const theme = loadTheme(action.payload)

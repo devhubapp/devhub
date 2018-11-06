@@ -1,4 +1,7 @@
-import { createActionCreatorCreator } from '../../utils/helpers/redux'
+import {
+  createActionCreator,
+  createActionCreatorCreator,
+} from '../../utils/helpers/redux'
 
 import { ThemePair } from '../../types'
 
@@ -13,3 +16,5 @@ export const setPreferrableTheme = createActionCreatorCreator(
   id: ThemePair['id']
   color?: ThemePair['color']
 }>()
+
+export const dayNightSwitch = createActionCreator('DAY_NIGHT_SWITCH')
