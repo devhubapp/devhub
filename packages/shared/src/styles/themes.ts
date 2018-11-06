@@ -16,3 +16,6 @@ export const themes: Record<ThemeName, Theme | undefined> = {
   'light-gray': lightGray,
   'light-white': lightWhite,
 }
+
+export const darkThemesArr = [darkBlack, darkBlue, darkGray]
+export const lightThemesArr = [lightWhite, lightBlue, lightGray]

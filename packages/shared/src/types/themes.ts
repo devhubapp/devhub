@@ -28,4 +28,5 @@ export interface Theme {
   foregroundColor: string
   foregroundColorMuted50: string
   foregroundColorTransparent50: string
+  foregroundColorTransparent80: string
 }

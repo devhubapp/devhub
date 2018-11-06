@@ -20,7 +20,7 @@ export const H2: React.SFC<H2Props> = ({
           {
             marginBottom: withMargin ? contentPadding : undefined,
             fontWeight: '600',
-            color: theme.foregroundColor,
+            color: theme.foregroundColorTransparent80,
           },
           style,
         ]}

@@ -28,9 +28,10 @@ export function createThemeFromColor(
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
   const foregroundColor = isDark ? lighten(0.8, color) : darken(0.8, color)
   const foregroundColorMuted50 = isDark
-    ? lighten(0.4, color)
-    : darken(0.4, color)
+    ? lighten(0.5, color)
+    : darken(0.5, color)
   const foregroundColorTransparent50 = rgba(foregroundColor, 0.5)
+  const foregroundColorTransparent80 = rgba(foregroundColor, 0.8)
 
   let invertedTheme: Theme
   return createTheme({
@@ -52,5 +53,6 @@ export function createThemeFromColor(
     foregroundColor,
     foregroundColorMuted50,
     foregroundColorTransparent50,
+    foregroundColorTransparent80,
   })
 }

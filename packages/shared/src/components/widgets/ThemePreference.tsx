@@ -10,9 +10,10 @@ import {
   preferredLightThemePairSelector,
   themePairSelector,
 } from '../../redux/selectors'
-import { themes } from '../../styles/themes'
+import { darkThemesArr, lightThemesArr, themes } from '../../styles/themes'
 import { contentPadding } from '../../styles/variables'
 import { ExtractPropsFromConnector, Theme } from '../../types'
+import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { Switch } from '../common/Switch'
@@ -121,33 +122,43 @@ class ThemePreferenceComponent extends PureComponent<
   }
 
   render() {
-    const _themesArr = Object.values(themes).filter(Boolean) as Theme[]
-    const darkThemesArr = _themesArr.filter(theme => theme.isDark)
-    const lightThemesArr = _themesArr.filter(theme => !theme.isDark)
-
     return (
       <ThemeConsumer>
         {({ theme: appTheme }) => (
           <View>
-            <H3 withMargin>Dark Theme</H3>
-            {darkThemesArr.map(t => this.renderThemeButton(t, appTheme))}
+            <H2 withMargin>Theme</H2>
+
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flex: 1 }}>
+                <H3 withMargin>Dark Theme</H3>
+                {darkThemesArr.map(t => this.renderThemeButton(t, appTheme))}
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <H3 withMargin>Light Theme</H3>
+                {lightThemesArr.map(t => this.renderThemeButton(t, appTheme))}
+              </View>
+            </View>
 
             <Spacer height={contentPadding} />
 
-            <H3 withMargin>Light Theme</H3>
-            {lightThemesArr.map(t => this.renderThemeButton(t, appTheme))}
-
-            <Spacer height={contentPadding} />
-
-            <H3 withMargin>Auto toggle on day/night</H3>
-            <Switch
-              onValueChange={enableAutoTheme =>
-                this.props.setTheme({
-                  id: enableAutoTheme ? 'auto' : appTheme.id,
-                })
-              }
-              value={this.props.currentThemeId === 'auto'}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <H3>Auto toggle on day/night</H3>
+              <Switch
+                onValueChange={enableAutoTheme =>
+                  this.props.setTheme({
+                    id: enableAutoTheme ? 'auto' : appTheme.id,
+                  })
+                }
+                value={this.props.currentThemeId === 'auto'}
+              />
+            </View>
           </View>
         )}
       </ThemeConsumer>
