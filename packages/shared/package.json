@@ -5,7 +5,8 @@
   "scripts": {
     "compile": "rm -rf dist/*; tsc",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
-    "lint": "tslint -p ."
+    "lint": "tslint -p .",
+    "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
     "@octokit/rest": "^15.15.1",
