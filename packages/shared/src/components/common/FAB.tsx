@@ -9,6 +9,7 @@ import {
 
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as colors from '../../styles/colors'
+import { contentPadding } from '../../styles/variables'
 import { GitHubIcon } from '../../types'
 import { ThemeConsumer } from '../context/ThemeContext'
 
@@ -31,13 +32,19 @@ export const FAB: React.SFC<FABProps> = ({
     {({ theme }) => (
       <TouchableOpacity
         {...props}
+        hitSlop={{
+          top: contentPadding / 2,
+          bottom: contentPadding / 2,
+          left: contentPadding,
+          right: contentPadding,
+        }}
         style={[
           {
             alignItems: 'center',
             justifyContent: 'center',
-            width: 60,
-            height: 60,
-            borderRadius: 60 / 2,
+            width: 48,
+            height: 48,
+            borderRadius: 48 / 2,
             backgroundColor: useBrandColor
               ? colors.brandBackgroundColor
               : theme.backgroundColorMore08,
