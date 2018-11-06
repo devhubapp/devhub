@@ -6,13 +6,14 @@ import { contentPadding, radius } from '../../styles/variables'
 import { ThemeConsumer } from '../context/ThemeContext'
 
 export interface ButtonProps extends TouchableOpacityProps {
+  onPress: TouchableOpacityProps['onPress']
   useBrandColor?: boolean
 }
 
 export const Button: React.SFC<ButtonProps> = ({
-  useBrandColor,
   children,
   style,
+  useBrandColor,
   ...props
 }) => (
   <ThemeConsumer>
@@ -27,7 +28,7 @@ export const Button: React.SFC<ButtonProps> = ({
             paddingHorizontal: contentPadding,
             paddingVertical: contentPadding / 2,
             backgroundColor: useBrandColor
-              ? colors.brand
+              ? colors.brandBackgroundColor
               : theme.backgroundColorMore08,
             borderRadius: radius,
           },
@@ -38,7 +39,9 @@ export const Button: React.SFC<ButtonProps> = ({
           <Text
             style={{
               fontWeight: '500',
-              color: theme.foregroundColor,
+              color: useBrandColor
+                ? colors.brandForegroundColor
+                : theme.foregroundColor,
             }}
           >
             {children}

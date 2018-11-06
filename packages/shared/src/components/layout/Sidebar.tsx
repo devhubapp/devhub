@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
 
 export interface SidebarProps {
   horizontal?: boolean
+  small?: boolean
 }
 
 const connectToStore = connect(
@@ -56,7 +57,7 @@ class SidebarComponent extends PureComponent<
   }
 
   render() {
-    const { columns, horizontal, replaceModal, username } = this.props
+    const { columns, horizontal, replaceModal, small, username } = this.props
 
     const squareStyle = {
       width: horizontal ? sidebarSize + StyleSheet.hairlineWidth : '100%',
@@ -96,12 +97,14 @@ class SidebarComponent extends PureComponent<
               </View>
             )}
 
-            <TouchableOpacity
-              onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-              style={[styles.centerContainer, squareStyle]}
-            >
-              <ColumnHeaderItem iconName="plus" />
-            </TouchableOpacity>
+            {!small && (
+              <TouchableOpacity
+                onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                style={[styles.centerContainer, squareStyle]}
+              >
+                <ColumnHeaderItem iconName="plus" />
+              </TouchableOpacity>
+            )}
 
             <ScrollView
               alwaysBounceHorizontal={false}
@@ -137,7 +140,7 @@ class SidebarComponent extends PureComponent<
               <ColumnHeaderItem iconName="gear" />
             </TouchableOpacity>
 
-            {!horizontal && (
+            {!small && (
               <>
                 <TouchableOpacity
                   onPress={this.logout}

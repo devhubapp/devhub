@@ -7,13 +7,16 @@ import {
 } from 'react-navigation'
 import { connect } from 'react-redux'
 
+import { FAB } from '../components/common/FAB'
 import { Screen } from '../components/common/Screen'
 import { DimensionsConsumer } from '../components/context/DimensionsContext'
 import { ThemeConsumer } from '../components/context/ThemeContext'
-import { Sidebar } from '../components/layout/Sidebar'
+import { Sidebar, sidebarSize } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
+import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { contentPadding } from '../styles/variables'
 import { ExtractPropsFromConnector } from '../types'
 
 const styles = StyleSheet.create({
@@ -26,9 +29,14 @@ const styles = StyleSheet.create({
   },
 })
 
-const connectToStore = connect((state: any) => ({
-  currentOpenedModal: selectors.currentOpenedModal(state),
-}))
+const connectToStore = connect(
+  (state: any) => ({
+    currentOpenedModal: selectors.currentOpenedModal(state),
+  }),
+  {
+    replaceModal: actions.replaceModal,
+  },
+)
 
 class MainScreenComponent extends PureComponent<
   NavigationScreenProps & ExtractPropsFromConnector<typeof connectToStore>
@@ -38,6 +46,8 @@ class MainScreenComponent extends PureComponent<
   }
 
   render() {
+    const { currentOpenedModal, replaceModal } = this.props
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
@@ -53,7 +63,24 @@ class MainScreenComponent extends PureComponent<
                       { flexDirection: small ? 'column-reverse' : 'row' },
                     ]}
                   >
-                    <Sidebar key="main-screen-sidebar" horizontal={small} />
+                    {!!small &&
+                      !currentOpenedModal && (
+                        <FAB
+                          iconName="plus"
+                          onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                          style={{
+                            position: 'absolute',
+                            bottom: sidebarSize + contentPadding / 2,
+                            right: contentPadding,
+                          }}
+                        />
+                      )}
+
+                    <Sidebar
+                      key="main-screen-sidebar"
+                      horizontal={small}
+                      small={small}
+                    />
 
                     <View style={styles.innerContainer}>
                       <ModalRenderer />

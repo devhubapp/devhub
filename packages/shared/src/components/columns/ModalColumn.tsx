@@ -51,6 +51,9 @@ class ModalColumnComponent extends PureComponent<
     return (
       <Column
         style={[
+          {
+            zIndex: 100,
+          },
           typeof maxWidth !== 'undefined' && { maxWidth },
           typeof minWidth !== 'undefined' && { minWidth },
         ]}

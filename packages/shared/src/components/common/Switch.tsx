@@ -9,11 +9,11 @@ export function Switch(props: SwitchProps) {
     <SwitchComponent
       {...Platform.select({
         default: {
-          trackColor: { false: '', true: colors.brand },
+          trackColor: { false: '', true: colors.brandBackgroundColor },
         },
         web: {
           activeThumbColor: '#FFFFFF',
-          onTintColor: colors.brand,
+          onTintColor: colors.brandBackgroundColor,
         },
       })}
       {...props}
