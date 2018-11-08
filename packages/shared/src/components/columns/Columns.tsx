@@ -121,6 +121,7 @@ export class Columns extends PureComponent<ColumnsProps> {
               data={data}
               horizontal
               keyExtractor={this.keyExtractor}
+              onScrollToIndexFailed={() => undefined}
               pagingEnabled={this.pagingEnabled}
               removeClippedSubviews
               scrollEnabled={!this.swipeable}
