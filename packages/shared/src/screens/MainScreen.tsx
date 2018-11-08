@@ -15,11 +15,12 @@ import { ThemeConsumer } from '../components/context/ThemeContext'
 import { Sidebar, sidebarSize } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
+import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { emitter } from '../setup'
 import { contentPadding } from '../styles/variables'
-import { ExtractPropsFromConnector } from '../types'
+import { Column, ExtractPropsFromConnector } from '../types'
 
 const styles = StyleSheet.create({
   container: {
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
 const connectToStore = connect(
   (state: any) => ({
     currentOpenedModal: selectors.currentOpenedModal(state),
+    columns: (selectors.columnsSelector(state) || []) as Column[],
   }),
   {
     closeAllModals: actions.closeAllModals,
@@ -55,10 +57,18 @@ class MainScreenComponent extends PureComponent<
       'FOCUS_ON_COLUMN',
       this.handleColumnFocusRequest,
     )
+
+    if (Platform.realOS === 'web') {
+      window.addEventListener('keypress', this.handleKeyPress)
+    }
   }
 
   componentWillUnmount() {
     if (this.focusOnColumnListener) this.focusOnColumnListener.remove()
+
+    if (Platform.realOS === 'web') {
+      window.removeEventListener('keypress', this.handleKeyPress)
+    }
   }
 
   handleColumnFocusRequest = () => {
@@ -67,6 +77,41 @@ class MainScreenComponent extends PureComponent<
       Dimensions.get('window').width <= 420
     ) {
       this.props.closeAllModals()
+    }
+  }
+
+  handleKeyPress = (e: any) => {
+    if (e.key === 'a' || e.key === 'n') {
+      this.props.replaceModal({ name: 'ADD_COLUMN' })
+      return
+    }
+
+    if (this.props.columns.length > 0) {
+      if (e.keyCode - 48 === 0) {
+        const columnIndex = this.props.columns.length - 1
+        emitter.emit('FOCUS_ON_COLUMN', {
+          animated: true,
+          columnId:
+            this.props.columns[columnIndex] &&
+            this.props.columns[columnIndex].id,
+          columnIndex,
+          highlight: true,
+        })
+        return
+      }
+
+      if (e.keyCode - 48 >= 1 && e.keyCode - 48 <= this.props.columns.length) {
+        const columnIndex = e.keyCode - 48 - 1
+        emitter.emit('FOCUS_ON_COLUMN', {
+          animated: true,
+          columnId:
+            this.props.columns[columnIndex] &&
+            this.props.columns[columnIndex].id,
+          columnIndex,
+          highlight: true,
+        })
+        return
+      }
     }
   }
 
