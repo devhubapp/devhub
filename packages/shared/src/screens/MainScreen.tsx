@@ -1,6 +1,7 @@
+import { EventSubscription } from 'fbemitter'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 import {
   NavigationScreenProps,
   NavigationStackScreenOptions,
@@ -16,6 +17,7 @@ import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { emitter } from '../setup'
 import { contentPadding } from '../styles/variables'
 import { ExtractPropsFromConnector } from '../types'
 
@@ -34,6 +36,7 @@ const connectToStore = connect(
     currentOpenedModal: selectors.currentOpenedModal(state),
   }),
   {
+    closeAllModals: actions.closeAllModals,
     replaceModal: actions.replaceModal,
   },
 )
@@ -43,6 +46,28 @@ class MainScreenComponent extends PureComponent<
 > {
   static navigationOptions: NavigationStackScreenOptions = {
     header: null,
+  }
+
+  focusOnColumnListener?: EventSubscription
+
+  componentDidMount() {
+    this.focusOnColumnListener = emitter.addListener(
+      'FOCUS_ON_COLUMN',
+      this.handleColumnFocusRequest,
+    )
+  }
+
+  componentWillUnmount() {
+    if (this.focusOnColumnListener) this.focusOnColumnListener.remove()
+  }
+
+  handleColumnFocusRequest = () => {
+    if (
+      this.props.currentOpenedModal &&
+      Dimensions.get('window').width <= 420
+    ) {
+      this.props.closeAllModals()
+    }
   }
 
   render() {

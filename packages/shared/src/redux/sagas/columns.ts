@@ -1,5 +1,7 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
+import { delay } from 'redux-saga'
+import { emitter } from '../../setup'
 import { Column, ExtractActionFromActionCreator } from '../../types'
 import { guid } from '../../utils/helpers/shared'
 import * as actions from '../actions'
@@ -41,6 +43,38 @@ function* onLoginSuccess(
   if (!columns) yield put(actions.replaceColumns(getDefaultColumns(username)))
 }
 
+function* onAddColumn(
+  action: ExtractActionFromActionCreator<typeof actions.addColumn>,
+) {
+  const columnId = action.payload.id
+
+  const columns: Column[] | undefined = yield select(selectors.columnsSelector)
+  const columnIndex = columns && columns.findIndex(c => c.id === columnId)
+
+  yield delay(300)
+  emitter.emit('FOCUS_ON_COLUMN', {
+    animated: true,
+    columnId,
+    columnIndex,
+    highlight: true,
+  })
+}
+
+function onMoveColumn(
+  action: ExtractActionFromActionCreator<typeof actions.moveColumn>,
+) {
+  emitter.emit('FOCUS_ON_COLUMN', {
+    animated: true,
+    columnId: action.payload.id,
+    columnIndex: action.payload.index,
+    highlight: true,
+  })
+}
+
 export function* columnsSagas() {
-  yield all([yield takeLatest('LOGIN_SUCCESS', onLoginSuccess)])
+  yield all([
+    yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield takeLatest('ADD_COLUMN', onAddColumn),
+    yield takeLatest('MOVE_COLUMN', onMoveColumn),
+  ])
 }

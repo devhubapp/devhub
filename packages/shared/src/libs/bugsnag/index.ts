@@ -4,9 +4,9 @@ import React from 'react'
 
 export * from 'bugsnag-react-native'
 
-export let bugsnagClient: InstanceType<typeof Bugsnag>
-export let ErrorBoundary: React.ComponentType<any>
+export let ErrorBoundary: React.ComponentType<any> = React.Fragment
 
+let bugsnagClient: InstanceType<typeof Bugsnag>
 export function initBugsnag(apiKey: string) {
   bugsnagClient = new Bugsnag(apiKey)
 

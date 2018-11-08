@@ -26,11 +26,7 @@ import { ThemeConsumer } from '../context/ThemeContext'
 export const columnHeaderItemContentSize = 20
 
 export interface ColumnHeaderItemProps {
-  avatarDetails?: {
-    owner: string
-    repo?: string
-  }
-  avatarShape?: AvatarProps['shape']
+  avatarProps?: Partial<AvatarProps>
   avatarStyle?: StyleProp<ImageStyle>
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
@@ -90,9 +86,7 @@ class ColumnHeaderItemComponent extends PureComponent<
 
   render() {
     const {
-      avatarDetails,
-      avatarShape,
-      avatarStyle,
+      avatarProps: _avatarProps,
       iconName,
       iconStyle,
       subtitle,
@@ -102,12 +96,13 @@ class ColumnHeaderItemComponent extends PureComponent<
       username: _username,
     } = this.props
 
+    const avatarProps = _avatarProps || {}
+
     const username =
       _username &&
-      avatarDetails &&
-      avatarDetails.owner &&
-      !(_username.toLowerCase() === avatarDetails.owner.toLowerCase())
-        ? avatarDetails.owner
+      avatarProps.username &&
+      !(_username.toLowerCase() === avatarProps.username.toLowerCase())
+        ? avatarProps.username
         : undefined
 
     const smallAvatarSpacing = 5
@@ -153,8 +148,7 @@ class ColumnHeaderItemComponent extends PureComponent<
                           }}
                           isBot={false}
                           linkURL=""
-                          repo={avatarDetails && avatarDetails.repo}
-                          shape={avatarShape}
+                          {...avatarProps}
                           style={[
                             {
                               position: 'absolute',
@@ -163,7 +157,7 @@ class ColumnHeaderItemComponent extends PureComponent<
                               width: 10,
                               height: 10,
                             },
-                            avatarStyle,
+                            avatarProps.style,
                           ]}
                           username={username}
                         />
@@ -174,14 +168,13 @@ class ColumnHeaderItemComponent extends PureComponent<
                       <Avatar
                         isBot={false}
                         linkURL=""
-                        repo={avatarDetails && avatarDetails.repo}
-                        shape={avatarShape}
+                        {...avatarProps}
                         style={[
                           {
                             width: columnHeaderItemContentSize,
                             height: columnHeaderItemContentSize,
                           },
-                          avatarStyle,
+                          avatarProps.style,
                         ]}
                         username={username}
                       />

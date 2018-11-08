@@ -205,7 +205,11 @@ class AddColumnDetailsModalComponent extends PureComponent<
     const { icon, name, paramList } = this.props
 
     return (
-      <ModalColumn iconName="plus" title="Add Column">
+      <ModalColumn
+        columnId="add-column-details-modal"
+        iconName="plus"
+        title="Add Column"
+      >
         <Spacer height={contentPadding} />
 
         <View

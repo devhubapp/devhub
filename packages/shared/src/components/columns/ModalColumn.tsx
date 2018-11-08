@@ -12,6 +12,7 @@ import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
 export interface ModalColumnProps extends ColumnHeaderItemProps {
+  columnId: string
   minWidth?: number
   maxWidth?: number
 }
@@ -50,6 +51,7 @@ class ModalColumnComponent extends PureComponent<
 
     return (
       <Column
+        columnId={this.props.columnId}
         style={[
           {
             zIndex: 100,

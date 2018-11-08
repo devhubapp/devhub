@@ -24,7 +24,11 @@ class SettingsModalComponent extends PureComponent<
 > {
   render() {
     return (
-      <ModalColumn iconName="gear" title="Preferences">
+      <ModalColumn
+        columnId="preferences-modal"
+        iconName="gear"
+        title="Preferences"
+      >
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{ padding: contentPadding }}

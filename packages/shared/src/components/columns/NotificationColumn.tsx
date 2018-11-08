@@ -51,6 +51,7 @@ class NotificationColumnComponent extends PureComponent<
     return (
       <Column
         key={`notification-column-${this.props.column.id}-inner`}
+        columnId={this.props.column.id}
         pagingEnabled={pagingEnabled}
       >
         <ColumnHeader>

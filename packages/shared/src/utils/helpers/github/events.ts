@@ -22,9 +22,9 @@ import {
 export function getColumnHeaderDetails(
   column: Column,
 ): {
-  avatarDetails?: {
-    owner: string
+  avatarProps?: {
     repo?: string
+    username: string
   }
   icon: GitHubIcon
   repoIsKnown: boolean
@@ -36,7 +36,7 @@ export function getColumnHeaderDetails(
       switch (column.subtype) {
         case 'ORG_PUBLIC_EVENTS': {
           return {
-            avatarDetails: { owner: column.params.org },
+            avatarProps: { username: column.params.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -53,9 +53,9 @@ export function getColumnHeaderDetails(
         }
         case 'REPO_EVENTS': {
           return {
-            avatarDetails: {
-              owner: column.params.owner,
+            avatarProps: {
               repo: column.params.repo,
+              username: column.params.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
@@ -65,9 +65,9 @@ export function getColumnHeaderDetails(
         }
         case 'REPO_NETWORK_EVENTS': {
           return {
-            avatarDetails: {
-              owner: column.params.owner,
+            avatarProps: {
               repo: column.params.repo,
+              username: column.params.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
@@ -77,7 +77,7 @@ export function getColumnHeaderDetails(
         }
         case 'USER_EVENTS': {
           return {
-            avatarDetails: { owner: column.params.username },
+            avatarProps: { username: column.params.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -86,7 +86,7 @@ export function getColumnHeaderDetails(
         }
         case 'USER_ORG_EVENTS': {
           return {
-            avatarDetails: { owner: column.params.org },
+            avatarProps: { username: column.params.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -95,7 +95,7 @@ export function getColumnHeaderDetails(
         }
         case 'USER_PUBLIC_EVENTS': {
           return {
-            avatarDetails: { owner: column.params.username },
+            avatarProps: { username: column.params.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -105,7 +105,7 @@ export function getColumnHeaderDetails(
         case 'USER_RECEIVED_EVENTS':
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
-            avatarDetails: { owner: column.params.username },
+            avatarProps: { username: column.params.username },
             icon: 'home',
             repoIsKnown: false,
             subtitle: 'Dashboard',

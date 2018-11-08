@@ -53,11 +53,12 @@ export class EventColumnComponent extends PureComponent<
     return (
       <Column
         key={`event-column-${this.props.column.id}-inner`}
+        columnId={this.props.column.id}
         pagingEnabled={pagingEnabled}
       >
         <ColumnHeader>
           <ColumnHeaderItem
-            avatarDetails={requestTypeIconAndData.avatarDetails}
+            avatarProps={requestTypeIconAndData.avatarProps}
             iconName={requestTypeIconAndData.icon}
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}

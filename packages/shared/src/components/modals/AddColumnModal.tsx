@@ -133,7 +133,11 @@ class AddColumnModalComponent extends PureComponent<
 
   render() {
     return (
-      <ModalColumn iconName="plus" title="Add Column">
+      <ModalColumn
+        columnId="add-column-modal"
+        iconName="plus"
+        title="Add Column"
+      >
         <View
           style={{
             flex: 1,

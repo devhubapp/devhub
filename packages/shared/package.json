@@ -13,6 +13,7 @@
     "bugsnag-js": "^4.7.3",
     "bugsnag-react": "^1.1.1",
     "bugsnag-react-native": "^2.12.2",
+    "fbemitter": "^2.1.1",
     "gravatar": "^1.6.0",
     "hoist-non-react-statics": "^3.1.0",
     "immer": "^1.7.4",
@@ -38,6 +39,7 @@
     "reselect": "^4.0.0"
   },
   "devDependencies": {
+    "@types/fbemitter": "^2.0.32",
     "@types/gravatar": "^1.4.28",
     "@types/hoist-non-react-statics": "^3.0.1",
     "@types/jest": "^23.3.9",

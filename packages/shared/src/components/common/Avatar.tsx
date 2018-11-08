@@ -10,11 +10,13 @@ import {
 import { fixURL } from '../../utils/helpers/github/url'
 import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
 import { ThemeConsumer } from '../context/ThemeContext'
+import { ConditionalWrap } from './ConditionalWrap'
 import { ImageWithLoading, ImageWithLoadingProps } from './ImageWithLoading'
 import { Link } from './Link'
 
 export interface AvatarProps extends Partial<ImageWithLoadingProps> {
   avatarURL?: string
+  disableLink?: boolean
   email?: string
   hitSlop?: TouchableOpacityProps['hitSlop']
   isBot?: boolean
@@ -31,6 +33,7 @@ export const size = avatarSize
 
 export const Avatar: SFC<AvatarProps> = ({
   avatarURL: _avatarURL,
+  disableLink,
   email,
   hitSlop,
   isBot: _isBot,
@@ -57,20 +60,26 @@ export const Avatar: SFC<AvatarProps> = ({
 
   if (!uri) return null
 
+  const linkUri = disableLink
+    ? undefined
+    : linkURL
+      ? fixURL(linkURL)
+      : username
+        ? repo
+          ? getRepositoryURL(username, repo)
+          : getUserURL(username, { isBot })
+        : undefined
+
   return (
     <ThemeConsumer>
       {({ theme }) => (
-        <Link
-          hitSlop={hitSlop}
-          href={
-            linkURL
-              ? fixURL(linkURL)
-              : username
-                ? repo
-                  ? getRepositoryURL(username, repo)
-                  : getUserURL(username, { isBot })
-                : undefined
-          }
+        <ConditionalWrap
+          condition={!!linkUri}
+          wrap={children => (
+            <Link hitSlop={hitSlop} href={linkUri}>
+              {children}
+            </Link>
+          )}
         >
           <ImageWithLoading
             {...props}
@@ -92,7 +101,7 @@ export const Avatar: SFC<AvatarProps> = ({
               style,
             ]}
           />
-        </Link>
+        </ConditionalWrap>
       )}
     </ThemeConsumer>
   )

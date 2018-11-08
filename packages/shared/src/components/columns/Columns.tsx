@@ -1,3 +1,4 @@
+import { EventSubscription } from 'fbemitter'
 import React, { PureComponent } from 'react'
 import {
   FlatList,
@@ -7,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
+import { emitter } from '../../setup'
 import { Column, Omit } from '../../types'
 import { DimensionsConsumer } from '../context/DimensionsContext'
 import { EventColumn } from './EventColumn'
@@ -26,8 +28,41 @@ const styles = StyleSheet.create({
 })
 
 export class Columns extends PureComponent<ColumnsProps> {
+  flatListRef = React.createRef<FlatList<Column>>()
+  focusOnColumnListener?: EventSubscription
   pagingEnabled: boolean = true
   swipeable: boolean = false
+
+  componentDidMount() {
+    this.focusOnColumnListener = emitter.addListener(
+      'FOCUS_ON_COLUMN',
+      this.handleColumnFocusRequest,
+    )
+  }
+
+  componentWillUnmount() {
+    if (this.focusOnColumnListener) this.focusOnColumnListener.remove()
+  }
+
+  handleColumnFocusRequest = ({
+    animated,
+    columnIndex,
+  }: {
+    columnId: string
+    columnIndex: number
+    animated?: boolean
+    highlight?: boolean
+  }) => {
+    if (!this.flatListRef.current) return
+    if (!(this.props.data && this.props.data!.length)) return
+
+    if (columnIndex >= 0 && columnIndex < this.props.data.length) {
+      this.flatListRef.current.scrollToIndex({
+        animated,
+        index: columnIndex,
+      })
+    }
+  }
 
   keyExtractor(column: Column) {
     return `column-container-${column.id}`
@@ -79,6 +114,7 @@ export class Columns extends PureComponent<ColumnsProps> {
 
           return (
             <FlatList
+              ref={this.flatListRef}
               key="columns-flat-list"
               bounces={!this.swipeable}
               className="snap-container"

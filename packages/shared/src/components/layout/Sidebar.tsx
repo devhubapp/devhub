@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { emitter } from '../../setup'
 import { ExtractPropsFromConnector } from '../../types'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { columnHeaderHeight } from '../columns/ColumnHeader'
@@ -40,6 +41,7 @@ const connectToStore = connect(
 
     return {
       columns: selectors.columnsSelector(state),
+      currentOpenedModal: selectors.currentOpenedModal(state),
       username: (user && user.login) || '',
     }
   },
@@ -81,8 +83,8 @@ class SidebarComponent extends PureComponent<
               <View
                 style={[
                   styles.centerContainer,
+                  squareStyle,
                   {
-                    ...squareStyle,
                     backgroundColor: theme.backgroundColorLess08,
                     borderBottomWidth: StyleSheet.hairlineWidth,
                     borderColor: theme.backgroundColorDarker08,
@@ -100,7 +102,14 @@ class SidebarComponent extends PureComponent<
             {!small && (
               <TouchableOpacity
                 onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                style={[styles.centerContainer, squareStyle]}
+                style={[
+                  styles.centerContainer,
+                  squareStyle,
+                  {
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderColor: theme.backgroundColorDarker08,
+                  },
+                ]}
               >
                 <ColumnHeaderItem iconName="plus" />
               </TouchableOpacity>
@@ -125,15 +134,26 @@ class SidebarComponent extends PureComponent<
                     )
 
                     return (
-                      <View
-                        key={`sidebar-column-${index}`}
+                      <TouchableOpacity
+                        key={`sidebar-column-${column.id}`}
                         style={[styles.centerContainer, squareStyle]}
+                        onPress={() => {
+                          emitter.emit('FOCUS_ON_COLUMN', {
+                            animated: !small || !this.props.currentOpenedModal,
+                            columnId: column.id,
+                            columnIndex: index,
+                            highlight: !small,
+                          })
+                        }}
                       >
                         <ColumnHeaderItem
-                          avatarDetails={requestTypeIconAndData.avatarDetails}
+                          avatarProps={{
+                            ...requestTypeIconAndData.avatarProps,
+                            disableLink: true,
+                          }}
                           iconName={requestTypeIconAndData.icon}
                         />
-                      </View>
+                      </TouchableOpacity>
                     )
                   })}
 
