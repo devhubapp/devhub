@@ -2,6 +2,7 @@ import { Platform } from '../../../libs/platform'
 import { GitHubRepo } from '../../../types'
 
 export interface GitHubURLOptions {
+  addBottomAnchor?: boolean
   commentId?: number
   issueOrPullRequestNumber?: number
 }
@@ -73,9 +74,20 @@ export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
 export const getGitHubURLForRepoInvitation = (repoFullName: string) =>
   repoFullName ? `${baseURL}/${repoFullName}/invitations` : ''
 
+function appBottomAnchorIfPossible(uri?: string) {
+  if (!uri) return ''
+
+  const anchorId = Platform.realOS === 'web' ? 'partial-timeline' : 'bottom'
+  return uri.includes('#') ? uri : `${uri}#${anchorId}`
+}
+
 export function githubHTMLUrlFromAPIUrl(
   apiURL: string,
-  { commentId, issueOrPullRequestNumber }: GitHubURLOptions = {},
+  {
+    addBottomAnchor,
+    commentId,
+    issueOrPullRequestNumber,
+  }: GitHubURLOptions = {},
 ): string {
   if (!apiURL) return ''
 
@@ -157,7 +169,9 @@ export function githubHTMLUrlFromAPIUrl(
     }
   }
 
-  return `${baseURL}/${restOfURL}`
+  const uri = `${baseURL}/${restOfURL}`
+
+  return addBottomAnchor ? appBottomAnchorIfPossible(uri) : uri
 }
 
 export function fixURL(url?: string, options: GitHubURLOptions = {}) {
@@ -166,10 +180,9 @@ export function fixURL(url?: string, options: GitHubURLOptions = {}) {
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
   let uri =
     url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
-  uri =
-    uri.indexOf('api.github.com') >= 0
-      ? githubHTMLUrlFromAPIUrl(uri, options)
-      : uri
 
-  return uri
+  if (uri.indexOf('api.github.com') >= 0)
+    uri = githubHTMLUrlFromAPIUrl(uri, options)
+
+  return options.addBottomAnchor ? appBottomAnchorIfPossible(uri) : uri
 }

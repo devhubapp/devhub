@@ -11,6 +11,7 @@ import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
 
 export interface CommentRowProps {
+  addBottomAnchor?: boolean
   avatarURL: string
   body: string
   isRead: boolean
@@ -24,6 +25,7 @@ export interface CommentRowProps {
 export interface CommentRowState {}
 
 export const CommentRow: SFC<CommentRowProps> = ({
+  addBottomAnchor,
   avatarURL,
   body: _body,
   isRead,
@@ -67,7 +69,7 @@ export const CommentRow: SFC<CommentRowProps> = ({
 
           <View style={getCardStylesForTheme(theme).rightColumn}>
             <Link
-              href={fixURL(url)}
+              href={fixURL(url, { addBottomAnchor })}
               style={getCardRowStylesForTheme(theme).mainContentContainer}
             >
               <Text

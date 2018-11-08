@@ -146,11 +146,12 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
             {!!issue && (
               <IssueOrPullRequestRow
                 key={`notification-issue-row-${issueOrPullRequestNumber}`}
+                addBottomAnchor
                 avatarURL=""
                 iconColor={issueIconColor!}
                 iconName={issueIconName!}
                 isRead={isRead}
-                issueNumber={issueOrPullRequestNumber!}
+                issueOrPullRequestNumber={issueOrPullRequestNumber!}
                 smallLeftColumn
                 title={issue.title}
                 url={issue.latest_comment_url || issue.url}
@@ -162,11 +163,12 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
             {!!pullRequest && (
               <IssueOrPullRequestRow
                 key={`notification-pr-row-${issueOrPullRequestNumber}`}
+                addBottomAnchor
                 avatarURL=""
                 iconColor={pullRequestIconColor!}
                 iconName={pullRequestIconName!}
                 isRead={isRead}
-                issueNumber={issueOrPullRequestNumber!}
+                issueOrPullRequestNumber={issueOrPullRequestNumber!}
                 smallLeftColumn
                 title={pullRequest.title}
                 url={pullRequest.latest_comment_url || pullRequest.url}
@@ -197,6 +199,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
               !!title && (
                 <CommentRow
                   key={`notification-${notification.id}-comment-row`}
+                  addBottomAnchor
                   avatarURL=""
                   body={title}
                   isRead={isRead}
@@ -214,6 +217,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
             {/* {!!comment && (
               <CommentRow
                 key={`notification-comment-row-${comment.id}`}
+                addBottomAnchor
                 body={comment.body}
                 smallLeftColumn
                 url={comment.html_url}

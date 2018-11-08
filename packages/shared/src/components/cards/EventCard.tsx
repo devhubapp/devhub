@@ -212,7 +212,7 @@ export class EventCard extends PureComponent<EventCardProps> {
                 iconColor={pullRequestIconColor!}
                 iconName={pullRequestIconName!}
                 isRead={isRead}
-                issueNumber={pullRequest.number}
+                issueOrPullRequestNumber={pullRequest.number}
                 title={pullRequest.title}
                 url={pullRequestURL}
                 userLinkURL={pullRequest.user.html_url || ''}
@@ -237,7 +237,7 @@ export class EventCard extends PureComponent<EventCardProps> {
                 iconColor={issueIconColor!}
                 iconName={issueIconName!}
                 isRead={isRead}
-                issueNumber={issue.number}
+                issueOrPullRequestNumber={issue.number}
                 title={issue.title}
                 url={issueURL}
                 userLinkURL={issue.user.html_url || ''}

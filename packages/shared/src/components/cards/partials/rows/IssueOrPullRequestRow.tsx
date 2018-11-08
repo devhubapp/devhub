@@ -14,11 +14,12 @@ import { CardItemId } from '../CardItemId'
 import { getCardRowStylesForTheme } from './styles'
 
 export interface IssueOrPullRequestRowProps {
+  addBottomAnchor?: boolean
   avatarURL: string
   iconColor?: string
   iconName: string
   isRead: boolean
-  issueNumber: number
+  issueOrPullRequestNumber: number
   smallLeftColumn?: boolean
   title: string
   url: string
@@ -35,11 +36,12 @@ const styles = StyleSheet.create({
 })
 
 export const IssueOrPullRequestRow: SFC<IssueOrPullRequestRowProps> = ({
+  addBottomAnchor,
   avatarURL,
   iconColor,
   iconName,
   isRead,
-  issueNumber,
+  issueOrPullRequestNumber,
   smallLeftColumn,
   title: _title,
   url,
@@ -78,7 +80,8 @@ export const IssueOrPullRequestRow: SFC<IssueOrPullRequestRowProps> = ({
           <View style={getCardStylesForTheme(theme).rightColumn}>
             <Link
               href={fixURL(url, {
-                issueOrPullRequestNumber: issueNumber,
+                addBottomAnchor,
+                issueOrPullRequestNumber,
               })}
               style={getCardRowStylesForTheme(theme).mainContentContainer}
             >
@@ -107,7 +110,7 @@ export const IssueOrPullRequestRow: SFC<IssueOrPullRequestRowProps> = ({
             </Link>
 
             <CardItemId
-              id={issueNumber}
+              id={issueOrPullRequestNumber}
               isRead={isRead}
               style={styles.cardItemId}
               url={url}
