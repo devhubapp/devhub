@@ -109,6 +109,11 @@ class SidebarComponent extends PureComponent<
             <ScrollView
               alwaysBounceHorizontal={false}
               alwaysBounceVertical={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent:
+                  small && horizontal ? 'space-evenly' : undefined,
+              }}
               horizontal={horizontal}
               style={{ flex: 1 }}
             >
@@ -121,7 +126,7 @@ class SidebarComponent extends PureComponent<
 
                     return (
                       <View
-                        key={`left-sidebar-column-${index}`}
+                        key={`sidebar-column-${index}`}
                         style={[styles.centerContainer, squareStyle]}
                       >
                         <ColumnHeaderItem
@@ -131,17 +136,26 @@ class SidebarComponent extends PureComponent<
                       </View>
                     )
                   })}
-            </ScrollView>
 
-            <TouchableOpacity
-              onPress={() => replaceModal({ name: 'SETTINGS' })}
-              style={[styles.centerContainer, squareStyle]}
-            >
-              <ColumnHeaderItem iconName="gear" />
-            </TouchableOpacity>
+              {!!small && (
+                <TouchableOpacity
+                  onPress={() => replaceModal({ name: 'SETTINGS' })}
+                  style={[styles.centerContainer, squareStyle]}
+                >
+                  <ColumnHeaderItem iconName="gear" />
+                </TouchableOpacity>
+              )}
+            </ScrollView>
 
             {!small && (
               <>
+                <TouchableOpacity
+                  onPress={() => replaceModal({ name: 'SETTINGS' })}
+                  style={[styles.centerContainer, squareStyle]}
+                >
+                  <ColumnHeaderItem iconName="gear" />
+                </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={this.logout}
                   style={[
