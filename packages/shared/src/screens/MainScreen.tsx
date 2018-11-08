@@ -129,26 +129,16 @@ class MainScreenComponent extends PureComponent<
               const small = width <= 420
 
               return (
-                <Screen statusBarBackgroundColor={theme.backgroundColorLess08}>
+                <Screen
+                  statusBarBackgroundColor={theme.backgroundColorLess08}
+                  useSafeArea={false}
+                >
                   <View
                     style={[
                       styles.container,
                       { flexDirection: small ? 'column-reverse' : 'row' },
                     ]}
                   >
-                    {!!small &&
-                      !currentOpenedModal && (
-                        <FAB
-                          iconName="plus"
-                          onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                          style={{
-                            position: 'absolute',
-                            bottom: sidebarSize + contentPadding / 2,
-                            right: contentPadding,
-                          }}
-                        />
-                      )}
-
                     <Sidebar
                       key="main-screen-sidebar"
                       horizontal={small}
@@ -158,6 +148,19 @@ class MainScreenComponent extends PureComponent<
                     <View style={styles.innerContainer}>
                       <ModalRenderer />
                       <ColumnsContainer />
+
+                      {!!small &&
+                        !currentOpenedModal && (
+                          <FAB
+                            iconName="plus"
+                            onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                            style={{
+                              position: 'absolute',
+                              bottom: contentPadding / 2,
+                              right: contentPadding,
+                            }}
+                          />
+                        )}
                     </View>
                   </View>
                 </Screen>

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import {
   Image,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -69,140 +70,148 @@ class SidebarComponent extends PureComponent<
     return (
       <ThemeConsumer>
         {({ theme }) => (
-          <View
+          <SafeAreaView
             style={{
-              flexDirection: horizontal ? 'row' : 'column',
               width: horizontal ? undefined : sidebarSize,
-              height: horizontal ? sidebarSize : undefined,
               backgroundColor: theme.backgroundColor,
               borderRightWidth: StyleSheet.hairlineWidth,
               borderRightColor: theme.backgroundColorDarker08,
             }}
           >
-            {!horizontal && (
-              <View
-                style={[
-                  styles.centerContainer,
-                  squareStyle,
-                  {
-                    backgroundColor: theme.backgroundColorLess08,
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderColor: theme.backgroundColorDarker08,
-                  },
-                ]}
-              >
-                <Avatar
-                  shape="circle"
-                  size={sidebarSize / 2}
-                  username={username}
-                />
-              </View>
-            )}
-
-            {!small && (
-              <TouchableOpacity
-                onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                style={[
-                  styles.centerContainer,
-                  squareStyle,
-                  {
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderColor: theme.backgroundColorDarker08,
-                  },
-                ]}
-              >
-                <ColumnHeaderItem iconName="plus" />
-              </TouchableOpacity>
-            )}
-
-            <ScrollView
-              alwaysBounceHorizontal={false}
-              alwaysBounceVertical={false}
-              contentContainerStyle={{
+            <View
+              style={{
                 flexGrow: 1,
-                justifyContent:
-                  small && horizontal ? 'space-evenly' : undefined,
+                flexDirection: horizontal ? 'row' : 'column',
+                width: horizontal ? undefined : sidebarSize,
+                height: horizontal ? sidebarSize : undefined,
               }}
-              horizontal={horizontal}
-              style={{ flex: 1 }}
             >
-              {!columns
-                ? null
-                : columns.map((column, index) => {
-                    const requestTypeIconAndData = getColumnHeaderDetails(
-                      column,
-                    )
-
-                    return (
-                      <TouchableOpacity
-                        key={`sidebar-column-${column.id}`}
-                        style={[styles.centerContainer, squareStyle]}
-                        onPress={() => {
-                          emitter.emit('FOCUS_ON_COLUMN', {
-                            animated: !small || !this.props.currentOpenedModal,
-                            columnId: column.id,
-                            columnIndex: index,
-                            highlight: !small,
-                          })
-                        }}
-                      >
-                        <ColumnHeaderItem
-                          avatarProps={{
-                            ...requestTypeIconAndData.avatarProps,
-                            disableLink: true,
-                          }}
-                          iconName={requestTypeIconAndData.icon}
-                        />
-                      </TouchableOpacity>
-                    )
-                  })}
-
-              {!!small && (
-                <TouchableOpacity
-                  onPress={() => replaceModal({ name: 'SETTINGS' })}
-                  style={[styles.centerContainer, squareStyle]}
-                >
-                  <ColumnHeaderItem iconName="gear" />
-                </TouchableOpacity>
-              )}
-            </ScrollView>
-
-            {!small && (
-              <>
-                <TouchableOpacity
-                  onPress={() => replaceModal({ name: 'SETTINGS' })}
-                  style={[styles.centerContainer, squareStyle]}
-                >
-                  <ColumnHeaderItem iconName="gear" />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={this.logout}
+              {!horizontal && (
+                <View
                   style={[
                     styles.centerContainer,
                     squareStyle,
                     {
-                      paddingLeft: 3,
+                      backgroundColor: theme.backgroundColorLess08,
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                      borderColor: theme.backgroundColorDarker08,
                     },
                   ]}
                 >
-                  <ColumnHeaderItem iconName="sign-out" />
-                </TouchableOpacity>
-
-                <View style={[styles.centerContainer, squareStyle]}>
-                  <Image
-                    resizeMode="contain"
-                    source={logo}
-                    style={{
-                      width: sidebarSize / 2,
-                      height: sidebarSize / 2,
-                      borderRadius: sidebarSize / (2 * 2),
-                    }}
+                  <Avatar
+                    shape="circle"
+                    size={sidebarSize / 2}
+                    username={username}
                   />
                 </View>
-              </>
-            )}
-          </View>
+              )}
+
+              {!small && (
+                <TouchableOpacity
+                  onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                  style={[
+                    styles.centerContainer,
+                    squareStyle,
+                    {
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                      borderColor: theme.backgroundColorDarker08,
+                    },
+                  ]}
+                >
+                  <ColumnHeaderItem iconName="plus" />
+                </TouchableOpacity>
+              )}
+
+              <ScrollView
+                alwaysBounceHorizontal={false}
+                alwaysBounceVertical={false}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                  justifyContent:
+                    small && horizontal ? 'space-evenly' : undefined,
+                }}
+                horizontal={horizontal}
+                style={{ flex: 1 }}
+              >
+                {!columns
+                  ? null
+                  : columns.map((column, index) => {
+                      const requestTypeIconAndData = getColumnHeaderDetails(
+                        column,
+                      )
+
+                      return (
+                        <TouchableOpacity
+                          key={`sidebar-column-${column.id}`}
+                          style={[styles.centerContainer, squareStyle]}
+                          onPress={() => {
+                            emitter.emit('FOCUS_ON_COLUMN', {
+                              animated:
+                                !small || !this.props.currentOpenedModal,
+                              columnId: column.id,
+                              columnIndex: index,
+                              highlight: !small,
+                            })
+                          }}
+                        >
+                          <ColumnHeaderItem
+                            avatarProps={{
+                              ...requestTypeIconAndData.avatarProps,
+                              disableLink: true,
+                            }}
+                            iconName={requestTypeIconAndData.icon}
+                          />
+                        </TouchableOpacity>
+                      )
+                    })}
+
+                {!!small && (
+                  <TouchableOpacity
+                    onPress={() => replaceModal({ name: 'SETTINGS' })}
+                    style={[styles.centerContainer, squareStyle]}
+                  >
+                    <ColumnHeaderItem iconName="gear" />
+                  </TouchableOpacity>
+                )}
+              </ScrollView>
+
+              {!small && (
+                <>
+                  <TouchableOpacity
+                    onPress={() => replaceModal({ name: 'SETTINGS' })}
+                    style={[styles.centerContainer, squareStyle]}
+                  >
+                    <ColumnHeaderItem iconName="gear" />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={this.logout}
+                    style={[
+                      styles.centerContainer,
+                      squareStyle,
+                      {
+                        paddingLeft: 3,
+                      },
+                    ]}
+                  >
+                    <ColumnHeaderItem iconName="sign-out" />
+                  </TouchableOpacity>
+
+                  <View style={[styles.centerContainer, squareStyle]}>
+                    <Image
+                      resizeMode="contain"
+                      source={logo}
+                      style={{
+                        width: sidebarSize / 2,
+                        height: sidebarSize / 2,
+                        borderRadius: sidebarSize / (2 * 2),
+                      }}
+                    />
+                  </View>
+                </>
+              )}
+            </View>
+          </SafeAreaView>
         )}
       </ThemeConsumer>
     )

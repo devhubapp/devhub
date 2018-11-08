@@ -1,5 +1,12 @@
 import React, { PureComponent, ReactNode } from 'react'
-import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import {
+  SafeAreaView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
 import { ThemeConsumer } from '../context/ThemeContext'
@@ -17,12 +24,13 @@ export interface ColumnHeaderProps extends ViewProps {
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'stretch',
+  },
+  innerContainer: {
+    alignSelf: 'stretch',
     flexDirection: 'row',
     height: columnHeaderHeight,
     paddingVertical: contentPadding,
   },
-
-  buttonContainer: {},
 })
 
 export class ColumnHeader extends PureComponent<ColumnHeaderProps> {
@@ -32,16 +40,16 @@ export class ColumnHeader extends PureComponent<ColumnHeaderProps> {
     return (
       <ThemeConsumer>
         {({ theme }) => (
-          <View
-            {...props}
+          <SafeAreaView
             style={[
               styles.container,
               { backgroundColor: theme.backgroundColorLess08 },
-              style,
             ]}
           >
-            {children}
-          </View>
+            <View {...props} style={[styles.innerContainer, style]}>
+              {children}
+            </View>
+          </SafeAreaView>
         )}
       </ThemeConsumer>
     )
