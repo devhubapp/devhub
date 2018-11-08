@@ -81,6 +81,9 @@ class MainScreenComponent extends PureComponent<
   }
 
   handleKeyPress = (e: any) => {
+    const targetTagName = e.target && `${e.target.tagName || ''}`.toLowerCase()
+    if (targetTagName === 'input') return
+
     if (e.key === 'a' || e.key === 'n') {
       this.props.replaceModal({ name: 'ADD_COLUMN' })
       return
