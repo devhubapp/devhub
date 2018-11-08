@@ -7,7 +7,7 @@ export * from 'bugsnag-js'
 export let bugsnagClient: ReturnType<typeof bugsnag>
 export let ErrorBoundary: React.ComponentType<any>
 
-export function setup(apiKey: string) {
+export function initBugsnag(apiKey: string) {
   bugsnagClient = bugsnag(apiKey)
   ;(bugsnagClient as any).apiKey = apiKey
   ;(bugsnagClient as any).autoBreadcrumbs = false

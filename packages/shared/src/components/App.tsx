@@ -2,7 +2,7 @@ import React, { PureComponent, StrictMode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import * as bugsnag from '../libs/bugsnag'
+import { bugsnagClient, initBugsnag } from '../libs/bugsnag'
 import { AppNavigator } from '../navigation/AppNavigator'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
@@ -11,7 +11,8 @@ import { ThemeProvider } from './context/ThemeContext'
 
 const { persistor, store } = configureStore()
 
-bugsnag.setup('231f337f6090422c611017d3dab3d32e')
+initBugsnag('231f337f6090422c611017d3dab3d32e')
+bugsnagClient.config.notifyReleaseStages = ['production']
 
 // TODO: Enable StrictMode after react-redux fixes it
 // @see https://github.com/reduxjs/react-redux/issues/897

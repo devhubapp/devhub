@@ -7,7 +7,7 @@ export * from 'bugsnag-react-native'
 export let bugsnagClient: InstanceType<typeof Bugsnag>
 export let ErrorBoundary: React.ComponentType<any>
 
-export function setup(apiKey: string) {
+export function initBugsnag(apiKey: string) {
   bugsnagClient = new Bugsnag(apiKey)
 
   try {
