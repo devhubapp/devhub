@@ -8,18 +8,17 @@ import {
 } from 'react-navigation'
 import { connect } from 'react-redux'
 
-import { FAB } from '../components/common/FAB'
 import { Screen } from '../components/common/Screen'
 import { DimensionsConsumer } from '../components/context/DimensionsContext'
 import { ThemeConsumer } from '../components/context/ThemeContext'
-import { Sidebar, sidebarSize } from '../components/layout/Sidebar'
+import { FABRenderer } from '../components/layout/FABRenderer'
+import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { emitter } from '../setup'
-import { contentPadding } from '../styles/variables'
 import { Column, ExtractPropsFromConnector } from '../types'
 
 const styles = StyleSheet.create({
@@ -119,8 +118,6 @@ class MainScreenComponent extends PureComponent<
   }
 
   render() {
-    const { currentOpenedModal, replaceModal } = this.props
-
     return (
       <ThemeConsumer>
         {({ theme }) => (
@@ -148,19 +145,7 @@ class MainScreenComponent extends PureComponent<
                     <View style={styles.innerContainer}>
                       <ModalRenderer />
                       <ColumnsContainer />
-
-                      {!!small &&
-                        !currentOpenedModal && (
-                          <FAB
-                            iconName="plus"
-                            onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                            style={{
-                              position: 'absolute',
-                              bottom: contentPadding / 2,
-                              right: contentPadding,
-                            }}
-                          />
-                        )}
+                      <FABRenderer />
                     </View>
                   </View>
                 </Screen>

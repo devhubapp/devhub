@@ -25,7 +25,7 @@ export const FAB: React.SFC<FABProps> = ({
   iconName,
   iconStyle,
   style,
-  useBrandColor = true,
+  useBrandColor,
   ...props
 }) => (
   <ThemeConsumer>
