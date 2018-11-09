@@ -74,6 +74,30 @@ export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
 export const getGitHubURLForRepoInvitation = (repoFullName: string) =>
   repoFullName ? `${baseURL}/${repoFullName}/invitations` : ''
 
+export const getGitHubAvatarURLFromPayload = (
+  payload: any,
+  userId?: number,
+) => {
+  if (!payload) return undefined
+
+  const fields = Object.getOwnPropertyNames(payload)
+  const fieldWithAvatar = fields.find(field => {
+    const hasAvatar =
+      payload[field] &&
+      payload[field].user &&
+      payload[field].user.avatar_url &&
+      typeof payload[field].user.avatar_url === 'string'
+    if (!hasAvatar) return false
+
+    if (userId && payload[field].user.id !== userId) return false
+
+    return true
+  })
+  if (!fieldWithAvatar) return undefined
+
+  return payload[fieldWithAvatar].user.avatar_url as string
+}
+
 function appBottomAnchorIfPossible(uri?: string) {
   if (!uri) return ''
 

@@ -43,11 +43,12 @@ export const Avatar: SFC<AvatarProps> = ({
   size: _size,
   small,
   style,
-  username,
+  username: _username,
   ...props
 }) => {
   const finalSize = _size || (small ? smallAvatarSize : avatarSize)
-  const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
+  const isBot = _isBot || Boolean(_username && _username.indexOf('[bot]') >= 0)
+  const username = isBot ? _username!.replace('[bot]', '') : _username
 
   const avatarURL = _avatarURL
     ? getUserAvatarByAvatarURL(_avatarURL, { size: finalSize })
@@ -62,7 +63,7 @@ export const Avatar: SFC<AvatarProps> = ({
 
   const linkUri = disableLink
     ? undefined
-    : linkURL
+    : linkURL && !isBot
       ? fixURL(linkURL)
       : username
         ? repo

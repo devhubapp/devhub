@@ -28,7 +28,10 @@ import {
   getOwnerAndRepo,
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
-import { getRepoFullNameFromObject } from '../../utils/helpers/github/url'
+import {
+  getGitHubAvatarURLFromPayload,
+  getRepoFullNameFromObject,
+} from '../../utils/helpers/github/url'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { BranchRow } from './partials/rows/BranchRow'
@@ -112,6 +115,17 @@ export class EventCard extends PureComponent<EventCardProps> {
     const isForcePush = isPush && (payload as GitHubPushEvent).forced
     const isPrivate = !!(event.public === false || (repo && repo.private))
 
+    const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
+
+    // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
+    //  but the correct avatar on payload.xxx.user.avatar_url,
+    // so lets get it from there instead
+    const botAvatarURL = isBot
+      ? getGitHubAvatarURLFromPayload(payload, actor.id)
+      : undefined
+
+    const avatarURL = (isBot && botAvatarURL) || actor.avatar_url
+
     const {
       icon: pullRequestIconName,
       color: pullRequestIconColor,
@@ -147,11 +161,11 @@ export class EventCard extends PureComponent<EventCardProps> {
             <EventCardHeader
               key={`event-card-header-${event.id}`}
               actionText={actionText}
-              avatarURL={actor.avatar_url}
+              avatarURL={avatarURL}
               cardIconColor={cardIconColor || theme.foregroundColor}
               cardIconName={cardIconName}
               createdAt={event.created_at}
-              isBot={Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)}
+              isBot={isBot}
               isPrivate={isPrivate}
               userLinkURL={actor.html_url || ''}
               username={actor.display_login || actor.login}
