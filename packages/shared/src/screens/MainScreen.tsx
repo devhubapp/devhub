@@ -39,6 +39,7 @@ const connectToStore = connect(
   }),
   {
     closeAllModals: actions.closeAllModals,
+    popModal: actions.popModal,
     replaceModal: actions.replaceModal,
   },
 )
@@ -59,6 +60,7 @@ class MainScreenComponent extends PureComponent<
     )
 
     if (Platform.realOS === 'web') {
+      window.addEventListener('keydown', this.handleKeyDown)
       window.addEventListener('keypress', this.handleKeyPress)
     }
   }
@@ -67,6 +69,7 @@ class MainScreenComponent extends PureComponent<
     if (this.focusOnColumnListener) this.focusOnColumnListener.remove()
 
     if (Platform.realOS === 'web') {
+      window.removeEventListener('keydown', this.handleKeyDown)
       window.removeEventListener('keypress', this.handleKeyPress)
     }
   }
@@ -77,6 +80,17 @@ class MainScreenComponent extends PureComponent<
       Dimensions.get('window').width <= 420
     ) {
       this.props.closeAllModals()
+    }
+  }
+
+  handleKeyDown = (e: any) => {
+    const targetTagName = e.target && `${e.target.tagName || ''}`.toLowerCase()
+
+    if (e.key === 'Escape') {
+      // never happens apparently
+      if (targetTagName === 'input') e.target.blur()
+      else if (this.props.currentOpenedModal) this.props.popModal()
+      return
     }
   }
 
