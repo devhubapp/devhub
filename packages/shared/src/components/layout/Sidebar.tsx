@@ -17,6 +17,7 @@ import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { columnHeaderHeight } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
+import { Separator } from '../common/Separator'
 import { ThemeConsumer } from '../context/ThemeContext'
 
 const logo = require('shared/assets/logo.png') // tslint:disable-line
@@ -63,8 +64,8 @@ class SidebarComponent extends PureComponent<
     const { columns, horizontal, replaceModal, small, username } = this.props
 
     const squareStyle = {
-      width: horizontal ? sidebarSize + StyleSheet.hairlineWidth : '100%',
-      height: horizontal ? '100%' : sidebarSize + StyleSheet.hairlineWidth,
+      width: sidebarSize,
+      height: sidebarSize,
     }
 
     return (
@@ -74,8 +75,6 @@ class SidebarComponent extends PureComponent<
             style={{
               width: horizontal ? undefined : sidebarSize,
               backgroundColor: theme.backgroundColor,
-              borderRightWidth: StyleSheet.hairlineWidth,
-              borderRightColor: theme.backgroundColorDarker08,
             }}
           >
             <View
@@ -87,39 +86,38 @@ class SidebarComponent extends PureComponent<
               }}
             >
               {!horizontal && (
-                <View
-                  style={[
-                    styles.centerContainer,
-                    squareStyle,
-                    {
-                      backgroundColor: theme.backgroundColorLess08,
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                      borderColor: theme.backgroundColorDarker08,
-                    },
-                  ]}
-                >
-                  <Avatar
-                    shape="circle"
-                    size={sidebarSize / 2}
-                    username={username}
-                  />
-                </View>
+                <>
+                  <View
+                    style={[
+                      styles.centerContainer,
+                      squareStyle,
+                      {
+                        backgroundColor: theme.backgroundColorLess08,
+                      },
+                    ]}
+                  >
+                    <Avatar
+                      shape="circle"
+                      size={sidebarSize / 2}
+                      username={username}
+                    />
+                  </View>
+
+                  <Separator horizontal />
+                </>
               )}
 
               {!small && (
-                <TouchableOpacity
-                  onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                  style={[
-                    styles.centerContainer,
-                    squareStyle,
-                    {
-                      borderBottomWidth: StyleSheet.hairlineWidth,
-                      borderColor: theme.backgroundColorDarker08,
-                    },
-                  ]}
-                >
-                  <ColumnHeaderItem iconName="plus" />
-                </TouchableOpacity>
+                <>
+                  <TouchableOpacity
+                    onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                    style={[styles.centerContainer, squareStyle]}
+                  >
+                    <ColumnHeaderItem iconName="plus" />
+                  </TouchableOpacity>
+
+                  <Separator horizontal />
+                </>
               )}
 
               <ScrollView

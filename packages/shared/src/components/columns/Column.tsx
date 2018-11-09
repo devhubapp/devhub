@@ -28,8 +28,7 @@ export interface ColumnState {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    borderRightWidth: StyleSheet.hairlineWidth,
-  } as ViewStyle,
+  },
 })
 
 export class Column extends PureComponent<ColumnProps> {
@@ -104,7 +103,6 @@ export class Column extends PureComponent<ColumnProps> {
                   styles.container,
                   {
                     backgroundColor: theme.backgroundColor,
-                    borderRightColor: theme.backgroundColorDarker08,
                     width: Math.max(
                       minWidth!,
                       Math.min(

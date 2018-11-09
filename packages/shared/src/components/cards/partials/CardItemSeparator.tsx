@@ -1,29 +1,7 @@
-import React, { PureComponent } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import React from 'react'
 
-import { ThemeConsumer } from '../../context/ThemeContext'
+import { Separator } from '../../common/Separator'
 
-const styles = StyleSheet.create({
-  separator: {
-    alignSelf: 'stretch',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    height: 1,
-  } as ViewStyle,
-})
-
-export class CardItemSeparator extends PureComponent {
-  render() {
-    return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <View
-            style={[
-              styles.separator,
-              { borderBottomColor: theme.backgroundColorDarker08 },
-            ]}
-          />
-        )}
-      </ThemeConsumer>
-    )
-  }
+export function CardItemSeparator() {
+  return <Separator horizontal />
 }

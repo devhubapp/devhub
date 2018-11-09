@@ -2,7 +2,6 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
-import { Spacer } from '../../components/common/Spacer'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { ExtractPropsFromConnector } from '../../types'

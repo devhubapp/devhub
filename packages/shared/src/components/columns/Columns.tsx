@@ -5,11 +5,13 @@ import {
   FlatListProps,
   StyleProp,
   StyleSheet,
+  View,
   ViewStyle,
 } from 'react-native'
 
 import { emitter } from '../../setup'
 import { Column, Omit } from '../../types'
+import { Separator } from '../common/Separator'
 import { DimensionsConsumer } from '../context/DimensionsContext'
 import { EventColumn } from './EventColumn'
 import { NotificationColumn } from './NotificationColumn'
@@ -24,6 +26,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
+  },
+  flatlist: {
+    flex: 1,
   },
 })
 
@@ -116,6 +121,9 @@ export class Columns extends PureComponent<ColumnsProps> {
             <FlatList
               ref={this.flatListRef}
               key="columns-flat-list"
+              ItemSeparatorComponent={Separator}
+              ListFooterComponent={Separator}
+              ListHeaderComponent={Separator}
               bounces={!this.swipeable}
               className="snap-container"
               data={data}
@@ -127,7 +135,7 @@ export class Columns extends PureComponent<ColumnsProps> {
               scrollEnabled={!this.swipeable}
               {...props}
               renderItem={this.renderItem}
-              style={[styles.container, style]}
+              style={[styles.flatlist, style]}
             />
           )
         }}

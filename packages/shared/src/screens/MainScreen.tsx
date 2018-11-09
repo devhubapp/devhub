@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux'
 
 import { Screen } from '../components/common/Screen'
+import { Separator } from '../components/common/Separator'
 import { DimensionsConsumer } from '../components/context/DimensionsContext'
 import { ThemeConsumer } from '../components/context/ThemeContext'
 import { FABRenderer } from '../components/layout/FABRenderer'
@@ -141,6 +142,8 @@ class MainScreenComponent extends PureComponent<
                       horizontal={small}
                       small={small}
                     />
+
+                    <Separator horizontal={small} />
 
                     <View style={styles.innerContainer}>
                       <ModalRenderer />
