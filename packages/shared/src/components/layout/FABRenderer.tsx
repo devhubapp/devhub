@@ -15,7 +15,7 @@ const connectToStore = connect(
     currentOpenedModal: selectors.currentOpenedModal(state),
   }),
   {
-    popModal: actions.popModal,
+    closeAllModals: actions.closeAllModals,
     replaceModal: actions.replaceModal,
   },
 )
@@ -26,7 +26,7 @@ class FABRendererComponent extends PureComponent<
   renderContent({ small }: { small?: boolean } = {}) {
     if (!small) return null
 
-    const { currentOpenedModal, popModal, replaceModal } = this.props
+    const { currentOpenedModal, closeAllModals, replaceModal } = this.props
 
     const fabStyle: ViewStyle = {
       position: 'absolute',
@@ -47,8 +47,11 @@ class FABRendererComponent extends PureComponent<
     }
 
     switch (currentOpenedModal.name) {
-      case 'ADD_COLUMN': {
-        return <FAB iconName="x" onPress={() => popModal()} style={fabStyle} />
+      case 'ADD_COLUMN':
+      case 'ADD_COLUMN_DETAILS': {
+        return (
+          <FAB iconName="x" onPress={() => closeAllModals()} style={fabStyle} />
+        )
       }
 
       default:
