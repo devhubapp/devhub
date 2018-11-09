@@ -93,14 +93,21 @@ export class EventCardHeader extends PureComponent<EventCardHeaderProps> {
                 <View style={styles.innerContainer}>
                   <View style={getCardStylesForTheme(theme).horizontal}>
                     <Link href={getUserURL(username, { isBot })}>
-                      <Text style={getCardStylesForTheme(theme).usernameText}>
+                      <Text
+                        numberOfLines={1}
+                        style={getCardStylesForTheme(theme).usernameText}
+                      >
                         {username}
                       </Text>
                     </Link>
                     {!!isBot && (
-                      <Text
-                        style={getCardStylesForTheme(theme).timestampText}
-                      >{` • BOT`}</Text>
+                      <>
+                        <Text children=" " />
+                        <Text
+                          numberOfLines={1}
+                          style={getCardStylesForTheme(theme).timestampText}
+                        >{`• BOT`}</Text>
+                      </>
                     )}
                     <IntervalRefresh date={createdAt}>
                       {() => {
@@ -108,17 +115,24 @@ export class EventCardHeader extends PureComponent<EventCardHeaderProps> {
                         if (!dateText) return null
 
                         return (
-                          <Text
-                            style={getCardStylesForTheme(theme).timestampText}
-                          >
-                            {` • ${dateText}`}
-                          </Text>
+                          <>
+                            <Text children=" " />
+                            <Text
+                              numberOfLines={1}
+                              style={getCardStylesForTheme(theme).timestampText}
+                            >
+                              {`• ${dateText}`}
+                            </Text>
+                          </>
                         )
                       }}
                     </IntervalRefresh>
                   </View>
 
-                  <Text style={getCardStylesForTheme(theme).descriptionText}>
+                  <Text
+                    numberOfLines={1}
+                    style={getCardStylesForTheme(theme).descriptionText}
+                  >
                     {!!isPrivate && (
                       <Text style={getCardStylesForTheme(theme).mutedText}>
                         <Icon name="lock" />{' '}

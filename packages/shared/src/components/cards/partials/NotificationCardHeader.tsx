@@ -109,11 +109,15 @@ class NotificationCardHeaderComponent extends PureComponent<
                         if (!dateText) return null
 
                         return (
-                          <Text
-                            style={getCardStylesForTheme(theme).timestampText}
-                          >
-                            {` • ${dateText}`}
-                          </Text>
+                          <>
+                            <Text children=" " />
+                            <Text
+                              numberOfLines={1}
+                              style={getCardStylesForTheme(theme).timestampText}
+                            >
+                              {`• ${dateText}`}
+                            </Text>
+                          </>
                         )
                       }}
                     </IntervalRefresh>
