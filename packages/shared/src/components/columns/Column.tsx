@@ -2,9 +2,7 @@ import React, { PureComponent, ReactNode } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import { EventSubscription } from 'fbemitter'
-import { Platform } from '../../libs/platform'
 import { emitter } from '../../setup'
-import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { DimensionsConsumer } from '../context/DimensionsContext'
 import { ThemeConsumer } from '../context/ThemeContext'
@@ -15,8 +13,8 @@ export const columnMargin = contentPadding / 2
 export interface ColumnProps extends ViewProps {
   children?: ReactNode
   columnId: string
-  maxWidth?: number
-  minWidth?: number
+  maxWidth?: number | null
+  minWidth?: number | null
   pagingEnabled?: boolean
   style?: StyleProp<ViewStyle>
 }
@@ -33,15 +31,7 @@ const styles = StyleSheet.create({
 
 export class Column extends PureComponent<ColumnProps> {
   static defaultProps = {
-    maxWidth: Platform.selectUsingRealOS(
-      {
-        android: 400,
-        default: 360,
-        ios: 400,
-        web: 360,
-      },
-      { fallbackToWeb: true },
-    ),
+    maxWidth: 360,
     minWidth: 320,
   }
 
@@ -104,10 +94,14 @@ export class Column extends PureComponent<ColumnProps> {
                   {
                     backgroundColor: theme.backgroundColor,
                     width: Math.max(
-                      minWidth!,
+                      minWidth && minWidth > 0 ? minWidth : 0,
                       Math.min(
-                        maxWidth!,
                         width - (width <= 420 ? 0 : sidebarSize), // TODO: Improve this
+                        maxWidth && maxWidth >= 0
+                          ? width <= 420
+                            ? width
+                            : maxWidth
+                          : width,
                       ),
                     ),
                   },

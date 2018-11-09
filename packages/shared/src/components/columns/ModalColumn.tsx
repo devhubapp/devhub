@@ -8,14 +8,14 @@ import * as selectors from '../../redux/selectors'
 import { ExtractPropsFromConnector } from '../../types'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Separator } from '../common/Separator'
-import { Column } from './Column'
+import { Column, ColumnProps } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
 export interface ModalColumnProps extends ColumnHeaderItemProps {
   columnId: string
-  minWidth?: number
-  maxWidth?: number
+  minWidth?: ColumnProps['minWidth']
+  maxWidth?: ColumnProps['maxWidth']
 }
 
 export interface ModalColumnState {}
@@ -53,12 +53,12 @@ class ModalColumnComponent extends PureComponent<
     return (
       <Column
         columnId={this.props.columnId}
+        maxWidth={maxWidth}
+        minWidth={minWidth}
         style={[
           {
             zIndex: 100,
           },
-          typeof maxWidth !== 'undefined' && { maxWidth },
-          typeof minWidth !== 'undefined' && { minWidth },
         ]}
       >
         <View style={{ flex: 1, flexDirection: 'row' }}>
