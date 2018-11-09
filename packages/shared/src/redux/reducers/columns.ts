@@ -41,10 +41,13 @@ export const columnsReducer: Reducer<State> = (
         const currentIndex = draft.columns.findIndex(
           c => c.id === action.payload.id,
         )
-        const newIndex = action.payload.index
-
         if (!(currentIndex >= 0 && currentIndex < draft.columns.length)) return
-        if (!(newIndex >= 0 && newIndex < draft.columns.length)) return
+
+        const newIndex = Math.max(
+          0,
+          Math.min(action.payload.index, draft.columns.length - 1),
+        )
+        if (Number.isNaN(newIndex)) return
 
         // move column inside array
         const column = draft.columns[currentIndex]

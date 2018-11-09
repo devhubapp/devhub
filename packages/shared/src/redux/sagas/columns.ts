@@ -60,13 +60,22 @@ function* onAddColumn(
   })
 }
 
-function onMoveColumn(
+function* onMoveColumn(
   action: ExtractActionFromActionCreator<typeof actions.moveColumn>,
 ) {
+  const columns: Column[] | undefined = yield select(selectors.columnsSelector)
+  if (!columns) return
+
+  const columnIndex = Math.max(
+    0,
+    Math.min(action.payload.index, columns.length - 1),
+  )
+  if (Number.isNaN(columnIndex)) return
+
   emitter.emit('FOCUS_ON_COLUMN', {
     animated: true,
     columnId: action.payload.id,
-    columnIndex: action.payload.index,
+    columnIndex,
     highlight: true,
   })
 }
