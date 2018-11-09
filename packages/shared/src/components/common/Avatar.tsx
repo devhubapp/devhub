@@ -1,5 +1,5 @@
 import React, { SFC } from 'react'
-import { StyleProp, TouchableOpacityProps } from 'react-native'
+import { StyleProp, TouchableOpacityProps, View } from 'react-native'
 
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import {
@@ -75,12 +75,16 @@ export const Avatar: SFC<AvatarProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <ConditionalWrap
-          condition={!!linkUri}
-          wrap={children => (
-            <Link hitSlop={hitSlop} href={linkUri}>
-              {children}
-            </Link>
-          )}
+          condition
+          wrap={children =>
+            linkUri ? (
+              <Link hitSlop={hitSlop} href={linkUri}>
+                {children}
+              </Link>
+            ) : (
+              <View>{children}</View>
+            )
+          }
         >
           <ImageWithLoading
             {...props}

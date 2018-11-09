@@ -57,9 +57,9 @@ class NotificationColumnComponent extends PureComponent<
         <ColumnHeader>
           <ColumnHeaderItem
             iconName={requestTypeIconAndData.icon}
+            style={{ flex: 1 }}
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}
-            style={{ flex: 1 }}
           />
 
           <ColumnHeaderItem

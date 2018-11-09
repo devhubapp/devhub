@@ -15,7 +15,7 @@ import { connect } from 'react-redux'
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as selectors from '../../redux/selectors'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
-import { ExtractPropsFromConnector, GitHubIcon } from '../../types'
+import { Column, ExtractPropsFromConnector, GitHubIcon } from '../../types'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
@@ -101,11 +101,9 @@ class ColumnHeaderItemComponent extends PureComponent<
     const username =
       _username &&
       avatarProps.username &&
-      !(_username.toLowerCase() === avatarProps.username.toLowerCase())
-        ? avatarProps.username
-        : undefined
-
-    const smallAvatarSpacing = 5
+      _username.toLowerCase() === avatarProps.username.toLowerCase()
+        ? undefined
+        : avatarProps.username
 
     return (
       <ThemeConsumer>
@@ -119,64 +117,29 @@ class ColumnHeaderItemComponent extends PureComponent<
                     alignContent: 'center',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginRight:
-                      title || subtitle
-                        ? 8 + (username ? smallAvatarSpacing : 0)
-                        : 0,
+                    marginRight: title || subtitle ? 8 : 0,
                   }}
                 >
-                  {iconName ? (
-                    <>
+                  {!!username ? (
+                    <Avatar
+                      isBot={false}
+                      linkURL=""
+                      {...avatarProps}
+                      style={[
+                        {
+                          width: columnHeaderItemContentSize,
+                          height: columnHeaderItemContentSize,
+                        },
+                        avatarProps.style,
+                      ]}
+                      username={username}
+                    />
+                  ) : (
+                    !!iconName && (
                       <Icon
                         color={theme.foregroundColor}
                         name={iconName}
                         style={[styles.icon, iconStyle]}
-                      />
-
-                      {!!username && (
-                        <Avatar
-                          hitSlop={{
-                            top:
-                              columnHeaderItemContentSize + smallAvatarSpacing,
-                            bottom: smallAvatarSpacing,
-                            left:
-                              columnHeaderItemContentSize / 2 +
-                              smallAvatarSpacing,
-                            right:
-                              columnHeaderItemContentSize / 2 +
-                              smallAvatarSpacing,
-                          }}
-                          isBot={false}
-                          linkURL=""
-                          {...avatarProps}
-                          style={[
-                            {
-                              position: 'absolute',
-                              bottom: 0,
-                              marginLeft: smallAvatarSpacing,
-                              width: 10,
-                              height: 10,
-                            },
-                            avatarProps.style,
-                          ]}
-                          username={username}
-                        />
-                      )}
-                    </>
-                  ) : (
-                    !!username && (
-                      <Avatar
-                        isBot={false}
-                        linkURL=""
-                        {...avatarProps}
-                        style={[
-                          {
-                            width: columnHeaderItemContentSize,
-                            height: columnHeaderItemContentSize,
-                          },
-                          avatarProps.style,
-                        ]}
-                        username={username}
                       />
                     )
                   )}

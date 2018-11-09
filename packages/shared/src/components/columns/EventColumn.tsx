@@ -60,9 +60,9 @@ export class EventColumnComponent extends PureComponent<
           <ColumnHeaderItem
             avatarProps={requestTypeIconAndData.avatarProps}
             iconName={requestTypeIconAndData.icon}
+            style={{ flex: 1 }}
             subtitle={requestTypeIconAndData.subtitle}
             title={requestTypeIconAndData.title}
-            style={{ flex: 1 }}
           />
 
           <ColumnHeaderItem
