@@ -61,34 +61,27 @@ class ModalColumnComponent extends PureComponent<
           },
         ]}
       >
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Separator />
+        <ColumnHeader>
+          {canGoBack && (
+            <ColumnHeaderItem
+              iconName="chevron-left"
+              onPress={this.handleBack}
+              style={{ paddingRight: 0 }}
+            />
+          )}
 
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <ColumnHeader>
-              {canGoBack && (
-                <ColumnHeaderItem
-                  iconName="chevron-left"
-                  onPress={this.handleBack}
-                  style={{ paddingRight: 0 }}
-                />
-              )}
+          <ColumnHeaderItem
+            {...props}
+            iconName={undefined}
+            style={{ flex: 1 }}
+          />
 
-              <ColumnHeaderItem
-                {...props}
-                iconName={undefined}
-                style={{ flex: 1 }}
-              />
+          <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
+        </ColumnHeader>
 
-              <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
-            </ColumnHeader>
+        <CardItemSeparator />
 
-            <CardItemSeparator />
-
-            {children}
-          </View>
-          <Separator />
-        </View>
+        {children}
       </Column>
     )
   }

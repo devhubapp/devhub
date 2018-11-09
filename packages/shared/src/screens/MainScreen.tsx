@@ -133,6 +133,8 @@ class MainScreenComponent extends PureComponent<
   }
 
   render() {
+    const { currentOpenedModal } = this.props
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
@@ -156,11 +158,12 @@ class MainScreenComponent extends PureComponent<
                       horizontal={small}
                       small={small}
                     />
-
-                    <Separator horizontal={small} />
+                    <Separator horizontal={small} thick />
 
                     <View style={styles.innerContainer}>
                       <ModalRenderer />
+                      {!!currentOpenedModal && !small && <Separator thick />}
+
                       <ColumnsContainer />
                       <FABRenderer />
                     </View>

@@ -5,7 +5,6 @@ import {
   FlatListProps,
   StyleProp,
   StyleSheet,
-  View,
   ViewStyle,
 } from 'react-native'
 
@@ -115,15 +114,16 @@ export class Columns extends PureComponent<ColumnsProps> {
     return (
       <DimensionsConsumer>
         {({ width }) => {
-          this.pagingEnabled = width <= 420
+          const small = width <= 420
+          this.pagingEnabled = small
 
           return (
             <FlatList
               ref={this.flatListRef}
               key="columns-flat-list"
               ItemSeparatorComponent={Separator}
-              ListFooterComponent={Separator}
-              ListHeaderComponent={Separator}
+              ListFooterComponent={small ? Separator : undefined}
+              ListHeaderComponent={small ? Separator : undefined}
               bounces={!this.swipeable}
               className="snap-container"
               data={data}

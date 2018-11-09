@@ -175,6 +175,8 @@ class SidebarComponent extends PureComponent<
 
               {!small && (
                 <>
+                  <Separator horizontal />
+
                   <TouchableOpacity
                     onPress={() => replaceModal({ name: 'SETTINGS' })}
                     style={[styles.centerContainer, squareStyle]}

@@ -3,31 +3,30 @@ import { StyleSheet, View } from 'react-native'
 
 import { ThemeConsumer } from '../context/ThemeContext'
 
-const styles = StyleSheet.create({
-  horizontalSeparator: {
-    width: '100%',
-    height: StyleSheet.hairlineWidth,
-  },
-  verticalSeparator: {
-    width: StyleSheet.hairlineWidth,
-    height: '100%',
-  },
-})
-
 export interface SeparatorProps {
   horizontal?: boolean
+  thick?: boolean
 }
 
 export class Separator extends PureComponent<SeparatorProps> {
   render() {
+    const { horizontal, thick } = this.props
+    const size = thick ? 2 : StyleSheet.hairlineWidth
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
           <View
             style={[
-              this.props.horizontal
-                ? styles.horizontalSeparator
-                : styles.verticalSeparator,
+              horizontal
+                ? {
+                    width: '100%',
+                    height: size,
+                  }
+                : {
+                    width: size,
+                    height: '100%',
+                  },
               { backgroundColor: theme.backgroundColorDarker08 },
             ]}
           />
