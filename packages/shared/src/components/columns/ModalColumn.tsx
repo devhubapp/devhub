@@ -2,10 +2,12 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 
+import { View } from 'react-native'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { ExtractPropsFromConnector } from '../../types'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
+import { Separator } from '../common/Separator'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
@@ -59,27 +61,34 @@ class ModalColumnComponent extends PureComponent<
           typeof minWidth !== 'undefined' && { minWidth },
         ]}
       >
-        <ColumnHeader>
-          {canGoBack && (
-            <ColumnHeaderItem
-              iconName="chevron-left"
-              onPress={this.handleBack}
-              style={{ paddingRight: 0 }}
-            />
-          )}
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <Separator />
 
-          <ColumnHeaderItem
-            {...props}
-            iconName={undefined}
-            style={{ flex: 1 }}
-          />
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <ColumnHeader>
+              {canGoBack && (
+                <ColumnHeaderItem
+                  iconName="chevron-left"
+                  onPress={this.handleBack}
+                  style={{ paddingRight: 0 }}
+                />
+              )}
 
-          <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
-        </ColumnHeader>
+              <ColumnHeaderItem
+                {...props}
+                iconName={undefined}
+                style={{ flex: 1 }}
+              />
 
-        <CardItemSeparator />
+              <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
+            </ColumnHeader>
 
-        {children}
+            <CardItemSeparator />
+
+            {children}
+          </View>
+          <Separator />
+        </View>
       </Column>
     )
   }
