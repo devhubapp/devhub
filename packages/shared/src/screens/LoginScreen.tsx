@@ -8,6 +8,7 @@ import {
 import { connect } from 'react-redux'
 
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
+import { AppVersion } from '../components/common/AppVersion'
 import { Screen } from '../components/common/Screen'
 import { ThemeConsumer } from '../components/context/ThemeContext'
 import { executeOAuth } from '../libs/oauth'
@@ -17,7 +18,6 @@ import { contentPadding } from '../styles/variables'
 import { ExtractPropsFromConnector } from '../types'
 
 const logo = require('shared/assets/logo.png') // tslint:disable-line
-const pkg = require('shared/package.json') // tslint:disable-line
 
 const serverURL = 'https://micro-oauth-pmkvlpfaua.now.sh'
 
@@ -185,12 +185,7 @@ export class LoginScreenComponent extends PureComponent<
                 >
                   TweetDeck for GitHub
                 </Text>
-                <Text
-                  style={[
-                    styles.appVersion,
-                    { color: theme.foregroundColorTransparent50 },
-                  ]}
-                >{`v${pkg.version}`}</Text>
+                <AppVersion />
               </View>
             </View>
           </Screen>

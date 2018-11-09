@@ -88,12 +88,12 @@ class ThemePreferenceComponent extends PureComponent<
               alignItems: 'center',
               justifyContent: 'center',
               marginRight: contentPadding / 2,
-              width: 32,
-              height: 32,
-              borderRadius: 32 / 2,
+              width: 28,
+              height: 28,
+              borderRadius: 28 / 2,
               backgroundColor: theme.backgroundColor,
               borderWidth: StyleSheet.hairlineWidth,
-              borderColor: theme.foregroundColorMuted50,
+              borderColor: theme.backgroundColorDarker08,
             }}
           >
             <Text
@@ -102,8 +102,8 @@ class ThemePreferenceComponent extends PureComponent<
                 margin: 0,
                 padding: 0,
                 fontWeight: '500',
-                fontSize: 13,
-                lineHeight: 32,
+                fontSize: 12,
+                lineHeight: 28,
                 color: theme.foregroundColorMuted50,
                 textAlign: 'center',
               }}
@@ -159,6 +159,8 @@ class ThemePreferenceComponent extends PureComponent<
                 value={this.props.currentThemeId === 'auto'}
               />
             </View>
+
+            <Spacer height={contentPadding} />
           </View>
         )}
       </ThemeConsumer>
