@@ -17,6 +17,7 @@ import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { columnHeaderHeight } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
+import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { ThemeConsumer } from '../context/ThemeContext'
 
@@ -197,7 +198,11 @@ class SidebarComponent extends PureComponent<
                     <ColumnHeaderItem iconName="sign-out" />
                   </TouchableOpacity>
 
-                  <View style={[styles.centerContainer, squareStyle]}>
+                  <Link
+                    href="https://twitter.com/brunolemos"
+                    openOnNewTab
+                    style={[styles.centerContainer, squareStyle]}
+                  >
                     <Image
                       resizeMode="contain"
                       source={logo}
@@ -207,7 +212,7 @@ class SidebarComponent extends PureComponent<
                         borderRadius: sidebarSize / (2 * 2),
                       }}
                     />
-                  </View>
+                  </Link>
                 </>
               )}
             </View>
