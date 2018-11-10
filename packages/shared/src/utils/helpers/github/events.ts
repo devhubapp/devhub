@@ -463,7 +463,9 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
 
   switch (eventA.type) {
     case 'WatchEvent': {
-      if (eventB.type === 'WatchEvent' && !isSameRepo) {
+      if (eventB.type === 'WatchEvent') {
+        if (isSameRepo) return eventB
+
         return {
           ...omit(['repo', 'type'], eventA),
           type: 'WatchEvent:OneUserMultipleRepos',
@@ -480,11 +482,13 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
       const alreadyMergedThisRepo = eventA.repos.find(
         repo => repo.id === repoBId,
       )
-      if (eventB.type === 'WatchEvent' && !alreadyMergedThisRepo) {
+      if (eventB.type === 'WatchEvent') {
         return {
           ...eventA,
           repos: uniqBy(repo => repo.id, [...eventA.repos, eventB.repo]),
-          merged: uniq([...eventA.merged, eventB.id]),
+          merged: alreadyMergedThisRepo
+            ? uniq(eventA.merged)
+            : uniq([...eventA.merged, eventB.id]),
         } as MultipleStarEvent
       }
 
