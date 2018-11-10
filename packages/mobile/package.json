@@ -15,7 +15,7 @@
     "metro-react-native-babel-preset": "^0.49.0",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.4",
-    "react-native-screens": "^1.0.0-alpha.15",
+    "react-native-screens": "^1.0.0-alpha.16",
     "shared": "0.13.0"
   },
   "jest": {
