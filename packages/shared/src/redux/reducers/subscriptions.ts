@@ -38,6 +38,14 @@ export const subscriptionsReducer: Reducer<State> = (
         )
       })
 
+    case 'DELETE_COLUMN_SUBSCRIPTION':
+      return immer(state, draft => {
+        if (draft.allIds)
+          draft.allIds = draft.allIds.filter(id => id !== action.payload)
+
+        if (draft.byId) delete draft.byId[action.payload]
+      })
+
     case 'REPLACE_COLUMNS':
       return immer(state, draft => {
         draft.allIds = []

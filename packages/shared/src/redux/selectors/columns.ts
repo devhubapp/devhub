@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect'
+
 import { RootState } from '../../types'
 import { createSubscriptionSelector } from './subscriptions'
 
