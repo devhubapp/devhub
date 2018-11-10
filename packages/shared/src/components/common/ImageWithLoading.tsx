@@ -94,8 +94,8 @@ export class ImageWithLoading extends PureComponent<ImageWithLoadingProps> {
             backgroundColor: error
               ? backgroundColorFailed
               : loading
-                ? backgroundColorLoading
-                : backgroundColorLoaded,
+              ? backgroundColorLoading
+              : backgroundColorLoaded,
           },
         ]}
       />

@@ -758,7 +758,7 @@ export interface GitHubNotification {
       | 'PullRequest'
       | 'Release'
       | 'RepositoryInvitation'
-      // | 'RepositoryVulnerabilityAlert' // TODO
+    // | 'RepositoryVulnerabilityAlert' // TODO
   }
   unread?: boolean
   updated_at: string

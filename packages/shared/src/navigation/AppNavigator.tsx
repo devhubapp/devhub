@@ -9,6 +9,6 @@ const connectToStore = connect((state: any) => ({
   user: selectors.currentUserSelector(state),
 }))
 
-export const AppNavigator = connectToStore(
-  ({ user }: any) => (user ? <MainNavigator /> : <AuthNavigator />),
+export const AppNavigator = connectToStore(({ user }: any) =>
+  user ? <MainNavigator /> : <AuthNavigator />,
 )

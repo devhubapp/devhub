@@ -195,24 +195,23 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
               />
             )}
 
-            {!(commit || issue || pullRequest) &&
-              !!title && (
-                <CommentRow
-                  key={`notification-${notification.id}-comment-row`}
-                  addBottomAnchor
-                  avatarURL=""
-                  body={title}
-                  isRead={isRead}
-                  smallLeftColumn
-                  userLinkURL=""
-                  username=""
-                  url={
-                    isRepoInvitation && repo
-                      ? getGitHubURLForRepoInvitation(repo.full_name)
-                      : undefined
-                  }
-                />
-              )}
+            {!(commit || issue || pullRequest) && !!title && (
+              <CommentRow
+                key={`notification-${notification.id}-comment-row`}
+                addBottomAnchor
+                avatarURL=""
+                body={title}
+                isRead={isRead}
+                smallLeftColumn
+                userLinkURL=""
+                username=""
+                url={
+                  isRepoInvitation && repo
+                    ? getGitHubURLForRepoInvitation(repo.full_name)
+                    : undefined
+                }
+              />
+            )}
 
             {/* {!!comment && (
               <CommentRow

@@ -64,12 +64,12 @@ export const Avatar: SFC<AvatarProps> = ({
   const linkUri = disableLink
     ? undefined
     : linkURL && !isBot
-      ? fixURL(linkURL)
-      : username
-        ? repo
-          ? getRepositoryURL(username, repo)
-          : getUserURL(username, { isBot })
-        : undefined
+    ? fixURL(linkURL)
+    : username
+    ? repo
+      ? getRepositoryURL(username, repo)
+      : getUserURL(username, { isBot })
+    : undefined
 
   return (
     <ThemeConsumer>
@@ -100,8 +100,8 @@ export const Avatar: SFC<AvatarProps> = ({
                   shape === 'circle'
                     ? finalSize / 2
                     : shape === 'square'
-                      ? 0
-                      : radius,
+                    ? 0
+                    : radius,
               },
               style,
             ]}

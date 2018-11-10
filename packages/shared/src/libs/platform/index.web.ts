@@ -30,8 +30,8 @@ export const Platform = {
       Platform.realOS in specifics
         ? specifics[realOS]
         : fallbackToWeb && 'web' in specifics
-          ? specifics.web
-          : specifics.default
+        ? specifics.web
+        : specifics.default
 
     return result
   },
