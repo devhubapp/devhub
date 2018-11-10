@@ -37,6 +37,7 @@ function* cleanupSubscriptions() {
 
 export function* subscriptionsSagas() {
   yield all([
+    yield takeLatest('ADD_COLUMN', cleanupSubscriptions),
     yield takeLatest('DELETE_COLUMN', cleanupSubscriptions),
     yield takeLatest('REPLACE_COLUMNS', cleanupSubscriptions),
   ])

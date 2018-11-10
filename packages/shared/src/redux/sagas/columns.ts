@@ -6,66 +6,60 @@ import {
   ColumnAndSubscriptions,
   ExtractActionFromActionCreator,
 } from '../../types'
+import { createSubscriptionObjectWithId } from '../../utils/helpers/github/shared'
 import { guid } from '../../utils/helpers/shared'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 
 function getDefaultColumns(username: string): ColumnAndSubscriptions[] {
-  const id1 = guid()
-  const id2 = guid()
-  const id3 = guid()
+  const notificationSubscription = createSubscriptionObjectWithId({
+    type: 'notifications',
+    subtype: undefined,
+    params: {
+      all: true,
+    },
+  })
+
+  const userReceivedEventsSubscription = createSubscriptionObjectWithId({
+    type: 'activity',
+    subtype: 'USER_RECEIVED_EVENTS',
+    params: {
+      username,
+    },
+  })
+
+  const userEventsSubscription = createSubscriptionObjectWithId({
+    type: 'activity',
+    subtype: 'USER_EVENTS',
+    params: {
+      username,
+    },
+  })
 
   return [
     {
       column: {
         id: guid(),
-        subscriptionIds: [id1],
+        subscriptionIds: [notificationSubscription.id],
         type: 'notifications',
       },
-      subscriptions: [
-        {
-          id: id1,
-          type: 'notifications',
-          subtype: undefined,
-          params: {
-            all: true,
-          },
-        },
-      ],
+      subscriptions: [notificationSubscription],
     },
     {
       column: {
         id: guid(),
-        subscriptionIds: [id2],
+        subscriptionIds: [userReceivedEventsSubscription.id],
         type: 'activity',
       },
-      subscriptions: [
-        {
-          id: id2,
-          type: 'activity',
-          subtype: 'USER_RECEIVED_EVENTS',
-          params: {
-            username,
-          },
-        },
-      ],
+      subscriptions: [userReceivedEventsSubscription],
     },
     {
       column: {
         id: guid(),
-        subscriptionIds: [id3],
+        subscriptionIds: [userEventsSubscription.id],
         type: 'activity',
       },
-      subscriptions: [
-        {
-          id: id3,
-          type: 'activity',
-          subtype: 'USER_EVENTS',
-          params: {
-            username,
-          },
-        },
-      ],
+      subscriptions: [userEventsSubscription],
     },
   ]
 }

@@ -2,7 +2,12 @@ import Octokit from '@octokit/rest'
 import gravatar from 'gravatar'
 
 import * as colors from '../../../styles/colors'
-import { GitHubIcon, GitHubPullRequest } from '../../../types'
+import {
+  ColumnSubscription,
+  GitHubIcon,
+  GitHubPullRequest,
+  Omit,
+} from '../../../types'
 import { getSteppedSize } from '../shared'
 
 export function getUserAvatarByAvatarURL(
@@ -145,5 +150,92 @@ export function getNotificationIconAndColor(
       console.error('Unknown notification type', type)
       return { icon: 'bell' }
     }
+  }
+}
+
+export function getUniqueIdForSubscription(subscription: ColumnSubscription) {
+  switch (subscription.type) {
+    case 'activity': {
+      switch (subscription.subtype) {
+        case 'PUBLIC_EVENTS': {
+          return '/events'
+        }
+
+        case 'REPO_EVENTS': {
+          const { owner, repo } = subscription.params
+          if (!(owner && repo)) throw new Error('Required params: owner, repo')
+          return `/repos/${owner}/${repo}/events`
+        }
+
+        case 'REPO_NETWORK_EVENTS': {
+          const { owner, repo } = subscription.params
+          if (!(owner && repo)) throw new Error('Required params: owner, repo')
+          return `/networks/${owner}/${repo}/events`
+        }
+
+        case 'ORG_PUBLIC_EVENTS': {
+          const { org } = subscription.params
+          if (!org) throw new Error('Required params: org')
+          return `/orgs/${org}/events`
+        }
+
+        case 'USER_RECEIVED_EVENTS': {
+          const { username } = subscription.params
+          if (!username) throw new Error('Required params: username')
+          return `/users/${username}/received_events`
+        }
+
+        case 'USER_RECEIVED_PUBLIC_EVENTS': {
+          const { username } = subscription.params
+          if (!username) throw new Error('Required params: username')
+          return `/users/${username}/received_events/public`
+        }
+
+        case 'USER_EVENTS': {
+          const { username } = subscription.params
+          if (!username) throw new Error('Required params: username')
+          return `/users/${username}/events`
+        }
+
+        case 'USER_PUBLIC_EVENTS': {
+          const { username } = subscription.params
+          if (!username) throw new Error('Required params: username')
+          return `/users/${username}/events/public`
+        }
+
+        case 'USER_ORG_EVENTS': {
+          const { org, username } = subscription.params
+          if (!(username && org))
+            throw new Error('Required params: username, org')
+          return `/users/${username}/events/orgs/${org}`
+        }
+
+        default: {
+          throw new Error(
+            `No path configured for subscription type '${
+              (subscription as any).subtype
+            }'`,
+          )
+        }
+      }
+    }
+
+    case 'notifications': {
+      return `/notifications?all=${subscription.params!.all ? 'true' : 'false'}`
+    }
+
+    default:
+      throw new Error(
+        `Unknown subscription type: ${(subscription as any).type}`,
+      )
+  }
+}
+
+export function createSubscriptionObjectWithId(
+  subscription: Omit<ColumnSubscription, 'id' | 'createdAt' | 'updatedAt'>,
+) {
+  return {
+    ...subscription,
+    id: getUniqueIdForSubscription(subscription as any),
   }
 }

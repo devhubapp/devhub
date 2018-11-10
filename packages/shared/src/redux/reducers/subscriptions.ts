@@ -28,6 +28,7 @@ export const subscriptionsReducer: Reducer<State> = (
             ...(s as any), // TODO: fix any
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
+            ...draft.byId[s.id],
           }
 
           return s.id

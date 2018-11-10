@@ -14,6 +14,7 @@ import {
 import { ModalColumn } from '../columns/ModalColumn'
 
 import { contentPadding } from '../../styles/variables'
+import { createSubscriptionObjectWithId } from '../../utils/helpers/github/shared'
 import { guid } from '../../utils/helpers/shared'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Button } from '../common/Button'
@@ -115,12 +116,12 @@ class AddColumnDetailsModalComponent extends PureComponent<
     this.props.closeAllModals()
 
     const subscriptions = [
-      {
-        id: guid(),
+      createSubscriptionObjectWithId({
         ...this.props.subscription,
         params: _.pick(params, paramList),
-      },
+      }),
     ]
+
     this.props.addColumn({
       column: {
         id: guid(),
