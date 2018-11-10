@@ -3,6 +3,7 @@ import { GitHubUser, Reducer } from '../../types'
 export interface State {
   error: object | null
   isLoggingIn: boolean
+  lastLoginAt: string | null
   token: string
   user: GitHubUser | null
 }
@@ -10,6 +11,7 @@ export interface State {
 const initialState: State = {
   error: null,
   isLoggingIn: false,
+  lastLoginAt: null,
   token: '',
   user: null,
 }
@@ -20,6 +22,7 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       return {
         error: null,
         isLoggingIn: true,
+        lastLoginAt: state.lastLoginAt,
         token: action.payload.token,
         user: state.user,
       }
@@ -28,16 +31,15 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       return {
         error: null,
         isLoggingIn: false,
+        lastLoginAt: new Date().toISOString(),
         token: state.token,
         user: action.payload,
       }
 
     case 'LOGIN_FAILURE':
       return {
+        ...initialState,
         error: action.error,
-        isLoggingIn: false,
-        token: '',
-        user: null,
       }
 
     default:
