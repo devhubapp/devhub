@@ -8,16 +8,16 @@ import {
   ViewStyle,
 } from 'react-native'
 
+import { ColumnContainer } from '../../containers/ColumnContainer'
 import { emitter } from '../../setup'
-import { Column, Omit } from '../../types'
+import { Omit } from '../../types'
 import { Separator } from '../common/Separator'
 import { DimensionsConsumer } from '../context/DimensionsContext'
-import { EventColumn } from './EventColumn'
-import { NotificationColumn } from './NotificationColumn'
 
 export interface ColumnsProps
-  extends Omit<FlatListProps<Column>, 'renderItem'> {
+  extends Omit<FlatListProps<string>, 'data' | 'renderItem'> {
   contentContainerStyle?: StyleProp<ViewStyle>
+  columnIds: string[]
   style?: StyleProp<ViewStyle>
 }
 
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 })
 
 export class Columns extends PureComponent<ColumnsProps> {
-  flatListRef = React.createRef<FlatList<Column>>()
+  flatListRef = React.createRef<FlatList<string>>()
   focusOnColumnListener?: EventSubscription
   pagingEnabled: boolean = true
   swipeable: boolean = false
@@ -58,9 +58,9 @@ export class Columns extends PureComponent<ColumnsProps> {
     highlight?: boolean
   }) => {
     if (!this.flatListRef.current) return
-    if (!(this.props.data && this.props.data!.length)) return
+    if (!(this.props.columnIds && this.props.columnIds.length)) return
 
-    if (columnIndex >= 0 && columnIndex < this.props.data.length) {
+    if (columnIndex >= 0 && columnIndex < this.props.columnIds.length) {
       this.flatListRef.current.scrollToIndex({
         animated,
         index: columnIndex,
@@ -68,48 +68,22 @@ export class Columns extends PureComponent<ColumnsProps> {
     }
   }
 
-  keyExtractor(column: Column) {
-    return `column-container-${column.id}`
+  keyExtractor(columnId: string) {
+    return `column-container-${columnId}`
   }
 
-  renderItem: FlatListProps<Column>['renderItem'] = ({
-    item: column,
-    index,
-  }) => {
-    switch (column.type) {
-      case 'notifications': {
-        return (
-          <NotificationColumn
-            key={`notification-column-${column.id}`}
-            column={column}
-            columnIndex={index}
-            pagingEnabled={this.pagingEnabled}
-            swipeable={this.swipeable}
-          />
-        )
-      }
-
-      case 'activity': {
-        return (
-          <EventColumn
-            key={`event-column-${column.id}`}
-            column={column}
-            columnIndex={index}
-            pagingEnabled={this.pagingEnabled}
-            swipeable={this.swipeable}
-          />
-        )
-      }
-
-      default: {
-        console.error('Invalid Column type: ', (column as any).type)
-        return null
-      }
-    }
+  renderItem: FlatListProps<string>['renderItem'] = ({ item: columnId }) => {
+    return (
+      <ColumnContainer
+        columnId={columnId}
+        pagingEnabled={this.pagingEnabled}
+        swipeable={this.swipeable}
+      />
+    )
   }
 
   render() {
-    const { data, style, ...props } = this.props
+    const { columnIds, style, ...props } = this.props
 
     return (
       <DimensionsConsumer>
@@ -126,7 +100,7 @@ export class Columns extends PureComponent<ColumnsProps> {
               ListHeaderComponent={small ? Separator : undefined}
               bounces={!this.swipeable}
               className="snap-container"
-              data={data}
+              data={columnIds}
               horizontal
               keyExtractor={this.keyExtractor}
               onScrollToIndexFailed={() => undefined}

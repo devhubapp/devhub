@@ -11,7 +11,7 @@ export interface ColumnsContainerProps {}
 export interface ColumnsContainerState {}
 
 const connectToStore = connect((state: any) => ({
-  columns: selectors.columnsSelector(state),
+  columnIds: selectors.columnIdsSelector(state),
 }))
 
 class ColumnsContainerComponent extends PureComponent<
@@ -19,8 +19,8 @@ class ColumnsContainerComponent extends PureComponent<
   ColumnsContainerState
 > {
   render() {
-    const columns = this.props.columns || []
-    return <Columns key="columns-container" data={columns} />
+    const columnIds = this.props.columnIds || []
+    return <Columns key="columns-container" columnIds={columnIds} />
   }
 }
 

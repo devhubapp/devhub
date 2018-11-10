@@ -39,8 +39,9 @@ function* onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
   const username = action.payload.login
-  const columns = yield select(selectors.columnsSelector)
-  if (!columns) yield put(actions.replaceColumns(getDefaultColumns(username)))
+  const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
+  if (!hasCreatedColumn)
+    yield put(actions.replaceColumns(getDefaultColumns(username)))
 }
 
 function* onAddColumn(
@@ -48,8 +49,8 @@ function* onAddColumn(
 ) {
   const columnId = action.payload.id
 
-  const columns: Column[] | undefined = yield select(selectors.columnsSelector)
-  const columnIndex = columns && columns.findIndex(c => c.id === columnId)
+  const ids: string[] = yield select(selectors.columnIdsSelector)
+  const columnIndex = ids.findIndex(id => id === columnId)
 
   yield delay(300)
   emitter.emit('FOCUS_ON_COLUMN', {
@@ -63,12 +64,12 @@ function* onAddColumn(
 function* onMoveColumn(
   action: ExtractActionFromActionCreator<typeof actions.moveColumn>,
 ) {
-  const columns: Column[] | undefined = yield select(selectors.columnsSelector)
-  if (!columns) return
+  const ids: string[] = yield select(selectors.columnIdsSelector)
+  if (!(ids && ids.length)) return
 
   const columnIndex = Math.max(
     0,
-    Math.min(action.payload.index, columns.length - 1),
+    Math.min(action.payload.index, ids.length - 1),
   )
   if (Number.isNaN(columnIndex)) return
 

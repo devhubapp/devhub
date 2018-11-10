@@ -33,7 +33,7 @@ export type ExtractActionFromActionCreator<AC> = AC extends () => infer A
 
 export type ExtractPropsFromConnector<
   Connector
-> = Connector extends InferableComponentEnhancerWithProps<infer T, {}>
+> = Connector extends InferableComponentEnhancerWithProps<infer T, any>
   ? T
   : never
 

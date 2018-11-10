@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 const connectToStore = connect(
   (state: any) => ({
     currentOpenedModal: selectors.currentOpenedModal(state),
-    columns: (selectors.columnsSelector(state) || []) as Column[],
+    columnIds: selectors.columnIdsSelector(state),
   }),
   {
     closeAllModals: actions.closeAllModals,
@@ -103,27 +103,26 @@ class MainScreenComponent extends PureComponent<
       return
     }
 
-    if (this.props.columns.length > 0) {
+    if (this.props.columnIds.length > 0) {
       if (e.keyCode - 48 === 0) {
-        const columnIndex = this.props.columns.length - 1
+        const columnIndex = this.props.columnIds.length - 1
         emitter.emit('FOCUS_ON_COLUMN', {
           animated: true,
-          columnId:
-            this.props.columns[columnIndex] &&
-            this.props.columns[columnIndex].id,
+          columnId: this.props.columnIds[columnIndex],
           columnIndex,
           highlight: true,
         })
         return
       }
 
-      if (e.keyCode - 48 >= 1 && e.keyCode - 48 <= this.props.columns.length) {
+      if (
+        e.keyCode - 48 >= 1 &&
+        e.keyCode - 48 <= this.props.columnIds.length
+      ) {
         const columnIndex = e.keyCode - 48 - 1
         emitter.emit('FOCUS_ON_COLUMN', {
           animated: true,
-          columnId:
-            this.props.columns[columnIndex] &&
-            this.props.columns[columnIndex].id,
+          columnId: this.props.columnIds[columnIndex],
           columnIndex,
           highlight: true,
         })

@@ -43,7 +43,7 @@ const connectToStore = connect(
     const user = selectors.currentUserSelector(state)
 
     return {
-      columns: selectors.columnsSelector(state),
+      columns: selectors.columnsArrSelector(state),
       currentOpenedModal: selectors.currentOpenedModal(state),
       username: (user && user.login) || '',
     }
