@@ -1,6 +1,8 @@
 import immer from 'immer'
+import _ from 'lodash'
 
 import { Column, Reducer } from '../../types'
+import { guid } from '../../utils/helpers/shared'
 
 export interface State {
   allIds: string[]
@@ -22,8 +24,21 @@ export const columnsReducer: Reducer<State> = (
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
-        draft.allIds.unshift(action.payload.id)
-        draft.byId[action.payload.id] = action.payload
+        const { column, subscriptions } = action.payload
+
+        const subscriptionIds = _.uniq(
+          (column.subscriptionIds || []).concat(subscriptions.map(s => s.id)),
+        ).filter(Boolean)
+
+        const id = guid()
+        draft.allIds.unshift(id)
+        draft.byId[id] = {
+          ...column,
+          id,
+          subscriptionIds,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
       })
 
     case 'DELETE_COLUMN':
@@ -58,9 +73,15 @@ export const columnsReducer: Reducer<State> = (
     case 'REPLACE_COLUMNS':
       return immer(state, draft => {
         draft.byId = {}
-        draft.allIds = action.payload.map(c => {
-          draft.byId![c.id] = c
-          return c.id
+        draft.allIds = action.payload.map(p => {
+          draft.byId![p.column.id] = {
+            ...p.column,
+            subscriptionIds: p.column.subscriptionIds || [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }
+
+          return p.column.id
         })
       })
 

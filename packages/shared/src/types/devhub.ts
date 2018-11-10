@@ -1,20 +1,22 @@
 import { GitHubExtractParamsFromActivityMethod, GitHubIcon, Omit } from '.'
 import { octokit } from '../libs/github'
 
-export interface NotificationParams {
-  all?: boolean
-}
-
-export interface NotificationColumn {
+export interface NotificationSubscription {
   id: string
   type: 'notifications'
   subtype?: undefined | ''
-  params: NotificationParams
+  params: {
+    all?: boolean
+  }
+  createdAt: string
+  updatedAt: string
 }
 
-export type ActivityColumn = {
+export type ActivitySubscription = {
   id: string
   type: 'activity'
+  createdAt: string
+  updatedAt: string
 } & (
   | {
       subtype: 'ORG_PUBLIC_EVENTS'
@@ -71,16 +73,58 @@ export type ActivityColumn = {
       >
     })
 
-export type Column = NotificationColumn | ActivityColumn
+// export interface ColumnFilters {
+//   archived?: boolean
+//   order?: Array<'asc' | 'desc'>
+//   owners?: string[]
+//   reasons?: Array<GitHubNotification['reason']>
+//   repos?: string[]
+//   saved?: boolean
+//   search: {
+//     exclude?: string
+//     match?: string
+//     regex?: string
+//   }
+//   sort?: string[]
+//   types?: Array<GitHubNotification['subject']['type']>
+//   unread?: boolean
+// }
+
+// export interface ColumnOptions {
+//   enableBadge?: boolean
+//   enableNotifications?: boolean
+// }
+
+export type ColumnSubscription = NotificationSubscription | ActivitySubscription
+
+export interface Column {
+  id: string
+  type: ColumnSubscription['type']
+  // title?: string // TODO
+  // subtitle?: string // TODO
+  subscriptionIds: string[]
+  // filters?: ColumnFilters // TODO
+  // options?: ColumnOptions // TODO
+  createdAt: string
+  updatedAt: string
+}
 
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
-export interface ColumnType {
+export interface AddColumnDetailsPayload {
   name: string
   icon: GitHubIcon
-  column: Omit<Column, 'id' | 'params'>
+  subscription: Omit<
+    ColumnSubscription,
+    'id' | 'params' | 'createdAt' | 'updatedAt'
+  >
   paramList: ColumnParamField[]
   defaultParams?: Partial<Record<ColumnParamField, any>>
+}
+
+export interface ColumnAndSubscriptions {
+  column: Omit<Column, 'createdAt' | 'updatedAt'>
+  subscriptions: Array<Omit<ColumnSubscription, 'createdAt' | 'updatedAt'>>
 }
 
 export type ModalPayload =
@@ -90,7 +134,7 @@ export type ModalPayload =
     }
   | {
       name: 'ADD_COLUMN_DETAILS'
-      params: ColumnType
+      params: AddColumnDetailsPayload
     }
   | {
       name: 'SETTINGS'

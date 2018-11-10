@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import { RootState } from '../../types'
+import { createSubscriptionSelector } from './subscriptions'
 
 const s = (state: RootState) => state.columns || {}
 
@@ -20,3 +21,20 @@ export const columnsArrSelector = createSelector(
 
 export const hasCreatedColumnSelector = (state: RootState) =>
   s(state).byId !== null
+
+export const createColumnSubscriptionsSelector = () => {
+  const columnSelector = createColumnSelector()
+  const subscriptionSelector = createSubscriptionSelector()
+
+  return createSelector(
+    (state: RootState) => state.subscriptions,
+    (state: RootState, id: string) =>
+      columnSelector(state, id)
+        ? columnSelector(state, id)!.subscriptionIds
+        : [],
+    (subscriptions, subscriptionIds) =>
+      subscriptionIds.map(id =>
+        subscriptionSelector({ subscriptions } as any, id),
+      ),
+  )
+}

@@ -10,9 +10,11 @@ import {
 import storage from 'redux-persist/lib/storage'
 import createSagaMiddleware from 'redux-saga'
 
-import { Column, RootState } from '../types'
+import { Column, ColumnSubscription, RootState } from '../types'
+import { guid } from '../utils/helpers/shared'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
+import * as selectors from './selectors'
 
 const migrations = {
   0: (state: any) => state,
@@ -28,15 +30,53 @@ const migrations = {
         return column.id
       })
     }),
+  3: (state: RootState) =>
+    immer(state, draft => {
+      let columns: Column[] = selectors.columnsArrSelector(state)
+      if (!columns) return
+
+      draft.subscriptions = draft.subscriptions || {}
+      draft.subscriptions.allIds = []
+      draft.subscriptions.byId = {}
+      columns = columns.map((oldColumn: any) => {
+        const subscription: ColumnSubscription = {
+          id: guid(),
+          type: oldColumn.type,
+          subtype: oldColumn.subtype,
+          params: oldColumn.params,
+          createdAt: oldColumn.createdAt || new Date().toISOString(),
+          updatedAt: oldColumn.updatedAt || new Date().toISOString(),
+        }
+
+        draft.subscriptions.allIds.push(subscription.id)
+        draft.subscriptions.byId[subscription.id] = subscription
+
+        const column: Column = {
+          id: oldColumn.id,
+          type: oldColumn.type,
+          subscriptionIds: [subscription.id],
+          createdAt: oldColumn.createdAt || new Date().toISOString(),
+          updatedAt: oldColumn.updatedAt || new Date().toISOString(),
+        }
+
+        return column
+      })
+
+      draft.columns.byId = {}
+      draft.columns.allIds = columns.map(column => {
+        draft.columns.byId![column.id] = column
+        return column.id
+      })
+    }),
 }
 
 export function configureStore(key = 'root') {
   const persistConfig: PersistConfig = {
     blacklist: ['navigation'],
     key,
-    migrate: createMigrate(migrations, { debug: __DEV__ }),
+    migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
-    version: 2,
+    version: 3,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 

@@ -11,18 +11,18 @@ import { connect } from 'react-redux'
 
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import { ColumnType, ExtractPropsFromConnector } from '../../types'
+import { AddColumnDetailsPayload, ExtractPropsFromConnector } from '../../types'
 import { ModalColumn } from '../columns/ModalColumn'
 
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ThemeConsumer } from '../context/ThemeContext'
 
-const columnTypes: ColumnType[] = [
+const columnTypes: AddColumnDetailsPayload[] = [
   {
     name: 'Dashboard',
     icon: 'home',
-    column: {
+    subscription: {
       type: 'activity',
       subtype: 'USER_RECEIVED_EVENTS',
     },
@@ -31,7 +31,7 @@ const columnTypes: ColumnType[] = [
   {
     name: 'User',
     icon: 'person',
-    column: {
+    subscription: {
       type: 'activity',
       subtype: 'USER_EVENTS',
     },
@@ -40,7 +40,7 @@ const columnTypes: ColumnType[] = [
   {
     name: 'Notifications',
     icon: 'bell',
-    column: {
+    subscription: {
       type: 'notifications',
       subtype: '',
     },
@@ -49,7 +49,7 @@ const columnTypes: ColumnType[] = [
   {
     name: 'Organization',
     icon: 'organization',
-    column: {
+    subscription: {
       type: 'activity',
       subtype: 'ORG_PUBLIC_EVENTS',
     },
@@ -58,7 +58,7 @@ const columnTypes: ColumnType[] = [
   {
     name: 'Repository',
     icon: 'repo',
-    column: {
+    subscription: {
       type: 'activity',
       subtype: 'REPO_EVENTS',
     },
@@ -86,12 +86,14 @@ class AddColumnModalComponent extends PureComponent<
     this.setState({ availableWidth: e.nativeEvent.layout.width })
   }
 
-  keyExtractor(columnType: ColumnType) {
-    return `add-column-button-${columnType.column.type}-${columnType.column
-      .subtype || ''}`
+  keyExtractor(columnType: AddColumnDetailsPayload) {
+    return `add-column-button-${columnType.subscription.type}-${columnType
+      .subscription.subtype || ''}`
   }
 
-  renderItem: FlatListProps<ColumnType>['renderItem'] = ({ item }) => (
+  renderItem: FlatListProps<AddColumnDetailsPayload>['renderItem'] = ({
+    item,
+  }) => (
     <ThemeConsumer key={this.keyExtractor(item)}>
       {({ theme }) => (
         <TouchableOpacity
@@ -128,7 +130,7 @@ class AddColumnModalComponent extends PureComponent<
     </ThemeConsumer>
   )
 
-  renderColumnType = (item: ColumnType, index: number) =>
+  renderColumnType = (item: AddColumnDetailsPayload, index: number) =>
     this.renderItem({ item, index } as any)
 
   render() {

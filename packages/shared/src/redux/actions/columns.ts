@@ -1,11 +1,13 @@
-import { Column } from '../../types'
+import { ColumnAndSubscriptions } from '../../types'
 import { createActionCreatorCreator } from '../../utils/helpers/redux'
 
 export const replaceColumns = createActionCreatorCreator('REPLACE_COLUMNS')<
-  Column[]
+  ColumnAndSubscriptions[]
 >()
 
-export const addColumn = createActionCreatorCreator('ADD_COLUMN')<Column>()
+export const addColumn = createActionCreatorCreator('ADD_COLUMN')<
+  ColumnAndSubscriptions
+>()
 
 export const deleteColumn = createActionCreatorCreator('DELETE_COLUMN')<
   string

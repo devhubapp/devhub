@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { ColumnRP } from '../../render-props/ColumnRP'
 import { emitter } from '../../setup'
 import { ExtractPropsFromConnector } from '../../types'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
@@ -43,7 +44,7 @@ const connectToStore = connect(
     const user = selectors.currentUserSelector(state)
 
     return {
-      columns: selectors.columnsArrSelector(state),
+      columnIds: selectors.columnIdsSelector(state),
       currentOpenedModal: selectors.currentOpenedModal(state),
       username: (user && user.login) || '',
     }
@@ -62,7 +63,7 @@ class SidebarComponent extends PureComponent<
   }
 
   render() {
-    const { columns, horizontal, replaceModal, small, username } = this.props
+    const { columnIds, horizontal, replaceModal, small, username } = this.props
 
     const squareStyle = {
       width: sidebarSize,
@@ -132,35 +133,47 @@ class SidebarComponent extends PureComponent<
                 horizontal={horizontal}
                 style={{ flex: 1 }}
               >
-                {!columns
+                {!columnIds
                   ? null
-                  : columns.map((column, index) => {
-                      const requestTypeIconAndData = getColumnHeaderDetails(
-                        column,
-                      )
-
+                  : columnIds.map(columnId => {
                       return (
-                        <TouchableOpacity
-                          key={`sidebar-column-${column.id}`}
-                          style={[styles.centerContainer, squareStyle]}
-                          onPress={() => {
-                            emitter.emit('FOCUS_ON_COLUMN', {
-                              animated:
-                                !small || !this.props.currentOpenedModal,
-                              columnId: column.id,
-                              columnIndex: index,
-                              highlight: !small,
-                            })
-                          }}
+                        <ColumnRP
+                          key={`sidebar-column-rp-${columnId}`}
+                          columnId={columnId}
                         >
-                          <ColumnHeaderItem
-                            avatarProps={{
-                              ...requestTypeIconAndData.avatarProps,
-                              disableLink: true,
-                            }}
-                            iconName={requestTypeIconAndData.icon}
-                          />
-                        </TouchableOpacity>
+                          {({ column, columnIndex, subscriptions }) => {
+                            if (!column) return null
+
+                            const requestTypeIconAndData = getColumnHeaderDetails(
+                              column,
+                              subscriptions,
+                            )
+
+                            return (
+                              <TouchableOpacity
+                                key={`sidebar-column-${column.id}`}
+                                style={[styles.centerContainer, squareStyle]}
+                                onPress={() => {
+                                  emitter.emit('FOCUS_ON_COLUMN', {
+                                    animated:
+                                      !small || !this.props.currentOpenedModal,
+                                    columnId: column.id,
+                                    columnIndex,
+                                    highlight: !small,
+                                  })
+                                }}
+                              >
+                                <ColumnHeaderItem
+                                  avatarProps={{
+                                    ...requestTypeIconAndData.avatarProps,
+                                    disableLink: true,
+                                  }}
+                                  iconName={requestTypeIconAndData.icon}
+                                />
+                              </TouchableOpacity>
+                            )
+                          }}
+                        </ColumnRP>
                       )
                     })}
 

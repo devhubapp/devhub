@@ -10,17 +10,21 @@ import {
 } from './shared'
 
 import {
+  ActivitySubscription,
   Column,
+  ColumnSubscription,
   EnhancedGitHubEvent,
   GitHubEvent,
   GitHubIcon,
   GitHubIssue,
   GitHubPullRequest,
   MultipleStarEvent,
+  NotificationSubscription,
 } from '../../../types'
 
 export function getColumnHeaderDetails(
   column: Column,
+  subscriptions: ColumnSubscription[],
 ): {
   avatarProps?: {
     repo?: string
@@ -33,14 +37,16 @@ export function getColumnHeaderDetails(
 } {
   switch (column.type) {
     case 'activity': {
-      switch (column.subtype) {
+      const subscription = subscriptions[0] as ActivitySubscription
+
+      switch (subscription.subtype) {
         case 'ORG_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: column.params.org },
+            avatarProps: { username: subscription.params.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: column.params.org,
+            title: subscription.params.org,
           }
         }
         case 'PUBLIC_EVENTS': {
@@ -54,62 +60,62 @@ export function getColumnHeaderDetails(
         case 'REPO_EVENTS': {
           return {
             avatarProps: {
-              repo: column.params.repo,
-              username: column.params.owner,
+              repo: subscription.params.repo,
+              username: subscription.params.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
             subtitle: 'Activity',
-            title: column.params.repo,
+            title: subscription.params.repo,
           }
         }
         case 'REPO_NETWORK_EVENTS': {
           return {
             avatarProps: {
-              repo: column.params.repo,
-              username: column.params.owner,
+              repo: subscription.params.repo,
+              username: subscription.params.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
             subtitle: 'Network',
-            title: column.params.repo,
+            title: subscription.params.repo,
           }
         }
         case 'USER_EVENTS': {
           return {
-            avatarProps: { username: column.params.username },
+            avatarProps: { username: subscription.params.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: column.params.username,
+            title: subscription.params.username,
           }
         }
         case 'USER_ORG_EVENTS': {
           return {
-            avatarProps: { username: column.params.org },
+            avatarProps: { username: subscription.params.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: column.params.org,
+            title: subscription.params.org,
           }
         }
         case 'USER_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: column.params.username },
+            avatarProps: { username: subscription.params.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: column.params.username,
+            title: subscription.params.username,
           }
         }
         case 'USER_RECEIVED_EVENTS':
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: column.params.username },
+            avatarProps: { username: subscription.params.username },
             icon: 'home',
             repoIsKnown: false,
             subtitle: 'Dashboard',
-            title: column.params.username,
+            title: subscription.params.username,
           }
         }
         default: {
@@ -128,10 +134,12 @@ export function getColumnHeaderDetails(
     }
 
     case 'notifications': {
+      const subscription = subscriptions[0] as NotificationSubscription
+
       return {
         icon: 'bell',
         repoIsKnown: false,
-        subtitle: column.params.all ? 'All' : '',
+        subtitle: subscription.params.all ? 'All' : '',
         title: 'Notifications',
       }
     }

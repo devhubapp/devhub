@@ -46,9 +46,9 @@ export class EventColumnComponent extends PureComponent<
   }
 
   render() {
-    const { column, columnIndex, pagingEnabled } = this.props
+    const { column, columnIndex, pagingEnabled, subscriptions } = this.props
 
-    const requestTypeIconAndData = getColumnHeaderDetails(column)
+    const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
     return (
       <Column

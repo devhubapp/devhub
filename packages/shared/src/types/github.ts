@@ -754,10 +754,11 @@ export interface GitHubNotification {
     latest_comment_url: string
     type:
       | 'Commit'
-      | 'RepositoryInvitation'
       | 'Issue'
       | 'PullRequest'
       | 'Release'
+      | 'RepositoryInvitation'
+      // | 'RepositoryVulnerabilityAlert' // TODO
   }
   unread?: boolean
   updated_at: string

@@ -2,35 +2,70 @@ import { all, put, select, takeLatest } from 'redux-saga/effects'
 
 import { delay } from 'redux-saga'
 import { emitter } from '../../setup'
-import { Column, ExtractActionFromActionCreator } from '../../types'
+import {
+  ColumnAndSubscriptions,
+  ExtractActionFromActionCreator,
+} from '../../types'
 import { guid } from '../../utils/helpers/shared'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 
-function getDefaultColumns(username: string): Column[] {
+function getDefaultColumns(username: string): ColumnAndSubscriptions[] {
+  const id1 = guid()
+  const id2 = guid()
+  const id3 = guid()
+
   return [
     {
-      id: guid(),
-      type: 'notifications',
-      params: {
-        all: true,
+      column: {
+        id: guid(),
+        subscriptionIds: [id1],
+        type: 'notifications',
       },
+      subscriptions: [
+        {
+          id: id1,
+          type: 'notifications',
+          subtype: undefined,
+          params: {
+            all: true,
+          },
+        },
+      ],
     },
     {
-      id: guid(),
-      type: 'activity',
-      subtype: 'USER_RECEIVED_EVENTS',
-      params: {
-        username,
+      column: {
+        id: guid(),
+        subscriptionIds: [id2],
+        type: 'activity',
       },
+      subscriptions: [
+        {
+          id: id2,
+          type: 'activity',
+          subtype: 'USER_RECEIVED_EVENTS',
+          params: {
+            username,
+          },
+        },
+      ],
     },
     {
-      id: guid(),
-      type: 'activity',
-      subtype: 'USER_EVENTS',
-      params: {
-        username,
+      column: {
+        id: guid(),
+        subscriptionIds: [id3],
+        type: 'activity',
       },
+      subscriptions: [
+        {
+          id: id3,
+          type: 'activity',
+          subtype: 'USER_EVENTS',
+          params: {
+            username,
+          },
+        },
+      ],
     },
   ]
 }
@@ -47,7 +82,7 @@ function* onLoginSuccess(
 function* onAddColumn(
   action: ExtractActionFromActionCreator<typeof actions.addColumn>,
 ) {
-  const columnId = action.payload.id
+  const columnId = action.payload.column.id
 
   const ids: string[] = yield select(selectors.columnIdsSelector)
   const columnIndex = ids.findIndex(id => id === columnId)

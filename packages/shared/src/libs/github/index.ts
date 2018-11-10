@@ -52,9 +52,9 @@ export async function getNotifications(
 export async function getActivity<T extends GitHubActivityType>(
   type: T,
   _params: any = {},
-  { columnId = '', useCache = true } = {},
+  { subscriptionId = '', useCache = true } = {},
 ) {
-  const cacheKey = JSON.stringify([type, _params, columnId])
+  const cacheKey = JSON.stringify([type, _params, subscriptionId])
   const cacheValue = cache[cacheKey]
 
   const params = { ..._params }

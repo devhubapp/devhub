@@ -7,8 +7,8 @@ import { connect } from 'react-redux'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import {
+  AddColumnDetailsPayload,
   ColumnParamField,
-  ColumnType,
   ExtractPropsFromConnector,
 } from '../../types'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -23,7 +23,7 @@ import { Spacer } from '../common/Spacer'
 import { TextInput } from '../common/TextInput'
 import { ThemeConsumer } from '../context/ThemeContext'
 
-interface AddColumnDetailsModalProps extends ColumnType {}
+interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {}
 
 interface AddColumnDetailsModalState {
   params: Record<ColumnParamField, any>
@@ -114,10 +114,20 @@ class AddColumnDetailsModalComponent extends PureComponent<
 
     this.props.closeAllModals()
 
+    const subscriptions = [
+      {
+        id: guid(),
+        ...this.props.subscription,
+        params: _.pick(params, paramList),
+      },
+    ]
     this.props.addColumn({
-      id: guid(),
-      ...(this.props.column as any), // TODO: Fix this thing
-      params: _.pick(params, paramList),
+      column: {
+        id: guid(),
+        type: this.props.subscription.type,
+        subscriptionIds: subscriptions.map(s => s.id),
+      },
+      subscriptions,
     })
   }
 

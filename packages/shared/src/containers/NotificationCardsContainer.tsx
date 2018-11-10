@@ -6,13 +6,19 @@ import {
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 import { getNotifications } from '../libs/github'
-import { NotificationColumn, Omit } from '../types'
+import {
+  Column,
+  ColumnSubscription,
+  NotificationSubscription,
+  Omit,
+} from '../types'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
   'notifications'
 > & {
-  column: NotificationColumn
+  column: Column
+  subscriptions: ColumnSubscription[]
 }
 
 export interface NotificationCardsContainerState {
@@ -38,11 +44,13 @@ export class NotificationCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
-    const { column } = this.props
+    const { subscriptions } = this.props
+    const subscription = subscriptions[0] as NotificationSubscription
 
     try {
-      const response = await getNotifications({ all: column.params.all })
-
+      const response = await getNotifications({
+        all: subscription.params.all,
+      })
       const notifications = response.data
       if (Array.isArray(notifications)) {
         this.setState({

@@ -3,11 +3,17 @@ import React, { PureComponent } from 'react'
 
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { getActivity } from '../libs/github'
-import { ActivityColumn, Omit } from '../types'
+import {
+  ActivitySubscription,
+  Column,
+  ColumnSubscription,
+  Omit,
+} from '../types'
 import { mergeSimilarEvent } from '../utils/helpers/github/events'
 
 export type EventCardsContainerProps = Omit<EventCardsProps, 'events'> & {
-  column: ActivityColumn
+  column: Column
+  subscriptions: ColumnSubscription[]
 }
 
 export interface EventCardsContainerState {
@@ -33,12 +39,17 @@ export class EventCardsContainer extends PureComponent<
   }
 
   fetchData = async () => {
-    const { id: columnId, params, subtype: activityType } = this.props.column
-
+    const { subscriptions } = this.props
+    const {
+      id: subscriptionId,
+      params,
+      subtype: activityType,
+    } = subscriptions[0] as ActivitySubscription
     try {
-      const response = await getActivity(activityType, params, { columnId })
+      const response = await getActivity(activityType, params, {
+        subscriptionId,
+      })
       const events = response.data
-
       if (Array.isArray(events)) {
         const orderedEvents = _(events)
           .concat(this.state.events)
