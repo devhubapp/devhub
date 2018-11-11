@@ -1,0 +1,5 @@
+packages/mobile
+packages/shared/src
+packages/web/build
+packages/web/src
+patches

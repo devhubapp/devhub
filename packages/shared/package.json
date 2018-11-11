@@ -3,7 +3,7 @@
   "version": "0.14.0",
   "main": "dist",
   "scripts": {
-    "compile": "rm -rf dist/*; tsc",
+    "build": "rm -rf dist/*; tsc",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package"
@@ -46,7 +46,7 @@
     "@types/lodash": "^4.14.118",
     "@types/qs": "^6.5.1",
     "@types/ramda": "^0.26.0",
-    "@types/react": "16.4.18",
+    "@types/react": "^16.7.2",
     "@types/react-native": "0.57.7",
     "@types/react-native-vector-icons": "^4.6.4",
     "@types/react-navigation": "^2.13.1",
