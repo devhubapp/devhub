@@ -15,5 +15,6 @@
         "destination": "/index.html"
       }
     ]
-  }
+  },
+  "version": 1
 }
