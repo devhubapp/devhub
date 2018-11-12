@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="ios/devhub/Images.xcassets/iTunesArtwork@1x.png" height="100" style="border-radius: 12px;" /><br/>
+  <img src="https://user-images.githubusercontent.com/619186/48372387-947ccf80-e6a5-11e8-83fc-eda08935e086.png" height="100" style="border-radius: 12px;" /><br/>
   <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
   <span>Android, iOS & Web with <b>99% code sharing</b> between them</span>
 </p>
