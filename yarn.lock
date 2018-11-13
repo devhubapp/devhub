@@ -1079,7 +1079,7 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native@*", "@types/react-native@0.57.8":
+"@types/react-native@*", "@types/react-native@^0.57.8":
   version "0.57.8"
   resolved "https://registry.npmjs.org/@types/react-native/-/react-native-0.57.8.tgz#39c77555d4de95fc20e9a963b66aa6059480eb4c"
   integrity sha512-j9H8cmbbP5gdQh/J5A+IS27HpN3tZeYtjH35t2kX7+rlPXmA2s2fYwHrX2gdegjsXMxva2DjztFR8XcN+Dthhw==
@@ -9623,17 +9623,17 @@ react-app-rewired@^1.6.2:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
 
-react-art@16.6.3:
-  version "16.6.3"
-  resolved "https://registry.npmjs.org/react-art/-/react-art-16.6.3.tgz#05bbc83fabe8f9e1dea425008e9af744e637c56f"
-  integrity sha512-L4mhwVTI3x96b9iuySVsIvWcbLfld9d6SShEbhuuPkNzR3xap5EwnoZzckKTbF9oJQUlS41xCeyuc7uUDZ6TTA==
+react-art@16.7.0-alpha.2:
+  version "16.7.0-alpha.2"
+  resolved "https://registry.npmjs.org/react-art/-/react-art-16.7.0-alpha.2.tgz#76484c2fabbebddebbd82cb360c1895e6d38a6f7"
+  integrity sha512-A6o1KeVc7hx5l2eHDSgpd/Iccb2VKxJV0Ki/Lw7sM92MAugVK35qGRv+IcKnkVraEfNGam5ok4/O7WbHHJYRFA==
   dependencies:
     art "^0.10.1"
     create-react-class "^15.6.2"
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.11.2"
+    scheduler "^0.12.0-alpha.2"
 
 react-clone-referenced-element@^1.0.1:
   version "1.1.0"
@@ -9683,15 +9683,15 @@ react-devtools-core@^3.4.0:
     shell-quote "^1.6.1"
     ws "^3.3.1"
 
-react-dom@16.6.3:
-  version "16.6.3"
-  resolved "https://registry.npmjs.org/react-dom/-/react-dom-16.6.3.tgz#8fa7ba6883c85211b8da2d0efeffc9d3825cccc0"
-  integrity sha512-8ugJWRCWLGXy+7PmNh8WJz3g1TaTUt1XyoIcFN+x0Zbkoz+KKdUyx1AQLYJdbFXjuF41Nmjn5+j//rxvhFjgSQ==
+react-dom@16.7.0-alpha.2:
+  version "16.7.0-alpha.2"
+  resolved "https://registry.npmjs.org/react-dom/-/react-dom-16.7.0-alpha.2.tgz#16632880ed43676315991d8b412cce6975a30282"
+  integrity sha512-o0mMw8jBlwHjGZEy/vvKd/6giAX0+skREMOTs3/QHmgi+yAhUClp4My4Z9lsKy3SXV+03uPdm1l/QM7NTcGuMw==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.11.2"
+    scheduler "^0.12.0-alpha.2"
 
 react-error-overlay@^5.1.0:
   version "5.1.0"
@@ -9813,10 +9813,10 @@ react-native-web@^0.9.7:
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.3"
 
-react-native@0.57.5:
-  version "0.57.5"
-  resolved "https://registry.npmjs.org/react-native/-/react-native-0.57.5.tgz#f1dbcbf1f889845fba954f3e0d47e61cf89d41d9"
-  integrity sha512-b/RNXcifPr4CrYZEAWmyD+W//KWZkEO4p6/TOZmLPP4M+vkqWqt0wmSW6JWn1bTEeZmRjx1JJZeVtYmtIVl/KA==
+"react-native@npm:@brunolemos/react-native":
+  version "0.57.5-hooks.3"
+  resolved "https://registry.npmjs.org/@brunolemos/react-native/-/react-native-0.57.5-hooks.3.tgz#4ccbb77284fe2a3463564e1b5fda2ca42e468184"
+  integrity sha512-FCE0TR569WnpORbDDAZlYH1sw6PUYo7WyiRnCnKj3xO9jeZr4nA5XHSBRHNZPK9ySxnM/8A2RCdfQzq2s4SXLA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     absolute-path "^0.0.0"
@@ -10016,15 +10016,15 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react@16.6.3:
-  version "16.6.3"
-  resolved "https://registry.npmjs.org/react/-/react-16.6.3.tgz#25d77c91911d6bbdd23db41e70fb094cc1e0871c"
-  integrity sha512-zCvmH2vbEolgKxtqXL2wmGCUxUyNheYn/C+PD1YAjfxHC54+MhdruyhO7QieQrYsYeTxrn93PM2y0jRH1zEExw==
+react@16.7.0-alpha.2:
+  version "16.7.0-alpha.2"
+  resolved "https://registry.npmjs.org/react/-/react-16.7.0-alpha.2.tgz#924f2ae843a46ea82d104a8def7a599fbf2c78ce"
+  integrity sha512-Xh1CC8KkqIojhC+LFXd21jxlVtzoVYdGnQAi/I2+dxbmos9ghbx5TQf9/nDxc4WxaFfUQJkya0w1k6rMeyIaxQ==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.11.2"
+    scheduler "^0.12.0-alpha.2"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -10589,6 +10589,14 @@ scheduler@^0.11.2:
   version "0.11.2"
   resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.11.2.tgz#a8db5399d06eba5abac51b705b7151d2319d33d3"
   integrity sha512-+WCP3s3wOaW4S7C1tl3TEXp4l9lJn0ZK8G3W3WKRWmw77Z2cIFUW2MiNTMHn5sCjxN+t7N43HAOOgMjyAg5hlg==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
+scheduler@^0.12.0-alpha.2:
+  version "0.12.0-alpha.2"
+  resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.12.0-alpha.2.tgz#2a8bc8dc6ecdb75fa6480ceeedc1f187c9539970"
+  integrity sha512-bfqFzGH18MjjhePIzYQNR0uGQ1wMCX6Q83c2s+3fzyuqKT6zBI2wNQTpq01q72C7QItAp8if5w2LfMiXnI2SYw==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
