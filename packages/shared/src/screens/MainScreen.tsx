@@ -157,7 +157,7 @@ class MainScreenComponent extends PureComponent<
                       horizontal={small}
                       small={small}
                     />
-                    <Separator horizontal={small} thick />
+                    <Separator horizontal={small} thick={!small} />
 
                     <View style={styles.innerContainer}>
                       <ModalRenderer />
