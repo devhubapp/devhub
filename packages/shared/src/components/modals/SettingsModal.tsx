@@ -72,12 +72,17 @@ class SettingsModalComponent extends PureComponent<
                         <Spacer width={contentPadding / 2} />
                         <Text style={{ color: theme.foregroundColor }}>
                           Logged as{' '}
-                          <Link href={`https://github.com/${username}`}>
-                            <Text style={{ fontWeight: 'bold' }}>
-                              {username}
-                            </Text>
-                          </Link>
                         </Text>
+                        <Link href={`https://github.com/${username}`}>
+                          <Text
+                            style={{
+                              color: theme.foregroundColor,
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            {username}
+                          </Text>
+                        </Link>
                       </View>
 
                       <Spacer height={contentPadding} />
