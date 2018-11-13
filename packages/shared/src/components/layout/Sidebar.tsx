@@ -63,7 +63,14 @@ class SidebarComponent extends PureComponent<
   }
 
   render() {
-    const { columnIds, horizontal, replaceModal, small, username } = this.props
+    const {
+      columnIds,
+      currentOpenedModal,
+      horizontal,
+      replaceModal,
+      small,
+      username,
+    } = this.props
 
     const squareStyle = {
       width: sidebarSize,
@@ -155,8 +162,7 @@ class SidebarComponent extends PureComponent<
                                 style={[styles.centerContainer, squareStyle]}
                                 onPress={() => {
                                   emitter.emit('FOCUS_ON_COLUMN', {
-                                    animated:
-                                      !small || !this.props.currentOpenedModal,
+                                    animated: !small || !currentOpenedModal,
                                     columnId: column.id,
                                     columnIndex,
                                     highlight: !small,
@@ -179,7 +185,12 @@ class SidebarComponent extends PureComponent<
 
                 {!!small && (
                   <TouchableOpacity
-                    onPress={() => replaceModal({ name: 'SETTINGS' })}
+                    onPress={() =>
+                      currentOpenedModal &&
+                      currentOpenedModal.name === 'SETTINGS'
+                        ? undefined
+                        : replaceModal({ name: 'SETTINGS' })
+                    }
                     style={[styles.centerContainer, squareStyle]}
                   >
                     <ColumnHeaderItem iconName="gear" />

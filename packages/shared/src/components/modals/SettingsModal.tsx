@@ -38,72 +38,79 @@ class SettingsModalComponent extends PureComponent<
     const { username } = this.props
 
     return (
-      <ModalColumn
-        columnId="preferences-modal"
-        iconName="gear"
-        title="Preferences"
-      >
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ padding: contentPadding }}
-        >
-          <ThemePreference />
+      <ThemeConsumer>
+        {({ theme }) => (
+          <DimensionsConsumer>
+            {({ width }) => {
+              const small = width <= 420
 
-          <ThemeConsumer>
-            {({ theme }) => (
-              <DimensionsConsumer>
-                {({ width }) => {
-                  if (!username) return null
-                  if (!(width <= 420)) return null
+              return (
+                <ModalColumn
+                  columnId="preferences-modal"
+                  hideCloseButton={small}
+                  iconName="gear"
+                  title="Preferences"
+                >
+                  <ScrollView
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ padding: contentPadding }}
+                  >
+                    <ThemePreference />
 
-                  return (
-                    <>
-                      <Spacer height={contentPadding} />
+                    {(() => {
+                      if (!username) return null
+                      if (!small) return null
 
-                      <H2 withMargin>Account</H2>
+                      return (
+                        <>
+                          <Spacer height={contentPadding} />
 
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Avatar size={28} username={username} />
-                        <Spacer width={contentPadding / 2} />
-                        <Text style={{ color: theme.foregroundColor }}>
-                          Logged as{' '}
-                        </Text>
-                        <Link href={`https://github.com/${username}`}>
-                          <Text
+                          <H2 withMargin>Account</H2>
+
+                          <View
                             style={{
-                              color: theme.foregroundColor,
-                              fontWeight: 'bold',
+                              flexDirection: 'row',
+                              alignItems: 'center',
                             }}
                           >
-                            {username}
-                          </Text>
-                        </Link>
-                      </View>
+                            <Avatar size={28} username={username} />
+                            <Spacer width={contentPadding / 2} />
+                            <Text style={{ color: theme.foregroundColor }}>
+                              Logged as{' '}
+                            </Text>
+                            <Link href={`https://github.com/${username}`}>
+                              <Text
+                                style={{
+                                  color: theme.foregroundColor,
+                                  fontWeight: 'bold',
+                                }}
+                              >
+                                {username}
+                              </Text>
+                            </Link>
+                          </View>
 
-                      <Spacer height={contentPadding} />
-                      <Button
-                        key="logout-button"
-                        onPress={() => this.props.logout()}
-                      >
-                        Logout
-                      </Button>
-                    </>
-                  )
-                }}
-              </DimensionsConsumer>
-            )}
-          </ThemeConsumer>
-        </ScrollView>
+                          <Spacer height={contentPadding} />
+                          <Button
+                            key="logout-button"
+                            onPress={() => this.props.logout()}
+                          >
+                            Logout
+                          </Button>
+                        </>
+                      )
+                    })()}
+                  </ScrollView>
 
-        <View style={{ padding: contentPadding }}>
-          <AppVersion />
-        </View>
-      </ModalColumn>
+                  <View style={{ padding: contentPadding }}>
+                    <AppVersion />
+                  </View>
+                </ModalColumn>
+              )
+            }}
+          </DimensionsConsumer>
+        )}
+      </ThemeConsumer>
     )
   }
 }

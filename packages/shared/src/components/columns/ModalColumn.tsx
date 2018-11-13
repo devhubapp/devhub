@@ -14,6 +14,7 @@ import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
 export interface ModalColumnProps extends ColumnHeaderItemProps {
   columnId: string
+  hideCloseButton?: boolean
   minWidth?: ColumnProps['minWidth']
   maxWidth?: ColumnProps['maxWidth']
 }
@@ -47,7 +48,14 @@ class ModalColumnComponent extends PureComponent<
   }
 
   render() {
-    const { canGoBack, children, maxWidth, minWidth, ...props } = this.props
+    const {
+      canGoBack,
+      children,
+      hideCloseButton,
+      maxWidth,
+      minWidth,
+      ...props
+    } = this.props
     delete props.popModal
 
     return (
@@ -76,7 +84,9 @@ class ModalColumnComponent extends PureComponent<
             style={{ flex: 1 }}
           />
 
-          <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
+          {!hideCloseButton && (
+            <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
+          )}
         </ColumnHeader>
 
         <CardItemSeparator />
