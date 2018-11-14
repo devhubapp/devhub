@@ -96,7 +96,9 @@ export class Columns extends PureComponent<ColumnsProps> {
               ref={this.flatListRef}
               key="columns-flat-list"
               ItemSeparatorComponent={Separator}
-              ListFooterComponent={small ? Separator : undefined}
+              ListFooterComponent={
+                small || (columnIds && columnIds.length) ? Separator : undefined
+              }
               ListHeaderComponent={small ? Separator : undefined}
               bounces={!this.swipeable}
               className="snap-container"
