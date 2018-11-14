@@ -74,22 +74,19 @@ class ModalColumnComponent extends PureComponent<
             <ColumnHeaderItem
               iconName="chevron-left"
               onPress={this.handleBack}
-              style={{ paddingRight: 0 }}
             />
           )}
 
           <ColumnHeaderItem
             {...props}
             iconName={undefined}
-            style={{ flex: 1 }}
+            style={[{ flex: 1 }, canGoBack && { padding: 0 }]}
           />
 
           {!hideCloseButton && (
             <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
           )}
         </ColumnHeader>
-
-        <CardItemSeparator />
 
         {children}
       </Column>

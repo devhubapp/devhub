@@ -121,6 +121,7 @@ class AddColumnModalComponent extends PureComponent<
             <ColumnHeaderItem
               iconName={item.icon}
               iconStyle={{ fontSize: 24, marginBottom: contentPadding / 2 }}
+              style={{ padding: 0 }}
             />
 
             <Text style={{ color: theme.foregroundColor }}>{item.name}</Text>

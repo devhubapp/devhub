@@ -221,20 +221,21 @@ class AddColumnDetailsModalComponent extends PureComponent<
         iconName="plus"
         title="Add Column"
       >
-        <Spacer height={contentPadding} />
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignContent: 'center',
-          }}
-        >
-          <ColumnHeaderItem iconName={icon} />
-          <H2>{name}</H2>
-        </View>
-
         <View style={{ flex: 1, padding: contentPadding }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <ColumnHeaderItem iconName={icon} style={{ padding: 0 }} />
+            <Spacer width={contentPadding / 2} />
+            <H2>{name}</H2>
+          </View>
+
+          <Spacer height={contentPadding} />
+
           {paramList.map(this.renderField)}
           <Button onPress={this.handleCreateColumn}>Add Column</Button>
         </View>

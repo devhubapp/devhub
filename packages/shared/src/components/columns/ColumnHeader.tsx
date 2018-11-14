@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
+import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { columnHeaderItemContentSize } from './ColumnHeaderItem'
 
@@ -29,7 +30,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flexDirection: 'row',
     height: columnHeaderHeight,
-    paddingVertical: contentPadding,
   },
 })
 
@@ -49,6 +49,8 @@ export class ColumnHeader extends PureComponent<ColumnHeaderProps> {
             <View {...props} style={[styles.innerContainer, style]}>
               {children}
             </View>
+
+            <CardItemSeparator />
           </SafeAreaView>
         )}
       </ThemeConsumer>

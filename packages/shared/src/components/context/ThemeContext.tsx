@@ -18,7 +18,7 @@ export interface ThemeProviderState {
 
 const defaultTheme = loadTheme(defaultThemePair)
 
-const ThemeContext = React.createContext<ThemeProviderState>({
+export const ThemeContext = React.createContext<ThemeProviderState>({
   setTheme: () => {
     throw new Error('[setTheme] Not implemented')
   },

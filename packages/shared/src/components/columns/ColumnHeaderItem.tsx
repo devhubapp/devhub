@@ -1,4 +1,3 @@
-import { rgba } from 'polished'
 import React, { PureComponent } from 'react'
 import {
   ImageStyle,
@@ -14,8 +13,8 @@ import { connect } from 'react-redux'
 
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as selectors from '../../redux/selectors'
-import { contentPadding, mutedOpacity } from '../../styles/variables'
-import { Column, ExtractPropsFromConnector, GitHubIcon } from '../../types'
+import { contentPadding } from '../../styles/variables'
+import { ExtractPropsFromConnector, GitHubIcon } from '../../types'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
@@ -34,6 +33,7 @@ export interface ColumnHeaderItemProps {
   style?: StyleProp<ViewStyle>
   subtitle?: string
   subtitleStyle?: StyleProp<TextStyle>
+  text?: string
   title?: string
   titleStyle?: StyleProp<TextStyle>
 }
@@ -43,22 +43,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
-    paddingHorizontal: contentPadding,
-  } as ViewStyle,
+    padding: contentPadding,
+  },
 
   icon: {
     fontSize: columnHeaderItemContentSize,
-  } as TextStyle,
+  },
 
   title: {
     fontSize: columnHeaderItemContentSize - 2,
     lineHeight: columnHeaderItemContentSize,
-  } as TextStyle,
+  },
 
   subtitle: {
     fontSize: columnHeaderItemContentSize - 6,
     lineHeight: columnHeaderItemContentSize,
-  } as TextStyle,
+  },
+
+  text: {
+    lineHeight: columnHeaderItemContentSize,
+  },
 })
 
 const connectToStore = connect((state: any) => {
@@ -91,6 +95,7 @@ class ColumnHeaderItemComponent extends PureComponent<
       iconStyle,
       subtitle,
       subtitleStyle,
+      text,
       title,
       titleStyle,
       username: _username,
@@ -105,6 +110,8 @@ class ColumnHeaderItemComponent extends PureComponent<
         ? undefined
         : avatarProps.username
 
+    const hasText = !!(title || subtitle || text)
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
@@ -117,7 +124,7 @@ class ColumnHeaderItemComponent extends PureComponent<
                     alignContent: 'center',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginRight: title || subtitle ? 8 : 0,
+                    marginRight: hasText ? 8 : 0,
                   }}
                 >
                   {!!username ? (
@@ -145,17 +152,19 @@ class ColumnHeaderItemComponent extends PureComponent<
                   )}
                 </View>
               )}
-              {!!(title || subtitle) && (
+              {hasText && (
                 <Text
                   numberOfLines={1}
-                  style={[
-                    styles.title,
-                    { color: theme.foregroundColor },
-                    titleStyle,
-                  ]}
+                  style={[{ color: theme.foregroundColorMuted50 }]}
                 >
                   {!!title && (
-                    <Text>
+                    <Text
+                      style={[
+                        styles.title,
+                        { color: theme.foregroundColor },
+                        titleStyle,
+                      ]}
+                    >
                       {title.toLowerCase()}
                       {!!subtitle && '  '}
                     </Text>
@@ -165,11 +174,19 @@ class ColumnHeaderItemComponent extends PureComponent<
                     <Text
                       style={[
                         styles.subtitle,
-                        { color: rgba(theme.foregroundColor, mutedOpacity) },
+                        { color: theme.foregroundColorMuted50 },
                         subtitleStyle,
                       ]}
                     >
                       {subtitle.toLowerCase()}
+                    </Text>
+                  )}
+
+                  {!!text && (
+                    <Text
+                      style={[styles.text, { color: theme.foregroundColor }]}
+                    >
+                      {text}
                     </Text>
                   )}
                 </Text>
