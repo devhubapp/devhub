@@ -8,7 +8,7 @@ import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
-import { EventColumnOptions } from './EventColumnOptions'
+import { EventColumnOptions } from './ColumnOptions'
 
 export interface NotificationColumnProps
   extends NotificationCardsContainerProps {
