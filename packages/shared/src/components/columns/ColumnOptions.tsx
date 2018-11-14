@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
   innerContainer: {},
 })
 
-export interface EventColumnOptionsProps {
+export interface ColumnOptionsProps {
   column: Column
   columnIndex: number
 }
 
-export function EventColumnOptions(props: EventColumnOptionsProps) {
+export function ColumnOptions(props: ColumnOptionsProps) {
   const { theme } = useContext(ThemeContext)
   const moveColumn = useReduxAction(actions.moveColumn)
   const deleteColumn = useReduxAction(actions.deleteColumn)

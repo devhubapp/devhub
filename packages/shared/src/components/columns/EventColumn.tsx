@@ -8,7 +8,7 @@ import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
-import { EventColumnOptions } from './ColumnOptions'
+import { ColumnOptions } from './ColumnOptions'
 
 export interface EventColumnProps extends EventCardsContainerProps {
   columnIndex: number
@@ -44,7 +44,7 @@ export function EventColumn(props: EventColumnProps) {
       </ColumnHeader>
 
       {!!showColumnOptions && (
-        <EventColumnOptions column={column} columnIndex={columnIndex} />
+        <ColumnOptions column={column} columnIndex={columnIndex} />
       )}
 
       <EventCardsContainer
