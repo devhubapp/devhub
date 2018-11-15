@@ -8001,10 +8001,10 @@ normalize-url@^3.0.0:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
-now@^12.1.1:
-  version "12.1.1"
-  resolved "https://registry.npmjs.org/now/-/now-12.1.1.tgz#e03c57ae0ccd89cbadd3b3a7551e92d5ac464d92"
-  integrity sha512-TdpXNaSHxf8g1gPYs+TvFx+ryfPO1aZQram8hamzt4FToD7ToMXaiXEWsOIsVm9vnpgPVsfPxJpJZRlSu4xphA==
+now@^12.1.2:
+  version "12.1.2"
+  resolved "https://registry.npmjs.org/now/-/now-12.1.2.tgz#2f46d609c4332a212abd394b8329de9e4218e652"
+  integrity sha512-jedX2KCeNODfcBn7KRtaAzTwgIhhdEflxiA+31IqCSMG3FlfkeVmVKebBZo38z7iGslS4QiMNzHyV9nJTnWtFw==
 
 npm-bundled@^1.0.1:
   version "1.0.5"
