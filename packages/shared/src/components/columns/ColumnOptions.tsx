@@ -128,11 +128,13 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
         {column.type === 'notifications' &&
           (() => {
-            const isReadChecked =
-              column.filters && column.filters.unread !== true
+            const isReadChecked = !(
+              column.filters && column.filters.unread === true
+            )
 
-            const isUnreadChecked =
-              column.filters && column.filters.unread !== false
+            const isUnreadChecked = !(
+              column.filters && column.filters.unread === false
+            )
 
             const getFilterValue = (read?: boolean, unread?: boolean) =>
               read && unread ? undefined : read ? false : unread
