@@ -2,10 +2,6 @@ import { EventSubscription } from 'fbemitter'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
-import {
-  NavigationScreenProps,
-  NavigationStackScreenOptions,
-} from 'react-navigation'
 import { connect } from 'react-redux'
 
 import { Screen } from '../components/common/Screen'
@@ -20,7 +16,7 @@ import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { emitter } from '../setup'
-import { Column, ExtractPropsFromConnector } from '../types'
+import { ExtractPropsFromConnector } from '../types'
 
 const styles = StyleSheet.create({
   container: {
@@ -44,13 +40,9 @@ const connectToStore = connect(
   },
 )
 
-class MainScreenComponent extends PureComponent<
-  NavigationScreenProps & ExtractPropsFromConnector<typeof connectToStore>
+export class MainScreenComponent extends PureComponent<
+  ExtractPropsFromConnector<typeof connectToStore>
 > {
-  static navigationOptions: NavigationStackScreenOptions = {
-    header: null,
-  }
-
   focusOnColumnListener?: EventSubscription
 
   componentDidMount() {

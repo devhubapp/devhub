@@ -1,10 +1,6 @@
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import React, { PureComponent } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import {
-  NavigationScreenProps,
-  NavigationStackScreenOptions,
-} from 'react-navigation'
 import { connect } from 'react-redux'
 
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
@@ -96,15 +92,9 @@ const connectToStore = connect(
 )
 
 export class LoginScreenComponent extends PureComponent<
-  LoginScreenProps &
-    ExtractPropsFromConnector<typeof connectToStore> &
-    NavigationScreenProps,
+  LoginScreenProps & ExtractPropsFromConnector<typeof connectToStore>,
   LoginScreenState
 > {
-  static navigationOptions: NavigationStackScreenOptions = {
-    header: null,
-  }
-
   state: LoginScreenState = {
     loggingInMethod: null,
   }
