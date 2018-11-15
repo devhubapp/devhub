@@ -71,7 +71,7 @@ export class EventCardsContainer extends PureComponent<
         subscriptionId,
       })
       if (Array.isArray(response.data)) {
-        const events = _.concat(this.state.events, response.data)
+        const events = _.concat(response.data, this.state.events)
         this.setState({ events })
       }
     } catch (error) {

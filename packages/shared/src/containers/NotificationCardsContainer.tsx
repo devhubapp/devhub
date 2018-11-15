@@ -73,8 +73,8 @@ export class NotificationCardsContainer extends PureComponent<
       })
       if (Array.isArray(response.data)) {
         const notifications = _.concat(
-          this.state.notifications,
           response.data as any,
+          this.state.notifications,
         )
 
         this.setState({ notifications })
