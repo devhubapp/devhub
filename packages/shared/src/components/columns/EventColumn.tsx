@@ -31,6 +31,7 @@ export function EventColumn(props: EventColumnProps) {
       <ColumnHeader>
         <ColumnHeaderItem
           avatarProps={requestTypeIconAndData.avatarProps}
+          fixedIconSize
           iconName={requestTypeIconAndData.icon}
           style={{ flex: 1 }}
           subtitle={requestTypeIconAndData.subtitle}

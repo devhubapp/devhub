@@ -27,9 +27,11 @@ export const columnHeaderItemContentSize = 20
 export interface ColumnHeaderItemProps {
   avatarProps?: Partial<AvatarProps>
   avatarStyle?: StyleProp<ImageStyle>
+  fixedIconSize?: boolean
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   onPress?: () => void
+  selectable?: boolean
   style?: StyleProp<ViewStyle>
   subtitle?: string
   subtitleStyle?: StyleProp<TextStyle>
@@ -91,8 +93,10 @@ class ColumnHeaderItemComponent extends PureComponent<
   render() {
     const {
       avatarProps: _avatarProps,
+      fixedIconSize,
       iconName,
       iconStyle,
+      selectable,
       subtitle,
       subtitleStyle,
       text,
@@ -145,8 +149,16 @@ class ColumnHeaderItemComponent extends PureComponent<
                     !!iconName && (
                       <Icon
                         color={theme.foregroundColor}
+                        selectable={selectable}
                         name={iconName}
-                        style={[styles.icon, iconStyle]}
+                        style={[
+                          styles.icon,
+                          fixedIconSize && {
+                            width: columnHeaderItemContentSize,
+                            height: columnHeaderItemContentSize,
+                          },
+                          iconStyle,
+                        ]}
                       />
                     )
                   )}
@@ -155,10 +167,12 @@ class ColumnHeaderItemComponent extends PureComponent<
               {hasText && (
                 <Text
                   numberOfLines={1}
+                  selectable={selectable}
                   style={[{ color: theme.foregroundColorMuted50 }]}
                 >
                   {!!title && (
                     <Text
+                      selectable={selectable}
                       style={[
                         styles.title,
                         { color: theme.foregroundColor },
@@ -172,6 +186,7 @@ class ColumnHeaderItemComponent extends PureComponent<
 
                   {!!subtitle && (
                     <Text
+                      selectable={selectable}
                       style={[
                         styles.subtitle,
                         { color: theme.foregroundColorMuted50 },
@@ -184,6 +199,7 @@ class ColumnHeaderItemComponent extends PureComponent<
 
                   {!!text && (
                     <Text
+                      selectable={selectable}
                       style={[styles.text, { color: theme.foregroundColor }]}
                     >
                       {text}

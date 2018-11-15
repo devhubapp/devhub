@@ -98,13 +98,13 @@ function* onMoveColumn(
 
   const columnIndex = Math.max(
     0,
-    Math.min(action.payload.index, ids.length - 1),
+    Math.min(action.payload.columnIndex, ids.length - 1),
   )
   if (Number.isNaN(columnIndex)) return
 
   emitter.emit('FOCUS_ON_COLUMN', {
     animated: true,
-    columnId: action.payload.id,
+    columnId: action.payload.columnId,
     columnIndex,
     highlight: true,
   })

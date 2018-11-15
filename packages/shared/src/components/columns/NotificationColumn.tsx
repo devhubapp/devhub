@@ -31,6 +31,7 @@ export function NotificationColumn(props: NotificationColumnProps) {
     >
       <ColumnHeader>
         <ColumnHeaderItem
+          fixedIconSize
           iconName={requestTypeIconAndData.icon}
           style={{ flex: 1 }}
           subtitle={requestTypeIconAndData.subtitle}

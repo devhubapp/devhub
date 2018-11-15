@@ -67,13 +67,13 @@ export const columnsReducer: Reducer<State> = (
         if (!draft.allIds) return
 
         const currentIndex = draft.allIds.findIndex(
-          id => id === action.payload.id,
+          id => id === action.payload.columnId,
         )
         if (!(currentIndex >= 0 && currentIndex < draft.allIds.length)) return
 
         const newIndex = Math.max(
           0,
-          Math.min(action.payload.index, draft.allIds.length - 1),
+          Math.min(action.payload.columnIndex, draft.allIds.length - 1),
         )
         if (Number.isNaN(newIndex)) return
 
@@ -96,6 +96,19 @@ export const columnsReducer: Reducer<State> = (
 
           return p.column.id
         })
+      })
+
+    case 'SET_COLUMN_REASON_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.reasons = column.filters.reasons || {}
+
+        column.filters.reasons[action.payload.reason] = action.payload.value
       })
 
     default:

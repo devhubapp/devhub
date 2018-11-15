@@ -1,9 +1,9 @@
-import Octokit from '@octokit/rest'
 import React, { PureComponent } from 'react'
 import { FlatList } from 'react-native'
 
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
+import { GitHubNotification } from '../../types'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { NotificationCard } from './NotificationCard'
@@ -11,7 +11,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
-  notifications: Octokit.ActivityGetNotificationsResponseItem[]
+  notifications: GitHubNotification[]
   repoIsKnown?: boolean
   swipeable?: boolean
 }
@@ -22,15 +22,11 @@ export class NotificationCards extends PureComponent<
   NotificationCardsProps,
   NotificationCardsState
 > {
-  keyExtractor(notification: Octokit.ActivityGetNotificationsResponseItem) {
+  keyExtractor(notification: GitHubNotification) {
     return `notification-card-${notification.id}`
   }
 
-  renderItem = ({
-    item: notification,
-  }: {
-    item: Octokit.ActivityGetNotificationsResponseItem
-  }) => {
+  renderItem = ({ item: notification }: { item: GitHubNotification }) => {
     if (this.props.swipeable) {
       return (
         <SwipeableNotificationCard

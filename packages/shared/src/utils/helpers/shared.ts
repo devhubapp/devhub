@@ -1,6 +1,8 @@
+import _ from 'lodash'
 import moment, { MomentInput } from 'moment'
 import { toUpper } from 'ramda'
 import { PixelRatio } from 'react-native'
+import { ColumnFilters, GitHubNotification } from '../../types'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, toUpper)
@@ -84,4 +86,24 @@ export function trimNewLinesAndSpaces(text?: string, maxLength: number = 100) {
   }
 
   return newText
+}
+
+export function getFilteredNotifications(
+  notifications: GitHubNotification[],
+  filters?: ColumnFilters,
+) {
+  let _notifications = _(notifications)
+    .uniqBy('id')
+    .orderBy(['unread', 'updated_at', 'created_at'], ['desc', 'desc', 'desc'])
+    .value()
+
+  if (!filters) return _notifications
+
+  if (filters.reasons) {
+    _notifications = _notifications.filter(
+      notification => filters.reasons![notification.reason] !== false,
+    )
+  }
+
+  return _notifications
 }

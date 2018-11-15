@@ -1,5 +1,12 @@
-import { ColumnAndSubscriptions } from '../../types'
-import { createActionCreatorCreator } from '../../utils/helpers/redux'
+import {
+  ColumnAndSubscriptions,
+  ColumnFilters,
+  GitHubNotificationReason,
+} from '../../types'
+import {
+  createAction,
+  createActionCreatorCreator,
+} from '../../utils/helpers/redux'
 
 export const replaceColumns = createActionCreatorCreator('REPLACE_COLUMNS')<
   ColumnAndSubscriptions[]
@@ -14,6 +21,12 @@ export const deleteColumn = createActionCreatorCreator('DELETE_COLUMN')<
 >()
 
 export const moveColumn = createActionCreatorCreator('MOVE_COLUMN')<{
-  id: string
-  index: number
+  columnId: string
+  columnIndex: number
 }>()
+
+export function setColumnReasonFilter<
+  T extends GitHubNotificationReason
+>(payload: { columnId: string; reason: T; value: boolean }) {
+  return createAction('SET_COLUMN_REASON_FILTER', payload)
+}

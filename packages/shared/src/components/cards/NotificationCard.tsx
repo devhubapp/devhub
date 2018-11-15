@@ -1,8 +1,8 @@
-import Octokit from '@octokit/rest'
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
+import { GitHubNotification, GitHubNotificationReason } from '../../types'
 import { getNotificationReasonTextsAndColor } from '../../utils/helpers/github/notifications'
 import {
   getIssueIconAndColor,
@@ -25,7 +25,7 @@ import { RepositoryRow } from './partials/rows/RepositoryRow'
 
 export interface NotificationCardProps {
   archived?: boolean
-  notification: Octokit.ActivityGetNotificationsResponseItem
+  notification: GitHubNotification
   onlyOneRepository?: boolean
   repoIsKnown?: boolean
 }
@@ -71,7 +71,9 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
     const cardIconName = cardIconDetails.icon
     const cardIconColor = cardIconDetails.color
 
-    const labelDetails = getNotificationReasonTextsAndColor(notification)
+    const labelDetails = getNotificationReasonTextsAndColor(
+      notification.reason as GitHubNotificationReason,
+    )
     const labelText = labelDetails.label.toLowerCase()
     const labelColor = labelDetails.color
 
@@ -206,7 +208,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 userLinkURL=""
                 username=""
                 url={
-                  isRepoInvitation && repo
+                  isRepoInvitation && repo && repo.full_name
                     ? getGitHubURLForRepoInvitation(repo.full_name)
                     : undefined
                 }

@@ -1,4 +1,10 @@
-import { GitHubExtractParamsFromActivityMethod, GitHubIcon, Omit } from '.'
+import {
+  GitHubExtractParamsFromActivityMethod,
+  GitHubIcon,
+  GitHubNotification,
+  GitHubNotificationReason,
+  Omit,
+} from '.'
 import { octokit } from '../libs/github'
 
 export interface NotificationSubscription {
@@ -73,27 +79,27 @@ export type ActivitySubscription = {
       >
     })
 
-// export interface ColumnFilters {
-//   archived?: boolean
-//   order?: Array<'asc' | 'desc'>
-//   owners?: string[]
-//   reasons?: Array<GitHubNotification['reason']>
-//   repos?: string[]
-//   saved?: boolean
-//   search: {
-//     exclude?: string
-//     match?: string
-//     regex?: string
-//   }
-//   sort?: string[]
-//   types?: Array<GitHubNotification['subject']['type']>
-//   unread?: boolean
-// }
+export interface ColumnFilters {
+  // archived?: boolean
+  // order?: Array<'asc' | 'desc'>
+  // owners?: string[]
+  reasons?: Partial<Record<GitHubNotificationReason, boolean>>
+  // repos?: string[]
+  // saved?: boolean
+  // search: {
+  //   exclude?: string
+  //   match?: string
+  //   regex?: string
+  // }
+  // sort?: string[]
+  // types?: Array<GitHubNotification['subject']['type']>
+  // unread?: boolean
+}
 
-// export interface ColumnOptions {
-//   enableBadge?: boolean
-//   enableNotifications?: boolean
-// }
+export interface ColumnOptions {
+  enableBadge?: boolean
+  enableNotifications?: boolean
+}
 
 export type ColumnSubscription = NotificationSubscription | ActivitySubscription
 
@@ -103,7 +109,7 @@ export interface Column {
   // title?: string // TODO
   // subtitle?: string // TODO
   subscriptionIds: string[]
-  // filters?: ColumnFilters // TODO
+  filters?: ColumnFilters
   // options?: ColumnOptions // TODO
   createdAt: string
   updatedAt: string

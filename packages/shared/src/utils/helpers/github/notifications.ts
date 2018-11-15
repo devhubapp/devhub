@@ -1,13 +1,17 @@
-import Octokit from '@octokit/rest'
-
 import * as colors from '../../../styles/colors'
+import { GitHubNotificationReason } from '../../../types'
 import { capitalize } from '../shared'
 
-export function getNotificationReasonTextsAndColor(
-  notification: Octokit.ActivityGetNotificationsResponseItem,
-): { color: string; reason: string; label: string; description: string } {
-  const { reason }: Octokit.ActivityGetNotificationsResponseItem = notification
-
+export function getNotificationReasonTextsAndColor<
+  T extends GitHubNotificationReason
+>(
+  reason: T,
+): {
+  color: string
+  reason: T
+  label: string
+  description: string
+} {
   switch (reason) {
     case 'assign':
       return {

@@ -1,10 +1,10 @@
-import Octokit from '@octokit/rest'
 import gravatar from 'gravatar'
 
 import * as colors from '../../../styles/colors'
 import {
   ColumnSubscription,
   GitHubIcon,
+  GitHubNotification,
   GitHubPullRequest,
   Omit,
 } from '../../../types'
@@ -129,7 +129,7 @@ export function getIssueIconAndColor(issue: {
 }
 
 export function getNotificationIconAndColor(
-  notification: Octokit.ActivityGetNotificationsResponseItem,
+  notification: GitHubNotification,
   // payload: GitHubCommit | GitHubIssue | GitHubPullRequest,
 ): { icon: GitHubIcon; color?: string } {
   const { subject } = notification

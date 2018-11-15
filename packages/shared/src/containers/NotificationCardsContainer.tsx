@@ -12,6 +12,7 @@ import {
   NotificationSubscription,
   Omit,
 } from '../types'
+import { getFilteredNotifications } from '../utils/helpers/shared'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
@@ -22,6 +23,7 @@ export type NotificationCardsContainerProps = Omit<
 }
 
 export interface NotificationCardsContainerState {
+  filteredNotifications: NotificationCardsProps['notifications']
   notifications: NotificationCardsProps['notifications']
 }
 
@@ -32,11 +34,29 @@ export class NotificationCardsContainer extends PureComponent<
   fetchDataInterval?: ReturnType<typeof setInterval>
 
   state: NotificationCardsContainerState = {
+    filteredNotifications: [],
     notifications: [],
   }
 
   componentDidMount() {
     this.startFetchDataInterval()
+  }
+
+  componentDidUpdate(
+    prevProps: NotificationCardsContainerProps,
+    prevState: NotificationCardsContainerState,
+  ) {
+    if (
+      this.props.column !== prevProps.column ||
+      this.state.notifications !== prevState.notifications
+    ) {
+      this.setState(state => ({
+        filteredNotifications: getFilteredNotifications(
+          state.notifications,
+          this.props.column.filters,
+        ),
+      }))
+    }
   }
 
   componentWillUnmount() {
@@ -51,18 +71,13 @@ export class NotificationCardsContainer extends PureComponent<
       const response = await getNotifications({
         all: subscription.params.all,
       })
-      const notifications = response.data
-      if (Array.isArray(notifications)) {
-        this.setState({
-          notifications: _(notifications)
-            .concat(this.state.notifications)
-            .uniqBy('id')
-            .orderBy(
-              ['unread', 'updated_at', 'created_at'],
-              ['desc', 'desc', 'desc'],
-            )
-            .value(),
-        })
+      if (Array.isArray(response.data)) {
+        const notifications = _.concat(
+          this.state.notifications,
+          response.data as any,
+        )
+
+        this.setState({ notifications })
       }
     } catch (error) {
       if (error && error.code === 304) return
@@ -84,8 +99,13 @@ export class NotificationCardsContainer extends PureComponent<
   }
 
   render() {
-    const { notifications } = this.state
+    const { filteredNotifications } = this.state
 
-    return <NotificationCards {...this.props} notifications={notifications} />
+    return (
+      <NotificationCards
+        {...this.props}
+        notifications={filteredNotifications}
+      />
+    )
   }
 }
