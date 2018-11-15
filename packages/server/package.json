@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "scripts": {
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "cd .",
