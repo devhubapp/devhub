@@ -21,6 +21,7 @@ import {
   ColumnHeaderItem,
   columnHeaderItemContentSize,
 } from './ColumnHeaderItem'
+import { ColumnOptionsRow } from './ColumnOptionsRow'
 
 const styles = StyleSheet.create({
   container: {
@@ -88,69 +89,50 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     >
       <ScrollView alwaysBounceVertical={false} style={styles.innerContainer}>
         {column.type === 'notifications' && (
-          <>
-            <TouchableWithoutFeedback
-              onPress={() => toggleOpenedOptionCategory('notification_types')}
-            >
-              <View style={{ flexDirection: 'row' }}>
-                <ColumnHeaderItem
-                  fixedIconSize
-                  iconName="check"
-                  selectable={false}
-                  text="Notification types"
-                />
-                <Spacer flex={1} />
-                <ColumnHeaderItem
-                  iconName={getChevronIcon('notification_types')}
-                  selectable={false}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-
-            {openedOptionCategory === 'notification_types' && (
-              <View
-                style={{
-                  paddingLeft:
-                    columnHeaderItemContentSize + 1.5 * contentPadding,
-                }}
-              >
-                {(() => {
-                  const reasonsFilters =
-                    (column.filters && column.filters.reasons) || {}
-
-                  return notificationReasonOptions.map(nro => (
-                    <View
-                      key={`notification-reason-option-${nro.reason}`}
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        alignContent: 'center',
-                      }}
-                    >
-                      <Checkbox
-                        checked={reasonsFilters[nro.reason] !== false}
-                        checkedBackgroundColor={nro.color}
-                        checkedForegroundColor={theme.backgroundColorDarker08}
-                        containerStyle={{
-                          flexGrow: 1,
-                          paddingVertical: contentPadding / 4,
-                        }}
-                        label={nro.label}
-                        onChange={checked => {
-                          setColumnReasonFilter({
-                            columnId: column.id,
-                            reason: nro.reason,
-                            value: checked,
-                          })
-                        }}
-                        uncheckedForegroundColor={nro.color}
-                      />
-                    </View>
-                  ))
-                })()}
-              </View>
-            )}
-          </>
+          <ColumnOptionsRow
+            iconName="check"
+            onToggle={() => toggleOpenedOptionCategory('notification_types')}
+            opened={openedOptionCategory === 'notification_types'}
+            title="Notification types"
+          >
+            <View style={{ marginVertical: -contentPadding / 4 }}>
+              {notificationReasonOptions.map(nro => (
+                <View
+                  key={`notification-reason-option-${nro.reason}`}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                  }}
+                >
+                  <Checkbox
+                    checked={
+                      column.filters &&
+                      column.filters.reasons &&
+                      column.filters.reasons[nro.reason] === false
+                        ? false
+                        : true
+                    }
+                    checkedBackgroundColor={nro.color}
+                    checkedForegroundColor={theme.backgroundColorDarker08}
+                    containerStyle={{
+                      flexGrow: 1,
+                      paddingVertical: contentPadding / 4,
+                    }}
+                    label={nro.label}
+                    onChange={checked => {
+                      setColumnReasonFilter({
+                        columnId: column.id,
+                        reason: nro.reason,
+                        value: checked,
+                      })
+                    }}
+                    uncheckedForegroundColor={nro.color}
+                  />
+                </View>
+              ))}
+            </View>
+          </ColumnOptionsRow>
         )}
 
         <View style={{ flexDirection: 'row' }}>
