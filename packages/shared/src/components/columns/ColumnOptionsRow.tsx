@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
 import { contentPadding } from '../../styles/variables'
 import { Column, GitHubIcon } from '../../types'
 import { Spacer } from '../common/Spacer'
@@ -11,6 +11,8 @@ import {
 
 export interface ColumnOptionsRowProps {
   children: React.ReactNode
+  containerStyle?: ViewStyle
+  contentContainerStyle?: ViewStyle
   iconName: GitHubIcon
   onToggle: () => void
   opened: boolean
@@ -18,12 +20,20 @@ export interface ColumnOptionsRowProps {
 }
 
 export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
-  const { children, iconName, onToggle, opened, title } = props
+  const {
+    children,
+    containerStyle,
+    contentContainerStyle,
+    iconName,
+    onToggle,
+    opened,
+    title,
+  } = props
 
   return (
     <>
       <TouchableWithoutFeedback onPress={() => onToggle()}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={[{ flexDirection: 'row' }, containerStyle]}>
           <ColumnHeaderItem
             fixedIconSize
             iconName={iconName}
@@ -40,9 +50,12 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
       {!!opened && (
         <View
-          style={{
-            paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
-          }}
+          style={[
+            {
+              paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
+            },
+            contentContainerStyle,
+          ]}
         >
           {children}
         </View>

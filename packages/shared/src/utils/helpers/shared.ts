@@ -2,7 +2,13 @@ import _ from 'lodash'
 import moment, { MomentInput } from 'moment'
 import { toUpper } from 'ramda'
 import { PixelRatio } from 'react-native'
-import { ColumnFilters, GitHubNotification } from '../../types'
+import {
+  ColumnFilters,
+  EnhancedGitHubEvent,
+  GitHubEvent,
+  GitHubNotification,
+} from '../../types'
+import { mergeSimilarEvent } from './github/events'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, toUpper)
@@ -92,7 +98,7 @@ export function getFilteredNotifications(
   notifications: GitHubNotification[],
   filters?: ColumnFilters,
 ) {
-  const _notifications = _(notifications)
+  let _notifications = _(notifications)
     .uniqBy('id')
     .orderBy(['unread', 'updated_at', 'created_at'], ['desc', 'desc', 'desc'])
     .value()
@@ -100,25 +106,60 @@ export function getFilteredNotifications(
   if (!filters) return _notifications
 
   const hasFilter =
-    (filters.notifications && filters.notifications.reasons) ||
+    (filters.notifications &&
+      filters.notifications.reasons &&
+      Object.values(filters.notifications.reasons).some(v => !v)) ||
     typeof filters.unread === 'boolean'
 
-  if (!hasFilter) return _notifications
+  if (hasFilter) {
+    _notifications = _notifications.filter(notification => {
+      if (
+        filters.notifications &&
+        filters.notifications.reasons &&
+        filters.notifications.reasons[notification.reason] === false
+      )
+        return false
 
-  return _notifications.filter(notification => {
-    if (
-      filters.notifications &&
-      filters.notifications.reasons &&
-      filters.notifications.reasons[notification.reason] === false
-    )
-      return false
+      if (
+        typeof filters.unread === 'boolean' &&
+        filters.unread !== !!notification.unread
+      )
+        return false
 
-    if (
-      typeof filters.unread === 'boolean' &&
-      filters.unread !== !!notification.unread
-    )
-      return false
+      return true
+    })
+  }
 
-    return true
-  })
+  return _notifications
+}
+export function getFilteredEvents(
+  events: GitHubEvent[],
+  filters?: ColumnFilters,
+) {
+  let _events = _(events)
+    .uniqBy('id')
+    .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
+    .value()
+
+  if (!filters) return _events
+
+  const hasFilter =
+    filters.activity &&
+    filters.activity.types &&
+    Object.values(filters.activity.types).some(v => !v)
+
+  if (hasFilter) {
+    _events = _events.filter(event => {
+      if (
+        filters.activity &&
+        filters.activity.types &&
+        filters.activity.types[event.type] === false
+      )
+        return false
+
+      return true
+    })
+  }
+
+  return mergeSimilarEvent(_events)
 }

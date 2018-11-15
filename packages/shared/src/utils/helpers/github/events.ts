@@ -157,12 +157,107 @@ export function getColumnHeaderDetails(
   }
 }
 
+export const eventTypes: Array<GitHubEvent['type']> = [
+  'CommitCommentEvent',
+  'CreateEvent',
+  'DeleteEvent',
+  'ForkEvent',
+  'GollumEvent',
+  'IssueCommentEvent',
+  'IssuesEvent',
+  'MemberEvent',
+  'PublicEvent',
+  'PullRequestEvent',
+  'PullRequestReviewCommentEvent',
+  'PullRequestReviewEvent',
+  'PushEvent',
+  'ReleaseEvent',
+  'WatchEvent',
+]
+
+export function getEventTypeMetadata<T extends GitHubEvent['type']>(
+  type: T,
+): { icon: GitHubIcon; label: string; type: T } {
+  switch (type) {
+    case 'CommitCommentEvent':
+      return { icon: 'comment-discussion', label: 'Commented on commit', type }
+
+    case 'CreateEvent':
+      return { icon: 'plus', label: 'Created repo, branch or tag', type }
+
+    case 'DeleteEvent':
+      return {
+        icon: 'trashcan',
+        label: 'Deleted repo, branch or tag',
+        type,
+      }
+
+    case 'ForkEvent':
+      return { icon: 'repo-forked', label: 'Forked repo', type }
+
+    case 'GollumEvent':
+      return { icon: 'book', label: 'Wiki created or updated', type }
+
+    case 'IssueCommentEvent':
+      return {
+        icon: 'comment-discussion',
+        label: 'Commented on issue or pr',
+        type,
+      }
+
+    case 'IssuesEvent':
+      return { icon: 'issue-opened', label: 'Issue opened or closed', type }
+
+    case 'MemberEvent':
+      return { icon: 'person', label: 'Collaborator added', type }
+
+    case 'PublicEvent':
+      return { icon: 'globe', label: 'Repository made public', type }
+
+    case 'PullRequestEvent':
+      return {
+        icon: 'git-pull-request',
+        label: 'Pull Request opened or closed',
+        type,
+      }
+
+    case 'PullRequestReviewCommentEvent':
+      return {
+        icon: 'comment-discussion',
+        label: 'Commented on pr review',
+        type,
+      }
+
+    case 'PullRequestReviewEvent':
+      return {
+        icon: 'comment-discussion',
+        label: 'Pull Request reviewed',
+        type,
+      }
+
+    case 'PushEvent':
+      return { icon: 'code', label: 'Pushed commit', type }
+
+    case 'ReleaseEvent':
+      return { icon: 'tag', label: 'Released new version', type }
+
+    case 'WatchEvent':
+      return { icon: 'star', label: 'Starred repository', type }
+
+    default: {
+      console.error(`Unknown event type: ${type}`)
+      return { icon: 'mark-github', label: type, type }
+    }
+  }
+}
+
 export function getEventIconAndColor(
   event: EnhancedGitHubEvent,
 ): { color?: string; icon: GitHubIcon; subIcon?: GitHubIcon } {
   switch (event.type) {
     case 'CommitCommentEvent':
       return { icon: 'git-commit', subIcon: 'comment-discussion' }
+
     case 'CreateEvent': {
       switch (event.payload.ref_type) {
         case 'repository':
@@ -175,6 +270,7 @@ export function getEventIconAndColor(
           return { icon: 'plus' }
       }
     }
+
     case 'DeleteEvent': {
       switch (event.payload.ref_type) {
         case 'repository':
@@ -187,10 +283,12 @@ export function getEventIconAndColor(
           return { icon: 'trashcan' }
       }
     }
-    case 'GollumEvent':
-      return { icon: 'book' }
+
     case 'ForkEvent':
       return { icon: 'repo-forked' }
+
+    case 'GollumEvent':
+      return { icon: 'book' }
 
     case 'IssueCommentEvent': {
       return {
@@ -228,33 +326,33 @@ export function getEventIconAndColor(
     }
     case 'MemberEvent':
       return { icon: 'person' }
+
     case 'PublicEvent':
       return { icon: 'globe', color: colors.blue }
 
-    case 'PullRequestEvent':
-      return (() => {
-        const pullRequest = event.payload.pull_request
+    case 'PullRequestEvent': {
+      const pullRequest = event.payload.pull_request
 
-        switch (event.payload.action) {
-          case 'opened':
-          case 'reopened':
-            return getPullRequestIconAndColor({
-              state: 'open',
-            } as GitHubPullRequest)
-          // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as GitHubPullRequest);
+      switch (event.payload.action) {
+        case 'opened':
+        case 'reopened':
+          return getPullRequestIconAndColor({
+            state: 'open',
+          } as GitHubPullRequest)
+        // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as GitHubPullRequest);
 
-          // case 'assigned':
-          // case 'unassigned':
-          // case 'labeled':
-          // case 'unlabeled':
-          // case 'edited':
-          default:
-            return getPullRequestIconAndColor(pullRequest)
-        }
-      })()
+        // case 'assigned':
+        // case 'unassigned':
+        // case 'labeled':
+        // case 'unlabeled':
+        // case 'edited':
+        default:
+          return getPullRequestIconAndColor(pullRequest)
+      }
+    }
 
-    case 'PullRequestReviewEvent':
-    case 'PullRequestReviewCommentEvent': {
+    case 'PullRequestReviewCommentEvent':
+    case 'PullRequestReviewEvent': {
       return {
         ...getPullRequestIconAndColor(event.payload.pull_request),
         subIcon: 'comment-discussion',
@@ -263,13 +361,18 @@ export function getEventIconAndColor(
 
     case 'PushEvent':
       return { icon: 'code' }
+
     case 'ReleaseEvent':
       return { icon: 'tag' }
+
     case 'WatchEvent':
     case 'WatchEvent:OneUserMultipleRepos':
       return { icon: 'star', color: colors.star }
-    default:
+
+    default: {
+      console.error(`Unknown event type: ${(event as any).type}`)
       return { icon: 'mark-github' }
+    }
   }
 }
 

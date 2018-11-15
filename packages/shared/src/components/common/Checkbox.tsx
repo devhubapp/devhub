@@ -33,7 +33,7 @@ export interface CheckboxProps {
   checkedForegroundColor?: string
   containerStyle?: ViewStyle
   disabled?: boolean
-  label?: string
+  label?: string | React.ReactNode
   onChange?: (value: boolean) => void
   size?: number | string
   uncheckedBackgroundColor?: string
@@ -87,16 +87,19 @@ export function Checkbox(props: CheckboxProps) {
         )}
       </View>
 
-      {!!label && (
-        <Text
-          style={{
-            marginLeft: contentPadding / 2,
-            color: theme.foregroundColor,
-          }}
-        >
-          {label}
-        </Text>
-      )}
+      {!!label &&
+        (typeof label === 'string' ? (
+          <Text
+            style={{
+              marginLeft: contentPadding / 2,
+              color: theme.foregroundColor,
+            }}
+          >
+            {label}
+          </Text>
+        ) : (
+          label
+        ))}
     </TouchableOpacity>
   )
 }

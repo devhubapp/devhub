@@ -2,7 +2,20 @@ import * as colors from '../../../styles/colors'
 import { GitHubNotificationReason } from '../../../types'
 import { capitalize } from '../shared'
 
-export function getNotificationReasonTextsAndColor<
+export const notificationReasons: GitHubNotificationReason[] = [
+  'assign',
+  'author',
+  'comment',
+  'invitation',
+  'manual',
+  'mention',
+  'review_requested',
+  'state_change',
+  'subscribed',
+  'team_mention',
+]
+
+export function getNotificationReasonMetadata<
   T extends GitHubNotificationReason
 >(
   reason: T,

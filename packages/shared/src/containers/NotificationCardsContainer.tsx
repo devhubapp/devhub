@@ -23,7 +23,7 @@ export type NotificationCardsContainerProps = Omit<
 }
 
 export interface NotificationCardsContainerState {
-  filteredNotifications: NotificationCardsProps['notifications']
+  enhancedNotifications: NotificationCardsProps['notifications']
   notifications: NotificationCardsProps['notifications']
 }
 
@@ -34,7 +34,7 @@ export class NotificationCardsContainer extends PureComponent<
   fetchDataInterval?: ReturnType<typeof setInterval>
 
   state: NotificationCardsContainerState = {
-    filteredNotifications: [],
+    enhancedNotifications: [],
     notifications: [],
   }
 
@@ -51,7 +51,7 @@ export class NotificationCardsContainer extends PureComponent<
       this.state.notifications !== prevState.notifications
     ) {
       this.setState(state => ({
-        filteredNotifications: getFilteredNotifications(
+        enhancedNotifications: getFilteredNotifications(
           state.notifications,
           this.props.column.filters,
         ),
@@ -99,12 +99,12 @@ export class NotificationCardsContainer extends PureComponent<
   }
 
   render() {
-    const { filteredNotifications } = this.state
+    const { enhancedNotifications } = this.state
 
     return (
       <NotificationCards
         {...this.props}
-        notifications={filteredNotifications}
+        notifications={enhancedNotifications}
       />
     )
   }

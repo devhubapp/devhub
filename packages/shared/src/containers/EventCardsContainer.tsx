@@ -7,9 +7,11 @@ import {
   ActivitySubscription,
   Column,
   ColumnSubscription,
+  EnhancedGitHubEvent,
+  GitHubEvent,
   Omit,
 } from '../types'
-import { mergeSimilarEvent } from '../utils/helpers/github/events'
+import { getFilteredEvents } from '../utils/helpers/shared'
 
 export type EventCardsContainerProps = Omit<EventCardsProps, 'events'> & {
   column: Column
@@ -17,7 +19,8 @@ export type EventCardsContainerProps = Omit<EventCardsProps, 'events'> & {
 }
 
 export interface EventCardsContainerState {
-  events: EventCardsProps['events']
+  enhancedEvents: EnhancedGitHubEvent[]
+  events: GitHubEvent[]
 }
 
 export class EventCardsContainer extends PureComponent<
@@ -27,11 +30,29 @@ export class EventCardsContainer extends PureComponent<
   fetchDataInterval?: ReturnType<typeof setInterval>
 
   state: EventCardsContainerState = {
+    enhancedEvents: [],
     events: [],
   }
 
   componentDidMount() {
     this.startFetchDataInterval()
+  }
+
+  componentDidUpdate(
+    prevProps: EventCardsContainerProps,
+    prevState: EventCardsContainerState,
+  ) {
+    if (
+      this.props.column !== prevProps.column ||
+      this.state.events !== prevState.events
+    ) {
+      this.setState(state => ({
+        enhancedEvents: getFilteredEvents(
+          state.events,
+          this.props.column.filters,
+        ),
+      }))
+    }
   }
 
   componentWillUnmount() {
@@ -49,15 +70,9 @@ export class EventCardsContainer extends PureComponent<
       const response = await getActivity(activityType, params, {
         subscriptionId,
       })
-      const events = response.data
-      if (Array.isArray(events)) {
-        const orderedEvents = _(events)
-          .concat(this.state.events)
-          .uniqBy('id')
-          .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
-          .value()
-        const mergedEvents = mergeSimilarEvent(orderedEvents)
-        this.setState({ events: mergedEvents })
+      if (Array.isArray(response.data)) {
+        const events = _.concat(this.state.events, response.data)
+        this.setState({ events })
       }
     } catch (error) {
       console.error('Failed to load GitHub activity', error)
@@ -78,8 +93,8 @@ export class EventCardsContainer extends PureComponent<
   }
 
   render() {
-    const { events } = this.state
+    const { enhancedEvents } = this.state
 
-    return <EventCards {...this.props} events={events} />
+    return <EventCards {...this.props} events={enhancedEvents} />
   }
 }

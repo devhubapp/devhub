@@ -98,6 +98,21 @@ export const columnsReducer: Reducer<State> = (
         })
       })
 
+    case 'SET_COLUMN_ACTIVITY_TYPE_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.activity = column.filters.activity || {}
+        column.filters.activity.types = column.filters.activity.types || {}
+
+        column.filters.activity.types[action.payload.type] =
+          action.payload.value
+      })
+
     case 'SET_COLUMN_REASON_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return

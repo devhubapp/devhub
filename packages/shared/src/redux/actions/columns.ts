@@ -1,6 +1,7 @@
 import {
   ColumnAndSubscriptions,
   ColumnFilters,
+  GitHubEvent,
   GitHubNotificationReason,
 } from '../../types'
 import {
@@ -24,6 +25,12 @@ export const moveColumn = createActionCreatorCreator('MOVE_COLUMN')<{
   columnId: string
   columnIndex: number
 }>()
+
+export function setColumnActivityTypeFilter<
+  T extends GitHubEvent['type']
+>(payload: { columnId: string; type: T; value: boolean }) {
+  return createAction('SET_COLUMN_ACTIVITY_TYPE_FILTER', payload)
+}
 
 export function setColumnReasonFilter<
   T extends GitHubNotificationReason

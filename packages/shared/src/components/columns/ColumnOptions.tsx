@@ -1,12 +1,21 @@
 import _ from 'lodash'
 import React, { useContext, useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+
 import { useDimensions } from '../../hooks/use-dimensions'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
-import { Column, GitHubNotificationReason } from '../../types'
-import { getNotificationReasonTextsAndColor } from '../../utils/helpers/github/notifications'
+import { Column } from '../../types'
+import {
+  eventTypes,
+  getEventTypeMetadata,
+} from '../../utils/helpers/github/events'
+import {
+  getNotificationReasonMetadata,
+  notificationReasons,
+} from '../../utils/helpers/github/notifications'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
@@ -22,21 +31,12 @@ const styles = StyleSheet.create({
   innerContainer: {},
 })
 
-const notificationReasons: GitHubNotificationReason[] = [
-  'assign',
-  'author',
-  'comment',
-  'invitation',
-  'manual',
-  'mention',
-  'review_requested',
-  'state_change',
-  'subscribed',
-  'team_mention',
-]
-
 const notificationReasonOptions = notificationReasons
-  .map(getNotificationReasonTextsAndColor)
+  .map(getNotificationReasonMetadata)
+  .sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))
+
+const eventTypeOptions = eventTypes
+  .map(getEventTypeMetadata)
   .sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))
 
 export interface ColumnOptionsProps {
@@ -44,7 +44,10 @@ export interface ColumnOptionsProps {
   columnIndex: number
 }
 
-export type ColumnOptionCategory = 'notification_types' | 'unread'
+export type ColumnOptionCategory =
+  | 'notification_types'
+  | 'unread'
+  | 'event_types'
 
 export function ColumnOptions(props: ColumnOptionsProps) {
   const [
@@ -55,6 +58,9 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const dimensions = useDimensions()
   const moveColumn = useReduxAction(actions.moveColumn)
+  const setColumnActivityTypeFilter = useReduxAction(
+    actions.setColumnActivityTypeFilter,
+  )
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
@@ -80,41 +86,43 @@ export function ColumnOptions(props: ColumnOptionsProps) {
       <ScrollView alwaysBounceVertical={false} style={styles.innerContainer}>
         {column.type === 'notifications' && (
           <ColumnOptionsRow
+            contentContainerStyle={{
+              marginVertical: -contentPadding / 4,
+              marginRight: contentPadding,
+            }}
             iconName="check"
             onToggle={() => toggleOpenedOptionCategory('notification_types')}
             opened={openedOptionCategory === 'notification_types'}
             title="Notification types"
           >
-            <View style={{ marginVertical: -contentPadding / 4 }}>
-              {notificationReasonOptions.map(nro => (
-                <Checkbox
-                  key={`notification-reason-option-${nro.reason}`}
-                  checked={
-                    column.filters &&
-                    column.filters.notifications &&
-                    column.filters.notifications.reasons &&
-                    column.filters.notifications.reasons[nro.reason] === false
-                      ? false
-                      : true
-                  }
-                  checkedBackgroundColor={nro.color}
-                  checkedForegroundColor={theme.backgroundColorDarker08}
-                  containerStyle={{
-                    flexGrow: 1,
-                    paddingVertical: contentPadding / 4,
-                  }}
-                  label={nro.label}
-                  onChange={checked => {
-                    setColumnReasonFilter({
-                      columnId: column.id,
-                      reason: nro.reason,
-                      value: checked,
-                    })
-                  }}
-                  uncheckedForegroundColor={nro.color}
-                />
-              ))}
-            </View>
+            {notificationReasonOptions.map(nro => (
+              <Checkbox
+                key={`notification-reason-option-${nro.reason}`}
+                checked={
+                  column.filters &&
+                  column.filters.notifications &&
+                  column.filters.notifications.reasons &&
+                  column.filters.notifications.reasons[nro.reason] === false
+                    ? false
+                    : true
+                }
+                checkedBackgroundColor={nro.color}
+                checkedForegroundColor={theme.backgroundColorDarker08}
+                containerStyle={{
+                  flexGrow: 1,
+                  paddingVertical: contentPadding / 4,
+                }}
+                label={nro.label}
+                onChange={checked => {
+                  setColumnReasonFilter({
+                    columnId: column.id,
+                    reason: nro.reason,
+                    value: checked,
+                  })
+                }}
+                uncheckedForegroundColor={nro.color}
+              />
+            ))}
           </ColumnOptionsRow>
         )}
 
@@ -131,6 +139,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
             return (
               <ColumnOptionsRow
+                contentContainerStyle={{ marginRight: contentPadding }}
                 iconName="eye"
                 onToggle={() => toggleOpenedOptionCategory('unread')}
                 opened={openedOptionCategory === 'unread'}
@@ -166,6 +175,70 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               </ColumnOptionsRow>
             )
           })()}
+
+        {column.type === 'activity' && (
+          <ColumnOptionsRow
+            contentContainerStyle={{
+              marginVertical: -contentPadding / 4,
+              marginRight: contentPadding,
+            }}
+            iconName="check"
+            onToggle={() => toggleOpenedOptionCategory('event_types')}
+            opened={openedOptionCategory === 'event_types'}
+            title="Event types"
+          >
+            {eventTypeOptions.map(eto => (
+              <Checkbox
+                key={`event-type-option-${eto.type}`}
+                checked={
+                  column.filters &&
+                  column.filters.activity &&
+                  column.filters.activity.types &&
+                  column.filters.activity.types[eto.type] === false
+                    ? false
+                    : true
+                }
+                containerStyle={{
+                  flexGrow: 1,
+                  paddingVertical: contentPadding / 4,
+                }}
+                label={
+                  <View
+                    style={{
+                      flexGrow: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      alignContent: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginLeft: contentPadding / 2,
+                        color: theme.foregroundColor,
+                      }}
+                    >
+                      {eto.label}
+                    </Text>
+
+                    <Icon
+                      color={theme.foregroundColor}
+                      name={eto.icon}
+                      size={16}
+                    />
+                  </View>
+                }
+                onChange={checked => {
+                  setColumnActivityTypeFilter({
+                    columnId: column.id,
+                    type: eto.type,
+                    value: checked,
+                  })
+                }}
+              />
+            ))}
+          </ColumnOptionsRow>
+        )}
 
         <View style={{ flexDirection: 'row' }}>
           <ColumnHeaderItem

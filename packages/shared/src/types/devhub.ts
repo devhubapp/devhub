@@ -1,4 +1,5 @@
 import {
+  GitHubEvent,
   GitHubExtractParamsFromActivityMethod,
   GitHubIcon,
   GitHubNotification,
@@ -80,6 +81,9 @@ export type ActivitySubscription = {
     })
 
 export interface ColumnFilters {
+  activity?: {
+    types?: Partial<Record<GitHubEvent['type'], boolean>>
+  }
   // archived?: boolean
   notifications?: {
     reasons?: Partial<Record<GitHubNotificationReason, boolean>>

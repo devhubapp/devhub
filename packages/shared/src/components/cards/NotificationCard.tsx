@@ -3,7 +3,7 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
 import { GitHubNotification, GitHubNotificationReason } from '../../types'
-import { getNotificationReasonTextsAndColor } from '../../utils/helpers/github/notifications'
+import { getNotificationReasonMetadata } from '../../utils/helpers/github/notifications'
 import {
   getIssueIconAndColor,
   getNotificationIconAndColor,
@@ -71,7 +71,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
     const cardIconName = cardIconDetails.icon
     const cardIconColor = cardIconDetails.color
 
-    const labelDetails = getNotificationReasonTextsAndColor(
+    const labelDetails = getNotificationReasonMetadata(
       notification.reason as GitHubNotificationReason,
     )
     const labelText = labelDetails.label.toLowerCase()
