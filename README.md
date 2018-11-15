@@ -4,63 +4,78 @@
   <span>Android, iOS & Web with <b>99% code sharing</b> between them</span>
 </p>
 
-## Screenshot
+## Screenshots
 
-![devhub](https://user-images.githubusercontent.com/619186/47956109-5c2b1200-df7e-11e8-9c2f-f44d130561f0.png)
+### Desktop
+
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/48530677-db262180-e87f-11e8-910c-e2923323b2ca.png)
+
+### Mobile
+
+<div>
+  <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/48530723-26403480-e880-11e8-9122-d3919be7f6c3.png" />
+  <img alt="DevHub Mobile - Event Filters" height="620" src="https://user-images.githubusercontent.com/619186/48530853-df9f0a00-e880-11e8-9cc9-693aefc522ae.png" />
+  <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/48530783-833bea80-e880-11e8-8ef8-f185b7fd7ffa.png" />
+</div>
+
 
 <br/>
 
 ## Why
 
-If you have one or more repositories on GitHub that you work on or that you really like, the `watch` feature on GitHub is great to follow their activities. The problem is that your notifications on GitHub would get **really** cluttered, with hundreds of new items per week.
+If you are an open source contributor, have some repositories on GitHub or simply want to discover new projects, DevHub can help you keep up to date with everything relevant that is happening. 
 
-
-So instead of using the built-in `watch` feature, create columns here instead.
+- Manage your notifications;
+- Follow repositories without using the `watch` feature so your notifications don't get cluttered;
+- Follow user activities without using the `follow` button so they don't know about it;
+- Follow user activities that GitHub don't show on your feed, like comments and pushed commits;
+- See other users dashboards (their home screen) so you can discover new people and repositories.
 
 <br/>
 
 ## Features
 
-Current implementations:
+### Column Layout
 
-- [x] **GitHub watcher**: Follow GitHub activity without needing to `watch` a repository neither `follow` the user
-  - [x] **Dashboard**: See the exact content the user see on their home page
-  - [x] **User events**: See all activity made by an user _(starred a repo, ...)_
-  - [x] **Repository events**: See all activity happening on a single repo _(released a new version, ...)_
-  - [x] **Organization events**: See all activity happening on the whole organization _(merged a pull request, ...)_
-- [x] **Notifications manager**
-  - [x] **TweetDeck column-style**: Overview all your notifications with easy
+Create columns like TweetDeck, made for power users that want to be more organized
 
-Other features:
+### Filters
 
-- [x] **Inbox Zero**: Keep your mind clean by archiving all seem items
-- [x] **Theme**: Light or Dark, with the option to automatically change on day/night
+Apply different filters on each column, creating your ideal GitHub workspace
 
-Next features:
+### Notification Manager
 
-- [ ] **Notification content**: See the relevant notification content before opening it
-- [ ] **Filter**: [soon] Create filters for each column;
-- [ ] **Push notification**: [soon] Enable push notifications for your filtered notifications;
+Quickly see unread notifications and create filters if you want to highlight some of them
 
-> Pull Requests more than welcome!
+### GitHub Activity
+
+Follow GitHub activities without needing to `watch` a repository neither `follow` the user:
+
+- [x] **Dashboard**: See the exact content the user see on their home page
+- [x] **User**: See all activity made by an user _(starred a repo, pushed a commit, commented on issue, ...)_
+- [x] **Repository**: See all activity happening in a single repo _(released a new version, ...)_
+- [x] **Organization**: See all activity happening in the whole organization _(merged a pull request, ...)_
+
+### And more!
+
+- [x] Light or Dark theme support
+- [x] Native apps
+
+### Next features:
+
+- [ ] **Backend**: Sync all your columns and preferences between all your devices
+- [ ] **Inbox Zero**: Keep your mind clean by archiving all seem items
+- [ ] **Notification content**: See more relevant notification content before opening it
+- [ ] **Push notification**: Enable push notifications for your filtered notifications;
+- [ ] **Trending**: New column type to show Trending repositories
 
 <br/>
 
-## Similar projects
+## Contributing
 
-- [DevSpace](https://devspace.io/) by [@zenorocha](https://github.com/zenorocha)
+Pull Requests more than welcome!
 
-  ### DevSpace vs DevHub
-  
-  DevSpace and DevHub started at a similar time.
-  One of the main differences between them is that DevHub shows more details about each event (see image below).
-  Another difference is that DevHub has native mobile apps, while DevSpace uses only web technologies.
-  
-  <img src="https://user-images.githubusercontent.com/619186/47956200-a95bb380-df7f-11e8-9058-80243ed46e1f.png"  width="500" />
-
-- [Octobox](https://github.com/octobox/octobox) by [@andrew](https://github.com/andrew)
-  
-  Octobox is great to manage notifications. We will certainly bring some power features from it to DevHub in the future.
+<br/>
 
 <br/>
 
