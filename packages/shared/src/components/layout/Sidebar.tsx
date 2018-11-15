@@ -90,8 +90,8 @@ class SidebarComponent extends PureComponent<
               style={{
                 flexGrow: 1,
                 flexDirection: horizontal ? 'row' : 'column',
-                width: horizontal ? undefined : sidebarSize,
-                height: horizontal ? sidebarSize : undefined,
+                width: horizontal ? '100%' : sidebarSize,
+                height: horizontal ? sidebarSize : '100%',
               }}
             >
               {!horizontal && (
