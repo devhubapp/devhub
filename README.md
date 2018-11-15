@@ -28,7 +28,7 @@ If you are an open source contributor, have some repositories on GitHub or simpl
 - Manage your notifications;
 - Follow repositories without using the `watch` feature so your notifications don't get cluttered;
 - Follow user activities without using the `follow` button so they don't know about it;
-- Follow user activities that GitHub don't show on your feed, like comments and pushed commits;
+- Follow user activities that GitHub don't show on your feed, like issue comments and pushed commits;
 - See other users dashboards (their home screen) so you can discover new people and repositories.
 
 <br/>
@@ -68,6 +68,18 @@ Follow GitHub activities without needing to `watch` a repository neither `follow
 - [ ] **Notification content**: See more relevant notification content before opening it
 - [ ] **Push notification**: Enable push notifications for your filtered notifications;
 - [ ] **Trending**: New column type to show Trending repositories
+- [ ] **Accessibility**: Full support for accessbility and keyboard shortcuts
+- [ ] **Drag & Drop**: Allow moving columns using drag&drop
+
+<br/>
+
+## Keyboard shortcuts
+
+| Key | Action |
+| --- | ------ |
+| `a`, `n` | Add a new column |
+| `1`...`9` | Go the the `nth` column |
+| `0` | Go to the last column |
 
 <br/>
 
