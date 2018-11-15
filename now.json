@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "alias": "devhubapp.com",
+  "alias": ["www.devhubapp.com", "devhubapp.com"],
   "builds": [
     { "src": "packages/web/dist/**", "use": "@now/static" }
   ],
