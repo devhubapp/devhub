@@ -2,11 +2,9 @@
   "name": "devhub",
   "alias": "devhubapp.com",
   "builds": [
-    { "src": "packages/web/dist/**", "use": "@now/static" },
-    { "src": "packages/server/index.js", "use": "@now/node" }
+    { "src": "packages/web/dist/**", "use": "@now/static" }
   ],
   "routes": [
-    { "src": "/api", "dest": "/packages/server/" },
     { "src": "/(.*)", "dest": "/packages/web/dist/$1" }
   ],
   "regions": ["gru1"],

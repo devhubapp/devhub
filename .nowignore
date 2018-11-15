@@ -4,6 +4,7 @@
 @types
 node_modules
 packages/mobile
+packages/server
 packages/shared/src
 packages/web/build
 packages/web/src
