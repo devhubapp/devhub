@@ -30,3 +30,10 @@ export function setColumnReasonFilter<
 >(payload: { columnId: string; reason: T; value: boolean }) {
   return createAction('SET_COLUMN_REASON_FILTER', payload)
 }
+
+export function setColumnUnreadFilter(payload: {
+  columnId: string
+  unread: ColumnFilters['unread']
+}) {
+  return createAction('SET_COLUMN_UNREAD_FILTER', payload)
+}

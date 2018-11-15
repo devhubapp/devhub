@@ -32,6 +32,7 @@ export interface CheckboxProps {
   checkedBackgroundColor?: string
   checkedForegroundColor?: string
   containerStyle?: ViewStyle
+  disabled?: boolean
   label?: string
   onChange?: (value: boolean) => void
   size?: number | string
@@ -48,6 +49,7 @@ export function Checkbox(props: CheckboxProps) {
     checkedBackgroundColor = colors.brandBackgroundColor,
     checkedForegroundColor = colors.brandForegroundColor,
     containerStyle,
+    disabled,
     label,
     onChange,
     size = 18,
@@ -57,8 +59,9 @@ export function Checkbox(props: CheckboxProps) {
 
   return (
     <TouchableOpacity
-      onPress={() => onChange && onChange(!checked)}
-      style={[styles.container, containerStyle]}
+      disabled={disabled}
+      onPress={disabled ? undefined : () => onChange && onChange(!checked)}
+      style={[styles.container, disabled && { opacity: 0.5 }, containerStyle]}
     >
       <View
         style={[

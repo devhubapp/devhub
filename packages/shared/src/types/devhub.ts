@@ -93,7 +93,7 @@ export interface ColumnFilters {
   // }
   // sort?: string[]
   // types?: Array<GitHubNotification['subject']['type']>
-  // unread?: boolean
+  unread?: boolean
 }
 
 export interface ColumnOptions {

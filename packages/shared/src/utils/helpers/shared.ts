@@ -92,18 +92,26 @@ export function getFilteredNotifications(
   notifications: GitHubNotification[],
   filters?: ColumnFilters,
 ) {
-  let _notifications = _(notifications)
+  const _notifications = _(notifications)
     .uniqBy('id')
     .orderBy(['unread', 'updated_at', 'created_at'], ['desc', 'desc', 'desc'])
     .value()
 
   if (!filters) return _notifications
 
-  if (filters.reasons) {
-    _notifications = _notifications.filter(
-      notification => filters.reasons![notification.reason] !== false,
-    )
-  }
+  const hasFilter = filters.reasons || typeof filters.unread === 'boolean'
+  if (!hasFilter) return _notifications
 
-  return _notifications
+  return _notifications.filter(notification => {
+    if (filters.reasons && filters.reasons[notification.reason] === false)
+      return false
+
+    if (
+      typeof filters.unread === 'boolean' &&
+      filters.unread !== !!notification.unread
+    )
+      return false
+
+    return true
+  })
 }

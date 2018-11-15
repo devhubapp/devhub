@@ -1,11 +1,6 @@
 import _ from 'lodash'
 import React, { useContext, useState } from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { useDimensions } from '../../hooks/use-dimensions'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
@@ -17,10 +12,7 @@ import { Checkbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
 import { ThemeContext } from '../context/ThemeContext'
 import { columnHeaderHeight } from './ColumnHeader'
-import {
-  ColumnHeaderItem,
-  columnHeaderItemContentSize,
-} from './ColumnHeaderItem'
+import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 
 const styles = StyleSheet.create({
@@ -52,7 +44,7 @@ export interface ColumnOptionsProps {
   columnIndex: number
 }
 
-export type ColumnOptionCategory = 'notification_types'
+export type ColumnOptionCategory = 'notification_types' | 'unread'
 
 export function ColumnOptions(props: ColumnOptionsProps) {
   const [
@@ -60,10 +52,11 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     setOpenedOptionCategory,
   ] = useState<ColumnOptionCategory | null>(null)
   const { theme } = useContext(ThemeContext)
-  const dimensions = useDimensions()
   const deleteColumn = useReduxAction(actions.deleteColumn)
+  const dimensions = useDimensions()
   const moveColumn = useReduxAction(actions.moveColumn)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
+  const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
   const toggleOpenedOptionCategory = (
     optionCategory: ColumnOptionCategory | null,
@@ -71,9 +64,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     setOpenedOptionCategory(
       optionCategory === openedOptionCategory ? null : optionCategory,
     )
-
-  const getChevronIcon = (optionCategory: ColumnOptionCategory | null) =>
-    optionCategory === openedOptionCategory ? 'chevron-up' : 'chevron-down'
 
   const { column, columnIndex } = props
 
@@ -97,43 +87,84 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           >
             <View style={{ marginVertical: -contentPadding / 4 }}>
               {notificationReasonOptions.map(nro => (
-                <View
+                <Checkbox
                   key={`notification-reason-option-${nro.reason}`}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignContent: 'center',
+                  checked={
+                    column.filters &&
+                    column.filters.reasons &&
+                    column.filters.reasons[nro.reason] === false
+                      ? false
+                      : true
+                  }
+                  checkedBackgroundColor={nro.color}
+                  checkedForegroundColor={theme.backgroundColorDarker08}
+                  containerStyle={{
+                    flexGrow: 1,
+                    paddingVertical: contentPadding / 4,
                   }}
-                >
-                  <Checkbox
-                    checked={
-                      column.filters &&
-                      column.filters.reasons &&
-                      column.filters.reasons[nro.reason] === false
-                        ? false
-                        : true
-                    }
-                    checkedBackgroundColor={nro.color}
-                    checkedForegroundColor={theme.backgroundColorDarker08}
-                    containerStyle={{
-                      flexGrow: 1,
-                      paddingVertical: contentPadding / 4,
-                    }}
-                    label={nro.label}
-                    onChange={checked => {
-                      setColumnReasonFilter({
-                        columnId: column.id,
-                        reason: nro.reason,
-                        value: checked,
-                      })
-                    }}
-                    uncheckedForegroundColor={nro.color}
-                  />
-                </View>
+                  label={nro.label}
+                  onChange={checked => {
+                    setColumnReasonFilter({
+                      columnId: column.id,
+                      reason: nro.reason,
+                      value: checked,
+                    })
+                  }}
+                  uncheckedForegroundColor={nro.color}
+                />
               ))}
             </View>
           </ColumnOptionsRow>
         )}
+
+        {column.type === 'notifications' &&
+          (() => {
+            const isReadChecked =
+              column.filters && column.filters.unread !== true
+
+            const isUnreadChecked =
+              column.filters && column.filters.unread !== false
+
+            const getFilterValue = (read?: boolean, unread?: boolean) =>
+              read && unread ? undefined : read ? false : unread
+
+            return (
+              <ColumnOptionsRow
+                iconName="eye"
+                onToggle={() => toggleOpenedOptionCategory('unread')}
+                opened={openedOptionCategory === 'unread'}
+                title="Read status"
+              >
+                <Checkbox
+                  checked={isReadChecked}
+                  containerStyle={{ flexGrow: 1 }}
+                  disabled={isReadChecked && !isUnreadChecked}
+                  label="Read"
+                  onChange={checked => {
+                    setColumnUnreadFilter({
+                      columnId: column.id,
+                      unread: getFilterValue(checked, isUnreadChecked),
+                    })
+                  }}
+                />
+
+                <Spacer height={contentPadding / 2} />
+
+                <Checkbox
+                  checked={isUnreadChecked}
+                  containerStyle={{ flexGrow: 1 }}
+                  disabled={isUnreadChecked && !isReadChecked}
+                  label="Unread"
+                  onChange={checked => {
+                    setColumnUnreadFilter({
+                      columnId: column.id,
+                      unread: getFilterValue(isReadChecked, checked),
+                    })
+                  }}
+                />
+              </ColumnOptionsRow>
+            )
+          })()}
 
         <View style={{ flexDirection: 'row' }}>
           <ColumnHeaderItem
