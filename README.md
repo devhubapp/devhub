@@ -64,12 +64,13 @@ Follow GitHub activities without needing to `watch` a repository neither `follow
 ### Next features:
 
 - [ ] **Backend**: Sync all your columns and preferences between all your devices
+- [ ] **Push notification**: Enable push notifications for your filtered notifications
 - [ ] **Inbox Zero**: Keep your mind clean by archiving all seem items
 - [ ] **Notification content**: See more relevant notification content before opening it
-- [ ] **Push notification**: Enable push notifications for your filtered notifications;
 - [ ] **Trending**: New column type to show Trending repositories
 - [ ] **Accessibility**: Full support for accessbility and keyboard shortcuts
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop
+- [ ] **Pagination**: Support fetching old data so you don't miss anything
 
 <br/>
 
