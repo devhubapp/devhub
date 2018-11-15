@@ -71,11 +71,12 @@ Follow GitHub activities without needing to `watch` a repository neither `follow
 
 <br/>
 
+<br/>
+
 ## Contributing
 
-Pull Requests more than welcome!
-
-<br/>
+Pull Requests and bug reports more than welcome!
+If the feature is big, please open an issue first for discussion.
 
 <br/>
 
