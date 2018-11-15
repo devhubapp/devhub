@@ -28,30 +28,46 @@ const cache: Record<
 > = {}
 
 export async function getNotifications(
-  _params: Octokit.ActivityGetNotificationsParams = {},
-  // { columnId = '', useCache = true } = {},
+  _params: Octokit.ActivityGetNotificationsParams & { headers?: any } = {},
+  { subscriptionId = '', useCache = false } = {},
 ) {
-  // const cacheKey = JSON.stringify(['NOTIFICATIONS', _params, columnId])
-  // const cacheValue = cache[cacheKey]
+  const cacheKey = JSON.stringify(['NOTIFICATIONS', _params, subscriptionId])
+  const cacheValue = cache[cacheKey]
 
-  const params = (_params || {}) as any
+  const params = _params || {}
   params.headers = params.headers || {}
   params.headers['If-None-Match'] = ''
 
-  // if (cacheValue && useCache) {
-  //   params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
-  //   params.headers['If-None-Match'] = cacheValue.headers.etag
-  // }
+  // Note: GitHub notifications cache doesnt work as expected.
+  // It keeps returning code 304 even if read status changed.
+  // Thats why its disabled by default.
+  if (cacheValue && useCache) {
+    if (cacheValue.headers['last-modified']) {
+      params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
+    }
 
-  const response = await octokit.activity.getNotifications(params)
+    if (cacheValue.headers.etag) {
+      params.headers['If-None-Match'] = cacheValue.headers.etag
+    }
+  }
 
-  // cache[cacheKey] = {
-  //   data: response.data,
-  //   headers: response.headers,
-  //   status: response.status,
-  // }
+  // So lets force an update
+  if (!useCache) (params as any).timestamp = Date.now()
 
-  return response
+  try {
+    const response = await octokit.activity.getNotifications(params)
+
+    cache[cacheKey] = {
+      data: response.data,
+      headers: response.headers,
+      status: response.status,
+    }
+
+    return response
+  } catch (error) {
+    if (error && error.code === 304) return cache[cacheKey]
+    throw error
+  }
 }
 
 export async function getActivity<T extends GitHubActivityType>(
@@ -67,8 +83,13 @@ export async function getActivity<T extends GitHubActivityType>(
   params.headers['If-None-Match'] = ''
 
   if (cacheValue && useCache) {
-    params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
-    params.headers['If-None-Match'] = cacheValue.headers.etag
+    if (cacheValue.headers['last-modified']) {
+      params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
+    }
+
+    if (cacheValue.headers.etag) {
+      params.headers['If-None-Match'] = cacheValue.headers.etag
+    }
   }
 
   try {

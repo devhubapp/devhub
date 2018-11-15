@@ -68,9 +68,10 @@ export class NotificationCardsContainer extends PureComponent<
     const subscription = subscriptions[0] as NotificationSubscription
 
     try {
-      const response = await getNotifications({
-        all: subscription.params.all,
-      })
+      const response = await getNotifications(
+        { all: subscription.params.all },
+        { subscriptionId: subscription.id },
+      )
       if (Array.isArray(response.data)) {
         const notifications = _.concat(
           response.data as any,
@@ -80,7 +81,6 @@ export class NotificationCardsContainer extends PureComponent<
         this.setState({ notifications })
       }
     } catch (error) {
-      if (error && error.code === 304) return
       console.error('Failed to load GitHub notifications', error)
     }
   }
