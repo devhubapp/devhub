@@ -1,5 +1,11 @@
+*.log
+.history
+.vscode
+@types
+node_modules
 packages/mobile
 packages/shared/src
 packages/web/build
 packages/web/src
 patches
+planning.txt
