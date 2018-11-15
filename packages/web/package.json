@@ -32,8 +32,13 @@
     "@types/react-dom": "^16.0.9",
     "babel-plugin-react-native-web": "^0.9.7",
     "postinstall-prepare": "^1.0.1",
+    "prettier": "^1.15.2",
     "react-app-rewired": "^1.6.2",
     "serve": "^10.1.1",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "tslint-react": "^3.6.0",
     "typescript": "^3.1.6",
     "webpack-bundle-analyzer": "^3.0.3"
   },

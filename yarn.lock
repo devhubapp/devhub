@@ -6911,7 +6911,7 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-"lint-staged@npm:lint-staged-offline":
+lint-staged-offline@^0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/lint-staged-offline/-/lint-staged-offline-0.0.1.tgz#f9028fde9f12c34d4db3ab8b2b57f26c609689a8"
   integrity sha512-iyXdzc9c9gotKJOI6VtFbNe4sX5mJUzSkNRbK9LkMU251A/YBn8gAnobl/vVj0Ps9e9aVIn8u9cAo5LOwQgCjQ==

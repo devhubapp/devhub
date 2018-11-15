@@ -1,4 +1,12 @@
 {
   "name": "server",
-  "version": "0.15.0"
+  "version": "0.15.0",
+  "scripts": {
+    "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
+    "lint": "cd .",
+    "prepare": "cd .. && yarn patch-package"
+  },
+  "devDependencies": {
+    "prettier": "^1.15.2"
+  }
 }
