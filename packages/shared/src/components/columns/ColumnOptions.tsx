@@ -91,8 +91,9 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   key={`notification-reason-option-${nro.reason}`}
                   checked={
                     column.filters &&
-                    column.filters.reasons &&
-                    column.filters.reasons[nro.reason] === false
+                    column.filters.notifications &&
+                    column.filters.notifications.reasons &&
+                    column.filters.notifications.reasons[nro.reason] === false
                       ? false
                       : true
                   }

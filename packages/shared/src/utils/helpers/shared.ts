@@ -99,11 +99,18 @@ export function getFilteredNotifications(
 
   if (!filters) return _notifications
 
-  const hasFilter = filters.reasons || typeof filters.unread === 'boolean'
+  const hasFilter =
+    (filters.notifications && filters.notifications.reasons) ||
+    typeof filters.unread === 'boolean'
+
   if (!hasFilter) return _notifications
 
   return _notifications.filter(notification => {
-    if (filters.reasons && filters.reasons[notification.reason] === false)
+    if (
+      filters.notifications &&
+      filters.notifications.reasons &&
+      filters.notifications.reasons[notification.reason] === false
+    )
       return false
 
     if (

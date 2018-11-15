@@ -81,9 +81,11 @@ export type ActivitySubscription = {
 
 export interface ColumnFilters {
   // archived?: boolean
+  notifications?: {
+    reasons?: Partial<Record<GitHubNotificationReason, boolean>>
+  }
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
-  reasons?: Partial<Record<GitHubNotificationReason, boolean>>
   // repos?: string[]
   // saved?: boolean
   // search: {

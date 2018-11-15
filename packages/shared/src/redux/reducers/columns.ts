@@ -106,9 +106,13 @@ export const columnsReducer: Reducer<State> = (
         if (!column) return
 
         column.filters = column.filters || {}
-        column.filters.reasons = column.filters.reasons || {}
+        column.filters.notifications = column.filters.notifications || {}
 
-        column.filters.reasons[action.payload.reason] = action.payload.value
+        column.filters.notifications.reasons =
+          column.filters.notifications.reasons || {}
+
+        column.filters.notifications.reasons[action.payload.reason] =
+          action.payload.value
       })
 
     case 'SET_COLUMN_UNREAD_FILTER':
