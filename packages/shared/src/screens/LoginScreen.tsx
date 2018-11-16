@@ -15,7 +15,7 @@ import { ExtractPropsFromConnector } from '../types'
 
 const logo = require('shared/assets/logo.png') // tslint:disable-line
 
-const serverURL = 'https://micro-oauth-pmkvlpfaua.now.sh'
+const serverURL = 'https://micro-oauth-r2cnw6ztl.now.sh'
 
 export interface LoginScreenProps {}
 
