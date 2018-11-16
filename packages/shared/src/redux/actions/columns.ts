@@ -44,3 +44,10 @@ export function setColumnUnreadFilter(payload: {
 }) {
   return createAction('SET_COLUMN_UNREAD_FILTER', payload)
 }
+
+export function setColumnPrivacyFilter(payload: {
+  columnId: string
+  private: ColumnFilters['private']
+}) {
+  return createAction('SET_COLUMN_PRIVACY_FILTER', payload)
+}

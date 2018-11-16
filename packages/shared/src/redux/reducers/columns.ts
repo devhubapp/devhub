@@ -141,6 +141,17 @@ export const columnsReducer: Reducer<State> = (
         column.filters.unread = action.payload.unread
       })
 
+    case 'SET_COLUMN_PRIVACY_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.private = action.payload.private
+      })
+
     default:
       return state
   }

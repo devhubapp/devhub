@@ -45,9 +45,10 @@ export interface ColumnOptionsProps {
 }
 
 export type ColumnOptionCategory =
-  | 'notification_types'
-  | 'unread'
   | 'event_types'
+  | 'notification_types'
+  | 'privacy'
+  | 'unread'
 
 export function ColumnOptions(props: ColumnOptionsProps) {
   const [
@@ -61,6 +62,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const setColumnActivityTypeFilter = useReduxAction(
     actions.setColumnActivityTypeFilter,
   )
+  const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
@@ -241,6 +243,64 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               </ColumnOptionsRow>
             )
           })()}
+
+        {(() => {
+          const isPrivateChecked = !(
+            column.filters && column.filters.private === false
+          )
+
+          const isPublicChecked = !(
+            column.filters && column.filters.private === true
+          )
+
+          const getFilterValue = (
+            showPublic?: boolean,
+            showPrivate?: boolean,
+          ) =>
+            showPublic && showPrivate
+              ? undefined
+              : showPublic
+              ? false
+              : showPrivate
+
+          return (
+            <ColumnOptionsRow
+              contentContainerStyle={{ marginRight: contentPadding }}
+              iconName="lock"
+              onToggle={() => toggleOpenedOptionCategory('privacy')}
+              opened={openedOptionCategory === 'privacy'}
+              title="Privacy"
+            >
+              <Checkbox
+                checked={isPublicChecked}
+                containerStyle={{ flexGrow: 1 }}
+                disabled={isPublicChecked && !isPrivateChecked}
+                label="Public"
+                onChange={checked => {
+                  setColumnPrivacyFilter({
+                    columnId: column.id,
+                    private: getFilterValue(checked, isPrivateChecked),
+                  })
+                }}
+              />
+
+              <Spacer height={contentPadding / 2} />
+
+              <Checkbox
+                checked={isPrivateChecked}
+                containerStyle={{ flexGrow: 1 }}
+                disabled={isPrivateChecked && !isPublicChecked}
+                label="Private"
+                onChange={checked => {
+                  setColumnPrivacyFilter({
+                    columnId: column.id,
+                    private: getFilterValue(isPublicChecked, checked),
+                  })
+                }}
+              />
+            </ColumnOptionsRow>
+          )
+        })()}
 
         <View style={{ flexDirection: 'row' }}>
           <ColumnHeaderItem

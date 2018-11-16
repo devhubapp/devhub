@@ -94,6 +94,16 @@ export function trimNewLinesAndSpaces(text?: string, maxLength: number = 100) {
   return newText
 }
 
+export function isEventPrivate(event: GitHubEvent) {
+  if (!event) return false
+  return !!(event.public === false || (event.repo && event.repo.private))
+}
+
+export function isNotificationPrivate(notification: GitHubNotification) {
+  if (!notification) return false
+  return !!(notification.repository && notification.repository.private)
+}
+
 export function getFilteredNotifications(
   notifications: GitHubNotification[],
   filters?: ColumnFilters,
@@ -109,7 +119,8 @@ export function getFilteredNotifications(
     (filters.notifications &&
       filters.notifications.reasons &&
       Object.values(filters.notifications.reasons).some(v => !v)) ||
-    typeof filters.unread === 'boolean'
+    typeof filters.unread === 'boolean' ||
+    typeof filters.private === 'boolean'
 
   if (hasFilter) {
     _notifications = _notifications.filter(notification => {
@@ -117,14 +128,23 @@ export function getFilteredNotifications(
         filters.notifications &&
         filters.notifications.reasons &&
         filters.notifications.reasons[notification.reason] === false
-      )
+      ) {
         return false
+      }
 
       if (
         typeof filters.unread === 'boolean' &&
         filters.unread !== !!notification.unread
-      )
+      ) {
         return false
+      }
+
+      if (
+        typeof filters.private === 'boolean' &&
+        isNotificationPrivate(notification) !== filters.private
+      ) {
+        return false
+      }
 
       return true
     })
@@ -144,9 +164,10 @@ export function getFilteredEvents(
   if (!filters) return _events
 
   const hasFilter =
-    filters.activity &&
-    filters.activity.types &&
-    Object.values(filters.activity.types).some(v => !v)
+    (filters.activity &&
+      filters.activity.types &&
+      Object.values(filters.activity.types).some(v => !v)) ||
+    typeof filters.private === 'boolean'
 
   if (hasFilter) {
     _events = _events.filter(event => {
@@ -154,8 +175,16 @@ export function getFilteredEvents(
         filters.activity &&
         filters.activity.types &&
         filters.activity.types[event.type] === false
-      )
+      ) {
         return false
+      }
+
+      if (
+        typeof filters.private === 'boolean' &&
+        isEventPrivate(event) !== filters.private
+      ) {
+        return false
+      }
 
       return true
     })

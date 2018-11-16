@@ -90,6 +90,7 @@ export interface ColumnFilters {
   }
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
+  private?: boolean
   // repos?: string[]
   // saved?: boolean
   // search: {

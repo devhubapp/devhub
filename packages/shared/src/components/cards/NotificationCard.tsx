@@ -14,7 +14,10 @@ import {
   getGitHubURLForRepoInvitation,
   getIssueOrPullRequestNumberFromUrl,
 } from '../../utils/helpers/github/url'
-import { trimNewLinesAndSpaces } from '../../utils/helpers/shared'
+import {
+  isNotificationPrivate,
+  trimNewLinesAndSpaces,
+} from '../../utils/helpers/shared'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
@@ -55,7 +58,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
     if (!subject) return null
 
     const isRead = !unread // TODO
-    const isPrivate = Boolean(repo && repo.private)
+    const isPrivate = isNotificationPrivate(notification)
     const title = trimNewLinesAndSpaces(subject.title)
 
     const repoFullName =

@@ -32,6 +32,7 @@ import {
   getGitHubAvatarURLFromPayload,
   getRepoFullNameFromObject,
 } from '../../utils/helpers/github/url'
+import { isEventPrivate } from '../../utils/helpers/shared'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { BranchRow } from './partials/rows/BranchRow'
@@ -113,7 +114,7 @@ export class EventCard extends PureComponent<EventCardProps> {
 
     const isPush = type === 'PushEvent'
     const isForcePush = isPush && (payload as GitHubPushEvent).forced
-    const isPrivate = !!(event.public === false || (repo && repo.private))
+    const isPrivate = isEventPrivate(event)
 
     const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
 
