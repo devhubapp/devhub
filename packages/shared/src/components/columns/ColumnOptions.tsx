@@ -126,58 +126,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           </ColumnOptionsRow>
         )}
 
-        {column.type === 'notifications' &&
-          (() => {
-            const isReadChecked = !(
-              column.filters && column.filters.unread === true
-            )
-
-            const isUnreadChecked = !(
-              column.filters && column.filters.unread === false
-            )
-
-            const getFilterValue = (read?: boolean, unread?: boolean) =>
-              read && unread ? undefined : read ? false : unread
-
-            return (
-              <ColumnOptionsRow
-                contentContainerStyle={{ marginRight: contentPadding }}
-                iconName="eye"
-                onToggle={() => toggleOpenedOptionCategory('unread')}
-                opened={openedOptionCategory === 'unread'}
-                title="Read status"
-              >
-                <Checkbox
-                  checked={isReadChecked}
-                  containerStyle={{ flexGrow: 1 }}
-                  disabled={isReadChecked && !isUnreadChecked}
-                  label="Read"
-                  onChange={checked => {
-                    setColumnUnreadFilter({
-                      columnId: column.id,
-                      unread: getFilterValue(checked, isUnreadChecked),
-                    })
-                  }}
-                />
-
-                <Spacer height={contentPadding / 2} />
-
-                <Checkbox
-                  checked={isUnreadChecked}
-                  containerStyle={{ flexGrow: 1 }}
-                  disabled={isUnreadChecked && !isReadChecked}
-                  label="Unread"
-                  onChange={checked => {
-                    setColumnUnreadFilter({
-                      columnId: column.id,
-                      unread: getFilterValue(isReadChecked, checked),
-                    })
-                  }}
-                />
-              </ColumnOptionsRow>
-            )
-          })()}
-
         {column.type === 'activity' && (
           <ColumnOptionsRow
             contentContainerStyle={{
@@ -241,6 +189,58 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             ))}
           </ColumnOptionsRow>
         )}
+
+        {column.type === 'notifications' &&
+          (() => {
+            const isReadChecked = !(
+              column.filters && column.filters.unread === true
+            )
+
+            const isUnreadChecked = !(
+              column.filters && column.filters.unread === false
+            )
+
+            const getFilterValue = (read?: boolean, unread?: boolean) =>
+              read && unread ? undefined : read ? false : unread
+
+            return (
+              <ColumnOptionsRow
+                contentContainerStyle={{ marginRight: contentPadding }}
+                iconName="eye"
+                onToggle={() => toggleOpenedOptionCategory('unread')}
+                opened={openedOptionCategory === 'unread'}
+                title="Read status"
+              >
+                <Checkbox
+                  checked={isReadChecked}
+                  containerStyle={{ flexGrow: 1 }}
+                  disabled={isReadChecked && !isUnreadChecked}
+                  label="Read"
+                  onChange={checked => {
+                    setColumnUnreadFilter({
+                      columnId: column.id,
+                      unread: getFilterValue(checked, isUnreadChecked),
+                    })
+                  }}
+                />
+
+                <Spacer height={contentPadding / 2} />
+
+                <Checkbox
+                  checked={isUnreadChecked}
+                  containerStyle={{ flexGrow: 1 }}
+                  disabled={isUnreadChecked && !isReadChecked}
+                  label="Unread"
+                  onChange={checked => {
+                    setColumnUnreadFilter({
+                      columnId: column.id,
+                      unread: getFilterValue(isReadChecked, checked),
+                    })
+                  }}
+                />
+              </ColumnOptionsRow>
+            )
+          })()}
 
         <View style={{ flexDirection: 'row' }}>
           <ColumnHeaderItem
