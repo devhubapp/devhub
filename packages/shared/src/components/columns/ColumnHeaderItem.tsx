@@ -28,6 +28,7 @@ import { ThemeConsumer } from '../context/ThemeContext'
 export interface ColumnHeaderItemProps {
   avatarProps?: Partial<AvatarProps>
   avatarStyle?: StyleProp<ImageStyle>
+  children?: React.ReactNode
   fixedIconSize?: boolean
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
@@ -94,6 +95,7 @@ class ColumnHeaderItemComponent extends PureComponent<
   render() {
     const {
       avatarProps: _avatarProps,
+      children,
       fixedIconSize,
       iconName,
       iconStyle,
@@ -208,6 +210,8 @@ class ColumnHeaderItemComponent extends PureComponent<
                   )}
                 </Text>
               )}
+
+              {children}
             </>
           </ConditionalWrap>
         )}

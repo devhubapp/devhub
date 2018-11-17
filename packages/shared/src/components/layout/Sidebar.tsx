@@ -48,7 +48,6 @@ const connectToStore = connect(
     }
   },
   {
-    logout: actions.logout,
     replaceModal: actions.replaceModal,
   },
 )
@@ -56,10 +55,6 @@ const connectToStore = connect(
 class SidebarComponent extends PureComponent<
   SidebarProps & ExtractPropsFromConnector<typeof connectToStore>
 > {
-  logout = () => {
-    this.props.logout()
-  }
-
   render() {
     const {
       columnIds,
@@ -205,19 +200,6 @@ class SidebarComponent extends PureComponent<
                     style={[styles.centerContainer, squareStyle]}
                   >
                     <ColumnHeaderItem iconName="gear" />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={this.logout}
-                    style={[
-                      styles.centerContainer,
-                      squareStyle,
-                      {
-                        paddingLeft: 3,
-                      },
-                    ]}
-                  >
-                    <ColumnHeaderItem iconName="sign-out" />
                   </TouchableOpacity>
 
                   <Link

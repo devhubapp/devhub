@@ -5,16 +5,16 @@ import { connect } from 'react-redux'
 import { View } from 'react-native'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { columnHeaderItemContentSize } from '../../styles/variables'
 import { ExtractPropsFromConnector } from '../../types'
-import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { Separator } from '../common/Separator'
-import { Column, ColumnProps } from './Column'
+import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
 export interface ModalColumnProps extends ColumnHeaderItemProps {
   columnId: string
   hideCloseButton?: boolean
+  right?: React.ReactNode
 }
 
 export interface ModalColumnState {}
@@ -46,7 +46,7 @@ class ModalColumnComponent extends PureComponent<
   }
 
   render() {
-    const { canGoBack, children, hideCloseButton, ...props } = this.props
+    const { canGoBack, children, hideCloseButton, right, ...props } = this.props
     delete props.popModal
 
     return (
@@ -75,6 +75,8 @@ class ModalColumnComponent extends PureComponent<
           {!hideCloseButton && (
             <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
           )}
+
+          {right && <ColumnHeaderItem>{right}</ColumnHeaderItem>}
         </ColumnHeader>
 
         {children}
