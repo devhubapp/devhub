@@ -11,14 +11,17 @@
   "scripts": {
     "build": "yarn workspace shared build && yarn workspace web build",
     "deploy": "yarn build && yarn now && yarn now alias",
-    "dev": "yarn workspace shared build -w",
+    "dev": "yarn workspace shared clean && yarn workspace shared build && concurrently --kill-others \"yarn workspace shared build -W\" \"yarn workspace web start\"  \"yarn workspace mobile start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "now": "now",
-    "prepare": "patch-package"
+    "prepare": "patch-package",
+    "studio": "yarn workspace mobile studio",
+    "xcode": "yarn workspace mobile xcode"
   },
   "dependencies": {},
   "devDependencies": {
+    "concurrently": "^4.0.1",
     "husky": "^1.1.4",
     "lint-staged-offline": "^0.0.1",
     "now": "^12.1.2",

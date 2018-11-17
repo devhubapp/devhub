@@ -3,7 +3,8 @@
   "version": "0.16.1",
   "main": "dist",
   "scripts": {
-    "build": "rm -rf dist/*; tsc",
+    "build": "tsc",
+    "clean": "rm -rf dist/*",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package"
