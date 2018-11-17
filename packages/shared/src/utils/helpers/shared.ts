@@ -94,9 +94,13 @@ export function trimNewLinesAndSpaces(text?: string, maxLength: number = 100) {
   return newText
 }
 
-export function isEventPrivate(event: GitHubEvent) {
+export function isEventPrivate(event: EnhancedGitHubEvent) {
   if (!event) return false
-  return !!(event.public === false || (event.repo && event.repo.private))
+  return !!(
+    event.public === false ||
+    ('repo' in event && event.repo && event.repo.private) ||
+    ('repos' in event && event.repos && event.repos.some(repo => repo.private))
+  )
 }
 
 export function isNotificationPrivate(notification: GitHubNotification) {
