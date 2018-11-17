@@ -1,6 +1,6 @@
 {
   "name": "mobile",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "scripts": {
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
@@ -16,7 +16,7 @@
     "react": "16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
     "react-native-screens": "^1.0.0-alpha.16",
-    "shared": "0.16.0"
+    "shared": "0.16.1"
   },
   "jest": {
     "preset": "react-native",
