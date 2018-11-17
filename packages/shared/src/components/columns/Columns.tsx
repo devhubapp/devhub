@@ -12,7 +12,7 @@ import { ColumnContainer } from '../../containers/ColumnContainer'
 import { emitter } from '../../setup'
 import { Omit } from '../../types'
 import { Separator } from '../common/Separator'
-import { DimensionsConsumer } from '../context/DimensionsContext'
+import { LayoutConsumer } from '../context/LayoutContext'
 
 export interface ColumnsProps
   extends Omit<FlatListProps<string>, 'data' | 'renderItem'> {
@@ -86,10 +86,9 @@ export class Columns extends PureComponent<ColumnsProps> {
     const { columnIds, style, ...props } = this.props
 
     return (
-      <DimensionsConsumer>
-        {({ width }) => {
-          const small = width <= 420
-          this.pagingEnabled = small
+      <LayoutConsumer>
+        {({ sizename }) => {
+          this.pagingEnabled = sizename === '1-small'
 
           return (
             <FlatList
@@ -97,9 +96,13 @@ export class Columns extends PureComponent<ColumnsProps> {
               key="columns-flat-list"
               ItemSeparatorComponent={Separator}
               ListFooterComponent={
-                small || (columnIds && columnIds.length) ? Separator : undefined
+                sizename === '1-small' || (columnIds && columnIds.length)
+                  ? Separator
+                  : undefined
               }
-              ListHeaderComponent={small ? Separator : undefined}
+              ListHeaderComponent={
+                sizename === '1-small' ? Separator : undefined
+              }
               bounces={!this.swipeable}
               className="snap-container"
               data={columnIds}
@@ -115,7 +118,7 @@ export class Columns extends PureComponent<ColumnsProps> {
             />
           )
         }}
-      </DimensionsConsumer>
+      </LayoutConsumer>
     )
   }
 }

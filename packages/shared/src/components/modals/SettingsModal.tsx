@@ -14,7 +14,7 @@ import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
-import { DimensionsConsumer } from '../context/DimensionsContext'
+import { LayoutConsumer } from '../context/LayoutContext'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { ThemePreference } from '../widgets/ThemePreference'
 
@@ -40,14 +40,12 @@ class SettingsModalComponent extends PureComponent<
     return (
       <ThemeConsumer>
         {({ theme }) => (
-          <DimensionsConsumer>
-            {({ width }) => {
-              const small = width <= 420
-
+          <LayoutConsumer>
+            {({ appOrientation, sizename }) => {
               return (
                 <ModalColumn
                   columnId="preferences-modal"
-                  hideCloseButton={small}
+                  hideCloseButton={sizename === '1-small'}
                   iconName="gear"
                   title="Preferences"
                 >
@@ -59,7 +57,7 @@ class SettingsModalComponent extends PureComponent<
 
                     {(() => {
                       if (!username) return null
-                      if (!small) return null
+                      if (appOrientation === 'landscape') return null
 
                       return (
                         <>
@@ -108,7 +106,7 @@ class SettingsModalComponent extends PureComponent<
                 </ModalColumn>
               )
             }}
-          </DimensionsConsumer>
+          </LayoutConsumer>
         )}
       </ThemeConsumer>
     )

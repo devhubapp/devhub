@@ -6,7 +6,10 @@ import { connect } from 'react-redux'
 
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
-import { DimensionsConsumer } from '../components/context/DimensionsContext'
+import {
+  LAYOUT_BREAKPOINTS,
+  LayoutConsumer,
+} from '../components/context/LayoutContext'
 import { ThemeConsumer } from '../components/context/ThemeContext'
 import { FABRenderer } from '../components/layout/FABRenderer'
 import { Sidebar } from '../components/layout/Sidebar'
@@ -69,7 +72,7 @@ export class MainScreenComponent extends PureComponent<
   handleColumnFocusRequest = () => {
     if (
       this.props.currentOpenedModal &&
-      Dimensions.get('window').width <= 420
+      Dimensions.get('window').width <= LAYOUT_BREAKPOINTS.SMALL
     ) {
       this.props.closeAllModals()
     }
@@ -129,9 +132,9 @@ export class MainScreenComponent extends PureComponent<
     return (
       <ThemeConsumer>
         {({ theme }) => (
-          <DimensionsConsumer>
-            {({ width }) => {
-              const small = width <= 420
+          <LayoutConsumer>
+            {({ appOrientation, sizename }) => {
+              const horizontalSidebar = appOrientation === 'portrait'
 
               return (
                 <Screen
@@ -141,19 +144,29 @@ export class MainScreenComponent extends PureComponent<
                   <View
                     style={[
                       styles.container,
-                      { flexDirection: small ? 'column-reverse' : 'row' },
+                      {
+                        flexDirection:
+                          appOrientation === 'landscape'
+                            ? 'row'
+                            : 'column-reverse',
+                      },
                     ]}
                   >
                     <Sidebar
                       key="main-screen-sidebar"
-                      horizontal={small}
-                      small={small}
+                      horizontal={horizontalSidebar}
+                      small={sizename === '1-small'}
                     />
-                    <Separator horizontal={small} thick={!small} />
+                    <Separator
+                      horizontal={horizontalSidebar}
+                      thick={!horizontalSidebar}
+                    />
 
                     <View style={styles.innerContainer}>
                       <ModalRenderer />
-                      {!!currentOpenedModal && !small && <Separator thick />}
+                      {!!currentOpenedModal && !horizontalSidebar && (
+                        <Separator thick />
+                      )}
 
                       <ColumnsContainer />
                       <FABRenderer />
@@ -162,7 +175,7 @@ export class MainScreenComponent extends PureComponent<
                 </Screen>
               )
             }}
-          </DimensionsConsumer>
+          </LayoutConsumer>
         )}
       </ThemeConsumer>
     )

@@ -1,13 +1,13 @@
 import _ from 'lodash'
 import React from 'react'
 import { TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
-import { contentPadding } from '../../styles/variables'
-import { Column, GitHubIcon } from '../../types'
-import { Spacer } from '../common/Spacer'
 import {
-  ColumnHeaderItem,
   columnHeaderItemContentSize,
-} from './ColumnHeaderItem'
+  contentPadding,
+} from '../../styles/variables'
+import { GitHubIcon } from '../../types'
+import { Spacer } from '../common/Spacer'
+import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface ColumnOptionsRowProps {
   children: React.ReactNode

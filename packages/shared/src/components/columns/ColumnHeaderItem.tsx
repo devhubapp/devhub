@@ -13,7 +13,10 @@ import { connect } from 'react-redux'
 
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as selectors from '../../redux/selectors'
-import { contentPadding } from '../../styles/variables'
+import {
+  columnHeaderItemContentSize,
+  contentPadding,
+} from '../../styles/variables'
 import { ExtractPropsFromConnector, GitHubIcon } from '../../types'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
@@ -21,8 +24,6 @@ import {
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
 import { ThemeConsumer } from '../context/ThemeContext'
-
-export const columnHeaderItemContentSize = 20
 
 export interface ColumnHeaderItemProps {
   avatarProps?: Partial<AvatarProps>

@@ -8,7 +8,7 @@ import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { ExtractPropsFromConnector } from '../../types'
 import { FAB } from '../common/FAB'
-import { DimensionsConsumer } from '../context/DimensionsContext'
+import { LayoutConsumer } from '../context/LayoutContext'
 
 const connectToStore = connect(
   (state: any) => ({
@@ -23,9 +23,7 @@ const connectToStore = connect(
 class FABRendererComponent extends PureComponent<
   ExtractPropsFromConnector<typeof connectToStore>
 > {
-  renderContent({ small }: { small?: boolean } = {}) {
-    if (!small) return null
-
+  renderContent() {
     const { currentOpenedModal, closeAllModals, replaceModal } = this.props
 
     const fabStyle: ViewStyle = {
@@ -61,12 +59,12 @@ class FABRendererComponent extends PureComponent<
 
   render() {
     return (
-      <DimensionsConsumer>
-        {({ width }) => {
-          const small = width <= 420
-          return this.renderContent({ small })
+      <LayoutConsumer>
+        {({ sizename }) => {
+          if (sizename !== '1-small') return null
+          return this.renderContent()
         }}
-      </DimensionsConsumer>
+      </LayoutConsumer>
     )
   }
 }

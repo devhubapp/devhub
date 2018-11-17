@@ -6,7 +6,7 @@ import { useDimensions } from '../../hooks/use-dimensions'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
-import { contentPadding } from '../../styles/variables'
+import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { Column } from '../../types'
 import {
   eventTypes,
@@ -20,7 +20,6 @@ import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
 import { ThemeContext } from '../context/ThemeContext'
-import { columnHeaderHeight } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 

@@ -8,13 +8,9 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { contentPadding } from '../../styles/variables'
+import { columnHeaderHeight } from '../../styles/variables'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { ThemeConsumer } from '../context/ThemeContext'
-import { columnHeaderItemContentSize } from './ColumnHeaderItem'
-
-export const columnHeaderHeight =
-  contentPadding * 2 + columnHeaderItemContentSize
 
 export interface ColumnHeaderProps extends ViewProps {
   children?: ReactNode

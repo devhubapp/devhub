@@ -15,8 +15,6 @@ import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 export interface ModalColumnProps extends ColumnHeaderItemProps {
   columnId: string
   hideCloseButton?: boolean
-  minWidth?: ColumnProps['minWidth']
-  maxWidth?: ColumnProps['maxWidth']
 }
 
 export interface ModalColumnState {}
@@ -48,21 +46,12 @@ class ModalColumnComponent extends PureComponent<
   }
 
   render() {
-    const {
-      canGoBack,
-      children,
-      hideCloseButton,
-      maxWidth,
-      minWidth,
-      ...props
-    } = this.props
+    const { canGoBack, children, hideCloseButton, ...props } = this.props
     delete props.popModal
 
     return (
       <Column
         columnId={this.props.columnId}
-        maxWidth={maxWidth}
-        minWidth={minWidth}
         style={[
           {
             zIndex: 100,

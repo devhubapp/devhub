@@ -13,9 +13,9 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { ColumnRP } from '../../render-props/ColumnRP'
 import { emitter } from '../../setup'
+import { sidebarSize } from '../../styles/variables'
 import { ExtractPropsFromConnector } from '../../types'
 import { getColumnHeaderDetails } from '../../utils/helpers/github/events'
-import { columnHeaderHeight } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
@@ -23,8 +23,6 @@ import { Separator } from '../common/Separator'
 import { ThemeConsumer } from '../context/ThemeContext'
 
 const logo = require('shared/assets/logo.png') // tslint:disable-line
-
-export const sidebarSize = columnHeaderHeight
 
 const styles = StyleSheet.create({
   centerContainer: {
@@ -112,7 +110,7 @@ class SidebarComponent extends PureComponent<
                     />
                   </View>
 
-                  <Separator horizontal />
+                  <Separator horizontal={!horizontal} />
                 </>
               )}
 
@@ -125,7 +123,7 @@ class SidebarComponent extends PureComponent<
                     <ColumnHeaderItem iconName="plus" />
                   </TouchableOpacity>
 
-                  <Separator horizontal />
+                  <Separator horizontal={!horizontal} />
                 </>
               )}
 
@@ -200,7 +198,7 @@ class SidebarComponent extends PureComponent<
 
               {!small && (
                 <>
-                  <Separator horizontal />
+                  <Separator horizontal={!horizontal} />
 
                   <TouchableOpacity
                     onPress={() => replaceModal({ name: 'SETTINGS' })}

@@ -1,11 +1,13 @@
-import React, { PureComponent, StrictMode } from 'react'
+import React, { PureComponent } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import { AppNavigator } from '../navigation/AppNavigator'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
+import { ColumnSizeProvider } from './context/ColumnSizeContext'
 import { DimensionsProvider } from './context/DimensionsContext'
+import { LayoutProvider } from './context/LayoutContext'
 import { ThemeProvider } from './context/ThemeContext'
 
 const { persistor, store } = configureStore()
@@ -19,12 +21,16 @@ export class App extends PureComponent {
       <ReduxProvider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <DimensionsProvider>
-            <ThemeProvider>
-              <>
-                <AppGlobalStyles />
-                <AppNavigator />
-              </>
-            </ThemeProvider>
+            <LayoutProvider>
+              <ColumnSizeProvider>
+                <ThemeProvider>
+                  <>
+                    <AppGlobalStyles />
+                    <AppNavigator />
+                  </>
+                </ThemeProvider>
+              </ColumnSizeProvider>
+            </LayoutProvider>
           </DimensionsProvider>
         </PersistGate>
       </ReduxProvider>

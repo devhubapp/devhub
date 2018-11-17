@@ -10,7 +10,7 @@ export interface DimensionsProviderState {
   height: number
 }
 
-const DimensionsContext = React.createContext<DimensionsProviderState>({
+export const DimensionsContext = React.createContext<DimensionsProviderState>({
   width: 0,
   height: 0,
 })
