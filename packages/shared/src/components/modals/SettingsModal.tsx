@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ScrollView, View } from 'react-native'
 
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -12,11 +12,13 @@ import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
 import { Spacer } from '../common/Spacer'
 import { LayoutConsumer } from '../context/LayoutContext'
+import { ThemeContext } from '../context/ThemeContext'
 import { ThemePreference } from '../widgets/ThemePreference'
 
 export interface SettingsModalProps {}
 
 export function SettingsModal() {
+  const { theme } = useContext(ThemeContext)
   const user = useReduxState(selectors.currentUserSelector)
   const logout = useReduxAction(actions.logout)
 
@@ -33,7 +35,12 @@ export function SettingsModal() {
             title="Preferences"
             right={
               sizename === '1-small' && username ? (
-                <Avatar shape="circle" size={28} username={username} />
+                <Avatar
+                  backgroundColorLoading={theme.backgroundColor}
+                  shape="circle"
+                  size={28}
+                  username={username}
+                />
               ) : (
                 undefined
               )

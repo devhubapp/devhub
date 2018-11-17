@@ -87,10 +87,10 @@ export const Avatar: SFC<AvatarProps> = ({
           }
         >
           <ImageWithLoading
-            {...props}
             backgroundColorFailed="#FFFFFF"
             backgroundColorLoaded="#FFFFFF"
             backgroundColorLoading={theme.backgroundColorLess08}
+            {...props}
             source={{ uri }}
             style={[
               {
