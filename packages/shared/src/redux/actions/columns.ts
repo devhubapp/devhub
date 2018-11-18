@@ -4,27 +4,23 @@ import {
   GitHubEvent,
   GitHubNotificationReason,
 } from '../../types'
-import {
-  createAction,
-  createActionCreatorCreator,
-} from '../../utils/helpers/redux'
+import { createAction } from '../../utils/helpers/redux'
 
-export const replaceColumns = createActionCreatorCreator('REPLACE_COLUMNS')<
-  ColumnAndSubscriptions[]
->()
+export function replaceColumns(payload: ColumnAndSubscriptions[]) {
+  return createAction('REPLACE_COLUMNS', payload)
+}
 
-export const addColumn = createActionCreatorCreator('ADD_COLUMN')<
-  ColumnAndSubscriptions
->()
+export function addColumn(payload: ColumnAndSubscriptions) {
+  return createAction('ADD_COLUMN', payload)
+}
 
-export const deleteColumn = createActionCreatorCreator('DELETE_COLUMN')<
-  string
->()
+export function deleteColumn(columnId: string) {
+  return createAction('DELETE_COLUMN', columnId)
+}
 
-export const moveColumn = createActionCreatorCreator('MOVE_COLUMN')<{
-  columnId: string
-  columnIndex: number
-}>()
+export function moveColumn(payload: { columnId: string; columnIndex: number }) {
+  return createAction('MOVE_COLUMN', payload)
+}
 
 export function setColumnActivityTypeFilter<
   T extends GitHubEvent['type']

@@ -1,17 +1,18 @@
 import { ModalPayload } from '../../types'
-import {
-  createActionCreator,
-  createActionCreatorCreator,
-} from '../../utils/helpers/redux'
+import { createAction } from '../../utils/helpers/redux'
 
-export const pushModal = createActionCreatorCreator('PUSH_MODAL')<
-  ModalPayload
->()
+export function pushModal(payload: ModalPayload) {
+  return createAction('PUSH_MODAL', payload)
+}
 
-export const replaceModal = createActionCreatorCreator('REPLACE_MODAL')<
-  ModalPayload
->()
+export function replaceModal(payload: ModalPayload) {
+  return createAction('REPLACE_MODAL', payload)
+}
 
-export const popModal = createActionCreator('POP_MODAL')
+export function popModal() {
+  return createAction('POP_MODAL')
+}
 
-export const closeAllModals = createActionCreator('CLOSE_ALL_MODALS')
+export function closeAllModals() {
+  return createAction('CLOSE_ALL_MODALS')
+}

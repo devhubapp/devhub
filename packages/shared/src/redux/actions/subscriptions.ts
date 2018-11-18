@@ -1,5 +1,5 @@
-import { createActionCreatorCreator } from '../../utils/helpers/redux'
+import { createAction } from '../../utils/helpers/redux'
 
-export const deleteColumnSubscription = createActionCreatorCreator(
-  'DELETE_COLUMN_SUBSCRIPTION',
-)<string>()
+export function deleteColumnSubscription(columnId: string) {
+  return createAction('DELETE_COLUMN_SUBSCRIPTION', columnId)
+}

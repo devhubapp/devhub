@@ -1,18 +1,19 @@
 import { GitHubUser } from '../../types'
-import {
-  createActionCreator,
-  createActionCreatorCreator,
-  createErrorActionCreator,
-} from '../../utils/helpers/redux'
+import { createAction, createErrorAction } from '../../utils/helpers/redux'
 
-export const loginRequest = createActionCreatorCreator('LOGIN_REQUEST')<{
-  token: string
-}>()
+export function loginRequest(payload: { token: string }) {
+  return createAction('LOGIN_REQUEST', payload)
+}
 
-export const loginSuccess = createActionCreatorCreator('LOGIN_SUCCESS')<
-  GitHubUser
->()
+export function loginSuccess(user: GitHubUser) {
+  return createAction('LOGIN_SUCCESS', user)
+}
 
-export const loginFailure = createErrorActionCreator('LOGIN_FAILURE')
+type HttpError = Error & { code: number } // TODO: Get this type from somewhere else
+export function loginFailure<E extends HttpError>(error: E) {
+  return createErrorAction('LOGIN_FAILURE', error)
+}
 
-export const logout = createActionCreator('LOGOUT')
+export function logout() {
+  return createAction('LOGOUT')
+}
