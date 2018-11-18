@@ -2,12 +2,11 @@ import React, { useContext, useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import * as actions from '../../redux/actions'
-import { AddColumnDetailsPayload } from '../../types'
-import { ModalColumn } from '../columns/ModalColumn'
-
-import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
+import { AddColumnDetailsPayload } from '../../types'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
+import { ModalColumn } from '../columns/ModalColumn'
 import { ColumnSizeContext } from '../context/ColumnSizeContext'
 import { ThemeContext } from '../context/ThemeContext'
 

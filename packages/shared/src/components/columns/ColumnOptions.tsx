@@ -3,9 +3,9 @@ import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 
 import { useDimensions } from '../../hooks/use-dimensions'
-import { useReduxAction } from '../../hooks/use-redux-action'
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { Column } from '../../types'
 import {

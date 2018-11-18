@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import { useReduxAction } from '../../hooks/use-redux-action'
-import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'

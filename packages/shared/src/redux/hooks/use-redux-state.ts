@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { ReactReduxContext } from 'react-redux'
-import { RootState } from '../types'
+
+import { RootState } from '../../types'
 
 export type ExtractSelector<S> = S extends (state: any) => infer R
   ? (state: RootState) => R
