@@ -27,5 +27,4 @@ If you find any bug, please contribute sending a PR with the fix or with a faili
 
 ---
 
-Created March 17th, 2017.<br/>
 Updated November 3rd, 2018.
