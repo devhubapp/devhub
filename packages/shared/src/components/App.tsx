@@ -3,6 +3,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import { AppNavigator } from '../navigation/AppNavigator'
+import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
 import { ColumnSizeProvider } from './context/ColumnSizeContext'
@@ -19,20 +20,22 @@ export class App extends PureComponent {
     return (
       // <StrictMode>
       <ReduxProvider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <DimensionsProvider>
-            <LayoutProvider>
-              <ColumnSizeProvider>
-                <ThemeProvider>
-                  <>
-                    <AppGlobalStyles />
-                    <AppNavigator />
-                  </>
-                </ThemeProvider>
-              </ColumnSizeProvider>
-            </LayoutProvider>
-          </DimensionsProvider>
-        </PersistGate>
+        <ReduxStoreProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <DimensionsProvider>
+              <LayoutProvider>
+                <ColumnSizeProvider>
+                  <ThemeProvider>
+                    <>
+                      <AppGlobalStyles />
+                      <AppNavigator />
+                    </>
+                  </ThemeProvider>
+                </ColumnSizeProvider>
+              </LayoutProvider>
+            </DimensionsProvider>
+          </PersistGate>
+        </ReduxStoreProvider>
       </ReduxProvider>
       // </StrictMode>
     )

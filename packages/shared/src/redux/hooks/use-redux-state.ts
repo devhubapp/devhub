@@ -1,22 +1,37 @@
-import { useContext } from 'react'
-import { ReactReduxContext } from 'react-redux'
+import { useContext, useEffect, useState } from 'react'
 
 import { RootState } from '../../types'
+import { ReduxStoreContext } from '../context/ReduxStoreContext'
 
 export type ExtractSelector<S> = S extends (state: any) => infer R
   ? (state: RootState) => R
   : (state: RootState) => any
 
-// TODO: This is currently triggering a re-render
-// of every function using this hook
-// because useContext(ReactReduxContext) is watching storeState.
-// Fix this.
 export function useReduxState<S extends (state: any) => any>(selector: S) {
-  const { storeState } = useContext<{ storeState: RootState }>(
-    ReactReduxContext,
+  type Result =
+    | (S extends (...args: any[]) => infer R ? R | undefined : any)
+    | undefined
+
+  const store = useContext(ReduxStoreContext)
+  const getResult = (): Result => selector(store.getState())
+  const [result, setResult] = useState(getResult())
+
+  useEffect(
+    () => {
+      return store.subscribe(() => {
+        if (!selector) {
+          setResult(undefined)
+          return
+        }
+
+        const newResult = getResult()
+        if (newResult === result) return
+
+        setResult(newResult)
+      })
+    },
+    [store],
   )
 
-  if (!selector) return
-
-  return selector(storeState) as S extends (...args: any[]) => infer R ? R : any
+  return result
 }
