@@ -16,7 +16,7 @@
     "react": "16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
     "react-native-screens": "^1.0.0-alpha.16",
-    "shared": "0.16.1"
+    "shared-components": "0.16.1"
   },
   "jest": {
     "preset": "react-native",

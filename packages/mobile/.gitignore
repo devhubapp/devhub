@@ -60,7 +60,3 @@ buck-out/
 
 .history
 .jest
-
-# Temporary ugly workaround while
-# react-native doesnt work well with symlinks / yarn workspaces
-./src/shared

@@ -1,0 +1,69 @@
+import React, { PureComponent } from 'react'
+import { FlatList } from 'react-native'
+
+import { EnhancedGitHubEvent } from 'shared-core/dist/types'
+import { ErrorBoundary } from '../../libs/bugsnag'
+import { contentPadding } from '../../styles/variables'
+import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
+import { ThemeConsumer } from '../context/ThemeContext'
+import { EventCard } from './EventCard'
+import { CardItemSeparator } from './partials/CardItemSeparator'
+import { SwipeableEventCard } from './SwipeableEventCard'
+
+export interface EventCardsProps {
+  events: EnhancedGitHubEvent[]
+  repoIsKnown?: boolean
+  swipeable?: boolean
+}
+
+export interface EventCardsState {}
+
+export class EventCards extends PureComponent<
+  EventCardsProps,
+  EventCardsState
+> {
+  keyExtractor(event: EnhancedGitHubEvent) {
+    return `event-card-${event.id}`
+  }
+
+  renderItem = ({ item: event }: { item: EnhancedGitHubEvent }) => {
+    if (this.props.swipeable) {
+      return (
+        <SwipeableEventCard
+          event={event}
+          repoIsKnown={this.props.repoIsKnown}
+        />
+      )
+    }
+
+    return (
+      <ErrorBoundary>
+        <EventCard event={event} repoIsKnown={this.props.repoIsKnown} />
+      </ErrorBoundary>
+    )
+  }
+
+  render() {
+    const { events } = this.props
+
+    return (
+      <ThemeConsumer>
+        {({ theme }) => (
+          <TransparentTextOverlay
+            color={theme.backgroundColor}
+            size={contentPadding}
+            from="vertical"
+          >
+            <FlatList
+              data={events}
+              ItemSeparatorComponent={CardItemSeparator}
+              keyExtractor={this.keyExtractor}
+              removeClippedSubviews
+              renderItem={this.renderItem}
+            />
+          </TransparentTextOverlay>
+        )}
+      </ThemeConsumer>
+    )
+  }
+}

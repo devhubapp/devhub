@@ -7,7 +7,7 @@ import { AppRegistry } from 'react-native-web'
 import './index.css'
 import './reset.css'
 
-import { App } from 'shared/dist/components/App'
+import { App } from 'shared-components/dist/components/App'
 
 AppRegistry.registerComponent('devhub', () => App)
 AppRegistry.runApplication('devhub', {
