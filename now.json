@@ -3,17 +3,17 @@
   "alias": "devhubapp.com",
   "version": 2,
   "builds": [
-    { "src": "packages/server/oauth/providers/github/*.js", "use": "@now/node" },
+    { "src": "packages/server/src/oauth/providers/github/*.js", "use": "@now/node" },
     { "src": "packages/web/dist/**", "use": "@now/static" }
   ],
   "routes": [
     {
       "src": "/auth/github",
-      "dest": "/packages/server/oauth/providers/github/auth.js"
+      "dest": "/packages/server//src/oauth/providers/github/auth.js"
     },
     {
       "src": "/auth/github/callback",
-      "dest": "/packages/server/oauth/providers/github/callback.js"
+      "dest": "/packages/server//src/oauth/providers/github/callback.js"
     },
     {
       "src": "/(.*)",
