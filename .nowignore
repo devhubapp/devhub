@@ -4,6 +4,7 @@
 @types
 node_modules
 packages/mobile
+packages/server/src
 packages/shared-components/node_modules
 packages/shared-components/package.json
 packages/shared-components/src

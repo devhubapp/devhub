@@ -1,9 +1,12 @@
 {
   "name": "server",
   "version": "0.17.1",
+  "main": "dist",
   "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist/*",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
-    "lint": "cd .",
+    "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
@@ -13,6 +16,22 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
-    "prettier": "^1.15.2"
+    "@types/fbemitter": "^2.0.32",
+    "@types/jest": "^23.3.9",
+    "@types/lodash": "^4.14.118",
+    "@types/lodash.omit": "^4.5.4",
+    "@types/qs": "^6.5.1",
+    "@types/ramda": "^0.26.0",
+    "babel-jest": "^23.6.0",
+    "husky": "^1.1.4",
+    "jest": "^23.6.0",
+    "postinstall-postinstall": "^2.0.0",
+    "prettier": "^1.15.2",
+    "ts-jest": "^23.10.4",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.1.6"
   }
 }

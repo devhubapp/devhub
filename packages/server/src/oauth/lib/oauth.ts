@@ -1,9 +1,14 @@
-const qs = require('qs')
-const axios = require('axios')
+import axios from 'axios'
+import { Http2ServerRequest, Http2ServerResponse } from 'http2'
+import qs from 'qs'
 
-const { mergeQueryWithURL } = require('../helpers')
+import { mergeQueryWithURL } from '../helpers'
 
-const redirectUsingHTML = (res, statusCode, url) => {
+const redirectUsingHTML = (
+  res: Http2ServerResponse,
+  _statusCode: number,
+  url: string,
+) => {
   // res.writeHead(statusCode || 302, { 'content-type': 'text/html' })
   res.end(
     `<!DOCTYPE html>
@@ -14,7 +19,11 @@ const redirectUsingHTML = (res, statusCode, url) => {
   )
 }
 
-const redirectUsingHTMLAndPostMessage = (res, statusCode, url) => {
+const redirectUsingHTMLAndPostMessage = (
+  res: Http2ServerResponse,
+  _statusCode: number,
+  url: string,
+) => {
   // res.writeHead(statusCode || 302, { 'content-type': 'text/html' })
   res.end(
     `<!DOCTYPE html>
@@ -48,30 +57,40 @@ const redirectUsingHTMLAndPostMessage = (res, statusCode, url) => {
   )
 }
 
-exports.authorize = (req, res, { AUTHORIZE_URL }, _query = req.query) => {
-  redirectUsingHTML(res, 302, mergeQueryWithURL(AUTHORIZE_URL, _query))
+export function authorize(
+  req: Http2ServerRequest,
+  res: Http2ServerResponse,
+  { AUTHORIZE_URL }: { AUTHORIZE_URL: string },
+  query?: object,
+) {
+  redirectUsingHTML(res, 302, mergeQueryWithURL(AUTHORIZE_URL, query || {}))
 }
 
-exports.callback = async (
-  req,
-  res,
+export async function callback(
+  req: Http2ServerRequest,
+  res: Http2ServerResponse,
   {
     CALLBACK_URL,
     CLIENT_ID,
     CLIENT_SECRET,
     GET_TOKEN_URL,
     PROVIDER = 'OAuth provider',
+  }: {
+    CALLBACK_URL: string
+    CLIENT_ID: string
+    CLIENT_SECRET: string
+    GET_TOKEN_URL: string
+    PROVIDER: string
   },
-  _query = req.query,
-  _callback = function() {},
-) => {
-  const { code } = req.query
+  _query: object = {},
+  _callback: (error: any, data: any) => void = () => undefined,
+) {
+  const { code }: any = _query || {}
 
-  const callback = _callback || function() {}
-  const redirectWithData = (statusCode, data) => {
-    callback(data.error || null, data.error ? null : data)
+  const redirectWithData = (statusCode: number, data: any) => {
+    if (_callback) _callback(data.error || null, data.error ? null : data)
 
-    const query = Object.assign({}, req.query, data)
+    const query = Object.assign({}, _query, data)
     query.callback_url = query.callback_url || CALLBACK_URL
 
     const url = mergeQueryWithURL(CALLBACK_URL, query)

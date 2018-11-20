@@ -1,5 +1,12 @@
 {
   "name": "server-www",
   "version": "0.17.1",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "cd .",
+    "clean": "cd .",
+    "format": "cd .",
+    "lint": "cd .",
+    "prepare": "cd .. && yarn patch-package"
+  }
 }

@@ -1038,7 +1038,14 @@
   resolved "https://registry.npmjs.org/@types/jest/-/jest-23.3.9.tgz#c16b55186ee73ae65e001fbee69d392c51337ad1"
   integrity sha512-wNMwXSUcwyYajtbayfPp55tSayuDVU6PfY5gzvRSj80UvxdXEJOVPnUVajaOp7NgXLm+1e2ZDLULmpsU9vDvQw==
 
-"@types/lodash@^4.14.118":
+"@types/lodash.omit@^4.5.4":
+  version "4.5.4"
+  resolved "https://registry.npmjs.org/@types/lodash.omit/-/lodash.omit-4.5.4.tgz#d5c14e264c4cb032b9f2d2638e3702adb52d2380"
+  integrity sha512-hv7Q3zXtRW+ruFC4Dp2y8AwMEyj6jiJHumDSnfCHNzE6HmFT8p7moTklM7Jzk+RJNKHfioJDnWHpv8GTnGXRnQ==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*", "@types/lodash@^4.14.118":
   version "4.14.118"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.118.tgz#247bab39bfcc6d910d4927c6e06cbc70ec376f27"
   integrity sha512-iiJbKLZbhSa6FYRip/9ZDX6HXhayXLDGY2Fqws9cOkEQ6XeKfaxB0sC541mowZJueYyMnVUmmG+al5/4fCDrgw==

@@ -2,6 +2,7 @@
   "name": "mobile",
   "version": "0.17.1",
   "scripts": {
+    "clean": "cd .",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package",

@@ -9,9 +9,10 @@
     "nohoist": []
   },
   "scripts": {
-    "build": "yarn && yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace web build",
+    "build": "yarn && yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace server build && yarn workspace web build",
+    "clean": "yarn workspaces run clean",
     "deploy": "yarn build && yarn now && yarn now alias",
-    "dev": "yarn workspace shared-core clean && yarn workspace shared-components clean && yarn workspace shared-core build && yarn workspace shared-components build && concurrently --kill-others \"yarn workspace shared-components build -W\" \"yarn workspace web start\"  \"yarn workspace mobile start\"",
+    "dev": "yarn clean && yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace server build && concurrently --kill-others \"yarn workspace shared-core build -W\" \"yarn workspace shared-components build -W\" \"yarn workspace server build -W\" \"yarn workspace web start\"  \"yarn workspace mobile start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "now": "npx now",

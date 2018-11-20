@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "react-app-rewired build && rm -rf dist && mv build dist",
+    "clean": "rm -rf dist/*",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
