@@ -15,7 +15,7 @@
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "now": "npx now",
-    "patch-package": "if test \"$NOW\" = \"1\"; then cd .; else patch-package; fi",
+    "patch-package": "if test \"$ISNOW\" = \"1\"; then cd .; else patch-package; fi",
     "prepare": "yarn patch-package",
     "studio": "yarn workspace mobile studio",
     "xcode": "yarn workspace mobile xcode"

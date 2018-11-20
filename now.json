@@ -24,6 +24,7 @@
   "env": {
     "GITHUB_CALLBACK_URL": "",
     "GITHUB_CLIENT_ID": "@github-client-id",
-    "GITHUB_CLIENT_SECRET": "@github-client-secret"
+    "GITHUB_CLIENT_SECRET": "@github-client-secret",
+    "ISNOW": "1"
   }
 }
