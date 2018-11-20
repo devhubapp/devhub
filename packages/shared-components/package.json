@@ -1,6 +1,6 @@
 {
   "name": "shared-components",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "main": "dist",
   "scripts": {
     "build": "tsc",
@@ -37,7 +37,7 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.2",
     "reselect": "^4.0.0",
-    "shared-core": "0.16.1"
+    "shared-core": "0.17.0"
   },
   "devDependencies": {
     "@types/fbemitter": "^2.0.32",
