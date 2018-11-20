@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-google-analytics-bridge')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-screens')
