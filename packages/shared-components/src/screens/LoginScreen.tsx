@@ -15,8 +15,6 @@ import { contentPadding } from '../styles/variables'
 
 const logo = require('shared-components/assets/logo.png') // tslint:disable-line
 
-const serverURL = 'https://micro-oauth-r2cnw6ztl.now.sh'
-
 export interface LoginScreenProps {}
 
 export interface LoginScreenState {
@@ -111,7 +109,7 @@ export class LoginScreenComponent extends PureComponent<
 
     let token
     try {
-      const params = await executeOAuth(serverURL, permissions)
+      const params = await executeOAuth(permissions)
       if (!(params && params.access_token))
         throw new Error('No token received.')
 

@@ -3,7 +3,7 @@ import { StyleSheet, Text } from 'react-native'
 
 import { ThemeConsumer } from '../context/ThemeContext'
 
-const pkg = require('shared-components/package.json') // tslint:disable-line
+const pkg = require('shared-core/package.json') // tslint:disable-line
 
 const styles = StyleSheet.create({
   appVersion: {

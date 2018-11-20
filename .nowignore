@@ -4,8 +4,12 @@
 @types
 node_modules
 packages/mobile
-packages/shared-components
+packages/shared-components/node_modules
+packages/shared-components/package.json
+packages/shared-components/src
 packages/web/build
+packages/web/node_modules
+packages/web/package.json
 packages/web/src
 patches
 planning.txt

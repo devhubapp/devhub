@@ -6,6 +6,12 @@
     "lint": "cd .",
     "prepare": "cd .. && yarn patch-package"
   },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "lodash.omit": "^4.5.0",
+    "qs": "^6.5.2",
+    "url": "^0.11.0"
+  },
   "devDependencies": {
     "prettier": "^1.15.2"
   }

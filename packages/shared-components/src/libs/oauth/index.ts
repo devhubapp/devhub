@@ -1,11 +1,12 @@
 import qs from 'qs'
 
+import { SERVER_BASE_URL } from 'shared-core/dist/utils/constants'
 import { Browser } from '../browser'
 import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
 
 const callbackURL = 'devhub://oauth/github'
 
-export async function executeOAuth(serverURL: string, scopes: string[]) {
+export async function executeOAuth(scopes: string[]) {
   const scopesStr = (scopes || []).join(' ')
   const querystring = qs.stringify({
     scope: scopesStr,
@@ -13,7 +14,7 @@ export async function executeOAuth(serverURL: string, scopes: string[]) {
   })
 
   // console.log('[OAUTH] Opening browser...')
-  Browser.openURL(`${serverURL}/?${querystring}`)
+  Browser.openURL(`${SERVER_BASE_URL}/auth/github?${querystring}`)
 
   const url = await listenForNextUrl()
   // console.log('[OAUTH] Received URL:', url)

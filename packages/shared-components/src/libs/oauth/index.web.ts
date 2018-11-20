@@ -1,5 +1,6 @@
 import qs from 'qs'
 
+import { SERVER_BASE_URL } from 'shared-core/dist/utils/constants'
 import { listenForNextMessageData } from './helpers.web'
 
 const callbackURL = ''
@@ -15,7 +16,7 @@ function popupWindow(url: string, w: number = 500, h: number = 600) {
   )
 }
 
-export async function executeOAuth(serverURL: string, scopes: string[]) {
+export async function executeOAuth(scopes: string[]) {
   const scopesStr = (scopes || []).join(' ')
   const querystring = qs.stringify({
     scope: scopesStr,
@@ -24,7 +25,9 @@ export async function executeOAuth(serverURL: string, scopes: string[]) {
   })
 
   // console.log('[OAUTH] Opening popup...')
-  const popup = popupWindow(`${serverURL}/?${querystring}`)
+  const serverBaseUrl =
+    window.location.hostname === 'localhost' ? SERVER_BASE_URL : ''
+  const popup = popupWindow(`${serverBaseUrl}/auth/github?${querystring}`)
 
   try {
     const data = await listenForNextMessageData(popup)

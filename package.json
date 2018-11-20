@@ -9,13 +9,14 @@
     "nohoist": []
   },
   "scripts": {
-    "build": "yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace web build",
+    "build": "yarn && yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace web build",
     "deploy": "yarn build && yarn now && yarn now alias",
     "dev": "yarn workspace shared-core clean && yarn workspace shared-components clean && yarn workspace shared-core build && yarn workspace shared-components build && concurrently --kill-others \"yarn workspace shared-components build -W\" \"yarn workspace web start\"  \"yarn workspace mobile start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
-    "now": "now",
-    "prepare": "patch-package",
+    "now": "npx now",
+    "patch-package": "if test \"$NOW\" = \"1\"; then cd .; else patch-package; fi",
+    "prepare": "yarn patch-package",
     "studio": "yarn workspace mobile studio",
     "xcode": "yarn workspace mobile xcode"
   },
@@ -24,7 +25,6 @@
     "concurrently": "^4.0.1",
     "husky": "^1.1.4",
     "lint-staged-offline": "^0.0.1",
-    "now": "^12.1.2",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "prettier": "^1.15.2",
