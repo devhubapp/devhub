@@ -34,7 +34,7 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
         isLoggingIn: false,
         lastLoginAt: new Date().toISOString(),
         token: state.token,
-        user: action.payload,
+        user: action.payload.user,
       }
 
     case 'LOGIN_FAILURE':

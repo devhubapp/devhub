@@ -1,4 +1,4 @@
-import { Http2ServerRequest } from 'http2'
+import { IncomingMessage } from 'http'
 import omit from 'lodash.omit'
 import qs from 'qs'
 import { ParsedUrlQuery } from 'querystring'
@@ -13,7 +13,7 @@ export function isLocalhost(host: string) {
   )
 }
 
-export function getCurrentHostURL(req: Http2ServerRequest) {
+export function getCurrentHostURL(req: IncomingMessage) {
   const host = req.headers.host || ''
 
   return isLocalhost(host)
@@ -21,12 +21,12 @@ export function getCurrentHostURL(req: Http2ServerRequest) {
     : `https://${host}`
 }
 
-export function getDefaultCallbackURL(req: Http2ServerRequest) {
+export function getDefaultCallbackURL(req: IncomingMessage) {
   return `${getCurrentHostURL(req)}/auth/github/callback`
 }
 
 export function getCallbackURLWithQuery(
-  req: Http2ServerRequest,
+  req: IncomingMessage,
   callbackUrl?: string,
   query?: object,
 ) {

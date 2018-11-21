@@ -1,11 +1,11 @@
-import { Http2ServerRequest, Http2ServerResponse } from 'http2'
+import { IncomingMessage, ServerResponse } from 'http'
 import url from 'url'
 
 import { getFirstStringFromQuery } from '../../helpers'
 import { callback } from '../../lib/oauth'
 
-module.exports = (req: Http2ServerRequest, res: Http2ServerResponse) => {
-  const query = url.parse(req.url, true).query || {}
+module.exports = (req: IncomingMessage, res: ServerResponse) => {
+  const query = url.parse(req.url || '', true).query || {}
   const callbackUrl = getFirstStringFromQuery(query, 'callback_url')
 
   callback(

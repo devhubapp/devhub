@@ -3,8 +3,8 @@ import {
   ColumnFilters,
   GitHubEvent,
   GitHubNotificationReason,
-} from 'shared-core/dist/types'
-import { createAction } from 'shared-core/dist/utils/helpers/redux'
+} from '../../types'
+import { createAction } from '../../utils/helpers/redux'
 
 export function replaceColumns(payload: ColumnAndSubscriptions[]) {
   return createAction('REPLACE_COLUMNS', payload)

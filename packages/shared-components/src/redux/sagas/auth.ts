@@ -20,13 +20,33 @@ function* onLoginRequest(
   try {
     github.authenticate(action.payload.token || '')
 
+    const response = yield fetch('/api/redux', {
+      method: 'POST',
+      body: JSON.stringify({ action }),
+    })
+    const body = yield response.json()
+    if (!(body && body.action && body.action.type))
+      throw new Error('Invalid response')
+
+    yield put(body.action)
+    return
+  } catch (error) {
+    console.error(error)
+
+    if (error && error.response && error.response.action) {
+      yield put(error.response.action)
+      return
+    }
+  }
+
+  try {
     const response = yield call(github.octokit.users.get, {})
     const user = response.data as GitHubUser
     if (!(user && user.id && user.login)) throw new Error('Invalid response')
 
-    yield put(actions.loginSuccess(user))
-  } catch (e) {
-    yield put(actions.loginFailure(e))
+    yield put(actions.loginSuccess({ user }))
+  } catch (error) {
+    yield put(actions.loginFailure(error))
   }
 }
 

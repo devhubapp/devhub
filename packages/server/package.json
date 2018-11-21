@@ -12,7 +12,9 @@
   "dependencies": {
     "axios": "^0.18.0",
     "lodash.omit": "^4.5.0",
+    "micro": "^9.3.3",
     "qs": "^6.5.2",
+    "shared-core": "0.17.1",
     "url": "^0.11.0"
   },
   "devDependencies": {
@@ -20,11 +22,13 @@
     "@types/jest": "^23.3.9",
     "@types/lodash": "^4.14.118",
     "@types/lodash.omit": "^4.5.4",
+    "@types/micro": "^7.3.3",
     "@types/qs": "^6.5.1",
     "@types/ramda": "^0.26.0",
     "babel-jest": "^23.6.0",
     "husky": "^1.1.4",
     "jest": "^23.6.0",
+    "micro-dev": "^3.0.0",
     "postinstall-postinstall": "^2.0.0",
     "prettier": "^1.15.2",
     "ts-jest": "^23.10.4",

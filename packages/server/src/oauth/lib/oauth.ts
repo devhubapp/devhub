@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { Http2ServerRequest, Http2ServerResponse } from 'http2'
+import { IncomingMessage, ServerResponse } from 'http'
 import qs from 'qs'
 
 import { mergeQueryWithURL } from '../helpers'
 
 const redirectUsingHTML = (
-  res: Http2ServerResponse,
+  res: ServerResponse,
   _statusCode: number,
   url: string,
 ) => {
@@ -20,7 +20,7 @@ const redirectUsingHTML = (
 }
 
 const redirectUsingHTMLAndPostMessage = (
-  res: Http2ServerResponse,
+  res: ServerResponse,
   _statusCode: number,
   url: string,
 ) => {
@@ -58,8 +58,8 @@ const redirectUsingHTMLAndPostMessage = (
 }
 
 export function authorize(
-  req: Http2ServerRequest,
-  res: Http2ServerResponse,
+  req: IncomingMessage,
+  res: ServerResponse,
   { AUTHORIZE_URL }: { AUTHORIZE_URL: string },
   query?: object,
 ) {
@@ -67,8 +67,8 @@ export function authorize(
 }
 
 export async function callback(
-  req: Http2ServerRequest,
-  res: Http2ServerResponse,
+  req: IncomingMessage,
+  res: ServerResponse,
   {
     CALLBACK_URL,
     CLIENT_ID,

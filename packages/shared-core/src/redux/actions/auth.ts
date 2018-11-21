@@ -1,0 +1,18 @@
+import { GitHubUser } from '../../types'
+import { createAction, createErrorAction } from '../../utils/helpers/redux'
+
+export function loginRequest(payload: { token: string }) {
+  return createAction('LOGIN_REQUEST', payload)
+}
+
+export function loginSuccess(payload: { user: GitHubUser }) {
+  return createAction('LOGIN_SUCCESS', payload)
+}
+
+export function loginFailure(error: { code: number; message: string }) {
+  return createErrorAction('LOGIN_FAILURE', error)
+}
+
+export function logout() {
+  return createAction('LOGOUT')
+}

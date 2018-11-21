@@ -67,7 +67,7 @@ function getDefaultColumns(username: string): ColumnAndSubscriptions[] {
 function* onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
-  const username = action.payload.login
+  const username = action.payload.user.login
   const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
   if (!hasCreatedColumn)
     yield put(actions.replaceColumns(getDefaultColumns(username)))
