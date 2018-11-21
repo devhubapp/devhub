@@ -7,6 +7,8 @@
     "clean": "cd .",
     "format": "cd .",
     "lint": "cd .",
-    "prepare": "cd .. && yarn patch-package"
-  }
+    "prepare": "cd ."
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

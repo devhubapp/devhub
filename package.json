@@ -6,7 +6,10 @@
     "packages": [
       "packages/*"
     ],
-    "nohoist": []
+    "nohoist": [
+      "**/server-www",
+      "**/server-www/**"
+    ]
   },
   "scripts": {
     "build": "yarn && yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace server build && yarn workspace web build",
