@@ -40,6 +40,8 @@ module.exports = async (req: IncomingMessage, res: ServerResponse) => {
           `https://api.github.com/user?access_token=${action.payload.token}`,
         )
 
+        console.log('[REDUX][LOGIN_SUCCESS]', data.login) // tslint:disable-line
+
         sendReduxResponse(res, status, {
           action: {
             type: 'LOGIN_SUCCESS',
