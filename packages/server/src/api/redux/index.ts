@@ -20,7 +20,13 @@ module.exports = async (req: IncomingMessage, res: ServerResponse) => {
     return
   }
 
-  const body = await json(req)
+  let body
+  try {
+    body = await json(req)
+  } catch (error) {
+    send(res, 400, 'Invalid request. Required a valid JSON.')
+    return
+  }
 
   const { action } = (body || {}) as { action?: AllActions }
 
