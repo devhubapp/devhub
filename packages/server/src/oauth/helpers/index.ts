@@ -3,26 +3,8 @@ import omit from 'lodash.omit'
 import qs from 'qs'
 import { ParsedUrlQuery } from 'querystring'
 
-export function isLocalhost(host: string) {
-  if (!host) return ''
-
-  return (
-    host.indexOf('localhost') >= 0 ||
-    host.indexOf('0.0.0.0') >= 0 ||
-    host.indexOf('127.0.0.1') >= 0
-  )
-}
-
-export function getCurrentHostURL(req: IncomingMessage) {
-  const host = req.headers.host || ''
-
-  return isLocalhost(host)
-    ? `http://${host.replace(/(0.0.0.0)|(127.0.0.1)/, 'localhost')}`
-    : `https://${host}`
-}
-
 export function getDefaultCallbackURL(req: IncomingMessage) {
-  return `${getCurrentHostURL(req)}/auth/github/callback`
+  return `https://devhubapp.com/auth/github/callback`
 }
 
 export function getCallbackURLWithQuery(
