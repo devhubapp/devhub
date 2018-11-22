@@ -10,7 +10,9 @@
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
-    "axios": "^0.18.1",
+    "apollo-server-micro": "^2.2.2",
+    "axios": "^0.18.0",
+    "graphql": "^14.0.2",
     "lodash.omit": "^4.5.0",
     "micro": "^9.3.3",
     "qs": "^6.5.2",
