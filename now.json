@@ -3,15 +3,15 @@
   "alias": "devhubapp.com",
   "version": 2,
   "builds": [
-    { "src": "packages/server/dist/api/auth/index.js", "use": "@now/node" },
+    { "src": "packages/server/dist/auth/index.js", "use": "@now/node" },
     { "src": "packages/server/dist/api/graphql/index.js", "use": "@now/node" },
     { "src": "packages/server/dist/oauth/providers/github/*.js", "use": "@now/node" },
     { "src": "packages/web/dist/**", "use": "@now/static" }
   ],
   "routes": [
     {
-      "src": "/api/auth",
-      "dest": "/packages/server/dist/api/auth/index.js"
+      "src": "/auth",
+      "dest": "/packages/server/dist/auth/index.js"
     },
     {
       "src": "/api/graphql",

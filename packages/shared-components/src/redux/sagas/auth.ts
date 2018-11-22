@@ -22,7 +22,7 @@ function* onLoginRequest(
 
   try {
     const { data }: AxiosResponse<{ user: GitHubUser }> = yield axios.post(
-      '/api/auth',
+      '/auth',
       {
         githubToken: action.payload.token,
       },
