@@ -1,6 +1,6 @@
 {
   "name": "server-www",
-  "version": "0.18.2",
+  "version": "0.18.3",
   "license": "MIT",
   "scripts": {
     "build": "cd .",
