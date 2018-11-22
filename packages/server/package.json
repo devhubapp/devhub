@@ -16,7 +16,6 @@
     "lodash.omit": "^4.5.0",
     "micro": "^9.3.3",
     "qs": "^6.5.2",
-    "shared-core": "0.18.2",
     "url": "^0.11.0"
   },
   "devDependencies": {
