@@ -14,8 +14,8 @@
   "scripts": {
     "build": "yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace server build && yarn workspace web build",
     "clean": "yarn workspaces run clean",
-    "deploy": "yarn build && yarn now && yarn now alias",
-    "dev": "yarn clean && yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace server build && concurrently --kill-others \"yarn workspace shared-core build -W\" \"yarn workspace shared-components build -W\" \"yarn workspace server build -W\" \"yarn workspace web start\"  \"yarn workspace mobile start\"",
+    "deploy": "yarn build && yarn now",
+    "dev": "yarn clean && yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace server build && concurrently --kill-others \"yarn workspace shared-core build -w\" \"yarn workspace shared-components build -w\" \"yarn workspace server build -w\" \"yarn workspace web start\" \"yarn workspace mobile start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "now": "npx now",
