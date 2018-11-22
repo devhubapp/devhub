@@ -1,5 +1,5 @@
-import { ThemePair } from '../../types'
-import { createAction } from '../../utils/helpers/redux'
+import { ThemePair } from 'shared-core/dist/types'
+import { createAction } from 'shared-core/dist/utils/helpers/redux'
 
 export function setTheme(payload: {
   id: ThemePair['id']

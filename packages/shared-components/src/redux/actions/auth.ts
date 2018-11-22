@@ -1,5 +1,8 @@
-import { GitHubUser } from '../../types'
-import { createAction, createErrorAction } from '../../utils/helpers/redux'
+import { GitHubUser } from 'shared-core/dist/types'
+import {
+  createAction,
+  createErrorAction,
+} from 'shared-core/dist/utils/helpers/redux'
 
 export function loginRequest(payload: { token: string }) {
   return createAction('LOGIN_REQUEST', payload)

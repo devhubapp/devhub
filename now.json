@@ -3,14 +3,14 @@
   "alias": "devhubapp.com",
   "version": 2,
   "builds": [
-    { "src": "packages/server/dist/api/redux/index.js", "use": "@now/node" },
+    { "src": "packages/server/dist/api/auth/index.js", "use": "@now/node" },
     { "src": "packages/server/dist/oauth/providers/github/*.js", "use": "@now/node" },
     { "src": "packages/web/dist/**", "use": "@now/static" }
   ],
   "routes": [
     {
-      "src": "/api/redux",
-      "dest": "/packages/server/dist/api/redux/index.js"
+      "src": "/api/auth",
+      "dest": "/packages/server/dist/api/auth/index.js"
     },
     {
       "src": "/auth/github",

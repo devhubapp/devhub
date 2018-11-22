@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from 'axios'
 import { REHYDRATE } from 'redux-persist'
 import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
@@ -17,24 +18,25 @@ function* onRehydrate() {
 function* onLoginRequest(
   action: ExtractActionFromActionCreator<typeof actions.loginRequest>,
 ) {
+  github.authenticate(action.payload.token || '')
+
   try {
-    github.authenticate(action.payload.token || '')
+    const { data }: AxiosResponse<{ user: GitHubUser }> = yield axios.post(
+      '/api/auth',
+      {
+        githubToken: action.payload.token,
+      },
+    )
 
-    const response = yield fetch('/api/redux', {
-      method: 'POST',
-      body: JSON.stringify({ action }),
-    })
-    const body = yield response.json()
-    if (!(body && body.action && body.action.type))
-      throw new Error('Invalid response')
+    if (!(data && data.user)) throw new Error('Invalid response')
 
-    yield put(body.action)
+    yield put(actions.loginSuccess({ user: data.user }))
     return
   } catch (error) {
-    console.error(error)
+    console.error(error.response)
 
-    if (error && error.response && error.response.action) {
-      yield put(error.response.action)
+    if (error && error.response && error.response.status === 401) {
+      yield put(actions.loginFailure(error.response.data))
       return
     }
   }
