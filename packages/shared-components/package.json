@@ -1,6 +1,6 @@
 {
   "name": "shared-components",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "main": "dist",
   "scripts": {
     "build": "tsc",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^15.17.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bugsnag-js": "^4.7.3",
     "bugsnag-react": "^1.1.1",
     "bugsnag-react-native": "^2.12.4",
@@ -38,7 +38,7 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.2",
     "reselect": "^4.0.0",
-    "shared-core": "0.18.0"
+    "shared-core": "0.18.1"
   },
   "devDependencies": {
     "@types/fbemitter": "^2.0.32",
