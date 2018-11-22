@@ -14,5 +14,11 @@ const resolvers = {
   },
 }
 
-const apolloServer = new ApolloServer({ typeDefs, resolvers })
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  introspection: true,
+  uploads: false,
+})
+
 module.exports = apolloServer.createHandler()
