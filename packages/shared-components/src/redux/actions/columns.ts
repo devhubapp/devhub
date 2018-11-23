@@ -3,6 +3,7 @@ import {
   ColumnFilters,
   GitHubEvent,
   GitHubNotificationReason,
+  NotificationColumnFilters,
 } from 'shared-core/dist/types'
 import { createAction } from 'shared-core/dist/utils/helpers/redux'
 
@@ -36,7 +37,7 @@ export function setColumnReasonFilter<
 
 export function setColumnUnreadFilter(payload: {
   columnId: string
-  unread: ColumnFilters['unread']
+  unread: NotificationColumnFilters['unread']
 }) {
   return createAction('SET_COLUMN_UNREAD_FILTER', payload)
 }

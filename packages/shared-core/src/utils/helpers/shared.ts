@@ -3,10 +3,11 @@ import moment, { MomentInput } from 'moment'
 import { toUpper } from 'ramda'
 import { PixelRatio } from 'react-native'
 import {
-  ColumnFilters,
+  ActivityColumnFilters,
   EnhancedGitHubEvent,
   GitHubEvent,
   GitHubNotification,
+  NotificationColumnFilters,
 } from '../../types'
 import { mergeSimilarEvent } from './github/events'
 
@@ -110,7 +111,7 @@ export function isNotificationPrivate(notification: GitHubNotification) {
 
 export function getFilteredNotifications(
   notifications: GitHubNotification[],
-  filters?: ColumnFilters,
+  filters?: NotificationColumnFilters,
 ) {
   let _notifications = _(notifications)
     .uniqBy('id')
@@ -158,7 +159,7 @@ export function getFilteredNotifications(
 }
 export function getFilteredEvents(
   events: GitHubEvent[],
-  filters?: ColumnFilters,
+  filters?: ActivityColumnFilters,
 ) {
   let _events = _(events)
     .uniqBy('id')

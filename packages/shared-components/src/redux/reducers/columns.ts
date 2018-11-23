@@ -1,7 +1,11 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { Column } from 'shared-core/dist/types'
+import {
+  ActivityColumn,
+  Column,
+  NotificationColumn,
+} from 'shared-core/dist/types'
 import { guid } from 'shared-core/dist/utils/helpers/shared'
 import { Reducer } from '../types'
 
@@ -103,7 +107,7 @@ export const columnsReducer: Reducer<State> = (
       return immer(state, draft => {
         if (!draft.byId) return
 
-        const column = draft.byId[action.payload.columnId]
+        const column = draft.byId[action.payload.columnId] as ActivityColumn
         if (!column) return
 
         column.filters = column.filters || {}
@@ -118,7 +122,7 @@ export const columnsReducer: Reducer<State> = (
       return immer(state, draft => {
         if (!draft.byId) return
 
-        const column = draft.byId[action.payload.columnId]
+        const column = draft.byId[action.payload.columnId] as NotificationColumn
         if (!column) return
 
         column.filters = column.filters || {}
@@ -135,7 +139,7 @@ export const columnsReducer: Reducer<State> = (
       return immer(state, draft => {
         if (!draft.byId) return
 
-        const column = draft.byId[action.payload.columnId]
+        const column = draft.byId[action.payload.columnId] as NotificationColumn
         if (!column) return
 
         column.filters = column.filters || {}

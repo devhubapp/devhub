@@ -5,9 +5,13 @@ import { TextInputProps, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import {
+  ActivityColumn,
+  ActivitySubscription,
   AddColumnDetailsPayload,
   ColumnParamField,
   ExtractPropsFromConnector,
+  NotificationColumn,
+  NotificationSubscription,
 } from 'shared-core/dist/types'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
@@ -122,12 +126,17 @@ class AddColumnDetailsModalComponent extends PureComponent<
       }),
     ]
 
+    const column = {
+      id: guid(),
+      type: this.props.subscription.type,
+      subscriptionIds: subscriptions.map(s => s.id),
+      filters: undefined,
+    } as typeof subscriptions extends ActivitySubscription[]
+      ? ActivityColumn
+      : NotificationColumn
+
     this.props.addColumn({
-      column: {
-        id: guid(),
-        type: this.props.subscription.type,
-        subscriptionIds: subscriptions.map(s => s.id),
-      },
+      column,
       subscriptions,
     })
   }

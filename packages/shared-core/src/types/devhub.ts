@@ -81,14 +81,8 @@ export type ActivitySubscription = {
       >
     })
 
-export interface ColumnFilters {
-  activity?: {
-    types?: Partial<Record<GitHubEvent['type'], boolean>>
-  }
+export interface BaseColumnFilters {
   // archived?: boolean
-  notifications?: {
-    reasons?: Partial<Record<GitHubNotificationReason, boolean>>
-  }
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
   private?: boolean
@@ -100,28 +94,53 @@ export interface ColumnFilters {
   //   regex?: string
   // }
   // sort?: string[]
-  // types?: Array<GitHubNotification['subject']['type']>
+}
+
+export interface ActivityColumnFilters extends BaseColumnFilters {
+  activity?: {
+    types?: Partial<Record<GitHubEvent['type'], boolean>>
+  }
+}
+
+export interface NotificationColumnFilters extends BaseColumnFilters {
+  notifications?: {
+    reasons?: Partial<Record<GitHubNotificationReason, boolean>>
+  }
   unread?: boolean
 }
 
-export interface ColumnOptions {
-  enableBadge?: boolean
-  enableNotifications?: boolean
-}
+export type ColumnFilters = ActivityColumnFilters | NotificationColumnFilters
 
-export type ColumnSubscription = NotificationSubscription | ActivitySubscription
+// export interface ColumnOptions {
+//   enableBadge?: boolean
+//   enableNotifications?: boolean
+// }
 
-export interface Column {
+export type ColumnSubscription = ActivitySubscription | NotificationSubscription
+
+export interface BaseColumn {
   id: string
-  type: ColumnSubscription['type']
   // title?: string // TODO
   // subtitle?: string // TODO
   subscriptionIds: string[]
-  filters?: ColumnFilters
   // options?: ColumnOptions // TODO
   createdAt: string
   updatedAt: string
 }
+
+export interface ActivityColumn extends BaseColumn {
+  id: string
+  type: 'activity'
+  filters?: ActivityColumnFilters
+}
+
+export interface NotificationColumn extends BaseColumn {
+  id: string
+  type: 'notifications'
+  filters?: NotificationColumnFilters
+}
+
+export type Column = ActivityColumn | NotificationColumn
 
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
@@ -137,7 +156,9 @@ export interface AddColumnDetailsPayload {
 }
 
 export interface ColumnAndSubscriptions {
-  column: Omit<Column, 'createdAt' | 'updatedAt'>
+  column:
+    | Omit<ActivityColumn, 'createdAt' | 'updatedAt'>
+    | Omit<NotificationColumn, 'createdAt' | 'updatedAt'>
   subscriptions: Array<Omit<ColumnSubscription, 'createdAt' | 'updatedAt'>>
 }
 
