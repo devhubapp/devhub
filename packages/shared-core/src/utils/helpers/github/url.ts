@@ -130,14 +130,9 @@ export function githubHTMLUrlFromAPIUrl(
       switch (type2) {
         case 'commits': {
           if (commentId) {
-            const elementId =
-              realOSName === 'web'
-                ? `commitcomment-${commentId}`
-                : `comment-${commentId}`
-
             return `${baseURL}/${repoFullName}/commit/${
               restOfURL2[0]
-            }#${elementId}`
+            }#commitcomment-${commentId}`
           }
 
           return `${baseURL}/${repoFullName}/commit/${restOfURL2.join('/')}`
@@ -148,12 +143,8 @@ export function githubHTMLUrlFromAPIUrl(
             issueOrPullRequestNumber &&
             (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
           ) {
-            const elementId =
-              realOSName === 'web'
-                ? `issuecomment-${commentId || restOfURL2[1]}`
-                : `comment-${commentId || restOfURL2[1]}`
-
-            return `${baseURL}/${repoFullName}/issues/${issueOrPullRequestNumber}#${elementId}`
+            return `${baseURL}/${repoFullName}/issues/${issueOrPullRequestNumber}#issuecomment-${commentId ||
+              restOfURL2[1]}`
           }
 
           return `${baseURL}/${repoFullName}/issues/${restOfURL2.join('/')}`
@@ -163,12 +154,8 @@ export function githubHTMLUrlFromAPIUrl(
             issueOrPullRequestNumber &&
             (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
           ) {
-            const elementId =
-              realOSName === 'web'
-                ? `discussion_r${commentId || restOfURL2[1]}`
-                : `comment-${commentId || restOfURL2[1]}`
-
-            return `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}#${elementId}`
+            return `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}#discussion_r${commentId ||
+              restOfURL2[1]}`
           }
 
           return `${baseURL}/${repoFullName}/pull/${restOfURL2.join('/')}`
