@@ -478,7 +478,7 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
   }
 }
 
-export function mergeSimilarEvent(events: GitHubEvent[]) {
+export function mergeSimilarEvents(events: GitHubEvent[]) {
   const enhancedEvents: EnhancedGitHubEvent[] = []
 
   let enhancedEvent: EnhancedGitHubEvent | null = null

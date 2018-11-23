@@ -9,7 +9,7 @@ import {
   GitHubNotification,
   NotificationColumnFilters,
 } from '../../types'
-import { mergeSimilarEvent } from './github/events'
+import { mergeSimilarEvents } from './github/events'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, toUpper)
@@ -166,15 +166,14 @@ export function getFilteredEvents(
     .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
     .value()
 
-  if (!filters) return _events
-
   const hasFilter =
-    (filters.activity &&
+    filters &&
+    ((filters.activity &&
       filters.activity.types &&
       Object.values(filters.activity.types).some(v => !v)) ||
-    typeof filters.private === 'boolean'
+      typeof filters.private === 'boolean')
 
-  if (hasFilter) {
+  if (hasFilter && filters) {
     _events = _events.filter(event => {
       if (
         filters.activity &&
@@ -195,5 +194,5 @@ export function getFilteredEvents(
     })
   }
 
-  return mergeSimilarEvent(_events)
+  return mergeSimilarEvents(_events)
 }
