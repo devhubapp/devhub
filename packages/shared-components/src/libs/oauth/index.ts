@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import { SERVER_BASE_URL } from 'shared-core/dist/utils/constants'
+import { API_BASE_URL } from 'shared-core/dist/utils/constants'
 import { Browser } from '../browser'
 import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
 
@@ -14,7 +14,7 @@ export async function executeOAuth(scopes: string[]) {
   })
 
   // console.log('[OAUTH] Opening browser...')
-  Browser.openURL(`${SERVER_BASE_URL}/auth/github?${querystring}`)
+  Browser.openURL(`${API_BASE_URL}/oauth/github?${querystring}`)
 
   const url = await listenForNextUrl()
   // console.log('[OAUTH] Received URL:', url)

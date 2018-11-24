@@ -3,38 +3,13 @@
   "alias": "devhubapp.com",
   "version": 2,
   "builds": [
-    { "src": "packages/server/dist/auth/index.js", "use": "@now/node" },
-    { "src": "packages/server/dist/graphql/index.js", "use": "@now/node" },
-    { "src": "packages/server/dist/oauth/providers/github/*.js", "use": "@now/node" },
     { "src": "packages/web/dist/**", "use": "@now/static" }
   ],
   "routes": [
-    {
-      "src": "/auth",
-      "dest": "/packages/server/dist/auth/index.js"
-    },
-    {
-      "src": "/auth/github",
-      "dest": "/packages/server/dist/oauth/providers/github/auth.js"
-    },
-    {
-      "src": "/auth/github/callback",
-      "dest": "/packages/server/dist/oauth/providers/github/callback.js"
-    },
-    {
-      "src": "/graphql",
-      "dest": "/packages/server/dist/graphql/index.js"
-    },
     {
       "src": "/(.*)",
       "dest": "/packages/web/dist/$1"
     }
   ],
-  "regions": ["gru1"],
-  "env": {
-    "GITHUB_CALLBACK_URL": "",
-    "GITHUB_CLIENT_ID": "@github-client-id",
-    "GITHUB_CLIENT_SECRET": "@github-client-secret",
-    "ISNOW": "1"
-  }
+  "regions": ["gru1"]
 }

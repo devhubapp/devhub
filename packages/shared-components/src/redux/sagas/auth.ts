@@ -6,6 +6,7 @@ import {
   ExtractActionFromActionCreator,
   GitHubUser,
 } from 'shared-core/dist/types'
+import { API_BASE_URL } from 'shared-core/dist/utils/constants'
 import * as github from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -22,7 +23,7 @@ function* onLoginRequest(
 
   try {
     const { data }: AxiosResponse<{ user: GitHubUser }> = yield axios.post(
-      '/auth',
+      `${API_BASE_URL}/auth`,
       {
         githubToken: action.payload.token,
       },

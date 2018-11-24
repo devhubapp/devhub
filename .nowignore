@@ -8,7 +8,6 @@
 @types
 node_modules
 packages/mobile
-packages/server/src
 packages/shared-components/dist
 packages/shared-components/node_modules
 packages/shared-components/package.json
