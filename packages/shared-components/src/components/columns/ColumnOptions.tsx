@@ -94,7 +94,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             iconName="check"
             onToggle={() => toggleOpenedOptionCategory('notification_types')}
             opened={openedOptionCategory === 'notification_types'}
-            title="Notification types"
+            title="Notification reasons"
           >
             {notificationReasonOptions.map(nro => (
               <Checkbox
