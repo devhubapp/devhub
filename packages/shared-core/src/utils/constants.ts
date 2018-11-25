@@ -5,3 +5,4 @@ export const MAX_COLUMN_WIDTH = 360
 export const MIN_COLUMN_WIDTH = 320
 
 export const API_BASE_URL = 'https://api.devhubapp.com'
+export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`

@@ -75,7 +75,7 @@ export const getGitHubURLForRepoInvitation = (repoFullName: string) =>
 
 export const getGitHubAvatarURLFromPayload = (
   payload: any,
-  userId?: number,
+  userId?: number | string,
 ) => {
   if (!payload) return undefined
 
@@ -88,7 +88,7 @@ export const getGitHubAvatarURLFromPayload = (
       typeof payload[field].user.avatar_url === 'string'
     if (!hasAvatar) return false
 
-    if (userId && payload[field].user.id !== userId) return false
+    if (userId && `${payload[field].user.id}` !== `${userId}`) return false
 
     return true
   })

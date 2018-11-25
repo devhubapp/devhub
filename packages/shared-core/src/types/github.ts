@@ -19,7 +19,7 @@ export type GitHubExtractParamsFromActivityMethod<F> = F extends (
   : never
 
 export interface GitHubUser {
-  id: number
+  id: number | string
   avatar_url: string // https://avatars.githubusercontent.com/u/2118189?
   display_login?: string
   gravatar_id: string
@@ -41,7 +41,7 @@ export interface GitHubReaction {
 }
 
 export interface GitHubComment {
-  id: number
+  id: number | string
   commit_id?: string // 6ef64f902613c73251da32d1bc9eb236f38798cc
   user: GitHubUser
   body: string
@@ -68,7 +68,7 @@ export interface GitHubCommit {
 }
 
 export interface GitHubLabel {
-  id: number
+  id: number | string
   name: string
   color: string // CCCCCC
   default: boolean
@@ -76,7 +76,7 @@ export interface GitHubLabel {
 }
 
 export interface GitHubMilestone {
-  id: number // 1165557
+  id: number | string // 1165557
   number: number // 5
   title: string // 30
   description: string // Knesset 30 - future issues / will be fixed later
@@ -93,7 +93,7 @@ export interface GitHubMilestone {
 }
 
 export interface GitHubIssue {
-  id: number
+  id: number | string
   user: GitHubUser
   assignee?: GitHubUser | null
   assignees?: GitHubUser[]
@@ -119,7 +119,7 @@ export interface GitHubOrg {
 }
 
 export interface GitHubPullRequest {
-  id: number // 95201658
+  id: number | string // 95201658
   number: number // 2
   state: 'open' | 'closed' // closed
   locked: boolean // false
@@ -175,7 +175,7 @@ export interface GitHubPage {
 }
 
 export interface GitHubRelease {
-  id: number // 1
+  id: number | string // 1
   tag_name: string // "v1.0.0"
   target_commitish: string // "master"
   name: string // "v1.0.0"
@@ -742,7 +742,7 @@ export type GitHubNotificationReason =
   | 'team_mention' // A team you are part of were @mentioned in the content.
 
 export interface GitHubNotification {
-  id: number
+  id: number | string
   // archived_at: string // specific to this app
   last_read_at: string
   // last_unread_at: string // specific to this app

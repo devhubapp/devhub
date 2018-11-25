@@ -1,4 +1,4 @@
-import { GitHubUser } from 'shared-core/dist/types'
+import { User } from 'shared-core/dist/types/graphql'
 import {
   createAction,
   createErrorAction,
@@ -8,7 +8,7 @@ export function loginRequest(payload: { token: string }) {
   return createAction('LOGIN_REQUEST', payload)
 }
 
-export function loginSuccess(payload: { user: GitHubUser }) {
+export function loginSuccess(payload: { user: User }) {
   return createAction('LOGIN_SUCCESS', payload)
 }
 

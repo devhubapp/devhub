@@ -6,7 +6,8 @@ import {
   ExtractActionFromActionCreator,
   GitHubUser,
 } from 'shared-core/dist/types'
-import { API_BASE_URL } from 'shared-core/dist/utils/constants'
+import { GRAPHQL_ENDPOINT } from 'shared-core/dist/utils/constants'
+import { fromGitHubUser } from '../../api/mappers/user'
 import * as github from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -22,21 +23,64 @@ function* onLoginRequest(
   github.authenticate(action.payload.token || '')
 
   try {
-    const { data }: AxiosResponse<{ user: GitHubUser }> = yield axios.post(
-      `${API_BASE_URL}/auth`,
+    const response: AxiosResponse<{
+      data: { me: any }
+      errors?: any[]
+    }> = yield axios.post(
+      GRAPHQL_ENDPOINT,
       {
-        githubToken: action.payload.token,
+        query: `query me {
+          me {
+            id
+            nodeId
+            login
+            name
+            avatarUrl
+            type
+            bio
+            publicGistsCount
+            publicReposCount
+            privateReposCount
+            privateGistsCount
+            followersCount
+            followingCount
+            ownedPrivateReposCount
+            isTwoFactorAuthenticationEnabled
+            createdAt
+            updatedAt
+          }
+        }`,
+      },
+      {
+        headers: {
+          Authorization: `bearer ${action.payload.token}`,
+        },
       },
     )
 
-    if (!(data && data.user)) throw new Error('Invalid response')
+    const { data, errors } = response.data
 
-    yield put(actions.loginSuccess({ user: data.user }))
+    if (errors && errors.length) {
+      throw { response }
+    }
+
+    if (!(data && data.me && data.me.id)) throw new Error('Invalid response')
+
+    yield put(actions.loginSuccess({ user: data.me }))
     return
   } catch (error) {
     console.error(error.response)
 
-    if (error && error.response && error.response.status === 401) {
+    if (
+      error &&
+      error.response &&
+      (error.response.status === 401 ||
+        (error.response.data &&
+          Array.isArray(error.response.data.errors) &&
+          error.response.data.errors.some(
+            (e: any) => e.extensions && e.extensions.code === 'UNAUTHENTICATED',
+          )))
+    ) {
       yield put(actions.loginFailure(error.response.data))
       return
     }
@@ -44,7 +88,8 @@ function* onLoginRequest(
 
   try {
     const response = yield call(github.octokit.users.get, {})
-    const user = response.data as GitHubUser
+    const githubUser = response.data as GitHubUser
+    const user = fromGitHubUser(githubUser)
     if (!(user && user.id && user.login)) throw new Error('Invalid response')
 
     yield put(actions.loginSuccess({ user }))

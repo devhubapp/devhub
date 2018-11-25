@@ -1,4 +1,4 @@
-import { GitHubUser } from 'shared-core/dist/types'
+import { User } from 'shared-core/dist/types/graphql'
 import { Reducer } from '../types'
 
 export interface State {
@@ -6,7 +6,7 @@ export interface State {
   isLoggingIn: boolean
   lastLoginAt: string | null
   token: string
-  user: GitHubUser | null
+  user: User | null
 }
 
 const initialState: State = {
