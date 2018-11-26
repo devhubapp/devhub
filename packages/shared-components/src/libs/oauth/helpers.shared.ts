@@ -2,10 +2,8 @@ import qs from 'qs'
 
 export interface OAuthResponseData {
   access_token?: string
-  callback_url: string
   code: string
   scope: string[]
-  token_type: string
 }
 
 export const getUrlParamsIfMatches = (

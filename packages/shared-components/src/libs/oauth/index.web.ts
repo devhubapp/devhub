@@ -18,8 +18,7 @@ export async function executeOAuth(scopes: string[]) {
   const scopesStr = (scopes || []).join(' ')
   const querystring = qs.stringify({
     scope: scopesStr,
-    callback_url: '',
-    // origin: window.location.origin || window.location.href,
+    redirect_uri: '',
   })
 
   // console.log('[OAUTH] Opening popup...')
@@ -36,6 +35,7 @@ export async function executeOAuth(scopes: string[]) {
     return data
   } catch (e) {
     if (popup) popup.close()
+
     throw e
   }
 }
