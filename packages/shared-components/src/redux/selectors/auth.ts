@@ -6,7 +6,11 @@ export const errorSelector = (state: RootState) => s(state).error
 
 export const isLoggingInSelector = (state: RootState) => s(state).isLoggingIn
 
-export const tokenSelector = (state: RootState) => s(state).token
+export const appTokenSelector = (state: RootState) => s(state).appToken
+
+export const githubTokenSelector = (state: RootState) => s(state).githubToken
 
 export const currentUserSelector = (state: RootState) =>
-  tokenSelector(state) ? s(state).user : undefined
+  appTokenSelector(state) && githubTokenSelector(state)
+    ? s(state).user
+    : undefined

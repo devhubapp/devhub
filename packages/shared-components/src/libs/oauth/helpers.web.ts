@@ -21,17 +21,18 @@ export const listenForNextMessageData = (
         !(
           e &&
           e.data &&
-          (e.data.oauth || (e.data.access_token || e.data.error))
+          (e.data.oauth ||
+            (e.data.app_token || e.data.github_token || e.data.error))
         )
       ) {
         return
       }
 
-      const { access_token: accessToken, error } = e.data
+      const { app_token: appToken, github_token: githubToken, error } = e.data
 
       window.removeEventListener('message', handleMessage)
 
-      if (accessToken && !error) resolve(e.data)
+      if (appToken && githubToken && !error) resolve(e.data)
       else
         reject(
           new Error(typeof error === 'string' ? error : 'No token received'),

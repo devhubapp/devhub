@@ -28,7 +28,7 @@ export async function executeOAuth(scopes: string[]) {
     const data = await listenForNextMessageData(popup)
     // console.log('[OAUTH] Received data:', data)
 
-    if (!(data && data.access_token)) {
+    if (!(data && data.app_token && data.github_token)) {
       throw new Error('Login failed: No access token received.')
     }
 

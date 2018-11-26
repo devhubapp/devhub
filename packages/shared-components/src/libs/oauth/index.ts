@@ -24,7 +24,7 @@ export async function executeOAuth(scopes: string[]) {
 
   if (typeof Browser.dismiss === 'function') Browser.dismiss()
 
-  if (!(params && params.access_token)) {
+  if (!(params && params.app_token && params.github_token)) {
     throw new Error('Login failed: No access token received.')
   }
 

@@ -6,6 +6,7 @@ import {
   ExtractActionFromActionCreator,
   GitHubUser,
 } from 'shared-core/dist/types'
+import { User } from 'shared-core/dist/types/graphql'
 import { GRAPHQL_ENDPOINT } from 'shared-core/dist/utils/constants'
 import { fromGitHubUser } from '../../api/mappers/user'
 import * as github from '../../libs/github'
@@ -13,47 +14,60 @@ import * as actions from '../actions'
 import * as selectors from '../selectors'
 
 function* onRehydrate() {
-  const token = yield select(selectors.tokenSelector)
-  if (token) yield put(actions.loginRequest({ token }))
+  const appToken = yield select(selectors.appTokenSelector)
+  const githubToken = yield select(selectors.githubTokenSelector)
+  if (!(appToken && githubToken)) return
+
+  yield put(actions.loginRequest({ appToken, githubToken }))
 }
 
 function* onLoginRequest(
   action: ExtractActionFromActionCreator<typeof actions.loginRequest>,
 ) {
-  github.authenticate(action.payload.token || '')
-
   try {
+    github.authenticate(action.payload.githubToken || '')
+
     const response: AxiosResponse<{
-      data: { me: any }
+      data: {
+        login: {
+          appToken: string
+          githubToken: string
+          user: User | null
+        } | null
+      }
       errors?: any[]
     }> = yield axios.post(
       GRAPHQL_ENDPOINT,
       {
-        query: `query me {
-          me {
-            id
-            nodeId
-            login
-            name
-            avatarUrl
-            type
-            bio
-            publicGistsCount
-            publicReposCount
-            privateReposCount
-            privateGistsCount
-            followersCount
-            followingCount
-            ownedPrivateReposCount
-            isTwoFactorAuthenticationEnabled
-            createdAt
-            updatedAt
+        query: `query auth {
+          login {
+            appToken
+            githubToken
+            user {
+              id
+              nodeId
+              login
+              name
+              avatarUrl
+              type
+              bio
+              publicGistsCount
+              publicReposCount
+              privateReposCount
+              privateGistsCount
+              followersCount
+              followingCount
+              ownedPrivateReposCount
+              isTwoFactorAuthenticationEnabled
+              createdAt
+              updatedAt
+            }
           }
         }`,
       },
       {
         headers: {
-          Authorization: `bearer ${action.payload.token}`,
+          Authorization: `bearer ${action.payload.appToken}`,
         },
       },
     )
@@ -64,9 +78,28 @@ function* onLoginRequest(
       throw { response }
     }
 
-    if (!(data && data.me && data.me.id)) throw new Error('Invalid response')
+    if (
+      !(
+        data &&
+        data.login &&
+        data.login.appToken &&
+        data.login.githubToken &&
+        data.login.user &&
+        data.login.user.id
+      )
+    ) {
+      throw new Error('Invalid response')
+    }
 
-    yield put(actions.loginSuccess({ user: data.me }))
+    github.authenticate(data.login.githubToken)
+
+    yield put(
+      actions.loginSuccess({
+        appToken: data.login.appToken,
+        githubToken: data.login.githubToken,
+        user: data.login.user,
+      }),
+    )
     return
   } catch (error) {
     console.error(error.response)
@@ -74,12 +107,7 @@ function* onLoginRequest(
     if (
       error &&
       error.response &&
-      (error.response.status === 401 ||
-        (error.response.data &&
-          Array.isArray(error.response.data.errors) &&
-          error.response.data.errors.some(
-            (e: any) => e.extensions && e.extensions.code === 'UNAUTHENTICATED',
-          )))
+      (error.response.status >= 200 || error.response.status < 500)
     ) {
       yield put(actions.loginFailure(error.response.data))
       return
@@ -92,10 +120,22 @@ function* onLoginRequest(
     const user = fromGitHubUser(githubUser)
     if (!(user && user.id && user.login)) throw new Error('Invalid response')
 
-    yield put(actions.loginSuccess({ user }))
+    yield put(
+      actions.loginSuccess({
+        appToken: action.payload.appToken,
+        githubToken: action.payload.githubToken,
+        user,
+      }),
+    )
   } catch (error) {
     yield put(actions.loginFailure(error))
   }
+}
+
+function onLoginSuccess(
+  action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
+) {
+  github.authenticate(action.payload.githubToken)
 }
 
 function* onLoginFailure(
@@ -113,6 +153,7 @@ export function* authSagas() {
     yield takeLatest(REHYDRATE, onRehydrate),
     yield takeLatest('LOGIN_FAILURE', onLoginFailure),
     yield takeLatest('LOGIN_REQUEST', onLoginRequest),
+    yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
     yield takeLatest('LOGOUT', onLogout),
   ])
 }

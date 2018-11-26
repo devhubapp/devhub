@@ -85,7 +85,7 @@ const connectToStore = connect(
     user: selectors.currentUserSelector(state),
   }),
   {
-    login: actions.loginRequest,
+    loginRequest: actions.loginRequest,
   },
 )
 
@@ -107,20 +107,22 @@ export class LoginScreenComponent extends PureComponent<
         ? ['user', 'repo', 'notifications', 'read:org']
         : ['user', 'public_repo', 'notifications', 'read:org']
 
-    let token
+    let appToken
+    let githubToken
     try {
       const params = await executeOAuth(permissions)
-      if (!(params && params.access_token))
-        throw new Error('No token received.')
+      appToken = params && params.app_token
+      githubToken = params && params.github_token
 
-      token = params.access_token
+      if (!(appToken && githubToken)) throw new Error('No token received.')
     } catch (e) {
       console.error(e)
+      if (e.message === 'Canceled' || e.message === 'Timeout') return
       alert(`Login failed. ${e || ''}`)
       return
     }
 
-    await this.props.login({ token })
+    await this.props.loginRequest({ appToken, githubToken })
   }
 
   loginWithGitHubPrivateAccess = () => this._loginWithGitHub('github.private')

@@ -4,11 +4,18 @@ import {
   createErrorAction,
 } from 'shared-core/dist/utils/helpers/redux'
 
-export function loginRequest(payload: { token: string }) {
+export function loginRequest(payload: {
+  appToken: string
+  githubToken: string
+}) {
   return createAction('LOGIN_REQUEST', payload)
 }
 
-export function loginSuccess(payload: { user: User }) {
+export function loginSuccess(payload: {
+  appToken: string
+  githubToken: string
+  user: User
+}) {
   return createAction('LOGIN_SUCCESS', payload)
 }
 

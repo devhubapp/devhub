@@ -1,8 +1,9 @@
 import qs from 'qs'
 
 export interface OAuthResponseData {
-  access_token?: string
+  app_token?: string
   code: string
+  github_token?: string
   scope: string[]
 }
 

@@ -1,39 +1,52 @@
+import _ from 'lodash'
+import { REHYDRATE } from 'redux-persist'
+
 import { User } from 'shared-core/dist/types/graphql'
 import { Reducer } from '../types'
 
 export interface State {
+  appToken: string | null
   error: object | null
+  githubToken: string | null
   isLoggingIn: boolean
   lastLoginAt: string | null
-  token: string
   user: User | null
 }
 
 const initialState: State = {
+  appToken: null,
   error: null,
+  githubToken: null,
   isLoggingIn: false,
   lastLoginAt: null,
-  token: '',
   user: null,
 }
 
 export const authReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {
+    case REHYDRATE as any:
+      return {
+        ...(action.payload as any).auth,
+        ..._.pick(initialState, ['error', 'isLoggingIn']),
+      }
+
     case 'LOGIN_REQUEST':
       return {
+        appToken: action.payload.appToken,
         error: null,
+        githubToken: action.payload.githubToken,
         isLoggingIn: true,
         lastLoginAt: state.lastLoginAt,
-        token: action.payload.token,
         user: state.user,
       }
 
     case 'LOGIN_SUCCESS':
       return {
+        appToken: action.payload.appToken || state.appToken,
         error: null,
+        githubToken: action.payload.githubToken || state.githubToken,
         isLoggingIn: false,
         lastLoginAt: new Date().toISOString(),
-        token: state.token,
         user: action.payload.user,
       }
 
