@@ -1,6 +1,7 @@
 import React, { SFC } from 'react'
 import { Text, View } from 'react-native'
 
+import { getGitHubURLForRelease } from 'shared-core/dist/utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from 'shared-core/dist/utils/helpers/shared'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
@@ -46,6 +47,14 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
   const name = trimNewLinesAndSpaces(_name)
   const tagName = trimNewLinesAndSpaces(_tagName)
 
+  const repoFullName =
+    ownerName && repositoryName ? `${ownerName}/${repositoryName}` : ''
+  const fixedURL = fixURL(
+    url && !url.includes('api.')
+      ? url
+      : getGitHubURLForRelease(repoFullName, tagName),
+  )
+
   return (
     <ThemeConsumer>
       {({ theme }) => (
@@ -81,7 +90,7 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
 
             <View style={getCardStylesForTheme(theme).rightColumn}>
               <Link
-                href={fixURL(url)}
+                href={fixedURL}
                 style={getCardRowStylesForTheme(theme).mainContentContainer}
               >
                 <Text
@@ -128,7 +137,7 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
 
               <View style={getCardStylesForTheme(theme).rightColumn}>
                 <Link
-                  href={fixURL(url)}
+                  href={fixedURL}
                   style={getCardRowStylesForTheme(theme).mainContentContainer}
                 >
                   <Text
