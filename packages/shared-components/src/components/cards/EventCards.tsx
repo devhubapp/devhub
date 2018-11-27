@@ -7,6 +7,7 @@ import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../context/ThemeContext'
+import { EmptyCards } from './EmptyCards'
 import { EventCard } from './EventCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
@@ -58,7 +59,10 @@ export class EventCards extends PureComponent<
   }
 
   render() {
-    const { events } = this.props
+    const { events, fetchNextPage } = this.props
+
+    if (!(events && events.length))
+      return <EmptyCards fetchNextPage={fetchNextPage} />
 
     return (
       <ThemeConsumer>

@@ -7,6 +7,7 @@ import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../context/ThemeContext'
+import { EmptyCards } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
@@ -61,7 +62,11 @@ export class NotificationCards extends PureComponent<
   }
 
   render() {
-    const { notifications } = this.props
+    const { fetchNextPage, notifications } = this.props
+
+    if (!(notifications && notifications.length))
+      return <EmptyCards fetchNextPage={fetchNextPage} />
+
     return (
       <ThemeConsumer>
         {({ theme }) => (
