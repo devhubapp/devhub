@@ -14,3 +14,8 @@ export const currentUserSelector = (state: RootState) =>
   appTokenSelector(state) && githubTokenSelector(state)
     ? s(state).user
     : undefined
+
+export const currentUsernameSelector = (state: RootState) => {
+  const user = currentUserSelector(state)
+  return (user && user.github && user.github.login) || undefined
+}

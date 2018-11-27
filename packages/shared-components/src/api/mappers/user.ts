@@ -1,7 +1,8 @@
+import { GitHubUser } from 'shared-core/dist/types'
 import { User } from 'shared-core/dist/types/graphql'
 
 // TODO: Put this on a shared repository with the server
-export function fromGitHubUser(user: any): User | null {
+export function fromGitHubUser(user: GitHubUser): User['github'] | null {
   if (!(user && user.id)) return null
 
   return {

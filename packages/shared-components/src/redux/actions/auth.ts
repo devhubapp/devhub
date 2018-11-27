@@ -19,7 +19,7 @@ export function loginSuccess(payload: {
   return createAction('LOGIN_SUCCESS', payload)
 }
 
-export function loginFailure(error: { code: number; message: string }) {
+export function loginFailure(error: any) {
   return createErrorAction('LOGIN_FAILURE', error)
 }
 

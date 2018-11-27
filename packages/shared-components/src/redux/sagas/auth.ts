@@ -44,21 +44,26 @@ function* onLoginRequest(
             appToken
             githubToken
             user {
-              id
-              nodeId
-              login
-              name
-              avatarUrl
-              type
-              bio
-              publicGistsCount
-              publicReposCount
-              privateReposCount
-              privateGistsCount
-              followersCount
-              followingCount
-              ownedPrivateReposCount
-              isTwoFactorAuthenticationEnabled
+              _id
+              github {
+                id
+                nodeId
+                login
+                name
+                avatarUrl
+                type
+                bio
+                publicGistsCount
+                publicReposCount
+                privateReposCount
+                privateGistsCount
+                followersCount
+                followingCount
+                ownedPrivateReposCount
+                isTwoFactorAuthenticationEnabled
+                createdAt
+                updatedAt
+              }
               createdAt
               updatedAt
             }
@@ -85,7 +90,9 @@ function* onLoginRequest(
         data.login.appToken &&
         data.login.githubToken &&
         data.login.user &&
-        data.login.user.id
+        data.login.user._id &&
+        data.login.user.github &&
+        data.login.user.github.id
       )
     ) {
       throw new Error('Invalid response')
@@ -124,7 +131,7 @@ function* onLoginRequest(
       actions.loginSuccess({
         appToken: action.payload.appToken,
         githubToken: action.payload.githubToken,
-        user,
+        user: { _id: '', github: user, createdAt: '', updatedAt: '' },
       }),
     )
   } catch (error) {
@@ -141,7 +148,20 @@ function onLoginSuccess(
 function* onLoginFailure(
   action: ExtractActionFromActionCreator<typeof actions.loginFailure>,
 ) {
-  if (action.error.code === 401) yield put(actions.logout())
+  if (
+    action.error &&
+    (action.error.code === 401 ||
+      (action.error.response &&
+        (action.error.response.status === 401 ||
+          (action.error.response.data &&
+            Array.isArray(action.error.response.data.errors) &&
+            action.error.response.data.errors.some(
+              (e: any) =>
+                e.extensions && e.extensions.code === 'UNAUTHENTICATED',
+            )))))
+  ) {
+    yield put(actions.logout())
+  }
 }
 
 function onLogout() {

@@ -51,7 +51,7 @@ const connectToStore = connect((state: any) => {
   const user = selectors.currentUserSelector(state)
 
   return {
-    username: (user && user.login) || '',
+    username: (user && user.github && user.github.login) || '',
   }
 })
 

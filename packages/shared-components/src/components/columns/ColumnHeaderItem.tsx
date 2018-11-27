@@ -69,13 +69,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const connectToStore = connect((state: any) => {
-  const user = selectors.currentUserSelector(state)
-
-  return {
-    username: (user && user.login) || '',
-  }
-})
+const connectToStore = connect((state: any) => ({
+  username: selectors.currentUsernameSelector(state),
+}))
 
 class ColumnHeaderItemComponent extends PureComponent<
   ColumnHeaderItemProps & ExtractPropsFromConnector<typeof connectToStore>

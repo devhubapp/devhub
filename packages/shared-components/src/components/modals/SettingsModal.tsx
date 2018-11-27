@@ -19,10 +19,8 @@ export interface SettingsModalProps {}
 
 export function SettingsModal() {
   const { theme } = useContext(ThemeContext)
-  const user = useReduxState(selectors.currentUserSelector)
   const logout = useReduxAction(actions.logout)
-
-  const username = (user && user.login) || ''
+  const username = useReduxState(selectors.currentUsernameSelector)
 
   return (
     <LayoutConsumer>

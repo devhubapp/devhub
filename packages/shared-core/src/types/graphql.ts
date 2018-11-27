@@ -1,6 +1,6 @@
 // TODO: Auto generate this from the schema using apollo codegen cli
 
-export interface User {
+export interface GraphQLGitHubUser {
   id: string
   nodeId: string
   login: string
@@ -26,6 +26,13 @@ export interface User {
   collaboratorsCount?: number
   isTwoFactorAuthenticationEnabled?: boolean
   plan: GitHubPlan
+  createdAt: string
+  updatedAt: string
+}
+
+export interface User {
+  _id: string
+  github: GraphQLGitHubUser
   createdAt: string
   updatedAt: string
 }

@@ -19,14 +19,41 @@ export type GitHubExtractParamsFromActivityMethod<F> = F extends (
   : never
 
 export interface GitHubUser {
-  id: number | string
-  avatar_url: string // https://avatars.githubusercontent.com/u/2118189?
+  id: string | number
+  node_id?: string
   display_login?: string
-  gravatar_id: string
   login: string
   name: string
-  url: string // https://api.github.com/users/brunolemos
-  html_url?: string // https://github.com/brunolemos
+  avatar_url: string
+  gravatar_id: string
+  type: 'User'
+  site_admin: boolean
+  company?: string
+  blog?: string
+  location?: string
+  email?: string
+  hireable?: boolean
+  bio?: string
+  public_gists?: number
+  public_repos?: number
+  total_private_repos?: number
+  private_gists?: number
+  followers?: number
+  following?: number
+  owned_private_repos?: number
+  disk_usage?: number
+  collaborators?: number
+  two_factor_authentication: boolean
+  plan: {
+    name: string
+    space: number
+    collaborators: number
+    private_repos: number
+  }
+  url: string
+  html_url?: string
+  created_at: string
+  updated_at: string
 }
 
 export interface GitHubReaction {

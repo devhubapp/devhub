@@ -38,15 +38,11 @@ export interface SidebarProps {
 }
 
 const connectToStore = connect(
-  (state: any) => {
-    const user = selectors.currentUserSelector(state)
-
-    return {
-      columnIds: selectors.columnIdsSelector(state),
-      currentOpenedModal: selectors.currentOpenedModal(state),
-      username: (user && user.login) || '',
-    }
-  },
+  (state: any) => ({
+    columnIds: selectors.columnIdsSelector(state),
+    currentOpenedModal: selectors.currentOpenedModal(state),
+    username: selectors.currentUsernameSelector(state),
+  }),
   {
     replaceModal: actions.replaceModal,
   },
