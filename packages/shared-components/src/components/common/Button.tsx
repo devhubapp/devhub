@@ -4,13 +4,13 @@ import {
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
-  View,
 } from 'react-native'
 
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
 import { ThemeConsumer } from '../context/ThemeContext'
-import { Spacer } from './Spacer'
+
+export const buttonSize = 40
 
 export interface ButtonProps extends TouchableOpacityProps {
   disabled?: boolean
@@ -35,7 +35,7 @@ export const Button: React.SFC<ButtonProps> = ({
           {
             alignItems: 'center',
             justifyContent: 'center',
-            height: 40,
+            height: buttonSize,
             paddingHorizontal: contentPadding,
             paddingVertical: contentPadding / 2,
             backgroundColor: useBrandColor

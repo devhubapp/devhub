@@ -13,6 +13,8 @@ import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { ThemeConsumer } from '../context/ThemeContext'
 
+export const fabSize = 48
+
 export interface FABProps extends TouchableOpacityProps {
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
@@ -42,9 +44,9 @@ export const FAB: React.SFC<FABProps> = ({
           {
             alignItems: 'center',
             justifyContent: 'center',
-            width: 48,
-            height: 48,
-            borderRadius: 48 / 2,
+            width: fabSize,
+            height: fabSize,
+            borderRadius: fabSize / 2,
             backgroundColor: useBrandColor
               ? colors.brandBackgroundColor
               : theme.backgroundColorMore08,

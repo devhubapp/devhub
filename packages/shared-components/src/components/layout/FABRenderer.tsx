@@ -7,7 +7,8 @@ import { ExtractPropsFromConnector } from 'shared-core/dist/types'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { FAB } from '../common/FAB'
+import { buttonSize } from '../common/Button'
+import { FAB, fabSize } from '../common/FAB'
 import { LayoutConsumer } from '../context/LayoutContext'
 
 const connectToStore = connect(
@@ -28,7 +29,7 @@ class FABRendererComponent extends PureComponent<
 
     const fabStyle: ViewStyle = {
       position: 'absolute',
-      bottom: contentPadding / 2,
+      bottom: contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2),
       right: contentPadding,
       zIndex: 101,
     }
