@@ -8,6 +8,7 @@ import {
 import { getOwnerAndRepo } from 'shared-core/dist/utils/helpers/github/shared'
 import {
   getGitHubURLForRepoInvitation,
+  getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
 } from 'shared-core/dist/utils/helpers/github/url'
 import {
@@ -21,6 +22,7 @@ import {
   getNotificationIconAndColor,
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
+import { fixURL } from '../../utils/helpers/github/url'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
@@ -92,6 +94,7 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
     const pullRequest = (subjectType === 'PullRequest' && subject) || null
     const release = (subjectType === 'Release' && subject) || null
     const isRepoInvitation = subjectType === 'RepositoryInvitation'
+    const isVulnerabilityAlert = subjectType === 'RepositoryVulnerabilityAlert'
 
     const {
       icon: pullRequestIconName,
@@ -206,7 +209,6 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
             {!(commit || issue || pullRequest) && !!title && (
               <CommentRow
                 key={`notification-${notification.id}-comment-row`}
-                addBottomAnchor
                 avatarURL=""
                 body={title}
                 isRead={isRead}
@@ -216,7 +218,9 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 url={
                   isRepoInvitation && repo && repo.full_name
                     ? getGitHubURLForRepoInvitation(repo.full_name)
-                    : undefined
+                    : isVulnerabilityAlert && repo && repo.full_name
+                    ? getGitHubURLForSecurityAlert(repo.full_name)
+                    : fixURL(subject.latest_comment_url || subject.url)
                 }
               />
             )}

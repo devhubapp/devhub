@@ -10,6 +10,7 @@ export const notificationReasons: GitHubNotificationReason[] = [
   'manual',
   'mention',
   'review_requested',
+  'security_alert',
   'state_change',
   'subscribed',
   'team_mention',
@@ -105,6 +106,14 @@ export function getNotificationReasonMetadata<
         color: colors.yellow,
         description: 'Someone requested you a review',
         label: 'Review requested',
+      }
+
+    case 'security_alert':
+      return {
+        reason,
+        color: colors.red,
+        description: 'Potential security vulnerability found',
+        label: 'Security',
       }
 
     default:

@@ -73,6 +73,9 @@ export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
 export const getGitHubURLForRepoInvitation = (repoFullName: string) =>
   repoFullName ? `${baseURL}/${repoFullName}/invitations` : ''
 
+export const getGitHubURLForSecurityAlert = (repoFullName: string) =>
+  repoFullName ? `${baseURL}/${repoFullName}/network/alerts` : ''
+
 export const getGitHubAvatarURLFromPayload = (
   payload: any,
   userId?: number | string,

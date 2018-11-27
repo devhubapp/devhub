@@ -63,14 +63,16 @@ export function getNotificationIconAndColor(
   switch (type) {
     case 'Commit':
       return getCommitIconAndColor()
-    case 'RepositoryInvitation':
-      return { icon: 'mail' }
     case 'Issue':
       return getIssueIconAndColor({})
     case 'PullRequest':
       return getPullRequestIconAndColor({})
     case 'Release':
       return { icon: 'tag' }
+    case 'RepositoryInvitation':
+      return { icon: 'mail' }
+    case 'RepositoryVulnerabilityAlert':
+      return { icon: 'alert', color: colors.yellow }
     default: {
       console.error('Unknown notification type', type)
       return { icon: 'bell' }

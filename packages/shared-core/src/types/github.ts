@@ -737,6 +737,7 @@ export type GitHubNotificationReason =
   | 'manual' // You subscribed to the thread (via an Issue or Pull Request).
   | 'mention' // You were specifically @mentioned in the content.
   | 'review_requested' // Someone requested your review on a pull request
+  | 'security_alert' // Potential security vulnerability alert
   | 'state_change' // You changed the thread state (for example, closing an Issue or merging a PR).
   | 'subscribed' // You're watching the repository.
   | 'team_mention' // A team you are part of were @mentioned in the content.
@@ -758,7 +759,7 @@ export interface GitHubNotification {
       | 'PullRequest'
       | 'Release'
       | 'RepositoryInvitation'
-    // | 'RepositoryVulnerabilityAlert' // TODO
+      | 'RepositoryVulnerabilityAlert'
   }
   unread?: boolean
   updated_at: string
