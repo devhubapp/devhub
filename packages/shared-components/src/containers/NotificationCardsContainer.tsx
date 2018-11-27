@@ -16,7 +16,7 @@ import { getNotifications } from '../libs/github'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
-  'fetchNextPage' | 'notifications'
+  'fetchNextPage' | 'notifications' | 'state'
 > & {
   column: Column
   subscriptions: ColumnSubscription[]
@@ -28,6 +28,7 @@ export interface NotificationCardsContainerState {
   notifications: NotificationCardsProps['notifications']
   page: number
   perPage: number
+  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
 }
 
 export class NotificationCardsContainer extends PureComponent<
@@ -42,6 +43,7 @@ export class NotificationCardsContainer extends PureComponent<
     notifications: [],
     page: 1,
     perPage: 20,
+    state: 'loading_first',
   }
 
   componentDidMount() {
@@ -79,6 +81,15 @@ export class NotificationCardsContainer extends PureComponent<
     const { params: _params } = subscription
     const params = { ..._params, page, per_page: perPage }
 
+    this.setState(state => ({
+      state:
+        page > 1
+          ? 'loading_more'
+          : !state.state || state.state === 'loading_first'
+          ? 'loading_first'
+          : 'loading',
+    }))
+
     try {
       const response = await getNotifications(params, {
         subscriptionId: subscription.id,
@@ -93,11 +104,13 @@ export class NotificationCardsContainer extends PureComponent<
           canFetchMore: response.data.length >= perPage,
           notifications,
           page,
+          state: 'loaded',
         })
       } else {
-        this.setState({ canFetchMore: false, page })
+        this.setState({ canFetchMore: false, page, state: 'loaded' })
       }
     } catch (error) {
+      this.setState({ state: 'loaded' })
       console.error('Failed to load GitHub notifications', error)
     }
   }
@@ -121,13 +134,14 @@ export class NotificationCardsContainer extends PureComponent<
   }
 
   render() {
-    const { canFetchMore, enhancedNotifications } = this.state
+    const { canFetchMore, enhancedNotifications, state } = this.state
 
     return (
       <NotificationCards
         {...this.props}
         notifications={enhancedNotifications}
         fetchNextPage={canFetchMore ? this.fetchNextPage : undefined}
+        state={state}
       />
     )
   }

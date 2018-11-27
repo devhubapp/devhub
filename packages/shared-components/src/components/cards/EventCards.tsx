@@ -16,6 +16,7 @@ export interface EventCardsProps {
   events: EnhancedGitHubEvent[]
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   repoIsKnown?: boolean
+  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
   swipeable?: boolean
 }
 
@@ -47,22 +48,27 @@ export class EventCards extends PureComponent<
   }
 
   renderFooter = () => {
-    const { fetchNextPage } = this.props
+    const { fetchNextPage, state } = this.props
 
     if (!fetchNextPage) return null
 
     return (
       <View style={{ padding: contentPadding }}>
-        <Button onPress={() => fetchNextPage()} children="Load more" />
+        <Button
+          disabled={state !== 'loaded'}
+          loading={state === 'loading_more'}
+          onPress={() => fetchNextPage()}
+          children="Load more"
+        />
       </View>
     )
   }
 
   render() {
-    const { events, fetchNextPage } = this.props
+    const { events, fetchNextPage, state } = this.props
 
     if (!(events && events.length))
-      return <EmptyCards fetchNextPage={fetchNextPage} />
+      return <EmptyCards fetchNextPage={fetchNextPage} state={state} />
 
     return (
       <ThemeConsumer>
@@ -74,6 +80,7 @@ export class EventCards extends PureComponent<
           >
             <FlatList
               data={events}
+              extraData={state}
               ItemSeparatorComponent={CardItemSeparator}
               ListFooterComponent={this.renderFooter}
               keyExtractor={this.keyExtractor}

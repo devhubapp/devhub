@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
@@ -33,10 +33,13 @@ const emoji = getRandomEmoji()
 
 export interface EmptyCardsProps {
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
+  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
 }
 
 export function EmptyCards(props: EmptyCardsProps) {
   const { theme } = useContext(ThemeContext)
+
+  const { fetchNextPage, state } = props
 
   return (
     <TransparentTextOverlay
@@ -54,17 +57,23 @@ export function EmptyCards(props: EmptyCardsProps) {
             padding: contentPadding,
           }}
         >
-          <Text style={{ color: theme.foregroundColorMuted50 }}>
-            {clearMessage} {emoji}
-          </Text>
+          {state === 'loading_first' ? (
+            <ActivityIndicator color={theme.foregroundColor} />
+          ) : (
+            <Text style={{ color: theme.foregroundColorMuted50 }}>
+              {clearMessage} {emoji}
+            </Text>
+          )}
         </View>
 
         <View style={{ minHeight: 40 + 2 * contentPadding }}>
-          {!!props.fetchNextPage && (
+          {!!fetchNextPage && (
             <View style={{ padding: contentPadding }}>
               <Button
-                onPress={() => props.fetchNextPage!()}
                 children="Load more"
+                disabled={state !== 'loaded'}
+                loading={state === 'loading_more'}
+                onPress={() => fetchNextPage()}
               />
             </View>
           )}

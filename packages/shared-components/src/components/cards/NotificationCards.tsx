@@ -16,6 +16,7 @@ export interface NotificationCardsProps {
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   notifications: GitHubNotification[]
   repoIsKnown?: boolean
+  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
   swipeable?: boolean
 }
 
@@ -50,22 +51,27 @@ export class NotificationCards extends PureComponent<
   }
 
   renderFooter = () => {
-    const { fetchNextPage } = this.props
+    const { fetchNextPage, state } = this.props
 
     if (!fetchNextPage) return null
 
     return (
       <View style={{ padding: contentPadding }}>
-        <Button onPress={() => fetchNextPage()} children="Load more" />
+        <Button
+          children="Load more"
+          disabled={state !== 'loaded'}
+          loading={state === 'loading_more'}
+          onPress={() => fetchNextPage()}
+        />
       </View>
     )
   }
 
   render() {
-    const { fetchNextPage, notifications } = this.props
+    const { fetchNextPage, state, notifications } = this.props
 
     if (!(notifications && notifications.length))
-      return <EmptyCards fetchNextPage={fetchNextPage} />
+      return <EmptyCards fetchNextPage={fetchNextPage} state={state} />
 
     return (
       <ThemeConsumer>
@@ -80,6 +86,7 @@ export class NotificationCards extends PureComponent<
               ItemSeparatorComponent={CardItemSeparator}
               ListFooterComponent={this.renderFooter}
               data={notifications}
+              extraData={state}
               keyExtractor={this.keyExtractor}
               removeClippedSubviews
               renderItem={this.renderItem}

@@ -15,7 +15,7 @@ import { getActivity } from '../libs/github'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
-  'events' | 'fetchNextPage'
+  'events' | 'fetchNextPage' | 'state'
 > & {
   column: Column
   subscriptions: ColumnSubscription[]
@@ -27,6 +27,7 @@ export interface EventCardsContainerState {
   events: GitHubEvent[]
   page: number
   perPage: number
+  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
 }
 
 export class EventCardsContainer extends PureComponent<
@@ -41,6 +42,7 @@ export class EventCardsContainer extends PureComponent<
     events: [],
     page: 1,
     perPage: 20,
+    state: 'loading_first',
   }
 
   componentDidMount() {
@@ -79,6 +81,15 @@ export class EventCardsContainer extends PureComponent<
       subtype: activityType,
     } = subscriptions[0] as ActivitySubscription
     try {
+      this.setState(state => ({
+        state:
+          page > 1
+            ? 'loading_more'
+            : !state.state || state.state === 'loading_first'
+            ? 'loading_first'
+            : 'loading',
+      }))
+
       const params = { ..._params, page, per_page: perPage }
       const response = await getActivity(activityType, params, {
         subscriptionId,
@@ -90,11 +101,13 @@ export class EventCardsContainer extends PureComponent<
           canFetchMore: response.data.length >= perPage,
           events,
           page,
+          state: 'loaded',
         })
       } else {
-        this.setState({ canFetchMore: false, page })
+        this.setState({ canFetchMore: false, page, state: 'loaded' })
       }
     } catch (error) {
+      this.setState({ state: 'loaded' })
       console.error('Failed to load GitHub activity', error)
     }
   }
@@ -118,13 +131,14 @@ export class EventCardsContainer extends PureComponent<
   }
 
   render() {
-    const { canFetchMore, enhancedEvents } = this.state
+    const { canFetchMore, enhancedEvents, state } = this.state
 
     return (
       <EventCards
         {...this.props}
         events={enhancedEvents}
         fetchNextPage={canFetchMore ? this.fetchNextPage : undefined}
+        state={state}
       />
     )
   }

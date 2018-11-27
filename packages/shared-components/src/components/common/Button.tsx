@@ -1,17 +1,28 @@
 import React from 'react'
-import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import {
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
 import { ThemeConsumer } from '../context/ThemeContext'
+import { Spacer } from './Spacer'
 
 export interface ButtonProps extends TouchableOpacityProps {
+  disabled?: boolean
+  loading?: boolean
   onPress: TouchableOpacityProps['onPress']
   useBrandColor?: boolean
 }
 
 export const Button: React.SFC<ButtonProps> = ({
   children,
+  disabled,
+  loading,
   style,
   useBrandColor,
   ...props
@@ -35,7 +46,9 @@ export const Button: React.SFC<ButtonProps> = ({
           style,
         ]}
       >
-        {typeof children === 'string' ? (
+        {loading ? (
+          <ActivityIndicator color={theme.foregroundColor} size="small" />
+        ) : typeof children === 'string' ? (
           <Text
             style={{
               fontWeight: '500',
