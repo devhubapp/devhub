@@ -199,14 +199,13 @@ export class NotificationCard extends PureComponent<NotificationCardProps> {
                 repositoryName={repoName!}
                 smallLeftColumn
                 tagName={release.title}
-                type="ReleaseEvent"
                 url={release.latest_comment_url || release.url}
                 userLinkURL=""
                 username=""
               />
             )}
 
-            {!(commit || issue || pullRequest) && !!title && (
+            {!(commit || issue || pullRequest || release) && !!title && (
               <CommentRow
                 key={`notification-${notification.id}-comment-row`}
                 avatarURL=""

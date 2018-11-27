@@ -12,29 +12,27 @@ import { getCardRowStylesForTheme } from './styles'
 
 export interface BranchRowProps {
   branch: string
+  isBranchMainEvent: boolean
   isRead: boolean
   ownerName: string
   repositoryName: string
   smallLeftColumn?: boolean
-  type: EnhancedGitHubEvent['type']
 }
 
 export interface BranchRowState {}
 
 export const BranchRow: SFC<BranchRowProps> = ({
   branch: _branch,
+  isBranchMainEvent,
   isRead,
   ownerName,
   repositoryName,
   smallLeftColumn,
-  type,
 }) => {
   const branch = (_branch || '').replace('refs/heads/', '')
   if (!branch) return null
 
-  const isBranchMainEventAction =
-    type === 'CreateEvent' || type === 'DeleteEvent'
-  if (branch === 'master' && !isBranchMainEventAction) return null
+  if (branch === 'master' && !isBranchMainEvent) return null
 
   return (
     <ThemeConsumer>
@@ -65,7 +63,7 @@ export const BranchRow: SFC<BranchRowProps> = ({
               <Text
                 style={[
                   getCardStylesForTheme(theme).normalText,
-                  (isRead || !isBranchMainEventAction) &&
+                  (isRead || !isBranchMainEvent) &&
                     getCardStylesForTheme(theme).mutedText,
                 ]}
               >

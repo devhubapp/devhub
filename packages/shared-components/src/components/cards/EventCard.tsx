@@ -5,6 +5,7 @@ import {
   EnhancedGitHubEvent,
   GitHubCommit,
   GitHubCommitCommentEvent,
+  GitHubCreateEvent,
   GitHubEvent,
   GitHubForkEvent,
   GitHubGollumEvent,
@@ -69,23 +70,48 @@ export class EventCard extends PureComponent<EventCardProps> {
     const { commits: _commits } = payload as GitHubPushEvent['payload']
     const { forkee } = payload as GitHubForkEvent['payload']
     const { member: _member } = payload as GitHubMemberEvent['payload']
-    const { release } = payload as GitHubReleaseEvent['payload']
+    let { release } = payload as GitHubReleaseEvent['payload']
     const { pages: _pages } = payload as GitHubGollumEvent['payload']
     const {
       pull_request: pullRequest,
     } = payload as GitHubPullRequestEvent['payload']
     const { issue } = payload as GitHubIssuesEvent['payload']
-    const { ref: branchName } = payload as GitHubPushEvent['payload']
+    let { ref: branchName } = payload as GitHubPushEvent['payload']
 
     const isRead = false // TODO
     const commits: GitHubCommit[] = (_commits || []).filter(Boolean)
-    const repos: GitHubRepo[] = (_repos || [_repo]).filter(
+    const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(Boolean)
+    const repos: GitHubRepo[] = _allRepos.filter(
       (r, index) => !!(r && !(repoIsKnown && index === 0)),
     )
     const users: GitHubUser[] = [_member].filter(Boolean) // TODO
     const pages: GitHubPage[] = (_pages || []).filter(Boolean)
 
-    const repo = repos.length === 1 ? repos[0] : undefined
+    const repo = _allRepos.length === 1 ? _allRepos[0] : undefined
+
+    if (event.type === 'CreateEvent' || event.type === 'DeleteEvent') {
+      const p = payload as GitHubCreateEvent['payload']
+
+      if (p.ref_type !== 'branch') branchName = ''
+
+      if (!release && p.ref_type === 'tag') {
+        release = {
+          id: '',
+          name: '',
+          tag_name: p.ref || '',
+          target_commitish: p.master_branch,
+          body: '',
+          draft: false,
+          prerelease: false,
+          created_at: event.created_at,
+          published_at: event.created_at,
+          author: event.actor,
+          assets: [],
+          url: '',
+          html_url: '',
+        }
+      }
+    }
 
     const commitIds = commits
       .filter(Boolean)
@@ -180,14 +206,18 @@ export class EventCard extends PureComponent<EventCardProps> {
               />
             )}
 
-            {Boolean(repo && repoOwnerName && repoName && branchName) && (
+            {Boolean(branchName) && (
               <BranchRow
                 key={`event-branch-row-${branchName}`}
                 branch={branchName}
+                isBranchMainEvent={
+                  (type === 'CreateEvent' || type === 'DeleteEvent') &&
+                  (payload as GitHubCreateEvent['payload']).ref_type ===
+                    'branch'
+                }
                 isRead={isRead}
-                ownerName={repoOwnerName!}
-                repositoryName={repoName!}
-                type={type}
+                ownerName={repoOwnerName || ''}
+                repositoryName={repoName || ''}
               />
             )}
 
@@ -310,7 +340,6 @@ export class EventCard extends PureComponent<EventCardProps> {
                 ownerName={repoOwnerName!}
                 repositoryName={repoName!}
                 tagName={release.tag_name}
-                type={type}
                 url={release.html_url || release.url}
                 userLinkURL={release.author.html_url || ''}
                 username={release.author.display_login || release.author.login}

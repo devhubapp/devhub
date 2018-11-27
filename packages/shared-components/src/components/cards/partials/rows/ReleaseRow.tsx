@@ -1,7 +1,6 @@
 import React, { SFC } from 'react'
 import { Text, View } from 'react-native'
 
-import { EnhancedGitHubEvent } from 'shared-core/dist/types'
 import { trimNewLinesAndSpaces } from 'shared-core/dist/utils/helpers/shared'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
@@ -22,7 +21,6 @@ export interface ReleaseRowProps {
   repositoryName: string
   smallLeftColumn?: boolean
   tagName: string
-  type: EnhancedGitHubEvent['type']
   url: string
   userLinkURL: string
   username: string
@@ -40,7 +38,6 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
   repositoryName,
   smallLeftColumn,
   tagName: _tagName,
-  type,
   url,
   userLinkURL,
   username,
@@ -53,14 +50,14 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
     <ThemeConsumer>
       {({ theme }) => (
         <View>
-          {!!(branch && ownerName && repositoryName) && (
+          {!!branch && (
             <BranchRow
               key={`branch-row-${branch}`}
               branch={branch}
-              ownerName={ownerName!}
-              repositoryName={repositoryName!}
-              type={type}
+              isBranchMainEvent={false}
               isRead={isRead}
+              ownerName={ownerName || ''}
+              repositoryName={repositoryName || ''}
             />
           )}
 
@@ -109,51 +106,53 @@ export const ReleaseRow: SFC<ReleaseRowProps> = ({
             </View>
           </View>
 
-          <View style={getCardRowStylesForTheme(theme).container}>
-            <View
-              style={[
-                getCardStylesForTheme(theme).leftColumn,
-                smallLeftColumn
-                  ? getCardStylesForTheme(theme).leftColumn__small
-                  : getCardStylesForTheme(theme).leftColumn__big,
-              ]}
-            >
-              <Avatar
-                avatarURL={avatarURL}
-                isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
-                linkURL={userLinkURL}
-                small
-                style={getCardStylesForTheme(theme).avatar}
-                username={username}
-              />
-            </View>
-
-            <View style={getCardStylesForTheme(theme).rightColumn}>
-              <Link
-                href={fixURL(url)}
-                style={getCardRowStylesForTheme(theme).mainContentContainer}
+          {!!(body && body !== name && body !== tagName) && (
+            <View style={getCardRowStylesForTheme(theme).container}>
+              <View
+                style={[
+                  getCardStylesForTheme(theme).leftColumn,
+                  smallLeftColumn
+                    ? getCardStylesForTheme(theme).leftColumn__small
+                    : getCardStylesForTheme(theme).leftColumn__big,
+                ]}
               >
-                <Text
-                  style={[
-                    getCardStylesForTheme(theme).normalText,
-                    isRead && getCardStylesForTheme(theme).mutedText,
-                  ]}
+                <Avatar
+                  avatarURL={avatarURL}
+                  isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+                  linkURL={userLinkURL}
+                  small
+                  style={getCardStylesForTheme(theme).avatar}
+                  username={username}
+                />
+              </View>
+
+              <View style={getCardStylesForTheme(theme).rightColumn}>
+                <Link
+                  href={fixURL(url)}
+                  style={getCardRowStylesForTheme(theme).mainContentContainer}
                 >
                   <Text
-                    numberOfLines={1}
-                    style={
-                      isRead
-                        ? getCardStylesForTheme(theme).mutedText
-                        : getCardStylesForTheme(theme).normalText
-                    }
+                    style={[
+                      getCardStylesForTheme(theme).normalText,
+                      isRead && getCardStylesForTheme(theme).mutedText,
+                    ]}
                   >
-                    <Icon name="megaphone" />{' '}
+                    <Text
+                      numberOfLines={1}
+                      style={
+                        isRead
+                          ? getCardStylesForTheme(theme).mutedText
+                          : getCardStylesForTheme(theme).normalText
+                      }
+                    >
+                      <Icon name="megaphone" />{' '}
+                    </Text>
+                    {body}
                   </Text>
-                  {body}
-                </Text>
-              </Link>
+                </Link>
+              </View>
             </View>
-          </View>
+          )}
         </View>
       )}
     </ThemeConsumer>
