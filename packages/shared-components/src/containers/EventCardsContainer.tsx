@@ -13,25 +13,34 @@ import { getFilteredEvents } from 'shared-core/dist/utils/helpers/shared'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { getActivity } from '../libs/github'
 
-export type EventCardsContainerProps = Omit<EventCardsProps, 'events'> & {
+export type EventCardsContainerProps = Omit<
+  EventCardsProps,
+  'events' | 'fetchNextPage'
+> & {
   column: Column
   subscriptions: ColumnSubscription[]
 }
 
 export interface EventCardsContainerState {
+  canFetchMore: boolean
   enhancedEvents: EnhancedGitHubEvent[]
   events: GitHubEvent[]
+  page: number
+  perPage: number
 }
 
 export class EventCardsContainer extends PureComponent<
   EventCardsContainerProps,
   EventCardsContainerState
 > {
-  fetchDataInterval?: ReturnType<typeof setInterval>
+  fetchDataInterval?: number
 
   state: EventCardsContainerState = {
+    canFetchMore: false,
     enhancedEvents: [],
     events: [],
+    page: 1,
+    perPage: 20,
   }
 
   componentDidMount() {
@@ -59,20 +68,31 @@ export class EventCardsContainer extends PureComponent<
     this.clearFetchDataInterval()
   }
 
-  fetchData = async () => {
+  fetchData = async ({
+    page = 1,
+    perPage = 20,
+  }: { page?: number; perPage?: number } = {}) => {
     const { subscriptions } = this.props
     const {
       id: subscriptionId,
-      params,
+      params: _params,
       subtype: activityType,
     } = subscriptions[0] as ActivitySubscription
     try {
+      const params = { ..._params, page, per_page: perPage }
       const response = await getActivity(activityType, params, {
         subscriptionId,
       })
-      if (Array.isArray(response.data)) {
+
+      if (Array.isArray(response.data) && response.data.length) {
         const events = _.concat(response.data, this.state.events)
-        this.setState({ events })
+        this.setState({
+          canFetchMore: response.data.length >= perPage,
+          events,
+          page,
+        })
+      } else {
+        this.setState({ canFetchMore: false, page })
       }
     } catch (error) {
       console.error('Failed to load GitHub activity', error)
@@ -81,7 +101,7 @@ export class EventCardsContainer extends PureComponent<
 
   startFetchDataInterval = () => {
     this.clearFetchDataInterval()
-    this.fetchDataInterval = setInterval(this.fetchData, 1000 * 60)
+    this.fetchDataInterval = setInterval(this.fetchData, 1000 * 60) as any
     this.fetchData()
   }
 
@@ -92,9 +112,20 @@ export class EventCardsContainer extends PureComponent<
     }
   }
 
-  render() {
-    const { enhancedEvents } = this.state
+  fetchNextPage = ({ perPage }: { perPage?: number } = {}) => {
+    const nextPage = (this.state.page || 1) + 1
+    this.fetchData({ page: nextPage, perPage })
+  }
 
-    return <EventCards {...this.props} events={enhancedEvents} />
+  render() {
+    const { canFetchMore, enhancedEvents } = this.state
+
+    return (
+      <EventCards
+        {...this.props}
+        events={enhancedEvents}
+        fetchNextPage={canFetchMore ? this.fetchNextPage : undefined}
+      />
+    )
   }
 }

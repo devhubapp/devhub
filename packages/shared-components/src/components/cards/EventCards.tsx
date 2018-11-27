@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, View } from 'react-native'
 
 import { EnhancedGitHubEvent } from 'shared-core/dist/types'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
+import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { ThemeConsumer } from '../context/ThemeContext'
 import { EventCard } from './EventCard'
@@ -12,6 +13,7 @@ import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps {
   events: EnhancedGitHubEvent[]
+  fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   repoIsKnown?: boolean
   swipeable?: boolean
 }
@@ -43,6 +45,18 @@ export class EventCards extends PureComponent<
     )
   }
 
+  renderFooter = () => {
+    const { fetchNextPage } = this.props
+
+    if (!fetchNextPage) return null
+
+    return (
+      <View style={{ padding: contentPadding }}>
+        <Button onPress={() => fetchNextPage()} children="Load more" />
+      </View>
+    )
+  }
+
   render() {
     const { events } = this.props
 
@@ -57,6 +71,7 @@ export class EventCards extends PureComponent<
             <FlatList
               data={events}
               ItemSeparatorComponent={CardItemSeparator}
+              ListFooterComponent={this.renderFooter}
               keyExtractor={this.keyExtractor}
               removeClippedSubviews
               renderItem={this.renderItem}
