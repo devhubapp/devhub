@@ -131,7 +131,7 @@ export function getColumnHeaderDetails(
       return {
         icon: 'bell',
         repoIsKnown: false,
-        subtitle: subscription.params.all ? 'All' : '',
+        subtitle: '',
         title: 'Notifications',
       }
     }
