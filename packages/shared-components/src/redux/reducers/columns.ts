@@ -35,7 +35,7 @@ export const columnsReducer: Reducer<State> = (
           (column.subscriptionIds || []).concat(subscriptions.map(s => s.id)),
         ).filter(Boolean)
 
-        const id = guid()
+        const id = column.id || guid()
         draft.allIds.unshift(id)
         draft.byId[id] = {
           ...column,

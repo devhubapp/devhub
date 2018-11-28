@@ -81,10 +81,10 @@ function* onAddColumn(
 ) {
   const columnId = action.payload.column.id
 
+  yield delay(300)
   const ids: string[] = yield select(selectors.columnIdsSelector)
   const columnIndex = ids.findIndex(id => id === columnId)
 
-  yield delay(300)
   emitter.emit('FOCUS_ON_COLUMN', {
     animated: true,
     columnId,
