@@ -50,17 +50,20 @@ export class EventCards extends PureComponent<
   renderFooter = () => {
     const { fetchNextPage, state } = this.props
 
-    if (!fetchNextPage) return null
+    if (!fetchNextPage) return <CardItemSeparator />
 
     return (
-      <View style={{ padding: contentPadding }}>
-        <Button
-          disabled={state !== 'loaded'}
-          loading={state === 'loading_more'}
-          onPress={() => fetchNextPage()}
-          children="Load more"
-        />
-      </View>
+      <>
+        <CardItemSeparator />
+        <View style={{ padding: contentPadding }}>
+          <Button
+            disabled={state !== 'loaded'}
+            loading={state === 'loading_more'}
+            onPress={() => fetchNextPage()}
+            children="Load more"
+          />
+        </View>
+      </>
     )
   }
 

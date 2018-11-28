@@ -53,17 +53,20 @@ export class NotificationCards extends PureComponent<
   renderFooter = () => {
     const { fetchNextPage, state } = this.props
 
-    if (!fetchNextPage) return null
+    if (!fetchNextPage) return <CardItemSeparator />
 
     return (
-      <View style={{ padding: contentPadding }}>
-        <Button
-          children="Load more"
-          disabled={state !== 'loaded'}
-          loading={state === 'loading_more'}
-          onPress={() => fetchNextPage()}
-        />
-      </View>
+      <>
+        <CardItemSeparator />
+        <View style={{ padding: contentPadding }}>
+          <Button
+            children="Load more"
+            disabled={state !== 'loaded'}
+            loading={state === 'loading_more'}
+            onPress={() => fetchNextPage()}
+          />
+        </View>
+      </>
     )
   }
 
