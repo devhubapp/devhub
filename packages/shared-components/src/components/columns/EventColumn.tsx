@@ -44,7 +44,7 @@ export function EventColumn(props: EventColumnProps) {
         />
 
         <ColumnHeaderItem
-          iconName="circle-slash"
+          iconName="eye"
           onPress={() =>
             setColumnClearedAtFilter({
               columnId: column.id,

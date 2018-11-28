@@ -217,7 +217,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             return (
               <ColumnOptionsRow
                 contentContainerStyle={{ marginRight: contentPadding }}
-                iconName="eye"
+                iconName="mail-read"
                 onToggle={() => toggleOpenedOptionCategory('unread')}
                 opened={openedOptionCategory === 'unread'}
                 title="Read status"
