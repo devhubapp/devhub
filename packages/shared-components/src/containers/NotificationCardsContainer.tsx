@@ -43,7 +43,7 @@ export class NotificationCardsContainer extends PureComponent<
     enhancedNotifications: [],
     notifications: [],
     page: 1,
-    perPage: 20,
+    perPage: 10,
     state: 'loading_first',
   }
 
@@ -88,11 +88,14 @@ export class NotificationCardsContainer extends PureComponent<
   }
 
   fetchData = async ({
-    page = 1,
-    perPage = 20,
+    page: _page,
+    perPage: _perPage,
   }: { page?: number; perPage?: number } = {}) => {
     const { column, subscriptions } = this.props
     const subscription = subscriptions[0] as NotificationSubscription
+
+    const page = Math.max(1, _page || 1)
+    const perPage = Math.min((_perPage || this.state.perPage || 10) * page, 100)
 
     const { params: _params } = subscription
     const params = { ..._params, page, per_page: perPage }
@@ -136,7 +139,7 @@ export class NotificationCardsContainer extends PureComponent<
   startFetchDataInterval = () => {
     this.clearFetchDataInterval()
     this.fetchDataInterval = setInterval(this.fetchData, 1000 * 60) as any
-    this.fetchData()
+    this.fetchData({ page: 1 })
   }
 
   clearFetchDataInterval = () => {
