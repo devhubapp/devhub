@@ -9,9 +9,9 @@ import {
   GitHubEvent,
   Omit,
 } from 'shared-core/dist/types'
-import { getFilteredEvents } from 'shared-core/dist/utils/helpers/shared'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { getActivity } from '../libs/github'
+import { getFilteredEvents } from '../utils/helpers/filters'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,

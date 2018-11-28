@@ -8,12 +8,12 @@ import {
   NotificationSubscription,
   Omit,
 } from 'shared-core/dist/types'
-import { getFilteredNotifications } from 'shared-core/dist/utils/helpers/shared'
 import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 import { getNotifications } from '../libs/github'
+import { getFilteredNotifications } from '../utils/helpers/filters'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
