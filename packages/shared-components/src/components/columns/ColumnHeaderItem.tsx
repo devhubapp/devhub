@@ -32,6 +32,7 @@ export interface ColumnHeaderItemProps {
   fixedIconSize?: boolean
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
+  noPadding?: boolean
   onPress?: () => void
   selectable?: boolean
   style?: StyleProp<ViewStyle>
@@ -47,7 +48,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
-    padding: contentPadding,
   },
 
   icon: {
@@ -80,12 +80,35 @@ class ColumnHeaderItemComponent extends PureComponent<
     this.props.onPress ? (
       <TouchableOpacity
         onPress={this.props.onPress}
-        style={[styles.container, this.props.style]}
+        style={[
+          styles.container,
+          this.props.noPadding
+            ? undefined
+            : {
+                paddingHorizontal: contentPadding / 2,
+                paddingVertical: contentPadding,
+              },
+          this.props.style,
+        ]}
       >
         {children}
       </TouchableOpacity>
     ) : (
-      <View style={[styles.container, this.props.style]}>{children}</View>
+      <View
+        style={[
+          styles.container,
+          this.props.noPadding
+            ? undefined
+            : {
+                paddingHorizontal: contentPadding / 2,
+                paddingVertical: contentPadding,
+              },
+          ,
+          this.props.style,
+        ]}
+      >
+        {children}
+      </View>
     )
 
   render() {
@@ -95,6 +118,7 @@ class ColumnHeaderItemComponent extends PureComponent<
       fixedIconSize,
       iconName,
       iconStyle,
+      noPadding,
       selectable,
       subtitle,
       subtitleStyle,

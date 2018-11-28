@@ -33,7 +33,12 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   return (
     <>
       <TouchableWithoutFeedback onPress={() => onToggle()}>
-        <View style={[{ flexDirection: 'row' }, containerStyle]}>
+        <View
+          style={[
+            { flexDirection: 'row', paddingHorizontal: contentPadding / 2 },
+            containerStyle,
+          ]}
+        >
           <ColumnHeaderItem
             fixedIconSize
             iconName={iconName}

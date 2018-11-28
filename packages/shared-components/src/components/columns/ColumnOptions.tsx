@@ -301,20 +301,23 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           )
         })()}
 
-        <View style={{ flexDirection: 'row' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingHorizontal: contentPadding / 2,
+          }}
+        >
           <ColumnHeaderItem
             iconName="chevron-left"
             onPress={() =>
               moveColumn({ columnId: column.id, columnIndex: columnIndex - 1 })
             }
-            style={{ paddingRight: contentPadding / 2 }}
           />
           <ColumnHeaderItem
             iconName="chevron-right"
             onPress={() =>
               moveColumn({ columnId: column.id, columnIndex: columnIndex + 1 })
             }
-            style={{ paddingLeft: contentPadding / 2 }}
           />
 
           <Spacer flex={1} />

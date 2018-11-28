@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { columnHeaderHeight } from '../../styles/variables'
+import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { ThemeConsumer } from '../context/ThemeContext'
 
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flexDirection: 'row',
     height: columnHeaderHeight,
+    paddingHorizontal: contentPadding / 2,
   },
 })
 

@@ -238,7 +238,7 @@ class AddColumnDetailsModalComponent extends PureComponent<
               alignContent: 'center',
             }}
           >
-            <ColumnHeaderItem iconName={icon} style={{ padding: 0 }} />
+            <ColumnHeaderItem iconName={icon} noPadding />
             <Spacer width={contentPadding / 2} />
             <H2>{name}</H2>
           </View>
