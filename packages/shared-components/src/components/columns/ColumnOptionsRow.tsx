@@ -58,6 +58,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           style={[
             {
               paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
+              paddingBottom: contentPadding / 2,
             },
             contentContainerStyle,
           ]}
