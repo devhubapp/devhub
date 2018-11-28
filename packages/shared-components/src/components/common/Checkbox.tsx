@@ -12,6 +12,8 @@ import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { ThemeContext } from '../context/ThemeContext'
 
+const checkboxBorderRadius = 4
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -22,19 +24,21 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 4,
+    borderRadius: checkboxBorderRadius,
     borderWidth: 1,
   },
 })
 
 export interface CheckboxProps {
-  checked?: boolean
+  checked?: boolean | null
   checkedBackgroundColor?: string
   checkedForegroundColor?: string
   containerStyle?: ViewStyle
+  defaultValue?: boolean | null
   disabled?: boolean
+  enableTrippleState?: boolean
   label?: string | React.ReactNode
-  onChange?: (value: boolean) => void
+  onChange?: (value: boolean | null) => void
   size?: number | string
   uncheckedBackgroundColor?: string
   uncheckedForegroundColor?: string
@@ -45,7 +49,8 @@ export function Checkbox(props: CheckboxProps) {
   const { theme } = useContext(ThemeContext)
 
   const {
-    checked,
+    defaultValue,
+    checked = defaultValue,
     checkedBackgroundColor = colors.brandBackgroundColor,
     checkedForegroundColor = colors.brandForegroundColor,
     containerStyle,
@@ -53,14 +58,34 @@ export function Checkbox(props: CheckboxProps) {
     label,
     onChange,
     size = 18,
+    enableTrippleState = false,
     uncheckedBackgroundColor,
     uncheckedForegroundColor = theme.foregroundColor,
   } = props
 
+  const [lastBooleanValue, setLastBooleanValue] = useState(
+    typeof props.checked === 'boolean' ? props.checked : !!defaultValue,
+  )
+
+  const handleOnChange = () => {
+    if (!onChange) return
+
+    const newValue =
+      enableTrippleState === true
+        ? checked === null
+          ? !lastBooleanValue
+          : null
+        : !checked
+
+    if (typeof newValue === 'boolean') setLastBooleanValue(newValue)
+
+    onChange(newValue)
+  }
+
   return (
     <TouchableOpacity
       disabled={disabled}
-      onPress={disabled ? undefined : () => onChange && onChange(!checked)}
+      onPress={disabled ? undefined : handleOnChange}
       style={[styles.container, disabled && { opacity: 0.5 }, containerStyle]}
     >
       <View
@@ -72,17 +97,25 @@ export function Checkbox(props: CheckboxProps) {
             backgroundColor: checked
               ? checkedBackgroundColor
               : uncheckedBackgroundColor,
-            borderColor: checked
-              ? checkedBackgroundColor
-              : uncheckedForegroundColor,
+            borderColor:
+              checked || (enableTrippleState === true && checked === null)
+                ? checkedBackgroundColor
+                : uncheckedForegroundColor,
           },
         ]}
       >
         {!!checked && (
-          <Icon
-            color={checked ? checkedForegroundColor : uncheckedForegroundColor}
-            name="check"
-            size={14}
+          <Icon color={checkedForegroundColor} name="check" size={14} />
+        )}
+
+        {enableTrippleState === true && checked === null && (
+          <View
+            style={{
+              width: '80%',
+              height: '80%',
+              backgroundColor: checkedBackgroundColor,
+              borderRadius: checkboxBorderRadius / 2,
+            }}
           />
         )}
       </View>
