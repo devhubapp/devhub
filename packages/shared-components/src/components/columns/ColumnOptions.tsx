@@ -12,7 +12,10 @@ import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
-import { filterRecordHasThisValue } from '../../utils/helpers/filters'
+import {
+  filterRecordHasAnyForcedValue,
+  filterRecordHasThisValue,
+} from '../../utils/helpers/filters'
 import {
   getNotificationReasonMetadata,
   notificationReasons,
@@ -86,120 +89,126 @@ export function ColumnOptions(props: ColumnOptionsProps) {
       ]}
     >
       <ScrollView alwaysBounceVertical={false} style={styles.innerContainer}>
-        {column.type === 'notifications' && (
-          <ColumnOptionsRow
-            contentContainerStyle={{
-              marginVertical: -contentPadding / 4,
-              marginRight: contentPadding,
-            }}
-            iconName="check"
-            onToggle={() => toggleOpenedOptionCategory('notification_types')}
-            opened={openedOptionCategory === 'notification_types'}
-            title="Notification reasons"
-          >
-            {(() => {
-              const filters =
-                column.filters &&
-                column.filters.notifications &&
-                column.filters.notifications.reasons
+        {column.type === 'notifications' &&
+          (() => {
+            const filters =
+              column.filters &&
+              column.filters.notifications &&
+              column.filters.notifications.reasons
 
-              const defaultBooleanValue = true
-              const isFilterStrict = filterRecordHasThisValue(
-                filters,
-                defaultBooleanValue,
-              )
+            const defaultBooleanValue = true
+            const isFilterStrict = filterRecordHasThisValue(
+              filters,
+              defaultBooleanValue,
+            )
 
-              return notificationReasonOptions.map(item => {
-                const checked =
-                  filters && typeof filters[item.reason] === 'boolean'
-                    ? filters[item.reason]
-                    : null
+            return (
+              <ColumnOptionsRow
+                contentContainerStyle={{
+                  marginVertical: -contentPadding / 4,
+                  marginRight: contentPadding,
+                }}
+                hasChanged={filterRecordHasAnyForcedValue(filters)}
+                iconName="check"
+                onToggle={() =>
+                  toggleOpenedOptionCategory('notification_types')
+                }
+                opened={openedOptionCategory === 'notification_types'}
+                title="Notification reasons"
+              >
+                {notificationReasonOptions.map(item => {
+                  const checked =
+                    filters && typeof filters[item.reason] === 'boolean'
+                      ? filters[item.reason]
+                      : null
 
-                return (
-                  <Checkbox
-                    key={`notification-reason-option-${item.reason}`}
-                    checked={checked}
-                    checkedBackgroundColor={item.color}
-                    checkedForegroundColor={theme.backgroundColorDarker08}
-                    containerStyle={{
-                      flexGrow: 1,
-                      paddingVertical: contentPadding / 4,
-                    }}
-                    defaultValue={defaultBooleanValue}
-                    enableTrippleState={
-                      !isFilterStrict || checked === defaultBooleanValue
-                    }
-                    label={item.label}
-                    onChange={value => {
-                      setColumnReasonFilter({
-                        columnId: column.id,
-                        reason: item.reason,
-                        value,
-                      })
-                    }}
-                    uncheckedForegroundColor={item.color}
-                  />
-                )
-              })
-            })()}
-          </ColumnOptionsRow>
-        )}
+                  return (
+                    <Checkbox
+                      key={`notification-reason-option-${item.reason}`}
+                      checked={checked}
+                      checkedBackgroundColor={item.color}
+                      checkedForegroundColor={theme.backgroundColorDarker08}
+                      containerStyle={{
+                        flexGrow: 1,
+                        paddingVertical: contentPadding / 4,
+                      }}
+                      defaultValue={defaultBooleanValue}
+                      enableTrippleState={
+                        !isFilterStrict || checked === defaultBooleanValue
+                      }
+                      label={item.label}
+                      onChange={value => {
+                        setColumnReasonFilter({
+                          columnId: column.id,
+                          reason: item.reason,
+                          value,
+                        })
+                      }}
+                      uncheckedForegroundColor={item.color}
+                    />
+                  )
+                })}
+              </ColumnOptionsRow>
+            )
+          })()}
 
-        {column.type === 'activity' && (
-          <ColumnOptionsRow
-            contentContainerStyle={{
-              marginVertical: -contentPadding / 4,
-              marginRight: contentPadding,
-            }}
-            iconName="check"
-            onToggle={() => toggleOpenedOptionCategory('event_types')}
-            opened={openedOptionCategory === 'event_types'}
-            title="Event types"
-          >
-            {(() => {
-              const filters =
-                column.filters &&
-                column.filters.activity &&
-                column.filters.activity.types
+        {column.type === 'activity' &&
+          (() => {
+            const filters =
+              column.filters &&
+              column.filters.activity &&
+              column.filters.activity.types
 
-              const defaultBooleanValue = true
-              const isFilterStrict = filterRecordHasThisValue(
-                filters,
-                defaultBooleanValue,
-              )
+            const defaultBooleanValue = true
+            const isFilterStrict = filterRecordHasThisValue(
+              filters,
+              defaultBooleanValue,
+            )
 
-              return eventTypeOptions.map(item => {
-                const checked =
-                  filters && typeof filters[item.type] === 'boolean'
-                    ? filters[item.type]
-                    : null
+            return (
+              <ColumnOptionsRow
+                contentContainerStyle={{
+                  marginVertical: -contentPadding / 4,
+                  marginRight: contentPadding,
+                }}
+                hasChanged={filterRecordHasAnyForcedValue(filters)}
+                iconName="check"
+                onToggle={() => toggleOpenedOptionCategory('event_types')}
+                opened={openedOptionCategory === 'event_types'}
+                title="Event types"
+              >
+                {eventTypeOptions.map(item => {
+                  const checked =
+                    filters && typeof filters[item.type] === 'boolean'
+                      ? filters[item.type]
+                      : null
 
-                return (
-                  <Checkbox
-                    key={`event-type-option-${item.type}`}
-                    checked={checked}
-                    containerStyle={{
-                      flexGrow: 1,
-                      paddingVertical: contentPadding / 4,
-                    }}
-                    defaultValue={defaultBooleanValue}
-                    enableTrippleState={
-                      !isFilterStrict || checked === defaultBooleanValue
-                    }
-                    label={item.label}
-                    onChange={value => {
-                      setColumnActivityTypeFilter({
-                        columnId: column.id,
-                        type: item.type,
-                        value,
-                      })
-                    }}
-                  />
-                )
-              })
-            })()}
-          </ColumnOptionsRow>
-        )}
+                  return (
+                    <Checkbox
+                      key={`event-type-option-${item.type}`}
+                      checked={checked}
+                      containerStyle={{
+                        flexGrow: 1,
+                        paddingVertical: contentPadding / 4,
+                      }}
+                      defaultValue={defaultBooleanValue}
+                      enableTrippleState={
+                        !isFilterStrict || checked === defaultBooleanValue
+                      }
+                      label={item.label}
+                      onChange={value => {
+                        setColumnActivityTypeFilter({
+                          columnId: column.id,
+                          type: item.type,
+                          value,
+                        })
+                      }}
+                    />
+                  )
+                })}
+              </ColumnOptionsRow>
+            )
+          })()}
 
         {column.type === 'notifications' &&
           (() => {
@@ -217,7 +226,16 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             return (
               <ColumnOptionsRow
                 contentContainerStyle={{ marginRight: contentPadding }}
-                iconName="mail-read"
+                hasChanged={
+                  !!(
+                    column.filters && typeof column.filters.unread === 'boolean'
+                  )
+                }
+                iconName={
+                  column.filters && column.filters.unread === true
+                    ? 'mail'
+                    : 'mail-read'
+                }
                 onToggle={() => toggleOpenedOptionCategory('unread')}
                 opened={openedOptionCategory === 'unread'}
                 title="Read status"
@@ -275,7 +293,16 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           return (
             <ColumnOptionsRow
               contentContainerStyle={{ marginRight: contentPadding }}
-              iconName="lock"
+              hasChanged={
+                !!(
+                  column.filters && typeof column.filters.private === 'boolean'
+                )
+              }
+              iconName={
+                column.filters && column.filters.private === false
+                  ? 'globe'
+                  : 'lock'
+              }
               onToggle={() => toggleOpenedOptionCategory('privacy')}
               opened={openedOptionCategory === 'privacy'}
               title="Privacy"

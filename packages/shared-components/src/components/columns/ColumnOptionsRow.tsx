@@ -1,7 +1,9 @@
 import _ from 'lodash'
 import React from 'react'
 import { TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
+
 import { GitHubIcon } from 'shared-core/dist/types'
+import * as colors from '../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,
@@ -13,6 +15,7 @@ export interface ColumnOptionsRowProps {
   children: React.ReactNode
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle
+  hasChanged: boolean
   iconName: GitHubIcon
   onToggle: () => void
   opened: boolean
@@ -24,6 +27,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     children,
     containerStyle,
     contentContainerStyle,
+    hasChanged,
     iconName,
     onToggle,
     opened,
@@ -44,6 +48,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             iconName={iconName}
             selectable={false}
             text={title}
+            iconStyle={
+              hasChanged ? { color: colors.brandBackgroundColor } : undefined
+            }
           />
           <Spacer flex={1} />
           <ColumnHeaderItem
