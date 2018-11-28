@@ -154,6 +154,7 @@ export function getFilteredNotifications(
 
       if (
         filters.clearedAt &&
+        notification.unread !== true &&
         (!notification.updated_at ||
           notification.updated_at < filters.clearedAt)
       ) {
