@@ -125,7 +125,8 @@ export function getFilteredNotifications(
       filters.notifications.reasons &&
       Object.values(filters.notifications.reasons).some(v => !v)) ||
     typeof filters.unread === 'boolean' ||
-    typeof filters.private === 'boolean'
+    typeof filters.private === 'boolean' ||
+    typeof filters.clearedAt
 
   if (hasFilter) {
     _notifications = _notifications.filter(notification => {
@@ -151,6 +152,14 @@ export function getFilteredNotifications(
         return false
       }
 
+      if (
+        filters.clearedAt &&
+        (!notification.updated_at ||
+          notification.updated_at < filters.clearedAt)
+      ) {
+        return false
+      }
+
       return true
     })
   }
@@ -171,7 +180,8 @@ export function getFilteredEvents(
     ((filters.activity &&
       filters.activity.types &&
       Object.values(filters.activity.types).some(v => !v)) ||
-      typeof filters.private === 'boolean')
+      typeof filters.private === 'boolean' ||
+      filters.clearedAt)
 
   if (hasFilter && filters) {
     _events = _events.filter(event => {
@@ -186,6 +196,13 @@ export function getFilteredEvents(
       if (
         typeof filters.private === 'boolean' &&
         isEventPrivate(event) !== filters.private
+      ) {
+        return false
+      }
+
+      if (
+        filters.clearedAt &&
+        (!event.created_at || event.created_at < filters.clearedAt)
       ) {
         return false
       }

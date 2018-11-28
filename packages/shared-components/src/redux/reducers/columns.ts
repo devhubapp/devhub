@@ -157,6 +157,20 @@ export const columnsReducer: Reducer<State> = (
         column.filters.private = action.payload.private
       })
 
+    case 'SET_COLUMN_CLEARED_AT_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.clearedAt =
+          action.payload.clearedAt === null
+            ? undefined
+            : action.payload.clearedAt || new Date().toISOString()
+      })
+
     default:
       return state
   }

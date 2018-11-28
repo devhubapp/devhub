@@ -58,6 +58,11 @@ export class EventCardsContainer extends PureComponent<
       this.state.events !== prevState.events
     ) {
       this.setState(state => ({
+        canFetchMore:
+          (this.props.column.filters && this.props.column.filters.clearedAt) !==
+          (prevProps.column.filters && prevProps.column.filters.clearedAt)
+            ? this.calculateCanFetchMore(this.props.column, state.events)
+            : state.canFetchMore,
         enhancedEvents: getFilteredEvents(
           state.events,
           this.props.column.filters,
@@ -70,11 +75,18 @@ export class EventCardsContainer extends PureComponent<
     this.clearFetchDataInterval()
   }
 
+  calculateCanFetchMore = (column: Column, events: GitHubEvent[]) => {
+    const clearedAt = column.filters && column.filters.clearedAt
+    const lastItem = events.slice(-1)[0]
+
+    return !clearedAt || lastItem.created_at > clearedAt
+  }
+
   fetchData = async ({
     page = 1,
     perPage = 20,
   }: { page?: number; perPage?: number } = {}) => {
-    const { subscriptions } = this.props
+    const { column, subscriptions } = this.props
     const {
       id: subscriptionId,
       params: _params,
@@ -97,8 +109,11 @@ export class EventCardsContainer extends PureComponent<
 
       if (Array.isArray(response.data) && response.data.length) {
         const events = _.concat(response.data, this.state.events)
+
         this.setState({
-          canFetchMore: response.data.length >= perPage,
+          canFetchMore:
+            response.data.length >= perPage &&
+            this.calculateCanFetchMore(column, response.data),
           events,
           page,
           state: 'loaded',

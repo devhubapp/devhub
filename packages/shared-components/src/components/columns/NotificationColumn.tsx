@@ -5,6 +5,8 @@ import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
+import * as actions from '../../redux/actions'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
@@ -18,6 +20,9 @@ export interface NotificationColumnProps
 
 export function NotificationColumn(props: NotificationColumnProps) {
   const [showColumnOptions, setShowColumnOptions] = useState(false)
+  const setColumnClearedAtFilter = useReduxAction(
+    actions.setColumnClearedAtFilter,
+  )
 
   const { column, columnIndex, pagingEnabled, subscriptions } = props
 
@@ -38,6 +43,15 @@ export function NotificationColumn(props: NotificationColumnProps) {
           title={requestTypeIconAndData.title}
         />
 
+        <ColumnHeaderItem
+          iconName="circle-slash"
+          onPress={() =>
+            setColumnClearedAtFilter({
+              columnId: column.id,
+              clearedAt: new Date().toISOString(),
+            })
+          }
+        />
         <ColumnHeaderItem
           iconName="settings"
           onPress={() => setShowColumnOptions(!showColumnOptions)}

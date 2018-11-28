@@ -5,6 +5,8 @@ import {
   EventCardsContainer,
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
+import * as actions from '../../redux/actions'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
@@ -17,6 +19,9 @@ export interface EventColumnProps extends EventCardsContainerProps {
 
 export function EventColumn(props: EventColumnProps) {
   const [showColumnOptions, setShowColumnOptions] = useState(false)
+  const setColumnClearedAtFilter = useReduxAction(
+    actions.setColumnClearedAtFilter,
+  )
 
   const { column, columnIndex, pagingEnabled, subscriptions } = props
 
@@ -38,6 +43,15 @@ export function EventColumn(props: EventColumnProps) {
           title={requestTypeIconAndData.title}
         />
 
+        <ColumnHeaderItem
+          iconName="circle-slash"
+          onPress={() =>
+            setColumnClearedAtFilter({
+              columnId: column.id,
+              clearedAt: new Date().toISOString(),
+            })
+          }
+        />
         <ColumnHeaderItem
           iconName="settings"
           onPress={() => setShowColumnOptions(!showColumnOptions)}

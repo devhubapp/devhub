@@ -48,3 +48,10 @@ export function setColumnPrivacyFilter(payload: {
 }) {
   return createAction('SET_COLUMN_PRIVACY_FILTER', payload)
 }
+
+export function setColumnClearedAtFilter(payload: {
+  columnId: string
+  clearedAt: string | null
+}) {
+  return createAction('SET_COLUMN_CLEARED_AT_FILTER', payload)
+}

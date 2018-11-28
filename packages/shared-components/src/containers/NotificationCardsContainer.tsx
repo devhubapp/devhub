@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react'
 import {
   Column,
   ColumnSubscription,
+  GitHubNotification,
   NotificationSubscription,
   Omit,
 } from 'shared-core/dist/types'
@@ -59,6 +60,11 @@ export class NotificationCardsContainer extends PureComponent<
       this.state.notifications !== prevState.notifications
     ) {
       this.setState(state => ({
+        canFetchMore:
+          (this.props.column.filters && this.props.column.filters.clearedAt) !==
+          (prevProps.column.filters && prevProps.column.filters.clearedAt)
+            ? this.calculateCanFetchMore(this.props.column, state.notifications)
+            : state.canFetchMore,
         enhancedNotifications: getFilteredNotifications(
           state.notifications,
           this.props.column.filters,
@@ -71,11 +77,21 @@ export class NotificationCardsContainer extends PureComponent<
     this.clearFetchDataInterval()
   }
 
+  calculateCanFetchMore = (
+    column: Column,
+    notifications: GitHubNotification[],
+  ) => {
+    const clearedAt = column.filters && column.filters.clearedAt
+    const lastItem = notifications.slice(-1)[0]
+
+    return !clearedAt || lastItem.updated_at > clearedAt
+  }
+
   fetchData = async ({
     page = 1,
     perPage = 20,
   }: { page?: number; perPage?: number } = {}) => {
-    const { subscriptions } = this.props
+    const { column, subscriptions } = this.props
     const subscription = subscriptions[0] as NotificationSubscription
 
     const { params: _params } = subscription
@@ -101,7 +117,9 @@ export class NotificationCardsContainer extends PureComponent<
         )
 
         this.setState({
-          canFetchMore: response.data.length >= perPage,
+          canFetchMore:
+            response.data.length >= perPage &&
+            this.calculateCanFetchMore(column, response.data),
           notifications,
           page,
           state: 'loaded',

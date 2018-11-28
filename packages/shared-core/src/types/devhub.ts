@@ -83,6 +83,7 @@ export type ActivitySubscription = {
 
 export interface BaseColumnFilters {
   // archived?: boolean
+  clearedAt?: string
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
   private?: boolean
