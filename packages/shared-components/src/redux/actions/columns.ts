@@ -25,13 +25,13 @@ export function moveColumn(payload: { columnId: string; columnIndex: number }) {
 
 export function setColumnActivityTypeFilter<
   T extends GitHubEvent['type']
->(payload: { columnId: string; type: T; value: boolean }) {
+>(payload: { columnId: string; type: T; value: boolean | null }) {
   return createAction('SET_COLUMN_ACTIVITY_TYPE_FILTER', payload)
 }
 
 export function setColumnReasonFilter<
   T extends GitHubNotificationReason
->(payload: { columnId: string; reason: T; value: boolean }) {
+>(payload: { columnId: string; reason: T; value: boolean | null }) {
   return createAction('SET_COLUMN_REASON_FILTER', payload)
 }
 

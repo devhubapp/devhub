@@ -12,6 +12,7 @@ import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
+import { filterRecordHasThisValue } from '../../utils/helpers/filters'
 import {
   getNotificationReasonMetadata,
   notificationReasons,
@@ -96,34 +97,51 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             opened={openedOptionCategory === 'notification_types'}
             title="Notification reasons"
           >
-            {notificationReasonOptions.map(nro => (
-              <Checkbox
-                key={`notification-reason-option-${nro.reason}`}
-                checked={
-                  column.filters &&
-                  column.filters.notifications &&
-                  column.filters.notifications.reasons &&
-                  column.filters.notifications.reasons[nro.reason] === false
-                    ? false
-                    : true
-                }
-                checkedBackgroundColor={nro.color}
-                checkedForegroundColor={theme.backgroundColorDarker08}
-                containerStyle={{
-                  flexGrow: 1,
-                  paddingVertical: contentPadding / 4,
-                }}
-                label={nro.label}
-                onChange={checked => {
-                  setColumnReasonFilter({
-                    columnId: column.id,
-                    reason: nro.reason,
-                    value: checked,
-                  })
-                }}
-                uncheckedForegroundColor={nro.color}
-              />
-            ))}
+            {(() => {
+              const filters =
+                column.filters &&
+                column.filters.notifications &&
+                column.filters.notifications.reasons
+
+              const defaultBooleanValue = true
+              const isFilterStrict = filterRecordHasThisValue(
+                filters,
+                defaultBooleanValue,
+              )
+
+              return notificationReasonOptions.map(item => {
+                const checked =
+                  filters && typeof filters[item.reason] === 'boolean'
+                    ? filters[item.reason]
+                    : null
+
+                return (
+                  <Checkbox
+                    key={`notification-reason-option-${item.reason}`}
+                    checked={checked}
+                    checkedBackgroundColor={item.color}
+                    checkedForegroundColor={theme.backgroundColorDarker08}
+                    containerStyle={{
+                      flexGrow: 1,
+                      paddingVertical: contentPadding / 4,
+                    }}
+                    defaultValue={defaultBooleanValue}
+                    enableTrippleState={
+                      !isFilterStrict || checked === defaultBooleanValue
+                    }
+                    label={item.label}
+                    onChange={value => {
+                      setColumnReasonFilter({
+                        columnId: column.id,
+                        reason: item.reason,
+                        value,
+                      })
+                    }}
+                    uncheckedForegroundColor={item.color}
+                  />
+                )
+              })
+            })()}
           </ColumnOptionsRow>
         )}
 
@@ -138,56 +156,48 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             opened={openedOptionCategory === 'event_types'}
             title="Event types"
           >
-            {eventTypeOptions.map(eto => (
-              <Checkbox
-                key={`event-type-option-${eto.type}`}
-                checked={
-                  column.filters &&
-                  column.filters.activity &&
-                  column.filters.activity.types &&
-                  column.filters.activity.types[eto.type] === false
-                    ? false
-                    : true
-                }
-                containerStyle={{
-                  flexGrow: 1,
-                  paddingVertical: contentPadding / 4,
-                }}
-                label={
-                  <View
-                    style={{
-                      flexGrow: 1,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignContent: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Text
-                      style={{
-                        marginLeft: contentPadding / 2,
-                        color: theme.foregroundColor,
-                      }}
-                    >
-                      {eto.label}
-                    </Text>
+            {(() => {
+              const filters =
+                column.filters &&
+                column.filters.activity &&
+                column.filters.activity.types
 
-                    <Icon
-                      color={theme.foregroundColor}
-                      name={eto.icon}
-                      size={16}
-                    />
-                  </View>
-                }
-                onChange={checked => {
-                  setColumnActivityTypeFilter({
-                    columnId: column.id,
-                    type: eto.type,
-                    value: checked,
-                  })
-                }}
-              />
-            ))}
+              const defaultBooleanValue = true
+              const isFilterStrict = filterRecordHasThisValue(
+                filters,
+                defaultBooleanValue,
+              )
+
+              return eventTypeOptions.map(item => {
+                const checked =
+                  filters && typeof filters[item.type] === 'boolean'
+                    ? filters[item.type]
+                    : null
+
+                return (
+                  <Checkbox
+                    key={`event-type-option-${item.type}`}
+                    checked={checked}
+                    containerStyle={{
+                      flexGrow: 1,
+                      paddingVertical: contentPadding / 4,
+                    }}
+                    defaultValue={defaultBooleanValue}
+                    enableTrippleState={
+                      !isFilterStrict || checked === defaultBooleanValue
+                    }
+                    label={item.label}
+                    onChange={value => {
+                      setColumnActivityTypeFilter({
+                        columnId: column.id,
+                        type: item.type,
+                        value,
+                      })
+                    }}
+                  />
+                )
+              })
+            })()}
           </ColumnOptionsRow>
         )}
 
@@ -220,7 +230,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   onChange={checked => {
                     setColumnUnreadFilter({
                       columnId: column.id,
-                      unread: getFilterValue(checked, isUnreadChecked),
+                      unread: getFilterValue(!!checked, isUnreadChecked),
                     })
                   }}
                 />
@@ -235,7 +245,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   onChange={checked => {
                     setColumnUnreadFilter({
                       columnId: column.id,
-                      unread: getFilterValue(isReadChecked, checked),
+                      unread: getFilterValue(isReadChecked, !!checked),
                     })
                   }}
                 />
@@ -278,7 +288,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 onChange={checked => {
                   setColumnPrivacyFilter({
                     columnId: column.id,
-                    private: getFilterValue(checked, isPrivateChecked),
+                    private: getFilterValue(!!checked, isPrivateChecked),
                   })
                 }}
               />
@@ -293,7 +303,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 onChange={checked => {
                   setColumnPrivacyFilter({
                     columnId: column.id,
-                    private: getFilterValue(isPublicChecked, checked),
+                    private: getFilterValue(isPublicChecked, !!checked),
                   })
                 }}
               />

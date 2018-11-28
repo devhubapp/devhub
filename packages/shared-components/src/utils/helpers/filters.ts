@@ -12,6 +12,40 @@ import {
   isNotificationPrivate,
 } from 'shared-core/dist/utils/helpers/shared'
 
+export const filterRecordHasAnyForcedValue = (
+  filtersRecord: Record<string, boolean | undefined> | undefined,
+) => {
+  if (!filtersRecord) return false
+  return Object.values(filtersRecord).some(value => typeof value === 'boolean')
+}
+
+export const filterRecordHasThisValue = (
+  filtersRecord: Record<string, boolean | undefined> | undefined,
+  valueToCheck: boolean,
+) => {
+  if (!filtersRecord) return false
+  return Object.values(filtersRecord).some(value => value === valueToCheck)
+}
+
+export function itemPassesFilterRecord(
+  filtersRecord: Record<string, boolean | undefined> | undefined,
+  value: any,
+  defaultValue: boolean,
+) {
+  if (!filtersRecord) return defaultValue
+
+  const hasForcedFilter = filterRecordHasAnyForcedValue(filtersRecord)
+  if (!hasForcedFilter) return defaultValue
+
+  const isFilterStrict =
+    hasForcedFilter && filterRecordHasThisValue(filtersRecord, defaultValue)
+
+  return filtersRecord[value] === !defaultValue ||
+    (filtersRecord[value] !== defaultValue && isFilterStrict)
+    ? !defaultValue
+    : defaultValue
+}
+
 export function getFilteredNotifications(
   notifications: GitHubNotification[],
   filters?: NotificationColumnFilters,
@@ -21,25 +55,20 @@ export function getFilteredNotifications(
     .orderBy(['unread', 'updated_at', 'created_at'], ['desc', 'desc', 'desc'])
     .value()
 
-  if (!filters) return _notifications
+  const reasonsFilter =
+    filters && filters.notifications && filters.notifications.reasons
 
   const hasFilter =
-    (filters.notifications &&
-      filters.notifications.reasons &&
-      Object.values(filters.notifications.reasons).some(v => !v)) ||
-    typeof filters.unread === 'boolean' ||
-    typeof filters.private === 'boolean' ||
-    typeof filters.clearedAt
+    filters &&
+    (filterRecordHasAnyForcedValue(reasonsFilter) ||
+      typeof filters.unread === 'boolean' ||
+      typeof filters.private === 'boolean' ||
+      filters.clearedAt)
 
-  if (hasFilter) {
+  if (hasFilter && filters) {
     _notifications = _notifications.filter(notification => {
-      if (
-        filters.notifications &&
-        filters.notifications.reasons &&
-        filters.notifications.reasons[notification.reason] === false
-      ) {
+      if (!itemPassesFilterRecord(reasonsFilter, notification.reason, true))
         return false
-      }
 
       if (
         typeof filters.unread === 'boolean' &&
@@ -79,23 +108,17 @@ export function getFilteredEvents(
     .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
     .value()
 
+  const activityFilter = filters && filters.activity && filters.activity.types
   const hasFilter =
     filters &&
-    ((filters.activity &&
-      filters.activity.types &&
-      Object.values(filters.activity.types).some(v => !v)) ||
+    (filterRecordHasAnyForcedValue(activityFilter) ||
       typeof filters.private === 'boolean' ||
       filters.clearedAt)
 
   if (hasFilter && filters) {
     _events = _events.filter(event => {
-      if (
-        filters.activity &&
-        filters.activity.types &&
-        filters.activity.types[event.type] === false
-      ) {
+      if (!itemPassesFilterRecord(activityFilter, event.type, true))
         return false
-      }
 
       if (
         typeof filters.private === 'boolean' &&

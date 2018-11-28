@@ -114,8 +114,12 @@ export const columnsReducer: Reducer<State> = (
         column.filters.activity = column.filters.activity || {}
         column.filters.activity.types = column.filters.activity.types || {}
 
-        column.filters.activity.types[action.payload.type] =
-          action.payload.value
+        if (typeof action.payload.value === 'boolean') {
+          column.filters.activity.types[action.payload.type] =
+            action.payload.value
+        } else {
+          delete column.filters.activity.types[action.payload.type]
+        }
       })
 
     case 'SET_COLUMN_REASON_FILTER':
@@ -131,8 +135,12 @@ export const columnsReducer: Reducer<State> = (
         column.filters.notifications.reasons =
           column.filters.notifications.reasons || {}
 
-        column.filters.notifications.reasons[action.payload.reason] =
-          action.payload.value
+        if (typeof action.payload.value === 'boolean') {
+          column.filters.notifications.reasons[action.payload.reason] =
+            action.payload.value
+        } else {
+          delete column.filters.notifications.reasons[action.payload.reason]
+        }
       })
 
     case 'SET_COLUMN_UNREAD_FILTER':
