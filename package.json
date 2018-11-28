@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "private": true,
   "workspaces": {
     "packages": [

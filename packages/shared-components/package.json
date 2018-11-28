@@ -1,6 +1,6 @@
 {
   "name": "shared-components",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "main": "dist",
   "scripts": {
     "build": "tsc",
@@ -23,7 +23,7 @@
     "moment": "^2.22.2",
     "polished": "^2.3.0",
     "qs": "^6.5.2",
-    "ramda": "^0.25.0",
+    "ramda": "^0.26.0",
     "react": "16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
     "react-native-gesture-handler": "^1.0.9",
@@ -38,7 +38,7 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.2",
     "reselect": "^4.0.0",
-    "shared-core": "0.25.0"
+    "shared-core": "0.26.0"
   },
   "devDependencies": {
     "@types/fbemitter": "^2.0.32",

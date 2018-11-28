@@ -1,6 +1,6 @@
 {
   "name": "shared-core",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "main": "dist",
   "scripts": {
     "build": "tsc",
@@ -16,7 +16,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "qs": "^6.5.2",
-    "ramda": "^0.25.0",
+    "ramda": "^0.26.0",
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
     "reselect": "^4.0.0"
