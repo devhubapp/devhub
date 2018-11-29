@@ -1,5 +1,5 @@
+import _ from 'lodash'
 import moment from 'moment'
-import { omit, uniq, uniqBy } from 'ramda'
 
 import { isPullRequest } from './shared'
 
@@ -442,7 +442,7 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
         if (isSameRepo) return eventB
 
         return {
-          ...omit(['repo', 'type'], eventA),
+          ..._.omit(eventA, ['repo', 'type']),
           type: 'WatchEvent:OneUserMultipleRepos',
           repos: [eventA.repo, eventB.repo],
           merged: [eventA.id, eventB.id],
@@ -460,10 +460,10 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
       if (eventB.type === 'WatchEvent') {
         return {
           ...eventA,
-          repos: uniqBy(repo => repo.id, [...eventA.repos, eventB.repo]),
+          repos: _.uniqBy([...eventA.repos, eventB.repo], repo => repo.id),
           merged: alreadyMergedThisRepo
-            ? uniq(eventA.merged)
-            : uniq([...eventA.merged, eventB.id]),
+            ? _.uniq(eventA.merged)
+            : _.uniq([...eventA.merged, eventB.id]),
         } as MultipleStarEvent
       }
 

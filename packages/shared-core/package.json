@@ -16,7 +16,6 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "qs": "^6.5.2",
-    "ramda": "^0.26.1",
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
     "reselect": "^4.0.0"
@@ -26,7 +25,6 @@
     "@types/jest": "^23.3.9",
     "@types/lodash": "^4.14.118",
     "@types/qs": "^6.5.1",
-    "@types/ramda": "^0.26.1",
     "babel-jest": "^23.6.0",
     "husky": "^1.1.4",
     "jest": "^23.6.0",

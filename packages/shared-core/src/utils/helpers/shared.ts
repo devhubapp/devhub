@@ -1,11 +1,10 @@
 import _ from 'lodash'
 import moment, { MomentInput } from 'moment'
-import { toUpper } from 'ramda'
 import { PixelRatio } from 'react-native'
 import { EnhancedGitHubEvent, GitHubNotification } from '../../types'
 
 export function capitalize(str: string) {
-  return str.toLowerCase().replace(/^.| ./g, toUpper)
+  return str.toLowerCase().replace(/^.| ./g, _.toUpper)
 }
 
 export function guid() {
