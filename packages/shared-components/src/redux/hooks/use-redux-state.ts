@@ -8,29 +8,26 @@ export type ExtractSelector<S> = S extends (state: any) => infer R
   : (state: RootState) => any
 
 export function useReduxState<S extends (state: any) => any>(selector: S) {
-  type Result =
-    | (S extends (...args: any[]) => infer R ? R | undefined : any)
-    | undefined
+  type Result = S extends (...args: any[]) => infer R ? R : any
 
   const store = useContext(ReduxStoreContext)
-  const getResult = (): Result => selector(store.getState())
-  const [result, setResult] = useState(getResult())
+  const [result, setResult] = useState<Result>(() => selector(store.getState()))
 
   useEffect(
     () => {
       return store.subscribe(() => {
         if (!selector) {
-          setResult(undefined)
+          setResult(undefined as any)
           return
         }
 
-        const newResult = getResult()
-        if (newResult === result) return
+        const newResult = selector(store.getState())
+        if (Object.is(newResult, result)) return
 
         setResult(newResult)
       })
     },
-    [store],
+    [store, result],
   )
 
   return result
