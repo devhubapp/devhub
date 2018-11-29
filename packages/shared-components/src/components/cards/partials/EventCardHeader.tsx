@@ -16,7 +16,7 @@ import { getUserURL } from './rows/helpers'
 export interface EventCardHeaderProps {
   actionText: string
   avatarURL: string
-  cardIconColor: string
+  cardIconColor?: string
   cardIconName: GitHubIcon
   createdAt: MomentInput
   isBot: boolean
@@ -141,7 +141,10 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             </Text>
           </View>
 
-          <CardIcon name={cardIconName} color={cardIconColor} />
+          <CardIcon
+            name={cardIconName}
+            color={cardIconColor || theme.foregroundColor}
+          />
         </View>
       </View>
     </View>

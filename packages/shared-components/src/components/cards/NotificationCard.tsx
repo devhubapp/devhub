@@ -23,7 +23,6 @@ import {
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
 import { fixURL } from '../../utils/helpers/github/url'
-import { useTheme } from '../context/ThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
@@ -46,8 +45,6 @@ const styles = StyleSheet.create({
 })
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const theme = useTheme()
-
   const { archived, notification, onlyOneRepository } = props
   if (!notification || archived) return null
 
@@ -109,11 +106,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   return (
     <View
       key={`notification-card-${notification.id}-inner`}
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
+      style={styles.container}
     >
       <NotificationCardHeader
         key={`notification-card-header-${notification.id}`}
-        cardIconColor={cardIconColor || theme.foregroundColor}
+        cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         isPrivate={isPrivate}
         isRead={isRead}

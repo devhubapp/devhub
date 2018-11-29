@@ -14,7 +14,7 @@ import { getCardStylesForTheme } from '../styles'
 import { CardIcon } from './CardIcon'
 
 export interface NotificationCardHeaderProps {
-  cardIconColor: string
+  cardIconColor?: string
   cardIconName: GitHubIcon
   isPrivate?: boolean
   isRead: boolean
@@ -113,7 +113,10 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             </View>
           </View>
 
-          <CardIcon name={cardIconName} color={cardIconColor} />
+          <CardIcon
+            name={cardIconName}
+            color={cardIconColor || theme.foregroundColor}
+          />
         </View>
       </View>
     </View>

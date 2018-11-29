@@ -32,7 +32,6 @@ import {
   getIssueIconAndColor,
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
-import { useTheme } from '../context/ThemeContext'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { BranchRow } from './partials/rows/BranchRow'
 import { CommentRow } from './partials/rows/CommentRow'
@@ -57,8 +56,6 @@ const styles = StyleSheet.create({
 })
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const theme = useTheme()
-
   const { event, repoIsKnown } = props
   if (!event) return null
 
@@ -171,15 +168,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
       : issue.html_url || issue.url)
 
   return (
-    <View
-      key={`event-card-${event.id}-inner`}
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
-    >
+    <View key={`event-card-${event.id}-inner`} style={styles.container}>
       <EventCardHeader
         key={`event-card-header-${event.id}`}
         actionText={actionText}
         avatarURL={avatarURL}
-        cardIconColor={cardIconColor || theme.foregroundColor}
+        cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         createdAt={event.created_at}
         isBot={isBot}
