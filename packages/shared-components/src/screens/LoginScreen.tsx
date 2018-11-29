@@ -1,25 +1,18 @@
-import hoistNonReactStatics from 'hoist-non-react-statics'
-import React, { PureComponent } from 'react'
+import React, { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { connect } from 'react-redux'
 
-import { ExtractPropsFromConnector } from 'shared-core/dist/types'
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
 import { Screen } from '../components/common/Screen'
-import { ThemeConsumer } from '../components/context/ThemeContext'
+import { useTheme } from '../components/context/ThemeContext'
 import { executeOAuth } from '../libs/oauth'
 import * as actions from '../redux/actions'
+import { useReduxAction } from '../redux/hooks/use-redux-action'
+import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
 
 const logo = require('shared-components/assets/logo.png') // tslint:disable-line
-
-export interface LoginScreenProps {}
-
-export interface LoginScreenState {
-  loggingInMethod: 'github.public' | 'github.private' | null
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -79,31 +72,20 @@ const styles = StyleSheet.create({
   },
 })
 
-const connectToStore = connect(
-  (state: any) => ({
-    isLoggingIn: selectors.isLoggingInSelector(state),
-    user: selectors.currentUserSelector(state),
-  }),
-  {
-    loginRequest: actions.loginRequest,
-  },
-)
+export function LoginScreen() {
+  const [loggingInMethod, setLoggingInMethod] = useState<
+    'github.public' | 'github.private' | null
+  >(null)
 
-export class LoginScreenComponent extends PureComponent<
-  LoginScreenProps & ExtractPropsFromConnector<typeof connectToStore>,
-  LoginScreenState
-> {
-  state: LoginScreenState = {
-    loggingInMethod: null,
-  }
+  const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
+  const loginRequest = useReduxAction(actions.loginRequest)
+  const theme = useTheme()
 
-  _loginWithGitHub = async (
-    loggingInMethod: LoginScreenState['loggingInMethod'],
-  ) => {
-    this.setState({ loggingInMethod })
+  const loginWithGitHub = async (method: typeof loggingInMethod) => {
+    setLoggingInMethod(method)
 
     const permissions =
-      loggingInMethod === 'github.private'
+      method === 'github.private'
         ? ['user', 'repo', 'notifications', 'read:org']
         : ['user', 'public_repo', 'notifications', 'read:org']
 
@@ -122,69 +104,50 @@ export class LoginScreenComponent extends PureComponent<
       return
     }
 
-    await this.props.loginRequest({ appToken, githubToken })
+    await loginRequest({ appToken, githubToken })
   }
 
-  loginWithGitHubPrivateAccess = () => this._loginWithGitHub('github.private')
+  return (
+    <Screen>
+      <View style={styles.container}>
+        <View style={styles.header} />
 
-  loginWithGitHubPublicAccess = () => this._loginWithGitHub('github.public')
+        <View style={styles.mainContentContainer}>
+          <Image
+            resizeMode="contain"
+            source={logo}
+            style={styles.logo as any}
+          />
 
-  render() {
-    const { loggingInMethod } = this.state
-    const { isLoggingIn } = this.props
+          <GitHubLoginButton
+            loading={isLoggingIn && loggingInMethod === 'github.public'}
+            onPress={() => loginWithGitHub('github.public')}
+            rightIcon="globe"
+            style={styles.button}
+            subtitle="Public access"
+            title="Sign in with GitHub"
+          />
 
-    return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <Screen>
-            <View style={styles.container}>
-              <View style={styles.header} />
+          <GitHubLoginButton
+            loading={isLoggingIn && loggingInMethod === 'github.private'}
+            onPress={() => loginWithGitHub('github.private')}
+            rightIcon="lock"
+            style={styles.button}
+            subtitle="Private access"
+            title="Sign in with GitHub"
+          />
+        </View>
 
-              <View style={styles.mainContentContainer}>
-                <Image
-                  resizeMode="contain"
-                  source={logo}
-                  style={styles.logo as any}
-                />
-
-                <GitHubLoginButton
-                  loading={isLoggingIn && loggingInMethod === 'github.public'}
-                  onPress={this.loginWithGitHubPublicAccess}
-                  rightIcon="globe"
-                  style={styles.button}
-                  subtitle="Public access"
-                  title="Sign in with GitHub"
-                />
-
-                <GitHubLoginButton
-                  loading={isLoggingIn && loggingInMethod === 'github.private'}
-                  onPress={this.loginWithGitHubPrivateAccess}
-                  rightIcon="lock"
-                  style={styles.button}
-                  subtitle="Private access"
-                  title="Sign in with GitHub"
-                />
-              </View>
-
-              <View style={styles.footer}>
-                <Text style={[styles.title, { color: theme.foregroundColor }]}>
-                  DevHub
-                </Text>
-                <Text
-                  style={[styles.subtitle, { color: theme.foregroundColor }]}
-                >
-                  TweetDeck for GitHub
-                </Text>
-                <AppVersion />
-              </View>
-            </View>
-          </Screen>
-        )}
-      </ThemeConsumer>
-    )
-  }
+        <View style={styles.footer}>
+          <Text style={[styles.title, { color: theme.foregroundColor }]}>
+            DevHub
+          </Text>
+          <Text style={[styles.subtitle, { color: theme.foregroundColor }]}>
+            TweetDeck for GitHub
+          </Text>
+          <AppVersion />
+        </View>
+      </View>
+    </Screen>
+  )
 }
-
-export const LoginScreen = connectToStore(LoginScreenComponent)
-
-hoistNonReactStatics(LoginScreen, LoginScreenComponent as any)

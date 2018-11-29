@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
 import { AddColumnDetailsPayload } from 'shared-core/dist/types'
@@ -7,8 +7,8 @@ import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
-import { ColumnSizeContext } from '../context/ColumnSizeContext'
-import { ThemeContext } from '../context/ThemeContext'
+import { useColumnWidth } from '../context/ColumnWidthContext'
+import { useTheme } from '../context/ThemeContext'
 
 const columnTypes: AddColumnDetailsPayload[] = [
   {
@@ -70,7 +70,7 @@ function AddColumnModalItem({
   availableWidth: number
   item: AddColumnDetailsPayload
 }) {
-  const { theme } = useContext(ThemeContext)
+  const theme = useTheme()
   const pushModal = useReduxAction(actions.pushModal)
 
   if (!(availableWidth > 0)) return null
@@ -112,7 +112,7 @@ function AddColumnModalItem({
 export function AddColumnModal() {
   const outerSpacing = (3 / 4) * contentPadding
 
-  const { width: columnWidth } = useContext(ColumnSizeContext)
+  const columnWidth = useColumnWidth()
   const [availableWidth, setAvailableWidth] = useState(
     columnWidth - 2 * outerSpacing,
   )

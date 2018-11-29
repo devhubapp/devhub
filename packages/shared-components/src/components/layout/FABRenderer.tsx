@@ -1,75 +1,50 @@
-import hoistNonReactStatics from 'hoist-non-react-statics'
-import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 
 import { ViewStyle } from 'react-native'
-import { ExtractPropsFromConnector } from 'shared-core/dist/types'
 import * as actions from '../../redux/actions'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { buttonSize } from '../common/Button'
 import { FAB, fabSize } from '../common/FAB'
-import { LayoutConsumer } from '../context/LayoutContext'
+import { useAppLayout } from '../context/LayoutContext'
 
-const connectToStore = connect(
-  (state: any) => ({
-    currentOpenedModal: selectors.currentOpenedModal(state),
-  }),
-  {
-    closeAllModals: actions.closeAllModals,
-    replaceModal: actions.replaceModal,
-  },
-)
+const fabStyle: ViewStyle = {
+  position: 'absolute',
+  bottom: contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2),
+  right: contentPadding,
+  zIndex: 101,
+}
 
-class FABRendererComponent extends PureComponent<
-  ExtractPropsFromConnector<typeof connectToStore>
-> {
-  renderContent() {
-    const { currentOpenedModal, closeAllModals, replaceModal } = this.props
+export function FABRenderer() {
+  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+  const closeAllModals = useReduxAction(actions.closeAllModals)
+  const replaceModal = useReduxAction(actions.replaceModal)
+  const { sizename } = useAppLayout()
 
-    const fabStyle: ViewStyle = {
-      position: 'absolute',
-      bottom: contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2),
-      right: contentPadding,
-      zIndex: 101,
-    }
+  if (sizename !== '1-small') return null
 
-    if (!currentOpenedModal) {
+  if (!currentOpenedModal) {
+    return (
+      <FAB
+        iconName="plus"
+        onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+        style={fabStyle}
+        useBrandColor
+      />
+    )
+  }
+
+  switch (currentOpenedModal.name) {
+    case 'ADD_COLUMN':
+    case 'ADD_COLUMN_DETAILS': {
       return (
-        <FAB
-          iconName="plus"
-          onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-          style={fabStyle}
-          useBrandColor
-        />
+        <FAB iconName="x" onPress={() => closeAllModals()} style={fabStyle} />
       )
     }
 
-    switch (currentOpenedModal.name) {
-      case 'ADD_COLUMN':
-      case 'ADD_COLUMN_DETAILS': {
-        return (
-          <FAB iconName="x" onPress={() => closeAllModals()} style={fabStyle} />
-        )
-      }
-
-      default:
-        return null
-    }
-  }
-
-  render() {
-    return (
-      <LayoutConsumer>
-        {({ sizename }) => {
-          if (sizename !== '1-small') return null
-          return this.renderContent()
-        }}
-      </LayoutConsumer>
-    )
+    default:
+      return null
   }
 }
-
-export const FABRenderer = connectToStore(FABRendererComponent)
-
-hoistNonReactStatics(FABRenderer, FABRendererComponent as any)

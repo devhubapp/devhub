@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text } from 'react-native'
 
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 const pkg = require('shared-core/package.json') // tslint:disable-line
 
@@ -15,16 +15,11 @@ const styles = StyleSheet.create({
 })
 
 export function AppVersion() {
+  const theme = useTheme()
+
   return (
-    <ThemeConsumer>
-      {({ theme }) => (
-        <Text
-          style={[
-            styles.appVersion,
-            { color: theme.foregroundColorTransparent50 },
-          ]}
-        >{`v${pkg.version}`}</Text>
-      )}
-    </ThemeConsumer>
+    <Text
+      style={[styles.appVersion, { color: theme.foregroundColorTransparent50 }]}
+    >{`v${pkg.version}`}</Text>
   )
 }

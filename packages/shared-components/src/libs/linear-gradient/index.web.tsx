@@ -1,4 +1,4 @@
-import React, { SFC } from 'react'
+import React from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
 
@@ -31,26 +31,30 @@ const propsToLinearGradient = ({
 }: Pick<LinearGradientProps, 'colors' | 'end' | 'start'>) =>
   `linear-gradient(${pointsToDeg(start, end)}, ${colors.join(', ')})`
 
-export const LinearGradient: SFC<LinearGradientProps> = ({
-  colors,
-  end,
-  // locations,
-  start,
-  style,
-  ...props
-}) => (
-  <View
-    {...props}
-    style={[
-      style,
-      {
-        backgroundColor: propsToLinearGradient({
-          colors,
-          end,
-          // locations,
-          start,
-        }),
-      },
-    ]}
-  />
-)
+export function LinearGradient(props: LinearGradientProps) {
+  const {
+    colors,
+    end,
+    // locations,
+    start,
+    style,
+    ...otherProps
+  } = props
+
+  return (
+    <View
+      {...otherProps}
+      style={[
+        style,
+        {
+          backgroundColor: propsToLinearGradient({
+            colors,
+            end,
+            // locations,
+            start,
+          }),
+        },
+      ]}
+    />
+  )
+}

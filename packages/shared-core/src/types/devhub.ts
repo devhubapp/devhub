@@ -176,3 +176,5 @@ export type ModalPayload =
       name: 'SETTINGS'
       params?: undefined
     }
+
+export type LoadState = 'loading' | 'loading_first' | 'loading_more' | 'loaded'

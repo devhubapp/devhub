@@ -5,30 +5,30 @@ import {
 } from 'react-native'
 
 import { contentPadding, radius } from '../../styles/variables'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 export type TextInputProps = TextInputComponentProps
 
-export const TextInput = React.forwardRef(
-  ({ style, ...props }: TextInputProps, ref: any) => (
-    <ThemeConsumer>
-      {({ theme }) => (
-        <TextInputOriginal
-          {...props}
-          ref={ref}
-          style={[
-            {
-              paddingHorizontal: contentPadding,
-              paddingVertical: contentPadding / 2,
-              backgroundColor: theme.backgroundColorLess08,
-              borderRadius: radius,
-            },
-            style,
-          ]}
-        />
-      )}
-    </ThemeConsumer>
-  ),
-)
+export const TextInput = React.forwardRef((props: TextInputProps, ref: any) => {
+  const theme = useTheme()
+
+  const { style, ...otherProps } = props
+
+  return (
+    <TextInputOriginal
+      {...otherProps}
+      ref={ref}
+      style={[
+        {
+          paddingHorizontal: contentPadding,
+          paddingVertical: contentPadding / 2,
+          backgroundColor: theme.backgroundColorLess08,
+          borderRadius: radius,
+        },
+        style,
+      ]}
+    />
+  )
+})
 
 export type TextInput = TextInputOriginal

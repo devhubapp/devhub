@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, StyleSheet, TextStyle, ViewStyle } from 'react-native'
+import { Animated, StyleSheet } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
@@ -146,11 +146,11 @@ const styles = StyleSheet.create({
   baseActionContainer: {
     flex: 1,
     justifyContent: 'center',
-  } as TextStyle,
+  },
 
   actionIcon: {
     backgroundColor: 'transparent',
     marginHorizontal: 10,
     width: 30,
-  } as ViewStyle,
+  },
 })

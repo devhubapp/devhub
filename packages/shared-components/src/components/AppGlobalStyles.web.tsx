@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Theme } from 'shared-core/dist/types'
-import { ThemeConsumer } from './context/ThemeContext'
+import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme }) {
   return `
@@ -13,9 +13,7 @@ function getStyles(params: { theme: Theme }) {
 }
 
 export function AppGlobalStyles() {
-  return (
-    <ThemeConsumer>
-      {({ theme }) => <style>{getStyles({ theme })}</style>}
-    </ThemeConsumer>
-  )
+  const theme = useTheme()
+
+  return <style>{getStyles({ theme })}</style>
 }

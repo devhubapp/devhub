@@ -1,5 +1,5 @@
-import React from 'react'
-import { Dimensions } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { Dimensions, ScaledSize } from 'react-native'
 
 export interface DimensionsProviderProps {
   children?: React.ReactNode
@@ -15,39 +15,34 @@ export const DimensionsContext = React.createContext<DimensionsProviderState>({
   height: 0,
 })
 
-export class DimensionsProvider extends React.PureComponent<
-  DimensionsProviderProps,
-  DimensionsProviderState
-> {
-  constructor(props: any) {
-    super(props)
-    this.state = this.getDimensions()
-  }
+function getDimensions() {
+  const { width, height } = Dimensions.get('window')
+  return { width, height }
+}
 
-  getDimensions() {
-    const { width, height } = Dimensions.get('window')
-    return { width, height }
-  }
+export function DimensionsProvider(props: DimensionsProviderProps) {
+  const [dimensions, setDimensions] = useState<DimensionsProviderState>(
+    getDimensions(),
+  )
 
-  updateDimensions = () => {
-    this.setState(this.getDimensions())
-  }
+  useEffect(() => {
+    const handler = ({ window }: { window: ScaledSize }) => {
+      setDimensions(window)
+    }
 
-  componentDidMount() {
-    Dimensions.addEventListener('change', this.updateDimensions)
-  }
+    Dimensions.addEventListener('change', handler)
+    return () => Dimensions.removeEventListener('change', handler)
+  }, [])
 
-  componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.updateDimensions)
-  }
-
-  render() {
-    return (
-      <DimensionsContext.Provider value={this.state}>
-        {this.props.children}
-      </DimensionsContext.Provider>
-    )
-  }
+  return (
+    <DimensionsContext.Provider value={dimensions}>
+      {props.children}
+    </DimensionsContext.Provider>
+  )
 }
 
 export const DimensionsConsumer = DimensionsContext.Consumer
+
+export function useDimensions() {
+  return useContext(DimensionsContext)
+}

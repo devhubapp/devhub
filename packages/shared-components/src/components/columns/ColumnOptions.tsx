@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import React, { useContext, useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { ScrollView, StyleSheet, View } from 'react-native'
 
 import { Column } from 'shared-core/dist/types'
 import {
@@ -8,7 +8,6 @@ import {
   getEventTypeMetadata,
 } from 'shared-core/dist/utils/helpers/github/events'
 import { useDimensions } from '../../hooks/use-dimensions'
-import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
@@ -23,7 +22,7 @@ import {
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
-import { ThemeContext } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 
@@ -58,7 +57,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     openedOptionCategory,
     setOpenedOptionCategory,
   ] = useState<ColumnOptionCategory | null>(null)
-  const { theme } = useContext(ThemeContext)
+  const theme = useTheme()
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const dimensions = useDimensions()
   const moveColumn = useReduxAction(actions.moveColumn)

@@ -1,4 +1,4 @@
-import React, { PureComponent, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import {
   SafeAreaView,
   StyleProp,
@@ -10,7 +10,7 @@ import {
 
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 export interface ColumnHeaderProps extends ViewProps {
   children?: ReactNode
@@ -30,27 +30,23 @@ const styles = StyleSheet.create({
   },
 })
 
-export class ColumnHeader extends PureComponent<ColumnHeaderProps> {
-  render() {
-    const { children, style, ...props } = this.props
+export function ColumnHeader(props: ColumnHeaderProps) {
+  const theme = useTheme()
 
-    return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <SafeAreaView
-            style={[
-              styles.container,
-              { backgroundColor: theme.backgroundColorLess08 },
-            ]}
-          >
-            <View {...props} style={[styles.innerContainer, style]}>
-              {children}
-            </View>
+  const { children, style, ...otherProps } = props
 
-            <CardItemSeparator />
-          </SafeAreaView>
-        )}
-      </ThemeConsumer>
-    )
-  }
+  return (
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme.backgroundColorLess08 },
+      ]}
+    >
+      <View {...otherProps} style={[styles.innerContainer, style]}>
+        {children}
+      </View>
+
+      <CardItemSeparator />
+    </SafeAreaView>
+  )
 }

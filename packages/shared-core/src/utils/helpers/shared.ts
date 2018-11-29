@@ -25,11 +25,11 @@ export function getDateSmallText(date: MomentInput) {
 
   const momentDate = moment(date)
   if (!momentDate.isValid()) return ''
-  // return `${moment(new Date()).diff(momentDate, 'seconds')}s`;
 
   const momentNow = moment(new Date())
   const daysDiff = momentNow.diff(momentDate, 'days')
   const timeText = momentDate.format('HH:mm')
+  // return `${momentNow.diff(momentDate, 'seconds')}s`
 
   if (daysDiff < 1) {
     const hoursDiff = momentNow.diff(momentDate, 'hours')

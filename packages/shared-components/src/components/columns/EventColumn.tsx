@@ -63,6 +63,7 @@ export function EventColumn(props: EventColumnProps) {
       )}
 
       <EventCardsContainer
+        key={`event-cards-container-${column.id}`}
         repoIsKnown={requestTypeIconAndData.repoIsKnown}
         {...props}
       />

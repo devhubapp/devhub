@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { FlatList, View } from 'react-native'
 
-import { GitHubNotification } from 'shared-core/dist/types'
+import { GitHubNotification, LoadState } from 'shared-core/dist/types'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 import { EmptyCards } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -16,26 +16,28 @@ export interface NotificationCardsProps {
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   notifications: GitHubNotification[]
   repoIsKnown?: boolean
-  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
+  loadState: LoadState
   swipeable?: boolean
 }
 
-export interface NotificationCardsState {}
+export function NotificationCards(props: NotificationCardsProps) {
+  const theme = useTheme()
 
-export class NotificationCards extends PureComponent<
-  NotificationCardsProps,
-  NotificationCardsState
-> {
-  keyExtractor(notification: GitHubNotification) {
+  const { fetchNextPage, loadState, notifications } = props
+
+  if (!(notifications && notifications.length))
+    return <EmptyCards fetchNextPage={fetchNextPage} loadState={loadState} />
+
+  function keyExtractor(notification: GitHubNotification) {
     return `notification-card-${notification.id}`
   }
 
-  renderItem = ({ item: notification }: { item: GitHubNotification }) => {
-    if (this.props.swipeable) {
+  function renderItem({ item: notification }: { item: GitHubNotification }) {
+    if (props.swipeable) {
       return (
         <SwipeableNotificationCard
           notification={notification}
-          repoIsKnown={this.props.repoIsKnown}
+          repoIsKnown={props.repoIsKnown}
         />
       )
     }
@@ -44,15 +46,13 @@ export class NotificationCards extends PureComponent<
       <ErrorBoundary>
         <NotificationCard
           notification={notification}
-          repoIsKnown={this.props.repoIsKnown}
+          repoIsKnown={props.repoIsKnown}
         />
       </ErrorBoundary>
     )
   }
 
-  renderFooter = () => {
-    const { fetchNextPage, state } = this.props
-
+  function renderFooter() {
     if (!fetchNextPage) return <CardItemSeparator />
 
     return (
@@ -61,8 +61,8 @@ export class NotificationCards extends PureComponent<
         <View style={{ padding: contentPadding }}>
           <Button
             children="Load more"
-            disabled={state !== 'loaded'}
-            loading={state === 'loading_more'}
+            disabled={loadState !== 'loaded'}
+            loading={loadState === 'loading_more'}
             onPress={() => fetchNextPage()}
           />
         </View>
@@ -70,33 +70,22 @@ export class NotificationCards extends PureComponent<
     )
   }
 
-  render() {
-    const { fetchNextPage, state, notifications } = this.props
-
-    if (!(notifications && notifications.length))
-      return <EmptyCards fetchNextPage={fetchNextPage} state={state} />
-
-    return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <TransparentTextOverlay
-            color={theme.backgroundColor}
-            size={contentPadding}
-            from="vertical"
-          >
-            <FlatList
-              key="notification-cards-flat-list"
-              ItemSeparatorComponent={CardItemSeparator}
-              ListFooterComponent={this.renderFooter}
-              data={notifications}
-              extraData={state}
-              keyExtractor={this.keyExtractor}
-              removeClippedSubviews
-              renderItem={this.renderItem}
-            />
-          </TransparentTextOverlay>
-        )}
-      </ThemeConsumer>
-    )
-  }
+  return (
+    <TransparentTextOverlay
+      color={theme.backgroundColor}
+      size={contentPadding}
+      from="vertical"
+    >
+      <FlatList
+        key="notification-cards-flat-list"
+        ItemSeparatorComponent={CardItemSeparator}
+        ListFooterComponent={renderFooter}
+        data={notifications}
+        extraData={loadState}
+        keyExtractor={keyExtractor}
+        removeClippedSubviews
+        renderItem={renderItem}
+      />
+    </TransparentTextOverlay>
+  )
 }

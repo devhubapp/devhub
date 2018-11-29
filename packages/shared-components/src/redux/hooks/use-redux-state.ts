@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { ReduxStoreContext } from '../context/ReduxStoreContext'
+import { useReduxStore } from '../context/ReduxStoreContext'
 import { RootState } from '../types'
 
 export type ExtractSelector<S> = S extends (state: any) => infer R
@@ -10,7 +10,7 @@ export type ExtractSelector<S> = S extends (state: any) => infer R
 export function useReduxState<S extends (state: any) => any>(selector: S) {
   type Result = S extends (...args: any[]) => infer R ? R : any
 
-  const store = useContext(ReduxStoreContext)
+  const store = useReduxStore()
   const [result, setResult] = useState<Result>(() => selector(store.getState()))
 
   useEffect(

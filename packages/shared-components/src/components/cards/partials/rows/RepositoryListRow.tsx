@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 
 import { GitHubRepo } from 'shared-core/dist/types'
 import { getOwnerAndRepo } from 'shared-core/dist/utils/helpers/github/shared'
@@ -15,8 +15,8 @@ export interface RepositoryListRowProps {
   repos: GitHubRepo[]
 }
 
-export class RepositoryListRow extends PureComponent<RepositoryListRowProps> {
-  renderItem: RenderItem<GitHubRepo> = ({
+export function RepositoryListRow(props: RepositoryListRowProps) {
+  const renderItem: RenderItem<GitHubRepo> = ({
     item: repo,
     showMoreItemsIndicator,
   }) => {
@@ -32,7 +32,7 @@ export class RepositoryListRow extends PureComponent<RepositoryListRowProps> {
     return (
       <RepositoryRow
         key={`repo-row-${repo.id}`}
-        {...this.props}
+        {...props}
         ownerName={repoOwnerName!}
         repositoryName={repoName!}
         showMoreItemsIndicator={showMoreItemsIndicator}
@@ -40,11 +40,9 @@ export class RepositoryListRow extends PureComponent<RepositoryListRowProps> {
     )
   }
 
-  render() {
-    const { repos, ...props } = this.props
+  const { repos, ...otherProps } = props
 
-    if (!(repos && repos.length > 0)) return null
+  if (!(repos && repos.length > 0)) return null
 
-    return <RowList {...props} data={repos} renderItem={this.renderItem} />
-  }
+  return <RowList {...otherProps} data={repos} renderItem={renderItem} />
 }

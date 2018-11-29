@@ -1,10 +1,10 @@
-import React, { SFC } from 'react'
+import React from 'react'
 import { Text, View } from 'react-native'
 
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { ThemeConsumer } from '../../../context/ThemeContext'
+import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getRepositoryURL } from './helpers'
 import { getCardRowStylesForTheme } from './styles'
@@ -22,16 +22,20 @@ export interface RepositoryRowProps {
 
 export interface RepositoryRowState {}
 
-export const RepositoryRow: SFC<RepositoryRowProps> = ({
-  isForcePush,
-  isFork,
-  isPush,
-  isRead,
-  ownerName,
-  repositoryName,
-  showMoreItemsIndicator,
-  smallLeftColumn,
-}) => {
+export function RepositoryRow(props: RepositoryRowProps) {
+  const theme = useTheme()
+
+  const {
+    isForcePush,
+    isFork,
+    isPush,
+    isRead,
+    ownerName,
+    repositoryName,
+    showMoreItemsIndicator,
+    smallLeftColumn,
+  } = props
+
   const repoIcon =
     (isForcePush && 'repo-force-push') ||
     (isPush && 'repo-push') ||
@@ -41,65 +45,61 @@ export const RepositoryRow: SFC<RepositoryRowProps> = ({
   const isBot = Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)
 
   return (
-    <ThemeConsumer>
-      {({ theme }) => (
-        <View style={getCardRowStylesForTheme(theme).container}>
-          <View
+    <View style={getCardRowStylesForTheme(theme).container}>
+      <View
+        style={[
+          getCardStylesForTheme(theme).leftColumn,
+          smallLeftColumn
+            ? getCardStylesForTheme(theme).leftColumn__small
+            : getCardStylesForTheme(theme).leftColumn__big,
+        ]}
+      >
+        <Avatar
+          isBot={isBot}
+          linkURL=""
+          small
+          style={getCardStylesForTheme(theme).avatar}
+          username={ownerName}
+        />
+      </View>
+
+      <View style={getCardStylesForTheme(theme).rightColumn}>
+        <Link
+          href={
+            showMoreItemsIndicator
+              ? undefined
+              : getRepositoryURL(ownerName, repositoryName)
+          }
+          style={getCardRowStylesForTheme(theme).mainContentContainer}
+        >
+          <Text
+            numberOfLines={1}
             style={[
-              getCardStylesForTheme(theme).leftColumn,
-              smallLeftColumn
-                ? getCardStylesForTheme(theme).leftColumn__small
-                : getCardStylesForTheme(theme).leftColumn__big,
+              getCardStylesForTheme(theme).normalText,
+              isRead && getCardStylesForTheme(theme).mutedText,
             ]}
           >
-            <Avatar
-              isBot={isBot}
-              linkURL=""
-              small
-              style={getCardStylesForTheme(theme).avatar}
-              username={ownerName}
-            />
-          </View>
-
-          <View style={getCardStylesForTheme(theme).rightColumn}>
-            <Link
-              href={
-                showMoreItemsIndicator
-                  ? undefined
-                  : getRepositoryURL(ownerName, repositoryName)
-              }
-              style={getCardRowStylesForTheme(theme).mainContentContainer}
+            <Icon name={repoIcon} />{' '}
+            <Text
+              style={[
+                getCardRowStylesForTheme(theme).repositoryText,
+                isRead && getCardStylesForTheme(theme).mutedText,
+              ]}
             >
-              <Text
-                numberOfLines={1}
-                style={[
-                  getCardStylesForTheme(theme).normalText,
-                  isRead && getCardStylesForTheme(theme).mutedText,
-                ]}
-              >
-                <Icon name={repoIcon} />{' '}
-                <Text
-                  style={[
-                    getCardRowStylesForTheme(theme).repositoryText,
-                    isRead && getCardStylesForTheme(theme).mutedText,
-                  ]}
-                >
-                  {showMoreItemsIndicator ? '' : repositoryName}
-                </Text>
-                <Text
-                  style={[
-                    getCardRowStylesForTheme(theme).repositorySecondaryText,
-                    (isRead || showMoreItemsIndicator) &&
-                      getCardStylesForTheme(theme).mutedText,
-                  ]}
-                >
-                  {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
-                </Text>
-              </Text>
-            </Link>
-          </View>
-        </View>
-      )}
-    </ThemeConsumer>
+              {showMoreItemsIndicator ? '' : repositoryName}
+            </Text>
+            <Text
+              style={[
+                getCardRowStylesForTheme(theme).repositorySecondaryText,
+                (isRead || showMoreItemsIndicator) &&
+                  getCardStylesForTheme(theme).mutedText,
+              ]}
+            >
+              {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
+            </Text>
+          </Text>
+        </Link>
+      </View>
+    </View>
   )
 }

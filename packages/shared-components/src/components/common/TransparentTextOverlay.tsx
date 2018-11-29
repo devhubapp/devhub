@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { ReactNode, SFC } from 'react'
+import React, { ReactNode } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 
 import { LinearGradient } from '../../libs/linear-gradient'
@@ -85,45 +85,45 @@ function getProps(from: From, size: number) {
   }
 }
 
-const GradientLayerOverlay: SFC<
-  TransparentTextOverlayProps & { from: From }
-> = ({ color, from, radius, size, style, ...props }) => (
-  <LinearGradient
-    colors={[rgba(color, 0), color]}
-    style={[
-      getStyle(from, size),
-      Boolean(radius) && { borderRadius: radius },
-      style,
-    ]}
-    {...getProps(from, size)}
-    {...props}
-  />
-)
+function GradientLayerOverlay(
+  props: TransparentTextOverlayProps & { from: From },
+) {
+  const { color, from, radius, size, style, ...otherProps } = props
+  return (
+    <LinearGradient
+      colors={[rgba(color, 0), color]}
+      style={[
+        getStyle(from, size),
+        Boolean(radius) && { borderRadius: radius },
+        style,
+      ]}
+      {...getProps(from, size)}
+      {...otherProps}
+    />
+  )
+}
 
-export const TransparentTextOverlay: SFC<TransparentTextOverlayProps> = ({
-  children,
-  containerStyle,
-  from,
-  ...props
-}) => {
+export function TransparentTextOverlay(props: TransparentTextOverlayProps) {
+  const { children, containerStyle, from, ...otherProps } = props
+
   return (
     <View style={[{ flex: 1, alignSelf: 'stretch' }, containerStyle]}>
       {children}
 
       {(from === 'vertical' || from === 'top') && (
-        <GradientLayerOverlay {...props} from="top" />
+        <GradientLayerOverlay {...otherProps} from="top" />
       )}
 
       {(from === 'vertical' || from === 'bottom') && (
-        <GradientLayerOverlay {...props} from="bottom" />
+        <GradientLayerOverlay {...otherProps} from="bottom" />
       )}
 
       {(from === 'horizontal' || from === 'left') && (
-        <GradientLayerOverlay {...props} from="left" />
+        <GradientLayerOverlay {...otherProps} from="left" />
       )}
 
       {(from === 'horizontal' || from === 'right') && (
-        <GradientLayerOverlay {...props} from="right" />
+        <GradientLayerOverlay {...otherProps} from="right" />
       )}
     </View>
   )

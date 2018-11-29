@@ -21,3 +21,7 @@ export function ReduxStoreProvider(props: ReduxStoreProviderProps) {
 }
 
 export const ReduxStoreConsumer = ReduxStoreContext.Consumer
+
+export function useReduxStore() {
+  return useContext(ReduxStoreContext)
+}

@@ -1,11 +1,9 @@
-import { useContext } from 'react'
-
-import { ReduxStoreContext } from '../context/ReduxStoreContext'
+import { useReduxStore } from '../context/ReduxStoreContext'
 
 type ActionCreator = (...args: any) => any
 
 export function useReduxAction<AC extends ActionCreator>(actionCreator: AC) {
-  const store = useContext(ReduxStoreContext)
+  const store = useReduxStore()
 
   return (
     ...args: AC extends ((...args: infer Args) => any) ? Args : any[]

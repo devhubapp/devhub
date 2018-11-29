@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 
+import { LoadState } from 'shared-core/dist/types'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
-import { ThemeContext } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 const clearMessages = [
   'All clear!',
@@ -33,13 +34,13 @@ const emoji = getRandomEmoji()
 
 export interface EmptyCardsProps {
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
-  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
+  loadState: LoadState
 }
 
 export function EmptyCards(props: EmptyCardsProps) {
-  const { theme } = useContext(ThemeContext)
+  const theme = useTheme()
 
-  const { fetchNextPage, state } = props
+  const { fetchNextPage, loadState } = props
 
   return (
     <TransparentTextOverlay
@@ -57,7 +58,7 @@ export function EmptyCards(props: EmptyCardsProps) {
             padding: contentPadding,
           }}
         >
-          {state === 'loading_first' ? (
+          {loadState === 'loading_first' ? (
             <ActivityIndicator color={theme.foregroundColor} />
           ) : (
             <Text style={{ color: theme.foregroundColorMuted50 }}>
@@ -67,12 +68,12 @@ export function EmptyCards(props: EmptyCardsProps) {
         </View>
 
         <View style={{ minHeight: 40 + 2 * contentPadding }}>
-          {!!fetchNextPage && (
+          {!!fetchNextPage && loadState !== 'loading_first' && (
             <View style={{ padding: contentPadding }}>
               <Button
                 children="Load more"
-                disabled={state !== 'loaded'}
-                loading={state === 'loading_more'}
+                disabled={loadState !== 'loaded'}
+                loading={loadState === 'loading_more'}
                 onPress={() => fetchNextPage()}
               />
             </View>

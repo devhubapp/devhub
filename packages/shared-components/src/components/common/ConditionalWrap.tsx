@@ -6,8 +6,8 @@ export interface ConditionalWrapProps {
   wrap: (children: React.ReactElement<any>) => React.ReactElement<any>
 }
 
-export const ConditionalWrap: React.SFC<ConditionalWrapProps> = ({
-  children,
-  condition,
-  wrap,
-}) => (condition ? wrap(children) : children)
+export function ConditionalWrap(props: ConditionalWrapProps) {
+  const { children, condition, wrap } = props
+
+  return condition ? wrap(children) : children
+}

@@ -63,6 +63,7 @@ export function NotificationColumn(props: NotificationColumnProps) {
       )}
 
       <NotificationCardsContainer
+        key={`notification-cards-container-${column.id}`}
         repoIsKnown={requestTypeIconAndData.repoIsKnown}
         {...props}
       />

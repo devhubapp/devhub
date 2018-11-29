@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { FlatList, View } from 'react-native'
 
-import { EnhancedGitHubEvent } from 'shared-core/dist/types'
+import { EnhancedGitHubEvent, LoadState } from 'shared-core/dist/types'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 import { EmptyCards } from './EmptyCards'
 import { EventCard } from './EventCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -15,41 +15,38 @@ import { SwipeableEventCard } from './SwipeableEventCard'
 export interface EventCardsProps {
   events: EnhancedGitHubEvent[]
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
+  loadState: LoadState
   repoIsKnown?: boolean
-  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
   swipeable?: boolean
 }
 
-export interface EventCardsState {}
+export const EventCards = React.memo((props: EventCardsProps) => {
+  const theme = useTheme()
 
-export class EventCards extends PureComponent<
-  EventCardsProps,
-  EventCardsState
-> {
-  keyExtractor(event: EnhancedGitHubEvent) {
+  const { events, fetchNextPage, loadState } = props
+
+  if (!(events && events.length))
+    return <EmptyCards fetchNextPage={fetchNextPage} loadState={loadState} />
+
+  function keyExtractor(event: EnhancedGitHubEvent) {
     return `event-card-${event.id}`
   }
 
-  renderItem = ({ item: event }: { item: EnhancedGitHubEvent }) => {
-    if (this.props.swipeable) {
+  function renderItem({ item: event }: { item: EnhancedGitHubEvent }) {
+    if (props.swipeable) {
       return (
-        <SwipeableEventCard
-          event={event}
-          repoIsKnown={this.props.repoIsKnown}
-        />
+        <SwipeableEventCard event={event} repoIsKnown={props.repoIsKnown} />
       )
     }
 
     return (
       <ErrorBoundary>
-        <EventCard event={event} repoIsKnown={this.props.repoIsKnown} />
+        <EventCard event={event} repoIsKnown={props.repoIsKnown} />
       </ErrorBoundary>
     )
   }
 
-  renderFooter = () => {
-    const { fetchNextPage, state } = this.props
-
+  function renderFooter() {
     if (!fetchNextPage) return <CardItemSeparator />
 
     return (
@@ -57,8 +54,8 @@ export class EventCards extends PureComponent<
         <CardItemSeparator />
         <View style={{ padding: contentPadding }}>
           <Button
-            disabled={state !== 'loaded'}
-            loading={state === 'loading_more'}
+            disabled={loadState !== 'loaded'}
+            loading={loadState === 'loading_more'}
             onPress={() => fetchNextPage()}
             children="Load more"
           />
@@ -67,32 +64,21 @@ export class EventCards extends PureComponent<
     )
   }
 
-  render() {
-    const { events, fetchNextPage, state } = this.props
-
-    if (!(events && events.length))
-      return <EmptyCards fetchNextPage={fetchNextPage} state={state} />
-
-    return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <TransparentTextOverlay
-            color={theme.backgroundColor}
-            size={contentPadding}
-            from="vertical"
-          >
-            <FlatList
-              data={events}
-              extraData={state}
-              ItemSeparatorComponent={CardItemSeparator}
-              ListFooterComponent={this.renderFooter}
-              keyExtractor={this.keyExtractor}
-              removeClippedSubviews
-              renderItem={this.renderItem}
-            />
-          </TransparentTextOverlay>
-        )}
-      </ThemeConsumer>
-    )
-  }
-}
+  return (
+    <TransparentTextOverlay
+      color={theme.backgroundColor}
+      size={contentPadding}
+      from="vertical"
+    >
+      <FlatList
+        data={events}
+        extraData={loadState}
+        ItemSeparatorComponent={CardItemSeparator}
+        ListFooterComponent={renderFooter}
+        keyExtractor={keyExtractor}
+        removeClippedSubviews
+        renderItem={renderItem}
+      />
+    </TransparentTextOverlay>
+  )
+})

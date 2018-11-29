@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 
 import { RenderItem, RowList } from './RowList'
 import { UserRow } from './UserRow'
@@ -11,8 +11,8 @@ export interface UserListRowProps {
   users: GitHubUser[]
 }
 
-export class UserListRow extends PureComponent<UserListRowProps> {
-  renderItem: RenderItem<GitHubUser> = ({
+export function UserListRow(props: UserListRowProps) {
+  const renderItem: RenderItem<GitHubUser> = ({
     item: user,
     showMoreItemsIndicator,
   }) => {
@@ -21,7 +21,7 @@ export class UserListRow extends PureComponent<UserListRowProps> {
     return (
       <UserRow
         key={`user-row-${user.id}`}
-        {...this.props}
+        {...props}
         avatarURL={user.avatar_url}
         showMoreItemsIndicator={showMoreItemsIndicator}
         userLinkURL={user.html_url || ''}
@@ -30,11 +30,9 @@ export class UserListRow extends PureComponent<UserListRowProps> {
     )
   }
 
-  render() {
-    const { users, ...props } = this.props
+  const { users, ...otherProps } = props
 
-    if (!(users && users.length > 0)) return null
+  if (!(users && users.length > 0)) return null
 
-    return <RowList {...props} data={users} renderItem={this.renderItem} />
-  }
+  return <RowList {...otherProps} data={users} renderItem={renderItem} />
 }

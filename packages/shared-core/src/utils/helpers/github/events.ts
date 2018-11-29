@@ -11,7 +11,6 @@ import {
   GitHubEvent,
   GitHubIcon,
   MultipleStarEvent,
-  NotificationSubscription,
 } from '../../../types'
 
 export function getColumnHeaderDetails(
@@ -126,8 +125,6 @@ export function getColumnHeaderDetails(
     }
 
     case 'notifications': {
-      const subscription = subscriptions[0] as NotificationSubscription
-
       return {
         icon: 'bell',
         repoIsKnown: false,

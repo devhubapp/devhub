@@ -1,27 +1,13 @@
 import _ from 'lodash'
-import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 
-import { ExtractPropsFromConnector } from 'shared-core/dist/types'
 import { Columns } from '../components/columns/Columns'
+import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 
 export interface ColumnsContainerProps {}
 
-export interface ColumnsContainerState {}
-
-const connectToStore = connect((state: any) => ({
-  columnIds: selectors.columnIdsSelector(state),
-}))
-
-class ColumnsContainerComponent extends PureComponent<
-  ColumnsContainerProps & ExtractPropsFromConnector<typeof connectToStore>,
-  ColumnsContainerState
-> {
-  render() {
-    const columnIds = this.props.columnIds || []
-    return <Columns key="columns-container" columnIds={columnIds} />
-  }
+export function ColumnsContainer() {
+  const columnIds = useReduxState(selectors.columnIdsSelector)
+  return <Columns key="columns-container" columnIds={columnIds} />
 }
-
-export const ColumnsContainer = connectToStore(ColumnsContainerComponent)

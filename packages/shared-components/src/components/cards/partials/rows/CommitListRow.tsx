@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 
 import { CommitRow } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
@@ -11,8 +11,8 @@ export interface CommitListRowProps {
   commits: GitHubCommit[]
 }
 
-export class CommitListRow extends PureComponent<CommitListRowProps> {
-  renderItem: RenderItem<GitHubCommit> = ({
+export function CommitListRow(props: CommitListRowProps) {
+  const renderItem: RenderItem<GitHubCommit> = ({
     showMoreItemsIndicator,
     item: commit,
   }) => {
@@ -21,7 +21,7 @@ export class CommitListRow extends PureComponent<CommitListRowProps> {
     return (
       <CommitRow
         key={`commit-row-${commit.sha}`}
-        {...this.props}
+        {...props}
         authorEmail={commit.author.email}
         authorName={commit.author.name}
         message={commit.message}
@@ -31,11 +31,9 @@ export class CommitListRow extends PureComponent<CommitListRowProps> {
     )
   }
 
-  render() {
-    const { commits, ...props } = this.props
+  const { commits, ...otherProps } = props
 
-    if (!(commits && commits.length > 0)) return null
+  if (!(commits && commits.length > 0)) return null
 
-    return <RowList {...props} data={commits} renderItem={this.renderItem} />
-  }
+  return <RowList {...otherProps} data={commits} renderItem={renderItem} />
 }

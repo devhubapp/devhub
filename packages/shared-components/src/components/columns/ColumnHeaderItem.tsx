@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import {
   ImageStyle,
   StyleProp,
@@ -9,10 +9,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import { connect } from 'react-redux'
 
-import { ExtractPropsFromConnector, GitHubIcon } from 'shared-core/dist/types'
+import { GitHubIcon } from 'shared-core/dist/types'
 import { Octicons as Icon } from '../../libs/vector-icons'
+import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import {
   columnHeaderItemContentSize,
@@ -23,7 +23,7 @@ import {
   ConditionalWrap,
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 export interface ColumnHeaderItemProps {
   avatarProps?: Partial<AvatarProps>
@@ -69,175 +69,165 @@ const styles = StyleSheet.create({
   },
 })
 
-const connectToStore = connect((state: any) => ({
-  username: selectors.currentUsernameSelector(state),
-}))
+export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
+  const theme = useTheme()
+  const _username = useReduxState(selectors.currentUsernameSelector)
 
-class ColumnHeaderItemComponent extends PureComponent<
-  ColumnHeaderItemProps & ExtractPropsFromConnector<typeof connectToStore>
-> {
-  wrap: ConditionalWrapProps['wrap'] = children =>
-    this.props.onPress ? (
+  const {
+    avatarProps: _avatarProps,
+    children,
+    fixedIconSize,
+    iconName,
+    iconStyle,
+    noPadding,
+    onPress,
+    selectable,
+    style,
+    subtitle,
+    subtitleStyle,
+    text,
+    title,
+    titleStyle,
+  } = props
+
+  const avatarProps = _avatarProps || {}
+
+  const username =
+    _username &&
+    avatarProps.username &&
+    _username.toLowerCase() === avatarProps.username.toLowerCase()
+      ? undefined
+      : avatarProps.username
+
+  const hasText = !!(title || subtitle || text)
+
+  const wrap: ConditionalWrapProps['wrap'] = child =>
+    onPress ? (
       <TouchableOpacity
-        onPress={this.props.onPress}
+        onPress={onPress}
         style={[
           styles.container,
-          this.props.noPadding
+          noPadding
             ? undefined
             : {
                 paddingHorizontal: contentPadding / 2,
                 paddingVertical: contentPadding,
               },
-          this.props.style,
+          style,
         ]}
       >
-        {children}
+        {child}
       </TouchableOpacity>
     ) : (
       <View
         style={[
           styles.container,
-          this.props.noPadding
+          noPadding
             ? undefined
             : {
                 paddingHorizontal: contentPadding / 2,
                 paddingVertical: contentPadding,
               },
           ,
-          this.props.style,
+          style,
         ]}
       >
-        {children}
+        {child}
       </View>
     )
 
-  render() {
-    const {
-      avatarProps: _avatarProps,
-      children,
-      fixedIconSize,
-      iconName,
-      iconStyle,
-      noPadding,
-      selectable,
-      subtitle,
-      subtitleStyle,
-      text,
-      title,
-      titleStyle,
-      username: _username,
-    } = this.props
-
-    const avatarProps = _avatarProps || {}
-
-    const username =
-      _username &&
-      avatarProps.username &&
-      _username.toLowerCase() === avatarProps.username.toLowerCase()
-        ? undefined
-        : avatarProps.username
-
-    const hasText = !!(title || subtitle || text)
-
-    return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <ConditionalWrap condition wrap={this.wrap}>
-            <>
-              {(!!iconName || !!username) && (
-                <View
-                  style={{
-                    position: 'relative',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: hasText ? 8 : 0,
-                  }}
-                >
-                  {!!username ? (
-                    <Avatar
-                      isBot={false}
-                      linkURL=""
-                      {...avatarProps}
-                      style={[
-                        {
-                          width: columnHeaderItemContentSize,
-                          height: columnHeaderItemContentSize,
-                        },
-                        avatarProps.style,
-                      ]}
-                      username={username}
-                    />
-                  ) : (
-                    !!iconName && (
-                      <Icon
-                        color={theme.foregroundColor}
-                        selectable={selectable}
-                        name={iconName}
-                        style={[
-                          styles.icon,
-                          fixedIconSize && {
-                            width: columnHeaderItemContentSize,
-                            height: columnHeaderItemContentSize,
-                          },
-                          iconStyle,
-                        ]}
-                      />
-                    )
-                  )}
-                </View>
-              )}
-              {hasText && (
-                <Text
-                  numberOfLines={1}
+  return (
+    <ConditionalWrap condition wrap={wrap}>
+      <>
+        {(!!iconName || !!username) && (
+          <View
+            style={{
+              position: 'relative',
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: hasText ? 8 : 0,
+            }}
+          >
+            {!!username ? (
+              <Avatar
+                isBot={false}
+                linkURL=""
+                {...avatarProps}
+                style={[
+                  {
+                    width: columnHeaderItemContentSize,
+                    height: columnHeaderItemContentSize,
+                  },
+                  avatarProps.style,
+                ]}
+                username={username}
+              />
+            ) : (
+              !!iconName && (
+                <Icon
+                  color={theme.foregroundColor}
                   selectable={selectable}
-                  style={[{ color: theme.foregroundColorMuted50 }]}
-                >
-                  {!!title && (
-                    <Text
-                      selectable={selectable}
-                      style={[
-                        styles.title,
-                        { color: theme.foregroundColor },
-                        titleStyle,
-                      ]}
-                    >
-                      {title.toLowerCase()}
-                      {!!subtitle && '  '}
-                    </Text>
-                  )}
-
-                  {!!subtitle && (
-                    <Text
-                      selectable={selectable}
-                      style={[
-                        styles.subtitle,
-                        { color: theme.foregroundColorMuted50 },
-                        subtitleStyle,
-                      ]}
-                    >
-                      {subtitle.toLowerCase()}
-                    </Text>
-                  )}
-
-                  {!!text && (
-                    <Text
-                      selectable={selectable}
-                      style={[styles.text, { color: theme.foregroundColor }]}
-                    >
-                      {text}
-                    </Text>
-                  )}
-                </Text>
-              )}
-
-              {children}
-            </>
-          </ConditionalWrap>
+                  name={iconName}
+                  style={[
+                    styles.icon,
+                    fixedIconSize && {
+                      width: columnHeaderItemContentSize,
+                      height: columnHeaderItemContentSize,
+                    },
+                    iconStyle,
+                  ]}
+                />
+              )
+            )}
+          </View>
         )}
-      </ThemeConsumer>
-    )
-  }
-}
+        {hasText && (
+          <Text
+            numberOfLines={1}
+            selectable={selectable}
+            style={[{ color: theme.foregroundColorMuted50 }]}
+          >
+            {!!title && (
+              <Text
+                selectable={selectable}
+                style={[
+                  styles.title,
+                  { color: theme.foregroundColor },
+                  titleStyle,
+                ]}
+              >
+                {title.toLowerCase()}
+                {!!subtitle && '  '}
+              </Text>
+            )}
 
-export const ColumnHeaderItem = connectToStore(ColumnHeaderItemComponent)
+            {!!subtitle && (
+              <Text
+                selectable={selectable}
+                style={[
+                  styles.subtitle,
+                  { color: theme.foregroundColorMuted50 },
+                  subtitleStyle,
+                ]}
+              >
+                {subtitle.toLowerCase()}
+              </Text>
+            )}
+
+            {!!text && (
+              <Text
+                selectable={selectable}
+                style={[styles.text, { color: theme.foregroundColor }]}
+              >
+                {text}
+              </Text>
+            )}
+          </Text>
+        )}
+
+        {children}
+      </>
+    </ConditionalWrap>
+  )
+}

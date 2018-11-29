@@ -1,23 +1,23 @@
-import { EventSubscription } from 'fbemitter'
-import hoistNonReactStatics from 'hoist-non-react-statics'
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
 
-import { ExtractPropsFromConnector } from 'shared-core/dist/types'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
 import {
-  LAYOUT_BREAKPOINTS,
-  LayoutConsumer,
+  APP_LAYOUT_BREAKPOINTS,
+  useAppLayout,
 } from '../components/context/LayoutContext'
-import { ThemeConsumer } from '../components/context/ThemeContext'
+import { useTheme } from '../components/context/ThemeContext'
 import { FABRenderer } from '../components/layout/FABRenderer'
 import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
-import { Platform } from '../libs/platform'
+import { useEmitter } from '../hooks/use-emitter'
+import { useKeyDownCallback } from '../hooks/use-key-down-callback'
+import { useKeyPressCallback } from '../hooks/use-key-press-callback'
 import * as actions from '../redux/actions'
+import { useReduxAction } from '../redux/hooks/use-redux-action'
+import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { emitter } from '../setup'
 
@@ -31,157 +31,114 @@ const styles = StyleSheet.create({
   },
 })
 
-const connectToStore = connect(
-  (state: any) => ({
-    currentOpenedModal: selectors.currentOpenedModal(state),
-    columnIds: selectors.columnIdsSelector(state),
-  }),
-  {
-    closeAllModals: actions.closeAllModals,
-    popModal: actions.popModal,
-    replaceModal: actions.replaceModal,
-  },
-)
+export function MainScreen() {
+  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+  const columnIds = useReduxState(selectors.columnIdsSelector)
+  const closeAllModals = useReduxAction(actions.closeAllModals)
+  const popModal = useReduxAction(actions.popModal)
+  const replaceModal = useReduxAction(actions.replaceModal)
+  const theme = useTheme()
+  const { appOrientation, sizename } = useAppLayout()
 
-export class MainScreenComponent extends PureComponent<
-  ExtractPropsFromConnector<typeof connectToStore>
-> {
-  focusOnColumnListener?: EventSubscription
+  const horizontalSidebar = appOrientation === 'portrait'
 
-  componentDidMount() {
-    this.focusOnColumnListener = emitter.addListener(
-      'FOCUS_ON_COLUMN',
-      this.handleColumnFocusRequest,
-    )
+  useKeyDownCallback(
+    e => {
+      const target = e.target as any
+      const targetTagName = target && `${target.tagName || ''}`.toLowerCase()
 
-    if (Platform.realOS === 'web') {
-      window.addEventListener('keydown', this.handleKeyDown)
-      window.addEventListener('keypress', this.handleKeyPress)
-    }
-  }
+      if (e.key === 'Escape') {
+        // never happens apparently
+        if (targetTagName === 'input') target.blur()
+        else if (currentOpenedModal) popModal()
+        return
+      }
+    },
+    undefined,
+    [currentOpenedModal],
+  )
 
-  componentWillUnmount() {
-    if (this.focusOnColumnListener) this.focusOnColumnListener.remove()
+  useKeyPressCallback(
+    e => {
+      const target = e.target as any
+      const targetTagName = target && `${target.tagName || ''}`.toLowerCase()
+      if (targetTagName === 'input') return
 
-    if (Platform.realOS === 'web') {
-      window.removeEventListener('keydown', this.handleKeyDown)
-      window.removeEventListener('keypress', this.handleKeyPress)
-    }
-  }
-
-  handleColumnFocusRequest = () => {
-    if (
-      this.props.currentOpenedModal &&
-      Dimensions.get('window').width <= LAYOUT_BREAKPOINTS.SMALL
-    ) {
-      this.props.closeAllModals()
-    }
-  }
-
-  handleKeyDown = (e: any) => {
-    const targetTagName = e.target && `${e.target.tagName || ''}`.toLowerCase()
-
-    if (e.key === 'Escape') {
-      // never happens apparently
-      if (targetTagName === 'input') e.target.blur()
-      else if (this.props.currentOpenedModal) this.props.popModal()
-      return
-    }
-  }
-
-  handleKeyPress = (e: any) => {
-    const targetTagName = e.target && `${e.target.tagName || ''}`.toLowerCase()
-    if (targetTagName === 'input') return
-
-    if (e.key === 'a' || e.key === 'n') {
-      this.props.replaceModal({ name: 'ADD_COLUMN' })
-      return
-    }
-
-    if (this.props.columnIds.length > 0) {
-      if (e.keyCode - 48 === 0) {
-        const columnIndex = this.props.columnIds.length - 1
-        emitter.emit('FOCUS_ON_COLUMN', {
-          animated: true,
-          columnId: this.props.columnIds[columnIndex],
-          columnIndex,
-          highlight: true,
-        })
+      if (e.key === 'a' || e.key === 'n') {
+        replaceModal({ name: 'ADD_COLUMN' })
         return
       }
 
+      if (columnIds.length > 0) {
+        if (e.keyCode - 48 === 0) {
+          const columnIndex = columnIds.length - 1
+          emitter.emit('FOCUS_ON_COLUMN', {
+            animated: true,
+            columnId: columnIds[columnIndex],
+            columnIndex,
+            highlight: true,
+          })
+          return
+        }
+
+        if (e.keyCode - 48 >= 1 && e.keyCode - 48 <= columnIds.length) {
+          const columnIndex = e.keyCode - 48 - 1
+          emitter.emit('FOCUS_ON_COLUMN', {
+            animated: true,
+            columnId: columnIds[columnIndex],
+            columnIndex,
+            highlight: true,
+          })
+          return
+        }
+      }
+    },
+    undefined,
+    [columnIds],
+  )
+
+  useEmitter(
+    'FOCUS_ON_COLUMN',
+    () => {
       if (
-        e.keyCode - 48 >= 1 &&
-        e.keyCode - 48 <= this.props.columnIds.length
+        currentOpenedModal &&
+        Dimensions.get('window').width <= APP_LAYOUT_BREAKPOINTS.SMALL
       ) {
-        const columnIndex = e.keyCode - 48 - 1
-        emitter.emit('FOCUS_ON_COLUMN', {
-          animated: true,
-          columnId: this.props.columnIds[columnIndex],
-          columnIndex,
-          highlight: true,
-        })
-        return
+        closeAllModals()
       }
-    }
-  }
+    },
+    [currentOpenedModal],
+  )
 
-  render() {
-    const { currentOpenedModal } = this.props
+  return (
+    <Screen
+      statusBarBackgroundColor={theme.backgroundColorLess08}
+      useSafeArea={false}
+    >
+      <View
+        style={[
+          styles.container,
+          {
+            flexDirection:
+              appOrientation === 'landscape' ? 'row' : 'column-reverse',
+          },
+        ]}
+      >
+        <Sidebar
+          key="main-screen-sidebar"
+          horizontal={horizontalSidebar}
+          small={sizename === '1-small'}
+        />
+        <Separator horizontal={horizontalSidebar} thick={!horizontalSidebar} />
 
-    return (
-      <ThemeConsumer>
-        {({ theme }) => (
-          <LayoutConsumer>
-            {({ appOrientation, sizename }) => {
-              const horizontalSidebar = appOrientation === 'portrait'
+        <View style={styles.innerContainer}>
+          <ModalRenderer />
+          {!!currentOpenedModal && !horizontalSidebar && <Separator thick />}
 
-              return (
-                <Screen
-                  statusBarBackgroundColor={theme.backgroundColorLess08}
-                  useSafeArea={false}
-                >
-                  <View
-                    style={[
-                      styles.container,
-                      {
-                        flexDirection:
-                          appOrientation === 'landscape'
-                            ? 'row'
-                            : 'column-reverse',
-                      },
-                    ]}
-                  >
-                    <Sidebar
-                      key="main-screen-sidebar"
-                      horizontal={horizontalSidebar}
-                      small={sizename === '1-small'}
-                    />
-                    <Separator
-                      horizontal={horizontalSidebar}
-                      thick={!horizontalSidebar}
-                    />
-
-                    <View style={styles.innerContainer}>
-                      <ModalRenderer />
-                      {!!currentOpenedModal && !horizontalSidebar && (
-                        <Separator thick />
-                      )}
-
-                      <ColumnsContainer />
-                      <FABRenderer />
-                    </View>
-                  </View>
-                </Screen>
-              )
-            }}
-          </LayoutConsumer>
-        )}
-      </ThemeConsumer>
-    )
-  }
+          <ColumnsContainer />
+          <FABRenderer />
+        </View>
+      </View>
+    </Screen>
+  )
 }
-
-export const MainScreen = connectToStore(MainScreenComponent)
-
-hoistNonReactStatics(MainScreen, MainScreenComponent as any)

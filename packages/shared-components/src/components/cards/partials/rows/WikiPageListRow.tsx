@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 
 import { GitHubPage } from 'shared-core/dist/types'
 import { RenderItem, RowList } from './RowList'
@@ -10,8 +10,8 @@ export interface WikiPageListRowProps {
   pages: GitHubPage[]
 }
 
-export class WikiPageListRow extends PureComponent<WikiPageListRowProps> {
-  renderItem: RenderItem<GitHubPage> = ({
+export function WikiPageListRow(props: WikiPageListRowProps) {
+  const renderItem: RenderItem<GitHubPage> = ({
     item: page,
     showMoreItemsIndicator,
   }) => {
@@ -20,7 +20,7 @@ export class WikiPageListRow extends PureComponent<WikiPageListRowProps> {
     return (
       <WikiPageRow
         key={`page-row-${page.sha}`}
-        {...this.props}
+        {...props}
         showMoreItemsIndicator={showMoreItemsIndicator}
         title={page.title}
         url={page.html_url || page.url}
@@ -28,11 +28,9 @@ export class WikiPageListRow extends PureComponent<WikiPageListRowProps> {
     )
   }
 
-  render() {
-    const { pages, ...props } = this.props
+  const { pages, ...otherProps } = props
 
-    if (!(pages && pages.length > 0)) return null
+  if (!(pages && pages.length > 0)) return null
 
-    return <RowList {...props} data={pages} renderItem={this.renderItem} />
-  }
+  return <RowList {...otherProps} data={pages} renderItem={renderItem} />
 }

@@ -1,5 +1,4 @@
-import { EventSubscription } from 'fbemitter'
-import React, { PureComponent } from 'react'
+import React, { useRef } from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -10,9 +9,9 @@ import {
 
 import { Omit } from 'shared-core/dist/types'
 import { ColumnContainer } from '../../containers/ColumnContainer'
-import { emitter } from '../../setup'
+import { useEmitter } from '../../hooks/use-emitter'
 import { Separator } from '../common/Separator'
-import { LayoutConsumer } from '../context/LayoutContext'
+import { useAppLayout } from '../context/LayoutContext'
 
 export interface ColumnsProps
   extends Omit<FlatListProps<string>, 'data' | 'renderItem'> {
@@ -31,94 +30,75 @@ const styles = StyleSheet.create({
   },
 })
 
-export class Columns extends PureComponent<ColumnsProps> {
-  flatListRef = React.createRef<FlatList<string>>()
-  focusOnColumnListener?: EventSubscription
-  pagingEnabled: boolean = true
-  swipeable: boolean = false
+function keyExtractor(columnId: string) {
+  return `column-container-${columnId}`
+}
 
-  componentDidMount() {
-    this.focusOnColumnListener = emitter.addListener(
-      'FOCUS_ON_COLUMN',
-      this.handleColumnFocusRequest,
-    )
-  }
+export const Columns = React.memo((props: ColumnsProps) => {
+  const { columnIds, style, ...otherProps } = props
 
-  componentWillUnmount() {
-    if (this.focusOnColumnListener) this.focusOnColumnListener.remove()
-  }
+  const flatListRef = useRef<FlatList<string>>(null)
+  const { sizename } = useAppLayout()
 
-  handleColumnFocusRequest = ({
-    animated,
-    columnIndex,
-  }: {
-    columnId: string
-    columnIndex: number
-    animated?: boolean
-    highlight?: boolean
+  useEmitter(
+    'FOCUS_ON_COLUMN',
+    (payload: {
+      columnId: string
+      columnIndex: number
+      animated?: boolean
+      highlight?: boolean
+    }) => {
+      if (!flatListRef.current) return
+      if (!(columnIds && columnIds.length)) return
+
+      if (payload.columnIndex >= 0 && payload.columnIndex < columnIds.length) {
+        flatListRef.current!.scrollToIndex({
+          animated: payload.animated,
+          index: payload.columnIndex,
+        })
+      }
+    },
+    [flatListRef, columnIds],
+  )
+
+  const renderItem: FlatListProps<string>['renderItem'] = ({
+    item: columnId,
   }) => {
-    if (!this.flatListRef.current) return
-    if (!(this.props.columnIds && this.props.columnIds.length)) return
-
-    if (columnIndex >= 0 && columnIndex < this.props.columnIds.length) {
-      this.flatListRef.current.scrollToIndex({
-        animated,
-        index: columnIndex,
-      })
-    }
-  }
-
-  keyExtractor(columnId: string) {
-    return `column-container-${columnId}`
-  }
-
-  renderItem: FlatListProps<string>['renderItem'] = ({ item: columnId }) => {
     return (
       <ColumnContainer
         columnId={columnId}
-        pagingEnabled={this.pagingEnabled}
-        swipeable={this.swipeable}
+        pagingEnabled={pagingEnabled}
+        swipeable={swipeable}
       />
     )
   }
 
-  render() {
-    const { columnIds, style, ...props } = this.props
+  const pagingEnabled = sizename === '1-small'
+  const swipeable: boolean = false
 
-    return (
-      <LayoutConsumer>
-        {({ sizename }) => {
-          this.pagingEnabled = sizename === '1-small'
-
-          return (
-            <FlatList
-              ref={this.flatListRef}
-              key="columns-flat-list"
-              ItemSeparatorComponent={Separator}
-              ListFooterComponent={
-                sizename === '1-small' || (columnIds && columnIds.length)
-                  ? Separator
-                  : undefined
-              }
-              ListHeaderComponent={
-                sizename === '1-small' ? Separator : undefined
-              }
-              bounces={!this.swipeable}
-              className="snap-container"
-              data={columnIds}
-              horizontal
-              keyExtractor={this.keyExtractor}
-              onScrollToIndexFailed={() => undefined}
-              pagingEnabled={this.pagingEnabled}
-              removeClippedSubviews
-              scrollEnabled={!this.swipeable}
-              {...props}
-              renderItem={this.renderItem}
-              style={[styles.flatlist, style]}
-            />
-          )
-        }}
-      </LayoutConsumer>
-    )
-  }
-}
+  return (
+    <FlatList
+      ref={flatListRef}
+      key="columns-flat-list"
+      ItemSeparatorComponent={Separator}
+      ListFooterComponent={
+        sizename === '1-small' || (columnIds && columnIds.length)
+          ? Separator
+          : undefined
+      }
+      ListHeaderComponent={sizename === '1-small' ? Separator : undefined}
+      bounces={!swipeable}
+      className="snap-container"
+      data={columnIds}
+      horizontal
+      keyExtractor={keyExtractor}
+      onScrollToIndexFailed={() => undefined}
+      pagingEnabled={pagingEnabled}
+      removeClippedSubviews
+      scrollEnabled={!swipeable}
+      {...otherProps}
+      renderItem={renderItem}
+      style={[styles.flatlist, style]}
+    />
+  )
+})

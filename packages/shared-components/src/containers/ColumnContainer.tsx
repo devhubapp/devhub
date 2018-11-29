@@ -1,9 +1,9 @@
 import _ from 'lodash'
-import React, { PureComponent } from 'react'
+import React from 'react'
 
 import { EventColumn } from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
-import { ColumnRP } from '../render-props/ColumnRP'
+import { useColumn } from '../hooks/use-column'
 
 export interface ColumnContainerProps {
   columnId: string
@@ -11,57 +11,43 @@ export interface ColumnContainerProps {
   swipeable?: boolean
 }
 
-export interface ColumnContainerState {}
+export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
+  const { columnId, pagingEnabled, swipeable } = props
 
-export class ColumnContainer extends PureComponent<
-  ColumnContainerProps,
-  ColumnContainerState
-> {
-  render() {
-    const { columnId, pagingEnabled, swipeable } = this.props
+  const { column, columnIndex, subscriptions } = useColumn(columnId)
 
-    return (
-      <ColumnRP
-        key={`column-container-column-rp-${columnId}`}
-        columnId={columnId}
-      >
-        {({ column, columnIndex, subscriptions }) => {
-          if (!column) return null
+  if (!column) return null
 
-          switch (column.type) {
-            case 'activity': {
-              return (
-                <EventColumn
-                  key={`event-column-${column.id}`}
-                  column={column}
-                  columnIndex={columnIndex}
-                  pagingEnabled={pagingEnabled}
-                  subscriptions={subscriptions}
-                  swipeable={swipeable}
-                />
-              )
-            }
+  switch (column.type) {
+    case 'activity': {
+      return (
+        <EventColumn
+          key={`event-column-${column.id}`}
+          column={column}
+          columnIndex={columnIndex}
+          pagingEnabled={pagingEnabled}
+          subscriptions={subscriptions}
+          swipeable={swipeable}
+        />
+      )
+    }
 
-            case 'notifications': {
-              return (
-                <NotificationColumn
-                  key={`notification-column-${column.id}`}
-                  column={column}
-                  columnIndex={columnIndex}
-                  pagingEnabled={pagingEnabled}
-                  subscriptions={subscriptions}
-                  swipeable={swipeable}
-                />
-              )
-            }
+    case 'notifications': {
+      return (
+        <NotificationColumn
+          key={`notification-column-${column.id}`}
+          column={column}
+          columnIndex={columnIndex}
+          pagingEnabled={pagingEnabled}
+          subscriptions={subscriptions}
+          swipeable={swipeable}
+        />
+      )
+    }
 
-            default: {
-              console.error('Invalid Column type: ', (column as any).type)
-              return null
-            }
-          }
-        }}
-      </ColumnRP>
-    )
+    default: {
+      console.error('Invalid Column type: ', (column as any).type)
+      return null
+    }
   }
-}
+})

@@ -1,24 +1,20 @@
-import hoistNonReactStatics from 'hoist-non-react-statics'
 import _ from 'lodash'
-import React, { PureComponent, RefObject } from 'react'
+import React, { Fragment, RefObject, useCallback, useState } from 'react'
 import { TextInputProps, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import {
   ActivityColumn,
   ActivitySubscription,
   AddColumnDetailsPayload,
   ColumnParamField,
-  ExtractPropsFromConnector,
   NotificationColumn,
-  NotificationSubscription,
 } from 'shared-core/dist/types'
 import * as actions from '../../redux/actions'
-import * as selectors from '../../redux/selectors'
 import { ModalColumn } from '../columns/ModalColumn'
 
 import { createSubscriptionObjectWithId } from 'shared-core/dist/utils/helpers/github/shared'
 import { guid } from 'shared-core/dist/utils/helpers/shared'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Button } from '../common/Button'
@@ -26,23 +22,9 @@ import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { TextInput } from '../common/TextInput'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {}
-
-interface AddColumnDetailsModalState {
-  params: Record<ColumnParamField, any>
-}
-
-const connectToStore = connect(
-  (state: any) => ({
-    currentOpenedModal: selectors.currentOpenedModal(state),
-  }),
-  {
-    addColumn: actions.addColumn,
-    closeAllModals: actions.closeAllModals,
-  },
-)
 
 interface FieldDetails {
   title: string
@@ -79,185 +61,152 @@ const fields: FieldDetails[] = [
   },
 ]
 
-type Props = AddColumnDetailsModalProps &
-  ExtractPropsFromConnector<typeof connectToStore>
-class AddColumnDetailsModalComponent extends PureComponent<
-  Props,
-  AddColumnDetailsModalState
-> {
-  constructor(props: Props) {
-    super(props)
+export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
+  const { defaultParams, icon, name, paramList, subscription } = props
 
-    this.state = {
-      params: {
-        all: true,
-        org: '',
-        owner: '',
-        repo: '',
-        username: '',
-        ...props.defaultParams,
-      },
-    }
-  }
+  const [params, setParams] = useState({
+    all: true,
+    org: '',
+    owner: '',
+    repo: '',
+    username: '',
+    ...defaultParams,
+  })
+  const addColumn = useReduxAction(actions.addColumn)
+  const closeAllModals = useReduxAction(actions.closeAllModals)
+  const theme = useTheme()
 
-  validateField = (field: ColumnParamField) => {
-    const value = this.state.params[field]
+  const validateField = (field: ColumnParamField) => {
+    const value = params[field]
     return !(typeof value === 'undefined' || value === '')
   }
 
-  handleCreateColumn = () => {
-    const { params } = this.state
-    const { paramList } = this.props
-
+  const handleCreateColumn = () => {
     for (const field of paramList) {
-      if (!this.validateField(field)) {
+      if (!validateField(field)) {
         const fieldDetails = fields.find(f => f.field === field)
         alert(`${fieldDetails ? fieldDetails.title : field} cannot be empty.`)
         return
       }
     }
 
-    this.props.closeAllModals()
+    closeAllModals()
 
     const subscriptions = [
       createSubscriptionObjectWithId({
-        ...this.props.subscription,
+        ...subscription,
         params: _.pick(params, paramList),
       }),
     ]
 
     const column = {
       id: guid(),
-      type: this.props.subscription.type,
+      type: subscription.type,
       subscriptionIds: subscriptions.map(s => s.id),
       filters: undefined,
     } as typeof subscriptions extends ActivitySubscription[]
       ? ActivityColumn
       : NotificationColumn
 
-    this.props.addColumn({
+    addColumn({
       column,
       subscriptions,
     })
   }
 
-  _createTextInputChangeHandler: (
-    fieldDetails: FieldDetails,
-  ) => TextInputProps['onChange'] = (fieldDetails: FieldDetails) => e => {
-    if (!(e && e.nativeEvent)) return
-    const text = e.nativeEvent.text
+  const createTextInputChangeHandler = useCallback(
+    (fieldDetails: FieldDetails): TextInputProps['onChange'] => e => {
+      if (!(e && e.nativeEvent)) return
+      const text = e.nativeEvent.text
 
-    this.setState(state => ({
-      params: {
-        ...state.params,
+      setParams(prevParams => ({
+        ...prevParams,
         [fieldDetails.field]: text,
-      },
-    }))
-  }
-
-  // tslint:disable-next-line
-  createTextInputChangeHandler = _.memoize(this._createTextInputChangeHandler)
-
-  _createTextInputSubmitHandler: (
-    fieldDetails: FieldDetails,
-  ) => TextInputProps['onSubmitEditing'] = (
-    fieldDetails: FieldDetails,
-  ) => () => {
-    const { paramList } = this.props
-
-    const index = paramList.findIndex(fd => fd === fieldDetails.field)
-
-    if (index < paramList.length - 1) {
-      if (!this.validateField(fieldDetails.field)) return
-
-      const nextField = paramList[index + 1]
-      const nextFieldDetails = fields.find(fd => fd.field === nextField)
-      if (nextFieldDetails && nextFieldDetails.ref.current) {
-        nextFieldDetails.ref.current.focus()
-      }
-
-      return
-    }
-
-    this.handleCreateColumn()
-  }
-
-  // tslint:disable-next-line
-  createTextInputSubmitHandler = _.memoize(this._createTextInputSubmitHandler)
-
-  renderTextInput = (fieldDetails: FieldDetails, props: TextInputProps) => (
-    <ThemeConsumer key={`add-column-details-text-input-${fieldDetails.field}`}>
-      {({ theme }) => (
-        <>
-          <H3 withMargin>{fieldDetails.title}</H3>
-
-          <TextInput
-            ref={fieldDetails.ref}
-            autoCapitalize="none"
-            autoCorrect={false}
-            blurOnSubmit={false}
-            placeholder={fieldDetails.placeholder}
-            placeholderTextColor={theme.foregroundColorMuted50}
-            {...props}
-            onChange={this.createTextInputChangeHandler(fieldDetails)}
-            onSubmitEditing={this.createTextInputSubmitHandler(fieldDetails)}
-            style={[{ color: theme.foregroundColor }, props.style]}
-            value={this.state.params[fieldDetails.field]}
-          />
-
-          <Spacer height={contentPadding} />
-        </>
-      )}
-    </ThemeConsumer>
+      }))
+    },
+    [],
   )
 
-  renderField = (field: string, index?: number) => {
+  const createTextInputSubmitHandler = useCallback(
+    (fieldDetails: FieldDetails): TextInputProps['onSubmitEditing'] => () => {
+      const index = paramList.findIndex(fd => fd === fieldDetails.field)
+
+      if (index < paramList.length - 1) {
+        if (!validateField(fieldDetails.field)) return
+
+        const nextField = paramList[index + 1]
+        const nextFieldDetails = fields.find(fd => fd.field === nextField)
+        if (nextFieldDetails && nextFieldDetails.ref.current) {
+          nextFieldDetails.ref.current.focus()
+        }
+
+        return
+      }
+
+      handleCreateColumn()
+    },
+    [params, paramList],
+  )
+
+  const renderTextInput = useCallback(
+    (fieldDetails: FieldDetails, textInputProps: TextInputProps) => (
+      <Fragment key={`add-column-details-text-input-${fieldDetails.field}`}>
+        <H3 withMargin>{fieldDetails.title}</H3>
+
+        <TextInput
+          ref={fieldDetails.ref}
+          autoCapitalize="none"
+          autoCorrect={false}
+          blurOnSubmit={false}
+          placeholder={fieldDetails.placeholder}
+          placeholderTextColor={theme.foregroundColorMuted50}
+          {...textInputProps}
+          onChange={createTextInputChangeHandler(fieldDetails)}
+          onSubmitEditing={createTextInputSubmitHandler(fieldDetails)}
+          style={[{ color: theme.foregroundColor }, textInputProps.style]}
+          value={params[fieldDetails.field]}
+        />
+
+        <Spacer height={contentPadding} />
+      </Fragment>
+    ),
+    [params, createTextInputChangeHandler, createTextInputSubmitHandler],
+  )
+
+  const renderField = (field: string, index?: number) => {
     const fieldDetails = fields.find(f => f.field === field)
 
     if (fieldDetails) {
-      return this.renderTextInput(fieldDetails, { autoFocus: index === 0 })
+      return renderTextInput(fieldDetails, { autoFocus: index === 0 })
     }
 
     return null
   }
 
-  render() {
-    const { icon, name, paramList } = this.props
-
-    return (
-      <ModalColumn
-        columnId="add-column-details-modal"
-        iconName="plus"
-        title="Add Column"
-      >
-        <View style={{ flex: 1, padding: contentPadding }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              alignContent: 'center',
-            }}
-          >
-            <ColumnHeaderItem iconName={icon} noPadding />
-            <Spacer width={contentPadding / 2} />
-            <H2>{name}</H2>
-          </View>
-
-          <Spacer height={contentPadding} />
-
-          {paramList.map(this.renderField)}
-          <Button onPress={this.handleCreateColumn}>Add Column</Button>
+  return (
+    <ModalColumn
+      columnId="add-column-details-modal"
+      iconName="plus"
+      title="Add Column"
+    >
+      <View style={{ flex: 1, padding: contentPadding }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignContent: 'center',
+          }}
+        >
+          <ColumnHeaderItem iconName={icon} noPadding />
+          <Spacer width={contentPadding / 2} />
+          <H2>{name}</H2>
         </View>
-      </ModalColumn>
-    )
-  }
+
+        <Spacer height={contentPadding} />
+
+        {paramList.map(renderField)}
+        <Button onPress={handleCreateColumn}>Add Column</Button>
+      </View>
+    </ModalColumn>
+  )
 }
-
-export const AddColumnDetailsModal = connectToStore(
-  AddColumnDetailsModalComponent,
-)
-
-hoistNonReactStatics(
-  AddColumnDetailsModal,
-  AddColumnDetailsModalComponent as any,
-)

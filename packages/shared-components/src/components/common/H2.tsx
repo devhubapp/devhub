@@ -2,31 +2,28 @@ import React from 'react'
 import { Text, TextProps } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 export type H2Props = TextProps & { children: string; withMargin?: boolean }
 
-export const H2: React.SFC<H2Props> = ({
-  children,
-  style,
-  withMargin,
-  ...props
-}) => (
-  <ThemeConsumer>
-    {({ theme }) => (
-      <Text
-        {...props}
-        style={[
-          {
-            marginBottom: withMargin ? contentPadding : undefined,
-            fontWeight: '600',
-            color: theme.foregroundColorTransparent80,
-          },
-          style,
-        ]}
-      >
-        {typeof children === 'string' ? children.toUpperCase() : children}
-      </Text>
-    )}
-  </ThemeConsumer>
-)
+export function H2(props: H2Props) {
+  const theme = useTheme()
+
+  const { children, style, withMargin, ...otherProps } = props
+
+  return (
+    <Text
+      {...otherProps}
+      style={[
+        {
+          marginBottom: withMargin ? contentPadding : undefined,
+          fontWeight: '600',
+          color: theme.foregroundColorTransparent80,
+        },
+        style,
+      ]}
+    >
+      {typeof children === 'string' ? children.toUpperCase() : children}
+    </Text>
+  )
+}

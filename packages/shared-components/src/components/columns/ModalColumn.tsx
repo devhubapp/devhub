@@ -1,12 +1,9 @@
-import hoistNonReactStatics from 'hoist-non-react-statics'
-import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 
-import { View } from 'react-native'
-import { ExtractPropsFromConnector } from 'shared-core/dist/types'
 import * as actions from '../../redux/actions'
+import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
-import { columnHeaderItemContentSize } from '../../styles/variables'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
@@ -17,74 +14,46 @@ export interface ModalColumnProps extends ColumnHeaderItemProps {
   right?: React.ReactNode
 }
 
-export interface ModalColumnState {}
+export const ModalColumn = React.memo((props: ModalColumnProps) => {
+  const modalStack = useReduxState(selectors.modalStack)
+  const popModal = useReduxAction(actions.popModal)
+  const closeAllModals = useReduxAction(actions.closeAllModals)
 
-const connectToStore = connect(
-  (state: any) => {
-    const modalStack = selectors.modalStack(state)
+  const canGoBack = !!(modalStack && modalStack.length > 1)
 
-    return {
-      canGoBack: !!(modalStack && modalStack.length > 1),
-    }
-  },
-  {
-    popModal: actions.popModal,
-    closeAllModals: actions.closeAllModals,
-  },
-)
+  const { children, hideCloseButton, right, columnId, ...otherProps } = props
 
-class ModalColumnComponent extends PureComponent<
-  ModalColumnProps & ExtractPropsFromConnector<typeof connectToStore>,
-  ModalColumnState
-> {
-  handleBack = () => {
-    this.props.popModal()
-  }
-
-  handleClose = () => {
-    this.props.closeAllModals()
-  }
-
-  render() {
-    const { canGoBack, children, hideCloseButton, right, ...props } = this.props
-    delete props.popModal
-
-    return (
-      <Column
-        columnId={this.props.columnId}
-        style={[
-          {
-            zIndex: 100,
-          },
-        ]}
-      >
-        <ColumnHeader>
-          {canGoBack && (
-            <ColumnHeaderItem
-              iconName="chevron-left"
-              onPress={this.handleBack}
-            />
-          )}
-
+  return (
+    <Column
+      columnId={columnId}
+      style={[
+        {
+          zIndex: 100,
+        },
+      ]}
+    >
+      <ColumnHeader>
+        {canGoBack && (
           <ColumnHeaderItem
-            {...props}
-            iconName={undefined}
-            style={[{ flex: 1 }, canGoBack && { padding: 0 }]}
+            iconName="chevron-left"
+            onPress={() => popModal()}
           />
+        )}
 
-          {!hideCloseButton && (
-            <ColumnHeaderItem iconName="x" onPress={this.handleClose} />
-          )}
+        <ColumnHeaderItem
+          {...otherProps}
+          iconName={undefined}
+          style={[{ flex: 1 }, canGoBack && { padding: 0 }]}
+        />
 
-          {right && <ColumnHeaderItem>{right}</ColumnHeaderItem>}
-        </ColumnHeader>
+        {!hideCloseButton && (
+          <ColumnHeaderItem iconName="x" onPress={() => closeAllModals()} />
+        )}
 
-        {children}
-      </Column>
-    )
-  }
-}
+        {right && <ColumnHeaderItem>{right}</ColumnHeaderItem>}
+      </ColumnHeader>
 
-export const ModalColumn = connectToStore(ModalColumnComponent)
-
-hoistNonReactStatics(ModalColumn, ModalColumnComponent as any)
+      {children}
+    </Column>
+  )
+})

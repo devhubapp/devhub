@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { PureComponent } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   ActivitySubscription,
@@ -7,6 +7,7 @@ import {
   ColumnSubscription,
   EnhancedGitHubEvent,
   GitHubEvent,
+  LoadState,
   Omit,
 } from 'shared-core/dist/types'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
@@ -15,150 +16,142 @@ import { getFilteredEvents } from '../utils/helpers/filters'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
-  'events' | 'fetchNextPage' | 'state'
+  'events' | 'fetchNextPage' | 'loadState'
 > & {
   column: Column
   subscriptions: ColumnSubscription[]
 }
 
-export interface EventCardsContainerState {
-  canFetchMore: boolean
-  enhancedEvents: EnhancedGitHubEvent[]
-  events: GitHubEvent[]
-  page: number
-  perPage: number
-  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
-}
+export const EventCardsContainer = React.memo(
+  (props: EventCardsContainerProps) => {
+    const { column, subscriptions } = props
 
-export class EventCardsContainer extends PureComponent<
-  EventCardsContainerProps,
-  EventCardsContainerState
-> {
-  fetchDataInterval?: number
+    const [canFetchMore, setCanFetchMore] = useState(false)
+    const [events, setEvents] = useState<GitHubEvent[]>([])
+    const [filteredEvents, setFilteredEvents] = useState<EnhancedGitHubEvent[]>(
+      [],
+    )
+    const [olderEventDate, setOlderEventDate] = useState<string | undefined>(
+      undefined,
+    )
+    const [loadState, setLoadState] = useState<LoadState>('loading_first')
+    const [pagination, setPagination] = useState({ page: 1, perPage: 10 })
 
-  state: EventCardsContainerState = {
-    canFetchMore: false,
-    enhancedEvents: [],
-    events: [],
-    page: 1,
-    perPage: 10,
-    state: 'loading_first',
-  }
+    useEffect(() => {
+      fetchData()
+    }, [])
 
-  componentDidMount() {
-    this.startFetchDataInterval()
-  }
+    useEffect(() => {
+      const timer = setInterval(fetchData, 1000 * 60)
+      return () => clearInterval(timer)
+    })
 
-  componentDidUpdate(
-    prevProps: EventCardsContainerProps,
-    prevState: EventCardsContainerState,
-  ) {
-    if (
-      this.props.column !== prevProps.column ||
-      this.state.events !== prevState.events
-    ) {
-      this.setState(state => ({
-        canFetchMore:
-          (this.props.column.filters && this.props.column.filters.clearedAt) !==
-          (prevProps.column.filters && prevProps.column.filters.clearedAt)
-            ? this.calculateCanFetchMore(this.props.column, state.events)
-            : state.canFetchMore,
-        enhancedEvents: getFilteredEvents(
-          state.events,
-          this.props.column.filters,
-        ),
-      }))
-    }
-  }
+    useEffect(
+      () => {
+        setFilteredEvents(getFilteredEvents(events, column.filters))
+      },
+      [events, column.filters],
+    )
 
-  componentWillUnmount() {
-    this.clearFetchDataInterval()
-  }
+    useEffect(
+      () => {
+        const clearedAt = column.filters && column.filters.clearedAt
+        if (!clearedAt) return
 
-  calculateCanFetchMore = (column: Column, events: GitHubEvent[]) => {
-    const clearedAt = column.filters && column.filters.clearedAt
-    const lastItem = events.slice(-1)[0]
+        const olderDate = getOlderEventDate(events)
+        if (!olderDate) return
 
-    return !clearedAt || lastItem.created_at > clearedAt
-  }
+        setCanFetchMore(clearedAt < olderDate)
+      },
+      [column.filters && column.filters.clearedAt],
+    )
 
-  fetchData = async ({
-    page: _page,
-    perPage: _perPage,
-  }: { page?: number; perPage?: number } = {}) => {
-    const { column, subscriptions } = this.props
-    const {
-      id: subscriptionId,
-      params: _params,
-      subtype: activityType,
-    } = subscriptions[0] as ActivitySubscription
+    const fetchData = async ({
+      page: _page,
+      perPage: _perPage,
+    }: { page?: number; perPage?: number } = {}) => {
+      const {
+        id: subscriptionId,
+        params: _params,
+        subtype: activityType,
+      } = subscriptions[0] as ActivitySubscription
 
-    const page = Math.max(1, _page || 1)
-    const perPage = Math.min((_perPage || this.state.perPage || 10) * page, 100)
+      const page = Math.max(1, _page || 1)
+      const perPage = Math.min(
+        (_perPage || pagination.perPage || 10) * page,
+        50,
+      )
 
-    try {
-      this.setState(state => ({
-        state:
+      try {
+        setLoadState(prevLoadState =>
           page > 1
             ? 'loading_more'
-            : !state.state || state.state === 'loading_first'
+            : !prevLoadState || prevLoadState === 'loading_first'
             ? 'loading_first'
             : 'loading',
-      }))
+        )
 
-      const params = { ..._params, page, per_page: perPage }
-      const response = await getActivity(activityType, params, {
-        subscriptionId,
-      })
-
-      if (Array.isArray(response.data) && response.data.length) {
-        const events = _.concat(response.data, this.state.events)
-
-        this.setState({
-          canFetchMore:
-            response.data.length >= perPage &&
-            this.calculateCanFetchMore(column, response.data),
-          events,
-          page,
-          state: 'loaded',
+        const params = { ..._params, page, per_page: perPage }
+        const response = await getActivity(activityType, params, {
+          subscriptionId,
         })
-      } else {
-        this.setState({ canFetchMore: false, page, state: 'loaded' })
+
+        if (Array.isArray(response.data) && response.data.length) {
+          const olderDateFromThisResponse = getOlderEventDate(response.data)
+
+          setEvents(prevEvents =>
+            _.uniqBy(_.concat(response.data, prevEvents), 'id'),
+          )
+          setPagination(prevPagination => ({ ...prevPagination, page }))
+          setLoadState('loaded')
+
+          if (
+            !olderEventDate ||
+            (olderDateFromThisResponse &&
+              olderDateFromThisResponse <= olderEventDate)
+          ) {
+            setOlderEventDate(olderDateFromThisResponse)
+
+            if (response.data.length >= perPage) {
+              const clearedAt = column.filters && column.filters.clearedAt
+              if (clearedAt && clearedAt >= olderDateFromThisResponse) {
+                setCanFetchMore(false)
+              } else {
+                setCanFetchMore(true)
+              }
+            } else {
+              setCanFetchMore(false)
+            }
+          }
+        } else {
+          setLoadState('loaded')
+          setPagination(prevPagination => ({ ...prevPagination, page }))
+          setCanFetchMore(false)
+        }
+      } catch (error) {
+        console.error('Failed to load GitHub activity', error)
+        setLoadState('loaded')
       }
-    } catch (error) {
-      this.setState({ state: 'loaded' })
-      console.error('Failed to load GitHub activity', error)
     }
-  }
 
-  startFetchDataInterval = () => {
-    this.clearFetchDataInterval()
-    this.fetchDataInterval = setInterval(this.fetchData, 1000 * 60) as any
-    this.fetchData({ page: 1 })
-  }
-
-  clearFetchDataInterval = () => {
-    if (this.fetchDataInterval) {
-      clearInterval(this.fetchDataInterval)
-      this.fetchDataInterval = undefined
+    const fetchNextPage = ({ perPage }: { perPage?: number } = {}) => {
+      const nextPage = (pagination.page || 1) + 1
+      fetchData({ page: nextPage, perPage })
     }
-  }
-
-  fetchNextPage = ({ perPage }: { perPage?: number } = {}) => {
-    const nextPage = (this.state.page || 1) + 1
-    this.fetchData({ page: nextPage, perPage })
-  }
-
-  render() {
-    const { canFetchMore, enhancedEvents, state } = this.state
 
     return (
       <EventCards
-        {...this.props}
-        events={enhancedEvents}
-        fetchNextPage={canFetchMore ? this.fetchNextPage : undefined}
-        state={state}
+        {...props}
+        key={`event-cards-${column.id}`}
+        events={filteredEvents}
+        fetchNextPage={canFetchMore ? fetchNextPage : undefined}
+        loadState={loadState}
       />
     )
-  }
+  },
+)
+
+function getOlderEventDate(events: GitHubEvent[]) {
+  const olderItem = _.orderBy(events, 'created_at', 'asc')[0]
+  return olderItem && olderItem.created_at
 }

@@ -1,10 +1,9 @@
-import React, { ReactNode, SFC } from 'react'
+import React, { ReactNode } from 'react'
 import {
   StyleProp,
   StyleSheet,
   Text,
   TextProps,
-  TextStyle,
   View,
   ViewProps,
   ViewStyle,
@@ -16,7 +15,7 @@ import {
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
-import { ThemeConsumer } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 export interface LabelProps {
   borderColor?: string
@@ -38,66 +37,66 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: contentPadding,
     paddingVertical: 2,
-  } as ViewStyle,
+  },
 
   labelText: {
     fontSize: 14,
-  } as TextStyle,
+  },
 })
 
-export const Label: SFC<LabelProps> = ({
-  borderColor,
-  color,
-  children,
-  containerStyle,
-  containerProps = {},
-  muted,
-  outline,
-  isPrivate,
-  radius = defaultRadius,
-  textColor,
-  textProps = {},
-}) => (
-  <ThemeConsumer>
-    {({ theme }) => (
-      <View
+export function Label(props: LabelProps) {
+  const theme = useTheme()
+
+  const {
+    borderColor,
+    color,
+    children,
+    containerStyle,
+    containerProps = {},
+    muted,
+    outline,
+    isPrivate,
+    radius = defaultRadius,
+    textColor,
+    textProps = {},
+  } = props
+
+  return (
+    <View
+      style={[
+        styles.labelContainer,
+        containerStyle,
+        { borderColor: borderColor || color || theme.foregroundColor },
+        !outline && {
+          backgroundColor: color || theme.foregroundColor,
+        },
+        Boolean(radius) && { borderRadius: radius },
+      ]}
+      {...containerProps}
+    >
+      <Text
+        numberOfLines={1}
         style={[
-          styles.labelContainer,
-          containerStyle,
-          { borderColor: borderColor || color || theme.foregroundColor },
-          !outline && {
-            backgroundColor: color || theme.foregroundColor,
+          styles.labelText,
+          {
+            color:
+              textColor ||
+              (outline
+                ? color ||
+                  (muted ? theme.foregroundColorMuted50 : theme.foregroundColor)
+                : '#FFFFFF'),
           },
-          Boolean(radius) && { borderRadius: radius },
+          muted && { opacity: mutedOpacity },
         ]}
-        {...containerProps}
+        {...textProps}
       >
-        <Text
-          numberOfLines={1}
-          style={[
-            styles.labelText,
-            {
-              color:
-                textColor ||
-                (outline
-                  ? color ||
-                    (muted
-                      ? theme.foregroundColorMuted50
-                      : theme.foregroundColor)
-                  : '#FFFFFF'),
-            },
-            muted && { opacity: mutedOpacity },
-          ]}
-          {...textProps}
-        >
-          {Boolean(isPrivate) && (
-            <Text>
-              <Icon name="lock" />{' '}
-            </Text>
-          )}
-          {children}
-        </Text>
-      </View>
-    )}
-  </ThemeConsumer>
-)
+        {Boolean(isPrivate) && (
+          <Text>
+            <Icon name="lock" />{' '}
+          </Text>
+        )}
+        {children}
+      </Text>
+    </View>
+  )
+}

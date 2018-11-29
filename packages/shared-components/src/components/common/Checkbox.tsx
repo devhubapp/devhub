@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,7 @@ import {
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
-import { ThemeContext } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 
 const checkboxBorderRadius = 4
 
@@ -46,7 +46,7 @@ export interface CheckboxProps {
 }
 
 export function Checkbox(props: CheckboxProps) {
-  const { theme } = useContext(ThemeContext)
+  const theme = useTheme()
 
   const {
     defaultValue,
@@ -70,12 +70,11 @@ export function Checkbox(props: CheckboxProps) {
   const handleOnChange = () => {
     if (!onChange) return
 
-    const newValue =
-      enableTrippleState === true
-        ? checked === null
-          ? !lastBooleanValue
-          : null
-        : !checked
+    const newValue = enableTrippleState
+      ? checked === null
+        ? !lastBooleanValue
+        : null
+      : !checked
 
     if (typeof newValue === 'boolean') setLastBooleanValue(newValue)
 
@@ -98,7 +97,7 @@ export function Checkbox(props: CheckboxProps) {
               ? checkedBackgroundColor
               : uncheckedBackgroundColor,
             borderColor:
-              checked || (enableTrippleState === true && checked === null)
+              checked || (enableTrippleState && checked === null)
                 ? checkedBackgroundColor
                 : uncheckedForegroundColor,
           },
@@ -108,7 +107,7 @@ export function Checkbox(props: CheckboxProps) {
           <Icon color={checkedForegroundColor} name="check" size={14} />
         )}
 
-        {enableTrippleState === true && checked === null && (
+        {enableTrippleState && checked === null && (
           <View
             style={{
               width: '80%',

@@ -1,5 +1,4 @@
-import _ from 'lodash'
-import React, { PureComponent } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Image, ImageProps } from 'react-native'
 
 export interface ImageWithLoadingProps extends ImageProps {
@@ -12,93 +11,73 @@ export interface ImageWithLoadingProps extends ImageProps {
   onLoadStart?: ImageProps['onLoadStart']
 }
 
-export class ImageWithLoading extends PureComponent<ImageWithLoadingProps> {
-  static defaultProps = {
-    onError: undefined,
-    onLoad: undefined,
-    onLoadEnd: undefined,
-    onLoadStart: undefined,
-  }
+export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
+  const {
+    backgroundColorFailed,
+    backgroundColorLoaded,
+    backgroundColorLoading,
+    onError,
+    onLoad,
+    onLoadEnd,
+    onLoadStart,
+    style,
+    ...otherProps
+  } = props
 
-  state = {
-    error: false,
-    loading: true,
-  }
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  onLoad = _.memoize(
-    (next: ImageProps['onLoad']): ImageProps['onLoad'] => e => {
-      if (!this.mounted) return
-      this.setState({ loading: false, error: false })
-      if (typeof next === 'function') next(e)
+  const handleLoad = useCallback(
+    e => {
+      setLoading(false)
+      setError(false)
+      if (typeof onLoad === 'function') onLoad(e)
     },
+    [onLoad],
   )
 
-  onLoadStart = _.memoize(
-    (next: ImageProps['onLoadStart']): ImageProps['onLoadStart'] => () => {
-      if (!this.mounted) return
-      this.setState({ loading: true })
-      if (typeof next === 'function') next()
+  const handleLoadStart = useCallback(
+    () => {
+      setLoading(true)
+      if (typeof onLoadStart === 'function') onLoadStart()
     },
+    [onLoadStart],
   )
 
-  onLoadEnd = _.memoize(
-    (next: ImageProps['onLoadEnd']): ImageProps['onLoadEnd'] => () => {
-      if (!this.mounted) return
-      this.setState({ loading: false })
-      if (typeof next === 'function') next()
+  const handleLoadEnd = useCallback(
+    () => {
+      setLoading(false)
+      if (typeof onLoadEnd === 'function') onLoadEnd()
     },
+    [onLoadEnd],
   )
 
-  onError = _.memoize(
-    (next: ImageProps['onError']): ImageProps['onError'] => error => {
-      if (!this.mounted) return
-      this.setState({ loading: false, error: true })
-      if (typeof next === 'function') next(error)
+  const handleError = useCallback(
+    e => {
+      setLoading(false)
+      setError(true)
+      if (typeof onError === 'function') onError(e)
     },
+    [onError],
   )
 
-  private mounted = false
-
-  componentDidMount() {
-    this.mounted = true
-  }
-
-  componentWillUnmount() {
-    this.mounted = false
-  }
-
-  render() {
-    const { error, loading } = this.state
-    const {
-      backgroundColorFailed,
-      backgroundColorLoaded,
-      backgroundColorLoading,
-      onError,
-      onLoad,
-      onLoadEnd,
-      onLoadStart,
-      style,
-      ...props
-    } = this.props
-
-    return (
-      <Image
-        {...props}
-        onError={this.onError(onError)}
-        onLoad={this.onLoad(onLoad)}
-        onLoadEnd={this.onLoadEnd(onLoadEnd)}
-        onLoadStart={this.onLoadStart(onLoadStart)}
-        style={[
-          style,
-          {
-            backgroundColor: error
-              ? backgroundColorFailed
-              : loading
-              ? backgroundColorLoading
-              : backgroundColorLoaded,
-          },
-        ]}
-      />
-    )
-  }
-}
+  return (
+    <Image
+      {...otherProps}
+      onError={handleError}
+      onLoad={handleLoad}
+      onLoadEnd={handleLoadEnd}
+      onLoadStart={handleLoadStart}
+      style={[
+        style,
+        {
+          backgroundColor: error
+            ? backgroundColorFailed
+            : loading
+            ? backgroundColorLoading
+            : backgroundColorLoaded,
+        },
+      ]}
+    />
+  )
+})

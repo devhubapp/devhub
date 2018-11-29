@@ -1,61 +1,50 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
-export const LAYOUT_BREAKPOINTS = {
+export const APP_LAYOUT_BREAKPOINTS = {
   SMALL: 420,
 }
 
-export interface LayoutProviderProps {
+export interface AppLayoutProviderProps {
   children?: React.ReactNode
 }
 
-export interface LayoutProviderState {
+export interface AppLayoutProviderState {
   appOrientation: 'landscape' | 'portrait'
   deviceOrientation: 'landscape' | 'portrait'
   sizename: '1-small' | '2-large'
 }
 
-const LayoutContext = React.createContext<LayoutProviderState>(
+export const AppLayoutContext = React.createContext<AppLayoutProviderState>(
   getLayoutConsumerState(),
 )
 
-export class LayoutProvider extends React.PureComponent<
-  LayoutProviderProps,
-  LayoutProviderState
-> {
-  constructor(props: any) {
-    super(props)
-    this.state = getLayoutConsumerState()
-  }
+export function AppLayoutProvider(props: AppLayoutProviderProps) {
+  const [state, setState] = useState(() => getLayoutConsumerState())
 
-  updateDimensions = () => {
-    this.setState(getLayoutConsumerState())
-  }
+  useEffect(() => {
+    const handler = () => {
+      setState(getLayoutConsumerState())
+    }
 
-  componentDidMount() {
-    Dimensions.addEventListener('change', this.updateDimensions)
-  }
+    Dimensions.addEventListener('change', handler)
+    return () => Dimensions.removeEventListener('change', handler)
+  }, [])
 
-  componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.updateDimensions)
-  }
-
-  render() {
-    return (
-      <LayoutContext.Provider value={this.state}>
-        {this.props.children}
-      </LayoutContext.Provider>
-    )
-  }
+  return (
+    <AppLayoutContext.Provider value={state}>
+      {props.children}
+    </AppLayoutContext.Provider>
+  )
 }
 
-export const LayoutConsumer = LayoutContext.Consumer
+export const AppLayoutConsumer = AppLayoutContext.Consumer
 
-export function getLayoutConsumerState(): LayoutProviderState {
+export function getLayoutConsumerState(): AppLayoutProviderState {
   const { width, height } = Dimensions.get('window')
 
-  const sizename: LayoutProviderState['sizename'] =
-    width <= LAYOUT_BREAKPOINTS.SMALL ? '1-small' : '2-large'
+  const sizename: AppLayoutProviderState['sizename'] =
+    width <= APP_LAYOUT_BREAKPOINTS.SMALL ? '1-small' : '2-large'
 
   const deviceOrientation = width > height ? 'landscape' : 'portrait'
   const appOrientation =
@@ -64,4 +53,8 @@ export function getLayoutConsumerState(): LayoutProviderState {
       : 'portrait'
 
   return { appOrientation, deviceOrientation, sizename }
+}
+
+export function useAppLayout() {
+  return useContext(AppLayoutContext)
 }

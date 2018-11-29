@@ -1,10 +1,11 @@
 import _ from 'lodash'
-import React, { PureComponent } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Column,
   ColumnSubscription,
   GitHubNotification,
+  LoadState,
   NotificationSubscription,
   Omit,
 } from 'shared-core/dist/types'
@@ -17,153 +18,145 @@ import { getFilteredNotifications } from '../utils/helpers/filters'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
-  'fetchNextPage' | 'notifications' | 'state'
+  'notifications' | 'fetchNextPage' | 'loadState'
 > & {
   column: Column
   subscriptions: ColumnSubscription[]
 }
 
-export interface NotificationCardsContainerState {
-  canFetchMore: boolean
-  enhancedNotifications: NotificationCardsProps['notifications']
-  notifications: NotificationCardsProps['notifications']
-  page: number
-  perPage: number
-  state: 'loading' | 'loading_first' | 'loading_more' | 'loaded'
-}
+export const NotificationCardsContainer = React.memo(
+  (props: NotificationCardsContainerProps) => {
+    const { column, subscriptions } = props
 
-export class NotificationCardsContainer extends PureComponent<
-  NotificationCardsContainerProps,
-  NotificationCardsContainerState
-> {
-  fetchDataInterval?: number
+    const [canFetchMore, setCanFetchMore] = useState(false)
+    const [notifications, setNotifications] = useState<GitHubNotification[]>([])
+    const [filteredNotifications, setFilteredNotifications] = useState<
+      GitHubNotification[]
+    >([])
+    const [olderNotificationDate, setOlderNotificationDate] = useState<
+      string | undefined
+    >(undefined)
+    const [loadState, setLoadState] = useState<LoadState>('loading_first')
+    const [pagination, setPagination] = useState({ page: 1, perPage: 10 })
 
-  state: NotificationCardsContainerState = {
-    canFetchMore: false,
-    enhancedNotifications: [],
-    notifications: [],
-    page: 1,
-    perPage: 10,
-    state: 'loading_first',
-  }
+    useEffect(() => {
+      fetchData()
+    }, [])
 
-  componentDidMount() {
-    this.startFetchDataInterval()
-  }
+    useEffect(() => {
+      const timer = setInterval(fetchData, 1000 * 60)
+      return () => clearInterval(timer)
+    })
 
-  componentDidUpdate(
-    prevProps: NotificationCardsContainerProps,
-    prevState: NotificationCardsContainerState,
-  ) {
-    if (
-      this.props.column !== prevProps.column ||
-      this.state.notifications !== prevState.notifications
-    ) {
-      this.setState(state => ({
-        canFetchMore:
-          (this.props.column.filters && this.props.column.filters.clearedAt) !==
-          (prevProps.column.filters && prevProps.column.filters.clearedAt)
-            ? this.calculateCanFetchMore(this.props.column, state.notifications)
-            : state.canFetchMore,
-        enhancedNotifications: getFilteredNotifications(
-          state.notifications,
-          this.props.column.filters,
-        ),
-      }))
-    }
-  }
+    useEffect(
+      () => {
+        setFilteredNotifications(
+          getFilteredNotifications(notifications, column.filters),
+        )
+      },
+      [notifications, column.filters],
+    )
 
-  componentWillUnmount() {
-    this.clearFetchDataInterval()
-  }
+    useEffect(
+      () => {
+        const clearedAt = column.filters && column.filters.clearedAt
+        if (!clearedAt) return
 
-  calculateCanFetchMore = (
-    column: Column,
-    notifications: GitHubNotification[],
-  ) => {
-    const clearedAt = column.filters && column.filters.clearedAt
-    const lastItem = notifications.slice(-1)[0]
+        const olderDate = getOlderNotificationDate(notifications)
+        if (!olderDate) return
 
-    return !clearedAt || lastItem.updated_at > clearedAt
-  }
+        setCanFetchMore(clearedAt < olderDate)
+      },
+      [column.filters && column.filters.clearedAt],
+    )
 
-  fetchData = async ({
-    page: _page,
-    perPage: _perPage,
-  }: { page?: number; perPage?: number } = {}) => {
-    const { column, subscriptions } = this.props
-    const subscription = subscriptions[0] as NotificationSubscription
+    const fetchData = async ({
+      page: _page,
+      perPage: _perPage,
+    }: { page?: number; perPage?: number } = {}) => {
+      const {
+        id: subscriptionId,
+        params: _params,
+      } = subscriptions[0] as NotificationSubscription
 
-    const page = Math.max(1, _page || 1)
-    const perPage = Math.min((_perPage || this.state.perPage || 10) * page, 100)
+      const page = Math.max(1, _page || 1)
+      const perPage = Math.min(
+        (_perPage || pagination.perPage || 10) * page,
+        50,
+      )
 
-    const { params: _params } = subscription
-    const params = { ..._params, page, per_page: perPage }
-
-    this.setState(state => ({
-      state:
-        page > 1
-          ? 'loading_more'
-          : !state.state || state.state === 'loading_first'
-          ? 'loading_first'
-          : 'loading',
-    }))
-
-    try {
-      const response = await getNotifications(params, {
-        subscriptionId: subscription.id,
-      })
-      if (Array.isArray(response.data) && response.data.length) {
-        const notifications = _.concat(
-          response.data as any,
-          this.state.notifications,
+      try {
+        setLoadState(prevLoadState =>
+          page > 1
+            ? 'loading_more'
+            : !prevLoadState || prevLoadState === 'loading_first'
+            ? 'loading_first'
+            : 'loading',
         )
 
-        this.setState({
-          canFetchMore:
-            response.data.length >= perPage &&
-            this.calculateCanFetchMore(column, response.data),
-          notifications,
-          page,
-          state: 'loaded',
+        const params = { ..._params, page, per_page: perPage }
+        const response = await getNotifications(params, {
+          subscriptionId,
         })
-      } else {
-        this.setState({ canFetchMore: false, page, state: 'loaded' })
+
+        if (Array.isArray(response.data) && response.data.length) {
+          const olderDateFromThisResponse = getOlderNotificationDate(
+            response.data,
+          )
+
+          setNotifications(prevNotifications =>
+            _.uniqBy(_.concat(response.data, prevNotifications), 'id'),
+          )
+          setPagination(prevPagination => ({ ...prevPagination, page }))
+          setLoadState('loaded')
+
+          if (
+            !olderNotificationDate ||
+            (olderDateFromThisResponse &&
+              olderDateFromThisResponse <= olderNotificationDate)
+          ) {
+            setOlderNotificationDate(olderDateFromThisResponse)
+
+            if (response.data.length >= perPage) {
+              const clearedAt = column.filters && column.filters.clearedAt
+              if (clearedAt && clearedAt >= olderDateFromThisResponse) {
+                setCanFetchMore(false)
+              } else {
+                setCanFetchMore(true)
+              }
+            } else {
+              setCanFetchMore(false)
+            }
+          }
+        } else {
+          setLoadState('loaded')
+          setPagination(prevPagination => ({ ...prevPagination, page }))
+          setCanFetchMore(false)
+        }
+      } catch (error) {
+        console.error('Failed to load GitHub notifications', error)
+        setLoadState('loaded')
       }
-    } catch (error) {
-      this.setState({ state: 'loaded' })
-      console.error('Failed to load GitHub notifications', error)
     }
-  }
 
-  startFetchDataInterval = () => {
-    this.clearFetchDataInterval()
-    this.fetchDataInterval = setInterval(this.fetchData, 1000 * 60) as any
-    this.fetchData({ page: 1 })
-  }
-
-  clearFetchDataInterval = () => {
-    if (this.fetchDataInterval) {
-      clearInterval(this.fetchDataInterval)
-      this.fetchDataInterval = undefined
+    const fetchNextPage = ({ perPage }: { perPage?: number } = {}) => {
+      const nextPage = (pagination.page || 1) + 1
+      fetchData({ page: nextPage, perPage })
     }
-  }
-
-  fetchNextPage = ({ perPage }: { perPage?: number } = {}) => {
-    const nextPage = (this.state.page || 1) + 1
-    this.fetchData({ page: nextPage, perPage })
-  }
-
-  render() {
-    const { canFetchMore, enhancedNotifications, state } = this.state
 
     return (
       <NotificationCards
-        {...this.props}
-        notifications={enhancedNotifications}
-        fetchNextPage={canFetchMore ? this.fetchNextPage : undefined}
-        state={state}
+        {...props}
+        key={`notification-cards-${column.id}`}
+        notifications={filteredNotifications}
+        fetchNextPage={canFetchMore ? fetchNextPage : undefined}
+        loadState={loadState}
       />
     )
-  }
+  },
+)
+
+function getOlderNotificationDate(notifications: GitHubNotification[]) {
+  const olderItem = _.orderBy(notifications, 'updated_at', 'asc')[0]
+  return olderItem && olderItem.updated_at
 }

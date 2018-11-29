@@ -1,4 +1,4 @@
-import React, { SFC } from 'react'
+import React from 'react'
 import { Text, View } from 'react-native'
 
 import { tryGetUsernameFromGitHubEmail } from 'shared-core/dist/utils/helpers/github/shared'
@@ -12,7 +12,7 @@ import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { ThemeConsumer } from '../../../context/ThemeContext'
+import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
 
@@ -30,17 +30,21 @@ export interface CommitRowProps {
 
 export interface CommitRowState {}
 
-export const CommitRow: SFC<CommitRowProps> = ({
-  authorEmail,
-  authorName,
-  authorUsername: _authorUsername,
-  isRead,
-  latestCommentUrl,
-  message: _message,
-  showMoreItemsIndicator,
-  smallLeftColumn,
-  url,
-}) => {
+export function CommitRow(props: CommitRowProps) {
+  const theme = useTheme()
+
+  const {
+    authorEmail,
+    authorName,
+    authorUsername: _authorUsername,
+    isRead,
+    latestCommentUrl,
+    message: _message,
+    showMoreItemsIndicator,
+    smallLeftColumn,
+    url,
+  } = props
+
   const message = trimNewLinesAndSpaces(_message)
   if (!message) return null
 
@@ -54,72 +58,67 @@ export const CommitRow: SFC<CommitRowProps> = ({
   byText = trimNewLinesAndSpaces(byText)
 
   return (
-    <ThemeConsumer>
-      {({ theme }) => (
-        <View style={getCardRowStylesForTheme(theme).container}>
-          <View
+    <View style={getCardRowStylesForTheme(theme).container}>
+      <View
+        style={[
+          getCardStylesForTheme(theme).leftColumn,
+          smallLeftColumn
+            ? getCardStylesForTheme(theme).leftColumn__small
+            : getCardStylesForTheme(theme).leftColumn__big,
+        ]}
+      >
+        <Avatar
+          email={authorEmail}
+          isBot={Boolean(
+            authorUsername && authorUsername.indexOf('[bot]') >= 0,
+          )}
+          small
+          style={getCardStylesForTheme(theme).avatar}
+          username={authorUsername}
+          linkURL={
+            authorUsername
+              ? getGitHubURLForUser(authorUsername)
+              : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
+          }
+        />
+      </View>
+
+      <View style={getCardStylesForTheme(theme).rightColumn}>
+        <Link
+          href={
+            showMoreItemsIndicator
+              ? undefined
+              : fixURL(url, {
+                  commentId:
+                    (latestCommentUrl &&
+                      getCommentIdFromUrl(latestCommentUrl)) ||
+                    undefined,
+                })
+          }
+          style={getCardRowStylesForTheme(theme).mainContentContainer}
+        >
+          <Text
+            numberOfLines={1}
             style={[
-              getCardStylesForTheme(theme).leftColumn,
-              smallLeftColumn
-                ? getCardStylesForTheme(theme).leftColumn__small
-                : getCardStylesForTheme(theme).leftColumn__big,
+              getCardStylesForTheme(theme).normalText,
+              isRead && getCardStylesForTheme(theme).mutedText,
             ]}
           >
-            <Avatar
-              email={authorEmail}
-              isBot={Boolean(
-                authorUsername && authorUsername.indexOf('[bot]') >= 0,
-              )}
-              small
-              style={getCardStylesForTheme(theme).avatar}
-              username={authorUsername}
-              linkURL={
-                authorUsername
-                  ? getGitHubURLForUser(authorUsername)
-                  : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
-              }
-            />
-          </View>
-
-          <View style={getCardStylesForTheme(theme).rightColumn}>
-            <Link
-              href={
-                showMoreItemsIndicator
-                  ? undefined
-                  : fixURL(url, {
-                      commentId:
-                        (latestCommentUrl &&
-                          getCommentIdFromUrl(latestCommentUrl)) ||
-                        undefined,
-                    })
-              }
-              style={getCardRowStylesForTheme(theme).mainContentContainer}
-            >
+            <Icon name="git-commit" /> {showMoreItemsIndicator ? '' : message}
+            {Boolean(byText) && (
               <Text
-                numberOfLines={1}
                 style={[
                   getCardStylesForTheme(theme).normalText,
-                  isRead && getCardStylesForTheme(theme).mutedText,
+                  getCardStylesForTheme(theme).smallText,
+                  getCardStylesForTheme(theme).mutedText,
                 ]}
               >
-                <Icon name="git-commit" />{' '}
-                {showMoreItemsIndicator ? '' : message}
-                {Boolean(byText) && (
-                  <Text
-                    style={[
-                      getCardStylesForTheme(theme).normalText,
-                      getCardStylesForTheme(theme).smallText,
-                      getCardStylesForTheme(theme).mutedText,
-                    ]}
-                  >
-                    {showMoreItemsIndicator ? '...' : ` by ${byText}`}
-                  </Text>
-                )}
+                {showMoreItemsIndicator ? '...' : ` by ${byText}`}
               </Text>
-            </Link>
-          </View>
-        </View>
-      )}
-    </ThemeConsumer>
+            )}
+          </Text>
+        </Link>
+      </View>
+    </View>
   )
 }

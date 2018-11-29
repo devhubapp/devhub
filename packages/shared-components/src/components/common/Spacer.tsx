@@ -6,4 +6,6 @@ export type SpacerProps = Pick<
   'flex' | 'width' | 'height' | 'minWidth' | 'minHeight' | 'backgroundColor'
 >
 
-export const Spacer: React.SFC<SpacerProps> = props => <View style={props} />
+export function Spacer(props: SpacerProps) {
+  return <View style={props} />
+}
