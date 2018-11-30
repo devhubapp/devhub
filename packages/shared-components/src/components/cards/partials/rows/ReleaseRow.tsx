@@ -17,11 +17,11 @@ export interface ReleaseRowProps {
   body: string
   branch?: string
   isRead: boolean
-  name: string
+  name: string | undefined
   ownerName: string
   repositoryName: string
   smallLeftColumn?: boolean
-  tagName: string
+  tagName: string | undefined
   url: string
   userLinkURL: string
   username: string
@@ -72,50 +72,52 @@ export function ReleaseRow(props: ReleaseRowProps) {
         />
       )}
 
-      <View style={getCardRowStylesForTheme(theme).container}>
-        <View
-          style={[
-            getCardStylesForTheme(theme).leftColumn,
-            smallLeftColumn
-              ? getCardStylesForTheme(theme).leftColumn__small
-              : getCardStylesForTheme(theme).leftColumn__big,
-          ]}
-        >
-          <Avatar
-            isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
-            linkURL=""
-            small
-            style={getCardStylesForTheme(theme).avatar}
-            username={ownerName}
-          />
-        </View>
-
-        <View style={getCardStylesForTheme(theme).rightColumn}>
-          <Link
-            href={fixedURL}
-            style={getCardRowStylesForTheme(theme).mainContentContainer}
+      {!!(name || tagName) && (
+        <View style={getCardRowStylesForTheme(theme).container}>
+          <View
+            style={[
+              getCardStylesForTheme(theme).leftColumn,
+              smallLeftColumn
+                ? getCardStylesForTheme(theme).leftColumn__small
+                : getCardStylesForTheme(theme).leftColumn__big,
+            ]}
           >
-            <Text
-              style={[
-                getCardStylesForTheme(theme).normalText,
-                isRead && getCardStylesForTheme(theme).mutedText,
-              ]}
+            <Avatar
+              isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+              linkURL=""
+              small
+              style={getCardStylesForTheme(theme).avatar}
+              username={ownerName}
+            />
+          </View>
+
+          <View style={getCardStylesForTheme(theme).rightColumn}>
+            <Link
+              href={fixedURL}
+              style={getCardRowStylesForTheme(theme).mainContentContainer}
             >
               <Text
-                numberOfLines={1}
-                style={
-                  isRead
-                    ? getCardStylesForTheme(theme).mutedText
-                    : getCardStylesForTheme(theme).normalText
-                }
+                style={[
+                  getCardStylesForTheme(theme).normalText,
+                  isRead && getCardStylesForTheme(theme).mutedText,
+                ]}
               >
-                <Icon name="tag" />{' '}
+                <Text
+                  numberOfLines={1}
+                  style={
+                    isRead
+                      ? getCardStylesForTheme(theme).mutedText
+                      : getCardStylesForTheme(theme).normalText
+                  }
+                >
+                  <Icon name="tag" />{' '}
+                </Text>
+                {name || tagName}
               </Text>
-              {name || tagName}
-            </Text>
-          </Link>
+            </Link>
+          </View>
         </View>
-      </View>
+      )}
 
       {!!(body && body !== name && body !== tagName) && (
         <View style={getCardRowStylesForTheme(theme).container}>

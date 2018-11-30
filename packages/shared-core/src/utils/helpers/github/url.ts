@@ -70,9 +70,14 @@ export const getGitHubSearchURL = (queryParams: {
 export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
   repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
 
-export const getGitHubURLForRelease = (repoFullName: string, tagName: string) =>
-  repoFullName && tagName
-    ? `${baseURL}/${repoFullName}/releases/tag/${tagName}`
+export const getGitHubURLForRelease = (
+  repoFullName: string,
+  tagName: string | undefined,
+) =>
+  repoFullName
+    ? tagName
+      ? `${baseURL}/${repoFullName}/releases/tag/${tagName}`
+      : `${baseURL}/${repoFullName}/releases`
     : ''
 
 export const getGitHubURLForRepoInvitation = (repoFullName: string) =>

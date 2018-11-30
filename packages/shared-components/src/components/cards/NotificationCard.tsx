@@ -181,11 +181,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           avatarURL=""
           body={release.title}
           isRead={isRead}
-          name={release.title}
+          name={(release as any).name || ''}
           ownerName={repoOwnerName!}
           repositoryName={repoName!}
           smallLeftColumn
-          tagName={release.title}
+          tagName={(release as any).tag_name || ''}
           url={release.latest_comment_url || release.url}
           userLinkURL=""
           username=""
