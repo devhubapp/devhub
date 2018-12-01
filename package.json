@@ -23,14 +23,14 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "concurrently": "^4.0.1",
-    "husky": "^1.1.4",
+    "concurrently": "^4.1.0",
+    "husky": "^1.2.0",
     "lint-staged-offline": "^0.0.1",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
-    "prettier": "^1.15.2",
+    "prettier": "^1.15.3",
     "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.16.0",
+    "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.2.1"
   },

@@ -13,7 +13,7 @@ export function fromGitHubUser(user: GitHubUser): User['github'] | null {
     avatarUrl: user.avatar_url || '',
     gravatarId: user.gravatar_id || '',
     type: user.type || 'User',
-    isSiteAdmin: user.site_admin === true,
+    isSiteAdmin: user.site_admin,
     company: user.company,
     blog: user.blog,
     location: user.location,

@@ -122,7 +122,7 @@ function* onLoginRequest(
   }
 
   try {
-    const response = yield call(github.octokit.users.get, {})
+    const response = yield call(github.octokit.users.getAuthenticated, {})
     const githubUser = response.data as GitHubUser
     const user = fromGitHubUser(githubUser)
     if (!(user && user.id && user.login)) throw new Error('Invalid response')
@@ -150,7 +150,7 @@ function* onLoginFailure(
 ) {
   if (
     action.error &&
-    (action.error.code === 401 ||
+    (action.error.status === 401 ||
       (action.error.response &&
         (action.error.response.status === 401 ||
           (action.error.response.data &&

@@ -28,7 +28,7 @@ const cache: Record<
 > = {}
 
 export async function getNotifications(
-  _params: Octokit.ActivityGetNotificationsParams & { headers?: any } = {},
+  _params: Octokit.ActivityListNotificationsParams & { headers?: any } = {},
   { subscriptionId = '', useCache = false } = {},
 ) {
   const cacheKey = JSON.stringify(['NOTIFICATIONS', _params, subscriptionId])
@@ -55,7 +55,7 @@ export async function getNotifications(
   if (!useCache) (params as any).timestamp = Date.now()
 
   try {
-    const response = await octokit.activity.getNotifications(params)
+    const response = await octokit.activity.listNotifications(params)
 
     cache[cacheKey] = {
       data: response.data,
@@ -65,7 +65,7 @@ export async function getNotifications(
 
     return response
   } catch (error) {
-    if (error && error.code === 304) return cache[cacheKey]
+    if (error && error.status === 304) return cache[cacheKey]
     throw error
   }
 }
@@ -96,23 +96,23 @@ export async function getActivity<T extends GitHubActivityType>(
     const response = await (() => {
       switch (type) {
         case 'ORG_PUBLIC_EVENTS':
-          return octokit.activity.getEventsForOrg(params)
+          return octokit.activity.listEventsForOrg(params)
         case 'PUBLIC_EVENTS':
-          return octokit.activity.getEvents(params)
+          return octokit.activity.listPublicEvents(params)
         case 'REPO_EVENTS':
-          return octokit.activity.getEventsForRepo(params)
+          return octokit.activity.listRepoEvents(params)
         case 'REPO_NETWORK_EVENTS':
-          return octokit.activity.getEventsForRepoNetwork(params)
+          return octokit.activity.listPublicEventsForRepoNetwork(params)
         case 'USER_EVENTS':
-          return octokit.activity.getEventsForUser(params)
+          return octokit.activity.listEventsForUser(params)
         case 'USER_ORG_EVENTS':
-          return octokit.activity.getEventsForUserOrg(params)
+          return octokit.activity.listEventsForOrg(params)
         case 'USER_PUBLIC_EVENTS':
-          return octokit.activity.getEventsForUserPublic(params)
+          return octokit.activity.listPublicEventsForUser(params)
         case 'USER_RECEIVED_EVENTS':
-          return octokit.activity.getEventsReceived(params)
+          return octokit.activity.listReceivedEventsForUser(params)
         case 'USER_RECEIVED_PUBLIC_EVENTS':
-          return octokit.activity.getEventsReceivedPublic(params)
+          return octokit.activity.listReceivedPublicEventsForUser(params)
         default:
           throw new Error(
             `No api method configured for activity type '${type}'.`,
@@ -128,7 +128,7 @@ export async function getActivity<T extends GitHubActivityType>(
 
     return response
   } catch (error) {
-    if (error && error.code === 304) return cache[cacheKey]
+    if (error && error.status === 304) return cache[cacheKey]
     throw error
   }
 }

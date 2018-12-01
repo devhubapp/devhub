@@ -13,7 +13,7 @@
     "xcode": "open ios/devhub.xcodeproj"
   },
   "dependencies": {
-    "metro-react-native-babel-preset": "^0.49.1",
+    "metro-react-native-babel-preset": "^0.50.0",
     "react": "16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
     "react-native-google-analytics-bridge": "^6.1.2",

@@ -29,55 +29,55 @@ export type ActivitySubscription = {
   | {
       subtype: 'ORG_PUBLIC_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsForOrg']
+        octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'PUBLIC_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEvents']
+        octokit['activity']['listPublicEvents']
       >
     }
   | {
       subtype: 'REPO_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsForRepo']
+        octokit['activity']['listRepoEvents']
       >
     }
   | {
       subtype: 'REPO_NETWORK_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsForRepoNetwork']
+        octokit['activity']['listPublicEventsForRepoNetwork']
       >
     }
   | {
       subtype: 'USER_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsForUser']
+        octokit['activity']['listEventsForUser']
       >
     }
   | {
       subtype: 'USER_ORG_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsForUserOrg']
+        octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'USER_PUBLIC_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsForUserPublic']
+        octokit['activity']['listPublicEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsReceived']
+        octokit['activity']['listReceivedEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_PUBLIC_EVENTS'
       params: GitHubExtractParamsFromActivityMethod<
-        octokit['activity']['getEventsReceivedPublic']
+        octokit['activity']['listReceivedPublicEventsForUser']
       >
     })
 
