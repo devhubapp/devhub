@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 
 import { Column } from 'shared-core/dist/types'
 import {
@@ -8,6 +8,7 @@ import {
   getEventTypeMetadata,
 } from 'shared-core/dist/utils/helpers/github/events'
 import { useDimensions } from '../../hooks/use-dimensions'
+import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import * as colors from '../../styles/colors'
@@ -199,7 +200,31 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       enableTrippleState={
                         !isFilterStrict || checked === defaultBooleanValue
                       }
-                      label={item.label}
+                      label={
+                        <View
+                          style={{
+                            flexGrow: 1,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <Text
+                            style={{
+                              marginLeft: contentPadding / 2,
+                              color: theme.foregroundColor,
+                            }}
+                          >
+                            {item.label}
+                          </Text>
+                          <Icon
+                            color={theme.foregroundColor}
+                            name={item.icon}
+                            size={16}
+                          />
+                        </View>
+                      }
                       onChange={value => {
                         setColumnActivityTypeFilter({
                           columnId: column.id,
