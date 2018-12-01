@@ -44,7 +44,7 @@ export function NotificationColumn(props: NotificationColumnProps) {
         />
 
         <ColumnHeaderItem
-          iconName="eye"
+          iconName="circle-slash"
           onPress={() =>
             setColumnClearedAtFilter({
               columnId: column.id,

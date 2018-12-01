@@ -10,6 +10,7 @@ import {
 import { useDimensions } from '../../hooks/use-dimensions'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import * as colors from '../../styles/colors'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import {
   filterRecordHasAnyForcedValue,
@@ -47,6 +48,7 @@ export interface ColumnOptionsProps {
 }
 
 export type ColumnOptionCategory =
+  | 'cleared'
   | 'event_types'
   | 'notification_types'
   | 'privacy'
@@ -63,6 +65,9 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const moveColumn = useReduxAction(actions.moveColumn)
   const setColumnActivityTypeFilter = useReduxAction(
     actions.setColumnActivityTypeFilter,
+  )
+  const setColumnClearedAtFilter = useReduxAction(
+    actions.setColumnClearedAtFilter,
   )
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
@@ -357,6 +362,27 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           />
 
           <Spacer flex={1} />
+
+          <ColumnHeaderItem
+            iconName="circle-slash"
+            iconStyle={
+              column.filters && column.filters.clearedAt
+                ? { color: colors.brandBackgroundColor }
+                : undefined
+            }
+            onPress={() =>
+              setColumnClearedAtFilter({
+                columnId: column.id,
+                clearedAt:
+                  column.filters && column.filters.clearedAt
+                    ? null
+                    : new Date().toISOString(),
+              })
+            }
+            text={
+              column.filters && column.filters.clearedAt ? 'Unclear' : 'Clear'
+            }
+          />
 
           <ColumnHeaderItem
             iconName="trashcan"
