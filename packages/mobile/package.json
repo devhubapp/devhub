@@ -1,6 +1,6 @@
 {
   "name": "mobile",
-  "version": "0.28.1",
+  "version": "0.28.2",
   "scripts": {
     "clean": "cd .",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
@@ -18,7 +18,7 @@
     "react-native": "npm:@brunolemos/react-native",
     "react-native-google-analytics-bridge": "^6.1.2",
     "react-native-screens": "^1.0.0-alpha.16",
-    "shared-components": "0.28.1"
+    "shared-components": "0.28.2"
   },
   "jest": {
     "preset": "react-native",

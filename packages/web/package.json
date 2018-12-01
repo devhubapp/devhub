@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.28.1",
+  "version": "0.28.2",
   "private": true,
   "scripts": {
     "build": "react-app-rewired build && rm -rf dist && mv build dist",
@@ -24,7 +24,7 @@
     "react-native-web": "^0.9.8",
     "react-scripts": "2.1.1",
     "resize-observer-polyfill": "^1.5.0",
-    "shared-components": "0.28.1"
+    "shared-components": "0.28.2"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",
