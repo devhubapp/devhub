@@ -46,6 +46,29 @@ export function itemPassesFilterRecord(
     : defaultValue
 }
 
+export function hasAnyFilter(
+  filters: ActivityColumnFilters | NotificationColumnFilters | undefined,
+) {
+  if (!filters) return false
+
+  if (typeof filters.private === 'boolean' || filters.clearedAt) return true
+
+  const activityColumnFilters = filters as ActivityColumnFilters
+  const notificationColumnFilters = filters as NotificationColumnFilters
+
+  if (activityColumnFilters.activity) {
+    return filterRecordHasAnyForcedValue(activityColumnFilters.activity.types)
+  }
+
+  if (notificationColumnFilters.notifications) {
+    return filterRecordHasAnyForcedValue(
+      notificationColumnFilters.notifications.reasons,
+    )
+  }
+
+  return false
+}
+
 export function getFilteredNotifications(
   notifications: GitHubNotification[],
   filters?: NotificationColumnFilters,
@@ -58,14 +81,7 @@ export function getFilteredNotifications(
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
 
-  const hasFilter =
-    filters &&
-    (filterRecordHasAnyForcedValue(reasonsFilter) ||
-      typeof filters.unread === 'boolean' ||
-      typeof filters.private === 'boolean' ||
-      filters.clearedAt)
-
-  if (hasFilter && filters) {
+  if (filters && hasAnyFilter(filters)) {
     _notifications = _notifications.filter(notification => {
       if (!itemPassesFilterRecord(reasonsFilter, notification.reason, true))
         return false
@@ -109,13 +125,8 @@ export function getFilteredEvents(
     .value()
 
   const activityFilter = filters && filters.activity && filters.activity.types
-  const hasFilter =
-    filters &&
-    (filterRecordHasAnyForcedValue(activityFilter) ||
-      typeof filters.private === 'boolean' ||
-      filters.clearedAt)
 
-  if (hasFilter && filters) {
+  if (filters && hasAnyFilter(filters)) {
     _events = _events.filter(event => {
       if (!itemPassesFilterRecord(activityFilter, event.type, true))
         return false
