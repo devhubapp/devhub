@@ -77,10 +77,7 @@ export const EventCardsContainer = React.memo(
       } = subscriptions[0] as ActivitySubscription
 
       const page = Math.max(1, _page || 1)
-      const perPage = Math.min(
-        (_perPage || pagination.perPage || 10) * page,
-        50,
-      )
+      const perPage = Math.min(_perPage || pagination.perPage || 10, 50)
 
       try {
         setLoadState(prevLoadState =>
