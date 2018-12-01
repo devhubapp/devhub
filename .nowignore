@@ -14,6 +14,7 @@ packages/shared-components/package.json
 packages/shared-components/src
 packages/shared-core
 packages/web/build
+packages/web/dist/**.map
 packages/web/node_modules
 packages/web/package.json
 packages/web/src
