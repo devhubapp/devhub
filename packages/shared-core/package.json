@@ -1,6 +1,6 @@
 {
   "name": "shared-core",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "main": "dist",
   "scripts": {
     "build": "tsc",
