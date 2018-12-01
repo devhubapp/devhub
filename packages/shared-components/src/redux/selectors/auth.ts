@@ -8,7 +8,12 @@ export const isLoggingInSelector = (state: RootState) => s(state).isLoggingIn
 
 export const appTokenSelector = (state: RootState) => s(state).appToken
 
+export const githubScopeSelector = (state: RootState) => s(state).githubScope
+
 export const githubTokenSelector = (state: RootState) => s(state).githubToken
+
+export const githubTokenTypeSelector = (state: RootState) =>
+  s(state).githubTokenType
 
 export const currentUserSelector = (state: RootState) =>
   appTokenSelector(state) && githubTokenSelector(state)

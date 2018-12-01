@@ -84,7 +84,7 @@ export function LoginScreen() {
   const loginWithGitHub = async (method: typeof loggingInMethod) => {
     setLoggingInMethod(method)
 
-    const permissions =
+    const githubScope =
       method === 'github.private'
         ? ['user', 'repo', 'notifications', 'read:org']
         : ['user', 'public_repo', 'notifications', 'read:org']
@@ -92,7 +92,7 @@ export function LoginScreen() {
     let appToken
     let githubToken
     try {
-      const params = await executeOAuth(permissions)
+      const params = await executeOAuth(githubScope)
       appToken = params && params.app_token
       githubToken = params && params.github_token
 
@@ -104,7 +104,11 @@ export function LoginScreen() {
       return
     }
 
-    await loginRequest({ appToken, githubToken })
+    await loginRequest({
+      appToken,
+      githubToken,
+      githubScope,
+    })
   }
 
   return (

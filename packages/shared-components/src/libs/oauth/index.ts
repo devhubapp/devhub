@@ -6,10 +6,10 @@ import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
 
 const redirectUri = 'devhub://oauth/github'
 
-export async function executeOAuth(scopes: string[]) {
-  const scopesStr = (scopes || []).join(' ')
+export async function executeOAuth(scope: string[]) {
+  const scopeStr = (scope || []).join(' ')
   const querystring = qs.stringify({
-    scope: scopesStr,
+    scope: scopeStr,
     redirect_uri: redirectUri,
   })
 

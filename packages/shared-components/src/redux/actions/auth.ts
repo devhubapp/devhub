@@ -6,14 +6,18 @@ import {
 
 export function loginRequest(payload: {
   appToken: string
+  githubScope?: string[] | undefined
   githubToken: string
+  githubTokenType?: string | undefined
 }) {
   return createAction('LOGIN_REQUEST', payload)
 }
 
 export function loginSuccess(payload: {
   appToken: string
+  githubScope: string[]
   githubToken: string
+  githubTokenType: string
   user: User
 }) {
   return createAction('LOGIN_SUCCESS', payload)

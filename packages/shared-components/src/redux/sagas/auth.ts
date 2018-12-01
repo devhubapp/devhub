@@ -31,7 +31,9 @@ function* onLoginRequest(
       data: {
         login: {
           appToken: string
+          githubScope: [string] | undefined
           githubToken: string
+          githubTokenType: string | undefined
           user: User | null
         } | null
       }
@@ -42,7 +44,9 @@ function* onLoginRequest(
         query: `query auth {
           login {
             appToken
+            githubScope
             githubToken
+            githubTokenType
             user {
               _id
               github {
@@ -51,16 +55,6 @@ function* onLoginRequest(
                 login
                 name
                 avatarUrl
-                type
-                bio
-                publicGistsCount
-                publicReposCount
-                privateReposCount
-                privateGistsCount
-                followersCount
-                followingCount
-                ownedPrivateReposCount
-                isTwoFactorAuthenticationEnabled
                 createdAt
                 updatedAt
               }
@@ -103,7 +97,9 @@ function* onLoginRequest(
     yield put(
       actions.loginSuccess({
         appToken: data.login.appToken,
+        githubScope: data.login.githubScope || [],
         githubToken: data.login.githubToken,
+        githubTokenType: data.login.githubTokenType || '',
         user: data.login.user,
       }),
     )
@@ -130,7 +126,9 @@ function* onLoginRequest(
     yield put(
       actions.loginSuccess({
         appToken: action.payload.appToken,
+        githubScope: action.payload.githubScope || [],
         githubToken: action.payload.githubToken,
+        githubTokenType: action.payload.githubTokenType || '',
         user: { _id: '', github: user, createdAt: '', updatedAt: '' },
       }),
     )
