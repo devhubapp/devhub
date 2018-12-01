@@ -388,26 +388,28 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
           <Spacer flex={1} />
 
-          <ColumnHeaderItem
-            iconName="circle-slash"
-            iconStyle={
-              column.filters && column.filters.clearedAt
-                ? { color: colors.brandBackgroundColor }
-                : undefined
-            }
-            onPress={() =>
-              setColumnClearedAtFilter({
-                columnId: column.id,
-                clearedAt:
-                  column.filters && column.filters.clearedAt
-                    ? null
-                    : new Date().toISOString(),
-              })
-            }
-            text={
-              column.filters && column.filters.clearedAt ? 'Unclear' : 'Clear'
-            }
-          />
+          {!!(column.filters && column.filters.clearedAt) && (
+            <ColumnHeaderItem
+              iconName="circle-slash"
+              iconStyle={
+                column.filters && column.filters.clearedAt
+                  ? { color: colors.brandBackgroundColor }
+                  : undefined
+              }
+              onPress={() =>
+                setColumnClearedAtFilter({
+                  columnId: column.id,
+                  clearedAt:
+                    column.filters && column.filters.clearedAt
+                      ? null
+                      : new Date().toISOString(),
+                })
+              }
+              text={
+                column.filters && column.filters.clearedAt ? 'Unclear' : 'Clear'
+              }
+            />
+          )}
 
           <ColumnHeaderItem
             iconName="trashcan"
