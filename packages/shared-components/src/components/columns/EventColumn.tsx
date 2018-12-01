@@ -7,6 +7,8 @@ import {
 } from '../../containers/EventCardsContainer'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import * as colors from '../../styles/colors'
+import { hasAnyFilter } from '../../utils/helpers/filters'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
@@ -45,6 +47,11 @@ export function EventColumn(props: EventColumnProps) {
 
         <ColumnHeaderItem
           iconName="circle-slash"
+          iconStyle={
+            column.filters && column.filters.clearedAt
+              ? { color: colors.brandBackgroundColor }
+              : undefined
+          }
           onPress={() =>
             setColumnClearedAtFilter({
               columnId: column.id,
@@ -54,6 +61,12 @@ export function EventColumn(props: EventColumnProps) {
         />
         <ColumnHeaderItem
           iconName="settings"
+          iconStyle={
+            column.filters &&
+            hasAnyFilter({ ...column.filters, clearedAt: undefined })
+              ? { color: colors.brandBackgroundColor }
+              : undefined
+          }
           onPress={() => setShowColumnOptions(!showColumnOptions)}
         />
       </ColumnHeader>
