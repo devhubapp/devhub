@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   ActivitySubscription,
@@ -26,6 +26,7 @@ export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { column, subscriptions } = props
 
+    const [hasFetched, setHasFetched] = useState(false)
     const [canFetchMore, setCanFetchMore] = useState(false)
     const [events, setEvents] = useState<GitHubEvent[]>([])
     const [filteredEvents, setFilteredEvents] = useState<EnhancedGitHubEvent[]>(
@@ -48,6 +49,14 @@ export const EventCardsContainer = React.memo(
 
     useEffect(
       () => {
+        if (!hasFetched) return
+        setLoadState('loaded')
+      },
+      [events],
+    )
+
+    useEffect(
+      () => {
         setFilteredEvents(getFilteredEvents(events, column.filters))
       },
       [events, column.filters],
@@ -56,12 +65,9 @@ export const EventCardsContainer = React.memo(
     useEffect(
       () => {
         const clearedAt = column.filters && column.filters.clearedAt
-        if (!clearedAt) return
-
         const olderDate = getOlderEventDate(events)
-        if (!olderDate) return
 
-        setCanFetchMore(clearedAt < olderDate)
+        setCanFetchMore(!clearedAt || !olderDate || clearedAt < olderDate)
       },
       [column.filters && column.filters.clearedAt],
     )
@@ -83,7 +89,9 @@ export const EventCardsContainer = React.memo(
         setLoadState(prevLoadState =>
           page > 1
             ? 'loading_more'
-            : !prevLoadState || prevLoadState === 'loading_first'
+            : !prevLoadState ||
+              prevLoadState === 'not_loaded' ||
+              prevLoadState === 'loading_first'
             ? 'loading_first'
             : 'loading',
         )
@@ -92,6 +100,8 @@ export const EventCardsContainer = React.memo(
         const response = await getActivity(activityType, params, {
           subscriptionId,
         })
+
+        if (!hasFetched) setHasFetched(true)
 
         if (Array.isArray(response.data) && response.data.length) {
           const olderDateFromThisResponse = getOlderEventDate(response.data)

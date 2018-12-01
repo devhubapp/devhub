@@ -60,12 +60,9 @@ export const NotificationCardsContainer = React.memo(
     useEffect(
       () => {
         const clearedAt = column.filters && column.filters.clearedAt
-        if (!clearedAt) return
-
         const olderDate = getOlderNotificationDate(notifications)
-        if (!olderDate) return
 
-        setCanFetchMore(clearedAt < olderDate)
+        setCanFetchMore(!clearedAt || !olderDate || clearedAt < olderDate)
       },
       [column.filters && column.filters.clearedAt],
     )
