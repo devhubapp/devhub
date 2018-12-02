@@ -25,16 +25,23 @@ export interface GraphQLGitHubUser {
   diskUsage?: number
   collaboratorsCount?: number
   isTwoFactorAuthenticationEnabled?: boolean
-  plan: GitHubPlan
+  plan?: GitHubPlan
   createdAt: string
   updatedAt: string
 }
 
 export interface User {
   _id: string
-  github: GraphQLGitHubUser
+  github: {
+    scope: string[]
+    token: string
+    tokenType: string
+    tokenCreatedAt?: string
+    user: GraphQLGitHubUser
+  }
   createdAt: string
   updatedAt: string
+  lastLoginAt: string
 }
 
 export interface GitHubPlan {

@@ -7,22 +7,14 @@ import { Reducer } from '../types'
 export interface State {
   appToken: string | null
   error: object | null
-  githubScope: string[] | null
-  githubToken: string | null
-  githubTokenType: string | null
   isLoggingIn: boolean
-  lastLoginAt: string | null
   user: User | null
 }
 
 const initialState: State = {
   appToken: null,
   error: null,
-  githubScope: null,
-  githubToken: null,
-  githubTokenType: null,
   isLoggingIn: false,
-  lastLoginAt: null,
   user: null,
 }
 
@@ -38,12 +30,7 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       return {
         appToken: action.payload.appToken,
         error: null,
-        githubScope: action.payload.githubScope || state.githubScope,
-        githubToken: action.payload.githubToken || state.githubToken,
-        githubTokenType:
-          action.payload.githubTokenType || state.githubTokenType,
         isLoggingIn: true,
-        lastLoginAt: state.lastLoginAt,
         user: state.user,
       }
 
@@ -51,13 +38,12 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       return {
         appToken: action.payload.appToken || state.appToken,
         error: null,
-        githubScope: action.payload.githubScope || state.githubScope,
-        githubToken: action.payload.githubToken || state.githubToken,
-        githubTokenType:
-          action.payload.githubTokenType || state.githubTokenType,
         isLoggingIn: false,
-        lastLoginAt: new Date().toISOString(),
-        user: action.payload.user,
+        user: action.payload.user && {
+          ...action.payload.user,
+          lastLoginAt:
+            action.payload.user.lastLoginAt || new Date().toISOString(),
+        },
       }
 
     case 'LOGIN_FAILURE':

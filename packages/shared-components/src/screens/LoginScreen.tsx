@@ -106,8 +106,9 @@ export function LoginScreen() {
 
     await loginRequest({
       appToken,
-      githubToken,
       githubScope,
+      githubToken,
+      githubTokenType: 'bearer',
     })
   }
 

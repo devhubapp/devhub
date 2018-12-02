@@ -15,10 +15,19 @@ import * as selectors from '../selectors'
 
 function* onRehydrate() {
   const appToken = yield select(selectors.appTokenSelector)
+  const githubScope = yield select(selectors.githubScopeSelector)
   const githubToken = yield select(selectors.githubTokenSelector)
+  const githubTokenType = yield select(selectors.githubTokenTypeSelector)
   if (!(appToken && githubToken)) return
 
-  yield put(actions.loginRequest({ appToken, githubToken }))
+  yield put(
+    actions.loginRequest({
+      appToken,
+      githubScope,
+      githubToken,
+      githubTokenType,
+    }),
+  )
 }
 
 function* onLoginRequest(
@@ -27,14 +36,31 @@ function* onLoginRequest(
   try {
     github.authenticate(action.payload.githubToken || '')
 
+    // TODO: Auto generate these typings
     const response: AxiosResponse<{
       data: {
         login: {
           appToken: string
-          githubScope: [string] | undefined
-          githubToken: string
-          githubTokenType: string | undefined
-          user: User | null
+          user: {
+            _id: User['_id']
+            github: {
+              scope: User['github']['scope']
+              token: User['github']['token']
+              tokenType: User['github']['tokenType']
+              user: {
+                id: User['github']['user']['id']
+                nodeId: User['github']['user']['nodeId']
+                login: User['github']['user']['login']
+                name: User['github']['user']['name']
+                avatarUrl: User['github']['user']['avatarUrl']
+                createdAt: User['github']['user']['createdAt']
+                updatedAt: User['github']['user']['updatedAt']
+              }
+            }
+            createdAt: User['createdAt']
+            updatedAt: User['updatedAt']
+            lastLoginAt: User['lastLoginAt']
+          }
         } | null
       }
       errors?: any[]
@@ -44,22 +70,23 @@ function* onLoginRequest(
         query: `query auth {
           login {
             appToken
-            githubScope
-            githubToken
-            githubTokenType
             user {
               _id
               github {
-                id
-                nodeId
-                login
-                name
-                avatarUrl
-                createdAt
-                updatedAt
+                scope
+                token
+                tokenType
+                user {
+                  id
+                  nodeId
+                  login
+                  name
+                  avatarUrl
+                }
               }
               createdAt
               updatedAt
+              lastLoginAt
             }
           }
         }`,
@@ -82,24 +109,21 @@ function* onLoginRequest(
         data &&
         data.login &&
         data.login.appToken &&
-        data.login.githubToken &&
         data.login.user &&
-        data.login.user._id &&
         data.login.user.github &&
-        data.login.user.github.id
+        data.login.user.github &&
+        data.login.user.github.user &&
+        data.login.user.github.user.id
       )
     ) {
       throw new Error('Invalid response')
     }
 
-    github.authenticate(data.login.githubToken)
+    github.authenticate(data.login.user.github.token)
 
     yield put(
       actions.loginSuccess({
         appToken: data.login.appToken,
-        githubScope: data.login.githubScope || [],
-        githubToken: data.login.githubToken,
-        githubTokenType: data.login.githubTokenType || '',
         user: data.login.user,
       }),
     )
@@ -126,10 +150,18 @@ function* onLoginRequest(
     yield put(
       actions.loginSuccess({
         appToken: action.payload.appToken,
-        githubScope: action.payload.githubScope || [],
-        githubToken: action.payload.githubToken,
-        githubTokenType: action.payload.githubTokenType || '',
-        user: { _id: '', github: user, createdAt: '', updatedAt: '' },
+        user: {
+          _id: '',
+          github: {
+            scope: action.payload.githubScope || [],
+            token: action.payload.githubToken,
+            tokenType: action.payload.githubTokenType || '',
+            user,
+          },
+          lastLoginAt: new Date().toISOString(),
+          createdAt: '',
+          updatedAt: '',
+        },
       }),
     )
   } catch (error) {
@@ -140,7 +172,7 @@ function* onLoginRequest(
 function onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
-  github.authenticate(action.payload.githubToken)
+  github.authenticate(action.payload.user.github.token)
 }
 
 function* onLoginFailure(

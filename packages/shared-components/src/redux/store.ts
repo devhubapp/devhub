@@ -10,7 +10,8 @@ import {
 import storage from 'redux-persist/lib/storage'
 import createSagaMiddleware from 'redux-saga'
 
-import { Column, ColumnSubscription } from 'shared-core/dist/types'
+import { Column, ColumnSubscription, GitHubUser } from 'shared-core/dist/types'
+import { GraphQLGitHubUser } from 'shared-core/dist/types/graphql'
 import { guid } from 'shared-core/dist/utils/helpers/shared'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
@@ -69,6 +70,36 @@ const migrations = {
         return column.id
       })
     }),
+  4: (state: RootState) =>
+    immer(state, draft => {
+      const oldAuth = (draft.auth as any) as {
+        appToken: string | null
+        githubScope: string[] | null
+        githubToken: string | null
+        githubTokenType: string | null
+        isLoggingIn: boolean
+        lastLoginAt: string | null
+        user: GraphQLGitHubUser
+      }
+
+      draft.auth = {
+        appToken: oldAuth.appToken,
+        error: null,
+        isLoggingIn: false,
+        user: oldAuth.user && {
+          _id: '',
+          github: {
+            scope: oldAuth.githubScope || [],
+            token: oldAuth.githubToken || '',
+            tokenType: oldAuth.githubTokenType || '',
+            user: oldAuth.user,
+          },
+          createdAt: '',
+          updatedAt: '',
+          lastLoginAt: oldAuth.lastLoginAt || '',
+        },
+      }
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -77,7 +108,7 @@ export function configureStore(key = 'root') {
     key,
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
-    version: 3,
+    version: 4,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
