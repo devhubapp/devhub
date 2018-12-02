@@ -12,6 +12,7 @@
     "build": "yarn workspace shared-core build && yarn workspace shared-components build && yarn workspace web build",
     "clean": "yarn workspaces run clean",
     "deploy": "yarn clean && yarn build && yarn now",
+    "deploy-www": "pushd packages/server-www; now && now alias; popd;",
     "dev": "yarn workspace shared-core build && yarn workspace shared-components build && concurrently --kill-others \"yarn workspace shared-core build -w\" \"yarn workspace shared-components build -w\" \"yarn workspace web start\" \"yarn workspace mobile start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
