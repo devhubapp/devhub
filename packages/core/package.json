@@ -2,7 +2,7 @@
   "name": "@devhub/core",
   "version": "0.29.0",
   "private": false,
-  "main": "dist",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc -b",
     "clean": "rm -rf dist/*",
