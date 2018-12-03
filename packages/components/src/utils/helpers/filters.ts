@@ -2,8 +2,8 @@ import _ from 'lodash'
 
 import {
   ActivityColumnFilters,
+  EnhancedGitHubNotification,
   GitHubEvent,
-  GitHubNotification,
   NotificationColumnFilters,
 } from '@devhub/core/src/types'
 import { mergeSimilarEvents } from '@devhub/core/src/utils/helpers/github/events'
@@ -70,7 +70,7 @@ export function hasAnyFilter(
 }
 
 export function getFilteredNotifications(
-  notifications: GitHubNotification[],
+  notifications: EnhancedGitHubNotification[],
   filters?: NotificationColumnFilters,
 ) {
   let _notifications = _(notifications)
@@ -115,6 +115,7 @@ export function getFilteredNotifications(
 
   return _notifications
 }
+
 export function getFilteredEvents(
   events: GitHubEvent[],
   filters?: ActivityColumnFilters,

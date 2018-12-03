@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, View } from 'react-native'
 
-import { GitHubNotification, LoadState } from '@devhub/core/src/types'
+import { EnhancedGitHubNotification, LoadState } from '@devhub/core/src/types'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
@@ -14,7 +14,7 @@ import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
-  notifications: GitHubNotification[]
+  notifications: EnhancedGitHubNotification[]
   repoIsKnown?: boolean
   loadState: LoadState
   swipeable?: boolean
@@ -28,11 +28,15 @@ export function NotificationCards(props: NotificationCardsProps) {
   if (!(notifications && notifications.length))
     return <EmptyCards fetchNextPage={fetchNextPage} loadState={loadState} />
 
-  function keyExtractor(notification: GitHubNotification) {
+  function keyExtractor(notification: EnhancedGitHubNotification) {
     return `notification-card-${notification.id}`
   }
 
-  function renderItem({ item: notification }: { item: GitHubNotification }) {
+  function renderItem({
+    item: notification,
+  }: {
+    item: EnhancedGitHubNotification
+  }) {
     if (props.swipeable) {
       return (
         <SwipeableNotificationCard

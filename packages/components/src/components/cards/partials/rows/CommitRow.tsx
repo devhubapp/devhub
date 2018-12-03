@@ -17,8 +17,8 @@ import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
 
 export interface CommitRowProps {
-  authorEmail?: string
-  authorName?: string
+  authorEmail: string
+  authorName: string
   authorUsername?: string
   isRead: boolean
   latestCommentUrl?: string

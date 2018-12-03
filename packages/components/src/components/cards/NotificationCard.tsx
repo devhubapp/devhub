@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import {
-  GitHubNotification,
+  EnhancedGitHubNotification,
   GitHubNotificationReason,
 } from '@devhub/core/src/types'
 import { getOwnerAndRepo } from '@devhub/core/src/utils/helpers/github/shared'
@@ -32,7 +32,7 @@ import { RepositoryRow } from './partials/rows/RepositoryRow'
 
 export interface NotificationCardProps {
   archived?: boolean
-  notification: GitHubNotification
+  notification: EnhancedGitHubNotification
   onlyOneRepository?: boolean
   repoIsKnown?: boolean
 }
@@ -49,16 +49,17 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   if (!notification || archived) return null
 
   const {
-    // comment,
+    comment,
+    id,
     repository: repo,
     subject,
-    // updated_at: updatedAt,
     unread,
+    updated_at: updatedAt,
   } = notification
 
   if (!subject) return null
 
-  const isRead = !unread // TODO
+  const isRead = !unread
   const isPrivate = isNotificationPrivate(notification)
   const title = trimNewLinesAndSpaces(subject.title)
 
@@ -66,10 +67,58 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     notification.repository.full_name || notification.repository.name || ''
   const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(repoFullName)
 
-  const cardIconDetails = getNotificationIconAndColor(
-    notification,
-    // subject, // TODO: Load commit/issue/pullrequest details
-  )
+  const subjectType = subject.type || ''
+
+  const commit =
+    notification.commit ||
+    (subjectType === 'Commit' && {
+      author: { avatar_url: '', login: '', html_url: '' },
+      commit: {
+        author: {
+          name: '',
+          email: '',
+        },
+        message: subject.title,
+        url: subject.url,
+      },
+    }) ||
+    null
+
+  const issue =
+    notification.issue ||
+    (subjectType === 'Issue' && {
+      title: subject.title,
+      url: subject.latest_comment_url || subject.url,
+      user: { avatar_url: '', login: '', html_url: '' },
+    }) ||
+    null
+
+  const pullRequest =
+    notification.pullRequest ||
+    (subjectType === 'PullRequest' && {
+      title: subject.title,
+      url: subject.latest_comment_url || subject.url,
+      user: { avatar_url: '', login: '', html_url: '' },
+    }) ||
+    null
+
+  const release =
+    notification.release ||
+    (subjectType === 'Release' && {
+      author: { avatar_url: '', login: '', html_url: '' },
+      body: '',
+      name: subject.title,
+      tag_name: '',
+      url: subject.latest_comment_url || subject.url,
+    }) ||
+    null
+
+  const isRepoInvitation = subjectType === 'RepositoryInvitation'
+  const isVulnerabilityAlert = subjectType === 'RepositoryVulnerabilityAlert'
+
+  const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
+    pullRequest ||
+    undefined) as any)
   const cardIconName = cardIconDetails.icon
   const cardIconColor = cardIconDetails.color
 
@@ -79,23 +128,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const labelText = labelDetails.label.toLowerCase()
   const labelColor = labelDetails.color
 
-  // const notificationIds = [notification.id]
-
-  // TODO: Load commit/issue/pullrequest details
-  const subjectType = subject.type || ''
-  const commit = (subjectType === 'Commit' && subject) || null
-  const issue = (subjectType === 'Issue' && subject) || null
-  const pullRequest = (subjectType === 'PullRequest' && subject) || null
-  const release = (subjectType === 'Release' && subject) || null
-  const isRepoInvitation = subjectType === 'RepositoryInvitation'
-  const isVulnerabilityAlert = subjectType === 'RepositoryVulnerabilityAlert'
-
   const { icon: pullRequestIconName, color: pullRequestIconColor } = pullRequest
-    ? getPullRequestIconAndColor({}) // TODO: Load pull request details
+    ? getPullRequestIconAndColor(pullRequest as any)
     : { icon: undefined, color: undefined }
 
   const { icon: issueIconName, color: issueIconColor } = issue
-    ? getIssueIconAndColor({}) // TODO: Load issue details
+    ? getIssueIconAndColor(issue as any)
     : { icon: undefined, color: undefined }
 
   const issueOrPullRequestNumber =
@@ -104,12 +142,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       : undefined
 
   return (
-    <View
-      key={`notification-card-${notification.id}-inner`}
-      style={styles.container}
-    >
+    <View key={`notification-card-${id}-inner`} style={styles.container}>
       <NotificationCardHeader
-        key={`notification-card-header-${notification.id}`}
+        key={`notification-card-header-${id}`}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         isPrivate={isPrivate}
@@ -117,7 +152,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         labelColor={labelColor}
         labelText={labelText}
         smallLeftColumn
-        updatedAt={notification.updated_at}
+        updatedAt={updatedAt}
       />
 
       {!!(repoOwnerName && repoName && !onlyOneRepository) && (
@@ -130,14 +165,17 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         />
       )}
 
-      {Boolean(commit) && (
+      {!!commit && (
         <CommitRow
-          key={`notification-commit-row-${commit!.url}`}
+          key={`notification-commit-row-${commit.commit.url}`}
+          authorEmail={commit.commit.author.email}
+          authorName={commit.commit.author.name}
+          authorUsername={commit.author.login}
           isRead={isRead}
-          latestCommentUrl={commit!.latest_comment_url}
-          message={commit!.title}
+          latestCommentUrl={subject.latest_comment_url}
+          message={commit.commit.message}
           smallLeftColumn
-          url={commit!.url}
+          url={commit.commit.url}
         />
       )}
 
@@ -145,16 +183,16 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <IssueOrPullRequestRow
           key={`notification-issue-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
-          avatarURL=""
+          avatarURL={issue.user.avatar_url}
           iconColor={issueIconColor!}
           iconName={issueIconName!}
           isRead={isRead}
           issueOrPullRequestNumber={issueOrPullRequestNumber!}
           smallLeftColumn
           title={issue.title}
-          url={issue.latest_comment_url || issue.url}
-          userLinkURL=""
-          username=""
+          url={issue.url}
+          userLinkURL={issue.user.html_url || ''}
+          username={issue.user.login || ''}
         />
       )}
 
@@ -162,39 +200,39 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <IssueOrPullRequestRow
           key={`notification-pr-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
-          avatarURL=""
+          avatarURL={pullRequest.user.avatar_url}
           iconColor={pullRequestIconColor!}
           iconName={pullRequestIconName!}
           isRead={isRead}
           issueOrPullRequestNumber={issueOrPullRequestNumber!}
           smallLeftColumn
           title={pullRequest.title}
-          url={pullRequest.latest_comment_url || pullRequest.url}
-          userLinkURL=""
-          username=""
+          url={pullRequest.url}
+          userLinkURL={pullRequest.user.html_url || ''}
+          username={pullRequest.user.login || ''}
         />
       )}
 
       {!!release && (
         <ReleaseRow
           key={`notification-release-row-${repo.id}`}
-          avatarURL=""
-          body={release.title}
+          avatarURL={release.author.avatar_url}
+          body={release.body}
           isRead={isRead}
-          name={(release as any).name || ''}
+          name={release.name || ''}
           ownerName={repoOwnerName!}
           repositoryName={repoName!}
           smallLeftColumn
-          tagName={(release as any).tag_name || ''}
-          url={release.latest_comment_url || release.url}
-          userLinkURL=""
-          username=""
+          tagName={release.tag_name || ''}
+          url={release.url}
+          userLinkURL={release.author.html_url || ''}
+          username={release.author.login || ''}
         />
       )}
 
       {!(commit || issue || pullRequest || release) && !!title && (
         <CommentRow
-          key={`notification-${notification.id}-comment-row`}
+          key={`notification-${id}-comment-row`}
           avatarURL=""
           body={title}
           isRead={isRead}
@@ -211,17 +249,19 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         />
       )}
 
-      {/* {!!comment && (
-              <CommentRow
-                key={`notification-comment-row-${comment.id}`}
-                addBottomAnchor
-                body={comment.body}
-                smallLeftColumn
-                url={comment.html_url}
-                userLinkURL={comment.user.html_url}
-                username={comment.user.display_login || comment.user.login}
-              />
-            )} */}
+      {!!comment && (
+        <CommentRow
+          key={`notification-comment-row-${comment.id}`}
+          addBottomAnchor
+          avatarURL={comment.user.avatar_url}
+          body={comment.body}
+          isRead={isRead}
+          smallLeftColumn
+          url={comment.html_url}
+          userLinkURL={comment.user.html_url || ''}
+          username={comment.user.login}
+        />
+      )}
     </View>
   )
 })

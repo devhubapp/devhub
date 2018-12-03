@@ -43,6 +43,9 @@
     "typescript": "^3.2.1",
     "webpack-bundle-analyzer": "^3.0.3"
   },
+  "resolutions": {
+    "scheduler": "0.12.0-alpha.3"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",

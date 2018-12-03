@@ -10156,7 +10156,7 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react@16.7.0-alpha.2, react@^16.7.0-alpha.2:
+react@^16.7.0-alpha.2:
   version "16.7.0-alpha.2"
   resolved "https://registry.npmjs.org/react/-/react-16.7.0-alpha.2.tgz#924f2ae843a46ea82d104a8def7a599fbf2c78ce"
   integrity sha512-Xh1CC8KkqIojhC+LFXd21jxlVtzoVYdGnQAi/I2+dxbmos9ghbx5TQf9/nDxc4WxaFfUQJkya0w1k6rMeyIaxQ==

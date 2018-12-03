@@ -21,6 +21,9 @@
     "react-native-google-analytics-bridge": "^6.1.2",
     "react-native-screens": "^1.0.0-alpha.16"
   },
+  "resolutions": {
+    "scheduler": "0.12.0-alpha.3"
+  },
   "jest": {
     "preset": "react-native",
     "setupFiles": [

@@ -82,7 +82,7 @@ export interface GitHubComment {
   url: string // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 }
 
-export interface GitHubCommit {
+export interface GitHubPushedCommit {
   sha: string
   message: string
   author: {
@@ -92,6 +92,52 @@ export interface GitHubCommit {
   distinct: boolean // Whether this commit is distinct from any that have been pushed before.
   forced: boolean
   url: string
+}
+
+export interface GitHubCommit {
+  sha: string
+  node_id: string
+  commit: {
+    author: {
+      name: string
+      email: string
+      date: string
+    }
+    committer: {
+      name: string
+      email: string
+      date: string
+    }
+    message: string
+    tree: {
+      sha: string
+      url: string
+    }
+    url: string
+    comment_count: number
+    verification: {
+      verified: boolean
+      reason: string
+      signature: any
+      payload: any
+    }
+  }
+  url: string
+  html_url: string
+  comments_url: string
+  author: GitHubUser
+  committer: GitHubUser
+  parents: Array<{
+    sha: string
+    url: string
+    html_url: string
+  }>
+  stats: {
+    total: number
+    additions: number
+    deletions: number
+  }
+  files: any[]
 }
 
 export interface GitHubLabel {
@@ -485,7 +531,7 @@ export interface GitHubPushEvent {
     before: string // The SHA of the most recent commit on ref before the push.
     size: number // The number of commits in the push.
     distinct_size: number // The number of distinct commits in the push.
-    commits: GitHubCommit[]
+    commits: GitHubPushedCommit[]
   }
   public?: boolean
   forced?: boolean
@@ -794,4 +840,12 @@ export interface GitHubNotification {
   unread?: boolean
   updated_at: string
   url: string
+}
+
+export interface EnhancedGitHubNotification extends GitHubNotification {
+  comment?: GitHubComment
+  commit?: GitHubCommit
+  issue?: GitHubIssue
+  pullRequest?: GitHubPullRequest
+  release?: GitHubRelease
 }

@@ -177,4 +177,9 @@ export type ModalPayload =
       params?: undefined
     }
 
-export type LoadState = 'loading' | 'loading_first' | 'loading_more' | 'loaded'
+export type LoadState =
+  | 'loaded'
+  | 'loading'
+  | 'loading_first'
+  | 'loading_more'
+  | 'not_loaded'

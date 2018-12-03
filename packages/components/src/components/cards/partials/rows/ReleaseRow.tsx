@@ -127,6 +127,7 @@ export function ReleaseRow(props: ReleaseRowProps) {
               smallLeftColumn
                 ? getCardStylesForTheme(theme).leftColumn__small
                 : getCardStylesForTheme(theme).leftColumn__big,
+              getCardStylesForTheme(theme).leftColumnAlignTop,
             ]}
           >
             <Avatar

@@ -1,10 +1,16 @@
 import _ from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   Column,
   ColumnSubscription,
+  EnhancedGitHubNotification,
+  GitHubComment,
+  GitHubCommit,
+  GitHubIssue,
   GitHubNotification,
+  GitHubPullRequest,
+  GitHubRelease,
   LoadState,
   NotificationSubscription,
   Omit,
@@ -20,7 +26,7 @@ import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
-import { getNotifications } from '../libs/github'
+import { getNotifications, octokit } from '../libs/github'
 import { getFilteredNotifications } from '../utils/helpers/filters'
 
 export type NotificationCardsContainerProps = Omit<
@@ -35,10 +41,19 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column, subscriptions } = props
 
+    const enhancedCommitShasRef = useRef(new Map())
+    const enhancedCommentIdsRef = useRef(new Map())
+    const enhancedIssueOrPullRequestIdsRef = useRef(new Map())
+    const enhancedReleaseIdsRef = useRef(new Map())
+
+    const [hasFetched, setHasFetched] = useState(false)
     const [canFetchMore, setCanFetchMore] = useState(false)
     const [notifications, setNotifications] = useState<GitHubNotification[]>([])
     const [filteredNotifications, setFilteredNotifications] = useState<
       GitHubNotification[]
+    >([])
+    const [enhancedNotifications, setEnhancedNotifications] = useState<
+      EnhancedGitHubNotification[]
     >([])
     const [olderNotificationDate, setOlderNotificationDate] = useState<
       string | undefined
@@ -57,11 +72,260 @@ export const NotificationCardsContainer = React.memo(
 
     useEffect(
       () => {
+        const promises = notifications.map(async notification => {
+          if (!(notification.repository && notification.repository.full_name))
+            return
+
+          const { owner, repo } = getOwnerAndRepo(
+            notification.repository.full_name,
+          )
+          if (!(owner && repo)) return
+
+          const commentId = getCommentIdFromUrl(
+            notification.subject.latest_comment_url,
+          )
+
+          const enhance = {} as {
+            comment?: GitHubComment
+            commit?: GitHubCommit
+            issue?: GitHubIssue
+            pullRequest?: GitHubPullRequest
+            release?: GitHubRelease
+          }
+
+          switch (notification.subject.type) {
+            case 'Commit': {
+              const sha = getCommitShaFromUrl(notification.subject.url)
+              if (!sha) break
+
+              if (!enhancedCommitShasRef.current.has(sha)) {
+                try {
+                  enhancedCommitShasRef.current.set(sha, null)
+
+                  const { data } = await octokit.repos.getCommit({
+                    owner,
+                    repo,
+                    sha,
+                  })
+
+                  if (!(data && data.sha)) throw new Error('Invalid response')
+
+                  enhance.commit = (data as any) as GitHubCommit
+                  enhancedCommitShasRef.current.set(sha, true)
+                } catch (error) {
+                  console.error(
+                    'Failed to load Commit notification details',
+                    error,
+                  )
+                  enhancedCommitShasRef.current.set(sha, false)
+                  break
+                }
+              }
+
+              if (commentId && !enhancedCommentIdsRef.current.has(commentId)) {
+                try {
+                  const { data } = await octokit.repos.getCommitComment({
+                    owner,
+                    repo,
+                    comment_id: commentId,
+                  })
+
+                  if (!(data && data.id)) throw new Error('Invalid response')
+
+                  enhance.comment = (data as any) as GitHubComment
+                  enhancedCommentIdsRef.current.set(commentId, true)
+                } catch (error) {
+                  console.error(
+                    'Failed to load Commit Comment notification details',
+                    error,
+                  )
+                  enhancedCommentIdsRef.current.set(commentId, false)
+                }
+              }
+
+              break
+            }
+
+            case 'Issue':
+            case 'PullRequest': {
+              const issueOrPullRequestNumber = getIssueOrPullRequestNumberFromUrl(
+                notification.subject.url,
+              )
+              if (!issueOrPullRequestNumber) break
+
+              const fakeId = `${owner}/${repo}#${issueOrPullRequestNumber}`
+
+              if (!enhancedIssueOrPullRequestIdsRef.current.has(fakeId)) {
+                try {
+                  enhancedIssueOrPullRequestIdsRef.current.set(fakeId, null)
+
+                  if (notification.subject.type === 'PullRequest') {
+                    const { data } = await octokit.pulls.get({
+                      owner,
+                      repo,
+                      number: issueOrPullRequestNumber,
+                    })
+
+                    if (!(data && data.id)) throw new Error('Invalid response')
+
+                    enhance.pullRequest = (data as any) as GitHubPullRequest
+                  } else {
+                    const { data } = await octokit.issues.get({
+                      owner,
+                      repo,
+                      number: issueOrPullRequestNumber,
+                    })
+
+                    if (!(data && data.id)) throw new Error('Invalid response')
+
+                    enhance.issue = (data as any) as GitHubIssue
+                  }
+                  enhancedIssueOrPullRequestIdsRef.current.set(fakeId, true)
+                } catch (error) {
+                  console.error(
+                    `Failed to load ${
+                      notification.subject.type
+                    } notification details`,
+                    error,
+                  )
+                  enhancedIssueOrPullRequestIdsRef.current.set(fakeId, false)
+                  break
+                }
+              }
+
+              if (commentId && !enhancedCommentIdsRef.current.has(commentId)) {
+                try {
+                  enhancedCommentIdsRef.current.set(commentId, null)
+
+                  if (
+                    notification.subject.latest_comment_url.includes('pulls')
+                  ) {
+                    const { data } = await octokit.pulls.getComment({
+                      owner,
+                      repo,
+                      comment_id: commentId,
+                    })
+
+                    if (!(data && data.id)) throw new Error('Invalid response')
+
+                    enhance.comment = (data as any) as GitHubComment
+                  } else {
+                    const { data } = await octokit.issues.getComment({
+                      owner,
+                      repo,
+                      comment_id: commentId,
+                    })
+
+                    if (!(data && data.id)) throw new Error('Invalid response')
+
+                    enhance.comment = (data as any) as GitHubComment
+                  }
+
+                  enhancedCommentIdsRef.current.set(commentId, true)
+                } catch (error) {
+                  console.error(
+                    'Failed to load Comment notification details',
+                    error,
+                  )
+                  enhancedCommentIdsRef.current.set(commentId, false)
+                }
+              }
+
+              break
+            }
+
+            case 'Release': {
+              const releaseId = getReleaseIdFromUrl(notification.subject.url)
+              if (!releaseId) break
+
+              if (!enhancedReleaseIdsRef.current.has(releaseId)) {
+                try {
+                  enhancedReleaseIdsRef.current.set(releaseId, null)
+
+                  const { data } = await octokit.repos.getRelease({
+                    owner,
+                    repo,
+                    release_id: parseInt(releaseId, 10),
+                  })
+
+                  if (!(data && data.id)) throw new Error('Invalid response')
+
+                  enhance.release = (data as any) as GitHubRelease
+
+                  enhancedReleaseIdsRef.current.set(releaseId, true)
+                } catch (error) {
+                  console.error(
+                    'Failed to load Release notification details',
+                    error,
+                  )
+                  enhancedReleaseIdsRef.current.set(releaseId, false)
+                  break
+                }
+              }
+
+              break
+            }
+
+            default:
+              break
+          }
+
+          if (!Object.keys(enhance).length) return
+
+          return { notificationId: notification.id, enhance }
+        })
+
+        Promise.all(promises).then(enhancements => {
+          const enhancementMap: any = enhancements.reduce(
+            (map, payload) =>
+              payload
+                ? {
+                    ...map,
+                    [payload.notificationId]: payload.enhance,
+                  }
+                : map,
+            {},
+          )
+
+          setEnhancedNotifications(currentEnhancedNotifications =>
+            notifications.map(cen => {
+              const enhanced = currentEnhancedNotifications.find(
+                n => n.id === cen.id,
+              )
+
+              const enhance = enhancementMap[cen.id]
+              if (!enhance) {
+                if (!enhanced) return cen
+                return { ...enhanced, ...cen }
+              }
+
+              return {
+                ...enhanced,
+                ...cen,
+                ...enhance,
+              } as EnhancedGitHubNotification
+            }),
+          )
+        })
+      },
+      [notifications],
+    )
+
+    useEffect(
+      () => {
+        if (!hasFetched) return
+        setLoadState('loaded')
+      },
+      [enhancedNotifications],
+    )
+
+    useEffect(
+      () => {
         setFilteredNotifications(
-          getFilteredNotifications(notifications, column.filters),
+          getFilteredNotifications(enhancedNotifications, column.filters),
         )
       },
-      [notifications, column.filters],
+      [enhancedNotifications, column.filters],
     )
 
     useEffect(
@@ -90,7 +354,9 @@ export const NotificationCardsContainer = React.memo(
         setLoadState(prevLoadState =>
           page > 1
             ? 'loading_more'
-            : !prevLoadState || prevLoadState === 'loading_first'
+            : !prevLoadState ||
+              prevLoadState === 'not_loaded' ||
+              prevLoadState === 'loading_first'
             ? 'loading_first'
             : 'loading',
         )
@@ -99,6 +365,8 @@ export const NotificationCardsContainer = React.memo(
         const response = await getNotifications(params, {
           subscriptionId,
         })
+
+        if (!hasFetched) setHasFetched(true)
 
         if (Array.isArray(response.data) && response.data.length) {
           const olderDateFromThisResponse = getOlderNotificationDate(
@@ -109,7 +377,7 @@ export const NotificationCardsContainer = React.memo(
             _.uniqBy(_.concat(response.data, prevNotifications), 'id'),
           )
           setPagination(prevPagination => ({ ...prevPagination, page }))
-          setLoadState('loaded')
+          // setLoadState('loaded') // moved to the enchancement effect
 
           if (
             !olderNotificationDate ||

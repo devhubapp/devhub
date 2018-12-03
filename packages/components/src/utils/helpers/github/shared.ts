@@ -1,8 +1,9 @@
 import {
   GitHubIcon,
+  GitHubIssue,
   GitHubNotification,
   GitHubPullRequest,
-} from '@devhub/core/dist/types'
+} from '@devhub/core/src/types'
 import {
   getCommitIconAndColor,
   isPullRequest,
@@ -55,7 +56,7 @@ export function getIssueIconAndColor(issue: {
 
 export function getNotificationIconAndColor(
   notification: GitHubNotification,
-  // payload: GitHubCommit | GitHubIssue | GitHubPullRequest,
+  payload?: GitHubIssue | GitHubPullRequest | undefined,
 ): { icon: GitHubIcon; color?: string } {
   const { subject } = notification
   const { type } = subject
@@ -64,9 +65,9 @@ export function getNotificationIconAndColor(
     case 'Commit':
       return getCommitIconAndColor()
     case 'Issue':
-      return getIssueIconAndColor({})
+      return getIssueIconAndColor(payload as GitHubIssue)
     case 'PullRequest':
-      return getPullRequestIconAndColor({})
+      return getPullRequestIconAndColor(payload as GitHubPullRequest)
     case 'Release':
       return { icon: 'tag' }
     case 'RepositoryInvitation':

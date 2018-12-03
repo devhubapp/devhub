@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native'
 
 import {
   EnhancedGitHubEvent,
-  GitHubCommit,
   GitHubCommitCommentEvent,
   GitHubCreateEvent,
   GitHubEvent,
@@ -13,6 +12,7 @@ import {
   GitHubMemberEvent,
   GitHubPage,
   GitHubPullRequestEvent,
+  GitHubPushedCommit,
   GitHubPushEvent,
   GitHubReleaseEvent,
   GitHubRepo,
@@ -75,7 +75,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
   let { ref: branchName } = payload as GitHubPushEvent['payload']
 
   const isRead = false // TODO
-  const commits: GitHubCommit[] = (_commits || []).filter(Boolean)
+  const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
   const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(Boolean)
   const repos: GitHubRepo[] = _allRepos.filter(
     (r, index) => !!(r && !(repoIsKnown && index === 0)),
@@ -111,7 +111,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const commitIds = commits
     .filter(Boolean)
-    .map((item: GitHubCommit) => item.sha)
+    .map((item: GitHubPushedCommit) => item.sha)
   const pageIds = pages.filter(Boolean).map((item: GitHubPage) => item.sha)
   const repoIds = repos.filter(Boolean).map((item: GitHubRepo) => item.id)
   const userIds = users.filter(Boolean).map((item: GitHubUser) => item.id)

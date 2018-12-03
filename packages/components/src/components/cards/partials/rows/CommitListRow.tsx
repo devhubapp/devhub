@@ -3,16 +3,16 @@ import React from 'react'
 import { CommitRow } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
 
-import { GitHubCommit } from '@devhub/core/src/types'
+import { GitHubPushedCommit } from '@devhub/core/src/types'
 
 export interface CommitListRowProps {
   isRead: boolean
   maxHeight?: number
-  commits: GitHubCommit[]
+  commits: GitHubPushedCommit[]
 }
 
 export function CommitListRow(props: CommitListRowProps) {
-  const renderItem: RenderItem<GitHubCommit> = ({
+  const renderItem: RenderItem<GitHubPushedCommit> = ({
     showMoreItemsIndicator,
     item: commit,
   }) => {
