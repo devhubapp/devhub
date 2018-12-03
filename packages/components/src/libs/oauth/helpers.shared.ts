@@ -4,6 +4,8 @@ export interface OAuthResponseData {
   app_token?: string
   code: string
   github_token?: string
+  github_token_created_at?: string
+  github_token_type?: string
   scope: string[]
 }
 

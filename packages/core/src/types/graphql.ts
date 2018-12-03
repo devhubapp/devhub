@@ -31,12 +31,12 @@ export interface GraphQLGitHubUser {
 }
 
 export interface User {
-  _id: string
+  _id: any
   github: {
     scope: string[]
     token: string
     tokenType: string
-    tokenCreatedAt?: string
+    tokenCreatedAt: string
     user: GraphQLGitHubUser
   }
   createdAt: string

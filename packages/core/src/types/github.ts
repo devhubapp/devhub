@@ -25,8 +25,8 @@ export interface GitHubUser {
   login: string
   name: string
   avatar_url: string
-  gravatar_id: string
-  type: 'User'
+  gravatar_id?: string
+  type?: 'User'
   site_admin: boolean
   company?: string
   blog?: string
@@ -140,8 +140,11 @@ export interface GitHubIssue {
 
 export interface GitHubOrg {
   id: number | string
+  node_id?: string
   login: string
   avatar_url: string
+  gravatar_id?: string
+  type?: 'Organization'
   url: string // https://api.github.com/orgs/DefinitelyTyped
 }
 

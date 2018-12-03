@@ -17,6 +17,9 @@ export const githubTokenSelector = (state: RootState) =>
 export const githubTokenTypeSelector = (state: RootState) =>
   s(state).user && s(state).user!.github.tokenType
 
+export const githubTokenCreatedAtSelector = (state: RootState) =>
+  s(state).user && s(state).user!.github.tokenCreatedAt
+
 export const currentUserSelector = (state: RootState) =>
   appTokenSelector(state) && githubTokenSelector(state)
     ? s(state).user

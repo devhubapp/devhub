@@ -5,7 +5,8 @@ export function loginRequest(payload: {
   appToken: string
   githubScope: string[] | undefined
   githubToken: string
-  githubTokenType: 'bearer'
+  githubTokenCreatedAt: string
+  githubTokenType: 'bearer' | string
 }) {
   return createAction('LOGIN_REQUEST', payload)
 }

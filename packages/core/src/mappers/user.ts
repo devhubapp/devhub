@@ -1,21 +1,19 @@
-import { GitHubUser } from '@devhub/core/src/types'
-import { User } from '@devhub/core/src/types/graphql'
+import { GitHubUser, User } from '../types'
 
-// TODO: Put this on a shared repository with the server
 export function fromGitHubUser(
-  user: GitHubUser,
+  user: GitHubUser | undefined,
 ): User['github']['user'] | null {
   if (!(user && user.id)) return null
 
   return {
-    id: `${user.id}`,
+    id: `${user.id || ''}`,
     nodeId: user.node_id || '',
     login: user.login || '',
     name: user.name || '',
     avatarUrl: user.avatar_url || '',
     gravatarId: user.gravatar_id || '',
     type: user.type || 'User',
-    isSiteAdmin: user.site_admin,
+    isSiteAdmin: user.site_admin === true,
     company: user.company,
     blog: user.blog,
     location: user.location,

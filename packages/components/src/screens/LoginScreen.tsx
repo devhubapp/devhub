@@ -91,10 +91,15 @@ export function LoginScreen() {
 
     let appToken
     let githubToken
+    let githubTokenCreatedAt
+    let githubTokenType
     try {
       const params = await executeOAuth(githubScope)
       appToken = params && params.app_token
       githubToken = params && params.github_token
+      githubTokenCreatedAt =
+        (params && params.github_token_created_at) || new Date().toISOString()
+      githubTokenType = (params && params.github_token_type) || 'bearer'
 
       if (!(appToken && githubToken)) throw new Error('No token received.')
     } catch (e) {
@@ -108,7 +113,8 @@ export function LoginScreen() {
       appToken,
       githubScope,
       githubToken,
-      githubTokenType: 'bearer',
+      githubTokenType,
+      githubTokenCreatedAt,
     })
   }
 

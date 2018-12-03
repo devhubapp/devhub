@@ -77,6 +77,7 @@ const migrations = {
         githubScope: string[] | null
         githubToken: string | null
         githubTokenType: string | null
+        githubTokenCreatedAt: string | null
         isLoggingIn: boolean
         lastLoginAt: string | null
         user: GraphQLGitHubUser
@@ -92,6 +93,7 @@ const migrations = {
             scope: oldAuth.githubScope || [],
             token: oldAuth.githubToken || '',
             tokenType: oldAuth.githubTokenType || '',
+            tokenCreatedAt: oldAuth.githubTokenCreatedAt || '',
             user: oldAuth.user,
           },
           createdAt: '',

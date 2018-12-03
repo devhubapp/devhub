@@ -2,10 +2,12 @@ import axios, { AxiosResponse } from 'axios'
 import { REHYDRATE } from 'redux-persist'
 import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
-import { GitHubUser } from '@devhub/core/src/types'
-import { User } from '@devhub/core/src/types/graphql'
-import { GRAPHQL_ENDPOINT } from '@devhub/core/src/utils/constants'
-import { fromGitHubUser } from '../../api/mappers/user'
+import {
+  fromGitHubUser,
+  GitHubUser,
+  GRAPHQL_ENDPOINT,
+  User,
+} from '@devhub/core'
 import * as github from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -16,6 +18,7 @@ function* onRehydrate() {
   const githubScope = yield select(selectors.githubScopeSelector)
   const githubToken = yield select(selectors.githubTokenSelector)
   const githubTokenType = yield select(selectors.githubTokenTypeSelector)
+  const githubTokenCreatedAt = yield select(selectors.githubTokenTypeSelector)
   if (!(appToken && githubToken)) return
 
   yield put(
@@ -24,6 +27,7 @@ function* onRehydrate() {
       githubScope,
       githubToken,
       githubTokenType,
+      githubTokenCreatedAt,
     }),
   )
 }
@@ -45,6 +49,7 @@ function* onLoginRequest(
               scope: User['github']['scope']
               token: User['github']['token']
               tokenType: User['github']['tokenType']
+              tokenCreatedAt: User['github']['tokenCreatedAt']
               user: {
                 id: User['github']['user']['id']
                 nodeId: User['github']['user']['nodeId']
@@ -74,6 +79,7 @@ function* onLoginRequest(
                 scope
                 token
                 tokenType
+                tokenCreatedAt
                 user {
                   id
                   nodeId
@@ -141,9 +147,9 @@ function* onLoginRequest(
 
   try {
     const response = yield call(github.octokit.users.getAuthenticated, {})
-    const githubUser = response.data as GitHubUser
-    const user = fromGitHubUser(githubUser)
-    if (!(user && user.id && user.login)) throw new Error('Invalid response')
+    const githubUser = fromGitHubUser(response.data as GitHubUser)
+    if (!(githubUser && githubUser.id && githubUser.login))
+      throw new Error('Invalid response')
 
     yield put(
       actions.loginSuccess({
@@ -154,7 +160,8 @@ function* onLoginRequest(
             scope: action.payload.githubScope || [],
             token: action.payload.githubToken,
             tokenType: action.payload.githubTokenType || '',
-            user,
+            tokenCreatedAt: '',
+            user: githubUser,
           },
           lastLoginAt: new Date().toISOString(),
           createdAt: '',
