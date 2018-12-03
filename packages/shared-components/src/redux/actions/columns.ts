@@ -5,7 +5,7 @@ import {
   GitHubNotificationReason,
   NotificationColumnFilters,
 } from 'shared-core/dist/types'
-import { createAction } from 'shared-core/dist/utils/helpers/redux'
+import { createAction } from '../helpers'
 
 export function replaceColumns(payload: ColumnAndSubscriptions[]) {
   return createAction('REPLACE_COLUMNS', payload)

@@ -110,7 +110,7 @@ export function getColumnHeaderDetails(
           }
         }
         default: {
-          if (__DEV__)
+          if (process.env.NODE_ENV === 'development')
             console.error(
               `Invalid activity type: '${(column as any).subtype}'.`,
             )
@@ -134,7 +134,7 @@ export function getColumnHeaderDetails(
     }
 
     default: {
-      if (__DEV__)
+      if (process.env.NODE_ENV === 'development')
         console.error(`Invalid column type: '${(column as any).type}'.`)
       return {
         icon: 'mark-github',

@@ -1,4 +1,4 @@
-import { Action, ActionWithError } from '../../types'
+import { Action, ActionWithError } from '../types/base'
 
 export function createAction<T extends string>(type: T): Action<T, void>
 export function createAction<T extends string, P>(

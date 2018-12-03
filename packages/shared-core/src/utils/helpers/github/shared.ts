@@ -11,19 +11,29 @@ import { getSteppedSize } from '../shared'
 export function getUserAvatarByAvatarURL(
   avatarURL: string,
   { size }: { size?: number } = {},
+  getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
   if (!avatarURL) return ''
 
   const _avatarURL = avatarURL.indexOf('?') > 0 ? avatarURL : `${avatarURL}?`
-  return `${_avatarURL}&s=${getSteppedSize(size)}`
+  return `${_avatarURL}&s=${getSteppedSize(
+    size,
+    undefined,
+    getPixelSizeForLayoutSizeFn,
+  )}`
 }
 
 export function getUserAvatarByUsername(
   username: string,
   { size }: { size?: number } = {},
+  getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
   return username
-    ? `https://github.com/${username}.png?size=${getSteppedSize(size)}`
+    ? `https://github.com/${username}.png?size=${getSteppedSize(
+        size,
+        undefined,
+        getPixelSizeForLayoutSizeFn,
+      )}`
     : ''
 }
 
@@ -40,10 +50,20 @@ export function tryGetUsernameFromGitHubEmail(email?: string) {
 export function getUserAvatarByEmail(
   email: string,
   { size, ...otherOptions }: { size?: number } = {},
+  getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
-  const steppedSize = getSteppedSize(size)
+  const steppedSize = getSteppedSize(
+    size,
+    undefined,
+    getPixelSizeForLayoutSizeFn,
+  )
   const username = tryGetUsernameFromGitHubEmail(email)
-  if (username) return getUserAvatarByUsername(username, { size: steppedSize })
+  if (username)
+    return getUserAvatarByUsername(
+      username,
+      { size: steppedSize },
+      getPixelSizeForLayoutSizeFn,
+    )
 
   const options = { size: `${steppedSize || ''}`, d: 'retro', ...otherOptions }
   return `https:${gravatar.url(email, options)}`.replace('??', '?')

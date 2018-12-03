@@ -1,6 +1,6 @@
 import { Reducer as ReduxReducer } from 'redux'
 
-import { ExtractActionFromActionCreator } from 'shared-core/dist/types'
+import { ExtractActionFromActionCreator } from './base'
 
 import * as actions from '../actions'
 import { rootReducer } from '../reducers'

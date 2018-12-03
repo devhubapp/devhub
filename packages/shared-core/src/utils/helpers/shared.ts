@@ -63,13 +63,19 @@ export function getDateSmallText(date: MomentInput) {
 }
 
 // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
-export function getSteppedSize(size?: number, sizeSteps = 50) {
+export function getSteppedSize(
+  size?: number,
+  sizeSteps = 50,
+  getPixelSizeForLayoutSizeFn?: (size: number) => number,
+) {
   const steppedSize =
     typeof size === 'number'
       ? sizeSteps * Math.max(1, Math.ceil(size / sizeSteps))
       : sizeSteps
 
-  return PixelRatio.getPixelSizeForLayoutSize(steppedSize)
+  return getPixelSizeForLayoutSizeFn
+    ? getPixelSizeForLayoutSizeFn(steppedSize)
+    : steppedSize
 }
 
 export function randomBetween(minNumber: number, maxNumber: number) {

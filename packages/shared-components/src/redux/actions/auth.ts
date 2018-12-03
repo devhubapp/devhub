@@ -1,8 +1,5 @@
 import { User } from 'shared-core/dist/types/graphql'
-import {
-  createAction,
-  createErrorAction,
-} from 'shared-core/dist/utils/helpers/redux'
+import { createAction, createErrorAction } from '../helpers'
 
 export function loginRequest(payload: {
   appToken: string

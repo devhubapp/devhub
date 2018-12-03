@@ -1,15 +1,13 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
 import { delay } from 'redux-saga'
-import {
-  ColumnAndSubscriptions,
-  ExtractActionFromActionCreator,
-} from 'shared-core/dist/types'
+import { ColumnAndSubscriptions } from 'shared-core/dist/types'
 import { createSubscriptionObjectWithId } from 'shared-core/dist/utils/helpers/github/shared'
 import { guid } from 'shared-core/dist/utils/helpers/shared'
 import { emitter } from '../../setup'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
+import { ExtractActionFromActionCreator } from '../types/base'
 
 function getDefaultColumns(username: string): ColumnAndSubscriptions[] {
   const notificationSubscription = createSubscriptionObjectWithId({

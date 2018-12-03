@@ -1,5 +1,10 @@
 import React from 'react'
-import { StyleProp, TouchableOpacityProps, View } from 'react-native'
+import {
+  PixelRatio,
+  StyleProp,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 
 import {
   getUserAvatarByAvatarURL,
@@ -55,13 +60,27 @@ export function Avatar(props: AvatarProps) {
   const username = isBot ? _username!.replace('[bot]', '') : _username
 
   const avatarURL = _avatarURL
-    ? getUserAvatarByAvatarURL(_avatarURL, { size: finalSize })
+    ? getUserAvatarByAvatarURL(
+        _avatarURL,
+        { size: finalSize },
+        PixelRatio.getPixelSizeForLayoutSize,
+      )
     : ''
 
   const uri =
     avatarURL ||
-    (username && getUserAvatarByUsername(username, { size: finalSize })) ||
-    (email && getUserAvatarByEmail(email, { size: finalSize }))
+    (username &&
+      getUserAvatarByUsername(
+        username,
+        { size: finalSize },
+        PixelRatio.getPixelSizeForLayoutSize,
+      )) ||
+    (email &&
+      getUserAvatarByEmail(
+        email,
+        { size: finalSize },
+        PixelRatio.getPixelSizeForLayoutSize,
+      ))
 
   if (!uri) return null
 

@@ -1,5 +1,5 @@
 import { ModalPayload } from 'shared-core/dist/types'
-import { createAction } from 'shared-core/dist/utils/helpers/redux'
+import { createAction } from '../helpers'
 
 export function pushModal(payload: ModalPayload) {
   return createAction('PUSH_MODAL', payload)

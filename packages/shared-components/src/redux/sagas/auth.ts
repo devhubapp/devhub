@@ -2,16 +2,14 @@ import axios, { AxiosResponse } from 'axios'
 import { REHYDRATE } from 'redux-persist'
 import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
-import {
-  ExtractActionFromActionCreator,
-  GitHubUser,
-} from 'shared-core/dist/types'
+import { GitHubUser } from 'shared-core/dist/types'
 import { User } from 'shared-core/dist/types/graphql'
 import { GRAPHQL_ENDPOINT } from 'shared-core/dist/utils/constants'
 import { fromGitHubUser } from '../../api/mappers/user'
 import * as github from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
+import { ExtractActionFromActionCreator } from '../types/base'
 
 function* onRehydrate() {
   const appToken = yield select(selectors.appTokenSelector)
