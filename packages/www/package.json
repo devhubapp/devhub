@@ -1,6 +1,7 @@
 {
   "name": "@devhub/www",
   "version": "1.0.0",
+  "private": false,
   "license": "MIT",
   "scripts": {},
   "dependencies": {},

@@ -1,6 +1,7 @@
 {
   "name": "@devhub/mobile",
   "version": "0.29.0",
+  "private": false,
   "scripts": {
     "clean": "cd .",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
