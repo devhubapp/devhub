@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import { trimNewLinesAndSpaces } from '@devhub/core/dist/utils/helpers/shared'
+import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { Platform } from '../../../../libs/platform'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'

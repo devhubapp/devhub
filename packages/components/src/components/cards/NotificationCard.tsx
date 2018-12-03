@@ -4,17 +4,17 @@ import { StyleSheet, View } from 'react-native'
 import {
   GitHubNotification,
   GitHubNotificationReason,
-} from '@devhub/core/dist/types'
-import { getOwnerAndRepo } from '@devhub/core/dist/utils/helpers/github/shared'
+} from '@devhub/core/src/types'
+import { getOwnerAndRepo } from '@devhub/core/src/utils/helpers/github/shared'
 import {
   getGitHubURLForRepoInvitation,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
-} from '@devhub/core/dist/utils/helpers/github/url'
+} from '@devhub/core/src/utils/helpers/github/url'
 import {
   isNotificationPrivate,
   trimNewLinesAndSpaces,
-} from '@devhub/core/dist/utils/helpers/shared'
+} from '@devhub/core/src/utils/helpers/shared'
 import { contentPadding } from '../../styles/variables'
 import { getNotificationReasonMetadata } from '../../utils/helpers/github/notifications'
 import {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 
-import { LoadState } from '@devhub/core/dist/types'
+import { LoadState } from '@devhub/core/src/types'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'

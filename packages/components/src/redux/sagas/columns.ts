@@ -1,8 +1,8 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
-import { ColumnAndSubscriptions } from '@devhub/core/dist/types'
-import { createSubscriptionObjectWithId } from '@devhub/core/dist/utils/helpers/github/shared'
-import { guid } from '@devhub/core/dist/utils/helpers/shared'
+import { ColumnAndSubscriptions } from '@devhub/core/src/types'
+import { createSubscriptionObjectWithId } from '@devhub/core/src/utils/helpers/github/shared'
+import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { delay } from 'redux-saga'
 import { emitter } from '../../setup'
 import * as actions from '../actions'

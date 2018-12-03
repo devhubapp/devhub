@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { StyleSheet } from 'react-native'
 
-import { Theme } from '@devhub/core/dist/types/themes'
+import { Theme } from '@devhub/core/src/types/themes'
 import { contentPadding, smallTextSize } from '../../../../styles/variables'
 
 export const getCardRowStylesForTheme = _.memoize((theme: Theme) => {

@@ -4,14 +4,16 @@
     "allowJs": false,
     "composite": true,
     "declaration": true,
-    "jsx": "react",
-    "noEmit": false,
+    "jsx": "preserve",
+    "noEmit": true,
     "outDir": "dist",
     "rootDir": "src",
     "typeRoots": [
       "../../@types",
       "../../node_modules/@types"
-    ]
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true
   },
   "include": [
     "src/index.tsx"
@@ -20,6 +22,11 @@
     "src/setupProxy.js"
   ],
   "references": [
-    { "path": "../components" }
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../components"
+    }
   ]
 }

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
-import { Column } from '@devhub/core/dist/types'
+import { Column } from '@devhub/core/src/types'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 

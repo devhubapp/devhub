@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { GitHubURLOptions } from '@devhub/core/dist/utils/helpers/github/url'
+import { GitHubURLOptions } from '@devhub/core/src/utils/helpers/github/url'
 import { Browser } from '../../../../libs/browser'
 import { fixURL } from '../../../../utils/helpers/github/url'
 

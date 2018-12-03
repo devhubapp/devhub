@@ -4,7 +4,7 @@ import { Dimensions, ScaledSize } from 'react-native'
 import {
   MAX_COLUMN_WIDTH,
   MIN_COLUMN_WIDTH,
-} from '@devhub/core/dist/utils/constants'
+} from '@devhub/core/src/utils/constants'
 import { sidebarSize } from '../../styles/variables'
 import { APP_LAYOUT_BREAKPOINTS, getLayoutConsumerState } from './LayoutContext'
 

@@ -1,5 +1,5 @@
-import { GitHubNotificationReason } from '@devhub/core/dist/types'
-import { capitalize } from '@devhub/core/dist/utils/helpers/shared'
+import { GitHubNotificationReason } from '@devhub/core/src/types'
+import { capitalize } from '@devhub/core/src/utils/helpers/shared'
 import * as colors from '../../../styles/colors'
 
 export const notificationReasons: GitHubNotificationReason[] = [

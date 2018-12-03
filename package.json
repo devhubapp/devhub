@@ -9,11 +9,13 @@
     "nohoist": []
   },
   "scripts": {
-    "build": "yarn workspace @devhub/core build && yarn workspace @devhub/components build && yarn workspace @devhub/web build",
     "clean": "yarn workspaces run clean",
-    "deploy": "yarn clean && yarn build && yarn now",
-    "deploy-www": "pushd packages/www; now && now alias; popd;",
-    "dev": "yarn workspace @devhub/core build && yarn workspace @devhub/components build && concurrently --kill-others \"yarn workspace @devhub/core build -w\" \"yarn workspace @devhub/components build -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\"",
+    "compile": "yarn workspace @devhub/components build",
+    "deploy:web": "yarn workspace @devhub/web build && yarn now",
+    "deploy:www": "pushd packages/www; now && now alias; popd;",
+    "dev": "concurrently \"yarn compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\"",
+    "dev:web": "concurrently \"yarn compile -w\" \"yarn workspace @devhub/web start\"",
+    "dev:mobile": "concurrently \"yarn compile -w\" \"yarn workspace @devhub/mobile start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "now": "npx now",

@@ -1,11 +1,11 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { ThemePair } from '@devhub/core/dist/types'
+import { ThemePair } from '@devhub/core/src/types'
 import {
   DEFAULT_DARK_THEME,
   DEFAULT_LIGHT_THEME,
-} from '@devhub/core/dist/utils/constants'
+} from '@devhub/core/src/utils/constants'
 import { loadTheme } from '../../styles/utils'
 import { Reducer } from '../types'
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import { getGitHubURLForRelease } from '@devhub/core/dist/utils/helpers/github/url'
-import { trimNewLinesAndSpaces } from '@devhub/core/dist/utils/helpers/shared'
+import { getGitHubURLForRelease } from '@devhub/core/src/utils/helpers/github/url'
+import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'

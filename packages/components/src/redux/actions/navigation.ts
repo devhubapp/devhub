@@ -1,4 +1,4 @@
-import { ModalPayload } from '@devhub/core/dist/types'
+import { ModalPayload } from '@devhub/core/src/types'
 import { createAction } from '../helpers'
 
 export function pushModal(payload: ModalPayload) {

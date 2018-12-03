@@ -1,7 +1,7 @@
 import { delay } from 'redux-saga'
 import { all, fork, put } from 'redux-saga/effects'
 
-import { isNight } from '@devhub/core/dist/utils/helpers/shared'
+import { isNight } from '@devhub/core/src/utils/helpers/shared'
 import * as actions from '../actions'
 
 let wasNight

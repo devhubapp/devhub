@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { REHYDRATE } from 'redux-persist'
 
-import { User } from '@devhub/core/dist/types/graphql'
+import { User } from '@devhub/core/src/types/graphql'
 import { Reducer } from '../types'
 
 export interface State {

@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { Omit } from '@devhub/core/dist/types'
+import { Omit } from '@devhub/core/src/types'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { Separator } from '../common/Separator'

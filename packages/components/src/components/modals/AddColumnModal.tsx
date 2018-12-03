@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
-import { AddColumnDetailsPayload } from '@devhub/core/dist/types'
+import { AddColumnDetailsPayload } from '@devhub/core/src/types'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'

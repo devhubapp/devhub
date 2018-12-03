@@ -1,13 +1,13 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import { tryGetUsernameFromGitHubEmail } from '@devhub/core/dist/utils/helpers/github/shared'
+import { tryGetUsernameFromGitHubEmail } from '@devhub/core/src/utils/helpers/github/shared'
 import {
   getCommentIdFromUrl,
   getGitHubSearchURL,
   getGitHubURLForUser,
-} from '@devhub/core/dist/utils/helpers/github/url'
-import { trimNewLinesAndSpaces } from '@devhub/core/dist/utils/helpers/shared'
+} from '@devhub/core/src/utils/helpers/github/url'
+import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'

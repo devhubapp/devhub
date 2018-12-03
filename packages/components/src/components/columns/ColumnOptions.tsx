@@ -2,11 +2,11 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 
-import { Column } from '@devhub/core/dist/types'
+import { Column } from '@devhub/core/src/types'
 import {
   eventTypes,
   getEventTypeMetadata,
-} from '@devhub/core/dist/utils/helpers/github/events'
+} from '@devhub/core/src/utils/helpers/github/events'
 import { useDimensions } from '../../hooks/use-dimensions'
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'

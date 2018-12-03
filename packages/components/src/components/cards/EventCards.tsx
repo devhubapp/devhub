@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, View } from 'react-native'
 
-import { EnhancedGitHubEvent, LoadState } from '@devhub/core/dist/types'
+import { EnhancedGitHubEvent, LoadState } from '@devhub/core/src/types'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'

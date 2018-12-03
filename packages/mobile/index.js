@@ -6,7 +6,7 @@ import {
   GoogleAnalyticsTracker,
 } from 'react-native-google-analytics-bridge'
 
-import { App } from '@devhub/components/dist/components/App'
+import { App } from '@devhub/components/src/components/App'
 
 export const tracker = new GoogleAnalyticsTracker('UA-52350759-2')
 GoogleAnalyticsSettings.setDispatchInterval(10)

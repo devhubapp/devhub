@@ -18,14 +18,14 @@ import {
   GitHubRepo,
   GitHubUser,
   MultipleStarEvent,
-} from '@devhub/core/dist/types'
-import { getEventText } from '@devhub/core/dist/utils/helpers/github/events'
-import { getOwnerAndRepo } from '@devhub/core/dist/utils/helpers/github/shared'
+} from '@devhub/core/src/types'
+import { getEventText } from '@devhub/core/src/utils/helpers/github/events'
+import { getOwnerAndRepo } from '@devhub/core/src/utils/helpers/github/shared'
 import {
   getGitHubAvatarURLFromPayload,
   getRepoFullNameFromObject,
-} from '@devhub/core/dist/utils/helpers/github/url'
-import { isEventPrivate } from '@devhub/core/dist/utils/helpers/shared'
+} from '@devhub/core/src/utils/helpers/github/url'
+import { isEventPrivate } from '@devhub/core/src/utils/helpers/shared'
 import { contentPadding } from '../../styles/variables'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import {

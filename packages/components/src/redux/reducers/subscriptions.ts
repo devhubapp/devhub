@@ -1,7 +1,7 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { ColumnSubscription } from '@devhub/core/dist/types'
+import { ColumnSubscription } from '@devhub/core/src/types'
 import { Reducer } from '../types'
 
 export interface State {

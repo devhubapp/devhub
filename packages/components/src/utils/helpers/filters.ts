@@ -5,12 +5,12 @@ import {
   GitHubEvent,
   GitHubNotification,
   NotificationColumnFilters,
-} from '@devhub/core/dist/types'
-import { mergeSimilarEvents } from '@devhub/core/dist/utils/helpers/github/events'
+} from '@devhub/core/src/types'
+import { mergeSimilarEvents } from '@devhub/core/src/utils/helpers/github/events'
 import {
   isEventPrivate,
   isNotificationPrivate,
-} from '@devhub/core/dist/utils/helpers/shared'
+} from '@devhub/core/src/utils/helpers/shared'
 
 export const filterRecordHasAnyForcedValue = (
   filtersRecord: Record<string, boolean | undefined> | undefined,

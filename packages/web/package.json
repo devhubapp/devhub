@@ -11,7 +11,7 @@
     "now-build": "build",
     "predeploy": "npm run build",
     "prepare": "cd .. && yarn patch-package",
-    "serve": "serve build",
+    "serve": "serve dist",
     "start": "react-app-rewired start",
     "test": "react-app-rewired test"
   },

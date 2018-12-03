@@ -3,7 +3,7 @@ import React from 'react'
 import { RenderItem, RowList } from './RowList'
 import { UserRow } from './UserRow'
 
-import { GitHubUser } from '@devhub/core/dist/types'
+import { GitHubUser } from '@devhub/core/src/types'
 
 export interface UserListRowProps {
   isRead: boolean

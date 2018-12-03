@@ -9,7 +9,7 @@
     "start": "node ../../node_modules/react-native/local-cli/cli.js start",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
-    "tsc": "tsc",
+    "tsc": "tsc -b",
     "xcode": "open ios/devhub.xcodeproj"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-import { Theme, ThemeName } from '@devhub/core/dist/types/themes'
+import { Theme, ThemeName } from '@devhub/core/src/types/themes'
 import { theme as darkBlack } from './themes/dark-black'
 import { theme as darkBlue } from './themes/dark-blue'
 import { theme as darkGray } from './themes/dark-gray'

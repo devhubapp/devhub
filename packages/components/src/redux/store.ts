@@ -10,9 +10,9 @@ import {
 import storage from 'redux-persist/lib/storage'
 import createSagaMiddleware from 'redux-saga'
 
-import { Column, ColumnSubscription, GitHubUser } from '@devhub/core/dist/types'
-import { GraphQLGitHubUser } from '@devhub/core/dist/types/graphql'
-import { guid } from '@devhub/core/dist/utils/helpers/shared'
+import { Column, ColumnSubscription, GitHubUser } from '@devhub/core/src/types'
+import { GraphQLGitHubUser } from '@devhub/core/src/types/graphql'
+import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
 import * as selectors from './selectors'

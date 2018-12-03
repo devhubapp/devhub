@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import { Theme } from '@devhub/core/dist/types'
+import { Theme } from '@devhub/core/src/types'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { defaultThemePair } from '../../redux/selectors/config'

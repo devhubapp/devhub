@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import moment, { MomentInput } from 'moment'
-import { PixelRatio } from 'react-native'
 import { EnhancedGitHubEvent, GitHubNotification } from '../../types'
 
 export function capitalize(str: string) {

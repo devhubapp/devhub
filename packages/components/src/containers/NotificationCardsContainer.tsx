@@ -8,14 +8,14 @@ import {
   LoadState,
   NotificationSubscription,
   Omit,
-} from '@devhub/core/dist/types'
-import { getOwnerAndRepo } from '@devhub/core/dist/utils/helpers/github/shared'
+} from '@devhub/core/src/types'
+import { getOwnerAndRepo } from '@devhub/core/src/utils/helpers/github/shared'
 import {
   getCommentIdFromUrl,
   getCommitShaFromUrl,
   getIssueOrPullRequestNumberFromUrl,
   getReleaseIdFromUrl,
-} from '@devhub/core/dist/utils/helpers/github/url'
+} from '@devhub/core/src/utils/helpers/github/url'
 import {
   NotificationCards,
   NotificationCardsProps,

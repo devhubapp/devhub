@@ -3,8 +3,8 @@ import {
   GitHubIcon,
   GitHubIssue,
   GitHubPullRequest,
-} from '@devhub/core/dist/types'
-import { isPullRequest } from '@devhub/core/dist/utils/helpers/github/shared'
+} from '@devhub/core/src/types'
+import { isPullRequest } from '@devhub/core/src/utils/helpers/github/shared'
 import * as colors from '../../../styles/colors'
 import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared'
 

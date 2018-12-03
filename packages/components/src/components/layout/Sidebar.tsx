@@ -8,8 +8,8 @@ import {
   View,
 } from 'react-native'
 
-import { ModalPayload } from '@devhub/core/dist/types'
-import { getColumnHeaderDetails } from '@devhub/core/dist/utils/helpers/github/events'
+import { ModalPayload } from '@devhub/core/src/types'
+import { getColumnHeaderDetails } from '@devhub/core/src/utils/helpers/github/events'
 import { useColumn } from '../../hooks/use-column'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'

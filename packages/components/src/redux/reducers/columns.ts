@@ -5,8 +5,8 @@ import {
   ActivityColumn,
   Column,
   NotificationColumn,
-} from '@devhub/core/dist/types'
-import { guid } from '@devhub/core/dist/utils/helpers/shared'
+} from '@devhub/core/src/types'
+import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { Reducer } from '../types'
 
 export interface State {

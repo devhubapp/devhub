@@ -1,6 +1,6 @@
 import Octokit from '@octokit/rest'
 
-import { GitHubActivityType } from '@devhub/core/dist/types'
+import { GitHubActivityType } from '@devhub/core/src/types'
 
 export const octokit = new Octokit()
 

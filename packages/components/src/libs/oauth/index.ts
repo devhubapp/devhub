@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import { API_BASE_URL } from '@devhub/core/dist/utils/constants'
+import { API_BASE_URL } from '@devhub/core/src/utils/constants'
 import { Browser } from '../browser'
 import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
 

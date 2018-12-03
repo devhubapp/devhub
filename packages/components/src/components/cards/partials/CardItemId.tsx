@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp, StyleSheet, Text, ViewStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core/dist/types'
+import { GitHubIcon } from '@devhub/core/src/types'
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { radius } from '../../../styles/variables'
 import { fixURL } from '../../../utils/helpers/github/url'

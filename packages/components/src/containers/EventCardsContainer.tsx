@@ -9,7 +9,7 @@ import {
   GitHubEvent,
   LoadState,
   Omit,
-} from '@devhub/core/dist/types'
+} from '@devhub/core/src/types'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { getActivity } from '../libs/github'
 import { getFilteredEvents } from '../utils/helpers/filters'

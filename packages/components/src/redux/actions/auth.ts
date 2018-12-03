@@ -1,4 +1,4 @@
-import { User } from '@devhub/core/dist/types/graphql'
+import { User } from '@devhub/core/src/types/graphql'
 import { createAction, createErrorAction } from '../helpers'
 
 export function loginRequest(payload: {

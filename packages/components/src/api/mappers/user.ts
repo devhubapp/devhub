@@ -1,5 +1,5 @@
-import { GitHubUser } from '@devhub/core/dist/types'
-import { User } from '@devhub/core/dist/types/graphql'
+import { GitHubUser } from '@devhub/core/src/types'
+import { User } from '@devhub/core/src/types/graphql'
 
 // TODO: Put this on a shared repository with the server
 export function fromGitHubUser(

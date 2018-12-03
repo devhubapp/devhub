@@ -10,7 +10,7 @@ import {
   getUserAvatarByAvatarURL,
   getUserAvatarByEmail,
   getUserAvatarByUsername,
-} from '@devhub/core/dist/utils/helpers/github/shared'
+} from '@devhub/core/src/utils/helpers/github/shared'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
 import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'

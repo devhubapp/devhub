@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import { trimNewLinesAndSpaces } from '@devhub/core/dist/utils/helpers/shared'
+import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Link } from '../../../common/Link'

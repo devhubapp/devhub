@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { getColumnHeaderDetails } from '@devhub/core/dist/utils/helpers/github/events'
+import { getColumnHeaderDetails } from '@devhub/core/src/utils/helpers/github/events'
 import {
   EventCardsContainer,
   EventCardsContainerProps,

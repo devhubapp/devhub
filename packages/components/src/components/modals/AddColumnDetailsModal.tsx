@@ -8,12 +8,12 @@ import {
   AddColumnDetailsPayload,
   ColumnParamField,
   NotificationColumn,
-} from '@devhub/core/dist/types'
+} from '@devhub/core/src/types'
 import * as actions from '../../redux/actions'
 import { ModalColumn } from '../columns/ModalColumn'
 
-import { createSubscriptionObjectWithId } from '@devhub/core/dist/utils/helpers/github/shared'
-import { guid } from '@devhub/core/dist/utils/helpers/shared'
+import { createSubscriptionObjectWithId } from '@devhub/core/src/utils/helpers/github/shared'
+import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'

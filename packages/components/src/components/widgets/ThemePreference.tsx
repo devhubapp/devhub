@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-import { Theme } from '@devhub/core/dist/types'
+import { Theme } from '@devhub/core/src/types'
 import { useTheme } from '../../components/context/ThemeContext'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'

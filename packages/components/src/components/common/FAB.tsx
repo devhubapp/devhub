@@ -7,7 +7,7 @@ import {
   TouchableOpacityProps,
 } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core/dist/types'
+import { GitHubIcon } from '@devhub/core/src/types'
 import { Octicons as Icon } from '../../libs/vector-icons'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
