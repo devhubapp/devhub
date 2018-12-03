@@ -7,12 +7,12 @@
 .vscode
 @types
 node_modules
+packages/components/dist
+packages/components/node_modules
+packages/components/package.json
+packages/components/src
+packages/core
 packages/mobile
-packages/shared-components/dist
-packages/shared-components/node_modules
-packages/shared-components/package.json
-packages/shared-components/src
-packages/shared-core
 packages/web/build
 packages/web/dist/**.map
 packages/web/node_modules

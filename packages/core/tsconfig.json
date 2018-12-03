@@ -4,22 +4,13 @@
     "allowJs": false,
     "composite": true,
     "declaration": true,
-    "jsx": "react",
     "noEmit": false,
-    "outDir": "dist",
+    "outDir": "dist/",
     "rootDir": "src",
     "typeRoots": [
       "../../@types",
       "../../node_modules/@types"
     ]
   },
-  "include": [
-    "src/index.tsx"
-  ],
-  "exclude": [
-    "src/setupProxy.js"
-  ],
-  "references": [
-    { "path": "../components" }
-  ]
+  "include": ["src/"]
 }

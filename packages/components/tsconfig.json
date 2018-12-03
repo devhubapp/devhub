@@ -13,13 +13,8 @@
       "../../node_modules/@types"
     ]
   },
-  "include": [
-    "src/index.tsx"
-  ],
-  "exclude": [
-    "src/setupProxy.js"
-  ],
+  "include": ["src/"],
   "references": [
-    { "path": "../components" }
+    { "path": "../core" }
   ]
 }

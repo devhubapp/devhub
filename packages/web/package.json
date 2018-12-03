@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@devhub/web",
   "version": "0.29.0",
   "private": true,
   "scripts": {
@@ -17,14 +17,14 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "@devhub/components": "0.29.0",
     "react": "16.7.0-alpha.2",
     "react-app-polyfill": "^0.1.3",
     "react-art": "16.7.0-alpha.2",
     "react-dom": "16.7.0-alpha.2",
     "react-native-web": "^0.9.8",
     "react-scripts": "2.1.1",
-    "resize-observer-polyfill": "^1.5.0",
-    "shared-components": "0.29.0"
+    "resize-observer-polyfill": "^1.5.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",
