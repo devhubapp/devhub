@@ -35,6 +35,8 @@ module.exports = function override(config, env) {
   config.plugins = config.plugins.map(plugin => {
     if (plugin.constructor.name !== 'ForkTsCheckerWebpackPlugin') return plugin
 
+    // This is an attempty to show ts errors of the other workspace packages,
+    // but did not work
     return new ForkTsCheckerWebpackPlugin({
       typescript: resolve.sync('typescript', {
         basedir: resolveApp('node_modules'),

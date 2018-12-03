@@ -15,7 +15,7 @@
   "dependencies": {
     "@devhub/components": "0.29.0",
     "metro-react-native-babel-preset": "^0.50.0",
-    "react": "16.7.0-alpha.2",
+    "react": "^16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
     "react-native-google-analytics-bridge": "^6.1.2",
     "react-native-screens": "^1.0.0-alpha.16"
