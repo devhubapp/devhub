@@ -1,5 +1,11 @@
 import React from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import { LoadState } from '@devhub/core/src/types'
 import { contentPadding } from '../../styles/variables'
@@ -33,14 +39,64 @@ const clearMessage = getRandomClearMessage()
 const emoji = getRandomEmoji()
 
 export interface EmptyCardsProps {
+  errorMessage?: string
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   loadState: LoadState
+  refresh: (() => void | Promise<void>) | undefined
 }
 
 export function EmptyCards(props: EmptyCardsProps) {
   const theme = useTheme()
 
-  const { fetchNextPage, loadState } = props
+  const { errorMessage, fetchNextPage, loadState, refresh } = props
+
+  const hasError = errorMessage || loadState === 'error'
+
+  const renderContent = () => {
+    if (loadState === 'loading_first') {
+      return <ActivityIndicator color={theme.foregroundColor} />
+    }
+
+    const containerStyle: ViewStyle = { width: '100%', padding: contentPadding }
+    const textStyle: TextStyle = {
+      lineHeight: 20,
+      fontSize: 14,
+      color: theme.foregroundColorMuted50,
+      textAlign: 'center',
+    }
+
+    if (hasError) {
+      return (
+        <View style={containerStyle}>
+          <Text style={textStyle}>
+            {`⚠️\nSomething went wrong`}
+            {!!errorMessage && (
+              <Text style={{ fontSize: 13 }}>{`\nError: ${errorMessage}`}</Text>
+            )}
+          </Text>
+
+          {!!refresh && (
+            <View style={{ padding: contentPadding }}>
+              <Button
+                children="Try again"
+                disabled={loadState !== 'error'}
+                loading={loadState === 'loading'}
+                onPress={() => refresh()}
+              />
+            </View>
+          )}
+        </View>
+      )
+    }
+
+    return (
+      <View style={containerStyle}>
+        <Text style={textStyle}>
+          {clearMessage} {emoji}
+        </Text>
+      </View>
+    )
+  }
 
   return (
     <TransparentTextOverlay
@@ -58,17 +114,11 @@ export function EmptyCards(props: EmptyCardsProps) {
             padding: contentPadding,
           }}
         >
-          {loadState === 'loading_first' ? (
-            <ActivityIndicator color={theme.foregroundColor} />
-          ) : (
-            <Text style={{ color: theme.foregroundColorMuted50 }}>
-              {clearMessage} {emoji}
-            </Text>
-          )}
+          {renderContent()}
         </View>
 
         <View style={{ minHeight: 40 + 2 * contentPadding }}>
-          {!!fetchNextPage && loadState !== 'loading_first' && (
+          {!!fetchNextPage && !hasError && loadState !== 'loading_first' && (
             <View style={{ padding: contentPadding }}>
               <Button
                 children="Load more"

@@ -16,7 +16,7 @@ import { getFilteredEvents } from '../utils/helpers/filters'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
-  'events' | 'fetchNextPage' | 'loadState'
+  'errorMessage' | 'events' | 'fetchNextPage' | 'loadState' | 'refresh'
 > & {
   column: Column
   subscriptions: ColumnSubscription[]
@@ -37,6 +37,11 @@ export const EventCardsContainer = React.memo(
     )
     const [loadState, setLoadState] = useState<LoadState>('loading_first')
     const [pagination, setPagination] = useState({ page: 1, perPage: 10 })
+
+    const [error, setError] = useState<{
+      [key: string]: any
+      message: string
+    } | null>(null)
 
     useEffect(() => {
       fetchData()
@@ -135,9 +140,11 @@ export const EventCardsContainer = React.memo(
           setPagination(prevPagination => ({ ...prevPagination, page }))
           setCanFetchMore(false)
         }
+        setError(null)
       } catch (error) {
         console.error('Failed to load GitHub activity', error)
-        setLoadState('loaded')
+        setLoadState('error')
+        setError(error)
       }
     }
 
@@ -150,9 +157,11 @@ export const EventCardsContainer = React.memo(
       <EventCards
         {...props}
         key={`event-cards-${column.id}`}
+        errorMessage={(error && error.message) || ''}
         events={filteredEvents}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         loadState={loadState}
+        refresh={() => fetchData()}
       />
     )
   },

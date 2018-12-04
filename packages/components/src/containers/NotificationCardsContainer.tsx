@@ -23,7 +23,7 @@ import { getFilteredNotifications } from '../utils/helpers/filters'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
-  'notifications' | 'fetchNextPage' | 'loadState'
+  'errorMessage' | 'notifications' | 'fetchNextPage' | 'loadState' | 'refresh'
 > & {
   column: Column
   subscriptions: ColumnSubscription[]
@@ -48,6 +48,11 @@ export const NotificationCardsContainer = React.memo(
     const [loadState, setLoadState] = useState<LoadState>('loading_first')
     const [pagination, setPagination] = useState({ page: 1, perPage: 10 })
     const githubToken = useReduxState(selectors.githubTokenSelector)!
+
+    const [error, setError] = useState<{
+      [key: string]: any
+      message: string
+    } | null>(null)
 
     useEffect(() => {
       fetchData()
@@ -169,9 +174,11 @@ export const NotificationCardsContainer = React.memo(
           setPagination(prevPagination => ({ ...prevPagination, page }))
           setCanFetchMore(false)
         }
+        setError(null)
       } catch (error) {
         console.error('Failed to load GitHub notifications', error)
-        setLoadState('loaded')
+        setLoadState('error')
+        setError(error)
       }
     }
 
@@ -184,9 +191,11 @@ export const NotificationCardsContainer = React.memo(
       <NotificationCards
         {...props}
         key={`notification-cards-${column.id}`}
-        notifications={filteredNotifications}
+        errorMessage={(error && error.message) || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         loadState={loadState}
+        notifications={filteredNotifications}
+        refresh={() => fetchData()}
       />
     )
   },

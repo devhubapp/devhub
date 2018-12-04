@@ -7,26 +7,41 @@ import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { useTheme } from '../context/ThemeContext'
-import { EmptyCards } from './EmptyCards'
+import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
+  errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
-  notifications: EnhancedGitHubNotification[]
-  repoIsKnown?: boolean
   loadState: LoadState
+  notifications: EnhancedGitHubNotification[]
+  refresh: EmptyCardsProps['refresh']
+  repoIsKnown?: boolean
   swipeable?: boolean
 }
 
 export function NotificationCards(props: NotificationCardsProps) {
   const theme = useTheme()
 
-  const { fetchNextPage, loadState, notifications } = props
+  const {
+    errorMessage,
+    fetchNextPage,
+    loadState,
+    notifications,
+    refresh,
+  } = props
 
   if (!(notifications && notifications.length))
-    return <EmptyCards fetchNextPage={fetchNextPage} loadState={loadState} />
+    return (
+      <EmptyCards
+        errorMessage={errorMessage}
+        fetchNextPage={fetchNextPage}
+        loadState={loadState}
+        refresh={refresh}
+      />
+    )
 
   function keyExtractor(notification: EnhancedGitHubNotification) {
     return `notification-card-${notification.id}`
@@ -64,7 +79,7 @@ export function NotificationCards(props: NotificationCardsProps) {
         <CardItemSeparator />
         <View style={{ padding: contentPadding }}>
           <Button
-            children="Load more"
+            children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
             disabled={loadState !== 'loaded'}
             loading={loadState === 'loading_more'}
             onPress={() => fetchNextPage()}

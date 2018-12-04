@@ -178,6 +178,7 @@ export type ModalPayload =
     }
 
 export type LoadState =
+  | 'error'
   | 'loaded'
   | 'loading'
   | 'loading_first'
