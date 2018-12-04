@@ -96,7 +96,7 @@ export async function getActivity<T extends GitHubActivityType>(
     const response = await (() => {
       switch (type) {
         case 'ORG_PUBLIC_EVENTS':
-          return octokit.activity.listEventsForOrg(params)
+          return octokit.activity.listPublicEventsForOrg(params)
         case 'PUBLIC_EVENTS':
           return octokit.activity.listPublicEvents(params)
         case 'REPO_EVENTS':
