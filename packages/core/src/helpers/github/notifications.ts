@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 import {
   EnhancedGitHubNotification,
   getCommentIdFromUrl,
@@ -11,7 +11,10 @@ const payloadUrlCache = new Map()
 
 export async function fetchNotificationsEnhancements(
   notifications: GitHubNotification[],
-  { githubToken }: { githubToken: string },
+  {
+    cancelToken,
+    githubToken,
+  }: { cancelToken: CancelToken | undefined; githubToken: string },
 ): Promise<Record<string, NotificationEnhancement>> {
   const promises = notifications.map(async notification => {
     if (!(notification.repository && notification.repository.full_name)) return
@@ -37,6 +40,7 @@ export async function fetchNotificationsEnhancements(
 
         const { data } = await axios.get(
           `${notification.subject.url}?access_token=${githubToken}`,
+          { cancelToken },
         )
         if (
           !(
@@ -67,6 +71,7 @@ export async function fetchNotificationsEnhancements(
           `${
             notification.subject.latest_comment_url
           }?access_token=${githubToken}`,
+          { cancelToken },
         )
         if (!(data && data.id)) throw new Error('Invalid response')
 
