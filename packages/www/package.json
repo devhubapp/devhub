@@ -3,7 +3,16 @@
   "version": "1.0.0",
   "private": false,
   "license": "MIT",
-  "scripts": {},
+  "main": "src/index.js",
+  "scripts": {
+    "build": "cd .",
+    "clean": "cd .",
+    "format": "prettier --write '{.,src/**}/*.js'",
+    "lint": "eslint src",
+    "prepare": "cd .. && yarn patch-package"
+  },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^5.9.0"
+  }
 }

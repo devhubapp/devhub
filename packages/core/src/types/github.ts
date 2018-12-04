@@ -27,7 +27,7 @@ export interface GitHubUser {
   avatar_url: string
   gravatar_id?: string
   type?: 'User'
-  site_admin: boolean
+  site_admin?: boolean
   company?: string
   blog?: string
   location?: string
