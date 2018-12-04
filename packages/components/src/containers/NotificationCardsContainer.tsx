@@ -1,6 +1,5 @@
-import axios, { CancelToken } from 'axios'
 import _ from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Column,
@@ -17,7 +16,7 @@ import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
-import { getNotifications } from '../libs/github'
+import { getNotifications, octokit } from '../libs/github'
 import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { getFilteredNotifications } from '../utils/helpers/filters'
@@ -49,40 +48,22 @@ export const NotificationCardsContainer = React.memo(
     const [loadState, setLoadState] = useState<LoadState>('loading_first')
     const [pagination, setPagination] = useState({ page: 1, perPage: 10 })
     const githubToken = useReduxState(selectors.githubTokenSelector)!
-    const fetchDataCancelTokenRef = useRef(axios.CancelToken.source())
-    const fetchNextPageCancelTokenRef = useRef(axios.CancelToken.source())
 
     useEffect(() => {
-      fetchDataCancelTokenRef.current = axios.CancelToken.source()
-      fetchData({ cancelToken: fetchDataCancelTokenRef.current.token })
-
-      return () => {
-        fetchDataCancelTokenRef.current.cancel()
-        if (fetchNextPageCancelTokenRef.current)
-          fetchNextPageCancelTokenRef.current.cancel()
-      }
+      fetchData()
     }, [])
 
     useEffect(() => {
-      fetchDataCancelTokenRef.current = axios.CancelToken.source()
-
-      const timer = setInterval(() => {
-        fetchData({ cancelToken: fetchDataCancelTokenRef.current.token })
-      }, 1000 * 60)
-
-      return () => {
-        clearInterval(timer)
-        fetchDataCancelTokenRef.current.cancel()
-      }
+      const timer = setInterval(fetchData, 1000 * 60)
+      return () => clearInterval(timer)
     })
 
     useEffect(
       () => {
-        const cancelTokenSource = axios.CancelToken.source()
         ;(async () => {
           const enhancementMap = await fetchNotificationsEnhancements(
             notifications,
-            { cancelToken: cancelTokenSource.token, githubToken },
+            { githubToken },
           )
 
           setEnhancedNotifications(currentEnhancedNotifications =>
@@ -93,10 +74,8 @@ export const NotificationCardsContainer = React.memo(
             ),
           )
         })()
-
-        return () => cancelTokenSource.cancel()
       },
-      [notifications, githubToken],
+      [notifications],
     )
 
     useEffect(
@@ -127,14 +106,9 @@ export const NotificationCardsContainer = React.memo(
     )
 
     const fetchData = async ({
-      cancelToken,
       page: _page,
       perPage: _perPage,
-    }: {
-      cancelToken: CancelToken
-      page?: number
-      perPage?: number
-    }) => {
+    }: { page?: number; perPage?: number } = {}) => {
       const {
         id: subscriptionId,
         params: _params,
@@ -156,8 +130,6 @@ export const NotificationCardsContainer = React.memo(
 
         const params = { ..._params, page, per_page: perPage }
         const response = await getNotifications(params, {
-          cancelToken,
-          githubToken,
           subscriptionId,
         })
 
@@ -205,13 +177,7 @@ export const NotificationCardsContainer = React.memo(
 
     const fetchNextPage = ({ perPage }: { perPage?: number } = {}) => {
       const nextPage = (pagination.page || 1) + 1
-
-      fetchNextPageCancelTokenRef.current = axios.CancelToken.source()
-      fetchData({
-        cancelToken: fetchNextPageCancelTokenRef.current.token,
-        page: nextPage,
-        perPage,
-      })
+      fetchData({ page: nextPage, perPage })
     }
 
     return (

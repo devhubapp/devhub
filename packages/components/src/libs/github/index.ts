@@ -1,8 +1,6 @@
 import Octokit from '@octokit/rest'
-import axios, { CancelToken } from 'axios'
 
 import { GitHubActivityType } from '@devhub/core/src/types'
-import qs from 'qs'
 
 export const octokit = new Octokit()
 
@@ -31,17 +29,7 @@ const cache: Record<
 
 export async function getNotifications(
   _params: Octokit.ActivityListNotificationsParams & { headers?: any } = {},
-  {
-    cancelToken,
-    githubToken,
-    subscriptionId = '',
-    useCache = false,
-  }: {
-    cancelToken?: CancelToken
-    githubToken: string
-    subscriptionId: string
-    useCache?: boolean
-  },
+  { subscriptionId = '', useCache = false } = {},
 ) {
   const cacheKey = JSON.stringify(['NOTIFICATIONS', _params, subscriptionId])
   const cacheValue = cache[cacheKey]
@@ -67,14 +55,7 @@ export async function getNotifications(
   if (!useCache) (params as any).timestamp = Date.now()
 
   try {
-    const querystring = qs.stringify({
-      access_token: githubToken,
-      ...params,
-    })
-    const response = await axios.get(
-      `https://api.github.com/notifications?${querystring}`,
-      { cancelToken },
-    )
+    const response = await octokit.activity.listNotifications(params)
 
     cache[cacheKey] = {
       data: response.data,
