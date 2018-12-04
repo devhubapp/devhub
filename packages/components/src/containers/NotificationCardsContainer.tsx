@@ -34,7 +34,7 @@ export const NotificationCardsContainer = React.memo(
     const { column, subscriptions } = props
 
     const hasFetchedRef = useRef(false)
-    const [canFetchMore, setCanFetchMore] = useState(false)
+    const [_canFetchMore, setCanFetchMore] = useState(false)
     const [notifications, setNotifications] = useState<GitHubNotification[]>([])
     const [filteredNotifications, setFilteredNotifications] = useState<
       GitHubNotification[]
@@ -98,16 +98,6 @@ export const NotificationCardsContainer = React.memo(
         )
       },
       [enhancedNotifications, column.filters],
-    )
-
-    useEffect(
-      () => {
-        const clearedAt = column.filters && column.filters.clearedAt
-        const olderDate = getOlderNotificationDate(notifications)
-
-        setCanFetchMore(!clearedAt || !olderDate || clearedAt < olderDate)
-      },
-      [column.filters && column.filters.clearedAt],
     )
 
     const fetchData = async ({
@@ -186,6 +176,14 @@ export const NotificationCardsContainer = React.memo(
       const nextPage = (pagination.page || 1) + 1
       fetchData({ page: nextPage, perPage })
     }
+
+    const canFetchMore = (() => {
+      const clearedAt = column.filters && column.filters.clearedAt
+      const olderDate = getOlderNotificationDate(notifications)
+
+      if (clearedAt && olderDate && clearedAt >= olderDate) return false
+      return _canFetchMore
+    })()
 
     return (
       <NotificationCards

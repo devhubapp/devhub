@@ -27,7 +27,7 @@ export const EventCardsContainer = React.memo(
     const { column, subscriptions } = props
 
     const hasFetchedRef = useRef(false)
-    const [canFetchMore, setCanFetchMore] = useState(false)
+    const [_canFetchMore, setCanFetchMore] = useState(false)
     const [events, setEvents] = useState<GitHubEvent[]>([])
     const [filteredEvents, setFilteredEvents] = useState<EnhancedGitHubEvent[]>(
       [],
@@ -65,16 +65,6 @@ export const EventCardsContainer = React.memo(
         setFilteredEvents(getFilteredEvents(events, column.filters))
       },
       [events, column.filters],
-    )
-
-    useEffect(
-      () => {
-        const clearedAt = column.filters && column.filters.clearedAt
-        const olderDate = getOlderEventDate(events)
-
-        setCanFetchMore(!clearedAt || !olderDate || clearedAt < olderDate)
-      },
-      [column.filters && column.filters.clearedAt],
     )
 
     const fetchData = async ({
@@ -152,6 +142,14 @@ export const EventCardsContainer = React.memo(
       const nextPage = (pagination.page || 1) + 1
       fetchData({ page: nextPage, perPage })
     }
+
+    const canFetchMore = (() => {
+      const clearedAt = column.filters && column.filters.clearedAt
+      const olderDate = getOlderEventDate(events)
+
+      if (clearedAt && olderDate && clearedAt >= olderDate) return false
+      return _canFetchMore
+    })()
 
     return (
       <EventCards
