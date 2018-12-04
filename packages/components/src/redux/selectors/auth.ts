@@ -2,7 +2,7 @@ import { RootState } from '../types'
 
 const s = (state: RootState) => state.auth || {}
 
-export const errorSelector = (state: RootState) => s(state).error
+export const authErrorSelector = (state: RootState) => s(state).error
 
 export const isLoggingInSelector = (state: RootState) => s(state).isLoggingIn
 

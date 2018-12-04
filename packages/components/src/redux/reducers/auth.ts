@@ -4,9 +4,15 @@ import { REHYDRATE } from 'redux-persist'
 import { User } from '@devhub/core/src/types/graphql'
 import { Reducer } from '../types'
 
+export interface AuthError {
+  message: string
+  status?: number
+  response?: any
+}
+
 export interface State {
   appToken: string | null
-  error: object | null
+  error: AuthError | null
   isLoggingIn: boolean
   user: User | null
 }

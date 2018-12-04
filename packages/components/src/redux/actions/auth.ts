@@ -1,5 +1,6 @@
 import { User } from '@devhub/core/src/types/graphql'
 import { createAction, createErrorAction } from '../helpers'
+import { AuthError } from '../reducers/auth'
 
 export function loginRequest(payload: {
   appToken: string
@@ -15,7 +16,7 @@ export function loginSuccess(payload: { appToken: string; user: User }) {
   return createAction('LOGIN_SUCCESS', payload)
 }
 
-export function loginFailure(error: any) {
+export function loginFailure<E extends AuthError>(error: E) {
   return createErrorAction('LOGIN_FAILURE', error)
 }
 

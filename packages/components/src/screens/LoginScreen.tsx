@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
@@ -78,8 +78,24 @@ export function LoginScreen() {
   >(null)
 
   const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
+  const error = useReduxState(selectors.authErrorSelector)
+  const initialErrorRef = useRef(error)
   const loginRequest = useReduxAction(actions.loginRequest)
   const theme = useTheme()
+
+  useEffect(
+    () => {
+      if (!error || initialErrorRef.current === error) return
+
+      const message = error && error.message
+      alert(
+        `Login failed. Please try again. ${
+          message ? ` \nError: ${message}` : ''
+        }`,
+      )
+    },
+    [error],
+  )
 
   const loginWithGitHub = async (method: typeof loggingInMethod) => {
     setLoggingInMethod(method)
