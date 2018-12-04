@@ -7,11 +7,12 @@ import {
   NotificationEnhancement,
 } from '../..'
 
-const payloadUrlCache = new Map()
-
 export async function fetchNotificationsEnhancements(
   notifications: GitHubNotification[],
-  { githubToken }: { githubToken: string },
+  {
+    cache = new Map(),
+    githubToken,
+  }: { cache?: Map<string, false | number>; githubToken: string },
 ): Promise<Record<string, NotificationEnhancement>> {
   const promises = notifications.map(async notification => {
     if (!(notification.repository && notification.repository.full_name)) return
@@ -26,10 +27,10 @@ export async function fetchNotificationsEnhancements(
     const enhance: NotificationEnhancement = {}
 
     if (
-      !payloadUrlCache.get(notification.subject.url) ||
+      !cache.get(notification.subject.url) ||
       (notification.updated_at &&
         new Date(notification.updated_at).valueOf() >
-          payloadUrlCache.get(notification.subject.url))
+          cache.get(notification.subject.url)!)
     ) {
       try {
         const field = (notification.subject.type[0].toLowerCase() +
@@ -47,21 +48,18 @@ export async function fetchNotificationsEnhancements(
           throw new Error('Invalid response')
 
         enhance[field] = data
-        payloadUrlCache.set(notification.subject.url, Date.now())
+        cache.set(notification.subject.url, Date.now())
       } catch (error) {
         console.error(
           `Failed to load ${notification.subject.type} notification details`,
           error,
         )
-        payloadUrlCache.set(notification.subject.url, false)
+        cache.set(notification.subject.url, false)
         return
       }
     }
 
-    if (
-      commentId &&
-      !payloadUrlCache.get(notification.subject.latest_comment_url)
-    ) {
+    if (commentId && !cache.get(notification.subject.latest_comment_url)) {
       try {
         const { data } = await axios.get(
           `${
@@ -71,13 +69,13 @@ export async function fetchNotificationsEnhancements(
         if (!(data && data.id)) throw new Error('Invalid response')
 
         enhance.comment = data
-        payloadUrlCache.set(notification.subject.latest_comment_url, Date.now())
+        cache.set(notification.subject.latest_comment_url, Date.now())
       } catch (error) {
         console.error(
           `Failed to load ${notification.subject.type} comment details`,
           error,
         )
-        payloadUrlCache.set(notification.subject.latest_comment_url, false)
+        cache.set(notification.subject.latest_comment_url, false)
       }
     }
 

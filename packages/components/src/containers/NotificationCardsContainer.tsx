@@ -33,6 +33,7 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column, subscriptions } = props
 
+    const cacheRef = useRef(new Map())
     const hasFetchedRef = useRef(false)
     const [_canFetchMore, setCanFetchMore] = useState(false)
     const [notifications, setNotifications] = useState<GitHubNotification[]>([])
@@ -68,7 +69,7 @@ export const NotificationCardsContainer = React.memo(
         ;(async () => {
           const enhancementMap = await fetchNotificationsEnhancements(
             notifications,
-            { githubToken },
+            { cache: cacheRef.current, githubToken },
           )
 
           setEnhancedNotifications(currentEnhancedNotifications =>
