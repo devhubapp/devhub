@@ -26,7 +26,7 @@ export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { column, subscriptions } = props
 
-    const [hasFetched, setHasFetched] = useState(false)
+    const hasFetchedRef = useRef(false)
     const [canFetchMore, setCanFetchMore] = useState(false)
     const [events, setEvents] = useState<GitHubEvent[]>([])
     const [filteredEvents, setFilteredEvents] = useState<EnhancedGitHubEvent[]>(
@@ -49,7 +49,7 @@ export const EventCardsContainer = React.memo(
 
     useEffect(
       () => {
-        if (!hasFetched) return
+        if (!hasFetchedRef.current) return
         setLoadState('loaded')
       },
       [events],
@@ -101,7 +101,7 @@ export const EventCardsContainer = React.memo(
           subscriptionId,
         })
 
-        if (!hasFetched) setHasFetched(true)
+        if (!hasFetchedRef.current) hasFetchedRef.current = true
 
         if (Array.isArray(response.data) && response.data.length) {
           const olderDateFromThisResponse = getOlderEventDate(response.data)

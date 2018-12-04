@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   Column,
@@ -33,7 +33,7 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column, subscriptions } = props
 
-    const [hasFetched, setHasFetched] = useState(false)
+    const hasFetchedRef = useRef(false)
     const [canFetchMore, setCanFetchMore] = useState(false)
     const [notifications, setNotifications] = useState<GitHubNotification[]>([])
     const [filteredNotifications, setFilteredNotifications] = useState<
@@ -80,7 +80,7 @@ export const NotificationCardsContainer = React.memo(
 
     useEffect(
       () => {
-        if (!hasFetched) return
+        if (!hasFetchedRef.current) return
         setLoadState('loaded')
       },
       [enhancedNotifications],
@@ -133,7 +133,7 @@ export const NotificationCardsContainer = React.memo(
           subscriptionId,
         })
 
-        if (!hasFetched) setHasFetched(true)
+        if (!hasFetchedRef.current) hasFetchedRef.current = true
 
         if (Array.isArray(response.data) && response.data.length) {
           const olderDateFromThisResponse = getOlderNotificationDate(
