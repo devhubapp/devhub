@@ -46,24 +46,30 @@ export function itemPassesFilterRecord(
     : defaultValue
 }
 
-export function hasAnyFilter(
-  filters: ActivityColumnFilters | NotificationColumnFilters | undefined,
+export function activityColumnHasAnyFilter(
+  filters: ActivityColumnFilters | undefined,
 ) {
   if (!filters) return false
 
   if (typeof filters.private === 'boolean' || filters.clearedAt) return true
 
-  const activityColumnFilters = filters as ActivityColumnFilters
-  const notificationColumnFilters = filters as NotificationColumnFilters
-
-  if (activityColumnFilters.activity) {
-    return filterRecordHasAnyForcedValue(activityColumnFilters.activity.types)
+  if (filters.activity) {
+    return filterRecordHasAnyForcedValue(filters.activity.types)
   }
 
-  if (notificationColumnFilters.notifications) {
-    return filterRecordHasAnyForcedValue(
-      notificationColumnFilters.notifications.reasons,
-    )
+  return false
+}
+
+export function notificationColumnHasAnyFilter(
+  filters: NotificationColumnFilters | undefined,
+) {
+  if (!filters) return false
+
+  if (typeof filters.private === 'boolean' || filters.clearedAt) return true
+  if (typeof filters.unread === 'boolean') return true
+
+  if (filters.notifications) {
+    return filterRecordHasAnyForcedValue(filters.notifications.reasons)
   }
 
   return false
@@ -81,7 +87,7 @@ export function getFilteredNotifications(
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
 
-  if (filters && hasAnyFilter(filters)) {
+  if (filters && notificationColumnHasAnyFilter(filters)) {
     _notifications = _notifications.filter(notification => {
       if (!itemPassesFilterRecord(reasonsFilter, notification.reason, true))
         return false
@@ -127,7 +133,7 @@ export function getFilteredEvents(
 
   const activityFilter = filters && filters.activity && filters.activity.types
 
-  if (filters && hasAnyFilter(filters)) {
+  if (filters && activityColumnHasAnyFilter(filters)) {
     _events = _events.filter(event => {
       if (!itemPassesFilterRecord(activityFilter, event.type, true))
         return false
