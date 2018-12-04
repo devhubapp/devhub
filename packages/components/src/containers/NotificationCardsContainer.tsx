@@ -48,7 +48,6 @@ export const NotificationCardsContainer = React.memo(
     const [loadState, setLoadState] = useState<LoadState>('loading_first')
     const [pagination, setPagination] = useState({ page: 1, perPage: 10 })
     const githubToken = useReduxState(selectors.githubTokenSelector)!
-    const githubTokenType = useReduxState(selectors.githubTokenTypeSelector)!
 
     useEffect(() => {
       fetchData()
@@ -64,8 +63,7 @@ export const NotificationCardsContainer = React.memo(
         ;(async () => {
           const enhancementMap = await fetchNotificationsEnhancements(
             notifications,
-            { githubToken, githubTokenType },
-            octokit,
+            { githubToken },
           )
 
           setEnhancedNotifications(currentEnhancedNotifications =>

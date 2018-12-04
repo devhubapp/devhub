@@ -842,10 +842,14 @@ export interface GitHubNotification {
   url: string
 }
 
-export interface EnhancedGitHubNotification extends GitHubNotification {
+export interface NotificationEnhancement {
   comment?: GitHubComment
   commit?: GitHubCommit
   issue?: GitHubIssue
   pullRequest?: GitHubPullRequest
   release?: GitHubRelease
 }
+
+export interface EnhancedGitHubNotification
+  extends GitHubNotification,
+    NotificationEnhancement {}
