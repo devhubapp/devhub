@@ -77,6 +77,8 @@ export async function fetchNotificationsEnhancements(
         )
         cache.set(notification.subject.latest_comment_url, false)
       }
+    } else if (!commentId) {
+      enhance.comment = undefined
     }
 
     if (!Object.keys(enhance).length) return
