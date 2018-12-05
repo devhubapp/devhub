@@ -28,11 +28,7 @@ function* cleanupSubscriptions() {
     usedSubscriptionIds,
   )
 
-  yield all(
-    unusedSubscriptionIds.map(subscriptionId =>
-      put(actions.deleteColumnSubscription(subscriptionId)),
-    ),
-  )
+  yield put(actions.deleteColumnSubscriptions(unusedSubscriptionIds))
 }
 
 export function* subscriptionsSagas() {

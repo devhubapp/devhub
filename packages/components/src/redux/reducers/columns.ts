@@ -54,7 +54,7 @@ export const columnsReducer: Reducer<State> = (
         if (draft.byId) delete draft.byId[action.payload]
       })
 
-    case 'DELETE_COLUMN_SUBSCRIPTION':
+    case 'DELETE_COLUMN_SUBSCRIPTIONS':
       return immer(state, draft => {
         if (!(draft.allIds && draft.byId)) return
 
@@ -63,7 +63,7 @@ export const columnsReducer: Reducer<State> = (
 
           draft.byId![columnId].subscriptionIds = draft.byId![
             columnId
-          ].subscriptionIds.filter(id => id !== action.payload)
+          ].subscriptionIds.filter(id => !action.payload.includes(id))
         })
       })
 
