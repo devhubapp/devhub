@@ -98,6 +98,8 @@ export function EmptyCards(props: EmptyCardsProps) {
     )
   }
 
+  const headerOrFooterHeight = 40 + 2 * contentPadding
+
   return (
     <TransparentTextOverlay
       color={theme.backgroundColor}
@@ -105,6 +107,8 @@ export function EmptyCards(props: EmptyCardsProps) {
       from="vertical"
     >
       <View style={{ flex: 1 }}>
+        <View style={{ height: headerOrFooterHeight }} />
+
         <View
           style={{
             flex: 1,
@@ -117,7 +121,7 @@ export function EmptyCards(props: EmptyCardsProps) {
           {renderContent()}
         </View>
 
-        <View style={{ minHeight: 40 + 2 * contentPadding }}>
+        <View style={{ minHeight: headerOrFooterHeight }}>
           {!!fetchNextPage && !hasError && loadState !== 'loading_first' && (
             <View style={{ padding: contentPadding }}>
               <Button
