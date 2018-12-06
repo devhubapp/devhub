@@ -3,8 +3,8 @@ import { Animated, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
+import { AnimatedIcon } from '../../../animated/AnimatedIcon'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
@@ -58,7 +58,14 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
               isRead && getCardStylesForTheme(theme).mutedText,
             ]}
           >
-            <Icon name="book" /> {showMoreItemsIndicator ? '' : title}
+            <AnimatedIcon
+              name="book"
+              style={[
+                getCardStylesForTheme(theme).normalText,
+                isRead && getCardStylesForTheme(theme).mutedText,
+              ]}
+            />{' '}
+            {showMoreItemsIndicator ? '' : title}
             {!!showMoreItemsIndicator && (
               <Animated.Text
                 numberOfLines={1}

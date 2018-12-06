@@ -3,10 +3,10 @@ import { Animated, StyleSheet, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { defaultStyles } from '../../../../styles/styles'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
+import { AnimatedIcon } from '../../../animated/AnimatedIcon'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -96,7 +96,7 @@ export const IssueOrPullRequestRow = React.memo(
                 isRead && getCardStylesForTheme(theme).mutedText,
               ]}
             >
-              <Icon color={iconColor} name={iconName} /> {title}
+              <AnimatedIcon color={iconColor} name={iconName} /> {title}
               {Boolean(byText) && (
                 <Animated.Text
                   style={[

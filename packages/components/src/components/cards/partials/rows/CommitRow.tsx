@@ -9,8 +9,8 @@ import {
 } from '@devhub/core/src/utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
+import { AnimatedIcon } from '../../../animated/AnimatedIcon'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -104,7 +104,14 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               isRead && getCardStylesForTheme(theme).mutedText,
             ]}
           >
-            <Icon name="git-commit" /> {showMoreItemsIndicator ? '' : message}
+            <AnimatedIcon
+              name="git-commit"
+              style={[
+                getCardStylesForTheme(theme).normalText,
+                isRead && getCardStylesForTheme(theme).mutedText,
+              ]}
+            />{' '}
+            {showMoreItemsIndicator ? '' : message}
             {Boolean(byText) && (
               <Animated.Text
                 style={[

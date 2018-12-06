@@ -5,11 +5,10 @@ import { Animated, StyleSheet, Text, View } from 'react-native'
 import { GitHubIcon } from '@devhub/core/src/types'
 import { getDateSmallText } from '@devhub/core/src/utils/helpers/shared'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
-import { Octicons as Icon } from '../../../libs/vector-icons'
+import { AnimatedIcon } from '../../animated/AnimatedIcon'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
-import { useTheme } from '../../context/ThemeContext'
 import { getCardStylesForTheme } from '../styles'
 import { CardIcon } from './CardIcon'
 import { getUserURL } from './rows/helpers'
@@ -135,7 +134,10 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             >
               {!!isPrivate && (
                 <Animated.Text style={getCardStylesForTheme(theme).mutedText}>
-                  <Icon name="lock" />{' '}
+                  <AnimatedIcon
+                    name="lock"
+                    style={getCardStylesForTheme(theme).mutedText}
+                  />{' '}
                 </Animated.Text>
               )}
               {actionText}

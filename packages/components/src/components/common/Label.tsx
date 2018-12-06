@@ -5,18 +5,17 @@ import {
   StyleSheet,
   Text,
   TextProps,
-  View,
   ViewProps,
   ViewStyle,
 } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
-import { Octicons as Icon } from '../../libs/vector-icons'
 import {
   contentPadding,
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
+import { AnimatedIcon } from '../animated/AnimatedIcon'
 
 export interface LabelProps {
   borderColor?: string
@@ -50,7 +49,7 @@ export function Label(props: LabelProps) {
 
   const {
     borderColor,
-    color,
+    color: _color,
     children,
     containerStyle,
     containerProps = {},
@@ -62,14 +61,20 @@ export function Label(props: LabelProps) {
     textProps = {},
   } = props
 
+  const color =
+    textColor ||
+    (outline
+      ? _color || (muted ? theme.foregroundColorMuted50 : theme.foregroundColor)
+      : '#FFFFFF')
+
   return (
     <Animated.View
       style={[
         styles.labelContainer,
         containerStyle,
-        { borderColor: borderColor || color || theme.foregroundColor },
+        { borderColor: borderColor || _color || theme.foregroundColor },
         !outline && {
-          backgroundColor: color || theme.foregroundColor,
+          backgroundColor: _color || theme.foregroundColor,
         },
         Boolean(radius) && { borderRadius: radius },
       ]}
@@ -80,12 +85,7 @@ export function Label(props: LabelProps) {
         style={[
           styles.labelText,
           {
-            color:
-              textColor ||
-              (outline
-                ? color ||
-                  (muted ? theme.foregroundColorMuted50 : theme.foregroundColor)
-                : '#FFFFFF'),
+            color,
           },
           muted && { opacity: mutedOpacity },
         ]}
@@ -93,7 +93,7 @@ export function Label(props: LabelProps) {
       >
         {Boolean(isPrivate) && (
           <Text>
-            <Icon name="lock" />{' '}
+            <AnimatedIcon color={color} name="lock" />{' '}
           </Text>
         )}
         {children}

@@ -72,16 +72,17 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           }
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Animated.Text
-            numberOfLines={1}
-            style={[
-              getCardStylesForTheme(theme).normalText,
-              isRead && getCardStylesForTheme(theme).mutedText,
-            ]}
-          >
-            <AnimatedIcon name={repoIcon} />{' '}
+          <Animated.Text numberOfLines={1}>
+            <AnimatedIcon
+              name={repoIcon}
+              style={[
+                getCardStylesForTheme(theme).normalText,
+                isRead && getCardStylesForTheme(theme).mutedText,
+              ]}
+            />{' '}
             <Animated.Text
               style={[
+                getCardStylesForTheme(theme).normalText,
                 getCardRowStylesForTheme(theme).repositoryText,
                 isRead && getCardStylesForTheme(theme).mutedText,
               ]}
@@ -90,6 +91,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
             </Animated.Text>
             <Animated.Text
               style={[
+                getCardStylesForTheme(theme).normalText,
                 getCardRowStylesForTheme(theme).repositorySecondaryText,
                 (isRead || showMoreItemsIndicator) &&
                   getCardStylesForTheme(theme).mutedText,

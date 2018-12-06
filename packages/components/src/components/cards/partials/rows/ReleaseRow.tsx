@@ -4,8 +4,8 @@ import { Animated, Text, View } from 'react-native'
 import { getGitHubURLForRelease } from '@devhub/core/src/utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
+import { AnimatedIcon } from '../../../animated/AnimatedIcon'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -102,15 +102,15 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                   isRead && getCardStylesForTheme(theme).mutedText,
                 ]}
               >
-                <Animated.Text
-                  numberOfLines={1}
-                  style={
-                    isRead
-                      ? getCardStylesForTheme(theme).mutedText
-                      : getCardStylesForTheme(theme).normalText
-                  }
-                >
-                  <Icon name="tag" />{' '}
+                <Animated.Text numberOfLines={1}>
+                  <AnimatedIcon
+                    name="tag"
+                    style={
+                      isRead
+                        ? getCardStylesForTheme(theme).mutedText
+                        : getCardStylesForTheme(theme).normalText
+                    }
+                  />{' '}
                 </Animated.Text>
                 {name || tagName}
               </Animated.Text>
@@ -151,15 +151,15 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                   isRead && getCardStylesForTheme(theme).mutedText,
                 ]}
               >
-                <Animated.Text
-                  numberOfLines={1}
-                  style={
-                    isRead
-                      ? getCardStylesForTheme(theme).mutedText
-                      : getCardStylesForTheme(theme).normalText
-                  }
-                >
-                  <Icon name="megaphone" />{' '}
+                <Animated.Text numberOfLines={1}>
+                  <AnimatedIcon
+                    name="megaphone"
+                    style={
+                      isRead
+                        ? getCardStylesForTheme(theme).mutedText
+                        : getCardStylesForTheme(theme).normalText
+                    }
+                  />{' '}
                 </Animated.Text>
                 {body}
               </Animated.Text>

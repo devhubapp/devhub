@@ -3,6 +3,7 @@ import { Animated, View } from 'react-native'
 
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
+import { AnimatedIcon } from '../../../animated/AnimatedIcon'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -62,22 +63,20 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
           <Animated.Text
+            numberOfLines={1}
             style={[
               getCardStylesForTheme(theme).normalText,
               (isRead || !isBranchMainEvent) &&
                 getCardStylesForTheme(theme).mutedText,
             ]}
           >
-            <Animated.Text
-              numberOfLines={1}
-              style={
-                isRead
-                  ? getCardStylesForTheme(theme).mutedText
-                  : getCardStylesForTheme(theme).normalText
-              }
-            >
-              <Icon name="git-branch" />{' '}
-            </Animated.Text>
+            <AnimatedIcon
+              name="git-branch"
+              style={[
+                getCardStylesForTheme(theme).normalText,
+                isRead && getCardStylesForTheme(theme).mutedText,
+              ]}
+            />{' '}
             {branch}
           </Animated.Text>
         </Link>
