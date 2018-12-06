@@ -1,10 +1,10 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
-import { Octicons as Icon } from '../../../../libs/vector-icons'
+import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { AnimatedIcon } from '../../../animated/AnimatedIcon'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getRepositoryURL } from './helpers'
 import { getCardRowStylesForTheme } from './styles'
@@ -23,7 +23,7 @@ export interface RepositoryRowProps {
 export interface RepositoryRowState {}
 
 export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     isForcePush,
@@ -72,23 +72,23 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           }
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Text
+          <Animated.Text
             numberOfLines={1}
             style={[
               getCardStylesForTheme(theme).normalText,
               isRead && getCardStylesForTheme(theme).mutedText,
             ]}
           >
-            <Icon name={repoIcon} />{' '}
-            <Text
+            <AnimatedIcon name={repoIcon} />{' '}
+            <Animated.Text
               style={[
                 getCardRowStylesForTheme(theme).repositoryText,
                 isRead && getCardStylesForTheme(theme).mutedText,
               ]}
             >
               {showMoreItemsIndicator ? '' : repositoryName}
-            </Text>
-            <Text
+            </Animated.Text>
+            <Animated.Text
               style={[
                 getCardRowStylesForTheme(theme).repositorySecondaryText,
                 (isRead || showMoreItemsIndicator) &&
@@ -96,8 +96,8 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               ]}
             >
               {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
-            </Text>
-          </Text>
+            </Animated.Text>
+          </Animated.Text>
         </Link>
       </View>
     </View>

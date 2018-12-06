@@ -1,10 +1,16 @@
 import React, { ReactNode, useState } from 'react'
-import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import {
+  Animated,
+  StyleProp,
+  StyleSheet,
+  ViewProps,
+  ViewStyle,
+} from 'react-native'
 
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useEmitter } from '../../hooks/use-emitter'
 import { contentPadding } from '../../styles/variables'
 import { useColumnWidth } from '../context/ColumnWidthContext'
-import { useTheme } from '../context/ThemeContext'
 
 export const columnMargin = contentPadding / 2
 
@@ -25,7 +31,7 @@ export const Column = React.memo((props: ColumnProps) => {
   const { children, columnId, pagingEnabled, style, ...otherProps } = props
 
   const [showFocusBorder, setShowFocusBorder] = useState(false)
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
   const width = useColumnWidth()
 
   useEmitter(
@@ -42,7 +48,7 @@ export const Column = React.memo((props: ColumnProps) => {
   )
 
   return (
-    <View
+    <Animated.View
       {...otherProps}
       key={`column-inner-${columnId}`}
       className={pagingEnabled ? 'snap-item-start' : ''}
@@ -58,7 +64,7 @@ export const Column = React.memo((props: ColumnProps) => {
       {children}
 
       {!!showFocusBorder && (
-        <View
+        <Animated.View
           style={{
             ...StyleSheet.absoluteFillObject,
             borderWidth: 0,
@@ -68,6 +74,6 @@ export const Column = React.memo((props: ColumnProps) => {
           }}
         />
       )}
-    </View>
+    </Animated.View>
   )
 })

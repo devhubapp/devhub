@@ -11,15 +11,18 @@ import {
   getUserAvatarByEmail,
   getUserAvatarByUsername,
 } from '@devhub/core/src/utils/helpers/github/shared'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
+import {
+  AnimatedImageWithLoading,
+  AnimatedImageWithLoadingProps,
+} from '../animated/AnimatedImageWithLoading'
 import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
-import { useTheme } from '../context/ThemeContext'
 import { ConditionalWrap } from './ConditionalWrap'
-import { ImageWithLoading, ImageWithLoadingProps } from './ImageWithLoading'
 import { Link } from './Link'
 
-export interface AvatarProps extends Partial<ImageWithLoadingProps> {
+export interface AvatarProps extends Partial<AnimatedImageWithLoadingProps> {
   avatarURL?: string
   disableLink?: boolean
   email?: string
@@ -37,7 +40,7 @@ export interface AvatarProps extends Partial<ImageWithLoadingProps> {
 export const size = avatarSize
 
 export function Avatar(props: AvatarProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     avatarURL: _avatarURL,
@@ -107,7 +110,7 @@ export function Avatar(props: AvatarProps) {
         )
       }
     >
-      <ImageWithLoading
+      <AnimatedImageWithLoading
         backgroundColorFailed="#FFFFFF"
         backgroundColorLoaded="#FFFFFF"
         backgroundColorLoading={theme.backgroundColorLess08}

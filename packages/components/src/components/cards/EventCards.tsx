@@ -2,11 +2,11 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 
 import { EnhancedGitHubEvent, LoadState } from '@devhub/core/src/types'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedTransparentTextOverlay } from '../animated/AnimatedTransparentTextOverlay'
 import { Button } from '../common/Button'
-import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
-import { useTheme } from '../context/ThemeContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard } from './EventCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -23,7 +23,7 @@ export interface EventCardsProps {
 }
 
 export const EventCards = React.memo((props: EventCardsProps) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const { errorMessage, events, fetchNextPage, loadState, refresh } = props
 
@@ -74,7 +74,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   }
 
   return (
-    <TransparentTextOverlay
+    <AnimatedTransparentTextOverlay
       color={theme.backgroundColor}
       size={contentPadding}
       from="vertical"
@@ -88,6 +88,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         removeClippedSubviews
         renderItem={renderItem}
       />
-    </TransparentTextOverlay>
+    </AnimatedTransparentTextOverlay>
   )
 })

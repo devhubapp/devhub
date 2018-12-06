@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Animated, StyleSheet } from 'react-native'
 
-import { useTheme } from '../context/ThemeContext'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 
 export interface SeparatorProps {
   horizontal?: boolean
@@ -9,13 +9,13 @@ export interface SeparatorProps {
 }
 
 export function Separator(props: SeparatorProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const { horizontal, thick } = props
   const size = thick ? 2 : StyleSheet.hairlineWidth
 
   return (
-    <View
+    <Animated.View
       style={[
         horizontal
           ? {

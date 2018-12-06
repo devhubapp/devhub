@@ -1,7 +1,7 @@
 import React from 'react'
 import {
+  Animated,
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -10,6 +10,7 @@ import {
 
 import { ModalPayload } from '@devhub/core/src/types'
 import { getColumnHeaderDetails } from '@devhub/core/src/utils/helpers/github/events'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useColumn } from '../../hooks/use-column'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
@@ -17,11 +18,11 @@ import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { emitter } from '../../setup'
 import { sidebarSize } from '../../styles/variables'
+import { AnimatedSafeAreaView } from '../animated/AnimatedSafeAreaView'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
-import { useTheme } from '../context/ThemeContext'
 
 const logo = require('@devhub/components/assets/logo.png') // tslint:disable-line
 
@@ -47,13 +48,13 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const replaceModal = useReduxAction(actions.replaceModal)
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
   const username = useReduxState(selectors.currentUsernameSelector)
 
   const { horizontal, small } = props
 
   return (
-    <SafeAreaView
+    <AnimatedSafeAreaView
       style={{
         width: horizontal ? undefined : sidebarSize,
         backgroundColor: theme.backgroundColor,
@@ -69,7 +70,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       >
         {!horizontal && (
           <>
-            <View
+            <Animated.View
               style={[
                 styles.centerContainer,
                 squareStyle,
@@ -83,7 +84,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 size={sidebarSize / 2}
                 username={username}
               />
-            </View>
+            </Animated.View>
 
             <Separator horizontal={!horizontal} />
           </>
@@ -166,7 +167,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </>
         )}
       </View>
-    </SafeAreaView>
+    </AnimatedSafeAreaView>
   )
 })
 

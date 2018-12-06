@@ -1,17 +1,17 @@
 import React from 'react'
 import {
-  ActivityIndicator,
+  Animated,
   StyleSheet,
-  Text,
   TextProps,
-  TouchableOpacity,
   TouchableOpacityProps,
   View,
 } from 'react-native'
 
-import { Octicons as Icon } from '../../libs/vector-icons'
+import { AnimatedActivityIndicator } from '../../components/animated/AnimatedActivityIndicator'
+import { AnimatedIcon } from '../../components/animated/AnimatedIcon'
+import { AnimatedTouchableOpacity } from '../../components/animated/AnimatedTouchableOpacity'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
-import { useTheme } from '../context/ThemeContext'
 
 export interface GitHubLoginButtonProps extends TouchableOpacityProps {
   horizontal?: boolean
@@ -79,10 +79,10 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     ...otherProps
   } = props
 
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   return (
-    <TouchableOpacity
+    <AnimatedTouchableOpacity
       activeOpacity={0.9}
       {...otherProps}
       style={[
@@ -96,7 +96,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     >
       <View style={styles.content}>
         {Boolean(leftIcon) && (
-          <View
+          <Animated.View
             style={[
               styles.iconWrapper,
               {
@@ -105,17 +105,17 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               },
             ]}
           >
-            <Icon
+            <AnimatedIcon
               color={theme.foregroundColor}
               name={leftIcon!}
               style={styles.icon}
             />
-          </View>
+          </Animated.View>
         )}
 
         <View style={styles.mainContentContainer}>
           {Boolean(title) && (
-            <Text
+            <Animated.Text
               {...textProps}
               style={[
                 styles.title,
@@ -126,11 +126,11 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               ]}
             >
               {title}
-            </Text>
+            </Animated.Text>
           )}
 
           {Boolean(subtitle) && (
-            <Text
+            <Animated.Text
               {...subtitleProps}
               style={[
                 styles.subtitleText,
@@ -141,16 +141,16 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               ]}
             >
               {subtitle}
-            </Text>
+            </Animated.Text>
           )}
         </View>
 
         {Boolean(rightIcon || loading) && (
           <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
             {loading ? (
-              <ActivityIndicator color={theme.foregroundColor} />
+              <AnimatedActivityIndicator color={theme.foregroundColor} />
             ) : (
-              <Icon
+              <AnimatedIcon
                 color={theme.foregroundColor}
                 name={rightIcon!}
                 style={styles.icon}
@@ -159,6 +159,6 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
           </View>
         )}
       </View>
-    </TouchableOpacity>
+    </AnimatedTouchableOpacity>
   )
 }

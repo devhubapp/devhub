@@ -1,9 +1,9 @@
 import React from 'react'
 import {
+  Animated,
   ImageStyle,
   StyleProp,
   StyleSheet,
-  Text,
   TextStyle,
   TouchableOpacity,
   View,
@@ -11,19 +11,19 @@ import {
 } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core/src/types'
-import { Octicons as Icon } from '../../libs/vector-icons'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
+import { AnimatedIcon } from '../animated/AnimatedIcon'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
-import { useTheme } from '../context/ThemeContext'
 
 export interface ColumnHeaderItemProps {
   avatarProps?: Partial<AvatarProps>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 })
 
 export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
   const _username = useReduxState(selectors.currentUsernameSelector)
 
   const {
@@ -165,7 +165,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               />
             ) : (
               !!iconName && (
-                <Icon
+                <AnimatedIcon
                   color={theme.foregroundColor}
                   selectable={selectable}
                   name={iconName}
@@ -183,13 +183,13 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
           </View>
         )}
         {hasText && (
-          <Text
+          <Animated.Text
             numberOfLines={1}
             selectable={selectable}
             style={[{ color: theme.foregroundColorMuted50 }]}
           >
             {!!title && (
-              <Text
+              <Animated.Text
                 selectable={selectable}
                 style={[
                   styles.title,
@@ -199,11 +199,11 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               >
                 {title.toLowerCase()}
                 {!!subtitle && '  '}
-              </Text>
+              </Animated.Text>
             )}
 
             {!!subtitle && (
-              <Text
+              <Animated.Text
                 selectable={selectable}
                 style={[
                   styles.subtitle,
@@ -212,18 +212,18 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 ]}
               >
                 {subtitle.toLowerCase()}
-              </Text>
+              </Animated.Text>
             )}
 
             {!!text && (
-              <Text
+              <Animated.Text
                 selectable={selectable}
                 style={[styles.text, { color: theme.foregroundColor }]}
               >
                 {text}
-              </Text>
+              </Animated.Text>
             )}
-          </Text>
+          </Animated.Text>
         )}
 
         {children}

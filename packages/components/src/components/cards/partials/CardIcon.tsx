@@ -3,10 +3,13 @@ import { StyleSheet } from 'react-native'
 
 import { Omit } from '@devhub/core/src/types'
 import { IconProps } from 'react-native-vector-icons/Icon'
-import { Octicons as Icon } from '../../../libs/vector-icons'
+import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
 import { contentPadding } from '../../../styles/variables'
+import { AnimatedIcon } from '../../animated/AnimatedIcon'
 
-export interface CardIconProps extends Omit<IconProps, 'accessibilityRole'> {}
+export interface CardIconProps extends Omit<IconProps, 'accessibilityRole'> {
+  style?: any
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -16,5 +19,12 @@ const styles = StyleSheet.create({
 })
 
 export function CardIcon(props: CardIconProps) {
-  return <Icon {...props} style={[styles.container, props.style]} />
+  const theme = useAnimatedTheme()
+  return (
+    <AnimatedIcon
+      {...props}
+      color={props.color || theme.foregroundColor}
+      style={[styles.container, props.style]}
+    />
+  )
 }

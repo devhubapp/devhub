@@ -1,14 +1,11 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native'
+import { Animated, TouchableOpacityProps } from 'react-native'
 
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
-import { useTheme } from '../context/ThemeContext'
+import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
+import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
 
 export const buttonSize = 40
 
@@ -21,7 +18,7 @@ export interface ButtonProps extends TouchableOpacityProps {
 }
 
 export function Button(props: ButtonProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     children,
@@ -33,7 +30,7 @@ export function Button(props: ButtonProps) {
   } = props
 
   return (
-    <TouchableOpacity
+    <AnimatedTouchableOpacity
       {...otherProps}
       style={[
         {
@@ -51,9 +48,9 @@ export function Button(props: ButtonProps) {
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={theme.foregroundColor} size="small" />
+        <AnimatedActivityIndicator color={theme.foregroundColor} size="small" />
       ) : typeof children === 'string' ? (
-        <Text
+        <Animated.Text
           style={{
             fontWeight: '500',
             color: useBrandColor
@@ -62,10 +59,10 @@ export function Button(props: ButtonProps) {
           }}
         >
           {children}
-        </Text>
+        </Animated.Text>
       ) : (
         children
       )}
-    </TouchableOpacity>
+    </AnimatedTouchableOpacity>
   )
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import { StyleProp, StyleSheet, Text, ViewStyle } from 'react-native'
+import { Animated, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core/src/types'
+import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
 import { Octicons as Icon } from '../../../libs/vector-icons'
 import { radius } from '../../../styles/variables'
 import { fixURL } from '../../../utils/helpers/github/url'
-import { Link } from '../../common/Link'
-import { useTheme } from '../../context/ThemeContext'
+import { AnimatedLink } from '../../animated/AnimatedLink'
 import { getCardStylesForTheme } from '../styles'
 
 export interface CardItemIdProps {
@@ -37,14 +37,14 @@ const styles = StyleSheet.create({
 
 export function CardItemId(props: CardItemIdProps) {
   const { icon, id, isRead, style, url } = props
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   if (!id && !icon) return null
 
   const parsedNumber = parseInt(`${id}`, 10) || id
 
   return (
-    <Link
+    <AnimatedLink
       href={fixURL(url)}
       style={[
         styles.container,
@@ -55,7 +55,7 @@ export function CardItemId(props: CardItemIdProps) {
         style,
       ]}
     >
-      <Text
+      <Animated.Text
         style={[
           styles.text,
           {
@@ -70,7 +70,7 @@ export function CardItemId(props: CardItemIdProps) {
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}
         {parsedNumber}
-      </Text>
-    </Link>
+      </Animated.Text>
+    </AnimatedLink>
   )
 }

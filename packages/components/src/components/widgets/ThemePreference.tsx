@@ -1,8 +1,14 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 import { Theme } from '@devhub/core/src/types'
-import { useTheme } from '../../components/context/ThemeContext'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
@@ -15,7 +21,7 @@ import { Spacer } from '../common/Spacer'
 import { Switch } from '../common/Switch'
 
 export function ThemePreference() {
-  const appTheme = useTheme()
+  const appTheme = useAnimatedTheme()
   const currentThemeId = useReduxState(selectors.themePairSelector).id
   const preferredDarkTheme = useReduxState(
     selectors.preferredDarkThemePairSelector,
@@ -91,9 +97,9 @@ export function ThemePreference() {
             </Text>
           </View>
 
-          <Text style={{ color: appTheme.foregroundColor }}>
+          <Animated.Text style={{ color: appTheme.foregroundColor }}>
             {theme.displayName}
-          </Text>
+          </Animated.Text>
         </View>
       </TouchableOpacity>
     )

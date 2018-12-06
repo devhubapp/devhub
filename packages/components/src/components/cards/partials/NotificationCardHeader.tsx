@@ -1,9 +1,10 @@
 import { MomentInput } from 'moment'
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Animated, StyleSheet, Text, View } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core/src/types'
 import { getDateSmallText } from '@devhub/core/src/utils/helpers/shared'
+import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
 import { useReduxState } from '../../../redux/hooks/use-redux-state'
 import * as selectors from '../../../redux/selectors'
 import { Avatar } from '../../common/Avatar'
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
 })
 
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
   const username = useReduxState(selectors.currentUsernameSelector)
 
   const {
@@ -100,12 +101,12 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   return (
                     <>
                       <Text children=" " />
-                      <Text
+                      <Animated.Text
                         numberOfLines={1}
                         style={getCardStylesForTheme(theme).timestampText}
                       >
                         {`• ${dateText}`}
-                      </Text>
+                      </Animated.Text>
                     </>
                   )
                 }}
@@ -113,10 +114,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             </View>
           </View>
 
-          <CardIcon
-            name={cardIconName}
-            color={cardIconColor || theme.foregroundColor}
-          />
+          <CardIcon name={cardIconName} color={cardIconColor} />
         </View>
       </View>
     </View>

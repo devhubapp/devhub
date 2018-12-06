@@ -1,17 +1,17 @@
 import React from 'react'
 import {
+  Animated,
   StyleProp,
-  Text,
   TextStyle,
-  TouchableOpacity,
   TouchableOpacityProps,
 } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core/src/types'
-import { Octicons as Icon } from '../../libs/vector-icons'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
-import { useTheme } from '../context/ThemeContext'
+import { AnimatedIcon } from '../animated/AnimatedIcon'
+import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
 
 export const fabSize = 48
 
@@ -24,7 +24,7 @@ export interface FABProps extends TouchableOpacityProps {
 }
 
 export function FAB(props: FABProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     children,
@@ -36,7 +36,7 @@ export function FAB(props: FABProps) {
   } = props
 
   return (
-    <TouchableOpacity
+    <AnimatedTouchableOpacity
       {...otherProps}
       hitSlop={{
         top: contentPadding / 2,
@@ -67,7 +67,7 @@ export function FAB(props: FABProps) {
       ]}
     >
       {typeof iconName === 'string' ? (
-        <Icon
+        <AnimatedIcon
           color={
             useBrandColor ? colors.brandForegroundColor : theme.foregroundColor
           }
@@ -75,7 +75,7 @@ export function FAB(props: FABProps) {
           style={[{ fontSize: 20 }, iconStyle]}
         />
       ) : typeof children === 'string' ? (
-        <Text
+        <Animated.Text
           style={{
             fontWeight: '500',
             color: useBrandColor
@@ -84,10 +84,10 @@ export function FAB(props: FABProps) {
           }}
         >
           {children}
-        </Text>
+        </Animated.Text>
       ) : (
         children
       )}
-    </TouchableOpacity>
+    </AnimatedTouchableOpacity>
   )
 }

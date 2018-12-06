@@ -7,11 +7,11 @@ import {
   APP_LAYOUT_BREAKPOINTS,
   useAppLayout,
 } from '../components/context/LayoutContext'
-import { useTheme } from '../components/context/ThemeContext'
 import { FABRenderer } from '../components/layout/FABRenderer'
 import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
+import { useAnimatedTheme } from '../hooks/use-animated-theme'
 import { useEmitter } from '../hooks/use-emitter'
 import { useKeyDownCallback } from '../hooks/use-key-down-callback'
 import { useKeyPressCallback } from '../hooks/use-key-press-callback'
@@ -31,13 +31,13 @@ const styles = StyleSheet.create({
   },
 })
 
-export function MainScreen() {
+export const MainScreen = React.memo(() => {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const popModal = useReduxAction(actions.popModal)
   const replaceModal = useReduxAction(actions.replaceModal)
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
   const { appOrientation, sizename } = useAppLayout()
 
   const horizontalSidebar = appOrientation === 'portrait'
@@ -141,4 +141,4 @@ export function MainScreen() {
       </View>
     </Screen>
   )
-}
+})

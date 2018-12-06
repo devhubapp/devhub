@@ -14,8 +14,10 @@ import { ModalColumn } from '../columns/ModalColumn'
 
 import { createSubscriptionObjectWithId } from '@devhub/core/src/utils/helpers/github/shared'
 import { guid } from '@devhub/core/src/utils/helpers/shared'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedTextInput } from '../animated/AnimatedTextInput'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
@@ -74,7 +76,7 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
   })
   const addColumn = useReduxAction(actions.addColumn)
   const closeAllModals = useReduxAction(actions.closeAllModals)
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const validateField = (field: ColumnParamField) => {
     const value = params[field]
@@ -153,7 +155,7 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
       <Fragment key={`add-column-details-text-input-${fieldDetails.field}`}>
         <H3 withMargin>{fieldDetails.title}</H3>
 
-        <TextInput
+        <AnimatedTextInput
           ref={fieldDetails.ref}
           autoCapitalize="none"
           autoCorrect={false}

@@ -1,8 +1,8 @@
-import { darken } from 'polished'
+// import { darken } from 'polished'
 import React, { ReactNode } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { Animated, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { useTheme } from '../context/ThemeContext'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 
 export interface ScreenProps {
   children?: ReactNode
@@ -16,17 +16,18 @@ const styles = StyleSheet.create({
   },
 })
 
-export function Screen(props: ScreenProps) {
-  const theme = useTheme()
+export const Screen = React.memo((props: ScreenProps) => {
+  const animatedTheme = useAnimatedTheme()
 
   return (
-    <View
+    <Animated.View
       {...props}
       style={[
         styles.container,
         props.style,
-        { backgroundColor: darken(0.01, theme.backgroundColor) },
+        { backgroundColor: animatedTheme.backgroundColor },
+        // darken(0.01, theme.backgroundColor)
       ]}
     />
   )
-}
+})

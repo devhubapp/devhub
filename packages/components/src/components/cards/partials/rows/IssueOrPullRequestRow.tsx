@@ -1,14 +1,14 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Animated, StyleSheet, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
+import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { defaultStyles } from '../../../../styles/styles'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
 import { getCardRowStylesForTheme } from './styles'
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
 export const IssueOrPullRequestRow = React.memo(
   (props: IssueOrPullRequestRowProps) => {
-    const theme = useTheme()
+    const theme = useAnimatedTheme()
 
     const {
       addBottomAnchor,
@@ -88,7 +88,7 @@ export const IssueOrPullRequestRow = React.memo(
             })}
             style={getCardRowStylesForTheme(theme).mainContentContainer}
           >
-            <Text
+            <Animated.Text
               numberOfLines={1}
               style={[
                 defaultStyles.full,
@@ -98,7 +98,7 @@ export const IssueOrPullRequestRow = React.memo(
             >
               <Icon color={iconColor} name={iconName} /> {title}
               {Boolean(byText) && (
-                <Text
+                <Animated.Text
                   style={[
                     getCardStylesForTheme(theme).normalText,
                     getCardStylesForTheme(theme).smallText,
@@ -107,9 +107,9 @@ export const IssueOrPullRequestRow = React.memo(
                 >
                   {' '}
                   by {byText}
-                </Text>
+                </Animated.Text>
               )}
-            </Text>
+            </Animated.Text>
           </Link>
 
           <CardItemId

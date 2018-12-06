@@ -1,17 +1,12 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { Animated, Text, View, ViewStyle } from 'react-native'
 
 import { LoadState } from '@devhub/core/src/types'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
+import { AnimatedTransparentTextOverlay } from '../animated/AnimatedTransparentTextOverlay'
 import { Button } from '../common/Button'
-import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
-import { useTheme } from '../context/ThemeContext'
 
 const clearMessages = [
   'All clear!',
@@ -46,7 +41,7 @@ export interface EmptyCardsProps {
 }
 
 export function EmptyCards(props: EmptyCardsProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const { errorMessage, fetchNextPage, loadState, refresh } = props
 
@@ -54,11 +49,11 @@ export function EmptyCards(props: EmptyCardsProps) {
 
   const renderContent = () => {
     if (loadState === 'loading_first') {
-      return <ActivityIndicator color={theme.foregroundColor} />
+      return <AnimatedActivityIndicator color={theme.foregroundColor} />
     }
 
     const containerStyle: ViewStyle = { width: '100%', padding: contentPadding }
-    const textStyle: TextStyle = {
+    const textStyle = {
       lineHeight: 20,
       fontSize: 14,
       color: theme.foregroundColorMuted50,
@@ -68,12 +63,12 @@ export function EmptyCards(props: EmptyCardsProps) {
     if (hasError) {
       return (
         <View style={containerStyle}>
-          <Text style={textStyle}>
+          <Animated.Text style={textStyle}>
             {`⚠️\nSomething went wrong`}
             {!!errorMessage && (
               <Text style={{ fontSize: 13 }}>{`\nError: ${errorMessage}`}</Text>
             )}
-          </Text>
+          </Animated.Text>
 
           {!!refresh && (
             <View style={{ padding: contentPadding }}>
@@ -91,9 +86,9 @@ export function EmptyCards(props: EmptyCardsProps) {
 
     return (
       <View style={containerStyle}>
-        <Text style={textStyle}>
+        <Animated.Text style={textStyle}>
           {clearMessage} {emoji}
-        </Text>
+        </Animated.Text>
       </View>
     )
   }
@@ -101,7 +96,7 @@ export function EmptyCards(props: EmptyCardsProps) {
   const headerOrFooterHeight = 40 + 2 * contentPadding
 
   return (
-    <TransparentTextOverlay
+    <AnimatedTransparentTextOverlay
       color={theme.backgroundColor}
       size={contentPadding}
       from="vertical"
@@ -134,6 +129,6 @@ export function EmptyCards(props: EmptyCardsProps) {
           )}
         </View>
       </View>
-    </TransparentTextOverlay>
+    </AnimatedTransparentTextOverlay>
   )
 }

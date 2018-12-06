@@ -1,12 +1,12 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
+import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
 
@@ -25,7 +25,7 @@ export interface CommentRowProps {
 export interface CommentRowState {}
 
 export const CommentRow = React.memo((props: CommentRowProps) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     addBottomAnchor,
@@ -74,7 +74,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
           href={fixURL(url, { addBottomAnchor })}
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Text
+          <Animated.Text
             numberOfLines={numberOfLines}
             style={[
               getCardStylesForTheme(theme).commentText,
@@ -82,7 +82,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             ]}
           >
             {body}
-          </Text>
+          </Animated.Text>
         </Link>
       </View>
     </View>

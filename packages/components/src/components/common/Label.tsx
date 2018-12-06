@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import {
+  Animated,
   StyleProp,
   StyleSheet,
   Text,
@@ -9,13 +10,13 @@ import {
   ViewStyle,
 } from 'react-native'
 
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { Octicons as Icon } from '../../libs/vector-icons'
 import {
   contentPadding,
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
-import { useTheme } from '../context/ThemeContext'
 
 export interface LabelProps {
   borderColor?: string
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
 })
 
 export function Label(props: LabelProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     borderColor,
@@ -62,7 +63,7 @@ export function Label(props: LabelProps) {
   } = props
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.labelContainer,
         containerStyle,
@@ -74,7 +75,7 @@ export function Label(props: LabelProps) {
       ]}
       {...containerProps}
     >
-      <Text
+      <Animated.Text
         numberOfLines={1}
         style={[
           styles.labelText,
@@ -96,7 +97,7 @@ export function Label(props: LabelProps) {
           </Text>
         )}
         {children}
-      </Text>
-    </View>
+      </Animated.Text>
+    </Animated.View>
   )
 }

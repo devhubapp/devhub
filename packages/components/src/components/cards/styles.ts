@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { StyleSheet } from 'react-native'
 
 import { Theme } from '@devhub/core/src/types/themes'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { Platform } from '../../libs/platform'
 import {
   avatarSize,
@@ -48,10 +49,11 @@ const styles = StyleSheet.create({
   },
 })
 
-export const getCardStylesForTheme = _.memoize((theme: Theme) => {
-  return {
-    ...styles,
-    ...StyleSheet.create({
+export const getCardStylesForTheme = _.memoize(
+  (theme: Theme | ReturnType<typeof useAnimatedTheme>) => {
+    return {
+      ...styles,
+
       usernameText: {
         alignSelf: 'center',
         color: theme.foregroundColor,
@@ -64,20 +66,6 @@ export const getCardStylesForTheme = _.memoize((theme: Theme) => {
         color: theme.foregroundColorMuted50,
         fontSize: smallTextSize,
         lineHeight: smallTextSize + 4,
-      },
-
-      mutedText: {
-        color: theme.foregroundColorMuted50,
-      },
-
-      normalText: {
-        color: theme.foregroundColor,
-        lineHeight: 20,
-      },
-
-      descriptionText: {
-        color: theme.foregroundColorMuted50,
-        lineHeight: 20,
       },
 
       commentText: {
@@ -93,6 +81,20 @@ export const getCardStylesForTheme = _.memoize((theme: Theme) => {
           },
         }) as any),
       },
-    }),
-  }
-})
+
+      mutedText: {
+        color: theme.foregroundColorMuted50,
+      },
+
+      normalText: {
+        color: theme.foregroundColor,
+        lineHeight: 20,
+      },
+
+      descriptionText: {
+        color: theme.foregroundColorMuted50,
+        lineHeight: 20,
+      },
+    }
+  },
+)

@@ -2,11 +2,11 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 
 import { EnhancedGitHubNotification, LoadState } from '@devhub/core/src/types'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedTransparentTextOverlay } from '../animated/AnimatedTransparentTextOverlay'
 import { Button } from '../common/Button'
-import { TransparentTextOverlay } from '../common/TransparentTextOverlay'
-import { useTheme } from '../context/ThemeContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -22,8 +22,8 @@ export interface NotificationCardsProps {
   swipeable?: boolean
 }
 
-export function NotificationCards(props: NotificationCardsProps) {
-  const theme = useTheme()
+export const NotificationCards = React.memo((props: NotificationCardsProps) => {
+  const theme = useAnimatedTheme()
 
   const {
     errorMessage,
@@ -90,7 +90,7 @@ export function NotificationCards(props: NotificationCardsProps) {
   }
 
   return (
-    <TransparentTextOverlay
+    <AnimatedTransparentTextOverlay
       color={theme.backgroundColor}
       size={contentPadding}
       from="vertical"
@@ -105,6 +105,6 @@ export function NotificationCards(props: NotificationCardsProps) {
         removeClippedSubviews
         renderItem={renderItem}
       />
-    </TransparentTextOverlay>
+    </AnimatedTransparentTextOverlay>
   )
-}
+})

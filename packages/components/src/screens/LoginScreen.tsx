@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Animated, Image, StyleSheet, View } from 'react-native'
 
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
 import { Screen } from '../components/common/Screen'
-import { useTheme } from '../components/context/ThemeContext'
+import { useAnimatedTheme } from '../hooks/use-animated-theme'
 import { executeOAuth } from '../libs/oauth'
 import * as actions from '../redux/actions'
 import { useReduxAction } from '../redux/hooks/use-redux-action'
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export function LoginScreen() {
+export const LoginScreen = React.memo(() => {
   const [loggingInMethod, setLoggingInMethod] = useState<
     'github.public' | 'github.private' | null
   >(null)
@@ -81,7 +81,7 @@ export function LoginScreen() {
   const error = useReduxState(selectors.authErrorSelector)
   const initialErrorRef = useRef(error)
   const loginRequest = useReduxAction(actions.loginRequest)
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   useEffect(
     () => {
@@ -166,15 +166,19 @@ export function LoginScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={[styles.title, { color: theme.foregroundColor }]}>
+          <Animated.Text
+            style={[styles.title, { color: theme.foregroundColor }]}
+          >
             DevHub
-          </Text>
-          <Text style={[styles.subtitle, { color: theme.foregroundColor }]}>
+          </Animated.Text>
+          <Animated.Text
+            style={[styles.subtitle, { color: theme.foregroundColor }]}
+          >
             TweetDeck for GitHub
-          </Text>
+          </Animated.Text>
           <AppVersion />
         </View>
       </View>
     </Screen>
   )
-}
+})

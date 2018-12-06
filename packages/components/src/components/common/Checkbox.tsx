@@ -1,16 +1,10 @@
 import React, { useState } from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { Animated, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
 
-import { Octicons as Icon } from '../../libs/vector-icons'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
-import { useTheme } from '../context/ThemeContext'
+import { AnimatedIcon } from '../animated/AnimatedIcon'
 
 const checkboxBorderRadius = 4
 
@@ -31,8 +25,8 @@ const styles = StyleSheet.create({
 
 export interface CheckboxProps {
   checked?: boolean | null
-  checkedBackgroundColor?: string
-  checkedForegroundColor?: string
+  checkedBackgroundColor?: string | Animated.AnimatedInterpolation
+  checkedForegroundColor?: string | Animated.AnimatedInterpolation
   containerStyle?: ViewStyle
   defaultValue?: boolean | null
   disabled?: boolean
@@ -40,13 +34,13 @@ export interface CheckboxProps {
   label?: string | React.ReactNode
   onChange?: (value: boolean | null) => void
   size?: number | string
-  uncheckedBackgroundColor?: string
-  uncheckedForegroundColor?: string
+  uncheckedBackgroundColor?: string | Animated.AnimatedInterpolation
+  uncheckedForegroundColor?: string | Animated.AnimatedInterpolation
   useBrandColor?: boolean
 }
 
 export function Checkbox(props: CheckboxProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     defaultValue,
@@ -87,7 +81,7 @@ export function Checkbox(props: CheckboxProps) {
       onPress={disabled ? undefined : handleOnChange}
       style={[styles.container, disabled && { opacity: 0.5 }, containerStyle]}
     >
-      <View
+      <Animated.View
         style={[
           styles.checkbox,
           {
@@ -104,11 +98,11 @@ export function Checkbox(props: CheckboxProps) {
         ]}
       >
         {!!checked && (
-          <Icon color={checkedForegroundColor} name="check" size={14} />
+          <AnimatedIcon color={checkedForegroundColor} name="check" size={14} />
         )}
 
         {enableTrippleState && checked === null && (
-          <View
+          <Animated.View
             style={{
               width: '80%',
               height: '80%',
@@ -117,18 +111,18 @@ export function Checkbox(props: CheckboxProps) {
             }}
           />
         )}
-      </View>
+      </Animated.View>
 
       {!!label &&
         (typeof label === 'string' ? (
-          <Text
+          <Animated.Text
             style={{
               marginLeft: contentPadding / 2,
               color: theme.foregroundColor,
             }}
           >
             {label}
-          </Text>
+          </Animated.Text>
         ) : (
           label
         ))}

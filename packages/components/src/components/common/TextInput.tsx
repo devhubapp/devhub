@@ -4,18 +4,19 @@ import {
   TextInputProps as TextInputComponentProps,
 } from 'react-native'
 
+import { AnimatedTextInput } from '../../components/animated/AnimatedTextInput'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding, radius } from '../../styles/variables'
-import { useTheme } from '../context/ThemeContext'
 
 export type TextInputProps = TextInputComponentProps
 
 export const TextInput = React.forwardRef((props: TextInputProps, ref: any) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const { style, ...otherProps } = props
 
   return (
-    <TextInputOriginal
+    <AnimatedTextInput
       {...otherProps}
       ref={ref}
       style={[

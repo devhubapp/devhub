@@ -1,16 +1,10 @@
 import React, { ReactNode } from 'react'
-import {
-  SafeAreaView,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewProps,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
+import { AnimatedSafeAreaView } from '../animated/AnimatedSafeAreaView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { useTheme } from '../context/ThemeContext'
 
 export interface ColumnHeaderProps extends ViewProps {
   children?: ReactNode
@@ -31,12 +25,12 @@ const styles = StyleSheet.create({
 })
 
 export function ColumnHeader(props: ColumnHeaderProps) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const { children, style, ...otherProps } = props
 
   return (
-    <SafeAreaView
+    <AnimatedSafeAreaView
       style={[
         styles.container,
         { backgroundColor: theme.backgroundColorLess08 },
@@ -47,6 +41,6 @@ export function ColumnHeader(props: ColumnHeaderProps) {
       </View>
 
       <CardItemSeparator />
-    </SafeAreaView>
+    </AnimatedSafeAreaView>
   )
 }

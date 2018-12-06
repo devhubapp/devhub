@@ -1,10 +1,10 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
+import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getBranchURL } from './helpers'
 import { getCardRowStylesForTheme } from './styles'
@@ -21,7 +21,7 @@ export interface BranchRowProps {
 export interface BranchRowState {}
 
 export const BranchRow = React.memo((props: BranchRowProps) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     branch: _branch,
@@ -61,14 +61,14 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
           href={getBranchURL(ownerName, repositoryName, branch)}
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Text
+          <Animated.Text
             style={[
               getCardStylesForTheme(theme).normalText,
               (isRead || !isBranchMainEvent) &&
                 getCardStylesForTheme(theme).mutedText,
             ]}
           >
-            <Text
+            <Animated.Text
               numberOfLines={1}
               style={
                 isRead
@@ -77,9 +77,9 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
               }
             >
               <Icon name="git-branch" />{' '}
-            </Text>
+            </Animated.Text>
             {branch}
-          </Text>
+          </Animated.Text>
         </Link>
       </View>
     </View>

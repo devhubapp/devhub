@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
 import { tryGetUsernameFromGitHubEmail } from '@devhub/core/src/utils/helpers/github/shared'
 import {
@@ -8,11 +8,11 @@ import {
   getGitHubURLForUser,
 } from '@devhub/core/src/utils/helpers/github/url'
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
+import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
 
@@ -31,7 +31,7 @@ export interface CommitRowProps {
 export interface CommitRowState {}
 
 export const CommitRow = React.memo((props: CommitRowProps) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     authorEmail,
@@ -97,7 +97,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
           }
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Text
+          <Animated.Text
             numberOfLines={1}
             style={[
               getCardStylesForTheme(theme).normalText,
@@ -106,7 +106,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
           >
             <Icon name="git-commit" /> {showMoreItemsIndicator ? '' : message}
             {Boolean(byText) && (
-              <Text
+              <Animated.Text
                 style={[
                   getCardStylesForTheme(theme).normalText,
                   getCardStylesForTheme(theme).smallText,
@@ -114,9 +114,9 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                 ]}
               >
                 {showMoreItemsIndicator ? '...' : ` by ${byText}`}
-              </Text>
+              </Animated.Text>
             )}
-          </Text>
+          </Animated.Text>
         </Link>
       </View>
     </View>

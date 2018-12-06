@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Animated, TouchableOpacity, View } from 'react-native'
 
 import { AddColumnDetailsPayload } from '@devhub/core/src/types'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { useColumnWidth } from '../context/ColumnWidthContext'
-import { useTheme } from '../context/ThemeContext'
 
 const columnTypes: AddColumnDetailsPayload[] = [
   {
@@ -70,7 +70,7 @@ function AddColumnModalItem({
   availableWidth: number
   item: AddColumnDetailsPayload
 }) {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
   const pushModal = useReduxAction(actions.pushModal)
 
   if (!(availableWidth > 0)) return null
@@ -103,7 +103,9 @@ function AddColumnModalItem({
           noPadding
         />
 
-        <Text style={{ color: theme.foregroundColor }}>{item.name}</Text>
+        <Animated.Text style={{ color: theme.foregroundColor }}>
+          {item.name}
+        </Animated.Text>
       </View>
     </TouchableOpacity>
   )

@@ -1,9 +1,9 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { ScrollView } from 'react-native'
 
+import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { contentPadding } from '../../../../styles/variables'
-import { TransparentTextOverlay } from '../../../common/TransparentTextOverlay'
-import { useTheme } from '../../../context/ThemeContext'
+import { AnimatedTransparentTextOverlay } from '../../../animated/AnimatedTransparentTextOverlay'
 
 export type RenderItem<T> = (
   params: { item: T; index: number; showMoreItemsIndicator?: boolean },
@@ -18,7 +18,7 @@ export interface RowListProps<T> {
 }
 
 export const RowList = React.memo((props: RowListProps<any>) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const { data, maxHeight = 220, maxLength = 5, narrow, renderItem } = props
   if (!(data && data.length > 0)) return null
@@ -34,7 +34,7 @@ export const RowList = React.memo((props: RowListProps<any>) => {
   const isSliced = data.length > slicedData.length
 
   return (
-    <TransparentTextOverlay
+    <AnimatedTransparentTextOverlay
       color={theme.backgroundColor}
       size={narrow ? contentPadding / 2 : contentPadding}
       from="vertical"
@@ -55,6 +55,6 @@ export const RowList = React.memo((props: RowListProps<any>) => {
             showMoreItemsIndicator: true,
           })}
       </ScrollView>
-    </TransparentTextOverlay>
+    </AnimatedTransparentTextOverlay>
   )
 })

@@ -1,14 +1,14 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 
 import { Column } from '@devhub/core/src/types'
 import {
   eventTypes,
   getEventTypeMetadata,
 } from '@devhub/core/src/utils/helpers/github/events'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useDimensions } from '../../hooks/use-dimensions'
-import { Octicons as Icon } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import * as colors from '../../styles/colors'
@@ -21,10 +21,10 @@ import {
   getNotificationReasonMetadata,
   notificationReasons,
 } from '../../utils/helpers/github/notifications'
+import { AnimatedIcon } from '../animated/AnimatedIcon'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
-import { useTheme } from '../context/ThemeContext'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 
@@ -60,7 +60,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     openedOptionCategory,
     setOpenedOptionCategory,
   ] = useState<ColumnOptionCategory | null>(null)
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const dimensions = useDimensions()
   const moveColumn = useReduxAction(actions.moveColumn)
@@ -84,7 +84,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const { column, columnIndex } = props
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.container,
         {
@@ -210,15 +210,15 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                             justifyContent: 'space-between',
                           }}
                         >
-                          <Text
+                          <Animated.Text
                             style={{
                               marginLeft: contentPadding / 2,
                               color: theme.foregroundColor,
                             }}
                           >
                             {item.label}
-                          </Text>
-                          <Icon
+                          </Animated.Text>
+                          <AnimatedIcon
                             color={theme.foregroundColor}
                             name={item.icon}
                             size={16}
@@ -419,6 +419,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
         </View>
       </ScrollView>
       <CardItemSeparator />
-    </View>
+    </Animated.View>
   )
 }

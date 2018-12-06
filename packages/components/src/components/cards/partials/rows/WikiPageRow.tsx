@@ -1,11 +1,11 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
+import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Link } from '../../../common/Link'
-import { useTheme } from '../../../context/ThemeContext'
 import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
 
@@ -21,7 +21,7 @@ export interface WikiPageRowProps {
 export interface WikiPageRowState {}
 
 export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
-  const theme = useTheme()
+  const theme = useAnimatedTheme()
 
   const {
     isRead,
@@ -51,7 +51,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
           href={showMoreItemsIndicator ? undefined : fixURL(url)}
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Text
+          <Animated.Text
             numberOfLines={1}
             style={[
               getCardStylesForTheme(theme).normalText,
@@ -60,7 +60,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
           >
             <Icon name="book" /> {showMoreItemsIndicator ? '' : title}
             {!!showMoreItemsIndicator && (
-              <Text
+              <Animated.Text
                 numberOfLines={1}
                 style={[
                   getCardStylesForTheme(theme).normalText,
@@ -68,9 +68,9 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
                 ]}
               >
                 ...
-              </Text>
+              </Animated.Text>
             )}
-          </Text>
+          </Animated.Text>
         </Link>
       </View>
     </View>
