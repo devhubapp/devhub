@@ -81,10 +81,12 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     >
       <FlatList
         data={events}
-        extraData={loadState}
         ItemSeparatorComponent={CardItemSeparator}
         ListFooterComponent={renderFooter}
+        extraData={loadState}
+        initialNumToRender={5}
         keyExtractor={keyExtractor}
+        maxToRenderPerBatch={5}
         removeClippedSubviews
         renderItem={renderItem}
       />

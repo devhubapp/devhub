@@ -101,7 +101,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         ListFooterComponent={renderFooter}
         data={notifications}
         extraData={loadState}
+        initialNumToRender={5}
         keyExtractor={keyExtractor}
+        maxToRenderPerBatch={5}
         removeClippedSubviews
         renderItem={renderItem}
       />

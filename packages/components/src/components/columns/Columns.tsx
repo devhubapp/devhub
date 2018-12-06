@@ -91,7 +91,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
       className="snap-container"
       data={columnIds}
       horizontal
+      initialNumToRender={5}
       keyExtractor={keyExtractor}
+      maxToRenderPerBatch={5}
       onScrollToIndexFailed={() => undefined}
       pagingEnabled={pagingEnabled}
       removeClippedSubviews
