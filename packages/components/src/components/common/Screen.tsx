@@ -6,6 +6,7 @@ import SplashScreen from 'react-native-splash-screen'
 import { AnimatedSafeAreaView } from '../../components/animated/AnimatedSafeAreaView'
 import { AnimatedStatusBar } from '../../components/animated/AnimatedStatusBar'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useTheme } from '../context/ThemeContext'
 
 let isSplashScreenVisible = true
 
@@ -24,7 +25,8 @@ const styles = StyleSheet.create({
 })
 
 export function Screen(props: ScreenProps) {
-  const theme = useAnimatedTheme()
+  const theme = useTheme()
+  const animatedTheme = useAnimatedTheme()
 
   useEffect(() => {
     if (isSplashScreenVisible && SplashScreen) {
@@ -42,7 +44,9 @@ export function Screen(props: ScreenProps) {
     <>
       <AnimatedStatusBar
         barStyle={theme.isDark ? 'light-content' : 'dark-content'}
-        backgroundColor={statusBarBackgroundColor || theme.backgroundColor}
+        backgroundColor={
+          statusBarBackgroundColor || animatedTheme.backgroundColor
+        }
       />
 
       <View style={{ flex: 1 }}>

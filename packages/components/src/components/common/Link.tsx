@@ -1,11 +1,9 @@
 import React, { AnchorHTMLAttributes } from 'react'
 import {
   Animated,
-  StyleProp,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
-  ViewStyle,
 } from 'react-native'
 
 import { Browser } from '../../libs/browser'

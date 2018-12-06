@@ -1,3 +1,9 @@
+* {
+  transition: all 150ms linear !important;
+  box-sizing: border-box;
+  cursor: default;
+}
+
 ::-webkit-scrollbar {
   width: 2px;
   height: 2px;

@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 
 import { LinearGradient } from '../../libs/linear-gradient'
+import { computeThemeColor } from '../../utils/helpers/colors'
 
 export type From = 'top' | 'bottom' | 'left' | 'right'
 export type FromWithVH = 'vertical' | 'horizontal' | From
@@ -88,7 +89,11 @@ function getProps(from: From, size: number) {
 function GradientLayerOverlay(
   props: TransparentTextOverlayProps & { from: From },
 ) {
-  const { color, from, radius, size, style, ...otherProps } = props
+  const { color: _color, from, radius, size, style, ...otherProps } = props
+
+  const color = computeThemeColor(_color)
+  if (!color) return null
+
   return (
     <LinearGradient
       colors={[rgba(color, 0), color]}

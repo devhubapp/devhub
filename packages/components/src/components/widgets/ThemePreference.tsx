@@ -19,9 +19,11 @@ import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { Switch } from '../common/Switch'
+import { useTheme } from '../context/ThemeContext'
 
 export function ThemePreference() {
-  const appTheme = useAnimatedTheme()
+  const appTheme = useTheme()
+  const appAnimatedTheme = useAnimatedTheme()
   const currentThemeId = useReduxState(selectors.themePairSelector).id
   const preferredDarkTheme = useReduxState(
     selectors.preferredDarkThemePairSelector,
@@ -97,7 +99,7 @@ export function ThemePreference() {
             </Text>
           </View>
 
-          <Animated.Text style={{ color: appTheme.foregroundColor }}>
+          <Animated.Text style={{ color: appAnimatedTheme.foregroundColor }}>
             {theme.displayName}
           </Animated.Text>
         </View>

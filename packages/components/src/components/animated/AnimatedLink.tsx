@@ -7,4 +7,6 @@ export interface AnimatedLinkProps extends Omit<LinkProps, 'animated'> {
   style: any
 }
 
-export const AnimatedLink = (props: AnimatedLinkProps) => <Link {...props} />
+export const AnimatedLink = (props: AnimatedLinkProps) => (
+  <Link {...props} animated />
+)
