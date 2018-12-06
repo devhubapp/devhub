@@ -113,16 +113,29 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           horizontal={horizontal}
           style={{ flex: 1 }}
         >
-          {!columnIds
-            ? null
-            : columnIds.map(columnId => (
-                <SidebarColumnItem
-                  key={`sidebar-column-item-${columnId}`}
-                  columnId={columnId}
-                  small={small}
-                  currentOpenedModal={currentOpenedModal}
-                />
-              ))}
+          {!(columnIds && columnIds.length) ? (
+            small ? (
+              <>
+                <TouchableOpacity
+                  onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                  style={[styles.centerContainer, squareStyle]}
+                >
+                  <ColumnHeaderItem iconName="plus" />
+                </TouchableOpacity>
+
+                <Separator horizontal={!horizontal} />
+              </>
+            ) : null
+          ) : (
+            columnIds.map(columnId => (
+              <SidebarColumnItem
+                key={`sidebar-column-item-${columnId}`}
+                columnId={columnId}
+                small={small}
+                currentOpenedModal={currentOpenedModal}
+              />
+            ))
+          )}
 
           {!!small && (
             <TouchableOpacity
