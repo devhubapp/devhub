@@ -1,9 +1,84 @@
 import _ from 'lodash'
-import { all, put, select, takeLatest } from 'redux-saga/effects'
+import {
+  all,
+  call,
+  fork,
+  put,
+  race,
+  select,
+  take,
+  takeEvery,
+  takeLatest,
+} from 'redux-saga/effects'
 
-import { Column } from '@devhub/core/src/types'
+import {
+  Column,
+  ColumnSubscription,
+  createNotificationsCache,
+  DEFAULT_PAGINATION_PER_PAGE,
+  EnhancementCache,
+  enhanceNotifications,
+  getNotificationsEnhancementMap,
+  getOlderEventDate,
+  getOlderNotificationDate,
+  GitHubEvent,
+  GitHubNotification,
+} from '@devhub/core'
+import { delay } from 'redux-saga'
+import { getActivity, getNotifications } from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
+import { ExtractActionFromActionCreator } from '../types/base'
+
+let notificationsCache: EnhancementCache
+
+function* init() {
+  yield take('LOGIN_SUCCESS')
+
+  let isFirstTime = true
+  while (true) {
+    yield race({
+      delay: delay(isFirstTime ? 0 : 10 * 1000),
+      logout: take([
+        'LOGIN_SUCCESS',
+        'LOGIN_FAILURE',
+        'LOGOUT',
+        'REPLACE_COLUMNS',
+      ]),
+    })
+    const _isFirstTime = isFirstTime
+    isFirstTime = false
+
+    const state = yield select()
+
+    if (_isFirstTime) {
+      const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
+      if (!hasCreatedColumn) yield take(['ADD_COLUMN', 'REPLACE_COLUMNS'])
+    }
+
+    const isLogged = !!selectors.currentUserSelector(state)
+    if (!isLogged) continue
+
+    const subscriptions = selectors.subscriptionsSelector(state)
+    if (!(subscriptions && subscriptions.length)) continue
+
+    const subscriptionsToFetch = _isFirstTime
+      ? subscriptions
+      : subscriptions.filter(s => minimumRefetchTimeHasPassed(s))
+    if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
+
+    yield all(
+      subscriptionsToFetch.map(function*(subscription) {
+        return yield put(
+          actions.fetchSubscriptionRequest({
+            subscriptionId: subscription.id,
+            params: { page: 1 },
+          }),
+        )
+      }),
+    )
+  }
+}
 
 function* cleanupSubscriptions() {
   const allSubscriptionIds: string[] = yield select(
@@ -27,14 +102,189 @@ function* cleanupSubscriptions() {
     allSubscriptionIds,
     usedSubscriptionIds,
   )
+  if (!(unusedSubscriptionIds && unusedSubscriptionIds.length)) return
 
   yield put(actions.deleteColumnSubscriptions(unusedSubscriptionIds))
 }
 
+function* onAddColumn(
+  action: ExtractActionFromActionCreator<typeof actions.addColumn>,
+) {
+  const state = yield select()
+  const columnSelector = selectors.createColumnSelector()
+
+  const column = columnSelector(state, action.payload.column.id)
+  if (!column) return
+
+  yield put(
+    actions.fetchColumnSubscriptionRequest({
+      columnId: column.id,
+      params: { page: 1 },
+    }),
+  )
+}
+
+function* onFetchColumnSubscriptions(
+  action: ExtractActionFromActionCreator<
+    typeof actions.fetchColumnSubscriptionRequest
+  >,
+) {
+  const state = yield select()
+  const columnSelector = selectors.createColumnSelector()
+
+  const column = columnSelector(state, action.payload.columnId)
+  if (!column) return
+
+  yield all(
+    column.subscriptionIds.map(function*(subscriptionId) {
+      return yield put(
+        actions.fetchSubscriptionRequest({
+          subscriptionId,
+          params: action.payload.params,
+        }),
+      )
+    }),
+  )
+}
+
+function* onFetchRequest(
+  action: ExtractActionFromActionCreator<
+    typeof actions.fetchSubscriptionRequest
+  >,
+) {
+  const state = yield select()
+
+  const { subscriptionId, params: _params } = action.payload
+
+  const subscription = selectors.subscriptionSelector(state, subscriptionId)
+  const githubToken = selectors.githubTokenSelector(state)
+
+  const page = Math.max(1, _params.page || 1)
+  const perPage = Math.min(_params.perPage || DEFAULT_PAGINATION_PER_PAGE, 50)
+
+  delete _params.page
+  delete _params.perPage
+  const params = { ...subscription.params, ..._params, page, per_page: perPage }
+
+  try {
+    if (!githubToken) throw new Error('Not logged')
+
+    if (
+      !(
+        subscription &&
+        (subscription.type === 'activity' ||
+          subscription.type === 'notifications')
+      )
+    ) {
+      throw new Error(
+        `Unknown column subscription type: ${subscription &&
+          (subscription as any).type}`,
+      )
+    }
+
+    if (subscription.type === 'notifications') {
+      const response = yield call(getNotifications, params, {
+        subscriptionId,
+      })
+
+      const prevItems = subscription.data || []
+      const newItems = response.data as GitHubNotification[]
+      const mergedItems = _.uniqBy(_.concat(newItems, prevItems), 'id')
+
+      const olderNotificationDate = getOlderNotificationDate(mergedItems)
+      const olderDateFromThisResponse = getOlderNotificationDate(newItems)
+
+      if (!notificationsCache) {
+        notificationsCache = createNotificationsCache(prevItems)
+      }
+
+      const enhancementMap = yield call(
+        getNotificationsEnhancementMap,
+        newItems,
+        {
+          cache: notificationsCache,
+          githubToken,
+        },
+      )
+
+      const enhancedItems = enhanceNotifications(
+        mergedItems,
+        enhancementMap,
+        prevItems,
+      )
+
+      const canFetchMore =
+        (!olderNotificationDate ||
+          (!!olderDateFromThisResponse &&
+            olderDateFromThisResponse <= olderNotificationDate) ||
+          page === 1) &&
+        newItems.length >= perPage
+
+      yield put(
+        actions.fetchSubscriptionSuccess({
+          subscriptionId,
+          data: enhancedItems,
+          canFetchMore,
+        }),
+      )
+    } else if (subscription.type === 'activity') {
+      const response = yield call(getActivity, subscription.subtype, params, {
+        subscriptionId,
+      })
+
+      const prevItems = subscription.data || []
+      const newItems = (response.data || []) as GitHubEvent[]
+      const mergedItems = _.uniqBy(_.concat(newItems, prevItems), 'id')
+
+      const olderNotificationDate = getOlderEventDate(mergedItems)
+      const olderDateFromThisResponse = getOlderEventDate(newItems)
+
+      const canFetchMore =
+        (!olderNotificationDate ||
+          (!!olderDateFromThisResponse &&
+            olderDateFromThisResponse <= olderNotificationDate) ||
+          page === 1) &&
+        newItems.length >= perPage
+
+      yield put(
+        actions.fetchSubscriptionSuccess({
+          subscriptionId,
+          data: mergedItems,
+          canFetchMore,
+        }),
+      )
+    }
+  } catch (error) {
+    console.error(`Failed to load GitHub ${subscription.type || 'data'}`, error)
+    yield put(actions.fetchSubscriptionFailure({ subscriptionId }, error))
+  }
+}
+
+function onLogout() {
+  if (notificationsCache) notificationsCache.clear()
+}
+
 export function* subscriptionsSagas() {
   yield all([
-    yield takeLatest('ADD_COLUMN', cleanupSubscriptions),
-    yield takeLatest('DELETE_COLUMN', cleanupSubscriptions),
+    yield fork(init),
+    yield takeEvery('ADD_COLUMN', cleanupSubscriptions),
+    yield takeEvery('ADD_COLUMN', onAddColumn),
+    yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
+    yield takeEvery('DELETE_COLUMN', cleanupSubscriptions),
     yield takeLatest('REPLACE_COLUMNS', cleanupSubscriptions),
+    yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
+    yield takeEvery('FETCH_SUBSCRIPTION_REQUEST', onFetchRequest),
   ])
+}
+
+function minimumRefetchTimeHasPassed(
+  subscription: ColumnSubscription,
+  interval = 60000,
+) {
+  if (!subscription) return false
+
+  return (
+    !subscription.lastFetchedAt ||
+    new Date(subscription.lastFetchedAt).valueOf() <= Date.now() - interval
+  )
 }

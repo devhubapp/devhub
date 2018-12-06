@@ -181,7 +181,7 @@ export function getUniqueIdForSubscription(subscription: ColumnSubscription) {
 }
 
 export function createSubscriptionObjectWithId(
-  subscription: Omit<ColumnSubscription, 'id' | 'createdAt' | 'updatedAt'>,
+  subscription: Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>,
 ) {
   return {
     ...subscription,

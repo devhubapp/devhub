@@ -139,7 +139,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
 
   // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
-  //  but the correct avatar on payload.xxx.user.avatar_url,
+  // but the correct avatar on payload.abc.user.avatar_url,
   // so lets get it from there instead
   const botAvatarURL = isBot
     ? getGitHubAvatarURLFromPayload(payload, actor.id)

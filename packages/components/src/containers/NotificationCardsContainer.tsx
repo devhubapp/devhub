@@ -4,11 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Column,
   ColumnSubscription,
+  DEFAULT_PAGINATION_PER_PAGE,
   EnhancedGitHubNotification,
-  enhanceNotifications,
-  fetchNotificationsEnhancements,
-  GitHubNotification,
-  LoadState,
+  getOlderNotificationDate,
   NotificationSubscription,
   Omit,
 } from '@devhub/core'
@@ -16,7 +14,8 @@ import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
-import { getNotifications, octokit } from '../libs/github'
+import * as actions from '../redux/actions'
+import { useReduxAction } from '../redux/hooks/use-redux-action'
 import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { getFilteredNotifications } from '../utils/helpers/filters'
@@ -31,176 +30,80 @@ export type NotificationCardsContainerProps = Omit<
 
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
-    const { column, subscriptions } = props
+    const { column } = props
 
-    const cacheRef = useRef(new Map())
-    const hasFetchedRef = useRef(false)
-    const [_canFetchMore, setCanFetchMore] = useState(false)
-    const [notifications, setNotifications] = useState<GitHubNotification[]>([])
-    const [filteredNotifications, setFilteredNotifications] = useState<
-      GitHubNotification[]
-    >([])
-    const [enhancedNotifications, setEnhancedNotifications] = useState<
+    const subscription = useReduxState(
+      state =>
+        selectors.subscriptionSelector(
+          state,
+          column.subscriptionIds[0],
+        ) as NotificationSubscription,
+    )
+
+    const fetchColumnSubscriptionRequest = useReduxAction(
+      actions.fetchColumnSubscriptionRequest,
+    )
+
+    const [filteredItems, setFilteredItems] = useState<
       EnhancedGitHubNotification[]
-    >([])
-    const [olderNotificationDate, setOlderNotificationDate] = useState<
-      string | undefined
-    >(undefined)
-    const [loadState, setLoadState] = useState<LoadState>('loading_first')
-    const [pagination, setPagination] = useState({ page: 1, perPage: 10 })
-    const githubToken = useReduxState(selectors.githubTokenSelector)!
+    >(() => getFilteredNotifications(subscription.data || [], column.filters))
 
-    const [error, setError] = useState<{
-      [key: string]: any
-      message: string
-    } | null>(null)
-
-    useEffect(() => {
-      fetchData()
-    }, [])
-
-    useEffect(() => {
-      const timer = setInterval(fetchData, 1000 * 60)
-      return () => clearInterval(timer)
-    })
+    const canFetchMoreRef = useRef(false)
 
     useEffect(
       () => {
-        ;(async () => {
-          const enhancementMap = await fetchNotificationsEnhancements(
-            notifications,
-            { cache: cacheRef.current, githubToken },
-          )
+        setFilteredItems(
+          getFilteredNotifications(subscription.data || [], column.filters),
+        )
+      },
+      [subscription.data, column.filters],
+    )
 
-          setEnhancedNotifications(currentEnhancedNotifications =>
-            enhanceNotifications(
-              notifications,
-              enhancementMap,
-              currentEnhancedNotifications,
-            ),
-          )
+    useEffect(
+      () => {
+        canFetchMoreRef.current = (() => {
+          const clearedAt = column.filters && column.filters.clearedAt
+          const olderDate = getOlderNotificationDate(subscription.data || [])
+
+          if (clearedAt && olderDate && clearedAt >= olderDate) return false
+          return !!subscription.canFetchMore
         })()
       },
-      [notifications],
+      [filteredItems, column.filters, subscription.canFetchMore],
     )
 
-    useEffect(
-      () => {
-        if (!hasFetchedRef.current) return
-        setLoadState('loaded')
-      },
-      [enhancedNotifications],
-    )
-
-    useEffect(
-      () => {
-        setFilteredNotifications(
-          getFilteredNotifications(enhancedNotifications, column.filters),
-        )
-      },
-      [enhancedNotifications, column.filters],
-    )
-
-    const fetchData = async ({
-      page: _page,
-      perPage: _perPage,
+    const fetchData = ({
+      page,
+      perPage,
     }: { page?: number; perPage?: number } = {}) => {
-      const {
-        id: subscriptionId,
-        params: _params,
-      } = subscriptions[0] as NotificationSubscription
-
-      const page = Math.max(1, _page || 1)
-      const perPage = Math.min(_perPage || pagination.perPage || 10, 50)
-
-      try {
-        setLoadState(prevLoadState =>
-          page > 1
-            ? 'loading_more'
-            : !prevLoadState ||
-              prevLoadState === 'not_loaded' ||
-              prevLoadState === 'loading_first'
-            ? 'loading_first'
-            : 'loading',
-        )
-
-        const params = { ..._params, page, per_page: perPage }
-        const response = await getNotifications(params, {
-          subscriptionId,
-        })
-
-        if (!hasFetchedRef.current) hasFetchedRef.current = true
-
-        if (Array.isArray(response.data) && response.data.length) {
-          const olderDateFromThisResponse = getOlderNotificationDate(
-            response.data,
-          )
-
-          setNotifications(prevNotifications =>
-            _.uniqBy(_.concat(response.data, prevNotifications), 'id'),
-          )
-          setPagination(prevPagination => ({ ...prevPagination, page }))
-          // setLoadState('loaded') // moved to the enchancement effect
-
-          if (
-            !olderNotificationDate ||
-            (olderDateFromThisResponse &&
-              olderDateFromThisResponse <= olderNotificationDate)
-          ) {
-            setOlderNotificationDate(olderDateFromThisResponse)
-
-            if (response.data.length >= perPage) {
-              const clearedAt = column.filters && column.filters.clearedAt
-              if (clearedAt && clearedAt >= olderDateFromThisResponse) {
-                setCanFetchMore(false)
-              } else {
-                setCanFetchMore(true)
-              }
-            } else {
-              setCanFetchMore(false)
-            }
-          }
-        } else {
-          setLoadState('loaded')
-          setPagination(prevPagination => ({ ...prevPagination, page }))
-          setCanFetchMore(false)
-        }
-        setError(null)
-      } catch (error) {
-        console.error('Failed to load GitHub notifications', error)
-        setLoadState('error')
-        setError(error)
-      }
+      fetchColumnSubscriptionRequest({
+        columnId: column.id,
+        params: {
+          page: page || 1,
+          perPage,
+        },
+      })
     }
 
-    const fetchNextPage = ({ perPage }: { perPage?: number } = {}) => {
-      const nextPage = (pagination.page || 1) + 1
+    const fetchNextPage = ({
+      perPage: _perPage,
+    }: { perPage?: number } = {}) => {
+      const perPage = _perPage || DEFAULT_PAGINATION_PER_PAGE
+      const currentPage = Math.ceil((subscription.data || []).length / perPage)
+      const nextPage = (currentPage || 1) + 1
       fetchData({ page: nextPage, perPage })
     }
-
-    const canFetchMore = (() => {
-      const clearedAt = column.filters && column.filters.clearedAt
-      const olderDate = getOlderNotificationDate(notifications)
-
-      if (clearedAt && olderDate && clearedAt >= olderDate) return false
-      return _canFetchMore
-    })()
 
     return (
       <NotificationCards
         {...props}
         key={`notification-cards-${column.id}`}
-        errorMessage={(error && error.message) || ''}
-        fetchNextPage={canFetchMore ? fetchNextPage : undefined}
-        loadState={loadState}
-        notifications={filteredNotifications}
+        errorMessage={subscription.errorMessage || ''}
+        fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
+        loadState={subscription.loadState || 'not_loaded'}
+        notifications={filteredItems}
         refresh={() => fetchData()}
       />
     )
   },
 )
-
-function getOlderNotificationDate(notifications: GitHubNotification[]) {
-  const olderItem = _.orderBy(notifications, 'updated_at', 'asc')[0]
-  return olderItem && olderItem.updated_at
-}

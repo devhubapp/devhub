@@ -2,15 +2,13 @@ import _ from 'lodash'
 
 import {
   ActivityColumnFilters,
+  EnhancedGitHubEvent,
   EnhancedGitHubNotification,
-  GitHubEvent,
-  NotificationColumnFilters,
-} from '@devhub/core/src/types'
-import { mergeSimilarEvents } from '@devhub/core/src/utils/helpers/github/events'
-import {
   isEventPrivate,
   isNotificationPrivate,
-} from '@devhub/core/src/utils/helpers/shared'
+  mergeSimilarEvents,
+  NotificationColumnFilters,
+} from '@devhub/core'
 
 export const filterRecordHasAnyForcedValue = (
   filtersRecord: Record<string, boolean | undefined> | undefined,
@@ -123,7 +121,7 @@ export function getFilteredNotifications(
 }
 
 export function getFilteredEvents(
-  events: GitHubEvent[],
+  events: EnhancedGitHubEvent[],
   filters?: ActivityColumnFilters,
 ) {
   let _events = _(events)

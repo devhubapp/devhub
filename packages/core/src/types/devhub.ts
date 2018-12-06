@@ -1,11 +1,14 @@
 import Octokit from '@octokit/rest'
+
 import {
+  EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
   GitHubEvent,
   GitHubExtractParamsFromActivityMethod,
   GitHubIcon,
   GitHubNotificationReason,
-  Omit,
-} from '.'
+} from './github'
+import { Omit } from './typescript'
 
 type octokit = InstanceType<typeof Octokit>
 
@@ -16,6 +19,11 @@ export interface NotificationSubscription {
   params: {
     all?: boolean
   }
+  data?: EnhancedGitHubNotification[]
+  loadState?: LoadState
+  errorMessage?: string
+  canFetchMore?: boolean
+  lastFetchedAt?: string
   createdAt: string
   updatedAt: string
 }
@@ -23,6 +31,11 @@ export interface NotificationSubscription {
 export type ActivitySubscription = {
   id: string
   type: 'activity'
+  data?: EnhancedGitHubEvent[]
+  loadState?: LoadState
+  errorMessage?: string
+  canFetchMore?: boolean
+  lastFetchedAt?: string
   createdAt: string
   updatedAt: string
 } & (
@@ -148,10 +161,7 @@ export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 export interface AddColumnDetailsPayload {
   name: string
   icon: GitHubIcon
-  subscription: Omit<
-    ColumnSubscription,
-    'id' | 'params' | 'createdAt' | 'updatedAt'
-  >
+  subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
   paramList: ColumnParamField[]
   defaultParams?: Partial<Record<ColumnParamField, any>>
 }
@@ -160,7 +170,9 @@ export interface ColumnAndSubscriptions {
   column:
     | Omit<ActivityColumn, 'createdAt' | 'updatedAt'>
     | Omit<NotificationColumn, 'createdAt' | 'updatedAt'>
-  subscriptions: Array<Omit<ColumnSubscription, 'createdAt' | 'updatedAt'>>
+  subscriptions: Array<
+    Pick<ColumnSubscription, 'id' | 'type' | 'subtype' | 'params'>
+  >
 }
 
 export type ModalPayload =
@@ -184,3 +196,8 @@ export type LoadState =
   | 'loading_first'
   | 'loading_more'
   | 'not_loaded'
+
+export type EnhancementCache = Map<
+  string,
+  false | { timestamp: number; data: any }
+>

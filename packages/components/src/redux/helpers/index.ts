@@ -16,6 +16,19 @@ export function createErrorAction<T extends string, E extends object>(
 export function createErrorAction<
   T extends string,
   E extends object = Record<string, any>
->(type: T, error?: E) {
+>(type: T, error: E) {
   return { type, error }
+}
+
+export function createErrorActionWithPayload<
+  T extends string,
+  P,
+  E extends object
+>(type: T, payload: P, error: E): ActionWithError<T, P, E>
+export function createErrorActionWithPayload<
+  T extends string,
+  P,
+  E extends object = Record<string, any>
+>(type: T, payload: P, error: E) {
+  return { type, payload, error }
 }

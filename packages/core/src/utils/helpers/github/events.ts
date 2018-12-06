@@ -409,7 +409,7 @@ export function getEventText(
   return text.replace(/ {2}/g, ' ').trim()
 }
 
-function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
+function tryMerge(eventA: EnhancedGitHubEvent, eventB: EnhancedGitHubEvent) {
   if (!eventA || !eventB) return null
 
   const isSameUser =
@@ -418,8 +418,7 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
   const isSameRepo =
     'repo' in eventA &&
     eventA.repo &&
-    eventB.repo &&
-    eventA.repo.id === eventB.repo.id
+    ('repo' in eventB && eventB.repo && eventA.repo.id === eventB.repo.id)
 
   const createdAtMinutesDiff = moment(eventA.created_at).diff(
     moment(eventB.created_at),
@@ -453,7 +452,7 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
     }
 
     case 'WatchEvent:OneUserMultipleRepos': {
-      const repoBId = eventB.repo && eventB.repo.id
+      const repoBId = 'repo' in eventB && eventB.repo && eventB.repo.id
       const alreadyMergedThisRepo = eventA.repos.find(
         repo => repo.id === repoBId,
       )
@@ -475,7 +474,7 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: GitHubEvent) {
   }
 }
 
-export function mergeSimilarEvents(events: GitHubEvent[]) {
+export function mergeSimilarEvents(events: EnhancedGitHubEvent[]) {
   const enhancedEvents: EnhancedGitHubEvent[] = []
 
   let enhancedEvent: EnhancedGitHubEvent | null = null

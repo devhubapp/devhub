@@ -26,7 +26,11 @@ export type ExtractDispatcherFromActionCreator<
 
 export type ExtractActionFromActionCreator<AC> = AC extends () => infer A
   ? A
-  : (AC extends (payload: any) => infer A ? A : never)
+  : (AC extends (payload: any) => infer A
+      ? A
+      : AC extends (payload: any, error: any) => infer A
+      ? A
+      : never)
 
 export type ExtractPropsFromConnector<
   Connector
