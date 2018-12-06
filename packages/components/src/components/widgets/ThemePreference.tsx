@@ -136,7 +136,11 @@ export function ThemePreference() {
         <Switch
           onValueChange={enableAutoTheme =>
             setTheme({
-              id: enableAutoTheme ? 'auto' : appTheme.id,
+              id: enableAutoTheme
+                ? 'auto'
+                : appTheme.isDark
+                ? preferredLightThemeId
+                : preferredDarkThemeId,
             })
           }
           value={currentThemeId === 'auto'}
