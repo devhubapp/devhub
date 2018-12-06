@@ -20,7 +20,7 @@ export interface BranchRowProps {
 
 export interface BranchRowState {}
 
-export function BranchRow(props: BranchRowProps) {
+export const BranchRow = React.memo((props: BranchRowProps) => {
   const theme = useTheme()
 
   const {
@@ -84,4 +84,4 @@ export function BranchRow(props: BranchRowProps) {
       </View>
     </View>
   )
-}
+})

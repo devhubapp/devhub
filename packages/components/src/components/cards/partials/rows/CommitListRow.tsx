@@ -11,7 +11,7 @@ export interface CommitListRowProps {
   commits: GitHubPushedCommit[]
 }
 
-export function CommitListRow(props: CommitListRowProps) {
+export const CommitListRow = React.memo((props: CommitListRowProps) => {
   const renderItem: RenderItem<GitHubPushedCommit> = ({
     showMoreItemsIndicator,
     item: commit,
@@ -36,4 +36,4 @@ export function CommitListRow(props: CommitListRowProps) {
   if (!(commits && commits.length > 0)) return null
 
   return <RowList {...otherProps} data={commits} renderItem={renderItem} />
-}
+})

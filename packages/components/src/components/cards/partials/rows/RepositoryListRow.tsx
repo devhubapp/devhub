@@ -15,7 +15,7 @@ export interface RepositoryListRowProps {
   repos: GitHubRepo[]
 }
 
-export function RepositoryListRow(props: RepositoryListRowProps) {
+export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {
   const renderItem: RenderItem<GitHubRepo> = ({
     item: repo,
     showMoreItemsIndicator,
@@ -45,4 +45,4 @@ export function RepositoryListRow(props: RepositoryListRowProps) {
   if (!(repos && repos.length > 0)) return null
 
   return <RowList {...otherProps} data={repos} renderItem={renderItem} />
-}
+})

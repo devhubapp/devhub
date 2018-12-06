@@ -19,7 +19,7 @@ export interface UserRowProps {
 
 export interface UserRowState {}
 
-export function UserRow(props: UserRowProps) {
+export const UserRow = React.memo((props: UserRowProps) => {
   const theme = useTheme()
 
   const {
@@ -69,4 +69,4 @@ export function UserRow(props: UserRowProps) {
       </View>
     </View>
   )
-}
+})

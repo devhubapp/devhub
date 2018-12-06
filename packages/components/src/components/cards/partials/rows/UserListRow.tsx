@@ -11,7 +11,7 @@ export interface UserListRowProps {
   users: GitHubUser[]
 }
 
-export function UserListRow(props: UserListRowProps) {
+export const UserListRow = React.memo((props: UserListRowProps) => {
   const renderItem: RenderItem<GitHubUser> = ({
     item: user,
     showMoreItemsIndicator,
@@ -35,4 +35,4 @@ export function UserListRow(props: UserListRowProps) {
   if (!(users && users.length > 0)) return null
 
   return <RowList {...otherProps} data={users} renderItem={renderItem} />
-}
+})

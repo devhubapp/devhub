@@ -20,7 +20,7 @@ export interface WikiPageRowProps {
 
 export interface WikiPageRowState {}
 
-export function WikiPageRow(props: WikiPageRowProps) {
+export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
   const theme = useTheme()
 
   const {
@@ -75,4 +75,4 @@ export function WikiPageRow(props: WikiPageRowProps) {
       </View>
     </View>
   )
-}
+})

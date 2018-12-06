@@ -10,7 +10,7 @@ export interface WikiPageListRowProps {
   pages: GitHubPage[]
 }
 
-export function WikiPageListRow(props: WikiPageListRowProps) {
+export const WikiPageListRow = React.memo((props: WikiPageListRowProps) => {
   const renderItem: RenderItem<GitHubPage> = ({
     item: page,
     showMoreItemsIndicator,
@@ -33,4 +33,4 @@ export function WikiPageListRow(props: WikiPageListRowProps) {
   if (!(pages && pages.length > 0)) return null
 
   return <RowList {...otherProps} data={pages} renderItem={renderItem} />
-}
+})

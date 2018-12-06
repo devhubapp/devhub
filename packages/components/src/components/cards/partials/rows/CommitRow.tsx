@@ -30,7 +30,7 @@ export interface CommitRowProps {
 
 export interface CommitRowState {}
 
-export function CommitRow(props: CommitRowProps) {
+export const CommitRow = React.memo((props: CommitRowProps) => {
   const theme = useTheme()
 
   const {
@@ -121,4 +121,4 @@ export function CommitRow(props: CommitRowProps) {
       </View>
     </View>
   )
-}
+})

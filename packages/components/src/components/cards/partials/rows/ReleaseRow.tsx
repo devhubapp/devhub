@@ -29,7 +29,7 @@ export interface ReleaseRowProps {
 
 export interface ReleaseRowState {}
 
-export function ReleaseRow(props: ReleaseRowProps) {
+export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
   const theme = useTheme()
 
   const {
@@ -169,4 +169,4 @@ export function ReleaseRow(props: ReleaseRowProps) {
       )}
     </View>
   )
-}
+})

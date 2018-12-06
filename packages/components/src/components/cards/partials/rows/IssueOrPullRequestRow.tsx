@@ -35,89 +35,91 @@ const styles = StyleSheet.create({
   },
 })
 
-export function IssueOrPullRequestRow(props: IssueOrPullRequestRowProps) {
-  const theme = useTheme()
+export const IssueOrPullRequestRow = React.memo(
+  (props: IssueOrPullRequestRowProps) => {
+    const theme = useTheme()
 
-  const {
-    addBottomAnchor,
-    avatarURL,
-    iconColor,
-    iconName,
-    isRead,
-    issueOrPullRequestNumber,
-    smallLeftColumn,
-    title: _title,
-    url,
-    userLinkURL,
-    username,
-  } = props
+    const {
+      addBottomAnchor,
+      avatarURL,
+      iconColor,
+      iconName,
+      isRead,
+      issueOrPullRequestNumber,
+      smallLeftColumn,
+      title: _title,
+      url,
+      userLinkURL,
+      username,
+    } = props
 
-  const title = trimNewLinesAndSpaces(_title)
-  if (!title) return null
+    const title = trimNewLinesAndSpaces(_title)
+    if (!title) return null
 
-  const byText = username ? `@${username}` : ''
+    const byText = username ? `@${username}` : ''
 
-  return (
-    <View style={getCardRowStylesForTheme(theme).container}>
-      <View
-        style={[
-          getCardStylesForTheme(theme).leftColumn,
-          smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
-        ]}
-      >
-        {Boolean(username) && (
-          <Avatar
-            avatarURL={avatarURL}
-            isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
-            linkURL={userLinkURL}
-            small
-            style={getCardStylesForTheme(theme).avatar}
-            username={username}
-          />
-        )}
-      </View>
-
-      <View style={getCardStylesForTheme(theme).rightColumn}>
-        <Link
-          href={fixURL(url, {
-            addBottomAnchor,
-            issueOrPullRequestNumber,
-          })}
-          style={getCardRowStylesForTheme(theme).mainContentContainer}
+    return (
+      <View style={getCardRowStylesForTheme(theme).container}>
+        <View
+          style={[
+            getCardStylesForTheme(theme).leftColumn,
+            smallLeftColumn
+              ? getCardStylesForTheme(theme).leftColumn__small
+              : getCardStylesForTheme(theme).leftColumn__big,
+          ]}
         >
-          <Text
-            numberOfLines={1}
-            style={[
-              defaultStyles.full,
-              getCardStylesForTheme(theme).normalText,
-              isRead && getCardStylesForTheme(theme).mutedText,
-            ]}
-          >
-            <Icon color={iconColor} name={iconName} /> {title}
-            {Boolean(byText) && (
-              <Text
-                style={[
-                  getCardStylesForTheme(theme).normalText,
-                  getCardStylesForTheme(theme).smallText,
-                  getCardStylesForTheme(theme).mutedText,
-                ]}
-              >
-                {' '}
-                by {byText}
-              </Text>
-            )}
-          </Text>
-        </Link>
+          {Boolean(username) && (
+            <Avatar
+              avatarURL={avatarURL}
+              isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+              linkURL={userLinkURL}
+              small
+              style={getCardStylesForTheme(theme).avatar}
+              username={username}
+            />
+          )}
+        </View>
 
-        <CardItemId
-          id={issueOrPullRequestNumber}
-          isRead={isRead}
-          style={styles.cardItemId}
-          url={url}
-        />
+        <View style={getCardStylesForTheme(theme).rightColumn}>
+          <Link
+            href={fixURL(url, {
+              addBottomAnchor,
+              issueOrPullRequestNumber,
+            })}
+            style={getCardRowStylesForTheme(theme).mainContentContainer}
+          >
+            <Text
+              numberOfLines={1}
+              style={[
+                defaultStyles.full,
+                getCardStylesForTheme(theme).normalText,
+                isRead && getCardStylesForTheme(theme).mutedText,
+              ]}
+            >
+              <Icon color={iconColor} name={iconName} /> {title}
+              {Boolean(byText) && (
+                <Text
+                  style={[
+                    getCardStylesForTheme(theme).normalText,
+                    getCardStylesForTheme(theme).smallText,
+                    getCardStylesForTheme(theme).mutedText,
+                  ]}
+                >
+                  {' '}
+                  by {byText}
+                </Text>
+              )}
+            </Text>
+          </Link>
+
+          <CardItemId
+            id={issueOrPullRequestNumber}
+            isRead={isRead}
+            style={styles.cardItemId}
+            url={url}
+          />
+        </View>
       </View>
-    </View>
-  )
-}
+    )
+  },
+)

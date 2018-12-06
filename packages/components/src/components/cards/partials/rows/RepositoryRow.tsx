@@ -22,7 +22,7 @@ export interface RepositoryRowProps {
 
 export interface RepositoryRowState {}
 
-export function RepositoryRow(props: RepositoryRowProps) {
+export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
   const theme = useTheme()
 
   const {
@@ -102,4 +102,4 @@ export function RepositoryRow(props: RepositoryRowProps) {
       </View>
     </View>
   )
-}
+})

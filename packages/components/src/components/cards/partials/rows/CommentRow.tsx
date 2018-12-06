@@ -24,7 +24,7 @@ export interface CommentRowProps {
 
 export interface CommentRowState {}
 
-export function CommentRow(props: CommentRowProps) {
+export const CommentRow = React.memo((props: CommentRowProps) => {
   const theme = useTheme()
 
   const {
@@ -87,4 +87,4 @@ export function CommentRow(props: CommentRowProps) {
       </View>
     </View>
   )
-}
+})
