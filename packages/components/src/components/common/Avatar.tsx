@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  PixelRatio,
-  StyleProp,
-  TouchableOpacityProps,
-  View,
-} from 'react-native'
+import { PixelRatio, StyleProp, View } from 'react-native'
 
 import {
   getUserAvatarByAvatarURL,
@@ -21,6 +16,7 @@ import {
 import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
 import { ConditionalWrap } from './ConditionalWrap'
 import { Link } from './Link'
+import { TouchableOpacityProps } from './TouchableOpacity'
 
 export interface AvatarProps extends Partial<AnimatedImageWithLoadingProps> {
   avatarURL?: string

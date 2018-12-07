@@ -33,7 +33,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
     <AnimatedSafeAreaView
       style={[
         styles.container,
-        { backgroundColor: theme.backgroundColorLess08 },
+        { backgroundColor: theme.backgroundColorLess08 as any },
       ]}
     >
       <View {...otherProps} style={[styles.innerContainer, style]}>

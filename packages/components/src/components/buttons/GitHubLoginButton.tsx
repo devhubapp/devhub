@@ -1,19 +1,16 @@
 import React from 'react'
-import {
-  Animated,
-  StyleSheet,
-  TextProps,
-  TouchableOpacityProps,
-  View,
-} from 'react-native'
+import { Animated, StyleSheet, TextProps, View } from 'react-native'
 
 import { AnimatedActivityIndicator } from '../../components/animated/AnimatedActivityIndicator'
 import { AnimatedIcon } from '../../components/animated/AnimatedIcon'
-import { AnimatedTouchableOpacity } from '../../components/animated/AnimatedTouchableOpacity'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
+import {
+  AnimatedTouchableOpacity,
+  AnimatedTouchableOpacityProps,
+} from '../animated/AnimatedTouchableOpacity'
 
-export interface GitHubLoginButtonProps extends TouchableOpacityProps {
+export interface GitHubLoginButtonProps extends AnimatedTouchableOpacityProps {
   horizontal?: boolean
   leftIcon?: string
   loading?: boolean
@@ -88,8 +85,8 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
       style={[
         styles.button,
         {
-          backgroundColor: theme.backgroundColorLess08,
-          borderColor: theme.backgroundColor,
+          backgroundColor: theme.backgroundColorLess08 as any,
+          borderColor: theme.backgroundColor as any,
         },
         props.style,
       ]}
@@ -148,7 +145,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
         {Boolean(rightIcon || loading) && (
           <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
             {loading ? (
-              <AnimatedActivityIndicator color={theme.foregroundColor} />
+              <AnimatedActivityIndicator color={theme.foregroundColor as any} />
             ) : (
               <AnimatedIcon
                 color={theme.foregroundColor}

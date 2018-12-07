@@ -8,7 +8,9 @@ import {
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding, radius } from '../../styles/variables'
 
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInputOriginal)
+const AnimatedTextInput = Animated.createAnimatedComponent(
+  TextInputOriginal,
+) as typeof TextInputOriginal
 
 export interface TextInputProps extends TextInputComponentProps {
   placeholderTextColor: any

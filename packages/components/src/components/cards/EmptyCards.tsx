@@ -49,7 +49,7 @@ export function EmptyCards(props: EmptyCardsProps) {
 
   const renderContent = () => {
     if (loadState === 'loading_first') {
-      return <AnimatedActivityIndicator color={theme.foregroundColor} />
+      return <AnimatedActivityIndicator color={theme.foregroundColor as any} />
     }
 
     const containerStyle: ViewStyle = { width: '100%', padding: contentPadding }
@@ -97,7 +97,7 @@ export function EmptyCards(props: EmptyCardsProps) {
 
   return (
     <AnimatedTransparentTextOverlay
-      color={theme.backgroundColor}
+      color={theme.backgroundColor as any}
       size={contentPadding}
       from="vertical"
     >

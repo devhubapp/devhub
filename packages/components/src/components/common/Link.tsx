@@ -1,14 +1,10 @@
 import React, { AnchorHTMLAttributes } from 'react'
-import {
-  Animated,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from 'react-native'
+import { Animated, View } from 'react-native'
 
 import { Browser } from '../../libs/browser'
 import { Platform } from '../../libs/platform'
 import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
+import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export interface LinkProps extends TouchableOpacityProps {
   allowEmptyLink?: boolean
@@ -22,7 +18,7 @@ export interface LinkProps extends TouchableOpacityProps {
 export function Link(props: LinkProps) {
   const {
     allowEmptyLink,
-    animated = true,
+    animated,
     href,
     mobileProps,
     openOnNewTab = true,
@@ -35,7 +31,7 @@ export function Link(props: LinkProps) {
     ? AnimatedTouchableOpacity
     : TouchableOpacity
 
-  if (!href && !allowEmptyLink)
+  if (!href && !allowEmptyLink) {
     return (
       <ViewComponent
         {...Platform.select({
@@ -51,6 +47,7 @@ export function Link(props: LinkProps) {
         })}
       />
     )
+  }
 
   return (
     <TouchableOpacityComponent

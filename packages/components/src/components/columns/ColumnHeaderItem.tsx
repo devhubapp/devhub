@@ -5,7 +5,6 @@ import {
   StyleProp,
   StyleSheet,
   TextStyle,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
@@ -24,6 +23,7 @@ import {
   ConditionalWrap,
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
+import { TouchableOpacity } from '../common/TouchableOpacity'
 
 export interface ColumnHeaderItemProps {
   avatarProps?: Partial<AvatarProps>

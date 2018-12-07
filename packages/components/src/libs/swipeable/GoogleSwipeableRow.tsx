@@ -20,7 +20,7 @@ export interface GoogleSwipeableRowAction extends BaseSwipeableRowAction {
 
 export interface GoogleSwipeableRowProps extends BaseSwipeableRowProps {}
 
-const AnimatedIcon = Animated.createAnimatedComponent(Icon)
+const AnimatedIcon = Animated.createAnimatedComponent(Icon) as typeof Icon
 
 export class GoogleSwipeableRow extends BaseSwipeableRow<
   GoogleSwipeableRowProps,
@@ -71,7 +71,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
           name={action.icon}
           size={30}
           color={action.textColor || '#FFFFFF'}
-          style={[styles.actionIcon, { transform: [transform] }]}
+          style={[styles.actionIcon, { transform: [transform] }] as any}
         />
       </RectButton>
     )
@@ -117,7 +117,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
           name={action.icon}
           size={30}
           color={action.textColor || '#FFFFFF'}
-          style={[styles.actionIcon, { transform: [transform] }]}
+          style={[styles.actionIcon, { transform: [transform] }] as any}
         />
       </RectButton>
     )

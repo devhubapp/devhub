@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Animated,
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Animated, Image, ScrollView, StyleSheet, View } from 'react-native'
 
 import { ModalPayload } from '@devhub/core/src/types'
 import { getColumnHeaderDetails } from '@devhub/core/src/utils/helpers/github/events'
@@ -23,6 +16,7 @@ import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
+import { TouchableOpacity } from '../common/TouchableOpacity'
 
 const logo = require('@devhub/components/assets/logo.png') // tslint:disable-line
 
@@ -57,7 +51,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
     <AnimatedSafeAreaView
       style={{
         width: horizontal ? undefined : sidebarSize,
-        backgroundColor: theme.backgroundColor,
+        backgroundColor: theme.backgroundColor as any,
       }}
     >
       <View

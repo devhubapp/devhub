@@ -45,7 +45,7 @@ export function Screen(props: ScreenProps) {
       <AnimatedStatusBar
         barStyle={theme.isDark ? 'light-content' : 'dark-content'}
         backgroundColor={
-          statusBarBackgroundColor || animatedTheme.backgroundColor
+          statusBarBackgroundColor || (animatedTheme.backgroundColor as any)
         }
       />
 

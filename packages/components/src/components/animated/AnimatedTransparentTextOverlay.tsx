@@ -16,4 +16,4 @@ class TransparentTextOverlayClass extends React.Component<
 
 export const AnimatedTransparentTextOverlay = Animated.createAnimatedComponent(
   TransparentTextOverlayClass,
-)
+) as typeof TransparentTextOverlayClass

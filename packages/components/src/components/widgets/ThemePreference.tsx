@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Animated, StyleSheet, Text, View } from 'react-native'
 
 import { Theme } from '@devhub/core/src/types'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -19,6 +13,7 @@ import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { Switch } from '../common/Switch'
+import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
 
 export function ThemePreference() {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Animated, TouchableOpacity, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
 import { AddColumnDetailsPayload } from '@devhub/core/src/types'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -8,6 +8,7 @@ import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
+import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 
 const columnTypes: AddColumnDetailsPayload[] = [

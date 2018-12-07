@@ -1,16 +1,11 @@
 import React, { useState } from 'react'
-import {
-  Animated,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { Animated, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedIcon } from '../animated/AnimatedIcon'
+import { TouchableOpacity } from './TouchableOpacity'
 
 const checkboxBorderRadius = 4
 

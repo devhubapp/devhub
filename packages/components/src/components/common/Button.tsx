@@ -1,11 +1,12 @@
 import React from 'react'
-import { Animated, TouchableOpacityProps } from 'react-native'
+import { Animated } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
 import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
+import { TouchableOpacityProps } from './TouchableOpacity'
 
 export const buttonSize = 40
 
@@ -41,14 +42,17 @@ export function Button(props: ButtonProps) {
           paddingVertical: contentPadding / 2,
           backgroundColor: useBrandColor
             ? colors.brandBackgroundColor
-            : theme.backgroundColorMore08,
+            : (theme.backgroundColorMore08 as any),
           borderRadius: radius,
         },
         style,
       ]}
     >
       {loading ? (
-        <AnimatedActivityIndicator color={theme.foregroundColor} size="small" />
+        <AnimatedActivityIndicator
+          color={theme.foregroundColor as any}
+          size="small"
+        />
       ) : typeof children === 'string' ? (
         <Animated.Text
           style={{

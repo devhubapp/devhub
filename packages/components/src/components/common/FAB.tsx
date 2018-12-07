@@ -4,6 +4,7 @@ import {
   StyleProp,
   TextStyle,
   TouchableOpacityProps,
+  ViewStyle,
 } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core/src/types'
@@ -18,8 +19,9 @@ export const fabSize = 48
 export interface FABProps extends TouchableOpacityProps {
   children?: string | React.ReactElement<any>
   iconName?: GitHubIcon
-  iconStyle?: StyleProp<TextStyle>
+  iconStyle?: StyleProp<TextStyle> | any
   onPress: TouchableOpacityProps['onPress']
+  style?: StyleProp<ViewStyle> | any
   useBrandColor?: boolean
 }
 

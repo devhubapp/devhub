@@ -35,7 +35,7 @@ export const RowList = React.memo((props: RowListProps<any>) => {
 
   return (
     <AnimatedTransparentTextOverlay
-      color={theme.backgroundColor}
+      color={theme.backgroundColor as any}
       size={narrow ? contentPadding / 2 : contentPadding}
       from="vertical"
       containerStyle={{ flex: 0 }}
