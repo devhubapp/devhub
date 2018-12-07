@@ -4,7 +4,7 @@ import { Animated, StyleSheet, View, ViewStyle } from 'react-native'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedIcon } from '../animated/AnimatedIcon'
+import { AnimatedIcon, AnimatedIconProps } from '../animated/AnimatedIcon'
 import { TouchableOpacity } from './TouchableOpacity'
 
 const checkboxBorderRadius = 4
@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: checkboxBorderRadius,
     borderWidth: 1,
   },
   center: {
@@ -34,13 +33,15 @@ export interface CheckboxProps {
   checked?: boolean | null
   checkedBackgroundColor?: string | Animated.AnimatedInterpolation
   checkedForegroundColor?: string | Animated.AnimatedInterpolation
+  circle?: boolean
   containerStyle?: ViewStyle
   defaultValue?: boolean | null
   disabled?: boolean
   enableTrippleState?: boolean
   label?: string | React.ReactNode
+  labelIcon?: AnimatedIconProps['name']
   onChange?: (value: boolean | null) => void
-  size?: number | string
+  size?: number
   uncheckedBackgroundColor?: string | Animated.AnimatedInterpolation
   uncheckedForegroundColor?: string | Animated.AnimatedInterpolation
   useBrandColor?: boolean
@@ -54,9 +55,11 @@ export function Checkbox(props: CheckboxProps) {
     checked = defaultValue,
     checkedBackgroundColor = colors.brandBackgroundColor,
     checkedForegroundColor = colors.brandForegroundColor,
+    circle,
     containerStyle,
     disabled,
     label,
+    labelIcon,
     onChange,
     size = 18,
     enableTrippleState = false,
@@ -88,7 +91,7 @@ export function Checkbox(props: CheckboxProps) {
     <TouchableOpacity
       disabled={disabled}
       onPress={disabled ? undefined : handleOnChange}
-      style={[styles.container, disabled && { opacity: 0.5 }, containerStyle]}
+      style={[styles.container, containerStyle]}
     >
       <Animated.View
         style={[
@@ -103,6 +106,7 @@ export function Checkbox(props: CheckboxProps) {
               checked || isThirdState
                 ? checkedBackgroundColor
                 : uncheckedForegroundColor,
+            borderRadius: circle ? size / 2 : checkboxBorderRadius,
           },
         ]}
       >
@@ -115,7 +119,7 @@ export function Checkbox(props: CheckboxProps) {
                 checked || isThirdState
                   ? checkedBackgroundColor
                   : uncheckedBackgroundColor,
-              borderRadius: checkboxBorderRadius / 2,
+              borderRadius: circle ? size / 2 : checkboxBorderRadius / 2,
             }}
           />
         </View>
@@ -124,25 +128,54 @@ export function Checkbox(props: CheckboxProps) {
           <AnimatedIcon
             color={checkedForegroundColor}
             name="check"
-            size={14}
-            style={{ opacity: checked ? 1 : 0 }}
+            size={13}
+            style={{
+              textAlign: 'center',
+              opacity: checked ? 1 : 0,
+            }}
           />
         </View>
       </Animated.View>
 
-      {!!label &&
-        (typeof label === 'string' ? (
+      {!!label && (
+        <View
+          style={{
+            flexGrow: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignContent: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <Animated.Text
             style={{
               marginLeft: contentPadding / 2,
               color: theme.foregroundColor,
             }}
           >
-            {label}
+            {typeof label === 'string' ? (
+              <Animated.Text
+                style={{
+                  marginLeft: contentPadding / 2,
+                  color: theme.foregroundColor,
+                }}
+              >
+                {label}
+              </Animated.Text>
+            ) : (
+              label
+            )}
           </Animated.Text>
-        ) : (
-          label
-        ))}
+
+          {!!labelIcon && (
+            <AnimatedIcon
+              color={theme.foregroundColor}
+              name={labelIcon}
+              size={16}
+            />
+          )}
+        </View>
+      )}
     </TouchableOpacity>
   )
 }

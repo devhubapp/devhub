@@ -23,6 +23,15 @@ export function moveColumn(payload: { columnId: string; columnIndex: number }) {
   return createAction('MOVE_COLUMN', payload)
 }
 
+export function setColumnInboxFilter(payload: {
+  columnId: string
+  inbox?: boolean
+  archived?: boolean
+  saved?: boolean
+}) {
+  return createAction('SET_COLUMN_INBOX_FILTER', payload)
+}
+
 export function setColumnActivityTypeFilter<
   T extends GitHubEvent['type']
 >(payload: { columnId: string; type: T; value: boolean | null }) {

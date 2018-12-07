@@ -1,6 +1,7 @@
 import React from 'react'
 import { Animated, StyleSheet, TextProps, View } from 'react-native'
 
+import { GitHubIcon } from '@devhub/core'
 import { AnimatedActivityIndicator } from '../../components/animated/AnimatedActivityIndicator'
 import { AnimatedIcon } from '../../components/animated/AnimatedIcon'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -12,9 +13,9 @@ import {
 
 export interface GitHubLoginButtonProps extends AnimatedTouchableOpacityProps {
   horizontal?: boolean
-  leftIcon?: string
+  leftIcon?: GitHubIcon
   loading?: boolean
-  rightIcon?: string
+  rightIcon?: GitHubIcon
   subtitle?: string
   subtitleProps?: TextProps
   textProps?: TextProps
@@ -92,7 +93,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
       ]}
     >
       <View style={styles.content}>
-        {Boolean(leftIcon) && (
+        {!!leftIcon && (
           <Animated.View
             style={[
               styles.iconWrapper,
@@ -104,14 +105,14 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
           >
             <AnimatedIcon
               color={theme.foregroundColor}
-              name={leftIcon!}
+              name={leftIcon}
               style={styles.icon}
             />
           </Animated.View>
         )}
 
         <View style={styles.mainContentContainer}>
-          {Boolean(title) && (
+          {!!title && (
             <Animated.Text
               {...textProps}
               style={[
@@ -126,7 +127,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
             </Animated.Text>
           )}
 
-          {Boolean(subtitle) && (
+          {!!subtitle && (
             <Animated.Text
               {...subtitleProps}
               style={[
@@ -142,16 +143,18 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
           )}
         </View>
 
-        {Boolean(rightIcon || loading) && (
+        {!!(rightIcon || loading) && (
           <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
             {loading ? (
               <AnimatedActivityIndicator color={theme.foregroundColor as any} />
             ) : (
-              <AnimatedIcon
-                color={theme.foregroundColor}
-                name={rightIcon!}
-                style={styles.icon}
-              />
+              !!rightIcon && (
+                <AnimatedIcon
+                  color={theme.foregroundColor}
+                  name={rightIcon}
+                  style={styles.icon}
+                />
+              )
             )}
           </View>
         )}

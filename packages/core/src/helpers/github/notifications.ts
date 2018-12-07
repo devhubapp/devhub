@@ -7,7 +7,7 @@ import {
   getCommentIdFromUrl,
   getOwnerAndRepo,
   GitHubNotification,
-  NotificationEnhancement,
+  NotificationPayloadEnhancement,
 } from '../..'
 
 export async function getNotificationsEnhancementMap(
@@ -16,7 +16,7 @@ export async function getNotificationsEnhancementMap(
     cache = new Map(),
     githubToken,
   }: { cache: EnhancementCache | undefined | undefined; githubToken: string },
-): Promise<Record<string, NotificationEnhancement>> {
+): Promise<Record<string, NotificationPayloadEnhancement>> {
   const promises = notifications.map(async notification => {
     if (!(notification.repository && notification.repository.full_name)) return
 
@@ -27,13 +27,15 @@ export async function getNotificationsEnhancementMap(
       notification.subject.latest_comment_url,
     )
 
-    const enhance: NotificationEnhancement = {}
+    const enhance: NotificationPayloadEnhancement = {}
 
     const subjectCache = cache.get(notification.subject.url)
     const commentCache = cache.get(notification.subject.latest_comment_url)
 
     const subjectField = (notification.subject.type[0].toLowerCase() +
-      notification.subject.type.substr(1)) as keyof NotificationEnhancement
+      notification.subject.type.substr(
+        1,
+      )) as keyof NotificationPayloadEnhancement
 
     if (
       !subjectCache ||
@@ -116,7 +118,7 @@ export async function getNotificationsEnhancementMap(
 
 export function enhanceNotifications(
   notifications: Array<GitHubNotification | EnhancedGitHubNotification>,
-  enhancementMap: Record<string, NotificationEnhancement>,
+  enhancementMap: Record<string, NotificationPayloadEnhancement>,
   currentEnhancedNotifications: EnhancedGitHubNotification[] = [],
 ) {
   return notifications.map(cen => {

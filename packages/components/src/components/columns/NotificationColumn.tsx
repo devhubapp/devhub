@@ -44,6 +44,12 @@ export function NotificationColumn(props: NotificationColumnProps) {
         />
 
         <ColumnHeaderItem
+          disabled={
+            column.filters &&
+            column.filters.inbox &&
+            column.filters.inbox &&
+            column.filters.inbox.archived === true
+          }
           iconName="circle-slash"
           onPress={() =>
             setColumnClearedAtFilter({

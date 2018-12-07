@@ -51,6 +51,10 @@ export function activityColumnHasAnyFilter(
 
   if (typeof filters.private === 'boolean' || filters.clearedAt) return true
 
+  if (filters.inbox) {
+    return filterRecordHasAnyForcedValue(filters.inbox)
+  }
+
   if (filters.activity) {
     return filterRecordHasAnyForcedValue(filters.activity.types)
   }
@@ -65,6 +69,10 @@ export function notificationColumnHasAnyFilter(
 
   if (typeof filters.private === 'boolean' || filters.clearedAt) return true
   if (typeof filters.unread === 'boolean') return true
+
+  if (filters.inbox) {
+    return filterRecordHasAnyForcedValue(filters.inbox)
+  }
 
   if (filters.notifications) {
     return filterRecordHasAnyForcedValue(filters.notifications.reasons)
@@ -85,6 +93,8 @@ export function getFilteredNotifications(
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
 
+  const inboxFilter = (filters && filters.inbox) || {}
+
   if (filters && notificationColumnHasAnyFilter(filters)) {
     _notifications = _notifications.filter(notification => {
       if (!itemPassesFilterRecord(reasonsFilter, notification.reason, true))
@@ -104,16 +114,21 @@ export function getFilteredNotifications(
         return false
       }
 
+      const showInbox = inboxFilter.inbox !== false
+      const showSaveForLater = inboxFilter.saved !== false
+      const showCleared = inboxFilter.archived === true
+
       if (
         filters.clearedAt &&
-        notification.unread !== true &&
         (!notification.updated_at ||
-          notification.updated_at < filters.clearedAt)
-      ) {
-        return false
-      }
+          notification.updated_at <= filters.clearedAt)
+      )
+        if (!notification.unread && !(showSaveForLater && notification.saved))
+          return showCleared
 
-      return true
+      if (notification.saved) return showSaveForLater
+
+      return showInbox
     })
   }
 
@@ -130,6 +145,7 @@ export function getFilteredEvents(
     .value()
 
   const activityFilter = filters && filters.activity && filters.activity.types
+  const inboxFilter = (filters && filters.inbox) || {}
 
   if (filters && activityColumnHasAnyFilter(filters)) {
     _events = _events.filter(event => {
@@ -143,14 +159,20 @@ export function getFilteredEvents(
         return false
       }
 
+      const showInbox = inboxFilter.inbox !== false
+      const showSaveForLater = inboxFilter.saved !== false
+      const showCleared = inboxFilter.archived === true
+
       if (
         filters.clearedAt &&
-        (!event.created_at || event.created_at < filters.clearedAt)
-      ) {
-        return false
-      }
+        (!event.created_at || event.created_at <= filters.clearedAt)
+      )
+        if (!(showSaveForLater && event.saved) /* && !event.unread */)
+          return showCleared
 
-      return true
+      if (event.saved) return showSaveForLater
+
+      return showInbox
     })
   }
 

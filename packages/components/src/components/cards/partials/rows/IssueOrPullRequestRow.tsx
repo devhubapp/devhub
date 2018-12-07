@@ -6,7 +6,7 @@ import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { defaultStyles } from '../../../../styles/styles'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { AnimatedIcon, AnimatedIconProps } from '../../../animated/AnimatedIcon'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -17,7 +17,7 @@ export interface IssueOrPullRequestRowProps {
   addBottomAnchor?: boolean
   avatarURL: string
   iconColor?: string
-  iconName: string
+  iconName: AnimatedIconProps['name']
   isRead: boolean
   issueOrPullRequestNumber: number
   smallLeftColumn?: boolean

@@ -3,18 +3,14 @@ import { StyleSheet, View } from 'react-native'
 
 import {
   EnhancedGitHubNotification,
-  GitHubNotificationReason,
-} from '@devhub/core/src/types'
-import { getOwnerAndRepo } from '@devhub/core/src/utils/helpers/github/shared'
-import {
   getGitHubURLForRepoInvitation,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
-} from '@devhub/core/src/utils/helpers/github/url'
-import {
+  getOwnerAndRepo,
+  GitHubNotificationReason,
   isNotificationPrivate,
   trimNewLinesAndSpaces,
-} from '@devhub/core/src/utils/helpers/shared'
+} from '@devhub/core'
 import { contentPadding } from '../../styles/variables'
 import { getNotificationReasonMetadata } from '../../utils/helpers/github/notifications'
 import {
@@ -52,6 +48,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     comment,
     id,
     repository: repo,
+    saved,
     subject,
     unread,
     updated_at: updatedAt,
@@ -60,7 +57,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   if (!subject) return null
 
   const isRead = !unread
+  const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
+
   const title = trimNewLinesAndSpaces(subject.title)
 
   const repoFullName =
@@ -147,8 +146,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         key={`notification-card-header-${id}`}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
+        id={id}
         isPrivate={isPrivate}
         isRead={isRead}
+        isSaved={isSaved}
         labelColor={labelColor}
         labelText={labelText}
         smallLeftColumn

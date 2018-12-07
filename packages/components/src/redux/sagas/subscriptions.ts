@@ -16,6 +16,7 @@ import {
   ColumnSubscription,
   createNotificationsCache,
   DEFAULT_PAGINATION_PER_PAGE,
+  EnhancedGitHubEvent,
   EnhancementCache,
   enhanceNotifications,
   getNotificationsEnhancementMap,
@@ -208,7 +209,7 @@ function* onFetchRequest(
       )
 
       const enhancedItems = enhanceNotifications(
-        mergedItems,
+        newItems,
         enhancementMap,
         prevItems,
       )
@@ -234,7 +235,10 @@ function* onFetchRequest(
 
       const prevItems = subscription.data.items || []
       const newItems = (response.data || []) as GitHubEvent[]
-      const mergedItems = _.uniqBy(_.concat(newItems, prevItems), 'id')
+      const mergedItems = _.uniqBy(
+        _.concat(newItems, prevItems as any),
+        'id',
+      ) as EnhancedGitHubEvent[]
 
       const olderNotificationDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)
@@ -249,7 +253,7 @@ function* onFetchRequest(
       yield put(
         actions.fetchSubscriptionSuccess({
           subscriptionId,
-          data: mergedItems,
+          data: newItems,
           canFetchMore,
         }),
       )

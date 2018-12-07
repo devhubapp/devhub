@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 
-import { Column } from '@devhub/core/src/types'
+import { Column, GitHubIcon } from '@devhub/core/src/types'
 import {
   eventTypes,
   getEventTypeMetadata,
@@ -58,6 +58,7 @@ export interface ColumnOptionsProps {
 export type ColumnOptionCategory =
   | 'cleared'
   | 'event_types'
+  | 'inbox'
   | 'notification_types'
   | 'privacy'
   | 'unread'
@@ -72,6 +73,8 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const dimensions = useDimensions()
   const { appOrientation, sizename } = useAppLayout()
   const moveColumn = useReduxAction(actions.moveColumn)
+  const clearArchivedItems = useReduxAction(actions.clearArchivedItems)
+  const setColumnInboxFilter = useReduxAction(actions.setColumnInboxFilter)
   const setColumnActivityTypeFilter = useReduxAction(
     actions.setColumnActivityTypeFilter,
   )
@@ -215,31 +218,8 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       enableTrippleState={
                         !isFilterStrict || checked === defaultBooleanValue
                       }
-                      label={
-                        <View
-                          style={{
-                            flexGrow: 1,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            alignContent: 'center',
-                            justifyContent: 'space-between',
-                          }}
-                        >
-                          <Animated.Text
-                            style={{
-                              marginLeft: contentPadding / 2,
-                              color: theme.foregroundColor,
-                            }}
-                          >
-                            {item.label}
-                          </Animated.Text>
-                          <AnimatedIcon
-                            color={theme.foregroundColor}
-                            name={item.icon}
-                            size={16}
-                          />
-                        </View>
-                      }
+                      label={item.label}
+                      labelIcon={item.icon}
                       onChange={value => {
                         setColumnActivityTypeFilter({
                           columnId: column.id,
@@ -253,6 +233,94 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               </ColumnOptionsRow>
             )
           })()}
+
+        {(() => {
+          const filters = (column.filters && column.filters.inbox) || {}
+
+          const showInbox = filters.inbox !== false
+          const showSaveForLater = filters.saved !== false
+          const showArchived = filters.archived === true
+
+          const savedForLaterTitle = 'Saved for later'
+          const details: { title: string; icon: GitHubIcon } = showArchived
+            ? {
+                title: `Archived${
+                  showSaveForLater ? ` + ${savedForLaterTitle}` : ''
+                }`,
+                icon: 'archive',
+              }
+            : !showInbox && showSaveForLater
+            ? { title: savedForLaterTitle, icon: 'bookmark' }
+            : {
+                title: `Inbox${
+                  showSaveForLater ? ` + ${savedForLaterTitle}` : ''
+                }`,
+                icon: 'inbox',
+              }
+
+          return (
+            <ColumnOptionsRow
+              contentContainerStyle={{ marginRight: contentPadding }}
+              hasChanged={filterRecordHasAnyForcedValue(filters)}
+              iconName={details.icon}
+              onToggle={() => toggleOpenedOptionCategory('inbox')}
+              opened={openedOptionCategory === 'inbox'}
+              title={details.title}
+            >
+              <Checkbox
+                checked={showInbox}
+                circle
+                disabled={showInbox && (!showSaveForLater && !showArchived)}
+                containerStyle={{ flexGrow: 1 }}
+                label="Inbox"
+                labelIcon="inbox"
+                onChange={checked => {
+                  setColumnInboxFilter({
+                    columnId: column.id,
+                    inbox: !!checked,
+                    ...(!!checked && {
+                      archived: false,
+                    }),
+                  })
+                }}
+              />
+
+              <Spacer height={contentPadding / 2} />
+
+              <Checkbox
+                checked={showArchived}
+                circle
+                containerStyle={{ flexGrow: 1 }}
+                label="Archived"
+                labelIcon="archive"
+                onChange={checked => {
+                  setColumnInboxFilter({
+                    columnId: column.id,
+                    archived: !!checked,
+                    ...(!!checked && {
+                      inbox: false,
+                    }),
+                  })
+                }}
+              />
+
+              <Spacer height={contentPadding / 2} />
+
+              <Checkbox
+                checked={showSaveForLater}
+                containerStyle={{ flexGrow: 1 }}
+                label="Saved for later"
+                labelIcon="bookmark"
+                onChange={checked => {
+                  setColumnInboxFilter({
+                    columnId: column.id,
+                    saved: !!checked,
+                  })
+                }}
+              />
+            </ColumnOptionsRow>
+          )
+        })()}
 
         {column.type === 'notifications' &&
           (() => {
@@ -289,6 +357,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   containerStyle={{ flexGrow: 1 }}
                   disabled={isReadChecked && !isUnreadChecked}
                   label="Read"
+                  // labelIcon="mail-read"
                   onChange={checked => {
                     setColumnUnreadFilter({
                       columnId: column.id,
@@ -304,6 +373,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   containerStyle={{ flexGrow: 1 }}
                   disabled={isUnreadChecked && !isReadChecked}
                   label="Unread"
+                  // labelIcon="mail"
                   onChange={checked => {
                     setColumnUnreadFilter({
                       columnId: column.id,
@@ -356,6 +426,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 containerStyle={{ flexGrow: 1 }}
                 disabled={isPublicChecked && !isPrivateChecked}
                 label="Public"
+                // labelIcon="globe"
                 onChange={checked => {
                   setColumnPrivacyFilter({
                     columnId: column.id,
@@ -371,6 +442,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 containerStyle={{ flexGrow: 1 }}
                 disabled={isPrivateChecked && !isPublicChecked}
                 label="Private"
+                // labelIcon="lock"
                 onChange={checked => {
                   setColumnPrivacyFilter({
                     columnId: column.id,
@@ -403,28 +475,44 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
           <Spacer flex={1} />
 
-          {!!(column.filters && column.filters.clearedAt) && (
-            <ColumnHeaderItem
-              iconName="circle-slash"
-              iconStyle={
-                column.filters && column.filters.clearedAt
-                  ? { color: colors.brandBackgroundColor }
-                  : undefined
-              }
-              onPress={() =>
-                setColumnClearedAtFilter({
-                  columnId: column.id,
-                  clearedAt:
-                    column.filters && column.filters.clearedAt
-                      ? null
-                      : new Date().toISOString(),
-                })
-              }
-              text={
-                column.filters && column.filters.clearedAt ? 'Unclear' : 'Clear'
-              }
-            />
-          )}
+          {!!column.filters &&
+            !!column.filters.clearedAt &&
+            ((column.filters.inbox && column.filters.inbox.archived) ===
+            true ? (
+              <ColumnHeaderItem
+                iconName="archive"
+                onPress={() =>
+                  clearArchivedItems({
+                    clearedAt: column.filters!.clearedAt!,
+                    subscriptionIds: column.subscriptionIds,
+                  })
+                }
+                text="Clear archived"
+              />
+            ) : (
+              <ColumnHeaderItem
+                iconName="circle-slash"
+                iconStyle={
+                  column.filters && column.filters.clearedAt
+                    ? { color: colors.brandBackgroundColor }
+                    : undefined
+                }
+                onPress={() =>
+                  setColumnClearedAtFilter({
+                    columnId: column.id,
+                    clearedAt:
+                      column.filters && column.filters.clearedAt
+                        ? null
+                        : new Date().toISOString(),
+                  })
+                }
+                text={
+                  column.filters && column.filters.clearedAt
+                    ? 'Unclear'
+                    : 'Clear'
+                }
+              />
+            ))}
 
           <ColumnHeaderItem
             iconName="trashcan"

@@ -44,3 +44,17 @@ export function fetchSubscriptionFailure<E extends Error>(
     error,
   )
 }
+
+export function saveItemForLater(payload: {
+  itemId: string | number
+  save?: boolean
+}) {
+  return createAction('SAVE_ITEM_FOR_LATER', payload)
+}
+
+export function clearArchivedItems(payload: {
+  clearedAt: string
+  subscriptionIds: string[]
+}) {
+  return createAction('CLEAR_ARCHIVED_ITEMS', payload)
+}

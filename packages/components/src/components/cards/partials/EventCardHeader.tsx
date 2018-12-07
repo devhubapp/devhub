@@ -2,9 +2,11 @@ import { MomentInput } from 'moment'
 import React from 'react'
 import { Animated, StyleSheet, Text, View } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core/src/types'
-import { getDateSmallText } from '@devhub/core/src/utils/helpers/shared'
+import { getDateSmallText, GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import * as actions from '../../../redux/actions'
+import { useReduxAction } from '../../../redux/hooks/use-redux-action'
+import * as colors from '../../../styles/colors'
 import { AnimatedIcon } from '../../animated/AnimatedIcon'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
@@ -19,8 +21,10 @@ export interface EventCardHeaderProps {
   cardIconColor?: string
   cardIconName: GitHubIcon
   createdAt: MomentInput
+  id: string | number
   isBot: boolean
   isPrivate?: boolean
+  isSaved?: boolean
   smallLeftColumn?: boolean
   userLinkURL: string
   username: string
@@ -52,14 +56,18 @@ const styles = StyleSheet.create({
 export function EventCardHeader(props: EventCardHeaderProps) {
   const theme = useAnimatedTheme()
 
+  const saveItemForLater = useReduxAction(actions.saveItemForLater)
+
   const {
     actionText,
     avatarURL,
     cardIconColor,
     cardIconName,
     createdAt,
+    id,
     isBot,
     isPrivate,
+    isSaved,
     smallLeftColumn,
     userLinkURL,
     username: _username,
@@ -68,7 +76,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   const username = isBot ? _username!.replace('[bot]', '') : _username
 
   return (
-    <View style={styles.container}>
+    <View key={`event-card-header-${id}-inner`} style={styles.container}>
       <View
         style={[
           getCardStylesForTheme(theme).leftColumn,
@@ -144,6 +152,15 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             </Animated.Text>
           </View>
 
+          <CardIcon
+            name="bookmark"
+            color={
+              isSaved
+                ? colors.brandBackgroundColor
+                : theme.foregroundColorMuted50
+            }
+            onPress={() => saveItemForLater({ itemId: id, save: !isSaved })}
+          />
           <CardIcon name={cardIconName} color={cardIconColor} />
         </View>
       </View>

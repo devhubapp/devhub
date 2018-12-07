@@ -20,7 +20,12 @@ export const TouchableOpacity = React.forwardRef(
       : TouchableOpacityOriginal
 
     return (
-      <TouchableOpacityComponent activeOpacity={0.5} {...props} ref={ref} />
+      <TouchableOpacityComponent
+        activeOpacity={0.5}
+        {...props}
+        style={[props.style, props.disabled && { opacity: 0.5 }]}
+        ref={ref}
+      />
     )
   },
 )

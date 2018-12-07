@@ -1,8 +1,15 @@
 import immer from 'immer'
 import _ from 'lodash'
-
-import { ColumnSubscription } from '@devhub/core'
 import { REHYDRATE } from 'redux-persist'
+
+import {
+  ActivitySubscription,
+  ColumnSubscription,
+  EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
+  NotificationSubscription,
+} from '@devhub/core'
+import * as selectors from '../selectors'
 import { Reducer } from '../types'
 
 export interface State {
@@ -43,6 +50,7 @@ export const subscriptionsReducer: Reducer<State> = (
           delete subscription.data.loadState
 
           // remove old items from the cache
+          // unless they were marked as Save for Later
           if (subscription.data.items.length) {
             const sevenDays = 1000 * 60 * 60 * 24 * 7
 
@@ -50,6 +58,7 @@ export const subscriptionsReducer: Reducer<State> = (
               item => {
                 if (!item) return false
                 if (!item.updated_at) return true
+                if (item.saved) return true
 
                 return (
                   new Date(item.updated_at).valueOf() >= Date.now() - sevenDays
@@ -148,10 +157,26 @@ export const subscriptionsReducer: Reducer<State> = (
 
         subscription.data = subscription.data || {}
         subscription.data.canFetchMore = action.payload.canFetchMore
-        subscription.data.items = action.payload.data
         subscription.data.errorMessage = undefined
         subscription.data.lastFetchedAt = new Date().toISOString()
         subscription.data.loadState = 'loaded'
+
+        const prevItems = (subscription.data.items || []) as any
+        const newItems = (action.payload.data || []) as any
+        const mergedItems = _.uniqBy(
+          _.concat(newItems, prevItems as any),
+          'id',
+        ).map(item => {
+          const prevValue = prevItems.find((i: any) => i.id === item.id)
+          if (!prevValue) return item
+
+          return {
+            ...item,
+            saved: prevValue.saved,
+          }
+        })
+
+        subscription.data.items = mergedItems
       })
 
     case 'FETCH_SUBSCRIPTION_FAILURE':
@@ -165,6 +190,86 @@ export const subscriptionsReducer: Reducer<State> = (
         subscription.data = subscription.data || {}
         subscription.data.loadState = 'error'
         subscription.data.errorMessage = action.error && action.error.message
+      })
+
+    case 'SAVE_ITEM_FOR_LATER':
+      return immer(state, draft => {
+        if (!draft.allIds) return
+        if (!draft.byId) return
+
+        const keys = Object.keys(draft.byId)
+        if (!(keys && keys.length)) return
+
+        keys.forEach(id => {
+          const subscription = draft.byId[id]
+          if (
+            !(
+              subscription &&
+              subscription.data &&
+              subscription.data.items &&
+              subscription.data.items.length
+            )
+          )
+            return
+
+          subscription.data.items = (subscription.data.items as any).map(
+            (item: any) => {
+              if (!(item && `${item.id}` === action.payload.itemId)) return item
+
+              return {
+                ...item,
+                saved: action.payload.save !== false,
+              }
+            },
+          )
+        })
+      })
+
+    case 'CLEAR_ARCHIVED_ITEMS':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const { clearedAt, subscriptionIds } = action.payload
+
+        if (!(clearedAt && subscriptionIds && subscriptionIds.length)) return
+
+        subscriptionIds.forEach(id => {
+          const subscription = draft.byId[id]
+          if (!subscription) return
+
+          if (subscription.type === 'activity') {
+            if (!(draft.byId[id].data && draft.byId[id].data.items)) return
+
+            const items = draft.byId[id].data.items as EnhancedGitHubEvent[]
+            if (!items.length) return
+
+            draft.byId[id] = {
+              ...draft.byId[id],
+              data: {
+                ...draft.byId[id].data,
+                items: items.filter(
+                  item => item && !(item.created_at <= clearedAt),
+                ),
+              },
+            } as ActivitySubscription
+          } else if (subscription.type === 'notifications') {
+            if (!(draft.byId[id].data && draft.byId[id].data.items)) return
+
+            const items = draft.byId[id].data
+              .items as EnhancedGitHubNotification[]
+            if (!items.length) return
+
+            draft.byId[id] = {
+              ...draft.byId[id],
+              data: {
+                ...draft.byId[id].data,
+                items: items.filter(
+                  item => item && !(item.updated_at <= clearedAt),
+                ),
+              },
+            } as NotificationSubscription
+          }
+        })
       })
 
     default:

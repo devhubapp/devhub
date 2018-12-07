@@ -5,20 +5,24 @@ import { Animated, StyleSheet, Text, View } from 'react-native'
 import { GitHubIcon } from '@devhub/core/src/types'
 import { getDateSmallText } from '@devhub/core/src/utils/helpers/shared'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import * as actions from '../../../redux/actions'
+import { useReduxAction } from '../../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../../redux/hooks/use-redux-state'
 import * as selectors from '../../../redux/selectors'
+import * as colors from '../../../styles/colors'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Label } from '../../common/Label'
-import { useTheme } from '../../context/ThemeContext'
 import { getCardStylesForTheme } from '../styles'
 import { CardIcon } from './CardIcon'
 
 export interface NotificationCardHeaderProps {
   cardIconColor?: string
   cardIconName: GitHubIcon
+  id: string | number
   isPrivate?: boolean
   isRead: boolean
+  isSaved?: boolean
   labelColor: string
   labelText: string
   smallLeftColumn?: boolean
@@ -50,13 +54,17 @@ const styles = StyleSheet.create({
 
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const theme = useAnimatedTheme()
+
   const username = useReduxState(selectors.currentUsernameSelector)
+  const saveItemForLater = useReduxAction(actions.saveItemForLater)
 
   const {
     cardIconColor,
     cardIconName,
+    id,
     isPrivate,
     isRead,
+    isSaved,
     labelColor,
     labelText,
     smallLeftColumn,
@@ -64,7 +72,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   } = props
 
   return (
-    <View style={styles.container}>
+    <View key={`notification-card-header-${id}-inner`} style={styles.container}>
       <View
         style={[
           getCardStylesForTheme(theme).leftColumn,
@@ -114,6 +122,15 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             </View>
           </View>
 
+          <CardIcon
+            name="bookmark"
+            color={
+              isSaved
+                ? colors.brandBackgroundColor
+                : theme.foregroundColorMuted50
+            }
+            onPress={() => saveItemForLater({ itemId: id, save: !isSaved })}
+          />
           <CardIcon name={cardIconName} color={cardIconColor} />
         </View>
       </View>

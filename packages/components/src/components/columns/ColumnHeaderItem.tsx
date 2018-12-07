@@ -29,6 +29,7 @@ export interface ColumnHeaderItemProps {
   avatarProps?: Partial<AvatarProps>
   avatarStyle?: StyleProp<ImageStyle>
   children?: React.ReactNode
+  disabled?: boolean
   fixedIconSize?: boolean
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
@@ -76,6 +77,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
   const {
     avatarProps: _avatarProps,
     children,
+    disabled,
     fixedIconSize,
     iconName,
     iconStyle,
@@ -104,6 +106,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
   const wrap: ConditionalWrapProps['wrap'] = child =>
     onPress ? (
       <TouchableOpacity
+        disabled={disabled}
         onPress={onPress}
         style={[
           styles.container,

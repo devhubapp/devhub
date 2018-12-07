@@ -1,5 +1,3 @@
-import { Omit } from './typescript'
-
 export type GitHubActivityType =
   | 'ORG_PUBLIC_EVENTS'
   | 'PUBLIC_EVENTS'
@@ -574,17 +572,6 @@ export interface GitHubWatchEvent {
   created_at: string
 }
 
-export interface GitHubEnhancedEventBase {
-  merged: string[]
-}
-
-export interface MultipleStarEvent
-  extends GitHubEnhancedEventBase,
-    Omit<GitHubWatchEvent, 'type' | 'repo'> {
-  type: 'WatchEvent:OneUserMultipleRepos'
-  repos: GitHubRepo[]
-}
-
 export type GitHubEvent =
   | GitHubCreateEvent
   | GitHubDeleteEvent
@@ -601,8 +588,6 @@ export type GitHubEvent =
   | GitHubPushEvent
   | GitHubReleaseEvent
   | GitHubWatchEvent
-
-export type EnhancedGitHubEvent = GitHubEvent | MultipleStarEvent
 
 // not visible in timelines
 // | 'DeploymentEvent'
@@ -621,10 +606,11 @@ export type EnhancedGitHubEvent = GitHubEvent | MultipleStarEvent
 
 export type GitHubIcon =
   | 'alert'
+  | 'archive'
   | 'arrow-down'
   | 'arrow-left'
-  | 'arrow-right'
   | 'arrow-ref_type-down'
+  | 'arrow-right'
   | 'arrow-small-left'
   | 'arrow-small-right'
   | 'arrow-small-up'
@@ -841,15 +827,3 @@ export interface GitHubNotification {
   updated_at: string
   url: string
 }
-
-export interface NotificationEnhancement {
-  comment?: GitHubComment
-  commit?: GitHubCommit
-  issue?: GitHubIssue
-  pullRequest?: GitHubPullRequest
-  release?: GitHubRelease
-}
-
-export interface EnhancedGitHubNotification
-  extends GitHubNotification,
-    NotificationEnhancement {}

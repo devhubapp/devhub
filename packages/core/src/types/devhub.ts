@@ -1,16 +1,53 @@
 import Octokit from '@octokit/rest'
 
 import {
-  EnhancedGitHubEvent,
-  EnhancedGitHubNotification,
+  GitHubComment,
+  GitHubCommit,
   GitHubEvent,
   GitHubExtractParamsFromActivityMethod,
   GitHubIcon,
+  GitHubIssue,
+  GitHubNotification,
   GitHubNotificationReason,
+  GitHubPullRequest,
+  GitHubRelease,
+  GitHubRepo,
+  GitHubWatchEvent,
 } from './github'
 import { Omit } from './typescript'
 
 type octokit = InstanceType<typeof Octokit>
+
+export interface SaveForLaterEnhancement {
+  saved?: boolean
+}
+
+export interface NotificationPayloadEnhancement {
+  comment?: GitHubComment
+  commit?: GitHubCommit
+  issue?: GitHubIssue
+  pullRequest?: GitHubPullRequest
+  release?: GitHubRelease
+}
+
+export interface EnhancedGitHubNotification
+  extends GitHubNotification,
+    NotificationPayloadEnhancement,
+    SaveForLaterEnhancement {}
+
+export interface GitHubEnhancedEventBase {
+  merged: string[]
+}
+
+export interface MultipleStarEvent
+  extends GitHubEnhancedEventBase,
+    Omit<GitHubWatchEvent, 'type' | 'repo'> {
+  type: 'WatchEvent:OneUserMultipleRepos'
+  repos: GitHubRepo[]
+}
+
+export type EnhancedGitHubEvent = (GitHubEvent | MultipleStarEvent) &
+  SaveForLaterEnhancement
 
 export interface ColumnSubscriptionData<
   Item extends EnhancedGitHubNotification | EnhancedGitHubEvent
@@ -97,13 +134,16 @@ export type ActivitySubscription = {
     })
 
 export interface BaseColumnFilters {
-  // archived?: boolean
+  inbox?: {
+    inbox?: boolean
+    archived?: boolean
+    saved?: boolean
+  }
   clearedAt?: string
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
   private?: boolean
   // repos?: string[]
-  // saved?: boolean
   // search: {
   //   exclude?: string
   //   match?: string

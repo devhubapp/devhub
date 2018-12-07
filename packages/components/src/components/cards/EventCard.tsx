@@ -3,6 +3,10 @@ import { StyleSheet, View } from 'react-native'
 
 import {
   EnhancedGitHubEvent,
+  getEventText,
+  getGitHubAvatarURLFromPayload,
+  getOwnerAndRepo,
+  getRepoFullNameFromObject,
   GitHubCommitCommentEvent,
   GitHubCreateEvent,
   GitHubEvent,
@@ -17,15 +21,9 @@ import {
   GitHubReleaseEvent,
   GitHubRepo,
   GitHubUser,
+  isEventPrivate,
   MultipleStarEvent,
-} from '@devhub/core/src/types'
-import { getEventText } from '@devhub/core/src/utils/helpers/github/events'
-import { getOwnerAndRepo } from '@devhub/core/src/utils/helpers/github/shared'
-import {
-  getGitHubAvatarURLFromPayload,
-  getRepoFullNameFromObject,
-} from '@devhub/core/src/utils/helpers/github/url'
-import { isEventPrivate } from '@devhub/core/src/utils/helpers/shared'
+} from '@devhub/core'
 import { contentPadding } from '../../styles/variables'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import {
@@ -59,7 +57,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const { event, repoIsKnown } = props
   if (!event) return null
 
-  const { actor, payload, repo: _repo, type } = event as GitHubEvent
+  const { actor, payload, id, saved, type } = event as EnhancedGitHubEvent
+  const { repo: _repo } = event as GitHubEvent
   const { repos: _repos } = event as MultipleStarEvent
 
   const { comment } = payload as GitHubCommitCommentEvent['payload']
@@ -74,7 +73,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const { issue } = payload as GitHubIssuesEvent['payload']
   let { ref: branchName } = payload as GitHubPushEvent['payload']
 
-  const isRead = false // TODO
+  const isRead = false
+  const isSaved = saved === true
+
   const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
   const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(Boolean)
   const repos: GitHubRepo[] = _allRepos.filter(
@@ -168,16 +169,18 @@ export const EventCard = React.memo((props: EventCardProps) => {
       : issue.html_url || issue.url)
 
   return (
-    <View key={`event-card-${event.id}-inner`} style={styles.container}>
+    <View key={`event-card-${id}-inner`} style={styles.container}>
       <EventCardHeader
-        key={`event-card-header-${event.id}`}
+        key={`event-card-header-${id}`}
         actionText={actionText}
         avatarURL={avatarURL}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         createdAt={event.created_at}
+        id={id}
         isBot={isBot}
         isPrivate={isPrivate}
+        isSaved={isSaved}
         userLinkURL={actor.html_url || ''}
         username={actor.display_login || actor.login}
       />

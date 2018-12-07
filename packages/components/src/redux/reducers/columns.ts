@@ -103,6 +103,37 @@ export const columnsReducer: Reducer<State> = (
         })
       })
 
+    case 'SET_COLUMN_INBOX_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId] as NotificationColumn
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.inbox = column.filters.inbox || {}
+        if (typeof action.payload.inbox !== 'undefined') {
+          column.filters.inbox.inbox = action.payload.inbox
+        }
+        if (typeof action.payload.archived !== 'undefined') {
+          column.filters.inbox.archived = action.payload.archived
+        }
+        if (typeof action.payload.saved !== 'undefined') {
+          column.filters.inbox.saved = action.payload.saved
+        }
+
+        const showInbox = column.filters.inbox.inbox !== false
+        const showSaveForLater = column.filters.inbox.saved !== false
+        const showCleared = column.filters.inbox.archived === true
+
+        if (showInbox && showSaveForLater && !showCleared) {
+          // default state to remove the changed indicator
+          column.filters.inbox = {}
+        } else if (!showInbox && !showSaveForLater && !showCleared) {
+          column.filters.inbox.inbox = true
+        }
+      })
+
     case 'SET_COLUMN_ACTIVITY_TYPE_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return

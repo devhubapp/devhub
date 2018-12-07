@@ -39,3 +39,5 @@ export const createColumnSubscriptionsSelector = () => {
       ),
   )
 }
+
+export const columnSubscriptionsSelector = createColumnSubscriptionsSelector()
