@@ -4,7 +4,7 @@
     "allowJs": false,
     "composite": true,
     "declaration": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "noEmit": false,
     "outDir": "dist",
     "rootDir": "src",

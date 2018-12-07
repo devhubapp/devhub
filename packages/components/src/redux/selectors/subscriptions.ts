@@ -17,4 +17,6 @@ export const createSubscriptionSelector = () =>
 export const subscriptionSelector = createSubscriptionSelector()
 
 export const subscriptionsSelector = (state: RootState) =>
-  subscriptionIdsSelector(state).map(id => subscriptionSelector(state, id))
+  subscriptionIdsSelector(state)
+    .map(id => subscriptionSelector(state, id))
+    .filter(Boolean)

@@ -1,7 +1,7 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { ColumnSubscription, DEFAULT_PAGINATION_PER_PAGE } from '@devhub/core'
+import { ColumnSubscription } from '@devhub/core'
 import { REHYDRATE } from 'redux-persist'
 import { Reducer } from '../types'
 
@@ -26,33 +26,36 @@ export const subscriptionsReducer: Reducer<State> = (
       if (!subscriptions) return subscriptions || state
 
       return immer(subscriptions, draft => {
-        const allIds = draft.allIds
-        const byId = draft.byId
-        if (!(allIds && allIds.length && byId)) return
+        draft.allIds = draft.allIds || []
+        draft.byId = draft.byId || {}
 
-        allIds.forEach(id => {
-          const subscription = byId[id]
+        const keys = Object.keys(draft.byId)
+        if (!(keys && keys.length && draft.byId)) return
+
+        keys.forEach(id => {
+          const subscription = draft.byId[id]
           if (!subscription) return
 
-          delete subscription.errorMessage
-          delete subscription.loadState
+          subscription.data = subscription.data || {}
+          subscription.data.canFetchMore = true
+          subscription.data.items = subscription.data.items || []
+          delete subscription.data.errorMessage
+          delete subscription.data.loadState
 
-          subscription.canFetchMore = true
-
-          // remove ole items from the cache
-          if (subscription.data && subscription.data.length) {
+          // remove old items from the cache
+          if (subscription.data.items.length) {
             const sevenDays = 1000 * 60 * 60 * 24 * 7
 
-            subscription.data = (subscription.data as any[]).filter(item => {
-              if (!item) return false
-              if (!item.updated_at) return true
+            subscription.data.items = (subscription.data.items as any[]).filter(
+              item => {
+                if (!item) return false
+                if (!item.updated_at) return true
 
-              return (
-                new Date(item.updated_at).valueOf() >= Date.now() - sevenDays
-              )
-            })
-          } else {
-            subscription.data = []
+                return (
+                  new Date(item.updated_at).valueOf() >= Date.now() - sevenDays
+                )
+              },
+            )
           }
         })
       })
@@ -70,6 +73,8 @@ export const subscriptionsReducer: Reducer<State> = (
             updatedAt: new Date().toISOString(),
             ...draft.byId[s.id],
           }
+
+          draft.byId[s.id].data = draft.byId[s.id].data || {}
 
           return s.id
         })
@@ -105,6 +110,8 @@ export const subscriptionsReducer: Reducer<State> = (
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             }
+
+            draft.byId[s.id].data = draft.byId[s.id].data || {}
           })
         })
       })
@@ -117,10 +124,11 @@ export const subscriptionsReducer: Reducer<State> = (
         const subscription = draft.byId[action.payload.subscriptionId]
         if (!subscription) return
 
-        const { page } = action.payload.params
+        subscription.data = subscription.data || {}
 
-        const prevLoadState = subscription.loadState
-        subscription.loadState =
+        const { page } = action.payload.params
+        const prevLoadState = subscription.data.loadState
+        subscription.data.loadState =
           page > 1
             ? 'loading_more'
             : !prevLoadState ||
@@ -138,11 +146,12 @@ export const subscriptionsReducer: Reducer<State> = (
         const subscription = draft.byId[action.payload.subscriptionId]
         if (!subscription) return
 
-        subscription.canFetchMore = action.payload.canFetchMore
-        subscription.data = action.payload.data
-        subscription.errorMessage = undefined
-        subscription.lastFetchedAt = new Date().toISOString()
-        subscription.loadState = 'loaded'
+        subscription.data = subscription.data || {}
+        subscription.data.canFetchMore = action.payload.canFetchMore
+        subscription.data.items = action.payload.data
+        subscription.data.errorMessage = undefined
+        subscription.data.lastFetchedAt = new Date().toISOString()
+        subscription.data.loadState = 'loaded'
       })
 
     case 'FETCH_SUBSCRIPTION_FAILURE':
@@ -153,8 +162,9 @@ export const subscriptionsReducer: Reducer<State> = (
         const subscription = draft.byId[action.payload.subscriptionId]
         if (!subscription) return
 
-        subscription.loadState = 'error'
-        subscription.errorMessage = action.error && action.error.message
+        subscription.data = subscription.data || {}
+        subscription.data.loadState = 'error'
+        subscription.data.errorMessage = action.error && action.error.message
       })
 
     default:

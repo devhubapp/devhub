@@ -29,7 +29,7 @@ export function Link(props: LinkProps) {
   const ViewComponent = animated ? Animated.View : View
   const TouchableOpacityComponent = animated
     ? AnimatedTouchableOpacity
-    : TouchableOpacity
+    : (TouchableOpacity as any)
 
   if (!href && !allowEmptyLink) {
     return (

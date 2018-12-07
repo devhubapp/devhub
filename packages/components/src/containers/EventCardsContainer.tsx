@@ -42,7 +42,7 @@ export const EventCardsContainer = React.memo(
     )
 
     const [filteredItems, setFilteredItems] = useState<EnhancedGitHubEvent[]>(
-      () => getFilteredEvents(subscription.data || [], column.filters),
+      () => getFilteredEvents(subscription.data.items || [], column.filters),
     )
 
     const canFetchMoreRef = useRef(false)
@@ -50,7 +50,7 @@ export const EventCardsContainer = React.memo(
     useEffect(
       () => {
         setFilteredItems(
-          getFilteredEvents(subscription.data || [], column.filters),
+          getFilteredEvents(subscription.data.items || [], column.filters),
         )
       },
       [subscription.data, column.filters],
@@ -60,13 +60,13 @@ export const EventCardsContainer = React.memo(
       () => {
         canFetchMoreRef.current = (() => {
           const clearedAt = column.filters && column.filters.clearedAt
-          const olderDate = getOlderEventDate(subscription.data || [])
+          const olderDate = getOlderEventDate(subscription.data.items || [])
 
           if (clearedAt && olderDate && clearedAt >= olderDate) return false
-          return !!subscription.canFetchMore
+          return !!subscription.data.canFetchMore
         })()
       },
-      [filteredItems, column.filters, subscription.canFetchMore],
+      [filteredItems, column.filters, subscription.data.canFetchMore],
     )
 
     const fetchData = ({
@@ -86,7 +86,9 @@ export const EventCardsContainer = React.memo(
       perPage: _perPage,
     }: { perPage?: number } = {}) => {
       const perPage = _perPage || DEFAULT_PAGINATION_PER_PAGE
-      const currentPage = Math.ceil((subscription.data || []).length / perPage)
+      const currentPage = Math.ceil(
+        (subscription.data.items || []).length / perPage,
+      )
       const nextPage = (currentPage || 1) + 1
       fetchData({ page: nextPage, perPage })
     }
@@ -95,9 +97,9 @@ export const EventCardsContainer = React.memo(
       <EventCards
         {...props}
         key={`event-cards-${column.id}`}
-        errorMessage={subscription.errorMessage || ''}
+        errorMessage={subscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        loadState={subscription.loadState || 'not_loaded'}
+        loadState={subscription.data.loadState || 'not_loaded'}
         events={filteredItems}
         refresh={() => fetchData()}
       />

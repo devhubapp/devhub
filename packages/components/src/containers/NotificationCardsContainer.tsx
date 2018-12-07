@@ -46,14 +46,19 @@ export const NotificationCardsContainer = React.memo(
 
     const [filteredItems, setFilteredItems] = useState<
       EnhancedGitHubNotification[]
-    >(() => getFilteredNotifications(subscription.data || [], column.filters))
+    >(() =>
+      getFilteredNotifications(subscription.data.items || [], column.filters),
+    )
 
     const canFetchMoreRef = useRef(false)
 
     useEffect(
       () => {
         setFilteredItems(
-          getFilteredNotifications(subscription.data || [], column.filters),
+          getFilteredNotifications(
+            subscription.data.items || [],
+            column.filters,
+          ),
         )
       },
       [subscription.data, column.filters],
@@ -63,13 +68,15 @@ export const NotificationCardsContainer = React.memo(
       () => {
         canFetchMoreRef.current = (() => {
           const clearedAt = column.filters && column.filters.clearedAt
-          const olderDate = getOlderNotificationDate(subscription.data || [])
+          const olderDate = getOlderNotificationDate(
+            subscription.data.items || [],
+          )
 
           if (clearedAt && olderDate && clearedAt >= olderDate) return false
-          return !!subscription.canFetchMore
+          return !!subscription.data.canFetchMore
         })()
       },
-      [filteredItems, column.filters, subscription.canFetchMore],
+      [filteredItems, column.filters, subscription.data.canFetchMore],
     )
 
     const fetchData = ({
@@ -89,7 +96,9 @@ export const NotificationCardsContainer = React.memo(
       perPage: _perPage,
     }: { perPage?: number } = {}) => {
       const perPage = _perPage || DEFAULT_PAGINATION_PER_PAGE
-      const currentPage = Math.ceil((subscription.data || []).length / perPage)
+      const currentPage = Math.ceil(
+        (subscription.data.items || []).length / perPage,
+      )
       const nextPage = (currentPage || 1) + 1
       fetchData({ page: nextPage, perPage })
     }
@@ -98,9 +107,9 @@ export const NotificationCardsContainer = React.memo(
       <NotificationCards
         {...props}
         key={`notification-cards-${column.id}`}
-        errorMessage={subscription.errorMessage || ''}
+        errorMessage={subscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        loadState={subscription.loadState || 'not_loaded'}
+        loadState={subscription.data.loadState || 'not_loaded'}
         notifications={filteredItems}
         refresh={() => fetchData()}
       />

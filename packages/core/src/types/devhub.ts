@@ -12,6 +12,16 @@ import { Omit } from './typescript'
 
 type octokit = InstanceType<typeof Octokit>
 
+export interface ColumnSubscriptionData<
+  Item extends EnhancedGitHubNotification | EnhancedGitHubEvent
+> {
+  items?: Item[]
+  loadState?: LoadState
+  errorMessage?: string
+  canFetchMore?: boolean
+  lastFetchedAt?: string
+}
+
 export interface NotificationSubscription {
   id: string
   type: 'notifications'
@@ -19,11 +29,7 @@ export interface NotificationSubscription {
   params: {
     all?: boolean
   }
-  data?: EnhancedGitHubNotification[]
-  loadState?: LoadState
-  errorMessage?: string
-  canFetchMore?: boolean
-  lastFetchedAt?: string
+  data: ColumnSubscriptionData<EnhancedGitHubNotification>
   createdAt: string
   updatedAt: string
 }
@@ -31,11 +37,7 @@ export interface NotificationSubscription {
 export type ActivitySubscription = {
   id: string
   type: 'activity'
-  data?: EnhancedGitHubEvent[]
-  loadState?: LoadState
-  errorMessage?: string
-  canFetchMore?: boolean
-  lastFetchedAt?: string
+  data: ColumnSubscriptionData<EnhancedGitHubEvent>
   createdAt: string
   updatedAt: string
 } & (

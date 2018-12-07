@@ -10,7 +10,7 @@ import {
 import storage from 'redux-persist/lib/storage'
 import createSagaMiddleware from 'redux-saga'
 
-import { Column, ColumnSubscription, GitHubUser } from '@devhub/core/src/types'
+import { Column, ColumnSubscription } from '@devhub/core/src/types'
 import { GraphQLGitHubUser } from '@devhub/core/src/types/graphql'
 import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { rootReducer } from './reducers'
@@ -46,6 +46,7 @@ const migrations = {
           type: oldColumn.type,
           subtype: oldColumn.subtype,
           params: oldColumn.params,
+          data: {},
           createdAt: oldColumn.createdAt || new Date().toISOString(),
           updatedAt: oldColumn.updatedAt || new Date().toISOString(),
         }
@@ -102,6 +103,40 @@ const migrations = {
         },
       }
     }),
+  5: (state: RootState) =>
+    immer(state, draft => {
+      draft.subscriptions = draft.subscriptions || {}
+      draft.subscriptions.allIds = draft.subscriptions.allIds || []
+      draft.subscriptions.byId = draft.subscriptions.byId || {}
+
+      const byId: Record<string, ColumnSubscription> = {}
+
+      selectors.subscriptionsSelector(draft).forEach(subscription => {
+        const {
+          data: items,
+          loadState,
+          errorMessage,
+          canFetchMore,
+          lastFetchedAt,
+          ...restSubscription
+        } = subscription as any
+
+        const newSubscription = {
+          ...restSubscription,
+          data: {
+            canFetchMore,
+            errorMessage,
+            items,
+            lastFetchedAt,
+            loadState,
+          },
+        }
+
+        byId[newSubscription.id] = newSubscription
+      })
+
+      draft.subscriptions.byId = byId
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -110,7 +145,7 @@ export function configureStore(key = 'root') {
     key,
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
-    version: 4,
+    version: 5,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 

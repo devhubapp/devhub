@@ -187,7 +187,7 @@ function* onFetchRequest(
         subscriptionId,
       })
 
-      const prevItems = subscription.data || []
+      const prevItems = subscription.data.items || []
       const newItems = response.data as GitHubNotification[]
       const mergedItems = _.uniqBy(_.concat(newItems, prevItems), 'id')
 
@@ -232,7 +232,7 @@ function* onFetchRequest(
         subscriptionId,
       })
 
-      const prevItems = subscription.data || []
+      const prevItems = subscription.data.items || []
       const newItems = (response.data || []) as GitHubEvent[]
       const mergedItems = _.uniqBy(_.concat(newItems, prevItems), 'id')
 
@@ -284,7 +284,7 @@ function minimumRefetchTimeHasPassed(
   if (!subscription) return false
 
   return (
-    !subscription.lastFetchedAt ||
-    new Date(subscription.lastFetchedAt).valueOf() <= Date.now() - interval
+    !subscription.data.lastFetchedAt ||
+    new Date(subscription.data.lastFetchedAt).valueOf() <= Date.now() - interval
   )
 }
