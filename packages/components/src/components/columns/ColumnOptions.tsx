@@ -12,7 +12,11 @@ import { useDimensions } from '../../hooks/use-dimensions'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import * as colors from '../../styles/colors'
-import { columnHeaderHeight, contentPadding } from '../../styles/variables'
+import {
+  columnHeaderHeight,
+  contentPadding,
+  sidebarSize,
+} from '../../styles/variables'
 import {
   filterRecordHasAnyForcedValue,
   filterRecordHasThisValue,
@@ -24,7 +28,10 @@ import {
 import { AnimatedIcon } from '../animated/AnimatedIcon'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
+import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
+import { useAppLayout } from '../context/LayoutContext'
+import { fabSpacing } from '../layout/FABRenderer'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 
@@ -63,6 +70,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const theme = useAnimatedTheme()
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const dimensions = useDimensions()
+  const { appOrientation, sizename } = useAppLayout()
   const moveColumn = useReduxAction(actions.moveColumn)
   const setColumnActivityTypeFilter = useReduxAction(
     actions.setColumnActivityTypeFilter,
@@ -73,6 +81,9 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
+
+  const horizontalSidebar = appOrientation === 'portrait'
+  const isFabVisible = sizename === '1-small'
 
   const toggleOpenedOptionCategory = (
     optionCategory: ColumnOptionCategory | null,
@@ -88,7 +99,11 @@ export function ColumnOptions(props: ColumnOptionsProps) {
       style={[
         styles.container,
         {
-          maxHeight: dimensions.window.height - columnHeaderHeight,
+          maxHeight:
+            dimensions.window.height -
+            columnHeaderHeight -
+            (horizontalSidebar ? sidebarSize : 0) -
+            (isFabVisible ? fabSize + 2 * fabSpacing : 0),
           backgroundColor: theme.backgroundColorLess08,
         },
       ]}
