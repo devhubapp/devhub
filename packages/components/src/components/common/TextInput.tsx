@@ -1,14 +1,19 @@
 import React from 'react'
 import {
+  Animated,
   TextInput as TextInputOriginal,
   TextInputProps as TextInputComponentProps,
 } from 'react-native'
 
-import { AnimatedTextInput } from '../../components/animated/AnimatedTextInput'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding, radius } from '../../styles/variables'
 
-export type TextInputProps = TextInputComponentProps
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInputOriginal)
+
+export interface TextInputProps extends TextInputComponentProps {
+  placeholderTextColor: any
+  style: any
+}
 
 export const TextInput = React.forwardRef((props: TextInputProps, ref: any) => {
   const theme = useAnimatedTheme()

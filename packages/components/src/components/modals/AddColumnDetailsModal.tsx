@@ -17,14 +17,12 @@ import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedTextInput } from '../animated/AnimatedTextInput'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { TextInput } from '../common/TextInput'
-import { useTheme } from '../context/ThemeContext'
 
 interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {}
 
@@ -155,7 +153,7 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
       <Fragment key={`add-column-details-text-input-${fieldDetails.field}`}>
         <H3 withMargin>{fieldDetails.title}</H3>
 
-        <AnimatedTextInput
+        <TextInput
           ref={fieldDetails.ref}
           autoCapitalize="none"
           autoCorrect={false}
