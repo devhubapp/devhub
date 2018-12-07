@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { Animated, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
+import {
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
@@ -15,11 +21,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkbox: {
+    position: 'relative',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: checkboxBorderRadius,
     borderWidth: 1,
+  },
+  center: {
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
 
@@ -61,6 +73,8 @@ export function Checkbox(props: CheckboxProps) {
     typeof props.checked === 'boolean' ? props.checked : !!defaultValue,
   )
 
+  const isThirdState = enableTrippleState && checked === null
+
   const handleOnChange = () => {
     if (!onChange) return
 
@@ -87,30 +101,38 @@ export function Checkbox(props: CheckboxProps) {
           {
             width: size,
             height: size,
-            backgroundColor: checked
-              ? checkedBackgroundColor
-              : uncheckedBackgroundColor,
+            // backgroundColor: checked
+            //   ? checkedBackgroundColor
+            //   : uncheckedBackgroundColor,
             borderColor:
-              checked || (enableTrippleState && checked === null)
+              checked || isThirdState
                 ? checkedBackgroundColor
                 : uncheckedForegroundColor,
           },
         ]}
       >
-        {!!checked && (
-          <AnimatedIcon color={checkedForegroundColor} name="check" size={14} />
-        )}
-
-        {enableTrippleState && checked === null && (
+        <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 1 }]}>
           <Animated.View
             style={{
-              width: '80%',
-              height: '80%',
-              backgroundColor: checkedBackgroundColor,
+              width: isThirdState ? '80%' : '100%',
+              height: isThirdState ? '80%' : '100%',
+              backgroundColor:
+                checked || isThirdState
+                  ? checkedBackgroundColor
+                  : uncheckedBackgroundColor,
               borderRadius: checkboxBorderRadius / 2,
             }}
           />
-        )}
+        </View>
+
+        <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 2 }]}>
+          <AnimatedIcon
+            color={checkedForegroundColor}
+            name="check"
+            size={14}
+            style={{ opacity: checked ? 1 : 0 }}
+          />
+        </View>
       </Animated.View>
 
       {!!label &&

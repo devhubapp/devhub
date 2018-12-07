@@ -1,9 +1,5 @@
 * {
-  transition:
-    opacity 0.25s ease-in,
-    color 0.25s ease-in,
-    border-color 0.25s ease-in,
-    background-color 0.25s ease-in !important;
+  transition: all 0.2s ease-in !important;
   box-sizing: border-box;
   cursor: default;
 }
