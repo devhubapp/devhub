@@ -11,6 +11,7 @@
   "scripts": {
     "clean": "yarn workspaces run clean",
     "compile": "yarn workspace @devhub/components build",
+    "deploy": "yarn deploy:web",
     "deploy:web": "yarn workspace @devhub/web build && yarn now",
     "deploy:www": "pushd packages/www; now && now alias; popd;",
     "dev": "concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\"",
