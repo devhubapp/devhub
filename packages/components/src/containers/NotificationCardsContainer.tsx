@@ -7,7 +7,7 @@ import {
   DEFAULT_PAGINATION_PER_PAGE,
   EnhancedGitHubNotification,
   getOlderNotificationDate,
-  NotificationSubscription,
+  NotificationColumnSubscription,
   Omit,
 } from '@devhub/core'
 import {
@@ -37,7 +37,7 @@ export const NotificationCardsContainer = React.memo(
         selectors.subscriptionSelector(
           state,
           column.subscriptionIds[0],
-        ) as NotificationSubscription,
+        ) as NotificationColumnSubscription,
     )
 
     const fetchColumnSubscriptionRequest = useReduxAction(

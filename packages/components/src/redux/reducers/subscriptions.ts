@@ -3,11 +3,12 @@ import _ from 'lodash'
 import { REHYDRATE } from 'redux-persist'
 
 import {
-  ActivitySubscription,
+  ActivityColumnSubscription,
   ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
-  NotificationSubscription,
+  NotificationColumnSubscription,
+  subscriptionsArrToState,
 } from '@devhub/core'
 import * as selectors from '../selectors'
 import { Reducer } from '../types'
@@ -73,24 +74,15 @@ export const subscriptionsReducer: Reducer<State> = (
     case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
         draft.allIds = draft.allIds || []
-
         draft.byId = draft.byId || {}
-        const subscriptionIds = action.payload.subscriptions.map(s => {
-          draft.byId[s.id] = {
-            ...(s as any), // TODO: fix any
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            ...draft.byId[s.id],
-          }
 
-          draft.byId[s.id].data = draft.byId[s.id].data || {}
+        const normalized = subscriptionsArrToState(action.payload.subscriptions)
 
-          return s.id
-        })
-
-        draft.allIds = _.uniq(draft.allIds.concat(subscriptionIds)).filter(
+        draft.allIds = _.uniq(draft.allIds.concat(normalized.allIds)).filter(
           Boolean,
         )
+
+        Object.assign(draft.byId, normalized.byId)
       })
 
     case 'DELETE_COLUMN_SUBSCRIPTIONS':
@@ -107,20 +99,9 @@ export const subscriptionsReducer: Reducer<State> = (
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
-        draft.allIds = []
-        draft.byId = {}
-
-        action.payload.subscriptions.forEach(s => {
-          draft.allIds.push(s.id)
-
-          draft.byId[s.id] = {
-            ...(s as any), // TODO: Fix any
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }
-
-          draft.byId[s.id].data = draft.byId[s.id].data || {}
-        })
+        const normalized = subscriptionsArrToState(action.payload.subscriptions)
+        draft.allIds = normalized.allIds
+        draft.byId = normalized.byId
       })
 
     case 'FETCH_SUBSCRIPTION_REQUEST':
@@ -249,7 +230,7 @@ export const subscriptionsReducer: Reducer<State> = (
                   item => item && !(item.created_at <= clearedAt),
                 ),
               },
-            } as ActivitySubscription
+            } as ActivityColumnSubscription
           } else if (subscription.type === 'notifications') {
             if (!(draft.byId[id].data && draft.byId[id].data.items)) return
 
@@ -265,7 +246,7 @@ export const subscriptionsReducer: Reducer<State> = (
                   item => item && !(item.updated_at <= clearedAt),
                 ),
               },
-            } as NotificationSubscription
+            } as NotificationColumnSubscription
           }
         })
       })

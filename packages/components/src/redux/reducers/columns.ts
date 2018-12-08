@@ -1,6 +1,7 @@
 import immer from 'immer'
 import _ from 'lodash'
 
+import { columnsArrToState, subscriptionsArrToState } from '@devhub/core'
 import {
   ActivityColumn,
   Column,
@@ -29,21 +30,26 @@ export const columnsReducer: Reducer<State> = (
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
-        const { column, subscriptions } = action.payload
+        const subscriptionIds = subscriptionsArrToState(
+          action.payload.subscriptions,
+        ).allIds
 
-        const subscriptionIds = _.uniq(
-          (column.subscriptionIds || []).concat(subscriptions.map(s => s.id)),
-        ).filter(Boolean)
+        const normalized = columnsArrToState([
+          {
+            ...action.payload.column,
+            subscriptionIds: _.uniq(
+              (action.payload.column.subscriptionIds || []).concat(
+                subscriptionIds,
+              ),
+            ),
+          },
+        ])
 
-        const id = column.id || guid()
-        draft.allIds.unshift(id)
-        draft.byId[id] = {
-          ...column,
-          id,
-          subscriptionIds,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
+        if (!(normalized.allIds.length === 1)) return
+
+        draft.allIds.unshift(normalized.allIds[0])
+
+        Object.assign(draft.byId, normalized.byId)
       })
 
     case 'DELETE_COLUMN':
@@ -90,21 +96,10 @@ export const columnsReducer: Reducer<State> = (
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
-        draft.byId = {}
+        const normalized = columnsArrToState(action.payload.columns)
 
-        // TODO: Fix any
-        draft.allIds = (action.payload.columns as any[]).map(
-          (column: Column) => {
-            draft.byId![column.id] = {
-              ...column,
-              subscriptionIds: column.subscriptionIds || [],
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            }
-
-            return column.id
-          },
-        )
+        draft.allIds = normalized.allIds
+        draft.byId = normalized.byId
       })
 
     case 'SET_COLUMN_INBOX_FILTER':

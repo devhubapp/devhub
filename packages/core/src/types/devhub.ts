@@ -59,7 +59,7 @@ export interface ColumnSubscriptionData<
   lastFetchedAt?: string
 }
 
-export interface NotificationSubscription {
+export interface NotificationColumnSubscription {
   id: string
   type: 'notifications'
   subtype?: undefined | ''
@@ -71,7 +71,7 @@ export interface NotificationSubscription {
   updatedAt: string
 }
 
-export type ActivitySubscription = {
+export type ActivityColumnSubscription = {
   id: string
   type: 'activity'
   data: ColumnSubscriptionData<EnhancedGitHubEvent>
@@ -172,7 +172,9 @@ export type ColumnFilters = ActivityColumnFilters | NotificationColumnFilters
 //   enableNotifications?: boolean
 // }
 
-export type ColumnSubscription = ActivitySubscription | NotificationSubscription
+export type ColumnSubscription =
+  | ActivityColumnSubscription
+  | NotificationColumnSubscription
 
 export interface BaseColumn {
   id: string
@@ -198,6 +200,48 @@ export interface NotificationColumn extends BaseColumn {
 
 export type Column = ActivityColumn | NotificationColumn
 
+export type ActivityColumnCreation = Omit<
+  ActivityColumn,
+  'createdAt' | 'updatedAt'
+> & {
+  createdAt?: string
+  updatedAt?: string
+}
+
+export type NotificationColumnCreation = Omit<
+  NotificationColumn,
+  'createdAt' | 'updatedAt'
+> & {
+  createdAt?: string
+  updatedAt?: string
+}
+
+export type ColumnCreation = ActivityColumnCreation | NotificationColumnCreation
+
+export type ActivityColumnSubscriptionCreation = Omit<
+  ActivityColumnSubscription,
+  'id' | 'data' | 'createdAt' | 'updatedAt'
+> & {
+  id?: string | undefined
+  data?: ActivityColumnSubscription['data'] | undefined
+  createdAt?: string | undefined
+  updatedAt?: string | undefined
+}
+
+export type NotificationColumnSubscriptionCreation = Omit<
+  NotificationColumnSubscription,
+  'id' | 'data' | 'createdAt' | 'updatedAt'
+> & {
+  id?: string | undefined
+  data?: NotificationColumnSubscription['data'] | undefined
+  createdAt?: string | undefined
+  updatedAt?: string | undefined
+}
+
+export type ColumnSubscriptionCreation =
+  | ActivityColumnSubscriptionCreation
+  | NotificationColumnSubscriptionCreation
+
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
 export interface AddColumnDetailsPayload {
@@ -209,12 +253,8 @@ export interface AddColumnDetailsPayload {
 }
 
 export interface ColumnAndSubscriptions {
-  column:
-    | Omit<ActivityColumn, 'createdAt' | 'updatedAt'>
-    | Omit<NotificationColumn, 'createdAt' | 'updatedAt'>
-  subscriptions: Array<
-    Pick<ColumnSubscription, 'id' | 'type' | 'subtype' | 'params'>
-  >
+  column: ColumnCreation
+  subscriptions: ColumnSubscriptionCreation[]
 }
 
 export interface ColumnsAndSubscriptions {

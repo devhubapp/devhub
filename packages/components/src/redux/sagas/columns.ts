@@ -1,8 +1,12 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
-import { ColumnsAndSubscriptions } from '@devhub/core/src/types'
-import { createSubscriptionObjectWithId } from '@devhub/core/src/utils/helpers/github/shared'
-import { guid } from '@devhub/core/src/utils/helpers/shared'
+import {
+  ActivityColumnSubscription,
+  ColumnsAndSubscriptions,
+  createSubscriptionObjectWithId,
+  guid,
+  NotificationColumnSubscription,
+} from '@devhub/core'
 import { delay } from 'redux-saga'
 import { emitter } from '../../setup'
 import * as actions from '../actions'
@@ -16,7 +20,7 @@ function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     params: {
       all: true,
     },
-  })
+  }) as NotificationColumnSubscription
 
   const userReceivedEventsSubscription = createSubscriptionObjectWithId({
     type: 'activity',
@@ -24,7 +28,7 @@ function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     params: {
       username,
     },
-  })
+  }) as ActivityColumnSubscription
 
   const userEventsSubscription = createSubscriptionObjectWithId({
     type: 'activity',
@@ -32,7 +36,7 @@ function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     params: {
       username,
     },
-  })
+  }) as ActivityColumnSubscription
 
   return {
     columns: [

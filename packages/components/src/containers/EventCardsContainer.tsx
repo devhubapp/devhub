@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 
 import {
-  ActivitySubscription,
+  ActivityColumnSubscription,
   Column,
   ColumnSubscription,
   DEFAULT_PAGINATION_PER_PAGE,
@@ -34,7 +34,7 @@ export const EventCardsContainer = React.memo(
         selectors.subscriptionSelector(
           state,
           column.subscriptionIds[0],
-        ) as ActivitySubscription,
+        ) as ActivityColumnSubscription,
     )
 
     const fetchColumnSubscriptionRequest = useReduxAction(

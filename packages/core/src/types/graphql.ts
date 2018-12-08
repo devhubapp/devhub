@@ -1,3 +1,5 @@
+import { Column, ColumnSubscription } from './devhub'
+
 // TODO: Auto generate this from the schema using apollo codegen cli
 
 export interface GraphQLGitHubUser {
@@ -32,6 +34,14 @@ export interface GraphQLGitHubUser {
 
 export interface User {
   _id: any
+  columns?: {
+    allIds: string[]
+    byId: Record<string, Column>
+  }
+  subscriptions?: {
+    allIds: string[]
+    byId: Record<string, ColumnSubscription>
+  }
   github: {
     scope: string[]
     token: string

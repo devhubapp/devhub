@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Animated, View } from 'react-native'
 
-import { AddColumnDetailsPayload } from '@devhub/core/src/types'
+import { AddColumnDetailsPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'

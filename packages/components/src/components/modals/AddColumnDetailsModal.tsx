@@ -4,20 +4,19 @@ import { TextInputProps, View } from 'react-native'
 
 import {
   ActivityColumn,
-  ActivitySubscription,
+  ActivityColumnSubscription,
   AddColumnDetailsPayload,
   ColumnParamField,
+  createSubscriptionObjectsWithId,
+  guid,
   NotificationColumn,
-} from '@devhub/core/src/types'
-import * as actions from '../../redux/actions'
-import { ModalColumn } from '../columns/ModalColumn'
-
-import { createSubscriptionObjectWithId } from '@devhub/core/src/utils/helpers/github/shared'
-import { guid } from '@devhub/core/src/utils/helpers/shared'
+} from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
+import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
@@ -94,19 +93,20 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
 
     closeAllModals()
 
-    const subscriptions = [
-      createSubscriptionObjectWithId({
-        ...subscription,
-        params: _.pick(params, paramList),
-      }),
-    ]
+    const subscriptions = createSubscriptionObjectsWithId([
+      {
+        ...(subscription as any),
+        id: '',
+        params: _.pick(params, paramList) as any,
+      },
+    ])
 
     const column = {
       id: guid(),
       type: subscription.type,
       subscriptionIds: subscriptions.map(s => s.id),
       filters: undefined,
-    } as typeof subscriptions extends ActivitySubscription[]
+    } as typeof subscriptions extends ActivityColumnSubscription[]
       ? ActivityColumn
       : NotificationColumn
 

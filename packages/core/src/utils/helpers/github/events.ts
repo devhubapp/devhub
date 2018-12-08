@@ -4,7 +4,7 @@ import moment from 'moment'
 import { isPullRequest } from './shared'
 
 import {
-  ActivitySubscription,
+  ActivityColumnSubscription,
   Column,
   ColumnSubscription,
   EnhancedGitHubEvent,
@@ -28,7 +28,7 @@ export function getColumnHeaderDetails(
 } {
   switch (column.type) {
     case 'activity': {
-      const subscription = subscriptions[0] as ActivitySubscription
+      const subscription = subscriptions[0] as ActivityColumnSubscription
 
       switch (subscription.subtype) {
         case 'ORG_PUBLIC_EVENTS': {

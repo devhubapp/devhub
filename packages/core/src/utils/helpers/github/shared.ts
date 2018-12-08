@@ -1,9 +1,14 @@
 import gravatar from 'gravatar'
 
 import {
+  ActivityColumnSubscription,
+  ActivityColumnSubscriptionCreation,
   ColumnSubscription,
+  ColumnSubscriptionCreation,
   GitHubIcon,
   GitHubPullRequest,
+  NotificationColumnSubscription,
+  NotificationColumnSubscriptionCreation,
   Omit,
 } from '../../../types'
 import { getSteppedSize } from '../shared'
@@ -102,58 +107,64 @@ export function getCommitIconAndColor(): { icon: GitHubIcon; color?: string } {
   return { icon: 'git-commit' }
 }
 
-export function getUniqueIdForSubscription(subscription: ColumnSubscription) {
-  switch (subscription.type) {
+export function getUniqueIdForSubscription(subscription: {
+  type: ColumnSubscription['type']
+  subtype?: ColumnSubscription['subtype'] | undefined
+  params: ColumnSubscription['params']
+}) {
+  const s = subscription as ColumnSubscription
+
+  switch (s.type) {
     case 'activity': {
-      switch (subscription.subtype) {
+      switch (s.subtype) {
         case 'PUBLIC_EVENTS': {
           return '/events'
         }
 
         case 'REPO_EVENTS': {
-          const { owner, repo } = subscription.params
+          const { owner, repo } = s.params
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/repos/${owner}/${repo}/events`
         }
 
         case 'REPO_NETWORK_EVENTS': {
-          const { owner, repo } = subscription.params
+          const { owner, repo } = s.params
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/networks/${owner}/${repo}/events`
         }
 
         case 'ORG_PUBLIC_EVENTS': {
-          const { org } = subscription.params
+          const { org } = s.params
           if (!org) throw new Error('Required params: org')
           return `/orgs/${org}/events`
         }
 
         case 'USER_RECEIVED_EVENTS': {
-          const { username } = subscription.params
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/received_events`
         }
 
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
-          const { username } = subscription.params
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/received_events/public`
         }
 
         case 'USER_EVENTS': {
-          const { username } = subscription.params
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/events`
         }
 
         case 'USER_PUBLIC_EVENTS': {
-          const { username } = subscription.params
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/events/public`
         }
 
         case 'USER_ORG_EVENTS': {
-          const { org, username } = subscription.params
+          const { org, username } = s.params
           if (!(username && org))
             throw new Error('Required params: username, org')
           return `/users/${username}/events/orgs/${org}`
@@ -161,22 +172,18 @@ export function getUniqueIdForSubscription(subscription: ColumnSubscription) {
 
         default: {
           throw new Error(
-            `No path configured for subscription type '${
-              (subscription as any).subtype
-            }'`,
+            `No path configured for subscription type '${(s as any).subtype}'`,
           )
         }
       }
     }
 
     case 'notifications': {
-      return `/notifications?all=${subscription.params!.all ? 'true' : 'false'}`
+      return `/notifications?all=${s.params!.all ? 'true' : 'false'}`
     }
 
     default:
-      throw new Error(
-        `Unknown subscription type: ${(subscription as any).type}`,
-      )
+      throw new Error(`Unknown subscription type: ${(s as any).type}`)
   }
 }
 
@@ -185,6 +192,15 @@ export function createSubscriptionObjectWithId(
 ) {
   return {
     ...subscription,
-    id: getUniqueIdForSubscription(subscription as any),
+    id: getUniqueIdForSubscription(subscription),
   }
+}
+
+export function createSubscriptionObjectsWithId(
+  subscriptions: Array<Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>>,
+) {
+  return (subscriptions as ColumnSubscription[]).map(subscription => ({
+    ...subscription,
+    id: getUniqueIdForSubscription(subscription),
+  }))
 }
