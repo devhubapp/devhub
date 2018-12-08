@@ -487,7 +487,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                     subscriptionIds: column.subscriptionIds,
                   })
                 }
-                text="Clear archived"
+                text="Delete archived"
               />
             ) : null) /* (
               <ColumnHeaderItem
