@@ -1,13 +1,14 @@
 import {
   ColumnAndSubscriptions,
   ColumnFilters,
+  ColumnsAndSubscriptions,
   GitHubEvent,
   GitHubNotificationReason,
   NotificationColumnFilters,
 } from '@devhub/core/src/types'
 import { createAction } from '../helpers'
 
-export function replaceColumns(payload: ColumnAndSubscriptions[]) {
+export function replaceColumns(payload: ColumnsAndSubscriptions) {
   return createAction('REPLACE_COLUMNS', payload)
 }
 

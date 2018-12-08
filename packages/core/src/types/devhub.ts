@@ -217,6 +217,11 @@ export interface ColumnAndSubscriptions {
   >
 }
 
+export interface ColumnsAndSubscriptions {
+  columns: Array<ColumnAndSubscriptions['column']>
+  subscriptions: ColumnAndSubscriptions['subscriptions']
+}
+
 export type ModalPayload =
   | {
       name: 'ADD_COLUMN'

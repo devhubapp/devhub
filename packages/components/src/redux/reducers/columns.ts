@@ -91,16 +91,20 @@ export const columnsReducer: Reducer<State> = (
     case 'REPLACE_COLUMNS':
       return immer(state, draft => {
         draft.byId = {}
-        draft.allIds = action.payload.map(p => {
-          draft.byId![p.column.id] = {
-            ...p.column,
-            subscriptionIds: p.column.subscriptionIds || [],
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }
 
-          return p.column.id
-        })
+        // TODO: Fix any
+        draft.allIds = (action.payload.columns as any[]).map(
+          (column: Column) => {
+            draft.byId![column.id] = {
+              ...column,
+              subscriptionIds: column.subscriptionIds || [],
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            }
+
+            return column.id
+          },
+        )
       })
 
     case 'SET_COLUMN_INBOX_FILTER':

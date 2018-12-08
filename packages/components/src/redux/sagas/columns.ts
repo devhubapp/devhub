@@ -1,6 +1,6 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
-import { ColumnAndSubscriptions } from '@devhub/core/src/types'
+import { ColumnsAndSubscriptions } from '@devhub/core/src/types'
 import { createSubscriptionObjectWithId } from '@devhub/core/src/utils/helpers/github/shared'
 import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { delay } from 'redux-saga'
@@ -9,7 +9,7 @@ import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
 
-function getDefaultColumns(username: string): ColumnAndSubscriptions[] {
+function getDefaultColumns(username: string): ColumnsAndSubscriptions {
   const notificationSubscription = createSubscriptionObjectWithId({
     type: 'notifications',
     subtype: undefined,
@@ -34,35 +34,33 @@ function getDefaultColumns(username: string): ColumnAndSubscriptions[] {
     },
   })
 
-  return [
-    {
-      column: {
+  return {
+    columns: [
+      {
         id: guid(),
         subscriptionIds: [notificationSubscription.id],
         type: 'notifications',
         filters: undefined,
       },
-      subscriptions: [notificationSubscription],
-    },
-    {
-      column: {
+      {
         id: guid(),
         subscriptionIds: [userReceivedEventsSubscription.id],
         type: 'activity',
         filters: undefined,
       },
-      subscriptions: [userReceivedEventsSubscription],
-    },
-    {
-      column: {
+      {
         id: guid(),
         subscriptionIds: [userEventsSubscription.id],
         type: 'activity',
         filters: undefined,
       },
-      subscriptions: [userEventsSubscription],
-    },
-  ]
+    ],
+    subscriptions: [
+      notificationSubscription,
+      userReceivedEventsSubscription,
+      userEventsSubscription,
+    ],
+  }
 }
 
 function* onLoginSuccess(

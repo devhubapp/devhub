@@ -110,18 +110,16 @@ export const subscriptionsReducer: Reducer<State> = (
         draft.allIds = []
         draft.byId = {}
 
-        action.payload.forEach(p => {
-          p.subscriptions.forEach(s => {
-            draft.allIds.push(s.id)
+        action.payload.subscriptions.forEach(s => {
+          draft.allIds.push(s.id)
 
-            draft.byId[s.id] = {
-              ...(s as any), // TODO: Fix any
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            }
+          draft.byId[s.id] = {
+            ...(s as any), // TODO: Fix any
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }
 
-            draft.byId[s.id].data = draft.byId[s.id].data || {}
-          })
+          draft.byId[s.id].data = draft.byId[s.id].data || {}
         })
       })
 
