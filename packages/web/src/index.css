@@ -1,7 +1,6 @@
 * {
   transition: all 0.2s ease-in !important;
   box-sizing: border-box;
-  cursor: default;
 }
 
 ::-webkit-scrollbar {
