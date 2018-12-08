@@ -489,7 +489,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 }
                 text="Clear archived"
               />
-            ) : (
+            ) : null) /* (
               <ColumnHeaderItem
                 iconName="circle-slash"
                 iconStyle={
@@ -512,7 +512,8 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                     : 'Clear'
                 }
               />
-            ))}
+            )
+            */}
 
           <ColumnHeaderItem
             iconName="trashcan"
