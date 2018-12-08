@@ -1,6 +1,10 @@
 * {
-  transition: all 0.2s ease-in !important;
+  transition: all 0.2s ease-out;
   box-sizing: border-box;
+}
+
+.touchable-opacity {
+  transition: all 0.2s ease-out, opacity 0s;
 }
 
 ::-webkit-scrollbar {

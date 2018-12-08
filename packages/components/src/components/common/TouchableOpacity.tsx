@@ -11,6 +11,7 @@ const AnimatedTouchableOpacity = Animated.createAnimatedComponent(
 
 export interface TouchableOpacityProps extends TouchableOpacityComponentProps {
   animated?: boolean
+  className?: string
 }
 
 export const TouchableOpacity = React.forwardRef(
@@ -23,6 +24,7 @@ export const TouchableOpacity = React.forwardRef(
       <TouchableOpacityComponent
         activeOpacity={0.5}
         {...props}
+        className={`touchable-opacity ${props.className || ''}`.trim()}
         style={[props.style, props.disabled && { opacity: 0.5 }]}
         ref={ref}
       />
