@@ -44,7 +44,7 @@ function* init() {
         'LOGIN_SUCCESS',
         'LOGIN_FAILURE',
         'LOGOUT',
-        'REPLACE_COLUMNS',
+        'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
       ]),
     })
     const _isFirstTime = isFirstTime
@@ -54,7 +54,11 @@ function* init() {
 
     if (_isFirstTime) {
       const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
-      if (!hasCreatedColumn) yield take(['ADD_COLUMN', 'REPLACE_COLUMNS'])
+      if (!hasCreatedColumn)
+        yield take([
+          'ADD_COLUMN_AND_SUBSCRIPTIONS',
+          'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
+        ])
     }
 
     const isLogged = !!selectors.currentUserSelector(state)
@@ -109,7 +113,9 @@ function* cleanupSubscriptions() {
 }
 
 function* onAddColumn(
-  action: ExtractActionFromActionCreator<typeof actions.addColumn>,
+  action: ExtractActionFromActionCreator<
+    typeof actions.addColumnAndSubscriptions
+  >,
 ) {
   const state = yield select()
   const columnSelector = selectors.createColumnSelector()
@@ -271,11 +277,11 @@ function onLogout() {
 export function* subscriptionsSagas() {
   yield all([
     yield fork(init),
-    yield takeEvery('ADD_COLUMN', cleanupSubscriptions),
-    yield takeEvery('ADD_COLUMN', onAddColumn),
+    yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', cleanupSubscriptions),
+    yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
     yield takeEvery('DELETE_COLUMN', cleanupSubscriptions),
-    yield takeLatest('REPLACE_COLUMNS', cleanupSubscriptions),
+    yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
     yield takeEvery('FETCH_SUBSCRIPTION_REQUEST', onFetchRequest),
   ])

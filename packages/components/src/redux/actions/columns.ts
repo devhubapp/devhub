@@ -8,12 +8,14 @@ import {
 } from '@devhub/core/src/types'
 import { createAction } from '../helpers'
 
-export function replaceColumns(payload: ColumnsAndSubscriptions) {
-  return createAction('REPLACE_COLUMNS', payload)
+export function replaceColumnsAndSubscriptions(
+  payload: ColumnsAndSubscriptions,
+) {
+  return createAction('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', payload)
 }
 
-export function addColumn(payload: ColumnAndSubscriptions) {
-  return createAction('ADD_COLUMN', payload)
+export function addColumnAndSubscriptions(payload: ColumnAndSubscriptions) {
+  return createAction('ADD_COLUMN_AND_SUBSCRIPTIONS', payload)
 }
 
 export function deleteColumn(columnId: string) {

@@ -65,7 +65,7 @@ export const MainScreen = React.memo(() => {
       if (targetTagName === 'input') return
 
       if (e.key === 'a' || e.key === 'n') {
-        replaceModal({ name: 'ADD_COLUMN' })
+        replaceModal({ name: 'ADD_COLUMN_AND_SUBSCRIPTIONS' })
         return
       }
 

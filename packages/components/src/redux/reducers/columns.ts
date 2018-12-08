@@ -24,7 +24,7 @@ export const columnsReducer: Reducer<State> = (
   action,
 ) => {
   switch (action.type) {
-    case 'ADD_COLUMN':
+    case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
@@ -88,7 +88,7 @@ export const columnsReducer: Reducer<State> = (
         draft.allIds.splice(newIndex, 0, columnId)
       })
 
-    case 'REPLACE_COLUMNS':
+    case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
         draft.byId = {}
 

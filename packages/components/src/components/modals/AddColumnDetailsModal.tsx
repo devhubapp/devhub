@@ -72,7 +72,9 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
     username: '',
     ...defaultParams,
   })
-  const addColumn = useReduxAction(actions.addColumn)
+  const addColumnAndSubscriptions = useReduxAction(
+    actions.addColumnAndSubscriptions,
+  )
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const theme = useAnimatedTheme()
 
@@ -108,7 +110,7 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
       ? ActivityColumn
       : NotificationColumn
 
-    addColumn({
+    addColumnAndSubscriptions({
       column,
       subscriptions,
     })

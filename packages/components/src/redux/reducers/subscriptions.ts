@@ -70,7 +70,7 @@ export const subscriptionsReducer: Reducer<State> = (
       })
     }
 
-    case 'ADD_COLUMN':
+    case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
         draft.allIds = draft.allIds || []
 
@@ -105,7 +105,7 @@ export const subscriptionsReducer: Reducer<State> = (
         })
       })
 
-    case 'REPLACE_COLUMNS':
+    case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
         draft.allIds = []
         draft.byId = {}

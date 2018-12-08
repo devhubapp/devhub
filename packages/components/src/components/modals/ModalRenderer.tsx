@@ -11,7 +11,7 @@ export function ModalRenderer() {
   if (!currentOpenedModal) return null
 
   switch (currentOpenedModal.name) {
-    case 'ADD_COLUMN':
+    case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
       return <AddColumnModal />
 
     case 'ADD_COLUMN_DETAILS':

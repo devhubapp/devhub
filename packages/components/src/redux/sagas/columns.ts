@@ -69,11 +69,15 @@ function* onLoginSuccess(
   const username = action.payload.user.github.user.login
   const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
   if (!hasCreatedColumn)
-    yield put(actions.replaceColumns(getDefaultColumns(username)))
+    yield put(
+      actions.replaceColumnsAndSubscriptions(getDefaultColumns(username)),
+    )
 }
 
 function* onAddColumn(
-  action: ExtractActionFromActionCreator<typeof actions.addColumn>,
+  action: ExtractActionFromActionCreator<
+    typeof actions.addColumnAndSubscriptions
+  >,
 ) {
   const columnId = action.payload.column.id
 
@@ -112,7 +116,7 @@ function* onMoveColumn(
 export function* columnsSagas() {
   yield all([
     yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
-    yield takeLatest('ADD_COLUMN', onAddColumn),
+    yield takeLatest('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest('MOVE_COLUMN', onMoveColumn),
   ])
 }
