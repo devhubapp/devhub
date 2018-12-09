@@ -149,12 +149,25 @@ export function configureStore(key = 'root') {
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
+  // TODO: Fix this
+  // Make it keep the current open modal opened
+  // Also make sure the middlewares (persist, saga, devtools, etc)
+  // keep working as expected
+  if (process.env.NODE_ENV !== 'production') {
+    if ((module as any).hot) {
+      ;(module as any).hot.accept(() => {
+        store.replaceReducer(persistedReducer)
+      })
+    }
+  }
+
   const sagaMiddleware = createSagaMiddleware()
 
   const store = createStore(
     persistedReducer,
     composeWithDevTools(applyMiddleware(sagaMiddleware)),
   )
+
   const persistor = persistStore(store)
 
   sagaMiddleware.run(rootSaga)
