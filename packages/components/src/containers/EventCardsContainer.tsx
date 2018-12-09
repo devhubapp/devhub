@@ -31,43 +31,44 @@ export const EventCardsContainer = React.memo(
 
     const subscription = useReduxState(
       state =>
-        selectors.subscriptionSelector(
-          state,
-          column.subscriptionIds[0],
-        ) as ActivityColumnSubscription,
+        selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
+          | ActivityColumnSubscription
+          | undefined,
     )
+
+    const data = (subscription && subscription.data) || {}
 
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
     )
 
     const [filteredItems, setFilteredItems] = useState<EnhancedGitHubEvent[]>(
-      () => getFilteredEvents(subscription.data.items || [], column.filters),
+      () => getFilteredEvents(data.items || [], column.filters),
     )
 
     const canFetchMoreRef = useRef(false)
 
     useEffect(
       () => {
-        setFilteredItems(
-          getFilteredEvents(subscription.data.items || [], column.filters),
-        )
+        setFilteredItems(getFilteredEvents(data.items || [], column.filters))
       },
-      [subscription.data, column.filters],
+      [data, column.filters],
     )
 
     useEffect(
       () => {
         canFetchMoreRef.current = (() => {
           const clearedAt = column.filters && column.filters.clearedAt
-          const olderDate = getOlderEventDate(subscription.data.items || [])
+          const olderDate = getOlderEventDate(data.items || [])
 
           if (clearedAt && olderDate && clearedAt >= olderDate) return false
-          return !!subscription.data.canFetchMore
+          return !!data.canFetchMore
         })()
       },
-      [filteredItems, column.filters, subscription.data.canFetchMore],
+      [filteredItems, column.filters, data.canFetchMore],
     )
+
+    if (!subscription) return null
 
     const fetchData = ({
       page,
