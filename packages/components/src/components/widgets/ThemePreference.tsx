@@ -141,8 +141,6 @@ export function ThemePreference() {
           value={currentThemeId === 'auto'}
         />
       </View>
-
-      <Spacer height={contentPadding} />
     </View>
   )
 }

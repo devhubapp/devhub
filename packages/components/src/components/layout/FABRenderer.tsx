@@ -46,7 +46,7 @@ export function FABRenderer() {
         <FAB
           key="fab"
           iconName="plus"
-          onPress={() => replaceModal({ name: 'ADD_COLUMN_AND_SUBSCRIPTIONS' })}
+          onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
           useBrandColor
         />
       </Animated.View>
@@ -54,7 +54,7 @@ export function FABRenderer() {
   }
 
   switch (currentOpenedModal.name) {
-    case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
+    case 'ADD_COLUMN':
     case 'ADD_COLUMN_DETAILS': {
       Animated.timing(addOrCloseAnimatedRef.current, {
         toValue: 1,

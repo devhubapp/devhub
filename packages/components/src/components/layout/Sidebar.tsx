@@ -87,9 +87,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         {!small && (
           <>
             <TouchableOpacity
-              onPress={() =>
-                replaceModal({ name: 'ADD_COLUMN_AND_SUBSCRIPTIONS' })
-              }
+              onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
               style={[styles.centerContainer, squareStyle]}
             >
               <ColumnHeaderItem iconName="plus" />
@@ -113,9 +111,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             small ? (
               <>
                 <TouchableOpacity
-                  onPress={() =>
-                    replaceModal({ name: 'ADD_COLUMN_AND_SUBSCRIPTIONS' })
-                  }
+                  onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   style={[styles.centerContainer, squareStyle]}
                 >
                   <ColumnHeaderItem iconName="plus" />

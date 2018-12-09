@@ -266,7 +266,7 @@ export interface ColumnsAndSubscriptions {
 
 export type ModalPayload =
   | {
-      name: 'ADD_COLUMN_AND_SUBSCRIPTIONS'
+      name: 'ADD_COLUMN'
       params?: undefined
     }
   | {
@@ -275,6 +275,10 @@ export type ModalPayload =
     }
   | {
       name: 'SETTINGS'
+      params?: undefined
+    }
+  | {
+      name: 'SETUP_GITHUB_ENTERPRISE'
       params?: undefined
     }
 

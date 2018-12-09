@@ -12,57 +12,59 @@ import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
 import { Spacer } from '../common/Spacer'
-import { AppLayoutConsumer } from '../context/LayoutContext'
+import { useAppLayout } from '../context/LayoutContext'
+import { AccountSettings } from '../widgets/AccountSettings'
 import { ThemePreference } from '../widgets/ThemePreference'
 
 export interface SettingsModalProps {}
 
 export function SettingsModal() {
   const theme = useAnimatedTheme()
-  const logout = useReduxAction(actions.logout)
+  const { sizename } = useAppLayout()
+
   const username = useReduxState(selectors.currentUsernameSelector)
 
+  const logout = useReduxAction(actions.logout)
+
   return (
-    <AppLayoutConsumer>
-      {({ sizename }) => {
-        return (
-          <ModalColumn
-            columnId="preferences-modal"
-            hideCloseButton={sizename === '1-small'}
-            iconName="gear"
-            title="Preferences"
-            right={
-              sizename === '1-small' && username ? (
-                <Avatar
-                  backgroundColorLoading={theme.backgroundColor}
-                  shape="circle"
-                  size={28}
-                  username={username}
-                />
-              ) : (
-                undefined
-              )
-            }
-          >
-            <ScrollView
-              style={{ flex: 1 }}
-              contentContainerStyle={{ padding: contentPadding }}
-            >
-              <ThemePreference />
-            </ScrollView>
-
-            <View style={{ padding: contentPadding }}>
-              <Button key="logout-button" onPress={() => logout()}>
-                Logout
-              </Button>
-
-              <Spacer height={contentPadding} />
-
-              <AppVersion />
-            </View>
-          </ModalColumn>
+    <ModalColumn
+      columnId="preferences-modal"
+      hideCloseButton={sizename === '1-small'}
+      iconName="gear"
+      title="Preferences"
+      right={
+        sizename === '1-small' && username ? (
+          <Avatar
+            backgroundColorLoading={theme.backgroundColor}
+            shape="circle"
+            size={28}
+            username={username}
+          />
+        ) : (
+          undefined
         )
-      }}
-    </AppLayoutConsumer>
+      }
+    >
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: contentPadding }}
+      >
+        <ThemePreference />
+
+        <Spacer height={contentPadding * 2} />
+
+        <AccountSettings />
+      </ScrollView>
+
+      <View style={{ padding: contentPadding }}>
+        <AppVersion />
+
+        <Spacer height={contentPadding} />
+
+        <Button key="logout-button" onPress={() => logout()}>
+          Logout
+        </Button>
+      </View>
+    </ModalColumn>
   )
 }
