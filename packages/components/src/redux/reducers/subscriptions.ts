@@ -14,7 +14,7 @@ import { Reducer } from '../types'
 
 export interface State {
   allIds: string[]
-  byId: Record<string, ColumnSubscription>
+  byId: Record<string, ColumnSubscription | undefined>
   updatedAt: string | null
 }
 
@@ -241,31 +241,31 @@ export const subscriptionsReducer: Reducer<State> = (
           if (!subscription) return
 
           if (subscription.type === 'activity') {
-            if (!(draft.byId[id].data && draft.byId[id].data.items)) return
+            if (!(subscription.data && subscription.data.items)) return
 
-            const items = draft.byId[id].data.items as EnhancedGitHubEvent[]
+            const items = subscription.data.items as EnhancedGitHubEvent[]
             if (!items.length) return
 
             draft.byId[id] = {
               ...draft.byId[id],
               data: {
-                ...draft.byId[id].data,
+                ...subscription.data,
                 items: items.filter(
                   item => item && !(item.created_at <= clearedAt),
                 ),
               },
             } as ActivityColumnSubscription
           } else if (subscription.type === 'notifications') {
-            if (!(draft.byId[id].data && draft.byId[id].data.items)) return
+            if (!(subscription.data && subscription.data.items)) return
 
-            const items = draft.byId[id].data
+            const items = subscription.data
               .items as EnhancedGitHubNotification[]
             if (!items.length) return
 
             draft.byId[id] = {
               ...draft.byId[id],
               data: {
-                ...draft.byId[id].data,
+                ...subscription.data,
                 items: items.filter(
                   item => item && !(item.updated_at <= clearedAt),
                 ),

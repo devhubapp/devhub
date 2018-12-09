@@ -191,7 +191,7 @@ const SidebarColumnItem = React.memo(
     const { columnId, small, currentOpenedModal } = props
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
-    if (!column) return null
+    if (!(column && subscriptions)) return null
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 

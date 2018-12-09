@@ -11,7 +11,7 @@ export function columnsArrToState(
   updatedAt?: string,
 ) {
   const items = columns || []
-  const byId: Record<string, Column> = {}
+  const byId: Record<string, Column | undefined> = {}
 
   const allIds = items.map((column: ColumnCreation) => {
     const id = column.id || guid()
@@ -35,7 +35,7 @@ export function subscriptionsArrToState(
   updatedAt?: string,
 ) {
   const items = subscriptions || []
-  const byId: Record<string, ColumnSubscription> = {}
+  const byId: Record<string, ColumnSubscription | undefined> = {}
   const allIds = items.map((subscription: ColumnSubscriptionCreation) => {
     const id = subscription.id || getUniqueIdForSubscription(subscription)
     byId[id] = {

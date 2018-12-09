@@ -109,7 +109,7 @@ const migrations = {
       draft.subscriptions.allIds = draft.subscriptions.allIds || []
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
-      const byId: Record<string, ColumnSubscription> = {}
+      const byId: Record<string, ColumnSubscription | undefined> = {}
 
       selectors.subscriptionsArrSelector(draft).forEach(subscription => {
         const {

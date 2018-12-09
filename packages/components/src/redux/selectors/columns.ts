@@ -17,7 +17,7 @@ export const columnIdsSelector = (state: RootState) => s(state).allIds
 export const columnsArrSelector = createSelector(
   (state: RootState) => columnIdsSelector(state),
   (state: RootState) => s(state).byId,
-  (allIds, byId) => (byId ? allIds.map(id => byId[id]) : []),
+  (allIds, byId) => (byId ? allIds.map(id => byId[id]!).filter(Boolean) : []),
 )
 
 export const hasCreatedColumnSelector = (state: RootState) =>
@@ -34,9 +34,9 @@ export const createColumnSubscriptionsSelector = () => {
         ? columnSelector(state, id)!.subscriptionIds
         : [],
     (subscriptions, subscriptionIds) =>
-      subscriptionIds.map(id =>
-        subscriptionSelector({ subscriptions } as any, id),
-      ),
+      subscriptionIds
+        .map(id => subscriptionSelector({ subscriptions } as any, id)!)
+        .filter(Boolean),
   )
 }
 

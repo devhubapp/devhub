@@ -69,11 +69,13 @@ function* init() {
 
     const subscriptionsToFetch = _isFirstTime
       ? subscriptions
-      : subscriptions.filter(s => minimumRefetchTimeHasPassed(s))
+      : subscriptions.filter(s => s && minimumRefetchTimeHasPassed(s))
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
     yield all(
       subscriptionsToFetch.map(function*(subscription) {
+        if (!subscription) return
+
         return yield put(
           actions.fetchSubscriptionRequest({
             subscriptionId: subscription.id,
@@ -171,7 +173,12 @@ function* onFetchRequest(
 
   delete _params.page
   delete _params.perPage
-  const params = { ...subscription.params, ..._params, page, per_page: perPage }
+  const params = {
+    ...(subscription && subscription.params),
+    ..._params,
+    page,
+    per_page: perPage,
+  }
 
   try {
     if (!githubToken) throw new Error('Not logged')
@@ -265,7 +272,10 @@ function* onFetchRequest(
       )
     }
   } catch (error) {
-    console.error(`Failed to load GitHub ${subscription.type || 'data'}`, error)
+    console.error(
+      `Failed to load GitHub ${(subscription && subscription.type) || 'data'}`,
+      error,
+    )
     yield put(actions.fetchSubscriptionFailure({ subscriptionId }, error))
   }
 }

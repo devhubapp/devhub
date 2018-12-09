@@ -73,10 +73,12 @@ async function sync(state: RootState) {
           mutation: {
             replaceColumnsAndSubscriptions: {
               __args: {
-                columns: columns.map(removeUndefinedFields),
-                subscriptions: subscriptions.map(s =>
-                  _.omit(removeUndefinedFields(s), 'data'),
-                ),
+                columns: columns
+                  .filter(Boolean)
+                  .map(c => removeUndefinedFields(c!)),
+                subscriptions: subscriptions
+                  .filter(Boolean)
+                  .map(s => _.omit(removeUndefinedFields(s!), 'data')),
                 columnsUpdatedAt:
                   state.columns.updatedAt || new Date().toISOString(),
                 subscriptionsUpdatedAt:
@@ -145,14 +147,18 @@ function* onLoginSuccess(
     if (serverDataIsNewer) {
       yield put(
         actions.replaceColumnsAndSubscriptions({
-          columns: columns.allIds.map(id => columns.byId[id]),
-          subscriptions: subscriptions.allIds.map(id => ({
-            ...subscriptions.byId[id],
-            data: {
-              ...(state.subscriptions.byId[id] || {}).data,
-              ...((subscriptions.byId[id].data || {}) as any),
-            },
-          })),
+          columns: columns.allIds.map(id => columns.byId[id]!).filter(Boolean),
+          subscriptions: subscriptions.allIds
+            .map(id => ({
+              ...subscriptions.byId[id]!,
+              data: {
+                ...(state.subscriptions.byId[id] &&
+                  state.subscriptions.byId[id]!.data),
+                ...(((subscriptions.byId[id] && subscriptions.byId[id]!.data) ||
+                  {}) as any),
+              },
+            }))
+            .filter(Boolean),
           columnsUpdatedAt: columns.updatedAt,
           subscriptionsUpdatedAt: columns.updatedAt,
         }),

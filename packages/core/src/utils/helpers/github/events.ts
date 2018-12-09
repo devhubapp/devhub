@@ -15,7 +15,7 @@ import {
 
 export function getColumnHeaderDetails(
   column: Column,
-  subscriptions: ColumnSubscription[],
+  subscriptions: Array<ColumnSubscription | undefined>,
 ): {
   avatarProps?: {
     repo?: string
@@ -28,7 +28,9 @@ export function getColumnHeaderDetails(
 } {
   switch (column.type) {
     case 'activity': {
-      const subscription = subscriptions[0] as ActivityColumnSubscription
+      const subscription = subscriptions.filter(
+        Boolean,
+      )[0] as ActivityColumnSubscription
 
       switch (subscription.subtype) {
         case 'ORG_PUBLIC_EVENTS': {

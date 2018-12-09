@@ -11,7 +11,7 @@ import { Reducer } from '../types'
 
 export interface State {
   allIds: string[]
-  byId: Record<string, Column> | null
+  byId: Record<string, Column | undefined> | null
   updatedAt: string | null
 }
 
@@ -70,11 +70,12 @@ export const columnsReducer: Reducer<State> = (
         if (!(draft.allIds && draft.byId)) return
 
         draft.allIds.forEach(columnId => {
-          if (!draft.byId![columnId].subscriptionIds) return
+          const column = draft.byId && draft.byId[columnId]
+          if (!column) return
 
-          draft.byId![columnId].subscriptionIds = draft.byId![
-            columnId
-          ].subscriptionIds.filter(id => !action.payload.includes(id))
+          column.subscriptionIds = column.subscriptionIds.filter(
+            id => !action.payload.includes(id),
+          )
 
           draft.updatedAt = new Date().toISOString()
         })

@@ -36,12 +36,12 @@ export interface User {
   _id: any
   columns?: {
     allIds: string[]
-    byId: Record<string, Column>
+    byId: Record<string, Column | undefined>
     updatedAt: string
   }
   subscriptions?: {
     allIds: string[]
-    byId: Record<string, ColumnSubscription>
+    byId: Record<string, ColumnSubscription | undefined>
     updatedAt: string
   }
   github: {
