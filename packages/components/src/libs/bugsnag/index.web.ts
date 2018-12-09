@@ -12,7 +12,7 @@ export function initBugsnag(apiKey: string) {
   const client = bugsnag({
     apiKey,
     autoBreadcrumbs: false,
-    // notifyReleaseStages: ['production'],
+    notifyReleaseStages: ['production'],
   })
 
   bugsnagClient = Object.assign({}, client, {

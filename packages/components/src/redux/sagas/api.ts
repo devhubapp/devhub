@@ -149,7 +149,7 @@ function* onLoginSuccess(
           subscriptions: subscriptions.allIds.map(id => ({
             ...subscriptions.byId[id],
             data: {
-              ...state.subscriptions.byId[id].data,
+              ...(state.subscriptions.byId[id] || {}).data,
               ...((subscriptions.byId[id].data || {}) as any),
             },
           })),
