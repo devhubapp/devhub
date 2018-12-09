@@ -1,5 +1,6 @@
 import createReactPlugin from 'bugsnag-react'
 import { Client as Bugsnag } from 'bugsnag-react-native'
+import _ from 'lodash'
 import React from 'react'
 
 import { Omit } from '@devhub/core'
@@ -21,7 +22,12 @@ export function initBugsnag(apiKey: string) {
     metadata?: Record<string, Record<string, any>>,
   ) => {
     _notify(error, r => {
-      if (metadata) r.metadata = metadata
+      r.metadata = Object.assign(r.metadata, metadata, {
+        error: _.omit(
+          _.pick(error, Object.getOwnPropertyNames(error)),
+          'stack',
+        ),
+      })
     })
   }
 

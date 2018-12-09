@@ -1,6 +1,6 @@
 import bugsnag from 'bugsnag-js'
-import Report from 'bugsnag-js/types/report'
 import createReactPlugin from 'bugsnag-react'
+import _ from 'lodash'
 import React from 'react'
 
 export * from 'bugsnag-js'
@@ -26,7 +26,12 @@ export function initBugsnag(apiKey: string) {
     notify(error: Error, metadata?: Record<string, Record<string, any>>) {
       client.notify(error, {
         beforeSend: r => {
-          if (metadata) r.metaData = metadata
+          r.metaData = Object.assign(r.metaData, metadata, {
+            error: _.omit(
+              _.pick(error, Object.getOwnPropertyNames(error)),
+              'stack',
+            ),
+          })
         },
       })
     },
