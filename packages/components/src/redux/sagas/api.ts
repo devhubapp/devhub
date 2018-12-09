@@ -94,11 +94,11 @@ async function sync(state: RootState) {
     const { errors } = response.data
 
     if (errors && errors.length) {
-      throw { response }
+      throw Object.assign(new Error('GraphQL Error'), { response })
     }
   } catch (error) {
     console.error(error.response)
-    bugsnagClient.notify(error)
+    bugsnagClient.notify(error, { response: error.response })
   }
 }
 

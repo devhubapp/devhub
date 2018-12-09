@@ -111,7 +111,7 @@ function* onLoginRequest(
     const { data, errors } = response.data
 
     if (errors && errors.length) {
-      throw { response }
+      throw Object.assign(new Error('GraphQL Error'), { response })
     }
 
     if (

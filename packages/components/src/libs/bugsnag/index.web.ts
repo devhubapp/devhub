@@ -1,4 +1,5 @@
 import bugsnag from 'bugsnag-js'
+import Report from 'bugsnag-js/types/report'
 import createReactPlugin from 'bugsnag-react'
 import React from 'react'
 
@@ -8,20 +9,30 @@ export let ErrorBoundary: React.ComponentType<any> = React.Fragment
 
 let bugsnagClient: ReturnType<typeof bugsnag>
 export function initBugsnag(apiKey: string) {
-  bugsnagClient = bugsnag(apiKey)
-  ;(bugsnagClient as any).apiKey = apiKey
-  ;(bugsnagClient as any).autoBreadcrumbs = false
-  ;(bugsnagClient as any).clearUser = () => {
-    bugsnagClient.user = {}
-  }
-  ;(bugsnagClient as any).setUser = (
-    id: string,
-    name: string,
-    email: string,
-    other = {},
-  ) => {
-    bugsnagClient.user = { id, name, email, ...other }
-  }
+  const client = bugsnag({
+    apiKey,
+    autoBreadcrumbs: false,
+    // notifyReleaseStages: ['production'],
+  })
+
+  bugsnagClient = Object.assign({}, client, {
+    clearUser() {
+      bugsnagClient.user = {}
+    },
+    setUser(id: string, name: string, email: string, other = {}) {
+      bugsnagClient.user = { id, name, email, ...other }
+    },
+
+    notify(error: Error, metadata?: Record<string, Record<string, any>>) {
+      client.notify(error, {
+        beforeSend: r => {
+          if (metadata) r.metaData = metadata
+        },
+      })
+    },
+
+    use: client.use,
+  })
 
   try {
     ErrorBoundary = bugsnagClient.use(createReactPlugin(React))
