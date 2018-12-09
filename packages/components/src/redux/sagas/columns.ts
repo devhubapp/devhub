@@ -1,4 +1,4 @@
-import { all, put, select, takeLatest } from 'redux-saga/effects'
+import { all, select, takeLatest } from 'redux-saga/effects'
 
 import {
   ActivityColumnSubscription,
@@ -13,7 +13,7 @@ import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
 
-function getDefaultColumns(username: string): ColumnsAndSubscriptions {
+export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
   const notificationSubscription = createSubscriptionObjectWithId({
     type: 'notifications',
     subtype: undefined,
@@ -67,17 +67,6 @@ function getDefaultColumns(username: string): ColumnsAndSubscriptions {
   }
 }
 
-function* onLoginSuccess(
-  action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
-) {
-  const username = action.payload.user.github.user.login
-  const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
-  if (!hasCreatedColumn)
-    yield put(
-      actions.replaceColumnsAndSubscriptions(getDefaultColumns(username)),
-    )
-}
-
 function* onAddColumn(
   action: ExtractActionFromActionCreator<
     typeof actions.addColumnAndSubscriptions
@@ -119,7 +108,6 @@ function* onMoveColumn(
 
 export function* columnsSagas() {
   yield all([
-    yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
     yield takeLatest('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest('MOVE_COLUMN', onMoveColumn),
   ])

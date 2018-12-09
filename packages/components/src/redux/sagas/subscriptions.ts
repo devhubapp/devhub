@@ -64,7 +64,7 @@ function* init() {
     const isLogged = !!selectors.currentUserSelector(state)
     if (!isLogged) continue
 
-    const subscriptions = selectors.subscriptionsSelector(state)
+    const subscriptions = selectors.subscriptionsArrSelector(state)
     if (!(subscriptions && subscriptions.length)) continue
 
     const subscriptionsToFetch = _isFirstTime

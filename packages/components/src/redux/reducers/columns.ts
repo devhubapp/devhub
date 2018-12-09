@@ -7,17 +7,18 @@ import {
   Column,
   NotificationColumn,
 } from '@devhub/core/src/types'
-import { guid } from '@devhub/core/src/utils/helpers/shared'
 import { Reducer } from '../types'
 
 export interface State {
   allIds: string[]
   byId: Record<string, Column> | null
+  updatedAt: string | null
 }
 
 const initialState: State = {
   allIds: [],
   byId: null,
+  updatedAt: null,
 }
 
 export const columnsReducer: Reducer<State> = (
@@ -50,6 +51,8 @@ export const columnsReducer: Reducer<State> = (
         draft.allIds.unshift(normalized.allIds[0])
 
         Object.assign(draft.byId, normalized.byId)
+
+        draft.updatedAt = normalized.updatedAt
       })
 
     case 'DELETE_COLUMN':
@@ -58,6 +61,8 @@ export const columnsReducer: Reducer<State> = (
           draft.allIds = draft.allIds.filter(id => id !== action.payload)
 
         if (draft.byId) delete draft.byId[action.payload]
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'DELETE_COLUMN_SUBSCRIPTIONS':
@@ -70,6 +75,8 @@ export const columnsReducer: Reducer<State> = (
           draft.byId![columnId].subscriptionIds = draft.byId![
             columnId
           ].subscriptionIds.filter(id => !action.payload.includes(id))
+
+          draft.updatedAt = new Date().toISOString()
         })
       })
 
@@ -92,14 +99,21 @@ export const columnsReducer: Reducer<State> = (
         const columnId = draft.allIds[currentIndex]
         draft.allIds = draft.allIds.filter(id => id !== columnId)
         draft.allIds.splice(newIndex, 0, columnId)
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
-        const normalized = columnsArrToState(action.payload.columns)
+        const normalized = columnsArrToState(
+          action.payload.columns,
+          action.payload.columnsUpdatedAt,
+        )
 
         draft.allIds = normalized.allIds
         draft.byId = normalized.byId
+
+        draft.updatedAt = normalized.updatedAt
       })
 
     case 'SET_COLUMN_INBOX_FILTER':
@@ -131,6 +145,8 @@ export const columnsReducer: Reducer<State> = (
         } else if (!showInbox && !showSaveForLater && !showCleared) {
           column.filters.inbox.inbox = true
         }
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'SET_COLUMN_ACTIVITY_TYPE_FILTER':
@@ -150,6 +166,8 @@ export const columnsReducer: Reducer<State> = (
         } else {
           delete column.filters.activity.types[action.payload.type]
         }
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'SET_COLUMN_REASON_FILTER':
@@ -171,6 +189,8 @@ export const columnsReducer: Reducer<State> = (
         } else {
           delete column.filters.notifications.reasons[action.payload.reason]
         }
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'SET_COLUMN_UNREAD_FILTER':
@@ -182,6 +202,8 @@ export const columnsReducer: Reducer<State> = (
 
         column.filters = column.filters || {}
         column.filters.unread = action.payload.unread
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'SET_COLUMN_PRIVACY_FILTER':
@@ -193,6 +215,8 @@ export const columnsReducer: Reducer<State> = (
 
         column.filters = column.filters || {}
         column.filters.private = action.payload.private
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'SET_COLUMN_CLEARED_AT_FILTER':
@@ -207,6 +231,8 @@ export const columnsReducer: Reducer<State> = (
           action.payload.clearedAt === null
             ? undefined
             : action.payload.clearedAt || new Date().toISOString()
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     default:

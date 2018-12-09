@@ -5,6 +5,7 @@ import { User } from '@devhub/core/src/types/graphql'
 import { Reducer } from '../types'
 
 export interface AuthError {
+  name: string
   message: string
   status?: number
   response?: any

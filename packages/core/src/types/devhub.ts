@@ -260,6 +260,8 @@ export interface ColumnAndSubscriptions {
 export interface ColumnsAndSubscriptions {
   columns: Array<ColumnAndSubscriptions['column']>
   subscriptions: ColumnAndSubscriptions['subscriptions']
+  columnsUpdatedAt?: string
+  subscriptionsUpdatedAt?: string
 }
 
 export type ModalPayload =

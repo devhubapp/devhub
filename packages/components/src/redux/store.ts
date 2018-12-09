@@ -111,7 +111,7 @@ const migrations = {
 
       const byId: Record<string, ColumnSubscription> = {}
 
-      selectors.subscriptionsSelector(draft).forEach(subscription => {
+      selectors.subscriptionsArrSelector(draft).forEach(subscription => {
         const {
           data: items,
           loadState,

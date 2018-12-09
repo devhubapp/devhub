@@ -9,8 +9,10 @@ import {
   User,
 } from '@devhub/core'
 import * as github from '../../libs/github'
+import { bugsnagClient } from '../../setup'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
+import { RootState } from '../types'
 import { ExtractActionFromActionCreator } from '../types/base'
 
 function* onRehydrate() {
@@ -43,6 +45,8 @@ function* onLoginRequest(
       data: {
         login: {
           appToken: string
+          columns?: RootState['columns']
+          subscriptions?: RootState['subscriptions']
           user: {
             _id: User['_id']
             github: {
@@ -75,6 +79,8 @@ function* onLoginRequest(
             appToken
             user {
               _id
+              columns
+              subscriptions
               github {
                 scope
                 token
@@ -176,6 +182,7 @@ function* onLoginRequest(
       }),
     )
   } catch (error) {
+    if (!error.name) error.name = 'AuthError'
     yield put(actions.loginFailure(error))
   }
 }
@@ -189,6 +196,8 @@ function onLoginSuccess(
 function* onLoginFailure(
   action: ExtractActionFromActionCreator<typeof actions.loginFailure>,
 ) {
+  bugsnagClient.notify(action.error)
+
   if (
     action.error &&
     (action.error.status === 401 ||

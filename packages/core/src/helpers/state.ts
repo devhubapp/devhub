@@ -6,7 +6,10 @@ import {
 } from '..'
 import { getUniqueIdForSubscription, guid } from '../utils'
 
-export function columnsArrToState(columns: ColumnCreation[]) {
+export function columnsArrToState(
+  columns: ColumnCreation[],
+  updatedAt?: string,
+) {
   const items = columns || []
   const byId: Record<string, Column> = {}
 
@@ -24,11 +27,12 @@ export function columnsArrToState(columns: ColumnCreation[]) {
     return id
   })
 
-  return { allIds, byId }
+  return { allIds, byId, updatedAt: updatedAt || new Date().toISOString() }
 }
 
 export function subscriptionsArrToState(
   subscriptions: ColumnSubscriptionCreation[],
+  updatedAt?: string,
 ) {
   const items = subscriptions || []
   const byId: Record<string, ColumnSubscription> = {}
@@ -45,5 +49,5 @@ export function subscriptionsArrToState(
     return id
   })
 
-  return { allIds, byId }
+  return { allIds, byId, updatedAt: updatedAt || new Date().toISOString() }
 }

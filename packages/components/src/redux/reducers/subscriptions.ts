@@ -10,17 +10,18 @@ import {
   NotificationColumnSubscription,
   subscriptionsArrToState,
 } from '@devhub/core'
-import * as selectors from '../selectors'
 import { Reducer } from '../types'
 
 export interface State {
   allIds: string[]
   byId: Record<string, ColumnSubscription>
+  updatedAt: string | null
 }
 
 const initialState: State = {
   allIds: [],
   byId: {},
+  updatedAt: null,
 }
 
 export const subscriptionsReducer: Reducer<State> = (
@@ -83,6 +84,8 @@ export const subscriptionsReducer: Reducer<State> = (
         )
 
         Object.assign(draft.byId, normalized.byId)
+
+        draft.updatedAt = normalized.updatedAt
       })
 
     case 'DELETE_COLUMN_SUBSCRIPTIONS':
@@ -95,13 +98,20 @@ export const subscriptionsReducer: Reducer<State> = (
         action.payload.forEach(id => {
           delete draft.byId[id]
         })
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
-        const normalized = subscriptionsArrToState(action.payload.subscriptions)
+        const normalized = subscriptionsArrToState(
+          action.payload.subscriptions,
+          action.payload.subscriptionsUpdatedAt,
+        )
         draft.allIds = normalized.allIds
         draft.byId = normalized.byId
+
+        draft.updatedAt = normalized.updatedAt
       })
 
     case 'FETCH_SUBSCRIPTION_REQUEST':
@@ -124,6 +134,8 @@ export const subscriptionsReducer: Reducer<State> = (
               prevLoadState === 'loading_first'
             ? 'loading_first'
             : 'loading'
+
+        // draft.updatedAt = new Date().toISOString()
       })
 
     case 'FETCH_SUBSCRIPTION_SUCCESS':
@@ -156,6 +168,14 @@ export const subscriptionsReducer: Reducer<State> = (
         })
 
         subscription.data.items = mergedItems
+
+        // TODO: The updatedAt from subscriptions are being changed too often
+        // (everytime this fetch success action is dispatched)
+        // which caused a server sync request without need
+        // because we are not saving the data.items on server yet
+        // if (subscription.data.items) {
+        //   draft.updatedAt = new Date().toISOString()
+        // }
       })
 
     case 'FETCH_SUBSCRIPTION_FAILURE':
@@ -169,6 +189,8 @@ export const subscriptionsReducer: Reducer<State> = (
         subscription.data = subscription.data || {}
         subscription.data.loadState = 'error'
         subscription.data.errorMessage = action.error && action.error.message
+
+        // draft.updatedAt = new Date().toISOString()
       })
 
     case 'SAVE_ITEM_FOR_LATER':
@@ -202,6 +224,8 @@ export const subscriptionsReducer: Reducer<State> = (
             },
           )
         })
+
+        draft.updatedAt = new Date().toISOString()
       })
 
     case 'CLEAR_ARCHIVED_ITEMS':
@@ -249,6 +273,8 @@ export const subscriptionsReducer: Reducer<State> = (
             } as NotificationColumnSubscription
           }
         })
+
+        // draft.updatedAt = new Date().toISOString()
       })
 
     default:

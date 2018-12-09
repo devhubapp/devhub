@@ -37,10 +37,12 @@ export interface User {
   columns?: {
     allIds: string[]
     byId: Record<string, Column>
+    updatedAt: string
   }
   subscriptions?: {
     allIds: string[]
     byId: Record<string, ColumnSubscription>
+    updatedAt: string
   }
   github: {
     scope: string[]
