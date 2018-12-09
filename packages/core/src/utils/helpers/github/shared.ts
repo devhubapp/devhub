@@ -124,50 +124,50 @@ export function getUniqueIdForSubscription(subscription: {
         case 'REPO_EVENTS': {
           const { owner, repo } = s.params
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
-          return `/repos/${owner}/${repo}/events`
+          return `/repos/${owner}/${repo}/events`.toLowerCase()
         }
 
         case 'REPO_NETWORK_EVENTS': {
           const { owner, repo } = s.params
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
-          return `/networks/${owner}/${repo}/events`
+          return `/networks/${owner}/${repo}/events`.toLowerCase()
         }
 
         case 'ORG_PUBLIC_EVENTS': {
           const { org } = s.params
           if (!org) throw new Error('Required params: org')
-          return `/orgs/${org}/events`
+          return `/orgs/${org}/events`.toLowerCase()
         }
 
         case 'USER_RECEIVED_EVENTS': {
           const { username } = s.params
           if (!username) throw new Error('Required params: username')
-          return `/users/${username}/received_events`
+          return `/users/${username}/received_events`.toLowerCase()
         }
 
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           const { username } = s.params
           if (!username) throw new Error('Required params: username')
-          return `/users/${username}/received_events/public`
+          return `/users/${username}/received_events/public`.toLowerCase()
         }
 
         case 'USER_EVENTS': {
           const { username } = s.params
           if (!username) throw new Error('Required params: username')
-          return `/users/${username}/events`
+          return `/users/${username}/events`.toLowerCase()
         }
 
         case 'USER_PUBLIC_EVENTS': {
           const { username } = s.params
           if (!username) throw new Error('Required params: username')
-          return `/users/${username}/events/public`
+          return `/users/${username}/events/public`.toLowerCase()
         }
 
         case 'USER_ORG_EVENTS': {
           const { org, username } = s.params
           if (!(username && org))
             throw new Error('Required params: username, org')
-          return `/users/${username}/events/orgs/${org}`
+          return `/users/${username}/events/orgs/${org}`.toLowerCase()
         }
 
         default: {
