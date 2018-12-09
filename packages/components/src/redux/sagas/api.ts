@@ -46,8 +46,13 @@ function* init() {
     )
       continue
 
-    debounceSync(state)
+    yield put(actions.syncUp())
   }
+}
+
+function* onSyncUp() {
+  const state: RootState = yield select()
+  debounceSync(state)
 }
 
 // Note: Lodash debounce was not working as expected with generators
@@ -106,8 +111,20 @@ const debounceSync = _.debounce(sync, 5000, {
 function* onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
+  const state: RootState = yield select()
+
   const { columns, subscriptions } = action.payload.user
   const username = action.payload.user.github.user.login
+
+  const clientDataIsNewer =
+    !columns ||
+    !columns.updatedAt ||
+    !state.columns.updatedAt ||
+    state.columns.updatedAt > columns.updatedAt ||
+    !subscriptions ||
+    !subscriptions.updatedAt ||
+    !state.subscriptions.updatedAt ||
+    state.subscriptions.updatedAt > subscriptions.updatedAt
 
   if (
     columns &&
@@ -117,8 +134,6 @@ function* onLoginSuccess(
     subscriptions.allIds &&
     subscriptions.byId
   ) {
-    const state: RootState = yield select()
-
     const serverDataIsNewer =
       (columns.updatedAt &&
         (!state.columns.updatedAt ||
@@ -142,13 +157,18 @@ function* onLoginSuccess(
           subscriptionsUpdatedAt: columns.updatedAt,
         }),
       )
+    } else if (clientDataIsNewer) {
+      yield put(actions.syncUp())
     }
   } else {
     const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
-    if (!hasCreatedColumn)
+    if (!hasCreatedColumn) {
       yield put(
         actions.replaceColumnsAndSubscriptions(getDefaultColumns(username)),
       )
+    } else if (clientDataIsNewer) {
+      yield put(actions.syncUp())
+    }
   }
 }
 
@@ -156,5 +176,6 @@ export function* apiSagas() {
   yield all([
     yield fork(init),
     yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield takeLatest('SYNC_UP', onSyncUp),
   ])
 }
