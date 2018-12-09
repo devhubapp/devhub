@@ -121,11 +121,11 @@ function* onLoginSuccess(
 
     const serverDataIsNewer =
       (columns.updatedAt &&
-        state.columns.updatedAt &&
-        columns.updatedAt > state.columns.updatedAt) ||
+        (!state.columns.updatedAt ||
+          columns.updatedAt > state.columns.updatedAt)) ||
       (subscriptions.updatedAt &&
-        state.subscriptions.updatedAt &&
-        subscriptions.updatedAt > state.subscriptions.updatedAt)
+        (!state.subscriptions.updatedAt ||
+          subscriptions.updatedAt > state.subscriptions.updatedAt))
 
     if (serverDataIsNewer) {
       yield put(
