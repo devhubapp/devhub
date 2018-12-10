@@ -43,6 +43,9 @@
   </noscript>
 
   <script>
+    if (window.location.href.indexOf('//www.') >= 0) {
+      window.location.href = window.location.href.replace('//www.', '//')
+    }
     /*
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
