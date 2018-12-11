@@ -165,7 +165,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
             <Link
               analyticsLabel="sidebar_logo"
-              href="https://twitter.com/brunolemos"
+              href="https://github.com/devhubapp/devhub"
               openOnNewTab
               style={[styles.centerContainer, squareStyle]}
             >
