@@ -3,21 +3,23 @@
   <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
   <span>Android, iOS & Web with <b>95%+ code sharing</b> between them</span>
 </p>
-
+  
 ![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)
 
 
-<div>
+<p align="center">
   <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/49802010-ebbca100-fd32-11e8-94d6-e8efb1b5dda8.PNG" />
   <img alt="DevHub Mobile - Event Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802011-ebbca100-fd32-11e8-80c1-5d7cad609e7b.png" />
   <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802012-ebbca100-fd32-11e8-8740-54ac8741edec.PNG" />
-</div>
+</p>
 
 <br/>
 
 ## Why
 
-DevHub helps you take back control of your GitHub workflow and stay on top of everything important going on.
+DevHub helps you take back control of your GitHub workflow and stay on top of everything important going on. Plus, mobile support is a first class citzen.
+
+### Features
 
 - **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on; made for power users;
 - **Inbox Zero**: Clear all the seen items and keep your mind clean; Archived items will be moved to a separate place;
@@ -34,20 +36,20 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 ### Next features:
 
-- [ ] **More filters**: Filter items by type (Issue, PR, etc); Filter by regex;
+- [ ] **Push notification**: Enable push notifications for your filtered columns (this will be a paid feature);
+- [ ] **More filters**: Filter items by type (ussue, pr, etc); filter by regex;
 - [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc;
 - [ ] **Trending**: New column type to show Trending repositories;
-- [ ] **Push notification**: Enable push notifications for your filtered columns (this will be a paid feature);
 - [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop
 
-> Which one do you want first? Any other recommendations? Search [existing issues](https://github.com/brunolemos/devhub/issues) or open an issue
+> Which one do you want first? Any other recommendations? Search [existing issues](https://github.com/brunolemos/devhub/issues) or open a new one
 
 <br/>
 
 ## GitHub Enterprise
 
-This is a paid feature. If you are interested, please contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com). You can also always contact me via [@twitter](https://twitter.com/brunolemos) or [open an issue](https://github.com/brunolemos/devhub/issues) here.
+This is a paid feature. If you are interested, please contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com). You can also always contact me via twitter ([@brunolemos](https://twitter.com/brunolemos)) or [open an issue](https://github.com/brunolemos/devhub/issues) here.
 
 <br/>
 
@@ -74,7 +76,6 @@ This is a paid feature. If you are interested, please contact us via e-mail: [en
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [Create React App](https://github.com/facebook/create-react-app)
 - [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/)
-
 - [React](https://github.com/facebook/react) with [Hooks](https://reactjs.org/docs/hooks-intro.html)
 - [React Native](https://github.com/facebook/react-native)
 - [React Native Web](https://github.com/necolas/react-native-web)
@@ -104,7 +105,7 @@ To open the mobile projects, use:
 - `yarn xcode`
 - `yarn studio`
 
-> Please beware of the License below. For example, you are allowed to use this locally, but not allowed to distribute the changed app to other people or remove its paid features, if any.
+> Note: See License below. For example, you are allowed to use this locally, but not allowed to distribute the changed app to other people or remove its paid features, if any.
 
 <br/>
 
@@ -125,9 +126,9 @@ By using this app you agree with its [privacy](PRIVACY.md) policy and the  [lice
 
 - ✅ You are encouraged to use, share and submit pull requests with improvements;
 
-- ✅ You are allowed to use the official hosted version ([devhubapp.com](https://devhubapp.com/)) without any change on your company or commercial projects;
+- ✅ You are allowed to use the official hosted version ([devhubapp.com](https://devhubapp.com/)) on your company or commercial projects;
 
-- ✅ You are allowed to use the source code for non-commercial purposes only, like studing or contributing.
+- ✅ You are allowed to use the source code for personal non-commercial purposes only, like studing or contributing.
 
 - 🚫 You are not allowed to distribute this code anywhere, including but not limited to Apple Store, Google Play or Web.
 
