@@ -40,7 +40,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 ### Next features:
 
 - [ ] **Push notification**: Enable push notifications for your filtered columns (this will be a paid feature);
-- [ ] **More filters**: Filter items by type (ussue, pr, etc); filter by regex;
+- [ ] **More filters**: Filter items by type (issue, pr, etc); filter by regex;
 - [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc;
 - [ ] **Trending**: New column type to show Trending repositories;
 - [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
