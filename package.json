@@ -6,7 +6,9 @@
     "packages": [
       "packages/*"
     ],
-    "nohoist": []
+    "nohoist": [
+      "**/react-native-firebase"
+    ]
   },
   "scripts": {
     "clean": "yarn workspaces run clean",

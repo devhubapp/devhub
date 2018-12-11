@@ -11,13 +11,14 @@
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
     "tsc": "tsc -b",
-    "xcode": "open ios/devhub.xcodeproj"
+    "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
     "@devhub/components": "0.36.5",
     "metro-react-native-babel-preset": "^0.50.0",
     "react": "^16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
+    "react-native-firebase": "^5.1.1",
     "react-native-google-analytics-bridge": "^6.1.2",
     "react-native-screens": "^1.0.0-alpha.16"
   },

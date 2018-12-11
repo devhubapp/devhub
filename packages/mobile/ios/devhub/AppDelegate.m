@@ -13,6 +13,8 @@
 
 //#import "RNSplashScreen.h"
 
+#import <Firebase.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -35,6 +37,8 @@
   [self.window makeKeyAndVisible];
   
 //  [RNSplashScreen show];
+  
+  [FIRApp configure];
   
   return YES;
 }

@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "135565205383",
+    "firebase_url": "https://devhub-prod.firebaseio.com",
+    "project_id": "devhub-prod",
+    "storage_bucket": "devhub-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135565205383:android:53046cf6339e0923",
+        "android_client_info": {
+          "package_name": "com.devhubapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135565205383-a8t6ka8qpsofo1er508gllrll3re3r9l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devhubapp",
+            "certificate_hash": "de90c81a791b4f6c17ab170051683e9ebc99eebe"
+          }
+        },
+        {
+          "client_id": "135565205383-b5bevttcd6eom1rdj67igef322kgkjrv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPlt79jZsvgHLU1iNfBlerkzQs51y6z2Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "135565205383-b5bevttcd6eom1rdj67igef322kgkjrv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "135565205383-ca1pg8cfd2ho830pgvgf4o6omprtmab6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.devhubapp",
+                "app_store_id": "1191864199"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
