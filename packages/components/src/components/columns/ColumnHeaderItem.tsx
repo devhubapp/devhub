@@ -23,20 +23,25 @@ import {
   ConditionalWrap,
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
-import { TouchableOpacity } from '../common/TouchableOpacity'
+import {
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from '../common/TouchableOpacity'
 
 export interface ColumnHeaderItemProps {
+  analyticsAction?: TouchableOpacityProps['analyticsAction']
+  analyticsLabel?: TouchableOpacityProps['analyticsLabel']
   avatarProps?: Partial<AvatarProps>
   avatarStyle?: StyleProp<ImageStyle>
   children?: React.ReactNode
-  disabled?: boolean
+  disabled?: TouchableOpacityProps['disabled']
   fixedIconSize?: boolean
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   noPadding?: boolean
-  onPress?: () => void
+  onPress?: TouchableOpacityProps['onPress']
   selectable?: boolean
-  style?: StyleProp<ViewStyle>
+  style?: TouchableOpacityProps['style']
   subtitle?: string
   subtitleStyle?: StyleProp<TextStyle>
   text?: string
@@ -75,6 +80,8 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
   const _username = useReduxState(selectors.currentUsernameSelector)
 
   const {
+    analyticsAction,
+    analyticsLabel,
     avatarProps: _avatarProps,
     children,
     disabled,
@@ -106,6 +113,8 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
   const wrap: ConditionalWrapProps['wrap'] = child =>
     onPress ? (
       <TouchableOpacity
+        analyticsAction={analyticsAction}
+        analyticsLabel={analyticsLabel}
         disabled={disabled}
         onPress={onPress}
         style={[

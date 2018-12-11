@@ -61,7 +61,13 @@ export function SettingsModal() {
 
         <Spacer height={contentPadding} />
 
-        <Button key="logout-button" onPress={() => logout()}>
+        <Button
+          key="logout-button"
+          analyticsCategory="engagement"
+          analyticsAction="logout"
+          analyticsLabel=""
+          onPress={() => logout()}
+        >
           Logout
         </Button>
       </View>

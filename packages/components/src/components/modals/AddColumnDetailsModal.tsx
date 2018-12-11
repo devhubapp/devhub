@@ -199,7 +199,11 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
             alignContent: 'center',
           }}
         >
-          <ColumnHeaderItem iconName={icon} noPadding />
+          <ColumnHeaderItem
+            analyticsLabel={undefined}
+            iconName={icon}
+            noPadding
+          />
           <Spacer width={contentPadding / 2} />
           <H2>{name}</H2>
         </View>
@@ -207,7 +211,9 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
         <Spacer height={contentPadding} />
 
         {paramList.map(renderField)}
-        <Button onPress={handleCreateColumn}>Add Column</Button>
+        <Button analyticsLabel="add_column" onPress={handleCreateColumn}>
+          Add Column
+        </Button>
       </View>
     </ModalColumn>
   )

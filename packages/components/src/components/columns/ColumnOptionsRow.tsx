@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React from 'react'
-import { TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core/src/types'
 import * as colors from '../../styles/colors'
@@ -9,9 +9,14 @@ import {
   contentPadding,
 } from '../../styles/variables'
 import { Spacer } from '../common/Spacer'
+import {
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from '../common/TouchableOpacity'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface ColumnOptionsRowProps {
+  analyticsLabel: TouchableOpacityProps['analyticsLabel']
   children: React.ReactNode
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle
@@ -24,6 +29,7 @@ export interface ColumnOptionsRowProps {
 
 export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   const {
+    analyticsLabel,
     children,
     containerStyle,
     contentContainerStyle,
@@ -36,7 +42,12 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={() => onToggle()}>
+      <TouchableOpacity
+        analyticsAction={opened ? 'hide' : 'show'}
+        analyticsCategory="option_row"
+        analyticsLabel={analyticsLabel}
+        onPress={() => onToggle()}
+      >
         <View
           style={[
             { flexDirection: 'row', paddingHorizontal: contentPadding / 2 },
@@ -44,6 +55,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           ]}
         >
           <ColumnHeaderItem
+            analyticsLabel={undefined}
             fixedIconSize
             iconName={iconName}
             selectable={false}
@@ -54,11 +66,12 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           />
           <Spacer flex={1} />
           <ColumnHeaderItem
+            analyticsLabel={undefined}
             iconName={opened ? 'chevron-up' : 'chevron-down'}
             selectable={false}
           />
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
 
       {!!opened && (
         <View

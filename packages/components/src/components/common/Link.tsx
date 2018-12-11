@@ -1,12 +1,15 @@
 import React, { AnchorHTMLAttributes } from 'react'
-import { Animated, View } from 'react-native'
+import { Animated, Linking, View } from 'react-native'
 
+import { Omit } from '@devhub/core'
 import { Browser } from '../../libs/browser'
 import { Platform } from '../../libs/platform'
 import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
-export interface LinkProps extends TouchableOpacityProps {
+export interface LinkProps
+  extends Omit<TouchableOpacityProps, 'analyticsLabel'> {
+  analyticsLabel?: TouchableOpacityProps['analyticsLabel']
   allowEmptyLink?: boolean
   animated?: boolean
   href?: string
@@ -18,6 +21,7 @@ export interface LinkProps extends TouchableOpacityProps {
 export function Link(props: LinkProps) {
   const {
     allowEmptyLink,
+    analyticsLabel,
     animated,
     href,
     mobileProps,
@@ -28,8 +32,8 @@ export function Link(props: LinkProps) {
 
   const ViewComponent = animated ? Animated.View : View
   const TouchableOpacityComponent = animated
-    ? AnimatedTouchableOpacity
-    : (TouchableOpacity as any)
+    ? (AnimatedTouchableOpacity as React.ComponentType<TouchableOpacityProps>)
+    : (TouchableOpacity as React.ComponentType<TouchableOpacityProps>)
 
   if (!href && !allowEmptyLink) {
     return (
@@ -51,9 +55,20 @@ export function Link(props: LinkProps) {
 
   return (
     <TouchableOpacityComponent
+      {...(analyticsLabel
+        ? {
+            analyticsCategory: 'link',
+            analyticsAction: 'click',
+            analyticsLabel,
+          }
+        : {})}
       {...Platform.select({
         default: {
-          onPress: href ? () => Browser.openURL(href) : undefined,
+          onPress: href
+            ? href.includes('http')
+              ? () => Browser.openURL(href)
+              : () => Linking.openURL(href)
+            : undefined,
           ...otherProps,
           ...mobileProps,
         } as any,

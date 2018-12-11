@@ -36,6 +36,7 @@ export function NotificationColumn(props: NotificationColumnProps) {
     >
       <ColumnHeader>
         <ColumnHeaderItem
+          analyticsLabel={undefined}
           fixedIconSize
           iconName={requestTypeIconAndData.icon}
           style={{ flex: 1 }}
@@ -44,6 +45,7 @@ export function NotificationColumn(props: NotificationColumnProps) {
         />
 
         <ColumnHeaderItem
+          analyticsLabel="clear_column"
           disabled={
             column.filters &&
             column.filters.inbox &&
@@ -59,6 +61,8 @@ export function NotificationColumn(props: NotificationColumnProps) {
           }
         />
         <ColumnHeaderItem
+          analyticsAction={showColumnOptions ? 'hide' : 'show'}
+          analyticsLabel="column_options"
           iconName="settings"
           onPress={() => setShowColumnOptions(!showColumnOptions)}
         />

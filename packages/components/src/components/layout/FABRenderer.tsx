@@ -45,6 +45,7 @@ export function FABRenderer() {
       <Animated.View style={[fabPositionStyle, { transform: [{ rotateZ }] }]}>
         <FAB
           key="fab"
+          analyticsLabel="add_column"
           iconName="plus"
           onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
           useBrandColor
@@ -69,7 +70,12 @@ export function FABRenderer() {
 
       return (
         <Animated.View style={[fabPositionStyle, { transform: [{ rotateZ }] }]}>
-          <FAB key="fab" iconName="plus" onPress={() => closeAllModals()} />
+          <FAB
+            analyticsLabel="close_modals"
+            key="fab"
+            iconName="plus"
+            onPress={() => closeAllModals()}
+          />
         </Animated.View>
       )
     }

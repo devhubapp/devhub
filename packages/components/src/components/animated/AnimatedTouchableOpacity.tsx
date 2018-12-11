@@ -8,7 +8,7 @@ import {
 
 export interface AnimatedTouchableOpacityProps
   extends Omit<TouchableOpacityProps, 'animated'> {
-  style: any
+  style?: any
 }
 
 export const AnimatedTouchableOpacity = (

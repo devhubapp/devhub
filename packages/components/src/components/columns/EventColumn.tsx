@@ -35,6 +35,7 @@ export function EventColumn(props: EventColumnProps) {
     >
       <ColumnHeader>
         <ColumnHeaderItem
+          analyticsLabel={undefined}
           avatarProps={requestTypeIconAndData.avatarProps}
           fixedIconSize
           iconName={requestTypeIconAndData.icon}
@@ -44,6 +45,7 @@ export function EventColumn(props: EventColumnProps) {
         />
 
         <ColumnHeaderItem
+          analyticsLabel="clear_column"
           disabled={
             column.filters &&
             column.filters.inbox &&
@@ -59,6 +61,8 @@ export function EventColumn(props: EventColumnProps) {
           }
         />
         <ColumnHeaderItem
+          analyticsAction={showColumnOptions ? 'hide' : 'show'}
+          analyticsLabel="column_options"
           iconName="settings"
           onPress={() => setShowColumnOptions(!showColumnOptions)}
         />

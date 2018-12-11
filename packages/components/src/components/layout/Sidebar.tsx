@@ -87,10 +87,11 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         {!small && (
           <>
             <TouchableOpacity
+              analyticsLabel="sidebar_add"
               onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
               style={[styles.centerContainer, squareStyle]}
             >
-              <ColumnHeaderItem iconName="plus" />
+              <ColumnHeaderItem analyticsLabel={undefined} iconName="plus" />
             </TouchableOpacity>
 
             <Separator horizontal={!horizontal} />
@@ -111,10 +112,14 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             small ? (
               <>
                 <TouchableOpacity
+                  analyticsLabel="sidebar_add"
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   style={[styles.centerContainer, squareStyle]}
                 >
-                  <ColumnHeaderItem iconName="plus" />
+                  <ColumnHeaderItem
+                    analyticsLabel={undefined}
+                    iconName="plus"
+                  />
                 </TouchableOpacity>
 
                 <Separator horizontal={!horizontal} />
@@ -133,6 +138,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
           {!!small && (
             <TouchableOpacity
+              analyticsLabel="sidebar_settings"
               onPress={() =>
                 currentOpenedModal && currentOpenedModal.name === 'SETTINGS'
                   ? undefined
@@ -140,7 +146,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               }
               style={[styles.centerContainer, squareStyle]}
             >
-              <ColumnHeaderItem iconName="gear" />
+              <ColumnHeaderItem analyticsLabel={undefined} iconName="gear" />
             </TouchableOpacity>
           )}
         </ScrollView>
@@ -150,13 +156,15 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             <Separator horizontal={!horizontal} />
 
             <TouchableOpacity
+              analyticsLabel="sidebar_settings"
               onPress={() => replaceModal({ name: 'SETTINGS' })}
               style={[styles.centerContainer, squareStyle]}
             >
-              <ColumnHeaderItem iconName="gear" />
+              <ColumnHeaderItem analyticsLabel={undefined} iconName="gear" />
             </TouchableOpacity>
 
             <Link
+              analyticsLabel="sidebar_logo"
               href="https://twitter.com/brunolemos"
               openOnNewTab
               style={[styles.centerContainer, squareStyle]}
@@ -194,6 +202,7 @@ const SidebarColumnItem = React.memo(
     return (
       <TouchableOpacity
         key={`sidebar-column-${column.id}`}
+        analyticsLabel="sidebar_column"
         style={[styles.centerContainer, squareStyle]}
         onPress={() => {
           emitter.emit('FOCUS_ON_COLUMN', {
@@ -205,6 +214,7 @@ const SidebarColumnItem = React.memo(
         }}
       >
         <ColumnHeaderItem
+          analyticsLabel={undefined}
           avatarProps={{
             ...requestTypeIconAndData.avatarProps,
             disableLink: true,

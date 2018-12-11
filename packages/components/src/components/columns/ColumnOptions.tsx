@@ -59,7 +59,7 @@ export type ColumnOptionCategory =
   | 'cleared'
   | 'event_types'
   | 'inbox'
-  | 'notification_types'
+  | 'notification_reasons'
   | 'privacy'
   | 'unread'
 
@@ -127,6 +127,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
             return (
               <ColumnOptionsRow
+                analyticsLabel="notification_reasons"
                 contentContainerStyle={{
                   marginVertical: -contentPadding / 4,
                   marginRight: contentPadding,
@@ -134,9 +135,9 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 iconName="check"
                 onToggle={() =>
-                  toggleOpenedOptionCategory('notification_types')
+                  toggleOpenedOptionCategory('notification_reasons')
                 }
-                opened={openedOptionCategory === 'notification_types'}
+                opened={openedOptionCategory === 'notification_reasons'}
                 title="Notification reasons"
               >
                 {notificationReasonOptions.map(item => {
@@ -148,6 +149,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   return (
                     <Checkbox
                       key={`notification-reason-option-${item.reason}`}
+                      analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundColor={item.color}
                       checkedForegroundColor={theme.backgroundColorDarker08}
@@ -190,6 +192,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
             return (
               <ColumnOptionsRow
+                analyticsLabel="event_types"
                 contentContainerStyle={{
                   marginVertical: -contentPadding / 4,
                   marginRight: contentPadding,
@@ -209,6 +212,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   return (
                     <Checkbox
                       key={`event-type-option-${item.type}`}
+                      analyticsLabel={undefined}
                       checked={checked}
                       containerStyle={{
                         flexGrow: 1,
@@ -260,6 +264,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
           return (
             <ColumnOptionsRow
+              analyticsLabel="inbox"
               contentContainerStyle={{ marginRight: contentPadding }}
               hasChanged={filterRecordHasAnyForcedValue(filters)}
               iconName={details.icon}
@@ -268,6 +273,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               title={details.title}
             >
               <Checkbox
+                analyticsLabel="inbox"
                 checked={showInbox}
                 circle
                 disabled={showInbox && (!showSaveForLater && !showArchived)}
@@ -288,6 +294,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               <Spacer height={contentPadding / 2} />
 
               <Checkbox
+                analyticsLabel="archived"
                 checked={showArchived}
                 circle
                 containerStyle={{ flexGrow: 1 }}
@@ -307,6 +314,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               <Spacer height={contentPadding / 2} />
 
               <Checkbox
+                analyticsLabel="save_for_later"
                 checked={showSaveForLater}
                 containerStyle={{ flexGrow: 1 }}
                 label="Saved for later"
@@ -337,6 +345,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
             return (
               <ColumnOptionsRow
+                analyticsLabel="read_status"
                 contentContainerStyle={{ marginRight: contentPadding }}
                 hasChanged={
                   !!(
@@ -353,6 +362,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 title="Read status"
               >
                 <Checkbox
+                  analyticsLabel="read"
                   checked={isReadChecked}
                   containerStyle={{ flexGrow: 1 }}
                   disabled={isReadChecked && !isUnreadChecked}
@@ -369,6 +379,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 <Spacer height={contentPadding / 2} />
 
                 <Checkbox
+                  analyticsLabel="unread"
                   checked={isUnreadChecked}
                   containerStyle={{ flexGrow: 1 }}
                   disabled={isUnreadChecked && !isReadChecked}
@@ -406,6 +417,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
           return (
             <ColumnOptionsRow
+              analyticsLabel="privacy"
               contentContainerStyle={{ marginRight: contentPadding }}
               hasChanged={
                 !!(
@@ -422,6 +434,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               title="Privacy"
             >
               <Checkbox
+                analyticsLabel="public"
                 checked={isPublicChecked}
                 containerStyle={{ flexGrow: 1 }}
                 disabled={isPublicChecked && !isPrivateChecked}
@@ -438,6 +451,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               <Spacer height={contentPadding / 2} />
 
               <Checkbox
+                analyticsLabel="private"
                 checked={isPrivateChecked}
                 containerStyle={{ flexGrow: 1 }}
                 disabled={isPrivateChecked && !isPublicChecked}
@@ -461,12 +475,14 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           }}
         >
           <ColumnHeaderItem
+            analyticsLabel="move_column_left"
             iconName="chevron-left"
             onPress={() =>
               moveColumn({ columnId: column.id, columnIndex: columnIndex - 1 })
             }
           />
           <ColumnHeaderItem
+            analyticsLabel="move_column_right"
             iconName="chevron-right"
             onPress={() =>
               moveColumn({ columnId: column.id, columnIndex: columnIndex + 1 })
@@ -480,6 +496,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             ((column.filters.inbox && column.filters.inbox.archived) ===
             true ? (
               <ColumnHeaderItem
+                analyticsLabel="delete_archived"
                 iconName="archive"
                 onPress={() =>
                   clearArchivedItems({
@@ -491,6 +508,11 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               />
             ) : (
               <ColumnHeaderItem
+                analyticsLabel={
+                  column.filters && column.filters.clearedAt
+                    ? 'unclear-column'
+                    : 'clear-column'
+                }
                 iconName="circle-slash"
                 iconStyle={
                   column.filters && column.filters.clearedAt
@@ -515,6 +537,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             ))}
 
           <ColumnHeaderItem
+            analyticsLabel="remove_column"
             iconName="trashcan"
             onPress={() => deleteColumn(column.id)}
             text="Remove"

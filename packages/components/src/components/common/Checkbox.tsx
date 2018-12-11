@@ -5,7 +5,7 @@ import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedIcon, AnimatedIconProps } from '../animated/AnimatedIcon'
-import { TouchableOpacity } from './TouchableOpacity'
+import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 const checkboxBorderRadius = 4
 
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
 })
 
 export interface CheckboxProps {
+  analyticsLabel: TouchableOpacityProps['analyticsLabel']
   checked?: boolean | null
   checkedBackgroundColor?: string | Animated.AnimatedInterpolation
   checkedForegroundColor?: string | Animated.AnimatedInterpolation
@@ -51,6 +52,7 @@ export function Checkbox(props: CheckboxProps) {
   const theme = useAnimatedTheme()
 
   const {
+    analyticsLabel,
     defaultValue,
     checked = defaultValue,
     checkedBackgroundColor = colors.brandBackgroundColor,
@@ -73,22 +75,28 @@ export function Checkbox(props: CheckboxProps) {
 
   const isThirdState = enableTrippleState && checked === null
 
-  const handleOnChange = () => {
-    if (!onChange) return
-
-    const newValue = enableTrippleState
+  const getNextValue = () =>
+    enableTrippleState
       ? checked === null
         ? !lastBooleanValue
         : null
       : !checked
 
-    if (typeof newValue === 'boolean') setLastBooleanValue(newValue)
+  const handleOnChange = () => {
+    if (!onChange) return
 
-    onChange(newValue)
+    const nextValue = getNextValue()
+
+    if (typeof nextValue === 'boolean') setLastBooleanValue(nextValue)
+
+    onChange(nextValue)
   }
 
   return (
     <TouchableOpacity
+      analyticsAction={isThirdState ? 'tripple' : checked ? 'uncheck' : 'check'}
+      analyticsCategory="checkbox"
+      analyticsLabel={analyticsLabel}
       disabled={disabled}
       onPress={disabled ? undefined : handleOnChange}
       style={[styles.container, containerStyle]}

@@ -5,6 +5,7 @@ import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
 import { Screen } from '../components/common/Screen'
 import { useAnimatedTheme } from '../hooks/use-animated-theme'
+import { analytics } from '../libs/analytics'
 import { executeOAuth } from '../libs/oauth'
 import * as actions from '../redux/actions'
 import { useReduxAction } from '../redux/hooks/use-redux-action'
@@ -72,10 +73,12 @@ const styles = StyleSheet.create({
   },
 })
 
+type LoginMethod = 'github.public' | 'github.private'
+
 export const LoginScreen = React.memo(() => {
-  const [loggingInMethod, setLoggingInMethod] = useState<
-    'github.public' | 'github.private' | null
-  >(null)
+  const [loggingInMethod, setLoggingInMethod] = useState<LoginMethod | null>(
+    null,
+  )
 
   const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
   const error = useReduxState(selectors.authErrorSelector)
@@ -97,7 +100,9 @@ export const LoginScreen = React.memo(() => {
     [error],
   )
 
-  const loginWithGitHub = async (method: typeof loggingInMethod) => {
+  analytics.trackScreenView('MAIN_SCREEN')
+
+  const loginWithGitHub = async (method: LoginMethod) => {
     setLoggingInMethod(method)
 
     const githubScope =
@@ -110,6 +115,8 @@ export const LoginScreen = React.memo(() => {
     let githubTokenCreatedAt
     let githubTokenType
     try {
+      analytics.trackEvent('engagement', 'login', method, 1, { method })
+
       const params = await executeOAuth(githubScope)
       appToken = params && params.app_token
       githubToken = params && params.github_token
@@ -147,6 +154,7 @@ export const LoginScreen = React.memo(() => {
           />
 
           <GitHubLoginButton
+            analyticsLabel="github_login_public"
             loading={isLoggingIn && loggingInMethod === 'github.public'}
             onPress={() => loginWithGitHub('github.public')}
             rightIcon="globe"
@@ -156,6 +164,7 @@ export const LoginScreen = React.memo(() => {
           />
 
           <GitHubLoginButton
+            analyticsLabel="github_login_private"
             loading={isLoggingIn && loggingInMethod === 'github.private'}
             onPress={() => loginWithGitHub('github.private')}
             rightIcon="lock"

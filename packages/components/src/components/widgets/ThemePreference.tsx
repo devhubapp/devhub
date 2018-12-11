@@ -42,6 +42,7 @@ export function ThemePreference() {
 
     return (
       <TouchableOpacity
+        analyticsLabel={undefined}
         key={`theme-button-${theme.id}`}
         onPress={() => {
           if (currentThemeId === 'auto') {
@@ -129,6 +130,7 @@ export function ThemePreference() {
       >
         <H3>Auto toggle on day/night</H3>
         <Switch
+          analyticsLabel="auto_theme"
           onValueChange={enableAutoTheme =>
             setTheme({
               id: enableAutoTheme

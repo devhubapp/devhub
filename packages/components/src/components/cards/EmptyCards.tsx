@@ -73,6 +73,7 @@ export function EmptyCards(props: EmptyCardsProps) {
           {!!refresh && (
             <View style={{ padding: contentPadding }}>
               <Button
+                analyticsLabel="try_again"
                 children="Try again"
                 disabled={loadState !== 'error'}
                 loading={loadState === 'loading'}
@@ -120,6 +121,7 @@ export function EmptyCards(props: EmptyCardsProps) {
           {!!fetchNextPage && !hasError && loadState !== 'loading_first' && (
             <View style={{ padding: contentPadding }}>
               <Button
+                analyticsLabel="load_more"
                 children="Load more"
                 disabled={loadState !== 'loaded'}
                 loading={loadState === 'loading_more'}

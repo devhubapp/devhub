@@ -29,3 +29,8 @@ export const currentUsernameSelector = (state: RootState) => {
   const user = currentUserSelector(state)
   return (user && user.github && user.github.user.login) || undefined
 }
+
+export const currentUserIdSelector = (state: RootState) => {
+  const user = currentUserSelector(state)
+  return (user && user._id) || undefined
+}

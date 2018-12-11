@@ -15,6 +15,7 @@ import { useAnimatedTheme } from '../hooks/use-animated-theme'
 import { useEmitter } from '../hooks/use-emitter'
 import { useKeyDownCallback } from '../hooks/use-key-down-callback'
 import { useKeyPressCallback } from '../hooks/use-key-press-callback'
+import { analytics } from '../libs/analytics'
 import * as actions from '../redux/actions'
 import { useReduxAction } from '../redux/hooks/use-redux-action'
 import { useReduxState } from '../redux/hooks/use-redux-state'
@@ -47,6 +48,10 @@ export const MainScreen = React.memo(() => {
       const target = e.target as any
       const targetTagName = target && `${target.tagName || ''}`.toLowerCase()
 
+      if (targetTagName !== 'input') {
+        analytics.trackEvent('keyboard_shortcut', 'keydown', e.key)
+      }
+
       if (e.key === 'Escape') {
         // never happens apparently
         if (targetTagName === 'input') target.blur()
@@ -70,7 +75,8 @@ export const MainScreen = React.memo(() => {
       }
 
       if (columnIds.length > 0) {
-        if (e.keyCode - 48 === 0) {
+        const n = e.keyCode - 48
+        if (n === 0) {
           const columnIndex = columnIds.length - 1
           emitter.emit('FOCUS_ON_COLUMN', {
             animated: true,
@@ -81,8 +87,8 @@ export const MainScreen = React.memo(() => {
           return
         }
 
-        if (e.keyCode - 48 >= 1 && e.keyCode - 48 <= columnIds.length) {
-          const columnIndex = e.keyCode - 48 - 1
+        if (n >= 1 && n <= columnIds.length) {
+          const columnIndex = n - 1
           emitter.emit('FOCUS_ON_COLUMN', {
             animated: true,
             columnId: columnIds[columnIndex],
@@ -109,6 +115,10 @@ export const MainScreen = React.memo(() => {
     },
     [currentOpenedModal],
   )
+
+  if (!currentOpenedModal) {
+    analytics.trackScreenView('MAIN_SCREEN')
+  }
 
   return (
     <Screen

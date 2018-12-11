@@ -18,6 +18,7 @@ export interface AccountSettingsProps {}
 export function AccountSettings() {
   const theme = useAnimatedTheme()
 
+  const userId = useReduxState(selectors.currentUserIdSelector)
   const username = useReduxState(selectors.currentUsernameSelector)
 
   const pushModal = useReduxAction(actions.pushModal)
@@ -58,6 +59,10 @@ export function AccountSettings() {
 
         <Button
           key="setup-github-enterprise-button"
+          analyticsCategory="enterprise"
+          analyticsAction="setup"
+          analyticsLabel={username}
+          analyticsPayload={{ user_id: userId }}
           onPress={() => pushModal({ name: 'SETUP_GITHUB_ENTERPRISE' })}
         >
           Setup GitHub Enterprise

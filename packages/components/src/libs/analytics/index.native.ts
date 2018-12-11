@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import * as firebase from 'react-native-firebase'
 import {
   GoogleAnalyticsSettings,
@@ -7,12 +8,15 @@ import {
 import { appVersion } from '../../components/common/AppVersion'
 import { Analytics } from './'
 
-GoogleAnalyticsSettings.setDryRun(false)
+GoogleAnalyticsSettings.setDryRun(__DEV__)
 GoogleAnalyticsSettings.setDispatchInterval(5)
+firebase.analytics().setAnalyticsCollectionEnabled(__DEV__)
 
 const tracker = new GoogleAnalyticsTracker('UA-52350759-2')
-tracker.setAppName('devhub-app')
-tracker.setAppVersion(appVersion)
+
+tracker.customDimensionsFieldsIndexMap = {
+  user_id: 1,
+}
 
 const log = (...args: any[]) => {
   console.log('[ANALYTICS]', ...args) // tslint:disable-line no-console
@@ -25,10 +29,27 @@ export const analytics: Analytics = {
     firebase.analytics().setUserId(userId)
   },
 
-  trackEvent(category, action) {
+  trackEvent(category, action, label, value, payload = {}) {
     if (__DEV__) log('event', category, action)
-    tracker.trackEvent(category, action)
-    firebase.analytics().logEvent(action, { category })
+    tracker.trackEvent(
+      category,
+      action,
+      { label, value },
+      {
+        // TODO: Test this and fix
+        customDimensions: _.isPlainObject(payload)
+          ? payload
+          : typeof payload === 'string' || typeof payload === 'number'
+          ? ({ payload } as any)
+          : undefined,
+      },
+    )
+    firebase.analytics().logEvent(action.replace(/\//g, '_'), {
+      event_category: category,
+      event_label: label,
+      value,
+      ...payload,
+    })
   },
 
   trackModalView(modalName) {

@@ -63,6 +63,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         <CardItemSeparator />
         <View style={{ padding: contentPadding }}>
           <Button
+            analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
             children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
             disabled={loadState !== 'loaded'}
             loading={loadState === 'loading_more'}

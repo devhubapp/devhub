@@ -2,7 +2,13 @@ import { appVersion } from '../../components/common/AppVersion'
 import { Analytics } from './'
 
 const trackingId = 'UA-52350759-2'
-gtag('config', trackingId, { app_name: 'devhub-app' })
+gtag('config', trackingId, {
+  custom_map: { dimension1: 'user_id' },
+})
+
+if (__DEV__) {
+  ;(window as any)[`ga-disable-${trackingId}`] = true
+}
 
 const gtagAndLog = (...args: any[]) => {
   if (__DEV__) console.debug('[ANALYTICS]', ...args) // tslint:disable-line no-console
@@ -14,8 +20,13 @@ export const analytics: Analytics = {
     gtagAndLog('set', { user_id: userId })
   },
 
-  trackEvent(category, action) {
-    gtagAndLog('event', action, { event_category: category })
+  trackEvent(category, action, label, value, payload) {
+    gtagAndLog('event', action, {
+      event_category: category,
+      event_label: label,
+      value,
+      ...payload,
+    })
   },
 
   trackModalView(modalName) {

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Omit } from '@devhub/core'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
@@ -8,7 +9,8 @@ import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
-export interface ModalColumnProps extends ColumnHeaderItemProps {
+export interface ModalColumnProps
+  extends Omit<ColumnHeaderItemProps, 'analyticsAction' | 'analyticsLabel'> {
   columnId: string
   hideCloseButton?: boolean
   right?: React.ReactNode
@@ -35,22 +37,34 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
       <ColumnHeader>
         {canGoBack && (
           <ColumnHeaderItem
+            analyticsLabel="modal"
+            analyticsAction="back"
             iconName="chevron-left"
             onPress={() => popModal()}
           />
         )}
 
         <ColumnHeaderItem
+          analyticsLabel={undefined}
           {...otherProps}
           iconName={undefined}
           style={[{ flex: 1 }, canGoBack && { padding: 0 }]}
         />
 
         {!hideCloseButton && (
-          <ColumnHeaderItem iconName="x" onPress={() => closeAllModals()} />
+          <ColumnHeaderItem
+            analyticsAction="close"
+            analyticsLabel="modal"
+            iconName="x"
+            onPress={() => closeAllModals()}
+          />
         )}
 
-        {right && <ColumnHeaderItem>{right}</ColumnHeaderItem>}
+        {right && (
+          <ColumnHeaderItem analyticsLabel={undefined}>
+            {right}
+          </ColumnHeaderItem>
+        )}
       </ColumnHeader>
 
       {children}

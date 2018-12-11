@@ -78,6 +78,7 @@ function AddColumnModalItem({
 
   return (
     <TouchableOpacity
+      analyticsLabel={undefined}
       onPress={() =>
         pushModal({
           name: 'ADD_COLUMN_DETAILS',
@@ -99,6 +100,7 @@ function AddColumnModalItem({
         }}
       >
         <ColumnHeaderItem
+          analyticsLabel={undefined}
           iconName={item.icon}
           iconStyle={{ fontSize: 24, marginBottom: contentPadding / 2 }}
           noPadding

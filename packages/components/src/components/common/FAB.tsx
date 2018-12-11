@@ -1,27 +1,23 @@
 import React from 'react'
-import {
-  Animated,
-  StyleProp,
-  TextStyle,
-  TouchableOpacityProps,
-  ViewStyle,
-} from 'react-native'
+import { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core/src/types'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedIcon } from '../animated/AnimatedIcon'
-import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
+import {
+  AnimatedTouchableOpacity,
+  AnimatedTouchableOpacityProps,
+} from '../animated/AnimatedTouchableOpacity'
 
 export const fabSize = 48
 
-export interface FABProps extends TouchableOpacityProps {
+export interface FABProps extends AnimatedTouchableOpacityProps {
   children?: string | React.ReactElement<any>
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle> | any
-  onPress: TouchableOpacityProps['onPress']
-  style?: StyleProp<ViewStyle> | any
+  onPress: AnimatedTouchableOpacityProps['onPress']
   useBrandColor?: boolean
 }
 
@@ -39,6 +35,7 @@ export function FAB(props: FABProps) {
 
   return (
     <AnimatedTouchableOpacity
+      analyticsCategory="fab"
       {...otherProps}
       hitSlop={{
         top: contentPadding / 2,
