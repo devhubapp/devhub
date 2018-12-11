@@ -6,6 +6,7 @@ import {
   GRAPHQL_ENDPOINT,
   jsonToGraphQLQuery,
   removeUndefinedFields,
+  User,
 } from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
 import * as actions from '../actions'
@@ -50,13 +51,93 @@ function* init() {
   }
 }
 
+// Note: Lodash debounce was not working as expected with generators
+// so we now use normal async/await in the sync functions
 function* onSyncUp() {
   const state: RootState = yield select()
-  debounceSync(state)
+  debounceSyncUp(state)
+}
+
+function* onSyncDown() {
+  const state: RootState = yield select()
+
+  const appToken = selectors.appTokenSelector(state)
+  if (!appToken) return
+
+  try {
+    const response: AxiosResponse<{
+      data: {
+        me?: {
+          columns?: User['columns']
+          subscriptions: User['subscriptions']
+        }
+      }
+      errors?: any[]
+    }> = yield axios.post(
+      GRAPHQL_ENDPOINT,
+      {
+        query: jsonToGraphQLQuery({
+          query: {
+            me: {
+              columns: true,
+              subscriptions: true,
+            },
+          },
+        }),
+      },
+      {
+        headers: { Authorization: `bearer ${appToken}` },
+      },
+    )
+
+    const { data, errors } = response.data
+
+    if (errors && errors.length) {
+      throw Object.assign(new Error('GraphQL Error'), { response })
+    }
+
+    if (!(data && data.me && data.me.columns && data.me.subscriptions)) {
+      throw Object.assign(new Error('GraphQL Error'), { response })
+    }
+
+    const { columns, subscriptions } = data.me
+
+    const serverDataIsNewer =
+      (columns.updatedAt &&
+        (!state.columns.updatedAt ||
+          columns.updatedAt > state.columns.updatedAt)) ||
+      (subscriptions.updatedAt &&
+        (!state.subscriptions.updatedAt ||
+          subscriptions.updatedAt > state.subscriptions.updatedAt))
+
+    if (serverDataIsNewer) {
+      yield put(
+        actions.replaceColumnsAndSubscriptions({
+          columns: columns.allIds.map(id => columns.byId[id]!).filter(Boolean),
+          subscriptions: subscriptions.allIds
+            .map(id => ({
+              ...subscriptions.byId[id]!,
+              data: {
+                ...(state.subscriptions.byId[id] &&
+                  state.subscriptions.byId[id]!.data),
+                ...(((subscriptions.byId[id] && subscriptions.byId[id]!.data) ||
+                  {}) as any),
+              },
+            }))
+            .filter(Boolean),
+          columnsUpdatedAt: columns.updatedAt,
+          subscriptionsUpdatedAt: columns.updatedAt,
+        }),
+      )
+    }
+  } catch (error) {
+    console.error(error.response || error)
+    bugsnag.notify(error, { response: error.response })
+  }
 }
 
 // Note: Lodash debounce was not working as expected with generators
-async function sync(state: RootState) {
+async function syncUp(state: RootState) {
   const appToken = selectors.appTokenSelector(state)
   if (!appToken) return
 
@@ -65,7 +146,10 @@ async function sync(state: RootState) {
 
   try {
     // TODO: Auto generate these typings
-    const response: AxiosResponse = await axios.post(
+    const response: AxiosResponse<{
+      replaceColumnsAndSubscriptions: boolean
+      errors?: any[]
+    }> = await axios.post(
       GRAPHQL_ENDPOINT,
       {
         // TODO: do it the right way ffs
@@ -104,7 +188,7 @@ async function sync(state: RootState) {
   }
 }
 
-const debounceSync = _.debounce(sync, 5000, {
+const debounceSyncUp = _.debounce(syncUp, 5000, {
   leading: true,
   maxWait: 30000,
   trailing: true,
@@ -182,6 +266,7 @@ export function* apiSagas() {
   yield all([
     yield fork(init),
     yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield takeLatest('SYNC_DOWN', onSyncDown),
     yield takeLatest('SYNC_UP', onSyncUp),
   ])
 }

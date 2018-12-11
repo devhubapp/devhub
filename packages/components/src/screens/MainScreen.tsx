@@ -1,4 +1,5 @@
-import React from 'react'
+import _ from 'lodash'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 
 import { Screen } from '../components/common/Screen'
@@ -17,6 +18,7 @@ import { useKeyDownCallback } from '../hooks/use-key-down-callback'
 import { useKeyPressCallback } from '../hooks/use-key-press-callback'
 import { analytics } from '../libs/analytics'
 import * as actions from '../redux/actions'
+import { useAppVisibility } from '../redux/hooks/use-app-visibility'
 import { useReduxAction } from '../redux/hooks/use-redux-action'
 import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
@@ -38,8 +40,34 @@ export const MainScreen = React.memo(() => {
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const popModal = useReduxAction(actions.popModal)
   const replaceModal = useReduxAction(actions.replaceModal)
+  const syncDown = useReduxAction(actions.syncDown)
   const theme = useAnimatedTheme()
   const { appOrientation, sizename } = useAppLayout()
+
+  const debounceSyncDown = useMemo(
+    () => {
+      return _.debounce(syncDown, 5000, {
+        leading: true,
+        maxWait: 30000,
+        trailing: false,
+      })
+    },
+    [syncDown],
+  )
+
+  const isVisible = useAppVisibility()
+  const wasVisible = useRef(isVisible)
+
+  useEffect(
+    () => {
+      if (isVisible && !wasVisible.current) {
+        debounceSyncDown()
+      }
+
+      wasVisible.current = isVisible
+    },
+    [isVisible],
+  )
 
   const horizontalSidebar = appOrientation === 'portrait'
 
