@@ -8,7 +8,7 @@
 
 ### Desktop
 
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/48530677-db262180-e87f-11e8-910c-e2923323b2ca.png)
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)
 
 ### Mobile
 
