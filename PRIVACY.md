@@ -15,16 +15,14 @@ This app does not access any code from any repository.
 
 
 ### Diagnostics information
-This app uses [Bugsnag](bugsnag.com) to collect information about errors occured while using the app. 
-The personal informations collected are `name` and `e-mail`.
-It may include some details about the device, like `brand`, `model` and `operation system` for debug purposes.
-Other information sent are only related to the crash itself, like the error call stack.
+This app uses [Bugsnag](https://bugsnag.com) and [Google Analytics](https://analytics.google.com/) to collect information about crashes and app usage. 
+No personal information is ever send to third parties, only an annonymous id. Some device information may be included for debugging purposes, like `brand`, `model` and `operation system`.
 
 
 ### Support
-Feel free to open an issue, contact me on twitter [@brunolemos](https://twitter.com/brunolemos) or e-mail via support@devhubapp.com.<br/>
+Feel free to open an issue, contact me on twitter [@brunolemos](https://twitter.com/brunolemos) or e-mail via [support@devhubapp.com](mailto:support@devhubapp.com).<br/>
 If you find any bug, please contribute sending a PR with the fix or with a failing test.
 
 ---
 
-Updated November 3rd, 2018.
+Updated December 11th, 2018.
