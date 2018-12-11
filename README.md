@@ -20,7 +20,7 @@
 
 ## Why
 
-DevHub helps you take back control of your GitHub workflow and stay on top of everything important going on. Plus, mobile support is a first class citzen.
+DevHub helps you take back control of your GitHub workflow and stay on top of everything important going on.
 
 ### Features
 
