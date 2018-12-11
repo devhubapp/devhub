@@ -1,16 +1,19 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/619186/49823485-eed18480-fd66-11e8-88c0-700d840ad4f1.png" height="100" /><br/>
-  <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
-  <span>Android, iOS & Web with <b>95%+ code sharing</b> between them</span>
+  <span><b>DevHub</b>: <span>TweetDeck for GitHub [BETA]</span><br/>
+  <span>Android, iOS & Web with <b>95%+ code sharing</b> between them</span><br/>
+  <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
 </p>
   
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)
+[![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)](https://devhubapp.com/)
 
 
 <p align="center">
+  <a href="https://devhubapp.com/" target="_blank">
   <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/49802010-ebbca100-fd32-11e8-94d6-e8efb1b5dda8.PNG" />
   <img alt="DevHub Mobile - Event Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802011-ebbca100-fd32-11e8-80c1-5d7cad609e7b.png" />
   <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802012-ebbca100-fd32-11e8-8740-54ac8741edec.PNG" />
+  </a>
 </p>
 
 <br/>
@@ -113,7 +116,7 @@ To open the mobile projects, use:
 
 Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
 
-<a href="https://twitter.com/brunolemos"><img src="https://twitter.com/brunolemos/profile_image?size=original" height="100" /></a>
+<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://twitter.com/brunolemos/profile_image?size=original" height="100" /></a>
 
 <br/>
 
