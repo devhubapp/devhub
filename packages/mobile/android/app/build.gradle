@@ -146,6 +146,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-base:16.0.1'
     implementation 'com.google.firebase:firebase-core:16.0.6'
 
+    implementation project(':react-native-google-analytics-bridge')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-screens')
