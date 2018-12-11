@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { SettingsModal } from '../../components/modals/SettingsModal'
+import { analytics } from '../../libs/analytics'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
@@ -10,6 +11,8 @@ import { EnterpriseSetupModal } from './EnterpriseSetupModal'
 export function ModalRenderer() {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   if (!currentOpenedModal) return null
+
+  analytics.trackModalView(currentOpenedModal.name)
 
   switch (currentOpenedModal.name) {
     case 'ADD_COLUMN':

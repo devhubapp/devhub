@@ -153,7 +153,7 @@ export function configureStore(key = 'root') {
   // Make it keep the current open modal opened
   // Also make sure the middlewares (persist, saga, devtools, etc)
   // keep working as expected
-  if (process.env.NODE_ENV !== 'production') {
+  if (__DEV__) {
     if ((module as any).hot) {
       ;(module as any).hot.accept(() => {
         store.replaceReducer(persistedReducer)

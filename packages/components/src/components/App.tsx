@@ -2,6 +2,7 @@ import React from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
+import '../libs/analytics'
 import { AppNavigator } from '../navigation/AppNavigator'
 import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'

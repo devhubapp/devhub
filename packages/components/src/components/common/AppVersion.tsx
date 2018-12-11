@@ -5,6 +5,8 @@ import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 
 const pkg = require('@devhub/core/package.json') // tslint:disable-line
 
+export const appVersion = pkg.version
+
 const styles = StyleSheet.create({
   appVersion: {
     alignSelf: 'center',
@@ -20,6 +22,6 @@ export function AppVersion() {
   return (
     <Animated.Text
       style={[styles.appVersion, { color: theme.foregroundColorTransparent50 }]}
-    >{`v${pkg.version}`}</Animated.Text>
+    >{`v${appVersion}`}</Animated.Text>
   )
 }

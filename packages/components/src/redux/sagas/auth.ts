@@ -8,6 +8,7 @@ import {
   GRAPHQL_ENDPOINT,
   User,
 } from '@devhub/core'
+import { analytics } from '../../libs/analytics'
 import * as github from '../../libs/github'
 import { bugsnagClient } from '../../setup'
 import * as actions from '../actions'
@@ -139,7 +140,7 @@ function* onLoginRequest(
     )
     return
   } catch (error) {
-    console.error(error.response)
+    console.error(error.response || error)
 
     if (
       error &&
@@ -190,7 +191,15 @@ function* onLoginRequest(
 function onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
-  github.authenticate(action.payload.user.github.token)
+  const { user } = action.payload
+
+  github.authenticate(user.github.token)
+  analytics.setUser(user._id)
+  bugsnagClient.setUser(
+    user._id,
+    user.github.user.name || '',
+    user.github.user.email || '',
+  )
 }
 
 function* onLoginFailure(
