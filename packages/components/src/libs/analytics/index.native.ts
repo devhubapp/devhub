@@ -1,3 +1,4 @@
+import * as firebase from 'react-native-firebase'
 import {
   GoogleAnalyticsSettings,
   GoogleAnalyticsTracker,
@@ -21,25 +22,22 @@ export const analytics: Analytics = {
   setUser(userId) {
     if (__DEV__) log('set', { user_id: userId })
     tracker.setUser(userId)
+    firebase.analytics().setUserId(userId)
   },
 
   trackEvent(category, action) {
     if (__DEV__) log('event', category, action)
     tracker.trackEvent(category, action)
-  },
-
-  trackException(description, isFatal) {
-    if (__DEV__) log('event exception', description, isFatal)
-    tracker.trackException(description, isFatal)
+    firebase.analytics().logEvent(action, { category })
   },
 
   trackModalView(modalName) {
     this.trackScreenView(`${modalName}_MODAL`)
-    tracker.trackEvent('open_modal', modalName)
   },
 
   trackScreenView(screenName) {
     if (__DEV__) log('screen_view', screenName)
     tracker.trackScreenView(screenName)
+    firebase.analytics().setCurrentScreen(screenName)
   },
 }

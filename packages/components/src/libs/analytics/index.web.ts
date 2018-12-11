@@ -18,13 +18,6 @@ export const analytics: Analytics = {
     gtagAndLog('event', action, { event_category: category })
   },
 
-  trackException(description, isFatal) {
-    gtagAndLog('event', 'exception', {
-      description,
-      fatal: isFatal,
-    })
-  },
-
   trackModalView(modalName) {
     this.trackScreenView(`${modalName}_MODAL`)
   },
