@@ -1,17 +1,26 @@
 import _ from 'lodash'
-import React from 'react'
-import { Animated, Linking, View } from 'react-native'
+import React, { useState } from 'react'
+import { Alert, Animated, Clipboard, Linking, View } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useReduxState } from '../../redux/hooks/use-redux-state'
+import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
-import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
+import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 
 export function EnterpriseSetupModal() {
+  const [copied, setCopied] = useState(false)
+
   const theme = useAnimatedTheme()
+
+  const userId = useReduxState(selectors.currentUserIdSelector)
+  const username = useReduxState(selectors.currentUsernameSelector)
+
+  const email = `enterprise${'@'}devhubapp.com`
 
   return (
     <ModalColumn
@@ -20,13 +29,11 @@ export function EnterpriseSetupModal() {
       title="GitHub Enterprise"
     >
       <View style={{ flex: 1, padding: contentPadding }}>
-        <H2>Are you interested?</H2>
-
         <Spacer height={contentPadding} />
 
-        <Animated.Text style={{ color: theme.foregroundColor }}>
-          If you are interested in GitHub Enterprise support, please let us
-          know!{' '}
+        <Animated.Text style={{ lineHeight: 16, color: theme.foregroundColor }}>
+          To enable DevHub on your GitHub Enterprise, contact us via e-mail
+          below:{' '}
         </Animated.Text>
 
         <Spacer height={contentPadding} />
@@ -38,19 +45,31 @@ export function EnterpriseSetupModal() {
           }}
         >
           <H3>E-mail: </H3>
-          <Animated.Text style={{ color: theme.foregroundColor }}>
-            {`enterprise${'@'}devhubapp.com`}
-          </Animated.Text>
+
+          <Link
+            analyticsLabel={`mailto:${email}`}
+            href={`mailto:${email}`}
+            openOnNewTab={false}
+          >
+            <Animated.Text style={{ color: theme.foregroundColor }}>
+              {email}
+            </Animated.Text>
+          </Link>
         </View>
 
         <Spacer height={contentPadding} />
 
         <Button
-          onPress={() =>
-            Linking.openURL(`mailto:enterprise${'@'}devhubapp.com`)
-          }
+          analyticsCategory="enterprise"
+          analyticsAction="copy_email"
+          analyticsLabel={username}
+          analyticsPayload={{ user_id: userId }}
+          onPress={async () => {
+            Clipboard.setString(email)
+            setCopied(true)
+          }}
         >
-          Contact us
+          {copied ? 'Copied!' : 'Copy e-mail'}
         </Button>
       </View>
     </ModalColumn>
