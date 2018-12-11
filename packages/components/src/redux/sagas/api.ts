@@ -7,7 +7,7 @@ import {
   jsonToGraphQLQuery,
   removeUndefinedFields,
 } from '@devhub/core'
-import { bugsnagClient } from '../../setup'
+import { bugsnag } from '../../libs/bugsnag'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
@@ -100,7 +100,7 @@ async function sync(state: RootState) {
     }
   } catch (error) {
     console.error(error.response || error)
-    bugsnagClient.notify(error, { response: error.response })
+    bugsnag.notify(error, { response: error.response })
   }
 }
 

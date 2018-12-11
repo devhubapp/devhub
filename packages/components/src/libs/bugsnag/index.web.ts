@@ -1,71 +1,41 @@
-import bugsnag from 'bugsnag-js'
+import bugsnagJS from 'bugsnag-js'
 import createReactPlugin from 'bugsnag-react'
 import _ from 'lodash'
 import React from 'react'
 
-export * from 'bugsnag-js'
+import { BugnsagCrossPlatform } from './'
 
-export let ErrorBoundary: React.ComponentType<any> = React.Fragment
+const client = bugsnagJS({
+  apiKey: '231f337f6090422c611017d3dab3d32e',
+  autoBreadcrumbs: true,
+  notifyReleaseStages: ['production'],
+})
 
-let bugsnagClient: ReturnType<typeof bugsnag>
-export function initBugsnag(apiKey: string) {
-  const client = bugsnag({
-    apiKey,
-    autoBreadcrumbs: false,
-    notifyReleaseStages: ['production'],
-  })
+export const bugsnag: BugnsagCrossPlatform = {
+  clearUser() {
+    client.user = {}
+  },
 
-  bugsnagClient = Object.assign({}, client, {
-    clearUser() {
-      bugsnagClient.user = {}
-    },
-    setUser(id: string, name: string, email: string, other = {}) {
-      bugsnagClient.user = { id, name, email, ...other }
-    },
+  leaveBreadcrumb(name, metadata) {
+    client.leaveBreadcrumb(name, metadata)
+  },
 
-    notify(error: Error, metadata?: Record<string, Record<string, any>>) {
-      client.notify(error, {
-        beforeSend: r => {
-          r.metaData = Object.assign(r.metaData, metadata, {
-            error: _.omit(
-              _.pick(error, Object.getOwnPropertyNames(error)),
-              'stack',
-            ),
-          })
-        },
-      })
-    },
+  notify(error, metadata) {
+    client.notify(error, {
+      beforeSend: r => {
+        r.metaData = Object.assign(r.metaData, metadata, {
+          error: _.omit(
+            _.pick(error, Object.getOwnPropertyNames(error)),
+            'stack',
+          ),
+        })
+      },
+    })
+  },
 
-    use: client.use,
-  })
-
-  try {
-    ErrorBoundary = bugsnagClient.use(createReactPlugin(React))
-    if (!ErrorBoundary) throw new Error()
-  } catch (e) {
-    console.error('[Bugsnag] Failed to create ErrorBoundary.', e)
-    ErrorBoundary = FallbackErrorBoundary
-  }
-
-  return bugsnagClient
+  setUser(id, name, email) {
+    client.user = { id, name, email }
+  },
 }
 
-class FallbackErrorBoundary extends React.Component {
-  static getDerivedStateFromError(error: any) {
-    return { hasError: true }
-  }
-
-  state = {
-    hasError: false,
-  }
-
-  componentDidCatch(error: any, info: any) {
-    bugsnagClient.notify(error, { context: 'react', metaData: info })
-  }
-
-  render() {
-    if (this.state.hasError) return null
-
-    return this.props.children
-  }
-}
+export const ErrorBoundary = client.use(createReactPlugin(React))

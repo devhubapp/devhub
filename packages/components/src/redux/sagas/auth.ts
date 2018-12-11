@@ -9,8 +9,8 @@ import {
   User,
 } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
+import { bugsnag } from '../../libs/bugsnag'
 import * as github from '../../libs/github'
-import { bugsnagClient } from '../../setup'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
@@ -195,17 +195,13 @@ function onLoginSuccess(
 
   github.authenticate(user.github.token)
   analytics.setUser(user._id)
-  bugsnagClient.setUser(
-    user._id,
-    user.github.user.name || '',
-    user.github.user.email || '',
-  )
+  bugsnag.setUser(user._id, user.github.user.name, user.github.user.email)
 }
 
 function* onLoginFailure(
   action: ExtractActionFromActionCreator<typeof actions.loginFailure>,
 ) {
-  bugsnagClient.notify(action.error)
+  bugsnag.notify(action.error)
 
   if (
     action.error &&

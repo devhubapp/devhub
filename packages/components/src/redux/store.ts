@@ -13,6 +13,7 @@ import createSagaMiddleware from 'redux-saga'
 import { Column, ColumnSubscription } from '@devhub/core/src/types'
 import { GraphQLGitHubUser } from '@devhub/core/src/types/graphql'
 import { guid } from '@devhub/core/src/utils/helpers/shared'
+import { bugsnagMiddleware } from './middlewares/bugsnag'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
 import * as selectors from './selectors'
@@ -165,7 +166,7 @@ export function configureStore(key = 'root') {
 
   const store = createStore(
     persistedReducer,
-    composeWithDevTools(applyMiddleware(sagaMiddleware)),
+    composeWithDevTools(applyMiddleware(bugsnagMiddleware, sagaMiddleware)),
   )
 
   const persistor = persistStore(store)
