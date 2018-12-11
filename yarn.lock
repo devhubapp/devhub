@@ -10011,11 +10011,6 @@ react-native-gesture-handler@^1.0.10:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-react-native-google-analytics-bridge@^6.1.2:
-  version "6.1.2"
-  resolved "https://registry.npmjs.org/react-native-google-analytics-bridge/-/react-native-google-analytics-bridge-6.1.2.tgz#1b901d7c06209f88baf4980d5be2ca8150c8df66"
-  integrity sha512-QhBvtQb6/5ao0ubgjMRkJMnsAo05UYwTMJHPesMUT6GD9W0zneAUiCC3HtV8IsHZMSZ0HJxytLhnLtQhWzN7PQ==
-
 react-native-linear-gradient@^2.5.2:
   version "2.5.2"
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.5.2.tgz#e00312997661ef99d76d5fb902fef3d04bc6b5d5"
