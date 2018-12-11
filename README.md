@@ -1,16 +1,11 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/619186/48372387-947ccf80-e6a5-11e8-83fc-eda08935e086.png" height="100" style="border-radius: 12px;" /><br/>
+  <img src="https://user-images.githubusercontent.com/619186/49823485-eed18480-fd66-11e8-88c0-700d840ad4f1.png" height="100" /><br/>
   <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
-  <span>Android, iOS & Web with <b>99% code sharing</b> between them</span>
+  <span>Android, iOS & Web with <b>95%+ code sharing</b> between them</span>
 </p>
-
-## Screenshots
-
-### Desktop
 
 ![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)
 
-### Mobile
 
 <div>
   <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/49802010-ebbca100-fd32-11e8-94d6-e8efb1b5dda8.PNG" />
@@ -22,79 +17,102 @@
 
 ## Why
 
-If you are an open source contributor, have some repositories on GitHub or simply want to discover new projects, DevHub can help you keep up to date with everything relevant that is happening. 
+DevHub helps you take back control of your GitHub workflow and stay on top of everything important going on.
 
-- Manage your notifications;
-- Follow repositories without using the `watch` feature so your notifications don't get cluttered;
-- Follow user activities without using the `follow` button so they don't know about it;
-- Follow user activities that GitHub don't show on your feed, like issue comments and pushed commits;
-- See other users dashboards (their home screen) so you can discover new people and repositories.
+- **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on; made for power users;
+- **Inbox Zero**: Clear all the seen items and keep your mind clean; Archived items will be moved to a separate place;
+- **Filters**: Apply different filters to each column; remove all the noise and make them show just what you want;
+- **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc;
+- **Sanely watch repositories**: Keep up to date with repositories activities without using the `watch` feature so your notifications don't get cluttered;
+- **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub don't show on your feed, like issue comments and pushed commits;
+- **Dashboard spier**: See the GitHub dashboard from other users (their home screen) so you can discover new interesting people and repositories;
+- **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
+- **Theme support**: Choose between 3 options of Light themes and 3 options of dark themes;
+- **And more!**: Light/Dark theme support, native apps, keyboard shortcuts, open source, ...
 
 <br/>
 
-## Features
-
-### Column Layout
-
-Create columns like TweetDeck, made for power users that want to be more organized
-
-### Filters
-
-Apply different filters on each column, creating your ideal GitHub workspace
-
-### Notification Manager
-
-Quickly see unread notifications and create filters if you want to highlight some of them
-
-### GitHub Activity
-
-Follow GitHub activities without needing to `watch` a repository neither `follow` the user:
-
-- [x] **Dashboard**: See the exact content the user see on their home page
-- [x] **User**: See all activity made by an user _(starred a repo, pushed a commit, commented on issue, ...)_
-- [x] **Repository**: See all activity happening in a single repo _(released a new version, ...)_
-- [x] **Organization**: See all activity happening in the whole organization _(merged a pull request, ...)_
-
-### And more!
-
-- [x] Light or Dark theme support
-- [x] Native apps
-
 ### Next features:
 
-- [ ] **Backend**: Sync all your columns and preferences between all your devices
-- [ ] **Push notification**: Enable push notifications for your filtered notifications
-- [ ] **Inbox Zero**: Keep your mind clean by archiving all seem items
-- [ ] **Notification content**: See more relevant notification content before opening it
-- [ ] **Trending**: New column type to show Trending repositories
-- [ ] **Accessibility**: Full support for accessbility and keyboard shortcuts
+- [ ] **More filters**: Filter items by type (Issue, PR, etc); Filter by regex;
+- [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc;
+- [ ] **Trending**: New column type to show Trending repositories;
+- [ ] **Push notification**: Enable push notifications for your filtered columns (this will be a paid feature);
+- [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop
-- [ ] **Pagination**: Support fetching old data so you don't miss anything
+
+> Which one do you want first? Any other recommendations? Search [existing issues](https://github.com/brunolemos/devhub/issues) or open an issue
+
+<br/>
+
+## GitHub Enterprise
+
+This is a paid feature. If you are interested, please contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com). You can also always contact me via [@twitter](https://twitter.com/brunolemos) or [open an issue](https://github.com/brunolemos/devhub/issues) here.
 
 <br/>
 
 ## Keyboard shortcuts
 
-| Key | Action |
-| --- | ------ |
-| `a`, `n` | Add a new column |
-| `1`...`9` | Go the the `nth` column |
-| `0` | Go to the last column |
+| Key       | Action                       | Implemented    |
+| --------- | ---------------------------- | -------------- |
+| `Esc`     | Close current open modal     | ✅
+| `a`, `n`  | Add a new column             | ✅
+| `1`...`9` | Go the the `nth` column      | ✅
+| `0`       | Go to the last column        | ✅
+| `j`, `k`  | Move down/up inside a column | [Contribute](https://github.com/brunolemos/devhub/blob/6157822c7723c85e11bf4bd781656a0204f81ab2/packages/components/src/screens/MainScreen.tsx#L94-L145)
+| `s`       | Toggle save item for later   | [Contribute](https://github.com/brunolemos/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133)
+| `Arrow keys` + `Space` | Focus on elements and press things | [Contribute](https://github.com/brunolemos/devhub/pulls)
+| `Alt + Arrow keys` | Move current column | [Contribute](https://github.com/brunolemos/devhub/pulls)
+
 
 <br/>
 
 <br/>
+
+## Tech Stack
+
+- [TypeScript](https://github.com/Microsoft/TypeScript)
+- [Create React App](https://github.com/facebook/create-react-app)
+- [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/)
+
+- [React](https://github.com/facebook/react) with [Hooks](https://reactjs.org/docs/hooks-intro.html)
+- [React Native](https://github.com/facebook/react-native)
+- [React Native Web](https://github.com/necolas/react-native-web)
+- [Redux](https://github.com/reduxjs/react-redux)
+- [Redux Persist](https://github.com/rt2zz/redux-persist)
+- [Redux Saga](https://github.com/redux-saga/redux-saga/)
+- [Reselect](https://github.com/reduxjs/reselect)
+- [GraphQL](https://github.com/facebook/graphql)
+
 
 ## Contributing
 
-Pull Requests and bug reports are more than welcome! <br/>
-If the feature is big, please open an issue first for discussion.
+Pull Requests, bug reports and feature requests are more than welcome! <br/>
+
+> If the feature is big, please open an issue first for discussion.
+
+### Running it locally
+
+- `git clone git@github.com:brunolemos/devhub.git`
+- `yarn`
+- `yarn dev`
+
+That's it. It will start three workers: `TypeScript compilation watcher`, `Web server` (create-react-app) and the `Mobile server` (react-native packager). The browser will open automatically.
+
+To open the mobile projects, use:
+
+- `yarn xcode`
+- `yarn studio`
+
+> Please beware of the License below. For example, you are allowed to use this locally, but not allowed to distribute the changed app to other people or remove its paid features, if any.
 
 <br/>
 
 ## Author
 
 Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
+
+<a href="https://twitter.com/brunolemos"><img src="https://twitter.com/brunolemos/profile_image?size=original" height="100" /></a>
 
 <br/>
 
@@ -105,9 +123,11 @@ Copyright (c) 2018 [Bruno Lemos](https://twitter.com/brunolemos).
 This is project provided as is without any warranties.<br/>
 By using this app you agree with its [privacy](PRIVACY.md) policy and the  [license](LICENSE.md) below:
 
-- ✅ You are encouraged to use, share and submit pull requests with improvements.
+- ✅ You are encouraged to use, share and submit pull requests with improvements;
 
-- ✅ You are allowed to use this code for non-commercial purposes only, like studing or contributing.
+- ✅ You are allowed to use the official hosted version ([devhubapp.com](https://devhubapp.com/)) without any change on your company or commercial projects;
+
+- ✅ You are allowed to use the source code for non-commercial purposes only, like studing or contributing.
 
 - 🚫 You are not allowed to distribute this code anywhere, including but not limited to Apple Store, Google Play or Web.
 
