@@ -46,13 +46,13 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop
 
-> Which one do you want first? Any other recommendations? Search [existing issues](https://github.com/brunolemos/devhub/issues) or open a new one
+> Which one do you want first? Any other recommendations? Search [existing issues](https://github.com/devhubapp/devhub/issues) or open a new one
 
 <br/>
 
 ## GitHub Enterprise
 
-This is a paid feature. If you are interested, please contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com). You can also always contact me via twitter ([@brunolemos](https://twitter.com/brunolemos)) or [open an issue](https://github.com/brunolemos/devhub/issues) here.
+This is a paid feature. If you are interested, please contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com). You can also always contact me via twitter ([@brunolemos](https://twitter.com/brunolemos)) or [open an issue](https://github.com/devhubapp/devhub/issues) here.
 
 <br/>
 
@@ -64,10 +64,10 @@ This is a paid feature. If you are interested, please contact us via e-mail: [en
 | `a`, `n`  | Add a new column             | ✅
 | `1`...`9` | Go the the `nth` column      | ✅
 | `0`       | Go to the last column        | ✅
-| `j`, `k`  | Move down/up inside a column | [Contribute](https://github.com/brunolemos/devhub/blob/6157822c7723c85e11bf4bd781656a0204f81ab2/packages/components/src/screens/MainScreen.tsx#L94-L145)
-| `s`       | Toggle save item for later   | [Contribute](https://github.com/brunolemos/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133)
-| `Arrow keys` + `Space` | Focus on elements and press things | [Contribute](https://github.com/brunolemos/devhub/pulls)
-| `Alt + Arrow keys` | Move current column | [Contribute](https://github.com/brunolemos/devhub/pulls)
+| `j`, `k`  | Move down/up inside a column | [Contribute](https://github.com/devhubapp/devhub/blob/6157822c7723c85e11bf4bd781656a0204f81ab2/packages/components/src/screens/MainScreen.tsx#L94-L145)
+| `s`       | Toggle save item for later   | [Contribute](https://github.com/devhubapp/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133)
+| `Arrow keys` + `Space` | Focus on elements and press things | [Contribute](https://github.com/devhubapp/devhub/pulls)
+| `Alt + Arrow keys` | Move current column | [Contribute](https://github.com/devhubapp/devhub/pulls)
 
 
 <br/>
@@ -97,7 +97,7 @@ Pull Requests, bug reports and feature requests are more than welcome! <br/>
 
 ### Running it locally
 
-- `git clone git@github.com:brunolemos/devhub.git`
+- `git clone git@github.com:devhubapp/devhub.git`
 - `yarn`
 - `yarn dev`
 
