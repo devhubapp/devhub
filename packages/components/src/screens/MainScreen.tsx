@@ -58,6 +58,7 @@ export const MainScreen = React.memo(() => {
   const isVisible = useAppVisibility()
   const wasVisible = useRef(isVisible)
 
+  // TODO: Use GraphQL Subscriptions, ffs
   useEffect(
     () => {
       if (isVisible && !wasVisible.current) {
