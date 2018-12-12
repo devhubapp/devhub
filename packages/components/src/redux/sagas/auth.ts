@@ -195,7 +195,7 @@ function onLoginSuccess(
 
   github.authenticate(user.github.token)
   analytics.setUser(user._id)
-  bugsnag.setUser(user._id, user.github.user.name, '')
+  bugsnag.setUser(user._id, user.github.user.name || user.github.user.login)
 }
 
 function* onLoginFailure(
