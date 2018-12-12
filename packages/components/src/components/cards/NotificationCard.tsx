@@ -171,7 +171,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           key={`notification-commit-row-${commit.commit.url}`}
           authorEmail={commit.commit.author.email}
           authorName={commit.commit.author.name}
-          authorUsername={commit.author.login}
+          authorUsername={commit.author && commit.author.login}
           isRead={isRead}
           latestCommentUrl={subject.latest_comment_url}
           message={commit.commit.message}

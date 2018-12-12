@@ -123,7 +123,7 @@ export interface GitHubCommit {
   url: string
   html_url: string
   comments_url: string
-  author: GitHubUser
+  author?: GitHubUser
   committer: GitHubUser
   parents: Array<{
     sha: string
