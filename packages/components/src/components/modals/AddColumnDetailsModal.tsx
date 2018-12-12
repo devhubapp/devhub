@@ -138,8 +138,10 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
 
         const nextField = paramList[index + 1]
         const nextFieldDetails = fields.find(fd => fd.field === nextField)
-        if (nextFieldDetails && nextFieldDetails.ref.current) {
-          nextFieldDetails.ref.current.focus()
+
+        const input = nextFieldDetails && nextFieldDetails.ref.current
+        if (input && input.focus) {
+          input.focus()
         }
 
         return
