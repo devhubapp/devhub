@@ -27,9 +27,9 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on; made for power users;
 - **Inbox Zero**: Clear all the seen items and keep your mind clean; Archived items will be moved to a separate place;
 - **Filters**: Apply different filters to each column; remove all the noise and make them show just what you want;
-- **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc;
+- **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc.;
 - **Sanely watch repositories**: Keep up to date with repositories activities without using the `watch` feature so your notifications don't get cluttered;
-- **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub don't show on your feed, like issue comments and pushed commits;
+- **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub doesn't show on your feed, like issue comments and pushed commits;
 - **Dashboard spier**: See the GitHub dashboard from other users (their home screen) so you can discover new interesting people and repositories;
 - **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - **Theme support**: Choose between 3 options of Light themes and 3 options of dark themes;
@@ -40,8 +40,8 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 ### Next features:
 
 - [ ] **Push notification**: Enable push notifications for your filtered columns (this will be a paid feature);
-- [ ] **More filters**: Filter items by type (issue, pr, etc); filter by regex;
-- [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc;
+- [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex;
+- [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.;
 - [ ] **Trending**: New column type to show Trending repositories;
 - [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop
