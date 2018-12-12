@@ -28,7 +28,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - **Inbox Zero**: Clear all the seen items and keep your mind clean; Archived items will be moved to a separate place;
 - **Filters**: Apply different filters to each column; remove all the noise and make them show just what you want;
 - **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc.;
-- **Sanely watch repositories**: Keep up to date with repositories activities without using the `watch` feature so your notifications don't get cluttered;
+- **Sanely watch repositories**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
 - **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub doesn't show on your feed, like issue comments and pushed commits;
 - **Dashboard spier**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
 - **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
@@ -131,7 +131,7 @@ By using this app you agree with its [privacy](PRIVACY.md) policy and the  [lice
 
 - ✅ You are allowed to use the official hosted version ([devhubapp.com](https://devhubapp.com/)) on your company or commercial projects;
 
-- ✅ You are allowed to use the source code for personal non-commercial purposes only, like studing or contributing;
+- ✅ You are allowed to use the source code for personal non-commercial purposes only, like studying or contributing;
 
 - 🚫 You are not allowed to distribute this app anywhere, neither changed versions of this app, including but not limited to Apple Store, Google Play or Web; Changes to the source code can only be used locally, taking in consideration the other points of this License;
 
