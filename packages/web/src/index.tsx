@@ -6,7 +6,6 @@ import { ComponentType } from 'react'
 import { AppRegistry } from 'react-native-web'
 
 import './index.css'
-import './reset.css'
 
 import { App } from '@devhub/components/src/components/App'
 
