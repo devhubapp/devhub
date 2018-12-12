@@ -133,12 +133,12 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   marginRight: contentPadding,
                 }}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
-                iconName="check"
+                iconName="rss"
                 onToggle={() =>
                   toggleOpenedOptionCategory('notification_reasons')
                 }
                 opened={openedOptionCategory === 'notification_reasons'}
-                title="Notification reasons"
+                title="Subscription reasons"
               >
                 {notificationReasonOptions.map(item => {
                   const checked =
@@ -198,7 +198,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   marginRight: contentPadding,
                 }}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
-                iconName="check"
+                iconName="note"
                 onToggle={() => toggleOpenedOptionCategory('event_types')}
                 opened={openedOptionCategory === 'event_types'}
                 title="Event types"
@@ -513,7 +513,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                     ? 'unclear-column'
                     : 'clear-column'
                 }
-                iconName="circle-slash"
+                iconName="check"
                 iconStyle={
                   column.filters && column.filters.clearedAt
                     ? { color: colors.brandBackgroundColor }

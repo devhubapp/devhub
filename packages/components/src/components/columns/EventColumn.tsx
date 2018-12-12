@@ -52,7 +52,7 @@ export function EventColumn(props: EventColumnProps) {
             column.filters.inbox &&
             column.filters.inbox.archived === true
           }
-          iconName="circle-slash"
+          iconName="check"
           onPress={() =>
             setColumnClearedAtFilter({
               columnId: column.id,
