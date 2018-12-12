@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/619186/49823485-eed18480-fd66-11e8-88c0-700d840ad4f1.png" height="100" /><br/>
   <span><b>DevHub</b>: <span>TweetDeck for GitHub [BETA]</span><br/>
-  <span>Android, iOS & Web with <b>95%+ code sharing</b> between them</span><br/>
+  <span>Android, <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8" target="_blank">iOS</a> & <a href="https://devhubapp.com/" target="_blank">Web</a> with <b>95%+ code sharing</b> between them</span><br/>
   <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
 </p>
   
