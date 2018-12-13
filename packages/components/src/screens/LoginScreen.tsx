@@ -125,10 +125,10 @@ export const LoginScreen = React.memo(() => {
       githubTokenType = (params && params.github_token_type) || 'bearer'
 
       if (!(appToken && githubToken)) throw new Error('No token received.')
-    } catch (e) {
-      console.error(e)
-      if (e.message === 'Canceled' || e.message === 'Timeout') return
-      alert(`Login failed. ${e || ''}`)
+    } catch (error) {
+      console.error('OAuth failed', error)
+      if (error.message === 'Canceled' || error.message === 'Timeout') return
+      alert(`Login failed. ${error || ''}`)
       return
     }
 

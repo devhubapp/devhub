@@ -8,7 +8,6 @@ import {
   removeUndefinedFields,
   User,
 } from '@devhub/core'
-import { bugsnag } from '../../libs/bugsnag'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
@@ -131,8 +130,7 @@ function* onSyncDown() {
       )
     }
   } catch (error) {
-    console.error(error.response || error)
-    bugsnag.notify(error, { response: error.response })
+    console.error('Sync down failed', error)
   }
 }
 
@@ -183,8 +181,7 @@ async function syncUp(state: RootState) {
       throw Object.assign(new Error('GraphQL Error'), { response })
     }
   } catch (error) {
-    console.error(error.response || error)
-    bugsnag.notify(error, { response: error.response })
+    console.error('Sync up failed', error)
   }
 }
 

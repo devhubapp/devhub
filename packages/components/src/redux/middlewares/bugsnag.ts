@@ -11,11 +11,7 @@ export const bugsnagMiddleware: Middleware = () => next => action => {
     }
     next(action)
   } catch (error) {
-    console.error(error)
-
-    if (bugsnag) {
-      bugsnag.notify(error, { action })
-    }
+    console.error('Failed to leave bugsnag breadcrumb', error)
 
     throw error
   }

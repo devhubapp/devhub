@@ -4,6 +4,7 @@ import _ from 'lodash'
 import React from 'react'
 
 import { BugnsagCrossPlatform } from './'
+import { overrideConsoleError } from './index.shared'
 
 const client = bugsnagJS({
   apiKey: '231f337f6090422c611017d3dab3d32e',
@@ -23,7 +24,7 @@ export const bugsnag: BugnsagCrossPlatform = {
   notify(error, metadata) {
     client.notify(error, {
       beforeSend: r => {
-        r.metaData = Object.assign(r.metaData, metadata, {
+        r.metaData = Object.assign(r.metaData || {}, metadata, {
           error: _.omit(
             _.pick(error, Object.getOwnPropertyNames(error)),
             'stack',
@@ -37,5 +38,7 @@ export const bugsnag: BugnsagCrossPlatform = {
     client.user = { id, name, email }
   },
 }
+
+overrideConsoleError(bugsnag)
 
 export const ErrorBoundary = client.use(createReactPlugin(React))

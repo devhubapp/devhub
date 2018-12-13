@@ -140,7 +140,7 @@ function* onLoginRequest(
     )
     return
   } catch (error) {
-    console.error(error.response || error)
+    console.error('Login failed', error)
 
     if (
       error &&
@@ -184,6 +184,7 @@ function* onLoginRequest(
     )
   } catch (error) {
     if (!error.name) error.name = 'AuthError'
+    console.error('Alternative login failed', error)
     yield put(actions.loginFailure(error))
   }
 }
@@ -201,8 +202,6 @@ function onLoginSuccess(
 function* onLoginFailure(
   action: ExtractActionFromActionCreator<typeof actions.loginFailure>,
 ) {
-  bugsnag.notify(action.error)
-
   if (
     action.error &&
     (action.error.status === 401 ||

@@ -3,6 +3,7 @@ import _ from 'lodash'
 
 import React from 'react'
 import { BugnsagCrossPlatform } from './'
+import { overrideConsoleError } from './index.shared'
 
 const client = new Client('231f337f6090422c611017d3dab3d32e')
 client.config.automaticallyCollectBreadcrumbs = true
@@ -19,7 +20,7 @@ export const bugsnag: BugnsagCrossPlatform = {
 
   notify(error, metadata) {
     client.notify(error, r => {
-      r.metadata = Object.assign(r.metadata, metadata, {
+      r.metadata = Object.assign(r.metadata || {}, metadata, {
         error: _.omit(
           _.pick(error, Object.getOwnPropertyNames(error)),
           'stack',
@@ -32,6 +33,8 @@ export const bugsnag: BugnsagCrossPlatform = {
     client.setUser(id, name || '', email || '')
   },
 }
+
+overrideConsoleError(bugsnag)
 
 export class ErrorBoundary extends React.Component {
   static getDerivedStateFromError() {
