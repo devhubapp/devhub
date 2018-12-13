@@ -47,7 +47,7 @@ export function tryGetUsernameFromGitHubEmail(email?: string) {
 
   const emailSplit = email.split('@')
   if (emailSplit.length === 2 && emailSplit[1] === 'users.noreply.github.com')
-    return emailSplit[0].split('+').pop()
+    return (emailSplit[0] || '').split('+').pop()
 
   return ''
 }
