@@ -3,7 +3,9 @@ import { Animated, Image, StyleSheet, View } from 'react-native'
 
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
+import { Link } from '../components/common/Link'
 import { Screen } from '../components/common/Screen'
+import { Spacer } from '../components/common/Spacer'
 import { useAnimatedTheme } from '../hooks/use-animated-theme'
 import { analytics } from '../libs/analytics'
 import { executeOAuth } from '../libs/oauth'
@@ -172,6 +174,20 @@ export const LoginScreen = React.memo(() => {
             subtitle="Private access"
             title="Sign in with GitHub"
           />
+
+          <Spacer height={contentPadding} />
+
+          <Link
+            analyticsLabel="why-permission"
+            href="https://github.com/dear-github/dear-github/issues/113"
+            openOnNewTab
+          >
+            <Animated.Text
+              style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
+            >
+              Why all these permissions?
+            </Animated.Text>
+          </Link>
         </View>
 
         <View style={styles.footer}>
