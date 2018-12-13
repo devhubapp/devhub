@@ -51,12 +51,15 @@ export function activityColumnHasAnyFilter(
 
   if (typeof filters.private === 'boolean' || filters.clearedAt) return true
 
-  if (filters.inbox) {
-    return filterRecordHasAnyForcedValue(filters.inbox)
+  if (filters.inbox && filterRecordHasAnyForcedValue(filters.inbox)) {
+    return true
   }
 
-  if (filters.activity) {
-    return filterRecordHasAnyForcedValue(filters.activity.types)
+  if (
+    filters.activity &&
+    filterRecordHasAnyForcedValue(filters.activity.types)
+  ) {
+    return true
   }
 
   return false
@@ -70,12 +73,15 @@ export function notificationColumnHasAnyFilter(
   if (typeof filters.private === 'boolean' || filters.clearedAt) return true
   if (typeof filters.unread === 'boolean') return true
 
-  if (filters.inbox) {
-    return filterRecordHasAnyForcedValue(filters.inbox)
+  if (filters.inbox && filterRecordHasAnyForcedValue(filters.inbox)) {
+    return true
   }
 
-  if (filters.notifications) {
-    return filterRecordHasAnyForcedValue(filters.notifications.reasons)
+  if (
+    filters.notifications &&
+    filterRecordHasAnyForcedValue(filters.notifications.reasons)
+  ) {
+    return true
   }
 
   return false
