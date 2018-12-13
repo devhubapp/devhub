@@ -2,10 +2,12 @@ import { Client } from 'bugsnag-react-native'
 import _ from 'lodash'
 
 import React from 'react'
+import { appVersion } from '../../components/common/AppVersion'
 import { BugnsagCrossPlatform } from './'
 import { overrideConsoleError } from './index.shared'
 
 const client = new Client('231f337f6090422c611017d3dab3d32e')
+client.config.appVersion = appVersion
 client.config.automaticallyCollectBreadcrumbs = true
 client.config.notifyReleaseStages = ['production']
 
