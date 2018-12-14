@@ -86,6 +86,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const issue =
     notification.issue ||
     (subjectType === 'Issue' && {
+      body: undefined,
+      state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
       user: { avatar_url: '', login: '', html_url: '' },
@@ -95,6 +97,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const pullRequest =
     notification.pullRequest ||
     (subjectType === 'PullRequest' && {
+      body: undefined,
+      state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
       user: { avatar_url: '', login: '', html_url: '' },
@@ -197,6 +201,19 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         />
       )}
 
+      {!comment && !!(issue && issue.state === 'open' && issue.body) && (
+        <CommentRow
+          key={`notification-issue-body-${issue.id}`}
+          avatarURL={issue.user.avatar_url}
+          body={issue.body}
+          isRead={isRead}
+          smallLeftColumn
+          url={issue.html_url}
+          userLinkURL={issue.user.html_url || ''}
+          username={issue.user.login}
+        />
+      )}
+
       {!!pullRequest && (
         <IssueOrPullRequestRow
           key={`notification-pr-row-${issueOrPullRequestNumber}`}
@@ -213,6 +230,20 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           username={pullRequest.user.login || ''}
         />
       )}
+
+      {!comment &&
+        !!(pullRequest && pullRequest.state === 'open' && pullRequest.body) && (
+          <CommentRow
+            key={`notification-pr-body-${pullRequest.id}`}
+            avatarURL={pullRequest.user.avatar_url}
+            body={pullRequest.body}
+            isRead={isRead}
+            smallLeftColumn
+            url={pullRequest.html_url}
+            userLinkURL={pullRequest.user.html_url || ''}
+            username={pullRequest.user.login}
+          />
+        )}
 
       {!!release && (
         <ReleaseRow
