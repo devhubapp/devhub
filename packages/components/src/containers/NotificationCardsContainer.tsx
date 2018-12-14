@@ -32,6 +32,9 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column } = props
 
+    const hasPrivateAccess = useReduxState(
+      selectors.githubHasPrivateAccessSelector,
+    )
     const subscription = useReduxState(
       state =>
         selectors.subscriptionSelector(
@@ -47,7 +50,11 @@ export const NotificationCardsContainer = React.memo(
     const [filteredItems, setFilteredItems] = useState<
       EnhancedGitHubNotification[]
     >(() =>
-      getFilteredNotifications(subscription.data.items || [], column.filters),
+      getFilteredNotifications(
+        subscription.data.items || [],
+        column.filters,
+        hasPrivateAccess,
+      ),
     )
 
     const canFetchMoreRef = useRef(false)
@@ -58,6 +65,7 @@ export const NotificationCardsContainer = React.memo(
           getFilteredNotifications(
             subscription.data.items || [],
             column.filters,
+            hasPrivateAccess,
           ),
         )
       },

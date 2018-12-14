@@ -29,6 +29,9 @@ export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { column } = props
 
+    const hasPrivateAccess = useReduxState(
+      selectors.githubHasPrivateAccessSelector,
+    )
     const subscription = useReduxState(
       state =>
         selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
@@ -43,14 +46,17 @@ export const EventCardsContainer = React.memo(
     )
 
     const [filteredItems, setFilteredItems] = useState<EnhancedGitHubEvent[]>(
-      () => getFilteredEvents(data.items || [], column.filters),
+      () =>
+        getFilteredEvents(data.items || [], column.filters, hasPrivateAccess),
     )
 
     const canFetchMoreRef = useRef(false)
 
     useEffect(
       () => {
-        setFilteredItems(getFilteredEvents(data.items || [], column.filters))
+        setFilteredItems(
+          getFilteredEvents(data.items || [], column.filters, hasPrivateAccess),
+        )
       },
       [data, column.filters],
     )

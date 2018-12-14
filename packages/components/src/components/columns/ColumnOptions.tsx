@@ -11,6 +11,8 @@ import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useDimensions } from '../../hooks/use-dimensions'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import { useReduxState } from '../../redux/hooks/use-redux-state'
+import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
 import {
   columnHeaderHeight,
@@ -69,9 +71,14 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     setOpenedOptionCategory,
   ] = useState<ColumnOptionCategory | null>(null)
   const theme = useAnimatedTheme()
-  const deleteColumn = useReduxAction(actions.deleteColumn)
   const dimensions = useDimensions()
   const { appOrientation, sizename } = useAppLayout()
+
+  const hasPrivateAccess = useReduxState(
+    selectors.githubHasPrivateAccessSelector,
+  )
+
+  const deleteColumn = useReduxAction(actions.deleteColumn)
   const moveColumn = useReduxAction(actions.moveColumn)
   const clearArchivedItems = useReduxAction(actions.clearArchivedItems)
   const setColumnInboxFilter = useReduxAction(actions.setColumnInboxFilter)
@@ -397,13 +404,18 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           })()}
 
         {(() => {
-          const isPrivateChecked = !(
-            column.filters && column.filters.private === false
-          )
+          const isPrivateChecked =
+            column.type === 'notifications'
+              ? !(column.filters && column.filters.private === false)
+              : hasPrivateAccess &&
+                !(column.filters && column.filters.private === false)
 
           const isPublicChecked = !(
             column.filters && column.filters.private === true
           )
+
+          const canShowPrivateContent =
+            hasPrivateAccess || column.type === 'notifications'
 
           const getFilterValue = (
             showPublic?: boolean,
@@ -421,7 +433,10 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               contentContainerStyle={{ marginRight: contentPadding }}
               hasChanged={
                 !!(
-                  column.filters && typeof column.filters.private === 'boolean'
+                  column.filters &&
+                  ((hasPrivateAccess &&
+                    typeof column.filters.private === 'boolean') ||
+                    (!hasPrivateAccess && column.filters.private === true))
                 )
               }
               iconName={
@@ -437,7 +452,10 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 analyticsLabel="public"
                 checked={isPublicChecked}
                 containerStyle={{ flexGrow: 1 }}
-                disabled={isPublicChecked && !isPrivateChecked}
+                disabled={
+                  isPublicChecked &&
+                  (!isPrivateChecked || !canShowPrivateContent)
+                }
                 label="Public"
                 // labelIcon="globe"
                 onChange={checked => {
@@ -454,7 +472,10 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 analyticsLabel="private"
                 checked={isPrivateChecked}
                 containerStyle={{ flexGrow: 1 }}
-                disabled={isPrivateChecked && !isPublicChecked}
+                disabled={
+                  (isPrivateChecked && !isPublicChecked) ||
+                  (!isPrivateChecked && !canShowPrivateContent)
+                }
                 label="Private"
                 // labelIcon="lock"
                 onChange={checked => {
