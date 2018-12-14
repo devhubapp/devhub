@@ -40,11 +40,11 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 ### Next features:
 
 - [ ] **Push notification**: Enable push notifications for your filtered columns (this will be a paid feature);
-- [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
-- [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.;
-- [ ] **Trending**: New column type to show Trending repositories;
-- [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
-- [ ] **Drag & Drop**: Allow moving columns using drag&drop
+- [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos (free feature);
+- [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.(free feature);
+- [ ] **Trending**: New column type to show Trending repositories(free feature);
+- [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements(free feature);
+- [ ] **Drag & Drop**: Allow moving columns using drag&drop(free feature)
 
 > Which one do you want first? Any other recommendations? Search [existing issues](https://github.com/devhubapp/devhub/issues) or open a new one
 
