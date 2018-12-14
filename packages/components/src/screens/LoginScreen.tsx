@@ -226,24 +226,24 @@ export const LoginScreen = React.memo(() => {
               loggingInMethod === 'github.public'
             }
             onPress={() => loginWithGitHub('github.public')}
-            rightIcon="globe"
+            // rightIcon="globe"
             style={styles.button}
-            subtitle="Public access"
+            subtitle="Public access only"
             title="Sign in with GitHub"
           />
 
-          <GitHubLoginButton
+          {/* <GitHubLoginButton
             analyticsLabel="github_login_private"
             loading={
               (isLoggingIn || isExecutingOAuth) &&
               loggingInMethod === 'github.private'
             }
             onPress={() => loginWithGitHub('github.private')}
-            rightIcon="lock"
+            // rightIcon="lock"
             style={styles.button}
             subtitle="Private access"
             title="Sign in with GitHub"
-          />
+          /> */}
 
           <Spacer height={contentPadding} />
 
