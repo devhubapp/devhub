@@ -3,6 +3,7 @@ import { Analytics } from './'
 
 const trackingId = 'UA-52350759-2'
 gtag('config', trackingId, {
+  app_version: appVersion,
   custom_map: { dimension1: 'user_id' },
 })
 
@@ -34,9 +35,6 @@ export const analytics: Analytics = {
   },
 
   trackScreenView(screenName) {
-    gtagAndLog('event', 'screen_view', {
-      screen_name: screenName,
-      app_version: appVersion,
-    })
+    gtagAndLog('event', 'screen_view', { screen_name: screenName })
   },
 }

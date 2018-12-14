@@ -13,7 +13,7 @@ GoogleAnalyticsSettings.setDispatchInterval(5)
 firebase.analytics().setAnalyticsCollectionEnabled(__DEV__)
 
 const tracker = new GoogleAnalyticsTracker('UA-52350759-2')
-
+tracker.setAppVersion(appVersion)
 tracker.customDimensionsFieldsIndexMap = {
   user_id: 1,
 }
