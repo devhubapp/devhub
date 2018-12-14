@@ -11,7 +11,7 @@ if (__DEV__) {
 }
 
 const gtagAndLog = (...args: any[]) => {
-  if (__DEV__) console.debug('[ANALYTICS]', ...args) // tslint:disable-line no-console
+  // if (__DEV__) console.debug('[ANALYTICS]', ...args) // tslint:disable-line no-console
   gtag(...args)
 }
 
