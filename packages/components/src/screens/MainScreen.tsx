@@ -104,7 +104,8 @@ export const MainScreen = React.memo(() => {
       }
 
       if (columnIds.length > 0) {
-        const n = e.keyCode - 48
+        const n = e.key >= '0' && e.key <= '9' ? parseInt(e.key, 10) : -1
+
         if (n === 0) {
           const columnIndex = columnIds.length - 1
           emitter.emit('FOCUS_ON_COLUMN', {
