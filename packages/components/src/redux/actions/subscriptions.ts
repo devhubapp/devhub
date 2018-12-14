@@ -36,7 +36,7 @@ export function fetchSubscriptionSuccess(payload: {
 
 export function fetchSubscriptionFailure<E extends Error>(
   payload: { subscriptionId: string },
-  error: E,
+  error: E & { status?: number },
 ) {
   return createErrorActionWithPayload(
     'FETCH_SUBSCRIPTION_FAILURE',

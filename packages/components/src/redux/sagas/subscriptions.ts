@@ -280,6 +280,20 @@ function* onFetchRequest(
   }
 }
 
+function* onFetchFailed(
+  action: ExtractActionFromActionCreator<
+    typeof actions.fetchSubscriptionFailure
+  >,
+) {
+  if (
+    action.error &&
+    action.error.status === 401 &&
+    action.error.message === 'Bad credentials'
+  ) {
+    yield put(actions.logout())
+  }
+}
+
 function onLogout() {
   if (notificationsCache) notificationsCache.clear()
 }
@@ -294,6 +308,7 @@ export function* subscriptionsSagas() {
     yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
     yield takeEvery('FETCH_SUBSCRIPTION_REQUEST', onFetchRequest),
+    yield takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),
   ])
 }
 
