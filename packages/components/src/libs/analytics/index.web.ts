@@ -4,12 +4,13 @@ import { Analytics } from './'
 const trackingId = 'UA-52350759-2'
 gtag('config', trackingId, {
   app_version: appVersion,
+  app_name: __DEV__ ? 'devhub-dev' : 'devhub',
   custom_map: { dimension1: 'user_id' },
 })
 
-if (__DEV__) {
-  ;(window as any)[`ga-disable-${trackingId}`] = true
-}
+// if (__DEV__) {
+//   ;(window as any)[`ga-disable-${trackingId}`] = true
+// }
 
 const gtagAndLog = (...args: any[]) => {
   // if (__DEV__) console.debug('[ANALYTICS]', ...args) // tslint:disable-line no-console
