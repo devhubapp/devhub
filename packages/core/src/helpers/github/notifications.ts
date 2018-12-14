@@ -15,7 +15,10 @@ export async function getNotificationsEnhancementMap(
   {
     cache = new Map(),
     githubToken,
-  }: { cache: EnhancementCache | undefined | undefined; githubToken: string },
+  }: {
+    cache: EnhancementCache | undefined | undefined
+    githubToken: string
+  },
 ): Promise<Record<string, NotificationPayloadEnhancement>> {
   const promises = notifications.map(async notification => {
     if (!(notification.repository && notification.repository.full_name)) return
@@ -29,6 +32,9 @@ export async function getNotificationsEnhancementMap(
 
     const enhance: NotificationPayloadEnhancement = {}
 
+    const hasSubjectCache = cache.has(notification.subject.url)
+    const hasCommentCache = cache.has(notification.subject.latest_comment_url)
+
     const subjectCache = cache.get(notification.subject.url)
     const commentCache = cache.get(notification.subject.latest_comment_url)
 
@@ -38,8 +44,9 @@ export async function getNotificationsEnhancementMap(
       )) as keyof NotificationPayloadEnhancement
 
     if (
-      !subjectCache ||
-      (notification.updated_at &&
+      !hasSubjectCache ||
+      (subjectCache &&
+        notification.updated_at &&
         new Date(notification.updated_at).valueOf() > subjectCache.timestamp)
     ) {
       try {
@@ -64,11 +71,12 @@ export async function getNotificationsEnhancementMap(
         cache.set(notification.subject.url, false)
         return
       }
-    } else if (subjectCache) {
-      if (subjectCache.data) enhance[subjectField] = subjectCache.data
+    } else if (hasSubjectCache) {
+      if (subjectCache && subjectCache.data)
+        enhance[subjectField] = subjectCache.data
     }
 
-    if (commentId && !commentCache) {
+    if (commentId && !hasCommentCache) {
       try {
         const { data } = await axios.get(
           `${
@@ -91,8 +99,8 @@ export async function getNotificationsEnhancementMap(
       }
     } else if (!commentId) {
       enhance.comment = undefined
-    } else if (commentCache) {
-      if (commentCache.data) enhance.comment = commentCache.data
+    } else if (hasCommentCache) {
+      if (commentCache && commentCache.data) enhance.comment = commentCache.data
     }
 
     if (!Object.keys(enhance).length) return
