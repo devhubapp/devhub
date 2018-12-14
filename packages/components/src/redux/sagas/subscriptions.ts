@@ -167,6 +167,7 @@ function* onFetchRequest(
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
   const githubToken = selectors.githubTokenSelector(state)
+  const hasPrivateAccess = selectors.githubHasPrivateAccessSelector(state)
 
   const page = Math.max(1, _params.page || 1)
   const perPage = Math.min(_params.perPage || DEFAULT_PAGINATION_PER_PAGE, 50)
@@ -218,6 +219,7 @@ function* onFetchRequest(
         {
           cache: notificationsCache,
           githubToken,
+          hasPrivateAccess,
         },
       )
 

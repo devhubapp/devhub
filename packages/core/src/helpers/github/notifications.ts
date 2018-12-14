@@ -15,9 +15,11 @@ export async function getNotificationsEnhancementMap(
   {
     cache = new Map(),
     githubToken,
+    hasPrivateAccess,
   }: {
     cache: EnhancementCache | undefined | undefined
     githubToken: string
+    hasPrivateAccess: boolean
   },
 ): Promise<Record<string, NotificationPayloadEnhancement>> {
   const promises = notifications.map(async notification => {
@@ -31,6 +33,10 @@ export async function getNotificationsEnhancementMap(
     )
 
     const enhance: NotificationPayloadEnhancement = {}
+
+    const isPrivate = notification.repository.private
+    const hasAccess = !isPrivate || hasPrivateAccess
+    if (!hasAccess) return
 
     const hasSubjectCache = cache.has(notification.subject.url)
     const hasCommentCache = cache.has(notification.subject.latest_comment_url)

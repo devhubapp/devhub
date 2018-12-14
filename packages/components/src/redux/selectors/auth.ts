@@ -11,6 +11,9 @@ export const appTokenSelector = (state: RootState) => s(state).appToken
 export const githubScopeSelector = (state: RootState) =>
   s(state).user && s(state).user!.github.scope
 
+export const githubHasPrivateAccessSelector = (state: RootState) =>
+  !!githubScopeSelector(state) && githubScopeSelector(state)!.includes('repo')
+
 export const githubTokenSelector = (state: RootState) =>
   s(state).user && s(state).user!.github.token
 
