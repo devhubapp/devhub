@@ -84,6 +84,7 @@ export const LoginScreen = React.memo(() => {
   const [loggingInMethod, setLoggingInMethod] = useState<LoginMethod | null>(
     null,
   )
+  const [isExecutingOAuth, setIsExecutingOAuth] = useState(false)
 
   const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
   const error = useReduxState(selectors.authErrorSelector)
@@ -187,6 +188,7 @@ export const LoginScreen = React.memo(() => {
 
   const loginWithGitHub = async (method: LoginMethod) => {
     setLoggingInMethod(method)
+    setIsExecutingOAuth(true)
 
     const githubScope =
       method === 'github.private'
@@ -201,6 +203,7 @@ export const LoginScreen = React.memo(() => {
     } catch (error) {
       // if (error.message === 'Canceled' || error.message === 'Timeout') return
       console.error('OAuth execution failed', error)
+      setIsExecutingOAuth(false)
     }
   }
 
@@ -218,7 +221,10 @@ export const LoginScreen = React.memo(() => {
 
           <GitHubLoginButton
             analyticsLabel="github_login_public"
-            loading={isLoggingIn && loggingInMethod === 'github.public'}
+            loading={
+              (isLoggingIn || isExecutingOAuth) &&
+              loggingInMethod === 'github.public'
+            }
             onPress={() => loginWithGitHub('github.public')}
             rightIcon="globe"
             style={styles.button}
@@ -228,7 +234,10 @@ export const LoginScreen = React.memo(() => {
 
           <GitHubLoginButton
             analyticsLabel="github_login_private"
-            loading={isLoggingIn && loggingInMethod === 'github.private'}
+            loading={
+              (isLoggingIn || isExecutingOAuth) &&
+              loggingInMethod === 'github.private'
+            }
             onPress={() => loginWithGitHub('github.private')}
             rightIcon="lock"
             style={styles.button}
