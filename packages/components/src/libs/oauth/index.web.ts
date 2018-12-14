@@ -1,7 +1,15 @@
 import qs from 'qs'
 
 import { API_BASE_URL } from '@devhub/core/src/utils/constants'
+import { Platform } from '../platform/index.web'
 import { listenForNextMessageData } from './helpers.web'
+
+const popupTarget =
+  Platform.realOS !== 'web' ||
+  Platform.isStandalone ||
+  (navigator.userAgent || '').includes('Edge')
+    ? '_self'
+    : '_blank'
 
 function popupWindow(url: string, w: number = 500, h: number = 600) {
   const left = (window.screen.width - w) / 2
@@ -9,7 +17,7 @@ function popupWindow(url: string, w: number = 500, h: number = 600) {
 
   return window.open(
     url,
-    '_blank',
+    popupTarget,
     `resizable=yes, width=${w}, height=${h}, top=${top}, left=${left}`,
   )
 }
@@ -34,7 +42,7 @@ export async function executeOAuth(scope: string[]) {
 
     return data
   } catch (e) {
-    if (popup) popup.close()
+    if (popup && popup !== window) popup.close()
 
     throw e
   }

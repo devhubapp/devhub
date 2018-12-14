@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
+import { Platform } from '../platform'
 
 type LinearGradientPoint =
   | OriginalLinearGradientProps['start']
@@ -42,13 +43,18 @@ export function LinearGradient(props: LinearGradientProps) {
     ...otherProps
   } = props
 
+  const backgroundField = Platform.select({
+    web: 'backgroundImage',
+    default: 'background',
+  })
+
   return (
     <View
       {...otherProps}
       style={[
         style,
         {
-          backgroundColor: propsToLinearGradient({
+          [backgroundField]: propsToLinearGradient({
             colors,
             end,
             // locations,

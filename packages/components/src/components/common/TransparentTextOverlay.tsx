@@ -112,7 +112,12 @@ export function TransparentTextOverlay(props: TransparentTextOverlayProps) {
   const { children, containerStyle, from, ...otherProps } = props
 
   return (
-    <View style={[{ flex: 1, alignSelf: 'stretch' }, containerStyle]}>
+    <View
+      style={[
+        { flex: 1, alignSelf: 'stretch', flexBasis: 'auto' },
+        containerStyle,
+      ]}
+    >
       {children}
 
       {(from === 'vertical' || from === 'top') && (
