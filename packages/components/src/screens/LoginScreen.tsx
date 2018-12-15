@@ -248,6 +248,20 @@ export const LoginScreen = React.memo(() => {
           <Spacer height={contentPadding} />
 
           <Link
+            analyticsLabel="about-private-access"
+            href="https://github.com/devhubapp/devhub/issues/32"
+            openOnNewTab
+          >
+            <Animated.Text
+              style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
+            >
+              What about private repositories?
+            </Animated.Text>
+          </Link>
+
+          {/* <Spacer height={contentPadding} />
+
+          <Link
             analyticsLabel="why-permission"
             href="https://github.com/dear-github/dear-github/issues/113"
             openOnNewTab
@@ -257,7 +271,7 @@ export const LoginScreen = React.memo(() => {
             >
               Why all these permissions?
             </Animated.Text>
-          </Link>
+          </Link> */}
         </View>
 
         <View style={styles.footer}>
