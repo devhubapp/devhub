@@ -1,6 +1,6 @@
 {
   "name": "@devhub/mobile",
-  "version": "0.38.6",
+  "version": "0.39.0",
   "private": false,
   "scripts": {
     "clean": "cd .",
@@ -14,7 +14,7 @@
     "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
-    "@devhub/components": "0.38.6",
+    "@devhub/components": "0.39.0",
     "metro-react-native-babel-preset": "^0.50.0",
     "react": "^16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
