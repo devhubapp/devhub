@@ -5,7 +5,7 @@ import {
   getUserAvatarByAvatarURL,
   getUserAvatarByEmail,
   getUserAvatarByUsername,
-} from '@devhub/core/src/utils/helpers/github/shared'
+} from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'

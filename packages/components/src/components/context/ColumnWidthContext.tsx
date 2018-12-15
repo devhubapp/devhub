@@ -1,10 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Dimensions, ScaledSize } from 'react-native'
 
-import {
-  MAX_COLUMN_WIDTH,
-  MIN_COLUMN_WIDTH,
-} from '@devhub/core/src/utils/constants'
+import { constants } from '@devhub/core'
 import { sidebarSize } from '../../styles/variables'
 import { APP_LAYOUT_BREAKPOINTS, getLayoutConsumerState } from './LayoutContext'
 
@@ -45,8 +42,8 @@ export const ColumnWidthConsumer = ColumnWidthContext.Consumer
 
 function calculateColumnWidth({
   window,
-  minWidth: _minWidth = MIN_COLUMN_WIDTH,
-  maxWidth: _maxWidth = MAX_COLUMN_WIDTH,
+  minWidth: _minWidth = constants.MIN_COLUMN_WIDTH,
+  maxWidth: _maxWidth = constants.MAX_COLUMN_WIDTH,
 }: {
   window: { width: number; height: number }
   minWidth?: number

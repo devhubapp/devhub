@@ -1,7 +1,7 @@
 import React from 'react'
 import { Animated, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core/src/types'
+import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
 import { radius } from '../../../styles/variables'
 import { fixURL } from '../../../utils/helpers/github/url'

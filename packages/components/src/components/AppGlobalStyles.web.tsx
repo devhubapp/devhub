@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Theme } from '@devhub/core/src/types'
+import { Theme } from '@devhub/core'
 import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme }) {

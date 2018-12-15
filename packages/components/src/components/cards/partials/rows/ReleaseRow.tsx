@@ -1,8 +1,7 @@
 import React from 'react'
-import { Animated, Text, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
-import { getGitHubURLForRelease } from '@devhub/core/src/utils/helpers/github/url'
-import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
+import { getGitHubURLForRelease, trimNewLinesAndSpaces } from '@devhub/core'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { AnimatedIcon } from '../../../animated/AnimatedIcon'

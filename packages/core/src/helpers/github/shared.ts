@@ -1,16 +1,6 @@
 import gravatar from 'gravatar'
 
-import {
-  ActivityColumnSubscription,
-  ActivityColumnSubscriptionCreation,
-  ColumnSubscription,
-  ColumnSubscriptionCreation,
-  GitHubIcon,
-  GitHubPullRequest,
-  NotificationColumnSubscription,
-  NotificationColumnSubscriptionCreation,
-  Omit,
-} from '../../../types'
+import { ColumnSubscription, GitHubIcon, GitHubPullRequest } from '../../types'
 import { getSteppedSize } from '../shared'
 
 export function getUserAvatarByAvatarURL(

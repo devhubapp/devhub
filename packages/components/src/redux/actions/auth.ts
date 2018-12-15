@@ -1,4 +1,4 @@
-import { User } from '@devhub/core/src/types/graphql'
+import { User } from '@devhub/core'
 import { createAction, createErrorAction } from '../helpers'
 import { AuthError } from '../reducers/auth'
 

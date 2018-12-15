@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { GitHubPage } from '@devhub/core/src/types'
+import { GitHubPage } from '@devhub/core'
 import { RenderItem, RowList } from './RowList'
 import { WikiPageRow } from './WikiPageRow'
 

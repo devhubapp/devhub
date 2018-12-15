@@ -3,7 +3,7 @@ import React from 'react'
 import { CommitRow } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
 
-import { GitHubPushedCommit } from '@devhub/core/src/types'
+import { GitHubPushedCommit } from '@devhub/core'
 
 export interface CommitListRowProps {
   isRead: boolean

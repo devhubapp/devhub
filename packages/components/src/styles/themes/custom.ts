@@ -1,6 +1,6 @@
 import { darken, getLuminance, invert, lighten, rgba } from 'polished'
 
-import { Theme } from '@devhub/core/src/types/themes'
+import { Theme } from '@devhub/core'
 
 function createTheme(theme: Theme): Theme {
   return theme

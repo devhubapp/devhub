@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import { Omit } from '@devhub/core/src/types'
+import { Omit } from '@devhub/core'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
 import { contentPadding } from '../../../styles/variables'
 import { AnimatedIcon, AnimatedIconProps } from '../../animated/AnimatedIcon'

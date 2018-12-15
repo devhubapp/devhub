@@ -1,6 +1,4 @@
-import { Theme, ThemePair } from '@devhub/core/src/types/themes'
-import * as constants from '@devhub/core/src/utils/constants'
-import { isNight } from '@devhub/core/src/utils/helpers/shared'
+import { constants, isNight, Theme, ThemePair } from '@devhub/core'
 import { themes } from './themes'
 import { createThemeFromColor } from './themes/custom'
 

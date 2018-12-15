@@ -5,7 +5,7 @@ import {
   GitHubEvent,
   GitHubNotificationReason,
   NotificationColumnFilters,
-} from '@devhub/core/src/types'
+} from '@devhub/core'
 import { createAction } from '../helpers'
 
 export function replaceColumnsAndSubscriptions(

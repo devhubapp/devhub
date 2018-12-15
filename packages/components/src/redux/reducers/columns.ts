@@ -1,12 +1,13 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { columnsArrToState, subscriptionsArrToState } from '@devhub/core'
 import {
   ActivityColumn,
   Column,
+  columnsArrToState,
   NotificationColumn,
-} from '@devhub/core/src/types'
+  subscriptionsArrToState,
+} from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {

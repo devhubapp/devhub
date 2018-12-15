@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   Column,
   ColumnSubscription,
-  DEFAULT_PAGINATION_PER_PAGE,
+  constants,
   EnhancedGitHubNotification,
   getOlderNotificationDate,
   NotificationColumnSubscription,
@@ -103,7 +103,7 @@ export const NotificationCardsContainer = React.memo(
     const fetchNextPage = ({
       perPage: _perPage,
     }: { perPage?: number } = {}) => {
-      const perPage = _perPage || DEFAULT_PAGINATION_PER_PAGE
+      const perPage = _perPage || constants.DEFAULT_PAGINATION_PER_PAGE
       const currentPage = Math.ceil(
         (subscription.data.items || []).length / perPage,
       )

@@ -1,9 +1,8 @@
 import React from 'react'
 
+import { GitHubUser } from '@devhub/core'
 import { RenderItem, RowList } from './RowList'
 import { UserRow } from './UserRow'
-
-import { GitHubUser } from '@devhub/core/src/types'
 
 export interface UserListRowProps {
   isRead: boolean

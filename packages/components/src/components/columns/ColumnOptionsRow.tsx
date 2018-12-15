@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React from 'react'
 import { View, ViewStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core/src/types'
+import { GitHubIcon } from '@devhub/core'
 import * as colors from '../../styles/colors'
 import {
   columnHeaderItemContentSize,

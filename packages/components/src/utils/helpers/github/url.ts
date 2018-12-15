@@ -1,7 +1,4 @@
-import {
-  fixURLForPlatform,
-  GitHubURLOptions,
-} from '@devhub/core/src/utils/helpers/github/url'
+import { fixURLForPlatform, GitHubURLOptions } from '@devhub/core'
 import { Platform } from '../../../libs/platform'
 
 export function fixURL(url?: string, options?: GitHubURLOptions) {

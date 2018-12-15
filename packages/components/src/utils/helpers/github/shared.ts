@@ -1,13 +1,11 @@
 import {
+  getCommitIconAndColor,
   GitHubIcon,
   GitHubIssue,
   GitHubNotification,
   GitHubPullRequest,
-} from '@devhub/core/src/types'
-import {
-  getCommitIconAndColor,
   isPullRequest,
-} from '@devhub/core/src/utils/helpers/github/shared'
+} from '@devhub/core'
 import * as colors from '../../../styles/colors'
 
 export function getPullRequestIconAndColor(pullRequest: {

@@ -3,8 +3,9 @@ import {
   ColumnCreation,
   ColumnSubscription,
   ColumnSubscriptionCreation,
-} from '..'
-import { getUniqueIdForSubscription, guid } from '../utils'
+} from '../types'
+import { getUniqueIdForSubscription } from './github/shared'
+import { guid } from './shared'
 
 export function columnsArrToState(
   columns: ColumnCreation[],

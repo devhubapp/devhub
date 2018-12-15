@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, View } from 'react-native'
 
-import { EnhancedGitHubEvent, LoadState } from '@devhub/core/src/types'
+import { EnhancedGitHubEvent, LoadState } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'

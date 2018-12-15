@@ -1,7 +1,7 @@
 import React from 'react'
-import { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native'
+import { Animated, StyleProp, TextStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core/src/types'
+import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'

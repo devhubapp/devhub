@@ -1,7 +1,7 @@
 import React from 'react'
 import { Animated, StyleSheet, Text, View } from 'react-native'
 
-import { Theme } from '@devhub/core/src/types'
+import { Theme } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'

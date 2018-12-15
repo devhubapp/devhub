@@ -1,11 +1,7 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { ThemePair } from '@devhub/core/src/types'
-import {
-  DEFAULT_DARK_THEME,
-  DEFAULT_LIGHT_THEME,
-} from '@devhub/core/src/utils/constants'
+import { constants, ThemePair } from '@devhub/core'
 import { loadTheme } from '../../styles/utils'
 import { Reducer } from '../types'
 
@@ -16,8 +12,8 @@ export interface State {
 }
 
 const initialState: State = {
-  preferredDarkTheme: { id: DEFAULT_DARK_THEME },
-  preferredLightTheme: { id: DEFAULT_LIGHT_THEME },
+  preferredDarkTheme: { id: constants.DEFAULT_DARK_THEME },
+  preferredLightTheme: { id: constants.DEFAULT_LIGHT_THEME },
   theme: { id: 'auto' },
 }
 

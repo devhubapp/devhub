@@ -1,7 +1,7 @@
 import React from 'react'
 import { Animated, Text, View, ViewStyle } from 'react-native'
 
-import { LoadState } from '@devhub/core/src/types'
+import { LoadState } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'

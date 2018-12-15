@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import { API_BASE_URL } from '@devhub/core/src/utils/constants'
+import { constants } from '@devhub/core'
 import { Browser } from '../browser'
 import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
 
@@ -14,7 +14,7 @@ export async function executeOAuth(scope: string[]) {
   })
 
   // console.log('[OAUTH] Opening browser...')
-  Browser.openURL(`${API_BASE_URL}/oauth/github?${querystring}`)
+  Browser.openURL(`${constants.API_BASE_URL}/oauth/github?${querystring}`)
 
   const url = await listenForNextUrl()
   // console.log('[OAUTH] Received URL:', url)

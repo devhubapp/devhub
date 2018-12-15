@@ -1,6 +1,6 @@
 import immer from 'immer'
 
-import { ModalPayload } from '@devhub/core/src/types'
+import { ModalPayload } from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {

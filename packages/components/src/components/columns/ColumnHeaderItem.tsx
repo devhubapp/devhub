@@ -6,10 +6,9 @@ import {
   StyleSheet,
   TextStyle,
   View,
-  ViewStyle,
 } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core/src/types'
+import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'

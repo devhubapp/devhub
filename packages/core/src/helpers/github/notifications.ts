@@ -4,11 +4,11 @@ import _ from 'lodash'
 import {
   EnhancedGitHubNotification,
   EnhancementCache,
-  getCommentIdFromUrl,
-  getOwnerAndRepo,
   GitHubNotification,
   NotificationPayloadEnhancement,
-} from '../..'
+} from '../../types'
+import { getOwnerAndRepo } from './shared'
+import { getCommentIdFromUrl } from './url'
 
 export async function getNotificationsEnhancementMap(
   notifications: EnhancedGitHubNotification[],

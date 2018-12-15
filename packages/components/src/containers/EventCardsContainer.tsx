@@ -5,7 +5,7 @@ import {
   ActivityColumnSubscription,
   Column,
   ColumnSubscription,
-  DEFAULT_PAGINATION_PER_PAGE,
+  constants,
   EnhancedGitHubEvent,
   getOlderEventDate,
   Omit,
@@ -92,7 +92,7 @@ export const EventCardsContainer = React.memo(
     const fetchNextPage = ({
       perPage: _perPage,
     }: { perPage?: number } = {}) => {
-      const perPage = _perPage || DEFAULT_PAGINATION_PER_PAGE
+      const perPage = _perPage || constants.DEFAULT_PAGINATION_PER_PAGE
       const currentPage = Math.ceil(
         (subscription.data.items || []).length / perPage,
       )

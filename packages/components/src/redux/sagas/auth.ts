@@ -2,12 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { REHYDRATE } from 'redux-persist'
 import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
-import {
-  fromGitHubUser,
-  GitHubUser,
-  GRAPHQL_ENDPOINT,
-  User,
-} from '@devhub/core'
+import { constants, fromGitHubUser, GitHubUser, User } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
 import { bugsnag } from '../../libs/bugsnag'
 import * as github from '../../libs/github'
@@ -73,7 +68,7 @@ function* onLoginRequest(
       }
       errors?: any[]
     }> = yield axios.post(
-      GRAPHQL_ENDPOINT,
+      constants.GRAPHQL_ENDPOINT,
       {
         query: `query auth {
           login {

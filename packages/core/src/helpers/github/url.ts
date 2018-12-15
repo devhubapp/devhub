@@ -1,4 +1,4 @@
-import { GitHubRepo } from '../../../types'
+import { GitHubRepo } from '../../types'
 
 export interface GitHubURLOptions {
   addBottomAnchor?: boolean

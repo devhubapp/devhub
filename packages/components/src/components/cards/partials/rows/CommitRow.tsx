@@ -1,13 +1,13 @@
 import React from 'react'
 import { Animated, View } from 'react-native'
 
-import { tryGetUsernameFromGitHubEmail } from '@devhub/core/src/utils/helpers/github/shared'
 import {
   getCommentIdFromUrl,
   getGitHubSearchURL,
   getGitHubURLForUser,
-} from '@devhub/core/src/utils/helpers/github/url'
-import { trimNewLinesAndSpaces } from '@devhub/core/src/utils/helpers/shared'
+  trimNewLinesAndSpaces,
+  tryGetUsernameFromGitHubEmail,
+} from '@devhub/core'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { AnimatedIcon } from '../../../animated/AnimatedIcon'

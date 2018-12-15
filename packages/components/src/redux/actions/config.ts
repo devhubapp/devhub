@@ -1,4 +1,4 @@
-import { ThemePair } from '@devhub/core/src/types'
+import { ThemePair } from '@devhub/core'
 import { createAction } from '../helpers'
 
 export function setTheme(payload: {

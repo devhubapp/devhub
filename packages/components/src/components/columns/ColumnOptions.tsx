@@ -2,11 +2,12 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 
-import { Column, GitHubIcon } from '@devhub/core/src/types'
 import {
+  Column,
   eventTypes,
   getEventTypeMetadata,
-} from '@devhub/core/src/utils/helpers/github/events'
+  GitHubIcon,
+} from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useDimensions } from '../../hooks/use-dimensions'
 import * as actions from '../../redux/actions'

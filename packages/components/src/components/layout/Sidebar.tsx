@@ -1,8 +1,7 @@
 import React from 'react'
 import { Animated, Image, ScrollView, StyleSheet, View } from 'react-native'
 
-import { ModalPayload } from '@devhub/core/src/types'
-import { getColumnHeaderDetails } from '@devhub/core/src/utils/helpers/github/events'
+import { getColumnHeaderDetails, ModalPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useColumn } from '../../hooks/use-column'
 import * as actions from '../../redux/actions'

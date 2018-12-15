@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { all, fork, put, select, take, takeLatest } from 'redux-saga/effects'
 
 import {
-  GRAPHQL_ENDPOINT,
+  constants,
   jsonToGraphQLQuery,
   removeUndefinedFields,
   User,
@@ -73,7 +73,7 @@ function* onSyncDown() {
       }
       errors?: any[]
     }> = yield axios.post(
-      GRAPHQL_ENDPOINT,
+      constants.GRAPHQL_ENDPOINT,
       {
         query: jsonToGraphQLQuery({
           query: {
@@ -148,7 +148,7 @@ async function syncUp(state: RootState) {
       replaceColumnsAndSubscriptions: boolean
       errors?: any[]
     }> = await axios.post(
-      GRAPHQL_ENDPOINT,
+      constants.GRAPHQL_ENDPOINT,
       {
         // TODO: do it the right way ffs
         query: jsonToGraphQLQuery({

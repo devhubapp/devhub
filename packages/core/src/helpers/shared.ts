@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import moment, { MomentInput } from 'moment'
-import { EnhancedGitHubEvent, GitHubNotification } from '../../types'
+
+import { EnhancedGitHubEvent, GitHubNotification } from '..'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, _.toUpper)

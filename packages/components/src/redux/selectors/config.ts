@@ -1,8 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { ThemePair } from '@devhub/core/src/types'
-import * as constants from '@devhub/core/src/utils/constants'
-import { isNight } from '@devhub/core/src/utils/helpers/shared'
+import { constants, isNight, ThemePair } from '@devhub/core'
 import { loadTheme } from '../../styles/utils'
 import { RootState } from '../types'
 

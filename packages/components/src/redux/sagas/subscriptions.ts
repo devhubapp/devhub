@@ -14,8 +14,8 @@ import {
 import {
   Column,
   ColumnSubscription,
+  constants,
   createNotificationsCache,
-  DEFAULT_PAGINATION_PER_PAGE,
   EnhancedGitHubEvent,
   EnhancementCache,
   enhanceNotifications,
@@ -170,7 +170,10 @@ function* onFetchRequest(
   const hasPrivateAccess = selectors.githubHasPrivateAccessSelector(state)
 
   const page = Math.max(1, _params.page || 1)
-  const perPage = Math.min(_params.perPage || DEFAULT_PAGINATION_PER_PAGE, 50)
+  const perPage = Math.min(
+    _params.perPage || constants.DEFAULT_PAGINATION_PER_PAGE,
+    50,
+  )
 
   delete _params.page
   delete _params.perPage

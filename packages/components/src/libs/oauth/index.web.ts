@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import { API_BASE_URL } from '@devhub/core/src/utils/constants'
+import { constants } from '@devhub/core'
 import { Platform } from '../platform/index.web'
 import { listenForNextMessageData } from './helpers.web'
 
@@ -30,7 +30,9 @@ export async function executeOAuth(scope: string[]) {
   })
 
   // console.log('[OAUTH] Opening popup...')
-  const popup = popupWindow(`${API_BASE_URL}/oauth/github?${querystring}`)
+  const popup = popupWindow(
+    `${constants.API_BASE_URL}/oauth/github?${querystring}`,
+  )
 
   try {
     const data = await listenForNextMessageData(popup)

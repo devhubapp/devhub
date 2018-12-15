@@ -1,8 +1,10 @@
 import React from 'react'
 
-import { GitHubRepo } from '@devhub/core/src/types'
-import { getOwnerAndRepo } from '@devhub/core/src/utils/helpers/github/shared'
-import { getRepoFullNameFromObject } from '@devhub/core/src/utils/helpers/github/url'
+import {
+  getOwnerAndRepo,
+  getRepoFullNameFromObject,
+  GitHubRepo,
+} from '@devhub/core'
 import { RepositoryRow } from './RepositoryRow'
 import { RenderItem, RowList } from './RowList'
 

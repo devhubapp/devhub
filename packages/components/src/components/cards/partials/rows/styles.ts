@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { StyleSheet } from 'react-native'
 
-import { Theme } from '@devhub/core/src/types/themes'
+import { Theme } from '@devhub/core'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { contentPadding, smallTextSize } from '../../../../styles/variables'
 
