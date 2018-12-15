@@ -417,6 +417,8 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           const canShowPrivateContent =
             hasPrivateAccess || column.type === 'notifications'
 
+          if (!canShowPrivateContent && !isPrivateChecked) return null
+
           const getFilterValue = (
             showPublic?: boolean,
             showPrivate?: boolean,
