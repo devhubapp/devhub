@@ -7,6 +7,12 @@ export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, _.toUpper)
 }
 
+export function memoizeMultipleArgs<FN extends (...args: any[]) => any>(
+  fn: FN,
+): FN {
+  return _.memoize(fn, (...args) => JSON.stringify(args))
+}
+
 export function guid() {
   const str4 = () =>
     (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1) // tslint:disable-line

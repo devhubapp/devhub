@@ -33,8 +33,8 @@ export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {
 
     return (
       <RepositoryRow
-        key={`repo-row-${repo.id}`}
         {...props}
+        key={`repo-row-${repo.id}`}
         ownerName={repoOwnerName!}
         repositoryName={repoName!}
         showMoreItemsIndicator={showMoreItemsIndicator}
