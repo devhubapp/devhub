@@ -33,6 +33,10 @@ html, body, #root, #root > div {
 
 body {
   background-color: #1c1c1c;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .snap-container {
