@@ -193,13 +193,19 @@ export const subscriptionsReducer: Reducer<State> = (
         // draft.updatedAt = new Date().toISOString()
       })
 
-    case 'SAVE_ITEM_FOR_LATER':
+    case 'SAVE_ITEMS_FOR_LATER':
       return immer(state, draft => {
+        if (!(action.payload.itemIds && action.payload.itemIds.length)) return
         if (!draft.allIds) return
         if (!draft.byId) return
 
         const keys = Object.keys(draft.byId)
         if (!(keys && keys.length)) return
+
+        const stringIds =
+          action.payload.itemIds &&
+          action.payload.itemIds.map(id => `${id || ''}`.trim()).filter(Boolean)
+        if (!(stringIds && stringIds.length)) return
 
         keys.forEach(id => {
           const subscription = draft.byId[id]
@@ -215,7 +221,7 @@ export const subscriptionsReducer: Reducer<State> = (
 
           subscription.data.items = (subscription.data.items as any).map(
             (item: any) => {
-              if (!(item && `${item.id}` === action.payload.itemId)) return item
+              if (!(item && stringIds.includes(`${item.id}`))) return item
 
               return {
                 ...item,

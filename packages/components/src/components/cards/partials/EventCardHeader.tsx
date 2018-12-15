@@ -21,7 +21,7 @@ export interface EventCardHeaderProps {
   cardIconColor?: string
   cardIconName: GitHubIcon
   createdAt: MomentInput
-  id: string | number
+  ids: Array<string | number>
   isBot: boolean
   isPrivate?: boolean
   isSaved?: boolean
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 export function EventCardHeader(props: EventCardHeaderProps) {
   const theme = useAnimatedTheme()
 
-  const saveItemForLater = useReduxAction(actions.saveItemForLater)
+  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   const {
     actionText,
@@ -64,7 +64,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     cardIconColor,
     cardIconName,
     createdAt,
-    id,
+    ids,
     isBot,
     isPrivate,
     isSaved,
@@ -76,7 +76,10 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   const username = isBot ? _username!.replace('[bot]', '') : _username
 
   return (
-    <View key={`event-card-header-${id}-inner`} style={styles.container}>
+    <View
+      key={`event-card-header-${ids.join(',')}-inner`}
+      style={styles.container}
+    >
       <View
         style={[
           getCardStylesForTheme(theme).leftColumn,
@@ -159,7 +162,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 ? colors.brandBackgroundColor
                 : theme.foregroundColorMuted50
             }
-            onPress={() => saveItemForLater({ itemId: id, save: !isSaved })}
+            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
           />
           <CardIcon name={cardIconName} color={cardIconColor} />
         </View>

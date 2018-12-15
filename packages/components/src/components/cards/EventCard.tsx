@@ -177,7 +177,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         createdAt={event.created_at}
-        id={id}
+        ids={('merged' in event && event.merged) || [id]}
         isBot={isBot}
         isPrivate={isPrivate}
         isSaved={isSaved}

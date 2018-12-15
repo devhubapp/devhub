@@ -19,7 +19,7 @@ import { CardIcon } from './CardIcon'
 export interface NotificationCardHeaderProps {
   cardIconColor?: string
   cardIconName: GitHubIcon
-  id: string | number
+  ids: Array<string | number>
   isPrivate?: boolean
   isRead: boolean
   isSaved?: boolean
@@ -56,12 +56,12 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const theme = useAnimatedTheme()
 
   const username = useReduxState(selectors.currentUsernameSelector)
-  const saveItemForLater = useReduxAction(actions.saveItemForLater)
+  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   const {
     cardIconColor,
     cardIconName,
-    id,
+    ids,
     isPrivate,
     isRead,
     isSaved,
@@ -72,7 +72,10 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   } = props
 
   return (
-    <View key={`notification-card-header-${id}-inner`} style={styles.container}>
+    <View
+      key={`notification-card-header-${ids.join(',')}-inner`}
+      style={styles.container}
+    >
       <View
         style={[
           getCardStylesForTheme(theme).leftColumn,
@@ -129,7 +132,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 ? colors.brandBackgroundColor
                 : theme.foregroundColorMuted50
             }
-            onPress={() => saveItemForLater({ itemId: id, save: !isSaved })}
+            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
           />
           <CardIcon name={cardIconName} color={cardIconColor} />
         </View>

@@ -150,7 +150,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         key={`notification-card-header-${id}`}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
-        id={id}
+        ids={[id]}
         isPrivate={isPrivate}
         isRead={isRead}
         isSaved={isSaved}

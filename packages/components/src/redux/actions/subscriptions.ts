@@ -45,11 +45,11 @@ export function fetchSubscriptionFailure<E extends Error>(
   )
 }
 
-export function saveItemForLater(payload: {
-  itemId: string | number
+export function saveItemsForLater(payload: {
+  itemIds: Array<string | number>
   save?: boolean
 }) {
-  return createAction('SAVE_ITEM_FOR_LATER', payload)
+  return createAction('SAVE_ITEMS_FOR_LATER', payload)
 }
 
 export function clearArchivedItems(payload: {
