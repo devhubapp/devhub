@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Animated, StyleSheet, Text, View } from 'react-native'
 
 import { Theme } from '@devhub/core'
@@ -19,6 +19,7 @@ import { useTheme } from '../context/ThemeContext'
 export function ThemePreference() {
   const appTheme = useTheme()
   const appAnimatedTheme = useAnimatedTheme()
+
   const currentThemeId = useReduxState(selectors.themePairSelector).id
   const preferredDarkTheme = useReduxState(
     selectors.preferredDarkThemePairSelector,
@@ -26,8 +27,18 @@ export function ThemePreference() {
   const preferredLightTheme = useReduxState(
     selectors.preferredLightThemePairSelector,
   )
-  const setPreferrableTheme = useReduxAction(actions.setPreferrableTheme)
+
   const setTheme = useReduxAction(actions.setTheme)
+
+  const lastThemeId = useRef(appTheme.id)
+
+  useEffect(
+    () => {
+      if (currentThemeId === 'auto') return
+      lastThemeId.current = currentThemeId
+    },
+    [appTheme.id],
+  )
 
   const preferredDarkThemeId = preferredDarkTheme && preferredDarkTheme.id
   const preferredLightThemeId = preferredLightTheme && preferredLightTheme.id
@@ -45,17 +56,10 @@ export function ThemePreference() {
         analyticsLabel={undefined}
         key={`theme-button-${theme.id}`}
         onPress={() => {
-          if (currentThemeId === 'auto') {
-            setPreferrableTheme({
-              id: theme.id,
-              color: theme.backgroundColor,
-            })
-          } else {
-            setTheme({
-              id: theme.id,
-              color: theme.backgroundColor,
-            })
-          }
+          setTheme({
+            id: theme.id,
+            color: theme.backgroundColor,
+          })
         }}
       >
         <View
@@ -133,11 +137,7 @@ export function ThemePreference() {
           analyticsLabel="auto_theme"
           onValueChange={enableAutoTheme =>
             setTheme({
-              id: enableAutoTheme
-                ? 'auto'
-                : appTheme.isDark
-                ? preferredLightThemeId
-                : preferredDarkThemeId,
+              id: enableAutoTheme ? 'auto' : lastThemeId.current,
             })
           }
           value={currentThemeId === 'auto'}
