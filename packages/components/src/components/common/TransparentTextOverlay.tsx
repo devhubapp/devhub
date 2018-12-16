@@ -3,6 +3,7 @@ import { Animated, StyleProp, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme.shared'
+import { Platform } from '../../libs/platform'
 import { AnimatedGradientLayerOverlay } from './GradientLayerOverlay'
 
 export type From = 'top' | 'bottom' | 'left' | 'right'
@@ -21,9 +22,11 @@ export interface AnimatedTransparentTextOverlayProps {
 
 export const AnimatedTransparentTextOverlay = React.memo(
   (props: AnimatedTransparentTextOverlayProps) => {
-    const theme = useAnimatedTheme()
-
     const { children, containerStyle, from, themeColor, ...otherProps } = props
+
+    if (Platform.OS === 'web') return children as any
+
+    const theme = useAnimatedTheme()
 
     const color = theme[themeColor]
 
