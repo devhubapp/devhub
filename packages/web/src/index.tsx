@@ -18,9 +18,11 @@ const render = (AppComponent: ComponentType) => {
 
 render(App)
 
+/*
 if (typeof module !== 'undefined' && (module as any).hot) {
   ;(module as any).hot.accept('@devhub/components/src/components/App', () => {
     const NewApp = require('@devhub/components/src/components/App').App
     render(NewApp)
   })
 }
+*/

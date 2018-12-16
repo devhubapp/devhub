@@ -154,6 +154,7 @@ export function configureStore(key = 'root') {
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
+  /*
   // TODO: Fix this
   // Make it keep the current open modal opened
   // Also make sure the middlewares (persist, saga, devtools, etc)
@@ -165,6 +166,7 @@ export function configureStore(key = 'root') {
       })
     }
   }
+  */
 
   const sagaMiddleware = createSagaMiddleware()
 
