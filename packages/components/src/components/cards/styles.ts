@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { StyleSheet } from 'react-native'
 
-import { memoizeMultipleArgs, Theme } from '@devhub/core'
+import { Theme } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { Platform } from '../../libs/platform'
 import {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const getCardStylesForTheme = memoizeMultipleArgs(
+export const getCardStylesForTheme = _.memoize(
   (theme: Theme | ReturnType<typeof useAnimatedTheme>) => {
     return {
       ...styles,
