@@ -72,9 +72,9 @@ export function useAnimatedTheme() {
         themeRef.current = newTheme
 
         Animated.timing(animatedValueRef.current, {
-          easing: Easing.linear,
+          easing: Easing.out(Easing.ease),
           toValue: 1,
-          duration: 150,
+          duration: 200,
         }).start()
 
         setAnimatedTheme({ ...animatedTheme })

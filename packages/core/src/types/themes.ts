@@ -13,12 +13,7 @@ export interface ThemePair {
   color?: string
 }
 
-export interface Theme {
-  id: ThemeName
-  displayName: string
-  isDark: boolean
-  invert: () => Theme
-
+export interface ThemeColors {
   backgroundColor: string
   backgroundColorDarker08: string
   backgroundColorLess08: string
@@ -29,4 +24,11 @@ export interface Theme {
   foregroundColorMuted50: string
   foregroundColorTransparent50: string
   foregroundColorTransparent80: string
+}
+
+export interface Theme extends ThemeColors {
+  id: ThemeName
+  displayName: string
+  isDark: boolean
+  invert: () => Theme
 }

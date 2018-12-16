@@ -5,8 +5,8 @@ import { EnhancedGitHubNotification, LoadState } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedTransparentTextOverlay } from '../animated/AnimatedTransparentTextOverlay'
 import { Button } from '../common/Button'
+import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -92,9 +92,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   return (
     <AnimatedTransparentTextOverlay
-      color={theme.backgroundColor as any}
-      size={contentPadding}
       from="vertical"
+      size={contentPadding}
+      themeColor="backgroundColor"
     >
       <FlatList
         key="notification-cards-flat-list"

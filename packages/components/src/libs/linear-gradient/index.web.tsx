@@ -1,16 +1,17 @@
+import { Omit } from '@devhub/core'
 import React from 'react'
-import { StyleProp, View, ViewStyle } from 'react-native'
+import { Animated, StyleProp, View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
-import { Platform } from '../platform'
 
 type LinearGradientPoint =
   | OriginalLinearGradientProps['start']
   | OriginalLinearGradientProps['end']
 
-export interface LinearGradientProps extends OriginalLinearGradientProps {
-  height: number
+export interface LinearGradientProps
+  extends Omit<OriginalLinearGradientProps, 'colors'> {
+  animated?: boolean
+  colors: Array<string | Animated.AnimatedInterpolation>
   style?: StyleProp<ViewStyle>
-  width: number
 }
 
 const radToDeg = (angle: number) => angle * (180 / Math.PI)
@@ -35,6 +36,7 @@ const propsToLinearGradient = ({
 export function LinearGradient(props: LinearGradientProps) {
   const {
     accessibilityStates: _accessibilityStates,
+    animated,
     colors,
     end,
     // locations,
@@ -43,18 +45,15 @@ export function LinearGradient(props: LinearGradientProps) {
     ...otherProps
   } = props
 
-  const backgroundField = Platform.select({
-    web: 'backgroundImage',
-    default: 'background',
-  })
+  const ViewComponent = animated ? Animated.View : View
 
   return (
-    <View
+    <ViewComponent
       {...otherProps}
       style={[
         style,
         {
-          [backgroundField]: propsToLinearGradient({
+          backgroundImage: propsToLinearGradient({
             colors,
             end,
             // locations,
@@ -64,4 +63,10 @@ export function LinearGradient(props: LinearGradientProps) {
       ]}
     />
   )
+}
+
+export interface AnimatedLinearGradientProps extends LinearGradientProps {}
+
+export function AnimatedLinearGradient(props: AnimatedLinearGradientProps) {
+  return <LinearGradient {...props} animated />
 }

@@ -5,8 +5,8 @@ import { LoadState } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
-import { AnimatedTransparentTextOverlay } from '../animated/AnimatedTransparentTextOverlay'
 import { Button } from '../common/Button'
+import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 
 const clearMessages = [
   'All clear!',
@@ -98,9 +98,9 @@ export function EmptyCards(props: EmptyCardsProps) {
 
   return (
     <AnimatedTransparentTextOverlay
-      color={theme.backgroundColor as any}
-      size={contentPadding}
       from="vertical"
+      size={contentPadding}
+      themeColor="backgroundColor"
     >
       <View style={{ flex: 1 }}>
         <View style={{ height: headerOrFooterHeight }} />

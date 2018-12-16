@@ -1,9 +1,8 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { ScrollView } from 'react-native'
 
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { contentPadding } from '../../../../styles/variables'
-import { AnimatedTransparentTextOverlay } from '../../../animated/AnimatedTransparentTextOverlay'
+import { AnimatedTransparentTextOverlay } from '../../../common/TransparentTextOverlay'
 
 export type RenderItem<T> = (
   params: { item: T; index: number; showMoreItemsIndicator?: boolean },
@@ -18,8 +17,6 @@ export interface RowListProps<T> {
 }
 
 export const RowList = React.memo((props: RowListProps<any>) => {
-  const theme = useAnimatedTheme()
-
   const { data, maxHeight = 220, maxLength = 5, narrow, renderItem } = props
   if (!(data && data.length > 0)) return null
 
@@ -35,10 +32,10 @@ export const RowList = React.memo((props: RowListProps<any>) => {
 
   return (
     <AnimatedTransparentTextOverlay
-      color={theme.backgroundColor as any}
-      size={narrow ? contentPadding / 2 : contentPadding}
-      from="vertical"
       containerStyle={{ flex: 0 }}
+      from="vertical"
+      size={narrow ? contentPadding / 2 : contentPadding}
+      themeColor="backgroundColor"
     >
       <ScrollView
         alwaysBounceVertical={false}
