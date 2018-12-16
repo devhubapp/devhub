@@ -49,7 +49,7 @@ export const columnsReducer: Reducer<State> = (
 
         if (!(normalized.allIds.length === 1)) return
 
-        draft.allIds.unshift(normalized.allIds[0])
+        draft.allIds.push(normalized.allIds[0])
 
         Object.assign(draft.byId, normalized.byId)
 
