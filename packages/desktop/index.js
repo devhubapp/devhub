@@ -11,7 +11,6 @@ function createWindow() {
         show: false
     })
 
-    // URL is argument to npm start
     const url = 'https://devhubapp.com'
     mainWindow.loadURL(url)
 
