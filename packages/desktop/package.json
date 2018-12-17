@@ -1,0 +1,28 @@
+{
+  "name": "devhub-desktop",
+  "version": "0.0.1",
+  "description": "devhub desktop client",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/devhubapp/devhub.git"
+  },
+  "keywords": [
+    "devhub",
+    "desktop",
+    "electron"
+  ],
+  "author": "amorist",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devhubapp/devhub/issues"
+  },
+  "homepage": "https://github.com/devhubapp/devhub#readme",
+  "dependencies": {
+    "electron": "^3.0.12"
+  }
+}
