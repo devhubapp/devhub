@@ -4,8 +4,48 @@
   "description": "devhub desktop client",
   "main": "index.js",
   "scripts": {
-    "start": "electron index.js",
+    "dev": "electron .",
+    "build": "electron-builder",
+    "patch": "npm version patch && git push origin master && git push origin --tags",
+    "minor": "npm version patch && git push origin master && git push origin --tags",
+    "major": "npm version patch && git push origin master && git push origin --tags",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "productName": "devhub",
+    "appId": "com.devhubapp.devhub",
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "index.js",
+      "node_modules/",
+      "package.json"
+    ],
+    "mac": {
+      "icon": ""
+    },
+    "win": {
+      "icon": ""
+    },
+    "linux": {
+      "icon": ""
+    }
   },
   "repository": {
     "type": "git",
@@ -22,7 +62,9 @@
     "url": "https://github.com/devhubapp/devhub/issues"
   },
   "homepage": "https://github.com/devhubapp/devhub#readme",
-  "dependencies": {
-    "electron": "^3.0.12"
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^3.0.12",
+    "electron-builder": "^20.38.3"
   }
 }
