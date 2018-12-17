@@ -19,6 +19,7 @@
     "dev": "concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\"",
     "dev:web": "concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/web start\"",
     "dev:mobile": "concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/mobile start\"",
+    "dev:desktop": "concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/desktop start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "now": "npx now",

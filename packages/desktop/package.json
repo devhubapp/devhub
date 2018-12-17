@@ -1,10 +1,10 @@
 {
-  "name": "devhub-desktop",
+  "name": "@devhub/desktop",
   "version": "0.0.1",
   "description": "devhub desktop client",
   "main": "index.js",
   "scripts": {
-    "dev": "electron .",
+    "start": "electron .",
     "build": "electron-builder",
     "patch": "npm version patch && git push origin master && git push origin --tags",
     "minor": "npm version patch && git push origin master && git push origin --tags",
