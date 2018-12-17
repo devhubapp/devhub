@@ -32,8 +32,7 @@ html, body, #root, #root > div {
 }
 
 body {
-  background-color: #1c1c1c;
-
+  background-color: #292c33;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

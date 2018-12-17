@@ -22,6 +22,7 @@ function getStyles(params: { theme: Theme }) {
       --theme_foregroundColorMuted50:${t.foregroundColorMuted50};
       --theme_foregroundColorTransparent50:${t.foregroundColorTransparent50};
       --theme_foregroundColorTransparent80:${t.foregroundColorTransparent80};
+      background-color:${t.backgroundColor};
     }
   `
 }
