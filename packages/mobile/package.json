@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@devhub/components": "0.39.2",
+    "jsc-android": "236355.1.1",
     "metro-react-native-babel-preset": "^0.50.0",
     "react": "^16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
