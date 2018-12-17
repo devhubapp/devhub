@@ -43,6 +43,7 @@ export function Screen(props: ScreenProps) {
   return (
     <>
       <AnimatedStatusBar
+        animated
         barStyle={theme.isDark ? 'light-content' : 'dark-content'}
         backgroundColor={
           statusBarBackgroundColor || (animatedTheme.backgroundColor as any)
