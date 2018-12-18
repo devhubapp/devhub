@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, nativeImage, TouchBar } from 'electron'
 
 let mainWindow: any
 
@@ -25,6 +25,16 @@ function createWindow() {
   // Show window when page is ready
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
+    if (process.platform === 'darwin') {
+      const spin = new TouchBar.TouchBarButton({
+        label: 'devhub',
+      })
+
+      const touchBar = new TouchBar({
+        items: [spin],
+      })
+      mainWindow.setTouchBar(touchBar)
+    }
   })
 }
 
@@ -44,3 +54,12 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+if (process.platform === 'darwin') {
+  app.setAboutPanelOptions({
+    applicationName: 'devhub',
+    applicationVersion: app.getVersion(),
+    copyright: 'Copyright 2018',
+    credits: 'devhub',
+  })
+}

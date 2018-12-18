@@ -35,12 +35,13 @@
       "output": "build"
     },
     "files": [
-      "src/main.js",
+      "dist/main.js",
+      "public/",
       "node_modules/",
       "package.json"
     ],
     "mac": {
-      "icon": ""
+      "icon": "public/static/icns/logo.icns"
     },
     "win": {
       "icon": ""
