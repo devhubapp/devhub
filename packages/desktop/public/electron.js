@@ -172,6 +172,7 @@ function createWindow() {
     height: 600,
     // Don't show the window until it ready, this prevents any white flickering
     show: false,
+    nodeIntegration: false
   })
 
   mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);

@@ -13,6 +13,7 @@ function getOSName(): PlatformOSType {
   if (/android/i.test(userAgent)) return 'android'
   if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream)
     return 'ios'
+  if (/electron/i.test(userAgent)) return 'electron'
   return 'web'
 }
 

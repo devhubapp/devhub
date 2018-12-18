@@ -31,7 +31,7 @@ module.exports = function override(config, env) {
     require.resolve('babel-plugin-react-native-web'),
   ].concat(config.module.rules[2].oneOf[1].options.plugins)
   config.module.rules = config.module.rules.filter(Boolean)
-
+  config.target = 'electron-renderer'
   config.plugins = config.plugins.map(plugin => {
     if (plugin.constructor.name !== 'ForkTsCheckerWebpackPlugin') return plugin
 
