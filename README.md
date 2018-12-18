@@ -35,8 +35,6 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - **Theme support**: Choose between 6 light or dark themes;
 - **And more!**: Native apps, keyboard shortcuts, open source, modern tech stack, ...
 
-<br/>
-
 ### Next features:
 
 - [ ] **Android app**: [#19](https://github.com/devhubapp/devhub/issues/19)
@@ -48,8 +46,6 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop ([#42](https://github.com/devhubapp/devhub/issues/42))
 
 > Which one do you want first? Any other recommendations? Search for [existing feature requests](https://github.com/devhubapp/devhub/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc) and add a 👍 reaction on them, or create a new one.
-
-<br/>
 
 ### Paid features:
 
@@ -75,12 +71,13 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | --------- | ---------------------------- | -------------- |
 | `Esc`     | Close current open modal     | ✅
 | `a`, `n`  | Add a new column             | ✅
-| `1`...`9` | Go to the `nth` column      | ✅
+| `1`...`9` | Go to the `nth` column       | ✅
 | `0`       | Go to the last column        | ✅
-| `j`, `k`  | Move down/up inside a column | [Contribute](https://github.com/devhubapp/devhub/blob/6157822c7723c85e11bf4bd781656a0204f81ab2/packages/components/src/screens/MainScreen.tsx#L94-L145)
-| `s`       | Toggle save item for later   | [Contribute](https://github.com/devhubapp/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133)
-| `Arrow keys` + `Space` | Focus on elements and press things | [Contribute](https://github.com/devhubapp/devhub/pulls)
-| `Alt + Arrow keys` | Move current column | [Contribute](https://github.com/devhubapp/devhub/pulls)
+| `j`, `k`  | Move down/up inside a column | [Contribute!](https://github.com/devhubapp/devhub/blob/6157822c7723c85e11bf4bd781656a0204f81ab2/packages/components/src/screens/MainScreen.tsx#L94-L145)
+| `s`       | Toggle save item for later   | [Contribute!](https://github.com/devhubapp/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133)
+| `Arrow keys` + `Space` | Focus on elements and press things | Contribute!
+| `Alt + Arrow keys` | Move current column | Contribute!
+| `?`       | Show keyboard shortcuts      | Contribute!
 
 
 <br/>
