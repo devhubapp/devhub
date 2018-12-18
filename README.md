@@ -24,16 +24,16 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 ## Features
 
-- **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on; made for power users;
-- **Inbox Zero**: Clear all the seen items and keep your mind clean; Archived items will be moved to a separate place;
-- **Filters**: Apply different filters to each column; remove all the noise and make them show just what you want;
-- **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc.;
-- **Sanely watch repositories**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
-- **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub doesn't show on your feed, like issue comments and pushed commits;
-- **Dashboard spier**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
-- **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
-- **Theme support**: Choose between 6 light or dark themes;
-- **And more!**: Native apps, keyboard shortcuts, open source, modern tech stack, ...
+- [x] **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on; made for power users;
+- [x] **Inbox Zero**: Clear all the seen items and keep your mind clean; Archived items will be moved to a separate place;
+- [x] **Filters**: Apply different filters to each column; remove all the noise and make them show just what you want;
+- [x] **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc.;
+- [x] **Sanely watch repositories**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
+- [x] **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub doesn't show on your feed, like issue comments and pushed commits;
+- [x] **Dashboard spier**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
+- [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
+- [x] **Theme support**: Choose between 6 light or dark themes;
+- [x] **And more!**: Native apps, keyboard shortcuts, open source, modern tech stack, ...
 
 ### Next features:
 
@@ -98,6 +98,8 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 - [Reselect](https://github.com/reduxjs/reselect)
 - [GraphQL](https://github.com/facebook/graphql)
 
+
+<br/>
 
 ## Contributing
 
