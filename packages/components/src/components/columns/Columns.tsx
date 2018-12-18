@@ -10,7 +10,8 @@ import {
 import { Omit } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
-import { Separator } from '../common/Separator'
+import { Separator, separatorSize } from '../common/Separator'
+import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 
 export interface ColumnsProps
@@ -37,8 +38,9 @@ function keyExtractor(columnId: string) {
 export const Columns = React.memo((props: ColumnsProps) => {
   const { columnIds, style, ...otherProps } = props
 
-  const flatListRef = useRef<FlatList<string>>(null)
   const { sizename } = useAppLayout()
+  const columnWidth = useColumnWidth()
+  const flatListRef = useRef<FlatList<string>>(null)
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -81,20 +83,21 @@ export const Columns = React.memo((props: ColumnsProps) => {
       ref={flatListRef}
       key="columns-flat-list"
       ItemSeparatorComponent={Separator}
-      ListFooterComponent={
-        sizename === '1-small' || (columnIds && columnIds.length)
-          ? Separator
-          : undefined
-      }
-      ListHeaderComponent={sizename === '1-small' ? Separator : undefined}
       bounces={!swipeable}
       className="snap-container"
       data={columnIds}
+      getItemLayout={(_data, index) => ({
+        index,
+        length: columnWidth + separatorSize,
+        offset: index * (columnWidth + separatorSize),
+      })}
       horizontal
       initialNumToRender={5}
       keyExtractor={keyExtractor}
       maxToRenderPerBatch={5}
-      onScrollToIndexFailed={() => undefined}
+      onScrollToIndexFailed={e => {
+        if (__DEV__) console.error(e)
+      }}
       pagingEnabled={pagingEnabled}
       removeClippedSubviews
       scrollEnabled={!swipeable}
