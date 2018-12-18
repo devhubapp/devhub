@@ -2,7 +2,6 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 
 import { EnhancedGitHubEvent, LoadState } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
@@ -23,8 +22,6 @@ export interface EventCardsProps {
 }
 
 export const EventCards = React.memo((props: EventCardsProps) => {
-  const theme = useAnimatedTheme()
-
   const { errorMessage, events, fetchNextPage, loadState, refresh } = props
 
   if (!(events && events.length))
