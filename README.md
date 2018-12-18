@@ -57,7 +57,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 
 - [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
-- [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks; contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com).
+- [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks; contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com) so we can work on this together.
 
 > Any suggestion for other paid features? Thoughts about the topic?  [Open an issue](https://github.com/devhubapp/devhub/issues/new)!
 
