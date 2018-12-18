@@ -62,7 +62,7 @@ This is a paid feature. If you are interested, please contact us via e-mail: [en
 | --------- | ---------------------------- | -------------- |
 | `Esc`     | Close current open modal     | ✅
 | `a`, `n`  | Add a new column             | ✅
-| `1`...`9` | Go the the `nth` column      | ✅
+| `1`...`9` | Go to the `nth` column      | ✅
 | `0`       | Go to the last column        | ✅
 | `j`, `k`  | Move down/up inside a column | [Contribute](https://github.com/devhubapp/devhub/blob/6157822c7723c85e11bf4bd781656a0204f81ab2/packages/components/src/screens/MainScreen.tsx#L94-L145)
 | `s`       | Toggle save item for later   | [Contribute](https://github.com/devhubapp/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133)
