@@ -6,7 +6,7 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "rm -rf dist && tsc && electron .",
-    "build": "tsc && electron-builder",
+    "build": "tsc && electron-builder -mw",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "patch": "npm version patch && git push origin master && git push origin --tags",
     "minor": "npm version patch && git push origin master && git push origin --tags",
@@ -44,10 +44,11 @@
       "icon": "public/static/icns/logo.icns"
     },
     "win": {
-      "icon": ""
+      "target": "nsis",
+      "icon": "public/static/icns/logo.ico"
     },
-    "linux": {
-      "icon": ""
+    "nsis": {
+      "oneClick": true
     }
   },
   "repository": {
