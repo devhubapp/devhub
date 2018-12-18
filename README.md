@@ -88,7 +88,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [Create React App](https://github.com/facebook/create-react-app)
-- [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/)
+- [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) (Monorepo)
 - [React](https://github.com/facebook/react) with [Hooks](https://reactjs.org/docs/hooks-intro.html)
 - [React Native](https://github.com/facebook/react-native)
 - [React Native Web](https://github.com/necolas/react-native-web)
