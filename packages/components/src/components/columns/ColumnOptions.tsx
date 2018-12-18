@@ -581,7 +581,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             <ColumnHeaderItem
               analyticsLabel="remove_column"
               iconName="trashcan"
-              onPress={() => deleteColumn(column.id)}
+              onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
               text="Remove"
             />
           </View>
