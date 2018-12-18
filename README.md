@@ -33,7 +33,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [x] **Dashboard spier**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Theme support**: Choose between 6 light or dark themes;
-- [x] **And more!**: Native apps, keyboard shortcuts, open source, modern tech stack, ...
+- [x] **And more!**: Native apps, keyboard shortcuts, modern tech stack, ...
 
 ### Next features:
 
@@ -53,7 +53,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 > "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
 
-DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It was created by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not plan to work with donations and, instead, plan to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
+DevHub plans to be a sustainable project. It's not made by a huge company like Facebook. It was created by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not plan to work with donations and, instead, plan to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
 
 - [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
