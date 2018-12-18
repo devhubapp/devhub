@@ -59,9 +59,11 @@ export const columnsReducer: Reducer<State> = (
     case 'DELETE_COLUMN':
       return immer(state, draft => {
         if (draft.allIds)
-          draft.allIds = draft.allIds.filter(id => id !== action.payload)
+          draft.allIds = draft.allIds.filter(
+            id => id !== action.payload.columnId,
+          )
 
-        if (draft.byId) delete draft.byId[action.payload]
+        if (draft.byId) delete draft.byId[action.payload.columnId]
 
         draft.updatedAt = new Date().toISOString()
       })

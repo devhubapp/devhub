@@ -18,8 +18,11 @@ export function addColumnAndSubscriptions(payload: ColumnAndSubscriptions) {
   return createAction('ADD_COLUMN_AND_SUBSCRIPTIONS', payload)
 }
 
-export function deleteColumn(columnId: string) {
-  return createAction('DELETE_COLUMN', columnId)
+export function deleteColumn(payload: {
+  columnId: string
+  columnIndex: number
+}) {
+  return createAction('DELETE_COLUMN', payload)
 }
 
 export function moveColumn(payload: { columnId: string; columnIndex: number }) {
