@@ -1,7 +1,9 @@
-const { app, BrowserWindow, TouchBar, Menu } = require('electron')
+const { app, BrowserWindow, TouchBar, Menu, Tray, nativeImage } = require('electron')
 const path = require('path')
 
-let mainWindow
+let mainWindow = null
+let trayWindow = null
+let tray = null
 
 var template = [
   {
@@ -187,9 +189,9 @@ function createWindow() {
 
   // Show window when page is ready
   mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
-    var menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+  mainWindow.show()
+  var menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
     if (process.platform === 'darwin') {
       const spin = new TouchBar.TouchBarButton({
         label: 'devhub',
@@ -203,9 +205,83 @@ function createWindow() {
   })
 }
 
+function createTrayWindow() {
+  trayWindow = new BrowserWindow({
+    width: 350,
+    height: 450,
+    show: false,
+    frame: false,
+    fullscreenable: false,
+    webPreferences: {
+      backgroundThrottling: false
+    }
+  })
+  trayWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
+
+  trayWindow.once('ready-to-show', () => {
+    const position = getWindowPosition()
+    trayWindow.setPosition(position.x, position.y, false)
+    trayWindow.show()
+    trayWindow.focus()
+  })
+  // Hide the window when it loses focus
+  trayWindow.on('blur', () => {
+    trayWindow.hide()
+  })
+}
+
+function createTray() {
+  const trayIcon = nativeImage.createFromPath(`${path.join(__dirname, '../build/static/media/logo.png')}`)
+  tray = new Tray(trayIcon.resize({
+    width: 22,
+    height: 22
+  }))
+
+  var trayMenuTemplate = [
+    {
+      label: 'Devhub',
+      click: function () {
+        trayWindow.hide()
+        toggleMainWindow()
+      }
+    },
+    {
+      label: 'Setting',
+      click: function () { }
+    },
+    {
+      label: 'Help',
+      click: function () { }
+    },
+    {
+      label: 'About',
+      click: function () {
+
+      }
+    },
+    {
+      label: 'Quit',
+      click: function () {
+        app.quit();
+      }
+    }
+  ];
+  tray.setToolTip(app.getName())
+
+  tray.on('click', () => {
+    toggleWindow()
+  })
+
+  tray.on('right-click', () => {
+    const contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
+    tray.popUpContextMenu(contextMenu)
+  })
+}
+
 // Wait until the app is ready
 app.on('ready', () => {
-  createWindow()
+  createTray()
+  createTrayWindow()
   if (process.platform == 'darwin') {
     app.setAboutPanelOptions({
       applicationName: 'devhub',
@@ -223,8 +299,47 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
+  if (trayWindow === null) {
+    createTray()
   }
 })
 
+function getWindowPosition() {
+  const windowBounds = trayWindow.getBounds()
+  const trayBounds = tray.getBounds()
+
+  // Center window horizontally below the tray icon
+  const x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2))
+
+  // Position window 4 pixels vertically below the tray icon
+  const y = Math.round(trayBounds.y + trayBounds.height + 4)
+
+  return { x: x, y: y }
+}
+
+// toggle window
+function toggleWindow() {
+  if (trayWindow.isVisible()) {
+    trayWindow.hide()
+  } else {
+    showTrayWindow()
+  }
+}
+
+// toggle main window
+function toggleMainWindow() {
+  if (mainWindow === null) {
+    createWindow()
+  } else if (mainWindow.isVisible()) {
+    mainWindow.hide()
+  } else {
+    mainWindow.show()
+  }
+}
+
+function showTrayWindow() {
+  const position = getWindowPosition()
+  trayWindow.setPosition(position.x, position.y, false)
+  trayWindow.show()
+  trayWindow.focus()
+}
