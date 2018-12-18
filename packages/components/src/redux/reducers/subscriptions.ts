@@ -32,7 +32,7 @@ export const subscriptionsReducer: Reducer<State> = (
     case REHYDRATE as any: {
       const subscriptions =
         action.payload && ((action.payload as any).subscriptions as State)
-      if (!subscriptions) return subscriptions || state
+      if (!subscriptions) return state
 
       return immer(subscriptions, draft => {
         draft.allIds = draft.allIds || []
