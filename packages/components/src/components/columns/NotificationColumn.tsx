@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { View } from 'react-native'
 
 import { getColumnHeaderDetails } from '@devhub/core'
 import {
@@ -19,6 +20,10 @@ export interface NotificationColumnProps
 }
 
 export function NotificationColumn(props: NotificationColumnProps) {
+  const [
+    columnOptionsAvailablHeight,
+    setColumnOptionsAvailablHeight,
+  ] = useState(0)
   const [showColumnOptions, setShowColumnOptions] = useState(false)
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
@@ -68,15 +73,26 @@ export function NotificationColumn(props: NotificationColumnProps) {
         />
       </ColumnHeader>
 
-      {!!showColumnOptions && (
-        <ColumnOptions column={column} columnIndex={columnIndex} />
-      )}
+      <View
+        style={{ flex: 1 }}
+        onLayout={e => {
+          setColumnOptionsAvailablHeight(e.nativeEvent.layout.height)
+        }}
+      >
+        {!!showColumnOptions && (
+          <ColumnOptions
+            availableHeight={columnOptionsAvailablHeight}
+            column={column}
+            columnIndex={columnIndex}
+          />
+        )}
 
-      <NotificationCardsContainer
-        key={`notification-cards-container-${column.id}`}
-        repoIsKnown={requestTypeIconAndData.repoIsKnown}
-        {...props}
-      />
+        <NotificationCardsContainer
+          key={`notification-cards-container-${column.id}`}
+          repoIsKnown={requestTypeIconAndData.repoIsKnown}
+          {...props}
+        />
+      </View>
     </Column>
   )
 }

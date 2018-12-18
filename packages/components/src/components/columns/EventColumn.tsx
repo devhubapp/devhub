@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { View } from 'react-native'
 
 import { getColumnHeaderDetails } from '@devhub/core'
 import {
@@ -18,6 +19,10 @@ export interface EventColumnProps extends EventCardsContainerProps {
 }
 
 export function EventColumn(props: EventColumnProps) {
+  const [
+    columnOptionsAvailablHeight,
+    setColumnOptionsAvailablHeight,
+  ] = useState(0)
   const [showColumnOptions, setShowColumnOptions] = useState(false)
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
@@ -68,15 +73,26 @@ export function EventColumn(props: EventColumnProps) {
         />
       </ColumnHeader>
 
-      {!!showColumnOptions && (
-        <ColumnOptions column={column} columnIndex={columnIndex} />
-      )}
+      <View
+        style={{ flex: 1 }}
+        onLayout={e => {
+          setColumnOptionsAvailablHeight(e.nativeEvent.layout.height)
+        }}
+      >
+        {!!showColumnOptions && (
+          <ColumnOptions
+            availableHeight={columnOptionsAvailablHeight}
+            column={column}
+            columnIndex={columnIndex}
+          />
+        )}
 
-      <EventCardsContainer
-        key={`event-cards-container-${column.id}`}
-        repoIsKnown={requestTypeIconAndData.repoIsKnown}
-        {...props}
-      />
+        <EventCardsContainer
+          key={`event-cards-container-${column.id}`}
+          repoIsKnown={requestTypeIconAndData.repoIsKnown}
+          {...props}
+        />
+      </View>
     </Column>
   )
 }
