@@ -1,0 +1,48 @@
+* {
+  transition: all 0.2s ease-out;
+  box-sizing: border-box;
+}
+
+.touchable-opacity {
+  transition: all 0.2s ease-out, opacity 0s;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: #49d3b580;
+}
+
+*:focus {
+  outline: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root, #root > div {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: #1c1c1c;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.snap-container {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-item-start {
+  scroll-snap-align: start;
+}

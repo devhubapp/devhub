@@ -1,17 +1,21 @@
 {
   "name": "@devhub/desktop",
-  "version": "0.0.1",
+  "version": "0.39.2",
   "private": false,
-  "description": "devhub desktop client",
-  "main": "dist/main.js",
+  "homepage": "./",
+  "main": "public/electron.js",
   "scripts": {
-    "start": "rm -rf dist && tsc && electron .",
-    "build": "tsc && electron-builder -mw",
-    "lint": "tslint -c tslint.json -p tsconfig.json",
-    "patch": "npm version patch && git push origin master && git push origin --tags",
-    "minor": "npm version patch && git push origin master && git push origin --tags",
-    "major": "npm version patch && git push origin master && git push origin --tags",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -b && react-app-rewired build && electron-builder -mw",
+    "clean": "rm -rf dist/*",
+    "eject": "react-app-rewired eject",
+    "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
+    "lint": "tslint -p .",
+    "now-build": "build",
+    "predeploy": "npm run build",
+    "prepare": "cd .. && yarn patch-package",
+    "serve": "serve dist",
+    "start": "tsc -b && react-app-rewired build && electron .",
+    "test": "react-app-rewired test"
   },
   "build": {
     "productName": "devhub",
@@ -35,9 +39,10 @@
       "output": "build"
     },
     "files": [
-      "dist/main.js",
-      "public/",
-      "node_modules/",
+      "main.js",
+      "dist/**/*",
+      "public/**/*",
+      "node_modules/**/*",
       "package.json"
     ],
     "mac": {
@@ -51,28 +56,43 @@
       "oneClick": true
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/devhubapp/devhub.git"
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@devhub/components": "0.39.2",
+    "react": "^16.7.0-alpha.2",
+    "react-app-polyfill": "^0.1.3",
+    "react-art": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2",
+    "react-native-web": "^0.9.8",
+    "react-scripts": "2.1.1",
+    "resize-observer-polyfill": "^1.5.0"
   },
-  "keywords": [
-    "devhub",
-    "desktop",
-    "electron"
-  ],
-  "author": "amorist",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/devhubapp/devhub/issues"
-  },
-  "homepage": "https://github.com/devhubapp/devhub#readme",
-  "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^23.3.10",
+    "@types/node": "^10.12.11",
+    "@types/react": "^16.7.11",
+    "@types/react-dom": "^16.0.11",
+    "babel-plugin-react-native-web": "^0.9.8",
     "electron": "^3.0.12",
     "electron-builder": "^20.38.3",
+    "postinstall-prepare": "^1.0.1",
+    "prettier": "^1.15.3",
+    "react-app-rewired": "^1.6.2",
+    "serve": "^10.1.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.17.0",
-    "typescript": "^3.2.1"
-  }
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.2.1",
+    "webpack-bundle-analyzer": "^3.0.3"
+  },
+  "resolutions": {
+    "scheduler": "0.12.0-alpha.3"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 9",
+    "not op_mini all"
+  ]
 }

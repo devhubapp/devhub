@@ -1,17 +1,31 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
+    "module": "esnext",
     "allowJs": false,
-    "composite": true,
-    "declaration": true,
-    "noEmit": false,
-    "outDir": "dist/",
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "noEmit": true,
+    "outDir": "dist",
     "rootDir": "src",
     "typeRoots": [
       "../../@types",
       "../../node_modules/@types"
     ]
-  }
+  },
+  "include": [
+    "src/index.tsx"
+  ],
+  "exclude": [
+    "src/setupProxy.js"
+  ],
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../components"
+    }
+  ]
 }
