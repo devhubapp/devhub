@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "allowJs": false,
+    "composite": true,
+    "declaration": true,
+    "noEmit": false,
+    "outDir": "dist/",
+    "rootDir": "src",
+    "typeRoots": [
+      "../../@types",
+      "../../node_modules/@types"
+    ]
+  }
+}

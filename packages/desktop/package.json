@@ -1,11 +1,13 @@
 {
   "name": "@devhub/desktop",
   "version": "0.0.1",
+  "private": false,
   "description": "devhub desktop client",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder",
+    "start": "rm -rf dist && tsc && electron .",
+    "build": "tsc && electron-builder",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
     "patch": "npm version patch && git push origin master && git push origin --tags",
     "minor": "npm version patch && git push origin master && git push origin --tags",
     "major": "npm version patch && git push origin master && git push origin --tags",
@@ -33,7 +35,7 @@
       "output": "build"
     },
     "files": [
-      "index.js",
+      "src/main.js",
       "node_modules/",
       "package.json"
     ],
@@ -65,6 +67,10 @@
   "dependencies": {},
   "devDependencies": {
     "electron": "^3.0.12",
-    "electron-builder": "^20.38.3"
+    "electron-builder": "^20.38.3",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.2.1"
   }
 }
