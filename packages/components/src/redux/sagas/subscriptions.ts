@@ -71,18 +71,23 @@ function* init() {
 
     const github = selectors.githubApiHeadersSelector(state)
 
+    // TODO: Eventually the number of subscriptions wont be 1x1 with the number of columns
+    // Because columns will be able to have multiple subscriptions.
+    // When that happens, improve this. Limit based on number of columns or subscriptions?
     const subscriptionsToFetch = _isFirstTime
-      ? subscriptions
-      : subscriptions.filter(
-          s =>
-            s &&
-            minimumRefetchTimeHasPassed(
-              s,
-              typeof github.pollInterval === 'number'
-                ? github.pollInterval * 1000
-                : undefined,
-            ),
-        )
+      ? subscriptions.slice(0, constants.COLUMNS_LIMIT)
+      : subscriptions
+          .slice(0, constants.COLUMNS_LIMIT)
+          .filter(
+            s =>
+              s &&
+              minimumRefetchTimeHasPassed(
+                s,
+                typeof github.pollInterval === 'number'
+                  ? github.pollInterval * 1000
+                  : undefined,
+              ),
+          )
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
     yield all(

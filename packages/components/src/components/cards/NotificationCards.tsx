@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, View } from 'react-native'
 
-import { EnhancedGitHubNotification, LoadState } from '@devhub/core'
+import { constants, EnhancedGitHubNotification, LoadState } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
@@ -13,6 +13,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
+  columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   loadState: LoadState
@@ -23,15 +24,28 @@ export interface NotificationCardsProps {
 }
 
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
-  const theme = useAnimatedTheme()
-
   const {
+    columnIndex,
     errorMessage,
     fetchNextPage,
     loadState,
     notifications,
     refresh,
   } = props
+
+  if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
+    return (
+      <EmptyCards
+        errorMessage={`You have reached the limit of ${
+          constants.COLUMNS_LIMIT
+        } columns. This is to maintain a healthy usage of the GitHub API.`}
+        errorTitle="Too many columns"
+        fetchNextPage={undefined}
+        loadState="error"
+        refresh={undefined}
+      />
+    )
+  }
 
   if (!(notifications && notifications.length))
     return (

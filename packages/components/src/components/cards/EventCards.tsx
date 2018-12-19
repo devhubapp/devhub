@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, View } from 'react-native'
 
-import { EnhancedGitHubEvent, LoadState } from '@devhub/core'
+import { constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
@@ -12,6 +12,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps {
+  columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   events: EnhancedGitHubEvent[]
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
@@ -22,9 +23,30 @@ export interface EventCardsProps {
 }
 
 export const EventCards = React.memo((props: EventCardsProps) => {
-  const { errorMessage, events, fetchNextPage, loadState, refresh } = props
+  const {
+    columnIndex,
+    errorMessage,
+    events,
+    fetchNextPage,
+    loadState,
+    refresh,
+  } = props
 
-  if (!(events && events.length))
+  if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
+    return (
+      <EmptyCards
+        errorMessage={`You have reached the limit of ${
+          constants.COLUMNS_LIMIT
+        } columns. This is to maintain a healthy usage of the GitHub API.`}
+        errorTitle="Too many columns"
+        fetchNextPage={undefined}
+        loadState="error"
+        refresh={undefined}
+      />
+    )
+  }
+
+  if (!(events && events.length)) {
     return (
       <EmptyCards
         errorMessage={errorMessage}
@@ -33,6 +55,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         refresh={refresh}
       />
     )
+  }
 
   function keyExtractor(event: EnhancedGitHubEvent) {
     return `event-card-${event.id}`
