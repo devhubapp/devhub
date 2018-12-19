@@ -76,6 +76,26 @@ function* init() {
       subscriptionsToFetch.map(function*(subscription) {
         if (!subscription) return
 
+        const fiveMinutes = 1000 * 60 * 5
+        const timeDiff = subscription.data.lastFetchedAt
+          ? Date.now() - new Date(subscription.data.lastFetchedAt).valueOf()
+          : undefined
+
+        if (
+          subscription &&
+          subscription.data &&
+          subscription.data.loadState === 'error' &&
+          (!timeDiff || timeDiff < fiveMinutes)
+        ) {
+          if (__DEV__) {
+            // tslint:disable-next-line no-console
+            console.debug(
+              'Ignoring subscription re-fetch due to recent fetch error.',
+            )
+          }
+          return
+        }
+
         return yield put(
           actions.fetchSubscriptionRequest({
             subscriptionId: subscription.id,
