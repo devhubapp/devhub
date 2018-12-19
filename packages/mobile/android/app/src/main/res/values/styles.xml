@@ -1,11 +1,14 @@
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/brand_background</item>
-        <item name="colorPrimaryDark">@color/brand_background</item>
+
+    <style name="SplashScreenTheme" parent="SplashScreen_SplashTheme">
+        <item name="android:windowBackground">@color/primary_dark</item>
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorPrimaryDark">@color/status_bar_color</item>
     </style>
 
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@color/brand_background</item>
-        <item name="colorPrimaryDark">@color/brand_foreground</item>
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/background_color_dark</item>
+        <item name="colorPrimary">@color/background_color_dark</item>
+        <item name="colorPrimaryDark">@color/background_color_dark</item>
     </style>
 </resources>
