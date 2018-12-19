@@ -122,7 +122,6 @@ export interface GitHubCommit {
   }
   url: string
   html_url: string
-  comments_url: string
   author?: GitHubUser
   committer: GitHubUser
   parents: Array<{
