@@ -219,6 +219,8 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
         <Button analyticsLabel="add_column" onPress={handleCreateColumn}>
           Add Column
         </Button>
+
+        <Spacer height={contentPadding} />
       </ScrollView>
     </ModalColumn>
   )
