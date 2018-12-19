@@ -19,7 +19,6 @@
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
@@ -35,8 +34,9 @@
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D02E4C91E0B4AEC006451C7 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* devhubTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* devhubTests.m */; };
+		2E0B32F621C9EE9800275D1B /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E6F6939201D16D9005C02A8 /* libSplashScreen.a */; };
+		2E0B333E21C9FAD800275D1B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2E2247FF21BF44F6000DF69D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E2247FE21BF44F6000DF69D /* GoogleService-Info.plist */; };
-		2E630C182162FC8F00CE28EA /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E6F6939201D16D9005C02A8 /* libSplashScreen.a */; };
 		2EAFF5FE1FE1AEEE000A9A11 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 486C758B88E34A52BFB2C474 /* MaterialIcons.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		60EFC7011AA849D496DCEC2C /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AA4F7C08944EB48AFA4996 /* libRNFirebase.a */; };
@@ -495,7 +495,7 @@
 				C2619E3179B6481FA20E5CEB /* libRNGestureHandler.a in Frameworks */,
 				DC69E7EC47C64276A45E93CF /* libSafariViewManager.a in Frameworks */,
 				072BCFEF97034DD8A762C885 /* libBVLinearGradient.a in Frameworks */,
-				2E630C182162FC8F00CE28EA /* libSplashScreen.a in Frameworks */,
+				2E0B32F621C9EE9800275D1B /* libSplashScreen.a in Frameworks */,
 				95F555B8BE324524957EC796 /* libRNScreens.a in Frameworks */,
 				EF14B007DB43410A84381B54 /* libBugsnagReactNative.a in Frameworks */,
 				C2434B7ADC1743A68D380C24 /* libz.tbd in Frameworks */,
@@ -1424,8 +1424,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				2E0B333E21C9FAD800275D1B /* Images.xcassets in Resources */,
 				2E2247FF21BF44F6000DF69D /* GoogleService-Info.plist in Resources */,
 				F104E1DDC29047C7B18F01E9 /* Octicons.ttf in Resources */,
 				2EAFF5FE1FE1AEEE000A9A11 /* MaterialIcons.ttf in Resources */,
@@ -1642,12 +1642,12 @@
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
 				ENTRY_FILE = packages/mobile/index;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../../../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(inherited)/**",
+					"$(SRCROOT)/../../../node_modules/react-native-vector-icons/RNVectorIconsManager/**",
 					"$(SRCROOT)/../../../node_modules/react-native-gesture-handler/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-safari-view",
-					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
-					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../../../node_modules/react-native-safari-view/**",
+					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient/**",
+					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios/**",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
@@ -1680,12 +1680,12 @@
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
 				ENTRY_FILE = packages/mobile/index;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../../../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(inherited)/**",
+					"$(SRCROOT)/../../../node_modules/react-native-vector-icons/RNVectorIconsManager/**",
 					"$(SRCROOT)/../../../node_modules/react-native-gesture-handler/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-safari-view",
-					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
-					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../../../node_modules/react-native-safari-view/**",
+					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient/**",
+					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios/**",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
