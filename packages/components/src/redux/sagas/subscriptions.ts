@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import {
+  actionChannel,
   all,
   call,
   fork,
@@ -25,7 +26,7 @@ import {
   GitHubEvent,
   GitHubNotification,
 } from '@devhub/core'
-import { delay } from 'redux-saga'
+import { delay, eventChannel } from 'redux-saga'
 import { getActivity, getNotifications } from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -174,6 +175,17 @@ function* onFetchColumnSubscriptions(
       )
     }),
   )
+}
+
+function* watchFetchRequests() {
+  const channel = yield actionChannel('FETCH_SUBSCRIPTION_REQUEST')
+
+  while (true) {
+    const action = yield take(channel)
+
+    yield fork(onFetchRequest, action)
+    yield delay(300)
+  }
 }
 
 function* onFetchRequest(
@@ -327,13 +339,13 @@ function onLogout() {
 export function* subscriptionsSagas() {
   yield all([
     yield fork(init),
+    yield fork(watchFetchRequests),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
     yield takeEvery('DELETE_COLUMN', cleanupSubscriptions),
     yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
-    yield takeEvery('FETCH_SUBSCRIPTION_REQUEST', onFetchRequest),
     yield takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),
   ])
 }
