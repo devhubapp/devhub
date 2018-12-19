@@ -8,6 +8,7 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   NotificationColumnSubscription,
+  removeUselessURLsFromResponseItem,
   subscriptionsArrToState,
 } from '@devhub/core'
 import { Reducer } from '../types'
@@ -167,9 +168,11 @@ export const subscriptionsReducer: Reducer<State> = (
           }
         })
 
-        subscription.data.items = mergedItems
+        subscription.data.items = mergedItems.map(
+          removeUselessURLsFromResponseItem,
+        )
 
-        // TODO: The updatedAt from subscriptions are being changed too often
+        // TODO: The updatedAt from subscriptions was being changed too often
         // (everytime this fetch success action is dispatched)
         // which caused a server sync request without need
         // because we are not saving the data.items on server yet
