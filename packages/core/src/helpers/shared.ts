@@ -125,7 +125,9 @@ export function deepMapper<T extends object, R = T>(
 }
 
 const urlsToKeep = ['url', 'html_url', 'avatar_url', 'latest_comment_url']
-export function removeUselessURLsFromResponseItem(item: object) {
+export function removeUselessURLsFromResponseItem<
+  T extends Record<string, any>
+>(item: T) {
   return deepMapper(item, obj => {
     const keys = Object.keys(obj)
 

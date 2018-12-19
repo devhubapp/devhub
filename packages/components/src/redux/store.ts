@@ -160,7 +160,7 @@ const migrations = {
         )
           return
 
-        subscription.data.items = (subscription.data.items as object[]).map(
+        subscription.data.items = (subscription.data.items as any[]).map(
           removeUselessURLsFromResponseItem,
         )
       })
