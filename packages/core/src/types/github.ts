@@ -826,3 +826,10 @@ export interface GitHubNotification {
   updated_at: string
   url: string
 }
+
+export interface GitHubApiHeaders {
+  pollInterval?: number
+  rateLimitLimit?: number
+  rateLimitRemaining?: number
+  rateLimitReset?: number
+}

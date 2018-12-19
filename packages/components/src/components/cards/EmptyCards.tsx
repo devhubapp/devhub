@@ -35,6 +35,7 @@ const emoji = getRandomEmoji()
 
 export interface EmptyCardsProps {
   errorMessage?: string
+  errorTitle?: string
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   loadState: LoadState
   refresh: (() => void | Promise<void>) | undefined
@@ -43,7 +44,13 @@ export interface EmptyCardsProps {
 export function EmptyCards(props: EmptyCardsProps) {
   const theme = useAnimatedTheme()
 
-  const { errorMessage, fetchNextPage, loadState, refresh } = props
+  const {
+    errorMessage,
+    errorTitle = 'Something went wrong',
+    fetchNextPage,
+    loadState,
+    refresh,
+  } = props
 
   const hasError = errorMessage || loadState === 'error'
 
@@ -64,9 +71,9 @@ export function EmptyCards(props: EmptyCardsProps) {
       return (
         <View style={containerStyle}>
           <Animated.Text style={textStyle}>
-            {`⚠️\nSomething went wrong`}
+            {`⚠️\n${errorTitle}`}
             {!!errorMessage && (
-              <Text style={{ fontSize: 13 }}>{`\nError: ${errorMessage}`}</Text>
+              <Text style={{ fontSize: 13 }}>{`\n${errorMessage}`}</Text>
             )}
           </Animated.Text>
 

@@ -124,6 +124,7 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
+        subscription.data.lastFetchedAt = new Date().toISOString()
 
         const { page } = action.payload.params
         const prevLoadState = subscription.data.loadState
@@ -190,8 +191,9 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        subscription.data.loadState = 'error'
         subscription.data.errorMessage = action.error && action.error.message
+        subscription.data.lastFetchedAt = new Date().toISOString()
+        subscription.data.loadState = 'error'
 
         // draft.updatedAt = new Date().toISOString()
       })

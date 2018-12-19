@@ -1,3 +1,4 @@
+import { GitHubApiHeaders } from '@devhub/core'
 import { createAction, createErrorActionWithPayload } from '../helpers'
 
 export function fetchColumnSubscriptionRequest(payload: {
@@ -30,12 +31,13 @@ export function fetchSubscriptionSuccess(payload: {
   subscriptionId: string
   data: any
   canFetchMore: boolean
+  github: GitHubApiHeaders
 }) {
   return createAction('FETCH_SUBSCRIPTION_SUCCESS', payload)
 }
 
 export function fetchSubscriptionFailure<E extends Error>(
-  payload: { subscriptionId: string },
+  payload: { subscriptionId: string; github: GitHubApiHeaders | undefined },
   error: E & { status?: number },
 ) {
   return createErrorActionWithPayload(

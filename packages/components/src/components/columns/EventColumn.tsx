@@ -91,6 +91,7 @@ export function EventColumn(props: EventColumnProps) {
           key={`event-cards-container-${column.id}`}
           repoIsKnown={requestTypeIconAndData.repoIsKnown}
           {...props}
+          columnIndex={columnIndex}
         />
       </View>
     </Column>
