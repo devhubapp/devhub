@@ -20,13 +20,14 @@ import {
   EnhancedGitHubEvent,
   EnhancementCache,
   enhanceNotifications,
+  getGitHubApiHeadersFromHeader,
   getNotificationsEnhancementMap,
   getOlderEventDate,
   getOlderNotificationDate,
   GitHubEvent,
   GitHubNotification,
 } from '@devhub/core'
-import { delay, eventChannel } from 'redux-saga'
+import { delay } from 'redux-saga'
 import { getActivity, getNotifications } from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -68,9 +69,20 @@ function* init() {
     const subscriptions = selectors.subscriptionsArrSelector(state)
     if (!(subscriptions && subscriptions.length)) continue
 
+    const github = selectors.githubApiHeadersSelector(state)
+
     const subscriptionsToFetch = _isFirstTime
       ? subscriptions
-      : subscriptions.filter(s => s && minimumRefetchTimeHasPassed(s))
+      : subscriptions.filter(
+          s =>
+            s &&
+            minimumRefetchTimeHasPassed(
+              s,
+              typeof github.pollInterval === 'number'
+                ? github.pollInterval * 1000
+                : undefined,
+            ),
+        )
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
     yield all(
@@ -219,23 +231,14 @@ function* onFetchRequest(
   try {
     if (!githubToken) throw new Error('Not logged')
 
-    if (
-      !(
-        subscription &&
-        (subscription.type === 'activity' ||
-          subscription.type === 'notifications')
-      )
-    ) {
-      throw new Error(
-        `Unknown column subscription type: ${subscription &&
-          (subscription as any).type}`,
-      )
-    }
-
-    if (subscription.type === 'notifications') {
+    let data
+    let canFetchMore: boolean
+    let headers
+    if (subscription && subscription.type === 'notifications') {
       const response = yield call(getNotifications, params, {
         subscriptionId,
       })
+      headers = (response && response.headers) || {}
 
       const prevItems = subscription.data.items || []
       const newItems = response.data as GitHubNotification[]
@@ -264,24 +267,19 @@ function* onFetchRequest(
         prevItems,
       )
 
-      const canFetchMore =
+      data = enhancedItems
+
+      canFetchMore =
         (!olderNotificationDate ||
           (!!olderDateFromThisResponse &&
             olderDateFromThisResponse <= olderNotificationDate) ||
           page === 1) &&
         newItems.length >= perPage
-
-      yield put(
-        actions.fetchSubscriptionSuccess({
-          subscriptionId,
-          data: enhancedItems,
-          canFetchMore,
-        }),
-      )
-    } else if (subscription.type === 'activity') {
+    } else if (subscription && subscription.type === 'activity') {
       const response = yield call(getActivity, subscription.subtype, params, {
         subscriptionId,
       })
+      headers = (response && response.headers) || {}
 
       const prevItems = subscription.data.items || []
       const newItems = (response.data || []) as GitHubEvent[]
@@ -293,28 +291,44 @@ function* onFetchRequest(
       const olderNotificationDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)
 
-      const canFetchMore =
+      canFetchMore =
         (!olderNotificationDate ||
           (!!olderDateFromThisResponse &&
             olderDateFromThisResponse <= olderNotificationDate) ||
           page === 1) &&
         newItems.length >= perPage
 
-      yield put(
-        actions.fetchSubscriptionSuccess({
-          subscriptionId,
-          data: newItems,
-          canFetchMore,
-        }),
+      data = newItems
+    } else {
+      throw new Error(
+        `Unknown column subscription type: ${subscription &&
+          (subscription as any).type}`,
       )
     }
+
+    const github = getGitHubApiHeadersFromHeader(headers)
+
+    yield put(
+      actions.fetchSubscriptionSuccess({
+        subscriptionId,
+        data,
+        canFetchMore,
+        github,
+      }),
+    )
   } catch (error) {
     console.error(
       `Failed to load GitHub ${(subscription && subscription.type) || 'data'}`,
       error,
     )
     // bugsnag.notify(error)
-    yield put(actions.fetchSubscriptionFailure({ subscriptionId }, error))
+
+    const headers = error && error.response && error.response.headers
+    const github = getGitHubApiHeadersFromHeader(headers)
+
+    yield put(
+      actions.fetchSubscriptionFailure({ subscriptionId, github }, error),
+    )
   }
 }
 
@@ -350,11 +364,17 @@ export function* subscriptionsSagas() {
   ])
 }
 
+const minute = 1 * 60 * 1000
 function minimumRefetchTimeHasPassed(
   subscription: ColumnSubscription,
-  interval = 60000,
+  _interval = minute,
 ) {
   if (!subscription) return false
+
+  const interval =
+    typeof _interval === 'number' && _interval > 0
+      ? Math.min(Math.max(minute, _interval), 60 * minute)
+      : minute
 
   return (
     !subscription.data.lastFetchedAt ||
