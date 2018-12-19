@@ -17,8 +17,6 @@ import { Platform } from '../../libs/platform'
 import { useTheme } from '../context/ThemeContext'
 import { ConditionalWrap } from './ConditionalWrap'
 
-let isSplashScreenVisible = true
-
 export interface ScreenProps {
   children?: ReactNode
   statusBarBackgroundColor?: string | Animated.AnimatedInterpolation
@@ -40,9 +38,8 @@ export function Screen(props: ScreenProps) {
   const animatedTheme = useAnimatedTheme()
 
   useEffect(() => {
-    if (isSplashScreenVisible && SplashScreen) {
+    if (SplashScreen) {
       SplashScreen.hide()
-      isSplashScreenVisible = false
     }
   }, [])
 
