@@ -281,6 +281,7 @@ function* onFetchRequest(
       `Failed to load GitHub ${(subscription && subscription.type) || 'data'}`,
       error,
     )
+    // bugsnag.notify(error)
     yield put(actions.fetchSubscriptionFailure({ subscriptionId }, error))
   }
 }

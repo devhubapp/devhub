@@ -135,7 +135,9 @@ function* onLoginRequest(
     )
     return
   } catch (error) {
-    console.error('Login failed', error)
+    const description = 'Login failed'
+    bugsnag.notify(error, { description })
+    console.error(description, error)
 
     if (
       error &&

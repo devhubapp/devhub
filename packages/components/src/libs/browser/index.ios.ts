@@ -1,5 +1,6 @@
 import { Linking, StatusBar } from 'react-native'
 import SafariView, { SafaryOptions } from 'react-native-safari-view'
+import { bugsnag } from '../bugsnag'
 
 export const Browser = {
   ...Linking,
@@ -16,7 +17,9 @@ export const Browser = {
         })
       })
       .catch(error => {
-        console.error('Safari View failed to open url', error, {
+        const description = 'Safari View failed to open url'
+        bugsnag.notify(error, { description })
+        console.error(description, error, {
           url,
           ...options,
         })

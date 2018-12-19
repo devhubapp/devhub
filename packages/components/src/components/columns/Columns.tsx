@@ -10,6 +10,7 @@ import {
 import { Omit } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
+import { bugsnag } from '../../libs/bugsnag'
 import { Separator, separatorSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
@@ -96,7 +97,12 @@ export const Columns = React.memo((props: ColumnsProps) => {
       keyExtractor={keyExtractor}
       maxToRenderPerBatch={5}
       onScrollToIndexFailed={e => {
-        if (__DEV__) console.error(e)
+        console.error(e)
+        bugsnag.notify({
+          name: 'ScrollToIndexFailed',
+          message: 'Failed to scroll to index',
+          ...e,
+        })
       }}
       pagingEnabled={pagingEnabled}
       removeClippedSubviews

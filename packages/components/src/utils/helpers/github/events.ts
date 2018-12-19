@@ -5,6 +5,7 @@ import {
   GitHubPullRequest,
   isPullRequest,
 } from '@devhub/core'
+import { bugsnag } from '../../../libs/bugsnag'
 import * as colors from '../../../styles/colors'
 import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared'
 
@@ -127,7 +128,9 @@ export function getEventIconAndColor(
       return { icon: 'star', color: colors.star }
 
     default: {
-      console.error(`Unknown event type: ${(event as any).type}`)
+      const message = `Unknown event type: ${(event as any).type}`
+      bugsnag.notify(new Error(message))
+      console.error(message)
       return { icon: 'mark-github' }
     }
   }

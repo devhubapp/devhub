@@ -9,6 +9,7 @@ import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
 import { useAnimatedTheme } from '../hooks/use-animated-theme'
 import { analytics } from '../libs/analytics'
+import { bugsnag } from '../libs/bugsnag'
 import { executeOAuth } from '../libs/oauth'
 import { getUrlParamsIfMatches, OAuthResponseData } from '../libs/oauth/helpers'
 import { Platform } from '../libs/platform'
@@ -181,7 +182,11 @@ export const LoginScreen = React.memo(() => {
         )
       }
     } catch (error) {
-      console.error('OAuth failed', error)
+      const description = 'OAuth failed'
+      console.error(description, error)
+      if (error.message === 'Canceled' || error.message === 'Timeout') return
+
+      bugsnag.notify(error, { description })
       alert(`Login failed. ${error || ''}`)
     }
   }
@@ -201,9 +206,12 @@ export const LoginScreen = React.memo(() => {
       const params = await executeOAuth(githubScope)
       handleOAuth(params, githubScope)
     } catch (error) {
-      // if (error.message === 'Canceled' || error.message === 'Timeout') return
-      console.error('OAuth execution failed', error)
+      const description = 'OAuth execution failed'
+      console.error(description, error)
       setIsExecutingOAuth(false)
+
+      if (error.message === 'Canceled' || error.message === 'Timeout') return
+      bugsnag.notify(error, { description })
     }
   }
 

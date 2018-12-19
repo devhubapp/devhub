@@ -8,6 +8,7 @@ import {
   removeUndefinedFields,
   User,
 } from '@devhub/core'
+import { bugsnag } from '../../libs/bugsnag'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
@@ -130,7 +131,9 @@ function* onSyncDown() {
       )
     }
   } catch (error) {
-    console.error('Sync down failed', error)
+    const description = 'Sync down failed'
+    bugsnag.notify(error, { description })
+    console.error(description, error)
   }
 }
 
