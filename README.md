@@ -37,7 +37,6 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 ### Next features:
 
-- [ ] **Android app**: [#19](https://github.com/devhubapp/devhub/issues/19)
 - [ ] **Desktop apps**: [#2](https://github.com/devhubapp/devhub/issues/2)
 - [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
 - [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.;
