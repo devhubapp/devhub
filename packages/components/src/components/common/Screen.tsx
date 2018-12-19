@@ -1,12 +1,21 @@
 // import { darken } from 'polished'
 import React, { ReactNode, useEffect } from 'react'
-import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  Animated,
+  KeyboardAvoidingView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 
 import { AnimatedSafeAreaView } from '../../components/animated/AnimatedSafeAreaView'
 import { AnimatedStatusBar } from '../../components/animated/AnimatedStatusBar'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { Platform } from '../../libs/platform'
 import { useTheme } from '../context/ThemeContext'
+import { ConditionalWrap } from './ConditionalWrap'
 
 let isSplashScreenVisible = true
 
@@ -18,8 +27,10 @@ export interface ScreenProps {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   container: {
-    backgroundColor: 'black',
     flex: 1,
   },
 })
@@ -35,10 +46,12 @@ export function Screen(props: ScreenProps) {
     }
   }, [])
 
-  const { statusBarBackgroundColor, useSafeArea = true, ...otherProps } = props
-
-  // const style = { backgroundColor: darken(0.01, theme.backgroundColor) }
-  const style = { backgroundColor: theme.backgroundColor }
+  const {
+    statusBarBackgroundColor,
+    useSafeArea = true,
+    style,
+    ...otherProps
+  } = props
 
   return (
     <>
@@ -50,16 +63,39 @@ export function Screen(props: ScreenProps) {
         }
       />
 
-      <View style={{ flex: 1 }}>
+      <ConditionalWrap
+        condition
+        wrap={children =>
+          Platform.select({
+            ios: (
+              <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>
+                {children}
+              </KeyboardAvoidingView>
+            ),
+            default: <View style={styles.wrapper}>{children}</View>,
+          })
+        }
+      >
         {useSafeArea ? (
           <AnimatedSafeAreaView
             {...otherProps}
-            style={[styles.container, style]}
+            style={[
+              styles.container,
+              { backgroundColor: theme.backgroundColor },
+              style,
+            ]}
           />
         ) : (
-          <Animated.View {...otherProps} style={[styles.container, style]} />
+          <Animated.View
+            {...otherProps}
+            style={[
+              styles.container,
+              { backgroundColor: theme.backgroundColor },
+              style,
+            ]}
+          />
         )}
-      </View>
+      </ConditionalWrap>
     </>
   )
 }
