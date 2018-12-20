@@ -539,6 +539,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               <ColumnHeaderItem
                 analyticsLabel="delete_archived"
                 iconName="archive"
+                iconStyle={{ color: colors.lightRed }}
                 onPress={() =>
                   clearArchivedItems({
                     clearedAt: column.filters!.clearedAt!,
@@ -559,11 +560,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                     ? 'history'
                     : 'tasklist'
                 }
-                iconStyle={
-                  column.filters && column.filters.clearedAt
-                    ? { color: colors.brandBackgroundColor }
-                    : undefined
-                }
+                iconStyle={{ color: colors.brandBackgroundColor }}
                 onPress={() =>
                   setColumnClearedAtFilter({
                     columnId: column.id,
@@ -584,6 +581,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             <ColumnHeaderItem
               analyticsLabel="remove_column"
               iconName="trashcan"
+              iconStyle={{ color: colors.lightRed }}
               onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
               text="Remove"
             />
