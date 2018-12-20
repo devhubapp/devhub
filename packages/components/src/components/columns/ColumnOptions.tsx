@@ -555,7 +555,11 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       ? 'unclear-column'
                       : 'clear-column'
                   }
-                  iconName="check"
+                  iconName={
+                    column.filters && column.filters.clearedAt
+                      ? 'history'
+                      : 'tasklist'
+                  }
                   iconStyle={
                     column.filters && column.filters.clearedAt
                       ? { color: colors.brandBackgroundColor }
