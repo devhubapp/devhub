@@ -37,7 +37,7 @@ export function AccountSettings() {
           <Avatar size={28} username={username} />
           <Spacer width={contentPadding / 2} />
           <Animated.Text style={{ color: theme.foregroundColor }}>
-            Logged as{' '}
+            Logged in as{' '}
           </Animated.Text>
           <Link href={`https://github.com/${username}`}>
             <Animated.Text
