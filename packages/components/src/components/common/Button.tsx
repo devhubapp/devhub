@@ -38,6 +38,7 @@ export function Button(props: ButtonProps) {
           alignItems: 'center',
           justifyContent: 'center',
           height: buttonSize,
+          lineHeight: buttonSize,
           paddingHorizontal: contentPadding,
           paddingVertical: contentPadding / 2,
           backgroundColor: useBrandColor
