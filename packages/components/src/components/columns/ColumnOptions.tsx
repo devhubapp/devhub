@@ -534,53 +534,52 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             <Spacer flex={1} />
 
             {!!column.filters &&
-              !!column.filters.clearedAt &&
-              ((column.filters.inbox && column.filters.inbox.archived) ===
-              true ? (
-                <ColumnHeaderItem
-                  analyticsLabel="delete_archived"
-                  iconName="archive"
-                  onPress={() =>
-                    clearArchivedItems({
-                      clearedAt: column.filters!.clearedAt!,
-                      subscriptionIds: column.subscriptionIds,
-                    })
-                  }
-                  text="Delete archived"
-                />
-              ) : (
-                <ColumnHeaderItem
-                  analyticsLabel={
-                    column.filters && column.filters.clearedAt
-                      ? 'unclear-column'
-                      : 'clear-column'
-                  }
-                  iconName={
-                    column.filters && column.filters.clearedAt
-                      ? 'history'
-                      : 'tasklist'
-                  }
-                  iconStyle={
-                    column.filters && column.filters.clearedAt
-                      ? { color: colors.brandBackgroundColor }
-                      : undefined
-                  }
-                  onPress={() =>
-                    setColumnClearedAtFilter({
-                      columnId: column.id,
-                      clearedAt:
-                        column.filters && column.filters.clearedAt
-                          ? null
-                          : new Date().toISOString(),
-                    })
-                  }
-                  text={
-                    column.filters && column.filters.clearedAt
-                      ? 'Unclear'
-                      : 'Clear'
-                  }
-                />
-              ))}
+            !!column.filters.clearedAt &&
+            (column.filters.inbox && column.filters.inbox.archived) === true ? (
+              <ColumnHeaderItem
+                analyticsLabel="delete_archived"
+                iconName="archive"
+                onPress={() =>
+                  clearArchivedItems({
+                    clearedAt: column.filters!.clearedAt!,
+                    subscriptionIds: column.subscriptionIds,
+                  })
+                }
+                text="Delete archived"
+              />
+            ) : (
+              <ColumnHeaderItem
+                analyticsLabel={
+                  column.filters && column.filters.clearedAt
+                    ? 'unclear-column'
+                    : 'clear-column'
+                }
+                iconName={
+                  column.filters && column.filters.clearedAt
+                    ? 'history'
+                    : 'tasklist'
+                }
+                iconStyle={
+                  column.filters && column.filters.clearedAt
+                    ? { color: colors.brandBackgroundColor }
+                    : undefined
+                }
+                onPress={() =>
+                  setColumnClearedAtFilter({
+                    columnId: column.id,
+                    clearedAt:
+                      column.filters && column.filters.clearedAt
+                        ? null
+                        : new Date().toISOString(),
+                  })
+                }
+                text={
+                  column.filters && column.filters.clearedAt
+                    ? 'Unclear'
+                    : 'Clear'
+                }
+              />
+            )}
 
             <ColumnHeaderItem
               analyticsLabel="remove_column"
