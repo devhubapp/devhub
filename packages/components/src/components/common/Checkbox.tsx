@@ -38,7 +38,7 @@ export interface CheckboxProps {
   containerStyle?: ViewStyle
   defaultValue?: boolean | null
   disabled?: boolean
-  enableTrippleState?: boolean
+  enableTripleState?: boolean
   label?: string | React.ReactNode
   labelIcon?: AnimatedIconProps['name']
   onChange?: (value: boolean | null) => void
@@ -64,7 +64,7 @@ export function Checkbox(props: CheckboxProps) {
     labelIcon,
     onChange,
     size = 18,
-    enableTrippleState = false,
+    enableTripleState = false,
     uncheckedBackgroundColor,
     uncheckedForegroundColor = theme.foregroundColor,
   } = props
@@ -73,14 +73,10 @@ export function Checkbox(props: CheckboxProps) {
     typeof props.checked === 'boolean' ? props.checked : !!defaultValue,
   )
 
-  const isThirdState = enableTrippleState && checked === null
+  const isThirdState = enableTripleState && checked === null
 
   const getNextValue = () =>
-    enableTrippleState
-      ? checked === null
-        ? !lastBooleanValue
-        : null
-      : !checked
+    enableTripleState ? (checked === null ? !lastBooleanValue : null) : !checked
 
   const handleOnChange = () => {
     if (!onChange) return
@@ -94,7 +90,7 @@ export function Checkbox(props: CheckboxProps) {
 
   return (
     <TouchableOpacity
-      analyticsAction={isThirdState ? 'tripple' : checked ? 'uncheck' : 'check'}
+      analyticsAction={isThirdState ? 'triple' : checked ? 'uncheck' : 'check'}
       analyticsCategory="checkbox"
       analyticsLabel={analyticsLabel}
       disabled={disabled}

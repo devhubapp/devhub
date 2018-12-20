@@ -177,7 +177,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                           paddingVertical: contentPadding / 4,
                         }}
                         defaultValue={defaultBooleanValue}
-                        enableTrippleState={
+                        enableTripleState={
                           !isFilterStrict || checked === defaultBooleanValue
                         }
                         label={item.label}
@@ -238,7 +238,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                           paddingVertical: contentPadding / 4,
                         }}
                         defaultValue={defaultBooleanValue}
-                        enableTrippleState={
+                        enableTripleState={
                           !isFilterStrict || checked === defaultBooleanValue
                         }
                         label={item.label}
