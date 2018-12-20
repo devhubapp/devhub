@@ -572,7 +572,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 }
                 text={
                   column.filters && column.filters.clearedAt
-                    ? 'Unclear'
+                    ? 'Restore'
                     : 'Clear'
                 }
               />
