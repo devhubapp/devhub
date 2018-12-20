@@ -57,7 +57,7 @@ export function EventColumn(props: EventColumnProps) {
             column.filters.inbox &&
             column.filters.inbox.archived === true
           }
-          iconName="check"
+          iconName="tasklist"
           onPress={() =>
             setColumnClearedAtFilter({
               columnId: column.id,
