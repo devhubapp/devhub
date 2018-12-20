@@ -38,7 +38,6 @@ export function Button(props: ButtonProps) {
           alignItems: 'center',
           justifyContent: 'center',
           height: buttonSize,
-          lineHeight: buttonSize,
           paddingHorizontal: contentPadding,
           paddingVertical: contentPadding / 2,
           backgroundColor: useBrandColor
@@ -58,6 +57,7 @@ export function Button(props: ButtonProps) {
         <Animated.Text
           style={{
             fontWeight: '500',
+            lineHeight: buttonSize,
             color: useBrandColor
               ? colors.brandForegroundColor
               : theme.foregroundColor,
