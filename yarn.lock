@@ -4233,10 +4233,10 @@ electron-to-chromium@^1.3.62, electron-to-chromium@^1.3.82:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.84.tgz#2e55df59e818f150a9f61b53471ebf4f0feecc65"
   integrity sha512-IYhbzJYOopiTaNWMBp7RjbecUBsbnbDneOP86f3qvS0G0xfzwNSvMJpTrvi5/Y1gU7tg2NAgeg8a8rCYvW9Whw==
 
-electron@^3.0.12:
-  version "3.0.12"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-3.0.12.tgz#7486ff1c60e9c22d8aadaee620695c42c9ddb2ac"
-  integrity sha512-stvGbqYzWv5qHHtjZZgA7gET3NPGLuxs68IHTrJqsqujQfXGkhMOh8tstpXl86kBdRpzZn7GaDlTWcgeFSmsPw==
+electron@4.0.0-beta.5:
+  version "4.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-4.0.0-beta.5.tgz#f8f968c5ba4f55778e16d3c12c65314166469ca6"
+  integrity sha512-IMUftZaEpSpwB8sR6FWnOdclgmt1AtIsn9zQgrZ/l26Q3tfq5dva65JKe5lMCU0n4Wk+HZJwawEl0D3IpiaYkg==
   dependencies:
     "@types/node" "^8.0.24"
     electron-download "^4.1.0"

@@ -1,21 +1,16 @@
 {
   "name": "@devhub/desktop",
-  "version": "0.39.2",
+  "version": "0.0.1",
   "private": false,
-  "homepage": "./",
-  "main": "public/electron.js",
+  "main": "dist/electron.js",
   "scripts": {
-    "build": "tsc -b && react-app-rewired build && electron-builder -mw",
+    "build": "tsc -b && electron-builder -mw",
     "clean": "rm -rf dist/*",
-    "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
-    "now-build": "build",
-    "predeploy": "npm run build",
-    "prepare": "cd .. && yarn patch-package",
-    "serve": "serve dist",
-    "start": "tsc -b && react-app-rewired build && electron .",
-    "test": "react-app-rewired test"
+    "predeploy": "yarn run build",
+    "start": "rm -rf dist && tsc && electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
     "productName": "devhub",
@@ -39,9 +34,7 @@
       "output": "build"
     },
     "files": [
-      "main.js",
       "dist/**/*",
-      "public/**/*",
       "node_modules/**/*",
       "package.json"
     ],
@@ -68,23 +61,12 @@
     "resize-observer-polyfill": "^1.5.0"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.10",
-    "@types/node": "^10.12.11",
-    "@types/react": "^16.7.11",
-    "@types/react-dom": "^16.0.11",
-    "babel-plugin-react-native-web": "^0.9.8",
-    "electron": "^3.0.12",
+    "electron": "4.0.0-beta.5",
     "electron-builder": "^20.38.3",
-    "postinstall-prepare": "^1.0.1",
-    "prettier": "^1.15.3",
-    "react-app-rewired": "^1.6.2",
-    "serve": "^10.1.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.17.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.2.1",
-    "webpack-bundle-analyzer": "^3.0.3"
+    "typescript": "^3.2.1"
   },
   "resolutions": {
     "scheduler": "0.12.0-alpha.3"
