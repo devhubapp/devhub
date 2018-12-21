@@ -5,6 +5,7 @@ import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
@@ -48,8 +49,10 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           analyticsLabel={undefined}
           {...otherProps}
           iconName={undefined}
-          style={[{ flex: 1 }, canGoBack && { padding: 0 }]}
+          style={[canGoBack && { padding: 0 }]}
         />
+
+        <Spacer flex={1} />
 
         {!hideCloseButton && (
           <ColumnHeaderItem

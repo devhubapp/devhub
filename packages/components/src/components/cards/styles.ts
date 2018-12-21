@@ -57,7 +57,7 @@ export const getCardStylesForTheme = _.memoize(
       usernameText: {
         alignSelf: 'center',
         color: theme.foregroundColor,
-        fontWeight: 'bold',
+        fontWeight: '500',
         lineHeight: 20,
       },
 
