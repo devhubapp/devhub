@@ -176,7 +176,7 @@ export function createNotificationsCache(
   notifications.forEach(n => {
     if (n.comment) checkAndFix(n.comment, n.comment.url, n.comment.updated_at)
     if (n.commit)
-      checkAndFix(n.commit, n.commit.commit.url, n.commit.commit.committer.date)
+      checkAndFix(n.commit, n.commit.url, n.commit.commit.committer.date)
     if (n.issue) checkAndFix(n.issue, n.issue.url, n.issue.updated_at)
     if (n.pullRequest)
       checkAndFix(n.pullRequest, n.pullRequest.url, n.pullRequest.updated_at)

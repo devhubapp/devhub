@@ -80,6 +80,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         message: subject.title,
         url: subject.url,
       },
+      url: subject.url,
     }) ||
     null
 
@@ -172,7 +173,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
       {!!commit && (
         <CommitRow
-          key={`notification-commit-row-${commit.commit.url}`}
+          key={`notification-commit-row-${commit.url}`}
           authorEmail={commit.commit.author.email}
           authorName={commit.commit.author.name}
           authorUsername={commit.author && commit.author.login}
@@ -180,7 +181,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           latestCommentUrl={subject.latest_comment_url}
           message={commit.commit.message}
           smallLeftColumn
-          url={commit.commit.url}
+          url={commit.url || commit.commit.url}
         />
       )}
 
