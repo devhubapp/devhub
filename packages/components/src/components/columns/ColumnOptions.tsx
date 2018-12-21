@@ -534,7 +534,11 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       ? 'unclear-column'
                       : 'clear-column'
                   }
-                  iconName="check"
+                  iconName={
+                    column.filters && column.filters.clearedAt
+                      ? 'history'
+                      : 'check'
+                  }
                   iconStyle={
                     column.filters && column.filters.clearedAt
                       ? { color: colors.brandBackgroundColor }
@@ -551,7 +555,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   }
                   text={
                     column.filters && column.filters.clearedAt
-                      ? 'Unclear'
+                      ? 'Restore'
                       : 'Clear'
                   }
                 />
