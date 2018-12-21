@@ -28,7 +28,7 @@ export const AnimatedTransparentTextOverlay = React.memo(
 
     const { children, containerStyle, from, themeColor, ...otherProps } = props
 
-    if (Platform.OS === 'web' && sizename !== '1-small') return children as any
+    if (Platform.OS === 'web' && !(sizename < '3-large')) return children as any
 
     const color = theme[themeColor]
 

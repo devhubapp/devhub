@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/619186/49823485-eed18480-fd66-11e8-88c0-700d840ad4f1.png" height="100" /><br/>
   <span><b>DevHub</b>: <span>TweetDeck for GitHub [BETA]</span><br/>
-  <span>Android, <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8" target="_blank">iOS</a> & <a href="https://devhubapp.com/" target="_blank">Web</a> with <b>95%+ code sharing</b> between them</span><br/>
+  <span><a href="https://play.google.com/store/apps/details?id=com.devhubapp" target="_blank">Android</a>, <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8" target="_blank">iOS</a> & <a href="https://devhubapp.com/" target="_blank">Web</a> with <b>95%+ code sharing</b> between them</span><br/>
   <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
 </p>
   
@@ -33,11 +33,10 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [x] **Dashboard spier**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Theme support**: Choose between 6 light or dark themes;
-- [x] **And more!**: Native apps, keyboard shortcuts, open source, modern tech stack, ...
+- [x] **And more!**: Native apps, keyboard shortcuts, modern tech stack, ...
 
 ### Next features:
 
-- [ ] **Android app**: [#19](https://github.com/devhubapp/devhub/issues/19)
 - [ ] **Desktop apps**: [#2](https://github.com/devhubapp/devhub/issues/2)
 - [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
 - [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.;
@@ -53,7 +52,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 > "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
 
-DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It was created by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not plan to work with donations and, instead, plan to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
+DevHub plans to be a sustainable project. It's not made by a huge company like Facebook. It was created by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not plan to work with donations and, instead, plan to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
 
 - [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));

@@ -15,6 +15,7 @@ import {
   ColumnSubscription,
   GraphQLGitHubUser,
   guid,
+  removeUselessURLsFromResponseItem,
 } from '@devhub/core'
 import { analyticsMiddleware } from './middlewares/analytics'
 import { bugsnagMiddleware } from './middlewares/bugsnag'
@@ -142,6 +143,28 @@ const migrations = {
 
       draft.subscriptions.byId = byId
     }),
+  6: (state: RootState) =>
+    immer(state, draft => {
+      draft.subscriptions = draft.subscriptions || {}
+      draft.subscriptions.allIds = draft.subscriptions.allIds || []
+      draft.subscriptions.byId = draft.subscriptions.byId || {}
+
+      selectors.subscriptionsArrSelector(draft).forEach(subscription => {
+        if (
+          !(
+            subscription &&
+            subscription.data &&
+            subscription.data.items &&
+            subscription.data.items.length
+          )
+        )
+          return
+
+        subscription.data.items = (subscription.data.items as any[]).map(
+          removeUselessURLsFromResponseItem,
+        )
+      })
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -150,7 +173,7 @@ export function configureStore(key = 'root') {
     key,
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
-    version: 5,
+    version: 6,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 

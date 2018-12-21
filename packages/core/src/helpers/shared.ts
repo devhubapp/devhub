@@ -112,3 +112,36 @@ export function isNotificationPrivate(notification: GitHubNotification) {
   if (!notification) return false
   return !!(notification.repository && notification.repository.private)
 }
+
+export function deepMapper<T extends object, R = T>(
+  obj: T,
+  mapper: (obj: T) => any,
+): R {
+  if (!(obj && _.isPlainObject(obj))) return obj as any
+
+  return mapper(_.mapValues(obj, v =>
+    _.isPlainObject(v) ? deepMapper(v as any, mapper) : v,
+  ) as any)
+}
+
+const urlsToKeep = ['url', 'html_url', 'avatar_url', 'latest_comment_url']
+export function removeUselessURLsFromResponseItem<
+  T extends Record<string, any>
+>(item: T) {
+  return deepMapper(item, obj => {
+    const keys = Object.keys(obj)
+
+    keys.forEach(key => {
+      if (!(key && typeof key === 'string')) return
+      if (
+        !(key.includes('_url') || key.includes('_link') || key.includes('href'))
+      )
+        return
+
+      if (!urlsToKeep.includes(key)) {
+        delete (obj as any)[key]
+      }
+    })
+    return obj
+  })
+}

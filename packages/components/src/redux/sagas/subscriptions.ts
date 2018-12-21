@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import {
+  actionChannel,
   all,
   call,
   fork,
@@ -19,6 +20,7 @@ import {
   EnhancedGitHubEvent,
   EnhancementCache,
   enhanceNotifications,
+  getGitHubApiHeadersFromHeader,
   getNotificationsEnhancementMap,
   getOlderEventDate,
   getOlderNotificationDate,
@@ -67,14 +69,50 @@ function* init() {
     const subscriptions = selectors.subscriptionsArrSelector(state)
     if (!(subscriptions && subscriptions.length)) continue
 
+    const github = selectors.githubApiHeadersSelector(state)
+
+    // TODO: Eventually the number of subscriptions wont be 1x1 with the number of columns
+    // Because columns will be able to have multiple subscriptions.
+    // When that happens, improve this. Limit based on number of columns or subscriptions?
     const subscriptionsToFetch = _isFirstTime
-      ? subscriptions
-      : subscriptions.filter(s => s && minimumRefetchTimeHasPassed(s))
+      ? subscriptions.slice(0, constants.COLUMNS_LIMIT)
+      : subscriptions
+          .slice(0, constants.COLUMNS_LIMIT)
+          .filter(
+            s =>
+              s &&
+              minimumRefetchTimeHasPassed(
+                s,
+                typeof github.pollInterval === 'number'
+                  ? github.pollInterval * 1000
+                  : undefined,
+              ),
+          )
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
     yield all(
       subscriptionsToFetch.map(function*(subscription) {
         if (!subscription) return
+
+        const fiveMinutes = 1000 * 60 * 5
+        const timeDiff = subscription.data.lastFetchedAt
+          ? Date.now() - new Date(subscription.data.lastFetchedAt).valueOf()
+          : undefined
+
+        if (
+          subscription &&
+          subscription.data &&
+          subscription.data.loadState === 'error' &&
+          (!timeDiff || timeDiff < fiveMinutes)
+        ) {
+          if (__DEV__) {
+            // tslint:disable-next-line no-console
+            console.debug(
+              'Ignoring subscription re-fetch due to recent fetch error.',
+            )
+          }
+          return
+        }
 
         return yield put(
           actions.fetchSubscriptionRequest({
@@ -156,6 +194,17 @@ function* onFetchColumnSubscriptions(
   )
 }
 
+function* watchFetchRequests() {
+  const channel = yield actionChannel('FETCH_SUBSCRIPTION_REQUEST')
+
+  while (true) {
+    const action = yield take(channel)
+
+    yield fork(onFetchRequest, action)
+    yield delay(300)
+  }
+}
+
 function* onFetchRequest(
   action: ExtractActionFromActionCreator<
     typeof actions.fetchSubscriptionRequest
@@ -187,23 +236,14 @@ function* onFetchRequest(
   try {
     if (!githubToken) throw new Error('Not logged')
 
-    if (
-      !(
-        subscription &&
-        (subscription.type === 'activity' ||
-          subscription.type === 'notifications')
-      )
-    ) {
-      throw new Error(
-        `Unknown column subscription type: ${subscription &&
-          (subscription as any).type}`,
-      )
-    }
-
-    if (subscription.type === 'notifications') {
+    let data
+    let canFetchMore: boolean
+    let headers
+    if (subscription && subscription.type === 'notifications') {
       const response = yield call(getNotifications, params, {
         subscriptionId,
       })
+      headers = (response && response.headers) || {}
 
       const prevItems = subscription.data.items || []
       const newItems = response.data as GitHubNotification[]
@@ -232,24 +272,19 @@ function* onFetchRequest(
         prevItems,
       )
 
-      const canFetchMore =
+      data = enhancedItems
+
+      canFetchMore =
         (!olderNotificationDate ||
           (!!olderDateFromThisResponse &&
             olderDateFromThisResponse <= olderNotificationDate) ||
           page === 1) &&
         newItems.length >= perPage
-
-      yield put(
-        actions.fetchSubscriptionSuccess({
-          subscriptionId,
-          data: enhancedItems,
-          canFetchMore,
-        }),
-      )
-    } else if (subscription.type === 'activity') {
+    } else if (subscription && subscription.type === 'activity') {
       const response = yield call(getActivity, subscription.subtype, params, {
         subscriptionId,
       })
+      headers = (response && response.headers) || {}
 
       const prevItems = subscription.data.items || []
       const newItems = (response.data || []) as GitHubEvent[]
@@ -261,27 +296,44 @@ function* onFetchRequest(
       const olderNotificationDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)
 
-      const canFetchMore =
+      canFetchMore =
         (!olderNotificationDate ||
           (!!olderDateFromThisResponse &&
             olderDateFromThisResponse <= olderNotificationDate) ||
           page === 1) &&
         newItems.length >= perPage
 
-      yield put(
-        actions.fetchSubscriptionSuccess({
-          subscriptionId,
-          data: newItems,
-          canFetchMore,
-        }),
+      data = newItems
+    } else {
+      throw new Error(
+        `Unknown column subscription type: ${subscription &&
+          (subscription as any).type}`,
       )
     }
+
+    const github = getGitHubApiHeadersFromHeader(headers)
+
+    yield put(
+      actions.fetchSubscriptionSuccess({
+        subscriptionId,
+        data,
+        canFetchMore,
+        github,
+      }),
+    )
   } catch (error) {
     console.error(
       `Failed to load GitHub ${(subscription && subscription.type) || 'data'}`,
       error,
     )
-    yield put(actions.fetchSubscriptionFailure({ subscriptionId }, error))
+    // bugsnag.notify(error)
+
+    const headers = error && error.response && error.response.headers
+    const github = getGitHubApiHeadersFromHeader(headers)
+
+    yield put(
+      actions.fetchSubscriptionFailure({ subscriptionId, github }, error),
+    )
   }
 }
 
@@ -306,22 +358,28 @@ function onLogout() {
 export function* subscriptionsSagas() {
   yield all([
     yield fork(init),
+    yield fork(watchFetchRequests),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
     yield takeEvery('DELETE_COLUMN', cleanupSubscriptions),
     yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
-    yield takeEvery('FETCH_SUBSCRIPTION_REQUEST', onFetchRequest),
     yield takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),
   ])
 }
 
+const minute = 1 * 60 * 1000
 function minimumRefetchTimeHasPassed(
   subscription: ColumnSubscription,
-  interval = 60000,
+  _interval = minute,
 ) {
   if (!subscription) return false
+
+  const interval =
+    typeof _interval === 'number' && _interval > 0
+      ? Math.min(Math.max(minute, _interval), 60 * minute)
+      : minute
 
   return (
     !subscription.data.lastFetchedAt ||

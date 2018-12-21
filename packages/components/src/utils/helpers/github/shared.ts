@@ -6,6 +6,7 @@ import {
   GitHubPullRequest,
   isPullRequest,
 } from '@devhub/core'
+import { bugsnag } from '../../../libs/bugsnag'
 import * as colors from '../../../styles/colors'
 
 export function getPullRequestIconAndColor(pullRequest: {
@@ -73,7 +74,9 @@ export function getNotificationIconAndColor(
     case 'RepositoryVulnerabilityAlert':
       return { icon: 'alert', color: colors.yellow }
     default: {
-      console.error('Unknown notification type', type)
+      const message = `Unknown event type: ${(event as any).type}`
+      bugsnag.notify(new Error(message))
+      console.error(message)
       return { icon: 'bell' }
     }
   }

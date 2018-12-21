@@ -1,3 +1,4 @@
+/*
 import _ from 'lodash'
 
 import { BugnsagCrossPlatform } from '.'
@@ -22,4 +23,10 @@ export function overrideConsoleError(bugsnag: BugnsagCrossPlatform) {
     bugsnag.notify(error)
     consoleError(...args)
   }
+}
+*/
+
+export function hideTokenFromString(str: string) {
+  if (!(str && typeof str === 'string')) return str
+  return str.replace(/(token=[\\]?["']?)([A-Za-z0-9\.\-_]+)/gi, '$1REDACTED')
 }

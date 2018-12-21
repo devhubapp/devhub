@@ -5,9 +5,11 @@ import { REHYDRATE } from 'redux-persist'
 import {
   ActivityColumnSubscription,
   ColumnSubscription,
+  constants,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   NotificationColumnSubscription,
+  removeUselessURLsFromResponseItem,
   subscriptionsArrToState,
 } from '@devhub/core'
 import { Reducer } from '../types'
@@ -56,8 +58,9 @@ export const subscriptionsReducer: Reducer<State> = (
           if (subscription.data.items.length) {
             const sevenDays = 1000 * 60 * 60 * 24 * 7
 
-            subscription.data.items = (subscription.data.items as any[]).filter(
-              item => {
+            let count = 0
+            subscription.data.items = (subscription.data.items as any[])
+              .filter(item => {
                 if (!item) return false
                 if (!item.updated_at) return true
                 if (item.saved) return true
@@ -65,8 +68,14 @@ export const subscriptionsReducer: Reducer<State> = (
                 return (
                   new Date(item.updated_at).valueOf() >= Date.now() - sevenDays
                 )
-              },
-            )
+              })
+              .filter(item => {
+                count = count + 1
+
+                if (item.saved) return true
+
+                return count <= constants.DEFAULT_PAGINATION_PER_PAGE
+              })
           }
         })
       })
@@ -123,6 +132,7 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
+        subscription.data.lastFetchedAt = new Date().toISOString()
 
         const { page } = action.payload.params
         const prevLoadState = subscription.data.loadState
@@ -167,9 +177,11 @@ export const subscriptionsReducer: Reducer<State> = (
           }
         })
 
-        subscription.data.items = mergedItems
+        subscription.data.items = mergedItems.map(
+          removeUselessURLsFromResponseItem,
+        )
 
-        // TODO: The updatedAt from subscriptions are being changed too often
+        // TODO: The updatedAt from subscriptions was being changed too often
         // (everytime this fetch success action is dispatched)
         // which caused a server sync request without need
         // because we are not saving the data.items on server yet
@@ -187,8 +199,9 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        subscription.data.loadState = 'error'
         subscription.data.errorMessage = action.error && action.error.message
+        subscription.data.lastFetchedAt = new Date().toISOString()
+        subscription.data.loadState = 'error'
 
         // draft.updatedAt = new Date().toISOString()
       })

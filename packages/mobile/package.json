@@ -1,6 +1,6 @@
 {
   "name": "@devhub/mobile",
-  "version": "0.39.2",
+  "version": "0.40.0",
   "private": false,
   "scripts": {
     "clean": "cd .",
@@ -14,16 +14,17 @@
     "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
-    "@devhub/components": "0.39.2",
-    "metro-react-native-babel-preset": "^0.50.0",
-    "react": "^16.7.0-alpha.2",
+    "@devhub/components": "0.40.0",
+    "jsc-android": "236355.1.1",
+    "metro-react-native-babel-preset": "^0.51.0",
+    "react": "16.7.0-alpha.2",
     "react-native": "npm:@brunolemos/react-native",
     "react-native-firebase": "^5.1.1",
-    "react-native-google-analytics-bridge": "^6.1.2",
+    "react-native-google-analytics-bridge": "^7.0.0",
     "react-native-screens": "^1.0.0-alpha.16"
   },
   "resolutions": {
-    "scheduler": "0.12.0-alpha.3"
+    "scheduler": "0.12.0"
   },
   "jest": {
     "preset": "react-native",

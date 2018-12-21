@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- required by react-native-splash-screen -->
-    <color name="primary_dark">@color/brand_background</color>
+    <color name="primary_dark">@color/background_color_dark</color>
+    <color name="status_bar_color">@color/background_color_dark</color>
 
     <color name="brand_background">#49D3B4</color>
     <color name="brand_foreground">#141C26</color>
+
+    <color name="background_color_dark">#292c33</color>
+    <color name="background_color_less08_dark">#3b404a</color>
+    <color name="foreground_color_dark">#f9fafb</color>
+
+    <color name="background_color_light">#F0F0F0</color>
+    <color name="background_color_less08_light">#dcdcdc</color>
+    <color name="foreground_color_light">#242424</color>
 </resources>

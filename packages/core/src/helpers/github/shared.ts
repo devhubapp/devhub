@@ -1,6 +1,11 @@
 import gravatar from 'gravatar'
 
-import { ColumnSubscription, GitHubIcon, GitHubPullRequest } from '../../types'
+import {
+  ColumnSubscription,
+  GitHubApiHeaders,
+  GitHubIcon,
+  GitHubPullRequest,
+} from '../../types'
 import { getSteppedSize } from '../shared'
 
 export function getUserAvatarByAvatarURL(
@@ -193,4 +198,24 @@ export function createSubscriptionObjectsWithId(
     ...subscription,
     id: getUniqueIdForSubscription(subscription),
   }))
+}
+
+export function getGitHubApiHeadersFromHeader(headers: Record<string, any>) {
+  const github: GitHubApiHeaders = {}
+
+  if (!headers) return github
+
+  if (typeof headers['x-poll-interval'] !== 'undefined')
+    github.pollInterval = parseInt(headers['x-poll-interval'], 10)
+
+  if (typeof headers['x-ratelimit-limit'] !== 'undefined')
+    github.rateLimitLimit = parseInt(headers['x-ratelimit-limit'], 10)
+
+  if (typeof headers['x-ratelimit-remaining'] !== 'undefined')
+    github.rateLimitRemaining = parseInt(headers['x-ratelimit-remaining'], 10)
+
+  if (typeof headers['x-ratelimit-reset'] !== 'undefined')
+    github.rateLimitReset = parseInt(headers['x-ratelimit-reset'], 10)
+
+  return github
 }

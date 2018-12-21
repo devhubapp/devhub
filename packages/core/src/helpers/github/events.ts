@@ -116,10 +116,8 @@ export function getColumnHeaderDetails(
           }
         }
         default: {
-          if (__DEV__)
-            console.error(
-              `Invalid activity type: '${(column as any).subtype}'.`,
-            )
+          console.error(`Invalid activity type: '${(column as any).subtype}'.`)
+
           return {
             icon: 'mark-github',
             repoIsKnown: false,
@@ -140,8 +138,7 @@ export function getColumnHeaderDetails(
     }
 
     default: {
-      if (__DEV__)
-        console.error(`Invalid column type: '${(column as any).type}'.`)
+      console.error(`Invalid column type: '${(column as any).type}'.`)
       return {
         icon: 'mark-github',
         repoIsKnown: false,

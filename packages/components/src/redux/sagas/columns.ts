@@ -106,9 +106,29 @@ function* onMoveColumn(
   })
 }
 
+function* onDeleteColumn(
+  action: ExtractActionFromActionCreator<typeof actions.deleteColumn>,
+) {
+  const ids: string[] = yield select(selectors.columnIdsSelector)
+  if (!(ids && ids.length)) return
+
+  // Fixes blank screen on Android after removing the last column.
+  // If removed the last column,
+  // scroll to the new last valid column
+  if (action.payload.columnIndex > ids.length - 1) {
+    emitter.emit('FOCUS_ON_COLUMN', {
+      animated: false,
+      columnId: ids[ids.length - 1],
+      columnIndex: ids.length - 1,
+      highlight: false,
+    })
+  }
+}
+
 export function* columnsSagas() {
   yield all([
     yield takeLatest('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest('MOVE_COLUMN', onMoveColumn),
+    yield takeLatest('DELETE_COLUMN', onDeleteColumn),
   ])
 }

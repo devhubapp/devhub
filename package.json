@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "version": "0.39.2",
+  "version": "0.40.0",
   "private": true,
   "workspaces": {
     "packages": [
@@ -43,7 +43,7 @@
     "typescript": "^3.2.1"
   },
   "resolutions": {
-    "scheduler": "0.12.0-alpha.3"
+    "scheduler": "0.12.0"
   },
   "husky": {
     "hooks": {

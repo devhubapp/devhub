@@ -13,12 +13,12 @@ import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 import { useAnimatedTheme } from '../hooks/use-animated-theme'
+import { useAppVisibility } from '../hooks/use-app-visibility'
 import { useEmitter } from '../hooks/use-emitter'
 import { useKeyDownCallback } from '../hooks/use-key-down-callback'
 import { useKeyPressCallback } from '../hooks/use-key-press-callback'
 import { analytics } from '../libs/analytics'
 import * as actions from '../redux/actions'
-import { useAppVisibility } from '../redux/hooks/use-app-visibility'
 import { useReduxAction } from '../redux/hooks/use-redux-action'
 import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
@@ -42,7 +42,7 @@ export const MainScreen = React.memo(() => {
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
   const theme = useAnimatedTheme()
-  const { appOrientation, sizename } = useAppLayout()
+  const { appOrientation } = useAppLayout()
 
   const debounceSyncDown = useMemo(
     () => {
@@ -138,7 +138,7 @@ export const MainScreen = React.memo(() => {
     () => {
       if (
         currentOpenedModal &&
-        Dimensions.get('window').width <= APP_LAYOUT_BREAKPOINTS.SMALL
+        Dimensions.get('window').width <= APP_LAYOUT_BREAKPOINTS.MEDIUM
       ) {
         closeAllModals()
       }
@@ -164,11 +164,7 @@ export const MainScreen = React.memo(() => {
           },
         ]}
       >
-        <Sidebar
-          key="main-screen-sidebar"
-          horizontal={horizontalSidebar}
-          small={sizename === '1-small'}
-        />
+        <Sidebar key="main-screen-sidebar" horizontal={horizontalSidebar} />
         <Separator horizontal={horizontalSidebar} thick={!horizontalSidebar} />
 
         <View style={styles.innerContainer}>

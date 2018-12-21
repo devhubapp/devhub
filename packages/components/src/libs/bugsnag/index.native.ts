@@ -4,7 +4,8 @@ import _ from 'lodash'
 import React from 'react'
 import { appVersion } from '../../components/common/AppVersion'
 import { BugnsagCrossPlatform } from './'
-import { overrideConsoleError } from './index.shared'
+import { hideTokenFromString } from './index.shared'
+// import { overrideConsoleError } from './index.shared'
 
 const client = new Client('231f337f6090422c611017d3dab3d32e')
 client.config.appVersion = appVersion
@@ -28,6 +29,15 @@ export const bugsnag: BugnsagCrossPlatform = {
           'stack',
         ),
       })
+
+      try {
+        const safeMetadata = JSON.parse(
+          hideTokenFromString(JSON.stringify(r.metadata)),
+        )
+        if (safeMetadata) r.metadata = safeMetadata
+      } catch (e) {
+        //
+      }
     })
   },
 
@@ -36,7 +46,7 @@ export const bugsnag: BugnsagCrossPlatform = {
   },
 }
 
-overrideConsoleError(bugsnag)
+// overrideConsoleError(bugsnag)
 
 export class ErrorBoundary extends React.Component {
   static getDerivedStateFromError() {

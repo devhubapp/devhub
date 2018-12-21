@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 
 import { Animated, Easing, View, ViewStyle } from 'react-native'
+import { useKeyboardVisibility } from '../../hooks/use-keyboard-visibility'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
@@ -22,12 +23,18 @@ const fabPositionStyle: ViewStyle = {
 
 export function FABRenderer() {
   const addOrCloseAnimatedRef = useRef(new Animated.Value(0))
-  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const closeAllModals = useReduxAction(actions.closeAllModals)
-  const replaceModal = useReduxAction(actions.replaceModal)
+
+  const keyboardVisibility = useKeyboardVisibility()
   const { sizename } = useAppLayout()
 
-  if (sizename !== '1-small') return null
+  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+
+  const closeAllModals = useReduxAction(actions.closeAllModals)
+  const replaceModal = useReduxAction(actions.replaceModal)
+
+  if (!(sizename < '3-large')) return null
+  if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
+    return null
 
   if (!currentOpenedModal) {
     Animated.timing(addOrCloseAnimatedRef.current, {

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Fragment, RefObject, useCallback, useState } from 'react'
-import { TextInputProps, View } from 'react-native'
+import { ScrollView, TextInputProps, View } from 'react-native'
 
 import {
   ActivityColumn,
@@ -193,7 +193,10 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
       iconName="plus"
       title="Add Column"
     >
-      <View style={{ flex: 1, padding: contentPadding }}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={{ flex: 1, padding: contentPadding }}
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -216,7 +219,9 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
         <Button analyticsLabel="add_column" onPress={handleCreateColumn}>
           Add Column
         </Button>
-      </View>
+
+        <Spacer height={contentPadding} />
+      </ScrollView>
     </ModalColumn>
   )
 }

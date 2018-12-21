@@ -72,31 +72,31 @@ export function ThemePreference() {
           <View
             style={{
               alignItems: 'center',
+              alignContent: 'center',
               justifyContent: 'center',
               marginRight: contentPadding / 2,
-              width: 28,
-              height: 28,
-              borderRadius: 28 / 2,
-              backgroundColor: theme.backgroundColor,
+              width: 20,
+              height: 20,
+              borderRadius: 20 / 2,
               borderWidth: StyleSheet.hairlineWidth,
-              borderColor: theme.backgroundColorDarker08,
+              borderColor: appTheme.backgroundColorDarker08,
             }}
           >
-            <Text
+            <Animated.Text
               style={{
-                width: '100%',
+                alignSelf: 'center',
                 margin: 0,
                 padding: 0,
                 fontWeight: '500',
-                fontSize: 12,
-                lineHeight: 28,
-                color: theme.foregroundColorMuted50,
+                fontSize: 10,
+                lineHeight: 10,
+                color: appTheme.foregroundColorTransparent80,
                 textAlign: 'center',
               }}
             >
               {selected &&
-                (currentThemeId === 'auto' ? (theme.isDark ? '◓' : '◒') : '●')}
-            </Text>
+                (currentThemeId === 'auto' ? (theme.isDark ? '◒' : '◓') : '●')}
+            </Animated.Text>
           </View>
 
           <Animated.Text style={{ color: appAnimatedTheme.foregroundColor }}>
@@ -113,13 +113,13 @@ export function ThemePreference() {
 
       <View style={{ flexDirection: 'row' }}>
         <View style={{ flex: 1 }}>
-          <H3 withMargin>Dark Theme</H3>
-          {darkThemesArr.map(t => renderThemeButton(t))}
+          <H3 withMargin>Light Theme</H3>
+          {lightThemesArr.map(t => renderThemeButton(t))}
         </View>
 
         <View style={{ flex: 1 }}>
-          <H3 withMargin>Light Theme</H3>
-          {lightThemesArr.map(t => renderThemeButton(t))}
+          <H3 withMargin>Dark Theme</H3>
+          {darkThemesArr.map(t => renderThemeButton(t))}
         </View>
       </View>
 

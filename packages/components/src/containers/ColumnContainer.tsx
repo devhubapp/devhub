@@ -4,6 +4,7 @@ import React from 'react'
 import { EventColumn } from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
 import { useColumn } from '../hooks/use-column'
+import { bugsnag } from '../libs/bugsnag'
 
 export interface ColumnContainerProps {
   columnId: string
@@ -46,7 +47,9 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
     }
 
     default: {
-      console.error('Invalid Column type: ', (column as any).type)
+      const message = `Invalid Column type: ${(column as any).type}`
+      console.error(message)
+      bugsnag.notify(new Error(message))
       return null
     }
   }

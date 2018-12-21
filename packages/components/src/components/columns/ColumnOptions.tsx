@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { Animated, ScrollView, StatusBar, StyleSheet, View } from 'react-native'
+import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 
 import {
   Column,
@@ -9,17 +9,12 @@ import {
   GitHubIcon,
 } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
-import { useDimensions } from '../../hooks/use-dimensions'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
-import {
-  columnHeaderHeight,
-  contentPadding,
-  sidebarSize,
-} from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import {
   filterRecordHasAnyForcedValue,
   filterRecordHasThisValue,
@@ -30,11 +25,8 @@ import {
 } from '../../utils/helpers/github/notifications'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
-import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
 import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
-import { useAppLayout } from '../context/LayoutContext'
-import { fabSpacing } from '../layout/FABRenderer'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 
@@ -42,7 +34,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'stretch',
   },
-  innerContainer: {},
+  scrollContainer: {},
 })
 
 const notificationReasonOptions = notificationReasons
@@ -73,8 +65,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     setOpenedOptionCategory,
   ] = useState<ColumnOptionCategory | null>(null)
   const theme = useAnimatedTheme()
-  const dimensions = useDimensions()
-  const { appOrientation, sizename } = useAppLayout()
 
   const hasPrivateAccess = useReduxState(
     selectors.githubHasPrivateAccessSelector,
@@ -94,9 +84,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
-  const horizontalSidebar = appOrientation === 'portrait'
-  const isFabVisible = sizename === '1-small'
-
   const toggleOpenedOptionCategory = (
     optionCategory: ColumnOptionCategory | null,
   ) =>
@@ -104,24 +91,13 @@ export function ColumnOptions(props: ColumnOptionsProps) {
       optionCategory === openedOptionCategory ? null : optionCategory,
     )
 
-  const { availableHeight: _availableHeight, column, columnIndex } = props
-
-  const availableHeight =
-    _availableHeight ||
-    dimensions.window.height -
-      columnHeaderHeight -
-      (horizontalSidebar ? sidebarSize : 0) -
-      (StatusBar.currentHeight || 0)
+  const { availableHeight, column, columnIndex } = props
 
   return (
     <Animated.View
       style={[
         styles.container,
-        {
-          maxHeight:
-            availableHeight - (isFabVisible ? fabSize + 2 * fabSpacing : 0),
-          backgroundColor: theme.backgroundColorLess08,
-        },
+        { backgroundColor: theme.backgroundColorLess08 },
       ]}
     >
       <AnimatedTransparentTextOverlay
@@ -130,7 +106,10 @@ export function ColumnOptions(props: ColumnOptionsProps) {
         size={contentPadding}
         themeColor="backgroundColorLess08"
       >
-        <ScrollView alwaysBounceVertical={false} style={styles.innerContainer}>
+        <ScrollView
+          alwaysBounceVertical={false}
+          style={[styles.scrollContainer, { maxHeight: availableHeight }]}
+        >
           {column.type === 'notifications' &&
             (() => {
               const filters =
@@ -177,7 +156,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                           paddingVertical: contentPadding / 4,
                         }}
                         defaultValue={defaultBooleanValue}
-                        enableTrippleState={
+                        enableIndeterminateState={
                           !isFilterStrict || checked === defaultBooleanValue
                         }
                         label={item.label}
@@ -238,7 +217,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                           paddingVertical: contentPadding / 4,
                         }}
                         defaultValue={defaultBooleanValue}
-                        enableTrippleState={
+                        enableIndeterminateState={
                           !isFilterStrict || checked === defaultBooleanValue
                         }
                         label={item.label}
@@ -555,7 +534,11 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       ? 'unclear-column'
                       : 'clear-column'
                   }
-                  iconName="check"
+                  iconName={
+                    column.filters && column.filters.clearedAt
+                      ? 'history'
+                      : 'check'
+                  }
                   iconStyle={
                     column.filters && column.filters.clearedAt
                       ? { color: colors.brandBackgroundColor }
@@ -572,7 +555,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   }
                   text={
                     column.filters && column.filters.clearedAt
-                      ? 'Unclear'
+                      ? 'Restore'
                       : 'Clear'
                   }
                 />
@@ -581,7 +564,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             <ColumnHeaderItem
               analyticsLabel="remove_column"
               iconName="trashcan"
-              onPress={() => deleteColumn(column.id)}
+              onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
               text="Remove"
             />
           </View>

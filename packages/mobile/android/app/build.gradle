@@ -73,8 +73,9 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    bundleAssetName: "index.android.bundle",
-    entryFile: "index.js"
+        bundleAssetName: "index.android.bundle",
+        cliPath        : "../../node_modules/react-native/local-cli/cli.js",
+        entryFile      : "packages/mobile/index.js"
 ]
 
 apply from: "../../../../node_modules/react-native/react.gradle"
@@ -103,7 +104,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "0.39.2"
+        versionName "0.40.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -127,13 +128,19 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.webkit:android-jsc:r236355'
     }
 }
 

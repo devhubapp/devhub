@@ -1,5 +1,12 @@
 import React from 'react'
-import { Animated, Image, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  Animated,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import { getColumnHeaderDetails, ModalPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -9,13 +16,18 @@ import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { emitter } from '../../setup'
-import { sidebarSize } from '../../styles/variables'
+import {
+  columnHeaderHeight,
+  columnHeaderItemContentBiggerSize,
+  sidebarSize,
+} from '../../styles/variables'
 import { AnimatedSafeAreaView } from '../animated/AnimatedSafeAreaView'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { TouchableOpacity } from '../common/TouchableOpacity'
+import { useAppLayout } from '../context/LayoutContext'
 
 const logo = require('@devhub/components/assets/logo.png') // tslint:disable-line
 
@@ -29,22 +41,29 @@ const styles = StyleSheet.create({
 
 export interface SidebarProps {
   horizontal?: boolean
-  small?: boolean
-}
-
-const squareStyle = {
-  width: sidebarSize,
-  height: sidebarSize,
 }
 
 export const Sidebar = React.memo((props: SidebarProps) => {
+  const theme = useAnimatedTheme()
+  const { sizename } = useAppLayout()
+
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const replaceModal = useReduxAction(actions.replaceModal)
-  const theme = useAnimatedTheme()
   const username = useReduxState(selectors.currentUsernameSelector)
 
-  const { horizontal, small } = props
+  const replaceModal = useReduxAction(actions.replaceModal)
+
+  const { horizontal } = props
+
+  const small = sizename === '1-small'
+  const large = sizename === '3-large'
+
+  const showLabel = !!(horizontal && small)
+
+  const itemContainerStyle = {
+    width: sidebarSize,
+    height: sidebarSize,
+  }
 
   return (
     <AnimatedSafeAreaView
@@ -58,7 +77,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           flexGrow: 1,
           flexDirection: horizontal ? 'row' : 'column',
           width: horizontal ? '100%' : sidebarSize,
-          height: horizontal ? sidebarSize : '100%',
+          height: horizontal ? undefined : '100%',
         }}
       >
         {!horizontal && (
@@ -66,8 +85,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             <Animated.View
               style={[
                 styles.centerContainer,
-                squareStyle,
                 {
+                  width: sidebarSize,
+                  height: columnHeaderHeight,
                   backgroundColor: theme.backgroundColorLess08,
                 },
               ]}
@@ -78,20 +98,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 username={username}
               />
             </Animated.View>
-
-            <Separator horizontal={!horizontal} />
-          </>
-        )}
-
-        {!small && (
-          <>
-            <TouchableOpacity
-              analyticsLabel="sidebar_add"
-              onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-              style={[styles.centerContainer, squareStyle]}
-            >
-              <ColumnHeaderItem analyticsLabel={undefined} iconName="plus" />
-            </TouchableOpacity>
 
             <Separator horizontal={!horizontal} />
           </>
@@ -108,16 +114,19 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           style={{ flex: 1 }}
         >
           {!(columnIds && columnIds.length) ? (
-            small ? (
+            !large ? (
               <>
                 <TouchableOpacity
                   analyticsLabel="sidebar_add"
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                  style={[styles.centerContainer, squareStyle]}
+                  style={[styles.centerContainer, itemContainerStyle]}
                 >
                   <ColumnHeaderItem
                     analyticsLabel={undefined}
                     iconName="plus"
+                    label="Add column"
+                    showLabel={showLabel}
+                    size={columnHeaderItemContentBiggerSize}
                   />
                 </TouchableOpacity>
 
@@ -129,8 +138,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               <SidebarColumnItem
                 key={`sidebar-column-item-${columnId}`}
                 columnId={columnId}
-                small={small}
                 currentOpenedModal={currentOpenedModal}
+                itemContainerStyle={itemContainerStyle}
+                showLabel={showLabel}
+                small={small}
               />
             ))
           )}
@@ -143,9 +154,15 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   ? undefined
                   : replaceModal({ name: 'SETTINGS' })
               }
-              style={[styles.centerContainer, squareStyle]}
+              style={[styles.centerContainer, itemContainerStyle]}
             >
-              <ColumnHeaderItem analyticsLabel={undefined} iconName="gear" />
+              <ColumnHeaderItem
+                analyticsLabel={undefined}
+                iconName="gear"
+                label="Preferences"
+                showLabel={showLabel}
+                size={columnHeaderItemContentBiggerSize}
+              />
             </TouchableOpacity>
           )}
         </ScrollView>
@@ -154,30 +171,58 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           <>
             <Separator horizontal={!horizontal} />
 
+            {!!large && (
+              <>
+                <TouchableOpacity
+                  analyticsLabel="sidebar_add"
+                  onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                  style={[styles.centerContainer, itemContainerStyle]}
+                >
+                  <ColumnHeaderItem
+                    analyticsLabel={undefined}
+                    iconName="plus"
+                    label="Add column"
+                    showLabel={showLabel}
+                    size={columnHeaderItemContentBiggerSize}
+                  />
+                </TouchableOpacity>
+
+                <Separator horizontal={!horizontal} />
+              </>
+            )}
+
             <TouchableOpacity
               analyticsLabel="sidebar_settings"
               onPress={() => replaceModal({ name: 'SETTINGS' })}
-              style={[styles.centerContainer, squareStyle]}
+              style={[styles.centerContainer, itemContainerStyle]}
             >
-              <ColumnHeaderItem analyticsLabel={undefined} iconName="gear" />
+              <ColumnHeaderItem
+                analyticsLabel={undefined}
+                iconName="gear"
+                label="Preferences"
+                showLabel={showLabel}
+                size={columnHeaderItemContentBiggerSize}
+              />
             </TouchableOpacity>
 
-            <Link
-              analyticsLabel="sidebar_logo"
-              href="https://github.com/devhubapp/devhub"
-              openOnNewTab
-              style={[styles.centerContainer, squareStyle]}
-            >
-              <Image
-                resizeMode="contain"
-                source={logo}
-                style={{
-                  width: sidebarSize / 2,
-                  height: sidebarSize / 2,
-                  borderRadius: sidebarSize / (2 * 2),
-                }}
-              />
-            </Link>
+            {!!large && (
+              <Link
+                analyticsLabel="sidebar_logo"
+                href="https://github.com/devhubapp/devhub"
+                openOnNewTab
+                style={[styles.centerContainer, itemContainerStyle]}
+              >
+                <Image
+                  resizeMode="contain"
+                  source={logo}
+                  style={{
+                    width: sidebarSize / 2,
+                    height: sidebarSize / 2,
+                    borderRadius: sidebarSize / (2 * 2),
+                  }}
+                />
+              </Link>
+            )}
           </>
         )}
       </View>
@@ -188,21 +233,29 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 const SidebarColumnItem = React.memo(
   (props: {
     columnId: string
-    small: boolean | undefined
     currentOpenedModal: ModalPayload | undefined
+    itemContainerStyle: ViewStyle
+    showLabel: boolean
+    small: boolean | undefined
   }) => {
-    const { columnId, small, currentOpenedModal } = props
+    const {
+      columnId,
+      currentOpenedModal,
+      itemContainerStyle,
+      showLabel,
+      small,
+    } = props
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
     if (!(column && subscriptions)) return null
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
+    const label = requestTypeIconAndData.title
 
     return (
       <TouchableOpacity
         key={`sidebar-column-${column.id}`}
         analyticsLabel="sidebar_column"
-        style={[styles.centerContainer, squareStyle]}
         onPress={() => {
           emitter.emit('FOCUS_ON_COLUMN', {
             animated: !small || !currentOpenedModal,
@@ -211,6 +264,7 @@ const SidebarColumnItem = React.memo(
             highlight: !small,
           })
         }}
+        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
       >
         <ColumnHeaderItem
           analyticsLabel={undefined}
@@ -219,6 +273,9 @@ const SidebarColumnItem = React.memo(
             disableLink: true,
           }}
           iconName={requestTypeIconAndData.icon}
+          label={label}
+          showLabel={showLabel}
+          size={columnHeaderItemContentBiggerSize}
         />
       </TouchableOpacity>
     )

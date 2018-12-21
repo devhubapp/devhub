@@ -5,7 +5,8 @@ import React from 'react'
 
 import { appVersion } from '../../components/common/AppVersion'
 import { BugnsagCrossPlatform } from './'
-import { overrideConsoleError } from './index.shared'
+import { hideTokenFromString } from './index.shared'
+// import { overrideConsoleError } from './index.shared'
 
 const client = bugsnagJS({
   apiKey: '231f337f6090422c611017d3dab3d32e',
@@ -26,12 +27,25 @@ export const bugsnag: BugnsagCrossPlatform = {
   notify(error, metadata) {
     client.notify(error, {
       beforeSend: r => {
+        if (r.request.url) {
+          r.request.url = hideTokenFromString(r.request.url)
+        }
+
         r.metaData = Object.assign(r.metaData || {}, metadata, {
           error: _.omit(
             _.pick(error, Object.getOwnPropertyNames(error)),
             'stack',
           ),
         })
+
+        try {
+          const safeMetadata = JSON.parse(
+            hideTokenFromString(JSON.stringify(r.metaData)),
+          )
+          if (safeMetadata) r.metaData = safeMetadata
+        } catch (e) {
+          //
+        }
       },
     })
   },
@@ -41,6 +55,6 @@ export const bugsnag: BugnsagCrossPlatform = {
   },
 }
 
-overrideConsoleError(bugsnag)
+// overrideConsoleError(bugsnag)
 
 export const ErrorBoundary = client.use(createReactPlugin(React))

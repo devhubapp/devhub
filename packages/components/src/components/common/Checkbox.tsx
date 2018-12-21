@@ -38,7 +38,7 @@ export interface CheckboxProps {
   containerStyle?: ViewStyle
   defaultValue?: boolean | null
   disabled?: boolean
-  enableTrippleState?: boolean
+  enableIndeterminateState?: boolean
   label?: string | React.ReactNode
   labelIcon?: AnimatedIconProps['name']
   onChange?: (value: boolean | null) => void
@@ -52,19 +52,20 @@ export function Checkbox(props: CheckboxProps) {
   const theme = useAnimatedTheme()
 
   const {
-    analyticsLabel,
     defaultValue,
     checked = defaultValue,
+
+    analyticsLabel,
     checkedBackgroundColor = colors.brandBackgroundColor,
     checkedForegroundColor = colors.brandForegroundColor,
     circle,
     containerStyle,
     disabled,
+    enableIndeterminateState = false,
     label,
     labelIcon,
     onChange,
     size = 18,
-    enableTrippleState = false,
     uncheckedBackgroundColor,
     uncheckedForegroundColor = theme.foregroundColor,
   } = props
@@ -73,10 +74,10 @@ export function Checkbox(props: CheckboxProps) {
     typeof props.checked === 'boolean' ? props.checked : !!defaultValue,
   )
 
-  const isThirdState = enableTrippleState && checked === null
+  const isIndeterminateState = enableIndeterminateState && checked === null
 
   const getNextValue = () =>
-    enableTrippleState
+    enableIndeterminateState
       ? checked === null
         ? !lastBooleanValue
         : null
@@ -94,7 +95,9 @@ export function Checkbox(props: CheckboxProps) {
 
   return (
     <TouchableOpacity
-      analyticsAction={isThirdState ? 'tripple' : checked ? 'uncheck' : 'check'}
+      analyticsAction={
+        isIndeterminateState ? 'indeterminate' : checked ? 'uncheck' : 'check'
+      }
       analyticsCategory="checkbox"
       analyticsLabel={analyticsLabel}
       disabled={disabled}
@@ -111,7 +114,7 @@ export function Checkbox(props: CheckboxProps) {
             //   ? checkedBackgroundColor
             //   : uncheckedBackgroundColor,
             borderColor:
-              checked || isThirdState
+              checked || isIndeterminateState
                 ? checkedBackgroundColor
                 : uncheckedForegroundColor,
             borderRadius: circle ? size / 2 : checkboxBorderRadius,
@@ -121,10 +124,10 @@ export function Checkbox(props: CheckboxProps) {
         <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 1 }]}>
           <Animated.View
             style={{
-              width: isThirdState ? '80%' : '100%',
-              height: isThirdState ? '80%' : '100%',
+              width: isIndeterminateState ? '80%' : '100%',
+              height: isIndeterminateState ? '80%' : '100%',
               backgroundColor:
-                checked || isThirdState
+                checked || isIndeterminateState
                   ? checkedBackgroundColor
                   : uncheckedBackgroundColor,
               borderRadius: circle ? size / 2 : checkboxBorderRadius / 2,
