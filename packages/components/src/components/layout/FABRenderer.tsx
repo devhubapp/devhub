@@ -32,7 +32,7 @@ export function FABRenderer() {
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
 
-  if (sizename !== '1-small') return null
+  if (!(sizename < '3-large')) return null
   if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
     return null
 

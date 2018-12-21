@@ -42,7 +42,7 @@ export const MainScreen = React.memo(() => {
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
   const theme = useAnimatedTheme()
-  const { appOrientation, sizename } = useAppLayout()
+  const { appOrientation } = useAppLayout()
 
   const debounceSyncDown = useMemo(
     () => {
@@ -138,7 +138,7 @@ export const MainScreen = React.memo(() => {
     () => {
       if (
         currentOpenedModal &&
-        Dimensions.get('window').width <= APP_LAYOUT_BREAKPOINTS.SMALL
+        Dimensions.get('window').width <= APP_LAYOUT_BREAKPOINTS.MEDIUM
       ) {
         closeAllModals()
       }
@@ -164,11 +164,7 @@ export const MainScreen = React.memo(() => {
           },
         ]}
       >
-        <Sidebar
-          key="main-screen-sidebar"
-          horizontal={horizontalSidebar}
-          small={sizename === '1-small'}
-        />
+        <Sidebar key="main-screen-sidebar" horizontal={horizontalSidebar} />
         <Separator horizontal={horizontalSidebar} thick={!horizontalSidebar} />
 
         <View style={styles.innerContainer}>

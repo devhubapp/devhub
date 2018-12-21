@@ -38,7 +38,7 @@ export function NotificationColumn(props: NotificationColumnProps) {
 
   const { column, columnIndex, pagingEnabled, subscriptions } = props
 
-  const isFabVisible = sizename === '1-small'
+  const isFabVisible = sizename < '3-large'
   const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
   return (

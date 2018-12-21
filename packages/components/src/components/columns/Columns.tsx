@@ -76,7 +76,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
     )
   }
 
-  const pagingEnabled = sizename === '1-small'
+  const pagingEnabled = sizename < '3-large'
   const swipeable: boolean = false
 
   return (

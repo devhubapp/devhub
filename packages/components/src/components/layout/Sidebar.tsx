@@ -27,6 +27,7 @@ import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { TouchableOpacity } from '../common/TouchableOpacity'
+import { useAppLayout } from '../context/LayoutContext'
 
 const logo = require('@devhub/components/assets/logo.png') // tslint:disable-line
 
@@ -40,17 +41,22 @@ const styles = StyleSheet.create({
 
 export interface SidebarProps {
   horizontal?: boolean
-  small?: boolean
 }
 
 export const Sidebar = React.memo((props: SidebarProps) => {
+  const theme = useAnimatedTheme()
+  const { sizename } = useAppLayout()
+
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const replaceModal = useReduxAction(actions.replaceModal)
-  const theme = useAnimatedTheme()
   const username = useReduxState(selectors.currentUsernameSelector)
 
-  const { horizontal, small } = props
+  const replaceModal = useReduxAction(actions.replaceModal)
+
+  const { horizontal } = props
+
+  const small = sizename === '1-small'
+  const large = sizename === '3-large'
 
   const showLabel = !!(horizontal && small)
 
@@ -108,7 +114,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           style={{ flex: 1 }}
         >
           {!(columnIds && columnIds.length) ? (
-            small ? (
+            !large ? (
               <>
                 <TouchableOpacity
                   analyticsLabel="sidebar_add"
@@ -165,21 +171,25 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           <>
             <Separator horizontal={!horizontal} />
 
-            <TouchableOpacity
-              analyticsLabel="sidebar_add"
-              onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-              style={[styles.centerContainer, itemContainerStyle]}
-            >
-              <ColumnHeaderItem
-                analyticsLabel={undefined}
-                iconName="plus"
-                label="Add column"
-                showLabel={showLabel}
-                size={columnHeaderItemContentBiggerSize}
-              />
-            </TouchableOpacity>
+            {!!large && (
+              <>
+                <TouchableOpacity
+                  analyticsLabel="sidebar_add"
+                  onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                  style={[styles.centerContainer, itemContainerStyle]}
+                >
+                  <ColumnHeaderItem
+                    analyticsLabel={undefined}
+                    iconName="plus"
+                    label="Add column"
+                    showLabel={showLabel}
+                    size={columnHeaderItemContentBiggerSize}
+                  />
+                </TouchableOpacity>
 
-            <Separator horizontal={!horizontal} />
+                <Separator horizontal={!horizontal} />
+              </>
+            )}
 
             <TouchableOpacity
               analyticsLabel="sidebar_settings"
@@ -195,22 +205,24 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               />
             </TouchableOpacity>
 
-            <Link
-              analyticsLabel="sidebar_logo"
-              href="https://github.com/devhubapp/devhub"
-              openOnNewTab
-              style={[styles.centerContainer, itemContainerStyle]}
-            >
-              <Image
-                resizeMode="contain"
-                source={logo}
-                style={{
-                  width: sidebarSize / 2,
-                  height: sidebarSize / 2,
-                  borderRadius: sidebarSize / (2 * 2),
-                }}
-              />
-            </Link>
+            {!!large && (
+              <Link
+                analyticsLabel="sidebar_logo"
+                href="https://github.com/devhubapp/devhub"
+                openOnNewTab
+                style={[styles.centerContainer, itemContainerStyle]}
+              >
+                <Image
+                  resizeMode="contain"
+                  source={logo}
+                  style={{
+                    width: sidebarSize / 2,
+                    height: sidebarSize / 2,
+                    borderRadius: sidebarSize / (2 * 2),
+                  }}
+                />
+              </Link>
+            )}
           </>
         )}
       </View>

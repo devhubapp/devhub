@@ -37,7 +37,7 @@ export function EventColumn(props: EventColumnProps) {
 
   const { column, columnIndex, pagingEnabled, subscriptions } = props
 
-  const isFabVisible = sizename === '1-small'
+  const isFabVisible = sizename < '3-large'
   const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
   return (

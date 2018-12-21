@@ -55,7 +55,7 @@ function calculateColumnWidth({
 
   const minWidth = _minWidth && _minWidth > 0 ? _minWidth : 0
   const maxWidth = Math.min(
-    window.width <= APP_LAYOUT_BREAKPOINTS.SMALL
+    window.width <= APP_LAYOUT_BREAKPOINTS.MEDIUM
       ? availableWidth
       : _maxWidth && _maxWidth >= 0
       ? _maxWidth
