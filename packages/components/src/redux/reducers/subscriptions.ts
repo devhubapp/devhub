@@ -5,6 +5,7 @@ import { REHYDRATE } from 'redux-persist'
 import {
   ActivityColumnSubscription,
   ColumnSubscription,
+  constants,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   NotificationColumnSubscription,
@@ -57,8 +58,9 @@ export const subscriptionsReducer: Reducer<State> = (
           if (subscription.data.items.length) {
             const sevenDays = 1000 * 60 * 60 * 24 * 7
 
-            subscription.data.items = (subscription.data.items as any[]).filter(
-              item => {
+            let count = 0
+            subscription.data.items = (subscription.data.items as any[])
+              .filter(item => {
                 if (!item) return false
                 if (!item.updated_at) return true
                 if (item.saved) return true
@@ -66,8 +68,14 @@ export const subscriptionsReducer: Reducer<State> = (
                 return (
                   new Date(item.updated_at).valueOf() >= Date.now() - sevenDays
                 )
-              },
-            )
+              })
+              .filter(item => {
+                count = count + 1
+
+                if (item.saved) return true
+
+                return count <= constants.DEFAULT_PAGINATION_PER_PAGE
+              })
           }
         })
       })
