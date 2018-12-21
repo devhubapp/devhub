@@ -18,7 +18,7 @@ export function H3(props: H3Props) {
         {
           marginBottom: withMargin ? contentPadding : undefined,
           fontWeight: '400',
-          color: theme.foregroundColorTransparent50,
+          color: theme.foregroundColorMuted50,
         },
         style,
       ]}
