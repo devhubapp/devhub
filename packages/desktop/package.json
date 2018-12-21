@@ -61,7 +61,7 @@
     "resize-observer-polyfill": "^1.5.0"
   },
   "devDependencies": {
-    "electron": "4.0.0-beta.5",
+    "electron": "^4.0.0",
     "electron-builder": "^20.38.3",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.1",
