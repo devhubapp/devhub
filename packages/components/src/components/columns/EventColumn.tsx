@@ -8,6 +8,10 @@ import {
 } from '../../containers/EventCardsContainer'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import { fabSize } from '../common/FAB'
+import { Spacer } from '../common/Spacer'
+import { useAppLayout } from '../context/LayoutContext'
+import { fabSpacing } from '../layout/FABRenderer'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
@@ -20,16 +24,20 @@ export interface EventColumnProps extends EventCardsContainerProps {
 
 export function EventColumn(props: EventColumnProps) {
   const [
-    columnOptionsAvailablHeight,
-    setColumnOptionsAvailablHeight,
+    columnOptionsContainerHeight,
+    setColumnOptionsContainerHeight,
   ] = useState(0)
   const [showColumnOptions, setShowColumnOptions] = useState(false)
+
+  const { sizename } = useAppLayout()
+
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
   )
 
   const { column, columnIndex, pagingEnabled, subscriptions } = props
 
+  const isFabVisible = sizename === '1-small'
   const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
   return (
@@ -44,10 +52,11 @@ export function EventColumn(props: EventColumnProps) {
           avatarProps={requestTypeIconAndData.avatarProps}
           fixedIconSize
           iconName={requestTypeIconAndData.icon}
-          style={{ flex: 1 }}
           subtitle={requestTypeIconAndData.subtitle}
           title={requestTypeIconAndData.title}
         />
+
+        <Spacer flex={1} />
 
         <ColumnHeaderItem
           analyticsLabel="clear_column"
@@ -76,12 +85,15 @@ export function EventColumn(props: EventColumnProps) {
       <View
         style={{ flex: 1 }}
         onLayout={e => {
-          setColumnOptionsAvailablHeight(e.nativeEvent.layout.height)
+          setColumnOptionsContainerHeight(e.nativeEvent.layout.height)
         }}
       >
         {!!showColumnOptions && (
           <ColumnOptions
-            availableHeight={columnOptionsAvailablHeight}
+            availableHeight={
+              columnOptionsContainerHeight -
+              (isFabVisible ? fabSize + 2 * fabSpacing : 0)
+            }
             column={column}
             columnIndex={columnIndex}
           />

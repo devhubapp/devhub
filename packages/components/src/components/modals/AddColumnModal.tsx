@@ -102,8 +102,9 @@ function AddColumnModalItem({
         <ColumnHeaderItem
           analyticsLabel={undefined}
           iconName={item.icon}
-          iconStyle={{ fontSize: 24, marginBottom: contentPadding / 2 }}
           noPadding
+          size={24}
+          style={{ fontSize: 24, marginBottom: contentPadding / 2 }}
         />
 
         <Animated.Text style={{ color: theme.foregroundColor }}>
