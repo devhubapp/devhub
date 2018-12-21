@@ -104,7 +104,7 @@ function AddColumnModalItem({
           iconName={item.icon}
           noPadding
           size={24}
-          style={{ fontSize: 24, marginBottom: contentPadding / 2 }}
+          style={{ marginBottom: contentPadding / 2 }}
         />
 
         <Animated.Text style={{ color: theme.foregroundColor }}>
