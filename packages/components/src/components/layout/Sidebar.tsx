@@ -97,26 +97,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </>
         )}
 
-        {!small && (
-          <>
-            <TouchableOpacity
-              analyticsLabel="sidebar_add"
-              onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-              style={[styles.centerContainer, itemContainerStyle]}
-            >
-              <ColumnHeaderItem
-                analyticsLabel={undefined}
-                iconName="plus"
-                label="Add column"
-                showLabel={showLabel}
-                size={columnHeaderItemContentBiggerSize}
-              />
-            </TouchableOpacity>
-
-            <Separator horizontal={!horizontal} />
-          </>
-        )}
-
         <ScrollView
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
@@ -183,6 +163,22 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
         {!small && (
           <>
+            <Separator horizontal={!horizontal} />
+
+            <TouchableOpacity
+              analyticsLabel="sidebar_add"
+              onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+              style={[styles.centerContainer, itemContainerStyle]}
+            >
+              <ColumnHeaderItem
+                analyticsLabel={undefined}
+                iconName="plus"
+                label="Add column"
+                showLabel={showLabel}
+                size={columnHeaderItemContentBiggerSize}
+              />
+            </TouchableOpacity>
+
             <Separator horizontal={!horizontal} />
 
             <TouchableOpacity
