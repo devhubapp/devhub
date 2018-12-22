@@ -1,6 +1,6 @@
 {
   "name": "@devhub/desktop",
-  "version": "0.0.1",
+  "version": "0.40.0",
   "private": false,
   "main": "dist/electron.js",
   "scripts": {
@@ -51,14 +51,15 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "@devhub/components": "0.39.2",
-    "react": "^16.7.0-alpha.2",
+    "@devhub/components": "0.40.0",
+    "react": "16.7.0-alpha.2",
     "react-app-polyfill": "^0.1.3",
-    "react-art": "^16.7.0-alpha.2",
-    "react-dom": "^16.7.0-alpha.2",
-    "react-native-web": "^0.9.8",
+    "react-art": "16.7.0-alpha.2",
+    "react-dom": "16.7.0-alpha.2",
+    "react-native-web": "0.9.9",
     "react-scripts": "2.1.1",
-    "resize-observer-polyfill": "^1.5.0"
+    "resize-observer-polyfill": "^1.5.0",
+    "smoothscroll-polyfill": "0.4.3"
   },
   "devDependencies": {
     "electron": "^4.0.0",
@@ -69,7 +70,7 @@
     "typescript": "^3.2.1"
   },
   "resolutions": {
-    "scheduler": "0.12.0-alpha.3"
+    "scheduler": "0.12.0"
   },
   "browserslist": [
     ">0.2%",
