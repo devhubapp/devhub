@@ -53,15 +53,8 @@
 </head>
 
 <body>
-  <script>
-    if (window.navigator.userAgent.indexOf("Electron") !== -1) {
-      var div = document.createElement("div");
-      div.innerHTML = "<div class='header-arrow'></div>";
-      var first=document.body.firstChild;
-      document.body.insertBefore(div, first);
-    }
-  </script>
   <div id="root"></div>
+
   <noscript id="error-container">
     <link rel="stylesheet" href="%PUBLIC_URL%/static/css/error.css" />
 
