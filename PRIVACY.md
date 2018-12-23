@@ -5,24 +5,31 @@
 This app requires GitHub authentication.<br/>
 These are all permissions that may be requested to you and their reasons:
 
-- [required] `user`: Read basic user information, like name, email and avatar, if provided by GitHub;
-- [required] `notifications`: Read user notifications; mark as read;
-- [required] `read:org`: Read organization events;
+- [required] `read:user`: Read-only access to the user's profile data, like username, email and avatar;
+- [required] `notifications`: Read user's public and private notifications; mark as read;
+- [required] `read:org`: Read organization events; read list of user's organizations;
 - [required] `public_repo`: Read public GitHub content, like events from any user or repository;
-- [optional] `repo`: Read user's private content, like events from private repositories.
-
-This app does not access any code from any repository.
+- [deprecated] `repo`: Read user's private content, like events from private repositories (not recommended).
 
 
 ### Diagnostics information
-This app uses [Bugsnag](https://bugsnag.com) and [Google Analytics](https://analytics.google.com/) to collect information about crashes and app usage. 
-No personal information is ever send to third parties, only an annonymous id. Some device information may be included for debugging purposes, like `brand`, `model` and `operation system`.
+This app uses [Bugsnag](https://bugsnag.com), [Google Analytics](https://analytics.google.com/) and [Firebase](https://firebase.google.com/) to collect information about crashes and app usage. 
+No personal information is ever send to third parties, only an annonymous id. Services may collect user's IP. Some device information may be included for debugging purposes, like `brand`, `model` and `operation system`.
+
+
+### Security & Limited Liability
+
+DevHub follows good practises of security, but 100% security can't be granted in software. DevHub is provided as is without any warranty. Use at your own risk.
+
+Client-side communication is encrypted using HTTPS. Server-side tokens are encrypted or behind environment variables.
+
+Disclaimer: DevHub does not access any code from any repository, but GitHub's oauth permissions `public_repo` and `repo` provide write access. Make sure to keep your tokens safe. For example, be extra careful with which browser extensions you have installed. Token safety is user's reponsability.
 
 
 ### Support
-Feel free to open an issue, contact me on twitter [@brunolemos](https://twitter.com/brunolemos) or e-mail via [support@devhubapp.com](mailto:support@devhubapp.com).<br/>
-If you find any bug, please contribute sending a PR with the fix or with a failing test.
+Feel free to open an issue or contact us via e-mail ([support@devhubapp.com](mailto:support@devhubapp.com)).<br/>
+If you find any bug, please contribute by opening an issue or sending a pull request with the fix.
 
 ---
 
-Updated December 11th, 2018.
+Updated December 23rd, 2018.
