@@ -132,7 +132,7 @@ Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
 
 ## License
 
-Copyright (c) 2018 [Bruno Lemos](https://twitter.com/brunolemos).
+Copyright (c) 2018 Bruno Lemos.
 
 This project is provided as is without any warranties. Use at your own risk.<br/>
 By using DevHub you agree with its [privacy](PRIVACY.md) policy and [license](LICENSE.md).
