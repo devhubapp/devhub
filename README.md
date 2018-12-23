@@ -30,10 +30,10 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [x] **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc.;
 - [x] **Sanely watch repositories**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
 - [x] **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub doesn't show on your feed, like issue comments and pushed commits;
-- [x] **Dashboard spier**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
+- [x] **Dashboard viewer**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Theme support**: Choose between 6 light or dark themes;
-- [x] **And more!**: Native apps, keyboard shortcuts, modern tech stack, ...
+- [x] **And more!**: Native apps, open source, modern tech stack, ...
 
 ### Next features:
 
@@ -48,11 +48,11 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 ### Paid features:
 
-#### Why is this app "just" 99% free and not 100%?
+> #### Why is this app "just" 99% free and not 100%?
 
 > "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
 
-DevHub plans to be a sustainable project. It's not made by a huge company like Facebook. It was created by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not plan to work with donations and, instead, plan to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
+> DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
 
 - [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
@@ -105,7 +105,7 @@ DevHub plans to be a sustainable project. It's not made by a huge company like F
 Bug reports, feature requests and other contributions are more than welcome! <br/>
 Whenever possible, please make a pull request with the implementation instead of just requesting it.
 
-> If the feature is big, please open an issue first for discussion.
+> If the feature is big, open an issue first for discussion.
 
 ### Running it locally
 
@@ -134,5 +134,5 @@ Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
 
 Copyright (c) 2018 [Bruno Lemos](https://twitter.com/brunolemos).
 
-This is project provided as is without any warranties. Use at your own risk.<br/>
+This project is provided as is without any warranties. Use at your own risk.<br/>
 By using DevHub you agree with its [privacy](PRIVACY.md) policy and [license](LICENSE.md).
