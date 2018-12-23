@@ -9,12 +9,12 @@ These are all permissions that may be requested to you and their reasons:
 - [required] `notifications`: Read user's public and private notifications; mark as read;
 - [required] `read:org`: Read organization events; read list of user's organizations;
 - [required] `public_repo`: Read public GitHub content, like events from any user or repository;
-- [deprecated] `repo`: Read user's private content, like events from private repositories (not recommended).
+- [deprecated] `repo`: Read user's private content, like events from private repositories ([not recommended](https://github.com/devhubapp/devhub/issues/32)).
 
 
 ### Diagnostics information
 This app uses [Bugsnag](https://bugsnag.com), [Google Analytics](https://analytics.google.com/) and [Firebase](https://firebase.google.com/) to collect information about crashes and app usage. 
-No personal information is ever send to third parties, only an annonymous id. Services may collect user's IP. Some device information may be included for debugging purposes, like `brand`, `model` and `operation system`.
+No personal information is ever sent to third parties, only an annonymous id. Services may collect user's IP. Some device information may be included for debugging purposes, like `brand`, `model` and `operation system`.
 
 
 ### Security & Limited Liability
