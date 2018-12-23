@@ -4,7 +4,7 @@
   "private": false,
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -b",
+    "compile": "tsc -b",
     "clean": "rm -rf dist/*",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",

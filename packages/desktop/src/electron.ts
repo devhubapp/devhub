@@ -1,4 +1,3 @@
-import { constants } from '@devhub/core'
 import {
   app,
   BrowserWindow,
@@ -10,10 +9,13 @@ import {
 } from 'electron'
 import fs from 'fs'
 import path from 'path'
+import url from 'url'
 
-const URL = 'https://devhubapp.com'
-const WIDTH = 350
-const HEIGHT = 450
+const __DEV__ = process.env.NODE_ENV === 'development'
+
+const startURL = __DEV__
+  ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
+  : `file://${path.join(__dirname, '../../web/dist/index.html')}`
 
 let mainWindow: Electron.BrowserWindow
 let menubarWindow: Electron.BrowserWindow
@@ -141,16 +143,15 @@ if (process.platform === 'darwin') {
 }
 
 function createWindow() {
-  // Create a new window
   mainWindow = new BrowserWindow({
-    minWidth: constants.MIN_COLUMN_WIDTH,
-    width: WIDTH,
-    height: HEIGHT,
-    // Don't show the window until it ready, this prevents any white flickering
+    minWidth: 320,
+    width: 340,
+    minHeight: 400,
+    height: 550,
     show: false,
   })
 
-  mainWindow.loadURL(URL)
+  mainWindow.loadURL(startURL)
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -188,9 +189,10 @@ function createWindow() {
 
 function createMenubarWindow() {
   menubarWindow = new BrowserWindow({
-    minWidth: constants.MIN_COLUMN_WIDTH,
-    width: WIDTH,
-    height: HEIGHT,
+    minWidth: 320,
+    width: 340,
+    minHeight: 400,
+    height: 550,
     show: false,
     frame: false,
     fullscreenable: false,
@@ -201,17 +203,14 @@ function createMenubarWindow() {
       backgroundThrottling: false,
     },
   })
-  menubarWindow.loadURL(URL)
+  menubarWindow.loadURL(startURL)
   const webContents = menubarWindow.webContents
 
   webContents.on('dom-ready', () => {
     const position = getWindowPosition()
     setWindowPosition(menubarWindow, position.x, position.y)
     webContents.insertCSS(
-      fs.readFileSync(
-        path.join(__dirname, '../public/static/css/arrow.css'),
-        'utf8',
-      ),
+      fs.readFileSync(path.join(__dirname, '../assets/css/arrow.css'), 'utf8'),
     )
     menubarWindow.show()
     menubarWindow.focus()
@@ -236,8 +235,9 @@ function createMenubarWindow() {
 
 function createTray() {
   const trayIcon = nativeImage.createFromPath(
-    `${path.join(__dirname, '../public/static/media/logo-transparent@2x.png')}`,
+    path.join(__dirname, '../assets/media/logo-transparent@2x.png'),
   )
+
   tray = new Tray(
     trayIcon.resize({
       width: 22,
@@ -302,12 +302,12 @@ app.on('activate', () => {
 })
 
 // web-contents-created
-app.on('web-contents-created', (event, webContents) => {
-  webContents.on('new-window', (e, url) => {
-    if (!url.includes('https://api.devhubapp.com/oauth')) {
-      e.preventDefault()
-      shell.openExternal(url)
-    }
+app.on('web-contents-created', (_event, webContents) => {
+  webContents.on('new-window', (e, uri) => {
+    if (`${url.parse(uri).pathname || ''}`.startsWith('/oauth')) return
+
+    e.preventDefault()
+    shell.openExternal(uri)
   })
 })
 

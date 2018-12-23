@@ -4,6 +4,7 @@ import { PlataformSelectSpecifics, PlatformSelectOptions } from './index.shared'
 
 export const Platform = {
   ..._Platform,
+  isElectron: false,
   isStandalone: true,
   realOS: _Platform.OS,
   selectUsingRealOS<T>(
