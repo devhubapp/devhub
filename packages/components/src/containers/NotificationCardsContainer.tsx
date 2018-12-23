@@ -37,11 +37,12 @@ export const NotificationCardsContainer = React.memo(
     )
     const subscription = useReduxState(
       state =>
-        selectors.subscriptionSelector(
-          state,
-          column.subscriptionIds[0],
-        ) as NotificationColumnSubscription,
+        selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
+          | NotificationColumnSubscription
+          | undefined,
     )
+
+    const data = (subscription && subscription.data) || {}
 
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
@@ -51,7 +52,7 @@ export const NotificationCardsContainer = React.memo(
       EnhancedGitHubNotification[]
     >(() =>
       getFilteredNotifications(
-        subscription.data.items || [],
+        data.items || [],
         column.filters,
         hasPrivateAccess,
       ),
@@ -63,29 +64,29 @@ export const NotificationCardsContainer = React.memo(
       () => {
         setFilteredItems(
           getFilteredNotifications(
-            subscription.data.items || [],
+            data.items || [],
             column.filters,
             hasPrivateAccess,
           ),
         )
       },
-      [subscription.data, column.filters],
+      [data, column.filters],
     )
 
     useEffect(
       () => {
         canFetchMoreRef.current = (() => {
           const clearedAt = column.filters && column.filters.clearedAt
-          const olderDate = getOlderNotificationDate(
-            subscription.data.items || [],
-          )
+          const olderDate = getOlderNotificationDate(data.items || [])
 
           if (clearedAt && olderDate && clearedAt >= olderDate) return false
-          return !!subscription.data.canFetchMore
+          return !!data.canFetchMore
         })()
       },
-      [filteredItems, column.filters, subscription.data.canFetchMore],
+      [filteredItems, column.filters, data.canFetchMore],
     )
+
+    if (!subscription) return null
 
     const fetchData = ({
       page,
