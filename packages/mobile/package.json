@@ -4,6 +4,7 @@
   "private": false,
   "scripts": {
     "clean": "cd .",
+    "compile": "tsc -b",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package",

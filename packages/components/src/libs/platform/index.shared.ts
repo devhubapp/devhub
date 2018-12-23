@@ -1,4 +1,4 @@
-export type PlatformOSType = 'android' | 'ios' | 'web'
+export type PlatformOSType = 'android' | 'electron' | 'ios' | 'web'
 
 export type PlataformSelectSpecifics<T> = {
   [platform in PlatformOSType | 'default']?: T
