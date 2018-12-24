@@ -7,8 +7,7 @@ body {
   width: 0;
   height: 0;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid #fff;
+  border-bottom: 10px solid var(--theme_backgroundColorLess08);
   border-left: 10px solid transparent;
   margin: auto;
-  transition: border-bottom-width .2s ease,border-bottom-color .3s ease;
 }
