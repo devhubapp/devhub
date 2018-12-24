@@ -21,6 +21,8 @@ let mainWindow: Electron.BrowserWindow
 let menubarWindow: Electron.BrowserWindow
 let tray: Electron.Tray
 
+app.dock.hide()
+
 const template: Electron.MenuItemConstructorOptions[] = [
   {
     label: 'Edit',
@@ -353,6 +355,7 @@ function showMainWindow(x: number, y: number) {
     mainWindow.show()
     mainWindow.focus()
   }
+  app.dock.show()
   setWindowPosition(mainWindow, x, y)
 }
 
@@ -360,6 +363,7 @@ function showMenubarWindow() {
   const position = getWindowPosition()
   menubarWindow.setPosition(position.x, position.y, false)
   setWindowPosition(menubarWindow, position.x, position.y)
+  app.dock.hide()
   menubarWindow.show()
   menubarWindow.focus()
 }
