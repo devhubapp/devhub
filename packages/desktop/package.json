@@ -11,7 +11,7 @@
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "predeploy": "yarn run build",
-    "start": "yarn clean && yarn compile && NODE_ENV=development electron .",
+    "start": "NODE_ENV=development nodemon --watch dist/*.js --watch assets --exec \"electron .\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
@@ -43,6 +43,7 @@
   "devDependencies": {
     "electron": "^4.0.0",
     "electron-builder": "^20.38.3",
+    "nodemon": "^1.18.9",
     "tslint": "^5.11.0",
     "typescript": "^3.2.1",
     "wait-on": "^3.2.0"
