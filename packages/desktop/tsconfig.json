@@ -14,7 +14,7 @@
     ]
   },
   "include": [
-    "src/electron.ts"
+    "src/index.ts"
   ],
   "references": [
     {

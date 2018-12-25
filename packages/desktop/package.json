@@ -2,7 +2,7 @@
   "name": "@devhub/desktop",
   "version": "0.40.0",
   "private": false,
-  "main": "dist/electron.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile && pushd ../web && yarn build && popd && yarn build:electron",
     "build:electron": "NODE_ENV=production electron-builder -mw",
@@ -22,7 +22,7 @@
       "app": "../../"
     },
     "extraMetadata": {
-      "main": "packages/desktop/dist/electron.js"
+      "main": "packages/desktop/dist/index.js"
     },
     "files": [
       "packages/core/package.json",
