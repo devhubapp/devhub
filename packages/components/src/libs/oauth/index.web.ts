@@ -2,7 +2,14 @@ import qs from 'qs'
 
 import { constants } from '@devhub/core'
 import { Platform } from '../platform/index.web'
-import { listenForNextMessageData } from './helpers.web'
+import {
+  getUrlParamsIfMatches,
+  listenForNextMessageData,
+  listenForNextUrl,
+  OAuthResponseData,
+} from './helpers'
+
+const redirectUri = 'devhub://oauth/github'
 
 const popupTarget =
   Platform.realOS !== 'web' ||
@@ -26,7 +33,7 @@ export async function executeOAuth(scope: string[]) {
   const scopeStr = (scope || []).join(' ')
   const querystring = qs.stringify({
     scope: scopeStr,
-    redirect_uri: '',
+    redirect_uri: Platform.isElectron ? redirectUri : '',
   })
 
   // console.log('[OAUTH] Opening popup...')
@@ -35,14 +42,24 @@ export async function executeOAuth(scope: string[]) {
   )
 
   try {
-    const data = await listenForNextMessageData(popup)
-    // console.log('[OAUTH] Received data:', data)
+    let params: OAuthResponseData | null
 
-    if (!(data && data.app_token && data.github_token)) {
+    if (Platform.isElectron) {
+      const url = await listenForNextUrl()
+      // console.log('[OAUTH] Received URL:', url)
+
+      params = getUrlParamsIfMatches(url, redirectUri)
+      // console.log('[OAUTH] URL params:', params)
+    } else {
+      params = await listenForNextMessageData(popup)
+      // console.log('[OAUTH] Received data:', params)
+    }
+
+    if (!(params && params.app_token && params.github_token)) {
       throw new Error('Login failed: No access token received.')
     }
 
-    return data
+    return params
   } catch (e) {
     if (popup && popup !== window) popup.close()
 

@@ -150,6 +150,11 @@ function createWindow() {
     minHeight: 400,
     height: 550,
     show: false,
+    webPreferences: {
+      affinity: 'main-window',
+      nativeWindowOpen: true,
+      nodeIntegration: true,
+    },
   })
 
   mainWindow.loadURL(startURL)
@@ -202,7 +207,10 @@ function createMenubarWindow() {
     transparent: true,
     icon: path.join(__dirname, '../assets/icons/icon.png'),
     webPreferences: {
+      affinity: 'menubar-window',
       backgroundThrottling: false,
+      nativeWindowOpen: true,
+      nodeIntegration: true,
     },
   })
   menubarWindow.loadURL(startURL)
@@ -275,7 +283,7 @@ function createTray() {
 
 // Wait until the app is ready
 app.on('ready', () => {
-  app.setAsDefaultProtocolClient('x-devhub-client')
+  app.setAsDefaultProtocolClient('devhub')
   createTray()
   createMenubarWindow()
   if (process.platform === 'darwin') {
@@ -306,8 +314,6 @@ app.on('web-contents-created', (_event, webContents) => {
   webContents.on(
     'new-window',
     (event, uri, _frameName, _disposition, _options) => {
-      if (`${url.parse(uri).pathname || ''}`.startsWith('/oauth')) return
-
       event.preventDefault()
       shell.openExternal(uri)
     },
