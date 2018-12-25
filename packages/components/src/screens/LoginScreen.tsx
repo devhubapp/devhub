@@ -19,7 +19,7 @@ import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
 
-const logo = require('@devhub/components/assets/logo.png') // tslint:disable-line
+const logo = require('@devhub/components/assets/logo_rounded.png') // tslint:disable-line
 
 const styles = StyleSheet.create({
   container: {
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
 
   logo: {
     alignSelf: 'center',
-    borderRadius: 100 / 8,
     height: 100,
     marginBottom: contentPadding / 2,
     width: 100,

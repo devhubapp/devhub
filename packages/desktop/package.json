@@ -16,27 +16,29 @@
   },
   "build": {
     "appId": "com.devhubapp",
-    "productName": "devhub",
+    "productName": "DevHub",
     "extends": null,
     "directories": {
-      "app": "../../"
+      "app": "../../",
+      "buildResources": "assets"
     },
     "extraMetadata": {
       "main": "packages/desktop/dist/index.js"
     },
     "files": [
+      "packages/core/dist/index.js",
       "packages/core/package.json",
-      "packages/core/dist/**/*",
-      "packages/desktop/dist/**/*",
-      "packages/web/dist/**/*",
-      "packages/web/public/**/*"
+      "packages/desktop/assets/**",
+      "packages/desktop/dist/**",
+      "packages/web/dist/**",
+      "packages/web/public/**"
     ],
     "mac": {
-      "icon": "assets/media/logo.icns"
+      "icon": "icons/icon.png"
     },
     "win": {
       "target": "nsis",
-      "icon": "assets/media/logo.ico"
+      "icon": "icons/icon.ico"
     }
   },
   "dependencies": {},

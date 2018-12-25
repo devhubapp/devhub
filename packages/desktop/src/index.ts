@@ -11,15 +11,14 @@ import fs from 'fs'
 import path from 'path'
 import url from 'url'
 
-const __DEV__ = process.env.NODE_ENV === 'development'
-
-const startURL = __DEV__
-  ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
-  : `file://${path.join(__dirname, '../../web/dist/index.html')}`
-
 let mainWindow: Electron.BrowserWindow
 let menubarWindow: Electron.BrowserWindow
 let tray: Electron.Tray
+
+const startURL =
+  process.env.NODE_ENV === 'development'
+    ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
+    : `file://${path.join(__dirname, '../../web/dist/index.html')}`
 
 app.dock.hide()
 
@@ -201,6 +200,7 @@ function createMenubarWindow() {
     movable: true,
     hasShadow: false,
     transparent: true,
+    icon: path.join(__dirname, '../assets/icons/icon.png'),
     webPreferences: {
       backgroundThrottling: false,
     },
@@ -237,15 +237,15 @@ function createMenubarWindow() {
 
 function createTray() {
   const trayIcon = nativeImage.createFromPath(
-    path.join(__dirname, '../assets/media/logo-transparent@2x.png'),
+    path.join(
+      __dirname,
+      `../assets/icons/${
+        process.platform === 'win32' ? 'trayIconWhite' : 'trayIconTemplate'
+      }.png`,
+    ),
   )
 
-  tray = new Tray(
-    trayIcon.resize({
-      width: 22,
-      height: 22,
-    }),
-  )
+  tray = new Tray(trayIcon)
 
   const trayMenuTemplate = [
     {
@@ -262,7 +262,6 @@ function createTray() {
       },
     },
   ]
-  tray.setToolTip(app.getName())
 
   tray.on('click', () => {
     toggleMenubarWindow()
@@ -281,7 +280,7 @@ app.on('ready', () => {
   createMenubarWindow()
   if (process.platform === 'darwin') {
     app.setAboutPanelOptions({
-      applicationName: 'devhub',
+      applicationName: 'DevHub',
       applicationVersion: app.getVersion(),
       copyright: 'Copyright 2018',
       credits: 'devhub',
@@ -303,14 +302,16 @@ app.on('activate', () => {
   }
 })
 
-// web-contents-created
 app.on('web-contents-created', (_event, webContents) => {
-  webContents.on('new-window', (e, uri) => {
-    if (`${url.parse(uri).pathname || ''}`.startsWith('/oauth')) return
+  webContents.on(
+    'new-window',
+    (event, uri, _frameName, _disposition, _options) => {
+      if (`${url.parse(uri).pathname || ''}`.startsWith('/oauth')) return
 
-    e.preventDefault()
-    shell.openExternal(uri)
-  })
+      event.preventDefault()
+      shell.openExternal(uri)
+    },
+  )
 })
 
 function getWindowPosition() {
