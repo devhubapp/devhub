@@ -3,243 +3,106 @@ import {
   BrowserWindow,
   Menu,
   nativeImage,
+  screen,
   shell,
   TouchBar,
   Tray,
 } from 'electron'
-import fs from 'fs'
 import path from 'path'
-import url from 'url'
+
+const __DEV__ = process.env.NODE_ENV === 'development'
 
 let mainWindow: Electron.BrowserWindow
-let menubarWindow: Electron.BrowserWindow
-let tray: Electron.Tray
+let tray: Electron.Tray | null = null
 
-const startURL =
-  process.env.NODE_ENV === 'development'
-    ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
-    : `file://${path.join(__dirname, '../../web/dist/index.html')}`
+// TODO: Persist these and also the window size/position and preferences
+let isMenuBarMode = false
+let lockOnCenter = true
 
-app.dock.hide()
+app.setName('DevHub')
 
-const template: Electron.MenuItemConstructorOptions[] = [
-  {
-    label: 'Edit',
-    submenu: [
-      {
-        label: 'Undo',
-        accelerator: 'CmdOrCtrl+Z',
-        role: 'undo',
-      },
-      {
-        label: 'Redo',
-        accelerator: 'Shift+CmdOrCtrl+Z',
-        role: 'redo',
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: 'Cut',
-        accelerator: 'CmdOrCtrl+X',
-        role: 'cut',
-      },
-      {
-        label: 'Copy',
-        accelerator: 'CmdOrCtrl+C',
-        role: 'copy',
-      },
-      {
-        label: 'Paste',
-        accelerator: 'CmdOrCtrl+V',
-        role: 'paste',
-      },
-      {
-        label: 'Select All',
-        accelerator: 'CmdOrCtrl+A',
-        role: 'selectall',
-      },
-    ],
-  },
-  {
-    label: 'View',
-    submenu: [
-      {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-      },
-    ],
-  },
-  {
-    label: 'Window',
-    role: 'window',
-    submenu: [
-      {
-        label: 'Minimize',
-        accelerator: 'CmdOrCtrl+M',
-        role: 'minimize',
-      },
-      {
-        label: 'Close',
-        accelerator: 'CmdOrCtrl+W',
-        role: 'close',
-      },
-    ],
-  },
-  {
-    type: 'separator',
-  },
-  {
-    label: 'Bring All to Front',
-    role: 'front',
-  },
-  {
-    label: 'Help',
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click: () => {
-          shell.openExternal('https://devhubapp.com')
-        },
-      },
-    ],
-  },
-]
+const startURL = __DEV__
+  ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
+  : `file://${path.join(__dirname, '../../web/dist/index.html')}`
 
-if (process.platform === 'darwin') {
-  const name = app.getName()
-  template.unshift({
-    label: name,
-    submenu: [
-      {
-        label: `About ${name}`,
-        role: 'about',
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: `Hide ${name}`,
-        accelerator: 'Command+H',
-        role: 'hide',
-      },
-      {
-        label: 'Hide Others',
-        accelerator: 'Command+Alt+H',
-        role: 'hideothers',
-      },
-      {
-        type: 'separator',
-      },
-      {
-        label: 'Quit',
-        accelerator: 'Command+Q',
-        click: () => {
-          app.quit()
-        },
-      },
-    ],
-  })
-}
+function getBrowserWindowOptions() {
+  function createOptions<T extends Electron.BrowserWindowConstructorOptions>(
+    obj: T,
+  ) {
+    return obj
+  }
 
-function createWindow() {
-  mainWindow = new BrowserWindow({
+  return createOptions({
     minWidth: 320,
-    width: 340,
-    minHeight: 400,
-    height: 550,
-    show: false,
+    minHeight: 450,
+    backgroundColor: '#292c33',
+    center: true,
+    darkTheme: true,
+    frame: false,
+    fullscreenable: true,
+    resizable: true,
+    show: true,
+    title: 'DevHub',
     webPreferences: {
       affinity: 'main-window',
-      nativeWindowOpen: true,
-      nodeIntegration: true,
-    },
-  })
-
-  mainWindow.loadURL(startURL)
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow.destroy()
-  })
-
-  // Show window when page is ready
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
-    const menu = Menu.buildFromTemplate(template)
-    Menu.setApplicationMenu(menu)
-    if (process.platform === 'darwin') {
-      const spin = new TouchBar.TouchBarButton({
-        label: 'devhub',
-      })
-
-      const touchBar = new TouchBar({
-        items: [spin],
-      })
-      mainWindow.setTouchBar(touchBar)
-    }
-  })
-
-  mainWindow.on('move', () => {
-    const [x, y] = mainWindow.getPosition()
-    if (y <= 100) {
-      mainWindow.hide()
-      showMenubarWindow()
-    }
-  })
-}
-
-function createMenubarWindow() {
-  menubarWindow = new BrowserWindow({
-    minWidth: 320,
-    width: 340,
-    minHeight: 400,
-    height: 550,
-    show: false,
-    frame: false,
-    fullscreenable: false,
-    movable: true,
-    hasShadow: false,
-    transparent: true,
-    icon: path.join(__dirname, '../assets/icons/icon.png'),
-    webPreferences: {
-      affinity: 'menubar-window',
       backgroundThrottling: false,
       nativeWindowOpen: true,
       nodeIntegration: true,
     },
+    ...(isMenuBarMode
+      ? {
+          maxWidth: screen.getPrimaryDisplay().workAreaSize.width * 0.8,
+          maxHeight: screen.getPrimaryDisplay().workAreaSize.height * 0.8,
+          movable: false,
+          width: 340,
+          height: 550,
+        }
+      : {
+          maxWidth: undefined,
+          maxHeight: undefined,
+          movable: !lockOnCenter,
+          width: screen.getPrimaryDisplay().workAreaSize.width,
+          height: screen.getPrimaryDisplay().workAreaSize.height,
+        }),
   })
-  menubarWindow.loadURL(startURL)
-  const webContents = menubarWindow.webContents
+}
 
-  webContents.on('dom-ready', () => {
-    const position = getWindowPosition()
-    setWindowPosition(menubarWindow, position.x, position.y)
-    webContents.insertCSS(
-      fs.readFileSync(path.join(__dirname, '../assets/css/arrow.css'), 'utf8'),
-    )
-    menubarWindow.show()
-    menubarWindow.focus()
+function createWindow() {
+  mainWindow = new BrowserWindow(getBrowserWindowOptions())
+
+  mainWindow.loadURL(startURL)
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
   })
 
-  // Hide the window when it loses focus
-  menubarWindow.on('blur', () => {
-    menubarWindow.hide()
+  mainWindow.on('show', () => {
+    updateTrayHightlightMode()
+    updateBrowserWindowOptions()
   })
 
-  menubarWindow.on('move', () => {
-    const [x, y] = menubarWindow.getPosition()
-    if (y <= 100) {
-      const position = getWindowPosition()
-      menubarWindow.setPosition(position.x, position.y, false)
-    } else {
-      menubarWindow.hide()
-      showMainWindow(x, y)
+  mainWindow.on('hide', () => {
+    if (tray) tray.setHighlightMode('selection')
+  })
+
+  mainWindow.on('closed', () => {
+    mainWindow.destroy()
+  })
+
+  mainWindow.on('resize', () => {
+    if (isMenuBarMode) {
+      alignWindowWithTray()
+    } else if (lockOnCenter) {
+      mainWindow.center()
     }
+  })
+
+  mainWindow.on('enter-full-screen', () => {
+    app.dock.show()
+  })
+
+  mainWindow.on('leave-full-screen', () => {
+    update()
   })
 }
 
@@ -253,39 +116,40 @@ function createTray() {
     ),
   )
 
+  if (tray && !tray.isDestroyed()) tray.destroy()
+
   tray = new Tray(trayIcon)
 
-  const trayMenuTemplate = [
-    {
-      label: 'Devhub',
-      click() {
-        menubarWindow.hide()
-        toggleMainWindow()
-      },
-    },
-    {
-      label: 'Quit',
-      click() {
-        app.quit()
-      },
-    },
-  ]
-
   tray.on('click', () => {
-    toggleMenubarWindow()
+    if (mainWindow.isFullScreen()) {
+      tray!.popUpContextMenu(getTrayContextMenu())
+      return
+    }
+
+    if (
+      mainWindow.isVisible() &&
+      mainWindow.isFocused() &&
+      !mainWindow.isMinimized()
+    ) {
+      tray!.popUpContextMenu(getTrayContextMenu())
+      return
+    }
+
+    mainWindow.show()
   })
 
   tray.on('right-click', () => {
-    const contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
-    tray.popUpContextMenu(contextMenu)
+    tray!.popUpContextMenu(getTrayContextMenu())
   })
 }
 
-// Wait until the app is ready
 app.on('ready', () => {
   app.setAsDefaultProtocolClient('devhub')
+
   createTray()
-  createMenubarWindow()
+  createWindow()
+  update()
+
   if (process.platform === 'darwin') {
     app.setAboutPanelOptions({
       applicationName: 'DevHub',
@@ -296,18 +160,18 @@ app.on('ready', () => {
   }
 })
 
-// window-all-closed
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
-// activate
 app.on('activate', () => {
-  if (menubarWindow === null) {
-    createTray()
+  if (!mainWindow) {
+    createWindow()
   }
+
+  mainWindow.show()
 })
 
 app.on('web-contents-created', (_event, webContents) => {
@@ -320,65 +184,412 @@ app.on('web-contents-created', (_event, webContents) => {
   )
 })
 
-function getWindowPosition() {
-  const windowBounds = menubarWindow.getBounds()
-  const trayBounds = tray.getBounds()
+function getCenterPosition(obj: Electron.BrowserWindow | Electron.Tray) {
+  const bounds = obj.getBounds()
 
-  // Center window horizontally below the tray icon
-  const x = Math.round(
-    trayBounds.x + trayBounds.width / 2 - windowBounds.width / 2,
-  )
-
-  // Position window 4 pixels vertically below the tray icon
-  const y = Math.round(trayBounds.y + trayBounds.height + 4)
+  const x = Math.round(bounds.x + bounds.width / 2)
+  const y = Math.round(bounds.y + bounds.height)
 
   return { x, y }
 }
 
-// toggle menubar window
-function toggleMenubarWindow() {
-  if (menubarWindow.isVisible()) {
-    menubarWindow.hide()
+function alignWindowWithTray() {
+  if (!(tray && !tray.isDestroyed())) return
+
+  const windowBounds = mainWindow.getBounds()
+  const trayCenter = getCenterPosition(tray)
+
+  const x = Math.round(trayCenter.x - windowBounds.width / 2)
+  const y = Math.round(trayCenter.y + 8)
+
+  mainWindow.setPosition(x, y)
+}
+
+function getModeMenuItems() {
+  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+
+  const menuItems: Electron.MenuItemConstructorOptions[] = [
+    {
+      type: 'radio',
+      label: 'Desktop mode',
+      checked: !isMenuBarMode,
+      enabled: isCurrentWindow,
+      click() {
+        enableDesktopMode()
+      },
+    },
+    {
+      type: 'radio',
+      label: 'Menubar mode',
+      checked: !!isMenuBarMode,
+      enabled: isCurrentWindow,
+      click() {
+        enableMenuBarMode()
+      },
+    },
+  ]
+
+  return menuItems
+}
+function getOptionsMenuItems() {
+  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+
+  const menuItems: Electron.MenuItemConstructorOptions[] = [
+    {
+      type: 'checkbox',
+      label: 'Lock on center',
+      checked: lockOnCenter,
+      enabled: isCurrentWindow,
+      visible: !isMenuBarMode,
+      click(item) {
+        lockOnCenter = item.checked
+
+        if (item.checked) {
+          if (!isMenuBarMode) {
+            mainWindow.setMovable(false)
+          }
+
+          mainWindow.center()
+        } else {
+          if (!isMenuBarMode) {
+            mainWindow.setMovable(getBrowserWindowOptions().movable)
+          }
+        }
+      },
+    },
+  ]
+
+  return menuItems
+}
+
+function getMainMenuItems() {
+  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+
+  const menuItems: Electron.MenuItemConstructorOptions[] = [
+    {
+      label: 'Edit',
+      submenu: [
+        {
+          label: 'Undo',
+          accelerator: 'CmdOrCtrl+Z',
+          role: 'undo',
+        },
+        {
+          label: 'Redo',
+          accelerator: 'Shift+CmdOrCtrl+Z',
+          role: 'redo',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          role: 'cut',
+        },
+        {
+          label: 'Copy',
+          accelerator: 'CmdOrCtrl+C',
+          role: 'copy',
+        },
+        {
+          label: 'Paste',
+          accelerator: 'CmdOrCtrl+V',
+          role: 'paste',
+        },
+        {
+          label: 'Select All',
+          accelerator: 'CmdOrCtrl+A',
+          role: 'selectall',
+        },
+      ],
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Reload',
+          accelerator: 'CmdOrCtrl+R',
+          click(_, focusedWindow) {
+            if (focusedWindow) focusedWindow.reload()
+          },
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: __DEV__
+            ? process.platform === 'darwin'
+              ? 'Alt+Command+I'
+              : 'Ctrl+Shift+I'
+            : undefined,
+          visible: __DEV__,
+          click(_, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.toggleDevTools()
+          },
+        },
+        {
+          type: 'separator',
+          enabled: isCurrentWindow,
+        },
+        ...getModeMenuItems(),
+        {
+          type: 'separator',
+          enabled: isCurrentWindow,
+        },
+        ...getOptionsMenuItems(),
+      ],
+    },
+    {
+      label: 'Window',
+      role: 'window',
+      submenu: getWindowMenuItems(),
+    },
+    {
+      type: 'separator',
+    },
+    {
+      label: 'Bring All to Front',
+      role: 'front',
+    },
+    {
+      label: 'Help',
+      role: 'help',
+      submenu: [
+        {
+          label: 'Report bug',
+          click: () => {
+            shell.openExternal('https://github.com/devhubapp/devhub/issues/new')
+          },
+        },
+        {
+          label: 'Send feedback',
+          click: () => {
+            shell.openExternal('https://github.com/devhubapp/devhub/issues/new')
+          },
+        },
+      ],
+    },
+  ]
+
+  if (process.platform === 'darwin') {
+    const name = app.getName()
+
+    menuItems.unshift({
+      label: name,
+      submenu: [
+        {
+          label: `About ${name}`,
+          role: 'about',
+        },
+        {
+          label: 'View on GitHub',
+          click: () => {
+            shell.openExternal('https://github.com/devhubapp/devhub')
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: `Hide ${name}`,
+          accelerator: 'Command+H',
+          role: 'hide',
+        },
+        {
+          label: 'Hide Others',
+          accelerator: 'Command+Alt+H',
+          role: 'hideothers',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click: () => {
+            app.quit()
+          },
+        },
+      ],
+    })
+  }
+
+  return menuItems
+}
+
+function getDockMenuItems() {
+  return getModeMenuItems()
+}
+
+function getWindowMenuItems() {
+  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+
+  const menuItems: Electron.MenuItemConstructorOptions[] = [
+    {
+      label: 'Close',
+      accelerator: 'CmdOrCtrl+W',
+      click() {
+        mainWindow.hide()
+      },
+    },
+    {
+      label: 'Minimize',
+      accelerator: isMenuBarMode ? undefined : 'CmdOrCtrl+M',
+      role: isMenuBarMode ? undefined : 'minimize',
+      enabled: isCurrentWindow && !mainWindow.isMinimized(),
+      visible: !isMenuBarMode, // && mainWindow.isMinimizable(),
+    },
+    {
+      label: 'Maximize',
+      visible: !isMenuBarMode, // && mainWindow.isMaximizable(),
+      enabled: isCurrentWindow, // && !mainWindow.isMaximized(),
+      click() {
+        if (!mainWindow.isVisible()) {
+          mainWindow.show()
+        }
+
+        mainWindow.maximize()
+      },
+    },
+    {
+      type: 'checkbox',
+      label: 'Full Screen',
+      accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
+      checked: mainWindow.isFullScreen(),
+      enabled: isCurrentWindow || mainWindow.isFullScreen(),
+      click(item) {
+        mainWindow.setFullScreen(item.checked)
+      },
+    },
+  ]
+
+  return menuItems
+}
+
+function getTrayMenuItems() {
+  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+
+  const menuItems: Electron.MenuItemConstructorOptions[] = [
+    {
+      label: 'Open',
+      visible: !isCurrentWindow,
+      click() {
+        mainWindow.show()
+      },
+    },
+    {
+      type: 'separator',
+      visible: !isCurrentWindow,
+    },
+    ...getModeMenuItems(),
+    {
+      type: 'separator',
+      enabled: isCurrentWindow,
+    },
+    ...getOptionsMenuItems(),
+    {
+      type: 'separator',
+      enabled: isCurrentWindow,
+      visible: !isMenuBarMode,
+    },
+    ...getWindowMenuItems().filter(item => item.label !== 'Close'),
+    {
+      type: 'separator',
+      enabled: isCurrentWindow,
+    },
+    {
+      label: 'Quit',
+      accelerator: 'CmdOrCtrl+Q',
+      role: 'quit',
+    },
+  ]
+
+  return menuItems
+}
+
+function getTrayContextMenu() {
+  return Menu.buildFromTemplate(getTrayMenuItems())
+}
+
+function updateTrayHightlightMode() {
+  if (!(tray && !tray.isDestroyed())) return
+
+  tray.setHighlightMode(
+    isMenuBarMode &&
+      mainWindow.isVisible() &&
+      mainWindow.isFocused() &&
+      !mainWindow.isFullScreen()
+      ? 'always'
+      : 'selection',
+  )
+}
+
+function updateBrowserWindowOptions() {
+  const options = getBrowserWindowOptions()
+
+  mainWindow.setMinimumSize(
+    Math.floor(options.minWidth),
+    Math.floor(options.minHeight),
+  )
+
+  mainWindow.setMaximumSize(
+    Math.floor(
+      options.maxWidth || screen.getPrimaryDisplay().workAreaSize.width,
+    ),
+    Math.floor(
+      options.maxHeight || screen.getPrimaryDisplay().workAreaSize.height,
+    ),
+  )
+
+  mainWindow.setMovable(options.movable)
+
+  mainWindow.setSize(options.width, options.height, false)
+
+  if (isMenuBarMode) {
+    alignWindowWithTray()
   } else {
-    showMenubarWindow()
+    mainWindow.maximize()
   }
 }
 
-// toggle main window
-function toggleMainWindow() {
-  if (mainWindow === undefined) {
-    createWindow()
-  } else if (mainWindow.isVisible()) {
-    mainWindow.hide()
+function updateMenu() {
+  Menu.setApplicationMenu(Menu.buildFromTemplate(getMainMenuItems()))
+
+  if (process.platform === 'darwin') {
+    const touchBar = new TouchBar({
+      items: [],
+    })
+
+    mainWindow.setTouchBar(touchBar)
+  }
+
+  app.dock.setMenu(Menu.buildFromTemplate(getDockMenuItems()))
+}
+
+function update() {
+  if (mainWindow.isFullScreen()) {
+    mainWindow.setFullScreen(false)
+    return
+  }
+
+  mainWindow.show()
+
+  updateMenu()
+  updateTrayHightlightMode()
+  updateBrowserWindowOptions()
+
+  if (isMenuBarMode) {
+    app.dock.hide()
   } else {
-    mainWindow.show()
+    app.dock.show()
   }
 }
 
-function showMainWindow(x: number, y: number) {
-  if (mainWindow === undefined) {
-    createWindow()
-  } else {
-    mainWindow.show()
-    mainWindow.focus()
-  }
-  app.dock.show()
-  setWindowPosition(mainWindow, x, y)
+function enableDesktopMode() {
+  isMenuBarMode = false
+  update()
 }
 
-function showMenubarWindow() {
-  const position = getWindowPosition()
-  menubarWindow.setPosition(position.x, position.y, false)
-  setWindowPosition(menubarWindow, position.x, position.y)
-  app.dock.hide()
-  menubarWindow.show()
-  menubarWindow.focus()
-}
-
-function setWindowPosition(
-  window: Electron.BrowserWindow,
-  x: number,
-  y: number,
-): void {
-  window.setPosition(x, y)
+function enableMenuBarMode() {
+  isMenuBarMode = true
+  update()
 }
