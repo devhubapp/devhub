@@ -5,7 +5,7 @@
   "main": "dist",
   "scripts": {
     "build": "tsc -b",
-    "clean": "rm -rf dist/*",
+    "clean": "rimraf dist/*",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package"

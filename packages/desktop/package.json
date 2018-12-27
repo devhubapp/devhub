@@ -5,11 +5,11 @@
   "main": "dist/electron.js",
   "scripts": {
     "build": "tsc -b && electron-builder -mw",
-    "clean": "rm -rf dist/*",
+    "clean": "rimraf dist/*",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "predeploy": "yarn run build",
-    "start": "rm -rf dist && tsc && electron .",
+    "start": "rimraf dist && tsc && electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
