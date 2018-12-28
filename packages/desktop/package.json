@@ -9,7 +9,7 @@
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "predeploy": "yarn run build",
-    "start": "rm -rf dist && tsc && electron .",
+    "start": "tsc && electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
