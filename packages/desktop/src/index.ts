@@ -19,7 +19,6 @@ const dock: Electron.Dock | null = app.dock || null
 // TODO: Persist these and also the window size/position and preferences
 let isMenuBarMode = false
 let lockOnCenter = process.platform === 'darwin'
-const canEnableMenuBarMode = process.platform === 'darwin'
 
 app.setName('DevHub')
 
@@ -28,19 +27,12 @@ const startURL = __DEV__
   : `file://${path.join(__dirname, '../../web/dist/index.html')}`
 
 function getBrowserWindowOptions() {
-  function createOptions<T extends Electron.BrowserWindowConstructorOptions>(
-    obj: T,
-  ) {
-    return obj
-  }
-
-  return createOptions({
+  const options: Electron.BrowserWindowConstructorOptions = {
     minWidth: 320,
     minHeight: 450,
     backgroundColor: '#292c33',
     center: true,
     darkTheme: true,
-    frame: process.platform !== 'darwin',
     fullscreenable: true,
     resizable: true,
     show: true,
@@ -53,59 +45,67 @@ function getBrowserWindowOptions() {
     },
     ...(isMenuBarMode
       ? {
+          frame: false,
           maxWidth: screen.getPrimaryDisplay().workAreaSize.width * 0.8,
           maxHeight: screen.getPrimaryDisplay().workAreaSize.height * 0.8,
           movable: false,
+          skipTaskbar: true,
           width: 340,
           height: 550,
         }
       : {
+          frame: process.platform !== 'darwin',
           maxWidth: undefined,
           maxHeight: undefined,
           movable: !lockOnCenter,
+          skipTaskbar: false,
           width: screen.getPrimaryDisplay().workAreaSize.width,
           height: screen.getPrimaryDisplay().workAreaSize.height,
         }),
-  })
+  }
+
+  return options
 }
 
 function createWindow() {
-  mainWindow = new BrowserWindow(getBrowserWindowOptions())
+  const win = new BrowserWindow(getBrowserWindowOptions())
 
-  mainWindow.loadURL(startURL)
+  win.loadURL(startURL)
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
+  win.once('ready-to-show', () => {
+    win.show()
   })
 
-  mainWindow.on('show', () => {
+  win.on('show', () => {
     updateTrayHightlightMode()
     updateBrowserWindowOptions()
   })
 
-  mainWindow.on('hide', () => {
+  win.on('hide', () => {
     if (tray) tray.setHighlightMode('selection')
   })
 
-  mainWindow.on('closed', () => {
-    mainWindow.destroy()
+  win.on('closed', () => {
+    win.destroy()
   })
 
-  mainWindow.on('resize', () => {
+  win.on('resize', () => {
     if (isMenuBarMode) {
       alignWindowWithTray()
     } else if (lockOnCenter) {
-      mainWindow.center()
+      win.center()
     }
   })
 
-  mainWindow.on('enter-full-screen', () => {
+  win.on('enter-full-screen', () => {
     if (dock) dock.show()
   })
 
-  mainWindow.on('leave-full-screen', () => {
+  win.on('leave-full-screen', () => {
     update()
   })
+
+  return win
 }
 
 function createTray() {
@@ -128,13 +128,16 @@ function createTray() {
       return
     }
 
-    if (
-      mainWindow.isVisible() &&
-      mainWindow.isFocused() &&
-      !mainWindow.isMinimized()
-    ) {
-      tray!.popUpContextMenu(getTrayContextMenu())
-      return
+    if (mainWindow.isVisible() && !mainWindow.isMinimized()) {
+      if (isMenuBarMode) {
+        mainWindow.hide()
+        return
+      }
+
+      if (mainWindow.isFocused() || process.platform !== 'darwin') {
+        tray!.popUpContextMenu(getTrayContextMenu())
+        return
+      }
     }
 
     mainWindow.show()
@@ -149,7 +152,7 @@ app.on('ready', () => {
   app.setAsDefaultProtocolClient('devhub')
 
   createTray()
-  createWindow()
+  if (!mainWindow) mainWindow = createWindow()
   update()
 
   if (process.platform === 'darwin') {
@@ -169,9 +172,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (!mainWindow) {
-    createWindow()
-  }
+  if (!mainWindow) mainWindow = createWindow()
 
   mainWindow.show()
 })
@@ -190,7 +191,7 @@ function getCenterPosition(obj: Electron.BrowserWindow | Electron.Tray) {
   const bounds = obj.getBounds()
 
   const x = Math.round(bounds.x + bounds.width / 2)
-  const y = Math.round(bounds.y + bounds.height)
+  const y = Math.round(bounds.y + bounds.height / 2)
 
   return { x, y }
 }
@@ -198,18 +199,50 @@ function getCenterPosition(obj: Electron.BrowserWindow | Electron.Tray) {
 function alignWindowWithTray() {
   if (!(tray && !tray.isDestroyed())) return
 
+  const screenSize = screen.getPrimaryDisplay().size
+  const workArea = screen.getPrimaryDisplay().workArea
   const windowBounds = mainWindow.getBounds()
+  const trayBounds = tray.getBounds()
   const trayCenter = getCenterPosition(tray)
 
-  const x = Math.round(trayCenter.x - windowBounds.width / 2)
-  const y = Math.round(trayCenter.y + 8)
+  const top = trayBounds.y < screenSize.height / 3
+  const bottom = screenSize.height - trayBounds.y < screenSize.height / 3
+  const left = trayBounds.x < screenSize.width / 3
+  const right = screenSize.width - trayBounds.x < screenSize.width / 3
 
-  mainWindow.setPosition(x, y)
+  let x: number
+  let y: number
+  const spacing = 8
+
+  if (top) {
+    y = Math.round(trayCenter.y)
+  } else if (bottom) {
+    y = Math.round(trayCenter.y - windowBounds.height / 2)
+  } else {
+    y = Math.round(trayCenter.y - windowBounds.height / 2)
+  }
+
+  if (left) {
+    x = Math.round(trayCenter.x)
+  } else if (right) {
+    x = Math.round(trayCenter.x - windowBounds.width / 2)
+  } else {
+    x = Math.round(trayCenter.x - windowBounds.width / 2)
+  }
+
+  const fixedX = Math.max(
+    workArea.x + spacing,
+    Math.min(x, workArea.x + workArea.width - windowBounds.width - spacing),
+  )
+  const fixedY = Math.max(
+    workArea.y + spacing,
+    Math.min(y, workArea.y + workArea.height - windowBounds.height - spacing),
+  )
+
+  mainWindow.setPosition(fixedX, fixedY)
 }
 
 function getModeMenuItems() {
-  if (!canEnableMenuBarMode) return []
-
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -256,7 +289,7 @@ function getOptionsMenuItems() {
           mainWindow.center()
         } else {
           if (!isMenuBarMode) {
-            mainWindow.setMovable(getBrowserWindowOptions().movable)
+            mainWindow.setMovable(getBrowserWindowOptions().movable !== false)
           }
         }
       },
@@ -524,8 +557,8 @@ function updateBrowserWindowOptions() {
   const options = getBrowserWindowOptions()
 
   mainWindow.setMinimumSize(
-    Math.floor(options.minWidth),
-    Math.floor(options.minHeight),
+    Math.floor(options.minWidth || 0),
+    Math.floor(options.minHeight || 0),
   )
 
   mainWindow.setMaximumSize(
@@ -543,9 +576,19 @@ function updateBrowserWindowOptions() {
     ),
   )
 
-  mainWindow.setMovable(options.movable)
+  mainWindow.setMovable(options.movable !== false)
 
-  mainWindow.setSize(options.width, options.height, false)
+  mainWindow.setSkipTaskbar(options.skipTaskbar === true)
+
+  mainWindow.setSize(options.width || 500, options.height || 500, false)
+
+  if (dock) {
+    if (options.skipTaskbar === true) {
+      dock.hide()
+    } else {
+      dock.show()
+    }
+  }
 
   if (isMenuBarMode) {
     alignWindowWithTray()
@@ -579,22 +622,24 @@ function update() {
   updateMenu()
   updateTrayHightlightMode()
   updateBrowserWindowOptions()
+}
 
-  if (isMenuBarMode) {
-    if (dock) dock.hide()
-  } else {
-    if (dock) dock.show()
+function updateOrRecreateWindow() {
+  if (process.platform !== 'darwin') {
+    const oldWindow = mainWindow
+    mainWindow = createWindow()
+    oldWindow.close()
   }
+
+  update()
 }
 
 function enableDesktopMode() {
   isMenuBarMode = false
-  update()
+  updateOrRecreateWindow()
 }
 
 function enableMenuBarMode() {
-  if (!canEnableMenuBarMode) return
-
   isMenuBarMode = true
-  update()
+  updateOrRecreateWindow()
 }
