@@ -271,6 +271,17 @@ function getMainMenuItems() {
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
+      label: 'Options',
+      submenu: [
+        ...getModeMenuItems(),
+        {
+          type: 'separator',
+          enabled: isCurrentWindow,
+        },
+        ...getOptionsMenuItems(),
+      ],
+    },
+    {
       label: 'Edit',
       submenu: [
         {
@@ -330,16 +341,6 @@ function getMainMenuItems() {
             if (focusedWindow) focusedWindow.webContents.toggleDevTools()
           },
         },
-        {
-          type: 'separator',
-          enabled: isCurrentWindow,
-        },
-        ...getModeMenuItems(),
-        {
-          type: 'separator',
-          enabled: isCurrentWindow,
-        },
-        ...getOptionsMenuItems(),
       ],
     },
     {
