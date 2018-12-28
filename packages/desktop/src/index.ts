@@ -12,9 +12,11 @@ import path from 'path'
 
 import { __DEV__ } from './libs/electron-is-dev'
 
+const dock: Electron.Dock | null = app.dock || null
+
 let mainWindow: Electron.BrowserWindow
 let tray: Electron.Tray | null = null
-const dock: Electron.Dock | null = app.dock || null
+let trayContextLastShownAt: number
 
 // TODO: Persist these and also the window size/position and preferences
 let isMenuBarMode = false
@@ -45,6 +47,7 @@ function getBrowserWindowOptions() {
     },
     ...(isMenuBarMode
       ? {
+          alwaysOnTop: true,
           frame: false,
           maxWidth: screen.getPrimaryDisplay().workAreaSize.width * 0.8,
           maxHeight: screen.getPrimaryDisplay().workAreaSize.height * 0.8,
@@ -54,6 +57,7 @@ function getBrowserWindowOptions() {
           height: 550,
         }
       : {
+          alwaysOnTop: false,
           frame: process.platform !== 'darwin',
           maxWidth: undefined,
           maxHeight: undefined,
@@ -97,6 +101,12 @@ function createWindow() {
     }
   })
 
+  win.on('blur', () => {
+    setTimeout(() => {
+      if (isMenuBarMode) win.hide()
+    }, 200)
+  })
+
   win.on('enter-full-screen', () => {
     if (dock) dock.show()
   })
@@ -106,6 +116,11 @@ function createWindow() {
   })
 
   return win
+}
+
+function showTrayContextPopup() {
+  trayContextLastShownAt = Date.now()
+  tray!.popUpContextMenu(getTrayContextMenu())
 }
 
 function createTray() {
@@ -124,7 +139,7 @@ function createTray() {
 
   tray.on('click', () => {
     if (mainWindow.isFullScreen()) {
-      tray!.popUpContextMenu(getTrayContextMenu())
+      showTrayContextPopup()
       return
     }
 
@@ -133,7 +148,7 @@ function createTray() {
         if (isMenuBarMode) {
           mainWindow.hide()
         } else {
-          tray!.popUpContextMenu(getTrayContextMenu())
+          showTrayContextPopup()
         }
 
         return
@@ -144,7 +159,7 @@ function createTray() {
   })
 
   tray.on('right-click', () => {
-    tray!.popUpContextMenu(getTrayContextMenu())
+    showTrayContextPopup()
   })
 }
 
@@ -244,13 +259,14 @@ function alignWindowWithTray() {
 
 function getModeMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const enabled = isCurrentWindow || isMenuBarMode
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
       type: 'radio',
       label: 'Desktop mode',
       checked: !isMenuBarMode,
-      enabled: isCurrentWindow,
+      enabled,
       click() {
         enableDesktopMode()
       },
@@ -259,7 +275,7 @@ function getModeMenuItems() {
       type: 'radio',
       label: 'Menubar mode',
       checked: !!isMenuBarMode,
-      enabled: isCurrentWindow,
+      enabled,
       click() {
         enableMenuBarMode()
       },
@@ -270,13 +286,14 @@ function getModeMenuItems() {
 }
 function getOptionsMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const enabled = isCurrentWindow || isMenuBarMode
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
       type: 'checkbox',
       label: 'Lock on center',
       checked: lockOnCenter,
-      enabled: isCurrentWindow,
+      enabled,
       visible: !isMenuBarMode,
       click(item) {
         lockOnCenter = item.checked
@@ -301,6 +318,7 @@ function getOptionsMenuItems() {
 
 function getMainMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const enabled = isCurrentWindow || isMenuBarMode
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
@@ -365,12 +383,12 @@ function getMainMenuItems() {
         },
         {
           type: 'separator',
-          enabled: isCurrentWindow,
+          enabled,
         },
         ...getModeMenuItems(),
         {
           type: 'separator',
-          enabled: isCurrentWindow,
+          enabled,
         },
         ...getOptionsMenuItems(),
       ],
@@ -452,6 +470,7 @@ function getDockMenuItems() {
 
 function getWindowMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const enabled = isCurrentWindow || isMenuBarMode
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
@@ -465,13 +484,13 @@ function getWindowMenuItems() {
       label: 'Minimize',
       accelerator: isMenuBarMode ? undefined : 'CmdOrCtrl+M',
       role: isMenuBarMode ? undefined : 'minimize',
-      enabled: isCurrentWindow && !mainWindow.isMinimized(),
+      enabled: enabled && !mainWindow.isMinimized(),
       visible: !isMenuBarMode, // && mainWindow.isMinimizable(),
     },
     {
       label: 'Maximize',
       visible: !isMenuBarMode, // && mainWindow.isMaximizable(),
-      enabled: isCurrentWindow, // && !mainWindow.isMaximized(),
+      enabled, // && !mainWindow.isMaximized(),
       click() {
         if (!mainWindow.isVisible()) {
           mainWindow.show()
@@ -485,7 +504,7 @@ function getWindowMenuItems() {
       label: 'Full Screen',
       accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
       checked: mainWindow.isFullScreen(),
-      enabled: isCurrentWindow || mainWindow.isFullScreen(),
+      enabled: enabled || mainWindow.isFullScreen(),
       click(item) {
         mainWindow.setFullScreen(item.checked)
       },
@@ -497,34 +516,35 @@ function getWindowMenuItems() {
 
 function getTrayMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const enabled = isCurrentWindow || isMenuBarMode
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'Open',
-      visible: !isCurrentWindow,
+      visible: !isCurrentWindow || isMenuBarMode,
       click() {
         mainWindow.show()
       },
     },
     {
       type: 'separator',
-      visible: !isCurrentWindow,
+      visible: !isCurrentWindow || isMenuBarMode,
     },
     ...getModeMenuItems(),
     {
       type: 'separator',
-      enabled: isCurrentWindow,
+      enabled,
     },
     ...getOptionsMenuItems(),
     {
       type: 'separator',
-      enabled: isCurrentWindow,
+      enabled,
       visible: !isMenuBarMode,
     },
     ...getWindowMenuItems().filter(item => item.label !== 'Close'),
     {
       type: 'separator',
-      enabled: isCurrentWindow,
+      enabled,
     },
     {
       label: 'Quit',
@@ -555,6 +575,8 @@ function updateTrayHightlightMode() {
 
 function updateBrowserWindowOptions() {
   const options = getBrowserWindowOptions()
+
+  mainWindow.setAlwaysOnTop(options.alwaysOnTop === true)
 
   mainWindow.setMinimumSize(
     Math.floor(options.minWidth || 0),
