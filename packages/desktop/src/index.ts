@@ -15,6 +15,8 @@ const __DEV__ = process.env.NODE_ENV === 'development'
 let mainWindow: Electron.BrowserWindow
 let tray: Electron.Tray | null = null
 
+const dock: Electron.Dock | null = app.dock || null
+
 // TODO: Persist these and also the window size/position and preferences
 let isMenuBarMode = false
 let lockOnCenter = true
@@ -98,7 +100,7 @@ function createWindow() {
   })
 
   mainWindow.on('enter-full-screen', () => {
-    app.dock.show()
+    if (dock) dock.show()
   })
 
   mainWindow.on('leave-full-screen', () => {
@@ -562,7 +564,7 @@ function updateMenu() {
     mainWindow.setTouchBar(touchBar)
   }
 
-  app.dock.setMenu(Menu.buildFromTemplate(getDockMenuItems()))
+  if (dock) dock.setMenu(Menu.buildFromTemplate(getDockMenuItems()))
 }
 
 function update() {
@@ -578,9 +580,9 @@ function update() {
   updateBrowserWindowOptions()
 
   if (isMenuBarMode) {
-    app.dock.hide()
+    if (dock) dock.hide()
   } else {
-    app.dock.show()
+    if (dock) dock.show()
   }
 }
 
