@@ -78,6 +78,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 | `Alt + Arrow keys` | Move current column | Contribute!
 | `?`       | Show keyboard shortcuts      | Contribute!
 
+> **Tip**: To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
 
 <br/>
 
