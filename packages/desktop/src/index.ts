@@ -40,7 +40,7 @@ function getBrowserWindowOptions() {
     backgroundColor: '#292c33',
     center: true,
     darkTheme: true,
-    frame: false,
+    frame: process.platform !== 'darwin',
     fullscreenable: true,
     resizable: true,
     show: true,
