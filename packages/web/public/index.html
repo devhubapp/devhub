@@ -95,7 +95,13 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
+
+    if ((window.location.search || '').includes('producthunt')) {
+      gtag('event', 'donthuntme')
+    }
   </script>
+
+  <script async defer src="%PUBLIC_URL%/static/js/donthuntme.js"></script>
 
 </body>
 

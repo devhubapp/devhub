@@ -78,6 +78,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 | `Alt + Arrow keys` | Move current column | Contribute!
 | `?`       | Show keyboard shortcuts      | Contribute!
 
+> **Tip:** To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
 
 <br/>
 
@@ -108,6 +109,15 @@ Whenever possible, please make a pull request with the implementation instead of
 > If the feature is big, open an issue first for discussion.
 
 ### Running it locally
+
+#### Requirements
+
+- [Node.js](https://nodejs.org/) (latest)
+- [Yarn](https://yarnpkg.com/)
+
+> **Note:** On Windows, you might need to install Bash commands (e.g. via [git-scm](https://git-scm.com/downloads) or via [linux bash shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/))
+
+#### How to run
 
 - `git clone git@github.com:devhubapp/devhub.git`
 - `yarn`

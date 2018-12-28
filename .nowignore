@@ -12,12 +12,14 @@ packages/components/node_modules
 packages/components/package.json
 packages/components/src
 packages/core
+packages/desktop
 packages/mobile
 packages/web/build
 packages/web/dist/**.map
 packages/web/node_modules
 packages/web/package.json
 packages/web/src
+packages/www
 patches
 tsconfig.json
 tslint.json
