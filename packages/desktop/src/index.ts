@@ -349,13 +349,6 @@ function getMainMenuItems() {
       submenu: getWindowMenuItems(),
     },
     {
-      type: 'separator',
-    },
-    {
-      label: 'Bring All to Front',
-      role: 'front',
-    },
-    {
       label: 'Help',
       role: 'help',
       submenu: [
