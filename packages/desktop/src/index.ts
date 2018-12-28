@@ -18,7 +18,7 @@ const dock: Electron.Dock | null = app.dock || null
 
 // TODO: Persist these and also the window size/position and preferences
 let isMenuBarMode = false
-let lockOnCenter = true
+let lockOnCenter = process.platform === 'darwin'
 const canEnableMenuBarMode = process.platform === 'darwin'
 
 app.setName('DevHub')
