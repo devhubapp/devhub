@@ -129,13 +129,13 @@ function createTray() {
     }
 
     if (mainWindow.isVisible() && !mainWindow.isMinimized()) {
-      if (isMenuBarMode) {
-        mainWindow.hide()
-        return
-      }
-
       if (mainWindow.isFocused() || process.platform !== 'darwin') {
-        tray!.popUpContextMenu(getTrayContextMenu())
+        if (isMenuBarMode) {
+          mainWindow.hide()
+        } else {
+          tray!.popUpContextMenu(getTrayContextMenu())
+        }
+
         return
       }
     }
