@@ -5,13 +5,13 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile && pushd ../web && yarn build && popd && yarn build:electron",
-    "build:electron": "NODE_ENV=production electron-builder -mw",
+    "build:electron": "electron-builder -mw",
     "compile": "tsc -b",
     "clean": "rm -rf build && rm -rf dist",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "predeploy": "yarn run build",
-    "start": "NODE_ENV=development nodemon --watch dist/*.js --watch assets --exec \"electron .\"",
+    "start": "nodemon --watch dist/*.js --watch assets --exec \"electron .\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {

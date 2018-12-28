@@ -10,7 +10,7 @@ import {
 } from 'electron'
 import path from 'path'
 
-const __DEV__ = process.env.NODE_ENV === 'development'
+import { __DEV__ } from './libs/electron-is-dev'
 
 let mainWindow: Electron.BrowserWindow
 let tray: Electron.Tray | null = null
