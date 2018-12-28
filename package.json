@@ -17,7 +17,7 @@
     "deploy:web": "yarn workspace @devhub/web build && yarn now && yarn now alias",
     "deploy:www": "pushd \"packages/www\"; now && now alias; popd;",
     "dev": "yarn workspace @devhub/desktop compile && concurrently --kill-others \"yarn workspace @devhub/desktop compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
-    "dev:desktop": "BROWSER=none concurrently \"yarn dev:web\" \"yarn workspace @devhub/desktop compile -w\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
+    "dev:desktop": "cross-env BROWSER=none concurrently \"yarn dev:web\" \"yarn workspace @devhub/desktop compile -w\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
     "dev:mobile": "yarn workspace @devhub/mobile compile && concurrently --kill-others \"yarn workspace @devhub/mobile compile -w\" \"yarn workspace @devhub/mobile start\"",
     "dev:web": "yarn workspace @devhub/web compile && concurrently --kill-others \"yarn workspace @devhub/web compile -w\" \"yarn workspace @devhub/web start\"",
     "format": "yarn workspaces run format",
@@ -31,6 +31,7 @@
   "dependencies": {},
   "devDependencies": {
     "concurrently": "^4.1.0",
+    "cross-env": "^5.2.0",
     "husky": "^1.2.0",
     "lint-staged-offline": "^0.0.1",
     "patch-package": "^5.1.1",
