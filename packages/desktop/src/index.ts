@@ -14,12 +14,12 @@ import { __DEV__ } from './libs/electron-is-dev'
 
 let mainWindow: Electron.BrowserWindow
 let tray: Electron.Tray | null = null
-
 const dock: Electron.Dock | null = app.dock || null
 
 // TODO: Persist these and also the window size/position and preferences
 let isMenuBarMode = false
 let lockOnCenter = true
+const canEnableMenuBarMode = process.platform === 'darwin'
 
 app.setName('DevHub')
 
@@ -208,6 +208,8 @@ function alignWindowWithTray() {
 }
 
 function getModeMenuItems() {
+  if (!canEnableMenuBarMode) return []
+
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -592,6 +594,8 @@ function enableDesktopMode() {
 }
 
 function enableMenuBarMode() {
+  if (!canEnableMenuBarMode) return
+
   isMenuBarMode = true
   update()
 }
