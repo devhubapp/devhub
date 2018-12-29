@@ -14,6 +14,7 @@
     "no-console": [true, "debug", "dir", "log", "trace", "warn"],
     "no-empty-interface": false,
     "no-namespace": false,
+    "no-reference": false,
     "object-literal-sort-keys": false,
     "object-shorthand-properties-first": false,
     "prefer-array-literal": false,

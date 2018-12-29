@@ -65,7 +65,8 @@ function getBrowserWindowOptions() {
       affinity: 'main-window',
       backgroundThrottling: false,
       nativeWindowOpen: true,
-      nodeIntegration: true,
+      nodeIntegration: false,
+      preload: path.join(__dirname, 'preload.js'),
     },
     ...(config.get('isMenuBarMode')
       ? {
@@ -260,6 +261,10 @@ function init() {
         shell.openExternal(uri)
       },
     )
+  })
+
+  app.on('open-url', (_event, url) => {
+    if (mainWindow) mainWindow.webContents.send('open-url', url)
   })
 }
 
