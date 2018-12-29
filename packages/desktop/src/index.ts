@@ -26,7 +26,7 @@ app.setName('DevHub')
 
 const startURL = __DEV__
   ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
-  : `file://${path.join(__dirname, '../../web/dist/index.html')}`
+  : `file://${path.join(__dirname, 'web/index.html')}`
 
 function getBrowserWindowOptions() {
   const options: Electron.BrowserWindowConstructorOptions = {

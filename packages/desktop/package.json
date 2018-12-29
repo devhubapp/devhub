@@ -4,14 +4,14 @@
   "private": false,
   "main": "dist/index.js",
   "scripts": {
-    "build": "yarn clean && yarn compile && pushd \"../web\" && yarn build && popd && yarn build:electron",
+    "build": "yarn clean && yarn compile && pushd \"../web\" && yarn build && popd && shx cp -Rf ../web/dist dist/web && yarn build:electron",
     "build:electron": "electron-builder -mw",
     "compile": "tsc -b",
     "clean": "shx rm -rf build && shx rm -rf dist",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "predeploy": "yarn run build",
-    "start": "nodemon --watch dist/*.js --watch assets --exec \"electron .\"",
+    "start": "nodemon --watch dist --watch assets --exec \"electron .\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
@@ -19,27 +19,23 @@
     "productName": "DevHub",
     "extends": null,
     "directories": {
-      "app": "../../",
-      "buildResources": "assets"
+      "buildResources": "assets",
+      "output": "build"
     },
     "extraMetadata": {
-      "main": "packages/desktop/dist/index.js"
+      "name": "devhub"
     },
-    "files": [
-      "packages/core/dist/index.js",
-      "packages/core/package.json",
-      "packages/desktop/assets/**",
-      "packages/desktop/dist/**",
-      "packages/web/dist/**",
-      "packages/web/public/**"
-    ],
     "mac": {
       "icon": "icons/icon.png"
     },
     "win": {
       "target": "nsis",
       "icon": "icons/icon.ico"
-    }
+    },
+    "files": [
+      "assets",
+      "dist"
+    ]
   },
   "dependencies": {},
   "devDependencies": {
