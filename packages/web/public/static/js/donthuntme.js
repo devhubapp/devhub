@@ -1,7 +1,7 @@
-// Source: https://donthuntme.com/
 'use strict'
+// Source: https://donthuntme.com/
 
-let ref
+var ref
 
 function init(config) {
   if (config.ribbon) {
@@ -17,13 +17,13 @@ if (
 }
 
 function setAttributes(e, attrs) {
-  Object.keys(attrs).forEach(key => {
+  Object.keys(attrs).forEach(function(key) {
     e.setAttribute(key, attrs[key])
   })
 }
 
 function redirectToPH() {
-  const phb = document.createElement('div')
+  var phb = document.createElement('div')
   phb.id = 'phb'
 
   setAttributes(phb, {
@@ -40,14 +40,14 @@ function redirectToPH() {
       '    position: fixed;',
   })
 
-  const p = pC()
+  var p = pC()
 
   phb.appendChild(p)
 
   document.body.appendChild(phb)
 
   function pC() {
-    const d = document.createElement('div')
+    var d = document.createElement('div')
     setAttributes(d, {
       style:
         '    background: #fff;' +
@@ -64,8 +64,8 @@ function redirectToPH() {
         '    padding: 80px 20px;',
     })
 
-    const te = text()
-    const img = imge()
+    var te = text()
+    var img = imge()
 
     d.appendChild(te)
     d.appendChild(img)
@@ -74,10 +74,10 @@ function redirectToPH() {
   }
 
   function text() {
-    const te = document.createElement('div')
+    var te = document.createElement('div')
     setAttributes(te, { style: 'width: 460px; margin-bottom: 40px;' })
 
-    const h = document.createElement('h2')
+    var h = document.createElement('h2')
     h.textContent = 'This product is not ready'
     setAttributes(h, {
       style:
@@ -90,7 +90,7 @@ function redirectToPH() {
     })
     te.appendChild(h)
 
-    const sh = document.createElement('p')
+    var sh = document.createElement('p')
     sh.textContent =
       'Dear Hunter, thank you for checking this website. Sadly, it is not ready to launch yet. Please come back later!'
     setAttributes(sh, {
@@ -104,7 +104,7 @@ function redirectToPH() {
     })
     te.appendChild(sh)
 
-    const red = document.createElement('p')
+    var red = document.createElement('p')
     red.textContent = 'You will be redirected in '
     setAttributes(red, {
       style:
@@ -117,7 +117,7 @@ function redirectToPH() {
         '    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;',
     })
 
-    const t = timer()
+    var t = timer()
     red.appendChild(t)
     te.appendChild(red)
 
@@ -125,12 +125,12 @@ function redirectToPH() {
   }
 
   function timer() {
-    const t = document.createElement('span')
+    var t = document.createElement('span')
     setAttributes(t, { style: 'color: #da552f' })
-    let l = 6
-    const ti = setInterval(() => {
+    var l = 6
+    var ti = setInterval(function() {
       l = l - 1
-      t.textContent = `${l}`
+      t.textContent = '' + l
       if (l <= 1) {
         clearInterval(ti)
         ref
@@ -143,8 +143,8 @@ function redirectToPH() {
 }
 
 function imge() {
-  const d = document.createElement('div')
-  const img = document.createElement('img')
+  var d = document.createElement('div')
+  var img = document.createElement('img')
   setAttributes(img, {
     src: '/static/media/donthuntme.png',
     style: 'width: 240px;',
@@ -154,7 +154,7 @@ function imge() {
 }
 
 function ribbon(loc) {
-  const phr = document.createElement('div')
+  var phr = document.createElement('div')
   phr.id = 'phr'
 
   setAttributes(phr, {
@@ -205,7 +205,7 @@ function ribbon(loc) {
   document.body.appendChild(phr)
 
   function explain() {
-    const exp = document.createElement('div')
+    var exp = document.createElement('div')
     exp.id = 'dhm-popup-explain'
 
     setAttributes(exp, {
@@ -222,7 +222,7 @@ function ribbon(loc) {
         '    position: fixed;',
     })
 
-    const p = pC()
+    var p = pC()
     exp.addEventListener('click', outsideClickListener)
 
     exp.appendChild(p)
@@ -230,7 +230,7 @@ function ribbon(loc) {
   }
 
   function pC() {
-    const p = document.createElement('div')
+    var p = document.createElement('div')
     p.id = 'dhm-popup-explain-container'
     setAttributes(p, {
       style:
@@ -248,8 +248,8 @@ function ribbon(loc) {
         '    padding: 80px 20px;',
     })
 
-    const te = text()
-    const img = imge()
+    var te = text()
+    var img = imge()
 
     p.appendChild(te)
     p.appendChild(img)
@@ -258,10 +258,10 @@ function ribbon(loc) {
   }
 
   function text() {
-    const te = document.createElement('div')
+    var te = document.createElement('div')
     setAttributes(te, { style: 'width: 460px; margin-bottom: 40px;' })
 
-    const h = document.createElement('h2')
+    var h = document.createElement('h2')
     h.textContent = 'This product will be blocked on Product Hunt!'
     setAttributes(h, {
       style:
@@ -274,7 +274,7 @@ function ribbon(loc) {
     })
     te.appendChild(h)
 
-    const t1 = document.createElement('p')
+    var t1 = document.createElement('p')
     t1.textContent = 'Dear Hunter, thank you for checking out my product!'
     setAttributes(t1, {
       style:
@@ -286,7 +286,7 @@ function ribbon(loc) {
         '    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;',
     })
     te.appendChild(t1)
-    const t2 = document.createElement('p')
+    var t2 = document.createElement('p')
     t2.textContent =
       "However, it is not ready to launch yet and Product Hunt's users will be blocked."
     setAttributes(t2, {
@@ -300,7 +300,7 @@ function ribbon(loc) {
     })
     te.appendChild(t2)
 
-    const b = document.createElement('a')
+    var b = document.createElement('a')
     b.textContent = 'back'
 
     setAttributes(b, {
@@ -322,14 +322,14 @@ function ribbon(loc) {
   }
 
   function outsideClickListener(e) {
-    const container = document.getElementById('dhm-popup-explain-container')
+    var container = document.getElementById('dhm-popup-explain-container')
     if (container && !container.contains(e.target)) {
       close()
     }
   }
 
   function close() {
-    const container = document.getElementById('dhm-popup-explain')
+    var container = document.getElementById('dhm-popup-explain')
     container.parentNode.removeChild(container)
   }
 }
