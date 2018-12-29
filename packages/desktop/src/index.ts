@@ -20,7 +20,7 @@ let trayContextLastShownAt: number
 
 // TODO: Persist these and also the window size/position and preferences
 let isMenuBarMode = false
-let lockOnCenter = process.platform === 'darwin'
+let lockOnCenter = false
 
 app.setName('DevHub')
 
