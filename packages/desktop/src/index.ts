@@ -8,19 +8,25 @@ import {
   TouchBar,
   Tray,
 } from 'electron'
+import Store from 'electron-store'
 import path from 'path'
 
 import { __DEV__ } from './libs/electron-is-dev'
+import { WindowState, windowStateKeeper } from './libs/electron-window-state'
+
+const config = new Store({
+  defaults: {
+    isMenuBarMode: false,
+    lockOnCenter: false,
+  },
+})
 
 const dock: Electron.Dock | null = app.dock || null
-
 let mainWindow: Electron.BrowserWindow
 let tray: Electron.Tray | null = null
-let trayContextLastShownAt: number
 
-// TODO: Persist these and also the window size/position and preferences
-let isMenuBarMode = false
-let lockOnCenter = false
+let mainWindowState: WindowState
+let menubarWindowState: WindowState
 
 app.setName('DevHub')
 
@@ -29,11 +35,26 @@ const startURL = __DEV__
   : `file://${path.join(__dirname, 'web/index.html')}`
 
 function getBrowserWindowOptions() {
+  if (!mainWindowState) {
+    mainWindowState = windowStateKeeper({
+      defaultWidth: screen.getPrimaryDisplay().workAreaSize.width,
+      defaultHeight: screen.getPrimaryDisplay().workAreaSize.height,
+      file: 'main-window.json',
+    })
+  }
+
+  if (!menubarWindowState) {
+    menubarWindowState = windowStateKeeper({
+      defaultWidth: 340,
+      defaultHeight: 550,
+      file: 'menubar-window.json',
+    })
+  }
+
   const options: Electron.BrowserWindowConstructorOptions = {
     minWidth: 320,
     minHeight: 450,
     backgroundColor: '#292c33',
-    center: true,
     darkTheme: true,
     fullscreenable: true,
     resizable: true,
@@ -45,26 +66,32 @@ function getBrowserWindowOptions() {
       nativeWindowOpen: true,
       nodeIntegration: true,
     },
-    ...(isMenuBarMode
+    ...(config.get('isMenuBarMode')
       ? {
+          x: menubarWindowState.x,
+          y: menubarWindowState.y,
+          width: menubarWindowState.width,
+          height: menubarWindowState.height,
           alwaysOnTop: true,
+          center: false,
           frame: false,
           maxWidth: screen.getPrimaryDisplay().workAreaSize.width * 0.8,
           maxHeight: screen.getPrimaryDisplay().workAreaSize.height * 0.8,
           movable: false,
           skipTaskbar: true,
-          width: 340,
-          height: 550,
         }
       : {
+          x: mainWindowState.x,
+          y: mainWindowState.y,
+          width: mainWindowState.width,
+          height: mainWindowState.height,
           alwaysOnTop: false,
+          center: true,
           frame: process.platform !== 'darwin',
           maxWidth: undefined,
           maxHeight: undefined,
-          movable: !lockOnCenter,
+          movable: !config.get('lockOnCenter'),
           skipTaskbar: false,
-          width: screen.getPrimaryDisplay().workAreaSize.width,
-          height: screen.getPrimaryDisplay().workAreaSize.height,
         }),
   }
 
@@ -94,16 +121,16 @@ function createWindow() {
   })
 
   win.on('resize', () => {
-    if (isMenuBarMode) {
+    if (config.get('isMenuBarMode')) {
       alignWindowWithTray()
-    } else if (lockOnCenter) {
+    } else if (config.get('lockOnCenter')) {
       win.center()
     }
   })
 
   win.on('blur', () => {
     setTimeout(() => {
-      if (isMenuBarMode) win.hide()
+      if (config.get('isMenuBarMode')) win.hide()
     }, 200)
   })
 
@@ -119,7 +146,6 @@ function createWindow() {
 }
 
 function showTrayContextPopup() {
-  trayContextLastShownAt = Date.now()
   tray!.popUpContextMenu(getTrayContextMenu())
 }
 
@@ -145,7 +171,7 @@ function createTray() {
 
     if (mainWindow.isVisible() && !mainWindow.isMinimized()) {
       if (mainWindow.isFocused() || process.platform !== 'darwin') {
-        if (isMenuBarMode) {
+        if (config.get('isMenuBarMode')) {
           mainWindow.hide()
         } else {
           showTrayContextPopup()
@@ -259,13 +285,13 @@ function alignWindowWithTray() {
 
 function getModeMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || isMenuBarMode
+  const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
       type: 'radio',
       label: 'Desktop mode',
-      checked: !isMenuBarMode,
+      checked: !config.get('isMenuBarMode'),
       enabled,
       click() {
         enableDesktopMode()
@@ -274,7 +300,7 @@ function getModeMenuItems() {
     {
       type: 'radio',
       label: 'Menubar mode',
-      checked: !!isMenuBarMode,
+      checked: !!config.get('isMenuBarMode'),
       enabled,
       click() {
         enableMenuBarMode()
@@ -286,26 +312,26 @@ function getModeMenuItems() {
 }
 function getOptionsMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || isMenuBarMode
+  const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
       type: 'checkbox',
       label: 'Lock on center',
-      checked: lockOnCenter,
+      checked: config.get('lockOnCenter'),
       enabled,
-      visible: !isMenuBarMode,
+      visible: !config.get('isMenuBarMode'),
       click(item) {
-        lockOnCenter = item.checked
+        config.set('lockOnCenter', item.checked)
 
         if (item.checked) {
-          if (!isMenuBarMode) {
+          if (!config.get('isMenuBarMode')) {
             mainWindow.setMovable(false)
           }
 
           mainWindow.center()
         } else {
-          if (!isMenuBarMode) {
+          if (!config.get('isMenuBarMode')) {
             mainWindow.setMovable(getBrowserWindowOptions().movable !== false)
           }
         }
@@ -318,7 +344,7 @@ function getOptionsMenuItems() {
 
 function getMainMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || isMenuBarMode
+  const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
@@ -470,7 +496,7 @@ function getDockMenuItems() {
 
 function getWindowMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || isMenuBarMode
+  const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
@@ -482,14 +508,14 @@ function getWindowMenuItems() {
     },
     {
       label: 'Minimize',
-      accelerator: isMenuBarMode ? undefined : 'CmdOrCtrl+M',
-      role: isMenuBarMode ? undefined : 'minimize',
+      accelerator: config.get('isMenuBarMode') ? undefined : 'CmdOrCtrl+M',
+      role: config.get('isMenuBarMode') ? undefined : 'minimize',
       enabled: enabled && !mainWindow.isMinimized(),
-      visible: !isMenuBarMode, // && mainWindow.isMinimizable(),
+      visible: !config.get('isMenuBarMode'), // && mainWindow.isMinimizable(),
     },
     {
       label: 'Maximize',
-      visible: !isMenuBarMode, // && mainWindow.isMaximizable(),
+      visible: !config.get('isMenuBarMode'), // && mainWindow.isMaximizable(),
       enabled, // && !mainWindow.isMaximized(),
       click() {
         if (!mainWindow.isVisible()) {
@@ -516,19 +542,19 @@ function getWindowMenuItems() {
 
 function getTrayMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || isMenuBarMode
+  const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'Open',
-      visible: !isCurrentWindow || isMenuBarMode,
+      visible: !isCurrentWindow || config.get('isMenuBarMode'),
       click() {
         mainWindow.show()
       },
     },
     {
       type: 'separator',
-      visible: !isCurrentWindow || isMenuBarMode,
+      visible: !isCurrentWindow || config.get('isMenuBarMode'),
     },
     ...getModeMenuItems(),
     {
@@ -539,7 +565,7 @@ function getTrayMenuItems() {
     {
       type: 'separator',
       enabled,
-      visible: !isMenuBarMode,
+      visible: !config.get('isMenuBarMode'),
     },
     ...getWindowMenuItems().filter(item => item.label !== 'Close'),
     {
@@ -564,7 +590,7 @@ function updateTrayHightlightMode() {
   if (!(tray && !tray.isDestroyed())) return
 
   tray.setHighlightMode(
-    isMenuBarMode &&
+    config.get('isMenuBarMode') &&
       mainWindow.isVisible() &&
       mainWindow.isFocused() &&
       !mainWindow.isFullScreen()
@@ -600,6 +626,8 @@ function updateBrowserWindowOptions() {
 
   mainWindow.setMovable(options.movable !== false)
 
+  mainWindow.setPosition(options.x || 0, options.y || 0, false)
+
   mainWindow.setSkipTaskbar(options.skipTaskbar === true)
 
   mainWindow.setSize(options.width || 500, options.height || 500, false)
@@ -612,10 +640,18 @@ function updateBrowserWindowOptions() {
     }
   }
 
-  if (isMenuBarMode) {
-    alignWindowWithTray()
+  mainWindowState.unmanage()
+  menubarWindowState.unmanage()
+  if (config.get('isMenuBarMode')) {
+    menubarWindowState.manage(mainWindow)
   } else {
-    mainWindow.maximize()
+    mainWindowState.manage(mainWindow)
+  }
+
+  if (config.get('isMenuBarMode')) {
+    alignWindowWithTray()
+  } else if (config.get('lockOnCenter')) {
+    mainWindow.center()
   }
 }
 
@@ -657,11 +693,11 @@ function updateOrRecreateWindow() {
 }
 
 function enableDesktopMode() {
-  isMenuBarMode = false
+  config.set('isMenuBarMode', false)
   updateOrRecreateWindow()
 }
 
 function enableMenuBarMode() {
-  isMenuBarMode = true
+  config.set('isMenuBarMode', true)
   updateOrRecreateWindow()
 }
