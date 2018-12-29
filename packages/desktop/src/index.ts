@@ -35,6 +35,17 @@ const startURL = __DEV__
   ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
   : `file://${path.join(__dirname, 'web/index.html')}`
 
+function setupBrowserExtensions() {
+  const {
+    default: installExtension,
+    REACT_DEVELOPER_TOOLS,
+    REDUX_DEVTOOLS,
+  } = require('electron-devtools-installer') // tslint:disable-line no-var-requires
+
+  installExtension(REACT_DEVELOPER_TOOLS).catch(console.error)
+  installExtension(REDUX_DEVTOOLS).catch(console.error)
+}
+
 function getBrowserWindowOptions() {
   if (!mainWindowState) {
     mainWindowState = windowStateKeeper({
@@ -239,6 +250,8 @@ function init() {
         credits: 'devhub',
       })
     }
+
+    if (__DEV__) setupBrowserExtensions()
   })
 
   app.on('window-all-closed', () => {
