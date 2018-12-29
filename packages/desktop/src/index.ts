@@ -75,6 +75,7 @@ function getBrowserWindowOptions() {
     webPreferences: {
       affinity: 'main-window',
       backgroundThrottling: false,
+      contextIsolation: false,
       nativeWindowOpen: true,
       nodeIntegration: false,
       preload: path.join(__dirname, 'preload.js'),
