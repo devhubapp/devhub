@@ -22,6 +22,8 @@ const config = new Store({
   },
 })
 
+const frameIsDifferentBetweenModes = process.platform !== 'darwin'
+
 const dock: Electron.Dock | null = app.dock || null
 let mainWindow: Electron.BrowserWindow
 let tray: Electron.Tray | null = null
@@ -86,7 +88,7 @@ function getBrowserWindowOptions() {
           height: mainWindowState.height,
           alwaysOnTop: false,
           center: true,
-          frame: process.platform !== 'darwin',
+          frame: frameIsDifferentBetweenModes,
           maxWidth: undefined,
           maxHeight: undefined,
           movable: !config.get('lockOnCenter'),
@@ -95,6 +97,12 @@ function getBrowserWindowOptions() {
   }
 
   return options
+}
+
+function showWindow() {
+  if (mainWindow.isMinimized()) mainWindow.restore()
+  if (mainWindow.isVisible()) mainWindow.focus()
+  else mainWindow.show()
 }
 
 function createWindow() {
@@ -180,7 +188,7 @@ function createTray() {
       }
     }
 
-    mainWindow.show()
+    showWindow()
   })
 
   tray.on('right-click', () => {
@@ -200,7 +208,7 @@ function init() {
   app.on('second-instance', (event, argv, _workingDirectory) => {
     if (!mainWindow) return
 
-    mainWindow.show()
+    showWindow()
 
     app.emit('open-url', event, __DEV__ ? argv[2] : argv[1])
   })
@@ -545,10 +553,7 @@ function getWindowMenuItems() {
       visible: !config.get('isMenuBarMode'), // && mainWindow.isMaximizable(),
       enabled, // && !mainWindow.isMaximized(),
       click() {
-        if (!mainWindow.isVisible()) {
-          mainWindow.show()
-        }
-
+        showWindow()
         mainWindow.maximize()
       },
     },
@@ -576,7 +581,7 @@ function getTrayMenuItems() {
       label: 'Open',
       visible: !isCurrentWindow || config.get('isMenuBarMode'),
       click() {
-        mainWindow.show()
+        showWindow()
       },
     },
     {
@@ -628,6 +633,11 @@ function updateTrayHightlightMode() {
 
 function updateBrowserWindowOptions() {
   const options = getBrowserWindowOptions()
+
+  const maximize =
+    mainWindow.isMaximized() ||
+    mainWindowState.isMaximized ||
+    config.get('launchCount') === 1
 
   mainWindow.setAlwaysOnTop(options.alwaysOnTop === true)
 
@@ -682,7 +692,7 @@ function updateBrowserWindowOptions() {
       mainWindow.center()
     }
 
-    if (config.get('launchCount') === 1) {
+    if (maximize) {
       mainWindow.maximize()
     }
   }
@@ -708,15 +718,14 @@ function update() {
     return
   }
 
-  mainWindow.show()
-
+  showWindow()
   updateMenu()
   updateTrayHightlightMode()
   updateBrowserWindowOptions()
 }
 
 function updateOrRecreateWindow() {
-  if (process.platform !== 'darwin') {
+  if (frameIsDifferentBetweenModes) {
     const oldWindow = mainWindow
     mainWindow = createWindow()
     oldWindow.close()
