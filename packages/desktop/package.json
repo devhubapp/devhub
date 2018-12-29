@@ -35,6 +35,12 @@
     "files": [
       "assets",
       "dist"
+    ],
+    "protocols": [
+      {
+        "name": "DevHub",
+        "schemes": ["devhub"]
+      }
     ]
   },
   "dependencies": {

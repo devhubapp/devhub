@@ -191,20 +191,29 @@ function init() {
   app.setName('DevHub')
 
   const gotTheLock = app.requestSingleInstanceLock()
-
   if (!gotTheLock) {
     app.quit()
     return
   }
 
-  app.on('second-instance', () => {
+  app.on('second-instance', (event, argv, _workingDirectory) => {
     if (!mainWindow) return
 
     mainWindow.show()
+
+    app.emit('open-url', event, __DEV__ ? argv[2] : argv[1])
   })
 
   app.on('ready', () => {
-    app.setAsDefaultProtocolClient('devhub')
+    app.removeAsDefaultProtocolClient('devhub')
+
+    if (__DEV__ && process.platform === 'win32') {
+      app.setAsDefaultProtocolClient('devhub', process.execPath, [
+        path.resolve(process.argv[1]),
+      ])
+    } else {
+      app.setAsDefaultProtocolClient('devhub')
+    }
 
     createTray()
     if (!mainWindow) mainWindow = createWindow()
