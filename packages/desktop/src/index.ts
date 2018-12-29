@@ -17,6 +17,7 @@ import { WindowState, windowStateKeeper } from './libs/electron-window-state'
 const config = new Store({
   defaults: {
     isMenuBarMode: false,
+    launchCount: 0,
     lockOnCenter: false,
   },
 })
@@ -205,6 +206,8 @@ function init() {
   })
 
   app.on('ready', () => {
+    config.set('launchCount', config.get('launchCount', 0) + 1)
+
     app.removeAsDefaultProtocolClient('devhub')
 
     if (__DEV__ && process.platform === 'win32') {
@@ -674,8 +677,14 @@ function updateBrowserWindowOptions() {
 
   if (config.get('isMenuBarMode')) {
     alignWindowWithTray()
-  } else if (config.get('lockOnCenter')) {
-    mainWindow.center()
+  } else {
+    if (config.get('lockOnCenter')) {
+      mainWindow.center()
+    }
+
+    if (config.get('launchCount') === 1) {
+      mainWindow.maximize()
+    }
   }
 }
 
