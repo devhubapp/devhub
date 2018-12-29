@@ -190,6 +190,19 @@ function createTray() {
 function init() {
   app.setName('DevHub')
 
+  const gotTheLock = app.requestSingleInstanceLock()
+
+  if (!gotTheLock) {
+    app.quit()
+    return
+  }
+
+  app.on('second-instance', () => {
+    if (!mainWindow) return
+
+    mainWindow.show()
+  })
+
   app.on('ready', () => {
     app.setAsDefaultProtocolClient('devhub')
 
