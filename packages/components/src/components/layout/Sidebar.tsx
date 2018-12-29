@@ -29,7 +29,7 @@ import { Separator } from '../common/Separator'
 import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useAppLayout } from '../context/LayoutContext'
 
-const logo = require('../../../assets/logo_circle.png') // tslint:disable-line
+const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
 const styles = StyleSheet.create({
   centerContainer: {
