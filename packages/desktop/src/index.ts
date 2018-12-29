@@ -28,8 +28,6 @@ let tray: Electron.Tray | null = null
 let mainWindowState: WindowState
 let menubarWindowState: WindowState
 
-app.setName('DevHub')
-
 const startURL = __DEV__
   ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
   : `file://${path.join(__dirname, 'web/index.html')}`
@@ -189,44 +187,48 @@ function createTray() {
   })
 }
 
-app.on('ready', () => {
-  app.setAsDefaultProtocolClient('devhub')
+function init() {
+  app.setName('DevHub')
 
-  createTray()
-  if (!mainWindow) mainWindow = createWindow()
-  update()
+  app.on('ready', () => {
+    app.setAsDefaultProtocolClient('devhub')
 
-  if (process.platform === 'darwin') {
-    app.setAboutPanelOptions({
-      applicationName: 'DevHub',
-      applicationVersion: app.getVersion(),
-      copyright: 'Copyright 2018',
-      credits: 'devhub',
-    })
-  }
-})
+    createTray()
+    if (!mainWindow) mainWindow = createWindow()
+    update()
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+    if (process.platform === 'darwin') {
+      app.setAboutPanelOptions({
+        applicationName: 'DevHub',
+        applicationVersion: app.getVersion(),
+        copyright: 'Copyright 2018',
+        credits: 'devhub',
+      })
+    }
+  })
 
-app.on('activate', () => {
-  if (!mainWindow) mainWindow = createWindow()
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
 
-  mainWindow.show()
-})
+  app.on('activate', () => {
+    if (!mainWindow) mainWindow = createWindow()
 
-app.on('web-contents-created', (_event, webContents) => {
-  webContents.on(
-    'new-window',
-    (event, uri, _frameName, _disposition, _options) => {
-      event.preventDefault()
-      shell.openExternal(uri)
-    },
-  )
-})
+    mainWindow.show()
+  })
+
+  app.on('web-contents-created', (_event, webContents) => {
+    webContents.on(
+      'new-window',
+      (event, uri, _frameName, _disposition, _options) => {
+        event.preventDefault()
+        shell.openExternal(uri)
+      },
+    )
+  })
+}
 
 function getCenterPosition(obj: Electron.BrowserWindow | Electron.Tray) {
   const bounds = obj.getBounds()
@@ -701,3 +703,5 @@ function enableMenuBarMode() {
   config.set('isMenuBarMode', true)
   updateOrRecreateWindow()
 }
+
+init()
