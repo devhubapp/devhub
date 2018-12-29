@@ -7,7 +7,7 @@
     "build": "yarn clean && yarn compile && pushd \"../web\" && yarn build && popd && yarn build:electron",
     "build:electron": "electron-builder -mw",
     "compile": "tsc -b",
-    "clean": "rimraf build && rimraf dist",
+    "clean": "shx rm -rf build && shx rm -rf dist",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "predeploy": "yarn run build",
