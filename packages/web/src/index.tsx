@@ -1,3 +1,8 @@
+// Security precaution
+;(window as any).eval = global.eval = () => {
+  throw new Error(`This app does not allow window.eval().`)
+}
+
 import '@babel/polyfill'
 import 'react-app-polyfill/ie9'
 import 'resize-observer-polyfill/dist/ResizeObserver.global'
