@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "yarn clean && yarn compile && pushd \"../web\" && yarn build && popd && shx cp -Rf ../web/dist dist/web && yarn build:electron",
-    "build:electron": "electron-builder -mw",
+    "build:electron": "electron-builder -mwl",
     "compile": "tsc -b",
     "clean": "shx rm -rf build && shx rm -rf dist",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
@@ -25,11 +25,13 @@
     "extraMetadata": {
       "name": "devhub"
     },
+    "linux": {
+      "icon": "icons/icon.png"
+    },
     "mac": {
       "icon": "icons/icon.png"
     },
     "win": {
-      "target": "nsis",
       "icon": "icons/icon.ico"
     },
     "files": [
