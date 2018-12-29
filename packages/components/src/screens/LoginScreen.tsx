@@ -160,6 +160,7 @@ export const LoginScreen = React.memo(() => {
 
       if (
         Platform.OS === 'web' &&
+        !Platform.isElectron &&
         window.history &&
         window.history.replaceState
       ) {
