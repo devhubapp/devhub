@@ -1,4 +1,7 @@
 // Source: https://donthuntme.com/
+'use strict'
+
+let ref
 
 function init(config) {
   if (config.ribbon) {
@@ -9,18 +12,18 @@ if (
   window.location.search.indexOf('?ref=producthunt') > -1 ||
   document.referrer.indexOf('producthunt') > -1
 ) {
-  var ref = document.referrer
+  ref = document.referrer
   redirectToPH()
 }
 
 function setAttributes(e, attrs) {
-  for (var a in attrs) {
-    e.setAttribute(a, attrs[a])
-  }
+  Object.keys(attrs).forEach(key => {
+    e.setAttribute(key, attrs[key])
+  })
 }
 
 function redirectToPH() {
-  let phb = document.createElement('div')
+  const phb = document.createElement('div')
   phb.id = 'phb'
 
   setAttributes(phb, {
@@ -37,15 +40,15 @@ function redirectToPH() {
       '    position: fixed;',
   })
 
-  let p = pC()
+  const p = pC()
 
   phb.appendChild(p)
 
   document.body.appendChild(phb)
 
   function pC() {
-    let p = document.createElement('div')
-    setAttributes(p, {
+    const d = document.createElement('div')
+    setAttributes(d, {
       style:
         '    background: #fff;' +
         '    border-radius: 3px;' +
@@ -61,20 +64,20 @@ function redirectToPH() {
         '    padding: 80px 20px;',
     })
 
-    let te = text()
-    let img = imge()
+    const te = text()
+    const img = imge()
 
-    p.appendChild(te)
-    p.appendChild(img)
+    d.appendChild(te)
+    d.appendChild(img)
 
-    return p
+    return d
   }
 
   function text() {
-    let te = document.createElement('div')
+    const te = document.createElement('div')
     setAttributes(te, { style: 'width: 460px; margin-bottom: 40px;' })
 
-    let h = document.createElement('h2')
+    const h = document.createElement('h2')
     h.textContent = 'This product is not ready'
     setAttributes(h, {
       style:
@@ -87,7 +90,7 @@ function redirectToPH() {
     })
     te.appendChild(h)
 
-    let sh = document.createElement('p')
+    const sh = document.createElement('p')
     sh.textContent =
       'Dear Hunter, thank you for checking this website. Sadly, it is not ready to launch yet. Please come back later!'
     setAttributes(sh, {
@@ -101,7 +104,7 @@ function redirectToPH() {
     })
     te.appendChild(sh)
 
-    let red = document.createElement('p')
+    const red = document.createElement('p')
     red.textContent = 'You will be redirected in '
     setAttributes(red, {
       style:
@@ -114,7 +117,7 @@ function redirectToPH() {
         '    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;',
     })
 
-    let t = timer()
+    const t = timer()
     red.appendChild(t)
     te.appendChild(red)
 
@@ -122,16 +125,17 @@ function redirectToPH() {
   }
 
   function timer() {
-    let t = document.createElement('span')
+    const t = document.createElement('span')
     setAttributes(t, { style: 'color: #da552f' })
     let l = 6
-    let ti = setInterval(function() {
-      t.textContent = --l
+    const ti = setInterval(() => {
+      l = l - 1
+      t.textContent = `${l}`
       if (l <= 1) {
         clearInterval(ti)
         ref
-          ? (window.location = ref)
-          : (window.location = 'https://github.com/devhubapp/devhub')
+          ? (window.location.href = ref)
+          : (window.location.href = 'https://github.com/devhubapp/devhub')
       }
     }, 1000)
     return t
@@ -139,8 +143,8 @@ function redirectToPH() {
 }
 
 function imge() {
-  let d = document.createElement('div')
-  let img = document.createElement('img')
+  const d = document.createElement('div')
+  const img = document.createElement('img')
   setAttributes(img, {
     src: '/static/media/donthuntme.png',
     style: 'width: 240px;',
@@ -150,7 +154,7 @@ function imge() {
 }
 
 function ribbon(loc) {
-  let phr = document.createElement('div')
+  const phr = document.createElement('div')
   phr.id = 'phr'
 
   setAttributes(phr, {
@@ -175,15 +179,15 @@ function ribbon(loc) {
       'box-shadow: 0px 4px 7px 0px rgba(50, 69, 93, 0.15), 0px -1px 4px 0px rgba(0, 0, 0, 0.08)',
   })
 
-  if (loc == 'bottomright') {
+  if (loc === 'bottomright') {
     phr.style.bottom = '55px'
     phr.style.right = '-60px'
     phr.style.transform = 'rotate(-40deg)'
-  } else if (loc == 'bottomleft') {
+  } else if (loc === 'bottomleft') {
     phr.style.bottom = '55px'
     phr.style.left = '-60px'
     phr.style.transform = 'rotate(40deg)'
-  } else if (loc == 'topleft') {
+  } else if (loc === 'topleft') {
     phr.style.top = '55px'
     phr.style.left = '-60px'
     phr.style.transform = 'rotate(-40deg)'
@@ -201,7 +205,7 @@ function ribbon(loc) {
   document.body.appendChild(phr)
 
   function explain() {
-    let exp = document.createElement('div')
+    const exp = document.createElement('div')
     exp.id = 'dhm-popup-explain'
 
     setAttributes(exp, {
@@ -218,7 +222,7 @@ function ribbon(loc) {
         '    position: fixed;',
     })
 
-    let p = pC()
+    const p = pC()
     exp.addEventListener('click', outsideClickListener)
 
     exp.appendChild(p)
@@ -226,7 +230,7 @@ function ribbon(loc) {
   }
 
   function pC() {
-    let p = document.createElement('div')
+    const p = document.createElement('div')
     p.id = 'dhm-popup-explain-container'
     setAttributes(p, {
       style:
@@ -244,8 +248,8 @@ function ribbon(loc) {
         '    padding: 80px 20px;',
     })
 
-    let te = text()
-    let img = imge()
+    const te = text()
+    const img = imge()
 
     p.appendChild(te)
     p.appendChild(img)
@@ -254,10 +258,10 @@ function ribbon(loc) {
   }
 
   function text() {
-    let te = document.createElement('div')
+    const te = document.createElement('div')
     setAttributes(te, { style: 'width: 460px; margin-bottom: 40px;' })
 
-    let h = document.createElement('h2')
+    const h = document.createElement('h2')
     h.textContent = 'This product will be blocked on Product Hunt!'
     setAttributes(h, {
       style:
@@ -270,7 +274,7 @@ function ribbon(loc) {
     })
     te.appendChild(h)
 
-    let t1 = document.createElement('p')
+    const t1 = document.createElement('p')
     t1.textContent = 'Dear Hunter, thank you for checking out my product!'
     setAttributes(t1, {
       style:
@@ -282,7 +286,7 @@ function ribbon(loc) {
         '    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;',
     })
     te.appendChild(t1)
-    let t2 = document.createElement('p')
+    const t2 = document.createElement('p')
     t2.textContent =
       "However, it is not ready to launch yet and Product Hunt's users will be blocked."
     setAttributes(t2, {
@@ -296,7 +300,7 @@ function ribbon(loc) {
     })
     te.appendChild(t2)
 
-    let b = document.createElement('a')
+    const b = document.createElement('a')
     b.textContent = 'back'
 
     setAttributes(b, {
@@ -318,14 +322,14 @@ function ribbon(loc) {
   }
 
   function outsideClickListener(e) {
-    let container = document.getElementById('dhm-popup-explain-container')
+    const container = document.getElementById('dhm-popup-explain-container')
     if (container && !container.contains(e.target)) {
       close()
     }
   }
 
   function close() {
-    let container = document.getElementById('dhm-popup-explain')
+    const container = document.getElementById('dhm-popup-explain')
     container.parentNode.removeChild(container)
   }
 }
