@@ -20,8 +20,4 @@ script:
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
-branches:
-  only:
-    - master
-
-if: tag IS present
+if: (tag =~ ^v) AND ((branch = master) OR (branch = tag))
