@@ -2629,7 +2629,7 @@ bugsnag-react@^1.1.1:
   resolved "http://registry.npmjs.org/bugsnag-react/-/bugsnag-react-1.1.1.tgz#da210c9102acfa427a3cdd00efa8cca785b87ea8"
   integrity sha512-u+aodYDZwlmPMj0kCC+nZiO0Rhw4LaJ8ve1cYzEb5gcToPjuIkOfFIQO4T7QhR96V2Uy6UdVw7e04OEPR4/0wg==
 
-builder-util-runtime@8.1.0, builder-util-runtime@^8.0.2, builder-util-runtime@^8.1.0:
+builder-util-runtime@8.1.0, builder-util-runtime@^8.0.2, builder-util-runtime@^8.1.0, builder-util-runtime@~8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-8.1.0.tgz#dd7fca995d48ceee7580b4851ca057566c94601e"
   integrity sha512-s1mlJ28mv+56Iebh6c9aXjVe11O3Z0cDTwAGeB0PCcUzHA37fDxGgS8ZGoYNMZP+rBHj21d/od1wuYofTVLaQg==
@@ -4190,6 +4190,21 @@ electron-to-chromium@^1.3.62, electron-to-chromium@^1.3.92:
   version "1.3.95"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.95.tgz#79fac438813ca7f3db182a525c2ab432934f6484"
   integrity sha512-0JZEDKOQAE05EO/4rk3vLAE+PYFI9OLCVLAS4QAq1y+Bb2y1N6MyQJz62ynzHN/y0Ka/nO5jVJcahbCEdfiXLQ==
+
+electron-updater@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.npmjs.org/electron-updater/-/electron-updater-4.0.6.tgz#9c4f495ae0e80bf4425e3e1b801c5ed2ab933c2d"
+  integrity sha512-JPGLME6fxJcHG8hX7HWFl6Aew6iVm0DkcrENreKa5SUJCHG+uUaAhxDGDt+YGcNkyx1uJ6eBGMvFxDTLUv67pg==
+  dependencies:
+    bluebird-lst "^1.0.6"
+    builder-util-runtime "~8.1.0"
+    fs-extra-p "^7.0.0"
+    js-yaml "^3.12.0"
+    lazy-val "^1.0.3"
+    lodash.isequal "^4.5.0"
+    pako "^1.0.7"
+    semver "^5.6.0"
+    source-map-support "^0.5.9"
 
 electron@^4.0.0:
   version "4.0.0"
@@ -7619,6 +7634,11 @@ lodash.get@^4.4.2:
   resolved "https://registry.npmjs.org/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.npmjs.org/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+
 lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npmjs.org/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -9037,7 +9057,7 @@ package-json@^4.0.0:
     registry-url "^3.0.3"
     semver "^5.1.0"
 
-pako@~1.0.5:
+pako@^1.0.7, pako@~1.0.5:
   version "1.0.7"
   resolved "https://registry.npmjs.org/pako/-/pako-1.0.7.tgz#2473439021b57f1516c82f58be7275ad8ef1bb27"
   integrity sha512-3HNK5tW4x8o5mO8RuHZp3Ydw9icZXx0RANAOMzlMzx7LVXhMJ4mo3MOBpzyd7r/+RUu8BmndP47LXT+vzjtWcQ==

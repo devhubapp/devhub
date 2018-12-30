@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "electron-store": "^2.0.0",
+    "electron-updater": "^4.0.6",
     "jsonfile": "^5.0.0",
     "mkdirp": "^0.5.1"
   },

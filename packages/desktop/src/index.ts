@@ -9,6 +9,7 @@ import {
   Tray,
 } from 'electron'
 import Store from 'electron-store'
+import { autoUpdater } from 'electron-updater'
 import path from 'path'
 
 import { __DEV__ } from './libs/electron-is-dev'
@@ -253,6 +254,8 @@ function init() {
     }
 
     if (__DEV__) setupBrowserExtensions()
+
+    autoUpdater.checkForUpdatesAndNotify()
   })
 
   app.on('window-all-closed', () => {
@@ -354,6 +357,16 @@ function getAboutMenuItems() {
       label: 'View on GitHub',
       click: () => {
         shell.openExternal('https://github.com/devhubapp/devhub')
+      },
+    },
+    {
+      type: 'separator',
+    },
+    {
+      label: 'Check for Updates...',
+      enabled: !__DEV__,
+      click: () => {
+        autoUpdater.checkForUpdatesAndNotify()
       },
     },
   ]
