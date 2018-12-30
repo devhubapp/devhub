@@ -2,6 +2,13 @@
   "name": "devhub",
   "version": "0.40.0",
   "private": true,
+  "author": {
+    "name": "Bruno Lemos",
+    "email": "bruno@devhubapp.com",
+    "url": "https://twitter.com/brunolemos"
+  },
+  "description": "TweetDeck for GitHub",
+  "repository": "https://github.com/devhubapp/devhub",
   "workspaces": {
     "packages": [
       "packages/*"
