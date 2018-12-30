@@ -18,18 +18,13 @@
     ]
   },
   "scripts": {
-    "build:desktop": "yarn workspace @devhub/desktop compile && concurrently --kill-others \"yarn workspace @devhub/desktop compile -w\" \"yarn workspace @devhub/desktop build\"",
     "clean": "yarn workspaces run clean",
-    "deploy": "yarn deploy:web",
-    "deploy:web": "yarn workspace @devhub/web build && yarn now && yarn now alias",
-    "deploy:www": "pushd \"packages/www\"; now && now alias; popd;",
     "dev": "yarn workspace @devhub/desktop compile && concurrently --kill-others \"yarn workspace @devhub/desktop compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
     "dev:desktop": "cross-env BROWSER=none concurrently \"yarn dev:web\" \"yarn workspace @devhub/desktop compile -w\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
     "dev:mobile": "yarn workspace @devhub/mobile compile && concurrently --kill-others \"yarn workspace @devhub/mobile compile -w\" \"yarn workspace @devhub/mobile start\"",
     "dev:web": "yarn workspace @devhub/web compile && concurrently --kill-others \"yarn workspace @devhub/web compile -w\" \"yarn workspace @devhub/web start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
-    "now": "npx now",
     "patch-package": "patch-package",
     "prepare": "yarn patch-package",
     "studio": "yarn workspace @devhub/mobile studio",

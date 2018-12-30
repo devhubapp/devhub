@@ -11,13 +11,15 @@
   "description": "TweetDeck for GitHub",
   "repository": "https://github.com/devhubapp/devhub",
   "scripts": {
-    "build": "yarn clean && yarn compile && pushd \"../web\" && yarn build && popd && shx cp -Rf ../web/dist dist/web && yarn build:electron",
+    "build": "yarn build:base && yarn build:web && yarn build:web:post && yarn build:electron",
+    "build:base": "yarn clean && yarn compile",
     "build:electron": "electron-builder",
-    "compile": "tsc -b",
+    "build:web": "pushd \"../web\" && yarn build && popd",
+    "build:web:post": "shx cp -Rf ../web/dist dist/web",
     "clean": "shx rm -rf build && shx rm -rf dist",
+    "compile": "tsc -b",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
-    "predeploy": "yarn run build",
     "start": "nodemon --watch dist --watch assets --exec \"electron .\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
