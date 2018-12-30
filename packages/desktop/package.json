@@ -53,7 +53,10 @@
           "devhub"
         ]
       }
-    ]
+    ],
+    "publish": {
+      "provider": "github"
+    }
   },
   "dependencies": {
     "electron-store": "^2.0.0",
