@@ -13,6 +13,7 @@
   ],
   "regions": ["gru1"],
   "github": {
+    "enabled": false,
     "autoAlias": false
   }
 }
