@@ -340,6 +340,27 @@ function alignWindowWithTray() {
   mainWindow.setPosition(fixedX, fixedY)
 }
 
+function getAboutMenuItems() {
+  const menuItems: Electron.MenuItemConstructorOptions[] = [
+    ...(process.platform === 'darwin'
+      ? [
+          {
+            label: `About ${app.getName()}`,
+            role: 'about',
+          },
+        ]
+      : []),
+    {
+      label: 'View on GitHub',
+      click: () => {
+        shell.openExternal('https://github.com/devhubapp/devhub')
+      },
+    },
+  ]
+
+  return menuItems
+}
+
 function getModeMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
@@ -367,6 +388,7 @@ function getModeMenuItems() {
 
   return menuItems
 }
+
 function getOptionsMenuItems() {
   const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
@@ -404,6 +426,39 @@ function getMainMenuItems() {
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
+    ...(process.platform === 'darwin'
+      ? ([
+          {
+            label: app.getName(),
+            submenu: [
+              ...getAboutMenuItems(),
+              {
+                type: 'separator',
+              },
+              {
+                label: `Hide ${app.getName()}`,
+                accelerator: 'Command+H',
+                role: 'hide',
+              },
+              {
+                label: 'Hide Others',
+                accelerator: 'Command+Alt+H',
+                role: 'hideothers',
+              },
+              {
+                type: 'separator',
+              },
+              {
+                label: 'Quit',
+                role: 'quit',
+                click: () => {
+                  app.quit()
+                },
+              },
+            ],
+          },
+        ] as Electron.MenuItemConstructorOptions[])
+      : []),
     {
       label: 'Edit',
       submenu: [
@@ -485,6 +540,14 @@ function getMainMenuItems() {
       label: 'Help',
       role: 'help',
       submenu: [
+        ...(process.platform === 'darwin'
+          ? []
+          : ([
+              ...getAboutMenuItems(),
+              {
+                type: 'separator',
+              },
+            ] as Electron.MenuItemConstructorOptions[])),
         {
           label: 'Report bug',
           click: () => {
@@ -500,49 +563,6 @@ function getMainMenuItems() {
       ],
     },
   ]
-
-  if (process.platform === 'darwin') {
-    const name = app.getName()
-
-    menuItems.unshift({
-      label: name,
-      submenu: [
-        {
-          label: `About ${name}`,
-          role: 'about',
-        },
-        {
-          label: 'View on GitHub',
-          click: () => {
-            shell.openExternal('https://github.com/devhubapp/devhub')
-          },
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: `Hide ${name}`,
-          accelerator: 'Command+H',
-          role: 'hide',
-        },
-        {
-          label: 'Hide Others',
-          accelerator: 'Command+Alt+H',
-          role: 'hideothers',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: 'Quit',
-          accelerator: 'Command+Q',
-          click: () => {
-            app.quit()
-          },
-        },
-      ],
-    })
-  }
 
   return menuItems
 }
