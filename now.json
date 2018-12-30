@@ -11,5 +11,8 @@
       "dest": "/packages/web/dist/$1"
     }
   ],
-  "regions": ["gru1"]
+  "regions": ["gru1"],
+  "github": {
+    "autoAlias": false
+  }
 }
