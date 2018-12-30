@@ -50,17 +50,17 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 #### About paid features
 
-##### Why is this app not completely free?
-
-> "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
-
-DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
-
 ##### What features will be paid?
 
 - Support for private repositories
 - Support for GitHub Enterprise
 - Push notifications
+
+##### Why is this app not completely free?
+
+> "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
+
+DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
 
 > Any suggestion? [Open an issue](https://github.com/devhubapp/devhub/issues/new)!
 
