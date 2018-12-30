@@ -14,6 +14,7 @@
     "build": "yarn build:base && yarn build:web && yarn build:web:post && yarn build:electron",
     "build:base": "yarn clean && yarn compile",
     "build:electron": "electron-builder",
+    "build:skipweb": "yarn build:base && yarn build:web:post && yarn build:electron",
     "build:web": "pushd \"../web\" && yarn build && popd",
     "build:web:post": "shx cp -Rf ../web/dist dist/web",
     "clean": "shx rm -rf build && shx rm -rf dist",

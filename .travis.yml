@@ -15,7 +15,11 @@ cache:
     - $HOME/.cache/electron-builder
 
 script:
-  - yarn workspace @devhub/desktop build --mac --win --linux
+  - yarn clean
+  - yarn workspace @devhub/web build
+  - yarn workspace @devhub/desktop build:skipweb --mac --win --linux
+  - yarn now --token $NOW_TOKEN
+  - yarn now alias --token $NOW_TOKEN
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
