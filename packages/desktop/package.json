@@ -36,6 +36,7 @@
       "icon": "icons/icon.png"
     },
     "mac": {
+      "category": "public.app-category.developer-tools",
       "icon": "icons/icon.png"
     },
     "win": {
