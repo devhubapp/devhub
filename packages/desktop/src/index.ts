@@ -32,7 +32,7 @@ let mainWindowState: WindowState
 let menubarWindowState: WindowState
 
 const startURL = __DEV__
-  ? `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
+  ? 'http://localhost:3000'
   : `file://${path.join(__dirname, 'web/index.html')}`
 
 function setupBrowserExtensions() {
