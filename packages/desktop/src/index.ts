@@ -278,7 +278,10 @@ function init() {
   })
 
   app.on('open-url', (_event, url) => {
-    if (mainWindow) mainWindow.webContents.send('open-url', url)
+    if (!mainWindow) return
+
+    mainWindow.webContents.send('open-url', url)
+    showWindow()
   })
 }
 
