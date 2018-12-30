@@ -1,8 +1,9 @@
 import React, { AnchorHTMLAttributes } from 'react'
-import { Animated, Linking, View } from 'react-native'
+import { Animated, View } from 'react-native'
 
 import { Omit } from '@devhub/core'
 import { Browser } from '../../libs/browser'
+import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
 import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
@@ -65,7 +66,7 @@ export function Link(props: LinkProps) {
       {...Platform.select({
         default: {
           onPress: href
-            ? href.includes('http')
+            ? href.startsWith('http')
               ? () => Browser.openURL(href)
               : () => Linking.openURL(href)
             : undefined,

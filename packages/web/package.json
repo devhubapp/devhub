@@ -2,9 +2,11 @@
   "name": "@devhub/web",
   "version": "0.40.0",
   "private": false,
+  "homepage": "./",
   "scripts": {
-    "build": "tsc -b && react-app-rewired build && rimraf dist && mv build dist",
-    "clean": "rimraf dist/*",
+    "build": "yarn compile && react-app-rewired build && shx rm -rf dist && mv build dist",
+    "clean": "shx rm -rf dist/*",
+    "compile": "tsc -b",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
@@ -41,7 +43,7 @@
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.1",
+    "typescript": "^3.2.2",
     "webpack-bundle-analyzer": "^3.0.3"
   },
   "resolutions": {

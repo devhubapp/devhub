@@ -4,8 +4,8 @@
   "private": false,
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -b",
-    "clean": "rimraf dist/*",
+    "compile": "tsc -b",
+    "clean": "shx rm -rf dist/*",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package"
@@ -25,6 +25,6 @@
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.1"
+    "typescript": "^3.2.2"
   }
 }

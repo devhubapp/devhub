@@ -2,6 +2,13 @@
   "name": "devhub",
   "version": "0.40.0",
   "private": true,
+  "author": {
+    "name": "Bruno Lemos",
+    "email": "bruno@devhubapp.com",
+    "url": "https://twitter.com/brunolemos"
+  },
+  "description": "TweetDeck for GitHub",
+  "repository": "https://github.com/devhubapp/devhub",
   "workspaces": {
     "packages": [
       "packages/*"
@@ -11,16 +18,15 @@
     ]
   },
   "scripts": {
-    "build:desktop": "yarn compile && concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/desktop build\"",
+    "build:desktop": "yarn workspace @devhub/desktop compile && concurrently --kill-others \"yarn workspace @devhub/desktop compile -w\" \"yarn workspace @devhub/desktop build\"",
     "clean": "yarn workspaces run clean",
-    "compile": "yarn workspace @devhub/components build",
     "deploy": "yarn deploy:web",
     "deploy:web": "yarn workspace @devhub/web build && yarn now && yarn now alias",
-    "deploy:www": "pushd packages/www; now && now alias; popd;",
-    "dev": "yarn compile && concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\" \"yarn workspace @devhub/desktop start\"",
-    "dev:desktop": "yarn compile && concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/desktop start\"",
-    "dev:mobile": "yarn compile && concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/mobile start\"",
-    "dev:web": "yarn compile && concurrently --kill-others \"yarn compile -w\" \"yarn workspace @devhub/web start\"",
+    "deploy:www": "pushd \"packages/www\"; now && now alias; popd;",
+    "dev": "yarn workspace @devhub/desktop compile && concurrently --kill-others \"yarn workspace @devhub/desktop compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
+    "dev:desktop": "cross-env BROWSER=none concurrently \"yarn dev:web\" \"yarn workspace @devhub/desktop compile -w\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
+    "dev:mobile": "yarn workspace @devhub/mobile compile && concurrently --kill-others \"yarn workspace @devhub/mobile compile -w\" \"yarn workspace @devhub/mobile start\"",
+    "dev:web": "yarn workspace @devhub/web compile && concurrently --kill-others \"yarn workspace @devhub/web compile -w\" \"yarn workspace @devhub/web start\"",
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "now": "npx now",
@@ -32,16 +38,17 @@
   "dependencies": {},
   "devDependencies": {
     "concurrently": "^4.1.0",
+    "cross-env": "^5.2.0",
     "husky": "^1.2.0",
     "lint-staged-offline": "^0.0.1",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "prettier": "^1.15.3",
-    "rimraf": "^2.6.2",
+    "shx": "0.3.2",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.1"
+    "typescript": "^3.2.2"
   },
   "resolutions": {
     "scheduler": "0.12.0"

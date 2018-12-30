@@ -29,7 +29,7 @@ import { Separator } from '../common/Separator'
 import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useAppLayout } from '../context/LayoutContext'
 
-const logo = require('@devhub/components/assets/logo.png') // tslint:disable-line
+const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
 const styles = StyleSheet.create({
   centerContainer: {
@@ -218,7 +218,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   style={{
                     width: sidebarSize / 2,
                     height: sidebarSize / 2,
-                    borderRadius: sidebarSize / (2 * 2),
                   }}
                 />
               </Link>

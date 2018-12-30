@@ -3,10 +3,10 @@
 
 <head>
   <meta charset="utf-8">
-  <base target="_blank" />
+  <base href="%PUBLIC_URL%" target="_blank" />
 
-  <title>DevHub - TweetDeck for GitHub</title>
-  <meta name="description" content="Take back control of your GitHub workflow. Manage your notifications and follow repositories activities using columns and custom filters.">
+  <title>DevHub</title>
+  <meta name="description" content="TweetDeck for GitHub. Take back control of your GitHub workflow. Manage your notifications and follow repositories activities using columns and custom filters.">
 
   <!-- Google / Search Engine Tags -->
   <meta itemprop="name" content="DevHub - TweetDeck for GitHub">
@@ -53,14 +53,6 @@
 </head>
 
 <body>
-  <script>
-    if (window.navigator.userAgent.indexOf("Electron") !== -1) {
-      var div = document.createElement("div");
-      div.innerHTML = "<div class='header-arrow'></div>";
-      var first=document.body.firstChild;
-      document.body.insertBefore(div, first);
-    }
-  </script>
   <div id="root"></div>
   <noscript id="error-container">
     <link rel="stylesheet" href="%PUBLIC_URL%/static/css/error.css" />

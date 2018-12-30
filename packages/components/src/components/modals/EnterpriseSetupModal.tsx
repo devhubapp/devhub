@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { Alert, Animated, Clipboard, Linking, View } from 'react-native'
+import { Animated, Clipboard, View } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
