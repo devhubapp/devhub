@@ -657,9 +657,10 @@ function updateBrowserWindowOptions() {
   const options = getBrowserWindowOptions()
 
   const maximize =
-    mainWindow.isMaximized() ||
-    mainWindowState.isMaximized ||
-    config.get('launchCount') === 1
+    !config.get('isMenuBarMode') &&
+    (mainWindow.isMaximized() ||
+      mainWindowState.isMaximized ||
+      config.get('launchCount') === 1)
 
   mainWindow.setAlwaysOnTop(options.alwaysOnTop === true)
 
@@ -685,11 +686,23 @@ function updateBrowserWindowOptions() {
 
   mainWindow.setMovable(options.movable !== false)
 
-  mainWindow.setPosition(options.x || 0, options.y || 0, false)
+  mainWindow.setPosition(
+    maximize ? screen.getPrimaryDisplay().workArea.x || 0 : options.x || 0,
+    maximize ? screen.getPrimaryDisplay().workArea.y || 0 : options.y || 0,
+    false,
+  )
 
   mainWindow.setSkipTaskbar(options.skipTaskbar === true)
 
-  mainWindow.setSize(options.width || 500, options.height || 500, false)
+  mainWindow.setSize(
+    maximize
+      ? screen.getPrimaryDisplay().workAreaSize.width
+      : options.width || 500,
+    maximize
+      ? screen.getPrimaryDisplay().workAreaSize.height
+      : options.height || 500,
+    false,
+  )
 
   if (dock) {
     if (options.skipTaskbar === true) {
