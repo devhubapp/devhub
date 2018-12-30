@@ -33,32 +33,36 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [x] **Dashboard viewer**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Theme support**: Choose between 6 light or dark themes;
-- [x] **And more!**: Native apps, open source, modern tech stack, ...
+- [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech stack, ...
 
 ### Next features:
 
-- [ ] **Desktop apps**: [#2](https://github.com/devhubapp/devhub/issues/2)
+- [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
 - [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.;
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
+- [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
 - [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop ([#42](https://github.com/devhubapp/devhub/issues/42))
+- [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks; contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com) to show your interest.
 
 > Which one do you want first? Any other recommendations? Search for [existing feature requests](https://github.com/devhubapp/devhub/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc) and add a 👍 reaction on them, or create a new one.
 
-### Paid features:
+### About paid features
 
-> #### Why is this app "just" 99% free and not 100%?
+#### Why is this app not completely free?
 
 > "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
 
-> DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
-
-- [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
-- [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
-- [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks; contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com) so we can work on this together.
+DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
 
 > Any suggestion for other paid features? Thoughts about the topic?  [Open an issue](https://github.com/devhubapp/devhub/issues/new)!
+
+### What features will be paid?
+
+- Support for private repositories
+- Support for GitHub Enterprise
+- Push notifications
 
 
 <br/>
