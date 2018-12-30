@@ -12,7 +12,7 @@
   "repository": "https://github.com/devhubapp/devhub",
   "scripts": {
     "build": "yarn clean && yarn compile && pushd \"../web\" && yarn build && popd && shx cp -Rf ../web/dist dist/web && yarn build:electron",
-    "build:electron": "electron-builder -mwl",
+    "build:electron": "electron-builder",
     "compile": "tsc -b",
     "clean": "shx rm -rf build && shx rm -rf dist",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
