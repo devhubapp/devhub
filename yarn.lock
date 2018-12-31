@@ -1260,6 +1260,11 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/sortablejs@^1.7.2":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@types/sortablejs/-/sortablejs-1.7.2.tgz#1e75a84ff3c60e6d44c43641f717a131b785982c"
+  integrity sha512-yIxpbtlfhaFi2QyuUK54XcmzDWZf5i11CgTrMO4Vh+sKKZthonizkTcqhADeHdngDNTDVUCYfIcfIvpZRAZY+A==
+
 "@types/tapable@1.0.2":
   version "1.0.2"
   resolved "https://registry.npmjs.org/@types/tapable/-/tapable-1.0.2.tgz#e13182e1b69871a422d7863e11a4a6f5b814a4bd"
@@ -11616,6 +11621,11 @@ sockjs@0.3.19:
   dependencies:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
+
+sortablejs@^1.8.0-rc1:
+  version "1.8.0-rc1"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.8.0-rc1.tgz#fe4731b2cb3ccb4730a26a8cdde2f74a634bb259"
+  integrity sha512-umyNbQVDwRgc0SZvUB+FRUIUqACnu5vCCmK0zv/xWA3eDSOh+IZsg3GHdWvEOcUBwnykqyk760+YPgVa8HfxFg==
 
 source-list-map@^2.0.0:
   version "2.0.1"
