@@ -88,9 +88,11 @@ export const columnsReducer: Reducer<State> = (
       return immer(state, draft => {
         if (!draft.allIds) return
 
-        const currentIndex = draft.allIds.findIndex(
-          id => id === action.payload.columnId,
-        )
+        const currentIndexFromPayload = action.payload.currentIndex
+        const currentIndex = _.isNumber(currentIndexFromPayload)
+          ? currentIndexFromPayload
+          : draft.allIds.findIndex(id => id === action.payload.columnId)
+
         if (!(currentIndex >= 0 && currentIndex < draft.allIds.length)) return
 
         const newIndex = Math.max(

@@ -25,7 +25,11 @@ export function deleteColumn(payload: {
   return createAction('DELETE_COLUMN', payload)
 }
 
-export function moveColumn(payload: { columnId: string; columnIndex: number }) {
+export function moveColumn(payload: {
+  columnId?: string
+  columnIndex: number
+  currentIndex?: number
+}) {
   return createAction('MOVE_COLUMN', payload)
 }
 
