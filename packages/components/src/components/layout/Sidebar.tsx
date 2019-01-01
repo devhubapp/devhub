@@ -81,7 +81,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       return null
     }
 
-    return findDOMNode(current).firstChild as HTMLElement
+    const node = findDOMNode(current)
+    return node && node.firstChild ? (node.firstChild as HTMLElement) : null
   }
 
   useDraggable(
