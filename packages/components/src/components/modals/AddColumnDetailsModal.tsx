@@ -14,6 +14,8 @@ import {
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
+import { useReduxState } from '../../redux/hooks/use-redux-state'
+import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -71,6 +73,9 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
     username: '',
     ...defaultParams,
   })
+
+  const username = useReduxState(selectors.currentUsernameSelector)
+
   const addColumnAndSubscriptions = useReduxAction(
     actions.addColumnAndSubscriptions,
   )
@@ -162,7 +167,10 @@ export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
           autoCapitalize="none"
           autoCorrect={false}
           blurOnSubmit={false}
-          placeholder={fieldDetails.placeholder}
+          placeholder={`${fieldDetails.placeholder || ''}`.replace(
+            'brunolemos',
+            username!,
+          )}
           placeholderTextColor={theme.foregroundColorMuted50}
           {...textInputProps}
           onChange={createTextInputChangeHandler(fieldDetails)}
