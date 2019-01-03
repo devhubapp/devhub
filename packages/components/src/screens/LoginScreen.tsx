@@ -198,7 +198,7 @@ export const LoginScreen = React.memo(() => {
     const githubScope =
       method === 'github.private'
         ? ['read:user', 'repo', 'notifications', 'read:org']
-        : ['read:user', 'public_repo', 'notifications', 'read:org']
+        : ['read:user', 'notifications', 'read:org']
 
     try {
       analytics.trackEvent('engagement', 'login', method, 1, { method })

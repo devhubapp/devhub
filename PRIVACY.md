@@ -8,7 +8,7 @@ These are all permissions that may be requested to you and their reasons:
 - [required] `read:user`: Read-only access to the user's profile data, like username, email and avatar;
 - [required] `notifications`: Read user's public and private notifications; mark as read;
 - [required] `read:org`: Read organization events; read list of user's organizations;
-- [required] `public_repo`: Read public GitHub content, like events from any user or repository;
+- [deprecated] `public_repo`: Allow starring repositories (removed while DevHub doesn't have this feature activated);
 - [deprecated] `repo`: Read user's private content, like events from private repositories ([not recommended](https://github.com/devhubapp/devhub/issues/32)).
 
 
@@ -32,4 +32,4 @@ If you find any bug, please contribute by opening an issue or sending a pull req
 
 ---
 
-Updated December 23rd, 2018.
+Updated January 3rd, 2019.
