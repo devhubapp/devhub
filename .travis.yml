@@ -18,8 +18,8 @@ script:
   - yarn clean
   - yarn workspace @devhub/web build
   - yarn workspace @devhub/desktop build:skipweb --mac --win --linux
-  - yarn now --token $NOW_TOKEN
-  - yarn now alias --token $NOW_TOKEN
+  - now --token $NOW_TOKEN
+  - now alias --token $NOW_TOKEN
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
