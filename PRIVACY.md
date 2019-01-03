@@ -6,6 +6,7 @@ This app requires GitHub authentication.<br/>
 These are all permissions that may be requested to you and their reasons:
 
 - [required] `read:user`: Read-only access to the user's profile data, like username, email and avatar;
+- [required] `user:email`: Read-only access to the user's e-mail, so DevHub has a way to contact its users if necessary, e.g. security disclosures;
 - [required] `notifications`: Read user's public and private notifications; mark as read;
 - [required] `read:org`: Read organization events; read list of user's organizations;
 - [deprecated] `public_repo`: Allow starring repositories (removed while DevHub doesn't have this feature activated);
