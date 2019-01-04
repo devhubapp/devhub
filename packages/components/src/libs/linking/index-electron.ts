@@ -19,7 +19,7 @@ export const Linking: LinkingCrossPlatform = {
     window.ipc.addListener('open-url', wrapHandler)
   },
   async canOpenURL(url: string) {
-    return LinkingOriginal.canOpenURL(url)
+    return window.ipc.sendSync('can-open-url', url)
   },
   async getInitialURL() {
     return ''

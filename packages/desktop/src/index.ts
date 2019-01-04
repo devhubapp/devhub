@@ -1,6 +1,7 @@
 import {
   app,
   BrowserWindow,
+  ipcMain,
   Menu,
   nativeImage,
   screen,
@@ -11,6 +12,7 @@ import {
 import Store from 'electron-store'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
+import url from 'url'
 
 import { __DEV__ } from './libs/electron-is-dev'
 import { WindowState, windowStateKeeper } from './libs/electron-window-state'
@@ -51,8 +53,11 @@ function getBrowserWindowOptions() {
   if (!mainWindowState) {
     mainWindowState = windowStateKeeper({
       defaultWidth: screen.getPrimaryDisplay().workAreaSize.width,
-      defaultHeight: screen.getPrimaryDisplay().workAreaSize.height,
+      defaultHeight:
+        screen.getPrimaryDisplay().workAreaSize.height -
+        (process.platform === 'linux' ? 28 : 0),
       file: 'main-window.json',
+      fullScreen: false,
     })
   }
 
@@ -61,6 +66,7 @@ function getBrowserWindowOptions() {
       defaultWidth: 340,
       defaultHeight: 550,
       file: 'menubar-window.json',
+      fullScreen: false,
     })
   }
 
@@ -151,7 +157,7 @@ function createWindow() {
 
   win.on('blur', () => {
     setTimeout(() => {
-      if (config.get('isMenuBarMode')) win.hide()
+      if (config.get('isMenuBarMode') && !win.isDestroyed()) win.hide()
     }, 200)
   })
 
@@ -160,6 +166,7 @@ function createWindow() {
   })
 
   win.on('leave-full-screen', () => {
+    if (!mainWindow.isFocused()) return
     update()
   })
 
@@ -175,7 +182,7 @@ function createTray() {
     path.join(
       __dirname,
       `../assets/icons/${
-        process.platform === 'win32' ? 'trayIconWhite' : 'trayIconTemplate'
+        process.platform === 'darwin' ? 'trayIconTemplate' : 'trayIconWhite'
       }.png`,
     ),
   )
@@ -230,9 +237,8 @@ function init() {
   app.on('ready', () => {
     config.set('launchCount', config.get('launchCount', 0) + 1)
 
-    app.removeAsDefaultProtocolClient('devhub')
-
     if (__DEV__ && process.platform === 'win32') {
+      app.removeAsDefaultProtocolClient('devhub')
       app.setAsDefaultProtocolClient('devhub', process.execPath, [
         path.resolve(process.argv[1]),
       ])
@@ -274,17 +280,48 @@ function init() {
     webContents.on(
       'new-window',
       (event, uri, _frameName, _disposition, _options) => {
+        if (
+          !app.isDefaultProtocolClient('devhub') &&
+          `${url.parse(uri).pathname || ''}`.startsWith('/oauth')
+        )
+          return
+
         event.preventDefault()
         shell.openExternal(uri)
       },
     )
   })
 
-  app.on('open-url', (_event, url) => {
+  app.on('open-url', (_event, uri) => {
     if (!mainWindow) return
 
-    mainWindow.webContents.send('open-url', url)
+    mainWindow.webContents.send('open-url', uri)
     showWindow()
+  })
+
+  ipcMain.on('can-open-url', (e: any, uri?: string) => {
+    let returnValue = false
+
+    if (!(e && uri && typeof uri === 'string')) returnValue = false
+    else if (uri.startsWith('http://') || uri.startsWith('https://'))
+      returnValue = true
+    else if (uri.startsWith('devhub://'))
+      returnValue = app.isDefaultProtocolClient('devhub')
+
+    e.returnValue = returnValue
+  })
+
+  ipcMain.on('open-url', (_e: any, uri?: string) => {
+    if (!mainWindow) return
+
+    if (!(uri && typeof uri === 'string' && uri.startsWith('devhub://'))) return
+    mainWindow.webContents.send('open-url', url)
+  })
+
+  ipcMain.on('post-message', (_e: any, data: any) => {
+    if (!mainWindow) return
+
+    mainWindow.webContents.send('post-message', data)
   })
 }
 
@@ -300,10 +337,15 @@ function getCenterPosition(obj: Electron.BrowserWindow | Electron.Tray) {
 function alignWindowWithTray() {
   if (!(tray && !tray.isDestroyed())) return
 
+  const trayBounds = tray.getBounds()
+  if (!(trayBounds.width && trayBounds.height)) {
+    mainWindow.center()
+    return
+  }
+
   const screenSize = screen.getPrimaryDisplay().size
   const workArea = screen.getPrimaryDisplay().workArea
   const windowBounds = mainWindow.getBounds()
-  const trayBounds = tray.getBounds()
   const trayCenter = getCenterPosition(tray)
 
   const top = trayBounds.y < screenSize.height / 3
@@ -375,7 +417,14 @@ function getAboutMenuItems() {
 }
 
 function getModeMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  if (
+    !(tray && tray.getBounds().width && tray.getBounds().height) &&
+    !config.get('isMenuBarMode')
+  )
+    return []
+
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -403,7 +452,8 @@ function getModeMenuItems() {
 }
 
 function getOptionsMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -435,7 +485,8 @@ function getOptionsMenuItems() {
 }
 
 function getMainMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -585,7 +636,8 @@ function getDockMenuItems() {
 }
 
 function getWindowMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -600,7 +652,7 @@ function getWindowMenuItems() {
       label: 'Minimize',
       accelerator: config.get('isMenuBarMode') ? undefined : 'CmdOrCtrl+M',
       role: config.get('isMenuBarMode') ? undefined : 'minimize',
-      enabled: enabled && !mainWindow.isMinimized(),
+      enabled: enabled && mainWindow && !mainWindow.isMinimized(),
       visible: !config.get('isMenuBarMode'), // && mainWindow.isMinimizable(),
     },
     {
@@ -616,8 +668,8 @@ function getWindowMenuItems() {
       type: 'checkbox',
       label: 'Full Screen',
       accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
-      checked: mainWindow.isFullScreen(),
-      enabled: enabled || mainWindow.isFullScreen(),
+      checked: mainWindow && mainWindow.isFullScreen(),
+      enabled: isCurrentWindow || (mainWindow && mainWindow.isFullScreen()),
       click(item) {
         mainWindow.setFullScreen(item.checked)
       },
@@ -628,7 +680,8 @@ function getWindowMenuItems() {
 }
 
 function getTrayMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -725,17 +778,23 @@ function updateBrowserWindowOptions() {
     false,
   )
 
-  mainWindow.setSkipTaskbar(options.skipTaskbar === true)
+  // Note: setSkipTaskbar was causing the app to freeze on linux
+  if (process.platform === 'darwin' || process.platform === 'win32') {
+    mainWindow.setSkipTaskbar(options.skipTaskbar === true)
+  }
 
-  mainWindow.setSize(
-    maximize
-      ? screen.getPrimaryDisplay().workAreaSize.width
-      : options.width || 500,
-    maximize
-      ? screen.getPrimaryDisplay().workAreaSize.height
-      : options.height || 500,
-    false,
-  )
+  if (maximize) {
+    // Node: workAreaSize.heigth is wrong on linux, causing the app content to jump on window open
+    if (process.platform !== 'linux') {
+      mainWindow.setSize(
+        screen.getPrimaryDisplay().workAreaSize.width,
+        screen.getPrimaryDisplay().workAreaSize.height,
+        false,
+      )
+    }
+  } else {
+    mainWindow.setSize(options.width || 500, options.height || 500, false)
+  }
 
   if (dock) {
     if (options.skipTaskbar === true) {
@@ -768,6 +827,9 @@ function updateBrowserWindowOptions() {
 
 function updateMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(getMainMenuItems()))
+
+  // Note: setContextMenu is required on linux
+  tray!.setContextMenu(getTrayContextMenu())
 
   if (process.platform === 'darwin') {
     const touchBar = new TouchBar({

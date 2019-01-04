@@ -1,6 +1,7 @@
 import qs from 'qs'
 
 import { constants } from '@devhub/core'
+import { Linking } from '../linking'
 import { Platform } from '../platform/index.web'
 import {
   getUrlParamsIfMatches,
@@ -44,7 +45,7 @@ export async function executeOAuth(scope: string[]) {
   try {
     let params: OAuthResponseData | null
 
-    if (Platform.isElectron) {
+    if (Platform.isElectron && (await Linking.canOpenURL(redirectUri))) {
       const url = await listenForNextUrl()
       // console.log('[OAUTH] Received URL:', url)
 
