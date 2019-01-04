@@ -259,9 +259,15 @@ function init() {
       })
     }
 
-    if (__DEV__) setupBrowserExtensions()
+    if (__DEV__) {
+      setupBrowserExtensions()
+    } else {
+      autoUpdater.checkForUpdatesAndNotify()
 
-    autoUpdater.checkForUpdatesAndNotify()
+      setInterval(() => {
+        autoUpdater.checkForUpdatesAndNotify()
+      }, 30 * 60 * 1000)
+    }
   })
 
   app.on('window-all-closed', () => {
