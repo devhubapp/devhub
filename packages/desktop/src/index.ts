@@ -653,15 +653,19 @@ function getWindowMenuItems() {
       accelerator: config.get('isMenuBarMode') ? undefined : 'CmdOrCtrl+M',
       role: config.get('isMenuBarMode') ? undefined : 'minimize',
       enabled: enabled && mainWindow && !mainWindow.isMinimized(),
-      visible: !config.get('isMenuBarMode'), // && mainWindow.isMinimizable(),
+      visible: !config.get('isMenuBarMode'), // && mainWindow && mainWindow.isMinimizable(),
     },
     {
+      type: 'checkbox',
       label: 'Maximize',
-      visible: !config.get('isMenuBarMode'), // && mainWindow.isMaximizable(),
-      enabled, // && !mainWindow.isMaximized(),
-      click() {
+      visible: !config.get('isMenuBarMode'), // && mainWindow && mainWindow.isMaximizable(),
+      enabled,
+      checked: mainWindow && mainWindow.isMaximized(),
+      click(item) {
         showWindow()
-        mainWindow.maximize()
+
+        if (item.checked) mainWindow.maximize()
+        else mainWindow.unmaximize()
       },
     },
     {
