@@ -1,6 +1,7 @@
 import {
   app,
   BrowserWindow,
+  dialog,
   ipcMain,
   Menu,
   nativeImage,
@@ -33,6 +34,23 @@ let tray: Electron.Tray | null = null
 
 let mainWindowState: WindowState
 let menubarWindowState: WindowState
+
+let updateInfo: {
+  state:
+    | 'not-checked'
+    | 'error'
+    | 'checking-for-update'
+    | 'update-not-available'
+    | 'update-available'
+    | 'downloading'
+    | 'update-downloaded'
+  date: number
+  progress?: number
+  lastManuallyCheckedAt?: number
+} = {
+  state: 'not-checked',
+  date: Date.now(),
+}
 
 const startURL = __DEV__
   ? 'http://localhost:3000'
@@ -262,11 +280,22 @@ function init() {
     if (__DEV__) {
       setupBrowserExtensions()
     } else {
+      autoUpdater.autoDownload = true
+      autoUpdater.autoInstallOnAppQuit = true
       autoUpdater.checkForUpdatesAndNotify()
 
       setInterval(() => {
         autoUpdater.checkForUpdatesAndNotify()
-      }, 30 * 60 * 1000)
+      }, 30 * 60000)
+
+      let lastUpdaterMenuItem = getUpdaterMenuItem()
+      setInterval(() => {
+        const newUpdaterMenuItem = getUpdaterMenuItem()
+        if (lastUpdaterMenuItem.label !== newUpdaterMenuItem.label) {
+          lastUpdaterMenuItem = newUpdaterMenuItem
+          updateMenu()
+        }
+      }, 5000)
     }
   })
 
@@ -328,6 +357,59 @@ function init() {
     if (!mainWindow) return
 
     mainWindow.webContents.send('post-message', data)
+  })
+
+  autoUpdater.on('error', () => {
+    updateInfo = { ...updateInfo, state: 'error', date: Date.now() }
+    updateMenu()
+  })
+
+  autoUpdater.on('checking-for-update', () => {
+    updateInfo = {
+      ...updateInfo,
+      state: 'checking-for-update',
+      date: Date.now(),
+    }
+    updateMenu()
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    const fromManualCheck =
+      updateInfo.lastManuallyCheckedAt &&
+      Date.now() - updateInfo.lastManuallyCheckedAt < 10000
+
+    updateInfo = {
+      ...updateInfo,
+      state: 'update-not-available',
+      date: Date.now(),
+    }
+    updateMenu()
+
+    if (fromManualCheck) {
+      dialog.showMessageBox({
+        message: 'There are currently no updates available.',
+      })
+    }
+  })
+
+  autoUpdater.on('update-available', () => {
+    updateInfo = { ...updateInfo, state: 'update-available', date: Date.now() }
+    updateMenu()
+  })
+
+  autoUpdater.on('download-progress', e => {
+    updateInfo = {
+      ...updateInfo,
+      state: 'downloading',
+      progress: e.percent,
+      date: Date.now(),
+    }
+    updateMenu()
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    updateInfo = { ...updateInfo, state: 'update-downloaded', date: Date.now() }
+    updateMenu()
   })
 }
 
@@ -391,6 +473,70 @@ function alignWindowWithTray() {
   mainWindow.setPosition(fixedX, fixedY)
 }
 
+function getUpdaterMenuItem() {
+  let label: string
+  let enabled: boolean = !__DEV__
+
+  switch (updateInfo.state) {
+    case 'checking-for-update': {
+      enabled = false
+      label = 'Checking for updates...'
+      if (Date.now() - updateInfo.date < 60000) break
+    }
+
+    case 'downloading': {
+      enabled = false
+      label =
+        updateInfo.progress && updateInfo.progress > 0
+          ? `Downloading update... (${updateInfo.progress}%)`
+          : 'Downloading update...'
+      if (Date.now() - updateInfo.date < 10 * 60000) break
+    }
+
+    case 'error': {
+      enabled = true
+      label = 'Failed to download update.'
+      if (Date.now() - updateInfo.date < 60000) break
+    }
+
+    case 'update-available': {
+      enabled = false
+      label = autoUpdater.autoDownload
+        ? 'Downloading updates...'
+        : 'Update available. Please wait.'
+      if (Date.now() - updateInfo.date < 10 * 60000) break
+    }
+
+    case 'update-downloaded': {
+      enabled = false
+      label = 'Update downloaded. Please restart.'
+      break
+    }
+
+    case 'update-not-available': {
+      enabled = false
+      label = 'No updates available.'
+      if (Date.now() - updateInfo.date < 30000) break
+    }
+
+    default: {
+      enabled = true
+      label = 'Check for updates...'
+    }
+  }
+
+  const menuItem: Electron.MenuItemConstructorOptions = {
+    label,
+    enabled: !__DEV__ && enabled,
+    click: () => {
+      updateInfo.lastManuallyCheckedAt = Date.now()
+      autoUpdater.checkForUpdatesAndNotify()
+    },
+  }
+
+  return menuItem
+}
+
 function getAboutMenuItems() {
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     ...(process.platform === 'darwin'
@@ -410,13 +556,7 @@ function getAboutMenuItems() {
     {
       type: 'separator',
     },
-    {
-      label: 'Check for Updates...',
-      enabled: !__DEV__,
-      click: () => {
-        autoUpdater.checkForUpdatesAndNotify()
-      },
-    },
+    getUpdaterMenuItem(),
   ]
 
   return menuItems
