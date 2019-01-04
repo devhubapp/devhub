@@ -649,11 +649,7 @@ function getWindowMenuItems() {
       },
     },
     {
-      label: 'Minimize',
-      accelerator: config.get('isMenuBarMode') ? undefined : 'CmdOrCtrl+M',
-      role: config.get('isMenuBarMode') ? undefined : 'minimize',
-      enabled: enabled && mainWindow && !mainWindow.isMinimized(),
-      visible: !config.get('isMenuBarMode'), // && mainWindow && mainWindow.isMinimizable(),
+      role: 'minimize',
     },
     {
       type: 'checkbox',
@@ -669,14 +665,7 @@ function getWindowMenuItems() {
       },
     },
     {
-      type: 'checkbox',
-      label: 'Full Screen',
-      accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
-      checked: mainWindow && mainWindow.isFullScreen(),
-      enabled: isCurrentWindow || (mainWindow && mainWindow.isFullScreen()),
-      click(item) {
-        mainWindow.setFullScreen(item.checked)
-      },
+      role: 'togglefullscreen',
     },
   ]
 
