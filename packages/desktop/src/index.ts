@@ -248,8 +248,8 @@ function init() {
       app.setAboutPanelOptions({
         applicationName: 'DevHub',
         applicationVersion: app.getVersion(),
-        copyright: 'Copyright 2018',
-        credits: 'devhub',
+        copyright: 'Copyright 2019',
+        credits: 'Bruno Lemos',
       })
     }
 
