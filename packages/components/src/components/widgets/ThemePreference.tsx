@@ -78,7 +78,7 @@ export function ThemePreference() {
               width: 20,
               height: 20,
               borderRadius: 20 / 2,
-              borderWidth: StyleSheet.hairlineWidth,
+              borderWidth: 1,
               borderColor: appTheme.backgroundColorDarker08,
             }}
           >
