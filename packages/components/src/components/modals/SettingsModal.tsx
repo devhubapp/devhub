@@ -1,16 +1,12 @@
-import React, { useState } from 'react'
-import { Dimensions, ScrollView, View } from 'react-native'
+import React from 'react'
+import { ScrollView, View } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
-import {
-  columnHeaderHeight,
-  contentPadding,
-  sidebarSize,
-} from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
