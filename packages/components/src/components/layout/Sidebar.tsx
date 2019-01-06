@@ -19,6 +19,7 @@ import { emitter } from '../../setup'
 import {
   columnHeaderHeight,
   columnHeaderItemContentBiggerSize,
+  contentPadding,
   sidebarSize,
 } from '../../styles/variables'
 import { AnimatedSafeAreaView } from '../animated/AnimatedSafeAreaView'
@@ -26,7 +27,9 @@ import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
+import { Spacer } from '../common/Spacer'
 import { TouchableOpacity } from '../common/TouchableOpacity'
+import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { useAppLayout } from '../context/LayoutContext'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
@@ -58,7 +61,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const small = sizename === '1-small'
   const large = sizename === '3-large'
 
-  const showLabel = !!(horizontal && small)
+  const showLabel = !!horizontal
+  const showFixedSettingsButton = !horizontal || columnIds.length > 3
 
   const itemContainerStyle = {
     width: sidebarSize,
@@ -103,69 +107,79 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </>
         )}
 
-        <ScrollView
-          alwaysBounceHorizontal={false}
-          alwaysBounceVertical={false}
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: small && horizontal ? 'space-evenly' : undefined,
-          }}
-          horizontal={horizontal}
-          style={{ flex: 1 }}
+        <AnimatedTransparentTextOverlay
+          from={horizontal ? 'horizontal' : 'vertical'}
+          size={contentPadding}
+          themeColor="backgroundColor"
         >
-          {!(columnIds && columnIds.length) ? (
-            !large ? (
-              <>
-                <TouchableOpacity
-                  analyticsLabel="sidebar_add"
-                  onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                  style={[styles.centerContainer, itemContainerStyle]}
-                >
-                  <ColumnHeaderItem
-                    analyticsLabel={undefined}
-                    iconName="plus"
-                    label="Add column"
-                    showLabel={showLabel}
-                    size={columnHeaderItemContentBiggerSize}
-                  />
-                </TouchableOpacity>
+          <ScrollView
+            alwaysBounceHorizontal={false}
+            alwaysBounceVertical={false}
+            contentContainerStyle={[
+              {
+                flexGrow: 1,
+                justifyContent:
+                  small && horizontal ? 'space-evenly' : undefined,
+              },
+              horizontal && { marginHorizontal: contentPadding / 2 },
+            ]}
+            horizontal={horizontal}
+            style={{ flex: 1 }}
+          >
+            {!(columnIds && columnIds.length) ? (
+              !large ? (
+                <>
+                  <TouchableOpacity
+                    analyticsLabel="sidebar_add"
+                    onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                    style={[styles.centerContainer, itemContainerStyle]}
+                  >
+                    <ColumnHeaderItem
+                      analyticsLabel={undefined}
+                      iconName="plus"
+                      label="Add column"
+                      showLabel={showLabel}
+                      size={columnHeaderItemContentBiggerSize}
+                    />
+                  </TouchableOpacity>
 
-                <Separator horizontal={!horizontal} />
-              </>
-            ) : null
-          ) : (
-            columnIds.map(columnId => (
-              <SidebarColumnItem
-                key={`sidebar-column-item-${columnId}`}
-                columnId={columnId}
-                currentOpenedModal={currentOpenedModal}
-                itemContainerStyle={itemContainerStyle}
-                showLabel={showLabel}
-                small={small}
-              />
-            ))
-          )}
+                  <Separator horizontal={!horizontal} />
+                </>
+              ) : null
+            ) : (
+              columnIds.map(columnId => (
+                <SidebarColumnItem
+                  key={`sidebar-column-item-${columnId}`}
+                  columnId={columnId}
+                  currentOpenedModal={currentOpenedModal}
+                  itemContainerStyle={itemContainerStyle}
+                  showLabel={showLabel}
+                  small={small}
+                />
+              ))
+            )}
 
-          {!!small && (
-            <TouchableOpacity
-              analyticsLabel="sidebar_settings"
-              onPress={() =>
-                currentOpenedModal && currentOpenedModal.name === 'SETTINGS'
-                  ? undefined
-                  : replaceModal({ name: 'SETTINGS' })
-              }
-              style={[styles.centerContainer, itemContainerStyle]}
-            >
-              <ColumnHeaderItem
-                analyticsLabel={undefined}
-                iconName="gear"
-                label="Preferences"
-                showLabel={showLabel}
-                size={columnHeaderItemContentBiggerSize}
-              />
-            </TouchableOpacity>
-          )}
-        </ScrollView>
+            {!showFixedSettingsButton && (
+              <TouchableOpacity
+                analyticsLabel="sidebar_settings"
+                onPress={() =>
+                  currentOpenedModal && currentOpenedModal.name === 'SETTINGS'
+                    ? undefined
+                    : replaceModal({ name: 'SETTINGS' })
+                }
+                style={[styles.centerContainer, itemContainerStyle]}
+              >
+                <ColumnHeaderItem
+                  analyticsLabel={undefined}
+                  iconName="gear"
+                  label="Preferences"
+                  showLabel={showLabel}
+                  size={columnHeaderItemContentBiggerSize}
+                />
+              </TouchableOpacity>
+            )}
+          </ScrollView>
+        </AnimatedTransparentTextOverlay>
 
         {!small && (
           <>
@@ -190,40 +204,46 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 <Separator horizontal={!horizontal} />
               </>
             )}
-
-            <TouchableOpacity
-              analyticsLabel="sidebar_settings"
-              onPress={() => replaceModal({ name: 'SETTINGS' })}
-              style={[styles.centerContainer, itemContainerStyle]}
-            >
-              <ColumnHeaderItem
-                analyticsLabel={undefined}
-                iconName="gear"
-                label="Preferences"
-                showLabel={showLabel}
-                size={columnHeaderItemContentBiggerSize}
-              />
-            </TouchableOpacity>
-
-            {!!large && (
-              <Link
-                analyticsLabel="sidebar_logo"
-                href="https://github.com/devhubapp/devhub"
-                openOnNewTab
-                style={[styles.centerContainer, itemContainerStyle]}
-              >
-                <Image
-                  resizeMode="contain"
-                  source={logo}
-                  style={{
-                    width: sidebarSize / 2,
-                    height: sidebarSize / 2,
-                  }}
-                />
-              </Link>
-            )}
           </>
         )}
+
+        {horizontal && <Spacer width={contentPadding / 2} />}
+
+        {showFixedSettingsButton && (
+          <TouchableOpacity
+            analyticsLabel="sidebar_settings"
+            onPress={() => replaceModal({ name: 'SETTINGS' })}
+            style={[styles.centerContainer, itemContainerStyle]}
+          >
+            <ColumnHeaderItem
+              analyticsLabel={undefined}
+              iconName="gear"
+              label="Preferences"
+              showLabel={showLabel}
+              size={columnHeaderItemContentBiggerSize}
+            />
+          </TouchableOpacity>
+        )}
+
+        {!!large && (
+          <Link
+            analyticsLabel="sidebar_logo"
+            href="https://github.com/devhubapp/devhub"
+            openOnNewTab
+            style={[styles.centerContainer, itemContainerStyle]}
+          >
+            <Image
+              resizeMode="contain"
+              source={logo}
+              style={{
+                width: sidebarSize / 2,
+                height: sidebarSize / 2,
+              }}
+            />
+          </Link>
+        )}
+
+        {horizontal && <Spacer width={contentPadding / 2} />}
       </View>
     </AnimatedSafeAreaView>
   )
