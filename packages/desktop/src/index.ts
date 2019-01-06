@@ -967,8 +967,9 @@ function updateBrowserWindowOptions() {
 function updateMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(getMainMenuItems()))
 
-  // Note: setContextMenu is required on linux
-  tray!.setContextMenu(getTrayContextMenu())
+  if (process.platform === 'linux') {
+    tray!.setContextMenu(getTrayContextMenu())
+  }
 
   if (process.platform === 'darwin') {
     const touchBar = new TouchBar({
