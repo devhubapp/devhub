@@ -141,6 +141,7 @@ export function Checkbox(props: CheckboxProps) {
             name="check"
             size={13}
             style={{
+              lineHeight: 13,
               textAlign: 'center',
               opacity: checked ? 1 : 0,
             }}
@@ -161,6 +162,7 @@ export function Checkbox(props: CheckboxProps) {
           {typeof label === 'string' ? (
             <Animated.Text
               style={{
+                lineHeight: size,
                 marginLeft: contentPadding / 2,
                 color: theme.foregroundColor,
               }}
@@ -176,6 +178,7 @@ export function Checkbox(props: CheckboxProps) {
               color={theme.foregroundColor}
               name={labelIcon}
               size={16}
+              style={{ lineHeight: 16 }}
             />
           )}
         </View>
