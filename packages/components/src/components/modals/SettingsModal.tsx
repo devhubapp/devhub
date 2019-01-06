@@ -25,13 +25,6 @@ export interface SettingsModalProps {}
 export function SettingsModal() {
   const { sizename } = useAppLayout()
 
-  const [containerHeight, setContainerHeight] = useState(
-    () =>
-      Dimensions.get('window').height -
-      columnHeaderHeight -
-      (sizename === '1-small' ? sidebarSize + 16 : 0),
-  )
-
   const theme = useAnimatedTheme()
 
   const userId = useReduxState(selectors.currentUserIdSelector)
@@ -62,11 +55,8 @@ export function SettingsModal() {
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
-          minHeight: containerHeight,
+          flexGrow: 1,
           padding: contentPadding,
-        }}
-        onLayout={e => {
-          setContainerHeight(e.nativeEvent.layout.height)
         }}
       >
         <ThemePreference />
