@@ -110,17 +110,14 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
 
     icon: {
       height: size,
-      lineHeight: size,
       fontSize: size,
     } as TextStyle,
 
     title: {
-      lineHeight: size - 2,
       fontSize: size - 2,
     } as TextStyle,
 
     subtitle: {
-      lineHeight: size - 7,
       fontSize: size - 7,
     } as TextStyle,
 
