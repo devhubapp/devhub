@@ -13,3 +13,4 @@ export const Browser: BrowserCrossPlatform = {
   dismiss: () => undefined,
   openURL: Linking.openURL,
 }
+;(Browser as any)._validateURL = (Linking as any)._validateURL
