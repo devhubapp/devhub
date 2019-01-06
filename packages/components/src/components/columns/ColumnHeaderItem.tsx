@@ -10,7 +10,7 @@ import {
 
 import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
-import { useReduxState } from '../../redux/hooks/use-redux-state'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import {
   columnHeaderItemContentSize,
@@ -22,7 +22,6 @@ import {
   ConditionalWrap,
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
-import { Spacer } from '../common/Spacer'
 import {
   TouchableOpacity,
   TouchableOpacityProps,

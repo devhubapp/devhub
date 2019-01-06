@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { useReduxStore } from '../context/ReduxStoreContext'
-import { RootState } from '../types'
+import { useReduxStore } from '../redux/context/ReduxStoreContext'
+import { RootState } from '../redux/types'
 
 export type ExtractSelector<S> = S extends (state: any) => infer R
   ? (state: RootState) => R

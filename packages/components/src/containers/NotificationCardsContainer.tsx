@@ -14,9 +14,9 @@ import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
+import { useReduxAction } from '../hooks/use-redux-action'
+import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
-import { useReduxAction } from '../redux/hooks/use-redux-action'
-import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { getFilteredNotifications } from '../utils/helpers/filters'
 

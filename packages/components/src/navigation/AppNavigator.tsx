@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useReduxState } from '../redux/hooks/use-redux-state'
+import { useReduxState } from '../hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { LoginScreen } from '../screens/LoginScreen'
 import { MainScreen } from '../screens/MainScreen'

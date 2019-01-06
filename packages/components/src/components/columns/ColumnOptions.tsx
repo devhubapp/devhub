@@ -9,9 +9,9 @@ import {
   GitHubIcon,
 } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
-import { useReduxAction } from '../../redux/hooks/use-redux-action'
-import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'

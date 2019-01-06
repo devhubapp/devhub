@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { SettingsModal } from '../../components/modals/SettingsModal'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
-import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
 import { AddColumnModal } from './AddColumnModal'

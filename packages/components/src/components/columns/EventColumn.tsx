@@ -6,8 +6,8 @@ import {
   EventCardsContainer,
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
+import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
-import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'

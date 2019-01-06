@@ -1,4 +1,4 @@
-import { useReduxStore } from '../context/ReduxStoreContext'
+import { useReduxStore } from '../redux/context/ReduxStoreContext'
 
 type ActionCreator = (...args: any) => any
 

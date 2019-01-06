@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Animated, Clipboard, View } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
-import { useReduxState } from '../../redux/hooks/use-redux-state'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'

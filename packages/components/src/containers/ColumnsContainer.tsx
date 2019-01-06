@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React from 'react'
 
 import { Columns } from '../components/columns/Columns'
-import { useReduxState } from '../redux/hooks/use-redux-state'
+import { useReduxState } from '../hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 
 export interface ColumnsContainerProps {}
