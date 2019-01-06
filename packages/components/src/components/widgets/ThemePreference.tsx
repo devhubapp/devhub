@@ -3,6 +3,7 @@ import { Animated, View } from 'react-native'
 
 import { Theme } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
@@ -89,8 +90,19 @@ export function ThemePreference() {
                 margin: 0,
                 padding: 0,
                 fontWeight: '500',
-                fontSize: 20,
-                lineHeight: 20,
+                ...Platform.select({
+                  android: {
+                    height: 20,
+                    marginTop: -1,
+                    fontFamily: 'monospace',
+                    fontSize: 30,
+                    lineHeight: 30,
+                  },
+                  default: {
+                    fontSize: 20,
+                    lineHeight: 20,
+                  },
+                }),
                 color: selected
                   ? colors.brandBackgroundColor
                   : appTheme.foregroundColorTransparent80,
