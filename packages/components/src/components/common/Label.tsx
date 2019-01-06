@@ -34,7 +34,7 @@ export interface LabelProps {
 const styles = StyleSheet.create({
   labelContainer: {
     borderRadius: defaultRadius,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
     paddingHorizontal: contentPadding,
     paddingVertical: 2,
   },

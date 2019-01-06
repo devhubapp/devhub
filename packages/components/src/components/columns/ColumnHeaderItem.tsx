@@ -13,7 +13,6 @@ import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import {
-  columnHeaderItemContentBiggerSize,
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
@@ -115,12 +114,13 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
     } as TextStyle,
 
     title: {
-      lineHeight: size - 2,
+      marginRight: contentPadding / 2,
+      lineHeight: size,
       fontSize: size - 2,
     } as TextStyle,
 
     subtitle: {
-      lineHeight: size - 7,
+      marginRight: contentPadding / 2,
       fontSize: size - 7,
     } as TextStyle,
 
@@ -175,6 +175,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
             <View
               style={{
                 position: 'relative',
+                alignSelf: 'center',
                 alignContent: 'center',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -213,47 +214,44 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               )}
             </View>
           )}
-          {hasText && (
+
+          <View style={{ flexDirection: 'row', maxWidth: 170 }}>
+            {!!title && (
+              <Animated.Text
+                numberOfLines={1}
+                selectable={selectable}
+                style={[
+                  styles.title,
+                  { color: theme.foregroundColor },
+                  titleStyle,
+                ]}
+              >
+                {title.toLowerCase()}
+              </Animated.Text>
+            )}
+          </View>
+
+          {!!subtitle && (
             <Animated.Text
               numberOfLines={1}
               selectable={selectable}
-              style={[{ color: theme.foregroundColorMuted50 }]}
+              style={[
+                styles.subtitle,
+                { color: theme.foregroundColorMuted50 },
+                subtitleStyle,
+              ]}
             >
-              {!!title && (
-                <Animated.Text
-                  selectable={selectable}
-                  style={[
-                    styles.title,
-                    { color: theme.foregroundColor },
-                    titleStyle,
-                  ]}
-                >
-                  {title.toLowerCase()}
-                  {!!subtitle && '  '}
-                </Animated.Text>
-              )}
+              {subtitle.toLowerCase()}
+            </Animated.Text>
+          )}
 
-              {!!subtitle && (
-                <Animated.Text
-                  selectable={selectable}
-                  style={[
-                    styles.subtitle,
-                    { color: theme.foregroundColorMuted50 },
-                    subtitleStyle,
-                  ]}
-                >
-                  {subtitle.toLowerCase()}
-                </Animated.Text>
-              )}
-
-              {!!text && (
-                <Animated.Text
-                  selectable={selectable}
-                  style={[styles.text, { color: theme.foregroundColor }]}
-                >
-                  {text}
-                </Animated.Text>
-              )}
+          {!!text && (
+            <Animated.Text
+              numberOfLines={1}
+              selectable={selectable}
+              style={[styles.text, { color: theme.foregroundColor }]}
+            >
+              {text}
             </Animated.Text>
           )}
         </View>

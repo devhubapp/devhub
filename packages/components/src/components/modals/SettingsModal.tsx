@@ -1,16 +1,12 @@
-import React, { useState } from 'react'
-import { Dimensions, ScrollView, View } from 'react-native'
+import React from 'react'
+import { ScrollView, View } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as actions from '../../redux/actions'
 import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
-import {
-  columnHeaderHeight,
-  contentPadding,
-  sidebarSize,
-} from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
@@ -24,13 +20,6 @@ export interface SettingsModalProps {}
 
 export function SettingsModal() {
   const { sizename } = useAppLayout()
-
-  const [containerHeight, setContainerHeight] = useState(
-    () =>
-      Dimensions.get('window').height -
-      columnHeaderHeight -
-      (sizename === '1-small' ? sidebarSize + 16 : 0),
-  )
 
   const theme = useAnimatedTheme()
 
@@ -62,11 +51,8 @@ export function SettingsModal() {
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
-          minHeight: containerHeight,
+          flexGrow: 1,
           padding: contentPadding,
-        }}
-        onLayout={e => {
-          setContainerHeight(e.nativeEvent.layout.height)
         }}
       >
         <ThemePreference />

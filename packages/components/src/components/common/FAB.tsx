@@ -11,7 +11,7 @@ import {
   AnimatedTouchableOpacityProps,
 } from '../animated/AnimatedTouchableOpacity'
 
-export const fabSize = 52
+export const fabSize = 50
 
 export interface FABProps extends AnimatedTouchableOpacityProps {
   children?: string | React.ReactElement<any>
@@ -71,7 +71,17 @@ export function FAB(props: FABProps) {
             useBrandColor ? colors.brandForegroundColor : theme.foregroundColor
           }
           name={iconName}
-          style={[{ height: 24, lineHeight: 24, fontSize: 24 }, iconStyle]}
+          style={[
+            {
+              width: 24,
+              height: 24,
+              lineHeight: 24,
+              marginTop: 1,
+              fontSize: 24,
+              textAlign: 'center',
+            },
+            iconStyle,
+          ]}
         />
       ) : typeof children === 'string' ? (
         <Animated.Text

@@ -64,7 +64,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         )}
 
         {right && (
-          <ColumnHeaderItem analyticsLabel={undefined}>
+          <ColumnHeaderItem analyticsLabel={undefined} noPadding>
             {right}
           </ColumnHeaderItem>
         )}

@@ -119,9 +119,7 @@ export function AddColumnModal() {
   const outerSpacing = (3 / 4) * contentPadding
 
   const columnWidth = useColumnWidth()
-  const [availableWidth, setAvailableWidth] = useState(
-    columnWidth - 2 * outerSpacing,
-  )
+  const availableWidth = columnWidth - 2 * outerSpacing
 
   return (
     <ModalColumn columnId="add-column-modal" iconName="plus" title="Add Column">
@@ -132,7 +130,6 @@ export function AddColumnModal() {
         }}
       >
         <View
-          onLayout={e => setAvailableWidth(e.nativeEvent.layout.width)}
           style={{
             flex: 1,
             flexDirection: 'row',

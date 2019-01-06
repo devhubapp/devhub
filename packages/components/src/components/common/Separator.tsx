@@ -1,9 +1,9 @@
 import React from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import { Animated } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 
-export const separatorSize = StyleSheet.hairlineWidth
+export const separatorSize = 1
 export const separatorTickSize = 2
 
 export interface SeparatorProps {

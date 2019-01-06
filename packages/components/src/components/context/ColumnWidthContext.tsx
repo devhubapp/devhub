@@ -20,16 +20,19 @@ export function ColumnWidthProvider(props: ColumnWidthProviderProps) {
     calculateColumnWidth({ window: Dimensions.get('window') }),
   )
 
-  useEffect(() => {
-    const handler = ({ window }: { window: ScaledSize }) => {
-      const w = calculateColumnWidth({ window })
-      setWidth(w)
-    }
+  useEffect(
+    () => {
+      const handler = ({ window }: { window: ScaledSize }) => {
+        const w = calculateColumnWidth({ window })
+        if (w !== width) setWidth(w)
+      }
 
-    Dimensions.addEventListener('change', handler)
+      Dimensions.addEventListener('change', handler)
 
-    return () => Dimensions.removeEventListener('change', handler)
-  }, [])
+      return () => Dimensions.removeEventListener('change', handler)
+    },
+    [width],
+  )
 
   return (
     <ColumnWidthContext.Provider value={width}>
