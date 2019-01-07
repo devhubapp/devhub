@@ -18,6 +18,10 @@ import url from 'url'
 import { __DEV__ } from './libs/electron-is-dev'
 import { WindowState, windowStateKeeper } from './libs/electron-window-state'
 
+const FEATURE_FLAGS = {
+  LOCK_ON_CENTER: process.platform !== 'linux',
+}
+
 const config = new Store({
   defaults: {
     isMenuBarMode: false,
@@ -25,6 +29,10 @@ const config = new Store({
     lockOnCenter: false,
   },
 })
+
+if (!FEATURE_FLAGS.LOCK_ON_CENTER && config.get('lockOnCenter')) {
+  config.set('lockOnCenter', false)
+}
 
 const frameIsDifferentBetweenModes = process.platform !== 'darwin'
 
@@ -603,29 +611,33 @@ function getOptionsMenuItems() {
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
-    {
-      type: 'checkbox',
-      label: 'Lock on center',
-      checked: config.get('lockOnCenter'),
-      enabled,
-      visible: !config.get('isMenuBarMode'),
-      click(item) {
-        config.set('lockOnCenter', item.checked)
+    FEATURE_FLAGS.LOCK_ON_CENTER
+      ? ({
+          type: 'checkbox',
+          label: 'Lock on center',
+          checked: config.get('lockOnCenter'),
+          enabled,
+          visible: !config.get('isMenuBarMode'),
+          click(item) {
+            config.set('lockOnCenter', item.checked)
 
-        if (item.checked) {
-          if (!config.get('isMenuBarMode')) {
-            mainWindow.setMovable(false)
-          }
+            if (item.checked) {
+              if (!config.get('isMenuBarMode')) {
+                mainWindow.setMovable(false)
+              }
 
-          mainWindow.center()
-        } else {
-          if (!config.get('isMenuBarMode')) {
-            mainWindow.setMovable(getBrowserWindowOptions().movable !== false)
-          }
-        }
-      },
-    },
-  ]
+              mainWindow.center()
+            } else {
+              if (!config.get('isMenuBarMode')) {
+                mainWindow.setMovable(
+                  getBrowserWindowOptions().movable !== false,
+                )
+              }
+            }
+          },
+        } as Electron.MenuItemConstructorOptions)
+      : (undefined as any),
+  ].filter(Boolean)
 
   return menuItems
 }
@@ -835,17 +847,25 @@ function getTrayMenuItems() {
       type: 'separator',
       visible: !isCurrentWindow || config.get('isMenuBarMode'),
     },
-    ...getModeMenuItems(),
-    {
-      type: 'separator',
-      enabled,
-    },
-    ...getOptionsMenuItems(),
-    {
-      type: 'separator',
-      enabled,
-      visible: !config.get('isMenuBarMode'),
-    },
+    ...(getModeMenuItems().length > 0
+      ? [
+          ...getModeMenuItems(),
+          {
+            type: 'separator',
+            enabled,
+          },
+        ]
+      : []),
+    ...(getOptionsMenuItems().length
+      ? [
+          ...getOptionsMenuItems(),
+          {
+            type: 'separator',
+            enabled,
+            visible: !config.get('isMenuBarMode'),
+          },
+        ]
+      : []),
     ...getWindowMenuItems().filter(item => item.label !== 'Close'),
     {
       type: 'separator',
@@ -856,7 +876,7 @@ function getTrayMenuItems() {
       accelerator: 'CmdOrCtrl+Q',
       role: 'quit',
     },
-  ]
+  ].filter(Boolean) as Electron.MenuItemConstructorOptions[]
 
   return menuItems
 }
