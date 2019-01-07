@@ -102,9 +102,9 @@ export function ColumnOptions(props: ColumnOptionsProps) {
     >
       <AnimatedTransparentTextOverlay
         containerStyle={{ flex: 0 }}
-        from="vertical"
         size={contentPadding}
         themeColor="backgroundColorLess08"
+        to="vertical"
       >
         <ScrollView
           alwaysBounceVertical={false}

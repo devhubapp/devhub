@@ -96,9 +96,9 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   return (
     <AnimatedTransparentTextOverlay
-      from="vertical"
       size={contentPadding}
       themeColor="backgroundColor"
+      to="vertical"
     >
       <FlatList
         data={events}

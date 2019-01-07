@@ -33,9 +33,9 @@ export const RowList = React.memo((props: RowListProps<any>) => {
   return (
     <AnimatedTransparentTextOverlay
       containerStyle={{ flex: 0 }}
-      from="vertical"
       size={narrow ? contentPadding / 2 : contentPadding}
       themeColor="backgroundColor"
+      to="vertical"
     >
       <ScrollView
         alwaysBounceVertical={false}

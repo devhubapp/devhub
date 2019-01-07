@@ -108,9 +108,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         )}
 
         <AnimatedTransparentTextOverlay
-          from={horizontal ? 'horizontal' : 'vertical'}
           size={contentPadding}
           themeColor="backgroundColor"
+          to={horizontal ? 'horizontal' : 'vertical'}
         >
           <ScrollView
             alwaysBounceHorizontal={false}

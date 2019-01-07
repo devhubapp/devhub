@@ -106,9 +106,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   return (
     <AnimatedTransparentTextOverlay
-      from="vertical"
       size={contentPadding}
       themeColor="backgroundColor"
+      to="vertical"
     >
       <FlatList
         key="notification-cards-flat-list"

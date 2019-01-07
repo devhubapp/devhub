@@ -105,9 +105,9 @@ export function EmptyCards(props: EmptyCardsProps) {
 
   return (
     <AnimatedTransparentTextOverlay
-      from="vertical"
       size={contentPadding}
       themeColor="backgroundColor"
+      to="vertical"
     >
       <View style={{ flex: 1 }}>
         <View style={{ height: headerOrFooterHeight }} />

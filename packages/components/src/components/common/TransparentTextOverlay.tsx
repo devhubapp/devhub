@@ -1,22 +1,20 @@
-import React, { ReactNode } from 'react'
-import { Animated, StyleProp, ViewStyle } from 'react-native'
+import React from 'react'
+import { Animated } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme.shared'
-import { Platform } from '../../libs/platform'
+import { Omit, ThemeColors } from '@devhub/core'
+import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { AnimatedGradientLayerOverlay } from './GradientLayerOverlay'
+import {
+  AnimatedGradientLayerOverlayProps,
+  To,
+  ToWithVH,
+} from './GradientLayerOverlay.shared'
 
-export type From = 'top' | 'bottom' | 'left' | 'right'
-export type FromWithVH = 'vertical' | 'horizontal' | From
+export { To as From, ToWithVH as FromWithVH }
 
-export interface AnimatedTransparentTextOverlayProps {
-  animated?: boolean
-  children?: ReactNode
-  containerStyle?: StyleProp<ViewStyle | any>
-  from: FromWithVH
-  radius?: number
-  size: number
-  style?: StyleProp<ViewStyle>
+export interface AnimatedTransparentTextOverlayProps
+  extends Omit<AnimatedGradientLayerOverlayProps, 'to' | 'color'> {
+  to: ToWithVH
   themeColor: keyof ThemeColors
 }
 
@@ -24,9 +22,7 @@ export const AnimatedTransparentTextOverlay = React.memo(
   (props: AnimatedTransparentTextOverlayProps) => {
     const theme = useAnimatedTheme()
 
-    const { children, containerStyle, from, themeColor, ...otherProps } = props
-
-    if (Platform.OS === 'web') return children as any
+    const { children, containerStyle, themeColor, to, ...otherProps } = props
 
     const color = theme[themeColor]
 
@@ -39,35 +35,35 @@ export const AnimatedTransparentTextOverlay = React.memo(
       >
         {children}
 
-        {(from === 'vertical' || from === 'top') && (
+        {(to === 'vertical' || to === 'bottom') && (
           <AnimatedGradientLayerOverlay
             {...otherProps}
             color={color}
-            from="top"
+            to="bottom"
           />
         )}
 
-        {(from === 'vertical' || from === 'bottom') && (
+        {(to === 'vertical' || to === 'top') && (
           <AnimatedGradientLayerOverlay
             {...otherProps}
             color={color}
-            from="bottom"
+            to="top"
           />
         )}
 
-        {(from === 'horizontal' || from === 'left') && (
+        {(to === 'horizontal' || to === 'right') && (
           <AnimatedGradientLayerOverlay
             {...otherProps}
             color={color}
-            from="left"
+            to="right"
           />
         )}
 
-        {(from === 'horizontal' || from === 'right') && (
+        {(to === 'horizontal' || to === 'left') && (
           <AnimatedGradientLayerOverlay
             {...otherProps}
             color={color}
-            from="right"
+            to="left"
           />
         )}
       </Animated.View>
