@@ -20,6 +20,7 @@ import { useKeyPressCallback } from '../hooks/use-key-press-callback'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
+import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { emitter } from '../setup'
@@ -85,6 +86,9 @@ export const MainScreen = React.memo(() => {
         // never happens apparently
         if (targetTagName === 'input') target.blur()
         else if (currentOpenedModal) popModal()
+        else if (Platform.isElectron && window.ipc)
+          window.ipc.send('exit-full-screen')
+
         return
       }
     },

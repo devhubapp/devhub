@@ -371,6 +371,11 @@ function init() {
     mainWindow.webContents.send('post-message', data)
   })
 
+  ipcMain.on('exit-full-screen', () => {
+    if (!mainWindow) return
+    mainWindow.setFullScreen(false)
+  })
+
   autoUpdater.on('error', () => {
     updateInfo = { ...updateInfo, state: 'error', date: Date.now() }
     updateMenu()
