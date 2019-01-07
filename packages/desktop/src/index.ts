@@ -101,6 +101,10 @@ function getBrowserWindowOptions() {
     minHeight: 450,
     backgroundColor: '#292c33',
     darkTheme: true,
+    icon:
+      process.platform === 'darwin' || process.platform === 'win32'
+        ? undefined
+        : path.join(__dirname, '../assets/icons/icon.png'),
     fullscreenable: true,
     resizable: true,
     show: true,
