@@ -8,6 +8,10 @@ matrix:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
+    - os: linux
+      services: docker
+      language: generic
+
 cache:
   directories:
     - node_modules
@@ -15,11 +19,23 @@ cache:
     - $HOME/.cache/electron-builder
 
 script:
-  - yarn clean
-  - yarn workspace @devhub/web build
-  - yarn workspace @devhub/desktop build:skipweb --mac --win --linux
-  - yarn now --token $NOW_TOKEN
-  - yarn now alias --token $NOW_TOKEN
+  - |
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      docker run --rm \
+        --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+        -v ${PWD}:/project \
+        -v ~/.cache/electron:/root/.cache/electron \
+        -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+        electronuserland/builder:wine \
+        /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn clean && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --linux --win"
+    else
+      yarn --link-duplicates --pure-lockfile
+      yarn clean
+      yarn workspace @devhub/web build
+      yarn workspace @devhub/desktop build:skipweb --mac
+      now --token $NOW_TOKEN
+      now alias --token $NOW_TOKEN
+    fi
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine

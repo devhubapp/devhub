@@ -1,10 +1,10 @@
 import React, { useRef } from 'react'
 
-import { Animated, Easing, View, ViewStyle } from 'react-native'
+import { Animated, Easing, ViewStyle } from 'react-native'
 import { useKeyboardVisibility } from '../../hooks/use-keyboard-visibility'
+import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
-import { useReduxAction } from '../../redux/hooks/use-redux-action'
-import { useReduxState } from '../../redux/hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { buttonSize } from '../common/Button'
@@ -48,12 +48,15 @@ export function FABRenderer() {
       outputRange: ['0deg', '45deg'],
     })
 
+    const iconStyle = { transform: [{ rotateZ }] }
+
     return (
-      <Animated.View style={[fabPositionStyle, { transform: [{ rotateZ }] }]}>
+      <Animated.View style={fabPositionStyle}>
         <FAB
           key="fab"
           analyticsLabel="add_column"
           iconName="plus"
+          iconStyle={iconStyle}
           onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
           useBrandColor
         />
@@ -75,12 +78,15 @@ export function FABRenderer() {
         outputRange: ['0deg', '45deg'],
       })
 
+      const iconStyle = { transform: [{ rotateZ }] }
+
       return (
-        <Animated.View style={[fabPositionStyle, { transform: [{ rotateZ }] }]}>
+        <Animated.View style={fabPositionStyle}>
           <FAB
             analyticsLabel="close_modals"
             key="fab"
             iconName="plus"
+            iconStyle={iconStyle}
             onPress={() => closeAllModals()}
           />
         </Animated.View>

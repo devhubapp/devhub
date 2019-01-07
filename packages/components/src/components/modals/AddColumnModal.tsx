@@ -3,8 +3,8 @@ import { Animated, View } from 'react-native'
 
 import { AddColumnDetailsPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
-import { useReduxAction } from '../../redux/hooks/use-redux-action'
 import { contentPadding } from '../../styles/variables'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -119,9 +119,7 @@ export function AddColumnModal() {
   const outerSpacing = (3 / 4) * contentPadding
 
   const columnWidth = useColumnWidth()
-  const [availableWidth, setAvailableWidth] = useState(
-    columnWidth - 2 * outerSpacing,
-  )
+  const availableWidth = columnWidth - 2 * outerSpacing
 
   return (
     <ModalColumn columnId="add-column-modal" iconName="plus" title="Add Column">
@@ -132,7 +130,6 @@ export function AddColumnModal() {
         }}
       >
         <View
-          onLayout={e => setAvailableWidth(e.nativeEvent.layout.width)}
           style={{
             flex: 1,
             flexDirection: 'row',

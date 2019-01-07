@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { useRef } from 'react'
 
-import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
+import { useReduxState } from './use-redux-state'
 
 export function useColumn(columnId: string) {
   const columnSelector = useRef(selectors.createColumnSelector()).current

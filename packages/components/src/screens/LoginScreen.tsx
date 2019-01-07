@@ -8,14 +8,14 @@ import { Link } from '../components/common/Link'
 import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
 import { useAnimatedTheme } from '../hooks/use-animated-theme'
+import { useReduxAction } from '../hooks/use-redux-action'
+import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { bugsnag } from '../libs/bugsnag'
 import { executeOAuth } from '../libs/oauth'
 import { getUrlParamsIfMatches, OAuthResponseData } from '../libs/oauth/helpers'
 import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
-import { useReduxAction } from '../redux/hooks/use-redux-action'
-import { useReduxState } from '../redux/hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
 
@@ -197,8 +197,8 @@ export const LoginScreen = React.memo(() => {
 
     const githubScope =
       method === 'github.private'
-        ? ['read:user', 'repo', 'notifications', 'read:org']
-        : ['read:user', 'public_repo', 'notifications', 'read:org']
+        ? ['read:user', 'user:email', 'repo', 'notifications', 'read:org']
+        : ['read:user', 'user:email', 'notifications', 'read:org']
 
     try {
       analytics.trackEvent('engagement', 'login', method, 1, { method })

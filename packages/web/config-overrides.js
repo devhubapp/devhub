@@ -32,40 +32,6 @@ module.exports = function override(config, env) {
   ].concat(config.module.rules[2].oneOf[1].options.plugins)
   config.module.rules = config.module.rules.filter(Boolean)
 
-  config.plugins = config.plugins.map(plugin => {
-    if (plugin.constructor.name !== 'ForkTsCheckerWebpackPlugin') return plugin
-
-    // This is an attempty to show ts errors of the other workspace packages,
-    // but did not work
-    return new ForkTsCheckerWebpackPlugin({
-      typescript: resolve.sync('typescript', {
-        basedir: resolveApp('node_modules'),
-      }),
-      async: false,
-      checkSyntacticErrors: true,
-      tsconfig: resolveApp('tsconfig.json'),
-      compilerOptions: {
-        module: 'esnext',
-        moduleResolution: 'node',
-        resolveJsonModule: true,
-        isolatedModules: true,
-        noEmit: true,
-        jsx: 'preserve',
-      },
-      reportFiles: [
-        '**',
-        '!**/*.json',
-        '!**/__tests__/**',
-        '!**/?(*.)(spec|test).*',
-        '!src/setupProxy.js',
-        '!src/setupTests.*',
-      ],
-      watch: appIncludes, // <- changed this
-      silent: false,
-      // formatter: typescriptFormatter,
-    })
-  })
-
   config.plugins.push(
     new webpack.DefinePlugin({ __DEV__: env !== 'production' }),
   )

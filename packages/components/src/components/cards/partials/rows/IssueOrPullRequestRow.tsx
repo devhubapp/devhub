@@ -3,7 +3,7 @@ import { Animated, StyleSheet, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { defaultStyles } from '../../../../styles/styles'
+import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { AnimatedIcon, AnimatedIconProps } from '../../../animated/AnimatedIcon'
@@ -91,7 +91,7 @@ export const IssueOrPullRequestRow = React.memo(
             <Animated.Text
               numberOfLines={1}
               style={[
-                defaultStyles.full,
+                Platform.OS !== 'android' && { flexGrow: 1 },
                 getCardStylesForTheme(theme).normalText,
                 isRead && getCardStylesForTheme(theme).mutedText,
               ]}

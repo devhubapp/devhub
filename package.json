@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "version": "0.41.0",
+  "version": "0.42.0",
   "private": true,
   "author": {
     "name": "Bruno Lemos",
@@ -36,6 +36,7 @@
     "cross-env": "^5.2.0",
     "husky": "^1.2.0",
     "lint-staged-offline": "^0.0.1",
+    "now": "*",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "prettier": "^1.15.3",

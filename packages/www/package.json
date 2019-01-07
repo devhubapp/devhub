@@ -8,14 +8,14 @@
     "build": "cd .",
     "clean": "cd .",
     "compile": "cd .",
-    "deploy": "yarn now && yarn now alias",
+    "deploy": "now && now alias",
     "format": "prettier --write '{.,src/**}/*.js'",
     "lint": "eslint src",
-    "now": "npx now",
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^5.9.0"
+    "eslint": "^5.9.0",
+    "now": "*"
   }
 }

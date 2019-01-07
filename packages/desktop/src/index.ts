@@ -1,6 +1,8 @@
 import {
   app,
   BrowserWindow,
+  dialog,
+  ipcMain,
   Menu,
   nativeImage,
   screen,
@@ -11,6 +13,7 @@ import {
 import Store from 'electron-store'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
+import url from 'url'
 
 import { __DEV__ } from './libs/electron-is-dev'
 import { WindowState, windowStateKeeper } from './libs/electron-window-state'
@@ -32,6 +35,23 @@ let tray: Electron.Tray | null = null
 let mainWindowState: WindowState
 let menubarWindowState: WindowState
 
+let updateInfo: {
+  state:
+    | 'not-checked'
+    | 'error'
+    | 'checking-for-update'
+    | 'update-not-available'
+    | 'update-available'
+    | 'downloading'
+    | 'update-downloaded'
+  date: number
+  progress?: number
+  lastManuallyCheckedAt?: number
+} = {
+  state: 'not-checked',
+  date: Date.now(),
+}
+
 const startURL = __DEV__
   ? 'http://localhost:3000'
   : `file://${path.join(__dirname, 'web/index.html')}`
@@ -51,8 +71,11 @@ function getBrowserWindowOptions() {
   if (!mainWindowState) {
     mainWindowState = windowStateKeeper({
       defaultWidth: screen.getPrimaryDisplay().workAreaSize.width,
-      defaultHeight: screen.getPrimaryDisplay().workAreaSize.height,
+      defaultHeight:
+        screen.getPrimaryDisplay().workAreaSize.height -
+        (process.platform === 'linux' ? 28 : 0),
       file: 'main-window.json',
+      fullScreen: false,
     })
   }
 
@@ -61,6 +84,7 @@ function getBrowserWindowOptions() {
       defaultWidth: 340,
       defaultHeight: 550,
       file: 'menubar-window.json',
+      fullScreen: false,
     })
   }
 
@@ -151,7 +175,7 @@ function createWindow() {
 
   win.on('blur', () => {
     setTimeout(() => {
-      if (config.get('isMenuBarMode')) win.hide()
+      if (config.get('isMenuBarMode') && !win.isDestroyed()) win.hide()
     }, 200)
   })
 
@@ -160,6 +184,7 @@ function createWindow() {
   })
 
   win.on('leave-full-screen', () => {
+    if (!mainWindow.isFocused()) return
     update()
   })
 
@@ -175,7 +200,7 @@ function createTray() {
     path.join(
       __dirname,
       `../assets/icons/${
-        process.platform === 'win32' ? 'trayIconWhite' : 'trayIconTemplate'
+        process.platform === 'darwin' ? 'trayIconTemplate' : 'trayIconWhite'
       }.png`,
     ),
   )
@@ -230,9 +255,8 @@ function init() {
   app.on('ready', () => {
     config.set('launchCount', config.get('launchCount', 0) + 1)
 
-    app.removeAsDefaultProtocolClient('devhub')
-
     if (__DEV__ && process.platform === 'win32') {
+      app.removeAsDefaultProtocolClient('devhub')
       app.setAsDefaultProtocolClient('devhub', process.execPath, [
         path.resolve(process.argv[1]),
       ])
@@ -248,14 +272,31 @@ function init() {
       app.setAboutPanelOptions({
         applicationName: 'DevHub',
         applicationVersion: app.getVersion(),
-        copyright: 'Copyright 2018',
-        credits: 'devhub',
+        copyright: 'Copyright 2019',
+        credits: 'Bruno Lemos',
       })
     }
 
-    if (__DEV__) setupBrowserExtensions()
+    if (__DEV__) {
+      setupBrowserExtensions()
+    } else {
+      autoUpdater.autoDownload = true
+      autoUpdater.autoInstallOnAppQuit = true
+      autoUpdater.checkForUpdatesAndNotify()
 
-    autoUpdater.checkForUpdatesAndNotify()
+      setInterval(() => {
+        autoUpdater.checkForUpdatesAndNotify()
+      }, 30 * 60000)
+
+      let lastUpdaterMenuItem = getUpdaterMenuItem()
+      setInterval(() => {
+        const newUpdaterMenuItem = getUpdaterMenuItem()
+        if (lastUpdaterMenuItem.label !== newUpdaterMenuItem.label) {
+          lastUpdaterMenuItem = newUpdaterMenuItem
+          updateMenu()
+        }
+      }, 5000)
+    }
   })
 
   app.on('window-all-closed', () => {
@@ -274,17 +315,101 @@ function init() {
     webContents.on(
       'new-window',
       (event, uri, _frameName, _disposition, _options) => {
+        if (
+          !app.isDefaultProtocolClient('devhub') &&
+          `${url.parse(uri).pathname || ''}`.startsWith('/oauth')
+        )
+          return
+
         event.preventDefault()
         shell.openExternal(uri)
       },
     )
   })
 
-  app.on('open-url', (_event, url) => {
+  app.on('open-url', (_event, uri) => {
     if (!mainWindow) return
 
-    mainWindow.webContents.send('open-url', url)
+    mainWindow.webContents.send('open-url', uri)
     showWindow()
+  })
+
+  ipcMain.on('can-open-url', (e: any, uri?: string) => {
+    let returnValue = false
+
+    if (!(e && uri && typeof uri === 'string')) returnValue = false
+    else if (uri.startsWith('http://') || uri.startsWith('https://'))
+      returnValue = true
+    else if (uri.startsWith('devhub://'))
+      returnValue = app.isDefaultProtocolClient('devhub')
+
+    e.returnValue = returnValue
+  })
+
+  ipcMain.on('open-url', (_e: any, uri?: string) => {
+    if (!mainWindow) return
+
+    if (!(uri && typeof uri === 'string' && uri.startsWith('devhub://'))) return
+    mainWindow.webContents.send('open-url', url)
+  })
+
+  ipcMain.on('post-message', (_e: any, data: any) => {
+    if (!mainWindow) return
+
+    mainWindow.webContents.send('post-message', data)
+  })
+
+  autoUpdater.on('error', () => {
+    updateInfo = { ...updateInfo, state: 'error', date: Date.now() }
+    updateMenu()
+  })
+
+  autoUpdater.on('checking-for-update', () => {
+    updateInfo = {
+      ...updateInfo,
+      state: 'checking-for-update',
+      date: Date.now(),
+    }
+    updateMenu()
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    const fromManualCheck =
+      updateInfo.lastManuallyCheckedAt &&
+      Date.now() - updateInfo.lastManuallyCheckedAt < 10000
+
+    updateInfo = {
+      ...updateInfo,
+      state: 'update-not-available',
+      date: Date.now(),
+    }
+    updateMenu()
+
+    if (fromManualCheck) {
+      dialog.showMessageBox({
+        message: 'There are currently no updates available.',
+      })
+    }
+  })
+
+  autoUpdater.on('update-available', () => {
+    updateInfo = { ...updateInfo, state: 'update-available', date: Date.now() }
+    updateMenu()
+  })
+
+  autoUpdater.on('download-progress', e => {
+    updateInfo = {
+      ...updateInfo,
+      state: 'downloading',
+      progress: e.percent,
+      date: Date.now(),
+    }
+    updateMenu()
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    updateInfo = { ...updateInfo, state: 'update-downloaded', date: Date.now() }
+    updateMenu()
   })
 }
 
@@ -300,10 +425,15 @@ function getCenterPosition(obj: Electron.BrowserWindow | Electron.Tray) {
 function alignWindowWithTray() {
   if (!(tray && !tray.isDestroyed())) return
 
+  const trayBounds = tray.getBounds()
+  if (!(trayBounds.width && trayBounds.height)) {
+    mainWindow.center()
+    return
+  }
+
   const screenSize = screen.getPrimaryDisplay().size
   const workArea = screen.getPrimaryDisplay().workArea
   const windowBounds = mainWindow.getBounds()
-  const trayBounds = tray.getBounds()
   const trayCenter = getCenterPosition(tray)
 
   const top = trayBounds.y < screenSize.height / 3
@@ -343,6 +473,70 @@ function alignWindowWithTray() {
   mainWindow.setPosition(fixedX, fixedY)
 }
 
+function getUpdaterMenuItem() {
+  let label: string
+  let enabled: boolean = !__DEV__
+
+  switch (updateInfo.state) {
+    case 'checking-for-update': {
+      enabled = false
+      label = 'Checking for updates...'
+      if (Date.now() - updateInfo.date < 60000) break
+    }
+
+    case 'downloading': {
+      enabled = false
+      label =
+        updateInfo.progress && updateInfo.progress > 0
+          ? `Downloading update... (${updateInfo.progress}%)`
+          : 'Downloading update...'
+      if (Date.now() - updateInfo.date < 10 * 60000) break
+    }
+
+    case 'error': {
+      enabled = true
+      label = 'Failed to download update.'
+      if (Date.now() - updateInfo.date < 60000) break
+    }
+
+    case 'update-available': {
+      enabled = false
+      label = autoUpdater.autoDownload
+        ? 'Downloading updates...'
+        : 'Update available. Please wait.'
+      if (Date.now() - updateInfo.date < 10 * 60000) break
+    }
+
+    case 'update-downloaded': {
+      enabled = false
+      label = 'Update downloaded. Please restart.'
+      break
+    }
+
+    case 'update-not-available': {
+      enabled = false
+      label = 'No updates available.'
+      if (Date.now() - updateInfo.date < 30000) break
+    }
+
+    default: {
+      enabled = true
+      label = 'Check for updates...'
+    }
+  }
+
+  const menuItem: Electron.MenuItemConstructorOptions = {
+    label,
+    enabled: !__DEV__ && enabled,
+    click: () => {
+      updateInfo.lastManuallyCheckedAt = Date.now()
+      autoUpdater.checkForUpdatesAndNotify()
+    },
+  }
+
+  return menuItem
+}
+
 function getAboutMenuItems() {
   const menuItems: Electron.MenuItemConstructorOptions[] = [
     ...(process.platform === 'darwin'
@@ -362,20 +556,21 @@ function getAboutMenuItems() {
     {
       type: 'separator',
     },
-    {
-      label: 'Check for Updates...',
-      enabled: !__DEV__,
-      click: () => {
-        autoUpdater.checkForUpdatesAndNotify()
-      },
-    },
+    getUpdaterMenuItem(),
   ]
 
   return menuItems
 }
 
 function getModeMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  if (
+    !(tray && tray.getBounds().width && tray.getBounds().height) &&
+    !config.get('isMenuBarMode')
+  )
+    return []
+
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -403,7 +598,8 @@ function getModeMenuItems() {
 }
 
 function getOptionsMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -435,7 +631,8 @@ function getOptionsMenuItems() {
 }
 
 function getMainMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -585,7 +782,8 @@ function getDockMenuItems() {
 }
 
 function getWindowMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -597,30 +795,23 @@ function getWindowMenuItems() {
       },
     },
     {
-      label: 'Minimize',
-      accelerator: config.get('isMenuBarMode') ? undefined : 'CmdOrCtrl+M',
-      role: config.get('isMenuBarMode') ? undefined : 'minimize',
-      enabled: enabled && !mainWindow.isMinimized(),
-      visible: !config.get('isMenuBarMode'), // && mainWindow.isMinimizable(),
-    },
-    {
-      label: 'Maximize',
-      visible: !config.get('isMenuBarMode'), // && mainWindow.isMaximizable(),
-      enabled, // && !mainWindow.isMaximized(),
-      click() {
-        showWindow()
-        mainWindow.maximize()
-      },
+      role: 'minimize',
     },
     {
       type: 'checkbox',
-      label: 'Full Screen',
-      accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
-      checked: mainWindow.isFullScreen(),
-      enabled: enabled || mainWindow.isFullScreen(),
+      label: 'Maximize',
+      visible: !config.get('isMenuBarMode'), // && mainWindow && mainWindow.isMaximizable(),
+      enabled,
+      checked: mainWindow && mainWindow.isMaximized(),
       click(item) {
-        mainWindow.setFullScreen(item.checked)
+        showWindow()
+
+        if (item.checked) mainWindow.maximize()
+        else mainWindow.unmaximize()
       },
+    },
+    {
+      role: 'togglefullscreen',
     },
   ]
 
@@ -628,7 +819,8 @@ function getWindowMenuItems() {
 }
 
 function getTrayMenuItems() {
-  const isCurrentWindow = mainWindow.isVisible() && !mainWindow.isMinimized()
+  const isCurrentWindow =
+    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
 
   const menuItems: Electron.MenuItemConstructorOptions[] = [
@@ -725,17 +917,23 @@ function updateBrowserWindowOptions() {
     false,
   )
 
-  mainWindow.setSkipTaskbar(options.skipTaskbar === true)
+  // Note: setSkipTaskbar was causing the app to freeze on linux
+  if (process.platform === 'darwin' || process.platform === 'win32') {
+    mainWindow.setSkipTaskbar(options.skipTaskbar === true)
+  }
 
-  mainWindow.setSize(
-    maximize
-      ? screen.getPrimaryDisplay().workAreaSize.width
-      : options.width || 500,
-    maximize
-      ? screen.getPrimaryDisplay().workAreaSize.height
-      : options.height || 500,
-    false,
-  )
+  if (maximize) {
+    // Node: workAreaSize.heigth is wrong on linux, causing the app content to jump on window open
+    if (process.platform !== 'linux') {
+      mainWindow.setSize(
+        screen.getPrimaryDisplay().workAreaSize.width,
+        screen.getPrimaryDisplay().workAreaSize.height,
+        false,
+      )
+    }
+  } else {
+    mainWindow.setSize(options.width || 500, options.height || 500, false)
+  }
 
   if (dock) {
     if (options.skipTaskbar === true) {
@@ -768,6 +966,10 @@ function updateBrowserWindowOptions() {
 
 function updateMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(getMainMenuItems()))
+
+  if (process.platform === 'linux') {
+    tray!.setContextMenu(getTrayContextMenu())
+  }
 
   if (process.platform === 'darwin') {
     const touchBar = new TouchBar({

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 
 import { Theme } from '@devhub/core'
-import { useReduxState } from '../../redux/hooks/use-redux-state'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { defaultThemePair } from '../../redux/selectors/config'
 import { loadTheme } from '../../styles/utils'

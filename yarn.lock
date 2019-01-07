@@ -8656,6 +8656,11 @@ normalize-url@^3.0.0:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
+now@*:
+  version "12.1.14"
+  resolved "https://registry.npmjs.org/now/-/now-12.1.14.tgz#3f56bce02df505eb668343baf2cecf57ca1cc10c"
+  integrity sha512-DsEvELqGbxwKMHI3Xpf+CoAeIsvj0bKOCoOXmaf8F6cAAh9N20DhTFl1wFGylpjPgd3lj8SGfQuiSbpUV5CTjQ==
+
 npm-bundled@^1.0.1:
   version "1.0.5"
   resolved "https://registry.npmjs.org/npm-bundled/-/npm-bundled-1.0.5.tgz#3c1732b7ba936b3a10325aef616467c0ccbcc979"

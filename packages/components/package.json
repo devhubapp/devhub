@@ -1,6 +1,6 @@
 {
   "name": "@devhub/components",
-  "version": "0.41.0",
+  "version": "0.42.0",
   "private": false,
   "main": "dist",
   "scripts": {
@@ -11,7 +11,7 @@
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
-    "@devhub/core": "0.41.0",
+    "@devhub/core": "0.42.0",
     "@octokit/rest": "^16.1.0",
     "axios": "^0.18.0",
     "bugsnag-js": "^4.7.3",

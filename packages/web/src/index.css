@@ -31,6 +31,10 @@ html, body, #root, #root > div {
   overflow: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #292c33;
   text-rendering: optimizeLegibility;
