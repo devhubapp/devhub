@@ -62,7 +62,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const large = sizename === '3-large'
 
   const showLabel = !!horizontal
-  const showFixedSettingsButton = !horizontal || columnIds.length > 3
+  const showFixedSettingsButton = !horizontal || columnIds.length >= 4
 
   const itemContainerStyle = {
     width: sidebarSize,
@@ -81,7 +81,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           flexGrow: 1,
           flexDirection: horizontal ? 'row' : 'column',
           width: horizontal ? '100%' : sidebarSize,
-          height: horizontal ? undefined : '100%',
+          height: horizontal ? sidebarSize : '100%',
         }}
       >
         {!horizontal && (
@@ -121,7 +121,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 justifyContent:
                   small && horizontal ? 'space-evenly' : undefined,
               },
-              horizontal && { marginHorizontal: contentPadding / 2 },
+              horizontal && { paddingHorizontal: contentPadding / 2 },
             ]}
             horizontal={horizontal}
             style={{ flex: 1 }}
@@ -167,7 +167,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                     ? undefined
                     : replaceModal({ name: 'SETTINGS' })
                 }
-                style={[styles.centerContainer, itemContainerStyle]}
+                style={[
+                  styles.centerContainer,
+                  !showLabel && itemContainerStyle,
+                ]}
               >
                 <ColumnHeaderItem
                   analyticsLabel={undefined}
@@ -190,7 +193,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 <TouchableOpacity
                   analyticsLabel="sidebar_add"
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-                  style={[styles.centerContainer, itemContainerStyle]}
+                  style={[
+                    styles.centerContainer,
+                    !showLabel && itemContainerStyle,
+                  ]}
                 >
                   <ColumnHeaderItem
                     analyticsLabel={undefined}
@@ -207,13 +213,15 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </>
         )}
 
-        {horizontal && <Spacer width={contentPadding / 2} />}
+        {horizontal && (showFixedSettingsButton || large) && (
+          <Spacer width={contentPadding / 2} />
+        )}
 
         {showFixedSettingsButton && (
           <TouchableOpacity
             analyticsLabel="sidebar_settings"
             onPress={() => replaceModal({ name: 'SETTINGS' })}
-            style={[styles.centerContainer, itemContainerStyle]}
+            style={[styles.centerContainer, !showLabel && itemContainerStyle]}
           >
             <ColumnHeaderItem
               analyticsLabel={undefined}
@@ -225,7 +233,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </TouchableOpacity>
         )}
 
-        {!!large && (
+        {large && (
           <Link
             analyticsLabel="sidebar_logo"
             href="https://github.com/devhubapp/devhub"
@@ -243,7 +251,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </Link>
         )}
 
-        {horizontal && <Spacer width={contentPadding / 2} />}
+        {horizontal && (showFixedSettingsButton || large) && (
+          <Spacer width={contentPadding / 2} />
+        )}
       </View>
     </AnimatedSafeAreaView>
   )
