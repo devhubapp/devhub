@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Theme } from '@devhub/core'
+import { Helmet } from '../libs/helmet'
 import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme }) {
@@ -30,5 +31,9 @@ function getStyles(params: { theme: Theme }) {
 export function AppGlobalStyles() {
   const theme = useTheme()
 
-  return <style>{getStyles({ theme })}</style>
+  return (
+    <Helmet>
+      <style>{getStyles({ theme })}</style>
+    </Helmet>
+  )
 }

@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 
+import { ThemeColors } from '@devhub/core'
 import { AnimatedSafeAreaView } from '../../components/animated/AnimatedSafeAreaView'
 import { AnimatedStatusBar } from '../../components/animated/AnimatedStatusBar'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -19,7 +20,7 @@ import { ConditionalWrap } from './ConditionalWrap'
 
 export interface ScreenProps {
   children?: ReactNode
-  statusBarBackgroundColor?: string | Animated.AnimatedInterpolation
+  statusBarBackgroundThemeColor?: keyof ThemeColors
   style?: StyleProp<ViewStyle>
   useSafeArea?: boolean
 }
@@ -34,8 +35,8 @@ const styles = StyleSheet.create({
 })
 
 export function Screen(props: ScreenProps) {
-  const theme = useTheme()
   const animatedTheme = useAnimatedTheme()
+  const theme = useTheme()
 
   useEffect(() => {
     if (SplashScreen) {
@@ -44,7 +45,7 @@ export function Screen(props: ScreenProps) {
   }, [])
 
   const {
-    statusBarBackgroundColor,
+    statusBarBackgroundThemeColor,
     useSafeArea = true,
     style,
     ...otherProps
@@ -56,7 +57,9 @@ export function Screen(props: ScreenProps) {
         animated
         barStyle={theme.isDark ? 'light-content' : 'dark-content'}
         backgroundColor={
-          statusBarBackgroundColor || (animatedTheme.backgroundColor as any)
+          statusBarBackgroundThemeColor
+            ? theme[statusBarBackgroundThemeColor]
+            : (animatedTheme.backgroundColor as any)
         }
       />
 
@@ -78,7 +81,7 @@ export function Screen(props: ScreenProps) {
             {...otherProps}
             style={[
               styles.container,
-              { backgroundColor: theme.backgroundColor },
+              { backgroundColor: animatedTheme.backgroundColor as any },
               style,
             ]}
           />
@@ -87,7 +90,7 @@ export function Screen(props: ScreenProps) {
             {...otherProps}
             style={[
               styles.container,
-              { backgroundColor: theme.backgroundColor },
+              { backgroundColor: animatedTheme.backgroundColor as any },
               style,
             ]}
           />

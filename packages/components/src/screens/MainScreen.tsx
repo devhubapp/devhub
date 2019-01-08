@@ -12,7 +12,6 @@ import { FABRenderer } from '../components/layout/FABRenderer'
 import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
-import { useAnimatedTheme } from '../hooks/use-animated-theme'
 import { useAppVisibility } from '../hooks/use-app-visibility'
 import { useEmitter } from '../hooks/use-emitter'
 import { useKeyDownCallback } from '../hooks/use-key-down-callback'
@@ -42,7 +41,6 @@ export const MainScreen = React.memo(() => {
   const popModal = useReduxAction(actions.popModal)
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
-  const theme = useAnimatedTheme()
   const { appOrientation } = useAppLayout()
 
   const debounceSyncDown = useMemo(
@@ -156,7 +154,7 @@ export const MainScreen = React.memo(() => {
 
   return (
     <Screen
-      statusBarBackgroundColor={theme.backgroundColorLess08}
+      statusBarBackgroundThemeColor="backgroundColorLess08"
       useSafeArea={false}
     >
       <View

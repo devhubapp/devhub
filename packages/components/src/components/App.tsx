@@ -3,6 +3,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import '../libs/analytics'
+import { HelmetProvider } from '../libs/helmet'
 import { AppNavigator } from '../navigation/AppNavigator'
 import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'
@@ -19,24 +20,26 @@ const { persistor, store } = configureStore()
 export function App() {
   return (
     // <StrictMode>
-    <ReduxProvider store={store}>
-      <ReduxStoreProvider>
-        <PersistGate loading={null} persistor={persistor}>
-          <DimensionsProvider>
-            <AppLayoutProvider>
-              <ColumnWidthProvider>
-                <ThemeProvider>
-                  <>
-                    <AppGlobalStyles />
-                    <AppNavigator />
-                  </>
-                </ThemeProvider>
-              </ColumnWidthProvider>
-            </AppLayoutProvider>
-          </DimensionsProvider>
-        </PersistGate>
-      </ReduxStoreProvider>
-    </ReduxProvider>
+    <HelmetProvider>
+      <ReduxProvider store={store}>
+        <ReduxStoreProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <DimensionsProvider>
+              <AppLayoutProvider>
+                <ColumnWidthProvider>
+                  <ThemeProvider>
+                    <>
+                      <AppGlobalStyles />
+                      <AppNavigator />
+                    </>
+                  </ThemeProvider>
+                </ColumnWidthProvider>
+              </AppLayoutProvider>
+            </DimensionsProvider>
+          </PersistGate>
+        </ReduxStoreProvider>
+      </ReduxProvider>
+    </HelmetProvider>
     // </StrictMode>
   )
 }
