@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -11,7 +11,6 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
-import { H2 } from '../common/H2'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemePreference } from '../widgets/ThemePreference'
@@ -23,11 +22,9 @@ export function SettingsModal() {
 
   const theme = useAnimatedTheme()
 
-  const userId = useReduxState(selectors.currentUserIdSelector)
   const username = useReduxState(selectors.currentUsernameSelector)
 
   const logout = useReduxAction(actions.logout)
-  const pushModal = useReduxAction(actions.pushModal)
 
   return (
     <ModalColumn
@@ -57,7 +54,7 @@ export function SettingsModal() {
       >
         <ThemePreference />
 
-        <Spacer height={contentPadding * 2} />
+        {/* <Spacer height={contentPadding * 2} />
 
         <View>
           <H2 withMargin>Enterprise</H2>
@@ -72,9 +69,9 @@ export function SettingsModal() {
           >
             Setup GitHub Enterprise
           </Button>
-        </View>
+        </View> */}
 
-        <Spacer flex={1} minHeight={contentPadding * 2} />
+        <Spacer flex={1} minHeight={contentPadding} />
 
         <AppVersion />
 
