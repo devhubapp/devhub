@@ -11,6 +11,7 @@ const appDirectory = fs.realpathSync(process.cwd())
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath)
 
 const appIncludes = [
+  resolveApp('../../node_modules/react-native-draggable-flatlist'),
   resolveApp('src'),
   resolveApp('../core/src'),
   resolveApp('../components/src'),
