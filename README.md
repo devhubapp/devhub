@@ -73,6 +73,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | Key       | Action                       | Implemented    |
 | --------- | ---------------------------- | -------------- |
 | `Esc`     | Close current open modal     | ✅
+| `Esc`     | Exit full screen mode on desktop | ✅
 | `a`, `n`  | Add a new column             | ✅
 | `1`...`9` | Go to the `nth` column       | ✅
 | `0`       | Go to the last column        | ✅
