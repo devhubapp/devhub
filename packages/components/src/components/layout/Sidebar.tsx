@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { findDOMNode } from 'react-dom' // stop using as soon (https://github.com/necolas/react-native-web/issues/1099) get finshed
+import React from 'react'
+import SortableList from 'react-native-draggable-flatlist'
 
 import {
   Animated,
@@ -15,7 +15,6 @@ import { isEqual } from 'lodash'
 import { SortableEvent } from 'sortablejs'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useColumn } from '../../hooks/use-column'
-import { useDraggable } from '../../hooks/use-draggable'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
@@ -55,7 +54,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const { sizename } = useAppLayout()
   const { horizontal } = props
 
-  const itemContainerRef = useRef(null)
   const theme = useAnimatedTheme()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
@@ -71,42 +69,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const showLabel = !!horizontal
   const showFixedSettingsButton = !horizontal || columnIds.length > 3
 
-  const hasColumns = columnIds && columnIds.length
-
   const itemContainerStyle = {
     width: sidebarSize,
     height: sidebarSize,
   }
-
-  const itemContainerNode = () => {
-    const { current } = itemContainerRef
-
-    if (!current) {
-      return null
-    }
-
-    const node = findDOMNode(current)
-    return node && node.firstChild ? (node.firstChild as HTMLElement) : null
-  }
-
-  useDraggable(
-    itemContainerNode,
-    {
-      delay: horizontal ? 500 : 0, // long-press if is horizontal
-      onEnd: (evt: SortableEvent) => {
-        const oldIndex = evt.oldIndex || 0
-        const newIndex = evt.newIndex || 0
-
-        if (!isEqual(oldIndex, newIndex)) {
-          moveColumn({
-            currentIndex: oldIndex,
-            columnIndex: newIndex,
-          })
-        }
-      },
-    },
-    [horizontal],
-  )
 
   return (
     <AnimatedSafeAreaView
@@ -152,7 +118,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           themeColor="backgroundColor"
         >
           <ScrollView
-            ref={itemContainerRef}
             alwaysBounceHorizontal={false}
             alwaysBounceVertical={false}
             contentContainerStyle={[
@@ -187,16 +152,25 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 </>
               ) : null
             ) : (
-              columnIds.map(columnId => (
-                <SidebarColumnItem
-                  key={`sidebar-column-item-${columnId}`}
-                  columnId={columnId}
-                  currentOpenedModal={currentOpenedModal}
-                  itemContainerStyle={itemContainerStyle}
-                  showLabel={showLabel}
-                  small={small}
-                />
-              ))
+              <SortableList
+                horizontal={horizontal}
+                data={columnIds}
+                renderItem={data => {
+                  const columnId = data.item
+                  return (
+                    <SidebarColumnItem
+                      key={`sidebar-column-item-${columnId}`}
+                      columnId={columnId}
+                      currentOpenedModal={currentOpenedModal}
+                      itemContainerStyle={itemContainerStyle}
+                      showLabel={showLabel}
+                      small={small}
+                      move={props.move}
+                      moveEnd={props.moveEnd}
+                    />
+                  )
+                }}
+              />
             )}
 
             {!showFixedSettingsButton && (
@@ -296,6 +270,8 @@ const SidebarColumnItem = React.memo(
     itemContainerStyle: ViewStyle
     showLabel: boolean
     small: boolean | undefined
+    move: () => void
+    moveEnd: () => void
   }) => {
     const {
       columnId,
@@ -303,9 +279,12 @@ const SidebarColumnItem = React.memo(
       itemContainerStyle,
       showLabel,
       small,
+      move,
+      moveEnd,
     } = props
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
+
     if (!(column && subscriptions)) return null
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
@@ -313,9 +292,11 @@ const SidebarColumnItem = React.memo(
 
     return (
       <TouchableOpacity
-        className="draggable-source"
+        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
         key={`sidebar-column-${column.id}`}
         analyticsLabel="sidebar_column"
+        onPressOut={moveEnd}
+        onLongPress={move}
         onPress={() => {
           emitter.emit('FOCUS_ON_COLUMN', {
             animated: !small || !currentOpenedModal,
@@ -324,7 +305,6 @@ const SidebarColumnItem = React.memo(
             highlight: !small,
           })
         }}
-        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
       >
         <ColumnHeaderItem
           analyticsLabel={undefined}
