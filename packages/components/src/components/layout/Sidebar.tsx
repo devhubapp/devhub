@@ -155,8 +155,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               <SortableList
                 horizontal={horizontal}
                 data={columnIds}
-                renderItem={data => {
-                  const columnId = data.item
+                renderItem={({ item: columnId, move, moveEnd }) => {
                   return (
                     <SidebarColumnItem
                       key={`sidebar-column-item-${columnId}`}
@@ -165,8 +164,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                       itemContainerStyle={itemContainerStyle}
                       showLabel={showLabel}
                       small={small}
-                      move={props.move}
-                      moveEnd={props.moveEnd}
+                      move={move}
+                      moveEnd={moveEnd}
                     />
                   )
                 }}
