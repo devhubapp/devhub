@@ -38,6 +38,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.link:hover * {
+  text-decoration: underline !important;
+  transition: none 0s !important;
+}
+
 .snap-container {
   scroll-snap-type: x mandatory;
 }
