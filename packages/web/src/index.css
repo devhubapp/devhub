@@ -18,11 +18,7 @@
 }
 
 *:focus {
-  outline: none;
-}
-
-* {
-  box-sizing: border-box;
+  outline-color: #49d3b5;
 }
 
 html, body, #root, #root > div {
