@@ -2,6 +2,9 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { Animated, Clipboard, View } from 'react-native'
 
+export interface EnterpriseSetupModalProps {
+  showBackButton: boolean
+}
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
@@ -12,7 +15,9 @@ import { H3 } from '../common/H3'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 
-export function EnterpriseSetupModal() {
+export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
+  const { showBackButton } = props
+
   const [copied, setCopied] = useState(false)
 
   const theme = useAnimatedTheme()
@@ -26,6 +31,7 @@ export function EnterpriseSetupModal() {
     <ModalColumn
       columnId="enterprise-setup-modal"
       iconName="plus"
+      showBackButton={showBackButton}
       title="GitHub Enterprise"
     >
       <View style={{ flex: 1, padding: contentPadding }}>

@@ -21,23 +21,28 @@ import { EnterpriseSetupModal } from './EnterpriseSetupModal'
 
 const AnimatedView = animated(Animated.View)
 
-function renderModal(modal: ModalPayload) {
+function renderModal(modal: ModalPayloadWithIndex) {
   if (!modal) return null
 
   analytics.trackModalView(modal.name)
 
   switch (modal.name) {
     case 'ADD_COLUMN':
-      return <AddColumnModal />
+      return <AddColumnModal showBackButton={modal.index >= 1} />
 
     case 'ADD_COLUMN_DETAILS':
-      return <AddColumnDetailsModal {...modal.params} />
+      return (
+        <AddColumnDetailsModal
+          showBackButton={modal.index >= 1}
+          {...modal.params}
+        />
+      )
 
     case 'SETTINGS':
-      return <SettingsModal />
+      return <SettingsModal showBackButton={modal.index >= 1} />
 
     case 'SETUP_GITHUB_ENTERPRISE':
-      return <EnterpriseSetupModal />
+      return <EnterpriseSetupModal showBackButton={modal.index >= 1} />
 
     default:
       return null
@@ -85,27 +90,34 @@ export function ModalRenderer(props: ModalRendererProps) {
           from: item =>
             (item.index === 0 && modalStack.length) ||
             (item.index > 0 && !modalStack.length)
-              ? { top: Dimensions.get('window').height }
-              : { top: 0 },
-          enter: { top: 0 },
-          update: { top: 0 },
+              ? { top: Dimensions.get('window').height, left: 0 }
+              : { top: 0, left: size },
+          enter: { top: 0, left: 0 },
+          update: item =>
+            modalStack.length > 1 && item.index !== modalStack.length - 1
+              ? { top: 0, left: -50 }
+              : { top: 0, left: 0 },
           leave: item =>
             item.index === 0 || !modalStack.length
-              ? { top: Dimensions.get('window').height }
-              : { top: 0 },
+              ? { top: Dimensions.get('window').height, left: 0 }
+              : { top: 0, left: size },
         }
       : {
           from: item =>
             (item.index === 0 && modalStack.length) ||
             (item.index > 0 && !modalStack.length)
-              ? { marginLeft: -size }
-              : { marginLeft: 0 },
-          enter: { marginLeft: 0 },
-          update: { marginLeft: 0 },
+              ? { left: -size }
+              : { left: size },
+          enter: { left: 0 },
+          update: item =>
+            modalStack.length > 1 && item.index !== modalStack.length - 1
+              ? { left: -size / 3 }
+              : { left: 0 },
+
           leave: item =>
             item.index === 0 || !modalStack.length
-              ? { marginLeft: -size }
-              : { marginLeft: 0 },
+              ? { left: -size }
+              : { left: size },
         }),
   })
 
@@ -133,36 +145,51 @@ export function ModalRenderer(props: ModalRendererProps) {
         </TouchableOpacity>
       )}
 
-      {modalTransitions.map(
-        ({ key, item, props: { width, ...animatedStyle } }) => (
-          <AnimatedView
-            key={key}
-            style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              flexDirection: 'row',
-              ...animatedStyle,
-              overflow: 'hidden',
-              zIndex: 900 + item.index,
-            }}
-          >
-            {renderModal(item)}
-            {!!renderSeparator && item.index === 0 && (
-              <View
+      {!!modalTransitions.length && (
+        <AnimatedView
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: size,
+            overflow: 'hidden',
+            zIndex: 900,
+          }}
+        >
+          {modalTransitions.map(
+            ({ key, item, props: { width, ...animatedStyle } }) => (
+              <AnimatedView
+                key={key}
                 style={{
                   position: 'absolute',
                   top: 0,
                   bottom: 0,
-                  right: 0,
-                  zIndex: 1000,
+                  flexDirection: 'row',
+                  ...animatedStyle,
+                  overflow: 'hidden',
+                  zIndex: 900 + item.index,
                 }}
               >
-                <Separator thick zIndex={1000} />
-              </View>
-            )}
-          </AnimatedView>
-        ),
+                {renderModal(item)}
+
+                {!!renderSeparator && (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      bottom: 0,
+                      right: 0,
+                      zIndex: 1000,
+                    }}
+                  >
+                    <Separator thick zIndex={1000} />
+                  </View>
+                )}
+              </AnimatedView>
+            ),
+          )}
+        </AnimatedView>
       )}
     </>
   )
