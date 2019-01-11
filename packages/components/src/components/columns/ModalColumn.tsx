@@ -27,14 +27,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
   const { children, hideCloseButton, right, columnId, ...otherProps } = props
 
   return (
-    <Column
-      columnId={columnId}
-      style={[
-        {
-          zIndex: 100,
-        },
-      ]}
-    >
+    <Column columnId={columnId} style={{ zIndex: 900 }}>
       <ColumnHeader>
         {canGoBack && (
           <ColumnHeaderItem

@@ -166,12 +166,20 @@ export const MainScreen = React.memo(() => {
           },
         ]}
       >
-        <Sidebar key="main-screen-sidebar" horizontal={horizontalSidebar} />
-        <Separator horizontal={horizontalSidebar} thick={!horizontalSidebar} />
+        <Sidebar
+          key="main-screen-sidebar"
+          horizontal={horizontalSidebar}
+          zIndex={1000}
+        />
+
+        <Separator
+          horizontal={horizontalSidebar}
+          thick={!horizontalSidebar}
+          zIndex={1000}
+        />
 
         <View style={styles.innerContainer}>
-          <ModalRenderer />
-          {!!currentOpenedModal && !horizontalSidebar && <Separator thick />}
+          <ModalRenderer renderSeparator={!horizontalSidebar} />
 
           <ColumnsContainer />
           <FABRenderer />

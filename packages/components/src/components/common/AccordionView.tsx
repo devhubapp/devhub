@@ -21,6 +21,7 @@ export type Transition = ReactSpringHook
 
 export interface AccordionViewProps {
   children: React.ReactNode
+  fixedSize?: number
   property: 'width' | 'height'
 }
 
@@ -33,12 +34,12 @@ export interface AccordionView {
 
 export const AccordionView = React.forwardRef(
   (props: AccordionViewProps, ref) => {
-    const { children, property } = props
+    const { children, fixedSize, property } = props
 
     const onFinishRef = useRef<null | (() => void)>(null)
 
     const contentSize = useRef({ width: 0, height: 0 })
-    const [size, setSize] = useState<number | 'auto'>(0)
+    const [size, setSize] = useState<number | 'auto'>(fixedSize || 0)
 
     const transitions = useTransition({
       items: children ? [children] : [],
@@ -87,7 +88,9 @@ export const AccordionView = React.forwardRef(
       contentSize.current = { width, height }
 
       const nextSize = property === 'width' ? width : height
-      if (size !== nextSize && size !== 'auto') setSize(nextSize)
+      if (size !== nextSize && size !== 'auto' && nextSize > 0) {
+        if (!fixedSize) setSize(nextSize)
+      }
     }
 
     return (

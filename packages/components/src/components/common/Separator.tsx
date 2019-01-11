@@ -9,12 +9,13 @@ export const separatorTickSize = 2
 export interface SeparatorProps {
   horizontal?: boolean
   thick?: boolean
+  zIndex?: number
 }
 
 export function Separator(props: SeparatorProps) {
   const theme = useAnimatedTheme()
 
-  const { horizontal, thick } = props
+  const { horizontal, thick, zIndex } = props
   const size = thick ? separatorTickSize : separatorSize
 
   return (
@@ -30,6 +31,7 @@ export function Separator(props: SeparatorProps) {
               height: '100%',
             },
         { backgroundColor: theme.backgroundColorDarker08 },
+        zIndex && { zIndex },
       ]}
     />
   )

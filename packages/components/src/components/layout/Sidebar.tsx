@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
 
 export interface SidebarProps {
   horizontal?: boolean
+  zIndex?: number
 }
 
 export const Sidebar = React.memo((props: SidebarProps) => {
@@ -56,7 +57,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
   const replaceModal = useReduxAction(actions.replaceModal)
 
-  const { horizontal } = props
+  const { horizontal, zIndex } = props
 
   const small = sizename === '1-small'
   const large = sizename === '3-large'
@@ -74,6 +75,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       style={{
         width: horizontal ? undefined : sidebarSize,
         backgroundColor: theme.backgroundColor as any,
+        zIndex: zIndex || 1000,
       }}
     >
       <View
