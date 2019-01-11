@@ -8,6 +8,7 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
+import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
 import {
   TouchableOpacity,
@@ -73,19 +74,21 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         </View>
       </TouchableOpacity>
 
-      {!!opened && (
-        <View
-          style={[
-            {
-              paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
-              paddingBottom: contentPadding / 2,
-            },
-            contentContainerStyle,
-          ]}
-        >
-          {children}
-        </View>
-      )}
+      <AccordionView property="height">
+        {!!opened && (
+          <View
+            style={[
+              {
+                paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
+                paddingBottom: contentPadding / 2,
+              },
+              contentContainerStyle,
+            ]}
+          >
+            {children}
+          </View>
+        )}
+      </AccordionView>
     </>
   )
 }

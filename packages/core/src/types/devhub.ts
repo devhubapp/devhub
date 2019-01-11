@@ -282,6 +282,8 @@ export type ModalPayload =
       params?: undefined
     }
 
+export type ModalPayloadWithIndex = ModalPayload & { index: number }
+
 export type LoadState =
   | 'error'
   | 'loaded'

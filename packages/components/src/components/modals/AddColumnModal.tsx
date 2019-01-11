@@ -11,6 +11,10 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 
+export interface AddColumnModalProps {
+  showBackButton: boolean
+}
+
 const columnTypes: AddColumnDetailsPayload[] = [
   {
     name: 'Dashboard',
@@ -115,14 +119,21 @@ function AddColumnModalItem({
   )
 }
 
-export function AddColumnModal() {
+export function AddColumnModal(props: AddColumnModalProps) {
+  const { showBackButton } = props
+
   const outerSpacing = (3 / 4) * contentPadding
 
   const columnWidth = useColumnWidth()
   const availableWidth = columnWidth - 2 * outerSpacing
 
   return (
-    <ModalColumn columnId="add-column-modal" iconName="plus" title="Add Column">
+    <ModalColumn
+      columnId="add-column-modal"
+      iconName="plus"
+      showBackButton={showBackButton}
+      title="Add Column"
+    >
       <View
         style={{
           flex: 1,

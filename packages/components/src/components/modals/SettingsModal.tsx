@@ -15,9 +15,13 @@ import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemePreference } from '../widgets/ThemePreference'
 
-export interface SettingsModalProps {}
+export interface SettingsModalProps {
+  showBackButton: boolean
+}
 
-export function SettingsModal() {
+export function SettingsModal(props: SettingsModalProps) {
+  const { showBackButton } = props
+
   const { sizename } = useAppLayout()
 
   const theme = useAnimatedTheme()
@@ -31,7 +35,6 @@ export function SettingsModal() {
       columnId="preferences-modal"
       hideCloseButton={sizename === '1-small'}
       iconName="gear"
-      title="Preferences"
       right={
         sizename === '1-small' && username ? (
           <Avatar
@@ -44,6 +47,8 @@ export function SettingsModal() {
           undefined
         )
       }
+      showBackButton={showBackButton}
+      title="Preferences"
     >
       <ScrollView
         style={{ flex: 1 }}

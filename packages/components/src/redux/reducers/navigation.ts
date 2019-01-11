@@ -1,10 +1,10 @@
 import immer from 'immer'
 
-import { ModalPayload } from '@devhub/core'
+import { ModalPayloadWithIndex } from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {
-  modalStack: ModalPayload[]
+  modalStack: ModalPayloadWithIndex[]
 }
 
 const initialState: State = {
@@ -20,17 +20,23 @@ export const navigationReducer: Reducer<State> = (
       return immer(state, draft => {
         const currentModal = draft.modalStack.slice(-1)[0]
         if (currentModal && currentModal.name === action.payload.name) return
-        draft.modalStack.push(action.payload)
+
+        const payload = { ...action.payload, index: draft.modalStack.length }
+        draft.modalStack.push(payload)
       })
 
     case 'REPLACE_MODAL':
       return immer(state, draft => {
-        draft.modalStack =
+        if (
           draft.modalStack.length === 1 &&
           draft.modalStack[0] &&
           draft.modalStack[0].name === action.payload.name
-            ? []
-            : [action.payload]
+        ) {
+          draft.modalStack = []
+        } else {
+          const payload = { ...action.payload, index: 0 }
+          draft.modalStack = [payload]
+        }
       })
 
     case 'POP_MODAL':

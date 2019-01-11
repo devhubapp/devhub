@@ -8,9 +8,7 @@ import {
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding, radius } from '../../styles/variables'
 
-const AnimatedTextInput = Animated.createAnimatedComponent(
-  TextInputOriginal,
-) as typeof TextInputOriginal
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInputOriginal)
 
 export interface TextInputProps extends TextInputComponentProps {
   placeholderTextColor: any
@@ -39,4 +37,4 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: any) => {
   )
 })
 
-export type TextInput = TextInputOriginal
+export type TextInput = typeof AnimatedTextInput
