@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Animated, StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, ViewStyle } from 'react-native'
 
 import { Omit } from '@devhub/core'
 
@@ -19,5 +19,5 @@ export interface GradientLayerOverlayProps {
 
 export interface AnimatedGradientLayerOverlayProps
   extends Omit<GradientLayerOverlayProps, 'color'> {
-  color: string | Animated.AnimatedInterpolation
+  color: string | any
 }

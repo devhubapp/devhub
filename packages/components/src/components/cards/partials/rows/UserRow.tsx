@@ -1,7 +1,8 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { AnimatedText } from '../../../animated/AnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -56,7 +57,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
           href={showMoreItemsIndicator ? undefined : getUserURL(username)}
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Animated.Text
+          <AnimatedText
             style={[
               getCardRowStylesForTheme(theme).usernameText,
               (isRead || showMoreItemsIndicator) &&
@@ -64,7 +65,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
             ]}
           >
             {showMoreItemsIndicator ? '...' : username}
-          </Animated.Text>
+          </AnimatedText>
         </Link>
       </View>
     </View>

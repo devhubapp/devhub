@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react'
-import { Animated, Image, ImageProps } from 'react-native'
+import { Image, ImageProps } from 'react-native'
+import { AnimatedImage } from '../animated/AnimatedImage'
 
 export interface ImageWithLoadingProps extends ImageProps {
   animated?: boolean
-  backgroundColorFailed: string | Animated.AnimatedInterpolation
-  backgroundColorLoaded: string | Animated.AnimatedInterpolation
-  backgroundColorLoading: string | Animated.AnimatedInterpolation
+  backgroundColorFailed: string | any
+  backgroundColorLoaded: string | any
+  backgroundColorLoading: string | any
   onError?: ImageProps['onError']
   onLoad?: ImageProps['onLoad']
   onLoadEnd?: ImageProps['onLoadEnd']
@@ -63,7 +64,7 @@ export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
     [onError],
   )
 
-  const ImageComponent = animated ? Animated.Image : Image
+  const ImageComponent = animated ? AnimatedImage : Image
 
   return (
     <ImageComponent

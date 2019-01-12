@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 import {
-  Animated,
   StyleProp,
   StyleSheet,
   Text,
@@ -16,6 +15,8 @@ import {
   radius as defaultRadius,
 } from '../../styles/variables'
 import { AnimatedIcon } from '../animated/AnimatedIcon'
+import { AnimatedText } from '../animated/AnimatedText'
+import { AnimatedView } from '../animated/AnimatedView'
 
 export interface LabelProps {
   borderColor?: string
@@ -68,7 +69,7 @@ export function Label(props: LabelProps) {
       : '#FFFFFF')
 
   return (
-    <Animated.View
+    <AnimatedView
       style={[
         styles.labelContainer,
         containerStyle,
@@ -80,7 +81,7 @@ export function Label(props: LabelProps) {
       ]}
       {...containerProps}
     >
-      <Animated.Text
+      <AnimatedText
         numberOfLines={1}
         style={[
           styles.labelText,
@@ -97,7 +98,7 @@ export function Label(props: LabelProps) {
           </Text>
         )}
         {children}
-      </Animated.Text>
-    </Animated.View>
+      </AnimatedText>
+    </AnimatedView>
   )
 }

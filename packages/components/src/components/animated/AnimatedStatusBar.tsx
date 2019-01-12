@@ -1,3 +1,5 @@
-import { Animated, StatusBar } from 'react-native'
+import { StatusBar } from 'react-native'
 
-export const AnimatedStatusBar = Animated.createAnimatedComponent(StatusBar)
+import { createAnimatedComponent } from './helpers'
+
+export const AnimatedStatusBar = createAnimatedComponent(StatusBar)

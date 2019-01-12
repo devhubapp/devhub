@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
@@ -7,6 +7,7 @@ import { radius } from '../../../styles/variables'
 import { fixURL } from '../../../utils/helpers/github/url'
 import { AnimatedIcon } from '../../animated/AnimatedIcon'
 import { AnimatedLink } from '../../animated/AnimatedLink'
+import { AnimatedText } from '../../animated/AnimatedText'
 import { getCardStylesForTheme } from '../styles'
 
 export interface CardItemIdProps {
@@ -65,12 +66,12 @@ export function CardItemId(props: CardItemIdProps) {
         style,
       ]}
     >
-      <Animated.Text style={textStyles}>
+      <AnimatedText style={textStyles}>
         {icon ? <AnimatedIcon name={icon} style={textStyles} /> : ''}
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}
         {parsedNumber}
-      </Animated.Text>
+      </AnimatedText>
     </AnimatedLink>
   )
 }

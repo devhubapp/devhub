@@ -1,6 +1,6 @@
 import { MomentInput } from 'moment'
 import React from 'react'
-import { Animated, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { getDateSmallText, GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
@@ -9,6 +9,7 @@ import { useReduxState } from '../../../hooks/use-redux-state'
 import * as actions from '../../../redux/actions'
 import * as selectors from '../../../redux/selectors'
 import * as colors from '../../../styles/colors'
+import { AnimatedText } from '../../animated/AnimatedText'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Label } from '../../common/Label'
@@ -111,12 +112,12 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   return (
                     <>
                       <Text children=" " />
-                      <Animated.Text
+                      <AnimatedText
                         numberOfLines={1}
                         style={getCardStylesForTheme(theme).timestampText}
                       >
                         {`• ${dateText}`}
-                      </Animated.Text>
+                      </AnimatedText>
                     </>
                   )
                 }}

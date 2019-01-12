@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { Animated, StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedIcon, AnimatedIconProps } from '../animated/AnimatedIcon'
+import { AnimatedText } from '../animated/AnimatedText'
+import { AnimatedView } from '../animated/AnimatedView'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 const checkboxBorderRadius = 4
@@ -32,8 +34,8 @@ const styles = StyleSheet.create({
 export interface CheckboxProps {
   analyticsLabel: TouchableOpacityProps['analyticsLabel']
   checked?: boolean | null
-  checkedBackgroundColor?: string | Animated.AnimatedInterpolation
-  checkedForegroundColor?: string | Animated.AnimatedInterpolation
+  checkedBackgroundColor?: string | any
+  checkedForegroundColor?: string | any
   circle?: boolean
   containerStyle?: ViewStyle
   defaultValue?: boolean | null
@@ -43,8 +45,8 @@ export interface CheckboxProps {
   labelIcon?: AnimatedIconProps['name']
   onChange?: (value: boolean | null) => void
   size?: number
-  uncheckedBackgroundColor?: string | Animated.AnimatedInterpolation
-  uncheckedForegroundColor?: string | Animated.AnimatedInterpolation
+  uncheckedBackgroundColor?: string | any
+  uncheckedForegroundColor?: string | any
   useBrandColor?: boolean
 }
 
@@ -104,7 +106,7 @@ export function Checkbox(props: CheckboxProps) {
       onPress={disabled ? undefined : handleOnChange}
       style={[styles.container, containerStyle]}
     >
-      <Animated.View
+      <AnimatedView
         style={[
           styles.checkbox,
           {
@@ -122,7 +124,7 @@ export function Checkbox(props: CheckboxProps) {
         ]}
       >
         <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 1 }]}>
-          <Animated.View
+          <AnimatedView
             style={{
               width: isIndeterminateState ? '80%' : '100%',
               height: isIndeterminateState ? '80%' : '100%',
@@ -147,7 +149,7 @@ export function Checkbox(props: CheckboxProps) {
             }}
           />
         </View>
-      </Animated.View>
+      </AnimatedView>
 
       {!!label && (
         <View
@@ -160,7 +162,7 @@ export function Checkbox(props: CheckboxProps) {
           }}
         >
           {typeof label === 'string' ? (
-            <Animated.Text
+            <AnimatedText
               style={{
                 lineHeight: size,
                 marginLeft: contentPadding / 2,
@@ -168,7 +170,7 @@ export function Checkbox(props: CheckboxProps) {
               }}
             >
               {label}
-            </Animated.Text>
+            </AnimatedText>
           ) : (
             label
           )}

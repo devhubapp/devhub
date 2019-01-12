@@ -1,5 +1,7 @@
-import { ActivityIndicator, Animated } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 
-export const AnimatedActivityIndicator = Animated.createAnimatedComponent(
+import { createAnimatedComponent } from './helpers'
+
+export const AnimatedActivityIndicator = createAnimatedComponent(
   ActivityIndicator,
 )

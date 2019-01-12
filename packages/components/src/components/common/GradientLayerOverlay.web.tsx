@@ -1,11 +1,8 @@
-import React, { ComponentClass } from 'react'
-import { Animated, View, ViewStyle } from 'react-native'
+import React from 'react'
+import { View, ViewStyle } from 'react-native'
 
-import {
-  AnimatedGradientLayerOverlayProps,
-  GradientLayerOverlayProps,
-  To,
-} from './GradientLayerOverlay.shared'
+import { createAnimatedComponent } from '../animated/helpers'
+import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
 function getStyle(color: string, to: To, size: number): ViewStyle {
   const getDefaultStyles = () => ({
@@ -74,6 +71,6 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
   }
 }
 
-export const AnimatedGradientLayerOverlay = Animated.createAnimatedComponent(
+export const AnimatedGradientLayerOverlay = createAnimatedComponent(
   GradientLayerOverlay,
 )

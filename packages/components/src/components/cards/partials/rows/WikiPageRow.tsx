@@ -1,10 +1,11 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { AnimatedText } from '../../../animated/AnimatedText'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
 import { getCardRowStylesForTheme } from './styles'
@@ -51,7 +52,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
           href={showMoreItemsIndicator ? undefined : fixURL(url)}
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Animated.Text
+          <AnimatedText
             numberOfLines={1}
             style={[
               getCardStylesForTheme(theme).normalText,
@@ -67,7 +68,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
             />{' '}
             {showMoreItemsIndicator ? '' : title}
             {!!showMoreItemsIndicator && (
-              <Animated.Text
+              <AnimatedText
                 numberOfLines={1}
                 style={[
                   getCardStylesForTheme(theme).normalText,
@@ -75,9 +76,9 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
                 ]}
               >
                 ...
-              </Animated.Text>
+              </AnimatedText>
             )}
-          </Animated.Text>
+          </AnimatedText>
         </Link>
       </View>
     </View>

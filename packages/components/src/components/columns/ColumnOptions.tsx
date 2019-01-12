@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { Animated, ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 
 import {
   Column,
@@ -23,6 +23,7 @@ import {
   getNotificationReasonMetadata,
   notificationReasons,
 } from '../../utils/helpers/github/notifications'
+import { AnimatedView } from '../animated/AnimatedView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
@@ -94,7 +95,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const { availableHeight, column, columnIndex } = props
 
   return (
-    <Animated.View
+    <AnimatedView
       style={[
         styles.container,
         { backgroundColor: theme.backgroundColorLess08 },
@@ -571,6 +572,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
         </ScrollView>
       </AnimatedTransparentTextOverlay>
       <CardItemSeparator />
-    </Animated.View>
+    </AnimatedView>
   )
 }

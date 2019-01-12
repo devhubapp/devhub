@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { Animated, View } from 'react-native'
+import React from 'react'
+import { View } from 'react-native'
 
 import { AddColumnDetailsPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedText } from '../animated/AnimatedText'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { TouchableOpacity } from '../common/TouchableOpacity'
@@ -111,9 +112,9 @@ function AddColumnModalItem({
           style={{ marginBottom: contentPadding / 2 }}
         />
 
-        <Animated.Text style={{ color: theme.foregroundColor }}>
+        <AnimatedText style={{ color: theme.foregroundColor }}>
           {item.name}
-        </Animated.Text>
+        </AnimatedText>
       </View>
     </TouchableOpacity>
   )

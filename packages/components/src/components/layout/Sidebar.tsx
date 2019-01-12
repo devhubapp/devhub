@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Animated,
-  Image,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { Image, ScrollView, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { getColumnHeaderDetails, ModalPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -23,6 +16,7 @@ import {
   sidebarSize,
 } from '../../styles/variables'
 import { AnimatedSafeAreaView } from '../animated/AnimatedSafeAreaView'
+import { AnimatedView } from '../animated/AnimatedView'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
@@ -88,7 +82,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       >
         {!horizontal && (
           <>
-            <Animated.View
+            <AnimatedView
               style={[
                 styles.centerContainer,
                 {
@@ -103,7 +97,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 size={sidebarSize / 2}
                 username={username}
               />
-            </Animated.View>
+            </AnimatedView>
 
             <Separator horizontal={!horizontal} />
           </>

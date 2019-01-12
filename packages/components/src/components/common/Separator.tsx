@@ -1,7 +1,7 @@
 import React from 'react'
-import { Animated } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { AnimatedView } from '../animated/AnimatedView'
 
 export const separatorSize = 1
 export const separatorTickSize = 2
@@ -19,7 +19,7 @@ export function Separator(props: SeparatorProps) {
   const size = thick ? separatorTickSize : separatorSize
 
   return (
-    <Animated.View
+    <AnimatedView
       style={[
         horizontal
           ? {
@@ -31,7 +31,7 @@ export function Separator(props: SeparatorProps) {
               height: '100%',
             },
         { backgroundColor: theme.backgroundColorDarker08 },
-        zIndex && { zIndex },
+        !!zIndex && { zIndex },
       ]}
     />
   )

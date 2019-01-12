@@ -1,7 +1,9 @@
-import { Omit } from '@devhub/core'
 import React from 'react'
-import { Animated, StyleProp, View, ViewStyle } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
+
+import { Omit } from '@devhub/core'
+import { AnimatedView } from '../../components/animated/AnimatedView'
 
 type LinearGradientPoint =
   | OriginalLinearGradientProps['start']
@@ -10,7 +12,7 @@ type LinearGradientPoint =
 export interface LinearGradientProps
   extends Omit<OriginalLinearGradientProps, 'colors'> {
   animated?: boolean
-  colors: Array<string | Animated.AnimatedInterpolation>
+  colors: Array<string | any>
   style?: StyleProp<ViewStyle>
 }
 
@@ -45,7 +47,7 @@ export function LinearGradient(props: LinearGradientProps) {
     ...otherProps
   } = props
 
-  const ViewComponent = animated ? Animated.View : View
+  const ViewComponent = animated ? AnimatedView : View
 
   return (
     <ViewComponent
@@ -59,7 +61,7 @@ export function LinearGradient(props: LinearGradientProps) {
             // locations,
             start,
           }),
-        },
+        } as any,
       ]}
     />
   )

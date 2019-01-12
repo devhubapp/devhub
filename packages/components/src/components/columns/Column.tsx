@@ -1,15 +1,10 @@
 import React, { ReactNode, useState } from 'react'
-import {
-  Animated,
-  StyleProp,
-  StyleSheet,
-  ViewProps,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, StyleSheet, ViewProps, ViewStyle } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useEmitter } from '../../hooks/use-emitter'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedView } from '../animated/AnimatedView'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 
 export const columnMargin = contentPadding / 2
@@ -48,7 +43,7 @@ export const Column = React.memo((props: ColumnProps) => {
   )
 
   return (
-    <Animated.View
+    <AnimatedView
       {...otherProps}
       key={`column-inner-${columnId}`}
       className={pagingEnabled ? 'snap-item-start' : ''}
@@ -64,7 +59,7 @@ export const Column = React.memo((props: ColumnProps) => {
       {children}
 
       {!!showFocusBorder && (
-        <Animated.View
+        <AnimatedView
           style={{
             ...StyleSheet.absoluteFillObject,
             borderWidth: 0,
@@ -74,6 +69,6 @@ export const Column = React.memo((props: ColumnProps) => {
           }}
         />
       )}
-    </Animated.View>
+    </AnimatedView>
   )
 })

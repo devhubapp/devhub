@@ -10,9 +10,9 @@ declare module 'react-native' {
       getNode(): InstanceType<T>
     }
 
-    export function createAnimatedComponent<T extends React.ComponentClass>(
-      component: T,
-    ): AnimatedComponent<T>
+    export function createAnimatedComponent<
+      T extends React.ComponentClass<any, any>
+    >(component: T): AnimatedComponent<T>
 
     export const View: AnimatedComponent<typeof View>
     export const Image: AnimatedComponent<typeof Image>

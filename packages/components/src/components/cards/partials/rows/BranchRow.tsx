@@ -1,9 +1,9 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { Octicons as Icon } from '../../../../libs/vector-icons'
 import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { AnimatedText } from '../../../animated/AnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -62,7 +62,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
           href={getBranchURL(ownerName, repositoryName, branch)}
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Animated.Text
+          <AnimatedText
             numberOfLines={1}
             style={[
               getCardStylesForTheme(theme).normalText,
@@ -78,7 +78,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
               ]}
             />{' '}
             {branch}
-          </Animated.Text>
+          </AnimatedText>
         </Link>
       </View>
     </View>

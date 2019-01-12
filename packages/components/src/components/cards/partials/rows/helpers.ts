@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 import { GitHubURLOptions, memoizeMultipleArgs } from '@devhub/core'
 import { Browser } from '../../../../libs/browser'
 import { fixURL } from '../../../../utils/helpers/github/url'

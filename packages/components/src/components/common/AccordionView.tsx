@@ -1,5 +1,5 @@
 import React, { useImperativeMethods, useRef, useState } from 'react'
-import { Animated, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import {
   animated,
   config,
@@ -9,7 +9,7 @@ import {
 
 import { Platform } from '../../libs/platform/index.web'
 
-const AnimatedView = animated(Animated.View)
+const SpringAnimatedView = animated(View)
 
 export type Transition = ReactSpringHook
 
@@ -90,7 +90,7 @@ export const AccordionView = React.forwardRef(
     return (
       <>
         {transitions.map(({ key, item, props: animatedStyle }) => (
-          <AnimatedView
+          <SpringAnimatedView
             key={key}
             style={{
               ...(animatedStyle as any),
@@ -117,7 +117,7 @@ export const AccordionView = React.forwardRef(
                 {item}
               </ScrollView>
             )}
-          </AnimatedView>
+          </SpringAnimatedView>
         ))}
       </>
     )

@@ -1,23 +1,21 @@
 import React from 'react'
-import { Animated, StyleProp, TextStyle } from 'react-native'
+import { StyleProp, TextStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedIcon } from '../animated/AnimatedIcon'
-import {
-  AnimatedTouchableOpacity,
-  AnimatedTouchableOpacityProps,
-} from '../animated/AnimatedTouchableOpacity'
+import { AnimatedText } from '../animated/AnimatedText'
+import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export const fabSize = 50
 
-export interface FABProps extends AnimatedTouchableOpacityProps {
+export interface FABProps extends TouchableOpacityProps {
   children?: string | React.ReactElement<any>
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle> | any
-  onPress: AnimatedTouchableOpacityProps['onPress']
+  onPress: TouchableOpacityProps['onPress']
   useBrandColor?: boolean
 }
 
@@ -34,7 +32,8 @@ export function FAB(props: FABProps) {
   } = props
 
   return (
-    <AnimatedTouchableOpacity
+    <TouchableOpacity
+      animated
       analyticsCategory="fab"
       {...otherProps}
       hitSlop={{
@@ -84,7 +83,7 @@ export function FAB(props: FABProps) {
           ]}
         />
       ) : typeof children === 'string' ? (
-        <Animated.Text
+        <AnimatedText
           style={{
             fontSize: 14,
             lineHeight: 14,
@@ -95,10 +94,10 @@ export function FAB(props: FABProps) {
           }}
         >
           {children}
-        </Animated.Text>
+        </AnimatedText>
       ) : (
         children
       )}
-    </AnimatedTouchableOpacity>
+    </TouchableOpacity>
   )
 }

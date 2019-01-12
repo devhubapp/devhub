@@ -1,8 +1,9 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { AnimatedText } from '../../../animated/AnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -72,7 +73,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           }
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Animated.Text numberOfLines={1}>
+          <AnimatedText numberOfLines={1}>
             <AnimatedIcon
               name={repoIcon}
               style={[
@@ -80,7 +81,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                 isRead && getCardStylesForTheme(theme).mutedText,
               ]}
             />{' '}
-            <Animated.Text
+            <AnimatedText
               style={[
                 getCardStylesForTheme(theme).normalText,
                 getCardRowStylesForTheme(theme).repositoryText,
@@ -88,8 +89,8 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               ]}
             >
               {showMoreItemsIndicator ? '' : repositoryName}
-            </Animated.Text>
-            <Animated.Text
+            </AnimatedText>
+            <AnimatedText
               style={[
                 getCardStylesForTheme(theme).normalText,
                 getCardRowStylesForTheme(theme).repositorySecondaryText,
@@ -98,8 +99,8 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               ]}
             >
               {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
-            </Animated.Text>
-          </Animated.Text>
+            </AnimatedText>
+          </AnimatedText>
         </Link>
       </View>
     </View>

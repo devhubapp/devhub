@@ -1,7 +1,5 @@
 // Source: https://github.com/PaulLeCam/react-native-electron/blob/master/src/apis/Linking.js
 
-import _ from 'lodash'
-
 import { LinkingCrossPlatform } from './index'
 import { Linking as LinkingOriginal } from './index-native'
 

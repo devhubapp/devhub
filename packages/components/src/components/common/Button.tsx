@@ -1,12 +1,11 @@
 import React from 'react'
-import { Animated } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
-import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
-import { TouchableOpacityProps } from './TouchableOpacity'
+import { AnimatedText } from '../animated/AnimatedText'
+import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export const buttonSize = 40
 
@@ -31,7 +30,8 @@ export function Button(props: ButtonProps) {
   } = props
 
   return (
-    <AnimatedTouchableOpacity
+    <TouchableOpacity
+      animated
       {...otherProps}
       style={[
         {
@@ -53,7 +53,7 @@ export function Button(props: ButtonProps) {
           size="small"
         />
       ) : typeof children === 'string' ? (
-        <Animated.Text
+        <AnimatedText
           style={{
             lineHeight: 14,
             fontSize: 14,
@@ -64,10 +64,10 @@ export function Button(props: ButtonProps) {
           }}
         >
           {children}
-        </Animated.Text>
+        </AnimatedText>
       ) : (
         children
       )}
-    </AnimatedTouchableOpacity>
+    </TouchableOpacity>
   )
 }

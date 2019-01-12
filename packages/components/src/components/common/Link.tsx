@@ -1,11 +1,11 @@
 import React, { AnchorHTMLAttributes } from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { Omit } from '@devhub/core'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
-import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
+import { AnimatedView } from '../animated/AnimatedView'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export interface LinkProps
@@ -31,10 +31,7 @@ export function Link(props: LinkProps) {
     ...otherProps
   } = props
 
-  const ViewComponent = animated ? Animated.View : View
-  const TouchableOpacityComponent = animated
-    ? (AnimatedTouchableOpacity as React.ComponentType<TouchableOpacityProps>)
-    : (TouchableOpacity as React.ComponentType<TouchableOpacityProps>)
+  const ViewComponent = animated ? AnimatedView : View
 
   if (!href && !allowEmptyLink) {
     return (
@@ -55,7 +52,8 @@ export function Link(props: LinkProps) {
   }
 
   return (
-    <TouchableOpacityComponent
+    <TouchableOpacity
+      animated={animated}
       {...(analyticsLabel
         ? {
             analyticsCategory: 'link',

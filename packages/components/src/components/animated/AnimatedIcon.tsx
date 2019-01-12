@@ -1,14 +1,15 @@
 import React from 'react'
-import { Animated, StyleProp, StyleSheet, TextStyle } from 'react-native'
+import { StyleProp, StyleSheet, TextStyle } from 'react-native'
 import { IconProps } from 'react-native-vector-icons/Icon'
 
 import { GitHubIcon, Omit } from '@devhub/core'
 import { Octicons as Icon } from '../../libs/vector-icons'
+import { createAnimatedComponent } from './helpers'
 
-const AnimatedIconComponent = Animated.createAnimatedComponent(Icon)
+const AnimatedIconComponent = createAnimatedComponent(Icon)
 
 export interface AnimatedIconProps extends Omit<IconProps, 'color' | 'style'> {
-  color?: string | Animated.AnimatedInterpolation
+  color?: string | any
   name: GitHubIcon
   style?: StyleProp<TextStyle | any>
 }

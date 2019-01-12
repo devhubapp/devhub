@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
   getCommentIdFromUrl,
@@ -11,6 +11,7 @@ import {
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { AnimatedText } from '../../../animated/AnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -97,7 +98,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
           }
           style={getCardRowStylesForTheme(theme).mainContentContainer}
         >
-          <Animated.Text
+          <AnimatedText
             numberOfLines={1}
             style={[
               getCardStylesForTheme(theme).normalText,
@@ -113,7 +114,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             />{' '}
             {showMoreItemsIndicator ? '' : message}
             {Boolean(byText) && (
-              <Animated.Text
+              <AnimatedText
                 style={[
                   getCardStylesForTheme(theme).normalText,
                   getCardStylesForTheme(theme).smallText,
@@ -121,9 +122,9 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                 ]}
               >
                 {showMoreItemsIndicator ? '...' : ` by ${byText}`}
-              </Animated.Text>
+              </AnimatedText>
             )}
-          </Animated.Text>
+          </AnimatedText>
         </Link>
       </View>
     </View>

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { useRef } from 'react'
 
 import * as selectors from '../redux/selectors'

@@ -1,15 +1,10 @@
 import React, { useState } from 'react'
-import {
-  Animated,
-  TextInput as TextInputOriginal,
-  TextInputProps as TextInputComponentProps,
-} from 'react-native'
+import { TextInputProps as TextInputComponentProps } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
-
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInputOriginal)
+import { AnimatedTextInput } from '../animated/AnimatedTextInput'
 
 export interface TextInputProps extends TextInputComponentProps {
   className?: string

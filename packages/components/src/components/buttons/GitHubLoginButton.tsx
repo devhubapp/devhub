@@ -1,17 +1,19 @@
 import React from 'react'
-import { Animated, StyleSheet, TextProps, View } from 'react-native'
+import { StyleSheet, TextProps, View } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { AnimatedActivityIndicator } from '../../components/animated/AnimatedActivityIndicator'
 import { AnimatedIcon } from '../../components/animated/AnimatedIcon'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedText } from '../animated/AnimatedText'
+import { AnimatedView } from '../animated/AnimatedView'
 import {
-  AnimatedTouchableOpacity,
-  AnimatedTouchableOpacityProps,
-} from '../animated/AnimatedTouchableOpacity'
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from '../common/TouchableOpacity'
 
-export interface GitHubLoginButtonProps extends AnimatedTouchableOpacityProps {
+export interface GitHubLoginButtonProps extends TouchableOpacityProps {
   horizontal?: boolean
   leftIcon?: GitHubIcon
   loading?: boolean
@@ -80,7 +82,8 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
   const theme = useAnimatedTheme()
 
   return (
-    <AnimatedTouchableOpacity
+    <TouchableOpacity
+      animated
       activeOpacity={0.9}
       {...otherProps}
       style={[
@@ -94,7 +97,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     >
       <View style={styles.content}>
         {!!leftIcon && (
-          <Animated.View
+          <AnimatedView
             style={[
               styles.iconWrapper,
               {
@@ -108,12 +111,12 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               name={leftIcon}
               style={styles.icon}
             />
-          </Animated.View>
+          </AnimatedView>
         )}
 
         <View style={styles.mainContentContainer}>
           {!!title && (
-            <Animated.Text
+            <AnimatedText
               {...textProps}
               style={[
                 styles.title,
@@ -124,11 +127,11 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               ]}
             >
               {title}
-            </Animated.Text>
+            </AnimatedText>
           )}
 
           {!!subtitle && (
-            <Animated.Text
+            <AnimatedText
               {...subtitleProps}
               style={[
                 styles.subtitleText,
@@ -139,7 +142,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               ]}
             >
               {subtitle}
-            </Animated.Text>
+            </AnimatedText>
           )}
         </View>
 
@@ -159,6 +162,6 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
           </View>
         )}
       </View>
-    </AnimatedTouchableOpacity>
+    </TouchableOpacity>
   )
 }

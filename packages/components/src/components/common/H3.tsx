@@ -1,8 +1,9 @@
 import React from 'react'
-import { Animated, TextProps } from 'react-native'
+import { TextProps } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedText } from '../animated/AnimatedText'
 
 export type H3Props = TextProps & { children: string; withMargin?: boolean }
 
@@ -12,7 +13,7 @@ export function H3(props: H3Props) {
   const { children, style, withMargin, ...otherProps } = props
 
   return (
-    <Animated.Text
+    <AnimatedText
       {...otherProps}
       style={[
         {
@@ -24,6 +25,6 @@ export function H3(props: H3Props) {
       ]}
     >
       {typeof children === 'string' ? children.toUpperCase() : children}
-    </Animated.Text>
+    </AnimatedText>
   )
 }

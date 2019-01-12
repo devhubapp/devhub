@@ -1,7 +1,6 @@
 // import { darken } from 'polished'
 import React, { ReactNode, useEffect } from 'react'
 import {
-  Animated,
   KeyboardAvoidingView,
   StyleProp,
   StyleSheet,
@@ -15,6 +14,7 @@ import { AnimatedSafeAreaView } from '../../components/animated/AnimatedSafeArea
 import { AnimatedStatusBar } from '../../components/animated/AnimatedStatusBar'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { Platform } from '../../libs/platform'
+import { AnimatedView } from '../animated/AnimatedView'
 import { useTheme } from '../context/ThemeContext'
 import { ConditionalWrap } from './ConditionalWrap'
 
@@ -86,7 +86,7 @@ export function Screen(props: ScreenProps) {
             ]}
           />
         ) : (
-          <Animated.View
+          <AnimatedView
             {...otherProps}
             style={[
               styles.container,

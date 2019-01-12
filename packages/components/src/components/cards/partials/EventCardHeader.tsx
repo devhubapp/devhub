@@ -1,6 +1,6 @@
 import { MomentInput } from 'moment'
 import React from 'react'
-import { Animated, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { getDateSmallText, GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
@@ -8,6 +8,7 @@ import { useReduxAction } from '../../../hooks/use-redux-action'
 import * as actions from '../../../redux/actions'
 import * as colors from '../../../styles/colors'
 import { AnimatedIcon } from '../../animated/AnimatedIcon'
+import { AnimatedText } from '../../animated/AnimatedText'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
@@ -103,20 +104,20 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           <View style={styles.innerContainer}>
             <View style={getCardStylesForTheme(theme).horizontal}>
               <Link href={getUserURL(username, { isBot })}>
-                <Animated.Text
+                <AnimatedText
                   numberOfLines={1}
                   style={getCardStylesForTheme(theme).usernameText}
                 >
                   {username}
-                </Animated.Text>
+                </AnimatedText>
               </Link>
               {!!isBot && (
                 <>
                   <Text children=" " />
-                  <Animated.Text
+                  <AnimatedText
                     numberOfLines={1}
                     style={getCardStylesForTheme(theme).timestampText}
-                  >{`• BOT`}</Animated.Text>
+                  >{`• BOT`}</AnimatedText>
                 </>
               )}
               <IntervalRefresh date={createdAt}>
@@ -127,32 +128,32 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   return (
                     <>
                       <Text children=" " />
-                      <Animated.Text
+                      <AnimatedText
                         numberOfLines={1}
                         style={getCardStylesForTheme(theme).timestampText}
                       >
                         {`• ${dateText}`}
-                      </Animated.Text>
+                      </AnimatedText>
                     </>
                   )
                 }}
               </IntervalRefresh>
             </View>
 
-            <Animated.Text
+            <AnimatedText
               numberOfLines={1}
               style={getCardStylesForTheme(theme).descriptionText}
             >
               {!!isPrivate && (
-                <Animated.Text style={getCardStylesForTheme(theme).mutedText}>
+                <AnimatedText style={getCardStylesForTheme(theme).mutedText}>
                   <AnimatedIcon
                     name="lock"
                     style={getCardStylesForTheme(theme).mutedText}
                   />{' '}
-                </Animated.Text>
+                </AnimatedText>
               )}
               {actionText}
-            </Animated.Text>
+            </AnimatedText>
           </View>
 
           <CardIcon

@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Animated,
-  ImageStyle,
-  StyleProp,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -17,6 +10,7 @@ import {
   contentPadding,
 } from '../../styles/variables'
 import { AnimatedIcon } from '../animated/AnimatedIcon'
+import { AnimatedText } from '../animated/AnimatedText'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
@@ -216,7 +210,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
 
           <View style={{ flexDirection: 'row', maxWidth: 170 }}>
             {!!title && (
-              <Animated.Text
+              <AnimatedText
                 numberOfLines={1}
                 selectable={selectable}
                 style={[
@@ -226,12 +220,12 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 ]}
               >
                 {title.toLowerCase()}
-              </Animated.Text>
+              </AnimatedText>
             )}
           </View>
 
           {!!subtitle && (
-            <Animated.Text
+            <AnimatedText
               numberOfLines={1}
               selectable={selectable}
               style={[
@@ -241,22 +235,22 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               ]}
             >
               {subtitle.toLowerCase()}
-            </Animated.Text>
+            </AnimatedText>
           )}
 
           {!!text && (
-            <Animated.Text
+            <AnimatedText
               numberOfLines={1}
               selectable={selectable}
               style={[styles.text, { color: theme.foregroundColor }]}
             >
               {text}
-            </Animated.Text>
+            </AnimatedText>
           )}
         </View>
 
         {!!showLabel && !!label && (
-          <Animated.Text
+          <AnimatedText
             style={{
               width: Math.max(54, size + contentPadding),
               marginHorizontal: 2,
@@ -269,7 +263,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
             numberOfLines={1}
           >
             {label}
-          </Animated.Text>
+          </AnimatedText>
         )}
 
         {children}

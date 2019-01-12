@@ -1,4 +1,4 @@
-import _ from 'lodash'
+/*
 import { useEffect, useRef, useState } from 'react'
 import { Animated, Easing } from 'react-native'
 
@@ -84,4 +84,38 @@ export function useAnimatedTheme() {
   )
 
   return animatedTheme
+}
+*/
+
+import _ from 'lodash'
+import { useEffect, useRef } from 'react'
+import { useSpring } from 'react-spring/hooks'
+
+import { Theme } from '@devhub/core'
+import { useReduxStore } from '../redux/context/ReduxStoreContext'
+import { themeSelector } from '../redux/selectors'
+import { themeColorFields } from '../utils/helpers/theme'
+
+const pickThemeColors = (theme: Theme) => _.pick(theme, themeColorFields)
+
+export function useAnimatedTheme() {
+  const store = useReduxStore()
+  const themeRef = useRef(themeSelector(store.getState()))
+
+  const [props, set] = useSpring(() => pickThemeColors(themeRef.current))
+
+  useEffect(
+    () => {
+      return store.subscribe(() => {
+        const newTheme = themeSelector(store.getState())
+        if (newTheme === themeRef.current) return
+
+        themeRef.current = newTheme
+        set(pickThemeColors(newTheme))
+      })
+    },
+    [store],
+  )
+
+  return props
 }

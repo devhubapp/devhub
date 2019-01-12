@@ -1,7 +1,7 @@
 import React from 'react'
-import { Animated, Dimensions, StyleSheet, View } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 
-import { ModalPayload, ModalPayloadWithIndex } from '@devhub/core'
+import { ModalPayloadWithIndex } from '@devhub/core'
 import { animated, config, useTransition } from 'react-spring/hooks'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -19,7 +19,7 @@ import { AddColumnDetailsModal } from './AddColumnDetailsModal'
 import { AddColumnModal } from './AddColumnModal'
 import { EnterpriseSetupModal } from './EnterpriseSetupModal'
 
-const AnimatedView = animated(Animated.View)
+const SpringAnimatedView = animated(View)
 
 function renderModal(modal: ModalPayloadWithIndex) {
   if (!modal) return null
@@ -124,29 +124,31 @@ export function ModalRenderer(props: ModalRendererProps) {
   return (
     <>
       {!!overlayTransition && (
-        <TouchableOpacity
-          analyticsAction="close-via-overlay"
-          analyticsLabel="modal"
-          activeOpacity={1}
-          style={[
-            StyleSheet.absoluteFill,
-            { zIndex: 500 },
-            Platform.OS === 'web' && ({ cursor: 'default' } as any),
-          ]}
-          onPress={() => closeAllModals()}
+        <SpringAnimatedView
+          style={{
+            ...StyleSheet.absoluteFillObject,
+            ...overlayTransition.props,
+            zIndex: 500,
+          }}
         >
-          <AnimatedView
-            style={StyleSheet.flatten([
-              StyleSheet.absoluteFill,
-              overlayTransition.props,
-              { backgroundColor: animatedTheme.backgroundColor, zIndex: 500 },
-            ])}
+          <TouchableOpacity
+            animated
+            analyticsAction="close-via-overlay"
+            analyticsLabel="modal"
+            activeOpacity={1}
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: animatedTheme.backgroundColor,
+              zIndex: 500,
+              ...Platform.select({ web: { cursor: 'default' } as any }),
+            }}
+            onPress={() => closeAllModals()}
           />
-        </TouchableOpacity>
+        </SpringAnimatedView>
       )}
 
       {!!modalTransitions.length && (
-        <AnimatedView
+        <SpringAnimatedView
           style={{
             position: 'absolute',
             top: 0,
@@ -159,7 +161,7 @@ export function ModalRenderer(props: ModalRendererProps) {
         >
           {modalTransitions.map(
             ({ key, item, props: { width, ...animatedStyle } }) => (
-              <AnimatedView
+              <SpringAnimatedView
                 key={key}
                 style={{
                   position: 'absolute',
@@ -186,10 +188,10 @@ export function ModalRenderer(props: ModalRendererProps) {
                     <Separator thick zIndex={1000} />
                   </View>
                 )}
-              </AnimatedView>
+              </SpringAnimatedView>
             ),
           )}
-        </AnimatedView>
+        </SpringAnimatedView>
       )}
     </>
   )

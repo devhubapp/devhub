@@ -1,7 +1,8 @@
 import React from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { AnimatedText } from '../animated/AnimatedText'
 
 const pkg = require('@devhub/core/package.json') // tslint:disable-line
 
@@ -20,8 +21,8 @@ export function AppVersion() {
   const theme = useAnimatedTheme()
 
   return (
-    <Animated.Text
+    <AnimatedText
       style={[styles.appVersion, { color: theme.foregroundColorTransparent50 }]}
-    >{`v${appVersion}`}</Animated.Text>
+    >{`v${appVersion}`}</AnimatedText>
   )
 }

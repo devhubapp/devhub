@@ -1,7 +1,8 @@
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Image, StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 
+import { AnimatedText } from '../components/animated/AnimatedText'
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
 import { Link } from '../components/common/Link'
@@ -260,11 +261,11 @@ export const LoginScreen = React.memo(() => {
             href="https://github.com/devhubapp/devhub/issues/32"
             openOnNewTab
           >
-            <Animated.Text
+            <AnimatedText
               style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
             >
               What about private repositories?
-            </Animated.Text>
+            </AnimatedText>
           </Link>
 
           {/* <Spacer height={contentPadding} />
@@ -274,25 +275,25 @@ export const LoginScreen = React.memo(() => {
             href="https://github.com/dear-github/dear-github/issues/113"
             openOnNewTab
           >
-            <Animated.Text
+            <AnimatedText
               style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
             >
               Why all these permissions?
-            </Animated.Text>
+            </AnimatedText>
           </Link> */}
         </View>
 
         <View style={styles.footer}>
-          <Animated.Text
+          <AnimatedText
             style={[styles.title, { color: theme.foregroundColor }]}
           >
             DevHub
-          </Animated.Text>
-          <Animated.Text
+          </AnimatedText>
+          <AnimatedText
             style={[styles.subtitle, { color: theme.foregroundColor }]}
           >
             TweetDeck for GitHub
-          </Animated.Text>
+          </AnimatedText>
           <AppVersion />
         </View>
       </View>

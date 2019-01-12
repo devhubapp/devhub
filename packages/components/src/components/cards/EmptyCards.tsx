@@ -1,10 +1,11 @@
 import React from 'react'
-import { Animated, Text, View, ViewStyle } from 'react-native'
+import { Text, TextStyle, View, ViewStyle } from 'react-native'
 
 import { LoadState } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
+import { AnimatedText } from '../animated/AnimatedText'
 import { Button } from '../common/Button'
 import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 
@@ -65,17 +66,17 @@ export function EmptyCards(props: EmptyCardsProps) {
       fontSize: 14,
       color: theme.foregroundColorMuted50,
       textAlign: 'center',
-    }
+    } as TextStyle
 
     if (hasError) {
       return (
         <View style={containerStyle}>
-          <Animated.Text style={textStyle}>
+          <AnimatedText style={textStyle}>
             {`⚠️\n${errorTitle}`}
             {!!errorMessage && (
               <Text style={{ fontSize: 13 }}>{`\n${errorMessage}`}</Text>
             )}
-          </Animated.Text>
+          </AnimatedText>
 
           {!!refresh && (
             <View style={{ padding: contentPadding }}>
@@ -94,9 +95,9 @@ export function EmptyCards(props: EmptyCardsProps) {
 
     return (
       <View style={containerStyle}>
-        <Animated.Text style={textStyle}>
+        <AnimatedText style={textStyle}>
           {clearMessage} {emoji}
-        </Animated.Text>
+        </AnimatedText>
       </View>
     )
   }

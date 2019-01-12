@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { Theme } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -11,6 +11,7 @@ import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
 import { darkThemesArr, lightThemesArr } from '../../styles/themes'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedText } from '../animated/AnimatedText'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
@@ -84,7 +85,7 @@ export function ThemePreference() {
               borderColor: 'transparent',
             }}
           >
-            <Animated.Text
+            <AnimatedText
               style={{
                 alignSelf: 'center',
                 margin: 0,
@@ -116,10 +117,10 @@ export function ThemePreference() {
                     : '◓'
                   : '◉'
                 : '○'}
-            </Animated.Text>
+            </AnimatedText>
           </View>
 
-          <Animated.Text
+          <AnimatedText
             style={{
               alignSelf: 'center',
               lineHeight: 20,
@@ -129,7 +130,7 @@ export function ThemePreference() {
             }}
           >
             {theme.displayName}
-          </Animated.Text>
+          </AnimatedText>
         </View>
       </TouchableOpacity>
     )

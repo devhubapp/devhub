@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { Animated, Clipboard, View } from 'react-native'
+import { Clipboard, View } from 'react-native'
 
 export interface EnterpriseSetupModalProps {
   showBackButton: boolean
@@ -9,6 +9,7 @@ import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
+import { AnimatedText } from '../animated/AnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H3 } from '../common/H3'
@@ -37,10 +38,10 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
       <View style={{ flex: 1, padding: contentPadding }}>
         <Spacer height={contentPadding} />
 
-        <Animated.Text style={{ lineHeight: 16, color: theme.foregroundColor }}>
+        <AnimatedText style={{ lineHeight: 16, color: theme.foregroundColor }}>
           To enable DevHub on your GitHub Enterprise, contact us via e-mail
           below:{' '}
-        </Animated.Text>
+        </AnimatedText>
 
         <Spacer height={contentPadding} />
 
@@ -57,9 +58,9 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
             href={`mailto:${email}`}
             openOnNewTab={false}
           >
-            <Animated.Text style={{ color: theme.foregroundColor }}>
+            <AnimatedText style={{ color: theme.foregroundColor }}>
               {email}
-            </Animated.Text>
+            </AnimatedText>
           </Link>
         </View>
 

@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react'
-import { Animated, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { Helmet } from '../../libs/helmet'
+import { AnimatedView } from '../animated/AnimatedView'
 import { useTheme } from '../context/ThemeContext'
 
 export interface ScreenProps {
@@ -46,7 +47,7 @@ export const Screen = React.memo((props: ScreenProps) => {
         />
       </Helmet>
 
-      <Animated.View
+      <AnimatedView
         {...props}
         style={[
           styles.container,

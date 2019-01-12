@@ -1,16 +1,7 @@
-import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
-import { Omit } from '@devhub/core'
-import {
+import { createAnimatedComponent } from './helpers'
+
+export const AnimatedTouchableOpacity = createAnimatedComponent(
   TouchableOpacity,
-  TouchableOpacityProps,
-} from '../common/TouchableOpacity'
-
-export interface AnimatedTouchableOpacityProps
-  extends Omit<TouchableOpacityProps, 'animated'> {
-  style?: any
-}
-
-export const AnimatedTouchableOpacity = (
-  props: AnimatedTouchableOpacityProps,
-) => <TouchableOpacity {...props} animated />
+)

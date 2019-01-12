@@ -1,14 +1,10 @@
 import React from 'react'
 import {
-  Animated,
   TouchableOpacity as TouchableOpacityOriginal,
   TouchableOpacityProps as TouchableOpacityComponentProps,
 } from 'react-native'
 import { analytics } from '../../libs/analytics'
-
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(
-  TouchableOpacityOriginal,
-)
+import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
 
 export interface TouchableOpacityProps extends TouchableOpacityComponentProps {
   analyticsCategory?: 'button' | 'checkbox' | 'link' | string | undefined

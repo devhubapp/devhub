@@ -2,7 +2,6 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 
 import { constants, EnhancedGitHubNotification, LoadState } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'

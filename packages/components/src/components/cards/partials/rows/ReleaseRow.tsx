@@ -1,10 +1,11 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { getGitHubURLForRelease, trimNewLinesAndSpaces } from '@devhub/core'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { AnimatedText } from '../../../animated/AnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -95,13 +96,13 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               href={fixedURL}
               style={getCardRowStylesForTheme(theme).mainContentContainer}
             >
-              <Animated.Text
+              <AnimatedText
                 style={[
                   getCardStylesForTheme(theme).normalText,
                   isRead && getCardStylesForTheme(theme).mutedText,
                 ]}
               >
-                <Animated.Text numberOfLines={1}>
+                <AnimatedText numberOfLines={1}>
                   <AnimatedIcon
                     name="tag"
                     style={
@@ -110,9 +111,9 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                         : getCardStylesForTheme(theme).normalText
                     }
                   />{' '}
-                </Animated.Text>
+                </AnimatedText>
                 {name || tagName}
-              </Animated.Text>
+              </AnimatedText>
             </Link>
           </View>
         </View>
@@ -144,13 +145,13 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               href={fixedURL}
               style={getCardRowStylesForTheme(theme).mainContentContainer}
             >
-              <Animated.Text
+              <AnimatedText
                 style={[
                   getCardStylesForTheme(theme).normalText,
                   isRead && getCardStylesForTheme(theme).mutedText,
                 ]}
               >
-                <Animated.Text numberOfLines={1}>
+                <AnimatedText numberOfLines={1}>
                   <AnimatedIcon
                     name="megaphone"
                     style={
@@ -159,9 +160,9 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                         : getCardStylesForTheme(theme).normalText
                     }
                   />{' '}
-                </Animated.Text>
+                </AnimatedText>
                 {body}
-              </Animated.Text>
+              </AnimatedText>
             </Link>
           </View>
         </View>

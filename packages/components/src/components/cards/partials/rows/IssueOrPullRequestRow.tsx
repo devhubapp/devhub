@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core'
 import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
@@ -7,6 +7,7 @@ import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { AnimatedIcon, AnimatedIconProps } from '../../../animated/AnimatedIcon'
+import { AnimatedText } from '../../../animated/AnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { getCardStylesForTheme } from '../../styles'
@@ -88,7 +89,7 @@ export const IssueOrPullRequestRow = React.memo(
             })}
             style={getCardRowStylesForTheme(theme).mainContentContainer}
           >
-            <Animated.Text
+            <AnimatedText
               numberOfLines={1}
               style={[
                 Platform.OS !== 'android' && { flexGrow: 1 },
@@ -98,7 +99,7 @@ export const IssueOrPullRequestRow = React.memo(
             >
               <AnimatedIcon color={iconColor} name={iconName} /> {title}
               {Boolean(byText) && (
-                <Animated.Text
+                <AnimatedText
                   style={[
                     getCardStylesForTheme(theme).normalText,
                     getCardStylesForTheme(theme).smallText,
@@ -107,9 +108,9 @@ export const IssueOrPullRequestRow = React.memo(
                 >
                   {' '}
                   by {byText}
-                </Animated.Text>
+                </AnimatedText>
               )}
-            </Animated.Text>
+            </AnimatedText>
           </Link>
 
           <CardItemId

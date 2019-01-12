@@ -1,8 +1,8 @@
 import React from 'react'
-import { Animated } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { AnimatedView } from '../animated/AnimatedView'
 import { AnimatedGradientLayerOverlay } from './GradientLayerOverlay'
 import {
   AnimatedGradientLayerOverlayProps,
@@ -27,7 +27,7 @@ export const AnimatedTransparentTextOverlay = React.memo(
     const color = theme[themeColor]
 
     return (
-      <Animated.View
+      <AnimatedView
         style={[
           { flex: 1, alignSelf: 'stretch', flexBasis: 'auto' },
           containerStyle,
@@ -66,7 +66,7 @@ export const AnimatedTransparentTextOverlay = React.memo(
             to="left"
           />
         )}
-      </Animated.View>
+      </AnimatedView>
     )
   },
 )
