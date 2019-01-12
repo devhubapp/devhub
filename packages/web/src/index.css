@@ -38,9 +38,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.link:hover * {
+a:hover:not(.link), .link:hover * {
   text-decoration: underline !important;
   transition: none 0s !important;
+}
+
+.input:focus {
+  outline: none !important;
 }
 
 .snap-container {

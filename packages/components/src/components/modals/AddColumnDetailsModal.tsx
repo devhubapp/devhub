@@ -155,7 +155,12 @@ export const AddColumnDetailsModal = React.memo(
           const nextFieldDetails = fields.find(fd => fd.field === nextField)
 
           const input = nextFieldDetails && nextFieldDetails.ref.current
-          if (input && input.getNode && input.getNode().focus) {
+          if (
+            input &&
+            input.getNode &&
+            input.getNode() &&
+            input.getNode().focus
+          ) {
             input.getNode().focus()
           }
 
@@ -181,6 +186,7 @@ export const AddColumnDetailsModal = React.memo(
             if (
               fieldDetails.ref.current &&
               fieldDetails.ref.current.getNode &&
+              fieldDetails.ref.current.getNode() &&
               fieldDetails.ref.current.getNode().focus
             ) {
               fieldDetails.ref.current.getNode().focus()
