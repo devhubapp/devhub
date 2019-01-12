@@ -145,7 +145,7 @@ To open the mobile projects, use:
 
 Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
 
-<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://twitter.com/brunolemos/profile_image?size=original" height="100" /></a>
+<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=100" height="100" /></a>
 
 <br/>
 
