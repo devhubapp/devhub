@@ -9,14 +9,12 @@ import {
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { AccordionView } from '../common/AccordionView'
-import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
-import { fabSpacing } from '../layout/FABRenderer'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
-import { ColumnOptions } from './ColumnOptions'
+import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
 
 export interface EventOrNotificationColumnProps {
   children: React.ReactNode
@@ -51,8 +49,37 @@ export const EventOrNotificationColumn = React.memo(
       subscriptions,
     } = props
 
-    const isFabVisible = sizename < '3-large'
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
+
+    const toggleOptions = () => {
+      // this is more complex than usual
+      // because im doing some weird workarounds
+      // to fix the animation between nested accordions.
+      // when this one opens, I "lock" it,
+      // so the nested ones doesnt trigger an animation on this one.
+
+      if (showColumnOptions) {
+        if (accordionRef.current!.isLocked()) {
+          accordionRef.current!.setOnFinishListener(() => {
+            accordionRef.current!.setOnFinishListener(null)
+            setShowColumnOptions(false)
+          })
+
+          accordionRef.current!.unlock()
+        } else {
+          accordionRef.current!.setOnFinishListener(null)
+          accordionRef.current!.unlock()
+          setShowColumnOptions(false)
+        }
+      } else {
+        accordionRef.current!.setOnFinishListener(() => {
+          accordionRef.current!.setOnFinishListener(null)
+          accordionRef.current!.lock()
+        })
+
+        setShowColumnOptions(true)
+      }
+    }
 
     return (
       <Column columnId={column.id} pagingEnabled={pagingEnabled}>
@@ -88,35 +115,7 @@ export const EventOrNotificationColumn = React.memo(
             analyticsAction={showColumnOptions ? 'hide' : 'show'}
             analyticsLabel="column_options"
             iconName="settings"
-            onPress={() => {
-              // this is more complex than usual
-              // because im doing some weird workarounds
-              // to fix the animation between nested accordions.
-              // when this one opens, I "lock" it,
-              // so the nested ones doesnt trigger an animation on this one.
-
-              if (showColumnOptions) {
-                if (accordionRef.current!.isLocked()) {
-                  accordionRef.current!.setOnFinishListener(() => {
-                    accordionRef.current!.setOnFinishListener(null)
-                    setShowColumnOptions(false)
-                  })
-
-                  accordionRef.current!.unlock()
-                } else {
-                  accordionRef.current!.setOnFinishListener(null)
-                  accordionRef.current!.unlock()
-                  setShowColumnOptions(false)
-                }
-              } else {
-                accordionRef.current!.setOnFinishListener(() => {
-                  accordionRef.current!.setOnFinishListener(null)
-                  accordionRef.current!.lock()
-                })
-
-                setShowColumnOptions(true)
-              }
-            }}
+            onPress={toggleOptions}
           />
         </ColumnHeader>
 
@@ -126,18 +125,14 @@ export const EventOrNotificationColumn = React.memo(
             setColumnOptionsContainerHeight(e.nativeEvent.layout.height)
           }}
         >
-          <AccordionView ref={accordionRef} property="height">
-            {!!showColumnOptions && (
-              <ColumnOptions
-                availableHeight={
-                  columnOptionsContainerHeight -
-                  (isFabVisible ? fabSize + 2 * fabSpacing : 0)
-                }
-                column={column}
-                columnIndex={columnIndex}
-              />
-            )}
-          </AccordionView>
+          <ColumnOptionsRenderer
+            accordionRef={accordionRef}
+            close={toggleOptions}
+            column={column}
+            columnIndex={columnIndex}
+            containerHeight={columnOptionsContainerHeight}
+            visible={!!showColumnOptions}
+          />
 
           {children}
         </View>

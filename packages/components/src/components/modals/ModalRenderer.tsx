@@ -72,8 +72,8 @@ export function ModalRenderer(props: ModalRendererProps) {
     reset: true,
     unique: true,
     items: currentOpenedModal ? [true] : [],
-    keys: () => 'modal-opacity-overlay',
-    config: { ...config.default, duration: 200, precision: 0.01 },
+    keys: () => 'modal-overlay',
+    config: { duration: 200, precision: 0.01 },
     from: { opacity: 0 },
     enter: { opacity: 0.75 },
     leave: { opacity: 0 },
@@ -85,6 +85,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     unique: false,
     items: modalStack,
     keys: item => `modal-stack-${item.name}`,
+    config: { ...config.default, precision: 1 },
     ...(sizename === '1-small'
       ? {
           from: item =>
