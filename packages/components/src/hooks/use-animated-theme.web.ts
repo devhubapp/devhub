@@ -1,3 +1,4 @@
+import { Platform } from '../libs/platform'
 
 const cssVariablesTheme = {
   backgroundColor: 'var(--theme_backgroundColor)',
@@ -15,17 +16,13 @@ const cssVariablesTheme = {
 function useCSSVariableTheme() {
   return cssVariablesTheme
 }
-
-const supportsCSSVariables = false
-/*
 const _window = typeof window !== 'undefined' ? (window as any) : undefined
 const supportsCSSVariables =
-Platform.OS === 'web' &&
-_window &&
-_window.CSS &&
-_window.CSS.supports &&
-_window.CSS.supports('--fake-var', 0)
-*/
+  Platform.OS === 'web' &&
+  _window &&
+  _window.CSS &&
+  _window.CSS.supports &&
+  _window.CSS.supports('--fake-var', 0)
 
 export const useAnimatedTheme = (supportsCSSVariables
   ? () => useCSSVariableTheme

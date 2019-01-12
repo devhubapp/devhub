@@ -1,8 +1,8 @@
-import { Omit } from '@devhub/core'
 import LinearGradient, {
   LinearGradientProps,
 } from 'react-native-linear-gradient'
 
+import { Omit } from '@devhub/core'
 import { createAnimatedComponent } from '../../components/animated/helpers'
 
 export { LinearGradient, LinearGradientProps }

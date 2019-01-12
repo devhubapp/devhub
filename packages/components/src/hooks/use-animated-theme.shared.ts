@@ -1,4 +1,3 @@
-/*
 import { useEffect, useRef, useState } from 'react'
 import { Animated, Easing } from 'react-native'
 
@@ -19,32 +18,32 @@ export function useAnimatedTheme() {
       })
 
     return {
-      backgroundColor: getInterpolate(themeRef.current.backgroundColor),
+      backgroundColor: getInterpolate(themeRef.current.backgroundColor) as any,
       backgroundColorDarker08: getInterpolate(
         themeRef.current.backgroundColorDarker08,
-      ),
+      ) as any,
       backgroundColorLess08: getInterpolate(
         themeRef.current.backgroundColorLess08,
-      ),
+      ) as any,
       backgroundColorLighther08: getInterpolate(
         themeRef.current.backgroundColorLighther08,
-      ),
+      ) as any,
       backgroundColorMore08: getInterpolate(
         themeRef.current.backgroundColorMore08,
-      ),
+      ) as any,
       backgroundColorTransparent10: getInterpolate(
         themeRef.current.backgroundColorTransparent10,
-      ),
-      foregroundColor: getInterpolate(themeRef.current.foregroundColor),
+      ) as any,
+      foregroundColor: getInterpolate(themeRef.current.foregroundColor) as any,
       foregroundColorMuted50: getInterpolate(
         themeRef.current.foregroundColorMuted50,
-      ),
+      ) as any,
       foregroundColorTransparent50: getInterpolate(
         themeRef.current.foregroundColorTransparent50,
-      ),
+      ) as any,
       foregroundColorTransparent80: getInterpolate(
         themeRef.current.foregroundColorTransparent80,
-      ),
+      ) as any,
     }
   })
 
@@ -84,38 +83,4 @@ export function useAnimatedTheme() {
   )
 
   return animatedTheme
-}
-*/
-
-import _ from 'lodash'
-import { useEffect, useRef } from 'react'
-import { useSpring } from 'react-spring/hooks'
-
-import { Theme } from '@devhub/core'
-import { useReduxStore } from '../redux/context/ReduxStoreContext'
-import { themeSelector } from '../redux/selectors'
-import { themeColorFields } from '../utils/helpers/theme'
-
-const pickThemeColors = (theme: Theme) => _.pick(theme, themeColorFields)
-
-export function useAnimatedTheme() {
-  const store = useReduxStore()
-  const themeRef = useRef(themeSelector(store.getState()))
-
-  const [props, set] = useSpring(() => pickThemeColors(themeRef.current))
-
-  useEffect(
-    () => {
-      return store.subscribe(() => {
-        const newTheme = themeSelector(store.getState())
-        if (newTheme === themeRef.current) return
-
-        themeRef.current = newTheme
-        set(pickThemeColors(newTheme))
-      })
-    },
-    [store],
-  )
-
-  return props
 }
