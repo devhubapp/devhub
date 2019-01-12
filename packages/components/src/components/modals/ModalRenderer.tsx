@@ -134,7 +134,7 @@ export function ModalRenderer(props: ModalRendererProps) {
         >
           <TouchableOpacity
             animated
-            analyticsAction="close-via-overlay"
+            analyticsAction="close_via_overlay"
             analyticsLabel="modal"
             activeOpacity={1}
             style={{

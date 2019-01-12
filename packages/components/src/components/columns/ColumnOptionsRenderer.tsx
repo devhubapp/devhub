@@ -63,8 +63,8 @@ export const ColumnOptionsRenderer = React.memo(
           >
             <TouchableOpacity
               animated
-              analyticsAction="close-via-overlay"
-              analyticsLabel="column-options"
+              analyticsAction="close_via_overlay"
+              analyticsLabel="column_options"
               activeOpacity={1}
               style={{
                 ...StyleSheet.absoluteFillObject,
