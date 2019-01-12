@@ -1,5 +1,4 @@
 import { Omit } from '@devhub/core'
-import { ComponentClass } from 'react'
 import { Animated } from 'react-native'
 import LinearGradient, {
   LinearGradientProps,
@@ -14,4 +13,4 @@ export interface AnimatedLinearGradientProps
 
 export const AnimatedLinearGradient = Animated.createAnimatedComponent(
   LinearGradient,
-) as ComponentClass<AnimatedLinearGradientProps>
+)

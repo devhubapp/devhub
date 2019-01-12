@@ -76,4 +76,4 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
 
 export const AnimatedGradientLayerOverlay = Animated.createAnimatedComponent(
   GradientLayerOverlay,
-) as ComponentClass<AnimatedGradientLayerOverlayProps>
+)

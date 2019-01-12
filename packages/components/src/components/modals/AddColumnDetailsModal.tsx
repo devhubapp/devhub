@@ -155,12 +155,8 @@ export const AddColumnDetailsModal = React.memo(
           const nextFieldDetails = fields.find(fd => fd.field === nextField)
 
           const input = nextFieldDetails && nextFieldDetails.ref.current
-          if (input) {
-            if (input.focus) {
-              input.focus()
-            } else if (input.getNode && input.getNode().focus) {
-              input.getNode().focus()
-            }
+          if (input && input.getNode && input.getNode().focus) {
+            input.getNode().focus()
           }
 
           return
@@ -182,15 +178,13 @@ export const AddColumnDetailsModal = React.memo(
 
         if (autoFocus) {
           setTimeout(() => {
-            if (fieldDetails.ref.current)
-              if (fieldDetails.ref.current.focus) {
-                fieldDetails.ref.current.focus()
-              } else if (
-                fieldDetails.ref.current.getNode &&
-                fieldDetails.ref.current.getNode().focus
-              ) {
-                fieldDetails.ref.current.getNode().focus()
-              }
+            if (
+              fieldDetails.ref.current &&
+              fieldDetails.ref.current.getNode &&
+              fieldDetails.ref.current.getNode().focus
+            ) {
+              fieldDetails.ref.current.getNode().focus()
+            }
           }, 500)
         }
 

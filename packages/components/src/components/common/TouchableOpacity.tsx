@@ -8,7 +8,7 @@ import { analytics } from '../../libs/analytics'
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(
   TouchableOpacityOriginal,
-) as typeof TouchableOpacityOriginal
+)
 
 export interface TouchableOpacityProps extends TouchableOpacityComponentProps {
   analyticsCategory?: 'button' | 'checkbox' | 'link' | string | undefined
