@@ -48,8 +48,7 @@ export interface EventCardProps {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: contentPadding,
-    paddingVertical: 1.5 * contentPadding,
+    padding: contentPadding,
   },
 })
 
