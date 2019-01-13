@@ -19,7 +19,7 @@ export interface AnimatedTransparentTextOverlayProps
 }
 
 export const AnimatedTransparentTextOverlay = React.memo(
-  (props: AnimatedTransparentTextOverlayProps) => {
+  React.forwardRef((props: AnimatedTransparentTextOverlayProps, ref: any) => {
     const theme = useAnimatedTheme()
 
     const { children, containerStyle, themeColor, to, ...otherProps } = props
@@ -28,13 +28,13 @@ export const AnimatedTransparentTextOverlay = React.memo(
 
     return (
       <AnimatedView
+        ref={ref}
+        pointerEvents="box-none"
         style={[
           { flex: 1, alignSelf: 'stretch', flexBasis: 'auto' },
           containerStyle,
         ]}
       >
-        {children}
-
         {(to === 'vertical' || to === 'bottom') && (
           <AnimatedGradientLayerOverlay
             {...otherProps}
@@ -66,7 +66,9 @@ export const AnimatedTransparentTextOverlay = React.memo(
             to="left"
           />
         )}
+
+        {children}
       </AnimatedView>
     )
-  },
+  }),
 )

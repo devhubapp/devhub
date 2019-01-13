@@ -87,9 +87,11 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
     return (
       <AnimatedLinearGradient
         colors={[rgba(color, 0), color]}
+        pointerEvents="box-none"
         style={[
           getStyle(to, size, spacing),
           Boolean(radius) && { borderRadius: radius },
+          { zIndex: 1 },
           style,
         ]}
         {...getProps(to)}

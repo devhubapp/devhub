@@ -7,20 +7,11 @@ import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
   const getDefaultStyles = () => ({
     backgroundColor: color,
-    WebkitMaskImage: `linear-gradient(to ${to}, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))`,
+    WebkitMaskImage: `linear-gradient(to ${to}, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))`,
   })
 
   switch (to) {
     case 'top':
-      return {
-        ...getDefaultStyles(),
-        height: size,
-        left: spacing,
-        position: 'absolute',
-        right: spacing,
-        top: 0,
-      }
-    case 'bottom':
       return {
         ...getDefaultStyles(),
         bottom: 0,
@@ -29,11 +20,20 @@ function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
         position: 'absolute',
         right: spacing,
       }
+    case 'bottom':
+      return {
+        ...getDefaultStyles(),
+        height: size,
+        left: spacing,
+        position: 'absolute',
+        right: spacing,
+        top: 0,
+      }
     case 'left':
       return {
         ...getDefaultStyles(),
         bottom: spacing,
-        left: 0,
+        right: 0,
         position: 'absolute',
         top: spacing,
         width: size,
@@ -43,7 +43,7 @@ function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
         ...getDefaultStyles(),
         bottom: spacing,
         position: 'absolute',
-        right: 0,
+        left: 0,
         top: spacing,
         width: size,
       }
@@ -68,9 +68,11 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
 
     return (
       <View
+        pointerEvents="box-none"
         style={[
           getStyle(color, to, size, spacing),
           Boolean(radius) && { borderRadius: radius },
+          { zIndex: 1 },
           style,
         ]}
         {...otherProps}

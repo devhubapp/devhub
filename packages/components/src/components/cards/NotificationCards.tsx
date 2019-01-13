@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 
 import { constants, EnhancedGitHubNotification, LoadState } from '@devhub/core'
 import { ErrorBoundary } from '../../libs/bugsnag'
@@ -104,12 +104,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   }
 
   return (
-    <AnimatedTransparentTextOverlay
-      size={contentPadding}
-      spacing={contentPadding}
-      themeColor="backgroundColor"
-      to="vertical"
-    >
+    <>
       <FlatList
         key="notification-cards-flat-list"
         ItemSeparatorComponent={CardItemSeparator}
@@ -122,6 +117,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         removeClippedSubviews
         renderItem={renderItem}
       />
-    </AnimatedTransparentTextOverlay>
+
+      <AnimatedTransparentTextOverlay
+        containerStyle={StyleSheet.absoluteFill}
+        size={contentPadding}
+        spacing={contentPadding}
+        themeColor="backgroundColor"
+        to="vertical"
+      />
+    </>
   )
 })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 
 import { constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
 import { ErrorBoundary } from '../../libs/bugsnag'
@@ -95,12 +95,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   }
 
   return (
-    <AnimatedTransparentTextOverlay
-      size={contentPadding}
-      spacing={contentPadding}
-      themeColor="backgroundColor"
-      to="vertical"
-    >
+    <>
       <FlatList
         data={events}
         ItemSeparatorComponent={CardItemSeparator}
@@ -112,6 +107,14 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         removeClippedSubviews
         renderItem={renderItem}
       />
-    </AnimatedTransparentTextOverlay>
+
+      <AnimatedTransparentTextOverlay
+        containerStyle={StyleSheet.absoluteFill}
+        size={contentPadding}
+        spacing={contentPadding}
+        themeColor="backgroundColor"
+        to="vertical"
+      />
+    </>
   )
 })

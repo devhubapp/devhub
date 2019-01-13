@@ -60,12 +60,14 @@ export const Column = React.memo((props: ColumnProps) => {
 
       {!!showFocusBorder && (
         <AnimatedView
+          pointerEvents="box-none"
           style={{
             ...StyleSheet.absoluteFillObject,
             borderWidth: 0,
             borderRightWidth: 4,
             borderLeftWidth: 4,
             borderColor: theme.foregroundColorTransparent50,
+            zIndex: 1000,
           }}
         />
       )}
