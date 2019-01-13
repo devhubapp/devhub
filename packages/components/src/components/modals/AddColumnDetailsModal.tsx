@@ -82,8 +82,6 @@ export const AddColumnDetailsModal = React.memo(
       defaultParams,
     } = props
 
-    let createColumnOnUnmount = false
-
     const didAutoFocusRef = useRef(false)
 
     const [params, setParams] = useState({
@@ -121,7 +119,9 @@ export const AddColumnDetailsModal = React.memo(
 
       closeAllModals()
 
-      createColumnOnUnmount = true
+      setTimeout(() => {
+        _handleCreateColumn()
+      }, 500)
     }
 
     const _handleCreateColumn = () => {
@@ -147,16 +147,6 @@ export const AddColumnDetailsModal = React.memo(
         subscriptions,
       })
     }
-
-    useEffect(() => {
-      return () => {
-        if (createColumnOnUnmount) {
-          requestAnimationFrame(() => {
-            _handleCreateColumn()
-          })
-        }
-      }
-    })
 
     const createTextInputChangeHandler = useCallback(
       (fieldDetails: FieldDetails): TextInputProps['onChange'] => e => {
