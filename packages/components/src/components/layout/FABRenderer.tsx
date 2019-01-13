@@ -18,7 +18,7 @@ const fabPositionStyle: ViewStyle = {
   position: 'absolute',
   bottom: fabSpacing,
   right: contentPadding,
-  zIndex: 101,
+  zIndex: 1000,
 }
 
 export function FABRenderer() {
