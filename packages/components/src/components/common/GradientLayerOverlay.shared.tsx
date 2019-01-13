@@ -13,6 +13,7 @@ export interface GradientLayerOverlayProps {
   containerStyle?: StyleProp<ViewStyle | any>
   radius?: number
   size: number
+  spacing?: number
   style?: StyleProp<ViewStyle>
   to: To
 }

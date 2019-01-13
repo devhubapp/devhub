@@ -104,6 +104,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
       <AnimatedTransparentTextOverlay
         containerStyle={{ flex: 0 }}
         size={contentPadding}
+        spacing={contentPadding}
         themeColor="backgroundColorLess08"
         to="vertical"
       >

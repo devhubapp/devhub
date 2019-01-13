@@ -107,6 +107,7 @@ export function EmptyCards(props: EmptyCardsProps) {
   return (
     <AnimatedTransparentTextOverlay
       size={contentPadding}
+      spacing={contentPadding}
       themeColor="backgroundColor"
       to="vertical"
     >

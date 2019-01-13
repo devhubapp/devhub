@@ -105,6 +105,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
         <AnimatedTransparentTextOverlay
           size={contentPadding}
+          spacing={contentPadding / 2}
           themeColor="backgroundColor"
           to={horizontal ? 'horizontal' : 'vertical'}
         >

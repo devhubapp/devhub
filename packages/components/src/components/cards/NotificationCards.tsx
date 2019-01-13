@@ -106,6 +106,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   return (
     <AnimatedTransparentTextOverlay
       size={contentPadding}
+      spacing={contentPadding}
       themeColor="backgroundColor"
       to="vertical"
     >

@@ -97,6 +97,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   return (
     <AnimatedTransparentTextOverlay
       size={contentPadding}
+      spacing={contentPadding}
       themeColor="backgroundColor"
       to="vertical"
     >

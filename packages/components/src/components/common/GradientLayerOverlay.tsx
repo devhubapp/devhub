@@ -6,38 +6,38 @@ import { AnimatedLinearGradient } from '../../libs/linear-gradient'
 import { createAnimatedComponent } from '../animated/helpers'
 import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
-function getStyle(to: To, size: number): ViewStyle {
+function getStyle(to: To, size: number, spacing = 0): ViewStyle {
   switch (to) {
     case 'top':
       return {
         bottom: 0,
         height: size,
-        left: 0,
+        left: spacing,
         position: 'absolute',
-        right: 0,
+        right: spacing,
       }
     case 'bottom':
       return {
         height: size,
-        left: 0,
+        left: spacing,
         position: 'absolute',
-        right: 0,
+        right: spacing,
         top: 0,
       }
     case 'left':
       return {
-        bottom: 0,
+        bottom: spacing,
         position: 'absolute',
         right: 0,
-        top: 0,
+        top: spacing,
         width: size,
       }
     case 'right':
       return {
-        bottom: 0,
+        bottom: spacing,
         left: 0,
         position: 'absolute',
-        top: 0,
+        top: spacing,
         width: size,
       }
     default:
@@ -72,7 +72,15 @@ function getProps(to: To) {
 
 class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
   render() {
-    const { color, radius, size, style, to, ...otherProps } = this.props
+    const {
+      color,
+      radius,
+      size,
+      spacing,
+      style,
+      to,
+      ...otherProps
+    } = this.props
 
     if (!color) return null
 
@@ -80,7 +88,7 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
       <AnimatedLinearGradient
         colors={[rgba(color, 0), color]}
         style={[
-          getStyle(to, size),
+          getStyle(to, size, spacing),
           Boolean(radius) && { borderRadius: radius },
           style,
         ]}
