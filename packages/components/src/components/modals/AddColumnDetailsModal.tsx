@@ -1,5 +1,11 @@
 import _ from 'lodash'
-import React, { Fragment, RefObject, useCallback, useState } from 'react'
+import React, {
+  Fragment,
+  RefObject,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { ScrollView, TextInputProps, View } from 'react-native'
 
 import {
@@ -74,6 +80,8 @@ export const AddColumnDetailsModal = React.memo(
       icon,
       defaultParams,
     } = props
+
+    const didAutoFocusRef = useRef(false)
 
     const [params, setParams] = useState({
       all: true,
@@ -181,7 +189,8 @@ export const AddColumnDetailsModal = React.memo(
         // need to find a real fix (propably inside react-spring)
         // instead of this ugly workaround
 
-        if (autoFocus) {
+        if (autoFocus && !didAutoFocusRef.current) {
+          didAutoFocusRef.current = true
           setTimeout(() => {
             if (
               fieldDetails.ref.current &&
