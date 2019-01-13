@@ -7,13 +7,14 @@ import { analytics } from '../../libs/analytics'
 import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
 
 export interface TouchableOpacityProps extends TouchableOpacityComponentProps {
-  analyticsCategory?: 'button' | 'checkbox' | 'link' | string | undefined
   analyticsAction?: 'press' | 'toggle' | string | undefined
+  analyticsCategory?: 'button' | 'checkbox' | 'link' | string | undefined
   analyticsLabel?: string | undefined
-  analyticsValue?: number | undefined
   analyticsPayload?: Record<string, string | number | undefined> | undefined
+  analyticsValue?: number | undefined
   animated?: boolean
   className?: string
+  selectable?: boolean
 }
 
 export const TouchableOpacity = React.forwardRef(
@@ -25,6 +26,7 @@ export const TouchableOpacity = React.forwardRef(
       analyticsValue,
       animated,
       onPress: _onPress,
+      selectable,
       ...props
     }: TouchableOpacityProps,
     ref: any,
@@ -53,7 +55,11 @@ export const TouchableOpacity = React.forwardRef(
         ref={ref}
         className={`touchable-opacity ${props.className || ''}`.trim()}
         onPress={onPress}
-        style={[props.style, props.disabled && { opacity: 0.5 }]}
+        style={[
+          props.style,
+          props.disabled && { opacity: 0.5 },
+          selectable === true && ({ userSelect: undefined } as any),
+        ]}
       />
     )
   },

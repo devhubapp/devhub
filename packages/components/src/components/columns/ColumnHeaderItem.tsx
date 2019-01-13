@@ -193,7 +193,6 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 !!iconName && (
                   <AnimatedIcon
                     color={theme.foregroundColor}
-                    selectable={selectable}
                     name={iconName}
                     style={[
                       styles.icon,

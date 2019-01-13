@@ -75,6 +75,7 @@ export function Link(props: LinkProps) {
         web: {
           accessibilityRole: 'link',
           href,
+          selectable: true,
           target: openOnNewTab ? '_blank' : undefined,
           ...otherProps,
           ...webProps,

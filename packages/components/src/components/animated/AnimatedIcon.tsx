@@ -16,6 +16,7 @@ export interface AnimatedIconProps extends Omit<IconProps, 'color' | 'style'> {
 
 export const AnimatedIcon = ({ color, style, ...props }: AnimatedIconProps) => (
   <AnimatedIconComponent
+    selectable={false}
     {...props}
     style={StyleSheet.flatten([{ color } as any, style])}
   />
