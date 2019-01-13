@@ -13,9 +13,10 @@ import {
 const redirectUri = 'devhub://oauth/github'
 
 const popupTarget =
-  Platform.realOS !== 'web' ||
-  Platform.isStandalone ||
-  (navigator.userAgent || '').includes('Edge')
+  !__DEV__ &&
+  (Platform.realOS !== 'web' ||
+    Platform.isStandalone ||
+    (navigator.userAgent || '').includes('Edge'))
     ? '_self'
     : '_blank'
 
