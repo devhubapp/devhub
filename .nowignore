@@ -4,8 +4,10 @@
 .babelrc
 .history
 .prettierrc
+.travis.yml
 .vscode
 @types
+assets
 node_modules
 packages/components/dist
 packages/components/node_modules
