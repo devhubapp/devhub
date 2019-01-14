@@ -7,11 +7,19 @@
   ],
   "routes": [
     {
+      "src": "/(.*)\\.(.*)",
+      "dest": "/packages/web/dist/$1.$2"
+    },
+    {
+      "src": "/",
+      "dest": "/packages/web/dist/index.html"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/packages/web/dist/$1"
+      "status": 301, "headers": { "Location": "/" }
     }
   ],
-  "regions": ["gru1"],
+  "regions": ["all"],
   "github": {
     "enabled": false,
     "autoAlias": false
