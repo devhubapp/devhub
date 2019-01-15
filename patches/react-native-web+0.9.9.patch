@@ -1,4 +1,34 @@
 patch-package
+--- a/node_modules/react-native-web/dist/exports/Image/index.js
++++ b/node_modules/react-native-web/dist/exports/Image/index.js
+@@ -278,6 +278,8 @@ var Image = function (_Component) {
+     var backgroundImage = displayImageUri ? 'url("' + displayImageUri + '")' : null;
+     var flatStyle = Object.assign({}, StyleSheet.flatten(this.props.style));
+     var finalResizeMode = resizeMode || flatStyle.resizeMode || ImageResizeMode.cover;
++    var backgroundColor = flatStyle.backgroundColor
++    var borderRadius = flatStyle.borderRadius
+ 
+     // CSS filters
+     var filters = [];
+@@ -307,6 +309,9 @@ var Image = function (_Component) {
+     // these styles are not supported on View
+     delete flatStyle.overlayColor;
+     delete flatStyle.resizeMode;
++    // these styles will be moved to the inner View (#1228)
++    delete flatStyle.backgroundColor;
++    delete flatStyle.borderRadius;
+ 
+     // Accessibility image allows users to trigger the browser's image context menu
+     var hiddenImage = displayImageUri ? createElement('img', {
+@@ -327,7 +332,7 @@ var Image = function (_Component) {
+         testID: testID
+       }),
+       React.createElement(View, {
+-        style: [styles.image, resizeModeStyles[finalResizeMode], this._getBackgroundSize(finalResizeMode), backgroundImage && { backgroundImage: backgroundImage }, filters.length > 0 && { filter: filters.join(' ') }]
++        style: [styles.image, resizeModeStyles[finalResizeMode], this._getBackgroundSize(finalResizeMode), backgroundImage && { backgroundImage: backgroundImage }, backgroundColor && { backgroundColor: backgroundColor }, borderRadius && { borderRadius: borderRadius }, filters.length > 0 && { filter: filters.join(' ') }]
+       }),
+       hiddenImage,
+       createTintColorSVG(tintColor, this._filterId)
 --- a/node_modules/react-native-web/dist/exports/Text/TextStylePropTypes.js
 +++ b/node_modules/react-native-web/dist/exports/Text/TextStylePropTypes.js
 @@ -42,7 +42,9 @@ var TextStylePropTypes = Object.assign({}, ViewStylePropTypes, {
@@ -53,5 +83,5 @@ patch-package
 +      behavior: !animated ? 'auto' : 'smooth',
 +    })
    },
-
+ 
    /**
