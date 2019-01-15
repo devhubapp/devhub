@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { View } from 'react-native'
 
 import { AddColumnDetailsPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
-import { contentPadding } from '../../styles/variables'
+import * as colors from '../../styles/colors'
+import { contentPadding, radius } from '../../styles/variables'
 import { AnimatedText } from '../animated/AnimatedText'
+import { AnimatedView } from '../animated/AnimatedView'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { TouchableOpacity } from '../common/TouchableOpacity'
@@ -79,10 +82,14 @@ function AddColumnModalItem({
   const theme = useAnimatedTheme()
   const pushModal = useReduxAction(actions.pushModal)
 
+  const touchableRef = useRef(null)
+  const isHovered = useHover(touchableRef)
+
   if (!(availableWidth > 0)) return null
 
   return (
     <TouchableOpacity
+      ref={touchableRef}
       analyticsLabel={undefined}
       onPress={() =>
         pushModal({
@@ -90,18 +97,21 @@ function AddColumnModalItem({
           params: item,
         })
       }
-      style={{
-        width:
-          availableWidth / Math.floor(availableWidth / (82 + contentPadding)),
-      }}
+      style={[
+        {
+          width:
+            availableWidth / Math.floor(availableWidth / (82 + contentPadding)),
+          borderRadius: radius,
+        },
+        isHovered && { backgroundColor: theme.backgroundColorLess08 },
+      ]}
     >
-      <View
+      <AnimatedView
         style={{
           alignItems: 'center',
           justifyContent: 'center',
           marginHorizontal: contentPadding / 4,
-          marginBottom: contentPadding,
-          paddingVertical: contentPadding / 2,
+          paddingVertical: contentPadding,
         }}
       >
         <ColumnHeaderItem
@@ -112,10 +122,14 @@ function AddColumnModalItem({
           style={{ marginBottom: contentPadding / 2 }}
         />
 
-        <AnimatedText style={{ color: theme.foregroundColor }}>
+        <AnimatedText
+          style={{
+            color: theme.foregroundColor,
+          }}
+        >
           {item.name}
         </AnimatedText>
-      </View>
+      </AnimatedView>
     </TouchableOpacity>
   )
 }

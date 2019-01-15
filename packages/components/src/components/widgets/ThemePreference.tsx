@@ -106,7 +106,7 @@ export function ThemePreference() {
                 }),
                 color: selected
                   ? colors.brandBackgroundColor
-                  : appTheme.foregroundColorTransparent80,
+                  : appTheme.foregroundColor,
                 textAlign: 'center',
               }}
             >

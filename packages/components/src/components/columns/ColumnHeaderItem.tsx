@@ -1,16 +1,19 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useHover } from '../../hooks/use-hover'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import * as colors from '../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
 import { AnimatedIcon } from '../animated/AnimatedIcon'
 import { AnimatedText } from '../animated/AnimatedText'
+import { AnimatedView } from '../animated/AnimatedView'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
@@ -28,7 +31,11 @@ export interface ColumnHeaderItemProps {
   avatarStyle?: StyleProp<ImageStyle>
   children?: React.ReactNode
   disabled?: TouchableOpacityProps['disabled']
+  enableBackgroundHover?: boolean
+  enableForegroundHover?: boolean
   fixedIconSize?: boolean
+  forceHoverState?: boolean
+  hoverBackgroundColor?: string
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   label?: string
@@ -46,16 +53,17 @@ export interface ColumnHeaderItemProps {
 }
 
 export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
-  const theme = useAnimatedTheme()
-  const _username = useReduxState(selectors.currentUsernameSelector)
-
   const {
     analyticsAction,
     analyticsLabel,
     avatarProps: _avatarProps,
     children,
     disabled,
+    enableBackgroundHover,
+    enableForegroundHover,
     fixedIconSize,
+    forceHoverState,
+    hoverBackgroundColor: _hoverBackgroundColor,
     iconName,
     iconStyle,
     label: _label,
@@ -72,6 +80,17 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
     titleStyle,
   } = props
 
+  const theme = useAnimatedTheme()
+  const _username = useReduxState(selectors.currentUsernameSelector)
+
+  const containerRef = useRef(null)
+  const isHovered =
+    useHover(
+      !disabled && (enableBackgroundHover || enableForegroundHover)
+        ? containerRef
+        : null,
+    ) || forceHoverState
+
   const avatarProps = _avatarProps || {}
 
   const label = `${_label || ''}`.trim().toLowerCase()
@@ -84,6 +103,16 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
       : avatarProps.username
 
   const hasText = !!(title || subtitle || text)
+
+  const backgroundColor =
+    isHovered && enableBackgroundHover
+      ? _hoverBackgroundColor || theme.backgroundColorLess08
+      : undefined
+
+  const foregroundColor =
+    isHovered && enableForegroundHover
+      ? colors.brandBackgroundColor
+      : theme.foregroundColor
 
   const styles = {
     container: {
@@ -123,6 +152,8 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
   const wrap: ConditionalWrapProps['wrap'] = child =>
     onPress ? (
       <TouchableOpacity
+        ref={containerRef}
+        animated
         analyticsAction={analyticsAction}
         analyticsLabel={analyticsLabel}
         disabled={disabled}
@@ -137,12 +168,14 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                   showLabel && label ? undefined : contentPadding,
               },
           style,
+          { backgroundColor },
         ]}
       >
         {child}
       </TouchableOpacity>
     ) : (
-      <View
+      <AnimatedView
+        ref={containerRef}
         style={[
           styles.container,
           noPadding
@@ -152,12 +185,12 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },
-          ,
           style,
+          { backgroundColor },
         ]}
       >
         {child}
-      </View>
+      </AnimatedView>
     )
 
   return (
@@ -192,7 +225,6 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               ) : (
                 !!iconName && (
                   <AnimatedIcon
-                    color={theme.foregroundColor}
                     name={iconName}
                     style={[
                       styles.icon,
@@ -200,6 +232,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                         width: size,
                       },
                       iconStyle,
+                      { color: foregroundColor },
                     ]}
                   />
                 )
@@ -212,11 +245,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               <AnimatedText
                 numberOfLines={1}
                 selectable={selectable}
-                style={[
-                  styles.title,
-                  { color: theme.foregroundColor },
-                  titleStyle,
-                ]}
+                style={[styles.title, titleStyle, { color: foregroundColor }]}
               >
                 {title.toLowerCase()}
               </AnimatedText>
@@ -241,7 +270,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
             <AnimatedText
               numberOfLines={1}
               selectable={selectable}
-              style={[styles.text, { color: theme.foregroundColor }]}
+              style={[styles.text, { color: foregroundColor }]}
             >
               {text}
             </AnimatedText>
@@ -256,7 +285,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               marginTop: 3,
               letterSpacing: -0.5,
               fontSize: 10,
-              color: theme.foregroundColor,
+              color: foregroundColor,
               textAlign: 'center',
             }}
             numberOfLines={1}

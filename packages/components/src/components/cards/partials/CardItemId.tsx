@@ -47,9 +47,7 @@ export function CardItemId(props: CardItemIdProps) {
   const textStyles = [
     styles.text,
     {
-      color: isRead
-        ? theme.foregroundColorTransparent50
-        : theme.foregroundColor,
+      color: isRead ? theme.foregroundColorMuted50 : theme.foregroundColor,
     },
     isRead && getCardStylesForTheme(theme).mutedText,
   ]

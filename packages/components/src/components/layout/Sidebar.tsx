@@ -1,5 +1,14 @@
-import React from 'react'
-import { Image, ScrollView, StyleSheet, View, ViewStyle } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import {
+  FlatList,
+  Image,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import { getColumnHeaderDetails, ModalPayload } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -22,7 +31,6 @@ import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
-import { TouchableOpacity } from '../common/TouchableOpacity'
 import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { useAppLayout } from '../context/LayoutContext'
 
@@ -37,16 +45,72 @@ const styles = StyleSheet.create({
 })
 
 export interface SidebarProps {
-  horizontal?: boolean
+  horizontal: boolean
   zIndex?: number
 }
 
 export const Sidebar = React.memo((props: SidebarProps) => {
+  const scrollViewRef = useRef<ScrollView>(null)
+  const leftOrTopOverlayRef = useRef<View>(null)
+  const rightOrBottomOverlayRef = useRef<View>(null)
+  const isLeftOrTopOverlayVisible = useRef(true)
+  const isRightOrBottomOverlayVisible = useRef(true)
+  const isScrollAtTheStartRef = useRef(true)
+  const isScrollAtTheEndRef = useRef(false)
+
+  function updateOverlayVisibility() {
+    const shouldShowLeftOverlay = !isScrollAtTheStartRef.current
+    const shouldShowRightOverlay = !isScrollAtTheEndRef.current
+
+    if (
+      leftOrTopOverlayRef.current &&
+      shouldShowLeftOverlay !== isLeftOrTopOverlayVisible.current
+    ) {
+      isLeftOrTopOverlayVisible.current = shouldShowLeftOverlay
+      leftOrTopOverlayRef.current.setNativeProps({
+        style: { opacity: shouldShowLeftOverlay ? 1 : 0 },
+      })
+    }
+
+    if (
+      rightOrBottomOverlayRef.current &&
+      shouldShowRightOverlay !== isRightOrBottomOverlayVisible.current
+    ) {
+      isRightOrBottomOverlayVisible.current = shouldShowRightOverlay
+      rightOrBottomOverlayRef.current.setNativeProps({
+        style: { opacity: shouldShowRightOverlay ? 1 : 0 },
+      })
+    }
+  }
+
+  function onScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
+    isScrollAtTheStartRef.current = horizontal
+      ? e.nativeEvent.contentOffset.x < 1
+      : e.nativeEvent.contentOffset.y < 1
+
+    isScrollAtTheEndRef.current = horizontal
+      ? e.nativeEvent.contentSize.width -
+          e.nativeEvent.layoutMeasurement.width -
+          e.nativeEvent.contentOffset.x <
+        1
+      : e.nativeEvent.contentSize.height -
+          e.nativeEvent.layoutMeasurement.height -
+          e.nativeEvent.contentOffset.y <
+        1
+
+    updateOverlayVisibility()
+  }
+
+  useEffect(() => {
+    updateOverlayVisibility()
+  }, [])
+
   const theme = useAnimatedTheme()
   const { sizename } = useAppLayout()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+  const modalStack = useReduxState(selectors.modalStack)
   const username = useReduxState(selectors.currentUsernameSelector)
 
   const replaceModal = useReduxAction(actions.replaceModal)
@@ -62,6 +126,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const itemContainerStyle = {
     width: sidebarSize,
     height: sidebarSize,
+  }
+
+  function isModalOpen(modalName: ModalPayload['name']) {
+    return !!modalStack && modalStack.some(m => m.name === modalName)
   }
 
   return (
@@ -103,13 +171,14 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </>
         )}
 
-        <AnimatedTransparentTextOverlay
-          size={contentPadding}
-          spacing={contentPadding / 2}
-          themeColor="backgroundColor"
-          to={horizontal ? 'horizontal' : 'vertical'}
+        <View
+          style={{
+            position: 'relative',
+            flex: 1,
+          }}
         >
           <ScrollView
+            ref={scrollViewRef}
             alwaysBounceHorizontal={false}
             alwaysBounceVertical={false}
             contentContainerStyle={[
@@ -121,24 +190,24 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               horizontal && { paddingHorizontal: contentPadding / 2 },
             ]}
             horizontal={horizontal}
+            onScroll={onScroll}
+            scrollEventThrottle={10}
             style={{ flex: 1 }}
           >
             {!(columnIds && columnIds.length) ? (
               !large ? (
                 <>
-                  <TouchableOpacity
+                  <ColumnHeaderItem
                     analyticsLabel="sidebar_add"
+                    enableBackgroundHover={!horizontal}
+                    forceHoverState={isModalOpen('ADD_COLUMN')}
+                    iconName="plus"
+                    label="Add column"
                     onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+                    showLabel={showLabel}
+                    size={columnHeaderItemContentBiggerSize}
                     style={[styles.centerContainer, itemContainerStyle]}
-                  >
-                    <ColumnHeaderItem
-                      analyticsLabel={undefined}
-                      iconName="plus"
-                      label="Add column"
-                      showLabel={showLabel}
-                      size={columnHeaderItemContentBiggerSize}
-                    />
-                  </TouchableOpacity>
+                  />
 
                   <Separator horizontal={!horizontal} />
                 </>
@@ -149,6 +218,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   key={`sidebar-column-item-${columnId}`}
                   columnId={columnId}
                   currentOpenedModal={currentOpenedModal}
+                  horizontal={horizontal}
                   itemContainerStyle={itemContainerStyle}
                   showLabel={showLabel}
                   small={small}
@@ -157,29 +227,45 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             )}
 
             {!showFixedSettingsButton && (
-              <TouchableOpacity
+              <ColumnHeaderItem
                 analyticsLabel="sidebar_settings"
+                enableBackgroundHover={!horizontal}
+                forceHoverState={isModalOpen('SETTINGS')}
+                iconName="gear"
+                label="Preferences"
                 onPress={() =>
-                  currentOpenedModal && currentOpenedModal.name === 'SETTINGS'
+                  isModalOpen('SETTINGS')
                     ? undefined
                     : replaceModal({ name: 'SETTINGS' })
                 }
+                showLabel={showLabel}
+                size={columnHeaderItemContentBiggerSize}
                 style={[
                   styles.centerContainer,
                   !showLabel && itemContainerStyle,
                 ]}
-              >
-                <ColumnHeaderItem
-                  analyticsLabel={undefined}
-                  iconName="gear"
-                  label="Preferences"
-                  showLabel={showLabel}
-                  size={columnHeaderItemContentBiggerSize}
-                />
-              </TouchableOpacity>
+              />
             )}
           </ScrollView>
-        </AnimatedTransparentTextOverlay>
+
+          <AnimatedTransparentTextOverlay
+            ref={leftOrTopOverlayRef}
+            containerStyle={StyleSheet.absoluteFill}
+            size={contentPadding}
+            spacing={contentPadding / 2}
+            themeColor="backgroundColor"
+            to={horizontal ? 'right' : 'bottom'}
+          />
+
+          <AnimatedTransparentTextOverlay
+            ref={rightOrBottomOverlayRef}
+            containerStyle={StyleSheet.absoluteFill}
+            size={contentPadding}
+            spacing={contentPadding / 2}
+            themeColor="backgroundColor"
+            to={horizontal ? 'left' : 'top'}
+          />
+        </View>
 
         {!small && (
           <>
@@ -187,22 +273,20 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
             {!!large && (
               <>
-                <TouchableOpacity
+                <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
+                  enableBackgroundHover={!horizontal}
+                  forceHoverState={isModalOpen('ADD_COLUMN')}
+                  iconName="plus"
+                  label="Add column"
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   style={[
                     styles.centerContainer,
                     !showLabel && itemContainerStyle,
                   ]}
-                >
-                  <ColumnHeaderItem
-                    analyticsLabel={undefined}
-                    iconName="plus"
-                    label="Add column"
-                    showLabel={showLabel}
-                    size={columnHeaderItemContentBiggerSize}
-                  />
-                </TouchableOpacity>
+                  showLabel={showLabel}
+                  size={columnHeaderItemContentBiggerSize}
+                />
 
                 <Separator horizontal={!horizontal} />
               </>
@@ -215,24 +299,24 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         )}
 
         {showFixedSettingsButton && (
-          <TouchableOpacity
+          <ColumnHeaderItem
             analyticsLabel="sidebar_settings"
+            enableBackgroundHover={!horizontal}
+            forceHoverState={isModalOpen('SETTINGS')}
+            iconName="gear"
+            label="Preferences"
             onPress={() => replaceModal({ name: 'SETTINGS' })}
+            showLabel={showLabel}
+            size={columnHeaderItemContentBiggerSize}
             style={[styles.centerContainer, !showLabel && itemContainerStyle]}
-          >
-            <ColumnHeaderItem
-              analyticsLabel={undefined}
-              iconName="gear"
-              label="Preferences"
-              showLabel={showLabel}
-              size={columnHeaderItemContentBiggerSize}
-            />
-          </TouchableOpacity>
+          />
         )}
 
         {large && (
           <Link
             analyticsLabel="sidebar_logo"
+            enableBackgroundHover
+            hoverBackgroundColor={theme.backgroundColorLess08}
             href="https://github.com/devhubapp/devhub"
             openOnNewTab
             style={[styles.centerContainer, itemContainerStyle]}
@@ -260,6 +344,7 @@ const SidebarColumnItem = React.memo(
   (props: {
     columnId: string
     currentOpenedModal: ModalPayload | undefined
+    horizontal: boolean
     itemContainerStyle: ViewStyle
     showLabel: boolean
     small: boolean | undefined
@@ -267,10 +352,13 @@ const SidebarColumnItem = React.memo(
     const {
       columnId,
       currentOpenedModal,
+      horizontal,
       itemContainerStyle,
       showLabel,
       small,
     } = props
+
+    const theme = useAnimatedTheme()
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
     if (!(column && subscriptions)) return null
@@ -279,9 +367,16 @@ const SidebarColumnItem = React.memo(
     const label = requestTypeIconAndData.title
 
     return (
-      <TouchableOpacity
+      <ColumnHeaderItem
         key={`sidebar-column-${column.id}`}
         analyticsLabel="sidebar_column"
+        avatarProps={{
+          ...requestTypeIconAndData.avatarProps,
+          disableLink: true,
+        }}
+        enableBackgroundHover={!horizontal}
+        iconName={requestTypeIconAndData.icon}
+        label={label}
         onPress={() => {
           emitter.emit('FOCUS_ON_COLUMN', {
             animated: !small || !currentOpenedModal,
@@ -290,20 +385,14 @@ const SidebarColumnItem = React.memo(
             highlight: !small,
           })
         }}
-        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
-      >
-        <ColumnHeaderItem
-          analyticsLabel={undefined}
-          avatarProps={{
-            ...requestTypeIconAndData.avatarProps,
-            disableLink: true,
-          }}
-          iconName={requestTypeIconAndData.icon}
-          label={label}
-          showLabel={showLabel}
-          size={columnHeaderItemContentBiggerSize}
-        />
-      </TouchableOpacity>
+        showLabel={showLabel}
+        size={columnHeaderItemContentBiggerSize}
+        style={[
+          styles.centerContainer,
+          !showLabel && itemContainerStyle,
+          { backgroundColor: theme.backgroundColor },
+        ]}
+      />
     )
   },
 )

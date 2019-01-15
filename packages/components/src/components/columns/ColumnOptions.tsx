@@ -13,7 +13,6 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import {
   filterRecordHasAnyForcedValue,
@@ -493,6 +492,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           >
             <ColumnHeaderItem
               analyticsLabel="move_column_left"
+              enableForegroundHover
               iconName="chevron-left"
               onPress={() =>
                 moveColumn({
@@ -503,6 +503,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             />
             <ColumnHeaderItem
               analyticsLabel="move_column_right"
+              enableForegroundHover
               iconName="chevron-right"
               onPress={() =>
                 moveColumn({
@@ -520,6 +521,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               true ? (
                 <ColumnHeaderItem
                   analyticsLabel="delete_archived"
+                  enableForegroundHover
                   iconName="archive"
                   onPress={() =>
                     clearArchivedItems({
@@ -536,15 +538,11 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       ? 'unclear-column'
                       : 'clear-column'
                   }
+                  enableForegroundHover
                   iconName={
                     column.filters && column.filters.clearedAt
                       ? 'history'
                       : 'check'
-                  }
-                  iconStyle={
-                    column.filters && column.filters.clearedAt
-                      ? { color: colors.brandBackgroundColor }
-                      : undefined
                   }
                   onPress={() =>
                     setColumnClearedAtFilter({
@@ -565,6 +563,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
             <ColumnHeaderItem
               analyticsLabel="remove_column"
+              enableForegroundHover
               iconName="trashcan"
               onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
               text="Remove"

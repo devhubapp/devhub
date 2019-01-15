@@ -103,6 +103,7 @@ export const EventOrNotificationColumn = React.memo(
               column.filters.inbox &&
               column.filters.inbox.archived === true
             }
+            enableForegroundHover
             iconName="check"
             onPress={() =>
               setColumnClearedAtFilter({
@@ -114,6 +115,7 @@ export const EventOrNotificationColumn = React.memo(
           <ColumnHeaderItem
             analyticsAction={showColumnOptions ? 'hide' : 'show'}
             analyticsLabel="column_options"
+            enableForegroundHover
             iconName="settings"
             onPress={toggleOptions}
           />

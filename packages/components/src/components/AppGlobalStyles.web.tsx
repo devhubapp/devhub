@@ -8,20 +8,22 @@ function getStyles(params: { theme: Theme }) {
   return `
     ::-webkit-scrollbar-thumb
     {
-      background-color:${t.backgroundColorDarker08};
+      background-color:${t.backgroundColorMore08};
     }
 
     body {
       --theme_backgroundColor:${t.backgroundColor};
       --theme_backgroundColorDarker08:${t.backgroundColorDarker08};
+      --theme_backgroundColorDarker16:${t.backgroundColorDarker16};
       --theme_backgroundColorLess08:${t.backgroundColorLess08};
+      --theme_backgroundColorLess16:${t.backgroundColorLess16};
       --theme_backgroundColorLighther08:${t.backgroundColorLighther08};
+      --theme_backgroundColorLighther16:${t.backgroundColorLighther16};
       --theme_backgroundColorMore08:${t.backgroundColorMore08};
+      --theme_backgroundColorMore16:${t.backgroundColorMore16};
       --theme_backgroundColorTransparent10:${t.backgroundColorTransparent10};
       --theme_foregroundColor:${t.foregroundColor};
       --theme_foregroundColorMuted50:${t.foregroundColorMuted50};
-      --theme_foregroundColorTransparent50:${t.foregroundColorTransparent50};
-      --theme_foregroundColorTransparent80:${t.foregroundColorTransparent80};
       background-color:${t.backgroundColor};
     }
   `

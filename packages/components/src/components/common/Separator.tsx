@@ -30,7 +30,7 @@ export function Separator(props: SeparatorProps) {
               width: size,
               height: '100%',
             },
-        { backgroundColor: theme.backgroundColorDarker08 },
+        { backgroundColor: theme.backgroundColorMore08 },
         !!zIndex && { zIndex },
       ]}
     />

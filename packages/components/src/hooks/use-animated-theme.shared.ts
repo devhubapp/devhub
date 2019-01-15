@@ -22,14 +22,26 @@ export function useAnimatedTheme() {
       backgroundColorDarker08: getInterpolate(
         themeRef.current.backgroundColorDarker08,
       ) as any,
+      backgroundColorDarker16: getInterpolate(
+        themeRef.current.backgroundColorDarker16,
+      ) as any,
       backgroundColorLess08: getInterpolate(
         themeRef.current.backgroundColorLess08,
+      ) as any,
+      backgroundColorLess16: getInterpolate(
+        themeRef.current.backgroundColorLess16,
       ) as any,
       backgroundColorLighther08: getInterpolate(
         themeRef.current.backgroundColorLighther08,
       ) as any,
+      backgroundColorLighther16: getInterpolate(
+        themeRef.current.backgroundColorLighther16,
+      ) as any,
       backgroundColorMore08: getInterpolate(
         themeRef.current.backgroundColorMore08,
+      ) as any,
+      backgroundColorMore16: getInterpolate(
+        themeRef.current.backgroundColorMore16,
       ) as any,
       backgroundColorTransparent10: getInterpolate(
         themeRef.current.backgroundColorTransparent10,
@@ -37,12 +49,6 @@ export function useAnimatedTheme() {
       foregroundColor: getInterpolate(themeRef.current.foregroundColor) as any,
       foregroundColorMuted50: getInterpolate(
         themeRef.current.foregroundColorMuted50,
-      ) as any,
-      foregroundColorTransparent50: getInterpolate(
-        themeRef.current.foregroundColorTransparent50,
-      ) as any,
-      foregroundColorTransparent80: getInterpolate(
-        themeRef.current.foregroundColorTransparent80,
       ) as any,
     }
   })

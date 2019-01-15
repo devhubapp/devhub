@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Keyboard, ScrollView, TextInputProps, View } from 'react-native'
+import { Keyboard, ScrollView, View } from 'react-native'
 
 import {
   ActivityColumn,
@@ -30,7 +30,7 @@ import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
-import { TextInput } from '../common/TextInput'
+import { TextInput, TextInputProps } from '../common/TextInput'
 
 interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {
   showBackButton: boolean
@@ -226,7 +226,6 @@ export const AddColumnDetailsModal = React.memo(
                 'brunolemos',
                 username!,
               )}
-              placeholderTextColor={theme.foregroundColorMuted50}
               {...textInputProps}
               onChange={createTextInputChangeHandler(fieldDetails)}
               onSubmitEditing={createTextInputSubmitHandler(fieldDetails)}

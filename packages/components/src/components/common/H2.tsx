@@ -19,7 +19,7 @@ export function H2(props: H2Props) {
         {
           marginBottom: withMargin ? contentPadding : undefined,
           fontWeight: '600',
-          color: theme.foregroundColorTransparent80,
+          color: theme.foregroundColorMuted50,
         },
         style,
       ]}

@@ -15,23 +15,31 @@ export function createThemeFromColor(
   const isDark = luminance <= 0.5
 
   const backgroundColor = color
-  const backgroundColorDarker08 =
-    luminance <= 0.02 ? lighten(0.08, color) : darken(0.08, color)
-  const backgroundColorLighther08 =
-    luminance >= 0.95 ? darken(0.08, color) : lighten(0.08, color)
+
+  const backgroundColorDarker08 = darken(0.08, color)
+  const backgroundColorDarker16 = darken(0.16, color)
+  const backgroundColorLighther08 = lighten(0.08, color)
+  const backgroundColorLighther16 = lighten(0.16, color)
+
   const backgroundColorMore08 = isDark
-    ? backgroundColorDarker08
-    : backgroundColorLighther08
+    ? darken(0.08, color)
+    : lighten(0.08, color)
+  const backgroundColorMore16 = isDark
+    ? darken(0.16, color)
+    : lighten(0.16, color)
+
   const backgroundColorLess08 = isDark
-    ? backgroundColorLighther08
-    : backgroundColorDarker08
+    ? lighten(0.08, color)
+    : darken(0.08, color)
+  const backgroundColorLess16 = isDark
+    ? lighten(0.16, color)
+    : darken(0.16, color)
+
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
   const foregroundColor = isDark ? lighten(0.8, color) : darken(0.8, color)
   const foregroundColorMuted50 = isDark
     ? lighten(0.5, color)
     : darken(0.5, color)
-  const foregroundColorTransparent50 = rgba(foregroundColor, 0.5)
-  const foregroundColorTransparent80 = rgba(foregroundColor, 0.8)
 
   let invertedTheme: Theme
   return createTheme({
@@ -46,13 +54,15 @@ export function createThemeFromColor(
     },
     backgroundColor,
     backgroundColorDarker08,
+    backgroundColorDarker16,
     backgroundColorLess08,
+    backgroundColorLess16,
     backgroundColorLighther08,
+    backgroundColorLighther16,
     backgroundColorMore08,
+    backgroundColorMore16,
     backgroundColorTransparent10,
     foregroundColor,
     foregroundColorMuted50,
-    foregroundColorTransparent50,
-    foregroundColorTransparent80,
   })
 }

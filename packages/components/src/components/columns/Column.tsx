@@ -66,7 +66,7 @@ export const Column = React.memo((props: ColumnProps) => {
             borderWidth: 0,
             borderRightWidth: 4,
             borderLeftWidth: 4,
-            borderColor: theme.foregroundColorTransparent50,
+            borderColor: theme.foregroundColorMuted50,
             zIndex: 1000,
           }}
         />

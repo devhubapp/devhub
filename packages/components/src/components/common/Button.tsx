@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useHover } from '../../hooks/use-hover'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
 import { AnimatedText } from '../animated/AnimatedText'
+import { AnimatedView } from '../animated/AnimatedView'
+import { useTheme } from '../context/ThemeContext'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export const buttonSize = 40
@@ -18,8 +21,6 @@ export interface ButtonProps extends TouchableOpacityProps {
 }
 
 export function Button(props: ButtonProps) {
-  const theme = useAnimatedTheme()
-
   const {
     children,
     disabled,
@@ -29,45 +30,66 @@ export function Button(props: ButtonProps) {
     ...otherProps
   } = props
 
+  const theme = useAnimatedTheme()
+
+  const touchableRef = useRef(null)
+  const isHovered = useHover(touchableRef)
+
   return (
     <TouchableOpacity
+      ref={touchableRef}
       animated
       {...otherProps}
       style={[
         {
-          alignItems: 'center',
-          justifyContent: 'center',
           height: buttonSize,
-          paddingHorizontal: contentPadding,
           backgroundColor: useBrandColor
             ? colors.brandBackgroundColor
-            : (theme.backgroundColorMore08 as any),
+            : (theme.backgroundColorLess08 as any),
           borderRadius: radius,
         },
         style,
       ]}
     >
-      {loading ? (
-        <AnimatedActivityIndicator
-          color={theme.foregroundColor as any}
-          size="small"
-        />
-      ) : typeof children === 'string' ? (
-        <AnimatedText
-          style={{
-            lineHeight: 14,
-            fontSize: 14,
-            fontWeight: '500',
-            color: useBrandColor
-              ? colors.brandForegroundColor
-              : theme.foregroundColor,
-          }}
-        >
-          {children}
-        </AnimatedText>
-      ) : (
-        children
-      )}
+      <AnimatedView
+        style={[
+          {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: buttonSize,
+            paddingHorizontal: contentPadding,
+            borderRadius: radius,
+          },
+          isHovered && {
+            backgroundColor: useBrandColor
+              ? theme.backgroundColorTransparent10
+              : theme.backgroundColorLess16,
+          },
+        ]}
+      >
+        {loading ? (
+          <AnimatedActivityIndicator
+            color={theme.foregroundColor as any}
+            size="small"
+          />
+        ) : typeof children === 'string' ? (
+          <AnimatedText
+            style={{
+              lineHeight: 14,
+              fontSize: 14,
+              fontWeight: '500',
+              color: useBrandColor
+                ? colors.brandForegroundColor
+                : theme.foregroundColor,
+            }}
+          >
+            {children}
+          </AnimatedText>
+        ) : (
+          children
+        )}
+      </AnimatedView>
     </TouchableOpacity>
   )
 }

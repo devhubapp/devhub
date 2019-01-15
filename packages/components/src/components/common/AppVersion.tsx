@@ -22,7 +22,7 @@ export function AppVersion() {
 
   return (
     <AnimatedText
-      style={[styles.appVersion, { color: theme.foregroundColorTransparent50 }]}
+      style={[styles.appVersion, { color: theme.foregroundColorMuted50 }]}
     >{`v${appVersion}`}</AnimatedText>
   )
 }

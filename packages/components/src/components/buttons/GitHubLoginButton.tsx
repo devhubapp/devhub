@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { AnimatedActivityIndicator } from '../../components/animated/AnimatedActivityIndicator'
 import { AnimatedIcon } from '../../components/animated/AnimatedIcon'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useHover } from '../../hooks/use-hover'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedText } from '../animated/AnimatedText'
 import { AnimatedView } from '../animated/AnimatedView'
@@ -26,13 +27,15 @@ export interface GitHubLoginButtonProps extends TouchableOpacityProps {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 58 / 2,
     height: 58,
+    borderRadius: 58 / 2,
   },
 
   content: {
     flex: 1,
     flexDirection: 'row',
+    height: 58,
+    borderRadius: 58 / 2,
   },
 
   iconWrapper: {
@@ -81,10 +84,14 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
 
   const theme = useAnimatedTheme()
 
+  const touchableRef = useRef(null)
+  const isHovered = useHover(touchableRef)
+
   return (
     <TouchableOpacity
+      ref={touchableRef}
       animated
-      activeOpacity={0.9}
+      activeOpacity={0.8}
       {...otherProps}
       style={[
         styles.button,
@@ -95,7 +102,12 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
         props.style,
       ]}
     >
-      <View style={styles.content}>
+      <View
+        style={[
+          styles.content,
+          isHovered && { backgroundColor: theme.backgroundColorLess16 },
+        ]}
+      >
         {!!leftIcon && (
           <AnimatedView
             style={[

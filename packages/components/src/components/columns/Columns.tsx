@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react'
 import {
   FlatList,
   FlatListProps,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   SafeAreaView,
   StyleProp,
   StyleSheet,
@@ -49,8 +51,8 @@ export const Columns = React.memo((props: ColumnsProps) => {
 
   const { sizename } = useAppLayout()
   const columnWidth = useColumnWidth()
-  const flatListRef = useRef<FlatList<string>>(null)
 
+  const flatListRef = useRef<FlatList<string>>(null)
   const leftOverlayRef = useRef<View>(null)
   const rightOverlayRef = useRef<View>(null)
   const isLeftOverlayVisible = useRef(true)
@@ -90,6 +92,18 @@ export const Columns = React.memo((props: ColumnsProps) => {
         style: { opacity: shouldShowRightOverlay ? 1 : 0 },
       })
     }
+  }
+
+  function onScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
+    isScrollAtTheStartRef.current = e.nativeEvent.contentOffset.x < 1
+
+    isScrollAtTheEndRef.current =
+      e.nativeEvent.contentSize.width -
+        e.nativeEvent.layoutMeasurement.width -
+        e.nativeEvent.contentOffset.x <
+      1
+
+    updateOverlayVisibility()
   }
 
   useEffect(() => {
@@ -162,20 +176,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
         initialNumToRender={5}
         keyExtractor={keyExtractor}
         maxToRenderPerBatch={5}
-        onScroll={
-          showHorizontalGradientOverlays
-            ? e => {
-                isScrollAtTheStartRef.current =
-                  e.nativeEvent.contentOffset.x < 1
-                isScrollAtTheEndRef.current =
-                  e.nativeEvent.contentSize.width -
-                    e.nativeEvent.layoutMeasurement.width -
-                    e.nativeEvent.contentOffset.x <
-                  1
-                updateOverlayVisibility()
-              }
-            : undefined
-        }
+        onScroll={showHorizontalGradientOverlays ? onScroll : undefined}
         onScrollToIndexFailed={e => {
           console.error(e)
           bugsnag.notify({
