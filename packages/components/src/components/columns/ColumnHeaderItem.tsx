@@ -104,15 +104,12 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
 
   const hasText = !!(title || subtitle || text)
 
-  const backgroundColor =
-    isHovered && enableBackgroundHover
-      ? _hoverBackgroundColor || theme.backgroundColorLess08
-      : undefined
+  const normalBackgroundColor = undefined
+  const hoverBackgroundColor =
+    _hoverBackgroundColor || theme.backgroundColorLess08
 
-  const foregroundColor =
-    isHovered && enableForegroundHover
-      ? colors.brandBackgroundColor
-      : theme.foregroundColor
+  const normalForegroundColor = theme.foregroundColor
+  const hoverForegroundColor = colors.brandBackgroundColor
 
   const styles = {
     container: {
@@ -167,8 +164,10 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },
+          { backgroundColor: normalBackgroundColor },
           style,
-          { backgroundColor },
+          isHovered &&
+            enableBackgroundHover && { backgroundColor: hoverBackgroundColor },
         ]}
       >
         {child}
@@ -186,7 +185,10 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                   showLabel && label ? undefined : contentPadding,
               },
           style,
-          { backgroundColor },
+          { backgroundColor: normalBackgroundColor },
+          style,
+          isHovered &&
+            enableBackgroundHover && { backgroundColor: hoverBackgroundColor },
         ]}
       >
         {child}
@@ -231,8 +233,12 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                       fixedIconSize && {
                         width: size,
                       },
+                      { color: normalForegroundColor },
                       iconStyle,
-                      { color: foregroundColor },
+                      isHovered &&
+                        enableForegroundHover && {
+                          color: hoverForegroundColor,
+                        },
                     ]}
                   />
                 )
@@ -245,7 +251,15 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               <AnimatedText
                 numberOfLines={1}
                 selectable={selectable}
-                style={[styles.title, titleStyle, { color: foregroundColor }]}
+                style={[
+                  styles.title,
+                  { color: normalForegroundColor },
+                  titleStyle,
+                  isHovered &&
+                    enableForegroundHover && {
+                      color: hoverForegroundColor,
+                    },
+                ]}
               >
                 {title.toLowerCase()}
               </AnimatedText>
@@ -270,7 +284,14 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
             <AnimatedText
               numberOfLines={1}
               selectable={selectable}
-              style={[styles.text, { color: foregroundColor }]}
+              style={[
+                styles.text,
+                { color: normalForegroundColor },
+                isHovered &&
+                  enableForegroundHover && {
+                    color: hoverForegroundColor,
+                  },
+              ]}
             >
               {text}
             </AnimatedText>
@@ -279,15 +300,23 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
 
         {!!showLabel && !!label && (
           <AnimatedText
-            style={{
-              width: Math.max(54, size + contentPadding),
-              marginHorizontal: 2,
-              marginTop: 3,
-              letterSpacing: -0.5,
-              fontSize: 10,
-              color: foregroundColor,
-              textAlign: 'center',
-            }}
+            style={[
+              {
+                width: Math.max(54, size + contentPadding),
+                marginHorizontal: 2,
+                marginTop: 3,
+                letterSpacing: -0.5,
+                fontSize: 10,
+                textAlign: 'center',
+              },
+
+              { color: normalForegroundColor },
+              style,
+              isHovered &&
+                enableForegroundHover && {
+                  color: hoverForegroundColor,
+                },
+            ]}
             numberOfLines={1}
           >
             {label}
