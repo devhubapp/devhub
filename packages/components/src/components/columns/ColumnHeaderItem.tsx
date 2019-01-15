@@ -48,6 +48,7 @@ export interface ColumnHeaderItemProps {
   subtitle?: string
   subtitleStyle?: StyleProp<TextStyle>
   text?: string
+  textStyle?: StyleProp<TextStyle>
   title?: string
   titleStyle?: StyleProp<TextStyle>
 }
@@ -76,6 +77,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
     subtitle,
     subtitleStyle,
     text,
+    textStyle,
     title,
     titleStyle,
   } = props
@@ -85,15 +87,15 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
 
   const containerRef = useRef(null)
   const isHovered =
-    useHover(
-      !disabled && (enableBackgroundHover || enableForegroundHover)
-        ? containerRef
-        : null,
-    ) || forceHoverState
+    (useHover(
+      enableBackgroundHover || enableForegroundHover ? containerRef : null,
+    ) ||
+      forceHoverState) &&
+    !disabled
 
   const avatarProps = _avatarProps || {}
 
-  const label = `${_label || ''}`.trim().toLowerCase()
+  const label = `${_label || ''}`.trim()
 
   const username =
     _username &&
@@ -261,7 +263,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                     },
                 ]}
               >
-                {title.toLowerCase()}
+                {title}
               </AnimatedText>
             )}
           </View>
@@ -276,7 +278,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 subtitleStyle,
               ]}
             >
-              {subtitle.toLowerCase()}
+              {subtitle}
             </AnimatedText>
           )}
 
@@ -287,6 +289,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
               style={[
                 styles.text,
                 { color: normalForegroundColor },
+                textStyle,
                 isHovered &&
                   enableForegroundHover && {
                     color: hoverForegroundColor,

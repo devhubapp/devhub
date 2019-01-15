@@ -10,7 +10,6 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
-import { useAppLayout } from '../context/LayoutContext'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
@@ -34,8 +33,6 @@ export const EventOrNotificationColumn = React.memo(
     ] = useState(0)
 
     const [showColumnOptions, setShowColumnOptions] = useState(false)
-
-    const { sizename } = useAppLayout()
 
     const setColumnClearedAtFilter = useReduxAction(
       actions.setColumnClearedAtFilter,
@@ -89,8 +86,8 @@ export const EventOrNotificationColumn = React.memo(
             avatarProps={requestTypeIconAndData.avatarProps}
             fixedIconSize
             iconName={requestTypeIconAndData.icon}
-            subtitle={requestTypeIconAndData.subtitle}
-            title={requestTypeIconAndData.title}
+            subtitle={`${requestTypeIconAndData.subtitle || ''}`.toLowerCase()}
+            title={`${requestTypeIconAndData.title || ''}`.toLowerCase()}
           />
 
           <Spacer flex={1} />
@@ -98,10 +95,39 @@ export const EventOrNotificationColumn = React.memo(
           <ColumnHeaderItem
             analyticsLabel="clear_column"
             disabled={
-              column.filters &&
-              column.filters.inbox &&
-              column.filters.inbox &&
-              column.filters.inbox.archived === true
+              !!(
+                column.filters &&
+                column.filters.clearedAt &&
+                subscriptions.some(s => {
+                  if (!s) return false
+
+                  if (s.type === 'activity') {
+                    return !!(
+                      s.data &&
+                      s.data.items &&
+                      !s.data.items.some(item => {
+                        const date = item && item.created_at
+                        return !!date && date > column.filters!.clearedAt!
+                      })
+                    )
+                  }
+
+                  if (s.type === 'notifications') {
+                    return !!(
+                      s.data &&
+                      s.data.items &&
+                      !s.data.items.some(item => {
+                        const date = item && item.updated_at
+                        return (
+                          !!date && item.updated_at > column.filters!.clearedAt!
+                        )
+                      })
+                    )
+                  }
+
+                  return false
+                })
+              )
             }
             enableForegroundHover
             iconName="check"

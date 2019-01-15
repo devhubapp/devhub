@@ -27,7 +27,6 @@ import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 
 export interface NotificationCardProps {
-  archived?: boolean
   notification: EnhancedGitHubNotification
   onlyOneRepository?: boolean
   repoIsKnown?: boolean
@@ -40,8 +39,8 @@ const styles = StyleSheet.create({
 })
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { archived, notification, onlyOneRepository } = props
-  if (!notification || archived) return null
+  const { notification, onlyOneRepository } = props
+  if (!notification) return null
 
   const {
     comment,

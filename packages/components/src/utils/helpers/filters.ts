@@ -54,9 +54,7 @@ export function activityColumnHasAnyFilter(
   if (hasPrivateAccess && typeof filters.private === 'boolean') return true
   if (!hasPrivateAccess && filters.private === true) return true
 
-  if (filters.inbox && filterRecordHasAnyForcedValue(filters.inbox)) {
-    return true
-  }
+  if (typeof filters.saved === 'boolean') return true
 
   if (
     filters.activity &&
@@ -77,11 +75,9 @@ export function notificationColumnHasAnyFilter(
   if (filters.clearedAt) return true
   if (hasPrivateAccess && typeof filters.private === 'boolean') return true
   if (!hasPrivateAccess && filters.private === true) return true
-  if (typeof filters.unread === 'boolean') return true
 
-  if (filters.inbox && filterRecordHasAnyForcedValue(filters.inbox)) {
-    return true
-  }
+  if (typeof filters.saved === 'boolean') return true
+  if (typeof filters.unread === 'boolean') return true
 
   if (
     filters.notifications &&
@@ -105,8 +101,6 @@ export function getFilteredNotifications(
 
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
-
-  const inboxFilter = (filters && filters.inbox) || {}
 
   // Note: GitHub always includes private notifications
   // even if our hasPrivateAccess (because this checks private repo access)
@@ -138,9 +132,9 @@ export function getFilteredNotifications(
         return false
       }
 
-      const showInbox = inboxFilter.inbox !== false
-      const showSaveForLater = inboxFilter.saved !== false
-      const showCleared = inboxFilter.archived === true
+      const showSaveForLater = filters.saved !== false
+      const showInbox = filters.saved !== true
+      const showCleared = false
 
       if (
         filters.clearedAt &&
@@ -170,7 +164,6 @@ export function getFilteredEvents(
     .value()
 
   const activityFilter = filters && filters.activity && filters.activity.types
-  const inboxFilter = (filters && filters.inbox) || {}
 
   if (
     filters &&
@@ -189,9 +182,9 @@ export function getFilteredEvents(
         return false
       }
 
-      const showInbox = inboxFilter.inbox !== false
-      const showSaveForLater = inboxFilter.saved !== false
-      const showCleared = inboxFilter.archived === true
+      const showSaveForLater = filters.saved !== false
+      const showInbox = filters.saved !== true
+      const showCleared = false
 
       if (
         filters.clearedAt &&

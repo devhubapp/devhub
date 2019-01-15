@@ -134,16 +134,12 @@ export type ActivityColumnSubscription = {
     })
 
 export interface BaseColumnFilters {
-  inbox?: {
-    inbox?: boolean
-    archived?: boolean
-    saved?: boolean
-  }
   clearedAt?: string
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
   private?: boolean
   // repos?: string[]
+  saved?: boolean
   // search: {
   //   exclude?: string
   //   match?: string

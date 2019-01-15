@@ -66,7 +66,11 @@ export const EventCardsContainer = React.memo(
           const clearedAt = column.filters && column.filters.clearedAt
           const olderDate = getOlderEventDate(data.items || [])
 
-          if (clearedAt && olderDate && clearedAt >= olderDate) return false
+          if (
+            clearedAt &&
+            (!olderDate || (olderDate && clearedAt >= olderDate))
+          )
+            return false
           return !!data.canFetchMore
         })()
       },
@@ -95,7 +99,7 @@ export const EventCardsContainer = React.memo(
       const currentPage = Math.ceil(
         (subscription.data.items || []).length / perPage,
       )
-      const nextPage = (currentPage || 1) + 1
+      const nextPage = (currentPage || 0) + 1
       fetchData({ page: nextPage, perPage })
     }
 

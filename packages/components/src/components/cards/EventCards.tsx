@@ -1,8 +1,10 @@
 import React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 
-import { constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
+import { Column, constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
+import { useReduxAction } from '../../hooks/use-redux-action'
 import { ErrorBoundary } from '../../libs/bugsnag'
+import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
@@ -12,6 +14,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps {
+  column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   events: EnhancedGitHubEvent[]
@@ -24,6 +27,7 @@ export interface EventCardsProps {
 
 export const EventCards = React.memo((props: EventCardsProps) => {
   const {
+    column,
     columnIndex,
     errorMessage,
     events,
@@ -32,9 +36,15 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     refresh,
   } = props
 
+  const setColumnClearedAtFilter = useReduxAction(
+    actions.setColumnClearedAtFilter,
+  )
+
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
+        clearedAt={column.filters && column.filters.clearedAt}
+        columnId={column.id}
         errorMessage={`You have reached the limit of ${
           constants.COLUMNS_LIMIT
         } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -49,6 +59,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   if (!(events && events.length)) {
     return (
       <EmptyCards
+        clearedAt={column.filters && column.filters.clearedAt}
+        columnId={column.id}
         errorMessage={errorMessage}
         fetchNextPage={fetchNextPage}
         loadState={loadState}
@@ -76,20 +88,36 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   }
 
   function renderFooter() {
-    if (!fetchNextPage) return <CardItemSeparator />
-
     return (
       <>
         <CardItemSeparator />
-        <View style={{ padding: contentPadding }}>
-          <Button
-            analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
-            children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
-            disabled={loadState !== 'loaded'}
-            loading={loadState === 'loading_more'}
-            onPress={() => fetchNextPage()}
-          />
-        </View>
+
+        {fetchNextPage ? (
+          <View style={{ padding: contentPadding }}>
+            <Button
+              analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
+              children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
+              disabled={loadState !== 'loaded'}
+              loading={loadState === 'loading_more'}
+              onPress={() => fetchNextPage()}
+            />
+          </View>
+        ) : column.filters && column.filters.clearedAt ? (
+          <View style={{ padding: contentPadding }}>
+            <Button
+              analyticsLabel="show_cleared"
+              borderOnly
+              children="Show cleared items"
+              disabled={loadState !== 'loaded'}
+              onPress={() =>
+                setColumnClearedAtFilter({
+                  clearedAt: null,
+                  columnId: column.id,
+                })
+              }
+            />
+          </View>
+        ) : null}
       </>
     )
   }
@@ -101,9 +129,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         ItemSeparatorComponent={CardItemSeparator}
         ListFooterComponent={renderFooter}
         extraData={loadState}
-        initialNumToRender={5}
+        initialNumToRender={10}
         keyExtractor={keyExtractor}
-        maxToRenderPerBatch={5}
         removeClippedSubviews
         renderItem={renderItem}
       />

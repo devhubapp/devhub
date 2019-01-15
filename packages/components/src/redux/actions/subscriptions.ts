@@ -1,4 +1,4 @@
-import { GitHubApiHeaders } from '@devhub/core'
+import { ColumnSubscription, GitHubApiHeaders } from '@devhub/core'
 import { createAction, createErrorActionWithPayload } from '../helpers'
 
 export function fetchColumnSubscriptionRequest(payload: {
@@ -17,6 +17,7 @@ export function deleteColumnSubscriptions(subscriptionIds: string[]) {
 }
 
 export function fetchSubscriptionRequest(payload: {
+  subscriptionType: ColumnSubscription['type']
   subscriptionId: string
   params: {
     [key: string]: string | number | undefined
@@ -28,6 +29,7 @@ export function fetchSubscriptionRequest(payload: {
 }
 
 export function fetchSubscriptionSuccess(payload: {
+  subscriptionType: ColumnSubscription['type']
   subscriptionId: string
   data: any
   canFetchMore: boolean
@@ -37,7 +39,11 @@ export function fetchSubscriptionSuccess(payload: {
 }
 
 export function fetchSubscriptionFailure<E extends Error>(
-  payload: { subscriptionId: string; github: GitHubApiHeaders | undefined },
+  payload: {
+    subscriptionType: ColumnSubscription['type']
+    subscriptionId: string
+    github: GitHubApiHeaders | undefined
+  },
   error: E & { status?: number },
 ) {
   return createErrorActionWithPayload(
@@ -54,9 +60,11 @@ export function saveItemsForLater(payload: {
   return createAction('SAVE_ITEMS_FOR_LATER', payload)
 }
 
-export function clearArchivedItems(payload: {
-  clearedAt: string
-  subscriptionIds: string[]
-}) {
-  return createAction('CLEAR_ARCHIVED_ITEMS', payload)
+export function cleanupSubscriptionsData(
+  payload: {
+    deleteOlderThan?: string
+    subscriptionIds?: string[]
+  } = {},
+) {
+  return createAction('CLEANUP_SUBSCRIPTIONS_DATA', payload)
 }

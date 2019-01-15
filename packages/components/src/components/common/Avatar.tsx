@@ -111,11 +111,12 @@ export function Avatar(props: AvatarProps) {
         backgroundColorLoaded="#FFFFFF"
         backgroundColorLoading={theme.backgroundColorLess08}
         {...oherProps}
-        source={{ uri }}
+        source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
         style={[
           {
             height: finalSize,
             width: finalSize,
+            borderWidth: 0,
             borderRadius:
               shape === 'circle'
                 ? finalSize / 2

@@ -27,6 +27,8 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
     hideCloseButton,
     right,
     showBackButton,
+    subtitle,
+    title,
     ...otherProps
   } = props
 
@@ -48,6 +50,8 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           {...otherProps}
           iconName={undefined}
           style={[showBackButton && { padding: 0 }]}
+          subtitle={`${subtitle || ''}`.toLowerCase()}
+          title={`${title || ''}`.toLowerCase()}
         />
 
         <Spacer flex={1} />

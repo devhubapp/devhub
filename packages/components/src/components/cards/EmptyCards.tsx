@@ -3,6 +3,8 @@ import { Text, TextStyle, View, ViewStyle } from 'react-native'
 
 import { LoadState } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useReduxAction } from '../../hooks/use-redux-action'
+import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
 import { AnimatedText } from '../animated/AnimatedText'
@@ -35,23 +37,30 @@ const clearMessage = getRandomClearMessage()
 const emoji = getRandomEmoji()
 
 export interface EmptyCardsProps {
+  clearedAt: string | undefined
+  columnId: string
   errorMessage?: string
   errorTitle?: string
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   loadState: LoadState
-  refresh: (() => void | Promise<void>) | undefined
+  refresh: () => void | Promise<void>
 }
 
 export function EmptyCards(props: EmptyCardsProps) {
-  const theme = useAnimatedTheme()
-
   const {
+    clearedAt,
+    columnId,
     errorMessage,
     errorTitle = 'Something went wrong',
     fetchNextPage,
     loadState,
     refresh,
   } = props
+
+  const theme = useAnimatedTheme()
+  const setColumnClearedAtFilter = useReduxAction(
+    actions.setColumnClearedAtFilter,
+  )
 
   const hasError = errorMessage || loadState === 'error'
 
@@ -127,7 +136,7 @@ export function EmptyCards(props: EmptyCardsProps) {
         </View>
 
         <View style={{ minHeight: headerOrFooterHeight }}>
-          {!!fetchNextPage && !hasError && loadState !== 'loading_first' && (
+          {hasError || loadState === 'loading_first' ? null : fetchNextPage ? (
             <View style={{ padding: contentPadding }}>
               <Button
                 analyticsLabel="load_more"
@@ -137,7 +146,20 @@ export function EmptyCards(props: EmptyCardsProps) {
                 onPress={() => fetchNextPage()}
               />
             </View>
-          )}
+          ) : clearedAt ? (
+            <View style={{ padding: contentPadding }}>
+              <Button
+                analyticsLabel="show_cleared"
+                borderOnly
+                children="Show cleared items"
+                disabled={loadState !== 'loaded'}
+                onPress={() => {
+                  setColumnClearedAtFilter({ clearedAt: null, columnId })
+                  if (refresh) refresh()
+                }}
+              />
+            </View>
+          ) : null}
         </View>
       </View>
     </AnimatedTransparentTextOverlay>

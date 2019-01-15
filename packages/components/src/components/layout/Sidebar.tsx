@@ -202,7 +202,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                     enableBackgroundHover={!horizontal}
                     forceHoverState={isModalOpen('ADD_COLUMN')}
                     iconName="plus"
-                    label="Add column"
+                    label="add column"
                     onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                     showLabel={showLabel}
                     size={columnHeaderItemContentBiggerSize}
@@ -232,7 +232,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 enableBackgroundHover={!horizontal}
                 forceHoverState={isModalOpen('SETTINGS')}
                 iconName="gear"
-                label="Preferences"
+                label="preferences"
                 onPress={() =>
                   isModalOpen('SETTINGS')
                     ? undefined
@@ -278,7 +278,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   enableBackgroundHover={!horizontal}
                   forceHoverState={isModalOpen('ADD_COLUMN')}
                   iconName="plus"
-                  label="Add column"
+                  label="add column"
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   style={[
                     styles.centerContainer,
@@ -304,7 +304,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             enableBackgroundHover={!horizontal}
             forceHoverState={isModalOpen('SETTINGS')}
             iconName="gear"
-            label="Preferences"
+            label="preferences"
             onPress={() => replaceModal({ name: 'SETTINGS' })}
             showLabel={showLabel}
             size={columnHeaderItemContentBiggerSize}
@@ -364,7 +364,7 @@ const SidebarColumnItem = React.memo(
     if (!(column && subscriptions)) return null
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
-    const label = requestTypeIconAndData.title
+    const label = `${requestTypeIconAndData.title || ''}`.toLowerCase()
 
     return (
       <ColumnHeaderItem

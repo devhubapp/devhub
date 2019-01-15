@@ -2,12 +2,7 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 
-import {
-  Column,
-  eventTypes,
-  getEventTypeMetadata,
-  GitHubIcon,
-} from '@devhub/core'
+import { Column, eventTypes, getEventTypeMetadata } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -54,9 +49,9 @@ export interface ColumnOptionsProps {
 export type ColumnOptionCategory =
   | 'cleared'
   | 'event_types'
-  | 'inbox'
   | 'notification_reasons'
   | 'privacy'
+  | 'saved_for_later'
   | 'unread'
 
 export function ColumnOptions(props: ColumnOptionsProps) {
@@ -72,13 +67,9 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const moveColumn = useReduxAction(actions.moveColumn)
-  const clearArchivedItems = useReduxAction(actions.clearArchivedItems)
-  const setColumnInboxFilter = useReduxAction(actions.setColumnInboxFilter)
+  const setColumnSavedFilter = useReduxAction(actions.setColumnSavedFilter)
   const setColumnActivityTypeFilter = useReduxAction(
     actions.setColumnActivityTypeFilter,
-  )
-  const setColumnClearedAtFilter = useReduxAction(
-    actions.setColumnClearedAtFilter,
   )
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
@@ -238,90 +229,37 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             })()}
 
           {(() => {
-            const filters = (column.filters && column.filters.inbox) || {}
-
-            const showInbox = filters.inbox !== false
-            const showSaveForLater = filters.saved !== false
-            const showArchived = filters.archived === true
-
-            const savedForLaterTitle = 'Saved for later'
-            const details: { title: string; icon: GitHubIcon } = showArchived
-              ? {
-                  title: `Archived${
-                    showSaveForLater ? ` + ${savedForLaterTitle}` : ''
-                  }`,
-                  icon: 'archive',
-                }
-              : !showInbox && showSaveForLater
-              ? { title: savedForLaterTitle, icon: 'bookmark' }
-              : {
-                  title: `Inbox${
-                    showSaveForLater ? ` + ${savedForLaterTitle}` : ''
-                  }`,
-                  icon: 'inbox',
-                }
+            const savedForLater = column.filters && column.filters.saved
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="inbox"
+                analyticsLabel="saved_for_later"
                 contentContainerStyle={{ marginRight: contentPadding }}
-                hasChanged={filterRecordHasAnyForcedValue(filters)}
-                iconName={details.icon}
-                onToggle={() => toggleOpenedOptionCategory('inbox')}
-                opened={openedOptionCategory === 'inbox'}
-                title={details.title}
+                hasChanged={typeof savedForLater === 'boolean'}
+                iconName="bookmark"
+                onToggle={() => toggleOpenedOptionCategory('saved_for_later')}
+                opened={openedOptionCategory === 'saved_for_later'}
+                subtitle={
+                  savedForLater === true
+                    ? 'Saved only'
+                    : savedForLater === false
+                    ? 'Saved excluded'
+                    : ''
+                }
+                title="Saved for later"
               >
                 <Checkbox
-                  analyticsLabel="inbox"
-                  checked={showInbox}
-                  circle
-                  disabled={showInbox && (!showSaveForLater && !showArchived)}
-                  containerStyle={{ flexGrow: 1 }}
-                  label="Inbox"
-                  labelIcon="inbox"
-                  onChange={checked => {
-                    setColumnInboxFilter({
-                      columnId: column.id,
-                      inbox: !!checked,
-                      ...(!!checked && {
-                        archived: false,
-                      }),
-                    })
-                  }}
-                />
-
-                <Spacer height={contentPadding / 2} />
-
-                <Checkbox
-                  analyticsLabel="archived"
-                  checked={showArchived}
-                  circle
-                  containerStyle={{ flexGrow: 1 }}
-                  label="Archived"
-                  labelIcon="archive"
-                  onChange={checked => {
-                    setColumnInboxFilter({
-                      columnId: column.id,
-                      archived: !!checked,
-                      ...(!!checked && {
-                        inbox: false,
-                      }),
-                    })
-                  }}
-                />
-
-                <Spacer height={contentPadding / 2} />
-
-                <Checkbox
                   analyticsLabel="save_for_later"
-                  checked={showSaveForLater}
+                  checked={
+                    typeof savedForLater === 'boolean' ? savedForLater : null
+                  }
                   containerStyle={{ flexGrow: 1 }}
+                  enableIndeterminateState
                   label="Saved for later"
-                  labelIcon="bookmark"
                   onChange={checked => {
-                    setColumnInboxFilter({
+                    setColumnSavedFilter({
                       columnId: column.id,
-                      saved: !!checked,
+                      saved: checked,
                     })
                   }}
                 />
@@ -359,6 +297,13 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                   }
                   onToggle={() => toggleOpenedOptionCategory('unread')}
                   opened={openedOptionCategory === 'unread'}
+                  subtitle={
+                    isReadChecked && !isUnreadChecked
+                      ? 'Read only'
+                      : !isReadChecked && isUnreadChecked
+                      ? 'Unread only'
+                      : ''
+                  }
                   title="Read status"
                 >
                   <Checkbox
@@ -427,12 +372,8 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 analyticsLabel="privacy"
                 contentContainerStyle={{ marginRight: contentPadding }}
                 hasChanged={
-                  !!(
-                    column.filters &&
-                    ((hasPrivateAccess &&
-                      typeof column.filters.private === 'boolean') ||
-                      (!hasPrivateAccess && column.filters.private === true))
-                  )
+                  !!column.filters &&
+                  typeof column.filters.private === 'boolean'
                 }
                 iconName={
                   column.filters && column.filters.private === false
@@ -441,6 +382,13 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 }
                 onToggle={() => toggleOpenedOptionCategory('privacy')}
                 opened={openedOptionCategory === 'privacy'}
+                subtitle={
+                  isPrivateChecked && !isPublicChecked
+                    ? 'Private only'
+                    : !isPrivateChecked && isPublicChecked
+                    ? 'Public only'
+                    : undefined
+                }
                 title="Privacy"
               >
                 <Checkbox
@@ -514,52 +462,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             />
 
             <Spacer flex={1} />
-
-            {!!column.filters &&
-              !!column.filters.clearedAt &&
-              ((column.filters.inbox && column.filters.inbox.archived) ===
-              true ? (
-                <ColumnHeaderItem
-                  analyticsLabel="delete_archived"
-                  enableForegroundHover
-                  iconName="archive"
-                  onPress={() =>
-                    clearArchivedItems({
-                      clearedAt: column.filters!.clearedAt!,
-                      subscriptionIds: column.subscriptionIds,
-                    })
-                  }
-                  text="Delete archived"
-                />
-              ) : (
-                <ColumnHeaderItem
-                  analyticsLabel={
-                    column.filters && column.filters.clearedAt
-                      ? 'unclear-column'
-                      : 'clear-column'
-                  }
-                  enableForegroundHover
-                  iconName={
-                    column.filters && column.filters.clearedAt
-                      ? 'history'
-                      : 'check'
-                  }
-                  onPress={() =>
-                    setColumnClearedAtFilter({
-                      columnId: column.id,
-                      clearedAt:
-                        column.filters && column.filters.clearedAt
-                          ? null
-                          : new Date().toISOString(),
-                    })
-                  }
-                  text={
-                    column.filters && column.filters.clearedAt
-                      ? 'Restore'
-                      : 'Clear'
-                  }
-                />
-              ))}
 
             <ColumnHeaderItem
               analyticsLabel="remove_column"

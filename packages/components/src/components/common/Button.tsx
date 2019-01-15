@@ -7,12 +7,12 @@ import { contentPadding, radius } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
 import { AnimatedText } from '../animated/AnimatedText'
 import { AnimatedView } from '../animated/AnimatedView'
-import { useTheme } from '../context/ThemeContext'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export const buttonSize = 40
 
 export interface ButtonProps extends TouchableOpacityProps {
+  borderOnly?: boolean
   children: string | React.ReactNode
   disabled?: boolean
   loading?: boolean
@@ -22,6 +22,7 @@ export interface ButtonProps extends TouchableOpacityProps {
 
 export function Button(props: ButtonProps) {
   const {
+    borderOnly,
     children,
     disabled,
     loading,
@@ -43,34 +44,42 @@ export function Button(props: ButtonProps) {
       style={[
         {
           height: buttonSize,
-          backgroundColor: useBrandColor
+          backgroundColor: borderOnly
+            ? 'transparent'
+            : useBrandColor
             ? colors.brandBackgroundColor
-            : (theme.backgroundColorLess08 as any),
+            : theme.backgroundColorLess08,
+          borderColor: useBrandColor
+            ? colors.brandBackgroundColor
+            : isHovered
+            ? theme.backgroundColorLess16
+            : theme.backgroundColorLess08,
+          borderWidth: borderOnly ? 1 : 0,
           borderRadius: radius,
         },
         style,
       ]}
     >
       <AnimatedView
-        style={[
-          {
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: buttonSize,
-            paddingHorizontal: contentPadding,
-            borderRadius: radius,
-          },
-          isHovered && {
-            backgroundColor: useBrandColor
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: buttonSize,
+          paddingHorizontal: contentPadding,
+          backgroundColor:
+            !isHovered || borderOnly
+              ? 'transparent'
+              : useBrandColor
               ? theme.backgroundColorTransparent10
               : theme.backgroundColorLess16,
-          },
-        ]}
+          borderWidth: 0,
+          borderRadius: radius,
+        }}
       >
         {loading ? (
           <AnimatedActivityIndicator
-            color={theme.foregroundColor as any}
+            color={theme.foregroundColor}
             size="small"
           />
         ) : typeof children === 'string' ? (
@@ -81,6 +90,10 @@ export function Button(props: ButtonProps) {
               fontWeight: '500',
               color: useBrandColor
                 ? colors.brandForegroundColor
+                : borderOnly
+                ? isHovered
+                  ? theme.foregroundColor
+                  : theme.foregroundColorMuted50
                 : theme.foregroundColor,
             }}
           >

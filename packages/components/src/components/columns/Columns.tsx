@@ -173,9 +173,8 @@ export const Columns = React.memo((props: ColumnsProps) => {
           offset: index * (columnWidth + separatorSize),
         })}
         horizontal
-        initialNumToRender={5}
+        initialNumToRender={4}
         keyExtractor={keyExtractor}
-        maxToRenderPerBatch={5}
         onScroll={showHorizontalGradientOverlays ? onScroll : undefined}
         onScrollToIndexFailed={e => {
           console.error(e)

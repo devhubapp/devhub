@@ -27,6 +27,7 @@ import {
   GitHubEvent,
   GitHubNotification,
 } from '@devhub/core'
+import { REHYDRATE } from 'redux-persist'
 import { delay } from 'redux-saga'
 import { getActivity, getNotifications } from '../../libs/github'
 import * as actions from '../actions'
@@ -116,6 +117,7 @@ function* init() {
 
         return yield put(
           actions.fetchSubscriptionRequest({
+            subscriptionType: subscription.type,
             subscriptionId: subscription.id,
             params: { page: 1 },
           }),
@@ -123,6 +125,17 @@ function* init() {
       }),
     )
   }
+}
+
+function* onRehydrate() {
+  const state = yield select()
+  const isLogged = !!selectors.currentUserSelector(state)
+  if (!isLogged) return
+
+  const sevenDays = 1000 * 60 * 60 * 24 * 7
+  const deleteOlderThan = new Date(Date.now() - sevenDays).toISOString()
+
+  yield put(actions.cleanupSubscriptionsData({ deleteOlderThan }))
 }
 
 function* cleanupSubscriptions() {
@@ -177,16 +190,20 @@ function* onFetchColumnSubscriptions(
   >,
 ) {
   const state = yield select()
-  const columnSelector = selectors.createColumnSelector()
+  const columnSubscriptionsSelector = selectors.createColumnSubscriptionsSelector()
 
-  const column = columnSelector(state, action.payload.columnId)
-  if (!column) return
+  const columnSubscriptions = columnSubscriptionsSelector(
+    state,
+    action.payload.columnId,
+  )
+  if (!(columnSubscriptions && columnSubscriptions.length)) return
 
   yield all(
-    column.subscriptionIds.map(function*(subscriptionId) {
+    columnSubscriptions.map(function*(subscription) {
       return yield put(
         actions.fetchSubscriptionRequest({
-          subscriptionId,
+          subscriptionType: subscription.type,
+          subscriptionId: subscription.id,
           params: action.payload.params,
         }),
       )
@@ -212,7 +229,7 @@ function* onFetchRequest(
 ) {
   const state = yield select()
 
-  const { subscriptionId, params: _params } = action.payload
+  const { subscriptionType, subscriptionId, params: _params } = action.payload
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
   const githubToken = selectors.githubTokenSelector(state)
@@ -315,6 +332,7 @@ function* onFetchRequest(
 
     yield put(
       actions.fetchSubscriptionSuccess({
+        subscriptionType,
         subscriptionId,
         data,
         canFetchMore,
@@ -332,7 +350,14 @@ function* onFetchRequest(
     const github = getGitHubApiHeadersFromHeader(headers)
 
     yield put(
-      actions.fetchSubscriptionFailure({ subscriptionId, github }, error),
+      actions.fetchSubscriptionFailure(
+        {
+          subscriptionType,
+          subscriptionId,
+          github,
+        },
+        error,
+      ),
     )
   }
 }
@@ -359,6 +384,7 @@ export function* subscriptionsSagas() {
   yield all([
     yield fork(init),
     yield fork(watchFetchRequests),
+    yield takeLatest(REHYDRATE, onRehydrate),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
