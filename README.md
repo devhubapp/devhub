@@ -124,7 +124,7 @@ If the feature is big, open an issue first for discussion.
 
 > **Note:** On Windows, you might need to install Bash commands (e.g. via [git-scm](https://git-scm.com/downloads) or via [linux bash shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/))
 
-#### How to run
+#### How to run locally
 
 - `git clone git@github.com:devhubapp/devhub.git`
 - `yarn`
@@ -139,11 +139,13 @@ To open the mobile projects, use:
 - `yarn xcode`
 - `yarn studio`
 
-#### Contribute Online
-Alternatively, you can contribute using Gitpod, a free online dev environment for GitHub.
+#### How to run online
+Alternatively, you can contribute using Gitpod, a free online dev environment for GitHub:
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/devhubapp/devhub)
 <br/>
+
+> Disclaimer: Gitpod is a third party service and is not affiliated with GitHub neither DevHub.
 
 ## Author
 
