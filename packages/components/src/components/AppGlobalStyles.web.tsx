@@ -1,14 +1,16 @@
 import React from 'react'
 
 import { Theme } from '@devhub/core'
+import { getSeparatorColor } from './common/Separator'
 import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme }) {
   const t = params.theme
+
   return `
     ::-webkit-scrollbar-thumb
     {
-      background-color:${t.backgroundColorMore08};
+      background-color:${getSeparatorColor(t.backgroundColor, t)};
     }
 
     body {
