@@ -124,7 +124,7 @@ If the feature is big, open an issue first for discussion.
 
 > **Note:** On Windows, you might need to install Bash commands (e.g. via [git-scm](https://git-scm.com/downloads) or via [linux bash shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/))
 
-#### How to run locally
+#### How to run
 
 - `git clone git@github.com:devhubapp/devhub.git`
 - `yarn`
@@ -146,6 +146,9 @@ Alternatively, you can contribute using Gitpod, a free online dev environment fo
 <br/>
 
 > Disclaimer: Gitpod is a third party service and is not affiliated with GitHub neither DevHub.
+
+> When using a third party service, your tokens may be less secured.
+<br/>
 
 ## Author
 
