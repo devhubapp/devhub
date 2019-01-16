@@ -4,7 +4,7 @@
   <span><a href="https://play.google.com/store/apps/details?id=com.devhubapp" target="_blank">Android</a>, <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8" target="_blank">iOS</a>, <a href="https://devhubapp.com/" target="_blank">Web</a> & <a href="https://github.com/devhubapp/devhub/releases" target="_self">Desktop</a> with <b>95%+ code sharing</b> between them<br/><i>thanks to React Native + React Native Web</i></span><br/>
   <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
 </p>
-  
+
 [![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)](https://devhubapp.com/)
 
 
@@ -139,6 +139,10 @@ To open the mobile projects, use:
 - `yarn xcode`
 - `yarn studio`
 
+#### Contribute Online
+Alternatively, you can contribute using Gitpod, a free online dev environment for GitHub.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/devhubapp/devhub)
 <br/>
 
 ## Author
