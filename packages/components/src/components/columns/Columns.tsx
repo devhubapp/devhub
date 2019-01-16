@@ -49,7 +49,7 @@ function keyExtractor(columnId: string) {
 export const Columns = React.memo((props: ColumnsProps) => {
   const { columnIds, style, ...otherProps } = props
 
-  const { sizename } = useAppLayout()
+  const { appOrientation, sizename } = useAppLayout()
   const columnWidth = useColumnWidth()
 
   const flatListRef = useRef<FlatList<string>>(null)
@@ -61,7 +61,8 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const isScrollAtTheStartRef = useRef(true)
   const isScrollAtTheEndRef = useRef(false)
 
-  const showHorizontalGradientOverlays = sizename !== '1-small'
+  const showHorizontalGradientOverlays =
+    sizename < '3-large' && appOrientation === 'landscape'
 
   function updateOverlayVisibility() {
     const shouldShowLeftOverlay =
