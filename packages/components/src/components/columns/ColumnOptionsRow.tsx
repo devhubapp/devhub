@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useRef, useState } from 'react'
-import { View, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -55,7 +55,20 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   const isHovered = useHover(touchableRef)
 
   return (
-    <>
+    <AnimatedView
+      style={[
+        {
+          backgroundColor: theme.backgroundColorLess08,
+          borderWidth: 0,
+          borderColor: 'transparent',
+          borderBottomWidth: 1,
+          borderBottomColor: theme.backgroundColorLess08,
+        },
+        !!(isHovered || isPressing || opened) && {
+          backgroundColor: theme.backgroundColorLess16,
+        },
+      ]}
+    >
       <TouchableOpacity
         ref={touchableRef}
         activeOpacity={1}
@@ -73,12 +86,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               alignItems: 'center',
               alignContent: 'center',
               padding: contentPadding,
-              backgroundColor: theme.backgroundColorLess08,
             },
             containerStyle,
-            !!(isHovered || isPressing || opened) && {
-              backgroundColor: theme.backgroundColorLess16,
-            },
           ]}
         >
           <ColumnHeaderItem
@@ -137,17 +146,12 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 paddingRight: contentPadding,
               },
               contentContainerStyle,
-              !!(isHovered || isPressing || opened) && {
-                backgroundColor: theme.backgroundColorLess16,
-              },
             ]}
           >
             {children}
           </AnimatedView>
         )}
       </AccordionView>
-
-      <Spacer height={1} />
-    </>
+    </AnimatedView>
   )
 }
