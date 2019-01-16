@@ -76,7 +76,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               backgroundColor: theme.backgroundColorLess08,
             },
             containerStyle,
-            (isHovered || isPressing || opened) && {
+            !!(isHovered || isPressing || opened) && {
               backgroundColor: theme.backgroundColorLess16,
             },
           ]}
@@ -129,7 +129,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
       <AccordionView property="height">
         {!!opened && (
-          <View
+          <AnimatedView
             style={[
               {
                 paddingBottom: contentPadding,
@@ -137,13 +137,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 paddingRight: contentPadding,
               },
               contentContainerStyle,
-              (isHovered || isPressing || opened) && {
+              !!(isHovered || isPressing || opened) && {
                 backgroundColor: theme.backgroundColorLess16,
               },
             ]}
           >
             {children}
-          </View>
+          </AnimatedView>
         )}
       </AccordionView>
 
