@@ -61,7 +61,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const isScrollAtTheStartRef = useRef(true)
   const isScrollAtTheEndRef = useRef(false)
 
-  const showHorizontalGradientOverlays = true
+  const showHorizontalGradientOverlays = sizename !== '1-small'
 
   function updateOverlayVisibility() {
     const shouldShowLeftOverlay =

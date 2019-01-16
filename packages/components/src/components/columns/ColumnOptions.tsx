@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 
 import { Column, eventTypes, getEventTypeMetadata } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
@@ -20,7 +20,6 @@ import {
 import { AnimatedView } from '../animated/AnimatedView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
-import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import { Spacer } from '../common/Spacer'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
@@ -91,9 +90,8 @@ export function ColumnOptions(props: ColumnOptionsProps) {
         { backgroundColor: theme.backgroundColorLess08 },
       ]}
     >
-      <ScrollViewWithOverlay
+      <ScrollView
         alwaysBounceVertical={false}
-        overlayThemeColor="backgroundColorLess08"
         style={[styles.scrollContainer, { maxHeight: availableHeight }]}
       >
         {column.type === 'notifications' &&
@@ -452,7 +450,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             text="Remove"
           />
         </View>
-      </ScrollViewWithOverlay>
+      </ScrollView>
       <CardItemSeparator />
     </AnimatedView>
   )
