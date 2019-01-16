@@ -41,8 +41,8 @@ export const ScrollViewWithOverlay = React.forwardRef(
     const contentSizeRef = useRef({ width: 0, height: 0 })
     const leftOrTopOverlayRef = useRef<View>(null)
     const rightOrBottomOverlayRef = useRef<View>(null)
-    const isLeftOrTopOverlayVisible = useRef<boolean>(null)
-    const isRightOrBottomOverlayVisible = useRef<boolean>(null)
+    const isLeftOrTopOverlayVisible = useRef(null as boolean | null)
+    const isRightOrBottomOverlayVisible = useRef(null as boolean | null)
     const isScrollAtTheStartRef = useRef(true)
     const isScrollAtTheEndRef = useRef(false)
 

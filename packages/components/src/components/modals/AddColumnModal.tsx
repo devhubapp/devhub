@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
 import { View } from 'react-native'
 
-import { AddColumnDetailsPayload } from '@devhub/core'
+import { AddColumnDetailsPayload, constants } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
-import * as colors from '../../styles/colors'
+import * as selectors from '../../redux/selectors'
 import { contentPadding, radius } from '../../styles/variables'
 import { AnimatedText } from '../animated/AnimatedText'
 import { AnimatedView } from '../animated/AnimatedView'
@@ -74,16 +75,18 @@ function keyExtractor(columnType: AddColumnDetailsPayload) {
 
 function AddColumnModalItem({
   availableWidth,
+  disabled,
   item,
 }: {
   availableWidth: number
+  disabled?: boolean
   item: AddColumnDetailsPayload
 }) {
   const theme = useAnimatedTheme()
   const pushModal = useReduxAction(actions.pushModal)
 
   const touchableRef = useRef(null)
-  const isHovered = useHover(touchableRef)
+  const isHovered = useHover(touchableRef) && !disabled
 
   if (!(availableWidth > 0)) return null
 
@@ -91,6 +94,7 @@ function AddColumnModalItem({
     <TouchableOpacity
       ref={touchableRef}
       analyticsLabel={undefined}
+      disabled={disabled}
       onPress={() =>
         pushModal({
           name: 'ADD_COLUMN_DETAILS',
@@ -137,10 +141,15 @@ function AddColumnModalItem({
 export function AddColumnModal(props: AddColumnModalProps) {
   const { showBackButton } = props
 
-  const outerSpacing = (3 / 4) * contentPadding
+  const theme = useAnimatedTheme()
 
+  const columnIds = useReduxState(selectors.columnIdsSelector)
   const columnWidth = useColumnWidth()
+
+  const outerSpacing = (3 / 4) * contentPadding
   const availableWidth = columnWidth - 2 * outerSpacing
+
+  const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 
   return (
     <ModalColumn
@@ -167,9 +176,26 @@ export function AddColumnModal(props: AddColumnModalProps) {
             <AddColumnModalItem
               key={keyExtractor(item)}
               availableWidth={availableWidth}
+              disabled={hasReachedColumnLimit}
               item={item}
             />
           ))}
+
+          {!!hasReachedColumnLimit && (
+            <AnimatedText
+              style={{
+                marginTop: contentPadding,
+                lineHeight: 20,
+                fontSize: 14,
+                color: theme.foregroundColorMuted50,
+                textAlign: 'center',
+              }}
+            >
+              {`You have reached the limit of ${
+                constants.COLUMNS_LIMIT
+              } columns. This is to maintain a healthy usage of the GitHub API.`}
+            </AnimatedText>
+          )}
         </View>
       </View>
     </ModalColumn>

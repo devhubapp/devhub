@@ -12,7 +12,7 @@ export const createColumnSelector = () =>
     (byId, id) => byId && byId[id],
   )
 
-export const columnIdsSelector = (state: RootState) => s(state).allIds
+export const columnIdsSelector = (state: RootState) => s(state).allIds || []
 
 export const columnsArrSelector = createSelector(
   (state: RootState) => columnIdsSelector(state),
