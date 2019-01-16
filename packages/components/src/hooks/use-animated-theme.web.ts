@@ -24,7 +24,7 @@ const supportsCSSVariables =
   _window &&
   _window.CSS &&
   _window.CSS.supports &&
-  _window.CSS.supports('--fake-var', 0)
+  _window.CSS.supports('color', 'var(--fake-var)')
 
 export const useAnimatedTheme = (supportsCSSVariables
   ? () => useCSSVariableTheme
