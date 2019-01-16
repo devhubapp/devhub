@@ -19,7 +19,7 @@ export function useHover(ref: RefObject<Element> | null) {
 
       if (node && (node as any)._node) node = (node as any)._node
 
-      if (!(node && node.addEventListener)) return
+      if (!(node && typeof node.addEventListener === 'function')) return
 
       const handleMouseOver = () => setIsHovered(true)
       const handleMouseOut = () => setIsHovered(false)

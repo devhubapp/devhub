@@ -112,10 +112,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             return (
               <ColumnOptionsRow
                 analyticsLabel="notification_reasons"
-                contentContainerStyle={{
-                  marginVertical: -contentPadding / 4,
-                  marginRight: contentPadding,
-                }}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 iconName="rss"
                 onToggle={() =>
@@ -177,10 +173,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             return (
               <ColumnOptionsRow
                 analyticsLabel="event_types"
-                contentContainerStyle={{
-                  marginVertical: -contentPadding / 4,
-                  marginRight: contentPadding,
-                }}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 iconName="note"
                 onToggle={() => toggleOpenedOptionCategory('event_types')}
@@ -228,7 +220,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           return (
             <ColumnOptionsRow
               analyticsLabel="saved_for_later"
-              contentContainerStyle={{ marginRight: contentPadding }}
               hasChanged={typeof savedForLater === 'boolean'}
               iconName="bookmark"
               onToggle={() => toggleOpenedOptionCategory('saved_for_later')}
@@ -277,7 +268,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
             return (
               <ColumnOptionsRow
                 analyticsLabel="read_status"
-                contentContainerStyle={{ marginRight: contentPadding }}
                 hasChanged={
                   !!(
                     column.filters && typeof column.filters.unread === 'boolean'
@@ -363,7 +353,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
           return (
             <ColumnOptionsRow
               analyticsLabel="privacy"
-              contentContainerStyle={{ marginRight: contentPadding }}
               hasChanged={
                 !!column.filters && typeof column.filters.private === 'boolean'
               }

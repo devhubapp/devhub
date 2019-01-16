@@ -1,15 +1,17 @@
 import _ from 'lodash'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { View, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useHover } from '../../hooks/use-hover'
 import * as colors from '../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
 import { AnimatedText } from '../animated/AnimatedText'
+import { AnimatedView } from '../animated/AnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
 import {
@@ -47,23 +49,36 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   const theme = useAnimatedTheme()
 
+  const [isPressing, setIsPressing] = useState(false)
+
+  const touchableRef = useRef(null)
+  const isHovered = useHover(touchableRef)
+
   return (
     <>
       <TouchableOpacity
+        ref={touchableRef}
+        activeOpacity={1}
         analyticsAction={opened ? 'hide' : 'show'}
         analyticsCategory="option_row"
         analyticsLabel={analyticsLabel}
         onPress={() => onToggle()}
+        onPressIn={() => setIsPressing(true)}
+        onPressOut={() => setIsPressing(false)}
       >
-        <View
+        <AnimatedView
           style={[
             {
               flexDirection: 'row',
               alignItems: 'center',
               alignContent: 'center',
               padding: contentPadding,
+              backgroundColor: theme.backgroundColorLess08,
             },
             containerStyle,
+            (isHovered || isPressing || opened) && {
+              backgroundColor: theme.backgroundColorLess16,
+            },
           ]}
         >
           <ColumnHeaderItem
@@ -109,7 +124,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             noPadding
             selectable={false}
           />
-        </View>
+        </AnimatedView>
       </TouchableOpacity>
 
       <AccordionView property="height">
@@ -117,16 +132,22 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           <View
             style={[
               {
+                paddingBottom: contentPadding,
                 paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
-                paddingBottom: contentPadding / 2,
+                paddingRight: contentPadding,
               },
               contentContainerStyle,
+              (isHovered || isPressing || opened) && {
+                backgroundColor: theme.backgroundColorLess16,
+              },
             ]}
           >
             {children}
           </View>
         )}
       </AccordionView>
+
+      <Spacer height={1} />
     </>
   )
 }

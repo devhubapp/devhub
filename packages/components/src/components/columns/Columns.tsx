@@ -68,6 +68,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       showHorizontalGradientOverlays &&
       !isShowingBorderRef.current &&
       !isScrollAtTheStartRef.current
+
     const shouldShowRightOverlay =
       showHorizontalGradientOverlays &&
       !isShowingBorderRef.current &&
