@@ -9,7 +9,6 @@ import { contentPadding } from '../../styles/variables'
 import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
 import { AnimatedText } from '../animated/AnimatedText'
 import { Button } from '../common/Button'
-import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 
 const clearMessages = [
   'All clear!',
@@ -43,7 +42,7 @@ export interface EmptyCardsProps {
   errorTitle?: string
   fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
   loadState: LoadState
-  refresh: () => void | Promise<void>
+  refresh: (() => void | Promise<void>) | undefined
 }
 
 export function EmptyCards(props: EmptyCardsProps) {
@@ -114,54 +113,47 @@ export function EmptyCards(props: EmptyCardsProps) {
   const headerOrFooterHeight = 40 + 2 * contentPadding
 
   return (
-    <AnimatedTransparentTextOverlay
-      size={contentPadding}
-      spacing={contentPadding}
-      themeColor="backgroundColor"
-      to="vertical"
-    >
-      <View style={{ flex: 1 }}>
-        <View style={{ height: headerOrFooterHeight }} />
+    <View style={{ flex: 1 }}>
+      <View style={{ height: headerOrFooterHeight }} />
 
-        <View
-          style={{
-            flex: 1,
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: contentPadding,
-          }}
-        >
-          {renderContent()}
-        </View>
-
-        <View style={{ minHeight: headerOrFooterHeight }}>
-          {hasError || loadState === 'loading_first' ? null : fetchNextPage ? (
-            <View style={{ padding: contentPadding }}>
-              <Button
-                analyticsLabel="load_more"
-                children="Load more"
-                disabled={loadState !== 'loaded'}
-                loading={loadState === 'loading_more'}
-                onPress={() => fetchNextPage()}
-              />
-            </View>
-          ) : clearedAt ? (
-            <View style={{ padding: contentPadding }}>
-              <Button
-                analyticsLabel="show_cleared"
-                borderOnly
-                children="Show cleared items"
-                disabled={loadState !== 'loaded'}
-                onPress={() => {
-                  setColumnClearedAtFilter({ clearedAt: null, columnId })
-                  if (refresh) refresh()
-                }}
-              />
-            </View>
-          ) : null}
-        </View>
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: contentPadding,
+        }}
+      >
+        {renderContent()}
       </View>
-    </AnimatedTransparentTextOverlay>
+
+      <View style={{ minHeight: headerOrFooterHeight }}>
+        {hasError || loadState === 'loading_first' ? null : fetchNextPage ? (
+          <View style={{ padding: contentPadding }}>
+            <Button
+              analyticsLabel="load_more"
+              children="Load more"
+              disabled={loadState !== 'loaded'}
+              loading={loadState === 'loading_more'}
+              onPress={() => fetchNextPage()}
+            />
+          </View>
+        ) : clearedAt ? (
+          <View style={{ padding: contentPadding }}>
+            <Button
+              analyticsLabel="show_cleared"
+              borderOnly
+              children="Show cleared items"
+              disabled={loadState !== 'loaded'}
+              onPress={() => {
+                setColumnClearedAtFilter({ clearedAt: null, columnId })
+                if (refresh) refresh()
+              }}
+            />
+          </View>
+        ) : null}
+      </View>
+    </View>
   )
 }

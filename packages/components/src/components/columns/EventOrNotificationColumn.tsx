@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 
 import {
@@ -19,12 +19,22 @@ export interface EventOrNotificationColumnProps {
   children: React.ReactNode
   column: ColumnType
   columnIndex: number
+  onColumnOptionsVisibilityChange?: (isOpen: boolean) => void
   pagingEnabled?: boolean
   subscriptions: Array<ColumnSubscription | undefined>
 }
 
 export const EventOrNotificationColumn = React.memo(
   (props: EventOrNotificationColumnProps) => {
+    const {
+      children,
+      column,
+      columnIndex,
+      pagingEnabled,
+      subscriptions,
+      onColumnOptionsVisibilityChange,
+    } = props
+
     const accordionRef = useRef<AccordionView>(null)
 
     const [
@@ -38,13 +48,13 @@ export const EventOrNotificationColumn = React.memo(
       actions.setColumnClearedAtFilter,
     )
 
-    const {
-      children,
-      column,
-      columnIndex,
-      pagingEnabled,
-      subscriptions,
-    } = props
+    useEffect(
+      () => {
+        if (onColumnOptionsVisibilityChange)
+          onColumnOptionsVisibilityChange(showColumnOptions)
+      },
+      [onColumnOptionsVisibilityChange, showColumnOptions],
+    )
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 

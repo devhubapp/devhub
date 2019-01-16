@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
   Column,
@@ -12,7 +12,7 @@ import { ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
-import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
+import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -137,26 +137,16 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   }
 
   return (
-    <>
-      <FlatList
-        key="notification-cards-flat-list"
-        ItemSeparatorComponent={CardItemSeparator}
-        ListFooterComponent={renderFooter}
-        data={notifications}
-        extraData={loadState}
-        initialNumToRender={10}
-        keyExtractor={keyExtractor}
-        removeClippedSubviews
-        renderItem={renderItem}
-      />
-
-      <AnimatedTransparentTextOverlay
-        containerStyle={StyleSheet.absoluteFill}
-        size={contentPadding}
-        spacing={contentPadding}
-        themeColor="backgroundColor"
-        to="vertical"
-      />
-    </>
+    <FlatListWithOverlay
+      key="notification-cards-flat-list"
+      ItemSeparatorComponent={CardItemSeparator}
+      ListFooterComponent={renderFooter}
+      data={notifications}
+      extraData={loadState}
+      initialNumToRender={10}
+      keyExtractor={keyExtractor}
+      removeClippedSubviews
+      renderItem={renderItem}
+    />
   )
 })
