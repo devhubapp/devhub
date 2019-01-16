@@ -139,7 +139,7 @@ To open the mobile projects, use:
 - `yarn xcode`
 - `yarn studio`
 
-#### How to run online
+### Running it online
 Alternatively, you can contribute using Gitpod, a free online dev environment for GitHub:
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/devhubapp/devhub)
