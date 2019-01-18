@@ -11,7 +11,7 @@ import { AppGlobalStyles } from './AppGlobalStyles'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DimensionsProvider } from './context/DimensionsContext'
 import { AppLayoutProvider } from './context/LayoutContext'
-import { ThemeProvider } from './context/ThemeContext'
+import { SpringAnimatedThemeProvider } from './context/SpringAnimatedThemeContext'
 
 const { persistor, store } = configureStore()
 
@@ -27,12 +27,12 @@ export function App() {
             <DimensionsProvider>
               <AppLayoutProvider>
                 <ColumnWidthProvider>
-                  <ThemeProvider>
+                  <SpringAnimatedThemeProvider>
                     <>
                       <AppGlobalStyles />
                       <AppNavigator />
                     </>
-                  </ThemeProvider>
+                  </SpringAnimatedThemeProvider>
                 </ColumnWidthProvider>
               </AppLayoutProvider>
             </DimensionsProvider>

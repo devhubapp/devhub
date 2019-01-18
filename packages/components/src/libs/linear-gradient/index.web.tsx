@@ -3,7 +3,7 @@ import { StyleProp, View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
 
 import { Omit } from '@devhub/core'
-import { AnimatedView } from '../../components/animated/AnimatedView'
+import { SpringAnimatedView } from '../../components/animated/spring/SpringAnimatedView'
 
 type LinearGradientPoint =
   | OriginalLinearGradientProps['start']
@@ -47,7 +47,7 @@ export function LinearGradient(props: LinearGradientProps) {
     ...otherProps
   } = props
 
-  const ViewComponent = animated ? AnimatedView : View
+  const ViewComponent = animated ? SpringAnimatedView : View
 
   return (
     <ViewComponent
@@ -67,8 +67,11 @@ export function LinearGradient(props: LinearGradientProps) {
   )
 }
 
-export interface AnimatedLinearGradientProps extends LinearGradientProps {}
+export interface SpringAnimatedLinearGradientProps
+  extends LinearGradientProps {}
 
-export function AnimatedLinearGradient(props: AnimatedLinearGradientProps) {
+export function SpringAnimatedLinearGradient(
+  props: SpringAnimatedLinearGradientProps,
+) {
   return <LinearGradient {...props} animated />
 }

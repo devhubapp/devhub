@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Image, ImageProps } from 'react-native'
-import { AnimatedImage } from '../animated/AnimatedImage'
+
+import { SpringAnimatedImage } from '../animated/spring/SpringAnimatedImage'
 
 export interface ImageWithLoadingProps extends ImageProps {
   animated?: boolean
@@ -11,6 +12,7 @@ export interface ImageWithLoadingProps extends ImageProps {
   onLoad?: ImageProps['onLoad']
   onLoadEnd?: ImageProps['onLoadEnd']
   onLoadStart?: ImageProps['onLoadStart']
+  style: any
 }
 
 export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
@@ -64,7 +66,7 @@ export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
     [onError],
   )
 
-  const ImageComponent = animated ? AnimatedImage : Image
+  const ImageComponent = animated ? SpringAnimatedImage : Image
 
   return (
     <ImageComponent

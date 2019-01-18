@@ -22,7 +22,7 @@ export interface NotificationCardsProps {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
-  fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
+  fetchNextPage: (() => void) | undefined
   loadState: LoadState
   notifications: EnhancedGitHubNotification[]
   refresh: EmptyCardsProps['refresh']
@@ -113,7 +113,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
               disabled={loadState !== 'loaded'}
               loading={loadState === 'loading_more'}
-              onPress={() => fetchNextPage()}
+              onPress={fetchNextPage}
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (

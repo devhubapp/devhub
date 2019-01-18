@@ -8,14 +8,14 @@ import {
   trimNewLinesAndSpaces,
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { AnimatedIcon } from '../../../animated/AnimatedIcon'
-import { AnimatedText } from '../../../animated/AnimatedText'
+import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
-import { getCardRowStylesForTheme } from './styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { cardRowStyles } from './styles'
 
 export interface CommitRowProps {
   authorEmail: string
@@ -32,7 +32,7 @@ export interface CommitRowProps {
 export interface CommitRowState {}
 
 export const CommitRow = React.memo((props: CommitRowProps) => {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     authorEmail,
@@ -59,13 +59,13 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
   byText = trimNewLinesAndSpaces(byText)
 
   return (
-    <View style={getCardRowStylesForTheme(theme).container}>
+    <View style={cardRowStyles.container}>
       <View
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       >
         <Avatar
@@ -74,7 +74,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             authorUsername && authorUsername.indexOf('[bot]') >= 0,
           )}
           small
-          style={getCardStylesForTheme(theme).avatar}
+          style={cardStyles.avatar}
           username={authorUsername}
           linkURL={
             authorUsername
@@ -84,7 +84,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
         />
       </View>
 
-      <View style={getCardStylesForTheme(theme).rightColumn}>
+      <View style={cardStyles.rightColumn}>
         <Link
           href={
             showMoreItemsIndicator
@@ -96,35 +96,35 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                     undefined,
                 })
           }
-          style={getCardRowStylesForTheme(theme).mainContentContainer}
+          style={cardRowStyles.mainContentContainer}
         >
-          <AnimatedText
+          <SpringAnimatedText
             numberOfLines={1}
             style={[
-              getCardStylesForTheme(theme).normalText,
-              isRead && getCardStylesForTheme(theme).mutedText,
+              getCardStylesForTheme(springAnimatedTheme).normalText,
+              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
-            <AnimatedIcon
+            <SpringAnimatedIcon
               name="git-commit"
               style={[
-                getCardStylesForTheme(theme).normalText,
-                isRead && getCardStylesForTheme(theme).mutedText,
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}
             {showMoreItemsIndicator ? '' : message}
             {Boolean(byText) && (
-              <AnimatedText
+              <SpringAnimatedText
                 style={[
-                  getCardStylesForTheme(theme).normalText,
-                  getCardStylesForTheme(theme).smallText,
-                  getCardStylesForTheme(theme).mutedText,
+                  getCardStylesForTheme(springAnimatedTheme).normalText,
+                  cardStyles.smallText,
+                  getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
                 {showMoreItemsIndicator ? '...' : ` by ${byText}`}
-              </AnimatedText>
+              </SpringAnimatedText>
             )}
-          </AnimatedText>
+          </SpringAnimatedText>
         </Link>
       </View>
     </View>

@@ -13,25 +13,27 @@ export interface NotificationColumnProps
   pagingEnabled?: boolean
 }
 
-export function NotificationColumn(props: NotificationColumnProps) {
-  const { column, columnIndex, pagingEnabled, subscriptions } = props
+export const NotificationColumn = React.memo(
+  (props: NotificationColumnProps) => {
+    const { column, columnIndex, pagingEnabled, subscriptions } = props
 
-  const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
+    const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
-  return (
-    <EventOrNotificationColumn
-      key={`notification-column-${column.id}-inner`}
-      column={column}
-      subscriptions={subscriptions}
-      columnIndex={columnIndex}
-      pagingEnabled={pagingEnabled}
-    >
-      <NotificationCardsContainer
-        key={`notification-cards-container-${column.id}`}
-        repoIsKnown={requestTypeIconAndData.repoIsKnown}
-        {...props}
+    return (
+      <EventOrNotificationColumn
+        key={`notification-column-${column.id}-inner`}
+        column={column}
+        subscriptions={subscriptions}
         columnIndex={columnIndex}
-      />
-    </EventOrNotificationColumn>
-  )
-}
+        pagingEnabled={pagingEnabled}
+      >
+        <NotificationCardsContainer
+          key={`notification-cards-container-${column.id}`}
+          repoIsKnown={requestTypeIconAndData.repoIsKnown}
+          {...props}
+          columnIndex={columnIndex}
+        />
+      </EventOrNotificationColumn>
+    )
+  },
+)

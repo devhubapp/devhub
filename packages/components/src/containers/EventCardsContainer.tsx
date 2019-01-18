@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   ActivityColumnSubscription,
@@ -77,31 +77,40 @@ export const EventCardsContainer = React.memo(
       [filteredItems, column.filters, data.canFetchMore],
     )
 
+    const fetchData = useCallback(
+      ({ page }: { page?: number } = {}) => {
+        fetchColumnSubscriptionRequest({
+          columnId: column.id,
+          params: {
+            page: page || 1,
+            perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
+          },
+        })
+      },
+      [fetchColumnSubscriptionRequest, column.id],
+    )
+
+    const fetchNextPage = useCallback(
+      () => {
+        const size = subscription ? (subscription.data.items || []).length : 0
+
+        const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
+        const currentPage = Math.ceil(size / perPage)
+
+        const nextPage = (currentPage || 0) + 1
+        fetchData({ page: nextPage })
+      },
+      [fetchData, subscription && (subscription.data.items || []).length],
+    )
+
+    const refresh = useCallback(
+      () => {
+        fetchData()
+      },
+      [fetchData],
+    )
+
     if (!subscription) return null
-
-    const fetchData = ({
-      page,
-      perPage,
-    }: { page?: number; perPage?: number } = {}) => {
-      fetchColumnSubscriptionRequest({
-        columnId: column.id,
-        params: {
-          page: page || 1,
-          perPage,
-        },
-      })
-    }
-
-    const fetchNextPage = ({
-      perPage: _perPage,
-    }: { perPage?: number } = {}) => {
-      const perPage = _perPage || constants.DEFAULT_PAGINATION_PER_PAGE
-      const currentPage = Math.ceil(
-        (subscription.data.items || []).length / perPage,
-      )
-      const nextPage = (currentPage || 0) + 1
-      fetchData({ page: nextPage, perPage })
-    }
 
     return (
       <EventCards
@@ -111,7 +120,7 @@ export const EventCardsContainer = React.memo(
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
         loadState={subscription.data.loadState || 'not_loaded'}
         events={filteredItems}
-        refresh={() => fetchData()}
+        refresh={refresh}
       />
     )
   },

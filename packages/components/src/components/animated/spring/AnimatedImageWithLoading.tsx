@@ -4,7 +4,7 @@ import { Omit } from '@devhub/core'
 import {
   ImageWithLoading,
   ImageWithLoadingProps,
-} from '../common/ImageWithLoading'
+} from '../../common/ImageWithLoading'
 
 export interface AnimatedImageWithLoadingProps
   extends Omit<ImageWithLoadingProps, 'animated'> {

@@ -2,8 +2,8 @@ import React from 'react'
 import { Image, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { getColumnHeaderDetails, ModalPayload } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useColumn } from '../../hooks/use-column'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
@@ -15,8 +15,8 @@ import {
   contentPadding,
   sidebarSize,
 } from '../../styles/variables'
-import { AnimatedSafeAreaView } from '../animated/AnimatedSafeAreaView'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
@@ -41,17 +41,16 @@ export interface SidebarProps {
 }
 
 export const Sidebar = React.memo((props: SidebarProps) => {
-  const theme = useAnimatedTheme()
-  const { sizename } = useAppLayout()
+  const { horizontal, zIndex } = props
 
+  const { sizename } = useAppLayout()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const modalStack = useReduxState(selectors.modalStack)
   const username = useReduxState(selectors.currentUsernameSelector)
-
+  const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
-
-  const { horizontal, zIndex } = props
 
   const small = sizename === '1-small'
   const large = sizename === '3-large'
@@ -69,10 +68,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   }
 
   return (
-    <AnimatedSafeAreaView
+    <SpringAnimatedSafeAreaView
       style={{
         width: horizontal ? undefined : sidebarSize,
-        backgroundColor: theme.backgroundColor as any,
+        backgroundColor: springAnimatedTheme.backgroundColor,
         zIndex: zIndex || 1000,
       }}
     >
@@ -86,13 +85,13 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       >
         {!horizontal && (
           <>
-            <AnimatedView
+            <SpringAnimatedView
               style={[
                 styles.centerContainer,
                 {
                   width: sidebarSize,
                   height: columnHeaderHeight,
-                  backgroundColor: theme.backgroundColorLess08,
+                  backgroundColor: springAnimatedTheme.backgroundColorLess08,
                 },
               ]}
             >
@@ -101,7 +100,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 size={sidebarSize / 2}
                 username={username}
               />
-            </AnimatedView>
+            </SpringAnimatedView>
 
             <Separator horizontal={!horizontal} />
           </>
@@ -142,6 +141,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             columnIds.map(columnId => (
               <SidebarColumnItem
                 key={`sidebar-column-item-${columnId}`}
+                closeAllModals={closeAllModals}
                 columnId={columnId}
                 currentOpenedModal={currentOpenedModal}
                 horizontal={horizontal}
@@ -217,35 +217,46 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         )}
 
         {large && (
-          <Link
-            analyticsLabel="sidebar_logo"
-            enableBackgroundHover
-            hoverBackgroundColor={theme.backgroundColorLess08}
-            href="https://github.com/devhubapp/devhub"
-            openOnNewTab
-            style={[styles.centerContainer, itemContainerStyle]}
-          >
-            <Image
-              resizeMode="contain"
-              source={logo}
-              style={{
-                width: sidebarSize / 2,
-                height: sidebarSize / 2,
-              }}
-            />
-          </Link>
+          <>
+            <Separator horizontal={!horizontal} />
+
+            <ColumnHeaderItem
+              analyticsLabel={undefined}
+              enableBackgroundHover={!horizontal}
+              noPadding
+              size={columnHeaderItemContentBiggerSize}
+              style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+            >
+              <Link
+                analyticsLabel="sidebar_logo"
+                href="https://github.com/devhubapp/devhub"
+                openOnNewTab
+                style={[styles.centerContainer, itemContainerStyle]}
+              >
+                <Image
+                  resizeMode="contain"
+                  source={logo}
+                  style={{
+                    width: sidebarSize / 2,
+                    height: sidebarSize / 2,
+                  }}
+                />
+              </Link>
+            </ColumnHeaderItem>
+          </>
         )}
 
         {horizontal && (showFixedSettingsButton || large) && (
           <Spacer width={contentPadding / 2} />
         )}
       </View>
-    </AnimatedSafeAreaView>
+    </SpringAnimatedSafeAreaView>
   )
 })
 
 const SidebarColumnItem = React.memo(
   (props: {
+    closeAllModals: () => void
     columnId: string
     currentOpenedModal: ModalPayload | undefined
     horizontal: boolean
@@ -254,6 +265,7 @@ const SidebarColumnItem = React.memo(
     small: boolean | undefined
   }) => {
     const {
+      closeAllModals,
       columnId,
       currentOpenedModal,
       horizontal,
@@ -261,8 +273,6 @@ const SidebarColumnItem = React.memo(
       showLabel,
       small,
     } = props
-
-    const theme = useAnimatedTheme()
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
     if (!(column && subscriptions)) return null
@@ -282,6 +292,8 @@ const SidebarColumnItem = React.memo(
         iconName={requestTypeIconAndData.icon}
         label={label}
         onPress={() => {
+          if (currentOpenedModal) closeAllModals()
+
           emitter.emit('FOCUS_ON_COLUMN', {
             animated: !small || !currentOpenedModal,
             columnId: column.id,
@@ -291,11 +303,7 @@ const SidebarColumnItem = React.memo(
         }}
         showLabel={showLabel}
         size={columnHeaderItemContentBiggerSize}
-        style={[
-          styles.centerContainer,
-          !showLabel && itemContainerStyle,
-          { backgroundColor: theme.backgroundColor },
-        ]}
+        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
       />
     )
   },

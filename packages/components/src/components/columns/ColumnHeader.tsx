@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
-import { AnimatedSafeAreaView } from '../animated/AnimatedSafeAreaView'
+import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 
 export interface ColumnHeaderProps extends ViewProps {
@@ -25,15 +25,15 @@ const styles = StyleSheet.create({
 })
 
 export function ColumnHeader(props: ColumnHeaderProps) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const { children, style, ...otherProps } = props
 
   return (
-    <AnimatedSafeAreaView
+    <SpringAnimatedSafeAreaView
       style={[
         styles.container,
-        { backgroundColor: theme.backgroundColorLess08 as any },
+        { backgroundColor: springAnimatedTheme.backgroundColorLess08 },
       ]}
     >
       <View {...otherProps} style={[styles.innerContainer, style]}>
@@ -41,6 +41,6 @@ export function ColumnHeader(props: ColumnHeaderProps) {
       </View>
 
       <CardItemSeparator />
-    </AnimatedSafeAreaView>
+    </SpringAnimatedSafeAreaView>
   )
 }

@@ -18,7 +18,7 @@ export interface EventCardsProps {
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   events: EnhancedGitHubEvent[]
-  fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
+  fetchNextPage: (() => void) | undefined
   loadState: LoadState
   refresh: EmptyCardsProps['refresh']
   repoIsKnown?: boolean
@@ -99,7 +99,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
               disabled={loadState !== 'loaded'}
               loading={loadState === 'loading_more'}
-              onPress={() => fetchNextPage()}
+              onPress={fetchNextPage}
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (

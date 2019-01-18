@@ -1,40 +1,41 @@
 import React, { useRef, useState } from 'react'
 import { TextInputProps as TextInputComponentProps } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
-import { AnimatedTextInput } from '../animated/AnimatedTextInput'
+import { SpringAnimatedTextInput as SpringAnimatedTextInputOriginal } from '../animated/spring/SpringAnimatedTextInput'
 
-export interface TextInputProps extends TextInputComponentProps {
+export interface SpringAnimatedTextInputProps extends TextInputComponentProps {
   className?: string
   placeholderTextColor?: any
   style?: any
 }
 
-export const TextInput = React.forwardRef(
-  (props: TextInputProps, _ref: any) => {
+export const SpringAnimatedTextInput = React.forwardRef(
+  (props: SpringAnimatedTextInputProps, _ref: any) => {
     const { style, ...otherProps } = props
 
     const [isFocused, setIsFocused] = useState(false)
-    const theme = useAnimatedTheme()
+
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const _defaultRef = useRef(null)
     const ref = _ref || _defaultRef
     const isHovered = useHover(ref)
 
     return (
-      <AnimatedTextInput
+      <SpringAnimatedTextInputOriginal
         ref={ref}
-        placeholderTextColor={theme.foregroundColorMuted50}
+        placeholderTextColor={springAnimatedTheme.foregroundColorMuted50}
         {...otherProps}
         className={`input ${otherProps.className || ''}`.trim()}
-        onBlur={e => {
+        onBlur={(e: any) => {
           setIsFocused(false)
           if (otherProps.onBlur) otherProps.onBlur(e)
         }}
-        onFocus={e => {
+        onFocus={(e: any) => {
           setIsFocused(true)
           if (otherProps.onFocus) otherProps.onFocus(e)
         }}
@@ -48,8 +49,8 @@ export const TextInput = React.forwardRef(
             borderColor: isFocused
               ? colors.brandBackgroundColor
               : isHovered
-              ? theme.backgroundColorLess16
-              : theme.backgroundColorLess08,
+              ? springAnimatedTheme.backgroundColorLess16
+              : springAnimatedTheme.backgroundColorLess08,
           },
           style,
         ]}
@@ -58,4 +59,4 @@ export const TextInput = React.forwardRef(
   },
 )
 
-export type TextInput = typeof AnimatedTextInput
+export type SpringAnimatedTextInput = typeof SpringAnimatedTextInputOriginal

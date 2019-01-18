@@ -1,15 +1,9 @@
 import React, { useImperativeMethods, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import {
-  animated,
-  config,
-  ReactSpringHook,
-  useTransition,
-} from 'react-spring/hooks'
+import { config, ReactSpringHook, useTransition } from 'react-spring/hooks'
 
 import { Platform } from '../../libs/platform/index.web'
-
-const SpringAnimatedView = animated(View)
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 
 export type Transition = ReactSpringHook
 

@@ -4,7 +4,11 @@ import {
   TouchableOpacityProps as TouchableOpacityComponentProps,
 } from 'react-native'
 import { analytics } from '../../libs/analytics'
-import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
+import { createSpringAnimatedComponent } from '../animated/spring/helpers'
+
+const SpringAnimatedTouchableOpacity = createSpringAnimatedComponent(
+  TouchableOpacityOriginal,
+)
 
 export interface TouchableOpacityProps extends TouchableOpacityComponentProps {
   analyticsAction?: 'press' | 'toggle' | string | undefined
@@ -13,7 +17,6 @@ export interface TouchableOpacityProps extends TouchableOpacityComponentProps {
   analyticsPayload?: Record<string, string | number | undefined> | undefined
   analyticsValue?: number | undefined
   animated?: boolean
-  className?: string
   selectable?: boolean
 }
 
@@ -32,8 +35,8 @@ export const TouchableOpacity = React.forwardRef(
     ref: any,
   ) => {
     const TouchableOpacityComponent = animated
-      ? AnimatedTouchableOpacity
-      : TouchableOpacityOriginal
+      ? SpringAnimatedTouchableOpacity
+      : ((TouchableOpacityOriginal as any) as typeof SpringAnimatedTouchableOpacity)
 
     const onPress: typeof _onPress =
       analyticsAction || analyticsCategory || analyticsLabel || analyticsValue
@@ -53,11 +56,11 @@ export const TouchableOpacity = React.forwardRef(
         activeOpacity={0.5}
         {...props}
         ref={ref}
-        className={`touchable-opacity ${props.className || ''}`.trim()}
         onPress={onPress}
         style={[
           props.style,
           props.disabled && { opacity: 0.5 },
+          !onPress && ({ cursor: undefined } as any),
           selectable === true && ({ userSelect: undefined } as any),
         ]}
       />

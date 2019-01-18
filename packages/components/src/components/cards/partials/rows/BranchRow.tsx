@@ -1,14 +1,14 @@
 import React from 'react'
-import { View } from 'react-native'
 
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { AnimatedIcon } from '../../../animated/AnimatedIcon'
-import { AnimatedText } from '../../../animated/AnimatedText'
+import { View } from 'react-native'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { getBranchURL } from './helpers'
-import { getCardRowStylesForTheme } from './styles'
+import { cardRowStyles } from './styles'
 
 export interface BranchRowProps {
   branch: string
@@ -22,7 +22,7 @@ export interface BranchRowProps {
 export interface BranchRowState {}
 
 export const BranchRow = React.memo((props: BranchRowProps) => {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     branch: _branch,
@@ -39,46 +39,46 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
   if (branch === 'master' && !isBranchMainEvent) return null
 
   return (
-    <View style={getCardRowStylesForTheme(theme).container}>
+    <View style={cardRowStyles.container}>
       <View
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       >
         <Avatar
           isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
           linkURL=""
           small
-          style={getCardStylesForTheme(theme).avatar}
+          style={cardStyles.avatar}
           username={ownerName}
         />
       </View>
 
-      <View style={getCardStylesForTheme(theme).rightColumn}>
+      <View style={cardStyles.rightColumn}>
         <Link
           href={getBranchURL(ownerName, repositoryName, branch)}
-          style={getCardRowStylesForTheme(theme).mainContentContainer}
+          style={cardRowStyles.mainContentContainer}
         >
-          <AnimatedText
+          <SpringAnimatedText
             numberOfLines={1}
             style={[
-              getCardStylesForTheme(theme).normalText,
+              getCardStylesForTheme(springAnimatedTheme).normalText,
               (isRead || !isBranchMainEvent) &&
-                getCardStylesForTheme(theme).mutedText,
+                getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
-            <AnimatedIcon
+            <SpringAnimatedIcon
               name="git-branch"
               style={[
-                getCardStylesForTheme(theme).normalText,
-                isRead && getCardStylesForTheme(theme).mutedText,
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}
             {branch}
-          </AnimatedText>
+          </SpringAnimatedText>
         </Link>
       </View>
     </View>

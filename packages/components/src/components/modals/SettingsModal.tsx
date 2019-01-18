@@ -1,7 +1,6 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
@@ -19,12 +18,10 @@ export interface SettingsModalProps {
   showBackButton: boolean
 }
 
-export function SettingsModal(props: SettingsModalProps) {
+export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
-
-  const theme = useAnimatedTheme()
 
   const username = useReduxState(selectors.currentUsernameSelector)
 
@@ -38,7 +35,7 @@ export function SettingsModal(props: SettingsModalProps) {
       right={
         sizename === '1-small' && username ? (
           <Avatar
-            backgroundColorLoading={theme.backgroundColor}
+            backgroundColorLoading={null}
             shape="circle"
             size={28}
             username={username}
@@ -94,4 +91,4 @@ export function SettingsModal(props: SettingsModalProps) {
       </ScrollView>
     </ModalColumn>
   )
-}
+})

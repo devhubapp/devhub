@@ -1,4 +1,6 @@
-import { ThemeColors } from '@devhub/core'
+import _ from 'lodash'
+
+import { Theme, ThemeColors } from '@devhub/core'
 
 export const themeColorFields: Array<keyof ThemeColors> = [
   'backgroundColor',
@@ -14,3 +16,5 @@ export const themeColorFields: Array<keyof ThemeColors> = [
   'foregroundColor',
   'foregroundColorMuted50',
 ]
+
+export const pickThemeColors = (theme: Theme) => _.pick(theme, themeColorFields)

@@ -2,22 +2,25 @@ import React, { useRef, useState } from 'react'
 import { StyleProp, TextStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedIcon } from '../animated/AnimatedIcon'
-import { AnimatedText } from '../animated/AnimatedText'
-import { AnimatedView } from '../animated/AnimatedView'
-import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import {
+  SpringAnimatedTouchableOpacity,
+  SpringAnimatedTouchableOpacityProps,
+} from '../animated/spring/SpringAnimatedTouchableOpacity'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 
 export const fabSize = 50
 
-export interface FABProps extends TouchableOpacityProps {
+export interface FABProps extends SpringAnimatedTouchableOpacityProps {
   children?: string | React.ReactElement<any>
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle> | any
-  onPress: TouchableOpacityProps['onPress']
+  onPress: SpringAnimatedTouchableOpacityProps['onPress']
   useBrandColor?: boolean
 }
 
@@ -31,7 +34,7 @@ export function FAB(props: FABProps) {
     ...otherProps
   } = props
 
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const [isPressing, setIsPressing] = useState(false)
 
@@ -39,9 +42,8 @@ export function FAB(props: FABProps) {
   const isHovered = useHover(touchableRef)
 
   return (
-    <TouchableOpacity
+    <SpringAnimatedTouchableOpacity
       ref={touchableRef}
-      animated
       analyticsCategory="fab"
       {...otherProps}
       activeOpacity={1}
@@ -60,7 +62,7 @@ export function FAB(props: FABProps) {
           borderRadius: fabSize / 2,
           backgroundColor: useBrandColor
             ? colors.brandBackgroundColor
-            : theme.backgroundColorLess08,
+            : springAnimatedTheme.backgroundColorLess08,
           shadowColor: '#000000',
           shadowOffset: {
             width: 0,
@@ -73,7 +75,7 @@ export function FAB(props: FABProps) {
         style,
       ]}
     >
-      <AnimatedView
+      <SpringAnimatedView
         style={[
           {
             flex: 1,
@@ -85,17 +87,17 @@ export function FAB(props: FABProps) {
           },
           !!(isHovered || isPressing) && {
             backgroundColor: useBrandColor
-              ? theme.backgroundColorTransparent10
-              : theme.backgroundColorLess16,
+              ? springAnimatedTheme.backgroundColorTransparent10
+              : springAnimatedTheme.backgroundColorLess16,
           },
         ]}
       >
         {typeof iconName === 'string' ? (
-          <AnimatedIcon
+          <SpringAnimatedIcon
             color={
               useBrandColor
                 ? colors.brandForegroundColor
-                : theme.foregroundColor
+                : springAnimatedTheme.foregroundColor
             }
             name={iconName}
             style={[
@@ -111,22 +113,22 @@ export function FAB(props: FABProps) {
             ]}
           />
         ) : typeof children === 'string' ? (
-          <AnimatedText
+          <SpringAnimatedText
             style={{
               fontSize: 14,
               lineHeight: 14,
               fontWeight: '500',
               color: useBrandColor
                 ? colors.brandForegroundColor
-                : theme.foregroundColor,
+                : springAnimatedTheme.foregroundColor,
             }}
           >
             {children}
-          </AnimatedText>
+          </SpringAnimatedText>
         ) : (
           children
         )}
-      </AnimatedView>
-    </TouchableOpacity>
+      </SpringAnimatedView>
+    </SpringAnimatedTouchableOpacity>
   )
 }

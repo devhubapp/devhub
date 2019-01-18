@@ -1,12 +1,14 @@
 import React, { AnchorHTMLAttributes, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { Omit } from '@devhub/core'
+import { Omit, ThemeColors } from '@devhub/core'
+import { rgba } from 'polished'
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useTheme } from '../context/ThemeContext'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export interface LinkProps
@@ -16,7 +18,7 @@ export interface LinkProps
   animated?: boolean
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
-  hoverBackgroundColor?: string
+  hoverBackgroundThemeColor?: keyof ThemeColors
   href?: string
   mobileProps?: TouchableOpacityProps
   openOnNewTab?: boolean
@@ -34,21 +36,49 @@ export function Link(props: LinkProps) {
     webProps,
     enableBackgroundHover,
     enableForegroundHover,
-    hoverBackgroundColor,
+    hoverBackgroundThemeColor,
     ...otherProps
   } = props
 
-  const ref = useRef(null)
-  const isHovered = useHover(
+  const initialTheme = useTheme(theme => {
+    cacheRef.current.theme = theme
+    updateStyles()
+  })
+
+  const ref = useRef<View>(null)
+  useHover(
     enableBackgroundHover || enableForegroundHover ? ref : null,
+    isHovered => {
+      cacheRef.current.isHovered = isHovered
+      updateStyles()
+    },
   )
 
-  const ViewComponent = animated ? AnimatedView : View
+  const cacheRef = useRef({ theme: initialTheme, isHovered: false })
 
+  function updateStyles() {
+    const { isHovered, theme } = cacheRef.current
+
+    if (ref.current) {
+      const hoverBackgroundColor =
+        hoverBackgroundThemeColor && theme[hoverBackgroundThemeColor]
+
+      ref.current!.setNativeProps({
+        style: {
+          backgroundColor: hoverBackgroundColor
+            ? isHovered
+              ? hoverBackgroundColor
+              : rgba(hoverBackgroundColor, 0)
+            : null,
+        },
+      })
+    }
+  }
+
+  const ViewComponent = animated ? SpringAnimatedView : View
   const renderTouchable = href || allowEmptyLink
 
   let finalProps: any
-
   if (renderTouchable) {
     finalProps = {
       ...(analyticsLabel
@@ -93,12 +123,7 @@ export function Link(props: LinkProps) {
     })
   }
 
-  if (isHovered && hoverBackgroundColor) {
-    finalProps.style = StyleSheet.flatten([
-      finalProps.style,
-      { backgroundColor: hoverBackgroundColor },
-    ])
-  }
+  finalProps.style = StyleSheet.flatten(finalProps.style)
 
   if (!renderTouchable) return <ViewComponent ref={ref} {...finalProps} />
   return <TouchableOpacity ref={ref} animated={animated} {...finalProps} />

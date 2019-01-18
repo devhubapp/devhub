@@ -1,30 +1,30 @@
 import React from 'react'
 import { TextProps } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedText } from '../animated/AnimatedText'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 
 export type H2Props = TextProps & { children: string; withMargin?: boolean }
 
 export function H2(props: H2Props) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const { children, style, withMargin, ...otherProps } = props
 
   return (
-    <AnimatedText
+    <SpringAnimatedText
       {...otherProps}
       style={[
         {
           marginBottom: withMargin ? contentPadding : undefined,
           fontWeight: '600',
-          color: theme.foregroundColor,
+          color: springAnimatedTheme.foregroundColor,
         },
         style,
       ]}
     >
       {typeof children === 'string' ? children.toUpperCase() : children}
-    </AnimatedText>
+    </SpringAnimatedText>
   )
 }

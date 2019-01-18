@@ -2,12 +2,15 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { Omit } from '@devhub/core'
-import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { contentPadding } from '../../../styles/variables'
-import { AnimatedIcon, AnimatedIconProps } from '../../animated/AnimatedIcon'
+import {
+  SpringAnimatedIcon,
+  SpringAnimatedIconProps,
+} from '../../animated/spring/SpringAnimatedIcon'
 
 export interface CardIconProps
-  extends Omit<AnimatedIconProps, 'accessibilityRole'> {
+  extends Omit<SpringAnimatedIconProps, 'accessibilityRole'> {
   style?: any
 }
 
@@ -18,12 +21,13 @@ const styles = StyleSheet.create({
   },
 })
 
-export function CardIcon(props: CardIconProps) {
-  const theme = useAnimatedTheme()
+export function SpringAnimatedCardIcon(props: CardIconProps) {
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
   return (
-    <AnimatedIcon
+    <SpringAnimatedIcon
       {...props}
-      color={props.color || theme.foregroundColor}
+      color={props.color || springAnimatedTheme.foregroundColor}
       style={[styles.container, props.style]}
     />
   )

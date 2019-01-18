@@ -1,26 +1,19 @@
 import React from 'react'
 
 import { getLuminance } from 'polished'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
-import { AnimatedView } from '../animated/AnimatedView'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 
 export const separatorSize = 1
 export const separatorTickSize = 2
 
-export function getSeparatorColor(
-  backgroundColor: string,
-  themeOrAnimatedTheme: {
-    backgroundColorLess08: string | any
-    backgroundColorLess16: string | any
-    backgroundColorMore08: string | any
-  },
-) {
+export function getSeparatorThemeColor(backgroundColor: string) {
   const luminance = getLuminance(backgroundColor)
 
-  if (luminance <= 0.02) return themeOrAnimatedTheme.backgroundColorLess16
-  if (luminance >= 0.95) return themeOrAnimatedTheme.backgroundColorLess08
-  return themeOrAnimatedTheme.backgroundColorMore08
+  if (luminance <= 0.02) return 'backgroundColorLess16'
+  if (luminance >= 0.95) return 'backgroundColorLess08'
+  return 'backgroundColorMore08'
 }
 
 export interface SeparatorProps {
@@ -30,14 +23,16 @@ export interface SeparatorProps {
 }
 
 export function Separator(props: SeparatorProps) {
-  const animatedTheme = useAnimatedTheme()
-  const theme = useTheme()
-
   const { horizontal, thick, zIndex } = props
+
+  const theme = useTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
   const size = thick ? separatorTickSize : separatorSize
+  const themeField = getSeparatorThemeColor(theme.backgroundColor)
 
   return (
-    <AnimatedView
+    <SpringAnimatedView
       style={[
         horizontal
           ? {
@@ -49,10 +44,7 @@ export function Separator(props: SeparatorProps) {
               height: '100%',
             },
         {
-          backgroundColor: getSeparatorColor(
-            theme.backgroundColor,
-            animatedTheme,
-          ),
+          backgroundColor: springAnimatedTheme[themeField],
         },
         !!zIndex && { zIndex },
       ]}

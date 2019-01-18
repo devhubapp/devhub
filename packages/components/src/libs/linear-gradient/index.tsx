@@ -3,13 +3,15 @@ import LinearGradient, {
 } from 'react-native-linear-gradient'
 
 import { Omit } from '@devhub/core'
-import { createAnimatedComponent } from '../../components/animated/helpers'
+import { createSpringAnimatedComponent } from '../../components/animated/spring/helpers'
 
 export { LinearGradient, LinearGradientProps }
 
-export interface AnimatedLinearGradientProps
+export interface SpringAnimatedLinearGradientProps
   extends Omit<LinearGradientProps, 'colors'> {
   colors: Array<string | any>
 }
 
-export const AnimatedLinearGradient = createAnimatedComponent(LinearGradient)
+export const SpringAnimatedLinearGradient = createSpringAnimatedComponent(
+  LinearGradient,
+)

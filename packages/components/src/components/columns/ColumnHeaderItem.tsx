@@ -1,8 +1,9 @@
-import React, { useRef } from 'react'
+import { rgba } from 'polished'
+import React, { useEffect, useRef } from 'react'
 import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
+import { useSpring } from 'react-spring/hooks'
 
-import { GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { GitHubIcon, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
@@ -11,18 +12,17 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
-import { AnimatedIcon } from '../animated/AnimatedIcon'
-import { AnimatedText } from '../animated/AnimatedText'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { Avatar, AvatarProps } from '../common/Avatar'
 import {
   ConditionalWrap,
   ConditionalWrapProps,
 } from '../common/ConditionalWrap'
-import {
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from '../common/TouchableOpacity'
+import { TouchableOpacityProps } from '../common/TouchableOpacity'
+import { useTheme } from '../context/ThemeContext'
 
 export interface ColumnHeaderItemProps {
   analyticsAction?: TouchableOpacityProps['analyticsAction']
@@ -35,7 +35,7 @@ export interface ColumnHeaderItemProps {
   enableForegroundHover?: boolean
   fixedIconSize?: boolean
   forceHoverState?: boolean
-  hoverBackgroundColor?: string
+  hoverBackgroundThemeColor?: keyof ThemeColors
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   label?: string
@@ -53,7 +53,7 @@ export interface ColumnHeaderItemProps {
   titleStyle?: StyleProp<TextStyle>
 }
 
-export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
+export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   const {
     analyticsAction,
     analyticsLabel,
@@ -64,7 +64,7 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
     enableForegroundHover,
     fixedIconSize,
     forceHoverState,
-    hoverBackgroundColor: _hoverBackgroundColor,
+    hoverBackgroundThemeColor,
     iconName,
     iconStyle,
     label: _label,
@@ -82,16 +82,57 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
     titleStyle,
   } = props
 
-  const theme = useAnimatedTheme()
-  const _username = useReduxState(selectors.currentUsernameSelector)
+  const initialTheme = useTheme(theme => {
+    cacheRef.current.theme = theme
+    updateStyles()
+  })
 
   const containerRef = useRef(null)
-  const isHovered =
-    (useHover(
-      enableBackgroundHover || enableForegroundHover ? containerRef : null,
-    ) ||
-      forceHoverState) &&
-    !disabled
+  useHover(
+    enableBackgroundHover || enableForegroundHover ? containerRef : null,
+    isHovered => {
+      cacheRef.current.isHovered = isHovered
+      updateStyles()
+    },
+  )
+
+  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
+
+  useEffect(
+    () => {
+      updateStyles()
+    },
+    [disabled, forceHoverState, enableBackgroundHover, enableForegroundHover],
+  )
+
+  const _username = useReduxState(selectors.currentUsernameSelector)
+
+  function getStyles() {
+    const { isHovered: _isHovered, theme } = cacheRef.current
+
+    const isHovered = (_isHovered || forceHoverState) && !disabled
+    const immediate = !!(enableForegroundHover && !enableBackgroundHover)
+
+    return {
+      config: { duration: immediate ? 0 : 100 },
+      native: true,
+      backgroundColor:
+        isHovered && enableBackgroundHover
+          ? theme[hoverBackgroundThemeColor || 'backgroundColorLess08']
+          : rgba(theme.backgroundColor, 0),
+      foregroundColor:
+        isHovered && enableForegroundHover
+          ? colors.brandBackgroundColor
+          : theme.foregroundColor,
+      mutedForegroundColor: theme.foregroundColorMuted50,
+    }
+  }
+
+  function updateStyles() {
+    setSpringAnimatedStyles(getStyles())
+  }
 
   const avatarProps = _avatarProps || {}
 
@@ -105,13 +146,6 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
       : avatarProps.username
 
   const hasText = !!(title || subtitle || text)
-
-  const normalBackgroundColor = undefined
-  const hoverBackgroundColor =
-    _hoverBackgroundColor || theme.backgroundColorLess08
-
-  const normalForegroundColor = theme.foregroundColor
-  const hoverForegroundColor = colors.brandBackgroundColor
 
   const styles = {
     container: {
@@ -150,13 +184,13 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
 
   const wrap: ConditionalWrapProps['wrap'] = child =>
     onPress ? (
-      <TouchableOpacity
+      <SpringAnimatedTouchableOpacity
         ref={containerRef}
-        animated
         analyticsAction={analyticsAction}
         analyticsLabel={analyticsLabel}
         disabled={disabled}
         onPress={onPress}
+        selectable={!onPress}
         style={[
           styles.container,
           noPadding
@@ -166,16 +200,14 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },
-          { backgroundColor: normalBackgroundColor },
+          { backgroundColor: springAnimatedStyles.backgroundColor },
           style,
-          isHovered &&
-            enableBackgroundHover && { backgroundColor: hoverBackgroundColor },
         ]}
       >
         {child}
-      </TouchableOpacity>
+      </SpringAnimatedTouchableOpacity>
     ) : (
-      <AnimatedView
+      <SpringAnimatedView
         ref={containerRef}
         style={[
           styles.container,
@@ -186,15 +218,12 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },
+          { backgroundColor: springAnimatedStyles.backgroundColor },
           style,
-          { backgroundColor: normalBackgroundColor },
-          style,
-          isHovered &&
-            enableBackgroundHover && { backgroundColor: hoverBackgroundColor },
         ]}
       >
         {child}
-      </AnimatedView>
+      </SpringAnimatedView>
     )
 
   return (
@@ -228,19 +257,15 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 />
               ) : (
                 !!iconName && (
-                  <AnimatedIcon
+                  <SpringAnimatedIcon
                     name={iconName}
                     style={[
                       styles.icon,
                       fixedIconSize && {
                         width: size,
                       },
-                      { color: normalForegroundColor },
+                      { color: springAnimatedStyles.foregroundColor },
                       iconStyle,
-                      isHovered &&
-                        enableForegroundHover && {
-                          color: hoverForegroundColor,
-                        },
                     ]}
                   />
                 )
@@ -250,59 +275,51 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
 
           <View style={{ flexDirection: 'row', maxWidth: 170 }}>
             {!!title && (
-              <AnimatedText
+              <SpringAnimatedText
                 numberOfLines={1}
                 selectable={selectable}
                 style={[
                   styles.title,
-                  { color: normalForegroundColor },
+                  { color: springAnimatedStyles.foregroundColor },
                   titleStyle,
-                  isHovered &&
-                    enableForegroundHover && {
-                      color: hoverForegroundColor,
-                    },
                 ]}
               >
                 {title}
-              </AnimatedText>
+              </SpringAnimatedText>
             )}
           </View>
 
           {!!subtitle && (
-            <AnimatedText
+            <SpringAnimatedText
               numberOfLines={1}
               selectable={selectable}
               style={[
                 styles.subtitle,
-                { color: theme.foregroundColorMuted50 },
+                { color: springAnimatedStyles.mutedForegroundColor },
                 subtitleStyle,
               ]}
             >
               {subtitle}
-            </AnimatedText>
+            </SpringAnimatedText>
           )}
 
           {!!text && (
-            <AnimatedText
+            <SpringAnimatedText
               numberOfLines={1}
               selectable={selectable}
               style={[
                 styles.text,
-                { color: normalForegroundColor },
+                { color: springAnimatedStyles.foregroundColor },
                 textStyle,
-                isHovered &&
-                  enableForegroundHover && {
-                    color: hoverForegroundColor,
-                  },
               ]}
             >
               {text}
-            </AnimatedText>
+            </SpringAnimatedText>
           )}
         </View>
 
         {!!showLabel && !!label && (
-          <AnimatedText
+          <SpringAnimatedText
             style={[
               {
                 width: Math.max(54, size + contentPadding),
@@ -313,21 +330,17 @@ export function ColumnHeaderItem(props: ColumnHeaderItemProps) {
                 textAlign: 'center',
               },
 
-              { color: normalForegroundColor },
+              { color: springAnimatedStyles.foregroundColor },
               style,
-              isHovered &&
-                enableForegroundHover && {
-                  color: hoverForegroundColor,
-                },
             ]}
             numberOfLines={1}
           >
             {label}
-          </AnimatedText>
+          </SpringAnimatedText>
         )}
 
         {children}
       </>
     </ConditionalWrap>
   )
-}
+})

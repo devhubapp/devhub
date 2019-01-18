@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedIcon, AnimatedIconProps } from '../animated/AnimatedIcon'
-import { AnimatedText } from '../animated/AnimatedText'
-import { AnimatedView } from '../animated/AnimatedView'
+import {
+  SpringAnimatedIcon,
+  SpringAnimatedIconProps,
+} from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 const checkboxBorderRadius = 4
@@ -31,7 +34,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export interface CheckboxProps {
+export interface SpringAnimatedCheckboxProps {
   analyticsLabel: TouchableOpacityProps['analyticsLabel']
   checked?: boolean | null
   checkedBackgroundColor?: string | any
@@ -42,7 +45,7 @@ export interface CheckboxProps {
   disabled?: boolean
   enableIndeterminateState?: boolean
   label?: string | React.ReactNode
-  labelIcon?: AnimatedIconProps['name']
+  labelIcon?: SpringAnimatedIconProps['name']
   onChange?: (value: boolean | null) => void
   size?: number
   uncheckedBackgroundColor?: string | any
@@ -50,8 +53,8 @@ export interface CheckboxProps {
   useBrandColor?: boolean
 }
 
-export function Checkbox(props: CheckboxProps) {
-  const theme = useAnimatedTheme()
+export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     defaultValue,
@@ -69,7 +72,7 @@ export function Checkbox(props: CheckboxProps) {
     onChange,
     size = 18,
     uncheckedBackgroundColor,
-    uncheckedForegroundColor = theme.foregroundColor,
+    uncheckedForegroundColor = springAnimatedTheme.foregroundColor,
   } = props
 
   const [lastBooleanValue, setLastBooleanValue] = useState(
@@ -106,7 +109,7 @@ export function Checkbox(props: CheckboxProps) {
       onPress={disabled ? undefined : handleOnChange}
       style={[styles.container, containerStyle]}
     >
-      <AnimatedView
+      <SpringAnimatedView
         style={[
           styles.checkbox,
           {
@@ -124,7 +127,7 @@ export function Checkbox(props: CheckboxProps) {
         ]}
       >
         <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 1 }]}>
-          <AnimatedView
+          <SpringAnimatedView
             style={{
               width: isIndeterminateState ? '80%' : '100%',
               height: isIndeterminateState ? '80%' : '100%',
@@ -138,7 +141,7 @@ export function Checkbox(props: CheckboxProps) {
         </View>
 
         <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 2 }]}>
-          <AnimatedIcon
+          <SpringAnimatedIcon
             color={checkedForegroundColor}
             name="check"
             size={13}
@@ -149,7 +152,7 @@ export function Checkbox(props: CheckboxProps) {
             }}
           />
         </View>
-      </AnimatedView>
+      </SpringAnimatedView>
 
       {!!label && (
         <View
@@ -162,22 +165,22 @@ export function Checkbox(props: CheckboxProps) {
           }}
         >
           {typeof label === 'string' ? (
-            <AnimatedText
+            <SpringAnimatedText
               style={{
                 lineHeight: size,
                 marginLeft: contentPadding / 2,
-                color: theme.foregroundColor,
+                color: springAnimatedTheme.foregroundColor,
               }}
             >
               {label}
-            </AnimatedText>
+            </SpringAnimatedText>
           ) : (
             label
           )}
 
           {!!labelIcon && (
-            <AnimatedIcon
-              color={theme.foregroundColor}
+            <SpringAnimatedIcon
+              color={springAnimatedTheme.foregroundColor}
               name={labelIcon}
               size={16}
               style={{ lineHeight: 16 }}

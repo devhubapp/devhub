@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 
 import { Column, eventTypes, getEventTypeMetadata } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
@@ -17,9 +17,9 @@ import {
   getNotificationReasonMetadata,
   notificationReasons,
 } from '../../utils/helpers/github/notifications'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { Checkbox } from '../common/Checkbox'
+import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
@@ -53,12 +53,12 @@ export type ColumnOptionCategory =
   | 'saved_for_later'
   | 'unread'
 
-export function ColumnOptions(props: ColumnOptionsProps) {
+export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const [
     openedOptionCategory,
     setOpenedOptionCategory,
   ] = useState<ColumnOptionCategory | null>(null)
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const hasPrivateAccess = useReduxState(
     selectors.githubHasPrivateAccessSelector,
@@ -84,10 +84,10 @@ export function ColumnOptions(props: ColumnOptionsProps) {
   const { availableHeight, column, columnIndex } = props
 
   return (
-    <AnimatedView
+    <SpringAnimatedView
       style={[
         styles.container,
-        { backgroundColor: theme.backgroundColorLess08 },
+        { backgroundColor: springAnimatedTheme.backgroundColorLess08 },
       ]}
     >
       <ScrollView
@@ -125,12 +125,14 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       : null
 
                   return (
-                    <Checkbox
+                    <SpringAnimatedCheckbox
                       key={`notification-reason-option-${item.reason}`}
                       analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundColor={item.color}
-                      checkedForegroundColor={theme.backgroundColorDarker08}
+                      checkedForegroundColor={
+                        springAnimatedTheme.backgroundColorDarker08
+                      }
                       containerStyle={{
                         flexGrow: 1,
                         paddingVertical: contentPadding / 4,
@@ -184,7 +186,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                       : null
 
                   return (
-                    <Checkbox
+                    <SpringAnimatedCheckbox
                       key={`event-type-option-${item.type}`}
                       analyticsLabel={undefined}
                       checked={checked}
@@ -231,7 +233,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               }
               title="Saved for later"
             >
-              <Checkbox
+              <SpringAnimatedCheckbox
                 analyticsLabel="save_for_later"
                 checked={
                   typeof savedForLater === 'boolean' ? savedForLater : null
@@ -287,7 +289,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
                 }
                 title="Read status"
               >
-                <Checkbox
+                <SpringAnimatedCheckbox
                   analyticsLabel="read"
                   checked={isReadChecked}
                   containerStyle={{ flexGrow: 1 }}
@@ -304,7 +306,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
                 <Spacer height={contentPadding / 2} />
 
-                <Checkbox
+                <SpringAnimatedCheckbox
                   analyticsLabel="unread"
                   checked={isUnreadChecked}
                   containerStyle={{ flexGrow: 1 }}
@@ -370,7 +372,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
               }
               title="Privacy"
             >
-              <Checkbox
+              <SpringAnimatedCheckbox
                 analyticsLabel="public"
                 checked={isPublicChecked}
                 containerStyle={{ flexGrow: 1 }}
@@ -390,7 +392,7 @@ export function ColumnOptions(props: ColumnOptionsProps) {
 
               <Spacer height={contentPadding / 2} />
 
-              <Checkbox
+              <SpringAnimatedCheckbox
                 analyticsLabel="private"
                 checked={isPrivateChecked}
                 containerStyle={{ flexGrow: 1 }}
@@ -452,6 +454,6 @@ export function ColumnOptions(props: ColumnOptionsProps) {
         </View>
       </ScrollView>
       <CardItemSeparator />
-    </AnimatedView>
+    </SpringAnimatedView>
   )
-}
+})

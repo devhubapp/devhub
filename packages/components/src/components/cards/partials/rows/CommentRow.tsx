@@ -2,14 +2,14 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { AnimatedText } from '../../../animated/AnimatedText'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
-import { getCardRowStylesForTheme } from './styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { cardRowStyles } from './styles'
 
 export interface CommentRowProps {
   addBottomAnchor?: boolean
@@ -26,7 +26,7 @@ export interface CommentRowProps {
 export interface CommentRowState {}
 
 export const CommentRow = React.memo((props: CommentRowProps) => {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     addBottomAnchor,
@@ -49,14 +49,14 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
 
   return (
-    <View style={getCardRowStylesForTheme(theme).container}>
+    <View style={cardRowStyles.container}>
       <View
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
-          getCardStylesForTheme(theme).leftColumnAlignTop,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
+          cardStyles.leftColumnAlignTop,
         ]}
       >
         <Avatar
@@ -65,25 +65,25 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
           linkURL={userLinkURL}
           shape={isBot ? 'rounded' : undefined}
           small
-          style={getCardStylesForTheme(theme).avatar}
+          style={cardStyles.avatar}
           username={username}
         />
       </View>
 
-      <View style={getCardStylesForTheme(theme).rightColumn}>
+      <View style={cardStyles.rightColumn}>
         <Link
           href={fixURL(url, { addBottomAnchor })}
-          style={getCardRowStylesForTheme(theme).mainContentContainer}
+          style={cardRowStyles.mainContentContainer}
         >
-          <AnimatedText
+          <SpringAnimatedText
             numberOfLines={numberOfLines}
             style={[
-              getCardStylesForTheme(theme).commentText,
-              isRead && getCardStylesForTheme(theme).mutedText,
+              getCardStylesForTheme(springAnimatedTheme).commentText,
+              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
             {body}
-          </AnimatedText>
+          </SpringAnimatedText>
         </Link>
       </View>
     </View>

@@ -2,23 +2,26 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { AnimatedIcon, AnimatedIconProps } from '../../../animated/AnimatedIcon'
-import { AnimatedText } from '../../../animated/AnimatedText'
+import {
+  SpringAnimatedIcon,
+  SpringAnimatedIconProps,
+} from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
-import { getCardRowStylesForTheme } from './styles'
+import { cardRowStyles } from './styles'
 
 export interface IssueOrPullRequestRowProps {
   addBottomAnchor?: boolean
   avatarURL: string
   iconColor?: string
-  iconName: AnimatedIconProps['name']
+  iconName: SpringAnimatedIconProps['name']
   isRead: boolean
   issueOrPullRequestNumber: number
   smallLeftColumn?: boolean
@@ -38,7 +41,7 @@ const styles = StyleSheet.create({
 
 export const IssueOrPullRequestRow = React.memo(
   (props: IssueOrPullRequestRowProps) => {
-    const theme = useAnimatedTheme()
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const {
       addBottomAnchor,
@@ -60,13 +63,13 @@ export const IssueOrPullRequestRow = React.memo(
     const byText = username ? `@${username}` : ''
 
     return (
-      <View style={getCardRowStylesForTheme(theme).container}>
+      <View style={cardRowStyles.container}>
         <View
           style={[
-            getCardStylesForTheme(theme).leftColumn,
+            cardStyles.leftColumn,
             smallLeftColumn
-              ? getCardStylesForTheme(theme).leftColumn__small
-              : getCardStylesForTheme(theme).leftColumn__big,
+              ? cardStyles.leftColumn__small
+              : cardStyles.leftColumn__big,
           ]}
         >
           {Boolean(username) && (
@@ -75,42 +78,42 @@ export const IssueOrPullRequestRow = React.memo(
               isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
               linkURL={userLinkURL}
               small
-              style={getCardStylesForTheme(theme).avatar}
+              style={cardStyles.avatar}
               username={username}
             />
           )}
         </View>
 
-        <View style={getCardStylesForTheme(theme).rightColumn}>
+        <View style={cardStyles.rightColumn}>
           <Link
             href={fixURL(url, {
               addBottomAnchor,
               issueOrPullRequestNumber,
             })}
-            style={getCardRowStylesForTheme(theme).mainContentContainer}
+            style={cardRowStyles.mainContentContainer}
           >
-            <AnimatedText
+            <SpringAnimatedText
               numberOfLines={1}
               style={[
                 Platform.OS !== 'android' && { flexGrow: 1 },
-                getCardStylesForTheme(theme).normalText,
-                isRead && getCardStylesForTheme(theme).mutedText,
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
-              <AnimatedIcon color={iconColor} name={iconName} /> {title}
+              <SpringAnimatedIcon color={iconColor} name={iconName} /> {title}
               {Boolean(byText) && (
-                <AnimatedText
+                <SpringAnimatedText
                   style={[
-                    getCardStylesForTheme(theme).normalText,
-                    getCardStylesForTheme(theme).smallText,
-                    getCardStylesForTheme(theme).mutedText,
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    cardStyles.smallText,
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
                 >
                   {' '}
                   by {byText}
-                </AnimatedText>
+                </SpringAnimatedText>
               )}
-            </AnimatedText>
+            </SpringAnimatedText>
           </Link>
 
           <CardItemId

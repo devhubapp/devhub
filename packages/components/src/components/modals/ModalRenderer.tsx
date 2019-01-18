@@ -2,24 +2,23 @@ import React from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 
 import { ModalPayloadWithIndex } from '@devhub/core'
-import { animated, config, useTransition } from 'react-spring/hooks'
+import { config, useTransition } from 'react-spring/hooks'
 import { SettingsModal } from '../../components/modals/SettingsModal'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { Separator, separatorTickSize } from '../common/Separator'
-import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
 import { AddColumnModal } from './AddColumnModal'
 import { EnterpriseSetupModal } from './EnterpriseSetupModal'
-
-const SpringAnimatedView = animated(View)
 
 function renderModal(modal: ModalPayloadWithIndex) {
   if (!modal) return null
@@ -57,7 +56,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const { renderSeparator } = props
 
   const { sizename } = useAppLayout()
-  const animatedTheme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const columnWidth = useColumnWidth()
 
   const modalStack = useReduxState(selectors.modalStack)
@@ -132,14 +131,13 @@ export function ModalRenderer(props: ModalRendererProps) {
             zIndex: 500,
           }}
         >
-          <TouchableOpacity
-            animated
+          <SpringAnimatedTouchableOpacity
             analyticsAction="close_via_overlay"
             analyticsLabel="modal"
             activeOpacity={1}
             style={{
               ...StyleSheet.absoluteFillObject,
-              backgroundColor: animatedTheme.backgroundColor,
+              backgroundColor: springAnimatedTheme.backgroundColor,
               zIndex: 500,
               ...Platform.select({ web: { cursor: 'default' } as any }),
             }}

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import { Theme } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import {
   avatarSize,
@@ -11,7 +11,7 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 
-const styles = StyleSheet.create({
+export const cardStyles = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
   } as ViewStyle,
@@ -50,10 +50,8 @@ const styles = StyleSheet.create({
 })
 
 export const getCardStylesForTheme = _.memoize(
-  (theme: Theme | ReturnType<typeof useAnimatedTheme>) => {
+  (theme: Theme | ReturnType<typeof useCSSVariablesOrSpringAnimatedTheme>) => {
     return {
-      ...styles,
-
       usernameText: {
         alignSelf: 'center',
         color: theme.foregroundColor,

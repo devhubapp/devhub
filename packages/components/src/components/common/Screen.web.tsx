@@ -2,9 +2,8 @@ import React, { ReactNode } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
-import { Helmet } from '../../libs/helmet'
-import { AnimatedView } from '../animated/AnimatedView'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 
 export interface ScreenProps {
@@ -15,46 +14,34 @@ export interface ScreenProps {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
     flex: 1,
   },
 })
 
 export const Screen = React.memo((props: ScreenProps) => {
-  const animatedTheme = useAnimatedTheme()
-  const theme = useTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  useTheme(theme => {
+    const color = statusBarBackgroundThemeColor
+      ? theme[statusBarBackgroundThemeColor]
+      : theme.backgroundColor
+
+    const metas = document.getElementsByTagName('meta') as any
+
+    metas['theme-color'].content = color
+    metas['msapplication-navbutton-color'].content = color
+  })
 
   const { statusBarBackgroundThemeColor } = props
 
   return (
-    <>
-      <Helmet>
-        <meta
-          name="theme-color"
-          content={
-            statusBarBackgroundThemeColor
-              ? theme[statusBarBackgroundThemeColor]
-              : theme.backgroundColor
-          }
-        />
-        <meta
-          name="msapplication-navbutton-color"
-          content={
-            statusBarBackgroundThemeColor
-              ? theme[statusBarBackgroundThemeColor]
-              : theme.backgroundColor
-          }
-        />
-      </Helmet>
-
-      <AnimatedView
-        {...props}
-        style={[
-          styles.container,
-          props.style,
-          { backgroundColor: animatedTheme.backgroundColor },
-        ]}
-      />
-    </>
+    <SpringAnimatedView
+      {...props}
+      style={[
+        styles.container,
+        props.style,
+        { backgroundColor: springAnimatedTheme.backgroundColor },
+      ]}
+    />
   )
 })

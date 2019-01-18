@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleProp, StyleSheet, TextStyle } from 'react-native'
+import { StyleProp, TextStyle } from 'react-native'
 import { IconProps } from 'react-native-vector-icons/Icon'
 
 import { GitHubIcon, Omit } from '@devhub/core'
@@ -18,6 +18,6 @@ export const AnimatedIcon = ({ color, style, ...props }: AnimatedIconProps) => (
   <AnimatedIconComponent
     selectable={false}
     {...props}
-    style={StyleSheet.flatten([{ color } as any, style])}
+    style={[{ color } as any, style]}
   />
 )

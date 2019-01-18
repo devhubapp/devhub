@@ -2,17 +2,16 @@ import React, { Ref } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Column as ColumnType } from '@devhub/core'
-import { animated, useTransition } from 'react-spring/hooks'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useTransition } from 'react-spring/hooks'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
+import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { fabSize } from '../common/FAB'
-import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing } from '../layout/FABRenderer'
 import { ColumnOptions } from './ColumnOptions'
-
-const SpringAnimatedView = animated(View)
 
 export interface ColumnOptionsRendererProps {
   accordionRef: Ref<AccordionView>
@@ -34,7 +33,7 @@ export const ColumnOptionsRenderer = React.memo(
       visible,
     } = props
 
-    const animatedTheme = useAnimatedTheme()
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
     const { sizename } = useAppLayout()
 
     const overlayTransition = useTransition<boolean, any>({
@@ -61,14 +60,13 @@ export const ColumnOptionsRenderer = React.memo(
               zIndex: 200,
             }}
           >
-            <TouchableOpacity
-              animated
+            <SpringAnimatedTouchableOpacity
               analyticsAction="close_via_overlay"
               analyticsLabel="column_options"
               activeOpacity={1}
               style={{
                 ...StyleSheet.absoluteFillObject,
-                backgroundColor: animatedTheme.backgroundColor,
+                backgroundColor: springAnimatedTheme.backgroundColor,
                 zIndex: 200,
                 ...Platform.select({ web: { cursor: 'default' } as any }),
               }}

@@ -6,19 +6,20 @@ import {
   getUserAvatarByEmail,
   getUserAvatarByUsername,
 } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
 import {
-  AnimatedImageWithLoading,
-  AnimatedImageWithLoadingProps,
-} from '../animated/AnimatedImageWithLoading'
+  SpringAnimatedImageWithLoading,
+  SpringAnimatedImageWithLoadingProps,
+} from '../animated/spring/SpringAnimatedImageWithLoading'
 import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
 import { ConditionalWrap } from './ConditionalWrap'
 import { Link } from './Link'
 import { TouchableOpacityProps } from './TouchableOpacity'
 
-export interface AvatarProps extends Partial<AnimatedImageWithLoadingProps> {
+export interface AvatarProps
+  extends Partial<SpringAnimatedImageWithLoadingProps> {
   avatarURL?: string
   disableLink?: boolean
   email?: string
@@ -36,7 +37,7 @@ export interface AvatarProps extends Partial<AnimatedImageWithLoadingProps> {
 export const size = avatarSize
 
 export function Avatar(props: AvatarProps) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     avatarURL: _avatarURL,
@@ -106,10 +107,10 @@ export function Avatar(props: AvatarProps) {
         )
       }
     >
-      <AnimatedImageWithLoading
+      <SpringAnimatedImageWithLoading
         backgroundColorFailed="#FFFFFF"
         backgroundColorLoaded="#FFFFFF"
-        backgroundColorLoading={theme.backgroundColorLess08}
+        backgroundColorLoading={springAnimatedTheme.backgroundColorLess08}
         {...oherProps}
         source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
         style={[

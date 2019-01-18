@@ -1,7 +1,7 @@
-// import { darken } from 'polished'
 import React, { ReactNode, useEffect } from 'react'
 import {
   KeyboardAvoidingView,
+  StatusBar,
   StyleProp,
   StyleSheet,
   View,
@@ -10,11 +10,11 @@ import {
 import SplashScreen from 'react-native-splash-screen'
 
 import { ThemeColors } from '@devhub/core'
-import { AnimatedSafeAreaView } from '../../components/animated/AnimatedSafeAreaView'
-import { AnimatedStatusBar } from '../../components/animated/AnimatedStatusBar'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
+import { SpringAnimatedStatusBar } from '../animated/spring/SpringAnimatedStatusBar'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 import { ConditionalWrap } from './ConditionalWrap'
 
@@ -35,8 +35,11 @@ const styles = StyleSheet.create({
 })
 
 export function Screen(props: ScreenProps) {
-  const animatedTheme = useAnimatedTheme()
-  const theme = useTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  useTheme(theme => {
+    StatusBar.setBarStyle(theme.isDark ? 'light-content' : 'dark-content')
+  })
 
   useEffect(() => {
     if (SplashScreen) {
@@ -53,13 +56,12 @@ export function Screen(props: ScreenProps) {
 
   return (
     <>
-      <AnimatedStatusBar
-        animated
-        barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+      <SpringAnimatedStatusBar
+        barStyle="light-content"
         backgroundColor={
           statusBarBackgroundThemeColor
-            ? theme[statusBarBackgroundThemeColor]
-            : (animatedTheme.backgroundColor as any)
+            ? springAnimatedTheme[statusBarBackgroundThemeColor]
+            : springAnimatedTheme.backgroundColor
         }
       />
 
@@ -77,20 +79,20 @@ export function Screen(props: ScreenProps) {
         }
       >
         {useSafeArea ? (
-          <AnimatedSafeAreaView
+          <SpringAnimatedSafeAreaView
             {...otherProps}
             style={[
               styles.container,
-              { backgroundColor: animatedTheme.backgroundColor as any },
+              { backgroundColor: springAnimatedTheme.backgroundColor as any },
               style,
             ]}
           />
         ) : (
-          <AnimatedView
+          <SpringAnimatedView
             {...otherProps}
             style={[
               styles.container,
-              { backgroundColor: animatedTheme.backgroundColor as any },
+              { backgroundColor: springAnimatedTheme.backgroundColor },
               style,
             ]}
           />

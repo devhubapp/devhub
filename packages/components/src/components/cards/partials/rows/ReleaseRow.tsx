@@ -2,15 +2,15 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { getGitHubURLForRelease, trimNewLinesAndSpaces } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { AnimatedIcon } from '../../../animated/AnimatedIcon'
-import { AnimatedText } from '../../../animated/AnimatedText'
+import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BranchRow } from './BranchRow'
-import { getCardRowStylesForTheme } from './styles'
+import { cardRowStyles } from './styles'
 
 export interface ReleaseRowProps {
   avatarURL: string
@@ -30,7 +30,7 @@ export interface ReleaseRowProps {
 export interface ReleaseRowState {}
 
 export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     avatarURL,
@@ -73,61 +73,59 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
       )}
 
       {!!(name || tagName) && (
-        <View style={getCardRowStylesForTheme(theme).container}>
+        <View style={cardRowStyles.container}>
           <View
             style={[
-              getCardStylesForTheme(theme).leftColumn,
+              cardStyles.leftColumn,
               smallLeftColumn
-                ? getCardStylesForTheme(theme).leftColumn__small
-                : getCardStylesForTheme(theme).leftColumn__big,
+                ? cardStyles.leftColumn__small
+                : cardStyles.leftColumn__big,
             ]}
           >
             <Avatar
               isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
               linkURL=""
               small
-              style={getCardStylesForTheme(theme).avatar}
+              style={cardStyles.avatar}
               username={ownerName}
             />
           </View>
 
-          <View style={getCardStylesForTheme(theme).rightColumn}>
-            <Link
-              href={fixedURL}
-              style={getCardRowStylesForTheme(theme).mainContentContainer}
-            >
-              <AnimatedText
+          <View style={cardStyles.rightColumn}>
+            <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
+              <SpringAnimatedText
                 style={[
-                  getCardStylesForTheme(theme).normalText,
-                  isRead && getCardStylesForTheme(theme).mutedText,
+                  getCardStylesForTheme(springAnimatedTheme).normalText,
+                  isRead &&
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
-                <AnimatedText numberOfLines={1}>
-                  <AnimatedIcon
+                <SpringAnimatedText numberOfLines={1}>
+                  <SpringAnimatedIcon
                     name="tag"
                     style={
                       isRead
-                        ? getCardStylesForTheme(theme).mutedText
-                        : getCardStylesForTheme(theme).normalText
+                        ? getCardStylesForTheme(springAnimatedTheme).mutedText
+                        : getCardStylesForTheme(springAnimatedTheme).normalText
                     }
                   />{' '}
-                </AnimatedText>
+                </SpringAnimatedText>
                 {name || tagName}
-              </AnimatedText>
+              </SpringAnimatedText>
             </Link>
           </View>
         </View>
       )}
 
       {!!(body && body !== name && body !== tagName) && (
-        <View style={getCardRowStylesForTheme(theme).container}>
+        <View style={cardRowStyles.container}>
           <View
             style={[
-              getCardStylesForTheme(theme).leftColumn,
+              cardStyles.leftColumn,
               smallLeftColumn
-                ? getCardStylesForTheme(theme).leftColumn__small
-                : getCardStylesForTheme(theme).leftColumn__big,
-              getCardStylesForTheme(theme).leftColumnAlignTop,
+                ? cardStyles.leftColumn__small
+                : cardStyles.leftColumn__big,
+              cardStyles.leftColumnAlignTop,
             ]}
           >
             <Avatar
@@ -135,34 +133,32 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
               linkURL={userLinkURL}
               small
-              style={getCardStylesForTheme(theme).avatar}
+              style={cardStyles.avatar}
               username={username}
             />
           </View>
 
-          <View style={getCardStylesForTheme(theme).rightColumn}>
-            <Link
-              href={fixedURL}
-              style={getCardRowStylesForTheme(theme).mainContentContainer}
-            >
-              <AnimatedText
+          <View style={cardStyles.rightColumn}>
+            <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
+              <SpringAnimatedText
                 style={[
-                  getCardStylesForTheme(theme).normalText,
-                  isRead && getCardStylesForTheme(theme).mutedText,
+                  getCardStylesForTheme(springAnimatedTheme).normalText,
+                  isRead &&
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
-                <AnimatedText numberOfLines={1}>
-                  <AnimatedIcon
+                <SpringAnimatedText numberOfLines={1}>
+                  <SpringAnimatedIcon
                     name="megaphone"
                     style={
                       isRead
-                        ? getCardStylesForTheme(theme).mutedText
-                        : getCardStylesForTheme(theme).normalText
+                        ? getCardStylesForTheme(springAnimatedTheme).mutedText
+                        : getCardStylesForTheme(springAnimatedTheme).normalText
                     }
                   />{' '}
-                </AnimatedText>
+                </SpringAnimatedText>
                 {body}
-              </AnimatedText>
+              </SpringAnimatedText>
             </Link>
           </View>
         </View>

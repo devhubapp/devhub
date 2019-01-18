@@ -8,15 +8,15 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import {
   contentPadding,
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
-import { AnimatedIcon } from '../animated/AnimatedIcon'
-import { AnimatedText } from '../animated/AnimatedText'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 
 export interface LabelProps {
   borderColor?: string
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 })
 
 export function Label(props: LabelProps) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     borderColor,
@@ -62,31 +62,37 @@ export function Label(props: LabelProps) {
     textProps = {},
   } = props
 
-  const color =
+  const springAnimatedColor =
     textColor ||
     (outline
-      ? _color || (muted ? theme.foregroundColorMuted50 : theme.foregroundColor)
+      ? _color ||
+        (muted
+          ? springAnimatedTheme.foregroundColorMuted50
+          : springAnimatedTheme.foregroundColor)
       : '#FFFFFF')
 
   return (
-    <AnimatedView
+    <SpringAnimatedView
       style={[
         styles.labelContainer,
         containerStyle,
-        { borderColor: borderColor || _color || theme.foregroundColor },
+        {
+          borderColor:
+            borderColor || _color || springAnimatedTheme.foregroundColor,
+        },
         !outline && {
-          backgroundColor: _color || theme.foregroundColor,
+          backgroundColor: _color || springAnimatedTheme.foregroundColor,
         },
         Boolean(radius) && { borderRadius: radius },
       ]}
       {...containerProps}
     >
-      <AnimatedText
+      <SpringAnimatedText
         numberOfLines={1}
         style={[
           styles.labelText,
           {
-            color,
+            color: springAnimatedColor,
           },
           muted && { opacity: mutedOpacity },
         ]}
@@ -94,11 +100,11 @@ export function Label(props: LabelProps) {
       >
         {Boolean(isPrivate) && (
           <Text>
-            <AnimatedIcon color={color} name="lock" />{' '}
+            <SpringAnimatedIcon color={springAnimatedColor} name="lock" />{' '}
           </Text>
         )}
         {children}
-      </AnimatedText>
-    </AnimatedView>
+      </SpringAnimatedText>
+    </SpringAnimatedView>
   )
 }

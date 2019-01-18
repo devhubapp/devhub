@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { Omit, ThemeColors } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
-import { AnimatedView } from '../animated/AnimatedView'
-import { AnimatedGradientLayerOverlay } from './GradientLayerOverlay'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { SpringAnimatedGradientLayerOverlay } from './GradientLayerOverlay'
 import {
   AnimatedGradientLayerOverlayProps,
   To,
@@ -20,14 +20,14 @@ export interface AnimatedTransparentTextOverlayProps
 
 export const AnimatedTransparentTextOverlay = React.memo(
   React.forwardRef((props: AnimatedTransparentTextOverlayProps, ref: any) => {
-    const theme = useAnimatedTheme()
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const { children, containerStyle, themeColor, to, ...otherProps } = props
 
-    const color = theme[themeColor]
+    const springAnimatedColor = springAnimatedTheme[themeColor]
 
     return (
-      <AnimatedView
+      <SpringAnimatedView
         ref={ref}
         pointerEvents="box-none"
         style={[
@@ -36,39 +36,39 @@ export const AnimatedTransparentTextOverlay = React.memo(
         ]}
       >
         {(to === 'vertical' || to === 'bottom') && (
-          <AnimatedGradientLayerOverlay
+          <SpringAnimatedGradientLayerOverlay
             {...otherProps}
-            color={color}
+            color={springAnimatedColor}
             to="bottom"
           />
         )}
 
         {(to === 'vertical' || to === 'top') && (
-          <AnimatedGradientLayerOverlay
+          <SpringAnimatedGradientLayerOverlay
             {...otherProps}
-            color={color}
+            color={springAnimatedColor}
             to="top"
           />
         )}
 
         {(to === 'horizontal' || to === 'right') && (
-          <AnimatedGradientLayerOverlay
+          <SpringAnimatedGradientLayerOverlay
             {...otherProps}
-            color={color}
+            color={springAnimatedColor}
             to="right"
           />
         )}
 
         {(to === 'horizontal' || to === 'left') && (
-          <AnimatedGradientLayerOverlay
+          <SpringAnimatedGradientLayerOverlay
             {...otherProps}
-            color={color}
+            color={springAnimatedColor}
             to="left"
           />
         )}
 
         {children}
-      </AnimatedView>
+      </SpringAnimatedView>
     )
   }),
 )

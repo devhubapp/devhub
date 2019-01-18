@@ -3,18 +3,19 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import { getDateSmallText, GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
 import { useReduxState } from '../../../hooks/use-redux-state'
 import * as actions from '../../../redux/actions'
 import * as selectors from '../../../redux/selectors'
 import * as colors from '../../../styles/colors'
-import { AnimatedText } from '../../animated/AnimatedText'
+import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Label } from '../../common/Label'
-import { getCardStylesForTheme } from '../styles'
-import { CardIcon } from './CardIcon'
+import { cardStyles, getCardStylesForTheme } from '../styles'
+import { SpringAnimatedCardIcon } from './CardIcon'
 
 export interface NotificationCardHeaderProps {
   cardIconColor?: string
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
 })
 
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const username = useReduxState(selectors.currentUsernameSelector)
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
@@ -76,26 +77,26 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
       key={`notification-card-header-${ids.join(',')}-inner`}
       style={styles.container}
     >
-      <View
+      <SpringAnimatedView
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       >
         <Avatar
           shape="circle"
           small
-          style={getCardStylesForTheme(theme).avatar}
+          style={cardStyles.avatar}
           username={username}
         />
-      </View>
+      </SpringAnimatedView>
 
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <View style={getCardStylesForTheme(theme).horizontal}>
+            <SpringAnimatedView style={cardStyles.horizontal}>
               <Label
                 color={labelColor}
                 isPrivate={isPrivate}
@@ -112,29 +113,32 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   return (
                     <>
                       <Text children=" " />
-                      <AnimatedText
+                      <SpringAnimatedText
                         numberOfLines={1}
-                        style={getCardStylesForTheme(theme).timestampText}
+                        style={
+                          getCardStylesForTheme(springAnimatedTheme)
+                            .timestampText
+                        }
                       >
                         {`• ${dateText}`}
-                      </AnimatedText>
+                      </SpringAnimatedText>
                     </>
                   )
                 }}
               </IntervalRefresh>
-            </View>
+            </SpringAnimatedView>
           </View>
 
-          <CardIcon
+          <SpringAnimatedCardIcon
             name="bookmark"
             color={
               isSaved
                 ? colors.brandBackgroundColor
-                : theme.foregroundColorMuted50
+                : springAnimatedTheme.foregroundColorMuted50
             }
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
           />
-          <CardIcon name={cardIconName} color={cardIconColor} />
+          <SpringAnimatedCardIcon name={cardIconName} color={cardIconColor} />
         </View>
       </View>
     </View>

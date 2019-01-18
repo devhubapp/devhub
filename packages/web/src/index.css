@@ -1,12 +1,3 @@
-* {
-  transition: opacity 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out, color 0.2s ease-out;
-  box-sizing: border-box;
-}
-
-.touchable-opacity {
-  transition: opacity 0s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out, color 0.2s ease-out;
-}
-
 ::-webkit-scrollbar {
   width: 1px;
   height: 1px;

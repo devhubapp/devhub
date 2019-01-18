@@ -2,12 +2,12 @@ import React from 'react'
 import { Text, TextStyle, View, ViewStyle } from 'react-native'
 
 import { LoadState } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
-import { AnimatedText } from '../animated/AnimatedText'
+import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Button } from '../common/Button'
 
 const clearMessages = [
@@ -40,12 +40,12 @@ export interface EmptyCardsProps {
   columnId: string
   errorMessage?: string
   errorTitle?: string
-  fetchNextPage: ((params?: { perPage?: number }) => void) | undefined
+  fetchNextPage: (() => void) | undefined
   loadState: LoadState
   refresh: (() => void | Promise<void>) | undefined
 }
 
-export function EmptyCards(props: EmptyCardsProps) {
+export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearedAt,
     columnId,
@@ -56,7 +56,7 @@ export function EmptyCards(props: EmptyCardsProps) {
     refresh,
   } = props
 
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
   )
@@ -65,26 +65,34 @@ export function EmptyCards(props: EmptyCardsProps) {
 
   const renderContent = () => {
     if (loadState === 'loading_first') {
-      return <AnimatedActivityIndicator color={theme.foregroundColor as any} />
+      return (
+        <SpringAnimatedActivityIndicator
+          color={springAnimatedTheme.foregroundColor}
+        />
+      )
     }
 
-    const containerStyle: ViewStyle = { width: '100%', padding: contentPadding }
-    const textStyle = {
+    const containerStyle: ViewStyle = {
+      width: '100%',
+      padding: contentPadding,
+    }
+
+    const springAnimatedTextStyle = {
       lineHeight: 20,
       fontSize: 14,
-      color: theme.foregroundColorMuted50,
+      color: springAnimatedTheme.foregroundColorMuted50,
       textAlign: 'center',
     } as TextStyle
 
     if (hasError) {
       return (
         <View style={containerStyle}>
-          <AnimatedText style={textStyle}>
+          <SpringAnimatedText style={springAnimatedTextStyle}>
             {`⚠️\n${errorTitle}`}
             {!!errorMessage && (
               <Text style={{ fontSize: 13 }}>{`\n${errorMessage}`}</Text>
             )}
-          </AnimatedText>
+          </SpringAnimatedText>
 
           {!!refresh && (
             <View style={{ padding: contentPadding }}>
@@ -103,9 +111,9 @@ export function EmptyCards(props: EmptyCardsProps) {
 
     return (
       <View style={containerStyle}>
-        <AnimatedText style={textStyle}>
+        <SpringAnimatedText style={springAnimatedTextStyle}>
           {clearMessage} {emoji}
-        </AnimatedText>
+        </SpringAnimatedText>
       </View>
     )
   }
@@ -136,7 +144,7 @@ export function EmptyCards(props: EmptyCardsProps) {
               children="Load more"
               disabled={loadState !== 'loaded'}
               loading={loadState === 'loading_more'}
-              onPress={() => fetchNextPage()}
+              onPress={fetchNextPage}
             />
           </View>
         ) : clearedAt ? (
@@ -156,4 +164,4 @@ export function EmptyCards(props: EmptyCardsProps) {
       </View>
     </View>
   )
-}
+})

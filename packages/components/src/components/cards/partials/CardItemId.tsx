@@ -2,12 +2,12 @@ import React from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { radius } from '../../../styles/variables'
 import { fixURL } from '../../../utils/helpers/github/url'
-import { AnimatedIcon } from '../../animated/AnimatedIcon'
-import { AnimatedLink } from '../../animated/AnimatedLink'
-import { AnimatedText } from '../../animated/AnimatedText'
+import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedLink } from '../../animated/spring/SpringAnimatedLink'
+import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { getCardStylesForTheme } from '../styles'
 
 export interface CardItemIdProps {
@@ -38,38 +38,45 @@ const styles = StyleSheet.create({
 
 export function CardItemId(props: CardItemIdProps) {
   const { icon, id, isRead, style, url } = props
-  const theme = useAnimatedTheme()
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   if (!id && !icon) return null
 
   const parsedNumber = parseInt(`${id}`, 10) || id
 
-  const textStyles = [
+  const springAnimatedTextStyles = [
     styles.text,
     {
-      color: isRead ? theme.foregroundColorMuted50 : theme.foregroundColor,
+      color: isRead
+        ? springAnimatedTheme.foregroundColorMuted50
+        : springAnimatedTheme.foregroundColor,
     },
-    isRead && getCardStylesForTheme(theme).mutedText,
+    isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
   ]
 
   return (
-    <AnimatedLink
+    <SpringAnimatedLink
       href={fixURL(url)}
       style={[
         styles.container,
         {
-          backgroundColor: theme.backgroundColorLess08,
-          borderColor: theme.backgroundColorLess08,
+          backgroundColor: springAnimatedTheme.backgroundColorLess08,
+          borderColor: springAnimatedTheme.backgroundColorLess08,
         },
         style,
       ]}
     >
-      <AnimatedText style={textStyles}>
-        {icon ? <AnimatedIcon name={icon} style={textStyles} /> : ''}
+      <SpringAnimatedText style={springAnimatedTextStyles}>
+        {icon ? (
+          <SpringAnimatedIcon name={icon} style={springAnimatedTextStyles} />
+        ) : (
+          ''
+        )}
         {parsedNumber && icon ? ' ' : ''}
         {typeof parsedNumber === 'number' ? '#' : ''}
         {parsedNumber}
-      </AnimatedText>
-    </AnimatedLink>
+      </SpringAnimatedText>
+    </SpringAnimatedLink>
   )
 }

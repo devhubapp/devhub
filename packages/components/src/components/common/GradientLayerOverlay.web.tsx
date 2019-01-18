@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 
-import { createAnimatedComponent } from '../animated/helpers'
+import { createSpringAnimatedComponent } from '../animated/spring/helpers'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
 function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
@@ -67,7 +68,7 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
     if (!color) return null
 
     return (
-      <View
+      <SpringAnimatedView
         pointerEvents="box-none"
         style={[
           getStyle(color, to, size, spacing),
@@ -81,6 +82,6 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
   }
 }
 
-export const AnimatedGradientLayerOverlay = createAnimatedComponent(
+export const SpringAnimatedGradientLayerOverlay = createSpringAnimatedComponent(
   GradientLayerOverlay,
 )

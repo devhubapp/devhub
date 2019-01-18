@@ -3,17 +3,18 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import { getDateSmallText, GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
 import * as actions from '../../../redux/actions'
 import * as colors from '../../../styles/colors'
-import { AnimatedIcon } from '../../animated/AnimatedIcon'
-import { AnimatedText } from '../../animated/AnimatedText'
+import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
-import { getCardStylesForTheme } from '../styles'
-import { CardIcon } from './CardIcon'
+import { cardStyles, getCardStylesForTheme } from '../styles'
+import { SpringAnimatedCardIcon } from './CardIcon'
 import { getUserURL } from './rows/helpers'
 
 export interface EventCardHeaderProps {
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
 })
 
 export function EventCardHeader(props: EventCardHeaderProps) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
@@ -81,12 +82,12 @@ export function EventCardHeader(props: EventCardHeaderProps) {
       key={`event-card-header-${ids.join(',')}-inner`}
       style={styles.container}
     >
-      <View
+      <SpringAnimatedView
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       >
         <Avatar
@@ -94,30 +95,34 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           isBot={isBot}
           linkURL={userLinkURL}
           shape={isBot ? 'rounded' : 'circle'}
-          style={getCardStylesForTheme(theme).avatar}
+          style={cardStyles.avatar}
           username={username}
         />
-      </View>
+      </SpringAnimatedView>
 
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <View style={getCardStylesForTheme(theme).horizontal}>
+            <SpringAnimatedView style={cardStyles.horizontal}>
               <Link href={getUserURL(username, { isBot })}>
-                <AnimatedText
+                <SpringAnimatedText
                   numberOfLines={1}
-                  style={getCardStylesForTheme(theme).usernameText}
+                  style={
+                    getCardStylesForTheme(springAnimatedTheme).usernameText
+                  }
                 >
                   {username}
-                </AnimatedText>
+                </SpringAnimatedText>
               </Link>
               {!!isBot && (
                 <>
                   <Text children=" " />
-                  <AnimatedText
+                  <SpringAnimatedText
                     numberOfLines={1}
-                    style={getCardStylesForTheme(theme).timestampText}
-                  >{`• BOT`}</AnimatedText>
+                    style={
+                      getCardStylesForTheme(springAnimatedTheme).timestampText
+                    }
+                  >{`• BOT`}</SpringAnimatedText>
                 </>
               )}
               <IntervalRefresh date={createdAt}>
@@ -128,44 +133,49 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   return (
                     <>
                       <Text children=" " />
-                      <AnimatedText
+                      <SpringAnimatedText
                         numberOfLines={1}
-                        style={getCardStylesForTheme(theme).timestampText}
+                        style={
+                          getCardStylesForTheme(springAnimatedTheme)
+                            .timestampText
+                        }
                       >
                         {`• ${dateText}`}
-                      </AnimatedText>
+                      </SpringAnimatedText>
                     </>
                   )
                 }}
               </IntervalRefresh>
-            </View>
+            </SpringAnimatedView>
 
-            <AnimatedText
+            <SpringAnimatedText
               numberOfLines={1}
-              style={getCardStylesForTheme(theme).descriptionText}
+              style={getCardStylesForTheme(springAnimatedTheme).descriptionText}
             >
               {!!isPrivate && (
-                <AnimatedText style={getCardStylesForTheme(theme).mutedText}>
-                  <AnimatedIcon
+                <SpringAnimatedText
+                  style={getCardStylesForTheme(springAnimatedTheme).mutedText}
+                >
+                  <SpringAnimatedIcon
                     name="lock"
-                    style={getCardStylesForTheme(theme).mutedText}
+                    style={getCardStylesForTheme(springAnimatedTheme).mutedText}
                   />{' '}
-                </AnimatedText>
+                </SpringAnimatedText>
               )}
               {actionText}
-            </AnimatedText>
+            </SpringAnimatedText>
           </View>
 
-          <CardIcon
+          <SpringAnimatedCardIcon
             name="bookmark"
             color={
               isSaved
                 ? colors.brandBackgroundColor
-                : theme.foregroundColorMuted50
+                : springAnimatedTheme.foregroundColorMuted50
             }
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
           />
-          <CardIcon name={cardIconName} color={cardIconColor} />
+          <SpringAnimatedCardIcon name={cardIconName} color={cardIconColor} />
         </View>
       </View>
     </View>

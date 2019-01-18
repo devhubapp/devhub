@@ -1,10 +1,10 @@
 import React, { ReactNode, useState } from 'react'
 import { StyleProp, StyleSheet, ViewProps, ViewStyle } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useEmitter } from '../../hooks/use-emitter'
 import { contentPadding } from '../../styles/variables'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 
 export const columnMargin = contentPadding / 2
@@ -26,7 +26,7 @@ export const Column = React.memo((props: ColumnProps) => {
   const { children, columnId, pagingEnabled, style, ...otherProps } = props
 
   const [showFocusBorder, setShowFocusBorder] = useState(false)
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const width = useColumnWidth()
 
   useEmitter(
@@ -43,14 +43,14 @@ export const Column = React.memo((props: ColumnProps) => {
   )
 
   return (
-    <AnimatedView
+    <SpringAnimatedView
       {...otherProps}
       key={`column-inner-${columnId}`}
       className={pagingEnabled ? 'snap-item-start' : ''}
       style={[
         styles.container,
         {
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: springAnimatedTheme.backgroundColor,
           width,
         },
         style,
@@ -59,18 +59,20 @@ export const Column = React.memo((props: ColumnProps) => {
       {children}
 
       {!!showFocusBorder && (
-        <AnimatedView
+        <SpringAnimatedView
           pointerEvents="box-none"
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            borderWidth: 0,
-            borderRightWidth: 4,
-            borderLeftWidth: 4,
-            borderColor: theme.foregroundColorMuted50,
-            zIndex: 1000,
-          }}
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              borderWidth: 0,
+              borderRightWidth: 4,
+              borderLeftWidth: 4,
+              borderColor: springAnimatedTheme.foregroundColorMuted50,
+              zIndex: 1000,
+            },
+          ]}
         />
       )}
-    </AnimatedView>
+    </SpringAnimatedView>
   )
 })

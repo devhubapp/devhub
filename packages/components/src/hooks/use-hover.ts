@@ -1,28 +1,38 @@
-import { RefObject, useEffect, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 
 import { Platform } from '../libs/platform'
+import { findNode } from '../utils/helpers/shared'
 
-export function useHover(ref: RefObject<Element> | null) {
-  if (Platform.realOS !== 'web') return
+export function useHover(
+  ref: RefObject<Element | any> | null,
+  callback?: (isHovered: boolean) => void,
+) {
+  if (Platform.realOS !== 'web') return false
 
+  const cacheRef = useRef(false)
   const [isHovered, setIsHovered] = useState(false)
 
   useEffect(
     () => {
-      let node = ref && ref.current
-
-      if (node && (node as any).getNode && (node as any).getNode())
-        node = (node as any).getNode()
-
-      if (node && (node as any)._touchableNode)
-        node = (node as any)._touchableNode
-
-      if (node && (node as any)._node) node = (node as any)._node
+      const node = findNode(ref)
 
       if (!(node && typeof node.addEventListener === 'function')) return
 
-      const handleMouseOver = () => setIsHovered(true)
-      const handleMouseOut = () => setIsHovered(false)
+      const resolve = (value: boolean) => {
+        if (cacheRef.current === value) return
+
+        cacheRef.current = value
+
+        if (callback) {
+          callback(value)
+          return
+        }
+
+        setIsHovered(value)
+      }
+
+      const handleMouseOver = () => resolve(true)
+      const handleMouseOut = () => resolve(false)
 
       node.addEventListener('mouseover', handleMouseOver)
       node.addEventListener('mouseout', handleMouseOut)
@@ -34,7 +44,7 @@ export function useHover(ref: RefObject<Element> | null) {
         node.removeEventListener('mouseout', handleMouseOut)
       }
     },
-    [ref && ref.current],
+    [ref && ref.current, callback],
   )
 
   return isHovered

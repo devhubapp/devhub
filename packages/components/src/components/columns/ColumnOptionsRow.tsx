@@ -1,23 +1,26 @@
 import _ from 'lodash'
-import React, { useRef, useState } from 'react'
-import { ViewStyle } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { View, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useSpring } from 'react-spring/hooks'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
+import { Platform } from '../../libs/platform'
 import * as colors from '../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
-import { AnimatedText } from '../animated/AnimatedText'
-import { AnimatedView } from '../animated/AnimatedView'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
 import {
   TouchableOpacity,
   TouchableOpacityProps,
 } from '../common/TouchableOpacity'
+import { useTheme } from '../context/ThemeContext'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface ColumnOptionsRowProps {
@@ -47,27 +50,56 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     title,
   } = props
 
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const [isPressing, setIsPressing] = useState(false)
+  const initialTheme = useTheme(theme => {
+    cacheRef.current.theme = theme
+    updateStyles()
+  })
 
   const touchableRef = useRef(null)
-  const isHovered = useHover(touchableRef)
+  const initialIsHovered = useHover(touchableRef, isHovered => {
+    cacheRef.current.isHovered = isHovered
+    updateStyles()
+  })
+
+  const cacheRef = useRef({ isHovered: initialIsHovered, theme: initialTheme })
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
+
+  useEffect(
+    () => {
+      updateStyles()
+    },
+    [opened],
+  )
+
+  function getStyles() {
+    const { isHovered, theme } = cacheRef.current
+
+    return {
+      config: { duration: 100 },
+      native: true,
+      backgroundColor:
+        isHovered || opened
+          ? theme.backgroundColorLess16
+          : theme.backgroundColorLess08,
+    }
+  }
+
+  function updateStyles() {
+    setSpringAnimatedStyles(getStyles())
+  }
 
   return (
-    <AnimatedView
-      style={[
-        {
-          backgroundColor: theme.backgroundColorLess08,
-          borderWidth: 0,
-          borderColor: 'transparent',
-          borderBottomWidth: 1,
-          borderBottomColor: theme.backgroundColorLess08,
-        },
-        !!(isHovered || isPressing || opened) && {
-          backgroundColor: theme.backgroundColorLess16,
-        },
-      ]}
+    <SpringAnimatedView
+      style={{
+        backgroundColor: springAnimatedStyles.backgroundColor,
+        borderWidth: 0,
+        borderColor: 'transparent',
+        borderBottomWidth: 1,
+        borderBottomColor: springAnimatedTheme.backgroundColorLess08,
+      }}
     >
       <TouchableOpacity
         ref={touchableRef}
@@ -76,10 +108,20 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         analyticsCategory="option_row"
         analyticsLabel={analyticsLabel}
         onPress={() => onToggle()}
-        onPressIn={() => setIsPressing(true)}
-        onPressOut={() => setIsPressing(false)}
+        onPressIn={() => {
+          if (Platform.realOS === 'web') return
+
+          cacheRef.current.isHovered = true
+          updateStyles()
+        }}
+        onPressOut={() => {
+          if (Platform.realOS === 'web') return
+
+          cacheRef.current.isHovered = false
+          updateStyles()
+        }}
       >
-        <AnimatedView
+        <View
           style={[
             {
               flexDirection: 'row',
@@ -101,27 +143,27 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
           <Spacer width={contentPadding / 2} />
 
-          <AnimatedText
+          <SpringAnimatedText
             numberOfLines={1}
-            style={{ color: theme.foregroundColor }}
+            style={{ color: springAnimatedTheme.foregroundColor }}
           >
             {title}
-          </AnimatedText>
+          </SpringAnimatedText>
 
           <Spacer flex={1} minWidth={contentPadding / 2} />
 
           {!!(subtitle || hasChanged) && (
-            <AnimatedText
+            <SpringAnimatedText
               numberOfLines={1}
               style={{
                 fontSize: 12,
                 color: hasChanged
                   ? colors.brandBackgroundColor
-                  : theme.foregroundColorMuted50,
+                  : springAnimatedTheme.foregroundColorMuted50,
               }}
             >
               {subtitle || '●'}
-            </AnimatedText>
+            </SpringAnimatedText>
           )}
 
           <Spacer width={contentPadding} />
@@ -133,12 +175,12 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             noPadding
             selectable={false}
           />
-        </AnimatedView>
+        </View>
       </TouchableOpacity>
 
       <AccordionView property="height">
         {!!opened && (
-          <AnimatedView
+          <View
             style={[
               {
                 paddingBottom: contentPadding,
@@ -149,9 +191,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             ]}
           >
             {children}
-          </AnimatedView>
+          </View>
         )}
       </AccordionView>
-    </AnimatedView>
+    </SpringAnimatedView>
   )
 }

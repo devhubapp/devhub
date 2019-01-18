@@ -3,7 +3,6 @@ import React, {
   Fragment,
   RefObject,
   useCallback,
-  useEffect,
   useRef,
   useState,
 } from 'react'
@@ -18,19 +17,23 @@ import {
   guid,
   NotificationColumn,
 } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
+import { findNode } from '../../utils/helpers/shared'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
-import { TextInput, TextInputProps } from '../common/TextInput'
+import {
+  SpringAnimatedTextInput,
+  SpringAnimatedTextInputProps,
+} from '../common/TextInput'
 
 interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {
   showBackButton: boolean
@@ -40,7 +43,7 @@ interface FieldDetails {
   title: string
   field: ColumnParamField
   placeholder: string
-  ref: RefObject<TextInput>
+  ref: RefObject<SpringAnimatedTextInput>
 }
 
 const fields: FieldDetails[] = [
@@ -93,13 +96,14 @@ export const AddColumnDetailsModal = React.memo(
       ...defaultParams,
     })
 
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
     const username = useReduxState(selectors.currentUsernameSelector)
 
     const addColumnAndSubscriptions = useReduxAction(
       actions.addColumnAndSubscriptions,
     )
     const closeAllModals = useReduxAction(actions.closeAllModals)
-    const theme = useAnimatedTheme()
 
     const validateField = (field: ColumnParamField) => {
       const value = params[field]
@@ -149,7 +153,9 @@ export const AddColumnDetailsModal = React.memo(
     }
 
     const createTextInputChangeHandler = useCallback(
-      (fieldDetails: FieldDetails): TextInputProps['onChange'] => e => {
+      (
+        fieldDetails: FieldDetails,
+      ): SpringAnimatedTextInputProps['onChange'] => e => {
         if (!(e && e.nativeEvent)) return
         const text = e.nativeEvent.text
 
@@ -162,7 +168,9 @@ export const AddColumnDetailsModal = React.memo(
     )
 
     const createTextInputSubmitHandler = useCallback(
-      (fieldDetails: FieldDetails): TextInputProps['onSubmitEditing'] => () => {
+      (
+        fieldDetails: FieldDetails,
+      ): SpringAnimatedTextInputProps['onSubmitEditing'] => () => {
         const index = paramList.findIndex(fd => fd === fieldDetails.field)
 
         if (index < paramList.length - 1) {
@@ -171,14 +179,15 @@ export const AddColumnDetailsModal = React.memo(
           const nextField = paramList[index + 1]
           const nextFieldDetails = fields.find(fd => fd.field === nextField)
 
-          const input = nextFieldDetails && nextFieldDetails.ref.current
-          if (
-            input &&
-            input.getNode &&
-            input.getNode() &&
-            input.getNode().focus
-          ) {
-            input.getNode().focus()
+          const input =
+            nextFieldDetails &&
+            nextFieldDetails.ref.current &&
+            (findNode(nextFieldDetails.ref.current as any) as any)
+
+          if (input && input.focus) {
+            input.focus()
+          } else {
+            alert(input)
           }
 
           return
@@ -192,7 +201,7 @@ export const AddColumnDetailsModal = React.memo(
     const renderTextInput = useCallback(
       (
         fieldDetails: FieldDetails,
-        { autoFocus, ...textInputProps }: TextInputProps,
+        { autoFocus, ...textInputProps }: SpringAnimatedTextInputProps,
       ) => {
         // autofocus is breaking the react-spring animation
         // need to find a real fix (propably inside react-spring)
@@ -201,13 +210,15 @@ export const AddColumnDetailsModal = React.memo(
         if (autoFocus && !didAutoFocusRef.current) {
           didAutoFocusRef.current = true
           setTimeout(() => {
-            if (
+            const input =
+              fieldDetails &&
               fieldDetails.ref.current &&
-              fieldDetails.ref.current.getNode &&
-              fieldDetails.ref.current.getNode() &&
-              fieldDetails.ref.current.getNode().focus
-            ) {
-              fieldDetails.ref.current.getNode().focus()
+              (findNode(fieldDetails.ref.current as any) as any)
+
+            if (input && input.focus) {
+              input.focus()
+            } else {
+              alert(input)
             }
           }, 500)
         }
@@ -216,7 +227,7 @@ export const AddColumnDetailsModal = React.memo(
           <Fragment key={`add-column-details-text-input-${fieldDetails.field}`}>
             <H3 withMargin>{fieldDetails.title}</H3>
 
-            <TextInput
+            <SpringAnimatedTextInput
               ref={fieldDetails.ref}
               autoCapitalize="none"
               autoCorrect={false}
@@ -229,7 +240,10 @@ export const AddColumnDetailsModal = React.memo(
               {...textInputProps}
               onChange={createTextInputChangeHandler(fieldDetails)}
               onSubmitEditing={createTextInputSubmitHandler(fieldDetails)}
-              style={[{ color: theme.foregroundColor }, textInputProps.style]}
+              style={[
+                { color: springAnimatedTheme.foregroundColor },
+                textInputProps.style,
+              ]}
               value={params[fieldDetails.field]}
             />
 

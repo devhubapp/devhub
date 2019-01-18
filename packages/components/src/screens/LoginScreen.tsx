@@ -2,13 +2,13 @@ import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 
-import { AnimatedText } from '../components/animated/AnimatedText'
+import { SpringAnimatedText } from '../components/animated/spring/SpringAnimatedText'
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
 import { Link } from '../components/common/Link'
 import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
-import { useAnimatedTheme } from '../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
@@ -91,7 +91,8 @@ export const LoginScreen = React.memo(() => {
   const error = useReduxState(selectors.authErrorSelector)
   const initialErrorRef = useRef(error)
   const loginRequest = useReduxAction(actions.loginRequest)
-  const theme = useAnimatedTheme()
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   // handle oauth flow without popup
   // that passes the token via query string
@@ -261,11 +262,14 @@ export const LoginScreen = React.memo(() => {
             href="https://github.com/devhubapp/devhub/issues/32"
             openOnNewTab
           >
-            <AnimatedText
-              style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
+            <SpringAnimatedText
+              style={{
+                fontSize: 12,
+                color: springAnimatedTheme.foregroundColorMuted50,
+              }}
             >
               What about private repositories?
-            </AnimatedText>
+            </SpringAnimatedText>
           </Link>
 
           {/* <Spacer height={contentPadding} />
@@ -275,25 +279,31 @@ export const LoginScreen = React.memo(() => {
             href="https://github.com/dear-github/dear-github/issues/113"
             openOnNewTab
           >
-            <AnimatedText
-              style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
+            <SpringAnimatedText
+              style={{ fontSize: 12, color: springAnimatedTheme.foregroundColorMuted50 }}
             >
               Why all these permissions?
-            </AnimatedText>
+            </SpringAnimatedText>
           </Link> */}
         </View>
 
         <View style={styles.footer}>
-          <AnimatedText
-            style={[styles.title, { color: theme.foregroundColor }]}
+          <SpringAnimatedText
+            style={[
+              styles.title,
+              { color: springAnimatedTheme.foregroundColor },
+            ]}
           >
             DevHub
-          </AnimatedText>
-          <AnimatedText
-            style={[styles.subtitle, { color: theme.foregroundColor }]}
+          </SpringAnimatedText>
+          <SpringAnimatedText
+            style={[
+              styles.subtitle,
+              { color: springAnimatedTheme.foregroundColor },
+            ]}
           >
             TweetDeck for GitHub
-          </AnimatedText>
+          </SpringAnimatedText>
           <AppVersion />
         </View>
       </View>

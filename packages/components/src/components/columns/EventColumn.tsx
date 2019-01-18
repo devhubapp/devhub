@@ -12,7 +12,7 @@ export interface EventColumnProps extends EventCardsContainerProps {
   pagingEnabled?: boolean
 }
 
-export function EventColumn(props: EventColumnProps) {
+export const EventColumn = React.memo((props: EventColumnProps) => {
   const { column, columnIndex, pagingEnabled, subscriptions } = props
 
   const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
@@ -33,4 +33,4 @@ export function EventColumn(props: EventColumnProps) {
       />
     </EventOrNotificationColumn>
   )
-}
+})
