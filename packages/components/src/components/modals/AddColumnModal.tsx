@@ -17,6 +17,7 @@ import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
+import { separatorSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useTheme } from '../context/ThemeContext'
 
@@ -92,12 +93,16 @@ function AddColumnModalItem({
   })
 
   const touchableRef = useRef(null)
-  useHover(touchableRef, isHovered => {
+  const initialIsHovered = useHover(touchableRef, isHovered => {
     cacheRef.current.isHovered = isHovered
     updateStyles()
   })
 
-  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
@@ -113,15 +118,15 @@ function AddColumnModalItem({
   const pushModal = useReduxAction(actions.pushModal)
 
   function getStyles() {
-    const { isHovered: _isHovered, theme } = cacheRef.current
-    const isHovered = _isHovered && !disabled
+    const { isHovered, isPressing, theme } = cacheRef.current
 
     return {
       config: { duration: 100 },
       native: true,
-      backgroundColor: isHovered
-        ? theme.backgroundColorLess08
-        : rgba(theme.backgroundColor, 0),
+      backgroundColor:
+        (isHovered || isPressing) && !disabled
+          ? theme.backgroundColorLess08
+          : rgba(theme.backgroundColor, 0),
     }
   }
 
@@ -145,13 +150,13 @@ function AddColumnModalItem({
       onPressIn={() => {
         if (Platform.realOS === 'web') return
 
-        cacheRef.current.isHovered = true
+        cacheRef.current.isPressing = true
         updateStyles()
       }}
       onPressOut={() => {
         if (Platform.realOS === 'web') return
 
-        cacheRef.current.isHovered = false
+        cacheRef.current.isPressing = false
         updateStyles()
       }}
       style={{
@@ -198,7 +203,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
   const columnWidth = useColumnWidth()
 
   const outerSpacing = (3 / 4) * contentPadding
-  const availableWidth = columnWidth - 2 * outerSpacing
+  const availableWidth = columnWidth - separatorSize - 2 * outerSpacing
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 

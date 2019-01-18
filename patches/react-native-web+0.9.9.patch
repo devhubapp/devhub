@@ -10,17 +10,16 @@ patch-package
  
      // CSS filters
      var filters = [];
-@@ -307,6 +309,9 @@ var Image = function (_Component) {
+@@ -307,6 +309,8 @@ var Image = function (_Component) {
      // these styles are not supported on View
      delete flatStyle.overlayColor;
      delete flatStyle.resizeMode;
 +    // these styles will be moved to the inner View (#1228)
 +    delete flatStyle.backgroundColor;
-+    delete flatStyle.borderRadius;
  
      // Accessibility image allows users to trigger the browser's image context menu
      var hiddenImage = displayImageUri ? createElement('img', {
-@@ -327,7 +332,7 @@ var Image = function (_Component) {
+@@ -327,7 +331,7 @@ var Image = function (_Component) {
          testID: testID
        }),
        React.createElement(View, {

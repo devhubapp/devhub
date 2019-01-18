@@ -57,7 +57,7 @@ export function FABRenderer() {
     const iconStyle = undefined
 
     return (
-      <View style={fabPositionStyle}>
+      <View collapsable={false} style={fabPositionStyle}>
         <FAB
           key="fab"
           analyticsLabel="add_column"

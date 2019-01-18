@@ -71,6 +71,7 @@ export function FAB(props: FABProps) {
           shadowOpacity: 0.2,
           shadowRadius: 6,
           zIndex: 1,
+          overflow: 'hidden',
         },
         style,
       ]}
@@ -84,6 +85,7 @@ export function FAB(props: FABProps) {
             width: fabSize,
             height: fabSize,
             borderRadius: fabSize / 2,
+            overflow: 'hidden',
           },
           !!(isHovered || isPressing) && {
             backgroundColor: useBrandColor

@@ -44,12 +44,16 @@ export const Button = React.memo((props: ButtonProps) => {
   })
 
   const touchableRef = useRef(null)
-  useHover(touchableRef, isHovered => {
+  const initialIsHovered = useHover(touchableRef, isHovered => {
     cacheRef.current.isHovered = isHovered
     updateStyles()
   })
 
-  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
@@ -58,7 +62,7 @@ export const Button = React.memo((props: ButtonProps) => {
   >(getStyles)
 
   function getStyles() {
-    const { isHovered, theme } = cacheRef.current
+    const { isHovered, isPressing, theme } = cacheRef.current
 
     return {
       config: { duration: 100 },
@@ -66,12 +70,12 @@ export const Button = React.memo((props: ButtonProps) => {
       activityIndicatorColor: theme.foregroundColor,
       touchableBorderColor: useBrandColor
         ? colors.brandBackgroundColor
-        : isHovered
+        : isHovered || isPressing
         ? theme.backgroundColorLess16
         : theme.backgroundColorLess08,
       innerContainerBackgroundColor: borderOnly
         ? rgba(theme.backgroundColorLess08, 0)
-        : isHovered
+        : isHovered || isPressing
         ? useBrandColor
           ? theme.backgroundColorTransparent10
           : theme.backgroundColorLess16
@@ -79,7 +83,7 @@ export const Button = React.memo((props: ButtonProps) => {
       textColor: useBrandColor
         ? colors.brandForegroundColor
         : borderOnly
-        ? isHovered
+        ? isHovered || isPressing
           ? theme.foregroundColor
           : theme.foregroundColorMuted50
         : theme.foregroundColor,
@@ -97,13 +101,13 @@ export const Button = React.memo((props: ButtonProps) => {
       onPressIn={() => {
         if (Platform.realOS === 'web') return
 
-        cacheRef.current.isHovered = true
+        cacheRef.current.isPressing = true
         updateStyles()
       }}
       onPressOut={() => {
         if (Platform.realOS === 'web') return
 
-        cacheRef.current.isHovered = false
+        cacheRef.current.isPressing = false
         updateStyles()
       }}
       style={[

@@ -65,23 +65,30 @@ export const EventOrNotificationColumn = React.memo(
       // when this one opens, I "lock" it,
       // so the nested ones doesnt trigger an animation on this one.
 
+      if (!accordionRef.current) return
+
       if (showColumnOptions) {
-        if (accordionRef.current!.isLocked()) {
-          accordionRef.current!.setOnFinishListener(() => {
-            accordionRef.current!.setOnFinishListener(null)
+        if (accordionRef.current.isLocked()) {
+          accordionRef.current.setOnFinishListener(() => {
+            if (accordionRef.current) {
+              accordionRef.current.setOnFinishListener(null)
+            }
+
             setShowColumnOptions(false)
           })
 
-          accordionRef.current!.unlock()
+          accordionRef.current.unlock()
         } else {
-          accordionRef.current!.setOnFinishListener(null)
-          accordionRef.current!.unlock()
+          accordionRef.current.setOnFinishListener(null)
+          accordionRef.current.unlock()
           setShowColumnOptions(false)
         }
       } else {
-        accordionRef.current!.setOnFinishListener(() => {
-          accordionRef.current!.setOnFinishListener(null)
-          accordionRef.current!.lock()
+        accordionRef.current.setOnFinishListener(() => {
+          if (accordionRef.current) {
+            accordionRef.current.setOnFinishListener(null)
+            accordionRef.current.lock()
+          }
         })
 
         setShowColumnOptions(true)

@@ -16,11 +16,7 @@ import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { bugsnag } from '../../libs/bugsnag'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
-import {
-  Separator,
-  separatorSize,
-  separatorTickSize,
-} from '../common/Separator'
+import { Separator, separatorTickSize } from '../common/Separator'
 import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
@@ -198,11 +194,13 @@ export const Columns = React.memo((props: ColumnsProps) => {
       {showHorizontalGradientOverlays && (
         <>
           <SafeAreaView
+            collapsable={false}
             style={[StyleSheet.absoluteFill, { flexDirection: 'row' }]}
             pointerEvents="box-none"
           >
             <View
               ref={leftOverlayRef}
+              collapsable={false}
               style={{ flex: 1 }}
               pointerEvents="box-none"
             >
@@ -235,6 +233,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
 
             <View
               ref={rightOverlayRef}
+              collapsable={false}
               style={{ flex: 1 }}
               pointerEvents="box-none"
             >

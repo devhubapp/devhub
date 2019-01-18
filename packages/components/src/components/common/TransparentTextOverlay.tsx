@@ -29,6 +29,7 @@ export const AnimatedTransparentTextOverlay = React.memo(
     return (
       <SpringAnimatedView
         ref={ref}
+        collapsable={false}
         pointerEvents="box-none"
         style={[
           { flex: 1, alignSelf: 'stretch', flexBasis: 'auto' },

@@ -54,6 +54,7 @@ export const ColumnOptionsRenderer = React.memo(
       <>
         {!!overlayTransition && (
           <SpringAnimatedView
+            collapsable={false}
             style={{
               ...StyleSheet.absoluteFillObject,
               ...overlayTransition.props,
@@ -76,6 +77,7 @@ export const ColumnOptionsRenderer = React.memo(
         )}
 
         <View
+          collapsable={false}
           style={{
             position: 'absolute',
             top: 0,

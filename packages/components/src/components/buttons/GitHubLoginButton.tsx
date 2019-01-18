@@ -95,26 +95,31 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
   })
 
   const touchableRef = useRef(null)
-  useHover(touchableRef, isHovered => {
+  const initialIsHovered = useHover(touchableRef, isHovered => {
     cacheRef.current.isHovered = isHovered
     updateStyles()
   })
 
-  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
     ReturnType<typeof getStyles>
   >(getStyles)
 
   function getStyles() {
-    const { isHovered, theme } = cacheRef.current
+    const { isHovered, isPressing, theme } = cacheRef.current
 
     return {
       config: { duration: 100 },
       native: true,
-      backgroundColor: isHovered
-        ? theme.backgroundColorLess16
-        : rgba(theme.backgroundColorLess16, 0),
+      backgroundColor:
+        isHovered || isPressing
+          ? theme.backgroundColorLess16
+          : rgba(theme.backgroundColorLess16, 0),
     }
   }
 
@@ -130,13 +135,13 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
       onPressIn={() => {
         if (Platform.realOS === 'web') return
 
-        cacheRef.current.isHovered = true
+        cacheRef.current.isPressing = true
         updateStyles()
       }}
       onPressOut={() => {
         if (Platform.realOS === 'web') return
 
-        cacheRef.current.isHovered = false
+        cacheRef.current.isPressing = false
         updateStyles()
       }}
       style={[

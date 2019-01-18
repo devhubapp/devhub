@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Image, ImageProps } from 'react-native'
 
+import { Platform } from '../../libs/platform'
 import { SpringAnimatedImage } from '../animated/spring/SpringAnimatedImage'
 
 export interface ImageWithLoadingProps extends ImageProps {
@@ -25,17 +26,22 @@ export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
     onLoad,
     onLoadEnd,
     onLoadStart,
-    style,
     ...otherProps
   } = props
 
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const imageRef = useRef<Image>(null)
+  const cacheRef = useRef({ error: false, isLoading: false })
+
+  useEffect(() => {
+    updateStyles()
+  }, [])
 
   const handleLoad = useCallback(
     e => {
-      setLoading(false)
-      setError(false)
+      cacheRef.current.isLoading = false
+      cacheRef.current.error = false
+      updateStyles()
+
       if (typeof onLoad === 'function') onLoad(e)
     },
     [onLoad],
@@ -43,7 +49,9 @@ export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
 
   const handleLoadStart = useCallback(
     () => {
-      setLoading(true)
+      cacheRef.current.isLoading = true
+      updateStyles()
+
       if (typeof onLoadStart === 'function') onLoadStart()
     },
     [onLoadStart],
@@ -51,7 +59,9 @@ export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
 
   const handleLoadEnd = useCallback(
     () => {
-      setLoading(false)
+      cacheRef.current.isLoading = false
+      updateStyles()
+
       if (typeof onLoadEnd === 'function') onLoadEnd()
     },
     [onLoadEnd],
@@ -59,32 +69,49 @@ export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
 
   const handleError = useCallback(
     e => {
-      setLoading(false)
-      setError(true)
+      cacheRef.current.isLoading = false
+      cacheRef.current.error = true
+      updateStyles()
+
       if (typeof onError === 'function') onError(e)
     },
     [onError],
   )
+
+  function updateStyles() {
+    const { error, isLoading } = cacheRef.current
+
+    if (imageRef.current) {
+      const imageURL =
+        otherProps && otherProps.source && (otherProps.source as any).uri
+
+      imageRef.current.setNativeProps({
+        style: {
+          backgroundColor: error
+            ? backgroundColorFailed
+            : isLoading
+            ? backgroundColorLoading
+            : backgroundColorLoaded,
+          ...(Platform.OS === 'web' &&
+            !!imageURL && {
+              backgroundImage: `url(${JSON.stringify(imageURL)})`,
+              backgroundSize: 'cover',
+            }),
+        },
+      })
+    }
+  }
 
   const ImageComponent = animated ? SpringAnimatedImage : Image
 
   return (
     <ImageComponent
       {...otherProps}
+      ref={imageRef}
       onError={handleError}
       onLoad={handleLoad}
       onLoadEnd={handleLoadEnd}
       onLoadStart={handleLoadStart}
-      style={[
-        style,
-        {
-          backgroundColor: error
-            ? backgroundColorFailed
-            : loading
-            ? backgroundColorLoading
-            : backgroundColorLoaded,
-        },
-      ]}
     />
   )
 })

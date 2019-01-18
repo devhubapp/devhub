@@ -126,7 +126,10 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
           },
         ]}
       >
-        <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 1 }]}>
+        <View
+          collapsable={false}
+          style={[StyleSheet.absoluteFill, styles.center, { zIndex: 1 }]}
+        >
           <SpringAnimatedView
             style={{
               width: isIndeterminateState ? '80%' : '100%',
@@ -140,7 +143,10 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
           />
         </View>
 
-        <View style={[StyleSheet.absoluteFill, styles.center, { zIndex: 2 }]}>
+        <View
+          collapsable={false}
+          style={[StyleSheet.absoluteFill, styles.center, { zIndex: 2 }]}
+        >
           <SpringAnimatedIcon
             color={checkedForegroundColor}
             name="check"

@@ -125,6 +125,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     <>
       {!!overlayTransition && (
         <SpringAnimatedView
+          collapsable={false}
           style={{
             ...StyleSheet.absoluteFillObject,
             ...overlayTransition.props,
@@ -148,6 +149,7 @@ export function ModalRenderer(props: ModalRendererProps) {
 
       {!!modalTransitions.length && (
         <SpringAnimatedView
+          collapsable={false}
           style={{
             position: 'absolute',
             top: 0,
@@ -162,6 +164,7 @@ export function ModalRenderer(props: ModalRendererProps) {
             ({ key, item, props: { width, ...animatedStyle } }) => (
               <SpringAnimatedView
                 key={key}
+                collapsable={false}
                 style={{
                   position: 'absolute',
                   top: 0,
@@ -176,6 +179,7 @@ export function ModalRenderer(props: ModalRendererProps) {
 
                 {!!renderSeparator && (
                   <View
+                    collapsable={false}
                     style={{
                       position: 'absolute',
                       top: 0,

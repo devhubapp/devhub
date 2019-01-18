@@ -63,7 +63,11 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     updateStyles()
   })
 
-  const cacheRef = useRef({ isHovered: initialIsHovered, theme: initialTheme })
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
@@ -75,13 +79,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   )
 
   function getStyles() {
-    const { isHovered, theme } = cacheRef.current
+    const { isHovered, isPressing, theme } = cacheRef.current
 
     return {
       config: { duration: 100 },
       native: true,
       backgroundColor:
-        isHovered || opened
+        isHovered || isPressing || opened
           ? theme.backgroundColorLess16
           : theme.backgroundColorLess08,
     }
@@ -111,13 +115,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         onPressIn={() => {
           if (Platform.realOS === 'web') return
 
-          cacheRef.current.isHovered = true
+          cacheRef.current.isPressing = true
           updateStyles()
         }}
         onPressOut={() => {
           if (Platform.realOS === 'web') return
 
-          cacheRef.current.isHovered = false
+          cacheRef.current.isPressing = false
           updateStyles()
         }}
       >

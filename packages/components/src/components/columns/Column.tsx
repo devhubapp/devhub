@@ -61,6 +61,7 @@ export const Column = React.memo((props: ColumnProps) => {
 
       {!!showFocusBorder && (
         <SpringAnimatedView
+          collapsable={false}
           pointerEvents="box-none"
           style={[
             {

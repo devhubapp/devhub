@@ -86,6 +86,7 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
 
     return (
       <SpringAnimatedLinearGradient
+        collapsable={false}
         colors={[rgba(color, 0), color]}
         pointerEvents="box-none"
         style={[
