@@ -171,8 +171,8 @@ export const Columns = React.memo((props: ColumnsProps) => {
         data={columnIds}
         getItemLayout={(_data, index) => ({
           index,
-          length: columnWidth + separatorSize,
-          offset: index * (columnWidth + separatorSize),
+          length: columnWidth,
+          offset: index * columnWidth,
         })}
         horizontal
         initialNumToRender={4}

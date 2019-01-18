@@ -5,6 +5,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useEmitter } from '../../hooks/use-emitter'
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { separatorSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 
 export const columnMargin = contentPadding / 2
@@ -27,7 +28,7 @@ export const Column = React.memo((props: ColumnProps) => {
 
   const [showFocusBorder, setShowFocusBorder] = useState(false)
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const width = useColumnWidth()
+  const width = useColumnWidth() - separatorSize
 
   useEmitter(
     'FOCUS_ON_COLUMN',
