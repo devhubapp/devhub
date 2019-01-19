@@ -1,6 +1,9 @@
 // Security precaution
-;(window as any).eval = global.eval = () => {
-  throw new Error(`This app does not allow window.eval().`)
+;(window as any).eval = global.eval = (payload: string) => {
+  const error = new Error(`This app does not allow window.eval().`)
+  Object.assign(error, { payload })
+
+  throw error
 }
 
 import '@babel/polyfill'
