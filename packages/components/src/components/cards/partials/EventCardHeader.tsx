@@ -37,7 +37,6 @@ export interface EventCardHeaderState {}
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    flexGrow: 1,
   },
 
   rightColumnCentered: {
