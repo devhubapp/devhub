@@ -41,8 +41,10 @@ export const SpringAnimatedTextInput = React.forwardRef(
         }}
         style={[
           {
+            height: 36,
+            margin: 0,
+            padding: 0,
             paddingHorizontal: contentPadding,
-            paddingVertical: contentPadding / 2,
             backgroundColor: 'transparent',
             borderRadius: radius,
             borderWidth: 1,
