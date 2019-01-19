@@ -51,7 +51,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged-offline"
+      "pre-commit": "yarn workspace @devhub/desktop compile && lint-staged-offline"
     }
   },
   "lint-staged": {
