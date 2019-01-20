@@ -84,10 +84,17 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
 
     if (!color) return null
 
+    let colors
+    try {
+      colors = [rgba(color, 0), rgba(color, 0.5)]
+    } catch (e) {
+      return null
+    }
+
     return (
       <SpringAnimatedLinearGradient
         collapsable={false}
-        colors={[rgba(color, 0), rgba(color, 0.5)]}
+        colors={colors}
         pointerEvents="box-none"
         style={[
           getStyle(to, size, spacing),
