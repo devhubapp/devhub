@@ -505,7 +505,9 @@ function getUpdaterMenuItem() {
       enabled = false
       label =
         updateInfo.progress && updateInfo.progress > 0
-          ? `Downloading update... (${updateInfo.progress}%)`
+          ? `Downloading update... (${parseFloat(
+              `${updateInfo.progress}`,
+            ).toFixed(2)}%)`
           : 'Downloading update...'
       if (Date.now() - updateInfo.date < 10 * 60000) break
     }
