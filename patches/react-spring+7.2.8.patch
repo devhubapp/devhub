@@ -1,0 +1,540 @@
+patch-package
+--- a/node_modules/react-spring/native-hooks.cjs.js
++++ b/node_modules/react-spring/native-hooks.cjs.js
+@@ -715,6 +715,17 @@ function interpolateTo(props) {
+     to: forward
+   }, rest);
+ }
++function handleRef(ref, forward) {
++  if (forward) {
++    // If it's a function, assume it's a ref callback
++    if (typeof forward === 'function') forward(ref);else if (typeof forward === 'object') {
++      // If it's an object and has a 'current' property, assume it's a ref object
++      forward.current = ref;
++    }
++  }
++
++  return ref;
++}
+ 
+ var Controller =
+ /*#__PURE__*/
+@@ -954,6 +965,104 @@ function (_AnimatedObjectWithCh) {
+   return AnimatedProps;
+ }(AnimatedObjectWithChildren);
+ 
++function createAnimatedComponent(Component) {
++  var AnimatedComponent =
++  /*#__PURE__*/
++  function (_React$Component) {
++    _inheritsLoose(AnimatedComponent, _React$Component);
++
++    function AnimatedComponent(props) {
++      var _this;
++
++      _this = _React$Component.call(this) || this;
++
++      _this.callback = function () {
++        if (_this.node) {
++          var didUpdate = applyAnimatedValues.fn(_this.node, _this.propsAnimated.getAnimatedValue(), _assertThisInitialized(_assertThisInitialized(_this)));
++          if (didUpdate === false) _this.forceUpdate();
++        }
++      };
++
++      _this.attachProps(props);
++
++      return _this;
++    }
++
++    var _proto = AnimatedComponent.prototype;
++
++    _proto.componentWillUnmount = function componentWillUnmount() {
++      this.propsAnimated && this.propsAnimated.detach();
++    };
++
++    _proto.setNativeProps = function setNativeProps(props) {
++      var didUpdate = applyAnimatedValues.fn(this.node, props, this);
++      if (didUpdate === false) this.forceUpdate();
++    } // The system is best designed when setNativeProps is implemented. It is
++    // able to avoid re-rendering and directly set the attributes that
++    // changed. However, setNativeProps can only be implemented on leaf
++    // native components. If you want to animate a composite component, you
++    // need to re-render it. In this case, we have a fallback that uses
++    // forceUpdate.
++    ;
++
++    _proto.attachProps = function attachProps(_ref) {
++      var forwardRef = _ref.forwardRef,
++          nextProps = _objectWithoutPropertiesLoose(_ref, ["forwardRef"]);
++
++      var oldPropsAnimated = this.propsAnimated;
++      this.propsAnimated = new AnimatedProps(nextProps, this.callback); // When you call detach, it removes the element from the parent list
++      // of children. If it goes to 0, then the parent also detaches itself
++      // and so on.
++      // An optimization is to attach the new elements and THEN detach the old
++      // ones instead of detaching and THEN attaching.
++      // This way the intermediate state isn't to go to 0 and trigger
++      // this expensive recursive detaching to then re-attach everything on
++      // the very next operation.
++
++      oldPropsAnimated && oldPropsAnimated.detach();
++    };
++
++    _proto.shouldComponentUpdate = function shouldComponentUpdate(props) {
++      var style = props.style,
++          nextProps = _objectWithoutPropertiesLoose(props, ["style"]);
++
++      var _this$props = this.props,
++          currentStyle = _this$props.style,
++          currentProps = _objectWithoutPropertiesLoose(_this$props, ["style"]);
++
++      if (!shallowEqual(currentProps, nextProps) || !shallowEqual(currentStyle, style)) {
++        this.attachProps(props);
++        return true;
++      }
++
++      return false;
++    };
++
++    _proto.render = function render() {
++      var _this2 = this;
++
++      var _this$propsAnimated$g = this.propsAnimated.getValue(),
++          scrollTop = _this$propsAnimated$g.scrollTop,
++          scrollLeft = _this$propsAnimated$g.scrollLeft,
++          animatedProps = _objectWithoutPropertiesLoose(_this$propsAnimated$g, ["scrollTop", "scrollLeft"]);
++
++      return React__default.createElement(Component, _extends({}, animatedProps, {
++        ref: function ref(node) {
++          return _this2.node = handleRef(node, _this2.props.forwardRef);
++        }
++      }));
++    };
++
++    return AnimatedComponent;
++  }(React__default.Component);
++
++  return React__default.forwardRef(function (props, ref) {
++    return React__default.createElement(AnimatedComponent, _extends({}, props, {
++      forwardRef: ref
++    }));
++  });
++}
++
+ var config = {
+   default: {
+     tension: 170,
+@@ -1450,54 +1559,6 @@ function (_AnimatedWithChildren) {
+   return AnimatedTransform;
+ }(AnimatedWithChildren);
+ 
+-var AnimatedStyles =
+-/*#__PURE__*/
+-function (_AnimatedWithChildren) {
+-  _inheritsLoose(AnimatedStyles, _AnimatedWithChildren);
+-
+-  function AnimatedStyles(styles) {
+-    var _this;
+-
+-    _this = _AnimatedWithChildren.call(this) || this;
+-    _this.payload = styles.map(function (style) {
+-      return new AnimatedStyle(style);
+-    });
+-    return _this;
+-  }
+-
+-  var _proto = AnimatedStyles.prototype;
+-
+-  _proto.getValue = function getValue() {
+-    return this.payload.map(function (style) {
+-      return style.getValue();
+-    });
+-  };
+-
+-  _proto.getAnimatedValue = function getAnimatedValue() {
+-    return this.payload.map(function (style) {
+-      return style.getAnimatedValue();
+-    });
+-  };
+-
+-  _proto.attach = function attach() {
+-    var _this2 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.addChild(_this2);
+-    });
+-  };
+-
+-  _proto.detach = function detach() {
+-    var _this3 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.removeChild(_this3);
+-    });
+-  };
+-
+-  return AnimatedStyles;
+-}(AnimatedWithChildren);
+-
+ var KeyframeController =
+ /*#__PURE__*/
+ function () {
+@@ -2373,11 +2434,11 @@ injectApplyAnimatedValues(function (instance, props) {
+   });
+ });
+ injectCreateAnimatedStyle(function (styles) {
+-  return Array.isArray(styles) ? new AnimatedStyles(styles) : new AnimatedStyle(styles);
++  return new AnimatedStyle(reactNative.StyleSheet.flatten(styles));
+ });
+ 
+ exports.config = config;
+-exports.animated = extendedAnimated;
++exports.animated = createAnimatedComponent;
+ exports.interpolate = interpolate$1;
+ exports.Globals = Globals;
+ exports.useSpring = useSpring;
+new file mode 100644
+--- /dev/null
++++ b/node_modules/react-spring/native-hooks.d.ts
+@@ -0,0 +1 @@
++export * from './hooks'
+--- a/node_modules/react-spring/native-hooks.js
++++ b/node_modules/react-spring/native-hooks.js
+@@ -4,7 +4,7 @@ import _extends from '@babel/runtime/helpers/esm/extends';
+ import _objectWithoutPropertiesLoose from '@babel/runtime/helpers/esm/objectWithoutPropertiesLoose';
+ import React, { useRef, useState, useImperativeMethods, useEffect, useCallback, useMemo } from 'react';
+ import _createClass from '@babel/runtime/helpers/esm/createClass';
+-import { View } from 'react-native';
++import { StyleSheet, View } from 'react-native';
+ 
+ var bugfixes = undefined;
+ var applyAnimatedValues = undefined;
+@@ -708,6 +708,17 @@ function interpolateTo(props) {
+     to: forward
+   }, rest);
+ }
++function handleRef(ref, forward) {
++  if (forward) {
++    // If it's a function, assume it's a ref callback
++    if (typeof forward === 'function') forward(ref);else if (typeof forward === 'object') {
++      // If it's an object and has a 'current' property, assume it's a ref object
++      forward.current = ref;
++    }
++  }
++
++  return ref;
++}
+ 
+ var Controller =
+ /*#__PURE__*/
+@@ -947,6 +958,104 @@ function (_AnimatedObjectWithCh) {
+   return AnimatedProps;
+ }(AnimatedObjectWithChildren);
+ 
++function createAnimatedComponent(Component) {
++  var AnimatedComponent =
++  /*#__PURE__*/
++  function (_React$Component) {
++    _inheritsLoose(AnimatedComponent, _React$Component);
++
++    function AnimatedComponent(props) {
++      var _this;
++
++      _this = _React$Component.call(this) || this;
++
++      _this.callback = function () {
++        if (_this.node) {
++          var didUpdate = applyAnimatedValues.fn(_this.node, _this.propsAnimated.getAnimatedValue(), _assertThisInitialized(_assertThisInitialized(_this)));
++          if (didUpdate === false) _this.forceUpdate();
++        }
++      };
++
++      _this.attachProps(props);
++
++      return _this;
++    }
++
++    var _proto = AnimatedComponent.prototype;
++
++    _proto.componentWillUnmount = function componentWillUnmount() {
++      this.propsAnimated && this.propsAnimated.detach();
++    };
++
++    _proto.setNativeProps = function setNativeProps(props) {
++      var didUpdate = applyAnimatedValues.fn(this.node, props, this);
++      if (didUpdate === false) this.forceUpdate();
++    } // The system is best designed when setNativeProps is implemented. It is
++    // able to avoid re-rendering and directly set the attributes that
++    // changed. However, setNativeProps can only be implemented on leaf
++    // native components. If you want to animate a composite component, you
++    // need to re-render it. In this case, we have a fallback that uses
++    // forceUpdate.
++    ;
++
++    _proto.attachProps = function attachProps(_ref) {
++      var forwardRef = _ref.forwardRef,
++          nextProps = _objectWithoutPropertiesLoose(_ref, ["forwardRef"]);
++
++      var oldPropsAnimated = this.propsAnimated;
++      this.propsAnimated = new AnimatedProps(nextProps, this.callback); // When you call detach, it removes the element from the parent list
++      // of children. If it goes to 0, then the parent also detaches itself
++      // and so on.
++      // An optimization is to attach the new elements and THEN detach the old
++      // ones instead of detaching and THEN attaching.
++      // This way the intermediate state isn't to go to 0 and trigger
++      // this expensive recursive detaching to then re-attach everything on
++      // the very next operation.
++
++      oldPropsAnimated && oldPropsAnimated.detach();
++    };
++
++    _proto.shouldComponentUpdate = function shouldComponentUpdate(props) {
++      var style = props.style,
++          nextProps = _objectWithoutPropertiesLoose(props, ["style"]);
++
++      var _this$props = this.props,
++          currentStyle = _this$props.style,
++          currentProps = _objectWithoutPropertiesLoose(_this$props, ["style"]);
++
++      if (!shallowEqual(currentProps, nextProps) || !shallowEqual(currentStyle, style)) {
++        this.attachProps(props);
++        return true;
++      }
++
++      return false;
++    };
++
++    _proto.render = function render() {
++      var _this2 = this;
++
++      var _this$propsAnimated$g = this.propsAnimated.getValue(),
++          scrollTop = _this$propsAnimated$g.scrollTop,
++          scrollLeft = _this$propsAnimated$g.scrollLeft,
++          animatedProps = _objectWithoutPropertiesLoose(_this$propsAnimated$g, ["scrollTop", "scrollLeft"]);
++
++      return React.createElement(Component, _extends({}, animatedProps, {
++        ref: function ref(node) {
++          return _this2.node = handleRef(node, _this2.props.forwardRef);
++        }
++      }));
++    };
++
++    return AnimatedComponent;
++  }(React.Component);
++
++  return React.forwardRef(function (props, ref) {
++    return React.createElement(AnimatedComponent, _extends({}, props, {
++      forwardRef: ref
++    }));
++  });
++}
++
+ var config = {
+   default: {
+     tension: 170,
+@@ -1443,54 +1552,6 @@ function (_AnimatedWithChildren) {
+   return AnimatedTransform;
+ }(AnimatedWithChildren);
+ 
+-var AnimatedStyles =
+-/*#__PURE__*/
+-function (_AnimatedWithChildren) {
+-  _inheritsLoose(AnimatedStyles, _AnimatedWithChildren);
+-
+-  function AnimatedStyles(styles) {
+-    var _this;
+-
+-    _this = _AnimatedWithChildren.call(this) || this;
+-    _this.payload = styles.map(function (style) {
+-      return new AnimatedStyle(style);
+-    });
+-    return _this;
+-  }
+-
+-  var _proto = AnimatedStyles.prototype;
+-
+-  _proto.getValue = function getValue() {
+-    return this.payload.map(function (style) {
+-      return style.getValue();
+-    });
+-  };
+-
+-  _proto.getAnimatedValue = function getAnimatedValue() {
+-    return this.payload.map(function (style) {
+-      return style.getAnimatedValue();
+-    });
+-  };
+-
+-  _proto.attach = function attach() {
+-    var _this2 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.addChild(_this2);
+-    });
+-  };
+-
+-  _proto.detach = function detach() {
+-    var _this3 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.removeChild(_this3);
+-    });
+-  };
+-
+-  return AnimatedStyles;
+-}(AnimatedWithChildren);
+-
+ var KeyframeController =
+ /*#__PURE__*/
+ function () {
+@@ -2366,7 +2427,7 @@ injectApplyAnimatedValues(function (instance, props) {
+   });
+ });
+ injectCreateAnimatedStyle(function (styles) {
+-  return Array.isArray(styles) ? new AnimatedStyles(styles) : new AnimatedStyle(styles);
++  return new AnimatedStyle(StyleSheet.flatten(styles));
+ });
+ 
+-export { config, extendedAnimated as animated, interpolate$1 as interpolate, Globals, useSpring, useTrail, useTransition, useKeyframes, useChain, useSprings };
++export { config, createAnimatedComponent as animated, interpolate$1 as interpolate, Globals, useSpring, useTrail, useTransition, useKeyframes, useChain, useSprings };
+--- a/node_modules/react-spring/native.cjs.js
++++ b/node_modules/react-spring/native.cjs.js
+@@ -2297,54 +2297,6 @@ function (_AnimatedWithChildren) {
+   return AnimatedTransform;
+ }(AnimatedWithChildren);
+ 
+-var AnimatedStyles =
+-/*#__PURE__*/
+-function (_AnimatedWithChildren) {
+-  _inheritsLoose(AnimatedStyles, _AnimatedWithChildren);
+-
+-  function AnimatedStyles(styles) {
+-    var _this;
+-
+-    _this = _AnimatedWithChildren.call(this) || this;
+-    _this.payload = styles.map(function (style) {
+-      return new AnimatedStyle(style);
+-    });
+-    return _this;
+-  }
+-
+-  var _proto = AnimatedStyles.prototype;
+-
+-  _proto.getValue = function getValue() {
+-    return this.payload.map(function (style) {
+-      return style.getValue();
+-    });
+-  };
+-
+-  _proto.getAnimatedValue = function getAnimatedValue() {
+-    return this.payload.map(function (style) {
+-      return style.getAnimatedValue();
+-    });
+-  };
+-
+-  _proto.attach = function attach() {
+-    var _this2 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.addChild(_this2);
+-    });
+-  };
+-
+-  _proto.detach = function detach() {
+-    var _this3 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.removeChild(_this3);
+-    });
+-  };
+-
+-  return AnimatedStyles;
+-}(AnimatedWithChildren);
+-
+ injectDefaultElement(reactNative.View);
+ injectInterpolation(createInterpolation);
+ injectColorNames(colors);
+@@ -2356,7 +2308,7 @@ injectApplyAnimatedValues(function (instance, props) {
+   });
+ });
+ injectCreateAnimatedStyle(function (styles) {
+-  return Array.isArray(styles) ? new AnimatedStyles(styles) : new AnimatedStyle(styles);
++  return new AnimatedStyle(reactNative.StyleSheet.flatten(styles));
+ });
+ 
+ exports.Spring = Spring;
+--- a/node_modules/react-spring/native.js
++++ b/node_modules/react-spring/native.js
+@@ -3,7 +3,7 @@ import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitial
+ import _extends from '@babel/runtime/helpers/esm/extends';
+ import _objectWithoutPropertiesLoose from '@babel/runtime/helpers/esm/objectWithoutPropertiesLoose';
+ import React from 'react';
+-import { View } from 'react-native';
++import { StyleSheet, View } from 'react-native';
+ 
+ var bugfixes = undefined;
+ var applyAnimatedValues = undefined;
+@@ -2290,54 +2290,6 @@ function (_AnimatedWithChildren) {
+   return AnimatedTransform;
+ }(AnimatedWithChildren);
+ 
+-var AnimatedStyles =
+-/*#__PURE__*/
+-function (_AnimatedWithChildren) {
+-  _inheritsLoose(AnimatedStyles, _AnimatedWithChildren);
+-
+-  function AnimatedStyles(styles) {
+-    var _this;
+-
+-    _this = _AnimatedWithChildren.call(this) || this;
+-    _this.payload = styles.map(function (style) {
+-      return new AnimatedStyle(style);
+-    });
+-    return _this;
+-  }
+-
+-  var _proto = AnimatedStyles.prototype;
+-
+-  _proto.getValue = function getValue() {
+-    return this.payload.map(function (style) {
+-      return style.getValue();
+-    });
+-  };
+-
+-  _proto.getAnimatedValue = function getAnimatedValue() {
+-    return this.payload.map(function (style) {
+-      return style.getAnimatedValue();
+-    });
+-  };
+-
+-  _proto.attach = function attach() {
+-    var _this2 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.addChild(_this2);
+-    });
+-  };
+-
+-  _proto.detach = function detach() {
+-    var _this3 = this;
+-
+-    this.payload.forEach(function (style) {
+-      return style.removeChild(_this3);
+-    });
+-  };
+-
+-  return AnimatedStyles;
+-}(AnimatedWithChildren);
+-
+ injectDefaultElement(View);
+ injectInterpolation(createInterpolation);
+ injectColorNames(colors);
+@@ -2349,7 +2301,7 @@ injectApplyAnimatedValues(function (instance, props) {
+   });
+ });
+ injectCreateAnimatedStyle(function (styles) {
+-  return Array.isArray(styles) ? new AnimatedStyles(styles) : new AnimatedStyle(styles);
++  return new AnimatedStyle(StyleSheet.flatten(styles));
+ });
+ 
+ export { Spring, Keyframes, Transition, Trail, Controller, config, createAnimatedComponent as animated, interpolate$1 as interpolate, Globals };
