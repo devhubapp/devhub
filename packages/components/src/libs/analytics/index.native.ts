@@ -8,9 +8,9 @@ import {
 import { appVersion } from '../../components/common/AppVersion'
 import { Analytics } from './'
 
-GoogleAnalyticsSettings.setDryRun(false) // __DEV__
+GoogleAnalyticsSettings.setDryRun(__DEV__) // __DEV__
 GoogleAnalyticsSettings.setDispatchInterval(5)
-firebase.analytics().setAnalyticsCollectionEnabled(false) // __DEV__
+firebase.analytics().setAnalyticsCollectionEnabled(__DEV__) // __DEV__
 
 const tracker = new GoogleAnalyticsTracker('UA-52350759-2')
 tracker.setAppName(__DEV__ ? 'devhub-dev' : 'devhub')

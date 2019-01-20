@@ -2,7 +2,7 @@ import React, { Ref } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Column as ColumnType } from '@devhub/core'
-import { useTransition } from 'react-spring/hooks'
+import { useTransition } from 'react-spring/native-hooks'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'

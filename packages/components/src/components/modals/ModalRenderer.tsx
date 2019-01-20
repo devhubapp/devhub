@@ -2,7 +2,7 @@ import React from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 
 import { ModalPayloadWithIndex } from '@devhub/core'
-import { config, useTransition } from 'react-spring/hooks'
+import { config, useTransition } from 'react-spring/native-hooks'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'

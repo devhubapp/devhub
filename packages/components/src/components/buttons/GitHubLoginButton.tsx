@@ -1,9 +1,9 @@
 import { rgba } from 'polished'
 import React, { useRef } from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
+import { useSpring } from 'react-spring/native-hooks'
 
 import { GitHubIcon } from '@devhub/core'
-import { useSpring } from 'react-spring/hooks'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
@@ -112,7 +112,6 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
-
     return {
       config: { duration: 100 },
       native: true,
@@ -166,9 +165,11 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
             ]}
           >
             <SpringAnimatedIcon
-              color={springAnimatedTheme.foregroundColor}
               name={leftIcon}
-              style={styles.icon}
+              style={[
+                styles.icon,
+                { color: springAnimatedTheme.foregroundColor },
+              ]}
             />
           </SpringAnimatedView>
         )}
@@ -214,9 +215,13 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
             ) : (
               !!rightIcon && (
                 <SpringAnimatedIcon
-                  color={springAnimatedTheme.foregroundColor}
                   name={rightIcon}
-                  style={styles.icon}
+                  style={[
+                    styles.icon,
+                    {
+                      color: springAnimatedTheme.foregroundColor,
+                    },
+                  ]}
                 />
               )
             )}

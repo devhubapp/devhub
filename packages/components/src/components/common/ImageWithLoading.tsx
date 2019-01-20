@@ -102,7 +102,7 @@ export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
     }
   }
 
-  const ImageComponent = animated ? SpringAnimatedImage : Image
+  const ImageComponent = true ? SpringAnimatedImage : Image
 
   return (
     <ImageComponent

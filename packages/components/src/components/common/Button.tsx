@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useSpring } from 'react-spring/hooks'
+import { useSpring } from 'react-spring/native-hooks'
 
 import { rgba } from 'polished'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'

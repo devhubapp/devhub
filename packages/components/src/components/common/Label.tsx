@@ -100,7 +100,10 @@ export function Label(props: LabelProps) {
       >
         {Boolean(isPrivate) && (
           <Text>
-            <SpringAnimatedIcon color={springAnimatedColor} name="lock" />{' '}
+            <SpringAnimatedIcon
+              name="lock"
+              style={{ color: springAnimatedColor }}
+            />{' '}
           </Text>
         )}
         {children}

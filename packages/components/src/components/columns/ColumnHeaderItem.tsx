@@ -1,7 +1,7 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
 import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
-import { useSpring } from 'react-spring/hooks'
+import { useSpring } from 'react-spring/native-hooks'
 
 import { GitHubIcon, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'

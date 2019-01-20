@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
-import { useSpring } from 'react-spring/hooks'
+import { useSpring } from 'react-spring/native-hooks'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'

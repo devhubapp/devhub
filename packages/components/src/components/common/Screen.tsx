@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 import {
   KeyboardAvoidingView,
   StatusBar,
@@ -13,7 +13,6 @@ import { ThemeColors } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { SpringAnimatedStatusBar } from '../animated/spring/SpringAnimatedStatusBar'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 import { ConditionalWrap } from './ConditionalWrap'
@@ -35,18 +34,6 @@ const styles = StyleSheet.create({
 })
 
 export function Screen(props: ScreenProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
-  useTheme(theme => {
-    StatusBar.setBarStyle(theme.isDark ? 'light-content' : 'dark-content')
-  })
-
-  useEffect(() => {
-    if (SplashScreen) {
-      SplashScreen.hide()
-    }
-  }, [])
-
   const {
     statusBarBackgroundThemeColor,
     useSafeArea = true,
@@ -54,50 +41,69 @@ export function Screen(props: ScreenProps) {
     ...otherProps
   } = props
 
-  return (
-    <>
-      <SpringAnimatedStatusBar
-        barStyle="light-content"
-        backgroundColor={
-          statusBarBackgroundThemeColor
-            ? springAnimatedTheme[statusBarBackgroundThemeColor]
-            : springAnimatedTheme.backgroundColor
-        }
-      />
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-      <ConditionalWrap
-        condition
-        wrap={children =>
-          Platform.select({
-            ios: (
-              <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>
-                {children}
-              </KeyboardAvoidingView>
-            ),
-            default: <View style={styles.wrapper}>{children}</View>,
-          })
-        }
-      >
-        {useSafeArea ? (
-          <SpringAnimatedSafeAreaView
-            {...otherProps}
-            style={[
-              styles.container,
-              { backgroundColor: springAnimatedTheme.backgroundColor as any },
-              style,
-            ]}
-          />
-        ) : (
-          <SpringAnimatedView
-            {...otherProps}
-            style={[
-              styles.container,
-              { backgroundColor: springAnimatedTheme.backgroundColor },
-              style,
-            ]}
-          />
-        )}
-      </ConditionalWrap>
-    </>
+  const initialTheme = useTheme(theme => {
+    cacheRef.current.theme = theme
+    updateStyles()
+  })
+
+  const cacheRef = useRef({ theme: initialTheme })
+
+  useEffect(() => {
+    if (SplashScreen) {
+      SplashScreen.hide()
+    }
+  }, [])
+
+  function updateStyles() {
+    const { theme } = cacheRef.current
+
+    StatusBar.setBarStyle(theme.isDark ? 'light-content' : 'dark-content')
+
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(
+        statusBarBackgroundThemeColor
+          ? theme[statusBarBackgroundThemeColor]
+          : theme.backgroundColor,
+        false,
+      )
+    }
+  }
+
+  return (
+    <ConditionalWrap
+      condition
+      wrap={children =>
+        Platform.select({
+          ios: (
+            <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>
+              {children}
+            </KeyboardAvoidingView>
+          ),
+          default: <View style={styles.wrapper}>{children}</View>,
+        })
+      }
+    >
+      {useSafeArea ? (
+        <SpringAnimatedSafeAreaView
+          {...otherProps}
+          style={[
+            styles.container,
+            { backgroundColor: springAnimatedTheme.backgroundColor },
+            style,
+          ]}
+        />
+      ) : (
+        <SpringAnimatedView
+          {...otherProps}
+          style={[
+            styles.container,
+            { backgroundColor: springAnimatedTheme.backgroundColor },
+            style,
+          ]}
+        />
+      )}
+    </ConditionalWrap>
   )
 }

@@ -1,6 +1,10 @@
 import React, { useImperativeMethods, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { config, ReactSpringHook, useTransition } from 'react-spring/hooks'
+import {
+  config,
+  ReactSpringHook,
+  useTransition,
+} from 'react-spring/native-hooks'
 
 import { Platform } from '../../libs/platform/index.web'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'

@@ -167,14 +167,17 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
           <SpringAnimatedCardIcon
             name="bookmark"
-            color={
-              isSaved
-                ? colors.brandBackgroundColor
-                : springAnimatedTheme.foregroundColorMuted50
-            }
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
+            style={{
+              color: isSaved
+                ? colors.brandBackgroundColor
+                : springAnimatedTheme.foregroundColorMuted50,
+            }}
           />
-          <SpringAnimatedCardIcon name={cardIconName} color={cardIconColor} />
+          <SpringAnimatedCardIcon
+            name={cardIconName}
+            style={!!cardIconColor && { color: cardIconColor }}
+          />
         </View>
       </View>
     </View>

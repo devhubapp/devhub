@@ -100,7 +100,11 @@ export const IssueOrPullRequestRow = React.memo(
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
-              <SpringAnimatedIcon color={iconColor} name={iconName} /> {title}
+              <SpringAnimatedIcon
+                name={iconName}
+                style={{ color: iconColor }}
+              />{' '}
+              {title}
               {Boolean(byText) && (
                 <SpringAnimatedText
                   style={[

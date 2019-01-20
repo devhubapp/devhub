@@ -96,11 +96,6 @@ export function FAB(props: FABProps) {
       >
         {typeof iconName === 'string' ? (
           <SpringAnimatedIcon
-            color={
-              useBrandColor
-                ? colors.brandForegroundColor
-                : springAnimatedTheme.foregroundColor
-            }
             name={iconName}
             style={[
               {
@@ -110,6 +105,9 @@ export function FAB(props: FABProps) {
                 marginTop: 1,
                 fontSize: 24,
                 textAlign: 'center',
+                color: useBrandColor
+                  ? colors.brandForegroundColor
+                  : springAnimatedTheme.foregroundColor,
               },
               iconStyle,
             ]}

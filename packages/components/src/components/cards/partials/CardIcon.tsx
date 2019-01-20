@@ -10,9 +10,7 @@ import {
 } from '../../animated/spring/SpringAnimatedIcon'
 
 export interface CardIconProps
-  extends Omit<SpringAnimatedIconProps, 'accessibilityRole'> {
-  style?: any
-}
+  extends Omit<SpringAnimatedIconProps, 'accessibilityRole'> {}
 
 const styles = StyleSheet.create({
   container: {
@@ -27,8 +25,13 @@ export function SpringAnimatedCardIcon(props: CardIconProps) {
   return (
     <SpringAnimatedIcon
       {...props}
-      color={props.color || springAnimatedTheme.foregroundColor}
-      style={[styles.container, props.style]}
+      style={[
+        styles.container,
+        {
+          color: springAnimatedTheme.foregroundColor,
+        },
+        props.style,
+      ]}
     />
   )
 }

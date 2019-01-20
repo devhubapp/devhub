@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
 })
 
 export const Screen = React.memo((props: ScreenProps) => {
+  const { statusBarBackgroundThemeColor } = props
+
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   useTheme(theme => {
@@ -31,8 +33,6 @@ export const Screen = React.memo((props: ScreenProps) => {
     metas['theme-color'].content = color
     metas['msapplication-navbutton-color'].content = color
   })
-
-  const { statusBarBackgroundThemeColor } = props
 
   return (
     <SpringAnimatedView

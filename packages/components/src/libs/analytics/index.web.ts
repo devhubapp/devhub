@@ -9,9 +9,9 @@ gtag('config', trackingId, {
   custom_map: { dimension1: 'user_id', dimension2: 'is_electron' },
 })
 
-// if (__DEV__) {
-//   ;(window as any)[`ga-disable-${trackingId}`] = true
-// }
+if (__DEV__) {
+  ;(window as any)[`ga-disable-${trackingId}`] = true
+}
 
 const gtagAndLog = (...args: any[]) => {
   // if (__DEV__) console.debug('[ANALYTICS]', ...args) // tslint:disable-line no-console

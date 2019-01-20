@@ -148,13 +148,13 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
           style={[StyleSheet.absoluteFill, styles.center, { zIndex: 2 }]}
         >
           <SpringAnimatedIcon
-            color={checkedForegroundColor}
             name="check"
             size={13}
             style={{
               lineHeight: 13,
               textAlign: 'center',
               opacity: checked ? 1 : 0,
+              color: checkedForegroundColor,
             }}
           />
         </View>
@@ -186,10 +186,12 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
 
           {!!labelIcon && (
             <SpringAnimatedIcon
-              color={springAnimatedTheme.foregroundColor}
               name={labelIcon}
               size={16}
-              style={{ lineHeight: 16 }}
+              style={{
+                lineHeight: 16,
+                color: springAnimatedTheme.foregroundColor,
+              }}
             />
           )}
         </View>

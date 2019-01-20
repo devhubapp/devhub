@@ -7,20 +7,23 @@ import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
+import {
+  SpringAnimatedTouchableOpacity,
+  SpringAnimatedTouchableOpacityProps,
+} from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
-import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export interface LinkProps
-  extends Omit<TouchableOpacityProps, 'analyticsLabel'> {
+  extends Omit<SpringAnimatedTouchableOpacityProps, 'analyticsLabel'> {
   allowEmptyLink?: boolean
-  analyticsLabel?: TouchableOpacityProps['analyticsLabel']
+  analyticsLabel?: SpringAnimatedTouchableOpacityProps['analyticsLabel']
   animated?: boolean
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
   hoverBackgroundThemeColor?: keyof ThemeColors
   href?: string
-  mobileProps?: TouchableOpacityProps
+  mobileProps?: SpringAnimatedTouchableOpacityProps
   openOnNewTab?: boolean
   webProps?: AnchorHTMLAttributes<HTMLAnchorElement>
 }
@@ -126,5 +129,5 @@ export function Link(props: LinkProps) {
   finalProps.style = StyleSheet.flatten(finalProps.style)
 
   if (!renderTouchable) return <ViewComponent ref={ref} {...finalProps} />
-  return <TouchableOpacity ref={ref} animated={animated} {...finalProps} />
+  return <SpringAnimatedTouchableOpacity ref={ref} {...finalProps} />
 }
