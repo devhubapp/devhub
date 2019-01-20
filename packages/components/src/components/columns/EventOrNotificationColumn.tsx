@@ -8,6 +8,7 @@ import {
 } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
+import { contentPadding } from '../../styles/variables'
 import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
@@ -147,6 +148,7 @@ export const EventOrNotificationColumn = React.memo(
               )
             }
             enableForegroundHover
+            fixedIconSize
             iconName="check"
             onPress={() =>
               setColumnClearedAtFilter({
@@ -154,13 +156,20 @@ export const EventOrNotificationColumn = React.memo(
                 clearedAt: new Date().toISOString(),
               })
             }
+            style={{
+              paddingHorizontal: contentPadding / 3,
+            }}
           />
           <ColumnHeaderItem
             analyticsAction={showColumnOptions ? 'hide' : 'show'}
             analyticsLabel="column_options"
             enableForegroundHover
+            fixedIconSize
             iconName="settings"
             onPress={toggleOptions}
+            style={{
+              paddingHorizontal: contentPadding / 3,
+            }}
           />
         </ColumnHeader>
 

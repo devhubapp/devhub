@@ -166,6 +166,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       height: size,
       lineHeight: size,
       fontSize: size,
+      textAlign: 'center',
     } as TextStyle,
 
     title: {

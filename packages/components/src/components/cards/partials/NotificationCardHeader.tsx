@@ -10,13 +10,17 @@ import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import * as selectors from '../../../redux/selectors'
 import * as colors from '../../../styles/colors'
+import {
+  columnHeaderItemContentSize,
+  contentPadding,
+} from '../../../styles/variables'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
+import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Label } from '../../common/Label'
 import { cardStyles, getCardStylesForTheme } from '../styles'
-import { SpringAnimatedCardIcon } from './CardIcon'
 
 export interface NotificationCardHeaderProps {
   cardIconColor?: string
@@ -134,18 +138,39 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             </SpringAnimatedView>
           </View>
 
-          <SpringAnimatedCardIcon
-            name="bookmark"
+          <ColumnHeaderItem
+            analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
+            fixedIconSize
+            iconName="bookmark"
+            iconStyle={[
+              { width: columnHeaderItemContentSize },
+              {
+                color: isSaved
+                  ? colors.brandBackgroundColor
+                  : springAnimatedTheme.foregroundColorMuted50,
+              },
+            ]}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
+            size={18}
             style={{
-              color: isSaved
-                ? colors.brandBackgroundColor
-                : springAnimatedTheme.foregroundColorMuted50,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
             }}
           />
-          <SpringAnimatedCardIcon
-            name={cardIconName}
-            style={!!cardIconColor && { color: cardIconColor }}
+
+          <ColumnHeaderItem
+            fixedIconSize
+            iconName={cardIconName}
+            iconStyle={[
+              { width: columnHeaderItemContentSize },
+              !!cardIconColor && { color: cardIconColor },
+            ]}
+            size={18}
+            style={{
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+              marginRight: -contentPadding / 2,
+            }}
           />
         </View>
       </View>
