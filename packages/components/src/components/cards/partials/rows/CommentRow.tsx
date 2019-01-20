@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { trimNewLinesAndSpaces } from '@devhub/core'
+import { stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { fixURL } from '../../../../utils/helpers/github/url'
@@ -41,7 +41,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
   } = props
 
   const body = trimNewLinesAndSpaces(
-    _body,
+    stripMarkdown(`${_body || ''}`),
     Platform.select({ default: 400, web: 150 }),
   )
   if (!body) return null
