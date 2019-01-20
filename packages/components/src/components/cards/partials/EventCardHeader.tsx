@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { getDateSmallText, GitHubIcon } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
+import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import * as colors from '../../../styles/colors'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
@@ -126,7 +127,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               )}
               <IntervalRefresh date={createdAt}>
                 {() => {
-                  const dateText = getDateSmallText(createdAt)
+                  const dateText = getDateSmallText(createdAt, false)
                   if (!dateText) return null
 
                   return (
@@ -138,6 +139,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                           getCardStylesForTheme(springAnimatedTheme)
                             .timestampText
                         }
+                        {...Platform.select({
+                          web: { title: getDateSmallText(createdAt, true) },
+                        })}
                       >
                         {`• ${dateText}`}
                       </SpringAnimatedText>

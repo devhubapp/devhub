@@ -25,7 +25,7 @@ export function isNight() {
   return hours >= 18 || hours <= 6
 }
 
-export function getDateSmallText(date: MomentInput) {
+export function getDateSmallText(date: MomentInput, includeExactTime = false) {
   if (!date) return ''
 
   const momentDate = moment(date)
@@ -55,14 +55,14 @@ export function getDateSmallText(date: MomentInput) {
       //   return `${minutesDiff}m`;
       // }
 
-      return `${minutesDiff}m (${timeText})`
+      return `${minutesDiff}m${includeExactTime ? ` (${timeText})` : ''}`
     }
 
-    return `${hoursDiff}h (${timeText})`
+    return `${hoursDiff}h${includeExactTime ? ` (${timeText})` : ''}`
   }
 
   if (daysDiff <= 3) {
-    return `${daysDiff}d (${timeText})`
+    return `${daysDiff}d${includeExactTime ? ` (${timeText})` : ''}`
   }
 
   return momentDate.format('MMM Do').toLowerCase()

@@ -6,6 +6,7 @@ import { getDateSmallText, GitHubIcon } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
 import { useReduxState } from '../../../hooks/use-redux-state'
+import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import * as selectors from '../../../redux/selectors'
 import * as colors from '../../../styles/colors'
@@ -106,7 +107,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               </Label>
               <IntervalRefresh date={updatedAt}>
                 {() => {
-                  const dateText = getDateSmallText(updatedAt)
+                  const dateText = getDateSmallText(updatedAt, false)
                   if (!dateText) return null
 
                   return (
@@ -118,6 +119,9 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                           getCardStylesForTheme(springAnimatedTheme)
                             .timestampText
                         }
+                        {...Platform.select({
+                          web: { title: getDateSmallText(updatedAt, true) },
+                        })}
                       >
                         {`• ${dateText}`}
                       </SpringAnimatedText>
