@@ -6,6 +6,7 @@ import { useHover } from '../../hooks/use-hover'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
 import { SpringAnimatedTextInput as SpringAnimatedTextInputOriginal } from '../animated/spring/SpringAnimatedTextInput'
+import { separatorSize } from './Separator'
 
 export interface SpringAnimatedTextInputProps extends TextInputComponentProps {
   className?: string
@@ -47,12 +48,12 @@ export const SpringAnimatedTextInput = React.forwardRef(
             paddingHorizontal: contentPadding,
             backgroundColor: 'transparent',
             borderRadius: radius,
-            borderWidth: 1,
+            borderWidth: separatorSize,
             borderColor: isFocused
               ? colors.brandBackgroundColor
               : isHovered
-              ? springAnimatedTheme.backgroundColorLess16
-              : springAnimatedTheme.backgroundColorLess08,
+              ? springAnimatedTheme.backgroundColorLess2
+              : springAnimatedTheme.backgroundColorLess1,
           },
           style,
         ]}

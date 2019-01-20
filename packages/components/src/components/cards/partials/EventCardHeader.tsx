@@ -94,7 +94,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           avatarURL={avatarURL}
           isBot={isBot}
           linkURL={userLinkURL}
-          shape={isBot ? 'rounded' : 'circle'}
+          shape={isBot ? undefined : 'circle'}
           style={cardStyles.avatar}
           username={username}
         />
@@ -122,7 +122,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                     style={
                       getCardStylesForTheme(springAnimatedTheme).timestampText
                     }
-                  >{`• BOT`}</SpringAnimatedText>
+                  >
+                    <Text children="•" style={{ fontSize: 9 }} />
+                    <Text children=" " />
+                    BOT
+                  </SpringAnimatedText>
                 </>
               )}
               <IntervalRefresh date={createdAt}>
@@ -143,7 +147,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                           web: { title: getDateSmallText(createdAt, true) },
                         })}
                       >
-                        {`• ${dateText}`}
+                        <Text children="•" style={{ fontSize: 9 }} />
+                        <Text children=" " />
+                        {dateText}
                       </SpringAnimatedText>
                     </>
                   )

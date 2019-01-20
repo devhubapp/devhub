@@ -87,7 +87,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     <SpringAnimatedView
       style={[
         styles.container,
-        { backgroundColor: springAnimatedTheme.backgroundColorLess08 },
+        { backgroundColor: springAnimatedTheme.backgroundColorLess1 },
       ]}
     >
       <ScrollView
@@ -131,7 +131,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       checked={checked}
                       checkedBackgroundColor={item.color}
                       checkedForegroundColor={
-                        springAnimatedTheme.backgroundColorDarker08
+                        springAnimatedTheme.backgroundColorDarker1
                       }
                       containerStyle={{
                         flexGrow: 1,

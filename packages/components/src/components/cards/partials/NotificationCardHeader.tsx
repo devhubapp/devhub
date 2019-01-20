@@ -123,7 +123,9 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                           web: { title: getDateSmallText(updatedAt, true) },
                         })}
                       >
-                        {`• ${dateText}`}
+                        <Text children="•" style={{ fontSize: 9 }} />
+                        <Text children=" " />
+                        {dateText}
                       </SpringAnimatedText>
                     </>
                   )

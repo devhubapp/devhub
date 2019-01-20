@@ -62,7 +62,7 @@ export function FAB(props: FABProps) {
           borderRadius: fabSize / 2,
           backgroundColor: useBrandColor
             ? colors.brandBackgroundColor
-            : springAnimatedTheme.backgroundColorLess08,
+            : springAnimatedTheme.backgroundColorLess1,
           shadowColor: '#000000',
           shadowOffset: {
             width: 0,
@@ -90,7 +90,7 @@ export function FAB(props: FABProps) {
           !!(isHovered || isPressing) && {
             backgroundColor: useBrandColor
               ? springAnimatedTheme.backgroundColorTransparent10
-              : springAnimatedTheme.backgroundColorLess16,
+              : springAnimatedTheme.backgroundColorLess2,
           },
         ]}
       >

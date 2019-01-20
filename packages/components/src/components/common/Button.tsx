@@ -15,6 +15,7 @@ import {
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
+import { separatorSize } from './Separator'
 
 export const buttonSize = 40
 
@@ -71,15 +72,15 @@ export const Button = React.memo((props: ButtonProps) => {
       touchableBorderColor: useBrandColor
         ? colors.brandBackgroundColor
         : isHovered || isPressing
-        ? theme.backgroundColorLess16
-        : theme.backgroundColorLess08,
+        ? theme.backgroundColorLess2
+        : theme.backgroundColorLess1,
       innerContainerBackgroundColor: borderOnly
-        ? rgba(theme.backgroundColorLess08, 0)
+        ? rgba(theme.backgroundColorLess1, 0)
         : isHovered || isPressing
         ? useBrandColor
           ? theme.backgroundColorTransparent10
-          : theme.backgroundColorLess16
-        : rgba(theme.backgroundColorLess08, 0),
+          : theme.backgroundColorLess2
+        : rgba(theme.backgroundColorLess1, 0),
       textColor: useBrandColor
         ? colors.brandForegroundColor
         : borderOnly
@@ -117,9 +118,9 @@ export const Button = React.memo((props: ButtonProps) => {
             ? 'transparent'
             : useBrandColor
             ? colors.brandBackgroundColor
-            : springAnimatedTheme.backgroundColorLess08,
+            : springAnimatedTheme.backgroundColorLess1,
           borderColor: springAnimatedStyles.touchableBorderColor,
-          borderWidth: borderOnly ? 1 : 0,
+          borderWidth: borderOnly ? separatorSize : 0,
           borderRadius: radius,
         },
         style,

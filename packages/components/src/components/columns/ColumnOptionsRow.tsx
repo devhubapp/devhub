@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
+import { useSpring } from 'react-spring/native-hooks'
 
 import { GitHubIcon } from '@devhub/core'
-import { useSpring } from 'react-spring/native-hooks'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
@@ -15,6 +15,7 @@ import {
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
+import { separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import {
   TouchableOpacity,
@@ -86,8 +87,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       native: true,
       backgroundColor:
         isHovered || isPressing || opened
-          ? theme.backgroundColorLess16
-          : theme.backgroundColorLess08,
+          ? theme.backgroundColorLess2
+          : theme.backgroundColorLess1,
     }
   }
 
@@ -101,8 +102,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         backgroundColor: springAnimatedStyles.backgroundColor,
         borderWidth: 0,
         borderColor: 'transparent',
-        borderBottomWidth: 1,
-        borderBottomColor: springAnimatedTheme.backgroundColorLess08,
+        borderBottomWidth: separatorSize,
+        borderBottomColor: springAnimatedTheme.backgroundColorLess1,
       }}
     >
       <TouchableOpacity

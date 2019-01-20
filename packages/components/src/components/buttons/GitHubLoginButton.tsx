@@ -117,8 +117,8 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
       native: true,
       backgroundColor:
         isHovered || isPressing
-          ? theme.backgroundColorLess16
-          : rgba(theme.backgroundColorLess16, 0),
+          ? theme.backgroundColorLess2
+          : rgba(theme.backgroundColorLess2, 0),
     }
   }
 
@@ -146,7 +146,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
       style={[
         styles.button,
         {
-          backgroundColor: springAnimatedTheme.backgroundColorLess08,
+          backgroundColor: springAnimatedTheme.backgroundColorLess1,
         },
         props.style,
       ]}

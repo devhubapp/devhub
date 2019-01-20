@@ -11,13 +11,12 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import { defaultTheme } from '../../styles/utils'
 import { contentPadding, radius } from '../../styles/variables'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
-import { separatorSize } from '../common/Separator'
+import { separatorTickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useTheme } from '../context/ThemeContext'
 
@@ -125,7 +124,7 @@ function AddColumnModalItem({
       native: true,
       backgroundColor:
         (isHovered || isPressing) && !disabled
-          ? theme.backgroundColorLess08
+          ? theme.backgroundColorLess1
           : rgba(theme.backgroundColor, 0),
     }
   }
@@ -203,7 +202,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
   const columnWidth = useColumnWidth()
 
   const outerSpacing = (3 / 4) * contentPadding
-  const availableWidth = columnWidth - separatorSize - 2 * outerSpacing
+  const availableWidth = columnWidth - 2 * separatorTickSize - 2 * outerSpacing
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 

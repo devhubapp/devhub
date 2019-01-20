@@ -32,7 +32,7 @@ export function SwipeableEventCard(props: SwipeableEventCardProps) {
       ]}
       rightActions={[
         {
-          color: theme.backgroundColorMore08,
+          color: theme.backgroundColorMore1,
           icon: 'archive',
           key: 'archive',
           label: 'Archive',

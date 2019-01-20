@@ -61,8 +61,8 @@ export function CardItemId(props: CardItemIdProps) {
       style={[
         styles.container,
         {
-          backgroundColor: springAnimatedTheme.backgroundColorLess08,
-          borderColor: springAnimatedTheme.backgroundColorLess08,
+          backgroundColor: springAnimatedTheme.backgroundColorLess1,
+          borderColor: springAnimatedTheme.backgroundColorLess1,
         },
         style,
       ]}

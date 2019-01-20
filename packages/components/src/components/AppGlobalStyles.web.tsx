@@ -15,14 +15,18 @@ function getStyles(params: { theme: Theme }) {
 
     body {
       --theme_backgroundColor:${t.backgroundColor};
-      --theme_backgroundColorDarker08:${t.backgroundColorDarker08};
-      --theme_backgroundColorDarker16:${t.backgroundColorDarker16};
-      --theme_backgroundColorLess08:${t.backgroundColorLess08};
-      --theme_backgroundColorLess16:${t.backgroundColorLess16};
-      --theme_backgroundColorLighther08:${t.backgroundColorLighther08};
-      --theme_backgroundColorLighther16:${t.backgroundColorLighther16};
-      --theme_backgroundColorMore08:${t.backgroundColorMore08};
-      --theme_backgroundColorMore16:${t.backgroundColorMore16};
+      --theme_backgroundColorDarker1:${t.backgroundColorDarker1};
+      --theme_backgroundColorDarker2:${t.backgroundColorDarker2};
+      --theme_backgroundColorDarker3:${t.backgroundColorDarker3};
+      --theme_backgroundColorLess1:${t.backgroundColorLess1};
+      --theme_backgroundColorLess2:${t.backgroundColorLess2};
+      --theme_backgroundColorLess3:${t.backgroundColorLess3};
+      --theme_backgroundColorLighther1:${t.backgroundColorLighther1};
+      --theme_backgroundColorLighther2:${t.backgroundColorLighther2};
+      --theme_backgroundColorLighther3:${t.backgroundColorLighther3};
+      --theme_backgroundColorMore1:${t.backgroundColorMore1};
+      --theme_backgroundColorMore2:${t.backgroundColorMore2};
+      --theme_backgroundColorMore3:${t.backgroundColorMore3};
       --theme_backgroundColorTransparent10:${t.backgroundColorTransparent10};
       --theme_foregroundColor:${t.foregroundColor};
       --theme_foregroundColorMuted50:${t.foregroundColorMuted50};

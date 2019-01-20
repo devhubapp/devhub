@@ -16,7 +16,7 @@ import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { bugsnag } from '../../libs/bugsnag'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
-import { Separator, separatorTickSize } from '../common/Separator'
+import { separatorTickSize } from '../common/Separator'
 import { AnimatedTransparentTextOverlay } from '../common/TransparentTextOverlay'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
@@ -161,7 +161,6 @@ export const Columns = React.memo((props: ColumnsProps) => {
       <FlatList
         ref={flatListRef}
         key="columns-flat-list"
-        ItemSeparatorComponent={Separator}
         bounces={!swipeable}
         className="snap-container"
         data={columnIds}
@@ -205,7 +204,6 @@ export const Columns = React.memo((props: ColumnsProps) => {
               pointerEvents="box-none"
             >
               <AnimatedTransparentTextOverlay
-                ref={leftOverlayRef}
                 containerStyle={StyleSheet.absoluteFill}
                 size={contentPadding}
                 spacing={0}
@@ -213,12 +211,11 @@ export const Columns = React.memo((props: ColumnsProps) => {
                   top: 0,
                   height: columnHeaderHeight,
                 }}
-                themeColor="backgroundColorLess08"
+                themeColor="backgroundColorLess1"
                 to="right"
               />
 
               <AnimatedTransparentTextOverlay
-                ref={leftOverlayRef}
                 containerStyle={StyleSheet.absoluteFill}
                 size={contentPadding}
                 spacing={0}
@@ -245,7 +242,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
                   top: 0,
                   height: columnHeaderHeight,
                 }}
-                themeColor="backgroundColorLess08"
+                themeColor="backgroundColorLess1"
                 to="left"
               />
 

@@ -17,6 +17,8 @@ import {
 } from '../../styles/variables'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { getUserURL } from '../cards/partials/rows/helpers'
+import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
@@ -24,6 +26,7 @@ import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
@@ -44,7 +47,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const { horizontal, zIndex } = props
 
   const { sizename } = useAppLayout()
+
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const theme = useTheme()
+
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const modalStack = useReduxState(selectors.modalStack)
@@ -71,7 +77,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
     <SpringAnimatedSafeAreaView
       style={{
         width: horizontal ? undefined : sidebarSize,
-        backgroundColor: springAnimatedTheme.backgroundColor,
+        backgroundColor:
+          springAnimatedTheme[
+            getColumnHeaderThemeColors(theme.backgroundColor).normal
+          ],
         zIndex: zIndex || 1000,
       }}
     >
@@ -85,22 +94,44 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       >
         {!horizontal && (
           <>
-            <SpringAnimatedView
+            <ColumnHeaderItem
+              analyticsLabel={undefined}
+              hoverBackgroundThemeColor={
+                getColumnHeaderThemeColors(theme.backgroundColor).hover
+              }
+              enableBackgroundHover={!horizontal}
+              noPadding
+              size={columnHeaderItemContentBiggerSize}
               style={[
                 styles.centerContainer,
+                itemContainerStyle,
                 {
                   width: sidebarSize,
                   height: columnHeaderHeight,
-                  backgroundColor: springAnimatedTheme.backgroundColorLess08,
                 },
               ]}
             >
-              <Avatar
-                shape="circle"
-                size={sidebarSize / 2}
-                username={username}
-              />
-            </SpringAnimatedView>
+              <Link
+                analyticsLabel="sidebar_user_avatar"
+                href={getUserURL(username!)}
+                openOnNewTab
+                style={[
+                  styles.centerContainer,
+                  itemContainerStyle,
+                  {
+                    width: sidebarSize,
+                    height: columnHeaderHeight,
+                  },
+                ]}
+              >
+                <Avatar
+                  disableLink
+                  shape="circle"
+                  size={sidebarSize / 2}
+                  username={username}
+                />
+              </Link>
+            </ColumnHeaderItem>
 
             <Separator horizontal={!horizontal} />
           </>
@@ -117,6 +148,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             horizontal && { paddingHorizontal: contentPadding / 2 },
           ]}
           horizontal={horizontal}
+          overlayThemeColor={
+            getColumnHeaderThemeColors(theme.backgroundColor).normal
+          }
           style={{ flex: 1 }}
         >
           {!(columnIds && columnIds.length) ? (
@@ -124,6 +158,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
+                  hoverBackgroundThemeColor={
+                    getColumnHeaderThemeColors(theme.backgroundColor).hover
+                  }
                   enableBackgroundHover={!horizontal}
                   forceHoverState={isModalOpen('ADD_COLUMN')}
                   iconName="plus"
@@ -155,6 +192,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           {!showFixedSettingsButton && (
             <ColumnHeaderItem
               analyticsLabel="sidebar_settings"
+              hoverBackgroundThemeColor={
+                getColumnHeaderThemeColors(theme.backgroundColor).hover
+              }
               enableBackgroundHover={!horizontal}
               forceHoverState={isModalOpen('SETTINGS')}
               iconName="gear"
@@ -179,6 +219,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
+                  hoverBackgroundThemeColor={
+                    getColumnHeaderThemeColors(theme.backgroundColor).hover
+                  }
                   enableBackgroundHover={!horizontal}
                   forceHoverState={isModalOpen('ADD_COLUMN')}
                   iconName="plus"
@@ -205,6 +248,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         {showFixedSettingsButton && (
           <ColumnHeaderItem
             analyticsLabel="sidebar_settings"
+            hoverBackgroundThemeColor={
+              getColumnHeaderThemeColors(theme.backgroundColor).hover
+            }
             enableBackgroundHover={!horizontal}
             forceHoverState={isModalOpen('SETTINGS')}
             iconName="gear"
@@ -222,6 +268,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
             <ColumnHeaderItem
               analyticsLabel={undefined}
+              hoverBackgroundThemeColor={
+                getColumnHeaderThemeColors(theme.backgroundColor).hover
+              }
               enableBackgroundHover={!horizontal}
               noPadding
               size={columnHeaderItemContentBiggerSize}
@@ -275,6 +324,8 @@ const SidebarColumnItem = React.memo(
     } = props
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
+    const theme = useTheme()
+
     if (!(column && subscriptions)) return null
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
@@ -288,6 +339,9 @@ const SidebarColumnItem = React.memo(
           ...requestTypeIconAndData.avatarProps,
           disableLink: true,
         }}
+        hoverBackgroundThemeColor={
+          getColumnHeaderThemeColors(theme.backgroundColor).hover
+        }
         enableBackgroundHover={!horizontal}
         iconName={requestTypeIconAndData.icon}
         label={label}

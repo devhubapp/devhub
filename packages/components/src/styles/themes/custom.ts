@@ -1,6 +1,11 @@
-import { darken, getLuminance, invert, lighten, rgba } from 'polished'
+import { darken, getLuminance, invert, lighten, mix, rgba } from 'polished'
 
 import { Theme } from '@devhub/core'
+import * as colors from '../colors'
+
+function mixWithBrand(color: string, weight: number = 0.01) {
+  return mix(weight, colors.brandBackgroundColor, color)
+}
 
 function createTheme(theme: Theme): Theme {
   return theme
@@ -16,30 +21,42 @@ export function createThemeFromColor(
 
   const backgroundColor = color
 
-  const backgroundColorDarker08 = darken(0.08, color)
-  const backgroundColorDarker16 = darken(0.16, color)
-  const backgroundColorLighther08 = lighten(0.08, color)
-  const backgroundColorLighther16 = lighten(0.16, color)
+  const amount1 = 0.03
+  const amount2 = 2 * amount1
+  const amount3 = 3 * amount1
 
-  const backgroundColorMore08 = isDark
-    ? darken(0.08, color)
-    : lighten(0.08, color)
-  const backgroundColorMore16 = isDark
-    ? darken(0.16, color)
-    : lighten(0.16, color)
+  const backgroundColorDarker1 = mixWithBrand(darken(amount1, color))
+  const backgroundColorDarker2 = mixWithBrand(darken(amount2, color))
+  const backgroundColorDarker3 = mixWithBrand(darken(amount3, color))
+  const backgroundColorLighther1 = mixWithBrand(lighten(amount1, color))
+  const backgroundColorLighther2 = mixWithBrand(lighten(amount2, color))
+  const backgroundColorLighther3 = mixWithBrand(lighten(amount3, color))
 
-  const backgroundColorLess08 = isDark
-    ? lighten(0.08, color)
-    : darken(0.08, color)
-  const backgroundColorLess16 = isDark
-    ? lighten(0.16, color)
-    : darken(0.16, color)
+  const backgroundColorMore1 = mixWithBrand(
+    isDark ? darken(amount1, color) : lighten(amount1, color),
+  )
+  const backgroundColorMore2 = mixWithBrand(
+    isDark ? darken(amount2, color) : lighten(amount2, color),
+  )
+  const backgroundColorMore3 = mixWithBrand(
+    isDark ? darken(amount3, color) : lighten(amount3, color),
+  )
+
+  const backgroundColorLess1 = mixWithBrand(
+    isDark ? lighten(amount1, color) : darken(amount1, color),
+  )
+  const backgroundColorLess2 = mixWithBrand(
+    isDark ? lighten(amount2, color) : darken(amount2, color),
+  )
+  const backgroundColorLess3 = mixWithBrand(
+    isDark ? lighten(amount3, color) : darken(amount3, color),
+  )
 
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
   const foregroundColor = isDark ? lighten(0.8, color) : darken(0.8, color)
-  const foregroundColorMuted50 = isDark
-    ? lighten(0.5, color)
-    : darken(0.5, color)
+  const foregroundColorMuted50 = mixWithBrand(
+    isDark ? lighten(0.5, color) : darken(0.5, color),
+  )
 
   let invertedTheme: Theme
   return createTheme({
@@ -53,14 +70,18 @@ export function createThemeFromColor(
       return invertedTheme
     },
     backgroundColor,
-    backgroundColorDarker08,
-    backgroundColorDarker16,
-    backgroundColorLess08,
-    backgroundColorLess16,
-    backgroundColorLighther08,
-    backgroundColorLighther16,
-    backgroundColorMore08,
-    backgroundColorMore16,
+    backgroundColorDarker1,
+    backgroundColorDarker2,
+    backgroundColorDarker3,
+    backgroundColorLess1,
+    backgroundColorLess2,
+    backgroundColorLess3,
+    backgroundColorLighther1,
+    backgroundColorLighther2,
+    backgroundColorLighther3,
+    backgroundColorMore1,
+    backgroundColorMore2,
+    backgroundColorMore3,
     backgroundColorTransparent10,
     foregroundColor,
     foregroundColorMuted50,

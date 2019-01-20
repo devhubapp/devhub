@@ -10,6 +10,7 @@ import {
 } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { separatorSize } from './Separator'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 const checkboxBorderRadius = 4
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: separatorSize,
   },
   center: {
     alignContent: 'center',

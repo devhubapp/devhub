@@ -120,7 +120,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       native: true,
       backgroundColor:
         isHovered && enableBackgroundHover
-          ? theme[hoverBackgroundThemeColor || 'backgroundColorLess08']
+          ? theme[hoverBackgroundThemeColor || 'backgroundColorLess1']
           : rgba(theme.backgroundColor, 0),
       foregroundColor:
         isHovered && enableForegroundHover
@@ -169,9 +169,10 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     } as TextStyle,
 
     title: {
+      fontWeight: '500',
       marginRight: contentPadding / 2,
       lineHeight: size,
-      fontSize: size - 2,
+      fontSize: size - 3,
     } as TextStyle,
 
     subtitle: {
@@ -245,14 +246,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 <Avatar
                   isBot={false}
                   linkURL=""
+                  size={size}
                   {...avatarProps}
-                  style={[
-                    {
-                      width: size,
-                      height: size,
-                    },
-                    avatarProps.style,
-                  ]}
                   username={username}
                 />
               ) : (

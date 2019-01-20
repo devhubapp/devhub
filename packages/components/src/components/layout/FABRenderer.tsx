@@ -12,7 +12,7 @@ import { FAB, fabSize } from '../common/FAB'
 import { useAppLayout } from '../context/LayoutContext'
 
 export const fabSpacing =
-  contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2)
+  contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2) - 2
 
 const fabPositionStyle: ViewStyle = {
   position: 'absolute',

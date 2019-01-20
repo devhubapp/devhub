@@ -17,6 +17,7 @@ import {
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { separatorSize } from './Separator'
 
 export interface LabelProps {
   borderColor?: string
@@ -35,7 +36,7 @@ export interface LabelProps {
 const styles = StyleSheet.create({
   labelContainer: {
     borderRadius: defaultRadius,
-    borderWidth: 1,
+    borderWidth: separatorSize,
     paddingHorizontal: contentPadding,
     paddingVertical: 2,
   },

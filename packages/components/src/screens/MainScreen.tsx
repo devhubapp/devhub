@@ -154,7 +154,7 @@ export const MainScreen = React.memo(() => {
 
   return (
     <Screen
-      statusBarBackgroundThemeColor="backgroundColorLess08"
+      statusBarBackgroundThemeColor="backgroundColorLess1"
       useSafeArea={false}
     >
       <View
@@ -173,6 +173,7 @@ export const MainScreen = React.memo(() => {
         />
 
         <Separator
+          half
           horizontal={horizontalSidebar}
           thick={!horizontalSidebar}
           zIndex={1000}

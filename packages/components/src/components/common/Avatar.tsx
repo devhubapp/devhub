@@ -110,7 +110,7 @@ export function Avatar(props: AvatarProps) {
       <SpringAnimatedImageWithLoading
         backgroundColorFailed="#FFFFFF"
         backgroundColorLoaded="#FFFFFF"
-        backgroundColorLoading={springAnimatedTheme.backgroundColorLess08}
+        backgroundColorLoading={springAnimatedTheme.backgroundColorLess1}
         {...oherProps}
         source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
         style={[
@@ -119,7 +119,7 @@ export function Avatar(props: AvatarProps) {
             width: finalSize,
             borderWidth: 0,
             borderRadius:
-              shape === 'circle'
+              !shape || shape === 'circle'
                 ? finalSize / 2
                 : shape === 'square'
                 ? 0
