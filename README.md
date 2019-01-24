@@ -5,7 +5,7 @@
   <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
 </p>
 
-[![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)](https://devhubapp.com/)
+[![DevHub Desktop](https://user-images.githubusercontent.com/619186/51652101-900e4600-1f75-11e9-9704-4f63e89fb9b9.jpg)](https://devhubapp.com/)
 
 
 <p align="center">
