@@ -29,6 +29,7 @@ function getStyles(params: { theme: Theme }) {
       --theme_backgroundColorMore3:${t.backgroundColorMore3};
       --theme_backgroundColorTransparent10:${t.backgroundColorTransparent10};
       --theme_foregroundColor:${t.foregroundColor};
+      --theme_foregroundColorMuted20:${t.foregroundColorMuted20};
       --theme_foregroundColorMuted50:${t.foregroundColorMuted50};
       background-color:${t.backgroundColor};
     }

@@ -52,8 +52,8 @@ export const SpringAnimatedTextInput = React.forwardRef(
             borderColor: isFocused
               ? colors.brandBackgroundColor
               : isHovered
-              ? springAnimatedTheme.backgroundColorLess2
-              : springAnimatedTheme.backgroundColorLess1,
+              ? springAnimatedTheme.foregroundColorMuted50
+              : springAnimatedTheme.foregroundColorMuted20,
           },
           style,
         ]}
