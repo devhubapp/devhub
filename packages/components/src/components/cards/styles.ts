@@ -17,16 +17,17 @@ export const cardStyles = StyleSheet.create({
   } as ViewStyle,
 
   leftColumn: {
-    justifyContent: 'center',
     marginRight: contentPadding,
     width: avatarSize,
   } as ViewStyle,
 
   leftColumn__small: {
+    justifyContent: 'center',
     width: smallAvatarSize,
   } as ViewStyle,
 
   leftColumn__big: {
+    justifyContent: 'flex-start',
     width: avatarSize,
   } as ViewStyle,
 
@@ -36,7 +37,6 @@ export const cardStyles = StyleSheet.create({
 
   rightColumn: {
     flex: 1,
-    flexDirection: 'row',
   } as ViewStyle,
 
   avatar: {

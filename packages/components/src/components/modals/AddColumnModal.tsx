@@ -178,7 +178,7 @@ function AddColumnModalItem({
           iconName={item.icon}
           noPadding
           size={24}
-          style={{ marginBottom: contentPadding / 2 }}
+          style={{ alignSelf: 'center', marginBottom: contentPadding / 2 }}
         />
 
         <SpringAnimatedText

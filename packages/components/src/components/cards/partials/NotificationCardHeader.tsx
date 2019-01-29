@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
 
   outerContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
   },
 
   innerContainer: {
@@ -142,17 +141,16 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
             fixedIconSize
             iconName="bookmark"
-            iconStyle={[
-              { width: columnHeaderItemContentSize },
-              {
-                color: isSaved
-                  ? colors.brandBackgroundColor
-                  : springAnimatedTheme.foregroundColorMuted50,
-              },
-            ]}
+            iconStyle={{
+              width: columnHeaderItemContentSize,
+              color: isSaved
+                ? colors.brandBackgroundColor
+                : springAnimatedTheme.foregroundColorMuted50,
+            }}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
             size={18}
             style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
             }}
@@ -162,11 +160,14 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             fixedIconSize
             iconName={cardIconName}
             iconStyle={[
-              { width: columnHeaderItemContentSize },
+              {
+                width: columnHeaderItemContentSize,
+              },
               !!cardIconColor && { color: cardIconColor },
             ]}
             size={18}
             style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
               marginRight: -contentPadding / 2,

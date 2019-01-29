@@ -149,7 +149,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
   const styles = {
     container: {
-      alignSelf: 'center',
+      alignSelf: 'flex-start',
       justifyContent: 'center',
       alignItems: 'center',
       alignContent: 'center',

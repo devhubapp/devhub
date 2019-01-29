@@ -84,7 +84,7 @@ export const IssueOrPullRequestRow = React.memo(
           )}
         </View>
 
-        <View style={cardStyles.rightColumn}>
+        <View style={[cardStyles.rightColumn, { flexDirection: 'row' }]}>
           <Link
             href={fixURL(url, {
               addBottomAnchor,

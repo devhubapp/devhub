@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
 
   outerContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
   },
 
   innerContainer: {
@@ -183,17 +182,17 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
             fixedIconSize
             iconName="bookmark"
-            iconStyle={[
-              { width: columnHeaderItemContentSize },
-              {
-                color: isSaved
-                  ? colors.brandBackgroundColor
-                  : springAnimatedTheme.foregroundColorMuted50,
-              },
-            ]}
+            iconStyle={{
+              width: columnHeaderItemContentSize,
+              color: isSaved
+                ? colors.brandBackgroundColor
+                : springAnimatedTheme.foregroundColorMuted50,
+            }}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
             size={18}
             style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 6,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
             }}
@@ -203,11 +202,18 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             fixedIconSize
             iconName={cardIconName}
             iconStyle={[
-              { width: columnHeaderItemContentSize },
+              {
+                width: columnHeaderItemContentSize,
+              },
+              cardIconName === 'star' && {
+                lineHeight: 16,
+              },
               !!cardIconColor && { color: cardIconColor },
             ]}
             size={18}
             style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 6,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
               marginRight: -contentPadding / 2,
