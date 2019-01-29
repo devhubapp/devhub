@@ -96,7 +96,7 @@ export function getFilteredNotifications(
 ) {
   let _notifications = _(notifications)
     .uniqBy('id')
-    .orderBy(['unread', 'updated_at', 'created_at'], ['desc', 'desc', 'desc'])
+    .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
     .value()
 
   const reasonsFilter =
