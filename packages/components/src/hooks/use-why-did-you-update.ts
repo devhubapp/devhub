@@ -17,7 +17,7 @@ export function useWhyDidYouUpdate(name: string, props: Record<string, any>) {
 
     if (Object.keys(changesObj).length) {
       // tslint:disable-next-line no-console
-      console.log('[xxx][why-did-update-you-update]', name, changesObj)
+      console.log('[why-did-you-update]', name, changesObj)
     }
 
     latestProps.current = props
