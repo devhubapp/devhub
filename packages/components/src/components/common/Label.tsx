@@ -29,36 +29,25 @@ export interface LabelProps {
   muted?: boolean
   outline?: boolean
   radius?: number
+  small?: boolean
   textColor?: string
   textProps?: TextProps
 }
-
-const styles = StyleSheet.create({
-  labelContainer: {
-    borderRadius: defaultRadius,
-    borderWidth: separatorSize,
-    paddingHorizontal: contentPadding,
-    paddingVertical: 2,
-  },
-
-  labelText: {
-    fontSize: 14,
-  },
-})
 
 export function Label(props: LabelProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     borderColor,
-    color: _color,
     children,
-    containerStyle,
+    color: _color,
     containerProps = {},
+    containerStyle,
+    isPrivate,
     muted,
     outline,
-    isPrivate,
     radius = defaultRadius,
+    small,
     textColor,
     textProps = {},
   } = props
@@ -74,8 +63,14 @@ export function Label(props: LabelProps) {
 
   return (
     <SpringAnimatedView
+      {...containerProps}
       style={[
-        styles.labelContainer,
+        {
+          borderRadius: defaultRadius,
+          borderWidth: separatorSize,
+          paddingHorizontal: contentPadding / (small ? 2 : 1),
+        },
+        containerProps && containerProps.style,
         containerStyle,
         {
           borderColor:
@@ -86,18 +81,19 @@ export function Label(props: LabelProps) {
         },
         Boolean(radius) && { borderRadius: radius },
       ]}
-      {...containerProps}
     >
       <SpringAnimatedText
         numberOfLines={1}
+        {...textProps}
         style={[
-          styles.labelText,
           {
+            lineHeight: small ? 16 : 18,
+            fontSize: small ? 13 : 14,
             color: springAnimatedColor,
           },
+          textProps && textProps.style,
           muted && { opacity: mutedOpacity },
         ]}
-        {...textProps}
       >
         {Boolean(isPrivate) && (
           <Text>

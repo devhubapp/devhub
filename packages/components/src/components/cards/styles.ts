@@ -54,16 +54,16 @@ export const getCardStylesForTheme = _.memoize(
     return {
       usernameText: {
         alignSelf: 'center',
-        color: theme.foregroundColor,
-        fontWeight: '600',
         lineHeight: 20,
+        fontWeight: '600',
+        color: theme.foregroundColor,
       } as TextStyle,
 
       timestampText: {
         alignSelf: 'center',
-        color: theme.foregroundColorMuted50,
+        lineHeight: smallTextSize + 1,
         fontSize: smallTextSize,
-        lineHeight: smallTextSize + 4,
+        color: theme.foregroundColorMuted50,
       } as TextStyle,
 
       commentText: {
@@ -85,13 +85,13 @@ export const getCardStylesForTheme = _.memoize(
       } as TextStyle,
 
       normalText: {
-        color: theme.foregroundColor,
         lineHeight: 20,
+        color: theme.foregroundColor,
       } as TextStyle,
 
       descriptionText: {
-        color: theme.foregroundColorMuted50,
         lineHeight: 20,
+        color: theme.foregroundColorMuted50,
       } as TextStyle,
     }
   },

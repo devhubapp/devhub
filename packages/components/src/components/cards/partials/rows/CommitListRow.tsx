@@ -6,9 +6,10 @@ import { RenderItem, RowList } from './RowList'
 import { GitHubPushedCommit } from '@devhub/core'
 
 export interface CommitListRowProps {
+  commits: GitHubPushedCommit[]
   isRead: boolean
   maxHeight?: number
-  commits: GitHubPushedCommit[]
+  smallLeftColumn?: boolean
 }
 
 export const CommitListRow = React.memo((props: CommitListRowProps) => {

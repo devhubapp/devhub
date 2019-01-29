@@ -7,6 +7,7 @@ import { UserRow } from './UserRow'
 export interface UserListRowProps {
   isRead: boolean
   maxHeight?: number
+  smallLeftColumn?: boolean
   users: GitHubUser[]
 }
 

@@ -80,6 +80,9 @@ export const getGitHubURLForRelease = (
       : `${baseURL}/${repoFullName}/releases`
     : ''
 
+export const getGitHubURLForRepo = (repoFullName: string) =>
+  repoFullName ? `${baseURL}/${repoFullName}` : ''
+
 export const getGitHubURLForRepoInvitation = (repoFullName: string) =>
   repoFullName ? `${baseURL}/${repoFullName}/invitations` : ''
 

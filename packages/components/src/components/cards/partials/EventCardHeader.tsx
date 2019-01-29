@@ -27,7 +27,7 @@ export interface EventCardHeaderProps {
   avatarURL: string
   cardIconColor?: string
   cardIconName: GitHubIcon
-  createdAt: MomentInput
+  date: MomentInput
   ids: Array<string | number>
   isBot: boolean
   isPrivate?: boolean
@@ -36,8 +36,6 @@ export interface EventCardHeaderProps {
   userLinkURL: string
   username: string
 }
-
-export interface EventCardHeaderState {}
 
 const styles = StyleSheet.create({
   container: {
@@ -68,7 +66,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     avatarURL,
     cardIconColor,
     cardIconName,
-    createdAt,
+    date,
     ids,
     isBot,
     isPrivate,
@@ -132,9 +130,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   </SpringAnimatedText>
                 </>
               )}
-              <IntervalRefresh date={createdAt}>
+              <IntervalRefresh date={date}>
                 {() => {
-                  const dateText = getDateSmallText(createdAt, false)
+                  const dateText = getDateSmallText(date, false)
                   if (!dateText) return null
 
                   return (
@@ -147,7 +145,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                             .timestampText
                         }
                         {...Platform.select({
-                          web: { title: getDateSmallText(createdAt, true) },
+                          web: { title: getDateSmallText(date, true) },
                         })}
                       >
                         <Text children="•" style={{ fontSize: 9 }} />

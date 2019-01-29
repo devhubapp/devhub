@@ -255,6 +255,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 !!iconName && (
                   <SpringAnimatedIcon
                     name={iconName}
+                    selectable={false}
                     style={[
                       styles.icon,
                       fixedIconSize && {

@@ -15,6 +15,7 @@ export interface RepositoryListRowProps {
   isRead: boolean
   maxHeight?: number
   repos: GitHubRepo[]
+  smallLeftColumn?: boolean
 }
 
 export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {

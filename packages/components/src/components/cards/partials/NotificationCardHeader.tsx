@@ -2,40 +2,49 @@ import { MomentInput } from 'moment'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { getDateSmallText, GitHubIcon } from '@devhub/core'
+import {
+  getDateSmallText,
+  GitHubIcon,
+  GitHubNotificationReason,
+} from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
-import { useReduxState } from '../../../hooks/use-redux-state'
 import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
-import * as selectors from '../../../redux/selectors'
 import * as colors from '../../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../../styles/variables'
+import { getNotificationReasonMetadata } from '../../../utils/helpers/github/notifications'
+import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Label } from '../../common/Label'
+import { Link } from '../../common/Link'
+import { Spacer } from '../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../styles'
+import { getUserURL } from './rows/helpers'
 
 export interface NotificationCardHeaderProps {
+  actionText: string
+  avatarURL: string
   cardIconColor?: string
   cardIconName: GitHubIcon
+  date: MomentInput
   ids: Array<string | number>
+  isBot: boolean
   isPrivate?: boolean
   isRead: boolean
   isSaved?: boolean
-  labelColor: string
-  labelText: string
+  reason: GitHubNotificationReason
   smallLeftColumn?: boolean
-  updatedAt: MomentInput
+  userLinkURL: string
+  username: string
 }
-
-export interface NotificationCardHeaderState {}
 
 const styles = StyleSheet.create({
   container: {
@@ -59,21 +68,27 @@ const styles = StyleSheet.create({
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const username = useReduxState(selectors.currentUsernameSelector)
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   const {
+    actionText,
+    avatarURL,
     cardIconColor,
     cardIconName,
+    date,
     ids,
+    isBot,
     isPrivate,
     isRead,
     isSaved,
-    labelColor,
-    labelText,
+    reason,
     smallLeftColumn,
-    updatedAt,
+    userLinkURL,
+    username: _username,
   } = props
+
+  const reasonDetails = getNotificationReasonMetadata(reason)
+  const username = isBot ? _username!.replace('[bot]', '') : _username
 
   return (
     <View
@@ -89,8 +104,10 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
         ]}
       >
         <Avatar
-          shape="circle"
-          small
+          avatarURL={avatarURL}
+          isBot={isBot}
+          linkURL={userLinkURL}
+          shape={isBot ? undefined : 'circle'}
           style={cardStyles.avatar}
           username={username}
         />
@@ -100,17 +117,36 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
             <SpringAnimatedView style={cardStyles.horizontal}>
-              <Label
-                color={labelColor}
-                isPrivate={isPrivate}
-                outline={isRead}
-                textProps={{ numberOfLines: 1 }}
-              >
-                {labelText}
-              </Label>
-              <IntervalRefresh date={updatedAt}>
+              <Link href={getUserURL(username, { isBot })}>
+                <SpringAnimatedText
+                  numberOfLines={1}
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).usernameText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  ]}
+                >
+                  {username}
+                </SpringAnimatedText>
+              </Link>
+              {!!isBot && (
+                <>
+                  <Text children=" " />
+                  <SpringAnimatedText
+                    numberOfLines={1}
+                    style={
+                      getCardStylesForTheme(springAnimatedTheme).timestampText
+                    }
+                  >
+                    <Text children="•" style={{ fontSize: 9 }} />
+                    <Text children=" " />
+                    BOT
+                  </SpringAnimatedText>
+                </>
+              )}
+              <IntervalRefresh date={date}>
                 {() => {
-                  const dateText = getDateSmallText(updatedAt, false)
+                  const dateText = getDateSmallText(date, false)
                   if (!dateText) return null
 
                   return (
@@ -123,7 +159,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                             .timestampText
                         }
                         {...Platform.select({
-                          web: { title: getDateSmallText(updatedAt, true) },
+                          web: { title: getDateSmallText(date, true) },
                         })}
                       >
                         <Text children="•" style={{ fontSize: 9 }} />
@@ -135,6 +171,46 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 }}
               </IntervalRefresh>
             </SpringAnimatedView>
+
+            {!!actionText && (
+              <SpringAnimatedText
+                numberOfLines={1}
+                style={
+                  getCardStylesForTheme(springAnimatedTheme).descriptionText
+                }
+              >
+                {!!isPrivate && (
+                  <SpringAnimatedText
+                    style={getCardStylesForTheme(springAnimatedTheme).mutedText}
+                  >
+                    <SpringAnimatedIcon
+                      name="lock"
+                      style={
+                        getCardStylesForTheme(springAnimatedTheme).mutedText
+                      }
+                    />{' '}
+                  </SpringAnimatedText>
+                )}
+                {actionText}
+              </SpringAnimatedText>
+            )}
+
+            {!!(reasonDetails && reasonDetails.label) && (
+              <>
+                <Spacer height={4} />
+
+                <Label
+                  color={reasonDetails.color}
+                  containerStyle={{ alignSelf: 'flex-start' }}
+                  isPrivate={isPrivate}
+                  outline={isRead}
+                  small
+                  textProps={{ numberOfLines: 1, style: { paddingBottom: 1 } }}
+                >
+                  {reasonDetails.label.toLowerCase()}
+                </Label>
+              </>
+            )}
           </View>
 
           <ColumnHeaderItem
@@ -151,6 +227,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             size={18}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 6,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
             }}
@@ -163,11 +240,15 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               {
                 width: columnHeaderItemContentSize,
               },
+              cardIconName === 'star' && {
+                lineHeight: 16,
+              },
               !!cardIconColor && { color: cardIconColor },
             ]}
             size={18}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 6,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
               marginRight: -contentPadding / 2,

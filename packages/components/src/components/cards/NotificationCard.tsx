@@ -3,10 +3,12 @@ import { StyleSheet, View } from 'react-native'
 
 import {
   EnhancedGitHubNotification,
+  getGitHubURLForRepo,
   getGitHubURLForRepoInvitation,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
   getOwnerAndRepo,
+  getUserAvatarByUsername,
   GitHubNotificationReason,
   isNotificationPrivate,
   trimNewLinesAndSpaces,
@@ -19,6 +21,8 @@ import {
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
 import { fixURL } from '../../utils/helpers/github/url'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
@@ -40,6 +44,9 @@ const styles = StyleSheet.create({
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const { notification, onlyOneRepository } = props
+
+  const springAnimatedTheme = useSpringAnimatedTheme()
+
   if (!notification) return null
 
   const {
@@ -124,12 +131,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const cardIconName = cardIconDetails.icon
   const cardIconColor = cardIconDetails.color
 
-  const labelDetails = getNotificationReasonMetadata(
-    notification.reason as GitHubNotificationReason,
-  )
-  const labelText = labelDetails.label.toLowerCase()
-  const labelColor = labelDetails.color
-
   const { icon: pullRequestIconName, color: pullRequestIconColor } = pullRequest
     ? getPullRequestIconAndColor(pullRequest as any)
     : { icon: undefined, color: undefined }
@@ -143,29 +144,65 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       ? getIssueOrPullRequestNumberFromUrl((issue || pullRequest)!.url)
       : undefined
 
+  // TODO: Show user actor + action text like activity events?
+  const actor = {
+    display_login: repoName,
+    login: repoFullName,
+    avatar_url: getUserAvatarByUsername(repoOwnerName || ''),
+    html_url: repo.html_url || getGitHubURLForRepo(repoFullName),
+  }
+  const actionText = ''
+
+  const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
+
+  const smallLeftColumn = false
+
   return (
-    <View key={`notification-card-${id}-inner`} style={styles.container}>
+    <SpringAnimatedView
+      key={`notification-card-${id}-inner`}
+      style={[
+        styles.container,
+        {
+          backgroundColor: isRead
+            ? springAnimatedTheme.backgroundColorDarker1
+            : springAnimatedTheme.backgroundColor,
+        },
+      ]}
+    >
       <NotificationCardHeader
         key={`notification-card-header-${id}`}
+        actionText={actionText}
+        avatarURL={actor && actor.avatar_url}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
+        date={updatedAt}
         ids={[id]}
+        isBot={isBot}
         isPrivate={isPrivate}
         isRead={isRead}
         isSaved={isSaved}
-        labelColor={labelColor}
-        labelText={labelText}
-        smallLeftColumn
-        updatedAt={updatedAt}
+        reason={notification.reason as GitHubNotificationReason}
+        smallLeftColumn={smallLeftColumn}
+        userLinkURL={actor.html_url || ''}
+        username={actor.display_login || actor.login}
       />
 
-      {!!(repoOwnerName && repoName && !onlyOneRepository) && (
+      {!!(
+        repoOwnerName &&
+        repoName &&
+        !onlyOneRepository &&
+        !(
+          (actor &&
+            (actor.display_login === repoName || actor.login === repoName)) ||
+          (actor.display_login === repoFullName || actor.login === repoFullName)
+        )
+      ) && (
         <RepositoryRow
           key={`notification-repo-row-${repo.id}`}
           isRead={isRead}
           ownerName={repoOwnerName}
           repositoryName={repoName}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
         />
       )}
 
@@ -178,7 +215,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           isRead={isRead}
           latestCommentUrl={subject.latest_comment_url}
           message={commit.commit.message}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
           url={commit.url || commit.commit.url}
         />
       )}
@@ -192,7 +229,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           iconName={issueIconName!}
           isRead={isRead}
           issueOrPullRequestNumber={issueOrPullRequestNumber!}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
           title={issue.title}
           url={issue.url}
           userLinkURL={issue.user.html_url || ''}
@@ -206,7 +243,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           avatarURL={issue.user.avatar_url}
           body={issue.body}
           isRead={isRead}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
           url={issue.html_url}
           userLinkURL={issue.user.html_url || ''}
           username={issue.user.login}
@@ -222,7 +259,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           iconName={pullRequestIconName!}
           isRead={isRead}
           issueOrPullRequestNumber={issueOrPullRequestNumber!}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
           title={pullRequest.title}
           url={pullRequest.url}
           userLinkURL={pullRequest.user.html_url || ''}
@@ -237,7 +274,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             avatarURL={pullRequest.user.avatar_url}
             body={pullRequest.body}
             isRead={isRead}
-            smallLeftColumn
+            smallLeftColumn={smallLeftColumn}
             url={pullRequest.html_url}
             userLinkURL={pullRequest.user.html_url || ''}
             username={pullRequest.user.login}
@@ -253,7 +290,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           name={release.name || ''}
           ownerName={repoOwnerName!}
           repositoryName={repoName!}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
           tagName={release.tag_name || ''}
           url={release.url}
           userLinkURL={release.author.html_url || ''}
@@ -267,7 +304,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           avatarURL=""
           body={title}
           isRead={isRead}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
           userLinkURL=""
           username=""
           url={
@@ -287,12 +324,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           avatarURL={comment.user.avatar_url}
           body={comment.body}
           isRead={isRead}
-          smallLeftColumn
+          smallLeftColumn={smallLeftColumn}
           url={comment.html_url}
           userLinkURL={comment.user.html_url || ''}
           username={comment.user.login}
         />
       )}
-    </View>
+    </SpringAnimatedView>
   )
 })
