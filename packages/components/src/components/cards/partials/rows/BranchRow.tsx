@@ -72,8 +72,10 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
           >
             <SpringAnimatedIcon
               name="git-branch"
+              size={13}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardStylesForTheme(springAnimatedTheme).icon,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}

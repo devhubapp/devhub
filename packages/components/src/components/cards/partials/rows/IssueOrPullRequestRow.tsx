@@ -97,7 +97,12 @@ export const IssueOrPullRequestRow = React.memo(
                 >
                   <SpringAnimatedIcon
                     name={iconName}
-                    style={{ color: iconColor }}
+                    size={13}
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).normalText,
+                      getCardStylesForTheme(springAnimatedTheme).icon,
+                      { color: iconColor },
+                    ]}
                   />{' '}
                   {title}
                 </SpringAnimatedText>

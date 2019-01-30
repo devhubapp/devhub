@@ -91,6 +91,11 @@ export const getCardStylesForTheme = _.memoize(
         wordBreak: 'break-all',
       } as TextStyle,
 
+      icon: {
+        lineHeight: 20,
+        marginRight: 2,
+      } as TextStyle,
+
       descriptionText: {
         lineHeight: 20,
         color: theme.foregroundColorMuted50,

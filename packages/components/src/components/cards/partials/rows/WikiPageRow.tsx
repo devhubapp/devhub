@@ -61,8 +61,10 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
           >
             <SpringAnimatedIcon
               name="book"
+              size={13}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardStylesForTheme(springAnimatedTheme).icon,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}

@@ -76,8 +76,10 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           <SpringAnimatedText numberOfLines={1}>
             <SpringAnimatedIcon
               name={repoIcon}
+              size={13}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardStylesForTheme(springAnimatedTheme).icon,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}

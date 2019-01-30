@@ -107,8 +107,10 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
           >
             <SpringAnimatedIcon
               name="git-commit"
+              size={13}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardStylesForTheme(springAnimatedTheme).icon,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}

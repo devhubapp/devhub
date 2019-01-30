@@ -103,11 +103,13 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 <SpringAnimatedText numberOfLines={1}>
                   <SpringAnimatedIcon
                     name="tag"
-                    style={
-                      isRead
-                        ? getCardStylesForTheme(springAnimatedTheme).mutedText
-                        : getCardStylesForTheme(springAnimatedTheme).normalText
-                    }
+                    size={13}
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).normalText,
+                      getCardStylesForTheme(springAnimatedTheme).icon,
+                      isRead &&
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    ]}
                   />{' '}
                 </SpringAnimatedText>
                 {name || tagName}
@@ -150,11 +152,13 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 <SpringAnimatedText numberOfLines={1}>
                   <SpringAnimatedIcon
                     name="megaphone"
-                    style={
-                      isRead
-                        ? getCardStylesForTheme(springAnimatedTheme).mutedText
-                        : getCardStylesForTheme(springAnimatedTheme).normalText
-                    }
+                    size={13}
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).normalText,
+                      getCardStylesForTheme(springAnimatedTheme).icon,
+                      isRead &&
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    ]}
                   />{' '}
                 </SpringAnimatedText>
                 {body}
