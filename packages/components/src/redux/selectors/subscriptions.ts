@@ -1,6 +1,19 @@
 import { createSelector } from 'reselect'
 
+import {
+  ColumnFilters,
+  ColumnSubscription,
+  EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
+  sortEvents,
+  sortNotifications,
+} from '@devhub/core'
+import {
+  getFilteredEvents,
+  getFilteredNotifications,
+} from '../../utils/helpers/filters'
 import { RootState } from '../types'
+import { githubHasPrivateAccessSelector } from './auth'
 
 const s = (state: RootState) => state.subscriptions || {}
 
@@ -16,7 +29,79 @@ export const createSubscriptionSelector = () =>
 
 export const subscriptionSelector = createSubscriptionSelector()
 
-export const subscriptionsArrSelector = (state: RootState) =>
-  subscriptionIdsSelector(state)
-    .map(id => subscriptionSelector(state, id))
-    .filter(Boolean)
+export const subscriptionsArrSelector = createSelector(
+  (state: RootState) => s(state).byId,
+  (state: RootState) => subscriptionIdsSelector(state),
+  (byId, ids) => ids.map(id => byId && byId[id]).filter(Boolean),
+)
+
+export const createSubscriptionsDataSelector = () =>
+  createSelector(
+    (state: RootState, subscriptionIds: string[]) =>
+      subscriptionIds.map(id => subscriptionSelector(state, id)),
+    subscriptions => {
+      let items: ColumnSubscription['data']['items']
+
+      subscriptions.forEach(subscription => {
+        if (
+          !(
+            subscription &&
+            subscription.data &&
+            subscription.data.items &&
+            subscription.data.items.length
+          )
+        )
+          return
+
+        if (!items) {
+          items = subscription.data.items
+        } else {
+          items = [...items, ...subscription.data.items] as any
+        }
+      })
+
+      if (!(items && items.length)) return []
+
+      if (subscriptions[0]!.type === 'notifications') {
+        return sortNotifications(items as EnhancedGitHubNotification[])
+      }
+
+      return sortEvents(items as EnhancedGitHubEvent[])
+    },
+  )
+
+export const createFilteredSubscriptionsDataSelector = () => {
+  const subscriptionsDataSelector = createSubscriptionsDataSelector()
+
+  return createSelector(
+    (state: RootState, subscriptionIds: string[]) => {
+      const firstSubscription = subscriptionIds
+        .map(id => subscriptionSelector(state, id))
+        .filter(Boolean)[0]
+
+      return firstSubscription && firstSubscription.type
+    },
+    (state: RootState, subscriptionIds: string[]) =>
+      subscriptionsDataSelector(state, subscriptionIds),
+    (state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
+      filters,
+    (state: RootState) => githubHasPrivateAccessSelector(state),
+    (type, items, filters, hasPrivateAccess) => {
+      if (!(items && items.length)) return []
+
+      if (type === 'notifications') {
+        return getFilteredNotifications(
+          items as EnhancedGitHubNotification[],
+          filters,
+          hasPrivateAccess,
+        )
+      }
+
+      return getFilteredEvents(
+        items as EnhancedGitHubEvent[],
+        filters,
+        hasPrivateAccess,
+      )
+    },
+  )
+}

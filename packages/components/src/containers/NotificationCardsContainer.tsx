@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
   Column,
@@ -17,7 +17,6 @@ import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
-import { getFilteredNotifications } from '../utils/helpers/filters'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
@@ -31,52 +30,64 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column } = props
 
-    const hasPrivateAccess = useReduxState(
-      selectors.githubHasPrivateAccessSelector,
-    )
-    const subscription = useReduxState(
+    const firstSubscription = useReduxState(
       state =>
         selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
           | NotificationColumnSubscription
           | undefined,
     )
 
-    const data = (subscription && subscription.data) || {}
+    const data = (firstSubscription && firstSubscription.data) || {}
 
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
     )
 
-    const [filteredItems, setFilteredItems] = useState<
-      EnhancedGitHubNotification[]
-    >(() =>
-      getFilteredNotifications(
-        data.items || [],
-        column.filters,
-        hasPrivateAccess,
-      ),
+    const subscriptionsDataSelectorRef = useRef(
+      selectors.createSubscriptionsDataSelector(),
     )
+
+    const filteredSubscriptionsDataSelectorRef = useRef(
+      selectors.createFilteredSubscriptionsDataSelector(),
+    )
+
+    useEffect(() => {
+      subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
+      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
+    }, column.subscriptionIds)
+
+    const allItems = useReduxState(
+      useCallback(
+        state => {
+          return subscriptionsDataSelectorRef.current(
+            state,
+            column.subscriptionIds,
+          )
+        },
+        [column.subscriptionIds, column.filters],
+      ),
+    ) as EnhancedGitHubNotification[]
+
+    const filteredItems = useReduxState(
+      useCallback(
+        state => {
+          return filteredSubscriptionsDataSelectorRef.current(
+            state,
+            column.subscriptionIds,
+            column.filters,
+          )
+        },
+        [column.subscriptionIds, column.filters],
+      ),
+    ) as EnhancedGitHubNotification[]
 
     const canFetchMoreRef = useRef(false)
 
     useEffect(
       () => {
-        setFilteredItems(
-          getFilteredNotifications(
-            data.items || [],
-            column.filters,
-            hasPrivateAccess,
-          ),
-        )
-      },
-      [data, column.filters],
-    )
-
-    useEffect(
-      () => {
         canFetchMoreRef.current = (() => {
           const clearedAt = column.filters && column.filters.clearedAt
-          const olderDate = getOlderNotificationDate(data.items || [])
+          const olderDate = getOlderNotificationDate(allItems)
 
           if (
             clearedAt &&
@@ -104,7 +115,7 @@ export const NotificationCardsContainer = React.memo(
 
     const fetchNextPage = useCallback(
       () => {
-        const size = subscription ? (subscription.data.items || []).length : 0
+        const size = allItems.length
 
         const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
         const currentPage = Math.ceil(size / perPage)
@@ -112,7 +123,7 @@ export const NotificationCardsContainer = React.memo(
         const nextPage = (currentPage || 0) + 1
         fetchData({ page: nextPage })
       },
-      [fetchData, subscription && (subscription.data.items || []).length],
+      [fetchData, allItems.length],
     )
 
     const refresh = useCallback(
@@ -122,15 +133,15 @@ export const NotificationCardsContainer = React.memo(
       [fetchData],
     )
 
-    if (!subscription) return null
+    if (!firstSubscription) return null
 
     return (
       <NotificationCards
         {...props}
         key={`notification-cards-${column.id}`}
-        errorMessage={subscription.data.errorMessage || ''}
+        errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        loadState={subscription.data.loadState || 'not_loaded'}
+        loadState={firstSubscription.data.loadState || 'not_loaded'}
         notifications={filteredItems}
         refresh={refresh}
       />

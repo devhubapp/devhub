@@ -14,7 +14,7 @@ import {
 import { isPullRequest } from './shared'
 
 export function getOlderEventDate(events: EnhancedGitHubEvent[]) {
-  const olderItem = _.orderBy(events, 'created_at', 'asc')[0]
+  const olderItem = sortEvents(events).pop()
   return olderItem && olderItem.created_at
 }
 
@@ -520,4 +520,12 @@ export function mergeSimilarEvents(events: EnhancedGitHubEvent[]) {
   if (enhancedEvent) enhancedEvents.push(enhancedEvent)
 
   return enhancedEvents.length === events.length ? events : enhancedEvents
+}
+
+export function sortEvents(events: EnhancedGitHubEvent[] | undefined) {
+  if (!events) return []
+  return _(events)
+    .uniqBy('id')
+    .orderBy('created_at', 'desc')
+    .value()
 }

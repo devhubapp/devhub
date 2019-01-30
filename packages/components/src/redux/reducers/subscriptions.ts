@@ -4,7 +4,11 @@ import _ from 'lodash'
 import {
   ColumnSubscription,
   constants,
+  EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
   removeUselessURLsFromResponseItem,
+  sortEvents,
+  sortNotifications,
   subscriptionsArrToState,
 } from '@devhub/core'
 import { Reducer } from '../types'
@@ -51,11 +55,7 @@ export const subscriptionsReducer: Reducer<State> = (
             let count = 0
 
             if (subscription.type === 'activity') {
-              subscription.data.items = _.orderBy(
-                subscription.data.items,
-                'created_at',
-                'desc',
-              )
+              subscription.data.items = sortEvents(subscription.data.items)
                 .filter(item => {
                   if (!item) return false
                   if (item.saved) return true
@@ -73,10 +73,8 @@ export const subscriptionsReducer: Reducer<State> = (
                   return count <= constants.DEFAULT_PAGINATION_PER_PAGE
                 })
             } else if (subscription.type === 'notifications') {
-              subscription.data.items = _.orderBy(
+              subscription.data.items = sortNotifications(
                 subscription.data.items,
-                'updated_at',
-                'desc',
               )
                 .filter(item => {
                   if (!item) return false
@@ -184,24 +182,23 @@ export const subscriptionsReducer: Reducer<State> = (
 
         const prevItems = (subscription.data.items || []) as any
         const newItems = (action.payload.data || []) as any
-        const mergedItems = _.uniqBy(
-          _.orderBy(
-            _.concat(newItems, prevItems as any),
-            action.payload.subscriptionType === 'notifications'
-              ? 'updated_at'
-              : 'created_at',
-            'desc',
-          ),
-          'id',
-        ).map(item => {
-          const prevValue = prevItems.find((i: any) => i.id === item.id)
-          if (!prevValue) return item
 
-          return {
-            ...item,
-            saved: prevValue.saved,
-          }
-        })
+        const _mergedItems: any[] =
+          action.payload.subscriptionType === 'notifications'
+            ? sortNotifications(_.concat(newItems, prevItems as any) as any[])
+            : sortEvents(_.concat(newItems, prevItems as any) as any[])
+
+        const mergedItems: any[] = _mergedItems.map(
+          (item: EnhancedGitHubEvent | EnhancedGitHubNotification) => {
+            const prevValue = prevItems.find((i: any) => i.id === item.id)
+            if (!prevValue) return item
+
+            return {
+              ...item,
+              saved: prevValue.saved,
+            }
+          },
+        )
 
         subscription.data.items = mergedItems.map(
           removeUselessURLsFromResponseItem,

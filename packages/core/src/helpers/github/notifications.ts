@@ -155,7 +155,7 @@ export function enhanceNotifications(
 export function getOlderNotificationDate(
   notifications: EnhancedGitHubNotification[],
 ) {
-  const olderItem = _.orderBy(notifications, 'updated_at', 'asc')[0]
+  const olderItem = sortNotifications(notifications).pop()
   return olderItem && olderItem.updated_at
 }
 
@@ -184,4 +184,15 @@ export function createNotificationsCache(
   })
 
   return cache
+}
+
+export function sortNotifications(
+  notifications: EnhancedGitHubNotification[] | undefined,
+) {
+  if (!notifications) return []
+
+  return _(notifications)
+    .uniqBy('id')
+    .orderBy('updated_at', 'desc')
+    .value()
 }

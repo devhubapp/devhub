@@ -27,18 +27,24 @@ export function useReduxState<S extends (state: any) => any>(
 
   useEffect(
     () => {
-      return store.subscribe(() => {
-        if (!selector) {
-          resolve(undefined as any)
-          return
-        }
+      update()
 
-        const newResult = selector(store.getState())
-        resolve(newResult)
+      return store.subscribe(() => {
+        update()
       })
     },
-    [store],
+    [store, selector],
   )
+
+  function update() {
+    if (!selector) {
+      resolve(undefined as any)
+      return
+    }
+
+    const newResult = selector(store.getState())
+    resolve(newResult)
+  }
 
   const resolve = (value: Result<S>) => {
     if (cacheRef.current === value) return

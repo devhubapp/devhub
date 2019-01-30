@@ -8,6 +8,8 @@ import {
   isNotificationPrivate,
   mergeSimilarEvents,
   NotificationColumnFilters,
+  sortEvents,
+  sortNotifications,
 } from '@devhub/core'
 
 export const filterRecordHasAnyForcedValue = (
@@ -94,10 +96,7 @@ export function getFilteredNotifications(
   filters: NotificationColumnFilters | undefined,
   hasPrivateAccess: boolean,
 ) {
-  let _notifications = _(notifications)
-    .uniqBy('id')
-    .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
-    .value()
+  let _notifications = sortNotifications(notifications)
 
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
@@ -158,10 +157,7 @@ export function getFilteredEvents(
   filters: ActivityColumnFilters | undefined,
   hasPrivateAccess: boolean,
 ) {
-  let _events = _(events)
-    .uniqBy('id')
-    .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
-    .value()
+  let _events = sortEvents(events)
 
   const activityFilter = filters && filters.activity && filters.activity.types
 
