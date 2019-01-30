@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -31,15 +31,6 @@ export interface IssueOrPullRequestRowProps {
   userLinkURL: string
   username: string
 }
-
-export interface IssueOrPullRequestRowState {}
-
-const styles = StyleSheet.create({
-  cardItemId: {
-    alignSelf: 'flex-start',
-    marginLeft: contentPadding,
-  },
-})
 
 export const IssueOrPullRequestRow = React.memo(
   (props: IssueOrPullRequestRowProps) => {
@@ -86,7 +77,7 @@ export const IssueOrPullRequestRow = React.memo(
           )}
         </View>
 
-        <View style={[cardStyles.rightColumn, { flexDirection: 'row' }]}>
+        <View style={cardStyles.rightColumn}>
           <View style={cardRowStyles.mainContentContainer}>
             <Link
               href={fixURL(url, {
@@ -115,27 +106,32 @@ export const IssueOrPullRequestRow = React.memo(
                   <>
                     <Spacer height={4} />
 
-                    <SpringAnimatedText
-                      style={[
-                        getCardStylesForTheme(springAnimatedTheme).normalText,
-                        cardStyles.smallText,
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                      ]}
+                    <View
+                      style={{ flexDirection: 'row', alignItems: 'center' }}
                     >
-                      by {byText}
-                    </SpringAnimatedText>
+                      <SpringAnimatedText
+                        style={[
+                          getCardStylesForTheme(springAnimatedTheme).normalText,
+                          cardStyles.smallText,
+                          getCardStylesForTheme(springAnimatedTheme).mutedText,
+                        ]}
+                      >
+                        by {byText}
+                      </SpringAnimatedText>
+
+                      <Spacer flex={1} minWidth={contentPadding / 2} />
+
+                      <CardItemId
+                        id={issueOrPullRequestNumber}
+                        isRead={isRead}
+                        url={url}
+                      />
+                    </View>
                   </>
                 )}
               </View>
             </Link>
           </View>
-
-          <CardItemId
-            id={issueOrPullRequestNumber}
-            isRead={isRead}
-            style={styles.cardItemId}
-            url={url}
-          />
         </View>
       </View>
     )
