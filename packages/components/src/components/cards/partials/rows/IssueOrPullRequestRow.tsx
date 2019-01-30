@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { trimNewLinesAndSpaces } from '@devhub/core'
+import { getGitHubURLForUser, trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
@@ -85,35 +85,35 @@ export const IssueOrPullRequestRow = React.memo(
                 issueOrPullRequestNumber,
               })}
             >
-              <View>
-                <SpringAnimatedText
-                  numberOfLines={2}
+              <SpringAnimatedText
+                numberOfLines={2}
+                style={[
+                  Platform.OS !== 'android' && { flexGrow: 1 },
+                  getCardStylesForTheme(springAnimatedTheme).normalText,
+                  isRead &&
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
+                ]}
+              >
+                <SpringAnimatedIcon
+                  name={iconName}
+                  size={13}
                   style={[
-                    Platform.OS !== 'android' && { flexGrow: 1 },
                     getCardStylesForTheme(springAnimatedTheme).normalText,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    getCardStylesForTheme(springAnimatedTheme).icon,
+                    { color: iconColor },
                   ]}
-                >
-                  <SpringAnimatedIcon
-                    name={iconName}
-                    size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      { color: iconColor },
-                    ]}
-                  />{' '}
-                  {title}
-                </SpringAnimatedText>
+                />{' '}
+                {title}
+              </SpringAnimatedText>
+            </Link>
 
-                {Boolean(byText) && (
-                  <>
-                    <Spacer height={4} />
+            <View>
+              {Boolean(byText) && (
+                <>
+                  <Spacer height={4} />
 
-                    <View
-                      style={{ flexDirection: 'row', alignItems: 'center' }}
-                    >
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Link href={userLinkURL || getGitHubURLForUser(username)}>
                       <SpringAnimatedText
                         style={[
                           getCardStylesForTheme(springAnimatedTheme).normalText,
@@ -123,19 +123,26 @@ export const IssueOrPullRequestRow = React.memo(
                       >
                         by {byText}
                       </SpringAnimatedText>
+                    </Link>
 
-                      <Spacer flex={1} minWidth={contentPadding / 2} />
+                    <Spacer flex={1} minWidth={contentPadding / 2} />
 
+                    <Link
+                      href={fixURL(url, {
+                        addBottomAnchor,
+                        issueOrPullRequestNumber,
+                      })}
+                    >
                       <CardItemId
                         id={issueOrPullRequestNumber}
                         isRead={isRead}
                         url={url}
                       />
-                    </View>
-                  </>
-                )}
-              </View>
-            </Link>
+                    </Link>
+                  </View>
+                </>
+              )}
+            </View>
           </View>
         </View>
       </View>
