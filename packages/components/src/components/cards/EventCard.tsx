@@ -262,6 +262,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <IssueOrPullRequestRow
           key={`event-pr-row-${pullRequest.id}`}
           avatarURL={pullRequest.user.avatar_url}
+          commentsCount={pullRequest.comments}
           iconColor={pullRequestIconColor!}
           iconName={pullRequestIconName!}
           isRead={isRead}
@@ -287,6 +288,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <IssueOrPullRequestRow
           key={`event-issue-row-${issue.id}`}
           avatarURL={issue.user.avatar_url}
+          commentsCount={issue.comments}
           iconColor={issueIconColor!}
           iconName={issueIconName!}
           isRead={isRead}

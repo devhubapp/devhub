@@ -16,11 +16,13 @@ import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
+import { CardSmallThing } from '../CardSmallThing'
 import { cardRowStyles } from './styles'
 
 export interface IssueOrPullRequestRowProps {
   addBottomAnchor?: boolean
   avatarURL: string
+  commentsCount?: number
   iconColor?: string
   iconName: SpringAnimatedIconProps['name']
   isRead: boolean
@@ -39,6 +41,7 @@ export const IssueOrPullRequestRow = React.memo(
     const {
       addBottomAnchor,
       avatarURL,
+      commentsCount,
       iconColor,
       iconName,
       isRead,
@@ -125,7 +128,29 @@ export const IssueOrPullRequestRow = React.memo(
                       </SpringAnimatedText>
                     </Link>
 
-                    <Spacer flex={1} minWidth={contentPadding / 2} />
+                    <Spacer flex={1} />
+
+                    {typeof commentsCount === 'number' && commentsCount >= 0 && (
+                      <>
+                        <Spacer width={contentPadding / 2} />
+
+                        <Link
+                          href={fixURL(url, {
+                            addBottomAnchor,
+                            issueOrPullRequestNumber,
+                          })}
+                        >
+                          <CardSmallThing
+                            icon="comment"
+                            isRead={isRead}
+                            text={commentsCount}
+                            url={url}
+                          />
+                        </Link>
+                      </>
+                    )}
+
+                    <Spacer width={contentPadding / 2} />
 
                     <Link
                       href={fixURL(url, {

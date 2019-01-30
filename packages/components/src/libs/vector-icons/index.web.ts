@@ -5,9 +5,14 @@ import MaterialIconFont from 'react-native-vector-icons/Fonts/MaterialIcons.ttf'
 import OcticonsFont from 'react-native-vector-icons/Fonts/Octicons.ttf'
 import { IconProps } from 'react-native-vector-icons/Icon'
 import { createElement } from 'react-native-web'
+import { OcticonIconProps } from './index.shared'
 
-function enhanceIconComponent(IconComponent: any) {
-  return React.forwardRef((props: IconProps, ref) =>
+export * from './index.shared'
+
+function enhanceIconComponent<P extends IconProps = IconProps>(
+  IconComponent: any,
+) {
+  return React.forwardRef((props: P, ref) =>
     createElement(IconComponent, {
       ...props,
       ref,
@@ -17,7 +22,7 @@ function enhanceIconComponent(IconComponent: any) {
   )
 }
 
-export const Octicons = enhanceIconComponent(_Octicons)
+export const Octicons = enhanceIconComponent<OcticonIconProps>(_Octicons)
 export const MaterialIcons = enhanceIconComponent(_MaterialIcons)
 
 const iconStyles = [

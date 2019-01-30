@@ -93,6 +93,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     notification.issue ||
     (subjectType === 'Issue' && {
       body: undefined,
+      comments: undefined,
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
@@ -104,6 +105,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     notification.pullRequest ||
     (subjectType === 'PullRequest' && {
       body: undefined,
+      comments: undefined,
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
@@ -225,6 +227,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           key={`notification-issue-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
           avatarURL={issue.user.avatar_url}
+          commentsCount={issue.comments}
           iconColor={issueIconColor!}
           iconName={issueIconName!}
           isRead={isRead}
@@ -255,6 +258,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           key={`notification-pr-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
           avatarURL={pullRequest.user.avatar_url}
+          commentsCount={pullRequest.comments}
           iconColor={pullRequestIconColor!}
           iconName={pullRequestIconName!}
           isRead={isRead}

@@ -60,6 +60,8 @@ export function Link(props: LinkProps) {
   const cacheRef = useRef({ theme: initialTheme, isHovered: false })
 
   function updateStyles() {
+    if (!(enableBackgroundHover || enableForegroundHover)) return
+
     const { isHovered, theme } = cacheRef.current
 
     if (ref.current) {
