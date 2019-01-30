@@ -3,7 +3,12 @@ import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { useSpring } from 'react-spring/native-hooks'
 
-import { AddColumnDetailsPayload, constants } from '@devhub/core'
+import {
+  AddColumnDetailsPayload,
+  ColumnSubscription,
+  constants,
+  GitHubIcon,
+} from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -17,6 +22,7 @@ import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimate
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { separatorTickSize } from '../common/Separator'
+import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useTheme } from '../context/ThemeContext'
 
@@ -24,67 +30,122 @@ export interface AddColumnModalProps {
   showBackButton: boolean
 }
 
-const columnTypes: AddColumnDetailsPayload[] = [
+const columnTypes: Array<{
+  title: string
+  type: ColumnSubscription['type']
+  icon: GitHubIcon
+  items: Array<{
+    title: string
+    icon: GitHubIcon
+    payload: AddColumnDetailsPayload
+  }>
+}> = [
   {
-    name: 'Dashboard',
-    icon: 'home',
-    subscription: {
-      type: 'activity',
-      subtype: 'USER_RECEIVED_EVENTS',
-    },
-    paramList: ['username'],
-  },
-  {
-    name: 'User',
-    icon: 'person',
-    subscription: {
-      type: 'activity',
-      subtype: 'USER_EVENTS',
-    },
-    paramList: ['username'],
-  },
-  {
-    name: 'Notifications',
+    title: 'Notifications',
+    type: 'notifications',
     icon: 'bell',
-    subscription: {
-      type: 'notifications',
-      subtype: '',
-    },
-    paramList: ['all'],
+    items: [
+      {
+        title: 'Notifications',
+        icon: 'bell',
+        payload: {
+          icon: 'bell',
+          title: 'All notifications',
+          subscription: {
+            type: 'notifications',
+            subtype: undefined,
+          },
+          paramList: ['all'],
+        },
+      },
+      {
+        title: 'Repository',
+        icon: 'repo',
+        payload: {
+          icon: 'bell',
+          title: 'Repository notifications',
+          subscription: {
+            type: 'notifications',
+            subtype: 'REPO_NOTIFICATIONS',
+          },
+          paramList: ['all', 'owner', 'repo'],
+        },
+      },
+    ],
   },
   {
-    name: 'Organization',
-    icon: 'organization',
-    subscription: {
-      type: 'activity',
-      subtype: 'ORG_PUBLIC_EVENTS',
-    },
-    paramList: ['org'],
-  },
-  {
-    name: 'Repository',
-    icon: 'repo',
-    subscription: {
-      type: 'activity',
-      subtype: 'REPO_EVENTS',
-    },
-    paramList: ['owner', 'repo'],
+    title: 'Activity',
+    type: 'activity',
+    icon: 'rss',
+    items: [
+      {
+        title: 'Dashboard',
+        icon: 'home',
+        payload: {
+          icon: 'home',
+          title: 'User dashboard',
+          subscription: {
+            type: 'activity',
+            subtype: 'USER_RECEIVED_EVENTS',
+          },
+          paramList: ['username'],
+        },
+      },
+      {
+        title: 'User',
+        icon: 'person',
+        payload: {
+          icon: 'person',
+          title: 'User activity',
+          subscription: {
+            type: 'activity',
+            subtype: 'USER_EVENTS',
+          },
+          paramList: ['username'],
+        },
+      },
+      {
+        title: 'Organization',
+        icon: 'organization',
+        payload: {
+          icon: 'organization',
+          title: 'Organization activity',
+          subscription: {
+            type: 'activity',
+            subtype: 'ORG_PUBLIC_EVENTS',
+          },
+          paramList: ['org'],
+        },
+      },
+      {
+        title: 'Repository',
+        icon: 'repo',
+        payload: {
+          icon: 'repo',
+          title: 'Repository activity',
+          subscription: {
+            type: 'activity',
+            subtype: 'REPO_EVENTS',
+          },
+          paramList: ['owner', 'repo'],
+        },
+      },
+    ],
   },
 ]
-
-function keyExtractor(columnType: AddColumnDetailsPayload) {
-  return `add-column-button-${columnType.subscription.type}-${columnType
-    .subscription.subtype || ''}`
-}
 
 function AddColumnModalItem({
   availableWidth,
   disabled,
-  item,
+  icon,
+  payload,
+  title,
 }: {
   availableWidth: number
   disabled?: boolean
-  item: AddColumnDetailsPayload
+  icon: GitHubIcon
+  payload: AddColumnDetailsPayload
+  title: string
 }) {
   const initialTheme = useTheme(theme => {
     cacheRef.current.theme = theme
@@ -143,7 +204,7 @@ function AddColumnModalItem({
       onPress={() =>
         pushModal({
           name: 'ADD_COLUMN_DETAILS',
-          params: item,
+          params: payload,
         })
       }
       onPressIn={() => {
@@ -175,7 +236,8 @@ function AddColumnModalItem({
       >
         <ColumnHeaderItem
           analyticsLabel={undefined}
-          iconName={item.icon}
+          iconName={icon}
+          iconStyle={{ lineHeight: undefined }}
           noPadding
           size={24}
           style={{ alignSelf: 'center', marginBottom: contentPadding / 2 }}
@@ -184,9 +246,10 @@ function AddColumnModalItem({
         <SpringAnimatedText
           style={{
             color: springAnimatedTheme.foregroundColor,
+            textAlign: 'center',
           }}
         >
-          {item.name}
+          {title}
         </SpringAnimatedText>
       </View>
     </SpringAnimatedTouchableOpacity>
@@ -213,45 +276,53 @@ export function AddColumnModal(props: AddColumnModalProps) {
       showBackButton={showBackButton}
       title="Add Column"
     >
-      <View
-        style={{
-          flex: 1,
-          padding: outerSpacing,
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            alignContent: 'flex-start',
-          }}
-        >
-          {columnTypes.map(item => (
-            <AddColumnModalItem
-              key={keyExtractor(item)}
-              availableWidth={availableWidth}
-              disabled={hasReachedColumnLimit}
-              item={item}
+      <View style={{ flex: 1 }}>
+        {columnTypes.map((group, groupIndex) => (
+          <View key={`add-column-header-group-${groupIndex}`}>
+            <SubHeader
+              analyticsLabel={undefined}
+              iconName={group.icon}
+              title={group.title}
             />
-          ))}
 
-          {!!hasReachedColumnLimit && (
-            <SpringAnimatedText
+            <View
               style={{
-                marginTop: contentPadding,
-                lineHeight: 20,
-                fontSize: 14,
-                color: springAnimatedTheme.foregroundColorMuted50,
-                textAlign: 'center',
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignContent: 'flex-start',
+                padding: outerSpacing,
               }}
             >
-              {`You have reached the limit of ${
-                constants.COLUMNS_LIMIT
-              } columns. This is to maintain a healthy usage of the GitHub API.`}
-            </SpringAnimatedText>
-          )}
-        </View>
+              {group.items.map((item, itemIndex) => (
+                <AddColumnModalItem
+                  key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
+                  availableWidth={availableWidth}
+                  disabled={hasReachedColumnLimit}
+                  icon={item.icon}
+                  payload={item.payload}
+                  title={item.title}
+                />
+              ))}
+            </View>
+          </View>
+        ))}
+
+        {!!hasReachedColumnLimit && (
+          <SpringAnimatedText
+            style={{
+              marginTop: contentPadding,
+              lineHeight: 20,
+              fontSize: 14,
+              color: springAnimatedTheme.foregroundColorMuted50,
+              textAlign: 'center',
+            }}
+          >
+            {`You have reached the limit of ${
+              constants.COLUMNS_LIMIT
+            } columns. This is to maintain a healthy usage of the GitHub API.`}
+          </SpringAnimatedText>
+        )}
       </View>
     </ModalColumn>
   )

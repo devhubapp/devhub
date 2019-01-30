@@ -9,6 +9,7 @@ import {
   GitHubEvent,
   GitHubIcon,
   MultipleStarEvent,
+  NotificationColumnSubscription,
 } from '../../types'
 import { isPullRequest } from './shared'
 
@@ -129,11 +130,28 @@ export function getColumnHeaderDetails(
     }
 
     case 'notifications': {
-      return {
-        icon: 'bell',
-        repoIsKnown: false,
-        subtitle: '',
-        title: 'Notifications',
+      const subscription = subscriptions.filter(
+        Boolean,
+      )[0] as NotificationColumnSubscription
+
+      switch (subscription.subtype) {
+        case 'REPO_NOTIFICATIONS': {
+          return {
+            icon: 'bell',
+            repoIsKnown: true,
+            subtitle: subscription.params.repo,
+            title: 'Notifications',
+          }
+        }
+
+        default: {
+          return {
+            icon: 'bell',
+            repoIsKnown: false,
+            subtitle: 'all',
+            title: 'Notifications',
+          }
+        }
       }
     }
 

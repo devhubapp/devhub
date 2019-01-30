@@ -30,6 +30,7 @@ import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
+import { SubHeader } from '../common/SubHeader'
 import {
   SpringAnimatedTextInput,
   SpringAnimatedTextInputProps,
@@ -77,12 +78,12 @@ const fields: FieldDetails[] = [
 export const AddColumnDetailsModal = React.memo(
   (props: AddColumnDetailsModalProps) => {
     const {
-      subscription,
-      showBackButton,
-      paramList,
-      name,
-      icon,
       defaultParams,
+      icon,
+      paramList,
+      showBackButton,
+      subscription,
+      title,
     } = props
 
     const didAutoFocusRef = useRef(false)
@@ -254,14 +255,10 @@ export const AddColumnDetailsModal = React.memo(
       [params, createTextInputChangeHandler, createTextInputSubmitHandler],
     )
 
-    const renderField = (field: string, index?: number) => {
-      const fieldDetails = fields.find(f => f.field === field)
+    const renderField = (fieldDetails: FieldDetails, index?: number) => {
+      if (!fieldDetails) return null
 
-      if (fieldDetails) {
-        return renderTextInput(fieldDetails, { autoFocus: index === 0 })
-      }
-
-      return null
+      return renderTextInput(fieldDetails, { autoFocus: index === 0 })
     }
 
     return (
@@ -271,32 +268,17 @@ export const AddColumnDetailsModal = React.memo(
         showBackButton={showBackButton}
         title="Add Column"
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          style={{ flex: 1, padding: contentPadding }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              alignContent: 'center',
-            }}
-          >
-            <ColumnHeaderItem
-              analyticsLabel={undefined}
-              iconName={icon}
-              noPadding
-            />
-            <Spacer width={contentPadding / 2} />
-            <H2>{name}</H2>
+        <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
+          <SubHeader iconName={icon} title={title} />
+
+          <View style={{ flex: 1, padding: contentPadding }}>
+            {(paramList
+              .map(p => fields.find(f => f.field === p))
+              .filter(Boolean) as FieldDetails[]).map(renderField)}
+            <Button analyticsLabel="add_column" onPress={handleCreateColumn}>
+              Add Column
+            </Button>
           </View>
-
-          <Spacer height={contentPadding} />
-
-          {paramList.map(renderField)}
-          <Button analyticsLabel="add_column" onPress={handleCreateColumn}>
-            Add Column
-          </Button>
 
           <Spacer height={contentPadding} />
         </ScrollView>

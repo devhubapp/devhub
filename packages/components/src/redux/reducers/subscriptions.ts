@@ -81,6 +81,7 @@ export const subscriptionsReducer: Reducer<State> = (
                 .filter(item => {
                   if (!item) return false
                   if (item.saved) return true
+                  if (item.unread) return true
                   if (!action.payload.deleteOlderThan) return false
                   if (!item.updated_at) return true
 

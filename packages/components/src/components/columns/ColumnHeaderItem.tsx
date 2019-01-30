@@ -149,13 +149,15 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
   const styles = {
     container: {
-      alignSelf: 'flex-start',
+      alignSelf: 'center',
       justifyContent: 'center',
       alignItems: 'center',
       alignContent: 'center',
+      overflow: 'hidden',
     } as ViewStyle,
 
     mainContainer: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       alignContent: 'center',
@@ -163,8 +165,6 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     } as ViewStyle,
 
     icon: {
-      height: size,
-      lineHeight: size,
       fontSize: size,
       textAlign: 'center',
     } as TextStyle,
@@ -172,7 +172,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     title: {
       fontWeight: '500',
       marginRight: contentPadding / 2,
-      lineHeight: size,
+      lineHeight: size - 1,
       fontSize: size - 3,
     } as TextStyle,
 
@@ -270,21 +270,22 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             </View>
           )}
 
-          <View style={{ flexDirection: 'row', maxWidth: 170 }}>
-            {!!title && (
-              <SpringAnimatedText
-                numberOfLines={1}
-                selectable={selectable}
-                style={[
-                  styles.title,
-                  { color: springAnimatedStyles.foregroundColor },
-                  titleStyle,
-                ]}
-              >
-                {title}
-              </SpringAnimatedText>
-            )}
-          </View>
+          {!!title && (
+            <SpringAnimatedText
+              numberOfLines={1}
+              selectable={selectable}
+              style={[
+                styles.title,
+                {
+                  flex: 1,
+                  color: springAnimatedStyles.foregroundColor,
+                },
+                titleStyle,
+              ]}
+            >
+              {title}
+            </SpringAnimatedText>
+          )}
 
           {!!subtitle && (
             <SpringAnimatedText

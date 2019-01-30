@@ -9,7 +9,7 @@ export type GitHubActivityType =
   | 'USER_RECEIVED_EVENTS'
   | 'USER_RECEIVED_PUBLIC_EVENTS'
 
-export type GitHubExtractParamsFromActivityMethod<F> = F extends (
+export type GitHubExtractParamsFromMethod<F> = F extends (
   params: infer P,
   callback: any,
 ) => any

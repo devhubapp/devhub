@@ -28,34 +28,39 @@ const cache: Record<
 > = {}
 
 export async function getNotifications(
-  _params: Octokit.ActivityListNotificationsParams & { headers?: any } = {},
+  params: (
+    | Octokit.ActivityListNotificationsParams
+    | Octokit.ActivityListNotificationsForRepoParams) & { headers?: any } = {},
   { subscriptionId = '', useCache = false } = {},
 ) {
-  const cacheKey = JSON.stringify(['NOTIFICATIONS', _params, subscriptionId])
+  const cacheKey = JSON.stringify(['NOTIFICATIONS', params, subscriptionId])
   const cacheValue = cache[cacheKey]
 
-  const params = _params || {}
-  params.headers = params.headers || {}
-  params.headers['If-None-Match'] = ''
+  const _params = params || {}
+  _params.headers = _params.headers || {}
+  _params.headers['If-None-Match'] = ''
 
   // Note: GitHub notifications cache doesnt work as expected.
   // It keeps returning code 304 even if read status changed.
   // Thats why its disabled by default.
   if (cacheValue && useCache) {
     if (cacheValue.headers['last-modified']) {
-      params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
+      _params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
     }
 
     if (cacheValue.headers.etag) {
-      params.headers['If-None-Match'] = cacheValue.headers.etag
+      _params.headers['If-None-Match'] = cacheValue.headers.etag
     }
   }
 
   // So lets force an update
-  if (!useCache) (params as any).timestamp = Date.now()
+  if (!useCache) (_params as any).timestamp = Date.now()
 
   try {
-    const response = await octokit.activity.listNotifications(params)
+    const response =
+      'owner' in _params && _params.owner && _params.repo
+        ? await octokit.activity.listNotificationsForRepo(_params)
+        : await octokit.activity.listNotifications(_params)
 
     cache[cacheKey] = {
       data: response.data,

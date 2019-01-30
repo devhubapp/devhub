@@ -4,7 +4,7 @@ import {
   GitHubComment,
   GitHubCommit,
   GitHubEvent,
-  GitHubExtractParamsFromActivityMethod,
+  GitHubExtractParamsFromMethod,
   GitHubIcon,
   GitHubIssue,
   GitHubNotification,
@@ -59,17 +59,28 @@ export interface ColumnSubscriptionData<
   lastFetchedAt?: string
 }
 
-export interface NotificationColumnSubscription {
+export type NotificationColumnSubscription = {
   id: string
   type: 'notifications'
-  subtype?: undefined | ''
   params: {
     all?: boolean
   }
   data: ColumnSubscriptionData<EnhancedGitHubNotification>
   createdAt: string
   updatedAt: string
-}
+} & (
+  | {
+      subtype: undefined | ''
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotifications']
+      >
+    }
+  | {
+      subtype: 'REPO_NOTIFICATIONS'
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotificationsForRepo']
+      >
+    })
 
 export type ActivityColumnSubscription = {
   id: string
@@ -80,55 +91,55 @@ export type ActivityColumnSubscription = {
 } & (
   | {
       subtype: 'ORG_PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listPublicEvents']
       >
     }
   | {
       subtype: 'REPO_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listRepoEvents']
       >
     }
   | {
       subtype: 'REPO_NETWORK_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listPublicEventsForRepoNetwork']
       >
     }
   | {
       subtype: 'USER_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listEventsForUser']
       >
     }
   | {
       subtype: 'USER_ORG_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'USER_PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listPublicEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listReceivedEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listReceivedPublicEventsForUser']
       >
     })
@@ -241,7 +252,7 @@ export type ColumnSubscriptionCreation =
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
 export interface AddColumnDetailsPayload {
-  name: string
+  title: string
   icon: GitHubIcon
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
   paramList: ColumnParamField[]

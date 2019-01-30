@@ -227,7 +227,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             size={18}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 6,
+              marginTop: 4,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
             }}
@@ -248,7 +248,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             size={18}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 6,
+              marginTop: 4,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
               marginRight: -contentPadding / 2,

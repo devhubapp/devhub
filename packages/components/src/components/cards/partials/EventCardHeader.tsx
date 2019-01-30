@@ -190,7 +190,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             size={18}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 6,
+              marginTop: 4,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
             }}
@@ -211,7 +211,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             size={18}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 6,
+              marginTop: 4,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
               marginRight: -contentPadding / 2,

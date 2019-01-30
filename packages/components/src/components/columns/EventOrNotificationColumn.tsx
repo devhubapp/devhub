@@ -106,9 +106,11 @@ export const EventOrNotificationColumn = React.memo(
             iconName={requestTypeIconAndData.icon}
             subtitle={`${requestTypeIconAndData.subtitle || ''}`.toLowerCase()}
             title={`${requestTypeIconAndData.title || ''}`.toLowerCase()}
+            titleStyle={{ flex: 1 }}
+            style={{ flex: 1, alignItems: 'flex-start' }}
           />
 
-          <Spacer flex={1} />
+          <Spacer width={contentPadding / 2} />
 
           <ColumnHeaderItem
             analyticsLabel="clear_column"
