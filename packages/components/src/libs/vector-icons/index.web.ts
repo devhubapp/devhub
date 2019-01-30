@@ -1,10 +1,24 @@
-import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons'
-import Octicons from 'react-native-vector-icons/dist/Octicons'
+import React from 'react'
+import _MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons'
+import _Octicons from 'react-native-vector-icons/dist/Octicons'
 import MaterialIconFont from 'react-native-vector-icons/Fonts/MaterialIcons.ttf'
 import OcticonsFont from 'react-native-vector-icons/Fonts/Octicons.ttf'
+import { IconProps } from 'react-native-vector-icons/Icon'
+import { createElement } from 'react-native-web'
 
-export * from 'react-native-vector-icons'
-export { MaterialIcons, Octicons }
+function enhanceIconComponent(IconComponent: any) {
+  return React.forwardRef((props: IconProps, ref) =>
+    createElement(IconComponent, {
+      ...props,
+      ref,
+      style: [{ userSelect: 'none' }, props.style],
+      className: `icon ${(props as any).className || ''}`.trim(),
+    }),
+  )
+}
+
+export const Octicons = enhanceIconComponent(_Octicons)
+export const MaterialIcons = enhanceIconComponent(_MaterialIcons)
 
 const iconStyles = [
   `@font-face { src:url(${MaterialIconFont});font-family: MaterialIcons; }`,

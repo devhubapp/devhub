@@ -5,11 +5,11 @@
 
 ::-webkit-scrollbar-thumb
 {
-  background-color: #49d3b580;
+  background-color: #49d3b480;
 }
 
 *:focus {
-  outline-color: #49d3b5;
+  outline-color: #49d3b4;
 }
 
 html, body, #root, #root > div {
@@ -27,11 +27,6 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-a:hover, a:hover * {
-  text-decoration: underline !important;
-  transition: none 0s !important;
 }
 
 .input:focus {

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Theme } from '@devhub/core'
+import { darken, lighten } from 'polished'
 import { getSeparatorThemeColor } from './common/Separator'
 import { useTheme } from './context/ThemeContext'
 
@@ -32,6 +33,15 @@ function getStyles(params: { theme: Theme }) {
       --theme_foregroundColorMuted20:${t.foregroundColorMuted20};
       --theme_foregroundColorMuted50:${t.foregroundColorMuted50};
       background-color:${t.backgroundColor};
+    }
+
+    a:not(.icon):hover, a:not(.icon):hover *:not(.icon) {
+      ${
+        t.isDark
+          ? `color: ${lighten(1, t.foregroundColor)} !important;`
+          : `color: ${darken(1, t.foregroundColor)} !important;`
+      }
+      transition: none 0s !important;
     }
   `
 }
