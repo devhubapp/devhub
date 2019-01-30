@@ -17,11 +17,14 @@ export function getUserAvatarByAvatarURL(
   if (!avatarURL) return ''
 
   const _avatarURL = avatarURL.indexOf('?') > 0 ? avatarURL : `${avatarURL}?`
-  return `${_avatarURL}&s=${getSteppedSize(
-    size,
-    undefined,
-    getPixelSizeForLayoutSizeFn,
-  )}`
+  const [url, _querystring] = _avatarURL.split('?')
+  const query = qs.parse(_querystring)
+  const querystring = qs.stringify({
+    ...query,
+    size: getSteppedSize(size, undefined, getPixelSizeForLayoutSizeFn),
+  })
+
+  return `${url}?${querystring}`
 }
 
 export function getUserAvatarByUsername(
