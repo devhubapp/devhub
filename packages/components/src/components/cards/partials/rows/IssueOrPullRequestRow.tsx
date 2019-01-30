@@ -13,6 +13,7 @@ import {
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
+import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
 import { cardRowStyles } from './styles'
@@ -35,6 +36,7 @@ export interface IssueOrPullRequestRowState {}
 
 const styles = StyleSheet.create({
   cardItemId: {
+    alignSelf: 'flex-start',
     marginLeft: contentPadding,
   },
 })
@@ -85,40 +87,48 @@ export const IssueOrPullRequestRow = React.memo(
         </View>
 
         <View style={[cardStyles.rightColumn, { flexDirection: 'row' }]}>
-          <Link
-            href={fixURL(url, {
-              addBottomAnchor,
-              issueOrPullRequestNumber,
-            })}
-            style={cardRowStyles.mainContentContainer}
-          >
-            <SpringAnimatedText
-              numberOfLines={1}
-              style={[
-                Platform.OS !== 'android' && { flexGrow: 1 },
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
+          <View style={cardRowStyles.mainContentContainer}>
+            <Link
+              href={fixURL(url, {
+                addBottomAnchor,
+                issueOrPullRequestNumber,
+              })}
             >
-              <SpringAnimatedIcon
-                name={iconName}
-                style={{ color: iconColor }}
-              />{' '}
-              {title}
-              {Boolean(byText) && (
+              <View>
                 <SpringAnimatedText
+                  numberOfLines={2}
                   style={[
+                    Platform.OS !== 'android' && { flexGrow: 1 },
                     getCardStylesForTheme(springAnimatedTheme).normalText,
-                    cardStyles.smallText,
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
                 >
-                  {' '}
-                  by {byText}
+                  <SpringAnimatedIcon
+                    name={iconName}
+                    style={{ color: iconColor }}
+                  />{' '}
+                  {title}
                 </SpringAnimatedText>
-              )}
-            </SpringAnimatedText>
-          </Link>
+
+                {Boolean(byText) && (
+                  <>
+                    <Spacer height={4} />
+
+                    <SpringAnimatedText
+                      style={[
+                        getCardStylesForTheme(springAnimatedTheme).normalText,
+                        cardStyles.smallText,
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      ]}
+                    >
+                      by {byText}
+                    </SpringAnimatedText>
+                  </>
+                )}
+              </View>
+            </Link>
+          </View>
 
           <CardItemId
             id={issueOrPullRequestNumber}
