@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -51,7 +51,6 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         style={{ flex: 1 }}
         contentContainerStyle={{
           flexGrow: 1,
-          padding: contentPadding,
         }}
       >
         <ThemePreference />
@@ -59,7 +58,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         {/* <Spacer height={contentPadding * 2} />
 
         <View>
-          <H2 withMargin>Enterprise</H2>
+          <SubHeader title="Enterprise" />
 
           <Button
             key="setup-github-enterprise-button"
@@ -75,19 +74,21 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
         <Spacer flex={1} minHeight={contentPadding} />
 
-        <AppVersion />
+        <View style={{ padding: contentPadding }}>
+          <AppVersion />
 
-        <Spacer height={contentPadding} />
+          <Spacer height={contentPadding} />
 
-        <Button
-          key="logout-button"
-          analyticsCategory="engagement"
-          analyticsAction="logout"
-          analyticsLabel=""
-          onPress={() => logout()}
-        >
-          Logout
-        </Button>
+          <Button
+            key="logout-button"
+            analyticsCategory="engagement"
+            analyticsAction="logout"
+            analyticsLabel=""
+            onPress={() => logout()}
+          >
+            Logout
+          </Button>
+        </View>
       </ScrollView>
     </ModalColumn>
   )

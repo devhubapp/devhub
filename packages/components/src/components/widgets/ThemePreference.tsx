@@ -15,6 +15,7 @@ import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
+import { SubHeader } from '../common/SubHeader'
 import { Switch } from '../common/Switch'
 import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
@@ -133,39 +134,41 @@ export const ThemePreference = React.memo(() => {
 
   return (
     <View>
-      <H2 withMargin>Theme</H2>
+      <SubHeader title="Theme" />
 
-      <View style={{ flexDirection: 'row' }}>
-        <View style={{ flex: 1 }}>
-          <H3 withMargin>Light Theme</H3>
-          {lightThemesArr.map(t => renderThemeButton(t))}
+      <View style={{ paddingHorizontal: contentPadding }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1 }}>
+            <H3 withMargin>Light Theme</H3>
+            {lightThemesArr.map(t => renderThemeButton(t))}
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <H3 withMargin>Dark Theme</H3>
+            {darkThemesArr.map(t => renderThemeButton(t))}
+          </View>
         </View>
 
-        <View style={{ flex: 1 }}>
-          <H3 withMargin>Dark Theme</H3>
-          {darkThemesArr.map(t => renderThemeButton(t))}
+        <Spacer height={contentPadding} />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <H3>Auto toggle on day/night</H3>
+          <Switch
+            analyticsLabel="auto_theme"
+            onValueChange={enableAutoTheme =>
+              setTheme({
+                id: enableAutoTheme ? 'auto' : lastThemeId.current,
+              })
+            }
+            value={currentThemeId === 'auto'}
+          />
         </View>
-      </View>
-
-      <Spacer height={contentPadding} />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <H3>Auto toggle on day/night</H3>
-        <Switch
-          analyticsLabel="auto_theme"
-          onValueChange={enableAutoTheme =>
-            setTheme({
-              id: enableAutoTheme ? 'auto' : lastThemeId.current,
-            })
-          }
-          value={currentThemeId === 'auto'}
-        />
       </View>
     </View>
   )

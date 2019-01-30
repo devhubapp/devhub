@@ -53,7 +53,7 @@ export function createThemeFromColor(
   )
 
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
-  const foregroundColor = isDark ? lighten(0.7, color) : darken(0.7, color)
+  const foregroundColor = isDark ? lighten(0.75, color) : darken(0.75, color)
   const foregroundColorMuted20 = mixWithBrand(
     isDark ? lighten(0.2, color) : darken(0.2, color),
   )

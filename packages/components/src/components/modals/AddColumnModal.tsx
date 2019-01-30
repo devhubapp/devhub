@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { useSpring } from 'react-spring/native-hooks'
 
 import {
@@ -76,7 +76,7 @@ const columnTypes: Array<{
   {
     title: 'Activity',
     type: 'activity',
-    icon: 'rss',
+    icon: 'note',
     items: [
       {
         title: 'Dashboard',
@@ -187,6 +187,7 @@ function AddColumnModalItem({
         (isHovered || isPressing) && !disabled
           ? theme.backgroundColorLess1
           : rgba(theme.backgroundColor, 0),
+      borderColor: theme.backgroundColorLess1,
     }
   }
 
@@ -223,7 +224,8 @@ function AddColumnModalItem({
         width:
           availableWidth / Math.floor(availableWidth / (82 + contentPadding)),
         borderRadius: radius,
-        backgroundColor: springAnimatedStyles.backgroundColor,
+        borderWidth: 0,
+        ...springAnimatedStyles,
       }}
     >
       <View
@@ -279,19 +281,15 @@ export function AddColumnModal(props: AddColumnModalProps) {
       <View style={{ flex: 1 }}>
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
-            <SubHeader
-              analyticsLabel={undefined}
-              iconName={group.icon}
-              title={group.title}
-            />
+            <SubHeader iconName={group.icon} title={group.title} />
 
             <View
               style={{
-                flex: 1,
                 flexDirection: 'row',
                 flexWrap: 'wrap',
                 alignContent: 'flex-start',
-                padding: outerSpacing,
+                paddingHorizontal: outerSpacing,
+                marginBottom: outerSpacing,
               }}
             >
               {group.items.map((item, itemIndex) => (

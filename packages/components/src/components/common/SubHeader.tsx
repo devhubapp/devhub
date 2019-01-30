@@ -2,47 +2,46 @@ import React from 'react'
 
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import {
   ColumnHeaderItem,
   ColumnHeaderItemProps,
 } from '../columns/ColumnHeaderItem'
-import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
-import { useTheme } from '../context/ThemeContext'
-import { getSeparatorThemeColor } from './Separator'
+import { H2 } from './H2'
 import { Spacer } from './Spacer'
 
-export interface SubHeaderProps extends ColumnHeaderItemProps {
+export interface SubHeaderProps {
   children?: React.ReactNode
+  iconName?: ColumnHeaderItemProps['iconName']
+  title?: ColumnHeaderItemProps['title']
 }
 
 export function SubHeader(props: SubHeaderProps) {
-  const { children, ...restProps } = props
-
-  const springAnimatedTheme = useSpringAnimatedTheme()
-  const theme = useTheme()
+  const { children, iconName, title } = props
 
   return (
     <SpringAnimatedView
       style={{
         alignSelf: 'stretch',
+        alignItems: 'center',
+        justifyContent: 'center',
         flexDirection: 'row',
-        paddingHorizontal: contentPadding / 2,
-        backgroundColor:
-          springAnimatedTheme[
-            getColumnHeaderThemeColors(theme.backgroundColor).normal
-          ],
+        padding: contentPadding,
       }}
     >
-      <ColumnHeaderItem
-        analyticsLabel={undefined}
-        fixedIconSize
-        size={18}
-        {...restProps}
-        style={[{ paddingVertical: contentPadding / 2 }, restProps.style]}
-        title={`${restProps.title || ''}`.toLowerCase()}
-        titleStyle={{ fontWeight: '400' }}
-      />
+      {!!iconName && (
+        <ColumnHeaderItem
+          analyticsLabel={undefined}
+          fixedIconSize
+          iconName={iconName}
+          noPadding
+          size={18}
+          titleStyle={{ fontWeight: '400' }}
+        />
+      )}
+
+      {!!iconName && !!title && <Spacer width={contentPadding / 2} />}
+
+      {!!title && <H2 withMargin={false}>{title}</H2>}
 
       <Spacer flex={1} minWidth={contentPadding / 2} />
 

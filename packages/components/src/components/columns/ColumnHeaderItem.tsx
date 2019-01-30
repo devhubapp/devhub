@@ -157,7 +157,6 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     } as ViewStyle,
 
     mainContainer: {
-      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       alignContent: 'center',
@@ -277,7 +276,6 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
               style={[
                 styles.title,
                 {
-                  flex: 1,
                   color: springAnimatedStyles.foregroundColor,
                 },
                 titleStyle,

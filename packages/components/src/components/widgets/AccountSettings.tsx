@@ -10,6 +10,7 @@ import { Avatar } from '../common/Avatar'
 import { H2 } from '../common/H2'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
+import { SubHeader } from '../common/SubHeader'
 
 export interface AccountSettingsProps {}
 
@@ -20,12 +21,13 @@ export function AccountSettings() {
 
   return (
     <View>
-      <H2 withMargin>Account</H2>
+      <SubHeader title="Account" />
 
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
+          paddingHorizontal: contentPadding,
         }}
       >
         <Avatar size={28} username={username} />
