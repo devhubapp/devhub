@@ -1,13 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 
 import {
   Column as ColumnType,
   ColumnSubscription,
+  EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
   getColumnHeaderDetails,
 } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
@@ -44,6 +48,33 @@ export const EventOrNotificationColumn = React.memo(
     ] = useState(0)
 
     const [showColumnOptions, setShowColumnOptions] = useState(false)
+
+    const filteredSubscriptionsDataSelectorRef = useRef(
+      selectors.createFilteredSubscriptionsDataSelector(),
+    )
+
+    useEffect(() => {
+      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
+    }, column.subscriptionIds)
+
+    const filteredItems = useReduxState(
+      useCallback(
+        state => {
+          return filteredSubscriptionsDataSelectorRef.current(
+            state,
+            column.subscriptionIds,
+            column.filters,
+          )
+        },
+        [column.subscriptionIds, column.filters],
+      ),
+    )
+
+    const clearableItems = (filteredItems as any[]).filter(
+      (item: EnhancedGitHubEvent | EnhancedGitHubNotification) => {
+        return !!(item && !item.saved && !('unread' in item && item.unread))
+      },
+    )
 
     const setColumnClearedAtFilter = useReduxAction(
       actions.setColumnClearedAtFilter,
@@ -114,41 +145,7 @@ export const EventOrNotificationColumn = React.memo(
 
           <ColumnHeaderItem
             analyticsLabel="clear_column"
-            disabled={
-              !!(
-                column.filters &&
-                column.filters.clearedAt &&
-                subscriptions.some(s => {
-                  if (!s) return false
-
-                  if (s.type === 'activity') {
-                    return !!(
-                      s.data &&
-                      s.data.items &&
-                      !s.data.items.some(item => {
-                        const date = item && item.created_at
-                        return !!date && date > column.filters!.clearedAt!
-                      })
-                    )
-                  }
-
-                  if (s.type === 'notifications') {
-                    return !!(
-                      s.data &&
-                      s.data.items &&
-                      !s.data.items.some(item => {
-                        const date = item && item.updated_at
-                        return (
-                          !!date && item.updated_at > column.filters!.clearedAt!
-                        )
-                      })
-                    )
-                  }
-
-                  return false
-                })
-              )
-            }
+            disabled={!clearableItems.length}
             enableForegroundHover
             fixedIconSize
             iconName="check"
