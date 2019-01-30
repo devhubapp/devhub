@@ -41,28 +41,28 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
   if (!momentDate.isValid()) return ''
 
   const momentNow = moment(new Date())
-  const daysDiff = momentNow.diff(momentDate, 'days')
   const timeText = momentDate.format('HH:mm')
-  // return `${momentNow.diff(momentDate, 'seconds')}s`
+
+  const secondsDiff = momentNow.diff(momentDate, 'seconds')
+  const minutesDiff = momentNow.diff(momentDate, 'minutes')
+  const hoursDiff =
+    momentNow.diff(momentDate, 'minutes') >= 60
+      ? Math.round(secondsDiff / (60 * 60))
+      : Math.floor(secondsDiff / (60 * 60))
+  const daysDiff =
+    momentNow.diff(momentDate, 'hours') >= 24
+      ? Math.round(secondsDiff / (24 * 60 * 60))
+      : Math.floor(secondsDiff / (24 * 60 * 60))
 
   if (daysDiff < 1) {
-    const hoursDiff = momentNow.diff(momentDate, 'hours')
-
     if (hoursDiff < 1) {
-      const minutesDiff = momentNow.diff(momentDate, 'minutes')
-
       if (minutesDiff < 1) {
-        const secondsDiff = momentNow.diff(momentDate, 'seconds')
         if (secondsDiff < 10) {
           return 'now'
         }
 
         return `${secondsDiff}s`
       }
-
-      // if (minutesDiff < 30) {
-      //   return `${minutesDiff}m`;
-      // }
 
       return `${minutesDiff}m${includeExactTime ? ` (${timeText})` : ''}`
     }
