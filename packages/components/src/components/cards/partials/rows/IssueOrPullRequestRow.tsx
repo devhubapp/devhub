@@ -1,7 +1,12 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 
-import { getGitHubURLForUser, trimNewLinesAndSpaces } from '@devhub/core'
+import {
+  getDateSmallText,
+  getFullDateText,
+  getGitHubURLForUser,
+  trimNewLinesAndSpaces,
+} from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
@@ -12,6 +17,7 @@ import {
 } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
+import { IntervalRefresh } from '../../../common/IntervalRefresh'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
@@ -23,6 +29,7 @@ export interface IssueOrPullRequestRowProps {
   addBottomAnchor?: boolean
   avatarURL: string
   commentsCount?: number
+  createdAt: string | undefined
   iconColor?: string
   iconName: SpringAnimatedIconProps['name']
   isRead: boolean
@@ -42,6 +49,7 @@ export const IssueOrPullRequestRow = React.memo(
       addBottomAnchor,
       avatarURL,
       commentsCount,
+      createdAt,
       iconColor,
       iconName,
       isRead,
@@ -111,54 +119,87 @@ export const IssueOrPullRequestRow = React.memo(
             </Link>
 
             <View>
-              {Boolean(byText) && (
-                <>
-                  <Spacer height={4} />
+              <Spacer height={4} />
 
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Link href={userLinkURL || getGitHubURLForUser(username)}>
-                      <SpringAnimatedText
-                        style={[
-                          getCardStylesForTheme(springAnimatedTheme).normalText,
-                          cardStyles.smallText,
-                          getCardStylesForTheme(springAnimatedTheme).mutedText,
-                        ]}
-                      >
-                        by {byText}
-                      </SpringAnimatedText>
-                    </Link>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {!!byText && (
+                  <Link href={userLinkURL || getGitHubURLForUser(username)}>
+                    <SpringAnimatedText
+                      style={[
+                        getCardStylesForTheme(springAnimatedTheme).normalText,
+                        cardStyles.smallText,
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      ]}
+                    >
+                      {byText}
+                    </SpringAnimatedText>
+                  </Link>
+                )}
 
-                    <Spacer flex={1} />
+                {!!createdAt && (
+                  <IntervalRefresh date={createdAt}>
+                    {() => {
+                      const dateText = getDateSmallText(createdAt, false)
+                      if (!dateText) return null
 
-                    {typeof commentsCount === 'number' && commentsCount >= 0 && (
-                      <>
-                        <Spacer width={contentPadding / 2} />
+                      return (
+                        <>
+                          {!!byText && <Text children=" " />}
 
-                        <CardSmallThing
-                          icon="comment"
-                          isRead={isRead}
-                          text={commentsCount}
-                          url={fixURL(url, {
-                            addBottomAnchor,
-                            issueOrPullRequestNumber,
-                          })}
-                        />
-                      </>
-                    )}
+                          <SpringAnimatedText
+                            numberOfLines={1}
+                            style={
+                              getCardStylesForTheme(springAnimatedTheme)
+                                .timestampText
+                            }
+                            {...Platform.select({
+                              web: { title: getFullDateText(createdAt) },
+                            })}
+                          >
+                            {!!byText && (
+                              <>
+                                <Text children="•" style={{ fontSize: 9 }} />
+                                <Text children=" " />
+                              </>
+                            )}
 
+                            {dateText}
+                          </SpringAnimatedText>
+                        </>
+                      )
+                    }}
+                  </IntervalRefresh>
+                )}
+
+                <Spacer flex={1} />
+
+                {typeof commentsCount === 'number' && commentsCount >= 0 && (
+                  <>
                     <Spacer width={contentPadding / 2} />
 
-                    <CardItemId
-                      id={issueOrPullRequestNumber}
+                    <CardSmallThing
+                      icon="comment"
                       isRead={isRead}
+                      text={commentsCount}
                       url={fixURL(url, {
                         addBottomAnchor,
                         issueOrPullRequestNumber,
                       })}
                     />
-                  </View>
-                </>
-              )}
+                  </>
+                )}
+
+                <Spacer width={contentPadding / 2} />
+
+                <CardItemId
+                  id={issueOrPullRequestNumber}
+                  isRead={isRead}
+                  url={fixURL(url, {
+                    addBottomAnchor,
+                    issueOrPullRequestNumber,
+                  })}
+                />
+              </View>
             </View>
           </View>
         </View>

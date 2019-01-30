@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 import {
   getDateSmallText,
+  getFullDateText,
   GitHubIcon,
   GitHubNotificationReason,
 } from '@devhub/core'
@@ -159,7 +160,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                             .timestampText
                         }
                         {...Platform.select({
-                          web: { title: getDateSmallText(date, true) },
+                          web: { title: getFullDateText(date) },
                         })}
                       >
                         <Text children="•" style={{ fontSize: 9 }} />

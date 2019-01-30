@@ -25,6 +25,15 @@ export function isNight() {
   return hours >= 18 || hours <= 6
 }
 
+export function getFullDateText(date: MomentInput) {
+  if (!date) return ''
+
+  const momentDate = moment(date)
+  if (!momentDate.isValid()) return ''
+
+  return momentDate.format('llll')
+}
+
 export function getDateSmallText(date: MomentInput, includeExactTime = false) {
   if (!date) return ''
 

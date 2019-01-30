@@ -2,7 +2,7 @@ import { MomentInput } from 'moment'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { getDateSmallText, GitHubIcon } from '@devhub/core'
+import { getDateSmallText, getFullDateText, GitHubIcon } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
@@ -145,7 +145,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                             .timestampText
                         }
                         {...Platform.select({
-                          web: { title: getDateSmallText(date, true) },
+                          web: { title: getFullDateText(date) },
                         })}
                       >
                         <Text children="•" style={{ fontSize: 9 }} />
