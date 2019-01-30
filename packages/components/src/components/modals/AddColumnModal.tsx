@@ -21,7 +21,9 @@ import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
+import { Link } from '../common/Link'
 import { separatorTickSize } from '../common/Separator'
+import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useTheme } from '../context/ThemeContext'
@@ -310,6 +312,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
           <SpringAnimatedText
             style={{
               marginTop: contentPadding,
+              paddingHorizontal: contentPadding,
               lineHeight: 20,
               fontSize: 14,
               color: springAnimatedTheme.foregroundColorMuted50,
@@ -321,6 +324,29 @@ export function AddColumnModal(props: AddColumnModalProps) {
             } columns. This is to maintain a healthy usage of the GitHub API.`}
           </SpringAnimatedText>
         )}
+
+        <Spacer flex={1} minHeight={contentPadding} />
+
+        <Link
+          analyticsLabel="about-private-access"
+          href="https://github.com/devhubapp/devhub/issues/32"
+          openOnNewTab
+        >
+          <SpringAnimatedText
+            style={{
+              paddingHorizontal: contentPadding,
+              lineHeight: 20,
+              fontSize: 12,
+              color: springAnimatedTheme.foregroundColorMuted50,
+              textAlign: 'center',
+            }}
+          >
+            Support for private repositories is coming soon! Subscribe to this
+            issue if you want to be notified.
+          </SpringAnimatedText>
+        </Link>
+
+        <Spacer height={contentPadding} />
       </View>
     </ModalColumn>
   )
