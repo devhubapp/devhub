@@ -134,36 +134,28 @@ export const IssueOrPullRequestRow = React.memo(
                       <>
                         <Spacer width={contentPadding / 2} />
 
-                        <Link
-                          href={fixURL(url, {
+                        <CardSmallThing
+                          icon="comment"
+                          isRead={isRead}
+                          text={commentsCount}
+                          url={fixURL(url, {
                             addBottomAnchor,
                             issueOrPullRequestNumber,
                           })}
-                        >
-                          <CardSmallThing
-                            icon="comment"
-                            isRead={isRead}
-                            text={commentsCount}
-                            url={url}
-                          />
-                        </Link>
+                        />
                       </>
                     )}
 
                     <Spacer width={contentPadding / 2} />
 
-                    <Link
-                      href={fixURL(url, {
+                    <CardItemId
+                      id={issueOrPullRequestNumber}
+                      isRead={isRead}
+                      url={fixURL(url, {
                         addBottomAnchor,
                         issueOrPullRequestNumber,
                       })}
-                    >
-                      <CardItemId
-                        id={issueOrPullRequestNumber}
-                        isRead={isRead}
-                        url={url}
-                      />
-                    </Link>
+                    />
                   </View>
                 </>
               )}

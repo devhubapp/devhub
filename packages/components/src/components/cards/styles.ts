@@ -78,7 +78,7 @@ export const getCardStylesForTheme = _.memoize(
             wordWrap: 'normal',
           },
         }) as any),
-        wordBreak: 'break-word',
+        wordWrap: 'break-word',
       } as TextStyle,
 
       mutedText: {
@@ -88,7 +88,7 @@ export const getCardStylesForTheme = _.memoize(
       normalText: {
         lineHeight: 20,
         color: theme.foregroundColor,
-        wordBreak: 'break-word',
+        wordWrap: 'break-word',
       } as TextStyle,
 
       icon: {
@@ -99,7 +99,7 @@ export const getCardStylesForTheme = _.memoize(
       descriptionText: {
         lineHeight: 20,
         color: theme.foregroundColorMuted50,
-        wordBreak: 'break-word',
+        wordWrap: 'break-word',
       } as TextStyle,
     }
   },
