@@ -1,9 +1,12 @@
+import _ from 'lodash'
+
 import {
   EnhancedGitHubEvent,
   GitHubIcon,
   GitHubIssue,
   GitHubPullRequest,
   isPullRequest,
+  sortEvents,
 } from '@devhub/core'
 import { bugsnag } from '../../../libs/bugsnag'
 import * as colors from '../../../styles/colors'
@@ -134,4 +137,26 @@ export function getEventIconAndColor(
       return { icon: 'mark-github' }
     }
   }
+}
+
+export function mergeEventsPreservingEnhancement(
+  newItems: EnhancedGitHubEvent[],
+  prevItems: EnhancedGitHubEvent[],
+) {
+  return sortEvents(
+    _.uniqBy(_.concat(newItems, prevItems), 'id').map(item => {
+      const newItem = newItems.find(i => i.id === item.id)
+      const existingItem = prevItems.find(i => i.id === item.id)
+      if (!(newItem && existingItem)) return item
+
+      return {
+        forceUnreadLocally: existingItem.forceUnreadLocally,
+        last_read_at: existingItem.last_read_at,
+        last_unread_at: existingItem.last_unread_at,
+        saved: existingItem.saved,
+        unread: existingItem.unread,
+        ...newItem,
+      }
+    }),
+  )
 }

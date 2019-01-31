@@ -145,7 +145,13 @@ export function enhanceNotifications(
     }
 
     return {
-      ...enhanced,
+      ..._.pick(enhanced, [
+        'comment',
+        'commit',
+        'issue',
+        'pullRequest',
+        'release',
+      ]),
       ...cen,
       ...enhance,
     } as EnhancedGitHubNotification

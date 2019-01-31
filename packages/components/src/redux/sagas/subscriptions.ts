@@ -33,6 +33,8 @@ import {
 
 import { bugsnag } from '../../libs/bugsnag'
 import { getActivity, getNotifications, octokit } from '../../libs/github'
+import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
+import { mergeNotificationsPreservingEnhancement } from '../../utils/helpers/github/notifications'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
@@ -267,7 +269,10 @@ function* onFetchRequest(
 
       const prevItems = subscription.data.items || []
       const newItems = response.data as GitHubNotification[]
-      const mergedItems = _.uniqBy(_.concat(newItems, prevItems), 'id')
+      const mergedItems = mergeNotificationsPreservingEnhancement(
+        newItems,
+        prevItems,
+      )
 
       const olderNotificationDate = getOlderNotificationDate(mergedItems)
       const olderDateFromThisResponse = getOlderNotificationDate(newItems)
@@ -308,10 +313,7 @@ function* onFetchRequest(
 
       const prevItems = subscription.data.items || []
       const newItems = (response.data || []) as GitHubEvent[]
-      const mergedItems = _.uniqBy(
-        _.concat(newItems, prevItems as any),
-        'id',
-      ) as EnhancedGitHubEvent[]
+      const mergedItems = mergeEventsPreservingEnhancement(newItems, prevItems)
 
       const olderNotificationDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)

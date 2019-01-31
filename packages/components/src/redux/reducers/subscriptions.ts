@@ -11,6 +11,8 @@ import {
   sortNotifications,
   subscriptionsArrToState,
 } from '@devhub/core'
+import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
+import { mergeNotificationsPreservingEnhancement } from '../../utils/helpers/github/notifications'
 import { Reducer } from '../types'
 
 export interface State {
@@ -183,22 +185,10 @@ export const subscriptionsReducer: Reducer<State> = (
         const prevItems = (subscription.data.items || []) as any
         const newItems = (action.payload.data || []) as any
 
-        const _mergedItems: any[] =
+        const mergedItems: any[] =
           action.payload.subscriptionType === 'notifications'
-            ? sortNotifications(_.concat(newItems, prevItems as any) as any[])
-            : sortEvents(_.concat(newItems, prevItems as any) as any[])
-
-        const mergedItems: any[] = _mergedItems.map(
-          (item: EnhancedGitHubEvent | EnhancedGitHubNotification) => {
-            const prevValue = prevItems.find((i: any) => i.id === item.id)
-            if (!prevValue) return item
-
-            return {
-              ...item,
-              saved: prevValue.saved,
-            }
-          },
-        )
+            ? mergeNotificationsPreservingEnhancement(newItems, prevItems)
+            : mergeEventsPreservingEnhancement(newItems, prevItems)
 
         subscription.data.items = mergedItems.map(
           removeUselessURLsFromResponseItem,
