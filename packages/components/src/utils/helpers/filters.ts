@@ -5,6 +5,7 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   isEventPrivate,
+  isItemRead,
   isNotificationPrivate,
   mergeSimilarEvents,
   NotificationColumnFilters,
@@ -118,7 +119,7 @@ export function getFilteredNotifications(
 
       if (
         typeof filters.unread === 'boolean' &&
-        filters.unread !== !!notification.unread
+        filters.unread !== !isItemRead(notification)
       ) {
         return false
       }
@@ -140,7 +141,8 @@ export function getFilteredNotifications(
         (!notification.updated_at ||
           notification.updated_at <= filters.clearedAt)
       )
-        if (!notification.unread && !(showSaveForLater && notification.saved))
+        if (!(showSaveForLater && notification.saved))
+          /* && isItemRead(notification) */
           return showCleared
 
       if (notification.saved) return showSaveForLater
@@ -186,7 +188,8 @@ export function getFilteredEvents(
         filters.clearedAt &&
         (!event.created_at || event.created_at <= filters.clearedAt)
       )
-        if (!(showSaveForLater && event.saved) /* && !event.unread */)
+        if (!(showSaveForLater && event.saved))
+          /* && isItemRead(event) */
           return showCleared
 
       if (event.saved) return showSaveForLater

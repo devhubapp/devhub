@@ -31,6 +31,7 @@ export interface EventCardHeaderProps {
   ids: Array<string | number>
   isBot: boolean
   isPrivate?: boolean
+  isRead: boolean
   isSaved?: boolean
   smallLeftColumn?: boolean
   userLinkURL: string
@@ -57,10 +58,6 @@ const styles = StyleSheet.create({
 })
 
 export function EventCardHeader(props: EventCardHeaderProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
-
   const {
     actionText,
     avatarURL,
@@ -70,11 +67,20 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     ids,
     isBot,
     isPrivate,
+    isRead,
     isSaved,
     smallLeftColumn,
     userLinkURL,
     username: _username,
   } = props
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
+
+  const markItemsAsReadOrUnread = useReduxAction(
+    actions.markItemsAsReadOrUnread,
+  )
 
   const username = isBot ? _username!.replace('[bot]', '') : _username
 
@@ -177,15 +183,37 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           </View>
 
           <ColumnHeaderItem
+            analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
+            enableForegroundHover
+            fixedIconSize
+            iconName={isRead ? 'mail-read' : 'mail'}
+            onPress={() =>
+              markItemsAsReadOrUnread({
+                type: 'activity',
+                itemIds: ids,
+                unread: !!isRead,
+                localOnly: true,
+              })
+            }
+            size={18}
+            style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 4,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+            }}
+          />
+
+          <ColumnHeaderItem
             analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
+            enableForegroundHover
             fixedIconSize
             iconName="bookmark"
-            iconStyle={{
-              width: columnHeaderItemContentSize,
-              color: isSaved
-                ? colors.brandBackgroundColor
-                : springAnimatedTheme.foregroundColorMuted50,
-            }}
+            iconStyle={[
+              isSaved && {
+                color: colors.brandBackgroundColor,
+              },
+            ]}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
             size={18}
             style={{
@@ -200,9 +228,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             fixedIconSize
             iconName={cardIconName}
             iconStyle={[
-              {
-                width: columnHeaderItemContentSize,
-              },
               cardIconName === 'star' && {
                 lineHeight: 16,
               },

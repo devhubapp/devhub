@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 
 import {
   Column as ColumnType,
@@ -7,12 +7,17 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   getColumnHeaderDetails,
+  isItemRead,
 } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
+import {
+  activityColumnHasAnyFilter,
+  notificationColumnHasAnyFilter,
+} from '../../utils/helpers/filters'
 import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
@@ -25,7 +30,10 @@ export interface EventOrNotificationColumnProps {
   column: ColumnType
   columnIndex: number
   onColumnOptionsVisibilityChange?: (isOpen: boolean) => void
+  owner: string | undefined
   pagingEnabled?: boolean
+  repo: string | undefined
+  repoIsKnown: boolean
   subscriptions: Array<ColumnSubscription | undefined>
 }
 
@@ -35,9 +43,12 @@ export const EventOrNotificationColumn = React.memo(
       children,
       column,
       columnIndex,
-      pagingEnabled,
-      subscriptions,
       onColumnOptionsVisibilityChange,
+      owner,
+      pagingEnabled,
+      repo,
+      repoIsKnown,
+      subscriptions,
     } = props
 
     const accordionRef = useRef<AccordionView>(null)
@@ -70,14 +81,30 @@ export const EventOrNotificationColumn = React.memo(
       ),
     )
 
+    const hasPrivateAccess = useReduxState(
+      selectors.githubHasPrivateAccessSelector,
+    )
+
     const clearableItems = (filteredItems as any[]).filter(
       (item: EnhancedGitHubEvent | EnhancedGitHubNotification) => {
-        return !!(item && !item.saved && !('unread' in item && item.unread))
+        return !!(item && !item.saved) /* && isItemRead(item) */
       },
     )
 
     const setColumnClearedAtFilter = useReduxAction(
       actions.setColumnClearedAtFilter,
+    )
+
+    const markItemsAsReadOrUnread = useReduxAction(
+      actions.markItemsAsReadOrUnread,
+    )
+
+    const markAllNotificationsAsReadOrUnread = useReduxAction(
+      actions.markAllNotificationsAsReadOrUnread,
+    )
+
+    const markRepoNotificationsAsReadOrUnread = useReduxAction(
+      actions.markRepoNotificationsAsReadOrUnread,
     )
 
     useEffect(
@@ -127,6 +154,11 @@ export const EventOrNotificationColumn = React.memo(
       }
     }
 
+    const hasOneUnreadItem = (filteredItems as any[]).some(
+      (item: EnhancedGitHubNotification | EnhancedGitHubEvent) =>
+        !isItemRead(item),
+    )
+
     return (
       <Column columnId={column.id} pagingEnabled={pagingEnabled}>
         <ColumnHeader>
@@ -141,6 +173,67 @@ export const EventOrNotificationColumn = React.memo(
           />
 
           <Spacer width={contentPadding / 2} />
+
+          <ColumnHeaderItem
+            analyticsLabel={
+              !hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'
+            }
+            disabled={!filteredItems.length}
+            enableForegroundHover
+            fixedIconSize
+            iconName={!hasOneUnreadItem ? 'mail-read' : 'mail'}
+            onPress={() => {
+              const unread = !hasOneUnreadItem
+
+              const visibleItemIds = (filteredItems as any[]).map(
+                (item: EnhancedGitHubNotification | EnhancedGitHubEvent) =>
+                  item && item.id,
+              )
+
+              const hasAnyFilter =
+                column.type === 'notifications'
+                  ? notificationColumnHasAnyFilter(
+                      { ...column.filters, clearedAt: undefined },
+                      hasPrivateAccess,
+                    )
+                  : column.type === 'activity'
+                  ? activityColumnHasAnyFilter(
+                      { ...column.filters, clearedAt: undefined },
+                      hasPrivateAccess,
+                    )
+                  : false
+
+              // column doesnt have any filter,
+              // so lets mark ALL notifications on github as read at once,
+              // instead of marking only the visible items one by one
+              if (column.type === 'notifications' && !hasAnyFilter && !unread) {
+                if (repoIsKnown) {
+                  if (owner && repo) {
+                    markRepoNotificationsAsReadOrUnread({
+                      owner,
+                      repo,
+                      unread,
+                    })
+
+                    return
+                  }
+                } else {
+                  markAllNotificationsAsReadOrUnread({ unread })
+                  return
+                }
+              }
+
+              // mark only the visible items as read/unread one by one
+              markItemsAsReadOrUnread({
+                type: column.type,
+                itemIds: visibleItemIds,
+                unread,
+              })
+            }}
+            style={{
+              paddingHorizontal: contentPadding / 3,
+            }}
+          />
 
           <ColumnHeaderItem
             analyticsLabel="clear_column"
@@ -158,6 +251,7 @@ export const EventOrNotificationColumn = React.memo(
               paddingHorizontal: contentPadding / 3,
             }}
           />
+
           <ColumnHeaderItem
             analyticsAction={showColumnOptions ? 'hide' : 'show'}
             analyticsLabel="column_options"

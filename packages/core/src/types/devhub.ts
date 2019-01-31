@@ -18,6 +18,13 @@ import { Omit } from './typescript'
 
 type octokit = InstanceType<typeof Octokit>
 
+export interface ReadUnreadEnhancement {
+  forceUnreadLocally?: boolean // Workaround while GitHub doesn't support marking as unread via api
+  last_read_at?: string
+  last_unread_at?: string
+  unread?: boolean // GitHub server's value
+}
+
 export interface SaveForLaterEnhancement {
   saved?: boolean
 }
@@ -33,6 +40,7 @@ export interface NotificationPayloadEnhancement {
 export interface EnhancedGitHubNotification
   extends GitHubNotification,
     NotificationPayloadEnhancement,
+    ReadUnreadEnhancement,
     SaveForLaterEnhancement {}
 
 export interface GitHubEnhancedEventBase {
@@ -47,6 +55,7 @@ export interface MultipleStarEvent
 }
 
 export type EnhancedGitHubEvent = (GitHubEvent | MultipleStarEvent) &
+  ReadUnreadEnhancement &
   SaveForLaterEnhancement
 
 export interface ColumnSubscriptionData<

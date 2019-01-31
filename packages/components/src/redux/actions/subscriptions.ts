@@ -60,6 +60,31 @@ export function saveItemsForLater(payload: {
   return createAction('SAVE_ITEMS_FOR_LATER', payload)
 }
 
+export function markItemsAsReadOrUnread(payload: {
+  type: ColumnSubscription['type']
+  itemIds: Array<string | number>
+  unread: boolean
+  localOnly?: boolean
+}) {
+  return createAction('MARK_ITEMS_AS_READ_OR_UNREAD', payload)
+}
+
+export function markAllNotificationsAsReadOrUnread(payload: {
+  unread: boolean
+  localOnly?: boolean
+}) {
+  return createAction('MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
+}
+
+export function markRepoNotificationsAsReadOrUnread(payload: {
+  owner: string
+  repo: string
+  unread: boolean
+  localOnly?: boolean
+}) {
+  return createAction('MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
+}
+
 export function cleanupSubscriptionsData(
   payload: {
     deleteOlderThan?: string

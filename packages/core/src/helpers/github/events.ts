@@ -27,10 +27,19 @@ export function getColumnHeaderDetails(
     username: string
   }
   icon: GitHubIcon
-  repoIsKnown: boolean
   subtitle?: string
   title: string
-} {
+} & (
+  | {
+      repoIsKnown: false
+      owner?: undefined
+      repo?: undefined
+    }
+  | {
+      repoIsKnown: true
+      owner: string
+      repo: string
+    }) {
   switch (column.type) {
     case 'activity': {
       const subscription = subscriptions.filter(
@@ -63,6 +72,8 @@ export function getColumnHeaderDetails(
             },
             icon: 'repo',
             repoIsKnown: true,
+            owner: subscription.params.owner,
+            repo: subscription.params.repo,
             subtitle: 'Activity',
             title: subscription.params.repo,
           }
@@ -75,6 +86,8 @@ export function getColumnHeaderDetails(
             },
             icon: 'repo',
             repoIsKnown: true,
+            owner: subscription.params.owner,
+            repo: subscription.params.repo,
             subtitle: 'Network',
             title: subscription.params.repo,
           }
@@ -139,6 +152,8 @@ export function getColumnHeaderDetails(
           return {
             icon: 'bell',
             repoIsKnown: true,
+            owner: subscription.params.owner,
+            repo: subscription.params.repo,
             subtitle: subscription.params.repo,
             title: 'Notifications',
           }

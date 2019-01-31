@@ -21,9 +21,12 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
     <EventOrNotificationColumn
       key={`event-column-${column.id}-inner`}
       column={column}
-      subscriptions={subscriptions}
       columnIndex={columnIndex}
+      owner={requestTypeIconAndData.owner}
       pagingEnabled={pagingEnabled}
+      repo={requestTypeIconAndData.repo}
+      repoIsKnown={requestTypeIconAndData.repoIsKnown}
+      subscriptions={subscriptions}
     >
       <EventCardsContainer
         key={`event-cards-container-${column.id}`}

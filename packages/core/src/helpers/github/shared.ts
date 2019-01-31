@@ -3,11 +3,19 @@ import qs from 'qs'
 
 import {
   ColumnSubscription,
+  EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
   GitHubApiHeaders,
   GitHubIcon,
   GitHubPullRequest,
 } from '../../types'
 import { getSteppedSize } from '../shared'
+
+export function isItemRead(
+  item: EnhancedGitHubNotification | EnhancedGitHubEvent,
+) {
+  return !(item && (item.unread !== false || item.forceUnreadLocally))
+}
 
 export function getUserAvatarByAvatarURL(
   avatarURL: string,

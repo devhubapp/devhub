@@ -79,7 +79,7 @@ export const subscriptionsReducer: Reducer<State> = (
                 .filter(item => {
                   if (!item) return false
                   if (item.saved) return true
-                  if (item.unread) return true
+                  // if (item.unread) return true
                   if (!action.payload.deleteOlderThan) return false
                   if (!item.updated_at) return true
 
@@ -229,6 +229,7 @@ export const subscriptionsReducer: Reducer<State> = (
         // draft.updatedAt = new Date().toISOString()
       })
 
+    case 'MARK_ITEMS_AS_READ_OR_UNREAD':
     case 'SAVE_ITEMS_FOR_LATER':
       return immer(state, draft => {
         if (!(action.payload.itemIds && action.payload.itemIds.length)) return
@@ -259,15 +260,92 @@ export const subscriptionsReducer: Reducer<State> = (
             (item: any) => {
               if (!(item && stringIds.includes(`${item.id}`))) return item
 
+              if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
+                return {
+                  ...item,
+                  ...(action.payload.unread === true
+                    ? {
+                        forceUnreadLocally: true,
+                        last_unread_at: new Date().toISOString(),
+                      }
+                    : {
+                        unread: false,
+                        forceUnreadLocally: false,
+                        last_read_at: new Date().toISOString(),
+                      }),
+                }
+              }
+
+              if (action.type === 'SAVE_ITEMS_FOR_LATER') {
+                return {
+                  ...item,
+                  saved: action.payload.save !== false,
+                }
+              }
+
+              return item
+            },
+          )
+        })
+
+        // draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD':
+    case 'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD':
+      return immer(state, draft => {
+        const keys = Object.keys(draft.byId)
+        if (!(keys && keys.length)) return
+
+        keys.forEach(id => {
+          const subscription = draft.byId[id]
+          if (
+            !(
+              subscription &&
+              subscription.data &&
+              subscription.data.items &&
+              subscription.data.items.length
+            )
+          )
+            return
+
+          if (subscription.type !== 'notifications') return
+
+          if (action.type === 'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD') {
+            if (
+              !(
+                'owner' in subscription.params &&
+                `${subscription.params.owner || ''}`.toLowerCase() ===
+                  `${action.payload.owner || ''}`.toLowerCase() &&
+                `${subscription.params.repo || ''}`.toLowerCase() ===
+                  `${action.payload.repo || ''}`.toLowerCase()
+              )
+            )
+              return
+          }
+
+          subscription.data.items = (subscription.data.items as any).map(
+            (item: any) => {
+              if (!item) return item
+
               return {
                 ...item,
-                saved: action.payload.save !== false,
+                ...(action.payload.unread === true
+                  ? {
+                      forceUnreadLocally: true,
+                      last_unread_at: new Date().toISOString(),
+                    }
+                  : {
+                      unread: false,
+                      forceUnreadLocally: false,
+                      last_read_at: new Date().toISOString(),
+                    }),
               }
             },
           )
         })
 
-        draft.updatedAt = new Date().toISOString()
+        // draft.updatedAt = new Date().toISOString()
       })
 
     default:

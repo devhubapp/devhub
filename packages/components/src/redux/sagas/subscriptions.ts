@@ -1,4 +1,7 @@
+import { Response } from '@octokit/rest'
 import _ from 'lodash'
+import { REHYDRATE } from 'redux-persist'
+import { delay } from 'redux-saga'
 import {
   actionChannel,
   all,
@@ -27,9 +30,9 @@ import {
   GitHubEvent,
   GitHubNotification,
 } from '@devhub/core'
-import { REHYDRATE } from 'redux-persist'
-import { delay } from 'redux-saga'
-import { getActivity, getNotifications } from '../../libs/github'
+
+import { bugsnag } from '../../libs/bugsnag'
+import { getActivity, getNotifications, octokit } from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
@@ -380,6 +383,123 @@ function onLogout() {
   if (notificationsCache) notificationsCache.clear()
 }
 
+function* onMarkItemsAsReadOrUnread(
+  action: ExtractActionFromActionCreator<
+    typeof actions.markItemsAsReadOrUnread
+  >,
+) {
+  const { itemIds, localOnly, type, unread } = action.payload
+
+  if (localOnly) return
+
+  // GitHub api does not support marking as unread yet :(
+  // @see https://github.com/octokit/rest.js/issues/1232
+  if (unread === true) return
+
+  if (type !== 'notifications') return
+  if (!(itemIds && itemIds.length)) return
+
+  const results = yield all(
+    itemIds.map(function*(itemId, index) {
+      const threadId = itemId && parseInt(`${itemId}`, 10)
+      if (!threadId) return
+
+      if (index > 0) yield delay(100)
+
+      try {
+        return yield octokit.activity.markThreadAsRead({ thread_id: threadId })
+      } catch (e) {
+        console.error('Failed to mark single notification as read', e)
+        bugsnag.notify(e)
+
+        return null
+      }
+    }),
+  )
+
+  const failedIds: string[] = results
+    .map((result: Response<any>, index: number) =>
+      result && result.status >= 200 && result.status < 400
+        ? undefined
+        : action.payload.itemIds[index],
+    )
+    .filter(Boolean)
+
+  if (failedIds.length) {
+    yield put(
+      actions.markItemsAsReadOrUnread({
+        localOnly: true,
+        itemIds: failedIds,
+        type: action.payload.type,
+        unread: !action.payload.unread,
+      }),
+    )
+  }
+}
+
+function* onMarkAllNotificationsAsReadOrUnread(
+  action: ExtractActionFromActionCreator<
+    typeof actions.markAllNotificationsAsReadOrUnread
+  >,
+) {
+  const { localOnly, unread } = action.payload
+
+  if (localOnly) return
+
+  // GitHub api does not support marking as unread yet :(
+  // @see https://github.com/octokit/rest.js/issues/1232
+  if (unread === true) return
+
+  try {
+    yield octokit.activity.markAsRead({})
+  } catch (e) {
+    console.error('Failed to mark all notifications as read', e)
+    bugsnag.notify(e)
+
+    yield put(
+      actions.markAllNotificationsAsReadOrUnread({
+        localOnly: true,
+        unread: !unread,
+      }),
+    )
+  }
+}
+
+function* onMarkRepoNotificationsAsReadOrUnread(
+  action: ExtractActionFromActionCreator<
+    typeof actions.markRepoNotificationsAsReadOrUnread
+  >,
+) {
+  const { owner, repo, localOnly, unread } = action.payload
+
+  if (localOnly) return
+
+  // GitHub api does not support marking as unread yet :(
+  // @see https://github.com/octokit/rest.js/issues/1232
+  if (unread === true) return
+
+  try {
+    if (!(owner && repo))
+      throw new Error(
+        'Required params to mark repo notifications as read: owner, repo',
+      )
+
+    yield octokit.activity.markNotificationsAsReadForRepo({ owner, repo })
+  } catch (e) {
+    console.error('Failed to mark all notifications as read', e)
+    bugsnag.notify(e)
+
+    yield put(
+      actions.markRepoNotificationsAsReadOrUnread({
+        owner,
+        repo,
+        localOnly: true,
+        unread: !unread,
+      }),
+    )
+  }
+}
+
 export function* subscriptionsSagas() {
   yield all([
     yield fork(init),
@@ -392,6 +512,15 @@ export function* subscriptionsSagas() {
     yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
     yield takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),
+    yield takeEvery('MARK_ITEMS_AS_READ_OR_UNREAD', onMarkItemsAsReadOrUnread),
+    yield takeEvery(
+      'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD',
+      onMarkAllNotificationsAsReadOrUnread,
+    ),
+    yield takeEvery(
+      'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD',
+      onMarkRepoNotificationsAsReadOrUnread,
+    ),
   ])
 }
 

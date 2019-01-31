@@ -806,9 +806,7 @@ export type GitHubNotificationReason =
 
 export interface GitHubNotification {
   id: number | string
-  // archived_at: string // specific to this app
-  last_read_at: string
-  // last_unread_at: string // specific to this app
+  last_read_at?: string
   reason: GitHubNotificationReason
   repository: GitHubRepo
   subject: {

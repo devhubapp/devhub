@@ -22,6 +22,7 @@ import {
   GitHubRepo,
   GitHubUser,
   isEventPrivate,
+  isItemRead,
   MultipleStarEvent,
 } from '@devhub/core'
 import { contentPadding } from '../../styles/variables'
@@ -77,7 +78,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const { issue } = payload as GitHubIssuesEvent['payload']
   let { ref: branchName } = payload as GitHubPushEvent['payload']
 
-  const isRead = false
+  const isRead = isItemRead(event)
   const isSaved = saved === true
 
   const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
@@ -196,6 +197,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         ids={('merged' in event && event.merged) || [id]}
         isBot={isBot}
         isPrivate={isPrivate}
+        isRead={isRead}
         isSaved={isSaved}
         smallLeftColumn={smallLeftColumn}
         userLinkURL={actor.html_url || ''}

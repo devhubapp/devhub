@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import {
   EnhancedGitHubNotification,
@@ -10,11 +10,11 @@ import {
   getOwnerAndRepo,
   getUserAvatarByUsername,
   GitHubNotificationReason,
+  isItemRead,
   isNotificationPrivate,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { contentPadding } from '../../styles/variables'
-import { getNotificationReasonMetadata } from '../../utils/helpers/github/notifications'
 import {
   getIssueIconAndColor,
   getNotificationIconAndColor,
@@ -55,13 +55,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     repository: repo,
     saved,
     subject,
-    unread,
     updated_at: updatedAt,
   } = notification
 
   if (!subject) return null
 
-  const isRead = !unread
+  const isRead = isItemRead(notification)
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
 
-import { getLuminance } from 'polished'
+import { darken, getLuminance, lighten } from 'polished'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import {
   contentPadding,
@@ -48,9 +48,6 @@ export function Label(props: LabelProps) {
     textProps = {},
   } = props
 
-  const darkTheme = theme.isDark ? theme : theme.invert()
-  const lightTheme = theme.isDark ? theme.invert() : theme
-
   const color =
     _color ||
     (muted
@@ -62,8 +59,8 @@ export function Label(props: LabelProps) {
     (outline && color) ||
     (_color
       ? getLuminance(_color) > 0.4
-        ? lightTheme.foregroundColor
-        : darkTheme.foregroundColor
+        ? darken(0.9, _color)
+        : lighten(0.9, _color)
       : springAnimatedTheme.foregroundColor)
 
   return (

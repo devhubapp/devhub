@@ -112,7 +112,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
               disabled={loadState !== 'loaded'}
-              loading={loadState === 'loading_more'}
+              loading={
+                loadState === 'loading_first' || loadState === 'loading_more'
+              }
               onPress={fetchNextPage}
             />
           </View>
@@ -123,12 +125,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
               borderOnly
               children="Show cleared items"
               disabled={loadState !== 'loaded'}
-              onPress={() =>
+              onPress={() => {
                 setColumnClearedAtFilter({
                   clearedAt: null,
                   columnId: column.id,
                 })
-              }
+
+                if (refresh) refresh()
+              }}
             />
           </View>
         ) : null}

@@ -23,9 +23,12 @@ export const NotificationColumn = React.memo(
       <EventOrNotificationColumn
         key={`notification-column-${column.id}-inner`}
         column={column}
-        subscriptions={subscriptions}
         columnIndex={columnIndex}
+        owner={requestTypeIconAndData.owner}
         pagingEnabled={pagingEnabled}
+        repo={requestTypeIconAndData.repo}
+        repoIsKnown={requestTypeIconAndData.repoIsKnown}
+        subscriptions={subscriptions}
       >
         <NotificationCardsContainer
           key={`notification-cards-container-${column.id}`}
