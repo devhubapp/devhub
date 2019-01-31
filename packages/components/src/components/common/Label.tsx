@@ -8,6 +8,7 @@ import {
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
+import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -108,7 +109,16 @@ export function Label(props: LabelProps) {
             />{' '}
           </Text>
         )}
-        {children}
+        {typeof children === 'string'
+          ? parseTextWithEmojisToReactComponents(children, {
+              imageProps: {
+                style: {
+                  width: small ? 10 : 11,
+                  height: small ? 10 : 11,
+                },
+              },
+            })
+          : children}
       </SpringAnimatedText>
     </SpringAnimatedView>
   )

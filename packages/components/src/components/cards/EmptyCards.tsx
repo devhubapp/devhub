@@ -1,11 +1,15 @@
 import React from 'react'
-import { Text, TextStyle, View, ViewStyle } from 'react-native'
+import { Image, Text, TextStyle, View, ViewStyle } from 'react-native'
 
 import { LoadState } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
+import {
+  getEmojiImageURL,
+  GitHubEmoji,
+} from '../../utils/helpers/github/emojis'
 import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Button } from '../common/Button'
@@ -18,7 +22,7 @@ const clearMessages = [
   'You rock!',
 ]
 
-const emojis = ['👍', '👏', '💪', '🎉', '💯']
+const emojis: GitHubEmoji[] = ['+1', 'muscle', 'tada', '100']
 
 const getRandomClearMessage = () => {
   const randomIndex = Math.floor(Math.random() * clearMessages.length)
@@ -34,6 +38,7 @@ const getRandomEmoji = () => {
 // because a chaning message is a bit distractive
 const clearMessage = getRandomClearMessage()
 const emoji = getRandomEmoji()
+const emojiImageURL = getEmojiImageURL(emoji)
 
 export interface EmptyCardsProps {
   clearedAt: string | undefined
@@ -112,7 +117,17 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     return (
       <View style={containerStyle}>
         <SpringAnimatedText style={springAnimatedTextStyle}>
-          {clearMessage} {emoji}
+          {clearMessage}
+          {!!emojiImageURL && (
+            <>
+              <Text children=" " />
+
+              <Image
+                source={{ uri: emojiImageURL }}
+                style={{ width: 16, height: 16 }}
+              />
+            </>
+          )}
         </SpringAnimatedText>
       </View>
     )

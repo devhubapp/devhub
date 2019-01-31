@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
+import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
@@ -81,7 +82,14 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
               isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
-            {body}
+            {parseTextWithEmojisToReactComponents(body, {
+              imageProps: {
+                style: {
+                  width: 12,
+                  height: 12,
+                },
+              },
+            })}
           </SpringAnimatedText>
         </Link>
       </View>
