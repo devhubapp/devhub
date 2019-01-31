@@ -21,12 +21,15 @@ import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
+import { fabSize } from '../common/FAB'
 import { Link } from '../common/Link'
 import { separatorTickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
+import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
+import { fabSpacing } from '../layout/FABRenderer'
 
 export interface AddColumnModalProps {
   showBackButton: boolean
@@ -268,10 +271,14 @@ export function AddColumnModal(props: AddColumnModalProps) {
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const columnWidth = useColumnWidth()
 
+  const { sizename } = useAppLayout()
+
   const outerSpacing = (3 / 4) * contentPadding
   const availableWidth = columnWidth - 2 * separatorTickSize - 2 * outerSpacing
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
+
+  const isFabVisible = sizename < '3-large'
 
   return (
     <ModalColumn
@@ -283,7 +290,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
       <View style={{ flex: 1 }}>
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
-            <SubHeader iconName={group.icon} title={group.title} />
+            <SubHeader title={group.title} />
 
             <View
               style={{
@@ -346,7 +353,9 @@ export function AddColumnModal(props: AddColumnModalProps) {
           </SpringAnimatedText>
         </Link>
 
-        <Spacer height={contentPadding} />
+        <Spacer
+          height={isFabVisible ? fabSize + 2 * fabSpacing : contentPadding}
+        />
       </View>
     </ModalColumn>
   )
