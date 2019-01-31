@@ -234,8 +234,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isForcePush={isForcePush}
           isFork
           isRead={isRead}
-          ownerName={forkRepoOwnerName!}
-          repositoryName={forkRepoName!}
+          ownerName={forkRepoOwnerName || ''}
+          repositoryName={forkRepoName || ''}
           smallLeftColumn={smallLeftColumn}
         />
       )}
@@ -266,8 +266,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           createdAt={pullRequest.created_at}
           iconColor={pullRequestIconColor!}
           iconName={pullRequestIconName!}
+          id={pullRequest.id}
           isRead={isRead}
           issueOrPullRequestNumber={pullRequest.number}
+          labels={pullRequest.labels}
+          owner={repoOwnerName || ''}
+          repo={repoName || ''}
           smallLeftColumn={smallLeftColumn}
           title={pullRequest.title}
           url={pullRequestURL}
@@ -293,8 +297,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           createdAt={issue.created_at}
           iconColor={issueIconColor!}
           iconName={issueIconName!}
+          id={issue.id}
           isRead={isRead}
           issueOrPullRequestNumber={issue.number}
+          labels={issue.labels}
+          owner={repoOwnerName || ''}
+          repo={repoName || ''}
           smallLeftColumn={smallLeftColumn}
           title={issue.title}
           url={issueURL}
@@ -354,8 +362,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
           branch={release.target_commitish}
           isRead={isRead}
           name={release.name}
-          ownerName={repoOwnerName!}
-          repositoryName={repoName!}
+          ownerName={repoOwnerName || ''}
+          repositoryName={repoName || ''}
           smallLeftColumn={smallLeftColumn}
           tagName={release.tag_name}
           url={release.html_url || release.url}

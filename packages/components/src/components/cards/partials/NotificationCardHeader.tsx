@@ -206,7 +206,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   isPrivate={isPrivate}
                   outline={isRead}
                   small
-                  textProps={{ numberOfLines: 1, style: { paddingBottom: 1 } }}
+                  textProps={{ style: { paddingBottom: 1 } }}
                 >
                   {reasonDetails.label.toLowerCase()}
                 </Label>

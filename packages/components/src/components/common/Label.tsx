@@ -1,13 +1,7 @@
 import React, { ReactNode } from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextProps,
-  ViewProps,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
 
+import { getLuminance } from 'polished'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import {
   contentPadding,
@@ -17,6 +11,7 @@ import {
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useTheme } from '../context/ThemeContext'
 import { separatorSize } from './Separator'
 
 export interface LabelProps {
@@ -36,6 +31,7 @@ export interface LabelProps {
 
 export function Label(props: LabelProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const theme = useTheme()
 
   const {
     borderColor,
@@ -48,18 +44,27 @@ export function Label(props: LabelProps) {
     outline,
     radius = defaultRadius,
     small,
-    textColor,
+    textColor: _textColor,
     textProps = {},
   } = props
 
-  const springAnimatedColor =
-    textColor ||
-    (outline
-      ? _color ||
-        (muted
-          ? springAnimatedTheme.foregroundColorMuted50
-          : springAnimatedTheme.foregroundColor)
-      : '#FFFFFF')
+  const darkTheme = theme.isDark ? theme : theme.invert()
+  const lightTheme = theme.isDark ? theme.invert() : theme
+
+  const color =
+    _color ||
+    (muted
+      ? springAnimatedTheme.foregroundColorMuted50
+      : springAnimatedTheme.foregroundColor)
+
+  const foregroundColor =
+    _textColor ||
+    (outline && color) ||
+    (_color
+      ? getLuminance(_color) > 0.4
+        ? lightTheme.foregroundColor
+        : darkTheme.foregroundColor
+      : springAnimatedTheme.foregroundColor)
 
   return (
     <SpringAnimatedView
@@ -73,11 +78,14 @@ export function Label(props: LabelProps) {
         containerProps && containerProps.style,
         containerStyle,
         {
-          borderColor:
-            borderColor || _color || springAnimatedTheme.foregroundColor,
-        },
-        !outline && {
-          backgroundColor: _color || springAnimatedTheme.foregroundColor,
+          borderColor: borderColor || color,
+          backgroundColor: outline
+            ? _color
+              ? getLuminance(_color) > 0.4
+                ? springAnimatedTheme.backgroundColorLighther2
+                : springAnimatedTheme.backgroundColorDarker2
+              : undefined
+            : color,
         },
         Boolean(radius) && { borderRadius: radius },
       ]}
@@ -87,9 +95,9 @@ export function Label(props: LabelProps) {
         {...textProps}
         style={[
           {
-            lineHeight: small ? 16 : 18,
+            lineHeight: small ? 17 : 18,
             fontSize: small ? 13 : 14,
-            color: springAnimatedColor,
+            color: foregroundColor,
           },
           textProps && textProps.style,
           muted && { opacity: mutedOpacity },
@@ -99,7 +107,7 @@ export function Label(props: LabelProps) {
           <Text>
             <SpringAnimatedIcon
               name="lock"
-              style={{ color: springAnimatedColor }}
+              style={{ color: foregroundColor }}
             />{' '}
           </Text>
         )}

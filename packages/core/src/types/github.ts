@@ -197,6 +197,7 @@ export interface GitHubPullRequest {
   state: 'open' | 'closed' // closed
   locked: boolean // false
   title: string // ok
+  labels: GitHubLabel[]
   user: GitHubUser
   body: string //
   created_at: string // 2016-11-24T15:59:50Z

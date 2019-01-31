@@ -5,6 +5,7 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForUser,
+  GitHubLabel,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -18,6 +19,7 @@ import {
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
+import { Label } from '../../../common/Label'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
@@ -32,8 +34,12 @@ export interface IssueOrPullRequestRowProps {
   createdAt: string | undefined
   iconColor?: string
   iconName: SpringAnimatedIconProps['name']
+  id: string | number | undefined
   isRead: boolean
   issueOrPullRequestNumber: number
+  labels?: GitHubLabel[] | undefined
+  owner: string
+  repo: string
   smallLeftColumn?: boolean
   title: string
   url: string
@@ -52,8 +58,12 @@ export const IssueOrPullRequestRow = React.memo(
       createdAt,
       iconColor,
       iconName,
+      id,
       isRead,
       issueOrPullRequestNumber,
+      labels,
+      owner,
+      repo,
       smallLeftColumn,
       title: _title,
       url,
@@ -67,7 +77,10 @@ export const IssueOrPullRequestRow = React.memo(
     const byText = username ? `@${username}` : ''
 
     return (
-      <View style={cardRowStyles.container}>
+      <View
+        key={`issue-or-pr-row-inner-${id}-${owner}-${repo}-${issueOrPullRequestNumber}`}
+        style={cardRowStyles.container}
+      >
         <View
           style={[
             cardStyles.leftColumn,
@@ -119,7 +132,37 @@ export const IssueOrPullRequestRow = React.memo(
             </Link>
 
             <View>
-              <Spacer height={4} />
+              {!!labels && labels.length > 0 && (
+                <>
+                  <Spacer height={contentPadding / 2} />
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      margin: -contentPadding / 4,
+                    }}
+                  >
+                    {labels.map(label => (
+                      <Label
+                        key={`issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
+                          label.name}`}
+                        color={label.color && `#${label.color}`}
+                        containerStyle={{
+                          alignSelf: 'flex-start',
+                          margin: contentPadding / 4,
+                        }}
+                        outline={isRead}
+                        small
+                      >
+                        {label.name}
+                      </Label>
+                    ))}
+                  </View>
+                </>
+              )}
+
+              <Spacer height={contentPadding / 2} />
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 {!!byText && (

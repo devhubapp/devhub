@@ -92,9 +92,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const issue =
     notification.issue ||
     (subjectType === 'Issue' && {
+      id: undefined,
       body: undefined,
       comments: undefined,
       created_at: undefined,
+      labels: [],
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
@@ -105,9 +107,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const pullRequest =
     notification.pullRequest ||
     (subjectType === 'PullRequest' && {
+      id: undefined,
       body: undefined,
       created_at: undefined,
       comments: undefined,
+      labels: [],
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
@@ -118,6 +122,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const release =
     notification.release ||
     (subjectType === 'Release' && {
+      id: undefined,
       author: { avatar_url: '', login: '', html_url: '' },
       body: '',
       created_at: undefined,
@@ -234,8 +239,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           createdAt={issue.created_at}
           iconColor={issueIconColor!}
           iconName={issueIconName!}
+          id={issue.id}
           isRead={isRead}
           issueOrPullRequestNumber={issueOrPullRequestNumber!}
+          labels={issue.labels}
+          owner={repoOwnerName || ''}
+          repo={repoName || ''}
           smallLeftColumn={smallLeftColumn}
           title={issue.title}
           url={issue.url}
@@ -266,8 +275,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           createdAt={pullRequest.created_at}
           iconColor={pullRequestIconColor!}
           iconName={pullRequestIconName!}
+          id={pullRequest.id}
           isRead={isRead}
           issueOrPullRequestNumber={issueOrPullRequestNumber!}
+          labels={pullRequest.labels}
+          owner={repoOwnerName || ''}
+          repo={repoName || ''}
           smallLeftColumn={smallLeftColumn}
           title={pullRequest.title}
           url={pullRequest.url}
@@ -297,8 +310,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           body={release.body}
           isRead={isRead}
           name={release.name || ''}
-          ownerName={repoOwnerName!}
-          repositoryName={repoName!}
+          ownerName={repoOwnerName || ''}
+          repositoryName={repoName || ''}
           smallLeftColumn={smallLeftColumn}
           tagName={release.tag_name || ''}
           url={release.url}
