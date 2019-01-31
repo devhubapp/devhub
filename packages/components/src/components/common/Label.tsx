@@ -79,9 +79,7 @@ export function Label(props: LabelProps) {
           borderColor: borderColor || color,
           backgroundColor: outline
             ? _color
-              ? getLuminance(_color) > 0.4
-                ? springAnimatedTheme.backgroundColorLighther2
-                : springAnimatedTheme.backgroundColorDarker2
+              ? springAnimatedTheme.backgroundColor
               : undefined
             : color,
         },
