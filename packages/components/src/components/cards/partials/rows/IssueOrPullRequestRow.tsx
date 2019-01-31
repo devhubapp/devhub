@@ -68,11 +68,14 @@ export const IssueOrPullRequestRow = React.memo(
       title: _title,
       url,
       userLinkURL,
-      username,
+      username: _username,
     } = props
 
     const title = trimNewLinesAndSpaces(_title)
     if (!title) return null
+
+    const isBot = Boolean(_username && _username.indexOf('[bot]') >= 0)
+    const username = isBot ? _username.replace('[bot]', '') : _username
 
     const byText = username ? `@${username}` : ''
 
@@ -92,7 +95,7 @@ export const IssueOrPullRequestRow = React.memo(
           {Boolean(username) && (
             <Avatar
               avatarURL={avatarURL}
-              isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+              isBot={isBot}
               linkURL={userLinkURL}
               small
               style={cardStyles.avatar}
