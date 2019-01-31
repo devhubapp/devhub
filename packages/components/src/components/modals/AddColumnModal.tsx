@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useSpring } from 'react-spring/native-hooks'
 
 import {
@@ -287,7 +287,12 @@ export function AddColumnModal(props: AddColumnModalProps) {
       showBackButton={showBackButton}
       title="Add Column"
     >
-      <View style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+      >
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
             <SubHeader title={group.title} />
@@ -356,7 +361,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
         <Spacer
           height={isFabVisible ? fabSize + 2 * fabSpacing : contentPadding}
         />
-      </View>
+      </ScrollView>
     </ModalColumn>
   )
 }
