@@ -1,5 +1,5 @@
 import React, { AnchorHTMLAttributes, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
@@ -18,7 +18,6 @@ export interface LinkProps
   extends Omit<SpringAnimatedTouchableOpacityProps, 'analyticsLabel'> {
   allowEmptyLink?: boolean
   analyticsLabel?: SpringAnimatedTouchableOpacityProps['analyticsLabel']
-  animated?: boolean
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
   hoverBackgroundThemeColor?: keyof ThemeColors
@@ -32,7 +31,6 @@ export function Link(props: LinkProps) {
   const {
     allowEmptyLink,
     analyticsLabel,
-    animated,
     href,
     mobileProps,
     openOnNewTab = true,
@@ -80,7 +78,6 @@ export function Link(props: LinkProps) {
     }
   }
 
-  const ViewComponent = animated ? SpringAnimatedView : View
   const renderTouchable = href || allowEmptyLink
 
   let finalProps: any
@@ -128,8 +125,6 @@ export function Link(props: LinkProps) {
     })
   }
 
-  finalProps.style = StyleSheet.flatten(finalProps.style)
-
-  if (!renderTouchable) return <ViewComponent ref={ref} {...finalProps} />
+  if (!renderTouchable) return <SpringAnimatedView ref={ref} {...finalProps} />
   return <SpringAnimatedTouchableOpacity ref={ref} {...finalProps} />
 }

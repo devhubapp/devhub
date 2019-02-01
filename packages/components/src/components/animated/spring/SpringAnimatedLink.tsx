@@ -1,6 +1,6 @@
 import { Link, LinkProps } from '../../common/Link'
-import { createSpringAnimatedComponent } from './helpers'
 
 export interface SpringAnimatedLinkProps extends LinkProps {}
 
-export const SpringAnimatedLink = createSpringAnimatedComponent(Link)
+// Link internals already use spring animated components
+export const SpringAnimatedLink = Link
