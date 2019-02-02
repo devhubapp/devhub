@@ -12,7 +12,7 @@ export function findNode(ref: any) {
 
   if (node && (node as any)._node) node = (node as any)._node
 
-  if (Platform.OS === 'web') node = findDOMNode(node)
+  if (node && Platform.OS === 'web') node = findDOMNode(node)
 
   return node
 }
