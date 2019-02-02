@@ -72,15 +72,15 @@ export const Button = React.memo((props: ButtonProps) => {
       touchableBorderColor: useBrandColor
         ? colors.brandBackgroundColor
         : isHovered || isPressing
-        ? theme.backgroundColorLess2
-        : theme.backgroundColorLess1,
+        ? theme.backgroundColorLess3
+        : theme.backgroundColorLess2,
       innerContainerBackgroundColor: borderOnly
-        ? rgba(theme.backgroundColorLess1, 0)
+        ? rgba(theme.backgroundColorLess2, 0)
         : isHovered || isPressing
         ? useBrandColor
           ? theme.backgroundColorTransparent10
-          : theme.backgroundColorLess2
-        : rgba(theme.backgroundColorLess1, 0),
+          : theme.backgroundColorLess3
+        : rgba(theme.backgroundColorLess2, 0),
       textColor: useBrandColor
         ? colors.brandForegroundColor
         : borderOnly
@@ -118,7 +118,7 @@ export const Button = React.memo((props: ButtonProps) => {
             ? 'transparent'
             : useBrandColor
             ? colors.brandBackgroundColor
-            : springAnimatedTheme.backgroundColorLess1,
+            : springAnimatedTheme.backgroundColorLess2,
           borderColor: springAnimatedStyles.touchableBorderColor,
           borderWidth: borderOnly ? separatorSize : 0,
           borderRadius: radius,

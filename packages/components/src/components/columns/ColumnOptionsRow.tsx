@@ -23,6 +23,7 @@ import {
   TouchableOpacityProps,
 } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
+import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 
 export interface ColumnOptionsRowProps {
@@ -95,8 +96,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       native: true,
       backgroundColor:
         isHovered || isPressing || opened
-          ? theme.backgroundColorLess2
-          : theme.backgroundColorLess1,
+          ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
+          : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
     }
   }
 
