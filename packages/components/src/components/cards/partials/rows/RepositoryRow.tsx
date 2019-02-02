@@ -1,13 +1,13 @@
 import React from 'react'
 import { View } from 'react-native'
 
+import { getGitHubURLForRepo } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
-import { getRepositoryURL } from './helpers'
 import { cardRowStyles, getCardRowStylesForTheme } from './styles'
 
 export interface RepositoryRowProps {
@@ -69,7 +69,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           href={
             showMoreItemsIndicator
               ? undefined
-              : getRepositoryURL(ownerName, repositoryName)
+              : getGitHubURLForRepo(ownerName, repositoryName)
           }
           style={cardRowStyles.mainContentContainer}
         >

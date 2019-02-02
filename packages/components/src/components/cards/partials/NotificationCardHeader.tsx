@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import {
   getDateSmallText,
   getFullDateText,
+  getGitHubURLForUser,
   GitHubIcon,
   GitHubNotificationReason,
 } from '@devhub/core'
@@ -28,7 +29,6 @@ import { Label } from '../../common/Label'
 import { Link } from '../../common/Link'
 import { Spacer } from '../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../styles'
-import { getUserURL } from './rows/helpers'
 
 export interface NotificationCardHeaderProps {
   actionText: string
@@ -80,7 +80,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
     isSaved,
     reason,
     smallLeftColumn,
-    userLinkURL,
+    userLinkURL: _userLinkURL,
     username: _username,
   } = props
 
@@ -94,6 +94,8 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
 
   const reasonDetails = getNotificationReasonMetadata(reason)
   const username = isBot ? _username!.replace('[bot]', '') : _username
+
+  const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
   return (
     <View
@@ -122,7 +124,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
             <SpringAnimatedView style={cardStyles.horizontal}>
-              <Link href={getUserURL(username, { isBot })}>
+              <Link href={userLinkURL}>
                 <SpringAnimatedText
                   numberOfLines={1}
                   style={[

@@ -1,12 +1,12 @@
 import React from 'react'
 import { View } from 'react-native'
 
+import { getGitHubURLForUser } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
-import { getUserURL } from './helpers'
 import { cardRowStyles, getCardRowStylesForTheme } from './styles'
 
 export interface UserRowProps {
@@ -54,7 +54,9 @@ export const UserRow = React.memo((props: UserRowProps) => {
 
       <View style={cardStyles.rightColumn}>
         <Link
-          href={showMoreItemsIndicator ? undefined : getUserURL(username)}
+          href={
+            showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
+          }
           style={cardRowStyles.mainContentContainer}
         >
           <SpringAnimatedText

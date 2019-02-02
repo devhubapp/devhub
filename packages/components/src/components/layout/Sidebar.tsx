@@ -1,7 +1,11 @@
 import React from 'react'
 import { Image, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { getColumnHeaderDetails, ModalPayload } from '@devhub/core'
+import {
+  getColumnHeaderDetails,
+  getGitHubURLForUser,
+  ModalPayload,
+} from '@devhub/core'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -16,8 +20,6 @@ import {
   sidebarSize,
 } from '../../styles/variables'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { getUserURL } from '../cards/partials/rows/helpers'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
@@ -114,7 +116,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             >
               <Link
                 analyticsLabel="sidebar_user_avatar"
-                href={getUserURL(username!)}
+                href={getGitHubURLForUser(username!)}
                 openOnNewTab
                 style={[
                   styles.centerContainer,

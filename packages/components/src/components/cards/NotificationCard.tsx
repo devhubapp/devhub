@@ -163,7 +163,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     display_login: repoName,
     login: repoFullName,
     avatar_url: getUserAvatarByUsername(repoOwnerName || ''),
-    html_url: repo.html_url || getGitHubURLForRepo(repoFullName),
+    html_url: repo.html_url || getGitHubURLForRepo(repoOwnerName!, repoName!),
   }
   const actionText = ''
 
@@ -334,10 +334,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           userLinkURL=""
           username=""
           url={
-            isRepoInvitation && repo && repo.full_name
-              ? getGitHubURLForRepoInvitation(repo.full_name)
-              : isVulnerabilityAlert && repo && repo.full_name
-              ? getGitHubURLForSecurityAlert(repo.full_name)
+            isRepoInvitation && repoOwnerName && repoName
+              ? getGitHubURLForRepoInvitation(repoOwnerName, repoName)
+              : isVulnerabilityAlert && repoOwnerName && repoName
+              ? getGitHubURLForSecurityAlert(repoOwnerName, repoName)
               : fixURL(subject.latest_comment_url || subject.url)
           }
         />

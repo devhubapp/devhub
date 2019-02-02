@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { getGitHubURLForBranch } from '@devhub/core'
 import { View } from 'react-native'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
@@ -7,7 +8,6 @@ import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
-import { getBranchURL } from './helpers'
 import { cardRowStyles } from './styles'
 
 export interface BranchRowProps {
@@ -59,7 +59,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
 
       <View style={cardStyles.rightColumn}>
         <Link
-          href={getBranchURL(ownerName, repositoryName, branch)}
+          href={getGitHubURLForBranch(ownerName, repositoryName, branch)}
           style={cardRowStyles.mainContentContainer}
         >
           <SpringAnimatedText

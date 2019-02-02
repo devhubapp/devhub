@@ -2,7 +2,12 @@ import { MomentInput } from 'moment'
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { getDateSmallText, getFullDateText, GitHubIcon } from '@devhub/core'
+import {
+  getDateSmallText,
+  getFullDateText,
+  getGitHubURLForUser,
+  GitHubIcon,
+} from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
@@ -20,7 +25,6 @@ import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../styles'
-import { getUserURL } from './rows/helpers'
 
 export interface EventCardHeaderProps {
   actionText: string
@@ -70,7 +74,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     isRead,
     isSaved,
     smallLeftColumn,
-    userLinkURL,
+    userLinkURL: _userLinkURL,
     username: _username,
   } = props
 
@@ -83,6 +87,8 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   )
 
   const username = isBot ? _username!.replace('[bot]', '') : _username
+
+  const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
   return (
     <View
@@ -111,7 +117,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
             <SpringAnimatedView style={cardStyles.horizontal}>
-              <Link href={getUserURL(username, { isBot })}>
+              <Link href={userLinkURL}>
                 <SpringAnimatedText
                   numberOfLines={1}
                   style={

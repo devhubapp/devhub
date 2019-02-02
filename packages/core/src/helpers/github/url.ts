@@ -55,8 +55,10 @@ export const getRepoFullNameFromObject = (repo: GitHubRepo): string =>
       getRepoFullNameFromUrl(repo.html_url || repo.url))) ||
   ''
 
-export const getGitHubURLForUser = (user: string) =>
-  user ? `${baseURL}/${user}` : ''
+export const getGitHubURLForUser = (
+  username: string,
+  { isBot }: { isBot?: boolean } = {},
+) => (username ? `${baseURL}/${isBot ? 'apps/' : ''}${username}` : undefined)
 
 const objToQueryParams = (obj: { [key: string]: string | number }) =>
   Object.keys(obj)
@@ -67,8 +69,14 @@ export const getGitHubSearchURL = (queryParams: {
   [key: string]: string | number
 }) => (queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : '')
 
-export const getGitHubURLForBranch = (repoFullName: string, branch: string) =>
-  repoFullName && branch ? `${baseURL}/${repoFullName}/tree/${branch}` : ''
+export const getGitHubURLForBranch = (
+  ownerName: string,
+  repoName: string,
+  branch: string,
+) =>
+  ownerName && repoName && branch
+    ? `${baseURL}/${ownerName}/${repoName}/tree/${branch}`
+    : undefined
 
 export const getGitHubURLForRelease = (
   repoFullName: string,
@@ -80,14 +88,22 @@ export const getGitHubURLForRelease = (
       : `${baseURL}/${repoFullName}/releases`
     : ''
 
-export const getGitHubURLForRepo = (repoFullName: string) =>
-  repoFullName ? `${baseURL}/${repoFullName}` : ''
+export const getGitHubURLForRepo = (ownerName: string, repoName: string) =>
+  ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}` : undefined
 
-export const getGitHubURLForRepoInvitation = (repoFullName: string) =>
-  repoFullName ? `${baseURL}/${repoFullName}/invitations` : ''
+export const getGitHubURLForRepoInvitation = (
+  ownerName: string,
+  repoName: string,
+) =>
+  ownerName && repoName ? `${baseURL}/${ownerName}${repoName}/invitations` : ''
 
-export const getGitHubURLForSecurityAlert = (repoFullName: string) =>
-  repoFullName ? `${baseURL}/${repoFullName}/network/alerts` : ''
+export const getGitHubURLForSecurityAlert = (
+  ownerName: string,
+  repoName: string,
+) =>
+  ownerName && repoName
+    ? `${baseURL}/${ownerName}${repoName}/network/alerts`
+    : ''
 
 export const getGitHubAvatarURLFromPayload = (
   payload: any,

@@ -2,6 +2,8 @@ import React from 'react'
 import { PixelRatio, StyleProp, View } from 'react-native'
 
 import {
+  getGitHubURLForRepo,
+  getGitHubURLForUser,
   getUserAvatarByAvatarURL,
   getUserAvatarByEmail,
   getUserAvatarByUsername,
@@ -13,7 +15,6 @@ import {
   SpringAnimatedImageWithLoading,
   SpringAnimatedImageWithLoadingProps,
 } from '../animated/spring/SpringAnimatedImageWithLoading'
-import { getRepositoryURL, getUserURL } from '../cards/partials/rows/helpers'
 import { ConditionalWrap } from './ConditionalWrap'
 import { Link } from './Link'
 import { TouchableOpacityProps } from './TouchableOpacity'
@@ -90,8 +91,8 @@ export function Avatar(props: AvatarProps) {
     ? fixURL(linkURL)
     : username
     ? repo
-      ? getRepositoryURL(username, repo)
-      : getUserURL(username, { isBot })
+      ? getGitHubURLForRepo(username, repo)
+      : getGitHubURLForUser(username, { isBot })
     : undefined
 
   return (
