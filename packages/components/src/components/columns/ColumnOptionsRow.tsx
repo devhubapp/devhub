@@ -15,6 +15,7 @@ import {
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
+import { ConditionalWrap } from '../common/ConditionalWrap'
 import { separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import {
@@ -31,7 +32,8 @@ export interface ColumnOptionsRowProps {
   contentContainerStyle?: ViewStyle
   hasChanged: boolean
   iconName: GitHubIcon
-  onToggle: () => void
+  onToggle: (() => void) | undefined
+  openOnHover?: boolean
   opened: boolean
   subtitle?: string
   title: string
@@ -46,6 +48,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     hasChanged,
     iconName,
     onToggle,
+    openOnHover,
     opened,
     subtitle,
     title,
@@ -59,10 +62,15 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   })
 
   const touchableRef = useRef(null)
-  const initialIsHovered = useHover(touchableRef, isHovered => {
-    cacheRef.current.isHovered = isHovered
-    updateStyles()
-  })
+  const initialIsHovered = useHover(
+    onToggle ? touchableRef : null,
+    isHovered => {
+      cacheRef.current.isHovered = isHovered
+      updateStyles()
+
+      if (openOnHover && onToggle && !opened) onToggle()
+    },
+  )
 
   const cacheRef = useRef({
     isHovered: initialIsHovered,
@@ -106,25 +114,38 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         borderBottomColor: springAnimatedTheme.backgroundColorLess1,
       }}
     >
-      <TouchableOpacity
-        ref={touchableRef}
-        activeOpacity={1}
-        analyticsAction={opened ? 'hide' : 'show'}
-        analyticsCategory="option_row"
-        analyticsLabel={analyticsLabel}
-        onPress={() => onToggle()}
-        onPressIn={() => {
-          if (Platform.realOS === 'web') return
+      <ConditionalWrap
+        condition={!!onToggle}
+        wrap={child =>
+          onToggle ? (
+            <TouchableOpacity
+              ref={touchableRef}
+              activeOpacity={1}
+              analyticsAction={opened ? 'hide' : 'show'}
+              analyticsCategory="option_row"
+              analyticsLabel={analyticsLabel}
+              onPress={() => {
+                onToggle()
+              }}
+              onPressIn={() => {
+                if (Platform.realOS === 'web') return
 
-          cacheRef.current.isPressing = true
-          updateStyles()
-        }}
-        onPressOut={() => {
-          if (Platform.realOS === 'web') return
+                cacheRef.current.isPressing = true
+                updateStyles()
+              }}
+              onPressOut={() => {
+                if (Platform.realOS === 'web') return
 
-          cacheRef.current.isPressing = false
-          updateStyles()
-        }}
+                cacheRef.current.isPressing = false
+                updateStyles()
+              }}
+            >
+              {child}
+            </TouchableOpacity>
+          ) : (
+            <View>{child}</View>
+          )
+        }
       >
         <View
           style={[
@@ -171,17 +192,21 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             </SpringAnimatedText>
           )}
 
-          <Spacer width={contentPadding} />
+          {!!onToggle && (
+            <>
+              <Spacer width={contentPadding} />
 
-          <ColumnHeaderItem
-            analyticsLabel={undefined}
-            iconName={opened ? 'chevron-up' : 'chevron-down'}
-            iconStyle={{ lineHeight: undefined }}
-            noPadding
-            selectable={false}
-          />
+              <ColumnHeaderItem
+                analyticsLabel={undefined}
+                iconName={opened ? 'chevron-up' : 'chevron-down'}
+                iconStyle={{ lineHeight: undefined }}
+                noPadding
+                selectable={false}
+              />
+            </>
+          )}
         </View>
-      </TouchableOpacity>
+      </ConditionalWrap>
 
       <AccordionView property="height">
         {!!opened && (

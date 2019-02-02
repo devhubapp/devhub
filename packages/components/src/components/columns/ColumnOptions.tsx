@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import React, { useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import React, { useRef, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 
 import { Column, eventTypes, getEventTypeMetadata } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -8,7 +8,7 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import { contentPadding } from '../../styles/variables'
+import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import {
   filterRecordHasAnyForcedValue,
   filterRecordHasThisValue,
@@ -23,13 +23,6 @@ import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
-
-const styles = StyleSheet.create({
-  container: {
-    alignSelf: 'stretch',
-  },
-  scrollContainer: {},
-})
 
 const notificationReasonOptions = notificationReasons
   .map(getNotificationReasonMetadata)
@@ -46,7 +39,6 @@ export interface ColumnOptionsProps {
 }
 
 export type ColumnOptionCategory =
-  | 'cleared'
   | 'event_types'
   | 'notification_reasons'
   | 'privacy'
@@ -54,10 +46,29 @@ export type ColumnOptionCategory =
   | 'unread'
 
 export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
-  const [
-    openedOptionCategory,
-    setOpenedOptionCategory,
-  ] = useState<ColumnOptionCategory | null>(null)
+  const { availableHeight, column, columnIndex } = props
+
+  const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
+    column.type === 'activity' && 'event_types',
+    column.type === 'notifications' && 'notification_reasons',
+    'privacy',
+    'saved_for_later',
+    column.type === 'notifications' && 'unread',
+  ]
+
+  const allColumnOptionCategories = _allColumnOptionCategories.filter(
+    Boolean,
+  ) as ColumnOptionCategory[]
+
+  const [openedOptionCategories, setOpenedOptionCategories] = useState(
+    () => new Set<ColumnOptionCategory>([]),
+  )
+
+  const allIsOpen =
+    openedOptionCategories.size === allColumnOptionCategories.length
+  const allowOnlyOneCategoryToBeOpenedRef = useRef(true)
+  const allowToggleCategoriesRef = useRef(true)
+
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const hasPrivateAccess = useReduxState(
@@ -74,25 +85,28 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
-  const toggleOpenedOptionCategory = (
-    optionCategory: ColumnOptionCategory | null,
-  ) =>
-    setOpenedOptionCategory(
-      optionCategory === openedOptionCategory ? null : optionCategory,
-    )
+  const toggleOpenedOptionCategory = (optionCategory: ColumnOptionCategory) => {
+    setOpenedOptionCategories(set => {
+      const isOpen = set.has(optionCategory)
+      if (allowOnlyOneCategoryToBeOpenedRef.current) set.clear()
+      isOpen ? set.delete(optionCategory) : set.add(optionCategory)
 
-  const { availableHeight, column, columnIndex } = props
+      if (set.size === 0) allowOnlyOneCategoryToBeOpenedRef.current = true
+
+      return set
+    })
+  }
 
   return (
     <SpringAnimatedView
-      style={[
-        styles.container,
-        { backgroundColor: springAnimatedTheme.backgroundColorLess1 },
-      ]}
+      style={{
+        alignSelf: 'stretch',
+        backgroundColor: springAnimatedTheme.backgroundColorLess1,
+      }}
     >
       <ScrollView
         alwaysBounceVertical={false}
-        style={[styles.scrollContainer, { maxHeight: availableHeight }]}
+        style={{ maxHeight: availableHeight - columnHeaderHeight - 4 }}
       >
         {column.type === 'notifications' &&
           (() => {
@@ -112,10 +126,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="notification_reasons"
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 iconName="rss"
-                onToggle={() =>
-                  toggleOpenedOptionCategory('notification_reasons')
+                onToggle={
+                  allowToggleCategoriesRef.current
+                    ? () => toggleOpenedOptionCategory('notification_reasons')
+                    : undefined
                 }
-                opened={openedOptionCategory === 'notification_reasons'}
+                opened={openedOptionCategories.has('notification_reasons')}
                 title="Subscription reasons"
               >
                 {notificationReasonOptions.map(item => {
@@ -175,8 +191,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="event_types"
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 iconName="note"
-                onToggle={() => toggleOpenedOptionCategory('event_types')}
-                opened={openedOptionCategory === 'event_types'}
+                onToggle={
+                  allowToggleCategoriesRef.current
+                    ? () => toggleOpenedOptionCategory('event_types')
+                    : undefined
+                }
+                opened={openedOptionCategories.has('event_types')}
                 title="Event types"
               >
                 {eventTypeOptions.map(item => {
@@ -222,8 +242,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               analyticsLabel="saved_for_later"
               hasChanged={typeof savedForLater === 'boolean'}
               iconName="bookmark"
-              onToggle={() => toggleOpenedOptionCategory('saved_for_later')}
-              opened={openedOptionCategory === 'saved_for_later'}
+              onToggle={
+                allowToggleCategoriesRef.current
+                  ? () => toggleOpenedOptionCategory('saved_for_later')
+                  : undefined
+              }
+              opened={openedOptionCategories.has('saved_for_later')}
               subtitle={
                 savedForLater === true
                   ? 'Saved only'
@@ -278,8 +302,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     ? 'mail'
                     : 'mail-read'
                 }
-                onToggle={() => toggleOpenedOptionCategory('unread')}
-                opened={openedOptionCategory === 'unread'}
+                onToggle={
+                  allowToggleCategoriesRef.current
+                    ? () => toggleOpenedOptionCategory('unread')
+                    : undefined
+                }
+                opened={openedOptionCategories.has('unread')}
                 subtitle={
                   isReadChecked && !isUnreadChecked
                     ? 'Read only'
@@ -361,8 +389,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   ? 'globe'
                   : 'lock'
               }
-              onToggle={() => toggleOpenedOptionCategory('privacy')}
-              opened={openedOptionCategory === 'privacy'}
+              onToggle={
+                allowToggleCategoriesRef.current
+                  ? () => toggleOpenedOptionCategory('privacy')
+                  : undefined
+              }
+              opened={openedOptionCategories.has('privacy')}
               subtitle={
                 isPrivateChecked && !isPublicChecked
                   ? 'Private only'
@@ -412,47 +444,65 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             </ColumnOptionsRow>
           )
         })()}
-
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingHorizontal: contentPadding / 2,
-          }}
-        >
-          <ColumnHeaderItem
-            analyticsLabel="move_column_left"
-            enableForegroundHover
-            iconName="chevron-left"
-            onPress={() =>
-              moveColumn({
-                columnId: column.id,
-                columnIndex: columnIndex - 1,
-              })
-            }
-          />
-          <ColumnHeaderItem
-            analyticsLabel="move_column_right"
-            enableForegroundHover
-            iconName="chevron-right"
-            onPress={() =>
-              moveColumn({
-                columnId: column.id,
-                columnIndex: columnIndex + 1,
-              })
-            }
-          />
-
-          <Spacer flex={1} />
-
-          <ColumnHeaderItem
-            analyticsLabel="remove_column"
-            enableForegroundHover
-            iconName="trashcan"
-            onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
-            text="Remove"
-          />
-        </View>
       </ScrollView>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingHorizontal: contentPadding / 2,
+        }}
+      >
+        <ColumnHeaderItem
+          analyticsLabel="move_column_left"
+          enableForegroundHover
+          iconName="chevron-left"
+          onPress={() =>
+            moveColumn({
+              columnId: column.id,
+              columnIndex: columnIndex - 1,
+            })
+          }
+        />
+        <ColumnHeaderItem
+          analyticsLabel="move_column_right"
+          enableForegroundHover
+          iconName="chevron-right"
+          onPress={() =>
+            moveColumn({
+              columnId: column.id,
+              columnIndex: columnIndex + 1,
+            })
+          }
+        />
+
+        <Spacer flex={1} />
+
+        <ColumnHeaderItem
+          analyticsLabel={allIsOpen ? 'collapse_filters' : 'expand_filters'}
+          enableForegroundHover
+          iconName={allIsOpen ? 'fold' : 'unfold'}
+          onPress={() => {
+            if (allIsOpen) {
+              allowOnlyOneCategoryToBeOpenedRef.current = true
+
+              setOpenedOptionCategories(new Set([]))
+            } else {
+              allowOnlyOneCategoryToBeOpenedRef.current = false
+
+              setOpenedOptionCategories(new Set(allColumnOptionCategories))
+            }
+          }}
+          text={allIsOpen ? 'Collapse filters' : 'Expand filters'}
+        />
+
+        <ColumnHeaderItem
+          analyticsLabel="remove_column"
+          enableForegroundHover
+          iconName="trashcan"
+          onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
+          text="Remove"
+        />
+      </View>
       <CardItemSeparator />
     </SpringAnimatedView>
   )
