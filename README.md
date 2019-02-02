@@ -152,7 +152,8 @@ Alternatively, you can contribute using Gitpod, a free online dev environment fo
 
 ## Author
 
-Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
+Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)<br/>
+Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
 
 <a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=100" height="100" /></a>
 

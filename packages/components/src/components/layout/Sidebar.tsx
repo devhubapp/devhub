@@ -278,8 +278,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               style={[styles.centerContainer, !showLabel && itemContainerStyle]}
             >
               <Link
-                analyticsLabel="sidebar_logo"
-                href="https://github.com/devhubapp/devhub"
+                analyticsLabel="sidebar_devhub_logo_twitter"
+                href="https://twitter.com/devhub_app"
                 openOnNewTab
                 style={[styles.centerContainer, itemContainerStyle]}
               >
