@@ -340,7 +340,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
         <Spacer flex={1} minHeight={contentPadding} />
 
         <Link
-          analyticsLabel="about-private-access"
+          analyticsLabel="about_private_access_from_addcolumn"
           href="https://github.com/devhubapp/devhub/issues/32"
           openOnNewTab
         >
@@ -353,8 +353,8 @@ export function AddColumnModal(props: AddColumnModalProps) {
               textAlign: 'center',
             }}
           >
-            Support for private repositories is coming soon! Subscribe to this
-            issue if you want to be notified.
+            Coming soon: support for private repositories. Click here and
+            subscribe to this issue if you want to be notified.
           </SpringAnimatedText>
         </Link>
 

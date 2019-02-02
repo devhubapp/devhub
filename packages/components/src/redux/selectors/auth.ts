@@ -11,8 +11,9 @@ export const appTokenSelector = (state: RootState) => s(state).appToken
 export const githubScopeSelector = (state: RootState) =>
   s(state).user && s(state).user!.github.scope
 
-export const githubHasPrivateAccessSelector = (state: RootState) =>
-  !!githubScopeSelector(state) && githubScopeSelector(state)!.includes('repo')
+// TODO: Support private repositories after migrating to GitHub App
+// @see https://github.com/devhubapp/devhub/issues/32
+export const githubHasPrivateAccessSelector = (_state: RootState) => false
 
 export const githubTokenSelector = (state: RootState) =>
   s(state).user && s(state).user!.github.token

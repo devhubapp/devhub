@@ -14,6 +14,8 @@ import {
   isNotificationPrivate,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
+import { useReduxState } from '../../hooks/use-redux-state'
+import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import {
   getIssueIconAndColor,
@@ -46,6 +48,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const { notification, onlyOneRepository } = props
 
   const springAnimatedTheme = useSpringAnimatedTheme()
+  const hasPrivateAccess = useReduxState(
+    selectors.githubHasPrivateAccessSelector,
+  )
 
   if (!notification) return null
 
@@ -349,6 +354,21 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           url={comment.html_url}
           userLinkURL={comment.user.html_url || ''}
           username={comment.user.login}
+        />
+      )}
+
+      {!!(isPrivate && !hasPrivateAccess && !notification.enhanced) && (
+        <CommentRow
+          key={`notification-privacy-support-row-${notification.id}`}
+          analyticsLabel="about_private_access_from_notification"
+          avatarURL={undefined}
+          body="Coming soon: support for private notifications. Click here and subscribe to this issue if you want to be notified."
+          isRead
+          smallLeftColumn={smallLeftColumn}
+          url="https://github.com/devhubapp/devhub/issues/32"
+          userLinkURL={undefined}
+          username={undefined}
+          textStyle={{ fontStyle: 'italic' }}
         />
       )}
     </SpringAnimatedView>

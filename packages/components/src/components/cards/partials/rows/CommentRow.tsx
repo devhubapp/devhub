@@ -6,36 +6,41 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-
 import { Platform } from '../../../../libs/platform'
 import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
+import {
+  SpringAnimatedText,
+  SpringAnimatedTextProps,
+} from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
-import { Link } from '../../../common/Link'
+import { Link, LinkProps } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { cardRowStyles } from './styles'
 
 export interface CommentRowProps {
   addBottomAnchor?: boolean
-  avatarURL: string
+  analyticsLabel?: LinkProps['analyticsLabel']
+  avatarURL: string | undefined
   body: string
   isRead: boolean
   numberOfLines?: number
   smallLeftColumn?: boolean
+  textStyle?: SpringAnimatedTextProps['style']
   url?: string
-  userLinkURL: string
-  username: string
+  userLinkURL: string | undefined
+  username: string | undefined
 }
-
-export interface CommentRowState {}
 
 export const CommentRow = React.memo((props: CommentRowProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     addBottomAnchor,
+    analyticsLabel,
     avatarURL,
     body: _body,
     isRead,
     numberOfLines = 3,
     smallLeftColumn,
+    textStyle,
     url,
     userLinkURL,
     username,
@@ -72,6 +77,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
 
       <View style={cardStyles.rightColumn}>
         <Link
+          analyticsLabel={analyticsLabel}
           href={fixURL(url, { addBottomAnchor })}
           style={cardRowStyles.mainContentContainer}
         >
@@ -79,6 +85,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             numberOfLines={numberOfLines}
             style={[
               getCardStylesForTheme(springAnimatedTheme).commentText,
+              textStyle,
               isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >

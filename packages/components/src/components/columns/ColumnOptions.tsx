@@ -360,7 +360,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         {(() => {
           const isPrivateChecked =
             column.type === 'notifications'
-              ? !(column.filters && column.filters.private === false)
+              ? column.filters && column.filters.private === true
               : hasPrivateAccess &&
                 !(column.filters && column.filters.private === false)
 
@@ -368,8 +368,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             column.filters && column.filters.private === true
           )
 
-          const canShowPrivateContent =
-            hasPrivateAccess || column.type === 'notifications'
+          const canShowPrivateContent = hasPrivateAccess // || column.type === 'notifications'
 
           if (!canShowPrivateContent && !isPrivateChecked) return null
 

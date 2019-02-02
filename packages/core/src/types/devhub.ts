@@ -35,6 +35,7 @@ export interface NotificationPayloadEnhancement {
   issue?: GitHubIssue
   pullRequest?: GitHubPullRequest
   release?: GitHubRelease
+  enhanced?: boolean
 }
 
 export interface EnhancedGitHubNotification
