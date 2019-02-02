@@ -16,6 +16,6 @@
         android:adjustViewBounds="false"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:src="@drawable/logo_rounded"
+        android:src="@drawable/logo_circle"
         tools:ignore="ContentDescription" />
 </RelativeLayout>
