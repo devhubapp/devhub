@@ -55,7 +55,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     column.type === 'notifications' && 'notification_reasons',
     'privacy',
     'saved_for_later',
-    column.type === 'notifications' && 'unread',
+    'unread',
   ]
 
   const allColumnOptionCategories = _allColumnOptionCategories.filter(
@@ -281,81 +281,78 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           )
         })()}
 
-        {column.type === 'notifications' &&
-          (() => {
-            const isReadChecked = !(
-              column.filters && column.filters.unread === true
-            )
+        {(() => {
+          const isReadChecked = !(
+            column.filters && column.filters.unread === true
+          )
 
-            const isUnreadChecked = !(
-              column.filters && column.filters.unread === false
-            )
+          const isUnreadChecked = !(
+            column.filters && column.filters.unread === false
+          )
 
-            const getFilterValue = (read?: boolean, unread?: boolean) =>
-              read && unread ? undefined : read ? false : unread
+          const getFilterValue = (read?: boolean, unread?: boolean) =>
+            read && unread ? undefined : read ? false : unread
 
-            return (
-              <ColumnOptionsRow
-                analyticsLabel="read_status"
-                hasChanged={
-                  !!(
-                    column.filters && typeof column.filters.unread === 'boolean'
-                  )
-                }
-                iconName={
-                  column.filters && column.filters.unread === true
-                    ? 'mail'
-                    : 'mail-read'
-                }
-                onToggle={
-                  allowToggleCategoriesRef.current
-                    ? () => toggleOpenedOptionCategory('unread')
-                    : undefined
-                }
-                opened={openedOptionCategories.has('unread')}
-                subtitle={
-                  isReadChecked && !isUnreadChecked
-                    ? 'Read only'
-                    : !isReadChecked && isUnreadChecked
-                    ? 'Unread only'
-                    : ''
-                }
-                title="Read status"
-              >
-                <SpringAnimatedCheckbox
-                  analyticsLabel="read"
-                  checked={isReadChecked}
-                  containerStyle={{ flexGrow: 1 }}
-                  disabled={isReadChecked && !isUnreadChecked}
-                  label="Read"
-                  // labelIcon="mail-read"
-                  onChange={checked => {
-                    setColumnUnreadFilter({
-                      columnId: column.id,
-                      unread: getFilterValue(!!checked, isUnreadChecked),
-                    })
-                  }}
-                />
+          return (
+            <ColumnOptionsRow
+              analyticsLabel="read_status"
+              hasChanged={
+                !!(column.filters && typeof column.filters.unread === 'boolean')
+              }
+              iconName={
+                column.filters && column.filters.unread === true
+                  ? 'mail'
+                  : 'mail-read'
+              }
+              onToggle={
+                allowToggleCategoriesRef.current
+                  ? () => toggleOpenedOptionCategory('unread')
+                  : undefined
+              }
+              opened={openedOptionCategories.has('unread')}
+              subtitle={
+                isReadChecked && !isUnreadChecked
+                  ? 'Read only'
+                  : !isReadChecked && isUnreadChecked
+                  ? 'Unread only'
+                  : ''
+              }
+              title="Read status"
+            >
+              <SpringAnimatedCheckbox
+                analyticsLabel="read"
+                checked={isReadChecked}
+                containerStyle={{ flexGrow: 1 }}
+                disabled={isReadChecked && !isUnreadChecked}
+                label="Read"
+                // labelIcon="mail-read"
+                onChange={checked => {
+                  setColumnUnreadFilter({
+                    columnId: column.id,
+                    unread: getFilterValue(!!checked, isUnreadChecked),
+                  })
+                }}
+              />
 
-                <Spacer height={contentPadding / 2} />
+              <Spacer height={contentPadding / 2} />
 
-                <SpringAnimatedCheckbox
-                  analyticsLabel="unread"
-                  checked={isUnreadChecked}
-                  containerStyle={{ flexGrow: 1 }}
-                  disabled={isUnreadChecked && !isReadChecked}
-                  label="Unread"
-                  // labelIcon="mail"
-                  onChange={checked => {
-                    setColumnUnreadFilter({
-                      columnId: column.id,
-                      unread: getFilterValue(isReadChecked, !!checked),
-                    })
-                  }}
-                />
-              </ColumnOptionsRow>
-            )
-          })()}
+              <SpringAnimatedCheckbox
+                analyticsLabel="unread"
+                checked={isUnreadChecked}
+                containerStyle={{ flexGrow: 1 }}
+                disabled={isUnreadChecked && !isReadChecked}
+                label="Unread"
+                // labelIcon="mail"
+                onChange={checked => {
+                  setColumnUnreadFilter({
+                    columnId: column.id,
+                    unread: getFilterValue(isReadChecked, !!checked),
+                  })
+                }}
+              />
+            </ColumnOptionsRow>
+          )
+        })()}
 
         {(() => {
           const isPrivateChecked =

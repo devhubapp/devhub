@@ -47,8 +47,8 @@ export function itemPassesFilterRecord(
     : defaultValue
 }
 
-export function activityColumnHasAnyFilter(
-  filters: ActivityColumnFilters | undefined,
+function baseColumnHasAnyFilter(
+  filters: NotificationColumnFilters | undefined,
   hasPrivateAccess: boolean,
 ) {
   if (!filters) return false
@@ -58,6 +58,18 @@ export function activityColumnHasAnyFilter(
   if (!hasPrivateAccess && filters.private === true) return true
 
   if (typeof filters.saved === 'boolean') return true
+  if (typeof filters.unread === 'boolean') return true
+
+  return false
+}
+
+export function activityColumnHasAnyFilter(
+  filters: ActivityColumnFilters | undefined,
+  hasPrivateAccess: boolean,
+) {
+  if (!filters) return false
+
+  if (baseColumnHasAnyFilter(filters, hasPrivateAccess)) return true
 
   if (
     filters.activity &&
@@ -75,12 +87,7 @@ export function notificationColumnHasAnyFilter(
 ) {
   if (!filters) return false
 
-  if (filters.clearedAt) return true
-  if (hasPrivateAccess && typeof filters.private === 'boolean') return true
-  if (!hasPrivateAccess && filters.private === true) return true
-
-  if (typeof filters.saved === 'boolean') return true
-  if (typeof filters.unread === 'boolean') return true
+  if (baseColumnHasAnyFilter(filters, hasPrivateAccess)) return true
 
   if (
     filters.notifications &&
@@ -171,6 +178,13 @@ export function getFilteredEvents(
     _events = _events.filter(event => {
       if (!itemPassesFilterRecord(activityFilter, event.type, true))
         return false
+
+      if (
+        typeof filters.unread === 'boolean' &&
+        filters.unread !== !isItemRead(event)
+      ) {
+        return false
+      }
 
       if (
         (!hasPrivateAccess && isEventPrivate(event)) ||

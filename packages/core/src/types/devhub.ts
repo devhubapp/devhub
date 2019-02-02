@@ -167,6 +167,7 @@ export interface BaseColumnFilters {
   //   regex?: string
   // }
   // sort?: string[]
+  unread?: boolean
 }
 
 export interface ActivityColumnFilters extends BaseColumnFilters {
@@ -179,7 +180,6 @@ export interface NotificationColumnFilters extends BaseColumnFilters {
   notifications?: {
     reasons?: Partial<Record<GitHubNotificationReason, boolean>>
   }
-  unread?: boolean
 }
 
 export type ColumnFilters = ActivityColumnFilters | NotificationColumnFilters
