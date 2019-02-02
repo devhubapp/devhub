@@ -36,6 +36,7 @@ export interface ColumnOptionsProps {
   availableHeight: number
   column: Column
   columnIndex: number
+  startWithFiltersExpanded?: boolean
 }
 
 export type ColumnOptionCategory =
@@ -47,6 +48,7 @@ export type ColumnOptionCategory =
 
 export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const { availableHeight, column, columnIndex } = props
+  const { startWithFiltersExpanded = availableHeight >= 700 } = props
 
   const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
     column.type === 'activity' && 'event_types',
@@ -61,12 +63,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   ) as ColumnOptionCategory[]
 
   const [openedOptionCategories, setOpenedOptionCategories] = useState(
-    () => new Set<ColumnOptionCategory>([]),
+    () =>
+      new Set<ColumnOptionCategory>(
+        startWithFiltersExpanded ? allColumnOptionCategories : [],
+      ),
   )
 
   const allIsOpen =
     openedOptionCategories.size === allColumnOptionCategories.length
-  const allowOnlyOneCategoryToBeOpenedRef = useRef(true)
+  const allowOnlyOneCategoryToBeOpenedRef = useRef(!allIsOpen)
   const allowToggleCategoriesRef = useRef(true)
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
