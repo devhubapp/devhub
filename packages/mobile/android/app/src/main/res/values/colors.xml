@@ -7,11 +7,9 @@
     <color name="brand_background">#49d3b4</color>
     <color name="brand_foreground">#141C26</color>
 
-    <color name="background_color_dark">#292c33</color>
-    <color name="background_color_less08_dark">#3b404a</color>
-    <color name="foreground_color_dark">#f9fafb</color>
+    <color name="background_color_dark">#242B38</color>
+    <color name="foreground_color_dark">#E9ECF1</color>
 
-    <color name="background_color_light">#F0F0F0</color>
-    <color name="background_color_less08_light">#dcdcdc</color>
-    <color name="foreground_color_light">#242424</color>
+    <color name="background_color_light">#ECF0F1</color>
+    <color name="foreground_color_light">#283436</color>
 </resources>
