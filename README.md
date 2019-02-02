@@ -157,6 +157,9 @@ Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
 
 <a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=100" height="100" /></a>
 
+BTC: `3KpFKpbEhXsNfTGXRA3P4psxxXd9gNSXzH`<br/>
+ETH: `0x1f6314A3F01A2f579369bD04B507166fe45b2880`
+
 <br/>
 
 ## License
