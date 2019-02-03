@@ -1,6 +1,6 @@
 {
   "name": "@devhub/mobile",
-  "version": "0.45.1",
+  "version": "0.45.2",
   "private": false,
   "scripts": {
     "clean": "cd .",
@@ -15,7 +15,7 @@
     "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
-    "@devhub/components": "0.45.1",
+    "@devhub/components": "0.45.2",
     "jsc-android": "236355.1.1",
     "metro-react-native-babel-preset": "^0.51.0",
     "react": "16.7.0-alpha.2",
