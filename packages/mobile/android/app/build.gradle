@@ -103,7 +103,7 @@ android {
         applicationId "com.devhubapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1348
+        versionCode 1362
         versionName "0.45.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
