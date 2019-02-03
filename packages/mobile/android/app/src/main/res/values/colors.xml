@@ -10,6 +10,6 @@
     <color name="background_color_dark">#242B38</color>
     <color name="foreground_color_dark">#E9ECF1</color>
 
-    <color name="background_color_light">#ECF0F1</color>
-    <color name="foreground_color_light">#283436</color>
+    <color name="background_color_light">#FBFBFB</color>
+    <color name="foreground_color_light">#3C3C3C</color>
 </resources>
