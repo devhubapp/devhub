@@ -5,7 +5,7 @@
   <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
 </p>
 
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/52172996-29054400-2762-11e9-801e-1dfd2125ac17.gif)
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/52172965-b3997380-2761-11e9-80ec-902d6d854917.jpg)
 
 <p align="center">
   <img alt="DevHub Mobile - Notifications" height="460" src="https://user-images.githubusercontent.com/619186/52172527-5cdb6c00-2758-11e9-9f2c-d7c28b523045.png" />
