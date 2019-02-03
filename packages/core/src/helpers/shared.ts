@@ -22,7 +22,7 @@ export function guid() {
 
 export function isNight() {
   const hours = new Date().getHours()
-  return hours >= 18 || hours <= 6
+  return hours >= 18 || hours < 6
 }
 
 export function getFullDateText(date: MomentInput) {
