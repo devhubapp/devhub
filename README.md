@@ -1,19 +1,17 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/619186/49823485-eed18480-fd66-11e8-88c0-700d840ad4f1.png" height="100" /><br/>
+  <img src="https://user-images.githubusercontent.com/619186/52172760-33710f00-275d-11e9-9adb-8ea4209e4453.png" height="100" /><br/>
   <span><b>DevHub</b>: <span>TweetDeck for GitHub <i>[BETA]</i></span><br/>
   <span><a href="https://play.google.com/store/apps/details?id=com.devhubapp" target="_blank">Android</a>, <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8" target="_blank">iOS</a>, <a href="https://devhubapp.com/" target="_blank">Web</a> & <a href="https://github.com/devhubapp/devhub/releases" target="_self">Desktop</a> with <b>95%+ code sharing</b> between them<br/><i>thanks to React Native + React Native Web</i></span><br/>
   <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
 </p>
 
-[![DevHub Desktop](https://user-images.githubusercontent.com/619186/51652101-900e4600-1f75-11e9-9704-4f63e89fb9b9.jpg)](https://devhubapp.com/)
-
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/52172965-b3997380-2761-11e9-80ec-902d6d854917.jpg)
 
 <p align="center">
-  <a href="https://devhubapp.com/" target="_blank">
-  <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/49802010-ebbca100-fd32-11e8-94d6-e8efb1b5dda8.PNG" />
-  <img alt="DevHub Mobile - Event Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802011-ebbca100-fd32-11e8-80c1-5d7cad609e7b.png" />
-  <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802012-ebbca100-fd32-11e8-8740-54ac8741edec.PNG" />
-  </a>
+  <img alt="DevHub Mobile - Notifications" height="460" src="https://user-images.githubusercontent.com/619186/52172527-5cdb6c00-2758-11e9-9f2c-d7c28b523045.png" />
+  <img alt="DevHub Mobile - Notification Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172528-5cdb6c00-2758-11e9-9072-4ae96c3c1795.png" />
+  <img alt="DevHub Mobile - Events" height="460" src="https://user-images.githubusercontent.com/619186/52172529-5cdb6c00-2758-11e9-999e-322f67d44fe1.png" />
+  <img alt="DevHub Mobile - Event Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172530-5cdb6c00-2758-11e9-86cf-291a30c37c96.png" />
 </p>
 
 <br/>
