@@ -150,7 +150,7 @@ dependencies {
     implementation 'com.facebook.react:react-native:+'  // From node_modules
 
     implementation project(':react-native-firebase')
-    implementation 'com.google.android.gms:play-services-base:16.1.0'
+    implementation 'com.google.android.gms:play-services-base:16.0.1'
     implementation 'com.google.firebase:firebase-core:16.0.7'
 
     implementation project(':react-native-google-analytics-bridge')
