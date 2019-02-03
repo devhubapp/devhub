@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/619186/52172760-33710f00-275d-11e9-9adb-8ea4209e4453.png" height="100" /><br/>
-  <span><b>DevHub</b>: <span>TweetDeck for GitHub <i>[BETA]</i></span><br/>
+  <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
   <span><a href="https://play.google.com/store/apps/details?id=com.devhubapp" target="_blank">Android</a>, <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8" target="_blank">iOS</a>, <a href="https://devhubapp.com/" target="_blank">Web</a> & <a href="https://github.com/devhubapp/devhub/releases" target="_self">Desktop</a> with <b>95%+ code sharing</b> between them<br/><i>thanks to React Native + React Native Web</i></span><br/>
   <p align="center">
     <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=github_repo" target="_blank"><img alt="Download on the App Store" height="50" src="https://user-images.githubusercontent.com/619186/52173137-d416fd00-2764-11e9-98c1-77607061f188.png" /></a>
