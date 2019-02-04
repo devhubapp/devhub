@@ -6,7 +6,7 @@ import '../libs/analytics'
 
 import { HelmetProvider } from '../libs/helmet'
 import { AppNavigator } from '../navigation/AppNavigator'
-import { enableAxiosNetworkInterceptor } from '../network-interceptor'
+import { enableNetworkInterceptors } from '../network-interceptor'
 import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
@@ -15,7 +15,7 @@ import { DimensionsProvider } from './context/DimensionsContext'
 import { AppLayoutProvider } from './context/LayoutContext'
 import { SpringAnimatedThemeProvider } from './context/SpringAnimatedThemeContext'
 
-enableAxiosNetworkInterceptor()
+enableNetworkInterceptors()
 
 const { persistor, store } = configureStore()
 
