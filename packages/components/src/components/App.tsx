@@ -3,8 +3,10 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import '../libs/analytics'
+
 import { HelmetProvider } from '../libs/helmet'
 import { AppNavigator } from '../navigation/AppNavigator'
+import { enableAxiosNetworkInterceptor } from '../network-interceptor'
 import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
@@ -12,6 +14,8 @@ import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DimensionsProvider } from './context/DimensionsContext'
 import { AppLayoutProvider } from './context/LayoutContext'
 import { SpringAnimatedThemeProvider } from './context/SpringAnimatedThemeContext'
+
+enableAxiosNetworkInterceptor()
 
 const { persistor, store } = configureStore()
 
