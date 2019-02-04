@@ -56,6 +56,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - Support for private repositories
 - Support for GitHub Enterprise
 - Push notifications
+- Unlimited number of columns and workspaces
 
 ##### Why is this app not completely free?
 
@@ -63,7 +64,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
 
-> Any suggestion? [Open an issue](https://github.com/devhubapp/devhub/issues/new)!
+> [Join the discussion](https://github.com/devhubapp/devhub/issues/106)!
 
 
 <br/>
