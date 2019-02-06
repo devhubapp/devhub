@@ -98,7 +98,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
       if (set.size === 0) allowOnlyOneCategoryToBeOpenedRef.current = true
 
-      return set
+      return new Set(set)
     })
   }
 
