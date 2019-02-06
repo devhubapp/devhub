@@ -18,14 +18,11 @@
     "@devhub/components": "0.45.2",
     "jsc-android": "236355.1.1",
     "metro-react-native-babel-preset": "^0.51.0",
-    "react": "16.7.0-alpha.2",
-    "react-native": "npm:@brunolemos/react-native",
+    "react": "16.8.1",
+    "react-native": "npm:@brunolemos/react-native@latest",
     "react-native-firebase": "^5.1.1",
     "react-native-google-analytics-bridge": "^7.0.0",
     "react-native-screens": "^1.0.0-alpha.16"
-  },
-  "resolutions": {
-    "scheduler": "0.12.0"
   },
   "jest": {
     "preset": "react-native",

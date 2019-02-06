@@ -200,9 +200,12 @@ new file mode 100644
 +export * from './hooks'
 --- a/node_modules/react-spring/native-hooks.js
 +++ b/node_modules/react-spring/native-hooks.js
-@@ -4,7 +4,7 @@ import _extends from '@babel/runtime/helpers/esm/extends';
+@@ -2,9 +2,9 @@ import _inheritsLoose from '@babel/runtime/helpers/esm/inheritsLoose';
+ import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitialized';
+ import _extends from '@babel/runtime/helpers/esm/extends';
  import _objectWithoutPropertiesLoose from '@babel/runtime/helpers/esm/objectWithoutPropertiesLoose';
- import React, { useRef, useState, useImperativeMethods, useEffect, useCallback, useMemo } from 'react';
+-import React, { useRef, useState, useImperativeMethods, useEffect, useCallback, useMemo } from 'react';
++import React, { useRef, useState, useImperativeHandle, useEffect, useCallback, useMemo } from 'react';
  import _createClass from '@babel/runtime/helpers/esm/createClass';
 -import { View } from 'react-native';
 +import { StyleSheet, View } from 'react-native';
@@ -387,6 +390,33 @@ new file mode 100644
  var KeyframeController =
  /*#__PURE__*/
  function () {
+@@ -1736,7 +1797,7 @@ var useSpringImpl = function useSpringImpl(type) {
+     }; // The hooks explcit API gets defined here ...
+ 
+ 
+-    useImperativeMethods(props.ref, function () {
++    useImperativeHandle(props.ref, function () {
+       return {
+         start: function start() {
+           return ctrl.start(onHalt);
+@@ -1844,7 +1905,7 @@ var useSpringsImpl = function useSpringsImpl(type, trail) {
+       return null;
+     }; // The hooks explcit API gets defined here ...
+ 
+-    useImperativeMethods(rest.ref, function () {
++    useImperativeHandle(rest.ref, function () {
+       return {
+         start: function start() {
+           return Promise.all(Array.from(instancesRef.current).map(function (_ref2, i) {
+@@ -2188,7 +2249,7 @@ function useTransition(props) {
+       first: true
+     }, rest);
+   }, [items, mapKeys(items, _currentKeys).join('')]);
+-  useImperativeMethods(ref, function () {
++  useImperativeHandle(ref, function () {
+     return {
+       start: function start() {
+         return Promise.all(Array.from(instances.current).map(function (_ref11) {
 @@ -2366,7 +2427,7 @@ injectApplyAnimatedValues(function (instance, props) {
    });
  });

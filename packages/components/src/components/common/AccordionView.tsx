@@ -1,4 +1,4 @@
-import React, { useImperativeMethods, useRef, useState } from 'react'
+import React, { useImperativeHandle, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import {
   config,
@@ -60,7 +60,7 @@ export const AccordionView = React.forwardRef(
       },
     })
 
-    useImperativeMethods(ref, () => ({
+    useImperativeHandle(ref, () => ({
       setOnFinishListener: (callback: null | (() => void)) => {
         onFinishRef.current = callback
       },
