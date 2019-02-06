@@ -34,6 +34,7 @@ export const RowList = React.memo((props: RowListProps<any>) => {
       alwaysBounceVertical={false}
       containerStyle={{
         flex: 0,
+        flexBasis: 'auto',
         flexGrow: 1,
         marginBottom: -(narrow ? contentPadding / 2 : contentPadding),
       }}
