@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { config, ReactSpringHook, useTransition } from 'react-spring/native'
 
@@ -8,9 +8,11 @@ import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 export type Transition = ReactSpringHook
 
 export interface AccordionViewProps {
+  accordionKey: string
   children: React.ReactNode
   fixedSize?: number
   property: 'width' | 'height'
+  skipFirst?: boolean
 }
 
 export interface AccordionView {
@@ -20,18 +22,26 @@ export interface AccordionView {
   unlock: () => void
 }
 
-export const AccordionView = React.forwardRef(
-  (props: AccordionViewProps, ref) => {
-    const { children, fixedSize, property } = props
+export const AccordionView = React.memo(
+  React.forwardRef((props: AccordionViewProps, ref) => {
+    const { accordionKey, children, fixedSize, property, skipFirst } = props
 
+    const openCountRef = useRef(0)
     const onFinishRef = useRef<null | (() => void)>(null)
 
     const contentSize = useRef({ width: 0, height: 0 })
     const [size, setSize] = useState<number | 'auto'>(fixedSize || 0)
 
+    useEffect(
+      () => {
+        openCountRef.current = openCountRef.current + 1
+      },
+      [!!children],
+    )
+
     const transitions = useTransition(
       children ? [children] : [],
-      () => 'accordion-view',
+      () => accordionKey,
       {
         from: { [property]: 0 },
         enter: { [property]: children ? size : 0 },
@@ -40,13 +50,9 @@ export const AccordionView = React.forwardRef(
         },
         leave: { [property]: 0 },
         config: { ...config.default, precision: 1 },
+        immediate: openCountRef.current === 1 && skipFirst,
         force: false,
         unique: true,
-        // TODO: API was changed on v8.
-        // Reimplement this or make this hack unnecessary,
-        // fix the nested accordion animation use case in a different way
-        // @see https://github.com/react-spring/react-spring/issues/512
-        /*
         onRest: (
           _e: any,
           state: string,
@@ -60,25 +66,28 @@ export const AccordionView = React.forwardRef(
             onFinishRef.current()
           }
         },
-        */
       },
     )
 
-    useImperativeHandle(ref, () => ({
-      setOnFinishListener: (callback: null | (() => void)) => {
-        onFinishRef.current = callback
-      },
-      isLocked: () => {
-        return size === 'auto'
-      },
-      lock: () => {
-        if (size !== 'auto') setSize('auto')
-      },
-      unlock: () => {
-        if (size !== contentSize.current[property])
-          setSize(contentSize.current[property])
-      },
-    }))
+    useImperativeHandle(
+      ref,
+      () => ({
+        setOnFinishListener: (callback: null | (() => void)) => {
+          onFinishRef.current = callback
+        },
+        isLocked: () => {
+          return size === 'auto'
+        },
+        lock: () => {
+          if (size !== 'auto') setSize('auto')
+        },
+        unlock: () => {
+          if (size !== contentSize.current[property])
+            setSize(contentSize.current[property])
+        },
+      }),
+      [size],
+    )
 
     const handleContentSizeChange = (width: number, height: number) => {
       contentSize.current = { width, height }
@@ -94,10 +103,12 @@ export const AccordionView = React.forwardRef(
         {transitions.map(({ key, item, props: animatedStyle }) => (
           <SpringAnimatedView
             key={key}
-            style={{
-              ...(animatedStyle as any),
-              overflow: 'hidden',
-            }}
+            style={[
+              animatedStyle as any,
+              {
+                overflow: 'hidden',
+              },
+            ]}
           >
             {Platform.OS === 'web' ? (
               <View
@@ -123,5 +134,5 @@ export const AccordionView = React.forwardRef(
         ))}
       </>
     )
-  },
+  }),
 )

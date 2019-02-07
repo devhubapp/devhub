@@ -208,7 +208,11 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         </View>
       </ConditionalWrap>
 
-      <AccordionView property="height">
+      <AccordionView
+        accordionKey={`accordion-view-column-options-row-${title}}`}
+        property="height"
+        skipFirst={opened}
+      >
         {!!opened && (
           <View
             style={[

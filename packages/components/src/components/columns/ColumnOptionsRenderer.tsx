@@ -87,7 +87,11 @@ export const ColumnOptionsRenderer = React.memo(
             zIndex: 200,
           }}
         >
-          <AccordionView ref={accordionRef} property="height">
+          <AccordionView
+            ref={accordionRef}
+            accordionKey="accordion-view-column-options-rendered"
+            property="height"
+          >
             {!!visible && (
               <ColumnOptions
                 availableHeight={
