@@ -12,19 +12,20 @@ import { Spacer } from './Spacer'
 export interface SubHeaderProps {
   children?: React.ReactNode
   iconName?: ColumnHeaderItemProps['iconName']
+  muted?: boolean
   title?: ColumnHeaderItemProps['title']
 }
 
 export function SubHeader(props: SubHeaderProps) {
-  const { children, iconName, title } = props
+  const { children, iconName, muted, title } = props
 
   return (
     <SpringAnimatedView
       style={{
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         alignSelf: 'stretch',
         alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
         padding: contentPadding,
       }}
     >
@@ -41,9 +42,11 @@ export function SubHeader(props: SubHeaderProps) {
 
       {!!iconName && !!title && <Spacer width={contentPadding / 2} />}
 
-      {!!title && <H2 withMargin={false}>{title}</H2>}
-
-      <Spacer flex={1} minWidth={contentPadding / 2} />
+      {!!title && (
+        <H2 muted={muted} withMargin={false}>
+          {title}
+        </H2>
+      )}
 
       {children}
     </SpringAnimatedView>

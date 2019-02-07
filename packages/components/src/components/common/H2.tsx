@@ -5,12 +5,16 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 
-export type H2Props = TextProps & { children: string; withMargin?: boolean }
+export type H2Props = TextProps & {
+  children: string
+  muted?: boolean
+  withMargin?: boolean
+}
 
 export function H2(props: H2Props) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const { children, style, withMargin, ...otherProps } = props
+  const { children, muted, style, withMargin, ...otherProps } = props
 
   return (
     <SpringAnimatedText
@@ -19,7 +23,9 @@ export function H2(props: H2Props) {
         {
           marginBottom: withMargin ? contentPadding : undefined,
           fontWeight: '600',
-          color: springAnimatedTheme.foregroundColor,
+          color: muted
+            ? springAnimatedTheme.foregroundColorMuted50
+            : springAnimatedTheme.foregroundColor,
         },
         style,
       ]}

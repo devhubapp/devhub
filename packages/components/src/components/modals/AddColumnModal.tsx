@@ -22,6 +22,7 @@ import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimate
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { fabSize } from '../common/FAB'
+import { H2 } from '../common/H2'
 import { Link } from '../common/Link'
 import { separatorTickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
@@ -42,8 +43,10 @@ const columnTypes: Array<{
   items: Array<{
     title: string
     icon: GitHubIcon
-    payload: AddColumnDetailsPayload
+    payload: AddColumnDetailsPayload | null
   }>
+  soon?: boolean
+  soonLink?: string
 }> = [
   {
     title: 'Notifications',
@@ -137,6 +140,25 @@ const columnTypes: Array<{
       },
     ],
   },
+  {
+    soon: true,
+    soonLink: 'https://github.com/devhubapp/devhub/issues/110',
+    title: 'Issue & PR Management',
+    type: 'activity', // TODO
+    icon: 'issue-opened',
+    items: [
+      {
+        title: 'Issues',
+        icon: 'issue-opened',
+        payload: null,
+      },
+      {
+        title: 'Pull Requests',
+        icon: 'git-pull-request',
+        payload: null,
+      },
+    ],
+  },
 ]
 
 function AddColumnModalItem({
@@ -149,7 +171,7 @@ function AddColumnModalItem({
   availableWidth: number
   disabled?: boolean
   icon: GitHubIcon
-  payload: AddColumnDetailsPayload
+  payload: AddColumnDetailsPayload | null
   title: string
 }) {
   const initialTheme = useTheme(theme => {
@@ -205,12 +227,15 @@ function AddColumnModalItem({
     <SpringAnimatedTouchableOpacity
       ref={touchableRef}
       analyticsLabel={undefined}
-      disabled={disabled}
-      onPress={() =>
-        pushModal({
-          name: 'ADD_COLUMN_DETAILS',
-          params: payload,
-        })
+      disabled={disabled || !payload}
+      onPress={
+        payload
+          ? () =>
+              pushModal({
+                name: 'ADD_COLUMN_DETAILS',
+                params: payload,
+              })
+          : undefined
       }
       onPressIn={() => {
         if (Platform.realOS === 'web') return
@@ -294,7 +319,21 @@ export function AddColumnModal(props: AddColumnModalProps) {
       >
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
-            <SubHeader title={group.title} />
+            <SubHeader muted={group.soon} title={group.title}>
+              {!!group.soon && (
+                <Link
+                  analyticsLabel={`add-column-${group.title}-soon`}
+                  href={group.soonLink}
+                >
+                  <H2
+                    muted
+                    withMargin={false}
+                    children=" (soon)"
+                    style={{ flex: 1 }}
+                  />
+                </Link>
+              )}
+            </SubHeader>
 
             <View
               style={{
@@ -309,7 +348,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
                 <AddColumnModalItem
                   key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
                   availableWidth={availableWidth}
-                  disabled={hasReachedColumnLimit}
+                  disabled={hasReachedColumnLimit || !item.payload}
                   icon={item.icon}
                   payload={item.payload}
                   title={item.title}
