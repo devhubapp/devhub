@@ -110,19 +110,6 @@ const columnTypes: Array<{
         },
       },
       {
-        title: 'Organization',
-        icon: 'organization',
-        payload: {
-          icon: 'organization',
-          title: 'Organization activity',
-          subscription: {
-            type: 'activity',
-            subtype: 'ORG_PUBLIC_EVENTS',
-          },
-          paramList: ['org'],
-        },
-      },
-      {
         title: 'Repository',
         icon: 'repo',
         payload: {
@@ -133,6 +120,19 @@ const columnTypes: Array<{
             subtype: 'REPO_EVENTS',
           },
           paramList: ['owner', 'repo'],
+        },
+      },
+      {
+        title: 'Organization',
+        icon: 'organization',
+        payload: {
+          icon: 'organization',
+          title: 'Organization activity',
+          subscription: {
+            type: 'activity',
+            subtype: 'ORG_PUBLIC_EVENTS',
+          },
+          paramList: ['org'],
         },
       },
     ],
