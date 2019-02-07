@@ -8,6 +8,7 @@ import {
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
+import { getLuminanceDifference } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -49,19 +50,27 @@ export function Label(props: LabelProps) {
     textProps = {},
   } = props
 
-  const color =
-    _color ||
-    (muted
-      ? springAnimatedTheme.foregroundColorMuted50
-      : springAnimatedTheme.foregroundColor)
+  const _colorLuminanceDiff = _color
+    ? Math.abs(getLuminanceDifference(_color, theme.backgroundColor))
+    : 0
+
+  const _readableColor =
+    _color &&
+    (outline && _colorLuminanceDiff < 0.4
+      ? theme.isDark
+        ? lighten(0.6 - _colorLuminanceDiff, _color)
+        : darken(0.6 - _colorLuminanceDiff, _color)
+      : _color)
+
+  const color = _readableColor || springAnimatedTheme.foregroundColor
 
   const foregroundColor =
     _textColor ||
     (outline && color) ||
-    (_color
-      ? getLuminance(_color) > 0.4
-        ? darken(0.9, _color)
-        : lighten(0.9, _color)
+    (_readableColor
+      ? getLuminance(_readableColor) > 0.4
+        ? darken(0.9, _readableColor)
+        : lighten(0.9, _readableColor)
       : springAnimatedTheme.foregroundColor)
 
   return (
@@ -78,11 +87,12 @@ export function Label(props: LabelProps) {
         {
           borderColor: borderColor || color,
           backgroundColor: outline
-            ? _color
+            ? _readableColor
               ? springAnimatedTheme.backgroundColor
               : undefined
             : color,
         },
+        muted && { opacity: mutedOpacity },
         Boolean(radius) && { borderRadius: radius },
       ]}
     >
@@ -96,7 +106,6 @@ export function Label(props: LabelProps) {
             color: foregroundColor,
           },
           textProps && textProps.style,
-          muted && { opacity: mutedOpacity },
         ]}
       >
         {Boolean(isPrivate) && (

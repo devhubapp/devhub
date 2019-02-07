@@ -10,7 +10,7 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
-import { contentPadding } from '../../../../styles/variables'
+import { contentPadding, mutedOpacity } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import {
   SpringAnimatedIcon,
@@ -129,6 +129,7 @@ export const IssueOrPullRequestRow = React.memo(
                     getCardStylesForTheme(springAnimatedTheme).normalText,
                     getCardStylesForTheme(springAnimatedTheme).icon,
                     { color: iconColor },
+                    isRead && { opacity: mutedOpacity },
                   ]}
                 />{' '}
                 {title}
@@ -156,6 +157,7 @@ export const IssueOrPullRequestRow = React.memo(
                           alignSelf: 'flex-start',
                           margin: contentPadding / 4,
                         }}
+                        muted={isRead}
                         outline={isRead}
                         small
                       >

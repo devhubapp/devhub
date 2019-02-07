@@ -210,6 +210,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   color={reasonDetails.color}
                   containerStyle={{ alignSelf: 'flex-start' }}
                   isPrivate={isPrivate}
+                  muted={isRead}
                   outline={isRead}
                   small
                   textProps={{ style: { paddingBottom: 1 } }}

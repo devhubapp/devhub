@@ -43,6 +43,7 @@ export const NotificationReasonRow = React.memo(
             color={labelColor}
             containerStyle={{ alignSelf: 'flex-start' }}
             isPrivate={isPrivate}
+            muted={isRead}
             outline
             textProps={{ numberOfLines: 1 }}
           >
