@@ -2,7 +2,7 @@ import React from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 
 import { ModalPayloadWithIndex } from '@devhub/core'
-import { config, useTransition } from 'react-spring/native-hooks'
+import { config, useTransition } from 'react-spring/native'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -66,60 +66,61 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const size = columnWidth + (renderSeparator ? separatorTickSize : 0)
 
-  const overlayTransition = useTransition<boolean, any>({
-    native: true,
-    reset: true,
-    unique: true,
-    items: currentOpenedModal ? [true] : [],
-    keys: () => 'modal-overlay',
-    config: { duration: 200, precision: 0.01 },
-    from: { opacity: 0 },
-    enter: { opacity: 0.75 },
-    leave: { opacity: 0 },
-  })[0]
+  const overlayTransition = useTransition<boolean, any>(
+    currentOpenedModal ? [true] : [],
+    () => 'modal-overlay',
+    {
+      reset: true,
+      unique: true,
+      config: { duration: 200, precision: 0.01 },
+      from: { opacity: 0 },
+      enter: { opacity: 0.75 },
+      leave: { opacity: 0 },
+    },
+  )[0]
 
-  const modalTransitions = useTransition<ModalPayloadWithIndex, any>({
-    native: true,
-    reset: true,
-    unique: false,
-    items: modalStack,
-    keys: item => `modal-stack-${item.name}`,
-    config: { ...config.default, precision: 1 },
-    ...(sizename === '1-small'
-      ? {
-          from: item =>
-            (item.index === 0 && modalStack.length) ||
-            (item.index > 0 && !modalStack.length)
-              ? { top: Dimensions.get('window').height, left: 0 }
-              : { top: 0, left: size },
-          enter: { top: 0, left: 0 },
-          update: item =>
-            modalStack.length > 1 && item.index !== modalStack.length - 1
-              ? { top: 0, left: -50 }
-              : { top: 0, left: 0 },
-          leave: item =>
-            item.index === 0 || !modalStack.length
-              ? { top: Dimensions.get('window').height, left: 0 }
-              : { top: 0, left: size },
-        }
-      : {
-          from: item =>
-            (item.index === 0 && modalStack.length) ||
-            (item.index > 0 && !modalStack.length)
-              ? { left: -size }
-              : { left: size },
-          enter: { left: 0 },
-          update: item =>
-            modalStack.length > 1 && item.index !== modalStack.length - 1
-              ? { left: -size / 3 }
-              : { left: 0 },
+  const modalTransitions = useTransition<ModalPayloadWithIndex, any>(
+    modalStack,
+    item => `modal-stack-${item.name}`,
+    {
+      reset: true,
+      config: { ...config.default, precision: 1 },
+      ...(sizename === '1-small'
+        ? {
+            from: item =>
+              (item.index === 0 && modalStack.length) ||
+              (item.index > 0 && !modalStack.length)
+                ? { top: Dimensions.get('window').height, left: 0 }
+                : { top: 0, left: size },
+            enter: { top: 0, left: 0 },
+            update: item =>
+              modalStack.length > 1 && item.index !== modalStack.length - 1
+                ? { top: 0, left: -50 }
+                : { top: 0, left: 0 },
+            leave: item =>
+              item.index === 0 || !modalStack.length
+                ? { top: Dimensions.get('window').height, left: 0 }
+                : { top: 0, left: size },
+          }
+        : {
+            from: item =>
+              (item.index === 0 && modalStack.length) ||
+              (item.index > 0 && !modalStack.length)
+                ? { left: -size }
+                : { left: size },
+            enter: { left: 0 },
+            update: item =>
+              modalStack.length > 1 && item.index !== modalStack.length - 1
+                ? { left: -size / 3 }
+                : { left: 0 },
 
-          leave: item =>
-            item.index === 0 || !modalStack.length
-              ? { left: -size }
-              : { left: size },
-        }),
-  })
+            leave: item =>
+              item.index === 0 || !modalStack.length
+                ? { left: -size }
+                : { left: size },
+          }),
+    },
+  )
 
   return (
     <>
@@ -161,38 +162,39 @@ export function ModalRenderer(props: ModalRendererProps) {
           }}
         >
           {modalTransitions.map(
-            ({ key, item, props: { width, ...animatedStyle } }) => (
-              <SpringAnimatedView
-                key={key}
-                collapsable={false}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  flexDirection: 'row',
-                  ...animatedStyle,
-                  overflow: 'hidden',
-                  zIndex: 900 + item.index,
-                }}
-              >
-                {renderModal(item)}
+            ({ key, item, props: { width, ...animatedStyle } }) =>
+              !!item && (
+                <SpringAnimatedView
+                  key={key}
+                  collapsable={false}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    flexDirection: 'row',
+                    ...animatedStyle,
+                    overflow: 'hidden',
+                    zIndex: 900 + item.index,
+                  }}
+                >
+                  {renderModal(item)}
 
-                {!!renderSeparator && (
-                  <View
-                    collapsable={false}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      bottom: 0,
-                      right: 0,
-                      zIndex: 1000,
-                    }}
-                  >
-                    <Separator thick zIndex={1000} />
-                  </View>
-                )}
-              </SpringAnimatedView>
-            ),
+                  {!!renderSeparator && (
+                    <View
+                      collapsable={false}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        bottom: 0,
+                        right: 0,
+                        zIndex: 1000,
+                      }}
+                    >
+                      <Separator thick zIndex={1000} />
+                    </View>
+                  )}
+                </SpringAnimatedView>
+              ),
           )}
         </SpringAnimatedView>
       )}

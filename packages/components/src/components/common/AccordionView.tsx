@@ -1,10 +1,6 @@
 import React, { useImperativeHandle, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import {
-  config,
-  ReactSpringHook,
-  useTransition,
-} from 'react-spring/native-hooks'
+import { config, ReactSpringHook, useTransition } from 'react-spring/native'
 
 import { Platform } from '../../libs/platform/index.web'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -33,32 +29,40 @@ export const AccordionView = React.forwardRef(
     const contentSize = useRef({ width: 0, height: 0 })
     const [size, setSize] = useState<number | 'auto'>(fixedSize || 0)
 
-    const transitions = useTransition({
-      items: children ? [children] : [],
-      from: { [property]: 0 },
-      enter: { [property]: children ? size : 0 },
-      update: {
-        [property]: children ? size : 0,
-      },
-      leave: { [property]: 0 },
-      config: { ...config.default, precision: 1 },
-      force: false,
-      native: true,
-      unique: true,
-      onRest: (
-        _e: any,
-        state: string,
-        p: { width?: number | 'auto'; height?: number | 'auto' },
-      ) => {
-        if (!onFinishRef.current) return
+    const transitions = useTransition(
+      children ? [children] : [],
+      () => 'accordion-view',
+      {
+        from: { [property]: 0 },
+        enter: { [property]: children ? size : 0 },
+        update: {
+          [property]: children ? size : 0,
+        },
+        leave: { [property]: 0 },
+        config: { ...config.default, precision: 1 },
+        force: false,
+        unique: true,
+        // TODO: API was changed on v8.
+        // Reimplement this or make this hack unnecessary,
+        // fix the nested accordion animation use case in a different way
+        // @see https://github.com/react-spring/react-spring/issues/512
+        /*
+        onRest: (
+          _e: any,
+          state: string,
+          p: { width?: number | 'auto'; height?: number | 'auto' },
+        ) => {
+          if (!onFinishRef.current) return
 
-        if (size !== 'auto' && p[property] && p[property]! > 0) {
-          onFinishRef.current()
-        } else if (state === 'leave' && p[property] === 0) {
-          onFinishRef.current()
-        }
+          if (size !== 'auto' && p[property] && p[property]! > 0) {
+            onFinishRef.current()
+          } else if (state === 'leave' && p[property] === 0) {
+            onFinishRef.current()
+          }
+        },
+        */
       },
-    })
+    )
 
     useImperativeHandle(ref, () => ({
       setOnFinishListener: (callback: null | (() => void)) => {

@@ -1,7 +1,7 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
 import { ScrollView, View } from 'react-native'
-import { useSpring } from 'react-spring/native-hooks'
+import { useSpring } from 'react-spring/native'
 
 import {
   AddColumnDetailsPayload,
@@ -187,7 +187,6 @@ function AddColumnModalItem({
 
     return {
       config: { duration: 100 },
-      native: true,
       backgroundColor:
         (isHovered || isPressing) && !disabled
           ? theme.backgroundColorLess1

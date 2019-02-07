@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useSpring } from 'react-spring/native-hooks'
+import { useSpring } from 'react-spring/native'
 
 import { rgba } from 'polished'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -67,7 +67,6 @@ export const Button = React.memo((props: ButtonProps) => {
 
     return {
       config: { duration: 100 },
-      native: true,
       activityIndicatorColor: theme.foregroundColor,
       touchableBorderColor: useBrandColor
         ? colors.brandBackgroundColor

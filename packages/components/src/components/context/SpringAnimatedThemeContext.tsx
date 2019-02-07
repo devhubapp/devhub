@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 
 import { ThemeColors } from '@devhub/core'
-import { useSpring, UseSpringProps } from 'react-spring/native-hooks'
+import { useSpring, UseSpringProps } from 'react-spring/native'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { defaultTheme } from '../../styles/utils'
@@ -30,7 +30,6 @@ export function SpringAnimatedThemeProvider(
 
   const [springAnimatedTheme, setSpringAnimatedTheme] = useSpring(() => ({
     immediate: true,
-    native: true,
     ...pickThemeColors(initialTheme),
   }))
 

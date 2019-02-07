@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
-import { useSpring } from 'react-spring/native-hooks'
+import { useSpring } from 'react-spring/native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -93,7 +93,6 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
     return {
       config: { duration: 100 },
-      native: true,
       backgroundColor:
         isHovered || isPressing || opened
           ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]

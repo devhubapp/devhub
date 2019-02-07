@@ -2,7 +2,7 @@ import React, { Ref } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Column as ColumnType } from '@devhub/core'
-import { useTransition } from 'react-spring/native-hooks'
+import { useTransition } from 'react-spring/native'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
@@ -36,17 +36,18 @@ export const ColumnOptionsRenderer = React.memo(
     const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
     const { sizename } = useAppLayout()
 
-    const overlayTransition = useTransition<boolean, any>({
-      native: true,
-      reset: true,
-      unique: true,
-      items: visible ? [true] : [],
-      keys: () => 'column-options-overlay',
-      config: { duration: 200, precision: 0.01 },
-      from: { opacity: 0 },
-      enter: { opacity: 0.75 },
-      leave: { opacity: 0 },
-    })[0]
+    const overlayTransition = useTransition<boolean, any>(
+      visible ? [true] : [],
+      () => 'column-options-overlay',
+      {
+        reset: true,
+        unique: true,
+        config: { duration: 200, precision: 0.01 },
+        from: { opacity: 0 },
+        enter: { opacity: 0.75 },
+        leave: { opacity: 0 },
+      },
+    )[0]
 
     const isFabVisible = sizename < '3-large'
 

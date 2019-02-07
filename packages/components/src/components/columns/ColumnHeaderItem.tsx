@@ -1,7 +1,7 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
 import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
-import { useSpring } from 'react-spring/native-hooks'
+import { useSpring } from 'react-spring/native'
 
 import { GitHubIcon, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
@@ -117,7 +117,6 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
     return {
       config: { duration: immediate ? 0 : 100 },
-      native: true,
       backgroundColor:
         isHovered && enableBackgroundHover
           ? theme[hoverBackgroundThemeColor || 'backgroundColorLess1']

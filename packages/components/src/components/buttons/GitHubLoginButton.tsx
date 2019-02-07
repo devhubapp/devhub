@@ -1,7 +1,7 @@
 import { rgba } from 'polished'
 import React, { useRef } from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
-import { useSpring } from 'react-spring/native-hooks'
+import { useSpring } from 'react-spring/native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -114,7 +114,6 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     const { isHovered, isPressing, theme } = cacheRef.current
     return {
       config: { duration: 100 },
-      native: true,
       backgroundColor:
         isHovered || isPressing
           ? theme.backgroundColorLess2
