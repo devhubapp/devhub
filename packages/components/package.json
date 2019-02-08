@@ -42,8 +42,7 @@
     "redux-devtools-extension": "^2.13.7",
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.2",
-    "reselect": "^4.0.0",
-    "sortablejs": "^1.8.0-rc1"
+    "reselect": "^4.0.0"
   },
   "devDependencies": {
     "@types/fbemitter": "^2.0.32",
@@ -59,7 +58,6 @@
     "@types/react-navigation": "^2.13.7",
     "@types/react-redux": "^6.0.10",
     "@types/react-test-renderer": "^16.8.0",
-    "@types/sortablejs": "^1.7.2",
     "babel-jest": "^23.6.0",
     "husky": "^1.2.0",
     "jest": "^23.6.0",
