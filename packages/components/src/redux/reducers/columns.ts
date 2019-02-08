@@ -122,7 +122,7 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = normalized.updatedAt
       })
 
-    case 'SET_COLUMN_INBOX_FILTER':
+    case 'SET_COLUMN_SAVED_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return
 
@@ -130,26 +130,12 @@ export const columnsReducer: Reducer<State> = (
         if (!column) return
 
         column.filters = column.filters || {}
-        column.filters.inbox = column.filters.inbox || {}
-        if (typeof action.payload.inbox !== 'undefined') {
-          column.filters.inbox.inbox = action.payload.inbox
-        }
-        if (typeof action.payload.archived !== 'undefined') {
-          column.filters.inbox.archived = action.payload.archived
-        }
+
         if (typeof action.payload.saved !== 'undefined') {
-          column.filters.inbox.saved = action.payload.saved
-        }
-
-        const showInbox = column.filters.inbox.inbox !== false
-        const showSaveForLater = column.filters.inbox.saved !== false
-        const showCleared = column.filters.inbox.archived === true
-
-        if (showInbox && showSaveForLater && !showCleared) {
-          // default state to remove the changed indicator
-          column.filters.inbox = {}
-        } else if (!showInbox && !showSaveForLater && !showCleared) {
-          column.filters.inbox.inbox = true
+          column.filters.saved =
+            typeof action.payload.saved === 'boolean'
+              ? action.payload.saved
+              : undefined
         }
 
         draft.updatedAt = new Date().toISOString()

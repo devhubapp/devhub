@@ -6,7 +6,7 @@
   "start_url": "./?utm_source=web_app_manifest",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#292c33",
+  "theme_color": "#49d3b4",
   "icons": [
     {
       "src": "static/media/logo.png",

@@ -1,78 +1,75 @@
-import React, { ReactNode } from 'react'
-import { Animated, StyleProp, ViewStyle } from 'react-native'
+import React from 'react'
 
-import { ThemeColors } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme.shared'
-import { Platform } from '../../libs/platform'
-import { useAppLayout } from '../context/LayoutContext'
-import { AnimatedGradientLayerOverlay } from './GradientLayerOverlay'
+import { Omit, ThemeColors } from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { SpringAnimatedGradientLayerOverlay } from './GradientLayerOverlay'
+import {
+  AnimatedGradientLayerOverlayProps,
+  To,
+  ToWithVH,
+} from './GradientLayerOverlay.shared'
 
-export type From = 'top' | 'bottom' | 'left' | 'right'
-export type FromWithVH = 'vertical' | 'horizontal' | From
+export { To as From, ToWithVH as FromWithVH }
 
-export interface AnimatedTransparentTextOverlayProps {
-  animated?: boolean
-  children?: ReactNode
-  containerStyle?: StyleProp<ViewStyle | any>
-  from: FromWithVH
-  radius?: number
-  size: number
-  style?: StyleProp<ViewStyle>
+export interface AnimatedTransparentTextOverlayProps
+  extends Omit<AnimatedGradientLayerOverlayProps, 'to' | 'color'> {
+  to: ToWithVH
   themeColor: keyof ThemeColors
 }
 
 export const AnimatedTransparentTextOverlay = React.memo(
-  (props: AnimatedTransparentTextOverlayProps) => {
-    const { sizename } = useAppLayout()
-    const theme = useAnimatedTheme()
+  React.forwardRef((props: AnimatedTransparentTextOverlayProps, ref: any) => {
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-    const { children, containerStyle, from, themeColor, ...otherProps } = props
+    const { children, containerStyle, themeColor, to, ...otherProps } = props
 
-    if (Platform.OS === 'web' && !(sizename < '3-large')) return children as any
-
-    const color = theme[themeColor]
+    const springAnimatedColor = springAnimatedTheme[themeColor]
 
     return (
-      <Animated.View
+      <SpringAnimatedView
+        ref={ref}
+        collapsable={false}
+        pointerEvents="box-none"
         style={[
           { flex: 1, alignSelf: 'stretch', flexBasis: 'auto' },
           containerStyle,
         ]}
       >
+        {(to === 'vertical' || to === 'bottom') && (
+          <SpringAnimatedGradientLayerOverlay
+            {...otherProps}
+            color={springAnimatedColor}
+            to="bottom"
+          />
+        )}
+
+        {(to === 'vertical' || to === 'top') && (
+          <SpringAnimatedGradientLayerOverlay
+            {...otherProps}
+            color={springAnimatedColor}
+            to="top"
+          />
+        )}
+
+        {(to === 'horizontal' || to === 'right') && (
+          <SpringAnimatedGradientLayerOverlay
+            {...otherProps}
+            color={springAnimatedColor}
+            to="right"
+          />
+        )}
+
+        {(to === 'horizontal' || to === 'left') && (
+          <SpringAnimatedGradientLayerOverlay
+            {...otherProps}
+            color={springAnimatedColor}
+            to="left"
+          />
+        )}
+
         {children}
-
-        {(from === 'vertical' || from === 'top') && (
-          <AnimatedGradientLayerOverlay
-            {...otherProps}
-            color={color}
-            from="top"
-          />
-        )}
-
-        {(from === 'vertical' || from === 'bottom') && (
-          <AnimatedGradientLayerOverlay
-            {...otherProps}
-            color={color}
-            from="bottom"
-          />
-        )}
-
-        {(from === 'horizontal' || from === 'left') && (
-          <AnimatedGradientLayerOverlay
-            {...otherProps}
-            color={color}
-            from="left"
-          />
-        )}
-
-        {(from === 'horizontal' || from === 'right') && (
-          <AnimatedGradientLayerOverlay
-            {...otherProps}
-            color={color}
-            from="right"
-          />
-        )}
-      </Animated.View>
+      </SpringAnimatedView>
     )
-  },
+  }),
 )

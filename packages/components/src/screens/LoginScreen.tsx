@@ -1,13 +1,13 @@
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Image, StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 
+import { SpringAnimatedText } from '../components/animated/spring/SpringAnimatedText'
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
-import { Link } from '../components/common/Link'
 import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
-import { useAnimatedTheme } from '../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
@@ -19,7 +19,7 @@ import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
 
-const logo = require('@devhub/components/assets/logo_rounded.png') // tslint:disable-line
+const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
 const styles = StyleSheet.create({
   container: {
@@ -78,19 +78,15 @@ const styles = StyleSheet.create({
   },
 })
 
-type LoginMethod = 'github.public' | 'github.private'
-
 export const LoginScreen = React.memo(() => {
-  const [loggingInMethod, setLoggingInMethod] = useState<LoginMethod | null>(
-    null,
-  )
   const [isExecutingOAuth, setIsExecutingOAuth] = useState(false)
 
   const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
   const error = useReduxState(selectors.authErrorSelector)
   const initialErrorRef = useRef(error)
   const loginRequest = useReduxAction(actions.loginRequest)
-  const theme = useAnimatedTheme()
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   // handle oauth flow without popup
   // that passes the token via query string
@@ -142,14 +138,6 @@ export const LoginScreen = React.memo(() => {
           ? params.github_scope
           : _githubScope
 
-      if (!loggingInMethod) {
-        setLoggingInMethod(
-          (githubScope || []).includes('repo')
-            ? 'github.private'
-            : 'github.public',
-        )
-      }
-
       await loginRequest({
         appToken,
         githubScope,
@@ -191,17 +179,13 @@ export const LoginScreen = React.memo(() => {
     }
   }
 
-  const loginWithGitHub = async (method: LoginMethod) => {
-    setLoggingInMethod(method)
+  const loginWithGitHub = async () => {
     setIsExecutingOAuth(true)
 
-    const githubScope =
-      method === 'github.private'
-        ? ['read:user', 'user:email', 'repo', 'notifications', 'read:org']
-        : ['read:user', 'user:email', 'notifications', 'read:org']
+    const githubScope = ['read:user', 'user:email', 'notifications', 'read:org']
 
     try {
-      analytics.trackEvent('engagement', 'login', method, 1, { method })
+      analytics.trackEvent('engagement', 'login')
 
       const params = await executeOAuth(githubScope)
       handleOAuth(params, githubScope)
@@ -229,70 +213,32 @@ export const LoginScreen = React.memo(() => {
 
           <GitHubLoginButton
             analyticsLabel="github_login_public"
-            loading={
-              (isLoggingIn || isExecutingOAuth) &&
-              loggingInMethod === 'github.public'
-            }
-            onPress={() => loginWithGitHub('github.public')}
-            // rightIcon="globe"
+            loading={isLoggingIn || isExecutingOAuth}
+            onPress={() => loginWithGitHub()}
             style={styles.button}
-            subtitle="Public access only"
             title="Sign in with GitHub"
           />
 
-          {/* <GitHubLoginButton
-            analyticsLabel="github_login_private"
-            loading={
-              (isLoggingIn || isExecutingOAuth) &&
-              loggingInMethod === 'github.private'
-            }
-            onPress={() => loginWithGitHub('github.private')}
-            // rightIcon="lock"
-            style={styles.button}
-            subtitle="Private access"
-            title="Sign in with GitHub"
-          /> */}
-
           <Spacer height={contentPadding} />
-
-          <Link
-            analyticsLabel="about-private-access"
-            href="https://github.com/devhubapp/devhub/issues/32"
-            openOnNewTab
-          >
-            <Animated.Text
-              style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
-            >
-              What about private repositories?
-            </Animated.Text>
-          </Link>
-
-          {/* <Spacer height={contentPadding} />
-
-          <Link
-            analyticsLabel="why-permission"
-            href="https://github.com/dear-github/dear-github/issues/113"
-            openOnNewTab
-          >
-            <Animated.Text
-              style={{ fontSize: 12, color: theme.foregroundColorMuted50 }}
-            >
-              Why all these permissions?
-            </Animated.Text>
-          </Link> */}
         </View>
 
         <View style={styles.footer}>
-          <Animated.Text
-            style={[styles.title, { color: theme.foregroundColor }]}
+          <SpringAnimatedText
+            style={[
+              styles.title,
+              { color: springAnimatedTheme.foregroundColor },
+            ]}
           >
             DevHub
-          </Animated.Text>
-          <Animated.Text
-            style={[styles.subtitle, { color: theme.foregroundColor }]}
+          </SpringAnimatedText>
+          <SpringAnimatedText
+            style={[
+              styles.subtitle,
+              { color: springAnimatedTheme.foregroundColor },
+            ]}
           >
             TweetDeck for GitHub
-          </Animated.Text>
+          </SpringAnimatedText>
           <AppVersion />
         </View>
       </View>

@@ -1,6 +1,12 @@
 import _ from 'lodash'
-import React, { Fragment, RefObject, useCallback, useState } from 'react'
-import { ScrollView, TextInputProps, View } from 'react-native'
+import React, {
+  Fragment,
+  RefObject,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
+import { Keyboard, ScrollView, View } from 'react-native'
 
 import {
   ActivityColumn,
@@ -11,27 +17,34 @@ import {
   guid,
   NotificationColumn,
 } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
+import { findNode } from '../../utils/helpers/shared'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
-import { TextInput } from '../common/TextInput'
+import { SubHeader } from '../common/SubHeader'
+import {
+  SpringAnimatedTextInput,
+  SpringAnimatedTextInputProps,
+} from '../common/TextInput'
 
-interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {}
+interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {
+  showBackButton: boolean
+}
 
 interface FieldDetails {
   title: string
   field: ColumnParamField
   placeholder: string
-  ref: RefObject<TextInput>
+  ref: RefObject<SpringAnimatedTextInput>
 }
 
 const fields: FieldDetails[] = [
@@ -62,174 +75,214 @@ const fields: FieldDetails[] = [
   },
 ]
 
-export function AddColumnDetailsModal(props: AddColumnDetailsModalProps) {
-  const { defaultParams, icon, name, paramList, subscription } = props
+export const AddColumnDetailsModal = React.memo(
+  (props: AddColumnDetailsModalProps) => {
+    const {
+      defaultParams,
+      icon,
+      paramList,
+      showBackButton,
+      subscription,
+      title,
+    } = props
 
-  const [params, setParams] = useState({
-    all: true,
-    org: '',
-    owner: '',
-    repo: '',
-    username: '',
-    ...defaultParams,
-  })
+    const didAutoFocusRef = useRef(false)
 
-  const username = useReduxState(selectors.currentUsernameSelector)
+    const [params, setParams] = useState({
+      all: true,
+      org: '',
+      owner: '',
+      repo: '',
+      username: '',
+      ...defaultParams,
+    })
 
-  const addColumnAndSubscriptions = useReduxAction(
-    actions.addColumnAndSubscriptions,
-  )
-  const closeAllModals = useReduxAction(actions.closeAllModals)
-  const theme = useAnimatedTheme()
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const validateField = (field: ColumnParamField) => {
-    const value = params[field]
-    return !(typeof value === 'undefined' || value === '')
-  }
+    const username = useReduxState(selectors.currentUsernameSelector)
 
-  const handleCreateColumn = () => {
-    for (const field of paramList) {
-      if (!validateField(field)) {
-        const fieldDetails = fields.find(f => f.field === field)
-        alert(`${fieldDetails ? fieldDetails.title : field} cannot be empty.`)
-        return
-      }
+    const addColumnAndSubscriptions = useReduxAction(
+      actions.addColumnAndSubscriptions,
+    )
+    const closeAllModals = useReduxAction(actions.closeAllModals)
+
+    const validateField = (field: ColumnParamField) => {
+      const value = params[field]
+      return !(typeof value === 'undefined' || value === '')
     }
 
-    closeAllModals()
-
-    const subscriptions = createSubscriptionObjectsWithId([
-      {
-        ...(subscription as any),
-        id: '',
-        params: _.pick(params, paramList) as any,
-      },
-    ])
-
-    const column = {
-      id: guid(),
-      type: subscription.type,
-      subscriptionIds: subscriptions.map(s => s.id),
-      filters: undefined,
-    } as typeof subscriptions extends ActivityColumnSubscription[]
-      ? ActivityColumn
-      : NotificationColumn
-
-    addColumnAndSubscriptions({
-      column,
-      subscriptions,
-    })
-  }
-
-  const createTextInputChangeHandler = useCallback(
-    (fieldDetails: FieldDetails): TextInputProps['onChange'] => e => {
-      if (!(e && e.nativeEvent)) return
-      const text = e.nativeEvent.text
-
-      setParams(prevParams => ({
-        ...prevParams,
-        [fieldDetails.field]: text,
-      }))
-    },
-    [],
-  )
-
-  const createTextInputSubmitHandler = useCallback(
-    (fieldDetails: FieldDetails): TextInputProps['onSubmitEditing'] => () => {
-      const index = paramList.findIndex(fd => fd === fieldDetails.field)
-
-      if (index < paramList.length - 1) {
-        if (!validateField(fieldDetails.field)) return
-
-        const nextField = paramList[index + 1]
-        const nextFieldDetails = fields.find(fd => fd.field === nextField)
-
-        const input = nextFieldDetails && nextFieldDetails.ref.current
-        if (input && input.focus) {
-          input.focus()
+    const handleCreateColumn = () => {
+      for (const field of paramList) {
+        if (!validateField(field)) {
+          const fieldDetails = fields.find(f => f.field === field)
+          alert(`${fieldDetails ? fieldDetails.title : field} cannot be empty.`)
+          return
         }
-
-        return
       }
 
-      handleCreateColumn()
-    },
-    [params, paramList],
-  )
+      Keyboard.dismiss()
 
-  const renderTextInput = useCallback(
-    (fieldDetails: FieldDetails, textInputProps: TextInputProps) => (
-      <Fragment key={`add-column-details-text-input-${fieldDetails.field}`}>
-        <H3 withMargin>{fieldDetails.title}</H3>
+      closeAllModals()
 
-        <TextInput
-          ref={fieldDetails.ref}
-          autoCapitalize="none"
-          autoCorrect={false}
-          blurOnSubmit={false}
-          placeholder={`${fieldDetails.placeholder || ''}`.replace(
-            'brunolemos',
-            username!,
-          )}
-          placeholderTextColor={theme.foregroundColorMuted50}
-          {...textInputProps}
-          onChange={createTextInputChangeHandler(fieldDetails)}
-          onSubmitEditing={createTextInputSubmitHandler(fieldDetails)}
-          style={[{ color: theme.foregroundColor }, textInputProps.style]}
-          value={params[fieldDetails.field]}
-        />
+      setTimeout(() => {
+        _handleCreateColumn()
+      }, 500)
+    }
 
-        <Spacer height={contentPadding} />
-      </Fragment>
-    ),
-    [params, createTextInputChangeHandler, createTextInputSubmitHandler],
-  )
+    const _handleCreateColumn = () => {
+      const subscriptions = createSubscriptionObjectsWithId([
+        {
+          ...(subscription as any),
+          id: '',
+          params: _.pick(params, paramList) as any,
+        },
+      ])
 
-  const renderField = (field: string, index?: number) => {
-    const fieldDetails = fields.find(f => f.field === field)
+      const column = {
+        id: guid(),
+        type: subscription.type,
+        subscriptionIds: subscriptions.map(s => s.id),
+        filters: undefined,
+      } as typeof subscriptions extends ActivityColumnSubscription[]
+        ? ActivityColumn
+        : NotificationColumn
 
-    if (fieldDetails) {
+      addColumnAndSubscriptions({
+        column,
+        subscriptions,
+      })
+    }
+
+    const createTextInputChangeHandler = useCallback(
+      (
+        fieldDetails: FieldDetails,
+      ): SpringAnimatedTextInputProps['onChange'] => e => {
+        if (!(e && e.nativeEvent)) return
+        const text = e.nativeEvent.text
+
+        setParams(prevParams => ({
+          ...prevParams,
+          [fieldDetails.field]: text,
+        }))
+      },
+      [],
+    )
+
+    const createTextInputSubmitHandler = useCallback(
+      (
+        fieldDetails: FieldDetails,
+      ): SpringAnimatedTextInputProps['onSubmitEditing'] => () => {
+        const index = paramList.findIndex(fd => fd === fieldDetails.field)
+
+        if (index < paramList.length - 1) {
+          if (!validateField(fieldDetails.field)) return
+
+          const nextField = paramList[index + 1]
+          const nextFieldDetails = fields.find(fd => fd.field === nextField)
+
+          const input =
+            nextFieldDetails &&
+            nextFieldDetails.ref.current &&
+            (findNode(nextFieldDetails.ref.current as any) as any)
+
+          if (input && input.focus) {
+            input.focus()
+          } else {
+            alert(input)
+          }
+
+          return
+        }
+
+        handleCreateColumn()
+      },
+      [params, paramList],
+    )
+
+    const renderTextInput = useCallback(
+      (
+        fieldDetails: FieldDetails,
+        { autoFocus, ...textInputProps }: SpringAnimatedTextInputProps,
+      ) => {
+        // autofocus is breaking the react-spring animation
+        // need to find a real fix (propably inside react-spring)
+        // instead of this ugly workaround
+
+        if (autoFocus && !didAutoFocusRef.current) {
+          didAutoFocusRef.current = true
+          setTimeout(() => {
+            const input =
+              fieldDetails &&
+              fieldDetails.ref.current &&
+              (findNode(fieldDetails.ref.current as any) as any)
+
+            if (input && input.focus) {
+              input.focus()
+            } else {
+              alert(input)
+            }
+          }, 500)
+        }
+
+        return (
+          <Fragment key={`add-column-details-text-input-${fieldDetails.field}`}>
+            <H3 withMargin>{fieldDetails.title}</H3>
+
+            <SpringAnimatedTextInput
+              ref={fieldDetails.ref}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus={false}
+              blurOnSubmit={false}
+              placeholder={`${fieldDetails.placeholder || ''}`.replace(
+                'brunolemos',
+                username!,
+              )}
+              {...textInputProps}
+              onChange={createTextInputChangeHandler(fieldDetails)}
+              onSubmitEditing={createTextInputSubmitHandler(fieldDetails)}
+              style={[
+                { color: springAnimatedTheme.foregroundColor },
+                textInputProps.style,
+              ]}
+              value={params[fieldDetails.field]}
+            />
+
+            <Spacer height={contentPadding} />
+          </Fragment>
+        )
+      },
+      [params, createTextInputChangeHandler, createTextInputSubmitHandler],
+    )
+
+    const renderField = (fieldDetails: FieldDetails, index?: number) => {
+      if (!fieldDetails) return null
+
       return renderTextInput(fieldDetails, { autoFocus: index === 0 })
     }
 
-    return null
-  }
-
-  return (
-    <ModalColumn
-      columnId="add-column-details-modal"
-      iconName="plus"
-      title="Add Column"
-    >
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        style={{ flex: 1, padding: contentPadding }}
+    return (
+      <ModalColumn
+        columnId="add-column-details-modal"
+        iconName="plus"
+        showBackButton={showBackButton}
+        title="Add Column"
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignContent: 'center',
-          }}
-        >
-          <ColumnHeaderItem
-            analyticsLabel={undefined}
-            iconName={icon}
-            noPadding
-          />
-          <Spacer width={contentPadding / 2} />
-          <H2>{name}</H2>
-        </View>
+        <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
+          <SubHeader iconName={icon} title={title} />
 
-        <Spacer height={contentPadding} />
+          <View style={{ flex: 1, padding: contentPadding }}>
+            {(paramList
+              .map(p => fields.find(f => f.field === p))
+              .filter(Boolean) as FieldDetails[]).map(renderField)}
+            <Button analyticsLabel="add_column" onPress={handleCreateColumn}>
+              Add Column
+            </Button>
+          </View>
 
-        {paramList.map(renderField)}
-        <Button analyticsLabel="add_column" onPress={handleCreateColumn}>
-          Add Column
-        </Button>
-
-        <Spacer height={contentPadding} />
-      </ScrollView>
-    </ModalColumn>
-  )
-}
+          <Spacer height={contentPadding} />
+        </ScrollView>
+      </ModalColumn>
+    )
+  },
+)

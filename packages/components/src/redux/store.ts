@@ -165,6 +165,23 @@ const migrations = {
         )
       })
     }),
+  7: (state: RootState) =>
+    immer(state, draft => {
+      draft.columns = draft.columns || {}
+      draft.columns.allIds = draft.columns.allIds || []
+      draft.columns.byId = draft.columns.byId || {}
+
+      const keys = Object.keys(draft.columns.byId)
+
+      keys.forEach(columnId => {
+        const column = draft.columns.byId![columnId]
+        const oldFilters = (column && column.filters) as any
+        if (!(oldFilters && oldFilters.inbox)) return
+
+        oldFilters.saved = oldFilters.inbox.saved
+        delete oldFilters.inbox
+      })
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -173,7 +190,7 @@ export function configureStore(key = 'root') {
     key,
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
-    version: 6,
+    version: 7,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 

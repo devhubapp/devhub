@@ -2,9 +2,8 @@ import React from 'react'
 
 import { Omit } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
-import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
-import * as selectors from '../../redux/selectors'
+import { contentPadding } from '../../styles/variables'
 import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
@@ -15,31 +14,32 @@ export interface ModalColumnProps
   columnId: string
   hideCloseButton?: boolean
   right?: React.ReactNode
+  showBackButton: boolean
 }
 
 export const ModalColumn = React.memo((props: ModalColumnProps) => {
-  const modalStack = useReduxState(selectors.modalStack)
   const popModal = useReduxAction(actions.popModal)
   const closeAllModals = useReduxAction(actions.closeAllModals)
 
-  const canGoBack = !!(modalStack && modalStack.length > 1)
-
-  const { children, hideCloseButton, right, columnId, ...otherProps } = props
+  const {
+    children,
+    columnId,
+    hideCloseButton,
+    right,
+    showBackButton,
+    subtitle,
+    title,
+    ...otherProps
+  } = props
 
   return (
-    <Column
-      columnId={columnId}
-      style={[
-        {
-          zIndex: 100,
-        },
-      ]}
-    >
+    <Column columnId={columnId} style={{ zIndex: 900 }}>
       <ColumnHeader>
-        {canGoBack && (
+        {!!showBackButton && (
           <ColumnHeaderItem
             analyticsLabel="modal"
             analyticsAction="back"
+            enableForegroundHover
             iconName="chevron-left"
             onPress={() => popModal()}
           />
@@ -49,7 +49,9 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           analyticsLabel={undefined}
           {...otherProps}
           iconName={undefined}
-          style={[canGoBack && { padding: 0 }]}
+          style={[showBackButton && { padding: 0 }]}
+          subtitle={`${subtitle || ''}`.toLowerCase()}
+          title={`${title || ''}`.toLowerCase()}
         />
 
         <Spacer flex={1} />
@@ -58,13 +60,20 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           <ColumnHeaderItem
             analyticsAction="close"
             analyticsLabel="modal"
+            enableForegroundHover
             iconName="x"
             onPress={() => closeAllModals()}
           />
         )}
 
         {right && (
-          <ColumnHeaderItem analyticsLabel={undefined} noPadding>
+          <ColumnHeaderItem
+            analyticsLabel={undefined}
+            noPadding
+            style={{
+              paddingHorizontal: contentPadding / 2,
+            }}
+          >
             {right}
           </ColumnHeaderItem>
         )}

@@ -1,8 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
-import { ScrollView } from 'react-native'
 
 import { contentPadding } from '../../../../styles/variables'
-import { AnimatedTransparentTextOverlay } from '../../../common/TransparentTextOverlay'
+import { ScrollViewWithOverlay } from '../../../common/ScrollViewWithOverlay'
 
 export type RenderItem<T> = (
   params: { item: T; index: number; showMoreItemsIndicator?: boolean },
@@ -31,27 +30,28 @@ export const RowList = React.memo((props: RowListProps<any>) => {
   const isSliced = data.length > slicedData.length
 
   return (
-    <AnimatedTransparentTextOverlay
-      containerStyle={{ flex: 0 }}
-      from="vertical"
-      size={narrow ? contentPadding / 2 : contentPadding}
-      themeColor="backgroundColor"
+    <ScrollViewWithOverlay
+      alwaysBounceVertical={false}
+      containerStyle={{
+        flex: 0,
+        flexBasis: 'auto',
+        flexGrow: 1,
+        marginBottom: -(narrow ? contentPadding / 2 : contentPadding),
+      }}
+      contentContainerStyle={{
+        paddingBottom: narrow ? contentPadding / 2 : contentPadding,
+      }}
+      overlaySize={narrow ? contentPadding / 2 : contentPadding}
+      overlaySpacing={0}
+      style={{ maxHeight }}
     >
-      <ScrollView
-        alwaysBounceVertical={false}
-        contentContainerStyle={{
-          paddingBottom: narrow ? contentPadding / 2 : contentPadding,
-        }}
-        style={{ maxHeight }}
-      >
-        {slicedData.map((item, index) => renderItem({ item, index }))}
-        {isSliced &&
-          renderItem({
-            index: slicedData.length,
-            item: data[slicedData.length],
-            showMoreItemsIndicator: true,
-          })}
-      </ScrollView>
-    </AnimatedTransparentTextOverlay>
+      {slicedData.map((item, index) => renderItem({ item, index }))}
+      {isSliced &&
+        renderItem({
+          index: slicedData.length,
+          item: data[slicedData.length],
+          showMoreItemsIndicator: true,
+        })}
+    </ScrollViewWithOverlay>
   )
 })

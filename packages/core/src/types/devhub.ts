@@ -4,7 +4,7 @@ import {
   GitHubComment,
   GitHubCommit,
   GitHubEvent,
-  GitHubExtractParamsFromActivityMethod,
+  GitHubExtractParamsFromMethod,
   GitHubIcon,
   GitHubIssue,
   GitHubNotification,
@@ -18,6 +18,13 @@ import { Omit } from './typescript'
 
 type octokit = InstanceType<typeof Octokit>
 
+export interface ReadUnreadEnhancement {
+  forceUnreadLocally?: boolean // Workaround while GitHub doesn't support marking as unread via api
+  last_read_at?: string
+  last_unread_at?: string
+  unread?: boolean // GitHub server's value
+}
+
 export interface SaveForLaterEnhancement {
   saved?: boolean
 }
@@ -28,11 +35,13 @@ export interface NotificationPayloadEnhancement {
   issue?: GitHubIssue
   pullRequest?: GitHubPullRequest
   release?: GitHubRelease
+  enhanced?: boolean
 }
 
 export interface EnhancedGitHubNotification
   extends GitHubNotification,
     NotificationPayloadEnhancement,
+    ReadUnreadEnhancement,
     SaveForLaterEnhancement {}
 
 export interface GitHubEnhancedEventBase {
@@ -47,6 +56,7 @@ export interface MultipleStarEvent
 }
 
 export type EnhancedGitHubEvent = (GitHubEvent | MultipleStarEvent) &
+  ReadUnreadEnhancement &
   SaveForLaterEnhancement
 
 export interface ColumnSubscriptionData<
@@ -59,17 +69,28 @@ export interface ColumnSubscriptionData<
   lastFetchedAt?: string
 }
 
-export interface NotificationColumnSubscription {
+export type NotificationColumnSubscription = {
   id: string
   type: 'notifications'
-  subtype?: undefined | ''
   params: {
     all?: boolean
   }
   data: ColumnSubscriptionData<EnhancedGitHubNotification>
   createdAt: string
   updatedAt: string
-}
+} & (
+  | {
+      subtype: undefined | ''
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotifications']
+      >
+    }
+  | {
+      subtype: 'REPO_NOTIFICATIONS'
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotificationsForRepo']
+      >
+    })
 
 export type ActivityColumnSubscription = {
   id: string
@@ -80,76 +101,73 @@ export type ActivityColumnSubscription = {
 } & (
   | {
       subtype: 'ORG_PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listPublicEvents']
       >
     }
   | {
       subtype: 'REPO_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listRepoEvents']
       >
     }
   | {
       subtype: 'REPO_NETWORK_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listPublicEventsForRepoNetwork']
       >
     }
   | {
       subtype: 'USER_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listEventsForUser']
       >
     }
   | {
       subtype: 'USER_ORG_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'USER_PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listPublicEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listReceivedEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_PUBLIC_EVENTS'
-      params: GitHubExtractParamsFromActivityMethod<
+      params: GitHubExtractParamsFromMethod<
         octokit['activity']['listReceivedPublicEventsForUser']
       >
     })
 
 export interface BaseColumnFilters {
-  inbox?: {
-    inbox?: boolean
-    archived?: boolean
-    saved?: boolean
-  }
   clearedAt?: string
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
   private?: boolean
   // repos?: string[]
+  saved?: boolean
   // search: {
   //   exclude?: string
   //   match?: string
   //   regex?: string
   // }
   // sort?: string[]
+  unread?: boolean
 }
 
 export interface ActivityColumnFilters extends BaseColumnFilters {
@@ -162,7 +180,6 @@ export interface NotificationColumnFilters extends BaseColumnFilters {
   notifications?: {
     reasons?: Partial<Record<GitHubNotificationReason, boolean>>
   }
-  unread?: boolean
 }
 
 export type ColumnFilters = ActivityColumnFilters | NotificationColumnFilters
@@ -245,7 +262,7 @@ export type ColumnSubscriptionCreation =
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
 export interface AddColumnDetailsPayload {
-  name: string
+  title: string
   icon: GitHubIcon
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
   paramList: ColumnParamField[]
@@ -281,6 +298,8 @@ export type ModalPayload =
       name: 'SETUP_GITHUB_ENTERPRISE'
       params?: undefined
     }
+
+export type ModalPayloadWithIndex = ModalPayload & { index: number }
 
 export type LoadState =
   | 'error'

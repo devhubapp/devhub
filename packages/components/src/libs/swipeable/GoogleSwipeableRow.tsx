@@ -20,7 +20,7 @@ export interface GoogleSwipeableRowAction extends BaseSwipeableRowAction {
 
 export interface GoogleSwipeableRowProps extends BaseSwipeableRowProps {}
 
-const AnimatedIcon = Animated.createAnimatedComponent(Icon) as typeof Icon
+const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
 export class GoogleSwipeableRow extends BaseSwipeableRow<
   GoogleSwipeableRowProps,

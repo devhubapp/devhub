@@ -1,29 +1,30 @@
 import React from 'react'
-import { Animated, TextProps } from 'react-native'
+import { TextProps } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { contentPadding } from '../../styles/variables'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 
 export type H3Props = TextProps & { children: string; withMargin?: boolean }
 
 export function H3(props: H3Props) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const { children, style, withMargin, ...otherProps } = props
 
   return (
-    <Animated.Text
+    <SpringAnimatedText
       {...otherProps}
       style={[
         {
           marginBottom: withMargin ? contentPadding : undefined,
           fontWeight: '400',
-          color: theme.foregroundColorMuted50,
+          color: springAnimatedTheme.foregroundColorMuted50,
         },
         style,
       ]}
     >
       {typeof children === 'string' ? children.toUpperCase() : children}
-    </Animated.Text>
+    </SpringAnimatedText>
   )
 }

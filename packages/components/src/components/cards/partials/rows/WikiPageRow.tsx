@@ -1,13 +1,14 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
 import { trimNewLinesAndSpaces } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
-import { getCardRowStylesForTheme } from './styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { cardRowStyles } from './styles'
 
 export interface WikiPageRowProps {
   isRead: boolean
@@ -21,7 +22,7 @@ export interface WikiPageRowProps {
 export interface WikiPageRowState {}
 
 export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     isRead,
@@ -36,48 +37,50 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
   if (!title) return null
 
   return (
-    <View style={getCardRowStylesForTheme(theme).container}>
+    <View style={cardRowStyles.container}>
       <View
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       />
 
-      <View style={getCardStylesForTheme(theme).rightColumn}>
+      <View style={cardStyles.rightColumn}>
         <Link
           href={showMoreItemsIndicator ? undefined : fixURL(url)}
-          style={getCardRowStylesForTheme(theme).mainContentContainer}
+          style={cardRowStyles.mainContentContainer}
         >
-          <Animated.Text
+          <SpringAnimatedText
             numberOfLines={1}
             style={[
-              getCardStylesForTheme(theme).normalText,
-              isRead && getCardStylesForTheme(theme).mutedText,
+              getCardStylesForTheme(springAnimatedTheme).normalText,
+              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
-            <AnimatedIcon
+            <SpringAnimatedIcon
               name="book"
+              size={13}
               style={[
-                getCardStylesForTheme(theme).normalText,
-                isRead && getCardStylesForTheme(theme).mutedText,
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardStylesForTheme(springAnimatedTheme).icon,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}
             {showMoreItemsIndicator ? '' : title}
             {!!showMoreItemsIndicator && (
-              <Animated.Text
+              <SpringAnimatedText
                 numberOfLines={1}
                 style={[
-                  getCardStylesForTheme(theme).normalText,
-                  getCardStylesForTheme(theme).mutedText,
+                  getCardStylesForTheme(springAnimatedTheme).normalText,
+                  getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
                 ...
-              </Animated.Text>
+              </SpringAnimatedText>
             )}
-          </Animated.Text>
+          </SpringAnimatedText>
         </Link>
       </View>
     </View>

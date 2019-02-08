@@ -1,42 +1,65 @@
-import React from 'react'
-import {
-  Animated,
-  TextInput as TextInputOriginal,
-  TextInputProps as TextInputComponentProps,
-} from 'react-native'
+import React, { useRef, useState } from 'react'
+import { TextInputProps as TextInputComponentProps } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { useHover } from '../../hooks/use-hover'
+import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
+import { SpringAnimatedTextInput as SpringAnimatedTextInputOriginal } from '../animated/spring/SpringAnimatedTextInput'
+import { separatorSize } from './Separator'
 
-const AnimatedTextInput = Animated.createAnimatedComponent(
-  TextInputOriginal,
-) as typeof TextInputOriginal
-
-export interface TextInputProps extends TextInputComponentProps {
-  placeholderTextColor: any
-  style: any
+export interface SpringAnimatedTextInputProps extends TextInputComponentProps {
+  className?: string
+  placeholderTextColor?: any
+  style?: any
 }
 
-export const TextInput = React.forwardRef((props: TextInputProps, ref: any) => {
-  const theme = useAnimatedTheme()
+export const SpringAnimatedTextInput = React.forwardRef(
+  (props: SpringAnimatedTextInputProps, _ref: any) => {
+    const { style, ...otherProps } = props
 
-  const { style, ...otherProps } = props
+    const [isFocused, setIsFocused] = useState(false)
 
-  return (
-    <AnimatedTextInput
-      {...otherProps}
-      ref={ref}
-      style={[
-        {
-          paddingHorizontal: contentPadding,
-          paddingVertical: contentPadding / 2,
-          backgroundColor: theme.backgroundColorLess08,
-          borderRadius: radius,
-        },
-        style,
-      ]}
-    />
-  )
-})
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-export type TextInput = TextInputOriginal
+    const _defaultRef = useRef(null)
+    const ref = _ref || _defaultRef
+    const isHovered = useHover(ref)
+
+    return (
+      <SpringAnimatedTextInputOriginal
+        ref={ref}
+        placeholderTextColor={springAnimatedTheme.foregroundColorMuted50}
+        {...otherProps}
+        className={`input ${otherProps.className || ''}`.trim()}
+        onBlur={(e: any) => {
+          setIsFocused(false)
+          if (otherProps.onBlur) otherProps.onBlur(e)
+        }}
+        onFocus={(e: any) => {
+          setIsFocused(true)
+          if (otherProps.onFocus) otherProps.onFocus(e)
+        }}
+        style={[
+          {
+            height: 36,
+            margin: 0,
+            padding: 0,
+            paddingHorizontal: contentPadding,
+            backgroundColor: 'transparent',
+            borderRadius: radius,
+            borderWidth: separatorSize,
+            borderColor: isFocused
+              ? colors.brandBackgroundColor
+              : isHovered
+              ? springAnimatedTheme.foregroundColorMuted50
+              : springAnimatedTheme.foregroundColorMuted20,
+          },
+          style,
+        ]}
+      />
+    )
+  },
+)
+
+export type SpringAnimatedTextInput = typeof SpringAnimatedTextInputOriginal

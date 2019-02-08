@@ -1,21 +1,20 @@
 import React, { ReactNode } from 'react'
-import {
-  Animated,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextProps,
-  ViewProps,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { darken, getLuminance, lighten } from 'polished'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import {
   contentPadding,
   mutedOpacity,
   radius as defaultRadius,
 } from '../../styles/variables'
-import { AnimatedIcon } from '../animated/AnimatedIcon'
+import { getLuminanceDifference } from '../../utils/helpers/colors'
+import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useTheme } from '../context/ThemeContext'
+import { separatorSize } from './Separator'
 
 export interface LabelProps {
   borderColor?: string
@@ -27,77 +26,107 @@ export interface LabelProps {
   muted?: boolean
   outline?: boolean
   radius?: number
+  small?: boolean
   textColor?: string
   textProps?: TextProps
 }
 
-const styles = StyleSheet.create({
-  labelContainer: {
-    borderRadius: defaultRadius,
-    borderWidth: 1,
-    paddingHorizontal: contentPadding,
-    paddingVertical: 2,
-  },
-
-  labelText: {
-    fontSize: 14,
-  },
-})
-
 export function Label(props: LabelProps) {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const theme = useTheme()
 
   const {
     borderColor,
-    color: _color,
     children,
-    containerStyle,
+    color: _color,
     containerProps = {},
+    containerStyle,
+    isPrivate,
     muted,
     outline,
-    isPrivate,
     radius = defaultRadius,
-    textColor,
+    small,
+    textColor: _textColor,
     textProps = {},
   } = props
 
-  const color =
-    textColor ||
-    (outline
-      ? _color || (muted ? theme.foregroundColorMuted50 : theme.foregroundColor)
-      : '#FFFFFF')
+  const _colorLuminanceDiff = _color
+    ? Math.abs(getLuminanceDifference(_color, theme.backgroundColor))
+    : 0
+
+  const _readableColor =
+    _color &&
+    (outline && _colorLuminanceDiff < 0.4
+      ? theme.isDark
+        ? lighten(0.6 - _colorLuminanceDiff, _color)
+        : darken(0.6 - _colorLuminanceDiff, _color)
+      : _color)
+
+  const color = _readableColor || springAnimatedTheme.foregroundColor
+
+  const foregroundColor =
+    _textColor ||
+    (outline && color) ||
+    (_readableColor
+      ? getLuminance(_readableColor) > 0.4
+        ? darken(0.9, _readableColor)
+        : lighten(0.9, _readableColor)
+      : springAnimatedTheme.foregroundColor)
 
   return (
-    <Animated.View
+    <SpringAnimatedView
+      {...containerProps}
       style={[
-        styles.labelContainer,
-        containerStyle,
-        { borderColor: borderColor || _color || theme.foregroundColor },
-        !outline && {
-          backgroundColor: _color || theme.foregroundColor,
+        {
+          borderRadius: defaultRadius,
+          borderWidth: separatorSize,
+          paddingHorizontal: contentPadding / (small ? 2 : 1),
         },
+        containerProps && containerProps.style,
+        containerStyle,
+        {
+          borderColor: borderColor || color,
+          backgroundColor: outline
+            ? _readableColor
+              ? springAnimatedTheme.backgroundColor
+              : undefined
+            : color,
+        },
+        muted && { opacity: mutedOpacity },
         Boolean(radius) && { borderRadius: radius },
       ]}
-      {...containerProps}
     >
-      <Animated.Text
+      <SpringAnimatedText
         numberOfLines={1}
-        style={[
-          styles.labelText,
-          {
-            color,
-          },
-          muted && { opacity: mutedOpacity },
-        ]}
         {...textProps}
+        style={[
+          {
+            lineHeight: small ? 17 : 18,
+            fontSize: small ? 13 : 14,
+            color: foregroundColor,
+          },
+          textProps && textProps.style,
+        ]}
       >
         {Boolean(isPrivate) && (
           <Text>
-            <AnimatedIcon color={color} name="lock" />{' '}
+            <SpringAnimatedIcon
+              name="lock"
+              style={{ color: foregroundColor }}
+            />{' '}
           </Text>
         )}
-        {children}
-      </Animated.Text>
-    </Animated.View>
+        {typeof children === 'string'
+          ? parseTextWithEmojisToReactComponents(children, {
+              imageProps: {
+                style: {
+                  width: small ? 10 : 11,
+                  height: small ? 10 : 11,
+                },
+              },
+            })
+          : children}
+      </SpringAnimatedText>
+    </SpringAnimatedView>
   )
 }

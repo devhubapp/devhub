@@ -12,7 +12,6 @@ import { FABRenderer } from '../components/layout/FABRenderer'
 import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
-import { useAnimatedTheme } from '../hooks/use-animated-theme'
 import { useAppVisibility } from '../hooks/use-app-visibility'
 import { useEmitter } from '../hooks/use-emitter'
 import { useKeyDownCallback } from '../hooks/use-key-down-callback'
@@ -20,6 +19,7 @@ import { useKeyPressCallback } from '../hooks/use-key-press-callback'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
+import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { emitter } from '../setup'
@@ -41,7 +41,6 @@ export const MainScreen = React.memo(() => {
   const popModal = useReduxAction(actions.popModal)
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
-  const theme = useAnimatedTheme()
   const { appOrientation } = useAppLayout()
 
   const debounceSyncDown = useMemo(
@@ -85,6 +84,9 @@ export const MainScreen = React.memo(() => {
         // never happens apparently
         if (targetTagName === 'input') target.blur()
         else if (currentOpenedModal) popModal()
+        else if (Platform.isElectron && window.ipc)
+          window.ipc.send('exit-full-screen')
+
         return
       }
     },
@@ -152,7 +154,7 @@ export const MainScreen = React.memo(() => {
 
   return (
     <Screen
-      statusBarBackgroundColor={theme.backgroundColorLess08}
+      statusBarBackgroundThemeColor="backgroundColorLess1"
       useSafeArea={false}
     >
       <View
@@ -164,12 +166,21 @@ export const MainScreen = React.memo(() => {
           },
         ]}
       >
-        <Sidebar key="main-screen-sidebar" horizontal={horizontalSidebar} />
-        <Separator horizontal={horizontalSidebar} thick={!horizontalSidebar} />
+        <Sidebar
+          key="main-screen-sidebar"
+          horizontal={horizontalSidebar}
+          zIndex={1000}
+        />
+
+        <Separator
+          half
+          horizontal={horizontalSidebar}
+          thick={!horizontalSidebar}
+          zIndex={1000}
+        />
 
         <View style={styles.innerContainer}>
-          <ModalRenderer />
-          {!!currentOpenedModal && !horizontalSidebar && <Separator thick />}
+          <ModalRenderer renderSeparator={!horizontalSidebar} />
 
           <ColumnsContainer />
           <FABRenderer />

@@ -3,14 +3,19 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import '../libs/analytics'
+
+import { HelmetProvider } from '../libs/helmet'
 import { AppNavigator } from '../navigation/AppNavigator'
+import { enableNetworkInterceptors } from '../network-interceptor'
 import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DimensionsProvider } from './context/DimensionsContext'
 import { AppLayoutProvider } from './context/LayoutContext'
-import { ThemeProvider } from './context/ThemeContext'
+import { SpringAnimatedThemeProvider } from './context/SpringAnimatedThemeContext'
+
+enableNetworkInterceptors()
 
 const { persistor, store } = configureStore()
 
@@ -19,24 +24,26 @@ const { persistor, store } = configureStore()
 export function App() {
   return (
     // <StrictMode>
-    <ReduxProvider store={store}>
-      <ReduxStoreProvider>
-        <PersistGate loading={null} persistor={persistor}>
-          <DimensionsProvider>
-            <AppLayoutProvider>
-              <ColumnWidthProvider>
-                <ThemeProvider>
-                  <>
-                    <AppGlobalStyles />
-                    <AppNavigator />
-                  </>
-                </ThemeProvider>
-              </ColumnWidthProvider>
-            </AppLayoutProvider>
-          </DimensionsProvider>
-        </PersistGate>
-      </ReduxStoreProvider>
-    </ReduxProvider>
+    <HelmetProvider>
+      <ReduxProvider store={store}>
+        <ReduxStoreProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <DimensionsProvider>
+              <AppLayoutProvider>
+                <ColumnWidthProvider>
+                  <SpringAnimatedThemeProvider>
+                    <>
+                      <AppGlobalStyles />
+                      <AppNavigator />
+                    </>
+                  </SpringAnimatedThemeProvider>
+                </ColumnWidthProvider>
+              </AppLayoutProvider>
+            </DimensionsProvider>
+          </PersistGate>
+        </ReduxStoreProvider>
+      </ReduxProvider>
+    </HelmetProvider>
     // </StrictMode>
   )
 }

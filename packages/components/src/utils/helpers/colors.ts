@@ -1,3 +1,5 @@
+import { getLuminance } from 'polished'
+
 import { Platform } from '../../libs/platform'
 
 export function computeThemeColor(color: string) {
@@ -8,4 +10,8 @@ export function computeThemeColor(color: string) {
           .trim()
       : undefined
     : color
+}
+
+export function getLuminanceDifference(colorA: string, colorB: string) {
+  return getLuminance(colorA) - getLuminance(colorB)
 }

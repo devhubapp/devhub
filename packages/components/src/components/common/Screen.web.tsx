@@ -1,32 +1,46 @@
-// import { darken } from 'polished'
 import React, { ReactNode } from 'react'
-import { Animated, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { ThemeColors } from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useTheme } from '../context/ThemeContext'
 
 export interface ScreenProps {
   children?: ReactNode
+  statusBarBackgroundThemeColor?: keyof ThemeColors
   style?: StyleProp<ViewStyle>
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
     flex: 1,
   },
 })
 
 export const Screen = React.memo((props: ScreenProps) => {
-  const animatedTheme = useAnimatedTheme()
+  const { statusBarBackgroundThemeColor } = props
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  useTheme(theme => {
+    const color = statusBarBackgroundThemeColor
+      ? theme[statusBarBackgroundThemeColor]
+      : theme.backgroundColor
+
+    const metas = document.getElementsByTagName('meta') as any
+
+    metas['theme-color'].content = color
+    metas['msapplication-navbutton-color'].content = color
+  })
 
   return (
-    <Animated.View
+    <SpringAnimatedView
       {...props}
       style={[
         styles.container,
         props.style,
-        { backgroundColor: animatedTheme.backgroundColor },
-        // darken(0.01, theme.backgroundColor)
+        { backgroundColor: springAnimatedTheme.backgroundColor },
       ]}
     />
   )

@@ -9,11 +9,12 @@ import {
   GitHubEvent,
   GitHubIcon,
   MultipleStarEvent,
+  NotificationColumnSubscription,
 } from '../../types'
 import { isPullRequest } from './shared'
 
 export function getOlderEventDate(events: EnhancedGitHubEvent[]) {
-  const olderItem = _.orderBy(events, 'created_at', 'asc')[0]
+  const olderItem = sortEvents(events).pop()
   return olderItem && olderItem.created_at
 }
 
@@ -26,10 +27,19 @@ export function getColumnHeaderDetails(
     username: string
   }
   icon: GitHubIcon
-  repoIsKnown: boolean
   subtitle?: string
   title: string
-} {
+} & (
+  | {
+      repoIsKnown: false
+      owner?: undefined
+      repo?: undefined
+    }
+  | {
+      repoIsKnown: true
+      owner: string
+      repo: string
+    }) {
   switch (column.type) {
     case 'activity': {
       const subscription = subscriptions.filter(
@@ -62,6 +72,8 @@ export function getColumnHeaderDetails(
             },
             icon: 'repo',
             repoIsKnown: true,
+            owner: subscription.params.owner,
+            repo: subscription.params.repo,
             subtitle: 'Activity',
             title: subscription.params.repo,
           }
@@ -74,6 +86,8 @@ export function getColumnHeaderDetails(
             },
             icon: 'repo',
             repoIsKnown: true,
+            owner: subscription.params.owner,
+            repo: subscription.params.repo,
             subtitle: 'Network',
             title: subscription.params.repo,
           }
@@ -129,11 +143,30 @@ export function getColumnHeaderDetails(
     }
 
     case 'notifications': {
-      return {
-        icon: 'bell',
-        repoIsKnown: false,
-        subtitle: '',
-        title: 'Notifications',
+      const subscription = subscriptions.filter(
+        Boolean,
+      )[0] as NotificationColumnSubscription
+
+      switch (subscription.subtype) {
+        case 'REPO_NOTIFICATIONS': {
+          return {
+            icon: 'bell',
+            repoIsKnown: true,
+            owner: subscription.params.owner,
+            repo: subscription.params.repo,
+            subtitle: subscription.params.repo,
+            title: 'Notifications',
+          }
+        }
+
+        default: {
+          return {
+            icon: 'bell',
+            repoIsKnown: false,
+            subtitle: 'all',
+            title: 'Notifications',
+          }
+        }
       }
     }
 
@@ -502,4 +535,12 @@ export function mergeSimilarEvents(events: EnhancedGitHubEvent[]) {
   if (enhancedEvent) enhancedEvents.push(enhancedEvent)
 
   return enhancedEvents.length === events.length ? events : enhancedEvents
+}
+
+export function sortEvents(events: EnhancedGitHubEvent[] | undefined) {
+  if (!events) return []
+  return _(events)
+    .uniqBy('id')
+    .orderBy('created_at', 'desc')
+    .value()
 }

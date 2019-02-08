@@ -1,7 +1,8 @@
 import React from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 
 const pkg = require('@devhub/core/package.json') // tslint:disable-line
 
@@ -17,11 +18,14 @@ const styles = StyleSheet.create({
 })
 
 export function AppVersion() {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   return (
-    <Animated.Text
-      style={[styles.appVersion, { color: theme.foregroundColorTransparent50 }]}
-    >{`v${appVersion}`}</Animated.Text>
+    <SpringAnimatedText
+      style={[
+        styles.appVersion,
+        { color: springAnimatedTheme.foregroundColorMuted50 },
+      ]}
+    >{`v${appVersion}`}</SpringAnimatedText>
   )
 }

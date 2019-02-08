@@ -1,13 +1,14 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
-import { AnimatedIcon } from '../../../animated/AnimatedIcon'
+import { getGitHubURLForRepo } from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
-import { getRepositoryURL } from './helpers'
-import { getCardRowStylesForTheme } from './styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { cardRowStyles, getCardRowStylesForTheme } from './styles'
 
 export interface RepositoryRowProps {
   isForcePush?: boolean
@@ -23,7 +24,7 @@ export interface RepositoryRowProps {
 export interface RepositoryRowState {}
 
 export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     isForcePush,
@@ -45,61 +46,64 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
   const isBot = Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)
 
   return (
-    <View style={getCardRowStylesForTheme(theme).container}>
+    <View style={cardRowStyles.container}>
       <View
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       >
         <Avatar
           isBot={isBot}
           linkURL=""
           small
-          style={getCardStylesForTheme(theme).avatar}
+          style={cardStyles.avatar}
           username={ownerName}
         />
       </View>
 
-      <View style={getCardStylesForTheme(theme).rightColumn}>
+      <View style={cardStyles.rightColumn}>
         <Link
           href={
             showMoreItemsIndicator
               ? undefined
-              : getRepositoryURL(ownerName, repositoryName)
+              : getGitHubURLForRepo(ownerName, repositoryName)
           }
-          style={getCardRowStylesForTheme(theme).mainContentContainer}
+          style={cardRowStyles.mainContentContainer}
         >
-          <Animated.Text numberOfLines={1}>
-            <AnimatedIcon
+          <SpringAnimatedText numberOfLines={1}>
+            <SpringAnimatedIcon
               name={repoIcon}
+              size={13}
               style={[
-                getCardStylesForTheme(theme).normalText,
-                isRead && getCardStylesForTheme(theme).mutedText,
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardStylesForTheme(springAnimatedTheme).icon,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '}
-            <Animated.Text
+            <SpringAnimatedText
               style={[
-                getCardStylesForTheme(theme).normalText,
-                getCardRowStylesForTheme(theme).repositoryText,
-                isRead && getCardStylesForTheme(theme).mutedText,
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardRowStylesForTheme(springAnimatedTheme).repositoryText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
               {showMoreItemsIndicator ? '' : repositoryName}
-            </Animated.Text>
-            <Animated.Text
+            </SpringAnimatedText>
+            <SpringAnimatedText
               style={[
-                getCardStylesForTheme(theme).normalText,
-                getCardRowStylesForTheme(theme).repositorySecondaryText,
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                getCardRowStylesForTheme(springAnimatedTheme)
+                  .repositorySecondaryText,
                 (isRead || showMoreItemsIndicator) &&
-                  getCardStylesForTheme(theme).mutedText,
+                  getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
               {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
-            </Animated.Text>
-          </Animated.Text>
+            </SpringAnimatedText>
+          </SpringAnimatedText>
         </Link>
       </View>
     </View>

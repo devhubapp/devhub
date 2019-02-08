@@ -5,9 +5,12 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   isEventPrivate,
+  isItemRead,
   isNotificationPrivate,
   mergeSimilarEvents,
   NotificationColumnFilters,
+  sortEvents,
+  sortNotifications,
 } from '@devhub/core'
 
 export const filterRecordHasAnyForcedValue = (
@@ -44,8 +47,8 @@ export function itemPassesFilterRecord(
     : defaultValue
 }
 
-export function activityColumnHasAnyFilter(
-  filters: ActivityColumnFilters | undefined,
+function baseColumnHasAnyFilter(
+  filters: NotificationColumnFilters | undefined,
   hasPrivateAccess: boolean,
 ) {
   if (!filters) return false
@@ -54,9 +57,19 @@ export function activityColumnHasAnyFilter(
   if (hasPrivateAccess && typeof filters.private === 'boolean') return true
   if (!hasPrivateAccess && filters.private === true) return true
 
-  if (filters.inbox && filterRecordHasAnyForcedValue(filters.inbox)) {
-    return true
-  }
+  if (typeof filters.saved === 'boolean') return true
+  if (typeof filters.unread === 'boolean') return true
+
+  return false
+}
+
+export function activityColumnHasAnyFilter(
+  filters: ActivityColumnFilters | undefined,
+  hasPrivateAccess: boolean,
+) {
+  if (!filters) return false
+
+  if (baseColumnHasAnyFilter(filters, hasPrivateAccess)) return true
 
   if (
     filters.activity &&
@@ -74,14 +87,7 @@ export function notificationColumnHasAnyFilter(
 ) {
   if (!filters) return false
 
-  if (filters.clearedAt) return true
-  if (hasPrivateAccess && typeof filters.private === 'boolean') return true
-  if (!hasPrivateAccess && filters.private === true) return true
-  if (typeof filters.unread === 'boolean') return true
-
-  if (filters.inbox && filterRecordHasAnyForcedValue(filters.inbox)) {
-    return true
-  }
+  if (baseColumnHasAnyFilter(filters, hasPrivateAccess)) return true
 
   if (
     filters.notifications &&
@@ -98,15 +104,10 @@ export function getFilteredNotifications(
   filters: NotificationColumnFilters | undefined,
   hasPrivateAccess: boolean,
 ) {
-  let _notifications = _(notifications)
-    .uniqBy('id')
-    .orderBy(['unread', 'updated_at', 'created_at'], ['desc', 'desc', 'desc'])
-    .value()
+  let _notifications = sortNotifications(notifications)
 
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
-
-  const inboxFilter = (filters && filters.inbox) || {}
 
   // Note: GitHub always includes private notifications
   // even if our hasPrivateAccess (because this checks private repo access)
@@ -125,7 +126,7 @@ export function getFilteredNotifications(
 
       if (
         typeof filters.unread === 'boolean' &&
-        filters.unread !== !!notification.unread
+        filters.unread !== !isItemRead(notification)
       ) {
         return false
       }
@@ -138,16 +139,17 @@ export function getFilteredNotifications(
         return false
       }
 
-      const showInbox = inboxFilter.inbox !== false
-      const showSaveForLater = inboxFilter.saved !== false
-      const showCleared = inboxFilter.archived === true
+      const showSaveForLater = filters.saved !== false
+      const showInbox = filters.saved !== true
+      const showCleared = false
 
       if (
         filters.clearedAt &&
         (!notification.updated_at ||
           notification.updated_at <= filters.clearedAt)
       )
-        if (!notification.unread && !(showSaveForLater && notification.saved))
+        if (!(showSaveForLater && notification.saved))
+          /* && isItemRead(notification) */
           return showCleared
 
       if (notification.saved) return showSaveForLater
@@ -164,13 +166,9 @@ export function getFilteredEvents(
   filters: ActivityColumnFilters | undefined,
   hasPrivateAccess: boolean,
 ) {
-  let _events = _(events)
-    .uniqBy('id')
-    .orderBy(['updated_at', 'created_at'], ['desc', 'desc'])
-    .value()
+  let _events = sortEvents(events)
 
   const activityFilter = filters && filters.activity && filters.activity.types
-  const inboxFilter = (filters && filters.inbox) || {}
 
   if (
     filters &&
@@ -182,6 +180,13 @@ export function getFilteredEvents(
         return false
 
       if (
+        typeof filters.unread === 'boolean' &&
+        filters.unread !== !isItemRead(event)
+      ) {
+        return false
+      }
+
+      if (
         (!hasPrivateAccess && isEventPrivate(event)) ||
         (typeof filters.private === 'boolean' &&
           isEventPrivate(event) !== filters.private)
@@ -189,15 +194,16 @@ export function getFilteredEvents(
         return false
       }
 
-      const showInbox = inboxFilter.inbox !== false
-      const showSaveForLater = inboxFilter.saved !== false
-      const showCleared = inboxFilter.archived === true
+      const showSaveForLater = filters.saved !== false
+      const showInbox = filters.saved !== true
+      const showCleared = false
 
       if (
         filters.clearedAt &&
         (!event.created_at || event.created_at <= filters.clearedAt)
       )
-        if (!(showSaveForLater && event.saved) /* && !event.unread */)
+        if (!(showSaveForLater && event.saved))
+          /* && isItemRead(event) */
           return showCleared
 
       if (event.saved) return showSaveForLater

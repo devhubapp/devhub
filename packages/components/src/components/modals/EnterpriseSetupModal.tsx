@@ -1,21 +1,28 @@
 import _ from 'lodash'
 import React, { useState } from 'react'
-import { Animated, Clipboard, View } from 'react-native'
+import { Clipboard, View } from 'react-native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+export interface EnterpriseSetupModalProps {
+  showBackButton: boolean
+}
+
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H3 } from '../common/H3'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 
-export function EnterpriseSetupModal() {
-  const [copied, setCopied] = useState(false)
+export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
+  const { showBackButton } = props
 
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const [copied, setCopied] = useState(false)
 
   const userId = useReduxState(selectors.currentUserIdSelector)
   const username = useReduxState(selectors.currentUsernameSelector)
@@ -26,15 +33,18 @@ export function EnterpriseSetupModal() {
     <ModalColumn
       columnId="enterprise-setup-modal"
       iconName="plus"
+      showBackButton={showBackButton}
       title="GitHub Enterprise"
     >
       <View style={{ flex: 1, padding: contentPadding }}>
         <Spacer height={contentPadding} />
 
-        <Animated.Text style={{ lineHeight: 16, color: theme.foregroundColor }}>
+        <SpringAnimatedText
+          style={{ lineHeight: 16, color: springAnimatedTheme.foregroundColor }}
+        >
           To enable DevHub on your GitHub Enterprise, contact us via e-mail
           below:{' '}
-        </Animated.Text>
+        </SpringAnimatedText>
 
         <Spacer height={contentPadding} />
 
@@ -51,9 +61,11 @@ export function EnterpriseSetupModal() {
             href={`mailto:${email}`}
             openOnNewTab={false}
           >
-            <Animated.Text style={{ color: theme.foregroundColor }}>
+            <SpringAnimatedText
+              style={{ color: springAnimatedTheme.foregroundColor }}
+            >
               {email}
-            </Animated.Text>
+            </SpringAnimatedText>
           </Link>
         </View>
 

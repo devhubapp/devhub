@@ -1,28 +1,34 @@
 import React from 'react'
 
 import { Theme } from '@devhub/core'
+import { darken, lighten } from 'polished'
+import { themeColorFields } from '../utils/helpers/theme'
+import { getSeparatorThemeColor } from './common/Separator'
 import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme }) {
   const t = params.theme
+
   return `
     ::-webkit-scrollbar-thumb
     {
-      background-color:${t.backgroundColorDarker08};
+      background-color:${t[getSeparatorThemeColor(t.backgroundColor)]};
     }
 
     body {
-      --theme_backgroundColor:${t.backgroundColor};
-      --theme_backgroundColorDarker08:${t.backgroundColorDarker08};
-      --theme_backgroundColorLess08:${t.backgroundColorLess08};
-      --theme_backgroundColorLighther08:${t.backgroundColorLighther08};
-      --theme_backgroundColorMore08:${t.backgroundColorMore08};
-      --theme_backgroundColorTransparent10:${t.backgroundColorTransparent10};
-      --theme_foregroundColor:${t.foregroundColor};
-      --theme_foregroundColorMuted50:${t.foregroundColorMuted50};
-      --theme_foregroundColorTransparent50:${t.foregroundColorTransparent50};
-      --theme_foregroundColorTransparent80:${t.foregroundColorTransparent80};
+      ${themeColorFields
+        .map(field => `--theme_${field}:${t[field]};`)
+        .join('\n')}
       background-color:${t.backgroundColor};
+    }
+
+    a:not(.icon):hover, a:not(.icon):hover *:not(.icon) {
+      ${
+        t.isDark
+          ? `color: ${lighten(1, t.foregroundColor)} !important;`
+          : `color: ${darken(1, t.foregroundColor)} !important;`
+      }
+      transition: none 0s !important;
     }
   `
 }
@@ -30,5 +36,5 @@ function getStyles(params: { theme: Theme }) {
 export function AppGlobalStyles() {
   const theme = useTheme()
 
-  return <style>{getStyles({ theme })}</style>
+  return <style key="global-styles">{getStyles({ theme })}</style>
 }

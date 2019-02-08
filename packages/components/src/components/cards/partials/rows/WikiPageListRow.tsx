@@ -8,6 +8,7 @@ export interface WikiPageListRowProps {
   isRead: boolean
   maxHeight?: number
   pages: GitHubPage[]
+  smallLeftColumn?: boolean
 }
 
 export const WikiPageListRow = React.memo((props: WikiPageListRowProps) => {

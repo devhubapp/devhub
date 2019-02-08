@@ -15,15 +15,26 @@ export interface ThemePair {
 
 export interface ThemeColors {
   backgroundColor: string
-  backgroundColorDarker08: string
-  backgroundColorLess08: string
-  backgroundColorLighther08: string
-  backgroundColorMore08: string
+  backgroundColorDarker1: string
+  backgroundColorDarker2: string
+  backgroundColorDarker3: string
+  backgroundColorDarker4: string
+  backgroundColorLess1: string
+  backgroundColorLess2: string
+  backgroundColorLess3: string
+  backgroundColorLess4: string
+  backgroundColorLighther1: string
+  backgroundColorLighther2: string
+  backgroundColorLighther3: string
+  backgroundColorLighther4: string
+  backgroundColorMore1: string
+  backgroundColorMore2: string
+  backgroundColorMore3: string
+  backgroundColorMore4: string
   backgroundColorTransparent10: string
   foregroundColor: string
+  foregroundColorMuted20: string
   foregroundColorMuted50: string
-  foregroundColorTransparent50: string
-  foregroundColorTransparent80: string
 }
 
 export interface Theme extends ThemeColors {

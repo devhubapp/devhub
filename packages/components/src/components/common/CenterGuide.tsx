@@ -10,7 +10,7 @@ export function CenterGuide(props: CenterGuideProps) {
   const { color = 'red', size = 1 } = props
 
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <View collapsable={false} style={StyleSheet.absoluteFill}>
       <View
         style={{
           position: 'absolute',

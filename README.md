@@ -1,20 +1,24 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/619186/49823485-eed18480-fd66-11e8-88c0-700d840ad4f1.png" height="100" /><br/>
-  <span><b>DevHub</b>: <span>TweetDeck for GitHub [BETA]</span><br/>
-  <span><a href="https://play.google.com/store/apps/details?id=com.devhubapp" target="_blank">Android</a>, <a href="https://itunes.apple.com/br/app/devhub-for-github/id1191864199?l=en&mt=8" target="_blank">iOS</a>, <a href="https://devhubapp.com/" target="_blank">Web</a> & <a href="https://github.com/devhubapp/devhub/releases" target="_self">Desktop</a> with <b>95%+ code sharing</b> between them</span><br/>
-  <a href="https://devhubapp.com/" target="_blank">devhubapp.com</a>
+  <img src="https://user-images.githubusercontent.com/619186/52172760-33710f00-275d-11e9-9adb-8ea4209e4453.png" height="100" /><br/>
+  <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
+  <span><a href="https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=github_repo_link" target="_blank">Android</a>, <a href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=github_repo_link" target="_blank">iOS</a>, <a href="https://devhubapp.com/" target="_blank">Web</a> & <a href="https://github.com/devhubapp/devhub/releases" target="_self">Desktop</a> with <b>95%+ code sharing</b> between them<br/><i>thanks to React Native + React Native Web</i></span><br/>
+  <p align="center">
+    <a href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=github_repo_button" target="_blank"><img alt="Download on the App Store" height="50" src="https://user-images.githubusercontent.com/619186/52173137-d416fd00-2764-11e9-98c1-77607061f188.png" /></a>
+    <a href="https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=github_repo_button" target="_blank"><img alt="Get it on Google Play" height="50" src="https://user-images.githubusercontent.com/619186/52173136-d416fd00-2764-11e9-9599-7c098c14bb37.png" /></a>
+  </p>
 </p>
-  
-[![DevHub Desktop](https://user-images.githubusercontent.com/619186/49800542-dfcee000-fd2e-11e8-8e08-ff95c5872513.png)](https://devhubapp.com/)
 
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/52172965-b3997380-2761-11e9-80ec-902d6d854917.jpg)
+
+![DevHub Menubar](https://user-images.githubusercontent.com/619186/52375458-d9b36200-2a46-11e9-9a50-431293de7fa6.jpg)
 
 <p align="center">
-  <a href="https://devhubapp.com/" target="_blank">
-  <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/49802010-ebbca100-fd32-11e8-94d6-e8efb1b5dda8.PNG" />
-  <img alt="DevHub Mobile - Event Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802011-ebbca100-fd32-11e8-80c1-5d7cad609e7b.png" />
-  <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/49802012-ebbca100-fd32-11e8-8740-54ac8741edec.PNG" />
-  </a>
+  <img alt="DevHub Mobile - Notifications" height="460" src="https://user-images.githubusercontent.com/619186/52172527-5cdb6c00-2758-11e9-9f2c-d7c28b523045.png" />
+  <img alt="DevHub Mobile - Notification Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172528-5cdb6c00-2758-11e9-9072-4ae96c3c1795.png" />
+  <img alt="DevHub Mobile - Events" height="460" src="https://user-images.githubusercontent.com/619186/52172529-5cdb6c00-2758-11e9-999e-322f67d44fe1.png" />
+  <img alt="DevHub Mobile - Event Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172530-5cdb6c00-2758-11e9-86cf-291a30c37c96.png" />
 </p>
+
 
 <br/>
 
@@ -39,7 +43,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 - [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
-- [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.;
+- [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
 - [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
@@ -55,6 +59,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - Support for private repositories
 - Support for GitHub Enterprise
 - Push notifications
+- Unlimited number of columns and workspaces
 
 ##### Why is this app not completely free?
 
@@ -62,7 +67,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
 
-> Any suggestion? [Open an issue](https://github.com/devhubapp/devhub/issues/new)!
+> [Join the discussion](https://github.com/devhubapp/devhub/issues/106)!
 
 
 <br/>
@@ -73,6 +78,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | Key       | Action                       | Implemented    |
 | --------- | ---------------------------- | -------------- |
 | `Esc`     | Close current open modal     | ✅
+| `Esc`     | Exit full screen mode on desktop | ✅
 | `a`, `n`  | Add a new column             | ✅
 | `1`...`9` | Go to the `nth` column       | ✅
 | `0`       | Go to the last column        | ✅
@@ -138,13 +144,26 @@ To open the mobile projects, use:
 - `yarn xcode`
 - `yarn studio`
 
+### Running it online
+Alternatively, you can contribute using Gitpod, a free online dev environment for GitHub:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/devhubapp/devhub)
+<br/>
+
+> Disclaimer: Gitpod is a third party service and is not affiliated with GitHub neither DevHub.
+
+> When using a third party service, your tokens may be less secured.
 <br/>
 
 ## Author
 
-Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
+Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)<br/>
+Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
 
-<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://twitter.com/brunolemos/profile_image?size=original" height="100" /></a>
+<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=100" height="100" /></a>
+
+BTC: `3KpFKpbEhXsNfTGXRA3P4psxxXd9gNSXzH`<br/>
+ETH: `0x1f6314A3F01A2f579369bD04B507166fe45b2880`
 
 <br/>
 

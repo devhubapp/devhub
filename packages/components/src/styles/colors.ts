@@ -12,7 +12,7 @@ export const pink = '#E91E63'
 export const purple = '#6e5494'
 export const red = '#cb2431'
 export const star = '#edb800'
-export const teal = '#009688'
+export const teal = '#49d3b4'
 export const yellow = '#FFC107'
 
 export const brandBackgroundColor = lightBlue

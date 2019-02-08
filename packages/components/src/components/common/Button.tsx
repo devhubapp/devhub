@@ -1,27 +1,36 @@
-import React from 'react'
-import { Animated } from 'react-native'
+import React, { useRef } from 'react'
+import { useSpring } from 'react-spring/native'
 
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { rgba } from 'polished'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { useHover } from '../../hooks/use-hover'
+import { Platform } from '../../libs/platform'
 import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
-import { AnimatedActivityIndicator } from '../animated/AnimatedActivityIndicator'
-import { AnimatedTouchableOpacity } from '../animated/AnimatedTouchableOpacity'
-import { TouchableOpacityProps } from './TouchableOpacity'
+import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import {
+  SpringAnimatedTouchableOpacity,
+  SpringAnimatedTouchableOpacityProps,
+} from '../animated/spring/SpringAnimatedTouchableOpacity'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useTheme } from '../context/ThemeContext'
+import { separatorSize } from './Separator'
 
 export const buttonSize = 40
 
-export interface ButtonProps extends TouchableOpacityProps {
+export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
+  borderOnly?: boolean
   children: string | React.ReactNode
   disabled?: boolean
   loading?: boolean
-  onPress: TouchableOpacityProps['onPress']
+  onPress: SpringAnimatedTouchableOpacityProps['onPress']
   useBrandColor?: boolean
 }
 
-export function Button(props: ButtonProps) {
-  const theme = useAnimatedTheme()
-
+export const Button = React.memo((props: ButtonProps) => {
   const {
+    borderOnly,
     children,
     disabled,
     loading,
@@ -30,44 +39,124 @@ export function Button(props: ButtonProps) {
     ...otherProps
   } = props
 
+  const initialTheme = useTheme(theme => {
+    cacheRef.current.theme = theme
+    updateStyles()
+  })
+
+  const touchableRef = useRef(null)
+  const initialIsHovered = useHover(touchableRef, isHovered => {
+    cacheRef.current.isHovered = isHovered
+    updateStyles()
+  })
+
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
+    ReturnType<typeof getStyles>
+  >(getStyles)
+
+  function getStyles() {
+    const { isHovered, isPressing, theme } = cacheRef.current
+
+    return {
+      config: { duration: 100 },
+      activityIndicatorColor: theme.foregroundColor,
+      touchableBorderColor: useBrandColor
+        ? colors.brandBackgroundColor
+        : isHovered || isPressing
+        ? theme.backgroundColorLess3
+        : theme.backgroundColorLess2,
+      innerContainerBackgroundColor: borderOnly
+        ? rgba(theme.backgroundColorLess2, 0)
+        : isHovered || isPressing
+        ? useBrandColor
+          ? theme.backgroundColorTransparent10
+          : theme.backgroundColorLess3
+        : rgba(theme.backgroundColorLess2, 0),
+      textColor: useBrandColor
+        ? colors.brandForegroundColor
+        : borderOnly
+        ? isHovered || isPressing
+          ? theme.foregroundColor
+          : theme.foregroundColorMuted50
+        : theme.foregroundColor,
+    }
+  }
+
+  function updateStyles() {
+    setSpringAnimatedStyles(getStyles())
+  }
+
   return (
-    <AnimatedTouchableOpacity
+    <SpringAnimatedTouchableOpacity
+      ref={touchableRef}
       {...otherProps}
+      onPressIn={() => {
+        if (Platform.realOS === 'web') return
+
+        cacheRef.current.isPressing = true
+        updateStyles()
+      }}
+      onPressOut={() => {
+        if (Platform.realOS === 'web') return
+
+        cacheRef.current.isPressing = false
+        updateStyles()
+      }}
       style={[
         {
-          alignItems: 'center',
-          justifyContent: 'center',
           height: buttonSize,
-          paddingHorizontal: contentPadding,
-          backgroundColor: useBrandColor
+          backgroundColor: borderOnly
+            ? 'transparent'
+            : useBrandColor
             ? colors.brandBackgroundColor
-            : (theme.backgroundColorMore08 as any),
+            : springAnimatedTheme.backgroundColorLess2,
+          borderColor: springAnimatedStyles.touchableBorderColor,
+          borderWidth: borderOnly ? separatorSize : 0,
           borderRadius: radius,
         },
         style,
       ]}
     >
-      {loading ? (
-        <AnimatedActivityIndicator
-          color={theme.foregroundColor as any}
-          size="small"
-        />
-      ) : typeof children === 'string' ? (
-        <Animated.Text
-          style={{
-            lineHeight: 14,
-            fontSize: 14,
-            fontWeight: '500',
-            color: useBrandColor
-              ? colors.brandForegroundColor
-              : theme.foregroundColor,
-          }}
-        >
-          {children}
-        </Animated.Text>
-      ) : (
-        children
-      )}
-    </AnimatedTouchableOpacity>
+      <SpringAnimatedView
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: buttonSize,
+          paddingHorizontal: contentPadding,
+          backgroundColor: springAnimatedStyles.innerContainerBackgroundColor,
+          borderWidth: 0,
+          borderRadius: radius,
+        }}
+      >
+        {loading ? (
+          <SpringAnimatedActivityIndicator
+            color={springAnimatedStyles.activityIndicatorColor}
+            size="small"
+          />
+        ) : typeof children === 'string' ? (
+          <SpringAnimatedText
+            style={{
+              lineHeight: 14,
+              fontSize: 14,
+              fontWeight: '500',
+              color: springAnimatedStyles.textColor,
+            }}
+          >
+            {children}
+          </SpringAnimatedText>
+        ) : (
+          children
+        )}
+      </SpringAnimatedView>
+    </SpringAnimatedTouchableOpacity>
   )
-}
+})

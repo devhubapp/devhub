@@ -22,6 +22,7 @@ import {
   GitHubRepo,
   GitHubUser,
   isEventPrivate,
+  isItemRead,
   MultipleStarEvent,
 } from '@devhub/core'
 import { contentPadding } from '../../styles/variables'
@@ -30,6 +31,8 @@ import {
   getIssueIconAndColor,
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { BranchRow } from './partials/rows/BranchRow'
 import { CommentRow } from './partials/rows/CommentRow'
@@ -48,13 +51,15 @@ export interface EventCardProps {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: contentPadding,
-    paddingVertical: 1.5 * contentPadding,
+    padding: contentPadding,
   },
 })
 
 export const EventCard = React.memo((props: EventCardProps) => {
   const { event, repoIsKnown } = props
+
+  const springAnimatedTheme = useSpringAnimatedTheme()
+
   if (!event) return null
 
   const { actor, payload, id, saved, type } = event as EnhancedGitHubEvent
@@ -73,7 +78,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const { issue } = payload as GitHubIssuesEvent['payload']
   let { ref: branchName } = payload as GitHubPushEvent['payload']
 
-  const isRead = false
+  const isRead = isItemRead(event)
   const isSaved = saved === true
 
   const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
@@ -168,19 +173,33 @@ export const EventCard = React.memo((props: EventCardProps) => {
       ? comment.html_url || comment.url
       : issue.html_url || issue.url)
 
+  const smallLeftColumn = false
+
   return (
-    <View key={`event-card-${id}-inner`} style={styles.container}>
+    <SpringAnimatedView
+      key={`event-card-${id}-inner`}
+      style={[
+        styles.container,
+        {
+          backgroundColor: isRead
+            ? springAnimatedTheme.backgroundColorDarker1
+            : springAnimatedTheme.backgroundColor,
+        },
+      ]}
+    >
       <EventCardHeader
         key={`event-card-header-${id}`}
         actionText={actionText}
         avatarURL={avatarURL}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
-        createdAt={event.created_at}
+        date={event.created_at}
         ids={('merged' in event && event.merged) || [id]}
         isBot={isBot}
         isPrivate={isPrivate}
+        isRead={isRead}
         isSaved={isSaved}
+        smallLeftColumn={smallLeftColumn}
         userLinkURL={actor.html_url || ''}
         username={actor.display_login || actor.login}
       />
@@ -192,6 +211,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isPush={isPush}
           isRead={isRead}
           repos={repos}
+          smallLeftColumn={smallLeftColumn}
         />
       )}
 
@@ -206,6 +226,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isRead={isRead}
           ownerName={repoOwnerName || ''}
           repositoryName={repoName || ''}
+          smallLeftColumn={smallLeftColumn}
         />
       )}
 
@@ -215,8 +236,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isForcePush={isForcePush}
           isFork
           isRead={isRead}
-          ownerName={forkRepoOwnerName!}
-          repositoryName={forkRepoName!}
+          ownerName={forkRepoOwnerName || ''}
+          repositoryName={forkRepoName || ''}
+          smallLeftColumn={smallLeftColumn}
         />
       )}
 
@@ -224,6 +246,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <UserListRow
           key={`event-user-list-row-${userIds.join('-')}`}
           isRead={isRead}
+          smallLeftColumn={smallLeftColumn}
           users={users}
         />
       )}
@@ -233,6 +256,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           key={`event-wiki-page-list-row-${pageIds.join('-')}`}
           isRead={isRead}
           pages={pages}
+          smallLeftColumn={smallLeftColumn}
         />
       )}
 
@@ -240,10 +264,17 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <IssueOrPullRequestRow
           key={`event-pr-row-${pullRequest.id}`}
           avatarURL={pullRequest.user.avatar_url}
+          commentsCount={pullRequest.comments}
+          createdAt={pullRequest.created_at}
           iconColor={pullRequestIconColor!}
           iconName={pullRequestIconName!}
+          id={pullRequest.id}
           isRead={isRead}
           issueOrPullRequestNumber={pullRequest.number}
+          labels={pullRequest.labels}
+          owner={repoOwnerName || ''}
+          repo={repoName || ''}
+          smallLeftColumn={smallLeftColumn}
           title={pullRequest.title}
           url={pullRequestURL}
           userLinkURL={pullRequest.user.html_url || ''}
@@ -256,6 +287,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           key={`event-commit-list-row-${commitIds.join('-')}`}
           commits={commits}
           isRead={isRead}
+          smallLeftColumn={smallLeftColumn}
         />
       )}
 
@@ -263,10 +295,17 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <IssueOrPullRequestRow
           key={`event-issue-row-${issue.id}`}
           avatarURL={issue.user.avatar_url}
+          commentsCount={issue.comments}
+          createdAt={issue.created_at}
           iconColor={issueIconColor!}
           iconName={issueIconName!}
+          id={issue.id}
           isRead={isRead}
           issueOrPullRequestNumber={issue.number}
+          labels={issue.labels}
+          owner={repoOwnerName || ''}
+          repo={repoName || ''}
+          smallLeftColumn={smallLeftColumn}
           title={issue.title}
           url={issueURL}
           userLinkURL={issue.user.html_url || ''}
@@ -282,6 +321,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             avatarURL={issue.user.avatar_url}
             body={issue.body}
             isRead={isRead}
+            smallLeftColumn={smallLeftColumn}
             url={issue.html_url || issue.url}
             userLinkURL={issue.user.html_url || ''}
             username={issue.user.display_login || issue.user.login}
@@ -295,6 +335,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               avatarURL={pullRequest.user.avatar_url}
               body={pullRequest.body}
               isRead={isRead}
+              smallLeftColumn={smallLeftColumn}
               url={pullRequest.html_url || pullRequest.url}
               userLinkURL={pullRequest.user.html_url || ''}
               username={
@@ -308,6 +349,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             avatarURL={comment.user.avatar_url}
             body={comment.body}
             isRead={isRead}
+            smallLeftColumn={smallLeftColumn}
             url={comment.html_url || comment.url}
             userLinkURL={comment.user.html_url || ''}
             username={comment.user.display_login || comment.user.login}
@@ -322,14 +364,15 @@ export const EventCard = React.memo((props: EventCardProps) => {
           branch={release.target_commitish}
           isRead={isRead}
           name={release.name}
-          ownerName={repoOwnerName!}
-          repositoryName={repoName!}
+          ownerName={repoOwnerName || ''}
+          repositoryName={repoName || ''}
+          smallLeftColumn={smallLeftColumn}
           tagName={release.tag_name}
           url={release.html_url || release.url}
           userLinkURL={release.author.html_url || ''}
           username={release.author.display_login || release.author.login}
         />
       )}
-    </View>
+    </SpringAnimatedView>
   )
 })

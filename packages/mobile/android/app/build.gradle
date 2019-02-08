@@ -103,8 +103,8 @@ android {
         applicationId "com.devhubapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "0.42.0"
+        versionCode 1383
+        versionName "0.45.4"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -151,7 +151,7 @@ dependencies {
 
     implementation project(':react-native-firebase')
     implementation 'com.google.android.gms:play-services-base:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
 
     implementation project(':react-native-google-analytics-bridge')
     implementation project(':react-native-vector-icons')

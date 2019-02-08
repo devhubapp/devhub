@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React from 'react'
 
 import { Columns } from '../components/columns/Columns'

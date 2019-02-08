@@ -1,28 +1,37 @@
-import React, { useEffect, useRef } from 'react'
-import { Animated, View } from 'react-native'
+import React, { useRef } from 'react'
+import { View } from 'react-native'
 
 import { Theme } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import * as colors from '../../styles/colors'
 import { darkThemesArr, lightThemesArr } from '../../styles/themes'
+import { defaultTheme } from '../../styles/utils'
 import { contentPadding } from '../../styles/variables'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
+import { SubHeader } from '../common/SubHeader'
 import { Switch } from '../common/Switch'
 import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
 
-export function ThemePreference() {
-  const appTheme = useTheme()
-  const appAnimatedTheme = useAnimatedTheme()
+export const ThemePreference = React.memo(() => {
+  const lastThemeId = useRef(defaultTheme.id)
+
+  useTheme(theme => {
+    if (theme.id === 'auto') return
+    lastThemeId.current = theme.id
+  })
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const currentThemeId = useReduxState(selectors.themePairSelector).id
+
   const preferredDarkTheme = useReduxState(
     selectors.preferredDarkThemePairSelector,
   )
@@ -31,16 +40,6 @@ export function ThemePreference() {
   )
 
   const setTheme = useReduxAction(actions.setTheme)
-
-  const lastThemeId = useRef(appTheme.id)
-
-  useEffect(
-    () => {
-      if (currentThemeId === 'auto') return
-      lastThemeId.current = currentThemeId
-    },
-    [appTheme.id],
-  )
 
   const preferredDarkThemeId = preferredDarkTheme && preferredDarkTheme.id
   const preferredLightThemeId = preferredLightTheme && preferredLightTheme.id
@@ -84,7 +83,8 @@ export function ThemePreference() {
               borderColor: 'transparent',
             }}
           >
-            <Animated.Text
+            <SpringAnimatedText
+              key={`theme-item-icon-${theme.id}`}
               style={{
                 alignSelf: 'center',
                 margin: 0,
@@ -103,9 +103,7 @@ export function ThemePreference() {
                     lineHeight: 20,
                   },
                 }),
-                color: selected
-                  ? colors.brandBackgroundColor
-                  : appTheme.foregroundColorTransparent80,
+                color: springAnimatedTheme.foregroundColor,
                 textAlign: 'center',
               }}
             >
@@ -116,20 +114,19 @@ export function ThemePreference() {
                     : '◓'
                   : '◉'
                 : '○'}
-            </Animated.Text>
+            </SpringAnimatedText>
           </View>
 
-          <Animated.Text
+          <SpringAnimatedText
+            key={`theme-item-name-${theme.id}`}
             style={{
               alignSelf: 'center',
               lineHeight: 20,
-              color: selected
-                ? colors.brandBackgroundColor
-                : appAnimatedTheme.foregroundColor,
+              color: springAnimatedTheme.foregroundColor,
             }}
           >
             {theme.displayName}
-          </Animated.Text>
+          </SpringAnimatedText>
         </View>
       </TouchableOpacity>
     )
@@ -137,40 +134,42 @@ export function ThemePreference() {
 
   return (
     <View>
-      <H2 withMargin>Theme</H2>
+      <SubHeader title="Theme" />
 
-      <View style={{ flexDirection: 'row' }}>
-        <View style={{ flex: 1 }}>
-          <H3 withMargin>Light Theme</H3>
-          {lightThemesArr.map(t => renderThemeButton(t))}
+      <View style={{ paddingHorizontal: contentPadding }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1 }}>
+            <H3 withMargin>Light Theme</H3>
+            {lightThemesArr.map(t => renderThemeButton(t))}
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <H3 withMargin>Dark Theme</H3>
+            {darkThemesArr.map(t => renderThemeButton(t))}
+          </View>
         </View>
 
-        <View style={{ flex: 1 }}>
-          <H3 withMargin>Dark Theme</H3>
-          {darkThemesArr.map(t => renderThemeButton(t))}
+        <Spacer height={contentPadding} />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <H3>Auto toggle on day/night</H3>
+          <Switch
+            analyticsLabel="auto_theme"
+            onValueChange={enableAutoTheme =>
+              setTheme({
+                id: enableAutoTheme ? 'auto' : lastThemeId.current,
+              })
+            }
+            value={currentThemeId === 'auto'}
+          />
         </View>
-      </View>
-
-      <Spacer height={contentPadding} />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <H3>Auto toggle on day/night</H3>
-        <Switch
-          analyticsLabel="auto_theme"
-          onValueChange={enableAutoTheme =>
-            setTheme({
-              id: enableAutoTheme ? 'auto' : lastThemeId.current,
-            })
-          }
-          value={currentThemeId === 'auto'}
-        />
       </View>
     </View>
   )
-}
+})

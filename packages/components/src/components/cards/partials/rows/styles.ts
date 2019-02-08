@@ -2,10 +2,10 @@ import _ from 'lodash'
 import { StyleSheet } from 'react-native'
 
 import { Theme } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { contentPadding, smallTextSize } from '../../../../styles/variables'
 
-const styles = StyleSheet.create({
+export const cardRowStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexGrow: 1,
@@ -19,10 +19,8 @@ const styles = StyleSheet.create({
 })
 
 export const getCardRowStylesForTheme = _.memoize(
-  (theme: Theme | ReturnType<typeof useAnimatedTheme>) => {
+  (theme: Theme | ReturnType<typeof useCSSVariablesOrSpringAnimatedTheme>) => {
     return {
-      ...styles,
-
       repositoryText: {
         color: theme.foregroundColor,
       },

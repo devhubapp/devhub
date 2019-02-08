@@ -1,28 +1,15 @@
-* {
-  transition: opacity 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out, color 0.2s ease-out;
-  box-sizing: border-box;
-}
-
-.touchable-opacity {
-  transition: opacity 0s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out, color 0.2s ease-out;
-}
-
 ::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+  width: 1px;
+  height: 1px;
 }
 
 ::-webkit-scrollbar-thumb
 {
-  background-color: #49d3b580;
+  background-color: #49d3b480;
 }
 
 *:focus {
-  outline: none;
-}
-
-* {
-  box-sizing: border-box;
+  outline-color: #49d3b4;
 }
 
 html, body, #root, #root > div {
@@ -36,10 +23,14 @@ html {
 }
 
 body {
-  background-color: #292c33;
+  background-color: #242b38;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.input:focus {
+  outline: none !important;
 }
 
 .snap-container {

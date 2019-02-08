@@ -1,41 +1,50 @@
 import { MomentInput } from 'moment'
 import React from 'react'
-import { Animated, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
-import { getDateSmallText, GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import {
+  getDateSmallText,
+  getFullDateText,
+  getGitHubURLForUser,
+  GitHubIcon,
+} from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
+import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import * as colors from '../../../styles/colors'
-import { AnimatedIcon } from '../../animated/AnimatedIcon'
+import {
+  columnHeaderItemContentSize,
+  contentPadding,
+} from '../../../styles/variables'
+import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
+import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
-import { getCardStylesForTheme } from '../styles'
-import { CardIcon } from './CardIcon'
-import { getUserURL } from './rows/helpers'
+import { cardStyles, getCardStylesForTheme } from '../styles'
 
 export interface EventCardHeaderProps {
   actionText: string
   avatarURL: string
   cardIconColor?: string
   cardIconName: GitHubIcon
-  createdAt: MomentInput
+  date: MomentInput
   ids: Array<string | number>
   isBot: boolean
   isPrivate?: boolean
+  isRead: boolean
   isSaved?: boolean
   smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
 
-export interface EventCardHeaderState {}
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    flexGrow: 1,
   },
 
   rightColumnCentered: {
@@ -45,7 +54,6 @@ const styles = StyleSheet.create({
 
   outerContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
   },
 
   innerContainer: {
@@ -54,117 +62,192 @@ const styles = StyleSheet.create({
 })
 
 export function EventCardHeader(props: EventCardHeaderProps) {
-  const theme = useAnimatedTheme()
-
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
-
   const {
     actionText,
     avatarURL,
     cardIconColor,
     cardIconName,
-    createdAt,
+    date,
     ids,
     isBot,
     isPrivate,
+    isRead,
     isSaved,
     smallLeftColumn,
-    userLinkURL,
+    userLinkURL: _userLinkURL,
     username: _username,
   } = props
 
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
+
+  const markItemsAsReadOrUnread = useReduxAction(
+    actions.markItemsAsReadOrUnread,
+  )
+
   const username = isBot ? _username!.replace('[bot]', '') : _username
+
+  const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
   return (
     <View
       key={`event-card-header-${ids.join(',')}-inner`}
       style={styles.container}
     >
-      <View
+      <SpringAnimatedView
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       >
         <Avatar
           avatarURL={avatarURL}
           isBot={isBot}
           linkURL={userLinkURL}
-          shape={isBot ? 'rounded' : 'circle'}
-          style={getCardStylesForTheme(theme).avatar}
+          shape={isBot ? undefined : 'circle'}
+          style={cardStyles.avatar}
           username={username}
         />
-      </View>
+      </SpringAnimatedView>
 
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <View style={getCardStylesForTheme(theme).horizontal}>
-              <Link href={getUserURL(username, { isBot })}>
-                <Animated.Text
+            <SpringAnimatedView style={cardStyles.horizontal}>
+              <Link href={userLinkURL}>
+                <SpringAnimatedText
                   numberOfLines={1}
-                  style={getCardStylesForTheme(theme).usernameText}
+                  style={
+                    getCardStylesForTheme(springAnimatedTheme).usernameText
+                  }
                 >
                   {username}
-                </Animated.Text>
+                </SpringAnimatedText>
               </Link>
               {!!isBot && (
                 <>
                   <Text children=" " />
-                  <Animated.Text
+                  <SpringAnimatedText
                     numberOfLines={1}
-                    style={getCardStylesForTheme(theme).timestampText}
-                  >{`• BOT`}</Animated.Text>
+                    style={
+                      getCardStylesForTheme(springAnimatedTheme).timestampText
+                    }
+                  >
+                    <Text children="•" style={{ fontSize: 9 }} />
+                    <Text children=" " />
+                    BOT
+                  </SpringAnimatedText>
                 </>
               )}
-              <IntervalRefresh date={createdAt}>
+              <IntervalRefresh date={date}>
                 {() => {
-                  const dateText = getDateSmallText(createdAt)
+                  const dateText = getDateSmallText(date, false)
                   if (!dateText) return null
 
                   return (
                     <>
                       <Text children=" " />
-                      <Animated.Text
+                      <SpringAnimatedText
                         numberOfLines={1}
-                        style={getCardStylesForTheme(theme).timestampText}
+                        style={
+                          getCardStylesForTheme(springAnimatedTheme)
+                            .timestampText
+                        }
+                        {...Platform.select({
+                          web: { title: getFullDateText(date) },
+                        })}
                       >
-                        {`• ${dateText}`}
-                      </Animated.Text>
+                        <Text children="•" style={{ fontSize: 9 }} />
+                        <Text children=" " />
+                        {dateText}
+                      </SpringAnimatedText>
                     </>
                   )
                 }}
               </IntervalRefresh>
-            </View>
+            </SpringAnimatedView>
 
-            <Animated.Text
+            <SpringAnimatedText
               numberOfLines={1}
-              style={getCardStylesForTheme(theme).descriptionText}
+              style={getCardStylesForTheme(springAnimatedTheme).descriptionText}
             >
               {!!isPrivate && (
-                <Animated.Text style={getCardStylesForTheme(theme).mutedText}>
-                  <AnimatedIcon
+                <SpringAnimatedText
+                  style={getCardStylesForTheme(springAnimatedTheme).mutedText}
+                >
+                  <SpringAnimatedIcon
                     name="lock"
-                    style={getCardStylesForTheme(theme).mutedText}
+                    style={getCardStylesForTheme(springAnimatedTheme).mutedText}
                   />{' '}
-                </Animated.Text>
+                </SpringAnimatedText>
               )}
               {actionText}
-            </Animated.Text>
+            </SpringAnimatedText>
           </View>
 
-          <CardIcon
-            name="bookmark"
-            color={
-              isSaved
-                ? colors.brandBackgroundColor
-                : theme.foregroundColorMuted50
+          <ColumnHeaderItem
+            analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
+            enableForegroundHover
+            fixedIconSize
+            iconName={isRead ? 'mail-read' : 'mail'}
+            onPress={() =>
+              markItemsAsReadOrUnread({
+                type: 'activity',
+                itemIds: ids,
+                unread: !!isRead,
+                localOnly: true,
+              })
             }
-            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
+            size={18}
+            style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 4,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+            }}
           />
-          <CardIcon name={cardIconName} color={cardIconColor} />
+
+          <ColumnHeaderItem
+            analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
+            enableForegroundHover
+            fixedIconSize
+            iconName="bookmark"
+            iconStyle={[
+              isSaved && {
+                color: colors.brandBackgroundColor,
+              },
+            ]}
+            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
+            size={18}
+            style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 4,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+            }}
+          />
+
+          <ColumnHeaderItem
+            fixedIconSize
+            iconName={cardIconName}
+            iconStyle={[
+              cardIconName === 'star' && {
+                lineHeight: 16,
+              },
+              !!cardIconColor && { color: cardIconColor },
+            ]}
+            size={18}
+            style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 4,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+              marginRight: -contentPadding / 2,
+            }}
+          />
         </View>
       </View>
     </View>

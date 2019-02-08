@@ -1,9 +1,9 @@
-import { InputIdentityList, KeyboardEvent, useEffect } from 'react'
+import { DependencyList, KeyboardEvent, useEffect } from 'react'
 
 export function useKeyDownCallback(
   callback: (e: KeyboardEvent) => void,
   keyOrKeys?: string | [string],
-  inputs: InputIdentityList = [],
+  deps: DependencyList = [],
 ) {
   useEffect(
     () => {
@@ -23,6 +23,6 @@ export function useKeyDownCallback(
         window.removeEventListener('keydown', handler as any)
       }
     },
-    [...(Array.isArray(keyOrKeys) ? keyOrKeys : [keyOrKeys]), ...inputs],
+    [...(Array.isArray(keyOrKeys) ? keyOrKeys : [keyOrKeys]), ...deps],
   )
 }

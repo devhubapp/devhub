@@ -1,12 +1,21 @@
 import gravatar from 'gravatar'
+import qs from 'qs'
 
 import {
   ColumnSubscription,
+  EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
   GitHubApiHeaders,
   GitHubIcon,
   GitHubPullRequest,
 } from '../../types'
 import { getSteppedSize } from '../shared'
+
+export function isItemRead(
+  item: EnhancedGitHubNotification | EnhancedGitHubEvent,
+) {
+  return !(item && (item.unread !== false || item.forceUnreadLocally))
+}
 
 export function getUserAvatarByAvatarURL(
   avatarURL: string,
@@ -16,11 +25,14 @@ export function getUserAvatarByAvatarURL(
   if (!avatarURL) return ''
 
   const _avatarURL = avatarURL.indexOf('?') > 0 ? avatarURL : `${avatarURL}?`
-  return `${_avatarURL}&s=${getSteppedSize(
-    size,
-    undefined,
-    getPixelSizeForLayoutSizeFn,
-  )}`
+  const [url, _querystring] = _avatarURL.split('?')
+  const query = qs.parse(_querystring)
+  const querystring = qs.stringify({
+    ...query,
+    size: getSteppedSize(size, undefined, getPixelSizeForLayoutSizeFn),
+  })
+
+  return `${url}?${querystring}`
 }
 
 export function getUserAvatarByUsername(
@@ -174,7 +186,20 @@ export function getUniqueIdForSubscription(subscription: {
     }
 
     case 'notifications': {
-      return `/notifications?all=${s.params!.all ? 'true' : 'false'}`
+      const _querystring = qs.stringify({ all: !!s.params.all })
+      const querystring = _querystring ? `?${_querystring}` : ''
+
+      switch (s.subtype) {
+        case 'REPO_NOTIFICATIONS': {
+          const { owner, repo } = s.params
+          if (!(owner && repo)) throw new Error('Required params: owner, repo')
+          return `/repos/${owner}/${repo}/notifications${querystring}`.toLowerCase()
+        }
+
+        default: {
+          return `/notifications${querystring}`
+        }
+      }
     }
 
     default:

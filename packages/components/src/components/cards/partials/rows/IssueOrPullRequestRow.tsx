@@ -1,123 +1,275 @@
 import React from 'react'
-import { Animated, StyleSheet, View } from 'react-native'
+import { Text, View } from 'react-native'
 
-import { trimNewLinesAndSpaces } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import {
+  getDateSmallText,
+  getFullDateText,
+  getGitHubURLForUser,
+  GitHubLabel,
+  trimNewLinesAndSpaces,
+} from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
-import { contentPadding } from '../../../../styles/variables'
+import { contentPadding, mutedOpacity } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { AnimatedIcon, AnimatedIconProps } from '../../../animated/AnimatedIcon'
+import {
+  SpringAnimatedIcon,
+  SpringAnimatedIconProps,
+} from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
+import { IntervalRefresh } from '../../../common/IntervalRefresh'
+import { Label } from '../../../common/Label'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
+import { Spacer } from '../../../common/Spacer'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
-import { getCardRowStylesForTheme } from './styles'
+import { CardSmallThing } from '../CardSmallThing'
+import { cardRowStyles } from './styles'
 
 export interface IssueOrPullRequestRowProps {
   addBottomAnchor?: boolean
-  avatarURL: string
+  avatarURL: string | undefined
+  commentsCount?: number
+  createdAt: string | undefined
   iconColor?: string
-  iconName: AnimatedIconProps['name']
+  iconName: SpringAnimatedIconProps['name']
+  id: string | number | undefined
   isRead: boolean
   issueOrPullRequestNumber: number
+  labels?: GitHubLabel[] | undefined
+  owner: string
+  repo: string
   smallLeftColumn?: boolean
   title: string
   url: string
-  userLinkURL: string
-  username: string
+  userLinkURL: string | undefined
+  username: string | undefined
 }
-
-export interface IssueOrPullRequestRowState {}
-
-const styles = StyleSheet.create({
-  cardItemId: {
-    marginLeft: contentPadding,
-  },
-})
 
 export const IssueOrPullRequestRow = React.memo(
   (props: IssueOrPullRequestRowProps) => {
-    const theme = useAnimatedTheme()
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const {
       addBottomAnchor,
       avatarURL,
+      commentsCount,
+      createdAt,
       iconColor,
       iconName,
+      id,
       isRead,
       issueOrPullRequestNumber,
+      labels,
+      owner,
+      repo,
       smallLeftColumn,
       title: _title,
       url,
       userLinkURL,
-      username,
+      username: _username,
     } = props
 
     const title = trimNewLinesAndSpaces(_title)
     if (!title) return null
 
+    const isBot = Boolean(_username && _username.indexOf('[bot]') >= 0)
+    const username =
+      isBot && _username ? _username.replace('[bot]', '') : _username
+
     const byText = username ? `@${username}` : ''
 
     return (
-      <View style={getCardRowStylesForTheme(theme).container}>
+      <View
+        key={`issue-or-pr-row-inner-${id}-${owner}-${repo}-${issueOrPullRequestNumber}`}
+        style={cardRowStyles.container}
+      >
         <View
           style={[
-            getCardStylesForTheme(theme).leftColumn,
+            cardStyles.leftColumn,
             smallLeftColumn
-              ? getCardStylesForTheme(theme).leftColumn__small
-              : getCardStylesForTheme(theme).leftColumn__big,
+              ? cardStyles.leftColumn__small
+              : cardStyles.leftColumn__big,
           ]}
         >
           {Boolean(username) && (
             <Avatar
               avatarURL={avatarURL}
-              isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
+              isBot={isBot}
               linkURL={userLinkURL}
               small
-              style={getCardStylesForTheme(theme).avatar}
+              style={cardStyles.avatar}
               username={username}
             />
           )}
         </View>
 
-        <View style={getCardStylesForTheme(theme).rightColumn}>
-          <Link
-            href={fixURL(url, {
-              addBottomAnchor,
-              issueOrPullRequestNumber,
-            })}
-            style={getCardRowStylesForTheme(theme).mainContentContainer}
-          >
-            <Animated.Text
-              numberOfLines={1}
-              style={[
-                Platform.OS !== 'android' && { flexGrow: 1 },
-                getCardStylesForTheme(theme).normalText,
-                isRead && getCardStylesForTheme(theme).mutedText,
-              ]}
+        <View style={cardStyles.rightColumn}>
+          <View style={cardRowStyles.mainContentContainer}>
+            <Link
+              href={fixURL(url, {
+                addBottomAnchor,
+                issueOrPullRequestNumber,
+              })}
             >
-              <AnimatedIcon color={iconColor} name={iconName} /> {title}
-              {Boolean(byText) && (
-                <Animated.Text
+              <SpringAnimatedText
+                numberOfLines={2}
+                style={[
+                  Platform.OS !== 'android' && { flexGrow: 1 },
+                  getCardStylesForTheme(springAnimatedTheme).normalText,
+                  isRead &&
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
+                ]}
+              >
+                <SpringAnimatedIcon
+                  name={iconName}
+                  size={13}
                   style={[
-                    getCardStylesForTheme(theme).normalText,
-                    getCardStylesForTheme(theme).smallText,
-                    getCardStylesForTheme(theme).mutedText,
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    getCardStylesForTheme(springAnimatedTheme).icon,
+                    { color: iconColor },
+                    isRead && { opacity: mutedOpacity },
                   ]}
-                >
-                  {' '}
-                  by {byText}
-                </Animated.Text>
-              )}
-            </Animated.Text>
-          </Link>
+                />{' '}
+                {title}
+              </SpringAnimatedText>
+            </Link>
 
-          <CardItemId
-            id={issueOrPullRequestNumber}
-            isRead={isRead}
-            style={styles.cardItemId}
-            url={url}
-          />
+            <View>
+              {!!labels && labels.length > 0 && (
+                <>
+                  <Spacer height={contentPadding / 2} />
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      margin: -contentPadding / 4,
+                    }}
+                  >
+                    {labels.map(label => (
+                      <Label
+                        key={`issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
+                          label.name}`}
+                        color={label.color && `#${label.color}`}
+                        containerStyle={{
+                          alignSelf: 'flex-start',
+                          margin: contentPadding / 4,
+                        }}
+                        muted={isRead}
+                        outline={isRead}
+                        small
+                      >
+                        {label.name}
+                      </Label>
+                    ))}
+                  </View>
+                </>
+              )}
+
+              {!!(
+                byText ||
+                createdAt ||
+                commentsCount ||
+                issueOrPullRequestNumber
+              ) && (
+                <>
+                  <Spacer height={contentPadding / 2} />
+
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {!!byText && (
+                      <Link
+                        href={
+                          userLinkURL ||
+                          (username && getGitHubURLForUser(username))
+                        }
+                      >
+                        <SpringAnimatedText
+                          style={[
+                            getCardStylesForTheme(springAnimatedTheme)
+                              .normalText,
+                            cardStyles.smallText,
+                            getCardStylesForTheme(springAnimatedTheme)
+                              .mutedText,
+                          ]}
+                        >
+                          {byText}
+                        </SpringAnimatedText>
+                      </Link>
+                    )}
+
+                    {!!createdAt && (
+                      <IntervalRefresh date={createdAt}>
+                        {() => {
+                          const dateText = getDateSmallText(createdAt, false)
+                          if (!dateText) return null
+
+                          return (
+                            <>
+                              {!!byText && <Text children=" " />}
+
+                              <SpringAnimatedText
+                                numberOfLines={1}
+                                style={
+                                  getCardStylesForTheme(springAnimatedTheme)
+                                    .timestampText
+                                }
+                                {...Platform.select({
+                                  web: { title: getFullDateText(createdAt) },
+                                })}
+                              >
+                                {!!byText && (
+                                  <>
+                                    <Text
+                                      children="•"
+                                      style={{ fontSize: 9 }}
+                                    />
+                                    <Text children=" " />
+                                  </>
+                                )}
+
+                                {dateText}
+                              </SpringAnimatedText>
+                            </>
+                          )
+                        }}
+                      </IntervalRefresh>
+                    )}
+
+                    <Spacer flex={1} />
+
+                    {typeof commentsCount === 'number' && commentsCount >= 0 && (
+                      <>
+                        <Spacer width={contentPadding / 2} />
+
+                        <CardSmallThing
+                          icon="comment"
+                          isRead={isRead}
+                          text={commentsCount}
+                          url={fixURL(url, {
+                            addBottomAnchor,
+                            issueOrPullRequestNumber,
+                          })}
+                        />
+                      </>
+                    )}
+
+                    <Spacer width={contentPadding / 2} />
+
+                    <CardItemId
+                      id={issueOrPullRequestNumber}
+                      isRead={isRead}
+                      url={fixURL(url, {
+                        addBottomAnchor,
+                        issueOrPullRequestNumber,
+                      })}
+                    />
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
         </View>
       </View>
     )

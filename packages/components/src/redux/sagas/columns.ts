@@ -1,4 +1,4 @@
-import { all, select, takeLatest } from 'redux-saga/effects'
+import { all, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
   ActivityColumnSubscription,
@@ -7,6 +7,7 @@ import {
   guid,
   NotificationColumnSubscription,
 } from '@devhub/core'
+import { Column } from '@devhub/core/src'
 import { delay } from 'redux-saga'
 import { emitter } from '../../setup'
 import * as actions from '../actions'
@@ -125,10 +126,66 @@ function* onDeleteColumn(
   }
 }
 
+function* onSetClearedAt(
+  action: ExtractActionFromActionCreator<
+    typeof actions.setColumnClearedAtFilter
+  >,
+) {
+  if (!(action.payload.clearedAt && action.payload.columnId)) return
+
+  const column: Column = yield select(
+    selectors.createColumnSelector(),
+    action.payload.columnId,
+  )
+  if (!(column && column.subscriptionIds && column.subscriptionIds.length))
+    return
+
+  const columns: Column[] = yield select(selectors.columnsArrSelector)
+  if (!(columns && columns.length)) return
+
+  yield all(
+    column.subscriptionIds.map(function*(subscriptionId) {
+      if (!subscriptionId) return
+
+      // deleteOlderThan will consider the clearedAt of the other columns
+      // that are also using this subscription
+      // because we cant remove their items, their columns were not cleared
+      let deleteOlderThan = action.payload.clearedAt || undefined
+
+      let hasColumnWithoutClearedAt = false
+      columns.forEach(c => {
+        if (!c.subscriptionIds.includes(subscriptionId)) return
+
+        if (!(c.filters && c.filters.clearedAt))
+          hasColumnWithoutClearedAt = true
+        if (hasColumnWithoutClearedAt) return
+
+        if (
+          c.filters &&
+          c.filters.clearedAt &&
+          (!deleteOlderThan || c.filters.clearedAt < deleteOlderThan)
+        ) {
+          deleteOlderThan = c.filters.clearedAt
+        }
+      })
+
+      if (hasColumnWithoutClearedAt) return
+
+      return yield put(
+        actions.cleanupSubscriptionsData({
+          deleteOlderThan,
+          subscriptionIds: [subscriptionId],
+        }),
+      )
+    }),
+  )
+}
+
 export function* columnsSagas() {
   yield all([
     yield takeLatest('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest('MOVE_COLUMN', onMoveColumn),
     yield takeLatest('DELETE_COLUMN', onDeleteColumn),
+    yield takeLatest('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
   ])
 }

@@ -9,7 +9,7 @@ export type GitHubActivityType =
   | 'USER_RECEIVED_EVENTS'
   | 'USER_RECEIVED_PUBLIC_EVENTS'
 
-export type GitHubExtractParamsFromActivityMethod<F> = F extends (
+export type GitHubExtractParamsFromMethod<F> = F extends (
   params: infer P,
   callback: any,
 ) => any
@@ -197,6 +197,7 @@ export interface GitHubPullRequest {
   state: 'open' | 'closed' // closed
   locked: boolean // false
   title: string // ok
+  labels: GitHubLabel[]
   user: GitHubUser
   body: string //
   created_at: string // 2016-11-24T15:59:50Z
@@ -805,9 +806,7 @@ export type GitHubNotificationReason =
 
 export interface GitHubNotification {
   id: number | string
-  // archived_at: string // specific to this app
-  last_read_at: string
-  // last_unread_at: string // specific to this app
+  last_read_at?: string
   reason: GitHubNotificationReason
   repository: GitHubRepo
   subject: {

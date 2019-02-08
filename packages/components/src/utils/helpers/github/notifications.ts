@@ -1,4 +1,11 @@
-import { capitalize, GitHubNotificationReason } from '@devhub/core'
+import _ from 'lodash'
+
+import {
+  capitalize,
+  EnhancedGitHubNotification,
+  GitHubNotificationReason,
+  sortNotifications,
+} from '@devhub/core'
 import * as colors from '../../../styles/colors'
 
 export const notificationReasons: GitHubNotificationReason[] = [
@@ -123,4 +130,26 @@ export function getNotificationReasonMetadata<
         label: capitalize(reason),
       }
   }
+}
+
+export function mergeNotificationsPreservingEnhancement(
+  newItems: EnhancedGitHubNotification[],
+  prevItems: EnhancedGitHubNotification[],
+) {
+  return sortNotifications(
+    _.uniqBy(_.concat(newItems, prevItems), 'id').map(item => {
+      const newItem = newItems.find(i => i.id === item.id)
+      const existingItem = prevItems.find(i => i.id === item.id)
+      if (!(newItem && existingItem)) return item
+
+      return {
+        forceUnreadLocally: existingItem.forceUnreadLocally,
+        last_read_at: existingItem.last_read_at,
+        last_unread_at: existingItem.last_unread_at,
+        saved: existingItem.saved,
+        unread: existingItem.unread,
+        ...newItem,
+      }
+    }),
+  )
 }

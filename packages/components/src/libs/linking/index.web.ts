@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 import { Platform } from '../platform'
 import { LinkingCrossPlatform } from './index'
 

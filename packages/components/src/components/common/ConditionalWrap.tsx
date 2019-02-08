@@ -1,7 +1,7 @@
 import React from 'react'
 
 export interface ConditionalWrapProps {
-  children: React.ReactElement<any>
+  children: any
   condition: boolean
   wrap: (children: React.ReactElement<any>) => React.ReactElement<any>
 }

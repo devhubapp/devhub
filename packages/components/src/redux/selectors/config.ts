@@ -1,18 +1,13 @@
 import { createSelector } from 'reselect'
 
-import { constants, isNight, ThemePair } from '@devhub/core'
+import { constants, isNight } from '@devhub/core'
 import { loadTheme } from '../../styles/utils'
 import { RootState } from '../types'
-
-export const defaultThemePair: ThemePair = {
-  id: constants.DEFAULT_THEME,
-  color: '',
-}
 
 const s = (state: RootState) => state.config || {}
 
 export const themePairSelector = (state: RootState) =>
-  s(state).theme || defaultThemePair
+  s(state).theme || constants.DEFAULT_THEME_PAIR
 
 export const preferredDarkThemePairSelector = (state: RootState) =>
   s(state).preferredDarkTheme || { id: constants.DEFAULT_DARK_THEME }

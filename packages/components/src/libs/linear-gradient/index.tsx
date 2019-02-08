@@ -1,17 +1,17 @@
-import { Omit } from '@devhub/core'
-import { ComponentClass } from 'react'
-import { Animated } from 'react-native'
 import LinearGradient, {
   LinearGradientProps,
 } from 'react-native-linear-gradient'
 
+import { Omit } from '@devhub/core'
+import { createSpringAnimatedComponent } from '../../components/animated/spring/helpers'
+
 export { LinearGradient, LinearGradientProps }
 
-export interface AnimatedLinearGradientProps
+export interface SpringAnimatedLinearGradientProps
   extends Omit<LinearGradientProps, 'colors'> {
-  colors: Array<string | Animated.AnimatedInterpolation>
+  colors: Array<string | any>
 }
 
-export const AnimatedLinearGradient = Animated.createAnimatedComponent(
+export const SpringAnimatedLinearGradient = createSpringAnimatedComponent(
   LinearGradient,
-) as ComponentClass<AnimatedLinearGradientProps>
+)

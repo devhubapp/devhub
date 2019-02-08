@@ -1,5 +1,4 @@
 import immer from 'immer'
-import _ from 'lodash'
 
 import { constants, ThemePair } from '@devhub/core'
 import { loadTheme } from '../../styles/utils'

@@ -1,46 +1,53 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 
-import { trimNewLinesAndSpaces } from '@devhub/core'
-import { useAnimatedTheme } from '../../../../hooks/use-animated-theme'
+import { stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
+import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
+import {
+  SpringAnimatedText,
+  SpringAnimatedTextProps,
+} from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
-import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
-import { getCardRowStylesForTheme } from './styles'
+import { Link, LinkProps } from '../../../common/Link'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { cardRowStyles } from './styles'
 
 export interface CommentRowProps {
   addBottomAnchor?: boolean
-  avatarURL: string
+  analyticsLabel?: LinkProps['analyticsLabel']
+  avatarURL: string | undefined
   body: string
   isRead: boolean
   numberOfLines?: number
   smallLeftColumn?: boolean
+  textStyle?: SpringAnimatedTextProps['style']
   url?: string
-  userLinkURL: string
-  username: string
+  userLinkURL: string | undefined
+  username: string | undefined
 }
 
-export interface CommentRowState {}
-
 export const CommentRow = React.memo((props: CommentRowProps) => {
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
     addBottomAnchor,
+    analyticsLabel,
     avatarURL,
     body: _body,
     isRead,
-    numberOfLines = 4,
+    numberOfLines = 3,
     smallLeftColumn,
+    textStyle,
     url,
     userLinkURL,
     username,
   } = props
 
   const body = trimNewLinesAndSpaces(
-    _body,
+    stripMarkdown(`${_body || ''}`),
     Platform.select({ default: 400, web: 150 }),
   )
   if (!body) return null
@@ -48,41 +55,49 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
 
   return (
-    <View style={getCardRowStylesForTheme(theme).container}>
+    <View style={cardRowStyles.container}>
       <View
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
-          getCardStylesForTheme(theme).leftColumnAlignTop,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
+          cardStyles.leftColumnAlignTop,
         ]}
       >
         <Avatar
           avatarURL={avatarURL}
           isBot={isBot}
           linkURL={userLinkURL}
-          shape={isBot ? 'rounded' : undefined}
           small
-          style={getCardStylesForTheme(theme).avatar}
+          style={cardStyles.avatar}
           username={username}
         />
       </View>
 
-      <View style={getCardStylesForTheme(theme).rightColumn}>
+      <View style={cardStyles.rightColumn}>
         <Link
+          analyticsLabel={analyticsLabel}
           href={fixURL(url, { addBottomAnchor })}
-          style={getCardRowStylesForTheme(theme).mainContentContainer}
+          style={cardRowStyles.mainContentContainer}
         >
-          <Animated.Text
+          <SpringAnimatedText
             numberOfLines={numberOfLines}
             style={[
-              getCardStylesForTheme(theme).commentText,
-              isRead && getCardStylesForTheme(theme).mutedText,
+              getCardStylesForTheme(springAnimatedTheme).commentText,
+              textStyle,
+              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
-            {body}
-          </Animated.Text>
+            {parseTextWithEmojisToReactComponents(body, {
+              imageProps: {
+                style: {
+                  width: 12,
+                  height: 12,
+                },
+              },
+            })}
+          </SpringAnimatedText>
         </Link>
       </View>
     </View>

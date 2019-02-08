@@ -33,13 +33,11 @@ export function moveColumn(payload: {
   return createAction('MOVE_COLUMN', payload)
 }
 
-export function setColumnInboxFilter(payload: {
+export function setColumnSavedFilter(payload: {
   columnId: string
-  inbox?: boolean
-  archived?: boolean
-  saved?: boolean
+  saved?: boolean | null
 }) {
-  return createAction('SET_COLUMN_INBOX_FILTER', payload)
+  return createAction('SET_COLUMN_SAVED_FILTER', payload)
 }
 
 export function setColumnActivityTypeFilter<

@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
 
 import { Theme } from '@devhub/core'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import {
   avatarSize,
@@ -11,62 +11,60 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 
-const styles = StyleSheet.create({
+export const cardStyles = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
-  },
+  } as ViewStyle,
 
   leftColumn: {
-    justifyContent: 'center',
     marginRight: contentPadding,
     width: avatarSize,
-  },
+  } as ViewStyle,
 
   leftColumn__small: {
+    justifyContent: 'center',
     width: smallAvatarSize,
-  },
+  } as ViewStyle,
 
   leftColumn__big: {
+    justifyContent: 'flex-start',
     width: avatarSize,
-  },
+  } as ViewStyle,
 
   leftColumnAlignTop: {
     alignSelf: 'flex-start',
-  },
+  } as ViewStyle,
 
   rightColumn: {
     flex: 1,
-    flexDirection: 'row',
-  },
+  } as ViewStyle,
 
   avatar: {
     alignSelf: 'flex-end',
-  },
+  } as ViewStyle,
 
   smallText: {
     fontSize: smallTextSize,
     lineHeight: smallTextSize + 4,
-  },
+  } as TextStyle,
 })
 
 export const getCardStylesForTheme = _.memoize(
-  (theme: Theme | ReturnType<typeof useAnimatedTheme>) => {
+  (theme: Theme | ReturnType<typeof useCSSVariablesOrSpringAnimatedTheme>) => {
     return {
-      ...styles,
-
       usernameText: {
         alignSelf: 'center',
-        color: theme.foregroundColor,
-        fontWeight: '500',
         lineHeight: 20,
-      },
+        fontWeight: '600',
+        color: theme.foregroundColor,
+      } as TextStyle,
 
       timestampText: {
         alignSelf: 'center',
-        color: theme.foregroundColorMuted50,
+        lineHeight: smallTextSize + 1,
         fontSize: smallTextSize,
-        lineHeight: smallTextSize + 4,
-      },
+        color: theme.foregroundColorMuted50,
+      } as TextStyle,
 
       commentText: {
         color: theme.foregroundColor,
@@ -77,24 +75,41 @@ export const getCardStylesForTheme = _.memoize(
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'pre-line',
-            wordWrap: 'normal',
+            wordWrap: 'break-word',
           },
         }) as any),
-      },
+      } as TextStyle,
 
       mutedText: {
         color: theme.foregroundColorMuted50,
-      },
+      } as TextStyle,
 
       normalText: {
-        color: theme.foregroundColor,
         lineHeight: 20,
-      },
+        color: theme.foregroundColor,
+        ...Platform.select({
+          default: {},
+          web: {
+            wordWrap: 'break-word',
+          },
+        }),
+      } as TextStyle,
+
+      icon: {
+        lineHeight: 20,
+        marginRight: 2,
+      } as TextStyle,
 
       descriptionText: {
-        color: theme.foregroundColorMuted50,
         lineHeight: 20,
-      },
+        color: theme.foregroundColorMuted50,
+        ...Platform.select({
+          default: {},
+          web: {
+            wordWrap: 'break-word',
+          },
+        }),
+      } as TextStyle,
     }
   },
 )

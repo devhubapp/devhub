@@ -1,34 +1,22 @@
 export * from 'react-native'
 
 declare module 'react-native' {
-  export interface TouchableNativeFeedbackStatic
-    extends TouchableMixin,
-      React.ClassicComponentClass<TouchableNativeFeedbackProps> {
-    /**
-     * Creates an object that represents android theme's default background for
-     * selectable elements (?android:attr/selectableItemBackground).
-     */
-    SelectableBackground(): ThemeAttributeBackgroundPropType
+  export namespace Animated {
+    export type AnimatedComponent<
+      T extends React.ComponentClass
+    > = (T extends React.ComponentClass<infer P>
+      ? React.ComponentClass<P>
+      : React.ComponentClass) & {
+      getNode(): InstanceType<T>
+    }
 
-    /**
-     * Creates an object that represent android theme's default background for borderless
-     * selectable elements (?android:attr/selectableItemBackgroundBorderless).
-     * Available on android API level 21+.
-     */
-    SelectableBackgroundBorderless(): ThemeAttributeBackgroundPropType
+    export function createAnimatedComponent<
+      T extends React.ComponentClass<any, any>
+    >(component: T): AnimatedComponent<T>
 
-    /**
-     * Creates an object that represents ripple drawable with specified color (as a
-     * string). If property `borderless` evaluates to true the ripple will
-     * render outside of the view bounds (see native actionbar buttons as an
-     * example of that behavior). This background type is available on Android
-     * API level 21+.
-     *
-     * @param color The ripple color
-     * @param borderless If the ripple can render outside it's bounds
-     */
-    Ripple(color: string, borderless?: boolean): RippleBackgroundPropType
-
-    canUseNativeForeground(): boolean
+    export const View: AnimatedComponent<typeof View>
+    export const Image: AnimatedComponent<typeof Image>
+    export const Text: AnimatedComponent<typeof Text>
+    export const ScrollView: AnimatedComponent<typeof ScrollView>
   }
 }

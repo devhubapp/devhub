@@ -68,6 +68,7 @@ export async function getNotificationsEnhancementMap(
           throw new Error('Invalid response')
 
         enhance[subjectField] = data
+        enhance.enhanced = true
         cache.set(notification.subject.url, { data, timestamp: Date.now() })
       } catch (error) {
         console.error(
@@ -80,6 +81,7 @@ export async function getNotificationsEnhancementMap(
     } else if (hasSubjectCache) {
       if (subjectCache && subjectCache.data)
         enhance[subjectField] = subjectCache.data
+      enhance.enhanced = true
     }
 
     if (commentId && !hasCommentCache) {
@@ -92,6 +94,7 @@ export async function getNotificationsEnhancementMap(
         if (!(data && data.id)) throw new Error('Invalid response')
 
         enhance.comment = data
+        enhance.enhanced = true
         cache.set(notification.subject.latest_comment_url, {
           data,
           timestamp: Date.now(),
@@ -106,7 +109,10 @@ export async function getNotificationsEnhancementMap(
     } else if (!commentId) {
       enhance.comment = undefined
     } else if (hasCommentCache) {
-      if (commentCache && commentCache.data) enhance.comment = commentCache.data
+      if (commentCache && commentCache.data) {
+        enhance.comment = commentCache.data
+        enhance.enhanced = true
+      }
     }
 
     if (!Object.keys(enhance).length) return
@@ -145,7 +151,14 @@ export function enhanceNotifications(
     }
 
     return {
-      ...enhanced,
+      ..._.pick(enhanced, [
+        'comment',
+        'commit',
+        'issue',
+        'pullRequest',
+        'release',
+        'enhanced',
+      ]),
       ...cen,
       ...enhance,
     } as EnhancedGitHubNotification
@@ -155,7 +168,7 @@ export function enhanceNotifications(
 export function getOlderNotificationDate(
   notifications: EnhancedGitHubNotification[],
 ) {
-  const olderItem = _.orderBy(notifications, 'updated_at', 'asc')[0]
+  const olderItem = sortNotifications(notifications).pop()
   return olderItem && olderItem.updated_at
 }
 
@@ -184,4 +197,15 @@ export function createNotificationsCache(
   })
 
   return cache
+}
+
+export function sortNotifications(
+  notifications: EnhancedGitHubNotification[] | undefined,
+) {
+  if (!notifications) return []
+
+  return _(notifications)
+    .uniqBy('id')
+    .orderBy('updated_at', 'desc')
+    .value()
 }

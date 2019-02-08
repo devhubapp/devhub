@@ -1,17 +1,25 @@
-import React from 'react'
-import { Animated, StyleSheet, TextProps, View } from 'react-native'
+import { rgba } from 'polished'
+import React, { useRef } from 'react'
+import { StyleSheet, TextProps, View } from 'react-native'
+import { useSpring } from 'react-spring/native'
 
 import { GitHubIcon } from '@devhub/core'
-import { AnimatedActivityIndicator } from '../../components/animated/AnimatedActivityIndicator'
-import { AnimatedIcon } from '../../components/animated/AnimatedIcon'
-import { useAnimatedTheme } from '../../hooks/use-animated-theme'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { useHover } from '../../hooks/use-hover'
+import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
+import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import {
-  AnimatedTouchableOpacity,
-  AnimatedTouchableOpacityProps,
-} from '../animated/AnimatedTouchableOpacity'
+  SpringAnimatedTouchableOpacity,
+  SpringAnimatedTouchableOpacityProps,
+} from '../animated/spring/SpringAnimatedTouchableOpacity'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useTheme } from '../context/ThemeContext'
 
-export interface GitHubLoginButtonProps extends AnimatedTouchableOpacityProps {
+export interface GitHubLoginButtonProps
+  extends SpringAnimatedTouchableOpacityProps {
   horizontal?: boolean
   leftIcon?: GitHubIcon
   loading?: boolean
@@ -24,13 +32,15 @@ export interface GitHubLoginButtonProps extends AnimatedTouchableOpacityProps {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 58 / 2,
     height: 58,
+    borderRadius: 58 / 2,
   },
 
-  content: {
+  contentContainer: {
     flex: 1,
     flexDirection: 'row',
+    height: 58,
+    borderRadius: 58 / 2,
   },
 
   iconWrapper: {
@@ -77,88 +87,146 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     ...otherProps
   } = props
 
-  const theme = useAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const initialTheme = useTheme(theme => {
+    cacheRef.current.theme = theme
+    updateStyles()
+  })
+
+  const touchableRef = useRef(null)
+  const initialIsHovered = useHover(touchableRef, isHovered => {
+    cacheRef.current.isHovered = isHovered
+    updateStyles()
+  })
+
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
+    ReturnType<typeof getStyles>
+  >(getStyles)
+
+  function getStyles() {
+    const { isHovered, isPressing, theme } = cacheRef.current
+    return {
+      config: { duration: 100 },
+      backgroundColor:
+        isHovered || isPressing
+          ? theme.backgroundColorLess2
+          : rgba(theme.backgroundColorLess2, 0),
+    }
+  }
+
+  function updateStyles() {
+    setSpringAnimatedStyles(getStyles())
+  }
 
   return (
-    <AnimatedTouchableOpacity
-      activeOpacity={0.9}
+    <SpringAnimatedTouchableOpacity
+      ref={touchableRef}
+      activeOpacity={0.8}
       {...otherProps}
+      onPressIn={() => {
+        if (Platform.realOS === 'web') return
+
+        cacheRef.current.isPressing = true
+        updateStyles()
+      }}
+      onPressOut={() => {
+        if (Platform.realOS === 'web') return
+
+        cacheRef.current.isPressing = false
+        updateStyles()
+      }}
       style={[
         styles.button,
         {
-          backgroundColor: theme.backgroundColorLess08 as any,
-          borderColor: theme.backgroundColor as any,
+          backgroundColor: springAnimatedTheme.backgroundColorLess1,
         },
         props.style,
       ]}
     >
-      <View style={styles.content}>
+      <SpringAnimatedView
+        style={[styles.contentContainer, springAnimatedStyles]}
+      >
         {!!leftIcon && (
-          <Animated.View
+          <SpringAnimatedView
             style={[
               styles.iconWrapper,
               {
-                borderColor: theme.foregroundColor,
+                borderColor: springAnimatedTheme.foregroundColor,
                 paddingLeft: contentPadding,
               },
             ]}
           >
-            <AnimatedIcon
-              color={theme.foregroundColor}
+            <SpringAnimatedIcon
               name={leftIcon}
-              style={styles.icon}
+              style={[
+                styles.icon,
+                { color: springAnimatedTheme.foregroundColor },
+              ]}
             />
-          </Animated.View>
+          </SpringAnimatedView>
         )}
 
         <View style={styles.mainContentContainer}>
           {!!title && (
-            <Animated.Text
+            <SpringAnimatedText
               {...textProps}
               style={[
                 styles.title,
                 {
-                  color: theme.foregroundColor,
+                  color: springAnimatedTheme.foregroundColor,
                 },
                 textProps.style,
               ]}
             >
               {title}
-            </Animated.Text>
+            </SpringAnimatedText>
           )}
 
           {!!subtitle && (
-            <Animated.Text
+            <SpringAnimatedText
               {...subtitleProps}
               style={[
                 styles.subtitleText,
                 {
-                  color: theme.foregroundColorMuted50,
+                  color: springAnimatedTheme.foregroundColorMuted50,
                 },
                 subtitleProps.style,
               ]}
             >
               {subtitle}
-            </Animated.Text>
+            </SpringAnimatedText>
           )}
         </View>
 
         {!!(rightIcon || loading) && (
           <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
             {loading ? (
-              <AnimatedActivityIndicator color={theme.foregroundColor as any} />
+              <SpringAnimatedActivityIndicator
+                color={springAnimatedTheme.foregroundColor as any}
+              />
             ) : (
               !!rightIcon && (
-                <AnimatedIcon
-                  color={theme.foregroundColor}
+                <SpringAnimatedIcon
                   name={rightIcon}
-                  style={styles.icon}
+                  style={[
+                    styles.icon,
+                    {
+                      color: springAnimatedTheme.foregroundColor,
+                    },
+                  ]}
                 />
               )
             )}
           </View>
         )}
-      </View>
-    </AnimatedTouchableOpacity>
+      </SpringAnimatedView>
+    </SpringAnimatedTouchableOpacity>
   )
 }

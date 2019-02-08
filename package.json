@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "version": "0.42.0",
+  "version": "0.45.4",
   "private": true,
   "author": {
     "name": "Bruno Lemos",
@@ -46,12 +46,9 @@
     "tslint-react": "^3.6.0",
     "typescript": "^3.2.2"
   },
-  "resolutions": {
-    "scheduler": "0.12.0"
-  },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged-offline"
+      "pre-commit": "yarn workspace @devhub/desktop compile && lint-staged-offline"
     }
   },
   "lint-staged": {

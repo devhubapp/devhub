@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React from 'react'
+import { View, ViewStyle } from 'react-native'
 
-import { Animated, Easing, ViewStyle } from 'react-native'
 import { useKeyboardVisibility } from '../../hooks/use-keyboard-visibility'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -12,17 +12,17 @@ import { FAB, fabSize } from '../common/FAB'
 import { useAppLayout } from '../context/LayoutContext'
 
 export const fabSpacing =
-  contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2)
+  contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2) - 2
 
 const fabPositionStyle: ViewStyle = {
   position: 'absolute',
   bottom: fabSpacing,
   right: contentPadding,
-  zIndex: 101,
+  zIndex: 1000,
 }
 
 export function FABRenderer() {
-  const addOrCloseAnimatedRef = useRef(new Animated.Value(0))
+  // const addOrCloseAnimatedRef = useRef(new Animated.Value(0))
 
   const keyboardVisibility = useKeyboardVisibility()
   const { sizename } = useAppLayout()
@@ -37,6 +37,7 @@ export function FABRenderer() {
     return null
 
   if (!currentOpenedModal) {
+    /*
     Animated.timing(addOrCloseAnimatedRef.current, {
       toValue: 0,
       duration: 200,
@@ -49,9 +50,14 @@ export function FABRenderer() {
     })
 
     const iconStyle = { transform: [{ rotateZ }] }
+    */
+
+    // TODO: Migrate to react-spring
+    // Bug: https://github.com/react-spring/react-spring/issues/437
+    const iconStyle = undefined
 
     return (
-      <Animated.View style={fabPositionStyle}>
+      <View collapsable={false} style={fabPositionStyle}>
         <FAB
           key="fab"
           analyticsLabel="add_column"
@@ -60,13 +66,14 @@ export function FABRenderer() {
           onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
           useBrandColor
         />
-      </Animated.View>
+      </View>
     )
   }
 
   switch (currentOpenedModal.name) {
     case 'ADD_COLUMN':
     case 'ADD_COLUMN_DETAILS': {
+      /*
       Animated.timing(addOrCloseAnimatedRef.current, {
         toValue: 1,
         duration: 200,
@@ -79,22 +86,27 @@ export function FABRenderer() {
       })
 
       const iconStyle = { transform: [{ rotateZ }] }
+      */
+
+      // TODO: Migrate to react-spring
+      // Bug: https://github.com/react-spring/react-spring/issues/437
+      const iconStyle = undefined
 
       return (
-        <Animated.View style={fabPositionStyle}>
+        <View style={fabPositionStyle}>
           <FAB
             analyticsLabel="close_modals"
             key="fab"
-            iconName="plus"
+            iconName="x"
             iconStyle={iconStyle}
             onPress={() => closeAllModals()}
           />
-        </Animated.View>
+        </View>
       )
     }
 
     default: {
-      addOrCloseAnimatedRef.current.setValue(0)
+      // addOrCloseAnimatedRef.current.setValue(0)
       return null
     }
   }

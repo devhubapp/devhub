@@ -1,39 +1,55 @@
 import { MomentInput } from 'moment'
 import React from 'react'
-import { Animated, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
-import { getDateSmallText, GitHubIcon } from '@devhub/core'
-import { useAnimatedTheme } from '../../../hooks/use-animated-theme'
+import {
+  getDateSmallText,
+  getFullDateText,
+  getGitHubURLForUser,
+  GitHubIcon,
+  GitHubNotificationReason,
+} from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
-import { useReduxState } from '../../../hooks/use-redux-state'
+import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
-import * as selectors from '../../../redux/selectors'
 import * as colors from '../../../styles/colors'
+import {
+  columnHeaderItemContentSize,
+  contentPadding,
+} from '../../../styles/variables'
+import { getNotificationReasonMetadata } from '../../../utils/helpers/github/notifications'
+import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
+import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Label } from '../../common/Label'
-import { getCardStylesForTheme } from '../styles'
-import { CardIcon } from './CardIcon'
+import { Link } from '../../common/Link'
+import { Spacer } from '../../common/Spacer'
+import { cardStyles, getCardStylesForTheme } from '../styles'
 
 export interface NotificationCardHeaderProps {
+  actionText: string
+  avatarURL: string
   cardIconColor?: string
   cardIconName: GitHubIcon
+  date: MomentInput
   ids: Array<string | number>
+  isBot: boolean
   isPrivate?: boolean
   isRead: boolean
   isSaved?: boolean
-  labelColor: string
-  labelText: string
+  reason: GitHubNotificationReason
   smallLeftColumn?: boolean
-  updatedAt: MomentInput
+  userLinkURL: string
+  username: string
 }
-
-export interface NotificationCardHeaderState {}
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    flexGrow: 1,
   },
 
   rightColumnCentered: {
@@ -43,7 +59,6 @@ const styles = StyleSheet.create({
 
   outerContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
   },
 
   innerContainer: {
@@ -52,88 +67,222 @@ const styles = StyleSheet.create({
 })
 
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
-  const theme = useAnimatedTheme()
-
-  const username = useReduxState(selectors.currentUsernameSelector)
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
-
   const {
+    actionText,
+    avatarURL,
     cardIconColor,
     cardIconName,
+    date,
     ids,
+    isBot,
     isPrivate,
     isRead,
     isSaved,
-    labelColor,
-    labelText,
+    reason,
     smallLeftColumn,
-    updatedAt,
+    userLinkURL: _userLinkURL,
+    username: _username,
   } = props
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
+
+  const markItemsAsReadOrUnread = useReduxAction(
+    actions.markItemsAsReadOrUnread,
+  )
+
+  const reasonDetails = getNotificationReasonMetadata(reason)
+  const username = isBot ? _username!.replace('[bot]', '') : _username
+
+  const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
   return (
     <View
       key={`notification-card-header-${ids.join(',')}-inner`}
       style={styles.container}
     >
-      <View
+      <SpringAnimatedView
         style={[
-          getCardStylesForTheme(theme).leftColumn,
+          cardStyles.leftColumn,
           smallLeftColumn
-            ? getCardStylesForTheme(theme).leftColumn__small
-            : getCardStylesForTheme(theme).leftColumn__big,
+            ? cardStyles.leftColumn__small
+            : cardStyles.leftColumn__big,
         ]}
       >
         <Avatar
-          shape="circle"
-          small
-          style={getCardStylesForTheme(theme).avatar}
+          avatarURL={avatarURL}
+          isBot={isBot}
+          linkURL={userLinkURL}
+          shape={isBot ? undefined : 'circle'}
+          style={cardStyles.avatar}
           username={username}
         />
-      </View>
+      </SpringAnimatedView>
 
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <View style={getCardStylesForTheme(theme).horizontal}>
-              <Label
-                color={labelColor}
-                isPrivate={isPrivate}
-                outline={isRead}
-                textProps={{ numberOfLines: 1 }}
-              >
-                {labelText}
-              </Label>
-              <IntervalRefresh date={updatedAt}>
+            <SpringAnimatedView style={cardStyles.horizontal}>
+              <Link href={userLinkURL}>
+                <SpringAnimatedText
+                  numberOfLines={1}
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).usernameText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  ]}
+                >
+                  {username}
+                </SpringAnimatedText>
+              </Link>
+              {!!isBot && (
+                <>
+                  <Text children=" " />
+                  <SpringAnimatedText
+                    numberOfLines={1}
+                    style={
+                      getCardStylesForTheme(springAnimatedTheme).timestampText
+                    }
+                  >
+                    <Text children="•" style={{ fontSize: 9 }} />
+                    <Text children=" " />
+                    BOT
+                  </SpringAnimatedText>
+                </>
+              )}
+              <IntervalRefresh date={date}>
                 {() => {
-                  const dateText = getDateSmallText(updatedAt)
+                  const dateText = getDateSmallText(date, false)
                   if (!dateText) return null
 
                   return (
                     <>
                       <Text children=" " />
-                      <Animated.Text
+                      <SpringAnimatedText
                         numberOfLines={1}
-                        style={getCardStylesForTheme(theme).timestampText}
+                        style={
+                          getCardStylesForTheme(springAnimatedTheme)
+                            .timestampText
+                        }
+                        {...Platform.select({
+                          web: { title: getFullDateText(date) },
+                        })}
                       >
-                        {`• ${dateText}`}
-                      </Animated.Text>
+                        <Text children="•" style={{ fontSize: 9 }} />
+                        <Text children=" " />
+                        {dateText}
+                      </SpringAnimatedText>
                     </>
                   )
                 }}
               </IntervalRefresh>
-            </View>
+            </SpringAnimatedView>
+
+            {!!actionText && (
+              <SpringAnimatedText
+                numberOfLines={1}
+                style={
+                  getCardStylesForTheme(springAnimatedTheme).descriptionText
+                }
+              >
+                {!!isPrivate && (
+                  <SpringAnimatedText
+                    style={getCardStylesForTheme(springAnimatedTheme).mutedText}
+                  >
+                    <SpringAnimatedIcon
+                      name="lock"
+                      style={
+                        getCardStylesForTheme(springAnimatedTheme).mutedText
+                      }
+                    />{' '}
+                  </SpringAnimatedText>
+                )}
+                {actionText}
+              </SpringAnimatedText>
+            )}
+
+            {!!(reasonDetails && reasonDetails.label) && (
+              <>
+                <Spacer height={4} />
+
+                <Label
+                  color={reasonDetails.color}
+                  containerStyle={{ alignSelf: 'flex-start' }}
+                  isPrivate={isPrivate}
+                  muted={isRead}
+                  outline={isRead}
+                  small
+                  textProps={{ style: { paddingBottom: 1 } }}
+                >
+                  {reasonDetails.label.toLowerCase()}
+                </Label>
+              </>
+            )}
           </View>
 
-          <CardIcon
-            name="bookmark"
-            color={
-              isSaved
-                ? colors.brandBackgroundColor
-                : theme.foregroundColorMuted50
+          <ColumnHeaderItem
+            analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
+            enableForegroundHover
+            fixedIconSize
+            iconName={isRead ? 'mail-read' : 'mail'}
+            onPress={() =>
+              markItemsAsReadOrUnread({
+                type: 'notifications',
+                itemIds: ids,
+                unread: !!isRead,
+              })
             }
-            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
+            size={18}
+            style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 4,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+            }}
           />
-          <CardIcon name={cardIconName} color={cardIconColor} />
+
+          <ColumnHeaderItem
+            analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
+            enableForegroundHover
+            fixedIconSize
+            iconName="bookmark"
+            iconStyle={[
+              isSaved && {
+                color: colors.brandBackgroundColor,
+              },
+            ]}
+            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
+            size={18}
+            style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 4,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+            }}
+          />
+
+          <ColumnHeaderItem
+            fixedIconSize
+            iconName={cardIconName}
+            iconStyle={[
+              {
+                width: columnHeaderItemContentSize,
+              },
+              cardIconName === 'star' && {
+                lineHeight: 16,
+              },
+              !!cardIconColor && { color: cardIconColor },
+            ]}
+            size={18}
+            style={{
+              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              marginTop: 4,
+              paddingVertical: 0,
+              paddingHorizontal: contentPadding / 3,
+              marginRight: -contentPadding / 2,
+            }}
+          />
         </View>
       </View>
     </View>

@@ -1,56 +1,43 @@
-import React, { ComponentClass, ReactNode } from 'react'
-import { Animated, StyleProp, ViewStyle } from 'react-native'
+import React from 'react'
+import { ViewStyle } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
-import { AnimatedLinearGradient } from '../../libs/linear-gradient'
+import { SpringAnimatedLinearGradient } from '../../libs/linear-gradient'
+import { createSpringAnimatedComponent } from '../animated/spring/helpers'
+import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
-export type From = 'top' | 'bottom' | 'left' | 'right'
-export type FromWithVH = 'vertical' | 'horizontal' | From
-
-export interface AnimatedTransparentTextOverlayProps {
-  animated?: boolean
-  children?: ReactNode
-  containerStyle?: StyleProp<ViewStyle | any>
-  from: FromWithVH
-  radius?: number
-  size: number
-  style?: StyleProp<ViewStyle>
-  themeColor: keyof ThemeColors
-}
-
-function getStyle(from: From, size: number): ViewStyle {
-  switch (from) {
+function getStyle(to: To, size: number, spacing = 0): ViewStyle {
+  switch (to) {
     case 'top':
       return {
+        bottom: 0,
         height: size,
-        left: 0,
+        left: spacing,
         position: 'absolute',
-        right: 0,
-        top: 0,
+        right: spacing,
       }
     case 'bottom':
       return {
-        bottom: 0,
         height: size,
-        left: 0,
+        left: spacing,
         position: 'absolute',
-        right: 0,
+        right: spacing,
+        top: 0,
       }
     case 'left':
       return {
-        bottom: 0,
-        left: 0,
+        bottom: spacing,
         position: 'absolute',
-        top: 0,
+        right: 0,
+        top: spacing,
         width: size,
       }
     case 'right':
       return {
-        bottom: 0,
+        bottom: spacing,
+        left: 0,
         position: 'absolute',
-        right: 0,
-        top: 0,
+        top: spacing,
         width: size,
       }
     default:
@@ -58,63 +45,70 @@ function getStyle(from: From, size: number): ViewStyle {
   }
 }
 
-function getProps(from: From) {
-  switch (from) {
+function getProps(to: To) {
+  switch (to) {
     case 'top':
-      return {
-        end: { x: 0, y: 0 },
-        start: { x: 0, y: 1 },
-      }
-    case 'bottom':
       return {
         end: { x: 0, y: 1 },
         start: { x: 0, y: 0 },
       }
-    case 'left':
+    case 'bottom':
       return {
         end: { x: 0, y: 0 },
-        start: { x: 1, y: 0 },
+        start: { x: 0, y: 1 },
       }
-    default:
+    case 'left':
       return {
         end: { x: 1, y: 0 },
         start: { x: 0, y: 0 },
       }
+    default:
+      return {
+        end: { x: 0, y: 0 },
+        start: { x: 1, y: 0 },
+      }
   }
-}
-
-interface GradientLayerOverlayProps
-  extends Omit<AnimatedTransparentTextOverlayProps, 'themeColor'> {
-  color: string
-  from: From
 }
 
 class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
   render() {
-    const { color, from, radius, size, style, ...otherProps } = this.props
+    const {
+      color,
+      radius,
+      size,
+      spacing,
+      style,
+      to,
+      ...otherProps
+    } = this.props
 
     if (!color) return null
 
+    let colors
+    try {
+      colors = [rgba(color, 0), rgba(color, 0.5)]
+    } catch (e) {
+      return null
+    }
+
     return (
-      <AnimatedLinearGradient
-        colors={[rgba(color, 0), color]}
+      <SpringAnimatedLinearGradient
+        collapsable={false}
+        colors={colors}
+        pointerEvents="box-none"
         style={[
-          getStyle(from, size),
+          getStyle(to, size, spacing),
           Boolean(radius) && { borderRadius: radius },
+          { zIndex: 1 },
           style,
         ]}
-        {...getProps(from)}
+        {...getProps(to)}
         {...otherProps}
       />
     )
   }
 }
 
-export interface AnimatedGradientLayerOverlayProps
-  extends Omit<GradientLayerOverlayProps, 'color'> {
-  color: string | Animated.AnimatedInterpolation
-}
-
-export const AnimatedGradientLayerOverlay = Animated.createAnimatedComponent(
+export const SpringAnimatedGradientLayerOverlay = createSpringAnimatedComponent(
   GradientLayerOverlay,
-) as ComponentClass<AnimatedGradientLayerOverlayProps>
+)

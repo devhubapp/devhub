@@ -7,15 +7,19 @@
     android:orientation="vertical"
     android:theme="@style/SplashScreenTheme">
 
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true">
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:adjustViewBounds="false"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:src="@drawable/logo_rounded"
-        tools:ignore="ContentDescription" />
+        android:src="@drawable/logo_circle"
+        tools:ignore="ContentDescription"
+        />
+    </RelativeLayout>
 </RelativeLayout>

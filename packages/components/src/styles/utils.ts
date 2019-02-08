@@ -11,7 +11,7 @@ export function loadTheme(
   preferredDarkTheme?: ThemePair,
   preferredLightTheme?: ThemePair,
 ): Theme {
-  const _theme = theme || { id: constants.DEFAULT_THEME }
+  const _theme = theme || constants.DEFAULT_THEME_PAIR
 
   if (_theme.id === 'custom' && _theme.color) {
     return loadCustomTheme(_theme.color)
@@ -47,3 +47,5 @@ export function loadTheme(
     )
   )
 }
+
+export const defaultTheme = loadTheme(constants.DEFAULT_THEME_PAIR)

@@ -15,7 +15,7 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_rounded" translatesAutoresizingMaskIntoConstraints="NO" id="zch-fU-eGV">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_circle" translatesAutoresizingMaskIntoConstraints="NO" id="zch-fU-eGV">
                     <rect key="frame" x="190" y="190" width="100" height="100"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="100" id="Ahl-Y6-BrY"/>
@@ -23,7 +23,7 @@
                     </constraints>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" red="0.16078431372549018" green="0.17254901960784313" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.14117647058823529" green="0.16862745098039217" blue="0.2196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="zch-fU-eGV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Do9-BS-cLl"/>
                 <constraint firstItem="zch-fU-eGV" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="HV4-1R-3p3"/>
@@ -34,6 +34,6 @@
         </view>
     </objects>
     <resources>
-        <image name="logo_rounded" width="300" height="300"/>
+        <image name="logo_circle" width="170.0787353515625" height="170.0787353515625"/>
     </resources>
 </document>
