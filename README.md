@@ -43,7 +43,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 - [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
-- [ ] **Issues/PR management**: New column types to manage all issues and PRs, filter the ones assigned to you, etc.;
+- [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
 - [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
