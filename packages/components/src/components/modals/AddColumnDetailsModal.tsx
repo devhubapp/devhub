@@ -187,8 +187,6 @@ export const AddColumnDetailsModal = React.memo(
 
           if (input && input.focus) {
             input.focus()
-          } else {
-            alert(input)
           }
 
           return
@@ -218,8 +216,6 @@ export const AddColumnDetailsModal = React.memo(
 
             if (input && input.focus) {
               input.focus()
-            } else {
-              alert(input)
             }
           }, 500)
         }
