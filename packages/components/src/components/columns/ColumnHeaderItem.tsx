@@ -1,6 +1,13 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
-import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
+import {
+  GestureResponderHandlers,
+  ImageStyle,
+  StyleProp,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import { GitHubIcon, ThemeColors } from '@devhub/core'
@@ -51,6 +58,7 @@ export interface ColumnHeaderItemProps {
   textStyle?: StyleProp<TextStyle>
   title?: string
   titleStyle?: StyleProp<TextStyle>
+  panHandlers?: GestureResponderHandlers
 }
 
 export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
@@ -80,6 +88,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     textStyle,
     title,
     titleStyle,
+    panHandlers = {},
   } = props
 
   const initialTheme = useTheme(theme => {
@@ -182,49 +191,37 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     text: {} as TextStyle,
   }
 
-  const wrap: ConditionalWrapProps['wrap'] = child =>
-    onPress ? (
-      <SpringAnimatedTouchableOpacity
-        ref={containerRef}
-        analyticsAction={analyticsAction}
-        analyticsLabel={analyticsLabel}
-        disabled={disabled}
-        onPress={onPress}
-        selectable={!onPress}
-        style={[
-          styles.container,
-          noPadding
-            ? undefined
-            : {
-                paddingHorizontal: contentPadding / 2,
-                paddingVertical:
-                  showLabel && label ? undefined : contentPadding,
-              },
-          { backgroundColor: springAnimatedStyles.backgroundColor },
-          style,
-        ]}
-      >
-        {child}
-      </SpringAnimatedTouchableOpacity>
-    ) : (
-      <SpringAnimatedView
-        ref={containerRef}
-        style={[
-          styles.container,
-          noPadding
-            ? undefined
-            : {
-                paddingHorizontal: contentPadding / 2,
-                paddingVertical:
-                  showLabel && label ? undefined : contentPadding,
-              },
-          { backgroundColor: springAnimatedStyles.backgroundColor },
-          style,
-        ]}
-      >
-        {child}
-      </SpringAnimatedView>
-    )
+  const wrap: ConditionalWrapProps['wrap'] = child => (
+    <SpringAnimatedView
+      {...panHandlers}
+      style={[
+        styles.container,
+        noPadding
+          ? undefined
+          : {
+              paddingHorizontal: contentPadding / 2,
+              paddingVertical: showLabel && label ? undefined : contentPadding,
+            },
+        { backgroundColor: springAnimatedStyles.backgroundColor },
+        style,
+      ]}
+    >
+      {onPress ? (
+        <SpringAnimatedTouchableOpacity
+          ref={containerRef}
+          analyticsAction={analyticsAction}
+          analyticsLabel={analyticsLabel}
+          disabled={disabled}
+          onPress={onPress}
+          selectable={!onPress}
+        >
+          {child}
+        </SpringAnimatedTouchableOpacity>
+      ) : (
+        child
+      )}
+    </SpringAnimatedView>
+  )
 
   return (
     <ConditionalWrap condition wrap={wrap}>
