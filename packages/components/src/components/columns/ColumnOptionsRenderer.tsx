@@ -14,7 +14,6 @@ import { fabSpacing } from '../layout/FABRenderer'
 import { ColumnOptions } from './ColumnOptions'
 
 export interface ColumnOptionsRendererProps {
-  accordionRef: Ref<AccordionView>
   close: () => void
   column: ColumnType
   columnIndex: number
@@ -24,14 +23,7 @@ export interface ColumnOptionsRendererProps {
 
 export const ColumnOptionsRenderer = React.memo(
   (props: ColumnOptionsRendererProps) => {
-    const {
-      accordionRef,
-      close,
-      column,
-      columnIndex,
-      containerHeight,
-      visible,
-    } = props
+    const { close, column, columnIndex, containerHeight, visible } = props
 
     const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
     const { sizename } = useAppLayout()
@@ -87,21 +79,14 @@ export const ColumnOptionsRenderer = React.memo(
             zIndex: 200,
           }}
         >
-          <AccordionView
-            ref={accordionRef}
-            accordionKey="accordion-view-column-options-rendered"
-            property="height"
-          >
-            {!!visible && (
-              <ColumnOptions
-                availableHeight={
-                  containerHeight -
-                  (isFabVisible ? fabSize + 2 * fabSpacing : 0)
-                }
-                column={column}
-                columnIndex={columnIndex}
-              />
-            )}
+          <AccordionView isOpen={visible}>
+            <ColumnOptions
+              availableHeight={
+                containerHeight - (isFabVisible ? fabSize + 2 * fabSpacing : 0)
+              }
+              column={column}
+              columnIndex={columnIndex}
+            />
           </AccordionView>
         </View>
       </>

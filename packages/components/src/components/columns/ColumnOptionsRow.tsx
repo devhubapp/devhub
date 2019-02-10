@@ -35,7 +35,7 @@ export interface ColumnOptionsRowProps {
   iconName: GitHubIcon
   onToggle: (() => void) | undefined
   openOnHover?: boolean
-  opened: boolean
+  isOpen: boolean
   subtitle?: string
   title: string
 }
@@ -48,9 +48,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     contentContainerStyle,
     hasChanged,
     iconName,
+    isOpen,
     onToggle,
     openOnHover,
-    opened,
     subtitle,
     title,
   } = props
@@ -69,7 +69,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       cacheRef.current.isHovered = isHovered
       updateStyles()
 
-      if (openOnHover && onToggle && !opened) onToggle()
+      if (openOnHover && onToggle && !isOpen) onToggle()
     },
   )
 
@@ -85,7 +85,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     () => {
       updateStyles()
     },
-    [opened],
+    [isOpen],
   )
 
   function getStyles() {
@@ -94,7 +94,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     return {
       config: { duration: 100 },
       backgroundColor:
-        isHovered || isPressing || opened
+        isHovered || isPressing || isOpen
           ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
           : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
     }
@@ -121,7 +121,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             <TouchableOpacity
               ref={touchableRef}
               activeOpacity={1}
-              analyticsAction={opened ? 'hide' : 'show'}
+              analyticsAction={isOpen ? 'hide' : 'show'}
               analyticsCategory="option_row"
               analyticsLabel={analyticsLabel}
               onPress={() => {
@@ -198,7 +198,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
               <ColumnHeaderItem
                 analyticsLabel={undefined}
-                iconName={opened ? 'chevron-up' : 'chevron-down'}
+                iconName={isOpen ? 'chevron-up' : 'chevron-down'}
                 iconStyle={{ lineHeight: undefined }}
                 noPadding
                 selectable={false}
@@ -208,25 +208,19 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         </View>
       </ConditionalWrap>
 
-      <AccordionView
-        accordionKey={`accordion-view-column-options-row-${title}}`}
-        property="height"
-        skipFirst={opened}
-      >
-        {!!opened && (
-          <View
-            style={[
-              {
-                paddingBottom: contentPadding,
-                paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
-                paddingRight: contentPadding,
-              },
-              contentContainerStyle,
-            ]}
-          >
-            {children}
-          </View>
-        )}
+      <AccordionView isOpen={isOpen}>
+        <View
+          style={[
+            {
+              paddingBottom: contentPadding,
+              paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
+              paddingRight: contentPadding,
+            },
+            contentContainerStyle,
+          ]}
+        >
+          {children}
+        </View>
       </AccordionView>
     </SpringAnimatedView>
   )

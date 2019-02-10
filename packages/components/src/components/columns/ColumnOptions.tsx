@@ -131,12 +131,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="notification_reasons"
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 iconName="rss"
+                isOpen={openedOptionCategories.has('notification_reasons')}
                 onToggle={
                   allowToggleCategoriesRef.current
                     ? () => toggleOpenedOptionCategory('notification_reasons')
                     : undefined
                 }
-                opened={openedOptionCategories.has('notification_reasons')}
                 title="Subscription reasons"
               >
                 {notificationReasonOptions.map(item => {
@@ -196,12 +196,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="event_types"
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 iconName="note"
+                isOpen={openedOptionCategories.has('event_types')}
                 onToggle={
                   allowToggleCategoriesRef.current
                     ? () => toggleOpenedOptionCategory('event_types')
                     : undefined
                 }
-                opened={openedOptionCategories.has('event_types')}
                 title="Event types"
               >
                 {eventTypeOptions.map(item => {
@@ -247,12 +247,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               analyticsLabel="saved_for_later"
               hasChanged={typeof savedForLater === 'boolean'}
               iconName="bookmark"
+              isOpen={openedOptionCategories.has('saved_for_later')}
               onToggle={
                 allowToggleCategoriesRef.current
                   ? () => toggleOpenedOptionCategory('saved_for_later')
                   : undefined
               }
-              opened={openedOptionCategories.has('saved_for_later')}
               subtitle={
                 savedForLater === true
                   ? 'Saved only'
@@ -304,12 +304,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   ? 'mail'
                   : 'mail-read'
               }
+              isOpen={openedOptionCategories.has('unread')}
               onToggle={
                 allowToggleCategoriesRef.current
                   ? () => toggleOpenedOptionCategory('unread')
                   : undefined
               }
-              opened={openedOptionCategories.has('unread')}
               subtitle={
                 isReadChecked && !isUnreadChecked
                   ? 'Read only'
@@ -390,12 +390,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   ? 'globe'
                   : 'lock'
               }
+              isOpen={openedOptionCategories.has('privacy')}
               onToggle={
                 allowToggleCategoriesRef.current
                   ? () => toggleOpenedOptionCategory('privacy')
                   : undefined
               }
-              opened={openedOptionCategories.has('privacy')}
               subtitle={
                 isPrivateChecked && !isPublicChecked
                   ? 'Private only'

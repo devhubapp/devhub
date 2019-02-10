@@ -51,8 +51,6 @@ export const EventOrNotificationColumn = React.memo(
       subscriptions,
     } = props
 
-    const accordionRef = useRef<AccordionView>(null)
-
     const [
       columnOptionsContainerHeight,
       setColumnOptionsContainerHeight,
@@ -118,40 +116,7 @@ export const EventOrNotificationColumn = React.memo(
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
     const toggleOptions = () => {
-      // this is more complex than usual
-      // because im doing some weird workarounds
-      // to fix the animation between nested accordions.
-      // when this one opens, I "lock" it,
-      // so the nested ones doesnt trigger an animation on this one.
-
-      if (!accordionRef.current) return
-
-      if (showColumnOptions) {
-        if (accordionRef.current.isLocked()) {
-          accordionRef.current.setOnFinishListener(() => {
-            if (accordionRef.current) {
-              accordionRef.current.setOnFinishListener(null)
-            }
-
-            setShowColumnOptions(false)
-          })
-
-          accordionRef.current.unlock()
-        } else {
-          accordionRef.current.setOnFinishListener(null)
-          accordionRef.current.unlock()
-          setShowColumnOptions(false)
-        }
-      } else {
-        accordionRef.current.setOnFinishListener(() => {
-          if (accordionRef.current) {
-            accordionRef.current.setOnFinishListener(null)
-            accordionRef.current.lock()
-          }
-        })
-
-        setShowColumnOptions(true)
-      }
+      setShowColumnOptions(v => !v)
     }
 
     const hasOneUnreadItem = (filteredItems as any[]).some(
@@ -271,14 +236,15 @@ export const EventOrNotificationColumn = React.memo(
             setColumnOptionsContainerHeight(e.nativeEvent.layout.height)
           }}
         >
-          <ColumnOptionsRenderer
-            accordionRef={accordionRef}
-            close={toggleOptions}
-            column={column}
-            columnIndex={columnIndex}
-            containerHeight={columnOptionsContainerHeight}
-            visible={!!showColumnOptions}
-          />
+          {columnOptionsContainerHeight > 0 && (
+            <ColumnOptionsRenderer
+              close={toggleOptions}
+              column={column}
+              columnIndex={columnIndex}
+              containerHeight={columnOptionsContainerHeight}
+              visible={!!showColumnOptions}
+            />
+          )}
 
           {children}
         </View>
