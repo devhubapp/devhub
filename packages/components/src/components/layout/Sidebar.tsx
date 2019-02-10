@@ -1,11 +1,20 @@
 import React from 'react'
-import { Image, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  GestureResponderEvent,
+  Image,
+  PanResponder,
+  PanResponderGestureState,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import {
   getColumnHeaderDetails,
   getGitHubURLForUser,
   ModalPayload,
 } from '@devhub/core'
+import { useSpring } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -326,6 +335,50 @@ const SidebarColumnItem = React.memo(
       small,
     } = props
 
+    const [style, setSpring] = useSpring(() => ({
+      translateX: 0,
+      translateY: 0,
+    }))
+
+    const transformStyle = {
+      transform: [{ translateX: style.translateX }],
+    }
+
+    const onMoveShouldSetPanResponderCapture = (
+      e: GestureResponderEvent,
+      gesture: PanResponderGestureState,
+    ) => {
+      return gesture.dx !== 0 && gesture.dy !== 0
+    }
+
+    const onPanResponderMove = (
+      e: GestureResponderEvent,
+      gesture: PanResponderGestureState,
+    ) => {
+      setSpring({
+        translateX: gesture.dx,
+        translateY: gesture.dy,
+      })
+    }
+
+    const onPanResponderEnd = (
+      e: GestureResponderEvent,
+      gesture: PanResponderGestureState,
+    ) => {
+      setSpring({
+        translateX: 0,
+        translateY: 0,
+      })
+    }
+
+    const panResponder = PanResponder.create({
+      onMoveShouldSetPanResponderCapture,
+      onPanResponderMove,
+      onPanResponderEnd,
+      onPanResponderRelease: onPanResponderEnd,
+      onPanResponderTerminate: onPanResponderEnd,
+    })
+
     const { column, columnIndex, subscriptions } = useColumn(columnId)
     const theme = useTheme()
 
@@ -336,6 +389,7 @@ const SidebarColumnItem = React.memo(
 
     return (
       <ColumnHeaderItem
+        panHandlers={panResponder.panHandlers}
         key={`sidebar-column-${column.id}`}
         analyticsLabel="sidebar_column"
         avatarProps={{
@@ -360,7 +414,11 @@ const SidebarColumnItem = React.memo(
         }}
         showLabel={showLabel}
         size={columnHeaderItemContentBiggerSize}
-        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+        style={[
+          styles.centerContainer,
+          transformStyle,
+          !showLabel && itemContainerStyle,
+        ]}
       />
     )
   },
