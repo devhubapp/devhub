@@ -4,11 +4,16 @@
 
 ### Personal user information
 This app requires GitHub authentication.<br/>
-These are all permissions that will be requested to you and their reasons:
+DevHub requests access to the user's profile data, e-mail and notifications.
 
-- [required] `read:user`: Read-only access to the user's profile data;
-- [required] `user:email`: Read-only access to the user's e-mail, so DevHub has a way to contact its users if necessary, e.g. security disclosures;
-- [required] `notifications`: Read user's public and private notifications; mark as read;
+
+### Repository and org access
+You have the option to install DevHub's GitHub App in some specific orgs and repositories.
+This is required to enable access to activities from private repositories.
+
+DevHub will have access to issues, pull requests, comments, labels, assignees, milestones, merges, collaborators and some other metadata (e.g. repository name).
+
+DevHub does not have access to any code from any repository.
 
 
 ### Diagnostics information
@@ -22,9 +27,7 @@ DevHub follows good practices of security, but 100% security can't be granted in
 
 Client-side communication is encrypted using HTTPS. Server-side tokens are encrypted or behind environment variables.
 
-DevHub does not access any code from any repository and never asks for this permission.
-
-Client-side token safety is a user's responsibility. We recommend being extra careful with which browser extensions you have installed, for example.
+We recommend being extra careful with which browser extensions you have installed to avoid token exposure to third parties.
 
 
 ### Support
