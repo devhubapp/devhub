@@ -1,8 +1,7 @@
-import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 
-import { GitHubTokenDetails } from '@devhub/core'
+import { constants } from '@devhub/core'
 import { SpringAnimatedText } from '../components/animated/spring/SpringAnimatedText'
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
@@ -14,11 +13,12 @@ import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { bugsnag } from '../libs/bugsnag'
 import { executeOAuth } from '../libs/oauth'
-import { getUrlParamsIfMatches, OAuthResponseData } from '../libs/oauth/helpers'
+import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
 import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
+import { tryParseOAuthParams } from '../utils/helpers/auth'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
@@ -94,16 +94,27 @@ export const LoginScreen = React.memo(() => {
   useEffect(() => {
     ;(async () => {
       if (Platform.OS !== 'web') return
+
       const querystring = window.location.search
       if (!(querystring && querystring.includes('oauth=true'))) return
 
       const params = getUrlParamsIfMatches(querystring, '')
       if (!params) return
 
-      const { appToken } = parseOAuthParams(params)
-      if (!appToken) return
+      try {
+        const { appToken } = tryParseOAuthParams(params)
+        if (!appToken) return
 
-      loginRequest({ appToken })
+        loginRequest({ appToken })
+      } catch (error) {
+        const description = 'OAuth execution failed'
+        console.error(description, error)
+
+        if (error.message === 'Canceled' || error.message === 'Timeout') return
+        bugsnag.notify(error, { description })
+
+        alert(`Login failed. ${error || ''}`)
+      }
     })()
   }, [])
 
@@ -123,65 +134,6 @@ export const LoginScreen = React.memo(() => {
 
   analytics.trackScreenView('LOGIN_SCREEN')
 
-  function parseOAuthParams(
-    params: OAuthResponseData,
-  ): { appToken?: string; tokenDetails?: GitHubTokenDetails } {
-    try {
-      if (!(params && params.app_token && params.github_token))
-        throw new Error('No token received.')
-
-      const appToken = params.app_token
-      const githubScope = params.github_scope
-      const githubToken = params.github_token
-      const githubTokenCreatedAt =
-        params.github_token_created_at || new Date().toISOString()
-      const githubTokenType = params.github_token_type || 'bearer'
-
-      const tokenDetails: GitHubTokenDetails = {
-        scope: githubScope,
-        token: githubToken,
-        tokenType: githubTokenType,
-        tokenCreatedAt: githubTokenCreatedAt,
-      }
-
-      if (
-        Platform.OS === 'web' &&
-        !Platform.isElectron &&
-        window.history &&
-        window.history.replaceState
-      ) {
-        const newQuery = { ...params }
-        delete newQuery.app_token
-        delete newQuery.code
-        delete newQuery.github_app_type
-        delete newQuery.github_scope
-        delete newQuery.github_token
-        delete newQuery.github_token_created_at
-        delete newQuery.github_token_type
-        delete newQuery.oauth
-
-        window.history.replaceState(
-          {},
-          document.title,
-          `/${
-            Object.keys(newQuery).length ? `?${qs.stringify(newQuery)}` : ''
-          }`,
-        )
-      }
-
-      return { appToken, tokenDetails }
-    } catch (error) {
-      const description = 'OAuth failed'
-      console.error(description, error)
-      if (error.message === 'Canceled' || error.message === 'Timeout') return {}
-
-      bugsnag.notify(error, { description })
-      alert(`Login failed. ${error || ''}`)
-
-      return {}
-    }
-  }
-
   const loginWithGitHub = async () => {
     setIsExecutingOAuth(true)
 
@@ -189,9 +141,9 @@ export const LoginScreen = React.memo(() => {
       analytics.trackEvent('engagement', 'login')
 
       const params = await executeOAuth('both', {
-        scope: ['notifications'],
+        scope: constants.DEFAULT_GITHUB_OAUTH_SCOPES,
       })
-      const { appToken } = parseOAuthParams(params)
+      const { appToken } = tryParseOAuthParams(params)
       if (!appToken) return
 
       loginRequest({ appToken })
@@ -202,6 +154,8 @@ export const LoginScreen = React.memo(() => {
 
       if (error.message === 'Canceled' || error.message === 'Timeout') return
       bugsnag.notify(error, { description })
+
+      alert(`Login failed. ${error || ''}`)
     }
   }
 

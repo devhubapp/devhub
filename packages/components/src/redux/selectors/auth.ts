@@ -12,7 +12,8 @@ export const isLoggedSelector = (state: RootState) =>
     ? !!(s(state).user && s(state).user!._id)
     : false
 
-export const appTokenSelector = (state: RootState) => s(state).appToken
+export const appTokenSelector = (state: RootState) =>
+  s(state).appToken || undefined
 
 // TODO: Support private repositories after migrating to GitHub App
 // @see https://github.com/devhubapp/devhub/issues/32

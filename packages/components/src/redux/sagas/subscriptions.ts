@@ -45,15 +45,18 @@ function* init() {
 
   let isFirstTime = true
   while (true) {
-    yield race({
+    const { action } = yield race({
       delay: delay(isFirstTime ? 0 : 10 * 1000),
-      logout: take([
+      action: take([
         'LOGIN_SUCCESS',
         'LOGIN_FAILURE',
         'LOGOUT',
         'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
       ]),
     })
+
+    const forceFetchAll = !!(action && action.type === 'LOGIN_SUCCESS')
+
     const _isFirstTime = isFirstTime
     isFirstTime = false
 
@@ -68,7 +71,7 @@ function* init() {
         ])
     }
 
-    const isLogged = !!selectors.currentUserSelector(state)
+    const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
 
     const subscriptions = selectors.subscriptionsArrSelector(state)
@@ -86,12 +89,13 @@ function* init() {
           .filter(
             s =>
               s &&
-              minimumRefetchTimeHasPassed(
-                s,
-                typeof github.pollInterval === 'number'
-                  ? github.pollInterval * 1000
-                  : undefined,
-              ),
+              (forceFetchAll ||
+                minimumRefetchTimeHasPassed(
+                  s,
+                  typeof github.pollInterval === 'number'
+                    ? github.pollInterval * 1000
+                    : undefined,
+                )),
           )
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
@@ -105,10 +109,11 @@ function* init() {
           : undefined
 
         if (
-          subscription &&
-          subscription.data &&
-          subscription.data.loadState === 'error' &&
-          (!timeDiff || timeDiff < fiveMinutes)
+          !forceFetchAll &&
+          (subscription &&
+            subscription.data &&
+            subscription.data.loadState === 'error' &&
+            (!timeDiff || timeDiff < fiveMinutes))
         ) {
           if (__DEV__) {
             // tslint:disable-next-line no-console

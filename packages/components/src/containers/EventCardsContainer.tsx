@@ -10,6 +10,7 @@ import {
   Omit,
 } from '@devhub/core'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
+import { NoTokenView } from '../components/cards/NoTokenView'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
@@ -26,6 +27,10 @@ export type EventCardsContainerProps = Omit<
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { column } = props
+
+    const appToken = useReduxState(selectors.appTokenSelector)
+    const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
+    const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
 
     const firstSubscription = useReduxState(
       state =>
@@ -131,6 +136,20 @@ export const EventCardsContainer = React.memo(
     )
 
     if (!firstSubscription) return null
+
+    if (!(appToken && githubOAuthToken)) {
+      return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
+    }
+
+    if (
+      (firstSubscription.data.errorMessage || '')
+        .toLowerCase()
+        .includes('not found')
+    ) {
+      if (!githubAppToken) return <NoTokenView githubAppType="app" />
+
+      // TODO: Show button to install GitHub App because it may be a private repo
+    }
 
     return (
       <EventCards

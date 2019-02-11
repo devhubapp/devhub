@@ -13,6 +13,7 @@ import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
+import { NoTokenView } from '../components/cards/NoTokenView'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
@@ -29,6 +30,10 @@ export type NotificationCardsContainerProps = Omit<
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column } = props
+
+    const appToken = useReduxState(selectors.appTokenSelector)
+    const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+    const githubOAuthScope = useReduxState(selectors.githubOAuthScopeSelector)
 
     const firstSubscription = useReduxState(
       state =>
@@ -134,6 +139,17 @@ export const NotificationCardsContainer = React.memo(
     )
 
     if (!firstSubscription) return null
+
+    if (
+      !(
+        appToken &&
+        githubOAuthToken &&
+        githubOAuthScope &&
+        githubOAuthScope.includes('notifications')
+      )
+    ) {
+      return <NoTokenView githubAppType="oauth" />
+    }
 
     return (
       <NotificationCards

@@ -37,12 +37,13 @@ const getRandomEmoji = () => {
 // only one message per app running instance
 // because a chaning message is a bit distractive
 const clearMessage = getRandomClearMessage()
-const emoji = getRandomEmoji()
-const emojiImageURL = getEmojiImageURL(emoji)
+const randomEmoji = getRandomEmoji()
+const randomEmojiImageURL = getEmojiImageURL(randomEmoji)
 
 export interface EmptyCardsProps {
   clearedAt: string | undefined
   columnId: string
+  emoji?: GitHubEmoji
   errorMessage?: string
   errorTitle?: string
   fetchNextPage: (() => void) | undefined
@@ -54,6 +55,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearedAt,
     columnId,
+    emoji = 'warning',
     errorMessage,
     errorTitle = 'Something went wrong',
     fetchNextPage,
@@ -66,6 +68,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     actions.setColumnClearedAtFilter,
   )
 
+  const emojiImageURL = getEmojiImageURL(emoji)
   const hasError = errorMessage || loadState === 'error'
 
   const renderContent = () => {
@@ -92,10 +95,26 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     if (hasError) {
       return (
         <View style={containerStyle}>
+          {!!emojiImageURL && (
+            <Image
+              source={{ uri: emojiImageURL }}
+              style={{
+                alignSelf: 'center',
+                width: 16,
+                height: 16,
+                marginBottom: 4,
+              }}
+            />
+          )}
+
           <SpringAnimatedText style={springAnimatedTextStyle}>
-            {`⚠️\n${errorTitle}`}
+            {errorTitle}
+
             {!!errorMessage && (
-              <Text style={{ fontSize: 13 }}>{`\n${errorMessage}`}</Text>
+              <>
+                {!!errorTitle && <Text>{'\n'}</Text>}
+                <Text style={{ fontSize: 13 }}>{errorMessage}</Text>
+              </>
             )}
           </SpringAnimatedText>
 
@@ -118,12 +137,12 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       <View style={containerStyle}>
         <SpringAnimatedText style={springAnimatedTextStyle}>
           {clearMessage}
-          {!!emojiImageURL && (
+          {!!randomEmojiImageURL && (
             <>
               <Text children=" " />
 
               <Image
-                source={{ uri: emojiImageURL }}
+                source={{ uri: randomEmojiImageURL }}
                 style={{ width: 16, height: 16 }}
               />
             </>

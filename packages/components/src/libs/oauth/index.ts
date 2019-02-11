@@ -11,14 +11,6 @@ import {
 const redirectUri = 'devhub://oauth/github'
 
 export async function executeOAuth(
-  gitHubAppType: 'app',
-  options?: { appToken?: string },
-): Promise<OAuthResponseData>
-export async function executeOAuth(
-  gitHubAppType: 'oauth' | 'both',
-  options: { appToken?: string; scope?: string[] | undefined },
-): Promise<OAuthResponseData>
-export async function executeOAuth(
   gitHubAppType: GitHubAppType | 'both',
   options: { appToken?: string; scope?: string[] | undefined } = {},
 ): Promise<OAuthResponseData> {
