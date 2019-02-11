@@ -189,7 +189,7 @@ export const LoginScreen = React.memo(() => {
       analytics.trackEvent('engagement', 'login')
 
       const params = await executeOAuth('both', {
-        scope: ['notifications', 'read:user', 'user:email', 'read:org'],
+        scope: ['notifications', 'read:user', 'user:email'],
       })
       const { appToken } = parseOAuthParams(params)
       if (!appToken) return
