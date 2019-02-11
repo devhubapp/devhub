@@ -1,14 +1,33 @@
 import qs from 'qs'
 
-import { constants } from '@devhub/core'
+import { constants, GitHubAppType } from '@devhub/core'
 import { Browser } from '../browser'
-import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
+import {
+  getUrlParamsIfMatches,
+  listenForNextUrl,
+  OAuthResponseData,
+} from './helpers'
 
 const redirectUri = 'devhub://oauth/github'
 
-export async function executeOAuth(scope: string[]) {
-  const scopeStr = (scope || []).join(' ')
+export async function executeOAuth(
+  gitHubAppType: 'app',
+  options?: { appToken?: string },
+): Promise<OAuthResponseData>
+export async function executeOAuth(
+  gitHubAppType: 'oauth' | 'both',
+  options: { appToken?: string; scope?: string[] | undefined },
+): Promise<OAuthResponseData>
+export async function executeOAuth(
+  gitHubAppType: GitHubAppType | 'both',
+  options: { appToken?: string; scope?: string[] | undefined } = {},
+): Promise<OAuthResponseData> {
+  const { appToken, scope } = options
+
+  const scopeStr = (scope || []).join(' ').trim()
   const querystring = qs.stringify({
+    app_token: appToken,
+    github_app_type: gitHubAppType,
     scope: scopeStr,
     redirect_uri: redirectUri,
   })

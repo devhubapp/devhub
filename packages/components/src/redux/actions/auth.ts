@@ -2,13 +2,7 @@ import { User } from '@devhub/core'
 import { createAction, createErrorAction } from '../helpers'
 import { AuthError } from '../reducers/auth'
 
-export function loginRequest(payload: {
-  appToken: string
-  githubScope: string[] | undefined
-  githubToken: string
-  githubTokenCreatedAt: string
-  githubTokenType: 'bearer' | string
-}) {
+export function loginRequest(payload: { appToken: string }) {
   return createAction('LOGIN_REQUEST', payload)
 }
 

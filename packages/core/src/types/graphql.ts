@@ -32,6 +32,13 @@ export interface GraphQLGitHubUser {
   updatedAt: string
 }
 
+export interface GitHubTokenDetails {
+  scope?: string[] | undefined
+  token: string
+  tokenType?: 'bearer' | string
+  tokenCreatedAt: string
+}
+
 export interface User {
   _id: any
   columns?: {
@@ -45,10 +52,8 @@ export interface User {
     updatedAt: string
   }
   github: {
-    scope: string[]
-    token: string
-    tokenType: string
-    tokenCreatedAt: string
+    app?: GitHubTokenDetails
+    oauth?: GitHubTokenDetails
     user: GraphQLGitHubUser
   }
   createdAt: string

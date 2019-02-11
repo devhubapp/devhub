@@ -20,7 +20,6 @@ import {
   ColumnSubscription,
   constants,
   createNotificationsCache,
-  EnhancedGitHubEvent,
   EnhancementCache,
   enhanceNotifications,
   getGitHubApiHeadersFromHeader,
@@ -237,7 +236,11 @@ function* onFetchRequest(
   const { subscriptionType, subscriptionId, params: _params } = action.payload
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
-  const githubToken = selectors.githubTokenSelector(state)
+
+  // TODO: Fix github app token handling
+  const githubToken =
+    selectors.githubOAuthTokenSelector(state) ||
+    selectors.githubAppTokenSelector(state)
   const hasPrivateAccess = selectors.githubHasPrivateAccessSelector(state)
 
   const page = Math.max(1, _params.page || 1)

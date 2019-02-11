@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import { Omit } from '@devhub/core'
+import { GitHubAppType, Omit } from '@devhub/core'
 import { Browser } from '../browser'
 import { Linking } from '../linking'
 import { Platform } from '../platform'
@@ -8,6 +8,7 @@ import { Platform } from '../platform'
 export interface OAuthResponseData {
   app_token?: string
   code: string
+  github_app_type: GitHubAppType
   github_scope: string[]
   github_token?: string
   github_token_created_at?: string

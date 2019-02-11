@@ -106,7 +106,7 @@ const migrations = {
             tokenType: oldAuth.githubTokenType || '',
             tokenCreatedAt: oldAuth.githubTokenCreatedAt || '',
             user: oldAuth.user,
-          },
+          } as any,
           createdAt: '',
           updatedAt: '',
           lastLoginAt: oldAuth.lastLoginAt || '',

@@ -6,28 +6,70 @@ export const authErrorSelector = (state: RootState) => s(state).error
 
 export const isLoggingInSelector = (state: RootState) => s(state).isLoggingIn
 
-export const appTokenSelector = (state: RootState) => s(state).appToken
+export const isLoggedSelector = (state: RootState) =>
+  appTokenSelector(state) &&
+  (githubAppTokenSelector(state) || githubOAuthTokenSelector(state))
+    ? !!(s(state).user && s(state).user!._id)
+    : false
 
-export const githubScopeSelector = (state: RootState) =>
-  s(state).user && s(state).user!.github.scope
+export const appTokenSelector = (state: RootState) => s(state).appToken
 
 // TODO: Support private repositories after migrating to GitHub App
 // @see https://github.com/devhubapp/devhub/issues/32
 export const githubHasPrivateAccessSelector = (_state: RootState) => false
 
-export const githubTokenSelector = (state: RootState) =>
-  s(state).user && s(state).user!.github.token
+export const githubAppTokenDetailsSelector = (state: RootState) => {
+  const user = s(state).user
+  return (user && user.github.app) || undefined
+}
 
-export const githubTokenTypeSelector = (state: RootState) =>
-  s(state).user && s(state).user!.github.tokenType
+export const githubAppScopeSelector = (state: RootState) => {
+  const tokenDetails = githubAppTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.scope) || undefined
+}
 
-export const githubTokenCreatedAtSelector = (state: RootState) =>
-  s(state).user && s(state).user!.github.tokenCreatedAt
+export const githubAppTokenSelector = (state: RootState) => {
+  const tokenDetails = githubAppTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.token) || undefined
+}
+
+export const githubAppTokenTypeSelector = (state: RootState) => {
+  const tokenDetails = githubAppTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.tokenType) || undefined
+}
+
+export const githubAppTokenCreatedAtSelector = (state: RootState) => {
+  const tokenDetails = githubAppTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.tokenCreatedAt) || undefined
+}
+
+export const githubOAuthTokenDetailsSelector = (state: RootState) => {
+  const user = s(state).user
+  return (user && user.github.oauth) || undefined
+}
+
+export const githubOAuthScopeSelector = (state: RootState) => {
+  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.scope) || undefined
+}
+
+export const githubOAuthTokenSelector = (state: RootState) => {
+  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.token) || undefined
+}
+
+export const githubOAuthTokenTypeSelector = (state: RootState) => {
+  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.tokenType) || undefined
+}
+
+export const githubOAuthTokenCreatedAtSelector = (state: RootState) => {
+  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+  return (tokenDetails && tokenDetails.tokenCreatedAt) || undefined
+}
 
 export const currentUserSelector = (state: RootState) =>
-  appTokenSelector(state) && githubTokenSelector(state)
-    ? s(state).user
-    : undefined
+  isLoggedSelector(state) ? s(state).user : undefined
 
 export const currentUsernameSelector = (state: RootState) => {
   const user = currentUserSelector(state)

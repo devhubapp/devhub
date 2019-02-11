@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import { constants } from '@devhub/core'
+import { constants, GitHubAppType } from '@devhub/core'
 import { Linking } from '../linking'
 import { Platform } from '../platform/index.web'
 import {
@@ -31,9 +31,24 @@ function popupWindow(url: string, w: number = 500, h: number = 600) {
   )
 }
 
-export async function executeOAuth(scope: string[]) {
-  const scopeStr = (scope || []).join(' ')
+export async function executeOAuth(
+  gitHubAppType: 'app',
+  options?: { appToken?: string },
+): Promise<OAuthResponseData>
+export async function executeOAuth(
+  gitHubAppType: 'oauth' | 'both',
+  options: { appToken?: string; scope?: string[] | undefined },
+): Promise<OAuthResponseData>
+export async function executeOAuth(
+  gitHubAppType: GitHubAppType | 'both',
+  options: { appToken?: string; scope?: string[] | undefined } = {},
+): Promise<OAuthResponseData> {
+  const { appToken, scope } = options
+
+  const scopeStr = (scope || []).join(' ').trim()
   const querystring = qs.stringify({
+    app_token: appToken,
+    github_app_type: gitHubAppType,
     scope: scopeStr,
     redirect_uri: Platform.isElectron ? redirectUri : '',
   })

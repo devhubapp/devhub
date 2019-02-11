@@ -1,3 +1,5 @@
+export type GitHubAppType = 'app' | 'oauth'
+
 export type GitHubActivityType =
   | 'ORG_PUBLIC_EVENTS'
   | 'PUBLIC_EVENTS'
