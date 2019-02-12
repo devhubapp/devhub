@@ -335,13 +335,18 @@ const SidebarColumnItem = React.memo(
       small,
     } = props
 
+    const { column, columnIndex, subscriptions } = useColumn(columnId)
+    const theme = useTheme()
+
+    if (!(column && subscriptions)) return null
+
     const [style, setSpring] = useSpring(() => ({
       translateX: 0,
       translateY: 0,
     }))
 
     const transformStyle = {
-      transform: [{ translateX: style.translateX }],
+      transform: [{ translateY: style.translateY }],
     }
 
     const onMoveShouldSetPanResponderCapture = (
@@ -379,17 +384,13 @@ const SidebarColumnItem = React.memo(
       onPanResponderTerminate: onPanResponderEnd,
     })
 
-    const { column, columnIndex, subscriptions } = useColumn(columnId)
-    const theme = useTheme()
-
-    if (!(column && subscriptions)) return null
-
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
     const label = `${requestTypeIconAndData.title || ''}`.toLowerCase()
 
     return (
       <ColumnHeaderItem
         panHandlers={panResponder.panHandlers}
+        containerStyle={[transformStyle]}
         key={`sidebar-column-${column.id}`}
         analyticsLabel="sidebar_column"
         avatarProps={{
@@ -414,11 +415,7 @@ const SidebarColumnItem = React.memo(
         }}
         showLabel={showLabel}
         size={columnHeaderItemContentBiggerSize}
-        style={[
-          styles.centerContainer,
-          transformStyle,
-          !showLabel && itemContainerStyle,
-        ]}
+        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
       />
     )
   },
