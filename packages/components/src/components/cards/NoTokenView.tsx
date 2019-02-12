@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Image, Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { constants, GitHubAppType } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
@@ -12,12 +11,9 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
-import {
-  getEmojiImageURL,
-  GitHubEmoji,
-} from '../../utils/helpers/github/emojis'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { GitHubEmoji } from '../../utils/helpers/github/emojis'
 import { Button } from '../common/Button'
+import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 export interface NoTokenViewProps {
   emoji?: GitHubEmoji
@@ -35,12 +31,9 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
   } = props
 
   const [isExecutingOAuth, setIsExecutingOAuth] = useState(false)
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const existingAppToken = useReduxState(selectors.appTokenSelector)
   const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
   const loginRequest = useReduxAction(actions.loginRequest)
-
-  const emojiImageURL = getEmojiImageURL(emoji)
 
   async function startOAuth() {
     try {
@@ -69,56 +62,6 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
     }
   }
 
-  const renderContent = () => {
-    return (
-      <View
-        style={{
-          width: '100%',
-          padding: contentPadding,
-        }}
-      >
-        {!!emojiImageURL && (
-          <Image
-            source={{ uri: emojiImageURL }}
-            style={{
-              alignSelf: 'center',
-              width: 16,
-              height: 16,
-              marginBottom: 4,
-            }}
-          />
-        )}
-
-        <SpringAnimatedText
-          style={{
-            lineHeight: 20,
-            fontSize: 14,
-            color: springAnimatedTheme.foregroundColorMuted50,
-            textAlign: 'center',
-          }}
-        >
-          {title}
-
-          {!!subtitle && (
-            <>
-              {!!title && <Text>{'\n'}</Text>}
-              <Text style={{ fontSize: 13 }}>{subtitle}</Text>
-            </>
-          )}
-        </SpringAnimatedText>
-
-        <View style={{ padding: contentPadding }}>
-          <Button
-            analyticsLabel={`relogin_with_github_${githubAppType}`}
-            children="Login with GitHub"
-            loading={isLoggingIn || isExecutingOAuth}
-            onPress={() => startOAuth()}
-          />
-        </View>
-      </View>
-    )
-  }
-
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -130,7 +73,19 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
           padding: contentPadding,
         }}
       >
-        {renderContent()}
+        <GenericMessageWithButtonView
+          buttonView={
+            <Button
+              analyticsLabel={`relogin_with_github_${githubAppType}`}
+              children="Login with GitHub"
+              loading={isLoggingIn || isExecutingOAuth}
+              onPress={() => startOAuth()}
+            />
+          }
+          emoji={emoji}
+          subtitle={subtitle}
+          title={title}
+        />
       </View>
     </View>
   )

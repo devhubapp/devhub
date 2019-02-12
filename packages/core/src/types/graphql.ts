@@ -67,3 +67,61 @@ export interface GitHubPlan {
   collaboratorsCount?: number
   privateReposLimit?: number
 }
+
+export interface InstallationPermissions {
+  metadata: string
+  contents: string
+  issues: string
+  single_file: string
+}
+
+export interface InstallationRepositoryPermissions {
+  admin: boolean
+  push: boolean
+  pull: boolean
+}
+
+export interface InstallationAccount {
+  id: number
+  nodeId: string
+  gravatarId?: string
+  login: string
+  type?: string
+  avatarURL: string
+  siteAdmin?: boolean
+  url: string
+  htmlURL?: string
+}
+
+export interface Installation {
+  id: number
+  account: InstallationAccount
+  appId: number
+  targetId: number
+  targetType: string
+  permissions: InstallationPermissions
+  events: string[]
+  singleFileName: string
+  htmlURL: string
+}
+
+export interface InstallationRepository {
+  id: number
+  nodeId: string
+  ownerName: string
+  repoName: string
+  private: boolean
+  permissions: InstallationRepositoryPermissions | null
+  language: string
+  description?: string
+  htmlURL: string
+}
+
+export interface InstallationResponse {
+  ownerId?: number | null
+  repoId?: number | null
+  installation?: Installation | null
+  installationRepositories?: InstallationRepository[] | null
+  installationToken?: string | null
+  installationTokenExpiresAt?: string | null
+}

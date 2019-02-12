@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   ActivityColumnSubscription,
@@ -7,14 +7,22 @@ import {
   constants,
   EnhancedGitHubEvent,
   getOlderEventDate,
+  InstallationResponse,
   Omit,
 } from '@devhub/core'
+import { View } from 'react-native'
+import { EmptyCards } from '../components/cards/EmptyCards'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
+import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
+import { Button } from '../components/common/Button'
+import { Link } from '../components/common/Link'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
+import { octokit } from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { contentPadding } from '../styles/variables'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
@@ -32,6 +40,7 @@ export const EventCardsContainer = React.memo(
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
 
+    // TODO: Support multiple subscriptions per column.
     const firstSubscription = useReduxState(
       state =>
         selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
@@ -40,6 +49,22 @@ export const EventCardsContainer = React.memo(
     )
 
     const data = (firstSubscription && firstSubscription.data) || {}
+
+    const owner =
+      (firstSubscription &&
+        (('owner' in firstSubscription.params &&
+          firstSubscription.params.owner) ||
+          ('org' in firstSubscription.params &&
+            firstSubscription.params.org))) ||
+      undefined
+    const repo =
+      (firstSubscription &&
+        ('repo' in firstSubscription.params &&
+          firstSubscription.params.repo)) ||
+      undefined
+
+    // TODO: Get from redux state
+    const installationResponse = { owner, repo } as any
 
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
@@ -148,7 +173,64 @@ export const EventCardsContainer = React.memo(
     ) {
       if (!githubAppToken) return <NoTokenView githubAppType="app" />
 
-      // TODO: Show button to install GitHub App because it may be a private repo
+      if (installationResponse.ownerId) {
+        return (
+          <View
+            style={{
+              flex: 1,
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: contentPadding,
+            }}
+          >
+            <GenericMessageWithButtonView
+              buttonView={
+                <Link
+                  analyticsLabel="setup_github_app"
+                  href={
+                    installationResponse.ownerId
+                      ? `https://github.com/apps/${
+                          constants.GITHUB_APP_CANNONICAL_ID
+                        }/installations/new/permissions?suggested_target_id=${
+                          installationResponse.ownerId
+                        }${
+                          installationResponse.repoId
+                            ? `&repository_ids[]=${installationResponse.repoId}`
+                            : ``
+                        }`
+                      : `https://github.com/apps/${
+                          constants.GITHUB_APP_CANNONICAL_ID
+                        }/installations/new`
+                  }
+                >
+                  <Button
+                    children="Install GitHub App"
+                    disabled={installationResponse.isLoading}
+                    loading={installationResponse.isLoading}
+                    onPress={undefined}
+                  />
+                </Link>
+              }
+              emoji="lock"
+              subtitle="Install the GitHub App to get private access. No code permission required."
+              title="Private repository?"
+            />
+          </View>
+        )
+      }
+
+      if (installationResponse.isLoading) {
+        return (
+          <EmptyCards
+            clearedAt={undefined}
+            columnId={column.id}
+            fetchNextPage={undefined}
+            loadState="loading"
+            refresh={undefined}
+          />
+        )
+      }
     }
 
     return (

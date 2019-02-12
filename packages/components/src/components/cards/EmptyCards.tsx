@@ -13,6 +13,7 @@ import {
 import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Button } from '../common/Button'
+import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 const clearMessages = [
   'All clear!',
@@ -68,7 +69,6 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     actions.setColumnClearedAtFilter,
   )
 
-  const emojiImageURL = getEmojiImageURL(emoji)
   const hasError = errorMessage || loadState === 'error'
 
   const renderContent = () => {
@@ -94,32 +94,9 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
 
     if (hasError) {
       return (
-        <View style={containerStyle}>
-          {!!emojiImageURL && (
-            <Image
-              source={{ uri: emojiImageURL }}
-              style={{
-                alignSelf: 'center',
-                width: 16,
-                height: 16,
-                marginBottom: 4,
-              }}
-            />
-          )}
-
-          <SpringAnimatedText style={springAnimatedTextStyle}>
-            {errorTitle}
-
-            {!!errorMessage && (
-              <>
-                {!!errorTitle && <Text>{'\n'}</Text>}
-                <Text style={{ fontSize: 13 }}>{errorMessage}</Text>
-              </>
-            )}
-          </SpringAnimatedText>
-
-          {!!refresh && (
-            <View style={{ padding: contentPadding }}>
+        <GenericMessageWithButtonView
+          buttonView={
+            !!refresh && (
               <Button
                 analyticsLabel="try_again"
                 children="Try again"
@@ -127,9 +104,12 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
                 loading={loadState === 'loading'}
                 onPress={() => refresh()}
               />
-            </View>
-          )}
-        </View>
+            )
+          }
+          emoji={emoji}
+          title={errorTitle}
+          subtitle={errorMessage}
+        />
       )
     }
 
