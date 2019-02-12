@@ -58,6 +58,7 @@ export interface ColumnHeaderItemProps {
   textStyle?: StyleProp<TextStyle>
   title?: string
   titleStyle?: StyleProp<TextStyle>
+  containerStyle?: TouchableOpacityProps['style']
   panHandlers?: GestureResponderHandlers
 }
 
@@ -88,6 +89,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     textStyle,
     title,
     titleStyle,
+    containerStyle,
     panHandlers = {},
   } = props
 
@@ -194,6 +196,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   const wrap: ConditionalWrapProps['wrap'] = child => (
     <SpringAnimatedView
       {...panHandlers}
+      ref={containerRef}
       style={[
         styles.container,
         noPadding
@@ -204,11 +207,11 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             },
         { backgroundColor: springAnimatedStyles.backgroundColor },
         style,
+        containerStyle,
       ]}
     >
       {onPress ? (
         <SpringAnimatedTouchableOpacity
-          ref={containerRef}
           analyticsAction={analyticsAction}
           analyticsLabel={analyticsLabel}
           disabled={disabled}
