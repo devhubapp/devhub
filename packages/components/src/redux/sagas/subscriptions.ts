@@ -249,6 +249,7 @@ function* onFetchRequest(
 
   const owner =
     (subscription &&
+      subscription.params &&
       (('owner' in subscription.params && subscription.params.owner) ||
         ('org' in subscription.params && subscription.params.org))) ||
     undefined

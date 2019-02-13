@@ -14,9 +14,7 @@ import { EmptyCards } from '../components/cards/EmptyCards'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
-import { Button } from '../components/common/Button'
 import { ButtonLink } from '../components/common/ButtonLink'
-import { Link } from '../components/common/Link'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
@@ -57,6 +55,7 @@ export const EventCardsContainer = React.memo(
 
     const owner =
       (firstSubscription &&
+        firstSubscription.params &&
         (('owner' in firstSubscription.params &&
           firstSubscription.params.owner) ||
           ('org' in firstSubscription.params &&
