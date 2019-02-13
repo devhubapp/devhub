@@ -15,6 +15,7 @@ import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { Button } from '../components/common/Button'
+import { ButtonLink } from '../components/common/ButtonLink'
 import { Link } from '../components/common/Link'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
@@ -202,31 +203,27 @@ export const EventCardsContainer = React.memo(
           >
             <GenericMessageWithButtonView
               buttonView={
-                <Link
+                <ButtonLink
                   analyticsLabel="setup_github_app"
+                  children="Install GitHub App"
+                  disabled={
+                    firstSubscription.data.loadState === 'loading' ||
+                    firstSubscription.data.loadState === 'loading_first'
+                  }
                   href={`https://github.com/apps/${
                     constants.GITHUB_APP_CANNONICAL_ID
                   }/installations/new/permissions?suggested_target_id=${
                     ownerResponse.data.id
                   }`}
+                  loading={
+                    firstSubscription.data.loadState === 'loading' ||
+                    firstSubscription.data.loadState === 'loading_first'
+                  }
                   openOnNewTab={false}
-                >
-                  <Button
-                    children="Install GitHub App"
-                    disabled={
-                      firstSubscription.data.loadState === 'loading' ||
-                      firstSubscription.data.loadState === 'loading_first'
-                    }
-                    loading={
-                      firstSubscription.data.loadState === 'loading' ||
-                      firstSubscription.data.loadState === 'loading_first'
-                    }
-                    onPress={undefined}
-                  />
-                </Link>
+                />
               }
               emoji="lock"
-              subtitle="Install the GitHub App to get private access. No code permission required."
+              subtitle="Install the GitHub App to unlock private access. No code permission required."
               title="Private repository?"
             />
           </View>
