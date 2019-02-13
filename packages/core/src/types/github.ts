@@ -18,6 +18,15 @@ export type GitHubExtractParamsFromMethod<F> = F extends (
   ? P
   : never
 
+export type GitHubExtractResponseFromMethod<F> = F extends (
+  params: any,
+  callback: any,
+) => infer R
+  ? R extends Promise<infer RR>
+    ? RR
+    : R
+  : never
+
 export interface GitHubUser {
   id: string | number
   node_id?: string
@@ -238,6 +247,7 @@ export interface GitHubRepo {
   full_name?: string
   fork: boolean
   private: boolean
+  owner?: GitHubOrg | GitHubUser | undefined
   url: string // https://api.github.com/repos/facebook/react
   html_url: string // https://github.com/facebook/react
 }
@@ -829,7 +839,7 @@ export interface GitHubNotification {
   url: string
 }
 
-export interface GitHubApiHeaders {
+export interface GitHubAPIHeaders {
   pollInterval?: number
   rateLimitLimit?: number
   rateLimitRemaining?: number

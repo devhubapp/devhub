@@ -44,6 +44,10 @@ export const NotificationCardsContainer = React.memo(
 
     const data = (firstSubscription && firstSubscription.data) || {}
 
+    const installationsLoadState = useReduxState(
+      selectors.installationsLoadStateSelector,
+    )
+
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
     )
@@ -157,7 +161,11 @@ export const NotificationCardsContainer = React.memo(
         key={`notification-cards-${column.id}`}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        loadState={firstSubscription.data.loadState || 'not_loaded'}
+        loadState={
+          installationsLoadState === 'loading' && !filteredItems.length
+            ? 'loading_first'
+            : firstSubscription.data.loadState || 'not_loaded'
+        }
         notifications={filteredItems}
         refresh={refresh}
       />

@@ -63,7 +63,7 @@ export interface ColumnSubscriptionData<
   Item extends EnhancedGitHubNotification | EnhancedGitHubEvent
 > {
   items?: Item[]
-  loadState?: LoadState
+  loadState?: EnhancedLoadState
   errorMessage?: string
   canFetchMore?: boolean
   lastFetchedAt?: string
@@ -307,13 +307,9 @@ export type ModalPayload =
 
 export type ModalPayloadWithIndex = ModalPayload & { index: number }
 
-export type LoadState =
-  | 'error'
-  | 'loaded'
-  | 'loading'
-  | 'loading_first'
-  | 'loading_more'
-  | 'not_loaded'
+export type LoadState = 'error' | 'loaded' | 'loading' | 'not_loaded'
+
+export type EnhancedLoadState = LoadState | 'loading_first' | 'loading_more'
 
 export type EnhancementCache = Map<
   string,

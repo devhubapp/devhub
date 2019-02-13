@@ -1,10 +1,10 @@
 import immer from 'immer'
 
-import { GitHubApiHeaders } from '@devhub/core'
+import { GitHubAPIHeaders } from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {
-  github?: GitHubApiHeaders
+  github?: GitHubAPIHeaders
 }
 
 const initialState: State = {

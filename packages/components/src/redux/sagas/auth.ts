@@ -130,7 +130,9 @@ function* onLoginRequest(
 
     yield put(
       actions.loginFailure(
-        error.response.data &&
+        error &&
+          error.response &&
+          error.response.data &&
           error.response.data.errors &&
           error.response.data.errors[0],
       ),

@@ -16,6 +16,7 @@ import {
 } from '@devhub/core'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import {
   getIssueIconAndColor,
@@ -29,6 +30,7 @@ import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 
@@ -48,10 +50,22 @@ const styles = StyleSheet.create({
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const { notification, onlyOneRepository, isSelected } = props
 
+  const repoFullName =
+    (notification &&
+      (notification.repository.full_name || notification.repository.name)) ||
+    ''
+
+  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(repoFullName)
+
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
-  const hasPrivateAccess = useReduxState(
-    selectors.githubHasPrivateAccessSelector,
+
+  const hasPrivateAccess = useReduxState(state =>
+    selectors.githubHasPrivateAccessToRepoSelector(
+      state,
+      repoOwnerName,
+      repoName,
+    ),
   )
 
   useEffect(
@@ -78,11 +92,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
 
-  const title = trimNewLinesAndSpaces(subject.title)
+  const isPrivateAndCantSee = !!(
+    isPrivate &&
+    !hasPrivateAccess &&
+    !notification.enhanced
+  )
 
-  const repoFullName =
-    notification.repository.full_name || notification.repository.name || ''
-  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(repoFullName)
+  const title = trimNewLinesAndSpaces(subject.title)
 
   const subjectType = subject.type || ''
 
@@ -152,8 +168,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
     pullRequest ||
     undefined) as any)
-  const cardIconName = cardIconDetails.icon
-  const cardIconColor = cardIconDetails.color
+  const cardIconName = isPrivateAndCantSee ? 'lock' : cardIconDetails.icon
+  const cardIconColor = isPrivateAndCantSee
+    ? colors.yellow
+    : cardIconDetails.color
 
   const { icon: pullRequestIconName, color: pullRequestIconColor } = pullRequest
     ? getPullRequestIconAndColor(pullRequest as any)
@@ -396,18 +414,17 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         />
       )}
 
-      {!!(isPrivate && !hasPrivateAccess && !notification.enhanced) && (
-        <CommentRow
-          key={`notification-privacy-support-row-${notification.id}`}
-          analyticsLabel="about_private_access_from_notification"
-          avatarURL={undefined}
-          body="Coming soon: support for private notifications. Click here and subscribe to this issue if you want to be notified."
-          isRead
+      {!!isPrivateAndCantSee && (
+        <PrivateNotificationRow
+          key={`private-notification-row-${notification.id}`}
+          isRead={isRead}
           smallLeftColumn={smallLeftColumn}
-          url="https://github.com/devhubapp/devhub/issues/32"
-          userLinkURL={undefined}
-          username={undefined}
-          textStyle={{ fontStyle: 'italic' }}
+          ownerId={
+            (notification.repository.owner &&
+              notification.repository.owner.id) ||
+            undefined
+          }
+          repoId={repo.id}
         />
       )}
     </SpringAnimatedView>

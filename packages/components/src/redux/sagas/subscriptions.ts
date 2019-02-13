@@ -22,7 +22,7 @@ import {
   createNotificationsCache,
   EnhancementCache,
   enhanceNotifications,
-  getGitHubApiHeadersFromHeader,
+  getGitHubAPIHeadersFromHeader,
   getNotificationsEnhancementMap,
   getOlderEventDate,
   getOlderNotificationDate,
@@ -52,10 +52,15 @@ function* init() {
         'LOGIN_FAILURE',
         'LOGOUT',
         'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
+        'FETCH_INSTALLATIONS_SUCCESS',
       ]),
     })
 
-    const forceFetchAll = !!(action && action.type === 'LOGIN_SUCCESS')
+    const forceFetchAll = !!(
+      action &&
+      (action.type === 'LOGIN_SUCCESS' ||
+        action.type === 'FETCH_INSTALLATIONS_SUCCESS')
+    )
 
     const _isFirstTime = isFirstTime
     isFirstTime = false
@@ -77,7 +82,7 @@ function* init() {
     const subscriptions = selectors.subscriptionsArrSelector(state)
     if (!(subscriptions && subscriptions.length)) continue
 
-    const github = selectors.githubApiHeadersSelector(state)
+    const github = selectors.githubAPIHeadersSelector(state)
 
     // TODO: Eventually the number of subscriptions wont be 1x1 with the number of columns
     // Because columns will be able to have multiple subscriptions.
@@ -242,11 +247,23 @@ function* onFetchRequest(
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
 
-  // TODO: Fix github app token handling
+  const owner =
+    (subscription &&
+      (('owner' in subscription.params && subscription.params.owner) ||
+        ('org' in subscription.params && subscription.params.org))) ||
+    undefined
+
+  const installationToken = selectors.installationTokenByOwnerSelector(
+    state,
+    owner,
+  )
+
+  const githubOAuthToken = selectors.githubOAuthTokenSelector(state)!
+
   const githubToken =
-    selectors.githubOAuthTokenSelector(state) ||
+    (subscription && subscription.type === 'activity' && installationToken) ||
+    githubOAuthToken ||
     selectors.githubAppTokenSelector(state)
-  const hasPrivateAccess = selectors.githubHasPrivateAccessSelector(state)
 
   const page = Math.max(1, _params.page || 1)
   const perPage = Math.min(
@@ -291,11 +308,19 @@ function* onFetchRequest(
 
       const enhancementMap = yield call(
         getNotificationsEnhancementMap,
-        newItems,
+        mergedItems,
         {
           cache: notificationsCache,
-          githubToken,
-          hasPrivateAccess,
+          getGitHubInstallationTokenForRepo: (
+            ownerName: string | undefined,
+            repoName: string | undefined,
+          ) =>
+            selectors.installationTokenByRepoSelector(
+              state,
+              ownerName,
+              repoName,
+            ),
+          githubOAuthToken,
         },
       )
 
@@ -316,6 +341,7 @@ function* onFetchRequest(
     } else if (subscription && subscription.type === 'activity') {
       const response = yield call(getActivity, subscription.subtype, params, {
         subscriptionId,
+        githubToken,
       })
       headers = (response && response.headers) || {}
 
@@ -341,7 +367,7 @@ function* onFetchRequest(
       )
     }
 
-    const github = getGitHubApiHeadersFromHeader(headers)
+    const github = getGitHubAPIHeadersFromHeader(headers)
 
     yield put(
       actions.fetchSubscriptionSuccess({
@@ -360,7 +386,7 @@ function* onFetchRequest(
     // bugsnag.notify(error)
 
     const headers = error && error.response && error.response.headers
-    const github = getGitHubApiHeadersFromHeader(headers)
+    const github = getGitHubAPIHeadersFromHeader(headers)
 
     yield put(
       actions.fetchSubscriptionFailure(

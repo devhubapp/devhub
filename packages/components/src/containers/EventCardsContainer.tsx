@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
   ActivityColumnSubscription,
@@ -7,7 +7,6 @@ import {
   constants,
   EnhancedGitHubEvent,
   getOlderEventDate,
-  InstallationResponse,
   Omit,
 } from '@devhub/core'
 import { View } from 'react-native'
@@ -17,6 +16,7 @@ import { GenericMessageWithButtonView } from '../components/cards/GenericMessage
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { Button } from '../components/common/Button'
 import { Link } from '../components/common/Link'
+import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { octokit } from '../libs/github'
@@ -50,6 +50,10 @@ export const EventCardsContainer = React.memo(
 
     const data = (firstSubscription && firstSubscription.data) || {}
 
+    const isNotFound = (data.errorMessage || '')
+      .toLowerCase()
+      .includes('not found')
+
     const owner =
       (firstSubscription &&
         (('owner' in firstSubscription.params &&
@@ -57,14 +61,15 @@ export const EventCardsContainer = React.memo(
           ('org' in firstSubscription.params &&
             firstSubscription.params.org))) ||
       undefined
-    const repo =
-      (firstSubscription &&
-        ('repo' in firstSubscription.params &&
-          firstSubscription.params.repo)) ||
-      undefined
 
-    // TODO: Get from redux state
-    const installationResponse = { owner, repo } as any
+    const ownerResponse = useGitHubAPI(
+      octokit.users.getByUsername,
+      isNotFound && owner ? { username: owner } : null,
+    )
+
+    const installationsLoadState = useReduxState(
+      selectors.installationsLoadStateSelector,
+    )
 
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
@@ -166,14 +171,25 @@ export const EventCardsContainer = React.memo(
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
     }
 
-    if (
-      (firstSubscription.data.errorMessage || '')
-        .toLowerCase()
-        .includes('not found')
-    ) {
+    if (isNotFound) {
       if (!githubAppToken) return <NoTokenView githubAppType="app" />
 
-      if (installationResponse.ownerId) {
+      if (
+        ownerResponse.loadingState === 'loading' ||
+        installationsLoadState === 'loading'
+      ) {
+        return (
+          <EmptyCards
+            clearedAt={undefined}
+            columnId={column.id}
+            fetchNextPage={undefined}
+            loadState="loading"
+            refresh={undefined}
+          />
+        )
+      }
+
+      if (ownerResponse.data && ownerResponse.data.id) {
         return (
           <View
             style={{
@@ -188,26 +204,23 @@ export const EventCardsContainer = React.memo(
               buttonView={
                 <Link
                   analyticsLabel="setup_github_app"
-                  href={
-                    installationResponse.ownerId
-                      ? `https://github.com/apps/${
-                          constants.GITHUB_APP_CANNONICAL_ID
-                        }/installations/new/permissions?suggested_target_id=${
-                          installationResponse.ownerId
-                        }${
-                          installationResponse.repoId
-                            ? `&repository_ids[]=${installationResponse.repoId}`
-                            : ``
-                        }`
-                      : `https://github.com/apps/${
-                          constants.GITHUB_APP_CANNONICAL_ID
-                        }/installations/new`
-                  }
+                  href={`https://github.com/apps/${
+                    constants.GITHUB_APP_CANNONICAL_ID
+                  }/installations/new/permissions?suggested_target_id=${
+                    ownerResponse.data.id
+                  }`}
+                  openOnNewTab={false}
                 >
                   <Button
                     children="Install GitHub App"
-                    disabled={installationResponse.isLoading}
-                    loading={installationResponse.isLoading}
+                    disabled={
+                      firstSubscription.data.loadState === 'loading' ||
+                      firstSubscription.data.loadState === 'loading_first'
+                    }
+                    loading={
+                      firstSubscription.data.loadState === 'loading' ||
+                      firstSubscription.data.loadState === 'loading_first'
+                    }
                     onPress={undefined}
                   />
                 </Link>
@@ -219,18 +232,6 @@ export const EventCardsContainer = React.memo(
           </View>
         )
       }
-
-      if (installationResponse.isLoading) {
-        return (
-          <EmptyCards
-            clearedAt={undefined}
-            columnId={column.id}
-            fetchNextPage={undefined}
-            loadState="loading"
-            refresh={undefined}
-          />
-        )
-      }
     }
 
     return (
@@ -239,7 +240,11 @@ export const EventCardsContainer = React.memo(
         key={`event-cards-${column.id}`}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        loadState={firstSubscription.data.loadState || 'not_loaded'}
+        loadState={
+          installationsLoadState === 'loading' && !filteredItems.length
+            ? 'loading_first'
+            : firstSubscription.data.loadState || 'not_loaded'
+        }
         events={filteredItems}
         refresh={refresh}
       />

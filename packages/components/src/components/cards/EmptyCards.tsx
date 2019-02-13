@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, Text, TextStyle, View, ViewStyle } from 'react-native'
 
-import { LoadState } from '@devhub/core'
+import { EnhancedLoadState } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
@@ -48,7 +48,7 @@ export interface EmptyCardsProps {
   errorMessage?: string
   errorTitle?: string
   fetchNextPage: (() => void) | undefined
-  loadState: LoadState
+  loadState: EnhancedLoadState
   refresh: (() => void | Promise<void>) | undefined
 }
 

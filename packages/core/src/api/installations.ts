@@ -1,29 +1,33 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { constants, InstallationResponse } from '..'
+import { constants, InstallationsConnection } from '..'
 
-export async function fetchInstallationToken(
-  params: { owner: string; repo?: string },
-  options: { appToken: string },
-) {
-  const { owner, repo } = params
-  const { appToken: token } = options
+export interface FetchInstallationsOptions {
+  appToken: string
+  includeInstallationRepositories: boolean
+  includeInstallationToken: boolean
+}
+
+export async function fetchInstallations(options: FetchInstallationsOptions) {
+  const {
+    appToken,
+    includeInstallationRepositories,
+    includeInstallationToken,
+  } = options
 
   const response: AxiosResponse<{
     data: {
-      getInstallationToken: InstallationResponse | null
+      getInstallationsConnection: InstallationsConnection | null
     }
     errors?: any[]
   }> = await axios.post(
     constants.GRAPHQL_ENDPOINT,
     {
-      variables: { owner, repo },
       query: `
-        query($owner: String!, $repo: String) {
-          getInstallationToken(input: { owner: $owner, repo: $repo }) {
-            ownerId
-            repoId
-            installation {
+        query {
+          getInstallationsConnection {
+            totalCount
+            nodes {
               id
               account {
                 id
@@ -32,17 +36,35 @@ export async function fetchInstallationToken(
                 avatarURL
                 htmlURL
               }
-            }
-            installationToken
-            installationTokenExpiresAt
-            installationRepositories {
-              id
-              nodeId
-              ownerName
-              repoName
-              private
-              permissions
-              htmlURL
+              ${
+                includeInstallationRepositories
+                  ? `
+                    repositoriesConnection {
+                      totalCount
+                      nodes {
+                        id
+                        nodeId
+                        ownerName
+                        repoName
+                        private
+                        permissions
+                        htmlURL
+                      }
+                    }
+                    `
+                  : ''
+              }
+              ${
+                includeInstallationToken
+                  ? `
+                    tokenDetails {
+                      token
+                      expiresAt
+                    }
+                  `
+                  : ''
+              }
+
             }
           }
         }
@@ -50,16 +72,16 @@ export async function fetchInstallationToken(
     },
     {
       headers: {
-        Authorization: `bearer ${token}`,
+        Authorization: `bearer ${appToken}`,
       },
     },
   )
 
   const { data, errors } = response.data
 
-  if (errors && errors.length) {
+  if ((errors && errors.length) || !(data && data.getInstallationsConnection)) {
     throw Object.assign(new Error('GraphQL Error'), { response })
   }
 
-  return data
+  return data.getInstallationsConnection
 }

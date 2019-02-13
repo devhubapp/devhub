@@ -85,9 +85,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
-  const hasPrivateAccess = useReduxState(
-    selectors.githubHasPrivateAccessSelector,
-  )
 
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const moveColumn = useReduxAction(actions.moveColumn)
@@ -429,19 +426,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         })()}
 
         {(() => {
-          const isPrivateChecked =
-            column.type === 'notifications'
-              ? column.filters && column.filters.private === true
-              : hasPrivateAccess &&
-                !(column.filters && column.filters.private === false)
+          const isPrivateChecked = !(
+            column.filters && column.filters.private === false
+          )
 
           const isPublicChecked = !(
             column.filters && column.filters.private === true
           )
-
-          const canShowPrivateContent = hasPrivateAccess // || column.type === 'notifications'
-
-          if (!canShowPrivateContent && !isPrivateChecked) return null
 
           const getFilterValue = (
             showPublic?: boolean,
@@ -483,10 +474,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="public"
                 checked={isPublicChecked}
                 containerStyle={{ flexGrow: 1 }}
-                disabled={
-                  isPublicChecked &&
-                  (!isPrivateChecked || !canShowPrivateContent)
-                }
+                disabled={isPublicChecked && !isPrivateChecked}
                 label="Public"
                 // labelIcon="globe"
                 onChange={checked => {
@@ -503,10 +491,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="private"
                 checked={isPrivateChecked}
                 containerStyle={{ flexGrow: 1 }}
-                disabled={
-                  (isPrivateChecked && !isPublicChecked) ||
-                  (!isPrivateChecked && !canShowPrivateContent)
-                }
+                disabled={isPrivateChecked && !isPublicChecked}
                 label="Private"
                 // labelIcon="lock"
                 onChange={checked => {

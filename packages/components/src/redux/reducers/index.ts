@@ -6,6 +6,7 @@ import { appReducer } from './app'
 import { authReducer } from './auth'
 import { columnsReducer } from './columns'
 import { configReducer } from './config'
+import { installationsReducer } from './installations'
 import { navigationReducer } from './navigation'
 import { subscriptionsReducer } from './subscriptions'
 
@@ -15,6 +16,7 @@ const _rootReducer = combineReducers({
   auth: authReducer,
   columns: columnsReducer,
   config: configReducer,
+  installations: installationsReducer,
   navigation: navigationReducer,
   subscriptions: subscriptionsReducer,
 })

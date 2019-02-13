@@ -13,7 +13,6 @@ import {
   getFilteredNotifications,
 } from '../../utils/helpers/filters'
 import { RootState } from '../types'
-import { githubHasPrivateAccessSelector } from './auth'
 
 const s = (state: RootState) => state.subscriptions || {}
 
@@ -85,23 +84,17 @@ export const createFilteredSubscriptionsDataSelector = () => {
       subscriptionsDataSelector(state, subscriptionIds),
     (state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
       filters,
-    (state: RootState) => githubHasPrivateAccessSelector(state),
-    (type, items, filters, hasPrivateAccess) => {
+    (type, items, filters) => {
       if (!(items && items.length)) return []
 
       if (type === 'notifications') {
         return getFilteredNotifications(
           items as EnhancedGitHubNotification[],
           filters,
-          hasPrivateAccess,
         )
       }
 
-      return getFilteredEvents(
-        items as EnhancedGitHubEvent[],
-        filters,
-        hasPrivateAccess,
-      )
+      return getFilteredEvents(items as EnhancedGitHubEvent[], filters)
     },
   )
 }

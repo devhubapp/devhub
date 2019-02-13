@@ -15,10 +15,6 @@ export const isLoggedSelector = (state: RootState) =>
 export const appTokenSelector = (state: RootState) =>
   s(state).appToken || undefined
 
-// TODO: Support private repositories after migrating to GitHub App
-// @see https://github.com/devhubapp/devhub/issues/32
-export const githubHasPrivateAccessSelector = (_state: RootState) => false
-
 export const githubAppTokenDetailsSelector = (state: RootState) => {
   const user = s(state).user
   return (user && user.github.app) || undefined

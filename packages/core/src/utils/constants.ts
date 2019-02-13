@@ -8,7 +8,7 @@ export const DEFAULT_DARK_THEME = 'dark-purple'
 export const DEFAULT_LIGHT_THEME = 'light-purple'
 export const DEFAULT_THEME_PAIR: ThemePair = { id: 'auto', color: '' }
 
-export const DEFAULT_GITHUB_OAUTH_SCOPES = ['notifications']
+export const DEFAULT_GITHUB_OAUTH_SCOPES = ['notifications', 'user:email']
 export const DEFAULT_PAGINATION_PER_PAGE = 10
 
 export const API_BASE_URL = 'https://api.devhubapp.com'

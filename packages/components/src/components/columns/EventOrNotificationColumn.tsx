@@ -79,10 +79,6 @@ export const EventOrNotificationColumn = React.memo(
       ),
     )
 
-    const hasPrivateAccess = useReduxState(
-      selectors.githubHasPrivateAccessSelector,
-    )
-
     const clearableItems = (filteredItems as any[]).filter(
       (item: EnhancedGitHubEvent | EnhancedGitHubNotification) => {
         return !!(item && !item.saved) /* && isItemRead(item) */
@@ -168,15 +164,15 @@ export const EventOrNotificationColumn = React.memo(
 
               const hasAnyFilter =
                 column.type === 'notifications'
-                  ? notificationColumnHasAnyFilter(
-                      { ...column.filters, clearedAt: undefined },
-                      hasPrivateAccess,
-                    )
+                  ? notificationColumnHasAnyFilter({
+                      ...column.filters,
+                      clearedAt: undefined,
+                    })
                   : column.type === 'activity'
-                  ? activityColumnHasAnyFilter(
-                      { ...column.filters, clearedAt: undefined },
-                      hasPrivateAccess,
-                    )
+                  ? activityColumnHasAnyFilter({
+                      ...column.filters,
+                      clearedAt: undefined,
+                    })
                   : false
 
               // column doesnt have any filter,

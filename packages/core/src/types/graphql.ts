@@ -62,66 +62,74 @@ export interface User {
 }
 
 export interface GitHubPlan {
-  name: string
-  space?: number
-  collaboratorsCount?: number
-  privateReposLimit?: number
+  name?: string | null
+  space?: number | null
+  collaboratorsCount?: number | null
+  privateReposLimit?: number | null
 }
 
 export interface InstallationPermissions {
-  metadata: string
-  contents: string
-  issues: string
-  single_file: string
+  metadata?: string | null
+  contents?: string | null
+  issues?: string | null
+  single_file?: string | null
 }
 
 export interface InstallationRepositoryPermissions {
-  admin: boolean
-  push: boolean
-  pull: boolean
+  admin?: boolean | null
+  push?: boolean | null
+  pull?: boolean | null
 }
 
 export interface InstallationAccount {
-  id: number
-  nodeId: string
-  gravatarId?: string
-  login: string
-  type?: string
-  avatarURL: string
-  siteAdmin?: boolean
-  url: string
-  htmlURL?: string
-}
-
-export interface Installation {
-  id: number
-  account: InstallationAccount
-  appId: number
-  targetId: number
-  targetType: string
-  permissions: InstallationPermissions
-  events: string[]
-  singleFileName: string
-  htmlURL: string
+  id?: number | null
+  nodeId?: string | null
+  gravatarId?: string | null
+  login?: string | null
+  type?: string | null
+  avatarURL?: string | null
+  siteAdmin?: boolean | null
+  url?: string | null
+  htmlURL?: string | null
 }
 
 export interface InstallationRepository {
-  id: number
-  nodeId: string
-  ownerName: string
-  repoName: string
-  private: boolean
-  permissions: InstallationRepositoryPermissions | null
-  language: string
-  description?: string
-  htmlURL: string
+  id?: number | null
+  nodeId?: string | null
+  ownerName?: string | null
+  repoName?: string | null
+  private?: boolean | null
+  permissions?: InstallationRepositoryPermissions | null
+  language?: string | null
+  description?: string | null
+  htmlURL?: string | null
 }
 
-export interface InstallationResponse {
-  ownerId?: number | null
-  repoId?: number | null
-  installation?: Installation | null
-  installationRepositories?: InstallationRepository[] | null
-  installationToken?: string | null
-  installationTokenExpiresAt?: string | null
+export interface InstallationRepositoriesConnection {
+  nodes?: InstallationRepository[] | null
+  totalCount?: number | null
+}
+
+export interface InstallationTokenDetails {
+  token?: string | null
+  expiresAt?: string | null
+}
+
+export interface Installation {
+  id?: number | null
+  account?: InstallationAccount | null
+  appId?: number | null
+  targetId?: number | null
+  targetType?: string | null
+  permissions?: InstallationPermissions | null
+  events?: string[] | null
+  singleFileName?: string | null
+  repositoriesConnection?: InstallationRepositoriesConnection | null
+  tokenDetails?: InstallationTokenDetails | null
+  htmlURL?: string | null
+}
+
+export interface InstallationsConnection {
+  nodes?: Installation[] | null
+  totalCount?: number | null
 }
