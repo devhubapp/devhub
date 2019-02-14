@@ -40,7 +40,7 @@ const initialState: State = {
   totalInstallationCount: 0,
 }
 
-export const installationsReducer: Reducer<State> = (
+export const githubInstallationsReducer: Reducer<State> = (
   state = initialState,
   action,
 ) => {

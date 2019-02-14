@@ -1,15 +1,12 @@
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
-import { installationsReducer } from './installations'
+import { githubAPIReducer } from './api'
+import { githubAuthReducer } from './auth'
+import { githubInstallationsReducer } from './installations'
 
-const _rootReducer = combineReducers({
-  installations: installationsReducer,
+export const githubReducer = combineReducers({
+  api: githubAPIReducer,
+  auth: githubAuthReducer,
+  installations: githubInstallationsReducer,
 })
-
-export const githubReducer = (state: any, action: any) => {
-  switch (action.type) {
-    default:
-      return _rootReducer(state, action)
-  }
-}

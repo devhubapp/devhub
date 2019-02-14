@@ -15,7 +15,7 @@ export interface State {
   appToken: string | null
   error: AuthError | null
   isLoggingIn: boolean
-  user: User | null
+  user: Pick<User, '_id' | 'createdAt' | 'lastLoginAt' | 'updatedAt'> | null
 }
 
 const initialState: State = {
@@ -47,9 +47,11 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
         error: null,
         isLoggingIn: false,
         user: action.payload.user && {
-          ...action.payload.user,
+          _id: action.payload.user._id,
           lastLoginAt:
             action.payload.user.lastLoginAt || new Date().toISOString(),
+          createdAt: action.payload.user.createdAt,
+          updatedAt: action.payload.user.updatedAt,
         },
       }
 
