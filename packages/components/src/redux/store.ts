@@ -94,19 +94,21 @@ const migrations = {
         appToken: oldAuth.appToken,
         error: null,
         isLoggingIn: false,
-        user: oldAuth.user && {
-          _id: '',
-          github: {
-            scope: oldAuth.githubScope || [],
-            token: oldAuth.githubToken || '',
-            tokenType: oldAuth.githubTokenType || '',
-            tokenCreatedAt: oldAuth.githubTokenCreatedAt || '',
-            user: oldAuth.user,
-          } as any,
-          createdAt: '',
-          updatedAt: '',
-          lastLoginAt: oldAuth.lastLoginAt || '',
-        },
+        user:
+          oldAuth.user &&
+          ({
+            _id: '',
+            github: {
+              scope: oldAuth.githubScope || [],
+              token: oldAuth.githubToken || '',
+              tokenType: oldAuth.githubTokenType || '',
+              tokenCreatedAt: oldAuth.githubTokenCreatedAt || '',
+              user: oldAuth.user,
+            } as any,
+            createdAt: '',
+            updatedAt: '',
+            lastLoginAt: oldAuth.lastLoginAt || '',
+          } as any),
       }
     }),
   5: (state: RootState) =>
@@ -182,6 +184,57 @@ const migrations = {
         delete oldFilters.inbox
       })
     }),
+  8: (state: RootState) =>
+    immer(state, draft => {
+      delete (draft as any).app
+
+      const githubAPIHeaders = (state as any).api && (state as any).api.github
+      draft.github = draft.github || {}
+      draft.github.api = draft.github.api || {}
+      draft.github.api.headers = githubAPIHeaders
+
+      const auth = (state.auth || {}) as {
+        appToken: string | null
+        error: any
+        isLoggingIn: boolean
+        user: {
+          _id: any
+          columns?: any
+          subscriptions?: any
+          github?: {
+            scope?: string[] | undefined
+            token?: string | undefined
+            tokenType?: string | undefined
+            tokenCreatedAt?: string | undefined
+            user: GraphQLGitHubUser
+          }
+          createdAt: string
+          updatedAt: string
+          lastLoginAt: string
+        } | null
+      }
+
+      if (!auth.user) return
+
+      draft.auth.user = {
+        _id: auth.user._id,
+        createdAt: auth.user.createdAt,
+        lastLoginAt: auth.user.lastLoginAt,
+        updatedAt: auth.user.updatedAt,
+      }
+
+      if (!(auth.user.github && auth.user.github.token)) return
+      draft.github = draft.github || {}
+      draft.github.auth = draft.github.auth || {}
+
+      draft.github.auth.oauth = {
+        scope: auth.user.github.scope,
+        token: auth.user.github.token,
+        tokenCreatedAt: auth.user.github.tokenCreatedAt!,
+        tokenType: auth.user.github.tokenType,
+      }
+      draft.github.auth.user = auth.user.github.user
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -191,7 +244,7 @@ export function configureStore(key = 'root') {
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
     throttle: 500,
-    version: 7,
+    version: 8,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
