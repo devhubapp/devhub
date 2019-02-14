@@ -15,6 +15,8 @@ const redirectUri = 'devhub://oauth/github'
 const popupTarget =
   !__DEV__ &&
   (Platform.realOS !== 'web' ||
+    (Platform.realOS === 'web' &&
+      window.location.search.includes('installation_id=')) ||
     Platform.isStandalone ||
     (navigator.userAgent || '').includes('Edge'))
     ? '_self'

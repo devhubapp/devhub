@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import qs from 'qs'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 
@@ -24,6 +25,7 @@ import { emitter } from '../libs/emitter'
 import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { clearQueryStringFromURL } from '../utils/helpers/auth'
 
 const styles = StyleSheet.create({
   container: {
@@ -78,6 +80,21 @@ export const MainScreen = React.memo(() => {
     },
     [isVisible],
   )
+
+  useEffect(() => {
+    ;(async () => {
+      if (Platform.OS !== 'web') return
+
+      const querystring = window.location.search
+      if (!(querystring && querystring.includes('installation_id='))) return
+
+      const query = querystring.replace(new RegExp(`^[?]?`), '')
+      const params = qs.parse(query)
+      if (!(params && params.installation_id)) return
+
+      clearQueryStringFromURL(['installation_id', 'setup_action'])
+    })()
+  }, [])
 
   const horizontalSidebar = appOrientation === 'portrait'
 

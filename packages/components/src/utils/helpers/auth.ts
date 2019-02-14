@@ -4,6 +4,33 @@ import { GitHubTokenDetails } from '@devhub/core'
 import { OAuthResponseData } from '../../libs/oauth/helpers'
 import { Platform } from '../../libs/platform'
 
+export function clearQueryStringFromURL(fields: string[]) {
+  if (
+    !(
+      Platform.OS === 'web' &&
+      !Platform.isElectron &&
+      window.history &&
+      window.history.replaceState
+    )
+  )
+    return
+
+  const query = window.location.search.replace(new RegExp(`^[?]?`), '')
+  const params = qs.parse(query)
+
+  fields.forEach(field => {
+    delete params[field]
+  })
+
+  window.history.replaceState(
+    {},
+    document.title,
+    `${window.location.pathname || '/'}${
+      Object.keys(params).length ? `?${qs.stringify(params)}` : ''
+    }`,
+  )
+}
+
 export function tryParseOAuthParams(
   params: OAuthResponseData,
 ): { appToken?: string; tokenDetails?: GitHubTokenDetails } {
@@ -25,30 +52,16 @@ export function tryParseOAuthParams(
       tokenCreatedAt: githubTokenCreatedAt,
     }
 
-    if (
-      Platform.OS === 'web' &&
-      !Platform.isElectron &&
-      window.history &&
-      window.history.replaceState
-    ) {
-      const newQuery = { ...params }
-      delete newQuery.app_token
-      delete newQuery.code
-      delete newQuery.github_app_type
-      delete newQuery.github_scope
-      delete newQuery.github_token
-      delete newQuery.github_token_created_at
-      delete newQuery.github_token_type
-      delete newQuery.oauth
-
-      window.history.replaceState(
-        {},
-        document.title,
-        `${window.location.pathname || '/'}${
-          Object.keys(newQuery).length ? `?${qs.stringify(newQuery)}` : ''
-        }`,
-      )
-    }
+    clearQueryStringFromURL([
+      'app_token',
+      'code',
+      'github_app_type',
+      'github_scope',
+      'github_token',
+      'github_token_created_at',
+      'github_token_type',
+      'oauth',
+    ])
 
     return { appToken, tokenDetails }
   } catch (error) {

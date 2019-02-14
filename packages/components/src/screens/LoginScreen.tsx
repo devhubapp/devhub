@@ -1,3 +1,4 @@
+import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 
@@ -18,7 +19,10 @@ import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
-import { tryParseOAuthParams } from '../utils/helpers/auth'
+import {
+  clearQueryStringFromURL,
+  tryParseOAuthParams,
+} from '../utils/helpers/auth'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
@@ -115,6 +119,30 @@ export const LoginScreen = React.memo(() => {
 
         alert(`Login failed. ${error || ''}`)
       }
+    })()
+  }, [])
+
+  // auto start oauth flow after github app installation
+  useEffect(() => {
+    ;(async () => {
+      if (Platform.OS !== 'web') return
+
+      const querystring = window.location.search
+      if (!(querystring && querystring.includes('installation_id='))) return
+      if (querystring.includes('oauth=true')) return
+
+      const query = querystring.replace(new RegExp(`^[?]?`), '')
+      const params = qs.parse(query)
+      if (!(params && params.installation_id)) return
+
+      const {
+        installation_id: installationId,
+        setup_action: _setupAction,
+      } = params
+
+      clearQueryStringFromURL(['installation_id', 'setup_action'])
+
+      loginWithGitHub()
     })()
   }, [])
 
