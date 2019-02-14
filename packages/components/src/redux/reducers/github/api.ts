@@ -28,7 +28,7 @@ export const githubAPIReducer: Reducer<State> = (
 
         draft.headers = {
           ...draft.headers,
-          ...action.payload.github,
+          ...action.payload.github.headers,
         }
       })
 

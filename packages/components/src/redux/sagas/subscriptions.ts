@@ -26,6 +26,7 @@ import {
   getNotificationsEnhancementMap,
   getOlderEventDate,
   getOlderNotificationDate,
+  GitHubAppTokenType,
   GitHubEvent,
   GitHubNotification,
 } from '@devhub/core'
@@ -243,7 +244,7 @@ function* onFetchRequest(
 ) {
   const state = yield select()
 
-  const { subscriptionType, subscriptionId, params: _params } = action.payload
+  const { params: _params, subscriptionId, subscriptionType } = action.payload
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
 
@@ -258,13 +259,18 @@ function* onFetchRequest(
     state,
     owner,
   )
-
   const githubOAuthToken = selectors.githubOAuthTokenSelector(state)!
+  const githubAppToken = selectors.githubAppTokenSelector(state)
 
   const githubToken =
     (subscription && subscription.type === 'activity' && installationToken) ||
     githubOAuthToken ||
-    selectors.githubAppTokenSelector(state)
+    githubAppToken
+
+  const appTokenType: GitHubAppTokenType =
+    (githubToken === installationToken && 'app-installation') ||
+    (githubToken === githubAppToken && 'app-user-to-server') ||
+    'oauth'
 
   const page = Math.max(1, _params.page || 1)
   const perPage = Math.min(
@@ -368,7 +374,7 @@ function* onFetchRequest(
       )
     }
 
-    const github = getGitHubAPIHeadersFromHeader(headers)
+    const githubAPIHeaders = getGitHubAPIHeadersFromHeader(headers)
 
     yield put(
       actions.fetchSubscriptionSuccess({
@@ -376,7 +382,7 @@ function* onFetchRequest(
         subscriptionId,
         data,
         canFetchMore,
-        github,
+        github: { appTokenType, headers: githubAPIHeaders },
       }),
     )
   } catch (error) {
@@ -387,14 +393,14 @@ function* onFetchRequest(
     // bugsnag.notify(error)
 
     const headers = error && error.response && error.response.headers
-    const github = getGitHubAPIHeadersFromHeader(headers)
+    const githubAPIHeaders = getGitHubAPIHeadersFromHeader(headers)
 
     yield put(
       actions.fetchSubscriptionFailure(
         {
           subscriptionType,
           subscriptionId,
-          github,
+          github: { appTokenType, headers: githubAPIHeaders },
         },
         error,
       ),
@@ -410,7 +416,11 @@ function* onFetchFailed(
   if (
     action.error &&
     action.error.status === 401 &&
-    action.error.message === 'Bad credentials'
+    action.error.message === 'Bad credentials' &&
+    action.payload &&
+    action.payload.github &&
+    (action.payload.github.appTokenType === 'app-user-to-server' ||
+      action.payload.github.appTokenType === 'oauth')
   ) {
     yield put(actions.logout())
   }
