@@ -6,7 +6,7 @@ import {
   LoadState,
   normalizeInstallationConnections,
 } from '@devhub/core'
-import { Reducer } from '../types'
+import { Reducer } from '../../types'
 
 export interface State {
   allIds: number[]

@@ -3,7 +3,8 @@ import { createSelector } from 'reselect'
 import { normalizeUsername } from '@devhub/core'
 import { RootState } from '../types'
 
-const s = (state: RootState) => state.installations || {}
+const s = (state: RootState) =>
+  (state.github && state.github.installations) || {}
 
 export const installationIdsSelector = (state: RootState) =>
   s(state).allIds || []
