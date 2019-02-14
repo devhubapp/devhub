@@ -249,3 +249,8 @@ export function stripMarkdown(
   }
   return output
 }
+
+export function normalizeUsername(username: string | undefined) {
+  if (!username || typeof username !== 'string') return undefined
+  return username.trim().toLowerCase()
+}

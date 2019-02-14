@@ -13,13 +13,9 @@ import createSagaMiddleware from 'redux-saga'
 import {
   Column,
   ColumnSubscription,
-  createSubscriptionObjectWithId,
   GraphQLGitHubUser,
   guid,
-  NotificationColumn,
-  NotificationColumnSubscription,
   removeUselessURLsFromResponseItem,
-  subscriptionsArrToState,
 } from '@devhub/core'
 import { analyticsMiddleware } from './middlewares/analytics'
 import { bugsnagMiddleware } from './middlewares/bugsnag'

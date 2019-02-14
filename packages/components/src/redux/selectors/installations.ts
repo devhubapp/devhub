@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { normalizeUsername } from '../../utils/helpers/github/shared'
+import { normalizeUsername } from '@devhub/core'
 import { RootState } from '../types'
 
 const s = (state: RootState) => state.installations || {}

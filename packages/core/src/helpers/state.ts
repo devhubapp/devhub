@@ -1,13 +1,17 @@
+import _ from 'lodash'
+
 import {
   Column,
   ColumnCreation,
   ColumnSubscription,
   ColumnSubscriptionCreation,
+  Installation,
+  InstallationsConnection,
 } from '../types'
 import { getUniqueIdForSubscription } from './github/shared'
-import { guid } from './shared'
+import { guid, normalizeUsername } from './shared'
 
-export function columnsArrToState(
+export function normalizeColumns(
   columns: ColumnCreation[],
   updatedAt?: string,
 ) {
@@ -31,7 +35,7 @@ export function columnsArrToState(
   return { allIds, byId, updatedAt: updatedAt || new Date().toISOString() }
 }
 
-export function subscriptionsArrToState(
+export function normalizeSubscriptions(
   subscriptions: ColumnSubscriptionCreation[],
   updatedAt?: string,
 ) {
@@ -51,4 +55,64 @@ export function subscriptionsArrToState(
   })
 
   return { allIds, byId, updatedAt: updatedAt || new Date().toISOString() }
+}
+
+export function normalizeInstallationConnections(
+  installations: InstallationsConnection['nodes'],
+) {
+  const items = installations || []
+
+  const allIds: number[] = []
+  const allOwnerNames: string[] = []
+  const allRepoFullNames: string[] = []
+  const byId: Record<number, Installation> = {}
+  const byOwnerName: Record<string, number> = {}
+  const byRepoFullName: Record<string, number> = {}
+
+  items.forEach(installation => {
+    if (!(installation && installation.id)) return
+
+    allIds.push(installation.id)
+    byId[installation.id] = installation
+
+    const ownerName = normalizeUsername(
+      (installation.account && installation.account.login) || undefined,
+    )
+    if (ownerName) {
+      allOwnerNames.push(ownerName)
+      byOwnerName[ownerName] = installation.id
+    }
+
+    const repos =
+      installation.repositoriesConnection &&
+      installation.repositoriesConnection.nodes
+
+    if (repos) {
+      repos.forEach(repo => {
+        if (!(repo && repo.repoName)) return
+
+        const _ownerName = normalizeUsername(repo.ownerName || undefined)
+        if (_ownerName) {
+          allOwnerNames.push(_ownerName)
+          byOwnerName[_ownerName] = installation.id!
+        }
+
+        const repoName = `${repo.repoName}`.trim().toLowerCase()
+        if (repoName) {
+          const repoFullName = `${_ownerName}/${repoName}`
+          allRepoFullNames.push(repoFullName)
+          byRepoFullName[repoFullName] = installation.id!
+        }
+      })
+    }
+  })
+
+  return {
+    allIds: _.uniq(allIds),
+    allOwnerNames: _.uniq(allOwnerNames),
+    allRepoFullNames: _.uniq(allRepoFullNames),
+    byId,
+    byOwnerName,
+    byRepoFullName,
+  }
 }

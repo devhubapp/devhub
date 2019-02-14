@@ -54,11 +54,11 @@ export function getColumnHeaderDetails(
       switch (subscription.subtype) {
         case 'ORG_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: subscription.params.org },
+            avatarProps: { username: subscription.params!.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params.org,
+            title: subscription.params!.org,
           }
         }
         case 'PUBLIC_EVENTS': {
@@ -72,66 +72,66 @@ export function getColumnHeaderDetails(
         case 'REPO_EVENTS': {
           return {
             avatarProps: {
-              repo: subscription.params.repo,
-              username: subscription.params.owner,
+              repo: subscription.params!.repo,
+              username: subscription.params!.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
-            owner: subscription.params.owner,
-            repo: subscription.params.repo,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
             subtitle: 'Activity',
-            title: subscription.params.repo,
+            title: subscription.params!.repo,
           }
         }
         case 'REPO_NETWORK_EVENTS': {
           return {
             avatarProps: {
-              repo: subscription.params.repo,
-              username: subscription.params.owner,
+              repo: subscription.params!.repo,
+              username: subscription.params!.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
-            owner: subscription.params.owner,
-            repo: subscription.params.repo,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
             subtitle: 'Network',
-            title: subscription.params.repo,
+            title: subscription.params!.repo,
           }
         }
         case 'USER_EVENTS': {
           return {
-            avatarProps: { username: subscription.params.username },
+            avatarProps: { username: subscription.params!.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params.username,
+            title: subscription.params!.username,
           }
         }
         case 'USER_ORG_EVENTS': {
           return {
-            avatarProps: { username: subscription.params.org },
+            avatarProps: { username: subscription.params!.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params.org,
+            title: subscription.params!.org,
           }
         }
         case 'USER_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: subscription.params.username },
+            avatarProps: { username: subscription.params!.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params.username,
+            title: subscription.params!.username,
           }
         }
         case 'USER_RECEIVED_EVENTS':
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: subscription.params.username },
+            avatarProps: { username: subscription.params!.username },
             icon: 'home',
             repoIsKnown: false,
             subtitle: 'Dashboard',
-            title: subscription.params.username,
+            title: subscription.params!.username,
           }
         }
         default: {
@@ -157,9 +157,9 @@ export function getColumnHeaderDetails(
           return {
             icon: 'bell',
             repoIsKnown: true,
-            owner: subscription.params.owner,
-            repo: subscription.params.repo,
-            subtitle: subscription.params.repo,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
+            subtitle: subscription.params!.repo,
             title: 'Notifications',
           }
         }

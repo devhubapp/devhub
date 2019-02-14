@@ -1,8 +1,11 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { Installation, LoadState } from '@devhub/core'
-import { normalizeUsername } from '../../utils/helpers/github/shared'
+import {
+  Installation,
+  LoadState,
+  normalizeInstallationConnections,
+} from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {
@@ -12,7 +15,7 @@ export interface State {
   allOwnerNames: string[]
   byOwnerName: Record<string, number>
 
-  allRepoFulNames: string[]
+  allRepoFullNames: string[]
   byRepoFullName: Record<string, number>
 
   error?: string | null
@@ -28,7 +31,7 @@ const initialState: State = {
   allOwnerNames: [],
   byOwnerName: {},
 
-  allRepoFulNames: [],
+  allRepoFullNames: [],
   byRepoFullName: {},
 
   error: null,
@@ -56,65 +59,27 @@ export const installationsReducer: Reducer<State> = (
         const { nodes, totalCount } = action.payload
 
         if (nodes) {
-          draft.allIds = []
-          draft.byId = {}
-
-          draft.allOwnerNames = []
-          draft.byOwnerName = {}
-
-          const allRepoFulNames: State['allRepoFulNames'] = []
-          const byRepoFullName: State['byRepoFullName'] = {}
+          const {
+            allIds,
+            allOwnerNames,
+            allRepoFullNames,
+            byId,
+            byOwnerName,
+            byRepoFullName,
+          } = normalizeInstallationConnections(nodes)
 
           draft.totalInstallationCount = totalCount || 0
 
-          nodes.forEach(installation => {
-            if (!(installation && installation.id)) return
+          draft.allIds = allIds
+          draft.allOwnerNames = allOwnerNames
+          draft.allRepoFullNames = allRepoFullNames
+          draft.byId = byId
+          draft.byOwnerName = byOwnerName
 
-            draft.allIds.push(installation.id)
-            draft.byId[installation.id] = installation
-
-            const ownerName = normalizeUsername(
-              (installation.account && installation.account.login) || undefined,
-            )
-            if (ownerName) {
-              draft.allOwnerNames.push(ownerName)
-              draft.byOwnerName[ownerName] = installation.id
-            }
-
-            const repos =
-              installation.repositoriesConnection &&
-              installation.repositoriesConnection.nodes
-
-            if (repos) {
-              repos.forEach(repo => {
-                if (!(repo && repo.repoName)) return
-
-                const _ownerName = normalizeUsername(
-                  repo.ownerName || undefined,
-                )
-                if (_ownerName) {
-                  draft.allOwnerNames.push(_ownerName)
-                  draft.byOwnerName[_ownerName] = installation.id!
-                }
-
-                const repoName = `${repo.repoName}`.trim().toLowerCase()
-                if (repoName) {
-                  const repoFullName = `${_ownerName}/${repoName}`
-                  allRepoFulNames.push(repoFullName)
-                  byRepoFullName[repoFullName] = installation.id!
-                }
-              })
-            }
-          })
-
-          if (allRepoFulNames.length) {
-            draft.allRepoFulNames = allRepoFulNames
+          if (allRepoFullNames.length || !allIds.length) {
+            draft.allRepoFullNames = allRepoFullNames
             draft.byRepoFullName = byRepoFullName
           }
-
-          draft.allIds = _.uniq(draft.allIds)
-          draft.allOwnerNames = _.uniq(draft.allOwnerNames)
-          draft.allRepoFulNames = _.uniq(draft.allRepoFulNames)
         }
       })
 
