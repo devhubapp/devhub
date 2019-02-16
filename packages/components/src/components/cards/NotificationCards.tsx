@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { FlatList, View } from 'react-native'
 
 import {
   Column,
@@ -7,6 +7,7 @@ import {
   EnhancedGitHubNotification,
   LoadState,
 } from '@devhub/core'
+import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
@@ -40,6 +41,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     notifications,
     refresh,
   } = props
+
+  const [scrollOffsetY, setScrollOffsetY] = React.useState(0)
+  const flatListRef = React.useRef<FlatList<View>>(null)
+
+  useKeyboardScrolling({
+    ref: flatListRef,
+    currentOffset: scrollOffsetY,
+    columnId: column.id,
+  })
 
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
@@ -142,6 +152,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   return (
     <FlatListWithOverlay
+      ref={flatListRef}
       key="notification-cards-flat-list"
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
@@ -151,6 +162,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       keyExtractor={keyExtractor}
       removeClippedSubviews
       renderItem={renderItem}
+      onScroll={e => setScrollOffsetY(e.nativeEvent.contentOffset.y)}
     />
   )
 })

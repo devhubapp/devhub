@@ -1,7 +1,8 @@
 import React from 'react'
-import { View } from 'react-native'
+import { FlatList, View } from 'react-native'
 
 import { Column, constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
+import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
@@ -35,6 +36,15 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     loadState,
     refresh,
   } = props
+
+  const [scrollOffsetY, setScrollOffsetY] = React.useState(0)
+  const flatListRef = React.useRef<FlatList<View>>(null)
+
+  useKeyboardScrolling({
+    ref: flatListRef,
+    currentOffset: scrollOffsetY,
+    columnId: column.id,
+  })
 
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
@@ -128,6 +138,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   return (
     <FlatListWithOverlay
+      ref={flatListRef}
       data={events}
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
@@ -136,6 +147,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       keyExtractor={keyExtractor}
       removeClippedSubviews
       renderItem={renderItem}
+      onScroll={e => setScrollOffsetY(e.nativeEvent.contentOffset.y)}
     />
   )
 })
