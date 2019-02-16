@@ -37,7 +37,9 @@ const styles = StyleSheet.create({
 export const MainScreen = React.memo(() => {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const columnIds = useReduxState(selectors.columnIdsSelector)
+  const focusedColumn = useReduxState(selectors.focusedColumnSelector)
   const closeAllModals = useReduxAction(actions.closeAllModals)
+  const focusColumn = useReduxAction(actions.focusColumn)
   const popModal = useReduxAction(actions.popModal)
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
@@ -105,6 +107,28 @@ export const MainScreen = React.memo(() => {
         return
       }
 
+      if (e.key === 'j') {
+        emitter.emit(
+          'SCROLL_DOWN_COLUMN',
+          {
+            columnId: focusedColumn,
+          },
+          [focusedColumn],
+        )
+        return
+      }
+
+      if (e.key === 'k') {
+        emitter.emit(
+          'SCROLL_UP_COLUMN',
+          {
+            columnId: focusedColumn,
+          },
+          [focusedColumn],
+        )
+        return
+      }
+
       if (columnIds.length > 0) {
         const n = e.key >= '0' && e.key <= '9' ? parseInt(e.key, 10) : -1
 
@@ -116,6 +140,7 @@ export const MainScreen = React.memo(() => {
             columnIndex,
             highlight: true,
           })
+          focusColumn(columnIds[columnIndex])
           return
         }
 
@@ -127,12 +152,13 @@ export const MainScreen = React.memo(() => {
             columnIndex,
             highlight: true,
           })
+          focusColumn(columnIds[columnIndex])
           return
         }
       }
     },
     undefined,
-    [columnIds],
+    [columnIds, focusedColumn],
   )
 
   useEmitter(
