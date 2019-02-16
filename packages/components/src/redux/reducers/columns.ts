@@ -14,12 +14,14 @@ export interface State {
   allIds: string[]
   byId: Record<string, Column | undefined> | null
   updatedAt: string | null
+  focused: string | null
 }
 
 const initialState: State = {
   allIds: [],
   byId: null,
   updatedAt: null,
+  focused: null,
 }
 
 export const columnsReducer: Reducer<State> = (
@@ -27,6 +29,10 @@ export const columnsReducer: Reducer<State> = (
   action,
 ) => {
   switch (action.type) {
+    case 'FOCUS_COLUMN':
+      return immer(state, draft => {
+        draft.focused = action.payload
+      })
     case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
         draft.allIds = draft.allIds || []
