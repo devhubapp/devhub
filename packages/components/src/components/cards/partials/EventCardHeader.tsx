@@ -29,7 +29,7 @@ import { cardStyles, getCardStylesForTheme } from '../styles'
 
 export interface EventCardHeaderProps {
   actionText: string
-  avatarURL: string
+  avatarUrl: string
   cardIconColor?: string
   cardIconName: GitHubIcon
   date: MomentInput
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 export function EventCardHeader(props: EventCardHeaderProps) {
   const {
     actionText,
-    avatarURL,
+    avatarUrl,
     cardIconColor,
     cardIconName,
     date,
@@ -105,7 +105,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
         ]}
       >
         <Avatar
-          avatarURL={avatarURL}
+          avatarUrl={avatarUrl}
           isBot={isBot}
           linkURL={userLinkURL}
           shape={isBot ? undefined : 'circle'}

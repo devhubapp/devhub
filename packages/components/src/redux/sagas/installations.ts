@@ -10,7 +10,7 @@ import {
   takeEvery,
 } from 'redux-saga/effects'
 
-import { fetchInstallations, InstallationsConnection } from '@devhub/core'
+import { Installation, refreshUserInstallations } from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -37,9 +37,9 @@ function* init() {
     if (!appToken) continue
 
     yield put(
-      actions.fetchInstallationsRequest({
+      actions.refreshInstallationsRequest({
         appToken,
-        includeInstallationRepositories: isFirstTime,
+        // includeInstallationRepositories: isFirstTime,
         includeInstallationToken: true,
       }),
     )
@@ -48,36 +48,39 @@ function* init() {
   }
 }
 
-function* onFetchRequest(
+function* onRefreshInstallationsRequest(
   action: ExtractActionFromActionCreator<
-    typeof actions.fetchInstallationsRequest
+    typeof actions.refreshInstallationsRequest
   >,
 ) {
   const {
     appToken,
-    includeInstallationRepositories,
+    // includeInstallationRepositories,
     includeInstallationToken,
   } = action.payload
 
   try {
-    const response: InstallationsConnection = yield fetchInstallations({
+    const response: Installation[] = yield refreshUserInstallations({
       appToken,
-      includeInstallationRepositories,
+      // includeInstallationRepositories,
       includeInstallationToken,
     })
 
-    yield put(actions.fetchInstallationsSuccess(response))
+    yield put(actions.refreshInstallationsSuccess(response))
   } catch (error) {
     console.error('Failed to fetch installations', error)
     bugsnag.notify(error)
 
-    yield put(actions.fetchInstallationsFailure(error))
+    yield put(actions.refreshInstallationsFailure(error))
   }
 }
 
 export function* installationSagas() {
   yield all([
     yield fork(init),
-    yield takeEvery('FETCH_INSTALLATIONS_REQUEST', onFetchRequest),
+    yield takeEvery(
+      'REFRESH_INSTALLATIONS_REQUEST',
+      onRefreshInstallationsRequest,
+    ),
   ])
 }

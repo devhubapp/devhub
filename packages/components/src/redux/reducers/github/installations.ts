@@ -1,43 +1,35 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import {
-  Installation,
-  LoadState,
-  normalizeInstallationConnections,
-} from '@devhub/core'
+import { Installation, LoadState, normalizeInstallations } from '@devhub/core'
 import { Reducer } from '../../types'
 
 export interface State {
   allIds: number[]
-  byId: Record<number, Installation>
-
   allOwnerNames: string[]
+  // allRepoFullNames: string[]
+  byId: Record<number, Installation | undefined>
   byOwnerName: Record<string, number>
-
-  allRepoFullNames: string[]
-  byRepoFullName: Record<string, number>
+  // byRepoFullName: Record<string, number>
 
   error?: string | null
   lastFetchedAt: string | null
   loadState: LoadState
-  totalInstallationCount: number
+  updatedAt: string | null
 }
 
 const initialState: State = {
   allIds: [],
-  byId: {},
-
   allOwnerNames: [],
+  // allRepoFullNames: [],
+  byId: {},
   byOwnerName: {},
-
-  allRepoFullNames: [],
-  byRepoFullName: {},
+  // byRepoFullName: {},
 
   error: null,
   lastFetchedAt: null,
   loadState: 'not_loaded',
-  totalInstallationCount: 0,
+  updatedAt: null,
 }
 
 export const githubInstallationsReducer: Reducer<State> = (
@@ -45,45 +37,43 @@ export const githubInstallationsReducer: Reducer<State> = (
   action,
 ) => {
   switch (action.type) {
-    case 'FETCH_INSTALLATIONS_REQUEST':
+    case 'REFRESH_INSTALLATIONS_REQUEST':
       return immer(state, draft => {
         draft.lastFetchedAt = new Date().toISOString()
         draft.loadState = 'loading'
       })
 
-    case 'FETCH_INSTALLATIONS_SUCCESS':
+    case 'REFRESH_INSTALLATIONS_SUCCESS':
       return immer(state, draft => {
         draft.error = null
         draft.loadState = 'loaded'
+        draft.updatedAt = new Date().toISOString()
 
-        const { nodes, totalCount } = action.payload
+        const installations = action.payload
+        if (!(installations && installations.length)) return
 
-        if (nodes) {
-          const {
-            allIds,
-            allOwnerNames,
-            allRepoFullNames,
-            byId,
-            byOwnerName,
-            byRepoFullName,
-          } = normalizeInstallationConnections(nodes)
+        const {
+          allIds,
+          allOwnerNames,
+          // allRepoFullNames,
+          byId,
+          byOwnerName,
+          // byRepoFullName,
+        } = normalizeInstallations(installations)
 
-          draft.totalInstallationCount = totalCount || 0
+        draft.allIds = allIds
+        draft.allOwnerNames = allOwnerNames
+        // draft.allRepoFullNames = allRepoFullNames
+        draft.byId = byId
+        draft.byOwnerName = byOwnerName
 
-          draft.allIds = allIds
-          draft.allOwnerNames = allOwnerNames
-          draft.allRepoFullNames = allRepoFullNames
-          draft.byId = byId
-          draft.byOwnerName = byOwnerName
-
-          if (allRepoFullNames.length || !allIds.length) {
-            draft.allRepoFullNames = allRepoFullNames
-            draft.byRepoFullName = byRepoFullName
-          }
-        }
+        // if (allRepoFullNames.length || !allIds.length) {
+        //   draft.allRepoFullNames = allRepoFullNames
+        //   draft.byRepoFullName = byRepoFullName
+        // }
       })
 
-    case 'FETCH_INSTALLATIONS_FAILURE':
+    case 'REFRESH_INSTALLATIONS_FAILURE':
       return immer(state, draft => {
         draft.error = `${(action.error && action.error.message) ||
           action.error}`

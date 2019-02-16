@@ -42,7 +42,8 @@ import { ExtractActionFromActionCreator } from '../types/base'
 let notificationsCache: EnhancementCache
 
 function* init() {
-  yield take('LOGIN_SUCCESS')
+  // yield take('LOGIN_SUCCESS')
+  yield take(['REFRESH_INSTALLATIONS_SUCCESS', 'REFRESH_INSTALLATIONS_FAILURE'])
 
   let isFirstTime = true
   while (true) {
@@ -53,14 +54,14 @@ function* init() {
         'LOGIN_FAILURE',
         'LOGOUT',
         'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
-        'FETCH_INSTALLATIONS_SUCCESS',
+        'REFRESH_INSTALLATIONS_SUCCESS',
       ]),
     })
 
     const forceFetchAll = !!(
       action &&
       (action.type === 'LOGIN_SUCCESS' ||
-        action.type === 'FETCH_INSTALLATIONS_SUCCESS')
+        action.type === 'REFRESH_INSTALLATIONS_SUCCESS')
     )
 
     const _isFirstTime = isFirstTime

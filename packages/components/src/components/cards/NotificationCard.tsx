@@ -216,7 +216,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       <NotificationCardHeader
         key={`notification-card-header-${id}`}
         actionText={actionText}
-        avatarURL={actor && actor.avatar_url}
+        avatarUrl={actor && actor.avatar_url}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         date={updatedAt}
@@ -268,7 +268,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <IssueOrPullRequestRow
           key={`notification-issue-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
-          avatarURL={issue.user.avatar_url}
+          avatarUrl={issue.user.avatar_url}
           commentsCount={issue.comments}
           createdAt={issue.created_at}
           iconColor={issueIconColor!}
@@ -304,7 +304,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           // because it may be for other updates
           <CommentRow
             key={`notification-issue-body-${issue.id}`}
-            avatarURL={issue.user.avatar_url}
+            avatarUrl={issue.user.avatar_url}
             body={issue.body}
             isRead={isRead}
             smallLeftColumn={smallLeftColumn}
@@ -318,7 +318,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <IssueOrPullRequestRow
           key={`notification-pr-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
-          avatarURL={pullRequest.user.avatar_url}
+          avatarUrl={pullRequest.user.avatar_url}
           commentsCount={pullRequest.comments}
           createdAt={pullRequest.created_at}
           iconColor={pullRequestIconColor!}
@@ -354,7 +354,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           // because it may be for other updates
           <CommentRow
             key={`notification-pr-body-${pullRequest.id}`}
-            avatarURL={pullRequest.user.avatar_url}
+            avatarUrl={pullRequest.user.avatar_url}
             body={pullRequest.body}
             isRead={isRead}
             smallLeftColumn={smallLeftColumn}
@@ -367,7 +367,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!!release && (
         <ReleaseRow
           key={`notification-release-row-${repo.id}`}
-          avatarURL={release.author.avatar_url}
+          avatarUrl={release.author.avatar_url}
           body={release.body}
           isRead={isRead}
           name={release.name || ''}
@@ -384,7 +384,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!(commit || issue || pullRequest || release) && !!title && (
         <CommentRow
           key={`notification-${id}-comment-row`}
-          avatarURL=""
+          avatarUrl=""
           body={title}
           isRead={isRead}
           smallLeftColumn={smallLeftColumn}
@@ -404,7 +404,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <CommentRow
           key={`notification-comment-row-${comment.id}`}
           addBottomAnchor
-          avatarURL={comment.user.avatar_url}
+          avatarUrl={comment.user.avatar_url}
           body={comment.body}
           isRead={isRead}
           smallLeftColumn={smallLeftColumn}

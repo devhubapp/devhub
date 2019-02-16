@@ -10,7 +10,7 @@ import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { cardRowStyles, getCardRowStylesForTheme } from './styles'
 
 export interface UserRowProps {
-  avatarURL: string
+  avatarUrl: string
   isRead: boolean
   showMoreItemsIndicator?: boolean
   smallLeftColumn?: boolean
@@ -24,7 +24,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
-    avatarURL,
+    avatarUrl,
     isRead,
     showMoreItemsIndicator,
     smallLeftColumn,
@@ -43,7 +43,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
         ]}
       >
         <Avatar
-          avatarURL={avatarURL}
+          avatarUrl={avatarUrl}
           isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
           linkURL={userLinkURL}
           small

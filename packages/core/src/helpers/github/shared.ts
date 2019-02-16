@@ -27,14 +27,14 @@ export function isUnreadFilterChecked(filters: ColumnFilters | undefined) {
 }
 
 export function getUserAvatarByAvatarURL(
-  avatarURL: string,
+  avatarUrl: string,
   { size }: { size?: number } = {},
   getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
-  if (!avatarURL) return ''
+  if (!avatarUrl) return ''
 
-  const _avatarURL = avatarURL.indexOf('?') > 0 ? avatarURL : `${avatarURL}?`
-  const [url, _querystring] = _avatarURL.split('?')
+  const _avatarUrl = avatarUrl.indexOf('?') > 0 ? avatarUrl : `${avatarUrl}?`
+  const [url, _querystring] = _avatarUrl.split('?')
   const query = qs.parse(_querystring)
   const querystring = qs.stringify({
     ...query,

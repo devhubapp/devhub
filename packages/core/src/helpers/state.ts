@@ -6,7 +6,7 @@ import {
   ColumnSubscription,
   ColumnSubscriptionCreation,
   Installation,
-  InstallationsConnection,
+  NormalizedInstallations,
 } from '../types'
 import { getUniqueIdForSubscription } from './github/shared'
 import { guid, normalizeUsername } from './shared'
@@ -57,17 +57,17 @@ export function normalizeSubscriptions(
   return { allIds, byId, updatedAt: updatedAt || new Date().toISOString() }
 }
 
-export function normalizeInstallationConnections(
-  installations: InstallationsConnection['nodes'],
-) {
+export function normalizeInstallations(
+  installations: Installation[],
+): NormalizedInstallations {
   const items = installations || []
 
   const allIds: number[] = []
   const allOwnerNames: string[] = []
-  const allRepoFullNames: string[] = []
-  const byId: Record<number, Installation> = {}
+  // const allRepoFullNames: string[] = []
+  const byId: Record<number, Installation | undefined> = {}
   const byOwnerName: Record<string, number> = {}
-  const byRepoFullName: Record<string, number> = {}
+  // const byRepoFullName: Record<string, number> = {}
 
   items.forEach(installation => {
     if (!(installation && installation.id)) return
@@ -83,9 +83,8 @@ export function normalizeInstallationConnections(
       byOwnerName[ownerName] = installation.id
     }
 
-    const repos =
-      installation.repositoriesConnection &&
-      installation.repositoriesConnection.nodes
+    /*
+    const repos = installation.repositories
 
     if (repos) {
       repos.forEach(repo => {
@@ -105,14 +104,15 @@ export function normalizeInstallationConnections(
         }
       })
     }
+    */
   })
 
   return {
     allIds: _.uniq(allIds),
     allOwnerNames: _.uniq(allOwnerNames),
-    allRepoFullNames: _.uniq(allRepoFullNames),
+    // allRepoFullNames: _.uniq(allRepoFullNames),
     byId,
     byOwnerName,
-    byRepoFullName,
+    // byRepoFullName,
   }
 }

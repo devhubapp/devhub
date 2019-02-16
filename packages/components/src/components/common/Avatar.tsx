@@ -21,7 +21,7 @@ import { TouchableOpacityProps } from './TouchableOpacity'
 
 export interface AvatarProps
   extends Partial<SpringAnimatedImageWithLoadingProps> {
-  avatarURL?: string
+  avatarUrl?: string
   disableLink?: boolean
   email?: string
   hitSlop?: TouchableOpacityProps['hitSlop']
@@ -41,7 +41,7 @@ export function Avatar(props: AvatarProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
-    avatarURL: _avatarURL,
+    avatarUrl: _avatarUrl,
     disableLink,
     email,
     hitSlop,
@@ -60,16 +60,16 @@ export function Avatar(props: AvatarProps) {
   const isBot = _isBot || Boolean(_username && _username.indexOf('[bot]') >= 0)
   const username = isBot ? _username!.replace('[bot]', '') : _username
 
-  const avatarURL = _avatarURL
+  const avatarUrl = _avatarUrl
     ? getUserAvatarByAvatarURL(
-        _avatarURL,
+        _avatarUrl,
         { size: finalSize },
         PixelRatio.getPixelSizeForLayoutSize,
       )
     : ''
 
   const uri =
-    avatarURL ||
+    avatarUrl ||
     (username &&
       getUserAvatarByUsername(
         username,

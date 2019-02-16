@@ -13,7 +13,7 @@ import { BranchRow } from './BranchRow'
 import { cardRowStyles } from './styles'
 
 export interface ReleaseRowProps {
-  avatarURL: string
+  avatarUrl: string
   body: string
   branch?: string
   isRead: boolean
@@ -33,7 +33,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
-    avatarURL,
+    avatarUrl,
     body: _body,
     branch,
     isRead,
@@ -131,7 +131,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
             ]}
           >
             <Avatar
-              avatarURL={avatarURL}
+              avatarUrl={avatarUrl}
               isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
               linkURL={userLinkURL}
               small

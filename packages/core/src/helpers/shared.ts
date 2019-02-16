@@ -254,3 +254,20 @@ export function normalizeUsername(username: string | undefined) {
   if (!username || typeof username !== 'string') return undefined
   return username.trim().toLowerCase()
 }
+
+export function convertObjectKeysToCamelCase<T extends Record<string, any>>(
+  obj: T,
+): Record<string, any> {
+  return _.mapKeys(obj, (_value, key) => _.camelCase(key))
+}
+
+export function genericGitHubResponseMapper(
+  response: Record<string, any> | undefined,
+): Record<string, any> | undefined {
+  if (!(response && _.isPlainObject(response))) return response
+
+  return _.mapValues(convertObjectKeysToCamelCase(response), obj => {
+    if (_.isPlainObject(obj)) return genericGitHubResponseMapper(obj)
+    return obj
+  })
+}

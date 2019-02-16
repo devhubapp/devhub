@@ -22,7 +22,7 @@ export const UserListRow = React.memo((props: UserListRowProps) => {
       <UserRow
         key={`user-row-${user.id}`}
         {...props}
-        avatarURL={user.avatar_url}
+        avatarUrl={user.avatar_url}
         showMoreItemsIndicator={showMoreItemsIndicator}
         userLinkURL={user.html_url || ''}
         username={user.display_login || user.login}

@@ -18,7 +18,7 @@ import { cardRowStyles } from './styles'
 export interface CommentRowProps {
   addBottomAnchor?: boolean
   analyticsLabel?: LinkProps['analyticsLabel']
-  avatarURL: string | undefined
+  avatarUrl: string | undefined
   body: string
   isRead: boolean
   numberOfLines?: number
@@ -35,7 +35,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
   const {
     addBottomAnchor,
     analyticsLabel,
-    avatarURL,
+    avatarUrl,
     body: _body,
     isRead,
     numberOfLines = 3,
@@ -66,7 +66,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
         ]}
       >
         <Avatar
-          avatarURL={avatarURL}
+          avatarUrl={avatarUrl}
           isBot={isBot}
           linkURL={userLinkURL}
           small

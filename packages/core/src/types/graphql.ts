@@ -55,6 +55,7 @@ export interface User {
     app?: GitHubTokenDetails
     oauth?: GitHubTokenDetails
     user: GraphQLGitHubUser
+    installations?: Installation[]
   }
   createdAt: string
   updatedAt: string
@@ -72,7 +73,6 @@ export interface InstallationPermissions {
   metadata?: string | null
   contents?: string | null
   issues?: string | null
-  single_file?: string | null
 }
 
 export interface InstallationRepositoryPermissions {
@@ -87,10 +87,10 @@ export interface InstallationAccount {
   gravatarId?: string | null
   login?: string | null
   type?: string | null
-  avatarURL?: string | null
+  avatarUrl?: string | null
   siteAdmin?: boolean | null
   url?: string | null
-  htmlURL?: string | null
+  htmlUrl?: string | null
 }
 
 export interface InstallationRepository {
@@ -102,20 +102,16 @@ export interface InstallationRepository {
   permissions?: InstallationRepositoryPermissions | null
   language?: string | null
   description?: string | null
-  htmlURL?: string | null
-}
-
-export interface InstallationRepositoriesConnection {
-  nodes?: InstallationRepository[] | null
-  totalCount?: number | null
+  htmlUrl?: string | null
 }
 
 export interface InstallationTokenDetails {
   token?: string | null
   expiresAt?: string | null
+  createdAt?: string | null
 }
 
-export interface Installation {
+export interface GraphQLGitHubInstallation {
   id?: number | null
   account?: InstallationAccount | null
   appId?: number | null
@@ -124,12 +120,25 @@ export interface Installation {
   permissions?: InstallationPermissions | null
   events?: string[] | null
   singleFileName?: string | null
-  repositoriesConnection?: InstallationRepositoriesConnection | null
-  tokenDetails?: InstallationTokenDetails | null
-  htmlURL?: string | null
+  htmlUrl?: string | null
 }
 
-export interface InstallationsConnection {
-  nodes?: Installation[] | null
-  totalCount?: number | null
+export interface CreatedInstallation extends GraphQLGitHubInstallation {
+  repositorySelection?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface Installation extends GraphQLGitHubInstallation {
+  // repositories?: InstallationRepository[] | null
+  tokenDetails?: InstallationTokenDetails | null
+}
+
+export interface NormalizedInstallations {
+  allIds: number[]
+  allOwnerNames: string[]
+  // allRepoFullNames: string[]
+  byId: Record<number, Installation | undefined>
+  byOwnerName: Record<string, number>
+  // byRepoFullName: Record<string, number>
 }

@@ -1,19 +1,18 @@
-import {
-  FetchInstallationsOptions,
-  InstallationsConnection,
-} from '@devhub/core'
+import { FetchInstallationsOptions, Installation } from '@devhub/core'
 import { createAction, createErrorAction } from '../helpers'
 
-export function fetchInstallationsRequest(payload: FetchInstallationsOptions) {
-  return createAction('FETCH_INSTALLATIONS_REQUEST', payload)
+export function refreshInstallationsRequest(
+  payload: FetchInstallationsOptions,
+) {
+  return createAction('REFRESH_INSTALLATIONS_REQUEST', payload)
 }
 
-export function fetchInstallationsSuccess(payload: InstallationsConnection) {
-  return createAction('FETCH_INSTALLATIONS_SUCCESS', payload)
+export function refreshInstallationsSuccess(payload: Installation[]) {
+  return createAction('REFRESH_INSTALLATIONS_SUCCESS', payload)
 }
 
-export function fetchInstallationsFailure<E extends Error>(
+export function refreshInstallationsFailure<E extends Error>(
   error: E & { status?: number },
 ) {
-  return createErrorAction('FETCH_INSTALLATIONS_FAILURE', error)
+  return createErrorAction('REFRESH_INSTALLATIONS_FAILURE', error)
 }
