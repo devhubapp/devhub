@@ -5,6 +5,9 @@ import { createSubscriptionSelector } from './subscriptions'
 
 const s = (state: RootState) => state.columns || {}
 
+export const focusedColumnSelector = (state: RootState) =>
+  s(state).focused || ''
+
 export const createColumnSelector = () =>
   createSelector(
     (state: RootState) => s(state).byId,
