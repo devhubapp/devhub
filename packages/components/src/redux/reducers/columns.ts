@@ -14,14 +14,14 @@ export interface State {
   allIds: string[]
   byId: Record<string, Column | undefined> | null
   updatedAt: string | null
-  focused: string | null
+  focused: number
 }
 
 const initialState: State = {
   allIds: [],
   byId: null,
   updatedAt: null,
-  focused: null,
+  focused: 0,
 }
 
 export const columnsReducer: Reducer<State> = (
