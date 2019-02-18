@@ -13,38 +13,38 @@ export function useKeyboardScrolling({
   columnId,
   length,
 }: KeyboardScrollingConfig) {
-  const [activeIndex, setActiveIndex] = React.useState(0)
+  const [selectedColumnIndex, setSelectedColumnIndex] = React.useState(0)
   useEmitter(
     'SCROLL_DOWN_COLUMN',
     (payload: { columnId: string }) => {
       if (!ref.current) return
       if (columnId !== payload.columnId) return
-      const index = activeIndex + 1
-      const maxIndex = length - 1
-      if (index <= maxIndex) {
+      const index = selectedColumnIndex + 1
+      if (index < length) {
         ref.current.scrollToIndex({
           animated: true,
           index,
         })
-        setActiveIndex(index)
+        setSelectedColumnIndex(index)
       }
     },
-    [activeIndex, length],
+    [selectedColumnIndex, length],
   )
   useEmitter(
     'SCROLL_UP_COLUMN',
     (payload: { columnId: string }) => {
       if (!ref.current) return
       if (columnId !== payload.columnId) return
-      const index = activeIndex - 1
+      const index = selectedColumnIndex - 1
       if (index >= 0) {
         ref.current.scrollToIndex({
           animated: true,
           index,
         })
-        setActiveIndex(index)
+        setSelectedColumnIndex(index)
       }
     },
-    [activeIndex, length],
+    [selectedColumnIndex, length],
   )
+  return selectedColumnIndex
 }
