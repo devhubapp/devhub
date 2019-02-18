@@ -42,13 +42,12 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     refresh,
   } = props
 
-  const [scrollOffsetY, setScrollOffsetY] = React.useState(0)
   const flatListRef = React.useRef<FlatList<View>>(null)
 
   useKeyboardScrolling({
     ref: flatListRef,
-    currentOffset: scrollOffsetY,
     columnId: column.id,
+    length: notifications.length,
   })
 
   const setColumnClearedAtFilter = useReduxAction(
@@ -162,7 +161,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       keyExtractor={keyExtractor}
       removeClippedSubviews
       renderItem={renderItem}
-      onScroll={e => setScrollOffsetY(e.nativeEvent.contentOffset.y)}
     />
   )
 })

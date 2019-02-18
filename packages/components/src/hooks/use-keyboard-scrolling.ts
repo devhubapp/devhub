@@ -1,51 +1,50 @@
-import { useState } from 'react'
+import React from 'react'
 import { FlatList, View } from 'react-native'
 import { useEmitter } from './use-emitter'
 
 interface KeyboardScrollingConfig {
   ref: React.RefObject<FlatList<View>>
   columnId: string
-  currentOffset: number
+  length: number
 }
 
 export function useKeyboardScrolling({
   ref,
   columnId,
-  currentOffset,
+  length,
 }: KeyboardScrollingConfig) {
-  const [scrolling, setScrolling] = useState(false)
-
+  const [activeIndex, setActiveIndex] = React.useState(0)
   useEmitter(
     'SCROLL_DOWN_COLUMN',
     (payload: { columnId: string }) => {
       if (!ref.current) return
       if (columnId !== payload.columnId) return
-      if (scrolling) return
-      setScrolling(true)
-      const target = currentOffset + 300
-      ref.current.scrollToOffset({
-        animated: true,
-        offset: target,
-      })
-      setTimeout(() => setScrolling(false), 100)
+      const index = activeIndex + 1
+      const maxIndex = length - 1
+      if (index <= maxIndex) {
+        ref.current.scrollToIndex({
+          animated: true,
+          index,
+        })
+        setActiveIndex(index)
+      }
     },
-    [currentOffset, scrolling],
+    [activeIndex, length],
   )
-
   useEmitter(
     'SCROLL_UP_COLUMN',
     (payload: { columnId: string }) => {
       if (!ref.current) return
       if (columnId !== payload.columnId) return
-      if (scrolling) return
-      setScrolling(true)
-      const target = currentOffset - 300
-      ref.current.scrollToOffset({
-        animated: true,
-        offset: target,
-      })
-      setTimeout(() => setScrolling(false), 100)
+      const index = activeIndex - 1
+      if (index >= 0) {
+        ref.current.scrollToIndex({
+          animated: true,
+          index,
+        })
+        setActiveIndex(index)
+      }
     },
-    [currentOffset, scrolling],
+    [activeIndex, length],
   )
 }
