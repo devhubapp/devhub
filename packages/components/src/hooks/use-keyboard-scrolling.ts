@@ -2,15 +2,17 @@ import { useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { useEmitter } from './use-emitter'
 
+interface KeyboardScrollingConfig {
+  ref: React.RefObject<FlatList<View>>
+  columnId: string
+  currentOffset: number
+}
+
 export function useKeyboardScrolling({
   ref,
   columnId,
   currentOffset,
-}: {
-  ref: React.RefObject<FlatList<View>>
-  columnId: string
-  currentOffset: number
-}) {
+}: KeyboardScrollingConfig) {
   const [scrolling, setScrolling] = useState(false)
 
   useEmitter(
