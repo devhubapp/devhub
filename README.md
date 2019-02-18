@@ -75,18 +75,19 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 
 ## Keyboard shortcuts
 
-| Key       | Action                       | Implemented    |
-| --------- | ---------------------------- | -------------- |
-| `Esc`     | Close current open modal     | ✅
-| `Esc`     | Exit full screen mode on desktop | ✅
-| `a`, `n`  | Add a new column             | ✅
-| `1`...`9` | Go to the `nth` column       | ✅
-| `0`       | Go to the last column        | ✅
-| `j`, `k`  | Move down/up inside a column | [Contribute!](https://github.com/devhubapp/devhub/blob/6157822c7723c85e11bf4bd781656a0204f81ab2/packages/components/src/screens/MainScreen.tsx#L94-L145)
-| `s`       | Toggle save item for later   | [Contribute!](https://github.com/devhubapp/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133)
-| `Arrow keys` + `Space` | Focus on elements and press things | Contribute!
-| `Alt + Arrow keys` | Move current column | Contribute!
-| `?`       | Show keyboard shortcuts      | Contribute!
+| Key       | Action                           | Implemented    | By      |
+| --------- | -------------------------------- | -------------- | ------- |
+| `Esc`     | Close current open modal         | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `Esc`     | Exit full screen mode on desktop | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `a`, `n`  | Add a new column                 | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `1`...`9` | Go to the `nth` column           | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `0`       | Go to the last column            | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `j`, `k`  | Move down/up inside a column     | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
+| `h`, `l`  | Move left/right between columns  | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
+| `s`       | Toggle save item for later   | [Contribute!](https://github.com/devhubapp/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133) | |
+| `Arrow keys` + `Space` | Focus on elements and press things | Contribute! | |
+| `Alt + Arrow keys` | Move current column | Contribute! | |
+| `?`       | Show keyboard shortcuts      | Contribute! | |
 
 > **Tip:** To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
 
