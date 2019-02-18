@@ -8,6 +8,10 @@ import {
 } from '@devhub/core'
 import { createAction } from '../helpers'
 
+export function focusColumn(payload: number) {
+  return createAction('FOCUS_COLUMN', payload)
+}
+
 export function replaceColumnsAndSubscriptions(
   payload: ColumnsAndSubscriptions,
 ) {

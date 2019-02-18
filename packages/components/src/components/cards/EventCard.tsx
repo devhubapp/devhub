@@ -47,6 +47,7 @@ import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 export interface EventCardProps {
   event: EnhancedGitHubEvent
   repoIsKnown?: boolean
+  isFocused?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
 })
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const { event, repoIsKnown } = props
+  const { event, repoIsKnown, isFocused } = props
 
   const springAnimatedTheme = useSpringAnimatedTheme()
 
@@ -175,17 +176,16 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const smallLeftColumn = false
 
+  const getBackgroundColor = () => {
+    if (isFocused) return springAnimatedTheme.backgroundColorDarker2
+    if (isRead) return springAnimatedTheme.backgroundColorDarker1
+    return springAnimatedTheme.backgroundColor
+  }
+
   return (
     <SpringAnimatedView
       key={`event-card-${id}-inner`}
-      style={[
-        styles.container,
-        {
-          backgroundColor: isRead
-            ? springAnimatedTheme.backgroundColorDarker1
-            : springAnimatedTheme.backgroundColor,
-        },
-      ]}
+      style={[styles.container, { backgroundColor: getBackgroundColor() }]}
     >
       <EventCardHeader
         key={`event-card-header-${id}`}

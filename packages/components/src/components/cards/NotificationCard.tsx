@@ -36,6 +36,7 @@ export interface NotificationCardProps {
   notification: EnhancedGitHubNotification
   onlyOneRepository?: boolean
   repoIsKnown?: boolean
+  isFocused?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
 })
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { notification, onlyOneRepository } = props
+  const { notification, onlyOneRepository, isFocused } = props
 
   const springAnimatedTheme = useSpringAnimatedTheme()
   const hasPrivateAccess = useReduxState(
@@ -171,17 +172,16 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const smallLeftColumn = false
 
+  const getBackgroundColor = () => {
+    if (isFocused) return springAnimatedTheme.backgroundColorDarker2
+    if (isRead) return springAnimatedTheme.backgroundColorDarker1
+    return springAnimatedTheme.backgroundColor
+  }
+
   return (
     <SpringAnimatedView
       key={`notification-card-${id}-inner`}
-      style={[
-        styles.container,
-        {
-          backgroundColor: isRead
-            ? springAnimatedTheme.backgroundColorDarker1
-            : springAnimatedTheme.backgroundColor,
-        },
-      ]}
+      style={[styles.container, { backgroundColor: getBackgroundColor() }]}
     >
       <NotificationCardHeader
         key={`notification-card-header-${id}`}

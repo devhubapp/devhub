@@ -2,7 +2,10 @@ import { DependencyList, useEffect } from 'react'
 
 import { emitter } from '../setup'
 
-export type EmitterType = 'FOCUS_ON_COLUMN'
+export type EmitterType =
+  | 'FOCUS_ON_COLUMN'
+  | 'SCROLL_DOWN_COLUMN'
+  | 'SCROLL_UP_COLUMN'
 
 export function useEmitter(
   key?: EmitterType,
