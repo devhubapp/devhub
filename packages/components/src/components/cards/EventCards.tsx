@@ -4,8 +4,10 @@ import { FlatList, View } from 'react-native'
 import { Column, constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
+import { focusedColumnSelector } from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
@@ -39,11 +41,13 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const flatListRef = React.useRef<FlatList<View>>(null)
 
-  useKeyboardScrolling({
+  const focusedIndex = useKeyboardScrolling({
     ref: flatListRef,
     columnId: column.id,
     length: events.length,
   })
+
+  const focusedColumn = useReduxState(focusedColumnSelector)
 
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
@@ -82,16 +86,30 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     return `event-card-${event.id}`
   }
 
-  function renderItem({ item: event }: { item: EnhancedGitHubEvent }) {
+  function renderItem({
+    item: event,
+    index,
+  }: {
+    item: EnhancedGitHubEvent
+    index: number
+  }) {
     if (props.swipeable) {
       return (
-        <SwipeableEventCard event={event} repoIsKnown={props.repoIsKnown} />
+        <SwipeableEventCard
+          event={event}
+          repoIsKnown={props.repoIsKnown}
+          isFocused={columnIndex === focusedColumn && index === focusedIndex}
+        />
       )
     }
 
     return (
       <ErrorBoundary>
-        <EventCard event={event} repoIsKnown={props.repoIsKnown} />
+        <EventCard
+          event={event}
+          repoIsKnown={props.repoIsKnown}
+          isFocused={columnIndex === focusedColumn && index === focusedIndex}
+        />
       </ErrorBoundary>
     )
   }
