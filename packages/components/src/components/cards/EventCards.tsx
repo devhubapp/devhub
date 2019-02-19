@@ -1,13 +1,14 @@
-import React from 'react'
-import { FlatList, View } from 'react-native'
+import React, { useCallback, useMemo, useRef } from 'react'
+import { FlatList, FlatListProps, View } from 'react-native'
 
 import { Column, constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
+import { useKeyPressCallback } from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
-import { focusedColumnSelector } from '../../redux/selectors'
+import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
@@ -40,17 +41,46 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   } = props
 
   const flatListRef = React.useRef<FlatList<View>>(null)
+  const visibleItemIndexesRef = useRef<number[]>([])
 
-  const focusedIndex = useKeyboardScrolling({
-    ref: flatListRef,
+  const getVisibleItemIndex = useCallback(() => {
+    if (
+      !(visibleItemIndexesRef.current && visibleItemIndexesRef.current.length)
+    )
+      return
+
+    return visibleItemIndexesRef.current[0]
+  }, [])
+
+  const [selectedItemId] = useKeyboardScrolling(flatListRef, {
     columnId: column.id,
-    length: events.length,
+    getVisibleItemIndex,
+    items: events,
   })
 
-  const focusedColumn = useReduxState(focusedColumnSelector)
+  const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
 
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
+  )
+
+  const _handleViewableItemsChanged: FlatListProps<
+    EnhancedGitHubEvent
+  >['onViewableItemsChanged'] = ({ viewableItems }) => {
+    visibleItemIndexesRef.current = viewableItems
+      .filter(v => v.isViewable && typeof v.index === 'number')
+      .map(v => v.index!)
+  }
+  const handleViewableItemsChanged = useCallback(
+    _handleViewableItemsChanged,
+    [],
+  )
+
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 100,
+    }),
+    [],
   )
 
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
@@ -82,23 +112,23 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     )
   }
 
-  function keyExtractor(event: EnhancedGitHubEvent) {
+  const keyExtractor: FlatListProps<
+    EnhancedGitHubEvent
+  >['keyExtractor'] = event => {
     return `event-card-${event.id}`
   }
 
-  function renderItem({
+  const renderItem: FlatListProps<EnhancedGitHubEvent>['renderItem'] = ({
     item: event,
-    index,
-  }: {
-    item: EnhancedGitHubEvent
-    index: number
-  }) {
+  }) => {
     if (props.swipeable) {
       return (
         <SwipeableEventCard
           event={event}
           repoIsKnown={props.repoIsKnown}
-          isFocused={columnIndex === focusedColumn && index === focusedIndex}
+          isSelected={
+            column.id === selectedColumnId && event.id === selectedItemId
+          }
         />
       )
     }
@@ -108,7 +138,9 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         <EventCard
           event={event}
           repoIsKnown={props.repoIsKnown}
-          isFocused={columnIndex === focusedColumn && index === focusedIndex}
+          isSelected={
+            column.id === selectedColumnId && event.id === selectedItemId
+          }
         />
       </ErrorBoundary>
     )
@@ -156,14 +188,16 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   return (
     <FlatListWithOverlay
       ref={flatListRef}
-      data={events}
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
+      data={events}
       extraData={loadState}
       initialNumToRender={10}
       keyExtractor={keyExtractor}
+      onViewableItemsChanged={handleViewableItemsChanged}
       removeClippedSubviews
       renderItem={renderItem}
+      viewabilityConfig={viewabilityConfig}
     />
   )
 })

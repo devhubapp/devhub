@@ -8,20 +8,21 @@ import {
   NotificationColumn,
   subscriptionsArrToState,
 } from '@devhub/core'
+import { REHYDRATE } from 'redux-persist'
 import { Reducer } from '../types'
 
 export interface State {
   allIds: string[]
   byId: Record<string, Column | undefined> | null
+  selectedColumnId: string | null
   updatedAt: string | null
-  focused: number
 }
 
 const initialState: State = {
   allIds: [],
   byId: null,
+  selectedColumnId: null,
   updatedAt: null,
-  focused: 0,
 }
 
 export const columnsReducer: Reducer<State> = (
@@ -29,10 +30,17 @@ export const columnsReducer: Reducer<State> = (
   action,
 ) => {
   switch (action.type) {
-    case 'FOCUS_COLUMN':
+    case REHYDRATE as any:
+      return {
+        ...(action.payload && (action.payload as any).auth),
+        ..._.pick(initialState, ['focused']),
+      }
+
+    case 'SELECT_COLUMN':
       return immer(state, draft => {
-        draft.focused = action.payload
+        draft.selectedColumnId = action.payload.columnId
       })
+
     case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
         draft.allIds = draft.allIds || []

@@ -33,10 +33,10 @@ import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 
 export interface NotificationCardProps {
+  isSelected?: boolean
   notification: EnhancedGitHubNotification
   onlyOneRepository?: boolean
   repoIsKnown?: boolean
-  isFocused?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 })
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { notification, onlyOneRepository, isFocused } = props
+  const { notification, onlyOneRepository, isSelected } = props
 
   const springAnimatedTheme = useSpringAnimatedTheme()
   const hasPrivateAccess = useReduxState(
@@ -173,7 +173,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const smallLeftColumn = false
 
   const getBackgroundColor = () => {
-    if (isFocused) return springAnimatedTheme.backgroundColorDarker2
+    if (isSelected) return springAnimatedTheme.backgroundColorLess2
     if (isRead) return springAnimatedTheme.backgroundColorDarker1
     return springAnimatedTheme.backgroundColor
   }

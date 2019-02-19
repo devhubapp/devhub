@@ -10,9 +10,9 @@ import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import { emitter } from '../../setup'
 import {
   columnHeaderHeight,
   columnHeaderItemContentBiggerSize,

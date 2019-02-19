@@ -123,7 +123,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       // so we hide the gradient overlay when showing the border
       // not proud of this but whatever
       if (payload.columnIndex >= 0 && payload.columnIndex < columnIds.length) {
-        if (showHorizontalGradientOverlays) {
+        if (showHorizontalGradientOverlays && payload.highlight) {
           isShowingBorderRef.current = true
           updateOverlayVisibility()
           setTimeout(() => {
@@ -135,6 +135,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
         flatListRef.current.scrollToIndex({
           animated: payload.animated,
           index: payload.columnIndex,
+          viewPosition: 0.5,
         })
       }
     },

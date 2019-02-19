@@ -1,15 +1,10 @@
 import { DependencyList, useEffect } from 'react'
 
-import { emitter } from '../setup'
+import { emitter, EmitterTypes } from '../libs/emitter'
 
-export type EmitterType =
-  | 'FOCUS_ON_COLUMN'
-  | 'SCROLL_DOWN_COLUMN'
-  | 'SCROLL_UP_COLUMN'
-
-export function useEmitter(
-  key?: EmitterType,
-  callback?: (payload: any) => void,
+export function useEmitter<K extends keyof EmitterTypes>(
+  key: K,
+  callback: (payload: EmitterTypes[K]) => void,
   deps: DependencyList = [],
 ) {
   useEffect(

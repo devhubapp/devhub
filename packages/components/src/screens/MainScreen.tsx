@@ -19,10 +19,10 @@ import { useKeyPressCallback } from '../hooks/use-key-press-callback'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
+import { emitter } from '../libs/emitter'
 import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
-import { emitter } from '../setup'
 
 const styles = StyleSheet.create({
   container: {
@@ -37,13 +37,17 @@ const styles = StyleSheet.create({
 export const MainScreen = React.memo(() => {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const columnIds = useReduxState(selectors.columnIdsSelector)
-  const focusedColumn = useReduxState(selectors.focusedColumnSelector)
   const closeAllModals = useReduxAction(actions.closeAllModals)
-  const focusColumn = useReduxAction(actions.focusColumn)
+  const selectColumn = useReduxAction(actions.selectColumn)
   const popModal = useReduxAction(actions.popModal)
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
   const { appOrientation } = useAppLayout()
+
+  const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
+  const selectedColumnIndex = selectedColumnId
+    ? columnIds.findIndex(id => id === selectedColumnId)
+    : -1
 
   const debounceSyncDown = useMemo(
     () => {
@@ -84,79 +88,115 @@ export const MainScreen = React.memo(() => {
 
       if (e.key === 'Escape') {
         // never happens apparently
-        if (targetTagName === 'input') target.blur()
-        else if (currentOpenedModal) popModal()
-        else if (Platform.isElectron && window.ipc)
+        if (targetTagName === 'input') {
+          e.preventDefault()
+          target.blur()
+        } else if (currentOpenedModal) {
+          e.preventDefault()
+          popModal()
+        } else if (Platform.isElectron && window.ipc) {
+          e.preventDefault()
           window.ipc.send('exit-full-screen')
+        }
 
         return
       }
-    },
-    undefined,
-    [currentOpenedModal],
-  )
 
-  useKeyPressCallback(
-    e => {
-      const target = e.target as any
-      const targetTagName = target && `${target.tagName || ''}`.toLowerCase()
       if (targetTagName === 'input') return
+      if (currentOpenedModal) return
 
-      if (e.key === 'a' || e.key === 'n') {
+      if (e.key === 'n') {
+        e.preventDefault()
+
         replaceModal({ name: 'ADD_COLUMN' })
         return
       }
 
-      if (e.key === 'j') {
-        emitter.emit(
-          'SCROLL_DOWN_COLUMN',
-          {
-            columnId: columnIds[focusedColumn],
-          },
-          [focusedColumn],
+      if (e.key === 'ArrowDown' || e.key === 'j') {
+        e.preventDefault()
+
+        const fixedColumnIndex = Math.max(
+          0,
+          Math.min(selectedColumnIndex, columnIds.length - 1),
         )
+
+        if (
+          fixedColumnIndex === 0 &&
+          fixedColumnIndex !== selectedColumnIndex
+        ) {
+          selectColumn({ columnId: columnIds[fixedColumnIndex] })
+        }
+
+        emitter.emit('SCROLL_DOWN_COLUMN', {
+          columnId: columnIds[fixedColumnIndex],
+        })
         return
       }
 
-      if (e.key === 'l') {
-        const nextColumn = focusedColumn + 1
-        if (nextColumn < columnIds.length) {
-          emitter.emit('FOCUS_ON_COLUMN', {
-            animated: true,
-            columnId: columnIds[nextColumn],
-            columnIndex: nextColumn,
-            highlight: true,
-          })
-          focusColumn(nextColumn)
+      if (e.key === 'ArrowUp' || e.key === 'k') {
+        e.preventDefault()
+
+        const fixedColumnIndex = Math.max(
+          0,
+          Math.min(selectedColumnIndex, columnIds.length - 1),
+        )
+
+        if (
+          fixedColumnIndex === 0 &&
+          fixedColumnIndex !== selectedColumnIndex
+        ) {
+          selectColumn({ columnId: columnIds[fixedColumnIndex] })
         }
-        return
-      }
-      if (e.key === 'h') {
-        const previousColumn = focusedColumn - 1
-        if (previousColumn >= 0) {
-          emitter.emit('FOCUS_ON_COLUMN', {
-            animated: true,
-            columnId: columnIds[previousColumn],
-            columnIndex: previousColumn,
-            highlight: true,
-          })
-          focusColumn(previousColumn)
-        }
+
+        emitter.emit('SCROLL_UP_COLUMN', {
+          columnId: columnIds[fixedColumnIndex],
+        })
         return
       }
 
-      if (e.key === 'k') {
-        emitter.emit(
-          'SCROLL_UP_COLUMN',
-          {
-            columnId: columnIds[focusedColumn],
-          },
-          [focusedColumn],
+      if (e.key === 'ArrowLeft' || e.key === 'h') {
+        e.preventDefault()
+
+        const previousColumnIndex = Math.max(
+          0,
+          Math.min(selectedColumnIndex - 1, columnIds.length - 1),
         )
+
+        selectColumn({ columnId: columnIds[previousColumnIndex] })
+
+        emitter.emit('FOCUS_ON_COLUMN', {
+          animated: true,
+          columnId: columnIds[previousColumnIndex],
+          columnIndex: previousColumnIndex,
+          focusOnVisibleItem: true,
+          highlight: false,
+        })
+        return
+      }
+
+      if (e.key === 'ArrowRight' || e.key === 'l') {
+        e.preventDefault()
+
+        const nextColumnIndex = Math.max(
+          0,
+          Math.min(selectedColumnIndex + 1, columnIds.length - 1),
+        )
+
+        selectColumn({ columnId: columnIds[nextColumnIndex] })
+
+        emitter.emit('FOCUS_ON_COLUMN', {
+          animated: true,
+          columnId: columnIds[nextColumnIndex],
+          columnIndex: nextColumnIndex,
+          focusOnVisibleItem: true,
+          highlight: false,
+        })
         return
       }
 
       if (columnIds.length > 0) {
+        e.preventDefault()
+
         const n = e.key >= '0' && e.key <= '9' ? parseInt(e.key, 10) : -1
 
         if (n === 0) {
@@ -167,7 +207,7 @@ export const MainScreen = React.memo(() => {
             columnIndex,
             highlight: true,
           })
-          focusColumn(columnIndex)
+          selectColumn({ columnId: columnIds[columnIndex] })
           return
         }
 
@@ -179,13 +219,13 @@ export const MainScreen = React.memo(() => {
             columnIndex,
             highlight: true,
           })
-          focusColumn(columnIndex)
+          selectColumn({ columnId: columnIds[columnIndex] })
           return
         }
       }
     },
     undefined,
-    [columnIds, focusedColumn],
+    [columnIds, currentOpenedModal, selectedColumnIndex],
   )
 
   useEmitter(

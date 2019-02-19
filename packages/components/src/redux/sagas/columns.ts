@@ -2,14 +2,14 @@ import { all, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
   ActivityColumnSubscription,
+  Column,
   ColumnsAndSubscriptions,
   createSubscriptionObjectWithId,
   guid,
   NotificationColumnSubscription,
 } from '@devhub/core'
-import { Column } from '@devhub/core/src'
 import { delay } from 'redux-saga'
-import { emitter } from '../../setup'
+import { emitter } from '../../libs/emitter'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
