@@ -117,6 +117,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       created_at: undefined,
       comments: undefined,
       labels: [],
+      draft: false,
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,

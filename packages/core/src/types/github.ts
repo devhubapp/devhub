@@ -215,6 +215,7 @@ export interface GitHubPullRequest {
       href: string
     }
   }
+  draft: boolean
   merged: boolean // true
   mergeable: boolean // null
   mergeable_state: string // unknown

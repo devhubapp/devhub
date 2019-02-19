@@ -10,15 +10,20 @@ import { bugsnag } from '../../../libs/bugsnag'
 import * as colors from '../../../styles/colors'
 
 export function getPullRequestIconAndColor(pullRequest: {
-  state?: GitHubPullRequest['state']
-  merged_at?: GitHubPullRequest['merged_at']
+  draft: GitHubPullRequest['draft']
+  state: GitHubPullRequest['state']
+  merged_at: GitHubPullRequest['merged_at'] | undefined
 }): { icon: GitHubIcon; color?: string } {
+  const draft = pullRequest.draft
   const merged = pullRequest.merged_at
   const state = merged ? 'merged' : pullRequest.state
 
   switch (state) {
     case 'open':
-      return { icon: 'git-pull-request', color: colors.green }
+      return {
+        icon: 'git-pull-request',
+        color: draft ? colors.gray : colors.green,
+      }
 
     case 'closed':
       return { icon: 'git-pull-request', color: colors.red }

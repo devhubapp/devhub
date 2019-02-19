@@ -54,7 +54,7 @@ export function getEventIconAndColor(
     case 'IssueCommentEvent': {
       return {
         ...(isPullRequest(event.payload.issue)
-          ? getPullRequestIconAndColor(event.payload.issue)
+          ? getPullRequestIconAndColor(event.payload.issue as GitHubPullRequest)
           : getIssueIconAndColor(event.payload.issue)),
         subIcon: 'comment-discussion',
       }
@@ -98,8 +98,10 @@ export function getEventIconAndColor(
         case 'opened':
         case 'reopened':
           return getPullRequestIconAndColor({
+            draft: pullRequest.draft,
             state: 'open',
-          } as GitHubPullRequest)
+            merged_at: undefined,
+          })
         // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as GitHubPullRequest);
 
         // case 'assigned':

@@ -86,6 +86,7 @@ export async function getActivity<T extends GitHubActivityType>(
   const params = { ..._params }
   params.headers = params.headers || {}
   params.headers['If-None-Match'] = ''
+  params.headers.Accept = 'application/vnd.github.shadow-cat-preview'
 
   if (cacheValue && useCache) {
     if (cacheValue.headers['last-modified']) {

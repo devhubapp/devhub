@@ -8,6 +8,7 @@ import {
   EnhancedGitHubEvent,
   GitHubEvent,
   GitHubIcon,
+  GitHubPullRequest,
   MultipleStarEvent,
   NotificationColumnSubscription,
 } from '../../types'
@@ -287,8 +288,18 @@ export function getEventText(
 ): string {
   const { issueOrPullRequestIsKnown, repoIsKnown } = options
 
+  const isDraftPR =
+    ('pull_request' in event.payload &&
+      event.payload.pull_request &&
+      event.payload.pull_request.draft) ||
+    ('issue' in event.payload &&
+      isPullRequest(event.payload.issue) &&
+      (event.payload.issue as GitHubPullRequest).draft)
+
   const issueText = issueOrPullRequestIsKnown ? 'this issue' : 'an issue'
-  const pullRequestText = issueOrPullRequestIsKnown ? 'this pr' : 'a pr'
+  const pullRequestText = issueOrPullRequestIsKnown
+    ? `this ${isDraftPR ? 'draft pr' : 'pr'}`
+    : `a ${isDraftPR ? 'draft pr' : 'pr'}`
   const repositoryText = repoIsKnown ? 'this repository' : 'a repository'
 
   const text = (() => {
