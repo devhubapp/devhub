@@ -38,6 +38,8 @@ export default function useMultiKeyPressCallback(
 
   useEffect(
     () => {
+      if (!(window && typeof window.addEventListener === 'function')) return
+
       window.addEventListener('keydown', downHandler)
       window.addEventListener('keyup', upHandler)
 

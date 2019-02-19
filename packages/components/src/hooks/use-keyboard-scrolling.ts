@@ -88,7 +88,7 @@ export function useKeyboardScrolling(
 
       setSelectedId((item && item.id) || null)
     },
-    [ref && ref.current, columnId, getVisibleItemIndex, items, length],
+    [ref && ref.current, columnId, getVisibleItemIndex, items],
   )
 
   return [selectedId, setSelectedId] as [
