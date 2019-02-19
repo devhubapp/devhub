@@ -16,20 +16,20 @@ import { Spacer } from '../common/Spacer'
 import { useTheme } from '../context/ThemeContext'
 
 const keyboardShortcuts = [
-  { keys: ['Esc'], description: 'Close current open modal' },
+  { keys: ['Esc'], description: 'Close currently open modal' },
   { keys: ['Esc'], description: 'Exit full screen mode on desktop' },
   { keys: ['Esc'], description: 'Unselect currently selected item' },
   { keys: ['n'], description: 'Add a new column' },
   { keys: ['1...9'], description: 'Go to the nth column' },
   { keys: ['0'], description: 'Go to the last column' },
-  { keys: ['↑', '↓', 'j', 'k'], description: 'Move down/up inside a column' },
+  { keys: ['↑', '↓', 'j', 'k'], description: 'Move up/down inside a column' },
   {
     keys: ['←', '→', 'h', 'l'],
     description: 'Move left/right between columns',
   },
   { keys: ['s'], description: 'Toggle save item for later' },
   { keys: ['m'], description: 'Mark item as read/unread' },
-  { keys: ['Alt ←', 'Alt →'], description: 'Move current selected column' },
+  { keys: ['Alt ←', 'Alt →'], description: 'Move currently selected column' },
   { keys: ['?'], description: 'Show keyboard shortcuts' },
 ]
 

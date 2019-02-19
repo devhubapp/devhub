@@ -77,7 +77,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 
 | Key       | Action                           | Implemented    | By      |
 | --------- | -------------------------------- | -------------- | ------- |
-| `Esc`     | Close current open modal         | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `Esc`     | Close currently open modal       | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Esc`     | Exit full screen mode on desktop | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Esc`     | Unselect currently selected item | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `n`       | Add a new column                 | ✅             | [@brunolemos](https://github.com/brunolemos) |
@@ -87,7 +87,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | `Arrow`, `h`, `l` | Move left/right between columns  | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
 | `s`       | Toggle save item for later       | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `m`       | Mark item as read/unread         | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Alt` + `Arrow` | Move current column        | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `Alt` + `Arrow` | Move currently selected column | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `?`       | Show keyboard shortcuts          | ✅             | [@brunolemos](https://github.com/brunolemos) |
 
 > **Tip:** To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
