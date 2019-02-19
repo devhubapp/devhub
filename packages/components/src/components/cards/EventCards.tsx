@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
 import { Column, constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
-import { useKeyPressCallback } from '../../hooks/use-key-press-callback'
+import { useKeyDownCallback } from '../../hooks/use-key-down-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -57,8 +57,24 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     getVisibleItemIndex,
     items: events,
   })
-
   const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
+  const hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+
+  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
+
+  useKeyDownCallback(
+    e => {
+      if (!hasSelectedItem) return
+
+      if (e.key === 's') {
+        const item = events.find(event => event.id === selectedItemId)
+        if (!item) return
+        saveItemsForLater({ itemIds: [selectedItemId!], save: !item.saved })
+      }
+    },
+    undefined,
+    [events, hasSelectedItem, selectedItemId],
+  )
 
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,

@@ -2,8 +2,8 @@ import { DependencyList, KeyboardEvent, useEffect } from 'react'
 
 export function useKeyDownCallback(
   callback: (e: KeyboardEvent) => void,
-  keyOrKeys?: string | [string],
-  deps: DependencyList = [],
+  keyOrKeys: string | [string] | undefined,
+  deps: DependencyList,
 ) {
   useEffect(
     () => {

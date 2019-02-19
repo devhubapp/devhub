@@ -85,7 +85,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | `0`       | Go to the last column            | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Arrow`, `j`, `k` | Move down/up inside a column     | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
 | `Arrow`, `h`, `l` | Move left/right between columns  | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
-| `s`       | Toggle save item for later   | [Contribute!](https://github.com/devhubapp/devhub/blob/fbe728fb106712092df1341aba5fdf12807e1f11/packages/components/src/components/cards/partials/NotificationCardHeader.tsx#L125-L133) | |
+| `s`       | Toggle save item for later   | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Alt + Arrow keys` | Move current column | Contribute! | |
 | `?`       | Show keyboard shortcuts      | Contribute! | |
 

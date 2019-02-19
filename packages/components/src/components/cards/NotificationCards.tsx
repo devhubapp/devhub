@@ -7,6 +7,7 @@ import {
   EnhancedGitHubNotification,
   LoadState,
 } from '@devhub/core'
+import { useKeyDownCallback } from '../../hooks/use-key-down-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -61,8 +62,26 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     getVisibleItemIndex,
     items: notifications,
   })
-
   const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
+  const hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+
+  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
+
+  useKeyDownCallback(
+    e => {
+      if (!hasSelectedItem) return
+
+      if (e.key === 's') {
+        const item = notifications.find(
+          notification => notification.id === selectedItemId,
+        )
+        if (!item) return
+        saveItemsForLater({ itemIds: [selectedItemId!], save: !item.saved })
+      }
+    },
+    undefined,
+    [notifications, hasSelectedItem, selectedItemId],
+  )
 
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,

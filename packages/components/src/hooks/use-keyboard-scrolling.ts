@@ -18,14 +18,18 @@ export function useKeyboardScrolling(
 ) {
   const [selectedId, setSelectedId] = useState<string | number | null>(null)
 
-  useKeyDownCallback(e => {
-    if (!ref.current) return
+  useKeyDownCallback(
+    e => {
+      if (!ref.current) return
 
-    if (e.key === 'Escape') {
-      if (e.defaultPrevented) return
-      setSelectedId(null)
-    }
-  })
+      if (e.key === 'Escape') {
+        if (e.defaultPrevented) return
+        setSelectedId(null)
+      }
+    },
+    undefined,
+    [],
+  )
 
   useEmitter(
     'SCROLL_UP_COLUMN',
