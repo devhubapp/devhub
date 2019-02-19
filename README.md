@@ -89,6 +89,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | `m`       | Mark item as read/unread         | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Alt` + `Arrow` | Move currently selected column | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `?`       | Show keyboard shortcuts          | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| To be defined | Load More, Open Filters, navigate between Add Column items, navigate between filters, etc | Contribute! | |
 
 > **Tip:** To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
 
