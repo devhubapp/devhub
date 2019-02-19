@@ -1546,12 +1546,7 @@ export interface EmojiParseOptions {
 
 function getComponent(
   emojiImageURL: string | undefined,
-  {
-    alt,
-    before = <Text children=" " />,
-    after = <Text children=" " />,
-    imageProps,
-  }: EmojiParseOptions,
+  { alt, before, after, imageProps }: EmojiParseOptions,
 ): React.ReactNode {
   if (!emojiImageURL) return null
 

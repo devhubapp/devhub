@@ -92,8 +92,8 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             {parseTextWithEmojisToReactComponents(body, {
               imageProps: {
                 style: {
-                  width: 12,
-                  height: 12,
+                  width: 14,
+                  height: 14,
                 },
               },
             })}
