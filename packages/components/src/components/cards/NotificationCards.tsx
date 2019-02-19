@@ -8,7 +8,7 @@ import {
   isItemRead,
   LoadState,
 } from '@devhub/core'
-import { useKeyDownCallback } from '../../hooks/use-key-down-callback'
+import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -74,27 +74,35 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   )
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
-  useKeyDownCallback(
-    e => {
-      if (!selectedItem) return
+  useKeyPressCallback(
+    's',
+    useCallback(
+      () => {
+        if (!selectedItem) return
 
-      if (e.key === 's') {
-        e.preventDefault()
         saveItemsForLater({
           itemIds: [selectedItemId!],
           save: !selectedItem.saved,
         })
-      } else if (e.key === 'm') {
-        e.preventDefault()
+      },
+      [selectedItem, selectedItemId],
+    ),
+  )
+
+  useKeyPressCallback(
+    'm',
+    useCallback(
+      () => {
+        if (!selectedItem) return
+
         markItemsAsReadOrUnread({
           type: 'notifications',
           itemIds: [selectedItemId!],
           unread: isItemRead(selectedItem),
         })
-      }
-    },
-    undefined,
-    [notifications, selectedItem, selectedItemId],
+      },
+      [selectedItem, selectedItemId],
+    ),
   )
 
   const setColumnClearedAtFilter = useReduxAction(

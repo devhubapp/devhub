@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 
 import { Screen } from '../components/common/Screen'
@@ -14,7 +14,7 @@ import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { ColumnsContainer } from '../containers/ColumnsContainer'
 import { useAppVisibility } from '../hooks/use-app-visibility'
 import { useEmitter } from '../hooks/use-emitter'
-import { useKeyDownCallback } from '../hooks/use-key-down-callback'
+import useKeyPressCallback from '../hooks/use-key-press-callback'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
@@ -34,16 +34,18 @@ const styles = StyleSheet.create({
 })
 
 export const MainScreen = React.memo(() => {
-  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const columnIds = useReduxState(selectors.columnIdsSelector)
-  const closeAllModals = useReduxAction(actions.closeAllModals)
-  const selectColumn = useReduxAction(actions.selectColumn)
-  const popModal = useReduxAction(actions.popModal)
-  const replaceModal = useReduxAction(actions.replaceModal)
-  const syncDown = useReduxAction(actions.syncDown)
   const { appOrientation } = useAppLayout()
 
+  const columnIds = useReduxState(selectors.columnIdsSelector)
+  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
+
+  const closeAllModals = useReduxAction(actions.closeAllModals)
+  const popModal = useReduxAction(actions.popModal)
+  const replaceModal = useReduxAction(actions.replaceModal)
+  const selectColumn = useReduxAction(actions.selectColumn)
+  const syncDown = useReduxAction(actions.syncDown)
+
   const selectedColumnIndex = selectedColumnId
     ? columnIds.findIndex(id => id === selectedColumnId)
     : -1
@@ -76,156 +78,166 @@ export const MainScreen = React.memo(() => {
 
   const horizontalSidebar = appOrientation === 'portrait'
 
-  useKeyDownCallback(
-    e => {
-      const target = e.target as any
-      const targetTagName = target && `${target.tagName || ''}`.toLowerCase()
-
-      if (targetTagName !== 'input') {
-        analytics.trackEvent('keyboard_shortcut', 'keydown', e.key)
-      }
-
-      if (e.key === 'Escape') {
-        // never happens apparently
-        if (targetTagName === 'input') {
-          e.preventDefault()
-          target.blur()
-        } else if (currentOpenedModal) {
-          e.preventDefault()
-          popModal()
-        } else if (Platform.isElectron && window.ipc) {
-          e.preventDefault()
+  useKeyPressCallback(
+    'Escape',
+    useCallback(
+      () => {
+        if (currentOpenedModal) popModal()
+        else if (Platform.isElectron && window.ipc)
           window.ipc.send('exit-full-screen')
-        }
+      },
+      [currentOpenedModal],
+    ),
+  )
 
-        return
-      }
+  useKeyPressCallback(
+    'n',
+    useCallback(
+      () => {
+        if (currentOpenedModal) return
+        replaceModal({ name: 'ADD_COLUMN' })
+      },
+      [currentOpenedModal],
+    ),
+  )
 
-      if (targetTagName === 'input') return
+  const scrollDown = useCallback(
+    () => {
       if (currentOpenedModal) return
 
-      if (e.key === 'n') {
-        e.preventDefault()
+      const fixedColumnIndex = Math.max(
+        0,
+        Math.min(selectedColumnIndex, columnIds.length - 1),
+      )
 
-        replaceModal({ name: 'ADD_COLUMN' })
-        return
+      if (fixedColumnIndex === 0 && fixedColumnIndex !== selectedColumnIndex) {
+        selectColumn({ columnId: columnIds[fixedColumnIndex] })
       }
 
-      if (e.key === 'ArrowDown' || e.key === 'j') {
-        e.preventDefault()
+      emitter.emit('SCROLL_DOWN_COLUMN', {
+        columnId: columnIds[fixedColumnIndex],
+      })
+    },
+    [currentOpenedModal, selectedColumnIndex, columnIds],
+  )
 
-        const fixedColumnIndex = Math.max(
-          0,
-          Math.min(selectedColumnIndex, columnIds.length - 1),
-        )
+  useKeyPressCallback('ArrowDown', scrollDown)
+  useKeyPressCallback('j', scrollDown)
 
-        if (
-          fixedColumnIndex === 0 &&
-          fixedColumnIndex !== selectedColumnIndex
-        ) {
-          selectColumn({ columnId: columnIds[fixedColumnIndex] })
-        }
+  const scrollUp = useCallback(
+    () => {
+      if (currentOpenedModal) return
 
-        emitter.emit('SCROLL_DOWN_COLUMN', {
-          columnId: columnIds[fixedColumnIndex],
-        })
-        return
+      const fixedColumnIndex = Math.max(
+        0,
+        Math.min(selectedColumnIndex, columnIds.length - 1),
+      )
+
+      if (fixedColumnIndex === 0 && fixedColumnIndex !== selectedColumnIndex) {
+        selectColumn({ columnId: columnIds[fixedColumnIndex] })
       }
 
-      if (e.key === 'ArrowUp' || e.key === 'k') {
-        e.preventDefault()
+      emitter.emit('SCROLL_UP_COLUMN', {
+        columnId: columnIds[fixedColumnIndex],
+      })
+    },
+    [currentOpenedModal, selectedColumnIndex, columnIds],
+  )
 
-        const fixedColumnIndex = Math.max(
-          0,
-          Math.min(selectedColumnIndex, columnIds.length - 1),
-        )
+  useKeyPressCallback('ArrowUp', scrollUp)
+  useKeyPressCallback('k', scrollUp)
 
-        if (
-          fixedColumnIndex === 0 &&
-          fixedColumnIndex !== selectedColumnIndex
-        ) {
-          selectColumn({ columnId: columnIds[fixedColumnIndex] })
-        }
+  const scrollLeft = useCallback(
+    () => {
+      if (currentOpenedModal) return
 
-        emitter.emit('SCROLL_UP_COLUMN', {
-          columnId: columnIds[fixedColumnIndex],
-        })
-        return
-      }
+      const previousColumnIndex = Math.max(
+        0,
+        Math.min(selectedColumnIndex - 1, columnIds.length - 1),
+      )
 
-      if (e.key === 'ArrowLeft' || e.key === 'h') {
-        e.preventDefault()
+      selectColumn({ columnId: columnIds[previousColumnIndex] })
 
-        const previousColumnIndex = Math.max(
-          0,
-          Math.min(selectedColumnIndex - 1, columnIds.length - 1),
-        )
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: true,
+        columnId: columnIds[previousColumnIndex],
+        columnIndex: previousColumnIndex,
+        focusOnVisibleItem: true,
+        highlight: false,
+      })
+    },
+    [currentOpenedModal, selectedColumnIndex, columnIds],
+  )
 
-        selectColumn({ columnId: columnIds[previousColumnIndex] })
+  useKeyPressCallback('ArrowLeft', scrollLeft)
+  useKeyPressCallback('h', scrollLeft)
 
+  const scrollRight = useCallback(
+    () => {
+      if (currentOpenedModal) return
+
+      const nextColumnIndex = Math.max(
+        0,
+        Math.min(selectedColumnIndex + 1, columnIds.length - 1),
+      )
+
+      selectColumn({ columnId: columnIds[nextColumnIndex] })
+
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: true,
+        columnId: columnIds[nextColumnIndex],
+        columnIndex: nextColumnIndex,
+        focusOnVisibleItem: true,
+        highlight: false,
+      })
+    },
+    [currentOpenedModal, selectedColumnIndex, columnIds],
+  )
+
+  useKeyPressCallback('ArrowRight', scrollRight)
+  useKeyPressCallback('l', scrollRight)
+
+  const scrollToColumnNumber = useCallback(
+    (n: number) => {
+      if (currentOpenedModal) return
+
+      if (n === 0) {
+        const columnIndex = columnIds.length - 1
         emitter.emit('FOCUS_ON_COLUMN', {
           animated: true,
-          columnId: columnIds[previousColumnIndex],
-          columnIndex: previousColumnIndex,
-          focusOnVisibleItem: true,
-          highlight: false,
+          columnId: columnIds[columnIndex],
+          columnIndex,
+          highlight: true,
         })
+        selectColumn({ columnId: columnIds[columnIndex] })
         return
       }
 
-      if (e.key === 'ArrowRight' || e.key === 'l') {
-        e.preventDefault()
-
-        const nextColumnIndex = Math.max(
-          0,
-          Math.min(selectedColumnIndex + 1, columnIds.length - 1),
-        )
-
-        selectColumn({ columnId: columnIds[nextColumnIndex] })
-
+      if (n >= 1 && n <= columnIds.length) {
+        const columnIndex = n - 1
         emitter.emit('FOCUS_ON_COLUMN', {
           animated: true,
-          columnId: columnIds[nextColumnIndex],
-          columnIndex: nextColumnIndex,
-          focusOnVisibleItem: true,
-          highlight: false,
+          columnId: columnIds[columnIndex],
+          columnIndex,
+          highlight: true,
         })
+        selectColumn({ columnId: columnIds[columnIndex] })
         return
-      }
-
-      if (columnIds.length > 0) {
-        e.preventDefault()
-
-        const n = e.key >= '0' && e.key <= '9' ? parseInt(e.key, 10) : -1
-
-        if (n === 0) {
-          const columnIndex = columnIds.length - 1
-          emitter.emit('FOCUS_ON_COLUMN', {
-            animated: true,
-            columnId: columnIds[columnIndex],
-            columnIndex,
-            highlight: true,
-          })
-          selectColumn({ columnId: columnIds[columnIndex] })
-          return
-        }
-
-        if (n >= 1 && n <= columnIds.length) {
-          const columnIndex = n - 1
-          emitter.emit('FOCUS_ON_COLUMN', {
-            animated: true,
-            columnId: columnIds[columnIndex],
-            columnIndex,
-            highlight: true,
-          })
-          selectColumn({ columnId: columnIds[columnIndex] })
-          return
-        }
       }
     },
-    undefined,
-    [columnIds, currentOpenedModal, selectedColumnIndex],
+    [currentOpenedModal, columnIds],
   )
+
+  useKeyPressCallback('1', scrollToColumnNumber.bind(null, 1))
+  useKeyPressCallback('2', scrollToColumnNumber.bind(null, 2))
+  useKeyPressCallback('3', scrollToColumnNumber.bind(null, 3))
+  useKeyPressCallback('4', scrollToColumnNumber.bind(null, 4))
+  useKeyPressCallback('5', scrollToColumnNumber.bind(null, 5))
+  useKeyPressCallback('6', scrollToColumnNumber.bind(null, 6))
+  useKeyPressCallback('7', scrollToColumnNumber.bind(null, 7))
+  useKeyPressCallback('8', scrollToColumnNumber.bind(null, 8))
+  useKeyPressCallback('9', scrollToColumnNumber.bind(null, 9))
+  useKeyPressCallback('0', scrollToColumnNumber.bind(null, 0))
 
   useEmitter(
     'FOCUS_ON_COLUMN',

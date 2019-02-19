@@ -1,8 +1,8 @@
-import { RefObject, useState } from 'react'
-import { FlatList, View } from 'react-native'
+import { RefObject, useCallback, useState } from 'react'
+import { FlatList } from 'react-native'
 
 import { useEmitter } from './use-emitter'
-import { useKeyDownCallback } from './use-key-down-callback'
+import useKeyPressCallback from './use-key-press-callback'
 
 export function useKeyboardScrolling(
   ref: RefObject<FlatList<any>>,
@@ -18,17 +18,15 @@ export function useKeyboardScrolling(
 ) {
   const [selectedId, setSelectedId] = useState<string | number | null>(null)
 
-  useKeyDownCallback(
-    e => {
-      if (!ref.current) return
-
-      if (e.key === 'Escape') {
-        if (e.defaultPrevented) return
+  useKeyPressCallback(
+    'Escape',
+    useCallback(
+      () => {
+        if (!(ref && ref.current)) return
         setSelectedId(null)
-      }
-    },
-    undefined,
-    [],
+      },
+      [ref && ref.current],
+    ),
   )
 
   useEmitter(
