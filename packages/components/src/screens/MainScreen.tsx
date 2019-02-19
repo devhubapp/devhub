@@ -15,6 +15,7 @@ import { ColumnsContainer } from '../containers/ColumnsContainer'
 import { useAppVisibility } from '../hooks/use-app-visibility'
 import { useEmitter } from '../hooks/use-emitter'
 import useKeyPressCallback from '../hooks/use-key-press-callback'
+import useMultiKeyPressCallback from '../hooks/use-multi-key-press-callback'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
@@ -41,6 +42,7 @@ export const MainScreen = React.memo(() => {
   const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
+  const moveColumn = useReduxAction(actions.moveColumn)
   const popModal = useReduxAction(actions.popModal)
   const replaceModal = useReduxAction(actions.replaceModal)
   const selectColumn = useReduxAction(actions.selectColumn)
@@ -238,6 +240,38 @@ export const MainScreen = React.memo(() => {
   useKeyPressCallback('8', scrollToColumnNumber.bind(null, 8))
   useKeyPressCallback('9', scrollToColumnNumber.bind(null, 9))
   useKeyPressCallback('0', scrollToColumnNumber.bind(null, 0))
+
+  useMultiKeyPressCallback(
+    ['Alt', 'ArrowLeft'],
+    useCallback(
+      () => {
+        if (currentOpenedModal) return
+        if (!selectedColumnId) return
+
+        moveColumn({
+          columnId: selectedColumnId,
+          columnIndex: selectedColumnIndex - 1,
+        })
+      },
+      [currentOpenedModal, columnIds, selectedColumnId, selectedColumnIndex],
+    ),
+  )
+
+  useMultiKeyPressCallback(
+    ['Alt', 'ArrowRight'],
+    useCallback(
+      () => {
+        if (currentOpenedModal) return
+        if (!selectedColumnId) return
+
+        moveColumn({
+          columnId: selectedColumnId,
+          columnIndex: selectedColumnIndex + 1,
+        })
+      },
+      [currentOpenedModal, columnIds, selectedColumnId, selectedColumnIndex],
+    ),
+  )
 
   useEmitter(
     'FOCUS_ON_COLUMN',
