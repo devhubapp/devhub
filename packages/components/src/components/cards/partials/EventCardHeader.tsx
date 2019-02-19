@@ -193,6 +193,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             enableForegroundHover
             fixedIconSize
             iconName={isRead ? 'mail-read' : 'mail'}
+            iconStyle={isRead ? undefined : { lineHeight: 18 }}
             onPress={() =>
               markItemsAsReadOrUnread({
                 type: 'activity',

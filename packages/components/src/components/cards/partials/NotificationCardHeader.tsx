@@ -226,6 +226,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             enableForegroundHover
             fixedIconSize
             iconName={isRead ? 'mail-read' : 'mail'}
+            iconStyle={isRead ? undefined : { lineHeight: 18 }}
             onPress={() =>
               markItemsAsReadOrUnread({
                 type: 'notifications',
