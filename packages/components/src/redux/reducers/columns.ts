@@ -10,8 +10,14 @@ import {
 } from '@devhub/core'
 import { Reducer } from '../types'
 
+export interface DragActiveItem {
+  draftIndex: number | null
+  originalIndex: number | null
+}
+
 export interface State {
   allIds: string[]
+  dragActive: DragActiveItem
   byId: Record<string, Column | undefined> | null
   updatedAt: string | null
 }
@@ -20,6 +26,10 @@ const initialState: State = {
   allIds: [],
   byId: null,
   updatedAt: null,
+  dragActive: {
+    draftIndex: null,
+    originalIndex: null,
+  },
 }
 
 export const columnsReducer: Reducer<State> = (
@@ -107,6 +117,10 @@ export const columnsReducer: Reducer<State> = (
         draft.allIds.splice(newIndex, 0, columnId)
 
         draft.updatedAt = new Date().toISOString()
+        draft.dragActive = {
+          draftIndex: null,
+          originalIndex: null,
+        }
       })
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
@@ -225,6 +239,14 @@ export const columnsReducer: Reducer<State> = (
             : action.payload.clearedAt || new Date().toISOString()
 
         draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_DRAG_ACTIVE':
+      return immer(state, draft => {
+        draft.dragActive = {
+          ...state.dragActive,
+          ...action.payload,
+        }
       })
 
     default:
