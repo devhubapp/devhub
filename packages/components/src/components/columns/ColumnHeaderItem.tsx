@@ -58,7 +58,7 @@ export interface ColumnHeaderItemProps {
   textStyle?: StyleProp<TextStyle>
   title?: string
   titleStyle?: StyleProp<TextStyle>
-  containerStyle?: TouchableOpacityProps['style']
+  containerStyle?: StyleProp<ViewStyle>
   panHandlers?: GestureResponderHandlers
 }
 
