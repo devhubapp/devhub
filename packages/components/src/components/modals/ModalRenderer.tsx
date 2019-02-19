@@ -19,6 +19,7 @@ import { useAppLayout } from '../context/LayoutContext'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
 import { AddColumnModal } from './AddColumnModal'
 import { EnterpriseSetupModal } from './EnterpriseSetupModal'
+import { KeyboardShortcutsModal } from './KeyboardShortcutsModal'
 
 function renderModal(modal: ModalPayloadWithIndex) {
   if (!modal) return null
@@ -36,6 +37,9 @@ function renderModal(modal: ModalPayloadWithIndex) {
           {...modal.params}
         />
       )
+
+    case 'KEYBOARD_SHORTCUTS':
+      return <KeyboardShortcutsModal showBackButton={modal.index >= 1} />
 
     case 'SETTINGS':
       return <SettingsModal showBackButton={modal.index >= 1} />

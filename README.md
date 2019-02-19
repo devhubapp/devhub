@@ -88,7 +88,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | `s`       | Toggle save item for later       | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `m`       | Mark item as read/unread         | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Alt` + `Arrow` | Move current column        | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `?`       | Show keyboard shortcuts      | Contribute! | |
+| `?`       | Show keyboard shortcuts          | ✅             | [@brunolemos](https://github.com/brunolemos) |
 
 > **Tip:** To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
 

@@ -44,6 +44,7 @@ export const MainScreen = React.memo(() => {
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const moveColumn = useReduxAction(actions.moveColumn)
   const popModal = useReduxAction(actions.popModal)
+  const pushModal = useReduxAction(actions.pushModal)
   const replaceModal = useReduxAction(actions.replaceModal)
   const selectColumn = useReduxAction(actions.selectColumn)
   const syncDown = useReduxAction(actions.syncDown)
@@ -272,6 +273,13 @@ export const MainScreen = React.memo(() => {
       [currentOpenedModal, columnIds, selectedColumnId, selectedColumnIndex],
     ),
   )
+
+  const showKeyboardShortcuts = useCallback(() => {
+    pushModal({ name: 'KEYBOARD_SHORTCUTS' })
+  }, [])
+
+  useKeyPressCallback('?', showKeyboardShortcuts)
+  useMultiKeyPressCallback(['Shift', '?'], showKeyboardShortcuts)
 
   useEmitter(
     'FOCUS_ON_COLUMN',

@@ -71,7 +71,9 @@ export function Label(props: LabelProps) {
       ? getLuminance(_readableColor) > 0.4
         ? darken(0.9, _readableColor)
         : lighten(0.9, _readableColor)
-      : springAnimatedTheme.foregroundColor)
+      : outline
+      ? springAnimatedTheme.foregroundColor
+      : springAnimatedTheme.backgroundColor)
 
   return (
     <SpringAnimatedView
