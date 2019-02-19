@@ -2,7 +2,6 @@ import React from 'react'
 import {
   GestureResponderEvent,
   Image,
-  PanResponder,
   PanResponderGestureState,
   StyleSheet,
   View,
@@ -27,11 +26,13 @@ import {
   columnHeaderItemContentBiggerSize,
   contentPadding,
   sidebarSize,
+  smallTextSize,
 } from '../../styles/variables'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
+import Draggable, { DraggableChildrenProps } from '../common/Draggable'
 import { Link } from '../common/Link'
 import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import { Separator } from '../common/Separator'
@@ -197,6 +198,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 itemContainerStyle={itemContainerStyle}
                 showLabel={showLabel}
                 small={small}
+                totalColumns={columnIds.length - 1}
               />
             ))
           )}
@@ -324,6 +326,7 @@ const SidebarColumnItem = React.memo(
     itemContainerStyle: ViewStyle
     showLabel: boolean
     small: boolean | undefined
+    totalColumns: number
   }) => {
     const {
       closeAllModals,
@@ -333,6 +336,7 @@ const SidebarColumnItem = React.memo(
       itemContainerStyle,
       showLabel,
       small,
+      totalColumns,
     } = props
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
@@ -340,82 +344,126 @@ const SidebarColumnItem = React.memo(
 
     if (!(column && subscriptions)) return null
 
-    const [style, setSpring] = useSpring(() => ({
-      translateX: 0,
-      translateY: 0,
-    }))
-
-    const transformStyle = {
-      transform: [{ translateY: style.translateY }],
-    }
-
-    const onMoveShouldSetPanResponderCapture = (
-      e: GestureResponderEvent,
-      gesture: PanResponderGestureState,
-    ) => {
-      return gesture.dx !== 0 && gesture.dy !== 0
-    }
-
-    const onPanResponderMove = (
-      e: GestureResponderEvent,
-      gesture: PanResponderGestureState,
-    ) => {
-      setSpring({
-        translateX: gesture.dx,
-        translateY: gesture.dy,
-      })
-    }
-
-    const onPanResponderEnd = (
-      e: GestureResponderEvent,
-      gesture: PanResponderGestureState,
-    ) => {
-      setSpring({
-        translateX: 0,
-        translateY: 0,
-      })
-    }
-
-    const panResponder = PanResponder.create({
-      onMoveShouldSetPanResponderCapture,
-      onPanResponderMove,
-      onPanResponderEnd,
-      onPanResponderRelease: onPanResponderEnd,
-      onPanResponderTerminate: onPanResponderEnd,
-    })
-
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
     const label = `${requestTypeIconAndData.title || ''}`.toLowerCase()
 
-    return (
-      <ColumnHeaderItem
-        panHandlers={panResponder.panHandlers}
-        containerStyle={[transformStyle]}
-        key={`sidebar-column-${column.id}`}
-        analyticsLabel="sidebar_column"
-        avatarProps={{
-          ...requestTypeIconAndData.avatarProps,
-          disableLink: true,
-        }}
-        hoverBackgroundThemeColor={
-          getColumnHeaderThemeColors(theme.backgroundColor).hover
-        }
-        enableBackgroundHover={!horizontal}
-        iconName={requestTypeIconAndData.icon}
-        label={label}
-        onPress={() => {
-          if (currentOpenedModal) closeAllModals()
+    const currentActive = useReduxState(selectors.columnDragActiveSelector)
+    const setCurrentActive = useReduxAction(actions.setDragActive)
+    const moveColumn = useReduxAction(actions.moveColumn)
 
-          emitter.emit('FOCUS_ON_COLUMN', {
-            animated: !small || !currentOpenedModal,
-            columnId: column.id,
-            columnIndex,
-            highlight: !small,
-          })
-        }}
-        showLabel={showLabel}
-        size={columnHeaderItemContentBiggerSize}
-        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+    const baseSize = showLabel ? sidebarSize + smallTextSize : sidebarSize
+
+    const onGrant = (
+      e: GestureResponderEvent,
+      gesture: PanResponderGestureState,
+    ) => {
+      setCurrentActive({
+        draftIndex: columnIndex,
+        originalIndex: columnIndex,
+      })
+    }
+
+    const onMove = (
+      e: GestureResponderEvent,
+      gesture: PanResponderGestureState,
+    ) => {
+      const draftIndex = currentActive.draftIndex
+      const gestureValue = showLabel ? gesture.dx : gesture.dy
+      const columnIndexDiff = gestureValue / baseSize
+
+      const minGestureValue = columnIndex * baseSize * -1
+      const maxGestureValue = (totalColumns - columnIndex) * baseSize
+      const reachedMin = gestureValue <= minGestureValue
+      const reachedMax = gestureValue >= maxGestureValue
+
+      let roundedNewIndex = Math.abs(Math.round(columnIndexDiff + columnIndex))
+      let translateX = gesture.dx
+      let translateY = gesture.dy
+
+      if (reachedMin) {
+        roundedNewIndex = 0
+        translateX = minGestureValue
+        translateY = minGestureValue
+      } else if (reachedMax) {
+        roundedNewIndex = totalColumns
+        translateX = maxGestureValue
+        translateY = maxGestureValue
+      }
+
+      if (draftIndex !== roundedNewIndex) {
+        setCurrentActive({
+          draftIndex: roundedNewIndex,
+        })
+      }
+
+      return {
+        translateX,
+        translateY,
+      }
+    }
+
+    const onEnd = () => {
+      if (currentActive.draftIndex !== null) {
+        moveColumn({
+          columnId,
+          columnIndex: currentActive.draftIndex,
+        })
+      }
+    }
+
+    const transformStyle: ((props: DraggableChildrenProps) => ViewStyle) = ({
+      springProps: { translateX, translateY },
+    }) => {
+      const translateAxis = showLabel ? { translateX } : { translateY }
+
+      return {
+        transform: [
+          {
+            ...translateAxis,
+          },
+        ],
+      }
+    }
+
+    return (
+      <Draggable
+        onEnd={onEnd}
+        baseSize={baseSize}
+        index={columnIndex}
+        currentActiveDraftIndex={currentActive.draftIndex}
+        currentActiveOriginalIndex={currentActive.originalIndex}
+        onMove={onMove}
+        onGrant={onGrant}
+        render={(draggableProps: DraggableChildrenProps) => (
+          <ColumnHeaderItem
+            panHandlers={draggableProps.panHandlers}
+            containerStyle={transformStyle(draggableProps)}
+            key={`sidebar-column-${column.id}`}
+            analyticsLabel="sidebar_column"
+            avatarProps={{
+              ...requestTypeIconAndData.avatarProps,
+              disableLink: true,
+            }}
+            hoverBackgroundThemeColor={
+              getColumnHeaderThemeColors(theme.backgroundColor).hover
+            }
+            enableBackgroundHover={!horizontal}
+            iconName={requestTypeIconAndData.icon}
+            label={label}
+            onPress={() => {
+              if (currentOpenedModal) closeAllModals()
+              emitter.emit('FOCUS_ON_COLUMN', {
+                animated: !small || !currentOpenedModal,
+                columnId: column.id,
+                columnIndex,
+                highlight: !small,
+              })
+            }}
+            showLabel={showLabel}
+            size={columnHeaderItemContentBiggerSize}
+            style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+          />
+        )}
       />
     )
   },
