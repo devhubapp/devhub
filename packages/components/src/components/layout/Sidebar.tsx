@@ -171,7 +171,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   showLabel={showLabel}
                   size={columnHeaderItemContentBiggerSize}
-                  style={[styles.centerContainer, itemContainerStyle]}
+                  style={[
+                    styles.centerContainer,
+                    !showLabel && itemContainerStyle,
+                  ]}
                 />
 
                 <Separator horizontal={!horizontal} />
