@@ -41,3 +41,8 @@ export const createColumnSubscriptionsSelector = () => {
 }
 
 export const columnSubscriptionsSelector = createColumnSubscriptionsSelector()
+
+export const columnDragActiveSelector = createSelector(
+  (state: RootState) => s(state).dragActive,
+  dragActive => dragActive,
+)
