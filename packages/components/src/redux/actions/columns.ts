@@ -7,6 +7,7 @@ import {
   NotificationColumnFilters,
 } from '@devhub/core'
 import { createAction } from '../helpers'
+import { DragActiveItem } from '../reducers/columns'
 
 export function replaceColumnsAndSubscriptions(
   payload: ColumnsAndSubscriptions,
@@ -71,4 +72,11 @@ export function setColumnClearedAtFilter(payload: {
   clearedAt: string | null
 }) {
   return createAction('SET_COLUMN_CLEARED_AT_FILTER', payload)
+}
+
+export function setDragActive(payload: {
+  draftIndex: number | null
+  originalIndex?: number | null
+}) {
+  return createAction('SET_DRAG_ACTIVE', payload)
 }
