@@ -1,7 +1,13 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
-import { Column, constants, EnhancedGitHubEvent, LoadState } from '@devhub/core'
+import {
+  Column,
+  constants,
+  EnhancedGitHubEvent,
+  isItemRead,
+  LoadState,
+} from '@devhub/core'
 import { useKeyDownCallback } from '../../hooks/use-key-down-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -58,22 +64,36 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     items: events,
   })
   const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
-  const hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+  const _hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+  const selectedItem =
+    _hasSelectedItem && events.find(event => event.id === selectedItemId)
 
+  const markItemsAsReadOrUnread = useReduxAction(
+    actions.markItemsAsReadOrUnread,
+  )
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   useKeyDownCallback(
     e => {
-      if (!hasSelectedItem) return
+      if (!selectedItem) return
 
       if (e.key === 's') {
-        const item = events.find(event => event.id === selectedItemId)
-        if (!item) return
-        saveItemsForLater({ itemIds: [selectedItemId!], save: !item.saved })
+        e.preventDefault()
+        saveItemsForLater({
+          itemIds: [selectedItemId!],
+          save: !selectedItem.saved,
+        })
+      } else if (e.key === 'm') {
+        e.preventDefault()
+        markItemsAsReadOrUnread({
+          type: 'activity',
+          itemIds: [selectedItemId!],
+          unread: isItemRead(selectedItem),
+        })
       }
     },
     undefined,
-    [events, hasSelectedItem, selectedItemId],
+    [events, selectedItem, selectedItemId],
   )
 
   const setColumnClearedAtFilter = useReduxAction(

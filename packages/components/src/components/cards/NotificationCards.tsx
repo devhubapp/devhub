@@ -5,6 +5,7 @@ import {
   Column,
   constants,
   EnhancedGitHubNotification,
+  isItemRead,
   LoadState,
 } from '@devhub/core'
 import { useKeyDownCallback } from '../../hooks/use-key-down-callback'
@@ -63,24 +64,37 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     items: notifications,
   })
   const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
-  const hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+  const _hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+  const selectedItem =
+    _hasSelectedItem &&
+    notifications.find(notification => notification.id === selectedItemId)
 
+  const markItemsAsReadOrUnread = useReduxAction(
+    actions.markItemsAsReadOrUnread,
+  )
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   useKeyDownCallback(
     e => {
-      if (!hasSelectedItem) return
+      if (!selectedItem) return
 
       if (e.key === 's') {
-        const item = notifications.find(
-          notification => notification.id === selectedItemId,
-        )
-        if (!item) return
-        saveItemsForLater({ itemIds: [selectedItemId!], save: !item.saved })
+        e.preventDefault()
+        saveItemsForLater({
+          itemIds: [selectedItemId!],
+          save: !selectedItem.saved,
+        })
+      } else if (e.key === 'm') {
+        e.preventDefault()
+        markItemsAsReadOrUnread({
+          type: 'notifications',
+          itemIds: [selectedItemId!],
+          unread: isItemRead(selectedItem),
+        })
       }
     },
     undefined,
-    [notifications, hasSelectedItem, selectedItemId],
+    [notifications, selectedItem, selectedItemId],
   )
 
   const setColumnClearedAtFilter = useReduxAction(
