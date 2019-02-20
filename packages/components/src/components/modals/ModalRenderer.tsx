@@ -5,6 +5,7 @@ import { ModalPayloadWithIndex } from '@devhub/core'
 import { config, useTransition } from 'react-spring/native'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { usePrevious } from '../../hooks/use-previous'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
@@ -65,6 +66,7 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const modalStack = useReduxState(selectors.modalStack)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+  const previouslyOpenedModal = usePrevious(currentOpenedModal)
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
 
@@ -89,6 +91,14 @@ export function ModalRenderer(props: ModalRendererProps) {
     {
       reset: true,
       config: { ...config.default, precision: 1 },
+      immediate:
+        (sizename === '1-small' &&
+          (currentOpenedModal && currentOpenedModal.name === 'SETTINGS')) ||
+        (!currentOpenedModal &&
+          previouslyOpenedModal &&
+          previouslyOpenedModal.name === 'SETTINGS')
+          ? true
+          : false,
       ...(sizename === '1-small'
         ? {
             from: item =>
