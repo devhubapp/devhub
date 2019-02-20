@@ -12,7 +12,11 @@ import {
   MultipleStarEvent,
   NotificationColumnSubscription,
 } from '../../types'
-import { isPullRequest } from './shared'
+import {
+  isPullRequest,
+  isReadFilterChecked,
+  isUnreadFilterChecked,
+} from './shared'
 
 export function getOlderEventDate(events: EnhancedGitHubEvent[]) {
   const olderItem = sortEvents(events).pop()
@@ -166,8 +170,13 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: subscription.params.participating
               ? 'participating'
-              : subscription.params.all
+              : isReadFilterChecked(column.filters) &&
+                isUnreadFilterChecked(column.filters)
               ? 'all'
+              : isUnreadFilterChecked(column.filters)
+              ? 'unread'
+              : isReadFilterChecked(column.filters)
+              ? 'read'
               : '',
             title: 'Notifications',
           }
