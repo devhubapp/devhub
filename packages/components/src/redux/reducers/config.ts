@@ -13,7 +13,7 @@ export interface State {
 const initialState: State = {
   preferredDarkTheme: { id: constants.DEFAULT_DARK_THEME },
   preferredLightTheme: { id: constants.DEFAULT_LIGHT_THEME },
-  theme: { id: 'auto' },
+  theme: { id: constants.DEFAULT_DARK_THEME },
 }
 
 export const configReducer: Reducer<State> = (state = initialState, action) => {
