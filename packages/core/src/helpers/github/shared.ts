@@ -197,6 +197,7 @@ export function getUniqueIdForSubscription(subscription: {
     case 'notifications': {
       const _querystring = qs.stringify({
         all: !!s.params.all,
+        participating: !!s.params.participating,
       })
       const querystring = _querystring ? `?${_querystring}` : ''
 

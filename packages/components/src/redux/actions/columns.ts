@@ -55,6 +55,13 @@ export function setColumnSavedFilter(payload: {
   return createAction('SET_COLUMN_SAVED_FILTER', payload)
 }
 
+export function setColumnParticipatingFilter(payload: {
+  columnId: string
+  participating: boolean
+}) {
+  return createAction('SET_COLUMN_PARTICIPATING_FILTER', payload)
+}
+
 export function setColumnActivityTypeFilter<
   T extends GitHubEvent['type']
 >(payload: { columnId: string; type: T; value: boolean | null }) {

@@ -164,7 +164,11 @@ export function getColumnHeaderDetails(
           return {
             icon: 'bell',
             repoIsKnown: false,
-            subtitle: 'all',
+            subtitle: subscription.params.participating
+              ? 'participating'
+              : subscription.params.all
+              ? 'all'
+              : '',
             title: 'Notifications',
           }
         }

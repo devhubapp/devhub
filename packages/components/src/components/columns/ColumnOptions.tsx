@@ -47,6 +47,7 @@ export interface ColumnOptionsProps {
 
 export type ColumnOptionCategory =
   | 'event_types'
+  | 'inbox'
   | 'notification_reasons'
   | 'privacy'
   | 'saved_for_later'
@@ -57,6 +58,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const { startWithFiltersExpanded = availableHeight >= 700 } = props
 
   const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
+    column.type === 'notifications' && 'inbox',
     column.type === 'activity' && 'event_types',
     column.type === 'notifications' && 'notification_reasons',
     'privacy',
@@ -89,6 +91,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const moveColumn = useReduxAction(actions.moveColumn)
   const setColumnSavedFilter = useReduxAction(actions.setColumnSavedFilter)
+  const setColumnParticipatingFilter = useReduxAction(
+    actions.setColumnParticipatingFilter,
+  )
   const setColumnActivityTypeFilter = useReduxAction(
     actions.setColumnActivityTypeFilter,
   )
@@ -119,6 +124,63 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         alwaysBounceVertical={false}
         style={{ maxHeight: availableHeight - columnHeaderHeight - 4 }}
       >
+        {column.type === 'notifications' &&
+          (() => {
+            const participating =
+              column.filters &&
+              column.filters.notifications &&
+              column.filters.notifications.participating
+
+            return (
+              <ColumnOptionsRow
+                analyticsLabel="inbox"
+                hasChanged={!!participating}
+                iconName="inbox"
+                isOpen={openedOptionCategories.has('inbox')}
+                onToggle={
+                  allowToggleCategoriesRef.current
+                    ? () => toggleOpenedOptionCategory('inbox')
+                    : undefined
+                }
+                subtitle={participating ? 'Participating' : 'All'}
+                title="Inbox"
+              >
+                <SpringAnimatedCheckbox
+                  analyticsLabel="all_notifications"
+                  checked={!participating}
+                  circle
+                  containerStyle={{
+                    flexGrow: 1,
+                    paddingVertical: contentPadding / 4,
+                  }}
+                  label="All"
+                  onChange={checked => {
+                    setColumnParticipatingFilter({
+                      columnId: column.id,
+                      participating: !checked,
+                    })
+                  }}
+                />
+                <SpringAnimatedCheckbox
+                  analyticsLabel="participating_notifications"
+                  checked={participating}
+                  circle
+                  containerStyle={{
+                    flexGrow: 1,
+                    paddingVertical: contentPadding / 4,
+                  }}
+                  label="Participating"
+                  onChange={checked => {
+                    setColumnParticipatingFilter({
+                      columnId: column.id,
+                      participating: !!checked,
+                    })
+                  }}
+                />
+              </ColumnOptionsRow>
+            )
+          })()}
+
         {column.type === 'notifications' &&
           (() => {
             const filters =
@@ -273,7 +335,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 checked={
                   typeof savedForLater === 'boolean' ? savedForLater : null
                 }
-                containerStyle={{ flexGrow: 1 }}
+                containerStyle={{
+                  flexGrow: 1,
+                  paddingVertical: contentPadding / 4,
+                }}
                 enableIndeterminateState
                 label="Saved for later"
                 onChange={checked => {

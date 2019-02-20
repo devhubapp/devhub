@@ -187,8 +187,12 @@ function* onSetClearedAt(
   )
 }
 
-function* onSetUnreadFilter(
-  action: ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>,
+function* onNotificationColumnSubscriptionFilterChange(
+  action:
+    | ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>
+    | ExtractActionFromActionCreator<
+        typeof actions.setColumnParticipatingFilter
+      >,
 ) {
   if (!action.payload.columnId) return
 
@@ -197,11 +201,6 @@ function* onSetUnreadFilter(
     action.payload.columnId,
   )
   if (!(column && column.id && column.type === 'notifications')) return
-
-  const allSubscriptionIds: string[] = yield select(
-    selectors.subscriptionIdsSelector,
-  )
-  if (!(allSubscriptionIds && allSubscriptionIds.length)) return
 
   const subscriptions: ColumnSubscription[] = yield select(
     selectors.columnSubscriptionsSelector,
@@ -216,9 +215,15 @@ function* onSetUnreadFilter(
       if (!(subscription && subscription.id)) return
       if (subscription.type !== 'notifications') return
 
-      const newSubscriptionParams = {
+      const newSubscriptionParams: NotificationColumnSubscription['params'] = {
         ...subscription.params,
         all: isReadFilterChecked(column.filters) ? true : false,
+        participating:
+          column.filters &&
+          column.filters.notifications &&
+          column.filters.notifications.participating
+            ? true
+            : false,
       }
 
       const newSubscriptionId = getUniqueIdForSubscription({
@@ -226,9 +231,14 @@ function* onSetUnreadFilter(
         params: newSubscriptionParams,
       })
 
-      const newSubscription = {
-        ...subscription,
+      const newSubscription: NotificationColumnSubscription = {
         id: newSubscriptionId,
+        type: subscription.type,
+        subtype: subscription.subtype as any,
+        params: newSubscriptionParams as any,
+        data: {},
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       }
 
       const result = []
@@ -274,6 +284,9 @@ export function* columnsSagas() {
     yield takeLatest('MOVE_COLUMN', onMoveColumn),
     yield takeLatest('DELETE_COLUMN', onDeleteColumn),
     yield takeLatest('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
-    yield takeLatest('SET_COLUMN_UNREAD_FILTER', onSetUnreadFilter),
+    yield takeLatest(
+      ['SET_COLUMN_UNREAD_FILTER', 'SET_COLUMN_PARTICIPATING_FILTER'],
+      onNotificationColumnSubscriptionFilterChange,
+    ),
   ])
 }

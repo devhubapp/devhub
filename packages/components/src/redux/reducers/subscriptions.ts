@@ -4,9 +4,6 @@ import _ from 'lodash'
 import {
   ColumnSubscription,
   constants,
-  createSubscriptionObjectWithId,
-  EnhancedGitHubEvent,
-  EnhancedGitHubNotification,
   removeUselessURLsFromResponseItem,
   sortEvents,
   sortNotifications,

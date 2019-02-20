@@ -74,6 +74,7 @@ export type NotificationColumnSubscription = {
   type: 'notifications'
   params: {
     all?: boolean
+    participating?: boolean
   }
   data: ColumnSubscriptionData<EnhancedGitHubNotification>
   createdAt: string
@@ -178,6 +179,7 @@ export interface ActivityColumnFilters extends BaseColumnFilters {
 
 export interface NotificationColumnFilters extends BaseColumnFilters {
   notifications?: {
+    participating?: boolean
     reasons?: Partial<Record<GitHubNotificationReason, boolean>>
   }
 }

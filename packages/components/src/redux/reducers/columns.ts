@@ -190,6 +190,21 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
       })
 
+    case 'SET_COLUMN_PARTICIPATING_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId] as NotificationColumn
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.notifications = column.filters.notifications || {}
+        column.filters.notifications.participating =
+          action.payload.participating
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
     case 'SET_COLUMN_ACTIVITY_TYPE_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return

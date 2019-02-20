@@ -786,6 +786,7 @@ export type GitHubIcon =
 
 export interface GitHubNotificationsOptions {
   all?: boolean
+  participating?: boolean
   since?: Date
   before?: string
 }
