@@ -8,6 +8,7 @@ import {
   getGitHubURLForUser,
   GitHubIcon,
   GitHubNotificationReason,
+  trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
@@ -133,7 +134,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
                 >
-                  {username}
+                  {trimNewLinesAndSpaces(username, 18)}
                 </SpringAnimatedText>
               </Link>
               {!!isBot && (

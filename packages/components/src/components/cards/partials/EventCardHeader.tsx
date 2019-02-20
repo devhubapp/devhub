@@ -7,6 +7,7 @@ import {
   getFullDateText,
   getGitHubURLForUser,
   GitHubIcon,
+  trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
@@ -124,7 +125,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                     getCardStylesForTheme(springAnimatedTheme).usernameText
                   }
                 >
-                  {username}
+                  {trimNewLinesAndSpaces(username, 18)}
                 </SpringAnimatedText>
               </Link>
               {!!isBot && (
