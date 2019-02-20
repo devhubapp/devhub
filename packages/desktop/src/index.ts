@@ -616,7 +616,7 @@ function getModeMenuItems() {
   return menuItems
 }
 
-function getOptionsMenuItems() {
+function getWindowOptionsMenuItems() {
   const isCurrentWindow =
     mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
   const enabled = isCurrentWindow || config.get('isMenuBarMode')
@@ -752,23 +752,22 @@ function getMainMenuItems() {
             if (focusedWindow) focusedWindow.webContents.toggleDevTools()
           },
         },
-        {
-          type: 'separator',
-          enabled,
-        },
-        ...getModeMenuItems(),
         { type: 'separator', enabled },
         { role: 'resetzoom', enabled },
         { role: 'zoomin', enabled },
         { role: 'zoomout', enabled },
         { type: 'separator', enabled },
-        ...getOptionsMenuItems(),
+        ...getModeMenuItems(),
       ],
     },
     {
       label: 'Window',
       role: 'window',
-      submenu: getWindowMenuItems(),
+      submenu: [
+        ...getWindowMenuItems(),
+        { type: 'separator', enabled },
+        ...getWindowOptionsMenuItems(),
+      ],
     },
     {
       label: 'Help',
@@ -868,9 +867,9 @@ function getTrayMenuItems() {
           },
         ]
       : []),
-    ...(getOptionsMenuItems().length
+    ...(getWindowOptionsMenuItems().length
       ? [
-          ...getOptionsMenuItems(),
+          ...getWindowOptionsMenuItems(),
           {
             type: 'separator',
             enabled,
