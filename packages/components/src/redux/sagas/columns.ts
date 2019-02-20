@@ -25,6 +25,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     subtype: undefined,
     params: {
       all: true,
+      participating: true,
     },
   }) as NotificationColumnSubscription
 
@@ -44,13 +45,17 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     },
   }) as ActivityColumnSubscription
 
-  return {
+  const result: ColumnsAndSubscriptions = {
     columns: [
       {
         id: guid(),
         subscriptionIds: [notificationSubscription.id],
         type: 'notifications',
-        filters: undefined,
+        filters: {
+          notifications: {
+            participating: notificationSubscription.params.participating,
+          },
+        },
       },
       {
         id: guid(),
@@ -71,6 +76,8 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       userEventsSubscription,
     ],
   }
+
+  return result
 }
 
 function* onAddColumn(
