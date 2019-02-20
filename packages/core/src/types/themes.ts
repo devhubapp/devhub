@@ -4,8 +4,10 @@ export type ThemeName =
   | 'dark-black'
   | 'dark-blue'
   | 'dark-gray'
+  | 'dark-purple'
   | 'light-blue'
   | 'light-gray'
+  | 'light-purple'
   | 'light-white'
 
 export interface ThemePair {
