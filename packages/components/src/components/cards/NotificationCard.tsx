@@ -258,18 +258,32 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         />
       )}
 
-      {!comment && !!(issue && issue.state === 'open' && issue.body) && (
-        <CommentRow
-          key={`notification-issue-body-${issue.id}`}
-          avatarURL={issue.user.avatar_url}
-          body={issue.body}
-          isRead={isRead}
-          smallLeftColumn={smallLeftColumn}
-          url={issue.html_url}
-          userLinkURL={issue.user.html_url || ''}
-          username={issue.user.login}
-        />
-      )}
+      {!comment &&
+        !!(
+          issue &&
+          issue.state === 'open' &&
+          issue.body &&
+          !(
+            issue.created_at &&
+            issue.updated_at &&
+            new Date(issue.updated_at).valueOf() -
+              new Date(issue.created_at).valueOf() >=
+              1000 * 60 * 60 * 24
+          )
+        ) && (
+          // only show body if this notification is probably from a creation event
+          // because it may be for other updates
+          <CommentRow
+            key={`notification-issue-body-${issue.id}`}
+            avatarURL={issue.user.avatar_url}
+            body={issue.body}
+            isRead={isRead}
+            smallLeftColumn={smallLeftColumn}
+            url={issue.html_url}
+            userLinkURL={issue.user.html_url || ''}
+            username={issue.user.login}
+          />
+        )}
 
       {!!pullRequest && (
         <IssueOrPullRequestRow
@@ -295,7 +309,20 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       )}
 
       {!comment &&
-        !!(pullRequest && pullRequest.state === 'open' && pullRequest.body) && (
+        !!(
+          pullRequest &&
+          pullRequest.state === 'open' &&
+          pullRequest.body &&
+          !(
+            pullRequest.created_at &&
+            pullRequest.updated_at &&
+            new Date(pullRequest.updated_at).valueOf() -
+              new Date(pullRequest.created_at).valueOf() >=
+              1000 * 60 * 60 * 24
+          )
+        ) && (
+          // only show body if this notification is probably from a creation event
+          // because it may be for other updates
           <CommentRow
             key={`notification-pr-body-${pullRequest.id}`}
             avatarURL={pullRequest.user.avatar_url}
