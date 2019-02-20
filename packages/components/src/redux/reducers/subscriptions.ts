@@ -4,6 +4,7 @@ import _ from 'lodash'
 import {
   ColumnSubscription,
   constants,
+  createSubscriptionObjectWithId,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   removeUselessURLsFromResponseItem,
@@ -107,6 +108,28 @@ export const subscriptionsReducer: Reducer<State> = (
         draft.byId = draft.byId || {}
 
         const normalized = subscriptionsArrToState(action.payload.subscriptions)
+
+        draft.allIds = _.uniq(draft.allIds.concat(normalized.allIds)).filter(
+          Boolean,
+        )
+
+        Object.assign(draft.byId, normalized.byId)
+
+        draft.updatedAt = normalized.updatedAt
+      })
+
+    case 'ADD_COLUMN_SUBSCRIPTION':
+      return immer(state, draft => {
+        draft.allIds = draft.allIds || []
+        draft.byId = draft.byId || {}
+
+        if (!action.payload.columnId) return
+        if (!(action.payload.subscription && action.payload.subscription.id))
+          return
+
+        const normalized = subscriptionsArrToState([
+          action.payload.subscription,
+        ])
 
         draft.allIds = _.uniq(draft.allIds.concat(normalized.allIds)).filter(
           Boolean,

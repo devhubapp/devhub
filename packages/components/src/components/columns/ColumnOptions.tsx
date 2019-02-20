@@ -2,7 +2,13 @@ import _ from 'lodash'
 import React, { useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import { Column, eventTypes, getEventTypeMetadata } from '@devhub/core'
+import {
+  Column,
+  eventTypes,
+  getEventTypeMetadata,
+  isReadFilterChecked,
+  isUnreadFilterChecked,
+} from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -282,16 +288,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         })()}
 
         {(() => {
-          const isReadChecked = !(
-            column.filters && column.filters.unread === true
-          )
+          const isReadChecked = isReadFilterChecked(column.filters)
+          const isUnreadChecked = isUnreadFilterChecked(column.filters)
 
-          const isUnreadChecked = !(
-            column.filters && column.filters.unread === false
-          )
-
-          const getFilterValue = (read?: boolean, unread?: boolean) =>
-            read && unread ? undefined : read ? false : unread
+          function getUnreadFilterValue(read?: boolean, unread?: boolean) {
+            return read && unread ? undefined : read ? false : unread
+          }
 
           return (
             <ColumnOptionsRow
@@ -329,7 +331,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 onChange={checked => {
                   setColumnUnreadFilter({
                     columnId: column.id,
-                    unread: getFilterValue(!!checked, isUnreadChecked),
+                    unread: getUnreadFilterValue(!!checked, isUnreadChecked),
                   })
                 }}
               />
@@ -346,7 +348,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 onChange={checked => {
                   setColumnUnreadFilter({
                     columnId: column.id,
-                    unread: getFilterValue(isReadChecked, !!checked),
+                    unread: getUnreadFilterValue(isReadChecked, !!checked),
                   })
                 }}
               />

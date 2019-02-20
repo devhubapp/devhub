@@ -70,6 +70,43 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = normalized.updatedAt
       })
 
+    case 'ADD_COLUMN_SUBSCRIPTION':
+      return immer(state, draft => {
+        draft.allIds = draft.allIds || []
+        draft.byId = draft.byId || {}
+
+        if (!action.payload.columnId) return
+        if (!(action.payload.subscription && action.payload.subscription.id))
+          return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.subscriptionIds = _.uniq(
+          column.subscriptionIds.concat(action.payload.subscription.id),
+        )
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'REMOVE_SUBSCRIPTION_FROM_COLUMN':
+      return immer(state, draft => {
+        draft.allIds = draft.allIds || []
+        draft.byId = draft.byId || {}
+
+        if (!action.payload.columnId) return
+        if (!action.payload.subscriptionId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.subscriptionIds = column.subscriptionIds.filter(
+          id => id !== action.payload.subscriptionId,
+        )
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
     case 'DELETE_COLUMN':
       return immer(state, draft => {
         if (draft.allIds)

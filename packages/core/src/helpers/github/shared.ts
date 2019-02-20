@@ -2,6 +2,7 @@ import gravatar from 'gravatar'
 import qs from 'qs'
 
 import {
+  ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
@@ -15,6 +16,14 @@ export function isItemRead(
   item: EnhancedGitHubNotification | EnhancedGitHubEvent,
 ) {
   return !(item && (item.unread !== false || item.forceUnreadLocally))
+}
+
+export function isReadFilterChecked(filters: ColumnFilters | undefined) {
+  return !(filters && filters.unread === true)
+}
+
+export function isUnreadFilterChecked(filters: ColumnFilters | undefined) {
+  return !(filters && filters.unread === false)
 }
 
 export function getUserAvatarByAvatarURL(
@@ -186,7 +195,9 @@ export function getUniqueIdForSubscription(subscription: {
     }
 
     case 'notifications': {
-      const _querystring = qs.stringify({ all: !!s.params.all })
+      const _querystring = qs.stringify({
+        all: !!s.params.all,
+      })
       const querystring = _querystring ? `?${_querystring}` : ''
 
       switch (s.subtype) {

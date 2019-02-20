@@ -511,6 +511,7 @@ export function* subscriptionsSagas() {
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
     yield takeEvery('DELETE_COLUMN', cleanupSubscriptions),
+    yield takeLatest('REMOVE_SUBSCRIPTION_FROM_COLUMN', cleanupSubscriptions),
     yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
     yield takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),

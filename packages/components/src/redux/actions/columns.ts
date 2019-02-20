@@ -2,6 +2,7 @@ import {
   ColumnAndSubscriptions,
   ColumnFilters,
   ColumnsAndSubscriptions,
+  ColumnSubscriptionCreation,
   GitHubEvent,
   GitHubNotificationReason,
   NotificationColumnFilters,
@@ -20,6 +21,20 @@ export function replaceColumnsAndSubscriptions(
 
 export function addColumnAndSubscriptions(payload: ColumnAndSubscriptions) {
   return createAction('ADD_COLUMN_AND_SUBSCRIPTIONS', payload)
+}
+
+export function addColumnSubscription(payload: {
+  columnId: string
+  subscription: ColumnSubscriptionCreation
+}) {
+  return createAction('ADD_COLUMN_SUBSCRIPTION', payload)
+}
+
+export function removeSubscriptionFromColumn(payload: {
+  columnId: string
+  subscriptionId: string
+}) {
+  return createAction('REMOVE_SUBSCRIPTION_FROM_COLUMN', payload)
 }
 
 export function deleteColumn(payload: {

@@ -20,7 +20,7 @@ export function fetchSubscriptionRequest(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
   params: {
-    [key: string]: string | number | undefined
+    [key: string]: string | number | boolean | undefined
     page: number
     perPage?: number
   }

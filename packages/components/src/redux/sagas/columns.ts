@@ -1,11 +1,16 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
+  ActivityColumn,
   ActivityColumnSubscription,
   Column,
   ColumnsAndSubscriptions,
+  ColumnSubscription,
   createSubscriptionObjectWithId,
+  getUniqueIdForSubscription,
   guid,
+  isReadFilterChecked,
+  NotificationColumn,
   NotificationColumnSubscription,
 } from '@devhub/core'
 import { delay } from 'redux-saga'
@@ -137,6 +142,7 @@ function* onSetClearedAt(
     selectors.createColumnSelector(),
     action.payload.columnId,
   )
+
   if (!(column && column.subscriptionIds && column.subscriptionIds.length))
     return
 
@@ -181,11 +187,93 @@ function* onSetClearedAt(
   )
 }
 
+function* onSetUnreadFilter(
+  action: ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>,
+) {
+  if (!action.payload.columnId) return
+
+  const column: ActivityColumn | NotificationColumn = yield select(
+    selectors.createColumnSelector(),
+    action.payload.columnId,
+  )
+  if (!(column && column.id && column.type === 'notifications')) return
+
+  const allSubscriptionIds: string[] = yield select(
+    selectors.subscriptionIdsSelector,
+  )
+  if (!(allSubscriptionIds && allSubscriptionIds.length)) return
+
+  const subscriptions: ColumnSubscription[] = yield select(
+    selectors.columnSubscriptionsSelector,
+    column.id,
+  )
+  if (!(subscriptions && subscriptions.length)) return
+
+  yield all(
+    subscriptions.map(function*(
+      subscription: ActivityColumnSubscription | NotificationColumnSubscription,
+    ) {
+      if (!(subscription && subscription.id)) return
+      if (subscription.type !== 'notifications') return
+
+      const newSubscriptionParams = {
+        ...subscription.params,
+        all: isReadFilterChecked(column.filters) ? true : false,
+      }
+
+      const newSubscriptionId = getUniqueIdForSubscription({
+        ...subscription,
+        params: newSubscriptionParams,
+      })
+
+      const newSubscription = {
+        ...subscription,
+        id: newSubscriptionId,
+      }
+
+      const result = []
+
+      if (newSubscriptionId === subscription.id) return
+
+      result.push(
+        yield put(
+          actions.addColumnSubscription({
+            columnId: column.id,
+            subscription: newSubscription,
+          }),
+        ),
+      )
+
+      result.push(
+        yield put(
+          actions.removeSubscriptionFromColumn({
+            columnId: column.id,
+            subscriptionId: subscription.id,
+          }),
+        ),
+      )
+
+      result.push(
+        yield put(
+          actions.fetchSubscriptionRequest({
+            params: { ...newSubscription.params, page: 1, perPage: 10 },
+            subscriptionId: newSubscription.id,
+            subscriptionType: newSubscription.type,
+          }),
+        ),
+      )
+
+      return yield all(result)
+    }),
+  )
+}
+
 export function* columnsSagas() {
   yield all([
     yield takeLatest('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest('MOVE_COLUMN', onMoveColumn),
     yield takeLatest('DELETE_COLUMN', onDeleteColumn),
     yield takeLatest('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
+    yield takeLatest('SET_COLUMN_UNREAD_FILTER', onSetUnreadFilter),
   ])
 }
