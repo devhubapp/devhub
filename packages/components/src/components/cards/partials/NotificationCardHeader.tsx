@@ -212,7 +212,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   containerStyle={{ alignSelf: 'flex-start' }}
                   isPrivate={isPrivate}
                   muted={isRead}
-                  outline={isRead}
+                  outline={false}
                   small
                   textProps={{ style: { paddingBottom: 1 } }}
                 >

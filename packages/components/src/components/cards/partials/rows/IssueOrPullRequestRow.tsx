@@ -158,7 +158,7 @@ export const IssueOrPullRequestRow = React.memo(
                           margin: contentPadding / 4,
                         }}
                         muted={isRead}
-                        outline={isRead}
+                        outline={false}
                         small
                       >
                         {label.name}
