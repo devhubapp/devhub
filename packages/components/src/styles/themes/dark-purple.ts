@@ -1,7 +1,7 @@
 import { createThemeFromColor } from './custom'
 
 export const theme = createThemeFromColor(
-  '#262438',
+  '#313142',
   'dark-purple',
   'Dark Purple',
 )
