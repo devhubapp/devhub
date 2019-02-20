@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { RefObject, useRef } from 'react'
 import {
+  Dimensions,
   GestureResponderEvent,
   Image,
   PanResponderGestureState,
+  ScrollView,
   StyleSheet,
   View,
   ViewStyle,
@@ -75,6 +77,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
   const showLabel = !!horizontal
   const showFixedSettingsButton = !horizontal || columnIds.length >= 4
+  const scrollViewRef = useRef<ScrollView>(null)
 
   const itemContainerStyle = {
     width: sidebarSize,
@@ -150,6 +153,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         )}
 
         <ScrollViewWithOverlay
+          ref={scrollViewRef}
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           contentContainerStyle={[
@@ -198,6 +202,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 showLabel={showLabel}
                 small={small}
                 totalColumns={columnIds.length - 1}
+                scrollViewRef={scrollViewRef}
               />
             ))
           )}
@@ -326,6 +331,7 @@ const SidebarColumnItem = React.memo(
     showLabel: boolean
     small: boolean | undefined
     totalColumns: number
+    scrollViewRef: RefObject<ScrollView>
   }) => {
     const {
       closeAllModals,
@@ -336,12 +342,15 @@ const SidebarColumnItem = React.memo(
       showLabel,
       small,
       totalColumns,
+      scrollViewRef,
     } = props
 
     const { column, columnIndex, subscriptions } = useColumn(columnId)
     const theme = useTheme()
 
     if (!(column && subscriptions)) return null
+
+    let currentGestureValue = 0
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
     const label = `${requestTypeIconAndData.title || ''}`.toLowerCase()
@@ -351,6 +360,36 @@ const SidebarColumnItem = React.memo(
     const moveColumn = useReduxAction(actions.moveColumn)
 
     const baseSize = showLabel ? sidebarSize + smallTextSize : sidebarSize
+    const screenSize = Dimensions.get('window')[showLabel ? 'width' : 'height']
+
+    const animateScroll = (data: {
+      scroll: number
+      translateX: number
+      translateY: number
+    }) => {
+      const halfScreenSize = screenSize / 2
+      const translateValue = showLabel ? data.translateX : data.translateY
+
+      if (translateValue > data.scroll + halfScreenSize) {
+        if (scrollViewRef.current && scrollViewRef.current.scrollTo) {
+          scrollViewRef.current.scrollTo(
+            showLabel
+              ? {
+                  x: halfScreenSize,
+                  animated: false,
+                }
+              : {
+                  y: halfScreenSize,
+                  animated: false,
+                },
+          )
+        }
+
+        return data.scroll + halfScreenSize
+      }
+
+      return data.scroll
+    }
 
     const onGrant = (
       e: GestureResponderEvent,
@@ -403,6 +442,7 @@ const SidebarColumnItem = React.memo(
 
     const onEnd = () => {
       if (currentActive.draftIndex !== null) {
+        currentGestureValue = 0
         moveColumn({
           columnId,
           columnIndex: currentActive.draftIndex,
@@ -414,8 +454,13 @@ const SidebarColumnItem = React.memo(
       springProps: { translateX, translateY },
     }) => {
       const translateAxis = showLabel ? { translateX } : { translateY }
+      const position =
+        columnIndex === currentActive.originalIndex
+          ? { position: 'absolute' as 'absolute' }
+          : {}
 
       return {
+        ...position,
         transform: [
           {
             ...translateAxis,
@@ -433,6 +478,7 @@ const SidebarColumnItem = React.memo(
         currentActiveOriginalIndex={currentActive.originalIndex}
         onMove={onMove}
         onGrant={onGrant}
+        animateScroll={animateScroll}
         render={(draggableProps: DraggableChildrenProps) => (
           <ColumnHeaderItem
             panHandlers={draggableProps.panHandlers}

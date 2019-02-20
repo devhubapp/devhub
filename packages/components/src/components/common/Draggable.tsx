@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, RefObject } from 'react'
 import { Spring } from 'react-spring/renderprops'
 
 import {
@@ -27,6 +27,9 @@ export interface DraggableProps {
   currentActiveDraftIndex: number | null
   currentActiveOriginalIndex: number | null
   index: number
+  animateScroll: (
+    data: { scroll: number; translateX: number; translateY: number },
+  ) => number
   onMove: (
     e: GestureResponderEvent,
     gesture: PanResponderGestureState,
@@ -40,7 +43,10 @@ export interface DraggableProps {
 }
 
 export default class Draggable extends React.PureComponent<DraggableProps> {
-  static getDerivedStateFromProps(props: DraggableProps, state: SpringProps) {
+  static getDerivedStateFromProps(
+    props: DraggableProps,
+    state: { scroll: number; translateX: number; translateY: number },
+  ) {
     let translateX =
       props.index === props.currentActiveOriginalIndex ? state.translateX : 0
     let translateY =
@@ -71,8 +77,14 @@ export default class Draggable extends React.PureComponent<DraggableProps> {
       translateY,
     }
   }
+
+  active: boolean
   panResponder: PanResponderInstance
-  state: SpringProps
+  state: {
+    translateX: number
+    translateY: number
+    scroll: number
+  }
 
   constructor(props: DraggableProps) {
     super(props)
@@ -80,11 +92,14 @@ export default class Draggable extends React.PureComponent<DraggableProps> {
     this.state = {
       translateX: 0,
       translateY: 0,
+      scroll: 0,
     }
 
+    this.active = false
     this.panResponder = PanResponder.create({
       onMoveShouldSetPanResponderCapture: this
         .onMoveShouldSetPanResponderCapture,
+      onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: this.onPanResponderGrant,
       onPanResponderMove: this.onPanResponderMove,
       onPanResponderEnd: this.onPanResponderEnd,
@@ -93,11 +108,36 @@ export default class Draggable extends React.PureComponent<DraggableProps> {
     })
   }
 
+  animateScroll = () => {
+    const scroll = this.props.animateScroll({
+      scroll: this.state.scroll,
+      translateX: this.state.translateX,
+      translateY: this.state.translateY,
+    })
+
+    if (scroll !== this.state.scroll) {
+      this.setState({
+        scroll,
+      })
+    }
+
+    if (this.active) {
+      requestAnimationFrame(this.animateScroll)
+    }
+  }
+
   onMoveShouldSetPanResponderCapture = (
     e: GestureResponderEvent,
     gesture: PanResponderGestureState,
   ) => {
-    return gesture.dx !== 0 && gesture.dy !== 0
+    const shouldSet = gesture.dx !== 0 && gesture.dy !== 0
+
+    if (shouldSet) {
+      this.active = true
+      this.animateScroll()
+    }
+
+    return shouldSet
   }
 
   onPanResponderGrant = (
@@ -124,6 +164,8 @@ export default class Draggable extends React.PureComponent<DraggableProps> {
     e: GestureResponderEvent,
     gesture: PanResponderGestureState,
   ) => {
+    this.active = false
+
     if (this.props.onEnd) {
       this.props.onEnd(e, gesture)
     }
