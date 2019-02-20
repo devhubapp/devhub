@@ -89,8 +89,8 @@ function getBrowserWindowOptions() {
 
   if (!menubarWindowState) {
     menubarWindowState = windowStateKeeper({
-      defaultWidth: 340,
-      defaultHeight: 550,
+      defaultWidth: 380,
+      defaultHeight: 600,
       file: 'menubar-window.json',
       fullScreen: false,
     })
