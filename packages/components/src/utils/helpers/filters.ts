@@ -89,6 +89,10 @@ export function notificationColumnHasAnyFilter(
 
   if (baseColumnHasAnyFilter(filters, hasPrivateAccess)) return true
 
+  if (filters.notifications && filters.notifications.participating) {
+    return true
+  }
+
   if (
     filters.notifications &&
     filterRecordHasAnyForcedValue(filters.notifications.reasons)
