@@ -7,8 +7,8 @@
     <color name="brand_background">#49d3b4</color>
     <color name="brand_foreground">#141C26</color>
 
-    <color name="background_color_dark">#242B38</color>
-    <color name="foreground_color_dark">#E9ECF1</color>
+    <color name="background_color_dark">#313142</color>
+    <color name="foreground_color_dark">#F8F8FA</color>
 
     <color name="background_color_light">#FBFBFB</color>
     <color name="foreground_color_light">#3C3C3C</color>
