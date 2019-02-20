@@ -4,5 +4,5 @@ import { animated } from 'react-spring/native'
 export function createSpringAnimatedComponent<T extends ReactType<any>>(
   component: T,
 ) {
-  return animated(component)
+  return (animated(component) as unknown) as T
 }

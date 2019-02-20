@@ -15,6 +15,7 @@ export interface TouchableProps
   analyticsLabel?: string | undefined
   analyticsPayload?: Record<string, string | number | undefined> | undefined
   analyticsValue?: number | undefined
+  children?: React.ReactNode
   selectable?: boolean
 }
 

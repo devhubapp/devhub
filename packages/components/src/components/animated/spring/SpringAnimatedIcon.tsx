@@ -5,8 +5,4 @@ import { createSpringAnimatedComponent } from './helpers'
 export interface SpringAnimatedIconProps
   extends Omit<OcticonIconProps, 'color'> {}
 
-export const SpringAnimatedIcon = createSpringAnimatedComponent(
-  Icon,
-) as React.ForwardRefExoticComponent<
-  SpringAnimatedIconProps & React.RefAttributes<Icon>
->
+export const SpringAnimatedIcon = createSpringAnimatedComponent(Icon)
