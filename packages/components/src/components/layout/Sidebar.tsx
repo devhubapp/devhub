@@ -13,7 +13,6 @@ import {
   getGitHubURLForUser,
   ModalPayload,
 } from '@devhub/core'
-import { useSpring } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
