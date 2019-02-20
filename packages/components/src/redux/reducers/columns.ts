@@ -32,7 +32,7 @@ export const columnsReducer: Reducer<State> = (
   switch (action.type) {
     case REHYDRATE as any:
       return {
-        ...(action.payload && (action.payload as any).auth),
+        ...(action.payload && (action.payload as any).columns),
         ..._.pick(initialState, ['focused']),
       }
 
