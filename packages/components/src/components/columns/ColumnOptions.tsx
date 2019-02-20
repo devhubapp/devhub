@@ -206,6 +206,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     : undefined
                 }
                 title="Subscription reasons"
+                subtitle={
+                  filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
+                }
               >
                 {notificationReasonOptions.map(item => {
                   const checked =
@@ -271,6 +274,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     : undefined
                 }
                 title="Event types"
+                subtitle={
+                  filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
+                }
               >
                 {eventTypeOptions.map(item => {
                   const checked =
@@ -323,10 +329,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               }
               subtitle={
                 savedForLater === true
-                  ? 'Saved only'
+                  ? 'Only'
                   : savedForLater === false
-                  ? 'Saved excluded'
-                  : ''
+                  ? 'Excluded'
+                  : 'Included'
               }
               title="Saved for later"
             >
@@ -379,10 +385,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               }
               subtitle={
                 isReadChecked && !isUnreadChecked
-                  ? 'Read only'
+                  ? 'Read'
                   : !isReadChecked && isUnreadChecked
-                  ? 'Unread only'
-                  : ''
+                  ? 'Unread'
+                  : 'All'
               }
               title="Read status"
             >
@@ -465,10 +471,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               }
               subtitle={
                 isPrivateChecked && !isPublicChecked
-                  ? 'Private only'
+                  ? 'Private'
                   : !isPrivateChecked && isPublicChecked
-                  ? 'Public only'
-                  : undefined
+                  ? 'Public'
+                  : 'All'
               }
               title="Privacy"
             >
