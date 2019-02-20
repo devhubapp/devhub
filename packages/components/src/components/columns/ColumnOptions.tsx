@@ -329,7 +329,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               }
               subtitle={
                 savedForLater === true
-                  ? 'Only'
+                  ? 'Saved only'
                   : savedForLater === false
                   ? 'Excluded'
                   : 'Included'
