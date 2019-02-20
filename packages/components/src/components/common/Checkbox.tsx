@@ -62,8 +62,8 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
     checked = defaultValue,
 
     analyticsLabel,
-    checkedBackgroundColor = colors.brandBackgroundColor,
-    checkedForegroundColor = colors.brandForegroundColor,
+    checkedBackgroundColor = springAnimatedTheme.primaryBackgroundColor,
+    checkedForegroundColor = springAnimatedTheme.primaryForegroundColor,
     circle,
     containerStyle,
     disabled,

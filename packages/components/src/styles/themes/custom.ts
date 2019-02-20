@@ -3,8 +3,12 @@ import { darken, getLuminance, invert, lighten, mix, rgba } from 'polished'
 import { Theme } from '@devhub/core'
 import * as colors from '../colors'
 
-function mixWithBrand(color: string, weight: number = 0.01) {
-  return mix(weight, colors.brandBackgroundColor, color)
+function _mixWithBrand(
+  primaryBackgroundColor: string,
+  color: string,
+  weight: number = 0.01,
+) {
+  return mix(weight, primaryBackgroundColor, color)
 }
 
 function createTheme(theme: Theme): Theme {
@@ -15,7 +19,16 @@ export function createThemeFromColor(
   color: string,
   id: Theme['id'],
   displayName: Theme['displayName'],
+  options: {
+    primaryBackgroundColor?: string
+    primaryForegroundColor?: string
+  } = {},
 ): Theme {
+  const {
+    primaryBackgroundColor = colors.defaultBrandBackgroundColor,
+    primaryForegroundColor = colors.defaultBrandForegroundColor,
+  } = options
+
   const luminance = getLuminance(color)
   const isDark = luminance <= 0.5
 
@@ -25,6 +38,8 @@ export function createThemeFromColor(
   const amount2 = 2 * amount1
   const amount3 = 3 * amount1
   const amount4 = 4 * amount1
+
+  const mixWithBrand = _mixWithBrand.bind(null, primaryBackgroundColor)
 
   const backgroundColorDarker1 = mixWithBrand(darken(amount1, color))
   const backgroundColorDarker2 = mixWithBrand(darken(amount2, color))
@@ -78,9 +93,16 @@ export function createThemeFromColor(
     invert: () => {
       if (invertedTheme) return invertedTheme
 
-      invertedTheme = createThemeFromColor(invert(color), id, displayName)
+      invertedTheme = createThemeFromColor(
+        invert(color),
+        id,
+        displayName,
+        options,
+      )
       return invertedTheme
     },
+    primaryBackgroundColor,
+    primaryForegroundColor,
     backgroundColor,
     backgroundColorDarker1,
     backgroundColorDarker2,

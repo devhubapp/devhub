@@ -61,7 +61,7 @@ export function FAB(props: FABProps) {
           height: fabSize,
           borderRadius: fabSize / 2,
           backgroundColor: useBrandColor
-            ? colors.brandBackgroundColor
+            ? springAnimatedTheme.primaryBackgroundColor
             : springAnimatedTheme.backgroundColorLess1,
           shadowColor: '#000000',
           shadowOffset: {
@@ -106,7 +106,7 @@ export function FAB(props: FABProps) {
                 fontSize: 24,
                 textAlign: 'center',
                 color: useBrandColor
-                  ? colors.brandForegroundColor
+                  ? springAnimatedTheme.primaryForegroundColor
                   : springAnimatedTheme.foregroundColor,
               },
               iconStyle,
@@ -119,7 +119,7 @@ export function FAB(props: FABProps) {
               lineHeight: 14,
               fontWeight: '500',
               color: useBrandColor
-                ? colors.brandForegroundColor
+                ? springAnimatedTheme.primaryForegroundColor
                 : springAnimatedTheme.foregroundColor,
             }}
           >

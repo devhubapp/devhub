@@ -184,7 +184,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               style={{
                 fontSize: 12,
                 color: hasChanged
-                  ? colors.brandBackgroundColor
+                  ? springAnimatedTheme.primaryBackgroundColor
                   : springAnimatedTheme.foregroundColorMuted50,
               }}
             >

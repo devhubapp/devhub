@@ -3,6 +3,8 @@ import _ from 'lodash'
 import { Theme, ThemeColors } from '@devhub/core'
 
 export const themeColorFields: Array<keyof ThemeColors> = [
+  'primaryBackgroundColor',
+  'primaryForegroundColor',
   'backgroundColor',
   'backgroundColorDarker1',
   'backgroundColorDarker2',

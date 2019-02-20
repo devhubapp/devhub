@@ -6,7 +6,7 @@ import {
 
 import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
-import * as colors from '../../styles/colors'
+import { useTheme } from '../context/ThemeContext'
 
 export interface SwitchProps extends SwitchPropsOriginal {
   analyticsLabel: string | undefined
@@ -20,6 +20,8 @@ export function Switch({
   onValueChange: _onValueChange,
   ...props
 }: SwitchProps) {
+  const theme = useTheme()
+
   const onValueChange: typeof _onValueChange =
     analyticsLabel && _onValueChange
       ? e => {
@@ -38,11 +40,11 @@ export function Switch({
       onValueChange={onValueChange}
       {...Platform.select({
         default: {
-          trackColor: { false: '', true: colors.brandBackgroundColor },
+          trackColor: { false: '', true: theme.primaryBackgroundColor },
         },
         web: {
           activeThumbColor: '#FFFFFF',
-          onTintColor: colors.brandBackgroundColor,
+          onTintColor: theme.primaryBackgroundColor,
         },
       })}
       {...props}

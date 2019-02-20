@@ -123,7 +123,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           : rgba(theme.backgroundColor, 0),
       foregroundColor:
         isHovered && enableForegroundHover
-          ? colors.brandBackgroundColor
+          ? theme.primaryBackgroundColor
           : theme.foregroundColor,
       mutedForegroundColor: theme.foregroundColorMuted50,
     }

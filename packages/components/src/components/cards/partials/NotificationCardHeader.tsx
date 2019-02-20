@@ -251,7 +251,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             iconName="bookmark"
             iconStyle={[
               isSaved && {
-                color: colors.brandBackgroundColor,
+                color: springAnimatedTheme.primaryBackgroundColor,
               },
             ]}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}

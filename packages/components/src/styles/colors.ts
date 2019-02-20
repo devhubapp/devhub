@@ -15,5 +15,5 @@ export const star = '#edb800'
 export const teal = '#49d3b4'
 export const yellow = '#FFC107'
 
-export const brandBackgroundColor = lightBlue
-export const brandForegroundColor = '#141c26'
+export const defaultBrandBackgroundColor = '#49d3b4'
+export const defaultBrandForegroundColor = '#141c26'

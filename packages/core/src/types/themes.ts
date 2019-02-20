@@ -16,6 +16,8 @@ export interface ThemePair {
 }
 
 export interface ThemeColors {
+  primaryBackgroundColor: string
+  primaryForegroundColor: string
   backgroundColor: string
   backgroundColorDarker1: string
   backgroundColorDarker2: string
