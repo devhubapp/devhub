@@ -46,7 +46,6 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
-- [ ] **Keyboard shortcuts**: Full support for keyboard shortcuts and other accessibility improvements;
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop ([#42](https://github.com/devhubapp/devhub/issues/42))
 - [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks; contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com) to show your interest.
 
