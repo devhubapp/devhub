@@ -192,6 +192,7 @@ const migrations = {
       draft.github = draft.github || {}
       draft.github.api = draft.github.api || {}
       draft.github.api.headers = githubAPIHeaders
+      delete (draft as any).api
 
       const auth = (state.auth || {}) as {
         appToken: string | null
