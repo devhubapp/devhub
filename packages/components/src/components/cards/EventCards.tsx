@@ -12,7 +12,7 @@ import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
-import { ErrorBoundary } from '../../libs/bugsnag'
+import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
@@ -238,6 +238,14 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       extraData={loadState}
       initialNumToRender={10}
       keyExtractor={keyExtractor}
+      onScrollToIndexFailed={e => {
+        console.error(e)
+        bugsnag.notify({
+          name: 'ScrollToIndexFailed',
+          message: 'Failed to scroll to index',
+          ...e,
+        })
+      }}
       onViewableItemsChanged={handleViewableItemsChanged}
       removeClippedSubviews
       renderItem={renderItem}
