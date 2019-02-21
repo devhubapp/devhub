@@ -89,7 +89,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   )
 
   useKeyPressCallback(
-    'm',
+    'r',
     useCallback(
       () => {
         if (!selectedItem) return

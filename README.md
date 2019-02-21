@@ -86,8 +86,8 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | `0`       | Go to the last column            | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Arrow`, `j`, `k` | Move down/up inside a column     | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
 | `Arrow`, `h`, `l` | Move left/right between columns  | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
+| `r`       | Mark item as read/unread         | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `s`       | Toggle save item for later       | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `m`       | Mark item as read/unread         | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Alt` + `Arrow` | Move currently selected column | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Tab`     | Navigate between buttons and links   | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `?`       | Show keyboard shortcuts          | ✅             | [@brunolemos](https://github.com/brunolemos) |

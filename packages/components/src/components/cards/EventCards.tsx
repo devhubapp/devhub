@@ -90,7 +90,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   )
 
   useKeyPressCallback(
-    'm',
+    'r',
     useCallback(
       () => {
         if (!selectedItem) return
