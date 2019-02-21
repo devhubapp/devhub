@@ -84,6 +84,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
+  const columnIds = useReduxState(selectors.columnIdsSelector)
   const hasPrivateAccess = useReduxState(
     selectors.githubHasPrivateAccessSelector,
   )
@@ -528,6 +529,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
       >
         <ColumnHeaderItem
           analyticsLabel="move_column_left"
+          disabled={columnIndex === 0}
           enableForegroundHover
           iconName="chevron-left"
           onPress={() =>
@@ -537,8 +539,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             })
           }
         />
+
         <ColumnHeaderItem
           analyticsLabel="move_column_right"
+          disabled={columnIndex === columnIds.length - 1}
           enableForegroundHover
           iconName="chevron-right"
           onPress={() =>
