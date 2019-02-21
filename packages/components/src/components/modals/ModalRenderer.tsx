@@ -71,11 +71,11 @@ export function ModalRenderer(props: ModalRendererProps) {
   const closeAllModals = useReduxAction(actions.closeAllModals)
 
   const immediate =
-    (sizename === '1-small' &&
-      (currentOpenedModal && currentOpenedModal.name === 'SETTINGS')) ||
-    (!currentOpenedModal &&
-      previouslyOpenedModal &&
-      previouslyOpenedModal.name === 'SETTINGS')
+    sizename === '1-small' &&
+    ((currentOpenedModal && currentOpenedModal.name === 'SETTINGS') ||
+      (!currentOpenedModal &&
+        previouslyOpenedModal &&
+        previouslyOpenedModal.name === 'SETTINGS'))
       ? true
       : false
 
