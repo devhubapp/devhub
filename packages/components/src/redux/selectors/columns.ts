@@ -5,9 +5,6 @@ import { createSubscriptionSelector } from './subscriptions'
 
 const s = (state: RootState) => state.columns || {}
 
-export const selectedColumnSelector = (state: RootState) =>
-  s(state).selectedColumnId
-
 export const createColumnSelector = () =>
   createSelector(
     (state: RootState) => s(state).byId,

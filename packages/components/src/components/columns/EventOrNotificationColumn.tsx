@@ -11,6 +11,7 @@ import {
 } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
@@ -115,8 +116,18 @@ export const EventOrNotificationColumn = React.memo(
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
+    function focusColumn() {
+      emitter.emit('FOCUS_ON_COLUMN', {
+        columnId: column.id,
+        columnIndex,
+        highlight: false,
+        scrollTo: false,
+      })
+    }
+
     const toggleOptions = () => {
       setShowColumnOptions(v => !v)
+      focusColumn()
     }
 
     const hasOneUnreadItem = (filteredItems as any[]).some(
@@ -194,6 +205,8 @@ export const EventOrNotificationColumn = React.memo(
                 itemIds: visibleItemIds,
                 unread,
               })
+
+              focusColumn()
             }}
             style={{
               paddingHorizontal: contentPadding / 3,
@@ -206,12 +219,14 @@ export const EventOrNotificationColumn = React.memo(
             enableForegroundHover
             fixedIconSize
             iconName="check"
-            onPress={() =>
+            onPress={() => {
               setColumnClearedAtFilter({
                 columnId: column.id,
                 clearedAt: new Date().toISOString(),
               })
-            }
+
+              focusColumn()
+            }}
             style={{
               paddingHorizontal: contentPadding / 3,
             }}

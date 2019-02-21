@@ -4,6 +4,7 @@ import { Dimensions, StyleSheet, View } from 'react-native'
 
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
+import { useFocusedColumn } from '../components/context/ColumnFocusContext'
 import {
   APP_LAYOUT_BREAKPOINTS,
   useAppLayout,
@@ -39,18 +40,17 @@ export const MainScreen = React.memo(() => {
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
+  const focusedColumnId = useFocusedColumn()
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const moveColumn = useReduxAction(actions.moveColumn)
   const popModal = useReduxAction(actions.popModal)
   const pushModal = useReduxAction(actions.pushModal)
   const replaceModal = useReduxAction(actions.replaceModal)
-  const selectColumn = useReduxAction(actions.selectColumn)
   const syncDown = useReduxAction(actions.syncDown)
 
-  const selectedColumnIndex = selectedColumnId
-    ? columnIds.findIndex(id => id === selectedColumnId)
+  const focusedColumnIndex = focusedColumnId
+    ? columnIds.findIndex(id => id === focusedColumnId)
     : -1
 
   const debounceSyncDown = useMemo(
@@ -110,18 +110,14 @@ export const MainScreen = React.memo(() => {
 
       const fixedColumnIndex = Math.max(
         0,
-        Math.min(selectedColumnIndex, columnIds.length - 1),
+        Math.min(focusedColumnIndex, columnIds.length - 1),
       )
-
-      if (fixedColumnIndex === 0 && fixedColumnIndex !== selectedColumnIndex) {
-        selectColumn({ columnId: columnIds[fixedColumnIndex] })
-      }
 
       emitter.emit('SCROLL_DOWN_COLUMN', {
         columnId: columnIds[fixedColumnIndex],
       })
     },
-    [currentOpenedModal, selectedColumnIndex, columnIds],
+    [currentOpenedModal, focusedColumnIndex, columnIds],
   )
 
   useKeyPressCallback('ArrowDown', scrollDown)
@@ -133,18 +129,14 @@ export const MainScreen = React.memo(() => {
 
       const fixedColumnIndex = Math.max(
         0,
-        Math.min(selectedColumnIndex, columnIds.length - 1),
+        Math.min(focusedColumnIndex, columnIds.length - 1),
       )
-
-      if (fixedColumnIndex === 0 && fixedColumnIndex !== selectedColumnIndex) {
-        selectColumn({ columnId: columnIds[fixedColumnIndex] })
-      }
 
       emitter.emit('SCROLL_UP_COLUMN', {
         columnId: columnIds[fixedColumnIndex],
       })
     },
-    [currentOpenedModal, selectedColumnIndex, columnIds],
+    [currentOpenedModal, focusedColumnIndex, columnIds],
   )
 
   useKeyPressCallback('ArrowUp', scrollUp)
@@ -156,10 +148,8 @@ export const MainScreen = React.memo(() => {
 
       const previousColumnIndex = Math.max(
         0,
-        Math.min(selectedColumnIndex - 1, columnIds.length - 1),
+        Math.min(focusedColumnIndex - 1, columnIds.length - 1),
       )
-
-      selectColumn({ columnId: columnIds[previousColumnIndex] })
 
       emitter.emit('FOCUS_ON_COLUMN', {
         animated: true,
@@ -167,9 +157,10 @@ export const MainScreen = React.memo(() => {
         columnIndex: previousColumnIndex,
         focusOnVisibleItem: true,
         highlight: false,
+        scrollTo: true,
       })
     },
-    [currentOpenedModal, selectedColumnIndex, columnIds],
+    [currentOpenedModal, focusedColumnIndex, columnIds],
   )
 
   useKeyPressCallback('ArrowLeft', scrollLeft)
@@ -181,10 +172,8 @@ export const MainScreen = React.memo(() => {
 
       const nextColumnIndex = Math.max(
         0,
-        Math.min(selectedColumnIndex + 1, columnIds.length - 1),
+        Math.min(focusedColumnIndex + 1, columnIds.length - 1),
       )
-
-      selectColumn({ columnId: columnIds[nextColumnIndex] })
 
       emitter.emit('FOCUS_ON_COLUMN', {
         animated: true,
@@ -192,9 +181,10 @@ export const MainScreen = React.memo(() => {
         columnIndex: nextColumnIndex,
         focusOnVisibleItem: true,
         highlight: false,
+        scrollTo: true,
       })
     },
-    [currentOpenedModal, selectedColumnIndex, columnIds],
+    [currentOpenedModal, focusedColumnIndex, columnIds],
   )
 
   useKeyPressCallback('ArrowRight', scrollRight)
@@ -211,8 +201,8 @@ export const MainScreen = React.memo(() => {
           columnId: columnIds[columnIndex],
           columnIndex,
           highlight: true,
+          scrollTo: true,
         })
-        selectColumn({ columnId: columnIds[columnIndex] })
         return
       }
 
@@ -223,8 +213,8 @@ export const MainScreen = React.memo(() => {
           columnId: columnIds[columnIndex],
           columnIndex,
           highlight: true,
+          scrollTo: true,
         })
-        selectColumn({ columnId: columnIds[columnIndex] })
         return
       }
     },
@@ -247,14 +237,14 @@ export const MainScreen = React.memo(() => {
     useCallback(
       () => {
         if (currentOpenedModal) return
-        if (!selectedColumnId) return
+        if (!focusedColumnId) return
 
         moveColumn({
-          columnId: selectedColumnId,
-          columnIndex: selectedColumnIndex - 1,
+          columnId: focusedColumnId,
+          columnIndex: focusedColumnIndex - 1,
         })
       },
-      [currentOpenedModal, columnIds, selectedColumnId, selectedColumnIndex],
+      [currentOpenedModal, columnIds, focusedColumnId, focusedColumnIndex],
     ),
   )
 
@@ -263,14 +253,14 @@ export const MainScreen = React.memo(() => {
     useCallback(
       () => {
         if (currentOpenedModal) return
-        if (!selectedColumnId) return
+        if (!focusedColumnId) return
 
         moveColumn({
-          columnId: selectedColumnId,
-          columnIndex: selectedColumnIndex + 1,
+          columnId: focusedColumnId,
+          columnIndex: focusedColumnIndex + 1,
         })
       },
-      [currentOpenedModal, columnIds, selectedColumnId, selectedColumnIndex],
+      [currentOpenedModal, columnIds, focusedColumnId, focusedColumnIndex],
     ),
   )
 

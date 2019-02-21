@@ -10,6 +10,7 @@ import { enableNetworkInterceptors } from '../network-interceptor'
 import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
+import { ColumnFocusProvider } from './context/ColumnFocusContext'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DimensionsProvider } from './context/DimensionsContext'
 import { AppLayoutProvider } from './context/LayoutContext'
@@ -30,14 +31,16 @@ export function App() {
           <PersistGate loading={null} persistor={persistor}>
             <DimensionsProvider>
               <AppLayoutProvider>
-                <ColumnWidthProvider>
-                  <SpringAnimatedThemeProvider>
-                    <>
-                      <AppGlobalStyles />
-                      <AppNavigator />
-                    </>
-                  </SpringAnimatedThemeProvider>
-                </ColumnWidthProvider>
+                <ColumnFocusProvider>
+                  <ColumnWidthProvider>
+                    <SpringAnimatedThemeProvider>
+                      <>
+                        <AppGlobalStyles />
+                        <AppNavigator />
+                      </>
+                    </SpringAnimatedThemeProvider>
+                  </ColumnWidthProvider>
+                </ColumnFocusProvider>
               </AppLayoutProvider>
             </DimensionsProvider>
           </PersistGate>

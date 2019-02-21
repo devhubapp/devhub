@@ -359,6 +359,7 @@ const SidebarColumnItem = React.memo(
             columnId: column.id,
             columnIndex,
             highlight: !small,
+            scrollTo: true,
           })
         }}
         showLabel={showLabel}

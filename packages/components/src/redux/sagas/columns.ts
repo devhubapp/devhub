@@ -96,6 +96,7 @@ function* onAddColumn(
     columnId,
     columnIndex,
     highlight: true,
+    scrollTo: true,
   })
 }
 
@@ -116,6 +117,7 @@ function* onMoveColumn(
     columnId: action.payload.columnId,
     columnIndex,
     highlight: true,
+    scrollTo: true,
   })
 }
 
@@ -134,6 +136,7 @@ function* onDeleteColumn(
       columnId: ids[ids.length - 1],
       columnIndex: ids.length - 1,
       highlight: false,
+      scrollTo: true,
     })
   }
 }

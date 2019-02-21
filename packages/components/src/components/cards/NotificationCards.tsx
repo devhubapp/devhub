@@ -18,6 +18,7 @@ import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
+import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -63,8 +64,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     getVisibleItemIndex,
     items: notifications,
   })
-  const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
-  const _hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+  const focusedColumnId = useFocusedColumn()
+  const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
   const selectedItem =
     _hasSelectedItem &&
     notifications.find(notification => notification.id === selectedItemId)
@@ -173,7 +174,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           notification={notification}
           repoIsKnown={props.repoIsKnown}
           isSelected={
-            column.id === selectedColumnId && notification.id === selectedItemId
+            column.id === focusedColumnId && notification.id === selectedItemId
           }
         />
       )
@@ -185,7 +186,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           notification={notification}
           repoIsKnown={props.repoIsKnown}
           isSelected={
-            column.id === selectedColumnId && notification.id === selectedItemId
+            column.id === focusedColumnId && notification.id === selectedItemId
           }
         />
       </ErrorBoundary>

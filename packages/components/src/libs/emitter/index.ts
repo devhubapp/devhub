@@ -10,6 +10,7 @@ export interface EmitterTypes {
     columnIndex: number
     focusOnVisibleItem?: boolean
     highlight?: boolean
+    scrollTo?: boolean
   }
   SCROLL_DOWN_COLUMN: { columnId: string }
   SCROLL_UP_COLUMN: { columnId: string }

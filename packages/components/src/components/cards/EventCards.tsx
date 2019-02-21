@@ -18,6 +18,7 @@ import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
+import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard } from './EventCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -63,8 +64,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     getVisibleItemIndex,
     items: events,
   })
-  const selectedColumnId = useReduxState(selectors.selectedColumnSelector)
-  const _hasSelectedItem = !!selectedItemId && column.id === selectedColumnId
+  const focusedColumnId = useFocusedColumn()
+  const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
   const selectedItem =
     _hasSelectedItem && events.find(event => event.id === selectedItemId)
 
@@ -171,7 +172,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           event={event}
           repoIsKnown={props.repoIsKnown}
           isSelected={
-            column.id === selectedColumnId && event.id === selectedItemId
+            column.id === focusedColumnId && event.id === selectedItemId
           }
         />
       )
@@ -183,7 +184,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           event={event}
           repoIsKnown={props.repoIsKnown}
           isSelected={
-            column.id === selectedColumnId && event.id === selectedItemId
+            column.id === focusedColumnId && event.id === selectedItemId
           }
         />
       </ErrorBoundary>

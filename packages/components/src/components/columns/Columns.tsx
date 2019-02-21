@@ -110,12 +110,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
 
   useEmitter(
     'FOCUS_ON_COLUMN',
-    (payload: {
-      columnId: string
-      columnIndex: number
-      animated?: boolean
-      highlight?: boolean
-    }) => {
+    payload => {
       if (!flatListRef.current) return
       if (!(columnIds && columnIds.length)) return
 
@@ -132,11 +127,13 @@ export const Columns = React.memo((props: ColumnsProps) => {
           }, 1000)
         }
 
-        flatListRef.current.scrollToIndex({
-          animated: payload.animated,
-          index: payload.columnIndex,
-          viewPosition: 0.5,
-        })
+        if (payload.scrollTo) {
+          flatListRef.current.scrollToIndex({
+            animated: payload.animated,
+            index: payload.columnIndex,
+            viewPosition: 0.5,
+          })
+        }
       }
     },
     [flatListRef, columnIds],
