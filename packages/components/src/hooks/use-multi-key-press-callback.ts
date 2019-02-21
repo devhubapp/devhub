@@ -11,6 +11,18 @@ export default function useMultiKeyPressCallback(
     callback: (() => undefined) as () => void,
     preventDefault: true,
   })
+  const timeoutRef = useRef<any>(0)
+
+  // clear all keys after some seconds without pressing any key
+  // this is a workaround to fix the keyup event not being called sometimes
+  // which would cause a key to be stuck at the pressedKeys cache
+  // and fail other combo attempts
+  function pingTimeout() {
+    clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => {
+      pressedKeysRef.current.clear()
+    }, 5000)
+  }
 
   useEffect(
     () => {
@@ -30,10 +42,14 @@ export default function useMultiKeyPressCallback(
       e.preventDefault()
       params.current.callback()
     }
+
+    pingTimeout()
   }, [])
 
   const upHandler = useCallback((e: KeyboardEvent) => {
     pressedKeysRef.current.delete(e.key)
+
+    pingTimeout()
   }, [])
 
   useEffect(
