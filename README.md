@@ -36,6 +36,7 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [x] **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub doesn't show on your feed, like issue comments and pushed commits;
 - [x] **Dashboard viewer**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
+- [x] **Keyboard shortcuts**: Do anything using only the keyboard ([see shortcuts below](#keyboard-shortcuts));
 - [x] **Theme support**: Choose between 6 light or dark themes;
 - [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech stack, ...
 
