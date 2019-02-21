@@ -97,8 +97,21 @@ export const MainScreen = React.memo(() => {
     'n',
     useCallback(
       () => {
-        if (currentOpenedModal) return
+        if (!(!currentOpenedModal || currentOpenedModal.name === 'SETTINGS'))
+          return
         replaceModal({ name: 'ADD_COLUMN' })
+      },
+      [currentOpenedModal],
+    ),
+  )
+
+  useKeyPressCallback(
+    'p',
+    useCallback(
+      () => {
+        if (!(!currentOpenedModal || currentOpenedModal.name === 'ADD_COLUMN'))
+          return
+        replaceModal({ name: 'SETTINGS' })
       },
       [currentOpenedModal],
     ),

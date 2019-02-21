@@ -81,6 +81,7 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 | `Esc`     | Exit full screen mode on desktop | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Esc`     | Unselect currently selected item | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `n`       | Add a new column                 | ✅             | [@brunolemos](https://github.com/brunolemos) |
+| `p`       | Open preferences                 | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `1`...`9` | Go to the `nth` column           | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `0`       | Go to the last column            | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Arrow`, `j`, `k` | Move down/up inside a column     | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |

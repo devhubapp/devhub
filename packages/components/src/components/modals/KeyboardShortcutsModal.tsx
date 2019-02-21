@@ -20,6 +20,7 @@ const keyboardShortcuts = [
   { keys: ['Esc'], description: 'Exit full screen mode on desktop' },
   { keys: ['Esc'], description: 'Unselect currently selected item' },
   { keys: ['n'], description: 'Add a new column' },
+  { keys: ['p'], description: 'Open preferences' },
   { keys: ['1...9'], description: 'Go to the nth column' },
   { keys: ['0'], description: 'Go to the last column' },
   { keys: ['↑', '↓', 'j', 'k'], description: 'Move up/down inside a column' },
