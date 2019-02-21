@@ -6,6 +6,7 @@ import { constants, User } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
 import { bugsnag } from '../../libs/bugsnag'
 import * as github from '../../libs/github'
+import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
@@ -153,6 +154,8 @@ function onLoginSuccess(
 
   analytics.setUser(user._id)
   bugsnag.setUser(user._id, user.github.user.name || user.github.user.login)
+
+  clearOAuthQueryParams()
 }
 
 function* onLoginFailure(
@@ -176,6 +179,7 @@ function* onLoginFailure(
 
 function onLogout() {
   github.authenticate('')
+  clearOAuthQueryParams()
 }
 
 export function* authSagas() {

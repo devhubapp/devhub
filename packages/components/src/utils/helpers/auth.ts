@@ -31,6 +31,19 @@ export function clearQueryStringFromURL(fields: string[]) {
   )
 }
 
+export function clearOAuthQueryParams() {
+  clearQueryStringFromURL([
+    'app_token',
+    'code',
+    'github_app_type',
+    'github_scope',
+    'github_token',
+    'github_token_created_at',
+    'github_token_type',
+    'oauth',
+  ])
+}
+
 export function tryParseOAuthParams(
   params: OAuthResponseData,
 ): { appToken?: string; tokenDetails?: GitHubTokenDetails } {
@@ -52,16 +65,7 @@ export function tryParseOAuthParams(
       tokenCreatedAt: githubTokenCreatedAt,
     }
 
-    clearQueryStringFromURL([
-      'app_token',
-      'code',
-      'github_app_type',
-      'github_scope',
-      'github_token',
-      'github_token_created_at',
-      'github_token_type',
-      'oauth',
-    ])
+    clearOAuthQueryParams()
 
     return { appToken, tokenDetails }
   } catch (error) {
