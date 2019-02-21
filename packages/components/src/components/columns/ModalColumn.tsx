@@ -49,7 +49,10 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
       if (node && node.focus)
         setTimeout(() => {
           const currentFocusedNodeTag =
-            document && document.activeElement && document.activeElement.tagName
+            typeof document !== 'undefined' &&
+            document &&
+            document.activeElement &&
+            document.activeElement.tagName
           if (
             currentFocusedNodeTag &&
             currentFocusedNodeTag.toLowerCase() === 'input'

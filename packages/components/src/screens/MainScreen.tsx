@@ -85,6 +85,14 @@ export const MainScreen = React.memo(() => {
     'Escape',
     useCallback(
       () => {
+        if (
+          typeof document !== 'undefined' &&
+          document &&
+          document.activeElement &&
+          (document.activeElement as any).blur
+        )
+          (document.activeElement as any).blur()
+
         if (currentOpenedModal) popModal()
         else if (Platform.isElectron && window.ipc)
           window.ipc.send('exit-full-screen')
