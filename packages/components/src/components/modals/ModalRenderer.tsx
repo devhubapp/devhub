@@ -161,6 +161,7 @@ export function ModalRenderer(props: ModalRendererProps) {
               ...Platform.select({ web: { cursor: 'default' } as any }),
             }}
             onPress={() => closeAllModals()}
+            tabIndex={-1}
           />
         </SpringAnimatedView>
       )}

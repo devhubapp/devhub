@@ -259,8 +259,8 @@ export const AddColumnDetailsModal = React.memo(
 
     return (
       <ModalColumn
-        columnId="add-column-details-modal"
         iconName="plus"
+        name="ADD_COLUMN_DETAILS"
         showBackButton={showBackButton}
         title="Add Column"
       >

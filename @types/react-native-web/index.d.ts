@@ -23,5 +23,6 @@ namespace JSX {
       | 'region' // section
 
     className?: string
+    tabIndex?: number
   }
 }

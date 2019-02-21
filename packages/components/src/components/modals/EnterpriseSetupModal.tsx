@@ -31,8 +31,8 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
 
   return (
     <ModalColumn
-      columnId="enterprise-setup-modal"
       iconName="plus"
+      name="SETUP_GITHUB_ENTERPRISE"
       showBackButton={showBackButton}
       title="GitHub Enterprise"
     >

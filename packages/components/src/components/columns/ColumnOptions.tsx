@@ -528,6 +528,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         }}
       >
         <ColumnHeaderItem
+          key="column-options-button-move-column-left"
           analyticsLabel="move_column_left"
           disabled={columnIndex === 0}
           enableForegroundHover
@@ -541,6 +542,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         />
 
         <ColumnHeaderItem
+          key="column-options-button-move-column-right"
           analyticsLabel="move_column_right"
           disabled={columnIndex === columnIds.length - 1}
           enableForegroundHover
@@ -556,6 +558,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         <Spacer flex={1} />
 
         <ColumnHeaderItem
+          key="column-options-button-toggle-collapse-filters"
           analyticsLabel={allIsOpen ? 'collapse_filters' : 'expand_filters'}
           enableForegroundHover
           iconName={allIsOpen ? 'fold' : 'unfold'}
@@ -574,6 +577,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         />
 
         <ColumnHeaderItem
+          key="column-options-button-remove-column"
           analyticsLabel="remove_column"
           enableForegroundHover
           iconName="trashcan"

@@ -11,10 +11,8 @@ import {
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
-import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
-import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
@@ -163,7 +161,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   function renderItem({
     item: notification,
-    index,
   }: {
     item: EnhancedGitHubNotification
     index: number

@@ -12,6 +12,10 @@
   outline-color: #49d3b4;
 }
 
+*[tabIndex^="-1"]:focus {
+  outline: none;
+}
+
 html, body, #root, #root > div {
   width: 100%;
   height: 100%;

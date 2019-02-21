@@ -65,6 +65,7 @@ export const ColumnOptionsRenderer = React.memo(
                 ...Platform.select({ web: { cursor: 'default' } as any }),
               }}
               onPress={() => close()}
+              tabIndex={-1}
             />
           </SpringAnimatedView>
         )}

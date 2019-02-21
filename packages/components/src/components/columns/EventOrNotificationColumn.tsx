@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
   Column as ColumnType,
@@ -19,7 +19,6 @@ import {
   activityColumnHasAnyFilter,
   notificationColumnHasAnyFilter,
 } from '../../utils/helpers/filters'
-import { AccordionView } from '../common/AccordionView'
 import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
@@ -151,6 +150,7 @@ export const EventOrNotificationColumn = React.memo(
           <Spacer width={contentPadding / 2} />
 
           <ColumnHeaderItem
+            key="column-options-button-toggle-mark-as-read"
             analyticsLabel={
               !hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'
             }
@@ -214,6 +214,7 @@ export const EventOrNotificationColumn = React.memo(
           />
 
           <ColumnHeaderItem
+            key="column-options-button-clear-column"
             analyticsLabel="clear_column"
             disabled={!clearableItems.length}
             enableForegroundHover
@@ -233,6 +234,7 @@ export const EventOrNotificationColumn = React.memo(
           />
 
           <ColumnHeaderItem
+            key="column-options-button-toggle-column-options"
             analyticsAction={showColumnOptions ? 'hide' : 'show'}
             analyticsLabel="column_options"
             enableForegroundHover

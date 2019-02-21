@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 import {
   EnhancedGitHubNotification,
@@ -48,9 +48,17 @@ const styles = StyleSheet.create({
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const { notification, onlyOneRepository, isSelected } = props
 
+  const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
   const hasPrivateAccess = useReduxState(
     selectors.githubHasPrivateAccessSelector,
+  )
+
+  useEffect(
+    () => {
+      if (isSelected && itemRef.current) itemRef.current.focus()
+    },
+    [isSelected],
   )
 
   if (!notification) return null
@@ -173,16 +181,19 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const smallLeftColumn = false
 
-  const getBackgroundColor = () => {
-    if (isSelected) return springAnimatedTheme.backgroundColorLess2
-    if (isRead) return springAnimatedTheme.backgroundColorDarker1
-    return springAnimatedTheme.backgroundColor
-  }
-
   return (
     <SpringAnimatedView
       key={`notification-card-${id}-inner`}
-      style={[styles.container, { backgroundColor: getBackgroundColor() }]}
+      ref={itemRef}
+      style={[
+        styles.container,
+        {
+          backgroundColor:
+            (isSelected && springAnimatedTheme.backgroundColorLess2) ||
+            (isRead && springAnimatedTheme.backgroundColorDarker1) ||
+            springAnimatedTheme.backgroundColor,
+        },
+      ]}
     >
       <NotificationCardHeader
         key={`notification-card-header-${id}`}

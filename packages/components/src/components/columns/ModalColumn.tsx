@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
-import { Omit } from '@devhub/core'
+import { ModalPayload, Omit } from '@devhub/core'
+import { NativeComponent, Platform, View } from 'react-native'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
@@ -11,20 +14,17 @@ import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
 export interface ModalColumnProps
   extends Omit<ColumnHeaderItemProps, 'analyticsAction' | 'analyticsLabel'> {
-  columnId: string
+  name: ModalPayload['name']
   hideCloseButton?: boolean
   right?: React.ReactNode
   showBackButton: boolean
 }
 
 export const ModalColumn = React.memo((props: ModalColumnProps) => {
-  const popModal = useReduxAction(actions.popModal)
-  const closeAllModals = useReduxAction(actions.closeAllModals)
-
   const {
     children,
-    columnId,
     hideCloseButton,
+    name,
     right,
     showBackButton,
     subtitle,
@@ -32,8 +32,38 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
     ...otherProps
   } = props
 
+  const columnRef = useRef<NativeComponent>(null)
+  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+  const closeAllModals = useReduxAction(actions.closeAllModals)
+  const popModal = useReduxAction(actions.popModal)
+
+  useEffect(
+    () => {
+      if (!(currentOpenedModal && currentOpenedModal.name === name)) return
+      if (!columnRef.current) return
+
+      const node = (columnRef.current as any).getNode
+        ? (columnRef.current as any).getNode()
+        : columnRef.current
+
+      if (node && node.focus)
+        setTimeout(() => {
+          const currentFocusedNodeTag =
+            document && document.activeElement && document.activeElement.tagName
+          if (
+            currentFocusedNodeTag &&
+            currentFocusedNodeTag.toLowerCase() === 'input'
+          )
+            return
+
+          node.focus()
+        }, 500)
+    },
+    [currentOpenedModal && currentOpenedModal.name === name],
+  )
+
   return (
-    <Column columnId={columnId} style={{ zIndex: 900 }}>
+    <Column ref={columnRef} columnId={name} style={{ zIndex: 900 }}>
       <ColumnHeader>
         {!!showBackButton && (
           <ColumnHeaderItem

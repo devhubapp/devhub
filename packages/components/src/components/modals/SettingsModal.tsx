@@ -29,9 +29,9 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
   return (
     <ModalColumn
-      columnId="preferences-modal"
       hideCloseButton={sizename === '1-small'}
       iconName="gear"
+      name="SETTINGS"
       right={
         sizename === '1-small' && username ? (
           <Avatar

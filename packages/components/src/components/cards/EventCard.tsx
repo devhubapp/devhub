@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import {
@@ -59,7 +59,15 @@ const styles = StyleSheet.create({
 export const EventCard = React.memo((props: EventCardProps) => {
   const { event, repoIsKnown, isSelected } = props
 
+  const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
+
+  useEffect(
+    () => {
+      if (isSelected && itemRef.current) itemRef.current.focus()
+    },
+    [isSelected],
+  )
 
   if (!event) return null
 
@@ -176,16 +184,19 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const smallLeftColumn = false
 
-  const getBackgroundColor = () => {
-    if (isSelected) return springAnimatedTheme.backgroundColorLess2
-    if (isRead) return springAnimatedTheme.backgroundColorDarker1
-    return springAnimatedTheme.backgroundColor
-  }
-
   return (
     <SpringAnimatedView
       key={`event-card-${id}-inner`}
-      style={[styles.container, { backgroundColor: getBackgroundColor() }]}
+      ref={itemRef}
+      style={[
+        styles.container,
+        {
+          backgroundColor:
+            (isSelected && springAnimatedTheme.backgroundColorLess2) ||
+            (isRead && springAnimatedTheme.backgroundColorDarker1) ||
+            springAnimatedTheme.backgroundColor,
+        },
+      ]}
     >
       <EventCardHeader
         key={`event-card-header-${id}`}

@@ -41,8 +41,8 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
 
   return (
     <ModalColumn
-      columnId="keyboard-shortcuts-modal"
       iconName="keyboard"
+      name="KEYBOARD_SHORTCUTS"
       showBackButton={showBackButton}
       title="Keyboard Shortcuts"
     >
