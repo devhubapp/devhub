@@ -70,6 +70,15 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
 
+  const immediate =
+    (sizename === '1-small' &&
+      (currentOpenedModal && currentOpenedModal.name === 'SETTINGS')) ||
+    (!currentOpenedModal &&
+      previouslyOpenedModal &&
+      previouslyOpenedModal.name === 'SETTINGS')
+      ? true
+      : false
+
   const size = columnWidth + (renderSeparator ? separatorTickSize : 0)
 
   const overlayTransition = useTransition<boolean, any>(
@@ -78,6 +87,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     {
       reset: true,
       unique: true,
+      immediate,
       config: { duration: 200, precision: 0.01 },
       from: { opacity: 0 },
       enter: { opacity: 0.75 },
@@ -91,14 +101,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     {
       reset: true,
       config: { ...config.default, precision: 1 },
-      immediate:
-        (sizename === '1-small' &&
-          (currentOpenedModal && currentOpenedModal.name === 'SETTINGS')) ||
-        (!currentOpenedModal &&
-          previouslyOpenedModal &&
-          previouslyOpenedModal.name === 'SETTINGS')
-          ? true
-          : false,
+      immediate,
       ...(sizename === '1-small'
         ? {
             from: item =>
