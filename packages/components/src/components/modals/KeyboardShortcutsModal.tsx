@@ -31,6 +31,7 @@ const keyboardShortcuts = [
   { keys: ['s'], description: 'Toggle save item for later' },
   { keys: ['m'], description: 'Mark item as read/unread' },
   { keys: ['Alt ←', 'Alt →'], description: 'Move currently selected column' },
+  { keys: ['Tab'], description: 'Navigate between buttons and links' },
   { keys: ['?'], description: 'Show keyboard shortcuts' },
 ]
 
