@@ -206,7 +206,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               iconName="gear"
               label="preferences"
               onPress={() =>
-                isModalOpen('SETTINGS')
+                small && isModalOpen('SETTINGS')
                   ? undefined
                   : replaceModal({ name: 'SETTINGS' })
               }
@@ -261,7 +261,11 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             forceHoverState={isModalOpen('SETTINGS')}
             iconName="gear"
             label="preferences"
-            onPress={() => replaceModal({ name: 'SETTINGS' })}
+            onPress={() =>
+              small && isModalOpen('SETTINGS')
+                ? undefined
+                : replaceModal({ name: 'SETTINGS' })
+            }
             showLabel={showLabel}
             size={columnHeaderItemContentBiggerSize}
             style={[styles.centerContainer, !showLabel && itemContainerStyle]}
