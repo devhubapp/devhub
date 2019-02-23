@@ -27,8 +27,8 @@
 - Android: [Play Store](https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=github_repo_link)
 - iOS: [App Store](https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=github_repo_link)
 - Desktop:
-  - [GitHub Releases](https://github.com/devhubapp/devhub/releases)
-  - Homebrew (macOS):
+  - [GitHub Releases](https://github.com/devhubapp/devhub/releases) (macOS, Windows, Linux)
+  - Homebrew (macOS alternative):
     ```
       brew tap devhubapp/devhub
       brew cask install devhub
