@@ -19,14 +19,22 @@
   <img alt="DevHub Mobile - Event Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172530-5cdb6c00-2758-11e9-86cf-291a30c37c96.png" />
 </p>
 
-## Installation on macOS using Homebrew
+<br/>
 
-Devhub can be installed on macOS using Homebrew using the following commands:
+## Download links
 
-```bash
-brew tap devhubapp/devhub
-brew cask install devhub
-```
+- Web: [devhubapp.com](https://devhubapp.com/)
+- Android: [Play Store](https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=github_repo_link)
+- iOS: [App Store](https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=github_repo_link)
+- Desktop:
+  - [GitHub Releases](https://github.com/devhubapp/devhub/releases)
+  - Homebrew (macOS):
+    ```
+      brew tap devhubapp/devhub
+      brew cask install devhub
+    ```
+
+<br/>
 
 ## Why
 
@@ -164,6 +172,7 @@ Alternatively, you can contribute using Gitpod, a free online dev environment fo
 
 > When using a third party service, your tokens may be less secured.
 <br/>
+
 
 ## Author
 
