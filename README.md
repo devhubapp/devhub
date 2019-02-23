@@ -19,8 +19,14 @@
   <img alt="DevHub Mobile - Event Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172530-5cdb6c00-2758-11e9-86cf-291a30c37c96.png" />
 </p>
 
+## Installation on macOS using Homebrew
 
-<br/>
+Devhub can be installed on macOS using Homebrew using the following commands:
+
+```bash
+brew tap devhubapp/devhub
+brew cask install devhub
+```
 
 ## Why
 
