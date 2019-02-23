@@ -1,19 +1,16 @@
 asset: DevHub-$STABLE_VERSION_NUMBER.dmg
-tap: devhubapp/homebrew-devhub/devhub.rb
+tap: devhubapp/homebrew-devhub/Casks/devhub.rb
 template: >
-  class App < Formula
+  cask 'devhub' do
     app           "DevHub.app"
     name          "DevHub"
     desc          "$REPO_DESCRIPTION"
     homepage      "$REPO_WEBITE"
+
     version       "$STABLE_VERSION"
     url           "$STABLE_ASSET_URL"
     sha256        "$STABLE_ASSET_SHA256"
 
     appcast       "https://github.com/devhubapp/devhub/releases.atom"
     auto_updates  true
-
-    def install
-      prefix.install "devhub"
-    end
   end
