@@ -5,6 +5,9 @@ const s = (state: RootState) => state.auth || {}
 
 export const authErrorSelector = (state: RootState) => s(state).error
 
+export const isDeletingAccountSelector = (state: RootState) =>
+  s(state).isDeletingAccount
+
 export const isLoggingInSelector = (state: RootState) => s(state).isLoggingIn
 
 export const isLoggedSelector = (state: RootState) =>

@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 
 import { constants, GitHubAppType } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
+import { confirm } from '../../libs/confirm'
 import { executeOAuth } from '../../libs/oauth'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -32,19 +34,23 @@ export const AdvancedSettingsModal = React.memo(
     const { sizename } = useAppLayout()
 
     const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-    const installations = useReduxState(selectors.installationsArrSelector)
 
     const [executingOAuth, setExecutingOAuth] = useState<GitHubAppType | null>(
       null,
     )
+
     const existingAppToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+    const installations = useReduxState(selectors.installationsArrSelector)
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
     )
+    const isDeletingAccount = useReduxState(selectors.isDeletingAccountSelector)
+    const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
 
     const loginRequest = useReduxAction(actions.loginRequest)
+    const deleteAccountRequest = useReduxAction(actions.deleteAccountRequest)
 
     async function startOAuth(githubAppType: GitHubAppType) {
       try {
@@ -317,6 +323,37 @@ export const AdvancedSettingsModal = React.memo(
                 </View>
               </>
             )}
+          </View>
+
+          <Spacer flex={1} minHeight={contentPadding} />
+
+          <View style={{ padding: contentPadding }}>
+            <Spacer height={contentPadding} />
+
+            <Button
+              key="delete-account-button"
+              analyticsAction="delete_account"
+              analyticsLabel=""
+              disabled={isDeletingAccount || isLoggingIn}
+              loading={isDeletingAccount}
+              hoverBackgroundColor={colors.red}
+              hoverForegroundColor="#FFFFFF"
+              onPress={() =>
+                confirm(
+                  'Delete Account?',
+                  'All your columns and preferences will be lost.' +
+                    ' If you login again, a new empty account will be created.',
+                  {
+                    cancelLabel: 'Cancel',
+                    confirmLabel: 'Delete',
+                    confirmCallback: () => deleteAccountRequest(),
+                    destructive: true,
+                  },
+                )
+              }
+            >
+              Delete account
+            </Button>
           </View>
         </ScrollView>
       </ModalColumn>

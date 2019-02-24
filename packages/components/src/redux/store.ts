@@ -93,6 +93,7 @@ const migrations = {
       draft.auth = {
         appToken: oldAuth.appToken,
         error: null,
+        isDeletingAccount: false,
         isLoggingIn: false,
         user:
           oldAuth.user &&

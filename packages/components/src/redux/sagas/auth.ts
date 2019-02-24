@@ -182,12 +182,86 @@ function onLogout() {
   clearOAuthQueryParams()
 }
 
+function* onDeleteAccountRequest() {
+  const appToken = yield select(selectors.appTokenSelector)
+
+  try {
+    const response: AxiosResponse<{
+      data: {
+        deleteAccount: boolean | null
+      }
+      errors?: any[]
+    }> = yield axios.post(
+      constants.GRAPHQL_ENDPOINT,
+      {
+        query: `mutation {
+          deleteAccount
+        }`,
+      },
+      {
+        headers: {
+          Authorization: `bearer ${appToken}`,
+        },
+      },
+    )
+
+    const { data, errors } = response.data
+
+    if (errors && errors.length) {
+      throw Object.assign(new Error('GraphQL Error'), { response })
+    }
+
+    if (!(data && typeof data.deleteAccount === 'boolean')) {
+      throw new Error('Invalid response')
+    }
+
+    if (!(data && data.deleteAccount)) {
+      throw new Error('Failed to delete account')
+    }
+
+    yield put(actions.deleteAccountSuccess())
+  } catch (error) {
+    const description = 'Delete account failed'
+    bugsnag.notify(error, { description })
+    console.error(description, error)
+
+    yield put(
+      actions.deleteAccountFailure(
+        error &&
+          error.response &&
+          error.response.data &&
+          error.response.data.errors &&
+          error.response.data.errors[0],
+      ),
+    )
+  }
+}
+
+function onDeleteAccountFailure(
+  action: ExtractActionFromActionCreator<typeof actions.deleteAccountFailure>,
+) {
+  bugsnag.notify(action.error)
+  alert(
+    `Oops. Failed to delete account. Please try again.\n\n${(action.error &&
+      action.error.message) ||
+      action.error ||
+      ''}`.trim(),
+  )
+}
+
+function* onDeleteAccountSuccess() {
+  yield put(actions.logout())
+}
+
 export function* authSagas() {
   yield all([
     yield takeLatest(REHYDRATE, onRehydrate),
-    yield takeLatest('LOGIN_FAILURE', onLoginFailure),
     yield takeLatest('LOGIN_REQUEST', onLoginRequest),
+    yield takeLatest('LOGIN_FAILURE', onLoginFailure),
     yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield takeLatest('DELETE_ACCOUNT_REQUEST', onDeleteAccountRequest),
+    yield takeLatest('DELETE_ACCOUNT_FAILURE', onDeleteAccountFailure),
+    yield takeLatest('DELETE_ACCOUNT_SUCCESS', onDeleteAccountSuccess),
     yield takeLatest('LOGOUT', onLogout),
   ])
 }

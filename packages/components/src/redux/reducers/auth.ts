@@ -14,6 +14,7 @@ export interface AuthError {
 export interface State {
   appToken: string | null
   error: AuthError | null
+  isDeletingAccount: boolean
   isLoggingIn: boolean
   user: Pick<User, '_id' | 'createdAt' | 'lastLoginAt' | 'updatedAt'> | null
 }
@@ -21,6 +22,7 @@ export interface State {
 const initialState: State = {
   appToken: null,
   error: null,
+  isDeletingAccount: false,
   isLoggingIn: false,
   user: null,
 }
@@ -30,13 +32,14 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
     case REHYDRATE as any:
       return {
         ...(action.payload && (action.payload as any).auth),
-        ..._.pick(initialState, ['error', 'isLoggingIn']),
+        ..._.pick(initialState, ['error', 'isDeletingAccount', 'isLoggingIn']),
       }
 
     case 'LOGIN_REQUEST':
       return {
         appToken: action.payload.appToken,
         error: null,
+        isDeletingAccount: false,
         isLoggingIn: true,
         user: state.user,
       }
@@ -45,6 +48,7 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       return {
         appToken: action.payload.appToken || state.appToken,
         error: null,
+        isDeletingAccount: false,
         isLoggingIn: false,
         user: action.payload.user && {
           _id: action.payload.user._id,
@@ -59,6 +63,24 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       return {
         ...initialState,
         error: action.error,
+      }
+
+    case 'DELETE_ACCOUNT_REQUEST':
+      return {
+        ...state,
+        isDeletingAccount: true,
+      }
+
+    case 'DELETE_ACCOUNT_SUCCESS':
+      return {
+        ...state,
+        isDeletingAccount: false,
+      }
+
+    case 'DELETE_ACCOUNT_FAILURE':
+      return {
+        ...state,
+        isDeletingAccount: false,
       }
 
     default:

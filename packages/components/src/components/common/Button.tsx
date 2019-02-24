@@ -23,28 +23,34 @@ import { separatorSize } from './Separator'
 export const defaultButtonSize = 40
 
 export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
+  backgroundColor?: string
   borderOnly?: boolean
   children: string | React.ReactNode
   contentContainerStyle?: ViewProps['style']
   disabled?: boolean
+  foregroundColor?: string
+  hoverBackgroundColor?: string
+  hoverForegroundColor?: string
   loading?: boolean
   loadingIndicatorStyle?: SpringAnimatedActivityIndicatorProps['style']
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
   size?: number | null
-  useBrandColor?: boolean
 }
 
 export const Button = React.memo((props: ButtonProps) => {
   const {
+    backgroundColor,
     borderOnly,
     children,
     contentContainerStyle,
     disabled,
+    foregroundColor,
+    hoverBackgroundColor,
+    hoverForegroundColor,
     loading,
     loadingIndicatorStyle,
     size: _size,
     style,
-    useBrandColor,
     ...otherProps
   } = props
 
@@ -82,23 +88,24 @@ export const Button = React.memo((props: ButtonProps) => {
     return {
       config: { duration: 100 },
       activityIndicatorColor: theme.foregroundColor,
-      touchableBorderColor: useBrandColor
-        ? theme.primaryBackgroundColor
+      touchableBorderColor: backgroundColor
+        ? backgroundColor
         : isHovered || isPressing
-        ? theme.backgroundColorLess3
+        ? hoverBackgroundColor || theme.backgroundColorLess3
         : theme.backgroundColorLess2,
       innerContainerBackgroundColor: borderOnly
         ? rgba(theme.backgroundColorLess2, 0)
         : isHovered || isPressing
-        ? useBrandColor
-          ? theme.backgroundColorTransparent10
-          : theme.backgroundColorLess3
+        ? hoverBackgroundColor ||
+          (backgroundColor
+            ? theme.backgroundColorTransparent10
+            : theme.backgroundColorLess3)
         : rgba(theme.backgroundColorLess2, 0),
-      textColor: useBrandColor
-        ? theme.primaryForegroundColor
+      textColor: foregroundColor
+        ? foregroundColor
         : borderOnly
         ? isHovered || isPressing
-          ? theme.foregroundColor
+          ? hoverForegroundColor || theme.foregroundColor
           : theme.foregroundColorMuted50
         : theme.foregroundColor,
     }
@@ -129,8 +136,8 @@ export const Button = React.memo((props: ButtonProps) => {
           height: size,
           backgroundColor: borderOnly
             ? 'transparent'
-            : useBrandColor
-            ? springAnimatedTheme.primaryBackgroundColor
+            : backgroundColor
+            ? backgroundColor
             : springAnimatedTheme.backgroundColorLess2,
           borderColor: springAnimatedStyles.touchableBorderColor,
           borderWidth: borderOnly ? separatorSize : 0,
