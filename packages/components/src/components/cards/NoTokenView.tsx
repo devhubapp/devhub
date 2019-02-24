@@ -47,7 +47,7 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
             : undefined,
       })
       const { appToken } = tryParseOAuthParams(params)
-      if (!appToken) return
+      if (!appToken) throw new Error('No app token')
 
       loginRequest({ appToken })
     } catch (error) {

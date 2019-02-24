@@ -1,6 +1,7 @@
+import _ from 'lodash'
 import { createSelector } from 'reselect'
 
-import { normalizeUsername } from '@devhub/core'
+import { Installation } from '@devhub/core'
 import { RootState } from '../../types'
 
 const s = (state: RootState) =>
@@ -9,6 +10,9 @@ const s = (state: RootState) =>
 export const installationIdsSelector = (state: RootState) =>
   s(state).allIds || []
 
+export const installationOwnerNamesSelector = (state: RootState) =>
+  s(state).allOwnerNames || []
+
 export const installationsLoadStateSelector = (state: RootState) =>
   s(state).loadState
 
@@ -16,6 +20,16 @@ export const installationSelector = createSelector(
   (state: RootState) => s(state).byId,
   (_state: RootState, id: number) => id,
   (byId, id) => byId[id],
+)
+
+export const installationsArrSelector = createSelector(
+  (state: RootState) => s(state).byId,
+  (state: RootState) => installationIdsSelector(state),
+  (byId, allIds) =>
+    _.orderBy(allIds.map(id => byId[id]).filter(Boolean), [
+      'account.login',
+      'asc',
+    ]) as Installation[],
 )
 
 export const installationByOwnerSelector = createSelector(

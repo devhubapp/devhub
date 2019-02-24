@@ -172,7 +172,7 @@ export const LoginScreen = React.memo(() => {
         scope: constants.DEFAULT_GITHUB_OAUTH_SCOPES,
       })
       const { appToken } = tryParseOAuthParams(params)
-      if (!appToken) return
+      if (!appToken) throw new Error('No app token')
 
       loginRequest({ appToken })
     } catch (error) {

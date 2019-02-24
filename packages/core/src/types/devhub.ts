@@ -293,6 +293,10 @@ export type ModalPayload =
       params: AddColumnDetailsPayload
     }
   | {
+      name: 'ADVANCED_SETTINGS'
+      params?: undefined
+    }
+  | {
       name: 'KEYBOARD_SHORTCUTS'
       params?: undefined
     }
