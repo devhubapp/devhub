@@ -38,7 +38,11 @@ export function normalizeColumns(
 export function normalizeSubscriptions(
   subscriptions: ColumnSubscriptionCreation[],
   updatedAt?: string,
-) {
+): {
+  allIds: string[]
+  byId: Record<string, ColumnSubscription | undefined>
+  updatedAt: string
+} {
   const items = subscriptions || []
   const byId: Record<string, ColumnSubscription | undefined> = {}
   const allIds = items.map((subscription: ColumnSubscriptionCreation) => {
