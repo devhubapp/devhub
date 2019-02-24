@@ -16,102 +16,106 @@ export interface ImageWithLoadingProps extends ImageProps {
   style: any
 }
 
-export const ImageWithLoading = React.memo((props: ImageWithLoadingProps) => {
-  const {
-    animated,
-    backgroundColorFailed,
-    backgroundColorLoaded,
-    backgroundColorLoading,
-    onError,
-    onLoad,
-    onLoadEnd,
-    onLoadStart,
-    ...otherProps
-  } = props
+export const ImageWithLoading = React.memo(
+  React.forwardRef((props: ImageWithLoadingProps, ref) => {
+    React.useImperativeHandle(ref, () => ({}))
 
-  const imageRef = useRef<Image>(null)
-  const cacheRef = useRef({ error: false, isLoading: false })
+    const {
+      animated,
+      backgroundColorFailed,
+      backgroundColorLoaded,
+      backgroundColorLoading,
+      onError,
+      onLoad,
+      onLoadEnd,
+      onLoadStart,
+      ...otherProps
+    } = props
 
-  useEffect(() => {
-    updateStyles()
-  }, [])
+    const imageRef = useRef<Image>(null)
+    const cacheRef = useRef({ error: false, isLoading: false })
 
-  const handleLoad = useCallback(
-    e => {
-      cacheRef.current.isLoading = false
-      cacheRef.current.error = false
+    useEffect(() => {
       updateStyles()
+    }, [])
 
-      if (typeof onLoad === 'function') onLoad(e)
-    },
-    [onLoad],
-  )
+    const handleLoad = useCallback(
+      e => {
+        cacheRef.current.isLoading = false
+        cacheRef.current.error = false
+        updateStyles()
 
-  const handleLoadStart = useCallback(
-    () => {
-      cacheRef.current.isLoading = true
-      updateStyles()
+        if (typeof onLoad === 'function') onLoad(e)
+      },
+      [onLoad],
+    )
 
-      if (typeof onLoadStart === 'function') onLoadStart()
-    },
-    [onLoadStart],
-  )
+    const handleLoadStart = useCallback(
+      () => {
+        cacheRef.current.isLoading = true
+        updateStyles()
 
-  const handleLoadEnd = useCallback(
-    () => {
-      cacheRef.current.isLoading = false
-      updateStyles()
+        if (typeof onLoadStart === 'function') onLoadStart()
+      },
+      [onLoadStart],
+    )
 
-      if (typeof onLoadEnd === 'function') onLoadEnd()
-    },
-    [onLoadEnd],
-  )
+    const handleLoadEnd = useCallback(
+      () => {
+        cacheRef.current.isLoading = false
+        updateStyles()
 
-  const handleError = useCallback(
-    e => {
-      cacheRef.current.isLoading = false
-      cacheRef.current.error = true
-      updateStyles()
+        if (typeof onLoadEnd === 'function') onLoadEnd()
+      },
+      [onLoadEnd],
+    )
 
-      if (typeof onError === 'function') onError(e)
-    },
-    [onError],
-  )
+    const handleError = useCallback(
+      e => {
+        cacheRef.current.isLoading = false
+        cacheRef.current.error = true
+        updateStyles()
 
-  function updateStyles() {
-    const { error, isLoading } = cacheRef.current
+        if (typeof onError === 'function') onError(e)
+      },
+      [onError],
+    )
 
-    if (imageRef.current) {
-      const imageURL =
-        otherProps && otherProps.source && (otherProps.source as any).uri
+    function updateStyles() {
+      const { error, isLoading } = cacheRef.current
 
-      imageRef.current.setNativeProps({
-        style: {
-          backgroundColor: error
-            ? backgroundColorFailed
-            : isLoading
-            ? backgroundColorLoading
-            : backgroundColorLoaded,
-          ...(Platform.OS === 'web' &&
-            !!imageURL && {
-              backgroundImage: `url(${JSON.stringify(imageURL)})`,
-              backgroundSize: 'cover',
-            }),
-        },
-      })
+      if (imageRef.current) {
+        const imageURL =
+          otherProps && otherProps.source && (otherProps.source as any).uri
+
+        imageRef.current.setNativeProps({
+          style: {
+            backgroundColor: error
+              ? backgroundColorFailed
+              : isLoading
+              ? backgroundColorLoading
+              : backgroundColorLoaded,
+            ...(Platform.OS === 'web' &&
+              !!imageURL && {
+                backgroundImage: `url(${JSON.stringify(imageURL)})`,
+                backgroundSize: 'cover',
+              }),
+          },
+        })
+      }
     }
-  }
 
-  const ImageComponent = true ? SpringAnimatedImage : Image
+    const ImageComponent = true ? SpringAnimatedImage : Image
 
-  return (
-    <ImageComponent
-      {...otherProps}
-      ref={imageRef}
-      onError={handleError}
-      onLoad={handleLoad}
-      onLoadEnd={handleLoadEnd}
-      onLoadStart={handleLoadStart}
-    />
-  )
-})
+    return (
+      <ImageComponent
+        {...otherProps}
+        ref={imageRef}
+        onError={handleError}
+        onLoad={handleLoad}
+        onLoadEnd={handleLoadEnd}
+        onLoadStart={handleLoadStart}
+      />
+    )
+  }),
+)

@@ -70,17 +70,11 @@ function getProps(to: To) {
   }
 }
 
-class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
-  render() {
-    const {
-      color,
-      radius,
-      size,
-      spacing,
-      style,
-      to,
-      ...otherProps
-    } = this.props
+const GradientLayerOverlay = React.forwardRef(
+  (props: GradientLayerOverlayProps, ref) => {
+    React.useImperativeHandle(ref, () => ({}))
+
+    const { color, radius, size, spacing, style, to, ...otherProps } = props
 
     if (!color) return null
 
@@ -106,8 +100,8 @@ class GradientLayerOverlay extends React.Component<GradientLayerOverlayProps> {
         {...otherProps}
       />
     )
-  }
-}
+  },
+)
 
 export const SpringAnimatedGradientLayerOverlay = createSpringAnimatedComponent(
   GradientLayerOverlay,
