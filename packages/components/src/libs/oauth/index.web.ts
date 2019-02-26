@@ -10,7 +10,7 @@ import {
   OAuthResponseData,
 } from './helpers'
 
-const redirectUri = 'devhub://oauth/github'
+const redirectUri = 'devhub://github/oauth'
 
 const popupTarget =
   !__DEV__ &&
@@ -49,7 +49,7 @@ export async function executeOAuth(
 
   // console.log('[OAUTH] Opening popup...')
   const popup = popupWindow(
-    `${constants.API_BASE_URL}/oauth/github?${querystring}`,
+    `${constants.API_BASE_URL}/github/oauth?${querystring}`,
   )
 
   try {

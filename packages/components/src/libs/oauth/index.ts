@@ -8,7 +8,7 @@ import {
   OAuthResponseData,
 } from './helpers'
 
-const redirectUri = 'devhub://oauth/github'
+const redirectUri = 'devhub://github/oauth'
 
 export async function executeOAuth(
   gitHubAppType: GitHubAppType | 'both',
@@ -25,7 +25,7 @@ export async function executeOAuth(
   })
 
   // console.log('[OAUTH] Opening browser...')
-  Browser.openURL(`${constants.API_BASE_URL}/oauth/github?${querystring}`)
+  Browser.openURL(`${constants.API_BASE_URL}/github/oauth?${querystring}`)
 
   const url = await listenForNextUrl()
   // console.log('[OAUTH] Received URL:', url)
