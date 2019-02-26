@@ -72,7 +72,10 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const hasError = errorMessage || loadState === 'error'
 
   const renderContent = () => {
-    if (loadState === 'loading_first') {
+    if (
+      loadState === 'loading_first' ||
+      (loadState === 'loading' && !refresh && !fetchNextPage)
+    ) {
       return (
         <SpringAnimatedActivityIndicator
           color={springAnimatedTheme.foregroundColor}

@@ -1,4 +1,5 @@
 import qs from 'qs'
+import url from 'url'
 
 import { constants, GitHubAppType } from '@devhub/core'
 import { Linking } from '../linking'
@@ -12,23 +13,26 @@ import {
 
 const redirectUri = 'devhub://github/oauth'
 
-const popupTarget =
-  !__DEV__ &&
-  (Platform.realOS !== 'web' ||
-    (Platform.realOS === 'web' &&
-      window.location.search.includes('installation_id=')) ||
-    Platform.isStandalone ||
-    (navigator.userAgent || '').includes('Edge'))
+function getPopupTarget() {
+  const currentURL = Linking.getCurrentURL()
+  const query = qs.parse(url.parse(currentURL).query || '')
+
+  return !__DEV__ &&
+    (Platform.realOS !== 'web' ||
+      query.installation_id ||
+      Platform.isStandalone ||
+      (navigator.userAgent || '').includes('Edge'))
     ? '_self'
     : '_blank'
+}
 
-function popupWindow(url: string, w: number = 500, h: number = 600) {
+function popupWindow(uri: string, w: number = 500, h: number = 600) {
   const left = (window.screen.width - w) / 2
   const top = (window.screen.height - h) / 2
 
   return window.open(
-    url,
-    popupTarget,
+    uri,
+    getPopupTarget(),
     `resizable=yes, width=${w}, height=${h}, top=${top}, left=${left}`,
   )
 }
@@ -43,8 +47,10 @@ export async function executeOAuth(
   const querystring = qs.stringify({
     app_token: appToken,
     github_app_type: gitHubAppType,
-    scope: scopeStr,
+    is_electron: Platform.isElectron,
+    platform: Platform.OS,
     redirect_uri: Platform.isElectron ? redirectUri : '',
+    scope: scopeStr,
   })
 
   // console.log('[OAUTH] Opening popup...')
@@ -56,10 +62,10 @@ export async function executeOAuth(
     let params: OAuthResponseData | null
 
     if (Platform.isElectron && (await Linking.canOpenURL(redirectUri))) {
-      const url = await listenForNextUrl()
-      // console.log('[OAUTH] Received URL:', url)
+      const uri = await listenForNextUrl()
+      // console.log('[OAUTH] Received URL:', uri)
 
-      params = getUrlParamsIfMatches(url, redirectUri)
+      params = getUrlParamsIfMatches(uri, redirectUri)
       // console.log('[OAUTH] URL params:', params)
     } else {
       params = await listenForNextMessageData(popup)

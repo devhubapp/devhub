@@ -33,13 +33,15 @@ export function Link(props: LinkProps) {
     analyticsLabel,
     href,
     mobileProps,
-    openOnNewTab = true,
+    openOnNewTab: _openOnNewTab = true,
     webProps,
     enableBackgroundHover,
     enableForegroundHover,
     hoverBackgroundThemeColor,
     ...otherProps
   } = props
+
+  const openOnNewTab = _openOnNewTab || Platform.isElectron
 
   const initialTheme = useTheme(theme => {
     cacheRef.current.theme = theme

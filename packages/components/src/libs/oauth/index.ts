@@ -2,6 +2,7 @@ import qs from 'qs'
 
 import { constants, GitHubAppType } from '@devhub/core'
 import { Browser } from '../browser'
+import { Platform } from '../platform'
 import {
   getUrlParamsIfMatches,
   listenForNextUrl,
@@ -20,8 +21,10 @@ export async function executeOAuth(
   const querystring = qs.stringify({
     app_token: appToken,
     github_app_type: gitHubAppType,
-    scope: scopeStr,
+    is_electron: Platform.isElectron,
+    platform: Platform.OS,
     redirect_uri: redirectUri,
+    scope: scopeStr,
   })
 
   // console.log('[OAUTH] Opening browser...')

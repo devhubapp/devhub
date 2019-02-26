@@ -22,6 +22,7 @@ import { octokit } from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
+import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
@@ -174,10 +175,7 @@ export const EventCardsContainer = React.memo(
     if (isNotFound) {
       if (!githubAppToken) return <NoTokenView githubAppType="app" />
 
-      if (
-        ownerResponse.loadingState === 'loading' ||
-        installationsLoadState === 'loading'
-      ) {
+      if (ownerResponse.loadingState === 'loading') {
         return (
           <EmptyCards
             clearedAt={undefined}
@@ -209,12 +207,11 @@ export const EventCardsContainer = React.memo(
                     firstSubscription.data.loadState === 'loading' ||
                     firstSubscription.data.loadState === 'loading_first'
                   }
-                  href={`https://github.com/apps/${
-                    constants.GITHUB_APP_CANNONICAL_ID
-                  }/installations/new/permissions?suggested_target_id=${
-                    ownerResponse.data.id
-                  }`}
+                  href={getGitHubAppInstallUri({
+                    suggestedTargetId: ownerResponse.data.id,
+                  })}
                   loading={
+                    installationsLoadState === 'loading' ||
                     firstSubscription.data.loadState === 'loading' ||
                     firstSubscription.data.loadState === 'loading_first'
                   }

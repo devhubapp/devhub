@@ -8,8 +8,9 @@ export interface LinkingCrossPlatform {
     handler: (payload: { url: string }) => void,
   ) => void
   canOpenURL(url: string): Promise<boolean>
-  getInitialURL(): Promise<string>
-  openURL(url: string): void
+  getCurrentURL(): string
+  getInitialURL(): string
+  openURL(url: string): Promise<void>
 }
 
 export const Linking: LinkingCrossPlatform

@@ -3,6 +3,7 @@ import { View } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { getGitHubAppInstallUri } from '../../../../utils/helpers/shared'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
@@ -36,16 +37,10 @@ export const PrivateNotificationRow = React.memo(
         <View style={cardStyles.rightColumn}>
           <Link
             analyticsLabel="setup_github_app_from_private_notification"
-            href={
-              ownerId
-                ? `https://github.com/apps/${
-                    constants.GITHUB_APP_CANNONICAL_ID
-                  }/installations/new/permissions?suggested_target_id=${ownerId}&repository_ids[]=${repoId ||
-                    ''}`
-                : `https://github.com/apps/${
-                    constants.GITHUB_APP_CANNONICAL_ID
-                  }/installations/new`
-            }
+            href={getGitHubAppInstallUri({
+              repositoryIds: repoId ? [repoId] : [],
+              suggestedTargetId: ownerId,
+            })}
             openOnNewTab={false}
             style={cardRowStyles.mainContentContainer}
           >

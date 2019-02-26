@@ -9,8 +9,10 @@ export function clearQueryStringFromURL(fields: string[]) {
     !(
       Platform.OS === 'web' &&
       !Platform.isElectron &&
+      typeof window !== 'undefined' &&
       window.history &&
-      window.history.replaceState
+      window.history.replaceState &&
+      window.location
     )
   )
     return

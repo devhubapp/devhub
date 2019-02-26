@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { constants, GitHubAppType } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -13,6 +13,7 @@ import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
+import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -122,9 +123,7 @@ export const AdvancedSettingsModal = React.memo(
                       width: 52,
                       paddingHorizontal: contentPadding,
                     }}
-                    href={`https://github.com/settings/connections/applications/${
-                      constants.GITHUB_OAUTH_CLIENT_ID
-                    }`}
+                    href={`${constants.API_BASE_URL}/github/oauth/manage`}
                     openOnNewTab
                     size={32}
                   >
@@ -180,14 +179,12 @@ export const AdvancedSettingsModal = React.memo(
 
                 {githubAppToken ? (
                   <ButtonLink
-                    analyticsLabel="manage_oauth"
+                    analyticsLabel="manage_app_oauth"
                     contentContainerStyle={{
                       width: 52,
                       paddingHorizontal: contentPadding,
                     }}
-                    href={`https://github.com/settings/connections/applications/${
-                      constants.GITHUB_APP_CLIENT_ID
-                    }`}
+                    href={`${constants.API_BASE_URL}/github/app/manage`}
                     openOnNewTab
                     size={32}
                   >
@@ -247,10 +244,8 @@ export const AdvancedSettingsModal = React.memo(
                           loadingIndicatorStyle={{
                             transform: [{ scale: 0.8 }],
                           }}
-                          href={`https://github.com/apps/${
-                            constants.GITHUB_APP_CANNONICAL_ID
-                          }/installations/new`}
-                          openOnNewTab
+                          href={getGitHubAppInstallUri()}
+                          openOnNewTab={false}
                           size={32}
                         >
                           <SpringAnimatedIcon

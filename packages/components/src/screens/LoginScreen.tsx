@@ -1,6 +1,7 @@
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
+import url from 'url'
 
 import { constants } from '@devhub/core'
 import { SpringAnimatedText } from '../components/animated/spring/SpringAnimatedText'
@@ -13,6 +14,7 @@ import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { bugsnag } from '../libs/bugsnag'
+import { Linking } from '../libs/linking'
 import { executeOAuth } from '../libs/oauth'
 import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
 import { Platform } from '../libs/platform'
@@ -97,10 +99,11 @@ export const LoginScreen = React.memo(() => {
   // that passes the token via query string
   useEffect(() => {
     ;(async () => {
-      if (Platform.OS !== 'web') return
+      const currentURL = await Linking.getCurrentURL()
+      const querystring = url.parse(currentURL).query || ''
+      const query = qs.parse(querystring)
 
-      const querystring = window.location.search
-      if (!(querystring && querystring.includes('oauth=true'))) return
+      if (!query.oauth) return
 
       const params = getUrlParamsIfMatches(querystring, '')
       if (!params) return
@@ -124,26 +127,27 @@ export const LoginScreen = React.memo(() => {
 
   // auto start oauth flow after github app installation
   useEffect(() => {
-    ;(async () => {
-      if (Platform.OS !== 'web') return
+    const handler = ({ url: uri }: { url: string }) => {
+      const querystring = url.parse(uri).query || ''
+      const query = qs.parse(querystring)
 
-      const querystring = window.location.search
-      if (!(querystring && querystring.includes('installation_id='))) return
-      if (querystring.includes('oauth=true')) return
-
-      const query = querystring.replace(new RegExp(`^[?]?`), '')
-      const params = qs.parse(query)
-      if (!(params && params.installation_id)) return
-
-      const {
-        installation_id: installationId,
-        setup_action: _setupAction,
-      } = params
-
-      clearQueryStringFromURL(['installation_id', 'setup_action'])
+      if (query.oauth) return
+      if (!query.installation_id) return
 
       loginWithGitHub()
-    })()
+
+      setTimeout(() => {
+        clearQueryStringFromURL(['installation_id', 'setup_action'])
+      }, 500)
+    }
+
+    Linking.addEventListener('url', handler)
+
+    handler({ url: Linking.getCurrentURL() })
+
+    return () => {
+      Linking.removeEventListener('url', handler)
+    }
   }, [])
 
   useEffect(

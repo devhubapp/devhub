@@ -50,3 +50,9 @@ SafariView.addEventListener('onShow', () => {
 SafariView.addEventListener('onDismiss', () => {
   StatusBar.setHidden(false, 'fade')
 })
+
+Linking.addEventListener('url', ({ url }) => {
+  if (!(url && url.startsWith('devhub://'))) return
+
+  SafariView.dismiss()
+})
