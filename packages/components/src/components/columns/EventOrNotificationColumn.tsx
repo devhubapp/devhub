@@ -7,7 +7,9 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   getColumnHeaderDetails,
+  isEventPrivate,
   isItemRead,
+  isNotificationPrivate,
 } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -19,6 +21,7 @@ import {
   activityColumnHasAnyFilter,
   notificationColumnHasAnyFilter,
 } from '../../utils/helpers/filters'
+import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
@@ -84,6 +87,21 @@ export const EventOrNotificationColumn = React.memo(
         return !!(item && !item.saved) /* && isItemRead(item) */
       },
     )
+
+    const hasValidPaidPlan = false // TODO
+
+    const isFreeTrial =
+      !hasValidPaidPlan &&
+      (column.type === 'activity'
+        ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
+            isEventPrivate(item),
+          )
+        : column.type === 'notifications'
+        ? (filteredItems as any[]).some(
+            (item: EnhancedGitHubNotification) =>
+              isNotificationPrivate(item) && !!item.enhanced,
+          )
+        : false)
 
     const setColumnClearedAtFilter = useReduxAction(
       actions.setColumnClearedAtFilter,
@@ -249,6 +267,8 @@ export const EventOrNotificationColumn = React.memo(
             setColumnOptionsContainerHeight(e.nativeEvent.layout.height)
           }}
         >
+          {!!isFreeTrial && <FreeTrialHeaderMessage />}
+
           {columnOptionsContainerHeight > 0 && (
             <ColumnOptionsRenderer
               close={toggleOptions}

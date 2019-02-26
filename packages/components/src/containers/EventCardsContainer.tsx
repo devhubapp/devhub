@@ -201,7 +201,7 @@ export const EventCardsContainer = React.memo(
             <GenericMessageWithButtonView
               buttonView={
                 <ButtonLink
-                  analyticsLabel="setup_github_app"
+                  analyticsLabel="setup_github_app_from_column"
                   children="Install GitHub App"
                   disabled={
                     firstSubscription.data.loadState === 'loading' ||
