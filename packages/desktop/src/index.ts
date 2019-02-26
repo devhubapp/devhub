@@ -491,8 +491,13 @@ function alignWindowWithTray() {
 }
 
 function getUpdaterMenuItem() {
-  let label: string
   let enabled: boolean = !__DEV__
+  let label: string
+
+  let click: Electron.MenuItemConstructorOptions['click'] = () => {
+    updateInfo.lastManuallyCheckedAt = Date.now()
+    autoUpdater.checkForUpdatesAndNotify()
+  }
 
   switch (updateInfo.state) {
     case 'checking-for-update': {
@@ -527,8 +532,14 @@ function getUpdaterMenuItem() {
     }
 
     case 'update-downloaded': {
-      enabled = false
-      label = 'Update downloaded. Please restart.'
+      enabled = true
+      label = 'Update downloaded. Click to restart.'
+
+      click = () => {
+        app.relaunch()
+        app.quit()
+      }
+
       break
     }
 
@@ -547,10 +558,7 @@ function getUpdaterMenuItem() {
   const menuItem: Electron.MenuItemConstructorOptions = {
     label,
     enabled: !__DEV__ && enabled,
-    click: () => {
-      updateInfo.lastManuallyCheckedAt = Date.now()
-      autoUpdater.checkForUpdatesAndNotify()
-    },
+    click,
   }
 
   return menuItem
@@ -738,6 +746,13 @@ function getMainMenuItems() {
           accelerator: 'CmdOrCtrl+R',
           click(_, focusedWindow) {
             if (focusedWindow) focusedWindow.reload()
+          },
+        },
+        {
+          label: 'Restart',
+          click() {
+            app.relaunch()
+            app.quit()
           },
         },
         {
