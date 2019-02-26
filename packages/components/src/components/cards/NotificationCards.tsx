@@ -5,8 +5,8 @@ import {
   Column,
   constants,
   EnhancedGitHubNotification,
+  EnhancedLoadState,
   isItemRead,
-  LoadState,
 } from '@devhub/core'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
@@ -27,7 +27,7 @@ export interface NotificationCardsProps {
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
-  loadState: LoadState
+  loadState: EnhancedLoadState
   notifications: EnhancedGitHubNotification[]
   refresh: EmptyCardsProps['refresh']
   repoIsKnown?: boolean

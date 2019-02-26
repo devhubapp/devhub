@@ -14,12 +14,15 @@ export async function getNotificationsEnhancementMap(
   notifications: EnhancedGitHubNotification[],
   {
     cache = new Map(),
-    githubToken,
-    hasPrivateAccess,
+    getGitHubInstallationTokenForRepo,
+    githubOAuthToken,
   }: {
     cache: EnhancementCache | undefined | undefined
-    githubToken: string
-    hasPrivateAccess: boolean
+    getGitHubInstallationTokenForRepo: (
+      owner: string | undefined,
+      repo: string | undefined,
+    ) => string | undefined
+    githubOAuthToken: string
   },
 ): Promise<Record<string, NotificationPayloadEnhancement>> {
   const promises = notifications.map(async notification => {
@@ -28,6 +31,9 @@ export async function getNotificationsEnhancementMap(
     const { owner, repo } = getOwnerAndRepo(notification.repository.full_name)
     if (!(owner && repo)) return
 
+    const installationToken = getGitHubInstallationTokenForRepo(owner, repo)
+    const githubToken = installationToken || githubOAuthToken
+
     const commentId = getCommentIdFromUrl(
       notification.subject.latest_comment_url,
     )
@@ -35,7 +41,7 @@ export async function getNotificationsEnhancementMap(
     const enhance: NotificationPayloadEnhancement = {}
 
     const isPrivate = notification.repository.private
-    const hasAccess = !isPrivate || hasPrivateAccess
+    const hasAccess = !isPrivate || !!installationToken
     if (!hasAccess) return
 
     const hasSubjectCache = cache.has(notification.subject.url)
@@ -76,12 +82,14 @@ export async function getNotificationsEnhancementMap(
           error,
         )
         cache.set(notification.subject.url, false)
+        if (!enhance.enhanced) enhance.enhanced = false
         return
       }
     } else if (hasSubjectCache) {
-      if (subjectCache && subjectCache.data)
+      if (subjectCache && subjectCache.data) {
         enhance[subjectField] = subjectCache.data
-      enhance.enhanced = true
+        enhance.enhanced = true
+      } else if (!enhance.enhanced) enhance.enhanced = false
     }
 
     if (commentId && !hasCommentCache) {
@@ -105,6 +113,7 @@ export async function getNotificationsEnhancementMap(
           error,
         )
         cache.set(notification.subject.latest_comment_url, false)
+        if (!enhance.enhanced) enhance.enhanced = false
       }
     } else if (!commentId) {
       enhance.comment = undefined
@@ -112,7 +121,7 @@ export async function getNotificationsEnhancementMap(
       if (commentCache && commentCache.data) {
         enhance.comment = commentCache.data
         enhance.enhanced = true
-      }
+      } else if (!enhance.enhanced) enhance.enhanced = false
     }
 
     if (!Object.keys(enhance).length) return

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, Text, TextStyle, View, ViewStyle } from 'react-native'
 
-import { LoadState } from '@devhub/core'
+import { EnhancedLoadState } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
@@ -13,6 +13,7 @@ import {
 import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Button } from '../common/Button'
+import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 const clearMessages = [
   'All clear!',
@@ -37,16 +38,17 @@ const getRandomEmoji = () => {
 // only one message per app running instance
 // because a chaning message is a bit distractive
 const clearMessage = getRandomClearMessage()
-const emoji = getRandomEmoji()
-const emojiImageURL = getEmojiImageURL(emoji)
+const randomEmoji = getRandomEmoji()
+const randomEmojiImageURL = getEmojiImageURL(randomEmoji)
 
 export interface EmptyCardsProps {
   clearedAt: string | undefined
   columnId: string
+  emoji?: GitHubEmoji
   errorMessage?: string
   errorTitle?: string
   fetchNextPage: (() => void) | undefined
-  loadState: LoadState
+  loadState: EnhancedLoadState
   refresh: (() => void | Promise<void>) | undefined
 }
 
@@ -54,6 +56,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearedAt,
     columnId,
+    emoji = 'warning',
     errorMessage,
     errorTitle = 'Something went wrong',
     fetchNextPage,
@@ -69,7 +72,10 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const hasError = errorMessage || loadState === 'error'
 
   const renderContent = () => {
-    if (loadState === 'loading_first') {
+    if (
+      loadState === 'loading_first' ||
+      (loadState === 'loading' && !refresh && !fetchNextPage)
+    ) {
       return (
         <SpringAnimatedActivityIndicator
           color={springAnimatedTheme.foregroundColor}
@@ -91,16 +97,9 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
 
     if (hasError) {
       return (
-        <View style={containerStyle}>
-          <SpringAnimatedText style={springAnimatedTextStyle}>
-            {`⚠️\n${errorTitle}`}
-            {!!errorMessage && (
-              <Text style={{ fontSize: 13 }}>{`\n${errorMessage}`}</Text>
-            )}
-          </SpringAnimatedText>
-
-          {!!refresh && (
-            <View style={{ padding: contentPadding }}>
+        <GenericMessageWithButtonView
+          buttonView={
+            !!refresh && (
               <Button
                 analyticsLabel="try_again"
                 children="Try again"
@@ -108,9 +107,12 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
                 loading={loadState === 'loading'}
                 onPress={() => refresh()}
               />
-            </View>
-          )}
-        </View>
+            )
+          }
+          emoji={emoji}
+          title={errorTitle}
+          subtitle={errorMessage}
+        />
       )
     }
 
@@ -118,12 +120,12 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       <View style={containerStyle}>
         <SpringAnimatedText style={springAnimatedTextStyle}>
           {clearMessage}
-          {!!emojiImageURL && (
+          {!!randomEmojiImageURL && (
             <>
               <Text children=" " />
 
               <Image
-                source={{ uri: emojiImageURL }}
+                source={{ uri: randomEmojiImageURL }}
                 style={{ width: 16, height: 16 }}
               />
             </>

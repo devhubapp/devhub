@@ -13,6 +13,7 @@ import {
   NotificationCards,
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
+import { NoTokenView } from '../components/cards/NoTokenView'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
@@ -30,6 +31,10 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column } = props
 
+    const appToken = useReduxState(selectors.appTokenSelector)
+    const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+    const githubOAuthScope = useReduxState(selectors.githubOAuthScopeSelector)
+
     const firstSubscription = useReduxState(
       state =>
         selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
@@ -38,6 +43,10 @@ export const NotificationCardsContainer = React.memo(
     )
 
     const data = (firstSubscription && firstSubscription.data) || {}
+
+    const installationsLoadState = useReduxState(
+      selectors.installationsLoadStateSelector,
+    )
 
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
@@ -135,13 +144,28 @@ export const NotificationCardsContainer = React.memo(
 
     if (!firstSubscription) return null
 
+    if (
+      !(
+        appToken &&
+        githubOAuthToken &&
+        githubOAuthScope &&
+        githubOAuthScope.includes('notifications')
+      )
+    ) {
+      return <NoTokenView githubAppType="oauth" />
+    }
+
     return (
       <NotificationCards
         {...props}
         key={`notification-cards-${column.id}`}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        loadState={firstSubscription.data.loadState || 'not_loaded'}
+        loadState={
+          installationsLoadState === 'loading' && !filteredItems.length
+            ? 'loading_first'
+            : firstSubscription.data.loadState || 'not_loaded'
+        }
         notifications={filteredItems}
         refresh={refresh}
       />

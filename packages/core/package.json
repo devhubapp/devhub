@@ -11,13 +11,14 @@
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
-    "@octokit/rest": "^16.1.0",
+    "@octokit/rest": "16.15.0",
     "gravatar": "^1.8.0",
     "json-to-graphql-query": "^1.9.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2"
   },
   "devDependencies": {
+    "@octokit/webhooks": "5.3.2",
     "@types/fbemitter": "^2.0.32",
     "@types/lodash": "^4.14.118",
     "prettier": "^1.15.3",

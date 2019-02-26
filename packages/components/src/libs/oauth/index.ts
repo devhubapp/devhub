@@ -1,20 +1,34 @@
 import qs from 'qs'
 
-import { constants } from '@devhub/core'
+import { constants, GitHubAppType } from '@devhub/core'
 import { Browser } from '../browser'
-import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
+import { Platform } from '../platform'
+import {
+  getUrlParamsIfMatches,
+  listenForNextUrl,
+  OAuthResponseData,
+} from './helpers'
 
-const redirectUri = 'devhub://oauth/github'
+const redirectUri = 'devhub://github/oauth'
 
-export async function executeOAuth(scope: string[]) {
-  const scopeStr = (scope || []).join(' ')
+export async function executeOAuth(
+  gitHubAppType: GitHubAppType | 'both',
+  options: { appToken?: string; scope?: string[] | undefined } = {},
+): Promise<OAuthResponseData> {
+  const { appToken, scope } = options
+
+  const scopeStr = (scope || []).join(' ').trim()
   const querystring = qs.stringify({
-    scope: scopeStr,
+    app_token: appToken,
+    github_app_type: gitHubAppType,
+    is_electron: Platform.isElectron,
+    platform: Platform.OS,
     redirect_uri: redirectUri,
+    scope: scopeStr,
   })
 
   // console.log('[OAUTH] Opening browser...')
-  Browser.openURL(`${constants.API_BASE_URL}/oauth/github?${querystring}`)
+  Browser.openURL(`${constants.API_BASE_URL}/github/oauth?${querystring}`)
 
   const url = await listenForNextUrl()
   // console.log('[OAUTH] Received URL:', url)

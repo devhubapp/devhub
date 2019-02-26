@@ -6,7 +6,7 @@ import {
   ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
-  GitHubApiHeaders,
+  GitHubAPIHeaders,
   GitHubIcon,
   GitHubPullRequest,
 } from '../../types'
@@ -27,14 +27,14 @@ export function isUnreadFilterChecked(filters: ColumnFilters | undefined) {
 }
 
 export function getUserAvatarByAvatarURL(
-  avatarURL: string,
+  avatarUrl: string,
   { size }: { size?: number } = {},
   getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
-  if (!avatarURL) return ''
+  if (!avatarUrl) return ''
 
-  const _avatarURL = avatarURL.indexOf('?') > 0 ? avatarURL : `${avatarURL}?`
-  const [url, _querystring] = _avatarURL.split('?')
+  const _avatarUrl = avatarUrl.indexOf('?') > 0 ? avatarUrl : `${avatarUrl}?`
+  const [url, _querystring] = _avatarUrl.split('?')
   const query = qs.parse(_querystring)
   const querystring = qs.stringify({
     ...query,
@@ -138,49 +138,49 @@ export function getUniqueIdForSubscription(subscription: {
         }
 
         case 'REPO_EVENTS': {
-          const { owner, repo } = s.params
+          const { owner, repo } = s.params!
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/repos/${owner}/${repo}/events`.toLowerCase()
         }
 
         case 'REPO_NETWORK_EVENTS': {
-          const { owner, repo } = s.params
+          const { owner, repo } = s.params!
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/networks/${owner}/${repo}/events`.toLowerCase()
         }
 
         case 'ORG_PUBLIC_EVENTS': {
-          const { org } = s.params
+          const { org } = s.params!
           if (!org) throw new Error('Required params: org')
           return `/orgs/${org}/events`.toLowerCase()
         }
 
         case 'USER_RECEIVED_EVENTS': {
-          const { username } = s.params
+          const { username } = s.params!
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/received_events`.toLowerCase()
         }
 
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
-          const { username } = s.params
+          const { username } = s.params!
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/received_events/public`.toLowerCase()
         }
 
         case 'USER_EVENTS': {
-          const { username } = s.params
+          const { username } = s.params!
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/events`.toLowerCase()
         }
 
         case 'USER_PUBLIC_EVENTS': {
-          const { username } = s.params
+          const { username } = s.params!
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/events/public`.toLowerCase()
         }
 
         case 'USER_ORG_EVENTS': {
-          const { org, username } = s.params
+          const { org, username } = s.params!
           if (!(username && org))
             throw new Error('Required params: username, org')
           return `/users/${username}/events/orgs/${org}`.toLowerCase()
@@ -203,7 +203,7 @@ export function getUniqueIdForSubscription(subscription: {
 
       switch (s.subtype) {
         case 'REPO_NOTIFICATIONS': {
-          const { owner, repo } = s.params
+          const { owner, repo } = s.params!
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/repos/${owner}/${repo}/notifications${querystring}`.toLowerCase()
         }
@@ -237,8 +237,8 @@ export function createSubscriptionObjectsWithId(
   }))
 }
 
-export function getGitHubApiHeadersFromHeader(headers: Record<string, any>) {
-  const github: GitHubApiHeaders = {}
+export function getGitHubAPIHeadersFromHeader(headers: Record<string, any>) {
+  const github: GitHubAPIHeaders = {}
 
   if (!headers) return github
 

@@ -1,6 +1,8 @@
 import _ from 'lodash'
+import qs from 'qs'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
+import url from 'url'
 
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
@@ -21,9 +23,11 @@ import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { emitter } from '../libs/emitter'
+import { Linking } from '../libs/linking'
 import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { clearQueryStringFromURL } from '../utils/helpers/auth'
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +42,7 @@ const styles = StyleSheet.create({
 export const MainScreen = React.memo(() => {
   const { appOrientation } = useAppLayout()
 
+  const appToken = useReduxState(selectors.appTokenSelector)!
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const focusedColumnId = useFocusedColumn()
@@ -46,6 +51,9 @@ export const MainScreen = React.memo(() => {
   const moveColumn = useReduxAction(actions.moveColumn)
   const popModal = useReduxAction(actions.popModal)
   const pushModal = useReduxAction(actions.pushModal)
+  const refreshInstallationsRequest = useReduxAction(
+    actions.refreshInstallationsRequest,
+  )
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
 
@@ -77,6 +85,41 @@ export const MainScreen = React.memo(() => {
       wasVisible.current = isVisible
     },
     [isVisible],
+  )
+
+  useEffect(
+    () => {
+      const handler = ({
+        isInitial,
+        url: uri,
+      }: {
+        isInitial?: boolean
+        url: string
+      }) => {
+        const querystring = url.parse(uri).query || ''
+        const query = qs.parse(querystring)
+
+        if (!query.installation_id) return
+
+        clearQueryStringFromURL(['installation_id', 'setup_action'])
+
+        if (!isInitial) {
+          refreshInstallationsRequest({
+            appToken,
+            includeInstallationToken: true,
+          })
+        }
+      }
+
+      Linking.addEventListener('url', handler)
+
+      handler({ isInitial: true, url: Linking.getCurrentURL() })
+
+      return () => {
+        Linking.removeEventListener('url', handler)
+      }
+    },
+    [appToken],
   )
 
   const horizontalSidebar = appOrientation === 'portrait'

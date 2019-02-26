@@ -1516,12 +1516,12 @@ const emojis = {
 
 export type GitHubEmoji = keyof typeof emojis
 
-export function isEmojiValid(emoji: GitHubEmoji | string) {
+export function isEmojiValid(emoji: GitHubEmoji) {
   if (!emoji) return false
   return !!(emojis as any)[emoji]
 }
 
-export function getEmojiImageURL(emoji: GitHubEmoji | string) {
+export function getEmojiImageURL(emoji: GitHubEmoji) {
   if (!isEmojiValid(emoji)) return undefined
   return `https://github.githubassets.com/images/icons/emoji/${
     (emojis as any)[emoji]
@@ -1591,7 +1591,7 @@ function parseTextWithEmojisToReactComponents_1(
 
   return genericParseText(text, pattern, match => {
     const emoji = match.slice(1, -1)
-    const emojiImageURL = getEmojiImageURL(emoji)
+    const emojiImageURL = getEmojiImageURL(emoji as GitHubEmoji)
     return getComponent(emojiImageURL, { alt: emoji, ...options })
   })
 }

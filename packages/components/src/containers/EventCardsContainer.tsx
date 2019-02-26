@@ -9,11 +9,20 @@ import {
   getOlderEventDate,
   Omit,
 } from '@devhub/core'
+import { View } from 'react-native'
+import { EmptyCards } from '../components/cards/EmptyCards'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
+import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
+import { NoTokenView } from '../components/cards/NoTokenView'
+import { ButtonLink } from '../components/common/ButtonLink'
+import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
+import { octokit } from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { contentPadding } from '../styles/variables'
+import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
@@ -27,6 +36,11 @@ export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { column } = props
 
+    const appToken = useReduxState(selectors.appTokenSelector)
+    const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
+    const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+
+    // TODO: Support multiple subscriptions per column.
     const firstSubscription = useReduxState(
       state =>
         selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
@@ -35,6 +49,28 @@ export const EventCardsContainer = React.memo(
     )
 
     const data = (firstSubscription && firstSubscription.data) || {}
+
+    const isNotFound = (data.errorMessage || '')
+      .toLowerCase()
+      .includes('not found')
+
+    const owner =
+      (firstSubscription &&
+        firstSubscription.params &&
+        (('owner' in firstSubscription.params &&
+          firstSubscription.params.owner) ||
+          ('org' in firstSubscription.params &&
+            firstSubscription.params.org))) ||
+      undefined
+
+    const ownerResponse = useGitHubAPI(
+      octokit.users.getByUsername,
+      isNotFound && owner ? { username: owner } : null,
+    )
+
+    const installationsLoadState = useReduxState(
+      selectors.installationsLoadStateSelector,
+    )
 
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
@@ -132,13 +168,76 @@ export const EventCardsContainer = React.memo(
 
     if (!firstSubscription) return null
 
+    if (!(appToken && githubOAuthToken)) {
+      return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
+    }
+
+    if (isNotFound) {
+      if (!githubAppToken) return <NoTokenView githubAppType="app" />
+
+      if (ownerResponse.loadingState === 'loading') {
+        return (
+          <EmptyCards
+            clearedAt={undefined}
+            columnId={column.id}
+            fetchNextPage={undefined}
+            loadState="loading"
+            refresh={undefined}
+          />
+        )
+      }
+
+      if (ownerResponse.data && ownerResponse.data.id) {
+        return (
+          <View
+            style={{
+              flex: 1,
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: contentPadding,
+            }}
+          >
+            <GenericMessageWithButtonView
+              buttonView={
+                <ButtonLink
+                  analyticsLabel="setup_github_app_from_column"
+                  children="Install GitHub App"
+                  disabled={
+                    firstSubscription.data.loadState === 'loading' ||
+                    firstSubscription.data.loadState === 'loading_first'
+                  }
+                  href={getGitHubAppInstallUri({
+                    suggestedTargetId: ownerResponse.data.id,
+                  })}
+                  loading={
+                    installationsLoadState === 'loading' ||
+                    firstSubscription.data.loadState === 'loading' ||
+                    firstSubscription.data.loadState === 'loading_first'
+                  }
+                  openOnNewTab={false}
+                />
+              }
+              emoji="lock"
+              subtitle="Install the GitHub App to unlock private access. No code permission required."
+              title="Private repository?"
+            />
+          </View>
+        )
+      }
+    }
+
     return (
       <EventCards
         {...props}
         key={`event-cards-${column.id}`}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        loadState={firstSubscription.data.loadState || 'not_loaded'}
+        loadState={
+          installationsLoadState === 'loading' && !filteredItems.length
+            ? 'loading_first'
+            : firstSubscription.data.loadState || 'not_loaded'
+        }
         events={filteredItems}
         refresh={refresh}
       />

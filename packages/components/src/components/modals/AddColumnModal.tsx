@@ -377,42 +377,6 @@ export function AddColumnModal(props: AddColumnModalProps) {
 
         <Spacer flex={1} minHeight={contentPadding} />
 
-        <Link
-          analyticsLabel="about_private_access_from_addcolumn"
-          href="https://github.com/devhubapp/devhub/issues/32"
-          openOnNewTab
-        >
-          <SpringAnimatedText
-            style={{
-              paddingHorizontal: contentPadding,
-              lineHeight: 20,
-              fontSize: 12,
-              color: springAnimatedTheme.foregroundColorMuted50,
-              textAlign: 'center',
-            }}
-          >
-            Coming soon: support for private repositories. Click here and
-            subscribe to this issue if you want to be notified.
-          </SpringAnimatedText>
-        </Link>
-        <Link
-          analyticsLabel="twitter_from_addcolumn"
-          href="https://twitter.com/devhub_app"
-          openOnNewTab
-        >
-          <SpringAnimatedText
-            style={{
-              paddingHorizontal: contentPadding,
-              lineHeight: 20,
-              fontSize: 12,
-              color: springAnimatedTheme.foregroundColorMuted50,
-              textAlign: 'center',
-            }}
-          >
-            Also, follow @devhub_app on Twitter!
-          </SpringAnimatedText>
-        </Link>
-
         <Spacer
           height={isFabVisible ? fabSize + 2 * fabSpacing : contentPadding}
         />

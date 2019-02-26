@@ -19,6 +19,7 @@ import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
 import { AddColumnModal } from './AddColumnModal'
+import { AdvancedSettingsModal } from './AdvancedSettingsModal'
 import { EnterpriseSetupModal } from './EnterpriseSetupModal'
 import { KeyboardShortcutsModal } from './KeyboardShortcutsModal'
 
@@ -38,6 +39,9 @@ function renderModal(modal: ModalPayloadWithIndex) {
           {...modal.params}
         />
       )
+
+    case 'ADVANCED_SETTINGS':
+      return <AdvancedSettingsModal showBackButton={modal.index >= 1} />
 
     case 'KEYBOARD_SHORTCUTS':
       return <KeyboardShortcutsModal showBackButton={modal.index >= 1} />
@@ -72,7 +76,9 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const immediate =
     sizename === '1-small' &&
-    ((currentOpenedModal && currentOpenedModal.name === 'SETTINGS') ||
+    ((currentOpenedModal &&
+      currentOpenedModal.name === 'SETTINGS' &&
+      !previouslyOpenedModal) ||
       (!currentOpenedModal &&
         previouslyOpenedModal &&
         previouslyOpenedModal.name === 'SETTINGS'))

@@ -1,6 +1,6 @@
-export * from './api'
 export * from './auth'
 export * from './columns'
 export * from './config'
+export * from './github'
 export * from './navigation'
 export * from './subscriptions'

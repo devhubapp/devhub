@@ -20,13 +20,13 @@ import {
   ColumnSubscription,
   constants,
   createNotificationsCache,
-  EnhancedGitHubEvent,
   EnhancementCache,
   enhanceNotifications,
-  getGitHubApiHeadersFromHeader,
+  getGitHubAPIHeadersFromHeader,
   getNotificationsEnhancementMap,
   getOlderEventDate,
   getOlderNotificationDate,
+  GitHubAppTokenType,
   GitHubEvent,
   GitHubNotification,
 } from '@devhub/core'
@@ -42,19 +42,28 @@ import { ExtractActionFromActionCreator } from '../types/base'
 let notificationsCache: EnhancementCache
 
 function* init() {
-  yield take('LOGIN_SUCCESS')
+  // yield take('LOGIN_SUCCESS')
+  yield take(['REFRESH_INSTALLATIONS_SUCCESS', 'REFRESH_INSTALLATIONS_FAILURE'])
 
   let isFirstTime = true
   while (true) {
-    yield race({
+    const { action } = yield race({
       delay: delay(isFirstTime ? 0 : 10 * 1000),
-      logout: take([
+      action: take([
         'LOGIN_SUCCESS',
         'LOGIN_FAILURE',
         'LOGOUT',
         'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
+        'REFRESH_INSTALLATIONS_SUCCESS',
       ]),
     })
+
+    const forceFetchAll = !!(
+      action &&
+      (action.type === 'LOGIN_SUCCESS' ||
+        action.type === 'REFRESH_INSTALLATIONS_SUCCESS')
+    )
+
     const _isFirstTime = isFirstTime
     isFirstTime = false
 
@@ -69,13 +78,13 @@ function* init() {
         ])
     }
 
-    const isLogged = !!selectors.currentUserSelector(state)
+    const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
 
     const subscriptions = selectors.subscriptionsArrSelector(state)
     if (!(subscriptions && subscriptions.length)) continue
 
-    const github = selectors.githubApiHeadersSelector(state)
+    const github = selectors.githubAPIHeadersSelector(state)
 
     // TODO: Eventually the number of subscriptions wont be 1x1 with the number of columns
     // Because columns will be able to have multiple subscriptions.
@@ -87,12 +96,13 @@ function* init() {
           .filter(
             s =>
               s &&
-              minimumRefetchTimeHasPassed(
-                s,
-                typeof github.pollInterval === 'number'
-                  ? github.pollInterval * 1000
-                  : undefined,
-              ),
+              (forceFetchAll ||
+                minimumRefetchTimeHasPassed(
+                  s,
+                  typeof github.pollInterval === 'number'
+                    ? github.pollInterval * 1000
+                    : undefined,
+                )),
           )
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
@@ -106,10 +116,11 @@ function* init() {
           : undefined
 
         if (
-          subscription &&
-          subscription.data &&
-          subscription.data.loadState === 'error' &&
-          (!timeDiff || timeDiff < fiveMinutes)
+          !forceFetchAll &&
+          (subscription &&
+            subscription.data &&
+            subscription.data.loadState === 'error' &&
+            (!timeDiff || timeDiff < fiveMinutes))
         ) {
           if (__DEV__) {
             // tslint:disable-next-line no-console
@@ -234,11 +245,33 @@ function* onFetchRequest(
 ) {
   const state = yield select()
 
-  const { subscriptionType, subscriptionId, params: _params } = action.payload
+  const { params: _params, subscriptionId, subscriptionType } = action.payload
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
-  const githubToken = selectors.githubTokenSelector(state)
-  const hasPrivateAccess = selectors.githubHasPrivateAccessSelector(state)
+
+  const owner =
+    (subscription &&
+      subscription.params &&
+      (('owner' in subscription.params && subscription.params.owner) ||
+        ('org' in subscription.params && subscription.params.org))) ||
+    undefined
+
+  const installationToken = selectors.installationTokenByOwnerSelector(
+    state,
+    owner,
+  )
+  const githubOAuthToken = selectors.githubOAuthTokenSelector(state)!
+  const githubAppToken = selectors.githubAppTokenSelector(state)
+
+  const githubToken =
+    (subscription && subscription.type === 'activity' && installationToken) ||
+    githubOAuthToken ||
+    githubAppToken
+
+  const appTokenType: GitHubAppTokenType =
+    (githubToken === installationToken && 'app-installation') ||
+    (githubToken === githubAppToken && 'app-user-to-server') ||
+    'oauth'
 
   const page = Math.max(1, _params.page || 1)
   const perPage = Math.min(
@@ -283,11 +316,19 @@ function* onFetchRequest(
 
       const enhancementMap = yield call(
         getNotificationsEnhancementMap,
-        newItems,
+        mergedItems,
         {
           cache: notificationsCache,
-          githubToken,
-          hasPrivateAccess,
+          getGitHubInstallationTokenForRepo: (
+            ownerName: string | undefined,
+            repoName: string | undefined,
+          ) =>
+            selectors.installationTokenByRepoSelector(
+              state,
+              ownerName,
+              repoName,
+            ),
+          githubOAuthToken,
         },
       )
 
@@ -308,6 +349,7 @@ function* onFetchRequest(
     } else if (subscription && subscription.type === 'activity') {
       const response = yield call(getActivity, subscription.subtype, params, {
         subscriptionId,
+        githubToken,
       })
       headers = (response && response.headers) || {}
 
@@ -333,7 +375,7 @@ function* onFetchRequest(
       )
     }
 
-    const github = getGitHubApiHeadersFromHeader(headers)
+    const githubAPIHeaders = getGitHubAPIHeadersFromHeader(headers)
 
     yield put(
       actions.fetchSubscriptionSuccess({
@@ -341,7 +383,7 @@ function* onFetchRequest(
         subscriptionId,
         data,
         canFetchMore,
-        github,
+        github: { appTokenType, headers: githubAPIHeaders },
       }),
     )
   } catch (error) {
@@ -352,14 +394,14 @@ function* onFetchRequest(
     // bugsnag.notify(error)
 
     const headers = error && error.response && error.response.headers
-    const github = getGitHubApiHeadersFromHeader(headers)
+    const githubAPIHeaders = getGitHubAPIHeadersFromHeader(headers)
 
     yield put(
       actions.fetchSubscriptionFailure(
         {
           subscriptionType,
           subscriptionId,
-          github,
+          github: { appTokenType, headers: githubAPIHeaders },
         },
         error,
       ),
@@ -375,7 +417,11 @@ function* onFetchFailed(
   if (
     action.error &&
     action.error.status === 401 &&
-    action.error.message === 'Bad credentials'
+    action.error.message === 'Bad credentials' &&
+    action.payload &&
+    action.payload.github &&
+    (action.payload.github.appTokenType === 'app-user-to-server' ||
+      action.payload.github.appTokenType === 'oauth')
   ) {
     yield put(actions.logout())
   }

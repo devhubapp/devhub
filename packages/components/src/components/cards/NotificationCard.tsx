@@ -16,6 +16,7 @@ import {
 } from '@devhub/core'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import {
   getIssueIconAndColor,
@@ -29,6 +30,7 @@ import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 
@@ -48,11 +50,25 @@ const styles = StyleSheet.create({
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const { notification, onlyOneRepository, isSelected } = props
 
+  const repoFullName =
+    (notification &&
+      (notification.repository.full_name || notification.repository.name)) ||
+    ''
+
+  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(repoFullName)
+
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
-  const hasPrivateAccess = useReduxState(
-    selectors.githubHasPrivateAccessSelector,
+
+  /*
+  const hasPrivateAccess = useReduxState(state =>
+    selectors.githubHasPrivateAccessToRepoSelector(
+      state,
+      repoOwnerName,
+      repoName,
+    ),
   )
+  */
 
   useEffect(
     () => {
@@ -78,11 +94,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
 
-  const title = trimNewLinesAndSpaces(subject.title)
+  const isPrivateAndCantSee = !!(
+    isPrivate &&
+    // !hasPrivateAccess &&
+    !notification.enhanced
+  )
 
-  const repoFullName =
-    notification.repository.full_name || notification.repository.name || ''
-  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(repoFullName)
+  const title = trimNewLinesAndSpaces(subject.title)
 
   const subjectType = subject.type || ''
 
@@ -152,8 +170,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
     pullRequest ||
     undefined) as any)
-  const cardIconName = cardIconDetails.icon
-  const cardIconColor = cardIconDetails.color
+  const cardIconName = isPrivateAndCantSee ? 'lock' : cardIconDetails.icon
+  const cardIconColor = isPrivateAndCantSee
+    ? colors.yellow
+    : cardIconDetails.color
 
   const { icon: pullRequestIconName, color: pullRequestIconColor } = pullRequest
     ? getPullRequestIconAndColor(pullRequest as any)
@@ -198,7 +218,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       <NotificationCardHeader
         key={`notification-card-header-${id}`}
         actionText={actionText}
-        avatarURL={actor && actor.avatar_url}
+        avatarUrl={actor && actor.avatar_url}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         date={updatedAt}
@@ -250,7 +270,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <IssueOrPullRequestRow
           key={`notification-issue-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
-          avatarURL={issue.user.avatar_url}
+          avatarUrl={issue.user.avatar_url}
           commentsCount={issue.comments}
           createdAt={issue.created_at}
           iconColor={issueIconColor!}
@@ -286,7 +306,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           // because it may be for other updates
           <CommentRow
             key={`notification-issue-body-${issue.id}`}
-            avatarURL={issue.user.avatar_url}
+            avatarUrl={issue.user.avatar_url}
             body={issue.body}
             isRead={isRead}
             smallLeftColumn={smallLeftColumn}
@@ -300,7 +320,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <IssueOrPullRequestRow
           key={`notification-pr-row-${issueOrPullRequestNumber}`}
           addBottomAnchor
-          avatarURL={pullRequest.user.avatar_url}
+          avatarUrl={pullRequest.user.avatar_url}
           commentsCount={pullRequest.comments}
           createdAt={pullRequest.created_at}
           iconColor={pullRequestIconColor!}
@@ -336,7 +356,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           // because it may be for other updates
           <CommentRow
             key={`notification-pr-body-${pullRequest.id}`}
-            avatarURL={pullRequest.user.avatar_url}
+            avatarUrl={pullRequest.user.avatar_url}
             body={pullRequest.body}
             isRead={isRead}
             smallLeftColumn={smallLeftColumn}
@@ -349,7 +369,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!!release && (
         <ReleaseRow
           key={`notification-release-row-${repo.id}`}
-          avatarURL={release.author.avatar_url}
+          avatarUrl={release.author.avatar_url}
           body={release.body}
           isRead={isRead}
           name={release.name || ''}
@@ -366,7 +386,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!(commit || issue || pullRequest || release) && !!title && (
         <CommentRow
           key={`notification-${id}-comment-row`}
-          avatarURL=""
+          avatarUrl=""
           body={title}
           isRead={isRead}
           smallLeftColumn={smallLeftColumn}
@@ -386,7 +406,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <CommentRow
           key={`notification-comment-row-${comment.id}`}
           addBottomAnchor
-          avatarURL={comment.user.avatar_url}
+          avatarUrl={comment.user.avatar_url}
           body={comment.body}
           isRead={isRead}
           smallLeftColumn={smallLeftColumn}
@@ -396,18 +416,17 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         />
       )}
 
-      {!!(isPrivate && !hasPrivateAccess && !notification.enhanced) && (
-        <CommentRow
-          key={`notification-privacy-support-row-${notification.id}`}
-          analyticsLabel="about_private_access_from_notification"
-          avatarURL={undefined}
-          body="Coming soon: support for private notifications. Click here and subscribe to this issue if you want to be notified."
-          isRead
+      {!!isPrivateAndCantSee && (
+        <PrivateNotificationRow
+          key={`private-notification-row-${notification.id}`}
+          isRead={isRead}
           smallLeftColumn={smallLeftColumn}
-          url="https://github.com/devhubapp/devhub/issues/32"
-          userLinkURL={undefined}
-          username={undefined}
-          textStyle={{ fontStyle: 'italic' }}
+          ownerId={
+            (notification.repository.owner &&
+              notification.repository.owner.id) ||
+            undefined
+          }
+          repoId={repo.id}
         />
       )}
     </SpringAnimatedView>

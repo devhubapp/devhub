@@ -7,12 +7,12 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { buttonSize } from '../common/Button'
+import { defaultButtonSize } from '../common/Button'
 import { FAB, fabSize } from '../common/FAB'
 import { useAppLayout } from '../context/LayoutContext'
 
 export const fabSpacing =
-  contentPadding / 2 + Math.max(0, (fabSize - buttonSize) / 2) - 2
+  contentPadding / 2 + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
 
 const fabPositionStyle: ViewStyle = {
   position: 'absolute',

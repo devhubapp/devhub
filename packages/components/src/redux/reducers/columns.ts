@@ -4,9 +4,9 @@ import _ from 'lodash'
 import {
   ActivityColumn,
   Column,
-  columnsArrToState,
+  normalizeColumns,
+  normalizeSubscriptions,
   NotificationColumn,
-  subscriptionsArrToState,
 } from '@devhub/core'
 import { Reducer } from '../types'
 
@@ -32,11 +32,11 @@ export const columnsReducer: Reducer<State> = (
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
-        const subscriptionIds = subscriptionsArrToState(
+        const subscriptionIds = normalizeSubscriptions(
           action.payload.subscriptions,
         ).allIds
 
-        const normalized = columnsArrToState([
+        const normalized = normalizeColumns([
           {
             ...action.payload.column,
             subscriptionIds: _.uniq(
@@ -146,7 +146,7 @@ export const columnsReducer: Reducer<State> = (
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
-        const normalized = columnsArrToState(
+        const normalized = normalizeColumns(
           action.payload.columns,
           action.payload.columnsUpdatedAt,
         )

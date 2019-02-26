@@ -19,8 +19,11 @@ export const Linking: LinkingCrossPlatform = {
   async canOpenURL(url: string) {
     return window.ipc.sendSync('can-open-url', url)
   },
-  async getInitialURL() {
-    return ''
+  getCurrentURL() {
+    return window.location.href || ''
+  },
+  getInitialURL() {
+    return LinkingOriginal.getInitialURL()
   },
   openURL: (url: string): Promise<void> => {
     return LinkingOriginal.openURL(url)

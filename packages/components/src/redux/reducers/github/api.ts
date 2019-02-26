@@ -1,14 +1,14 @@
 import immer from 'immer'
 
-import { GitHubApiHeaders } from '@devhub/core'
-import { Reducer } from '../types'
+import { GitHubAPIHeaders } from '@devhub/core'
+import { Reducer } from '../../types'
 
 export interface State {
-  github?: GitHubApiHeaders
+  headers?: GitHubAPIHeaders
 }
 
 const initialState: State = {
-  github: {
+  headers: {
     pollInterval: undefined,
     rateLimitLimit: undefined,
     rateLimitRemaining: undefined,
@@ -16,16 +16,19 @@ const initialState: State = {
   },
 }
 
-export const apiReducer: Reducer<State> = (state = initialState, action) => {
+export const githubAPIReducer: Reducer<State> = (
+  state = initialState,
+  action,
+) => {
   switch (action.type) {
     case 'FETCH_SUBSCRIPTION_SUCCESS':
     case 'FETCH_SUBSCRIPTION_FAILURE':
       return immer(state, draft => {
         if (!action.payload.github) return
 
-        draft.github = {
-          ...draft.github,
-          ...action.payload.github,
+        draft.headers = {
+          ...draft.headers,
+          ...action.payload.github.headers,
         }
       })
 

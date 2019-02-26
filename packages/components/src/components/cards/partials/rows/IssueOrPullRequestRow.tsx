@@ -29,7 +29,7 @@ import { cardRowStyles } from './styles'
 
 export interface IssueOrPullRequestRowProps {
   addBottomAnchor?: boolean
-  avatarURL: string | undefined
+  avatarUrl: string | undefined
   commentsCount?: number
   createdAt: string | undefined
   iconColor?: string
@@ -53,7 +53,7 @@ export const IssueOrPullRequestRow = React.memo(
 
     const {
       addBottomAnchor,
-      avatarURL,
+      avatarUrl,
       commentsCount,
       createdAt,
       iconColor,
@@ -95,7 +95,7 @@ export const IssueOrPullRequestRow = React.memo(
         >
           {Boolean(username) && (
             <Avatar
-              avatarURL={avatarURL}
+              avatarUrl={avatarUrl}
               isBot={isBot}
               linkURL={userLinkURL}
               small

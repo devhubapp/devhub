@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { GitHubIcon } from '@devhub/core'
+import { GitHubIcon, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
@@ -19,7 +19,7 @@ import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 
 export interface GitHubLoginButtonProps
-  extends SpringAnimatedTouchableOpacityProps {
+  extends Omit<SpringAnimatedTouchableOpacityProps, 'children'> {
   horizontal?: boolean
   leftIcon?: GitHubIcon
   loading?: boolean

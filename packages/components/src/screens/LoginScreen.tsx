@@ -1,7 +1,9 @@
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
+import url from 'url'
 
+import { constants } from '@devhub/core'
 import { SpringAnimatedText } from '../components/animated/spring/SpringAnimatedText'
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
@@ -12,12 +14,17 @@ import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { bugsnag } from '../libs/bugsnag'
+import { Linking } from '../libs/linking'
 import { executeOAuth } from '../libs/oauth'
-import { getUrlParamsIfMatches, OAuthResponseData } from '../libs/oauth/helpers'
+import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
 import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { contentPadding } from '../styles/variables'
+import {
+  clearQueryStringFromURL,
+  tryParseOAuthParams,
+} from '../utils/helpers/auth'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
@@ -92,14 +99,55 @@ export const LoginScreen = React.memo(() => {
   // that passes the token via query string
   useEffect(() => {
     ;(async () => {
-      if (Platform.OS !== 'web') return
-      const querystring = window.location.search
-      if (!(querystring && querystring.includes('oauth=true'))) return
+      const currentURL = await Linking.getCurrentURL()
+      const querystring = url.parse(currentURL).query || ''
+      const query = qs.parse(querystring)
+
+      if (!query.oauth) return
 
       const params = getUrlParamsIfMatches(querystring, '')
       if (!params) return
-      handleOAuth(params)
+
+      try {
+        const { appToken } = tryParseOAuthParams(params)
+        if (!appToken) return
+
+        loginRequest({ appToken })
+      } catch (error) {
+        const description = 'OAuth execution failed'
+        console.error(description, error)
+
+        if (error.message === 'Canceled' || error.message === 'Timeout') return
+        bugsnag.notify(error, { description })
+
+        alert(`Login failed. ${error || ''}`)
+      }
     })()
+  }, [])
+
+  // auto start oauth flow after github app installation
+  useEffect(() => {
+    const handler = ({ url: uri }: { url: string }) => {
+      const querystring = url.parse(uri).query || ''
+      const query = qs.parse(querystring)
+
+      if (query.oauth) return
+      if (!query.installation_id) return
+
+      loginWithGitHub()
+
+      setTimeout(() => {
+        clearQueryStringFromURL(['installation_id', 'setup_action'])
+      }, 500)
+    }
+
+    Linking.addEventListener('url', handler)
+
+    handler({ url: Linking.getCurrentURL() })
+
+    return () => {
+      Linking.removeEventListener('url', handler)
+    }
   }, [])
 
   useEffect(
@@ -118,77 +166,19 @@ export const LoginScreen = React.memo(() => {
 
   analytics.trackScreenView('LOGIN_SCREEN')
 
-  const handleOAuth = async (
-    params: OAuthResponseData,
-    _githubScope?: string[],
-  ) => {
-    try {
-      if (!(params && params.app_token && params.github_token))
-        throw new Error('No token received.')
-
-      const appToken = params.app_token
-      const githubToken = params.github_token
-
-      const githubTokenCreatedAt =
-        params.github_token_created_at || new Date().toISOString()
-      const githubTokenType = params.github_token_type || 'bearer'
-
-      const githubScope =
-        params.github_scope && params.github_scope.length
-          ? params.github_scope
-          : _githubScope
-
-      await loginRequest({
-        appToken,
-        githubScope,
-        githubToken,
-        githubTokenType,
-        githubTokenCreatedAt,
-      })
-
-      if (
-        Platform.OS === 'web' &&
-        !Platform.isElectron &&
-        window.history &&
-        window.history.replaceState
-      ) {
-        const newQuery = { ...params }
-        delete newQuery.app_token
-        delete newQuery.code
-        delete newQuery.github_scope
-        delete newQuery.github_token
-        delete newQuery.github_token_created_at
-        delete newQuery.github_token_type
-        delete newQuery.oauth
-
-        window.history.replaceState(
-          {},
-          document.title,
-          `/${
-            Object.keys(newQuery).length ? `?${qs.stringify(newQuery)}` : ''
-          }`,
-        )
-      }
-    } catch (error) {
-      const description = 'OAuth failed'
-      console.error(description, error)
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
-
-      bugsnag.notify(error, { description })
-      alert(`Login failed. ${error || ''}`)
-    }
-  }
-
   const loginWithGitHub = async () => {
     setIsExecutingOAuth(true)
-
-    const githubScope = ['read:user', 'user:email', 'notifications', 'read:org']
 
     try {
       analytics.trackEvent('engagement', 'login')
 
-      const params = await executeOAuth(githubScope)
-      handleOAuth(params, githubScope)
+      const params = await executeOAuth('both', {
+        scope: constants.DEFAULT_GITHUB_OAUTH_SCOPES,
+      })
+      const { appToken } = tryParseOAuthParams(params)
+      if (!appToken) throw new Error('No app token')
+
+      loginRequest({ appToken })
     } catch (error) {
       const description = 'OAuth execution failed'
       console.error(description, error)
@@ -196,6 +186,8 @@ export const LoginScreen = React.memo(() => {
 
       if (error.message === 'Canceled' || error.message === 'Timeout') return
       bugsnag.notify(error, { description })
+
+      alert(`Login failed. ${error || ''}`)
     }
   }
 

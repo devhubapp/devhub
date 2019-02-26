@@ -49,14 +49,11 @@ export function itemPassesFilterRecord(
 
 function baseColumnHasAnyFilter(
   filters: NotificationColumnFilters | undefined,
-  hasPrivateAccess: boolean,
 ) {
   if (!filters) return false
 
   if (filters.clearedAt) return true
-  if (hasPrivateAccess && typeof filters.private === 'boolean') return true
-  if (!hasPrivateAccess && filters.private === true) return true
-
+  if (typeof filters.private === 'boolean') return true
   if (typeof filters.saved === 'boolean') return true
   if (typeof filters.unread === 'boolean') return true
 
@@ -65,11 +62,10 @@ function baseColumnHasAnyFilter(
 
 export function activityColumnHasAnyFilter(
   filters: ActivityColumnFilters | undefined,
-  hasPrivateAccess: boolean,
 ) {
   if (!filters) return false
 
-  if (baseColumnHasAnyFilter(filters, hasPrivateAccess)) return true
+  if (baseColumnHasAnyFilter(filters)) return true
 
   if (
     filters.activity &&
@@ -83,11 +79,10 @@ export function activityColumnHasAnyFilter(
 
 export function notificationColumnHasAnyFilter(
   filters: NotificationColumnFilters | undefined,
-  hasPrivateAccess: boolean,
 ) {
   if (!filters) return false
 
-  if (baseColumnHasAnyFilter(filters, hasPrivateAccess)) return true
+  if (baseColumnHasAnyFilter(filters)) return true
 
   if (filters.notifications && filters.notifications.participating) {
     return true
@@ -106,24 +101,13 @@ export function notificationColumnHasAnyFilter(
 export function getFilteredNotifications(
   notifications: EnhancedGitHubNotification[],
   filters: NotificationColumnFilters | undefined,
-  hasPrivateAccess: boolean,
 ) {
   let _notifications = sortNotifications(notifications)
 
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
 
-  // Note: GitHub always includes private notifications
-  // even if our hasPrivateAccess (because this checks private repo access)
-  // TL/DR, it will show private notifications, but without enhancement
-  // (without issue details, comment content, etc)
-  if (
-    filters &&
-    (notificationColumnHasAnyFilter(filters, hasPrivateAccess) ||
-      (!hasPrivateAccess &&
-        typeof filters.private === 'boolean' &&
-        _notifications.find(n => isNotificationPrivate(n))))
-  ) {
+  if (filters && notificationColumnHasAnyFilter(filters)) {
     _notifications = _notifications.filter(notification => {
       if (!itemPassesFilterRecord(reasonsFilter, notification.reason, true))
         return false
@@ -136,7 +120,6 @@ export function getFilteredNotifications(
       }
 
       if (
-        // (!hasPrivateAccess && isNotificationPrivate(notification)) ||
         typeof filters.private === 'boolean' &&
         isNotificationPrivate(notification) !== filters.private
       ) {
@@ -168,17 +151,12 @@ export function getFilteredNotifications(
 export function getFilteredEvents(
   events: EnhancedGitHubEvent[],
   filters: ActivityColumnFilters | undefined,
-  hasPrivateAccess: boolean,
 ) {
   let _events = sortEvents(events)
 
   const activityFilter = filters && filters.activity && filters.activity.types
 
-  if (
-    filters &&
-    (activityColumnHasAnyFilter(filters, hasPrivateAccess) ||
-      (!hasPrivateAccess && _events.find(e => isEventPrivate(e))))
-  ) {
+  if (filters && activityColumnHasAnyFilter(filters)) {
     _events = _events.filter(event => {
       if (!itemPassesFilterRecord(activityFilter, event.type, true))
         return false
@@ -191,9 +169,8 @@ export function getFilteredEvents(
       }
 
       if (
-        (!hasPrivateAccess && isEventPrivate(event)) ||
-        (typeof filters.private === 'boolean' &&
-          isEventPrivate(event) !== filters.private)
+        typeof filters.private === 'boolean' &&
+        isEventPrivate(event) !== filters.private
       ) {
         return false
       }

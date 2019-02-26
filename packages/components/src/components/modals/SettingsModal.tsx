@@ -11,6 +11,7 @@ import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
 import { Spacer } from '../common/Spacer'
+import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemePreference } from '../widgets/ThemePreference'
 
@@ -26,6 +27,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const username = useReduxState(selectors.currentUsernameSelector)
 
   const logout = useReduxAction(actions.logout)
+  const pushModal = useReduxAction(actions.pushModal)
 
   return (
     <ModalColumn
@@ -76,6 +78,16 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
         <View style={{ padding: contentPadding }}>
           <AppVersion />
+
+          <Spacer height={contentPadding} />
+
+          <Button
+            key="adbanced-button"
+            analyticsLabel=""
+            onPress={() => pushModal({ name: 'ADVANCED_SETTINGS' })}
+          >
+            Show advanced settings
+          </Button>
 
           <Spacer height={contentPadding} />
 

@@ -1,11 +1,12 @@
 import axios, { AxiosResponse } from 'axios'
 import { REHYDRATE } from 'redux-persist'
-import { all, call, put, select, takeLatest } from 'redux-saga/effects'
+import { all, put, select, takeLatest } from 'redux-saga/effects'
 
-import { constants, fromGitHubUser, GitHubUser, User } from '@devhub/core'
+import { constants, User } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
 import { bugsnag } from '../../libs/bugsnag'
 import * as github from '../../libs/github'
+import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
@@ -13,29 +14,15 @@ import { ExtractActionFromActionCreator } from '../types/base'
 
 function* onRehydrate() {
   const appToken = yield select(selectors.appTokenSelector)
-  const githubScope = yield select(selectors.githubScopeSelector)
-  const githubToken = yield select(selectors.githubTokenSelector)
-  const githubTokenType = yield select(selectors.githubTokenTypeSelector)
-  const githubTokenCreatedAt = yield select(selectors.githubTokenTypeSelector)
-  if (!(appToken && githubToken)) return
+  if (!appToken) return
 
-  yield put(
-    actions.loginRequest({
-      appToken,
-      githubScope,
-      githubToken,
-      githubTokenType,
-      githubTokenCreatedAt,
-    }),
-  )
+  yield put(actions.loginRequest({ appToken }))
 }
 
 function* onLoginRequest(
   action: ExtractActionFromActionCreator<typeof actions.loginRequest>,
 ) {
   try {
-    github.authenticate(action.payload.githubToken || '')
-
     // TODO: Auto generate these typings
     const response: AxiosResponse<{
       data: {
@@ -46,10 +33,8 @@ function* onLoginRequest(
           user: {
             _id: User['_id']
             github: {
-              scope: User['github']['scope']
-              token: User['github']['token']
-              tokenType: User['github']['tokenType']
-              tokenCreatedAt: User['github']['tokenCreatedAt']
+              app?: User['github']['app']
+              oauth?: User['github']['oauth']
               user: {
                 id: User['github']['user']['id']
                 nodeId: User['github']['user']['nodeId']
@@ -78,10 +63,18 @@ function* onLoginRequest(
               columns
               subscriptions
               github {
-                scope
-                token
-                tokenType
-                tokenCreatedAt
+                app {
+                  scope
+                  token
+                  tokenType
+                  tokenCreatedAt
+                }
+                oauth {
+                  scope
+                  token
+                  tokenType
+                  tokenCreatedAt
+                }
                 user {
                   id
                   nodeId
@@ -125,64 +118,26 @@ function* onLoginRequest(
       throw new Error('Invalid response')
     }
 
-    github.authenticate(data.login.user.github.token)
-
     yield put(
       actions.loginSuccess({
         appToken: data.login.appToken,
         user: data.login.user,
       }),
     )
-    return
   } catch (error) {
     const description = 'Login failed'
     bugsnag.notify(error, { description })
     console.error(description, error)
 
-    if (
-      error &&
-      error.response &&
-      (error.response.status >= 200 || error.response.status < 500)
-    ) {
-      yield put(
-        actions.loginFailure(
-          error.response.data &&
-            error.response.data.errors &&
-            error.response.data.errors[0],
-        ),
-      )
-      return
-    }
-  }
-
-  try {
-    const response = yield call(github.octokit.users.getAuthenticated, {})
-    const githubUser = fromGitHubUser(response.data as GitHubUser)
-    if (!(githubUser && githubUser.id && githubUser.login))
-      throw new Error('Invalid response')
-
     yield put(
-      actions.loginSuccess({
-        appToken: action.payload.appToken,
-        user: {
-          _id: '',
-          github: {
-            scope: action.payload.githubScope || [],
-            token: action.payload.githubToken,
-            tokenType: action.payload.githubTokenType || '',
-            tokenCreatedAt: '',
-            user: githubUser,
-          },
-          lastLoginAt: new Date().toISOString(),
-          createdAt: '',
-          updatedAt: '',
-        },
-      }),
+      actions.loginFailure(
+        error &&
+          error.response &&
+          error.response.data &&
+          error.response.data.errors &&
+          error.response.data.errors[0],
+      ),
     )
-  } catch (error) {
-    if (!error.name) error.name = 'AuthError'
-    console.error('Alternative login failed', error)
-    yield put(actions.loginFailure(error))
   }
 }
 
@@ -191,9 +146,16 @@ function onLoginSuccess(
 ) {
   const { user } = action.payload
 
-  github.authenticate(user.github.token)
+  // TODO: better handle app oauth
+  github.authenticate(
+    (user.github.oauth && user.github.oauth.token)! ||
+      (user.github.app && user.github.app.token)!,
+  )
+
   analytics.setUser(user._id)
   bugsnag.setUser(user._id, user.github.user.name || user.github.user.login)
+
+  clearOAuthQueryParams()
 }
 
 function* onLoginFailure(
@@ -217,14 +179,89 @@ function* onLoginFailure(
 
 function onLogout() {
   github.authenticate('')
+  clearOAuthQueryParams()
+}
+
+function* onDeleteAccountRequest() {
+  const appToken = yield select(selectors.appTokenSelector)
+
+  try {
+    const response: AxiosResponse<{
+      data: {
+        deleteAccount: boolean | null
+      }
+      errors?: any[]
+    }> = yield axios.post(
+      constants.GRAPHQL_ENDPOINT,
+      {
+        query: `mutation {
+          deleteAccount
+        }`,
+      },
+      {
+        headers: {
+          Authorization: `bearer ${appToken}`,
+        },
+      },
+    )
+
+    const { data, errors } = response.data
+
+    if (errors && errors.length) {
+      throw Object.assign(new Error('GraphQL Error'), { response })
+    }
+
+    if (!(data && typeof data.deleteAccount === 'boolean')) {
+      throw new Error('Invalid response')
+    }
+
+    if (!(data && data.deleteAccount)) {
+      throw new Error('Failed to delete account')
+    }
+
+    yield put(actions.deleteAccountSuccess())
+  } catch (error) {
+    const description = 'Delete account failed'
+    bugsnag.notify(error, { description })
+    console.error(description, error)
+
+    yield put(
+      actions.deleteAccountFailure(
+        error &&
+          error.response &&
+          error.response.data &&
+          error.response.data.errors &&
+          error.response.data.errors[0],
+      ),
+    )
+  }
+}
+
+function onDeleteAccountFailure(
+  action: ExtractActionFromActionCreator<typeof actions.deleteAccountFailure>,
+) {
+  bugsnag.notify(action.error)
+  alert(
+    `Oops. Failed to delete account. Please try again.\n\n${(action.error &&
+      action.error.message) ||
+      action.error ||
+      ''}`.trim(),
+  )
+}
+
+function* onDeleteAccountSuccess() {
+  yield put(actions.logout())
 }
 
 export function* authSagas() {
   yield all([
     yield takeLatest(REHYDRATE, onRehydrate),
-    yield takeLatest('LOGIN_FAILURE', onLoginFailure),
     yield takeLatest('LOGIN_REQUEST', onLoginRequest),
+    yield takeLatest('LOGIN_FAILURE', onLoginFailure),
     yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield takeLatest('DELETE_ACCOUNT_REQUEST', onDeleteAccountRequest),
+    yield takeLatest('DELETE_ACCOUNT_FAILURE', onDeleteAccountFailure),
+    yield takeLatest('DELETE_ACCOUNT_SUCCESS', onDeleteAccountSuccess),
     yield takeLatest('LOGOUT', onLogout),
   ])
 }

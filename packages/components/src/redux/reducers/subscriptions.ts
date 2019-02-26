@@ -4,10 +4,10 @@ import _ from 'lodash'
 import {
   ColumnSubscription,
   constants,
+  normalizeSubscriptions,
   removeUselessURLsFromResponseItem,
   sortEvents,
   sortNotifications,
-  subscriptionsArrToState,
 } from '@devhub/core'
 import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
 import { mergeNotificationsPreservingEnhancement } from '../../utils/helpers/github/notifications'
@@ -104,7 +104,7 @@ export const subscriptionsReducer: Reducer<State> = (
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
-        const normalized = subscriptionsArrToState(action.payload.subscriptions)
+        const normalized = normalizeSubscriptions(action.payload.subscriptions)
 
         draft.allIds = _.uniq(draft.allIds.concat(normalized.allIds)).filter(
           Boolean,
@@ -124,9 +124,7 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!(action.payload.subscription && action.payload.subscription.id))
           return
 
-        const normalized = subscriptionsArrToState([
-          action.payload.subscription,
-        ])
+        const normalized = normalizeSubscriptions([action.payload.subscription])
 
         draft.allIds = _.uniq(draft.allIds.concat(normalized.allIds)).filter(
           Boolean,
@@ -153,7 +151,7 @@ export const subscriptionsReducer: Reducer<State> = (
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
       return immer(state, draft => {
-        const normalized = subscriptionsArrToState(
+        const normalized = normalizeSubscriptions(
           action.payload.subscriptions,
           action.payload.subscriptionsUpdatedAt,
         )

@@ -2,13 +2,7 @@ import { User } from '@devhub/core'
 import { createAction, createErrorAction } from '../helpers'
 import { AuthError } from '../reducers/auth'
 
-export function loginRequest(payload: {
-  appToken: string
-  githubScope: string[] | undefined
-  githubToken: string
-  githubTokenCreatedAt: string
-  githubTokenType: 'bearer' | string
-}) {
+export function loginRequest(payload: { appToken: string }) {
   return createAction('LOGIN_REQUEST', payload)
 }
 
@@ -22,4 +16,16 @@ export function loginFailure<E extends AuthError>(error: E) {
 
 export function logout() {
   return createAction('LOGOUT')
+}
+
+export function deleteAccountRequest() {
+  return createAction('DELETE_ACCOUNT_REQUEST')
+}
+
+export function deleteAccountSuccess() {
+  return createAction('DELETE_ACCOUNT_SUCCESS')
+}
+
+export function deleteAccountFailure<E extends Error>(error: E) {
+  return createErrorAction('DELETE_ACCOUNT_FAILURE', error)
 }
