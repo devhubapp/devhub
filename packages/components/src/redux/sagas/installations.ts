@@ -18,7 +18,7 @@ import { ExtractActionFromActionCreator } from '../types/base'
 
 // Fetch new installation tokens every X minutes
 function* init() {
-  let isFirstTime = true
+  // let isFirstTime = true
 
   while (true) {
     const { action } = yield race({
@@ -26,7 +26,7 @@ function* init() {
       action: take(['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT']),
     })
 
-    if (action && action.type === 'LOGIN_SUCCESS') isFirstTime = true
+    // if (action && action.type === 'LOGIN_SUCCESS') isFirstTime = true
 
     const state = yield select()
 
@@ -44,7 +44,7 @@ function* init() {
       }),
     )
 
-    isFirstTime = false
+    // isFirstTime = false
   }
 }
 
@@ -53,13 +53,20 @@ function* onRefreshInstallationsRequest(
     typeof actions.refreshInstallationsRequest
   >,
 ) {
-  const {
-    appToken,
-    // includeInstallationRepositories,
-    includeInstallationToken,
-  } = action.payload
+  const noGitHubAppTokenMessage = 'No GitHub App token.'
 
   try {
+    const state = yield select()
+
+    const githubAppToken = selectors.githubAppTokenSelector(state)
+    if (!githubAppToken) throw new Error(noGitHubAppTokenMessage)
+
+    const {
+      appToken,
+      // includeInstallationRepositories,
+      includeInstallationToken,
+    } = action.payload
+
     const response: Installation[] = yield refreshUserInstallations({
       appToken,
       // includeInstallationRepositories,
@@ -69,7 +76,9 @@ function* onRefreshInstallationsRequest(
     yield put(actions.refreshInstallationsSuccess(response))
   } catch (error) {
     console.error('Failed to fetch installations', error)
-    bugsnag.notify(error)
+    if (!(error && error.message === noGitHubAppTokenMessage)) {
+      bugsnag.notify(error)
+    }
 
     yield put(actions.refreshInstallationsFailure(error))
   }
