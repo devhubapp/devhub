@@ -13,6 +13,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Browser } from '../../libs/browser'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
@@ -23,6 +24,7 @@ import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { fabSize } from '../common/FAB'
 import { H2 } from '../common/H2'
+import { HeaderMessage } from '../common/HeaderMessage'
 import { Link } from '../common/Link'
 import { separatorTickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
@@ -311,6 +313,26 @@ export function AddColumnModal(props: AddColumnModalProps) {
       showBackButton={showBackButton}
       title="Add Column"
     >
+      <HeaderMessage>
+        <Link
+          analyticsLabel="new-feature-private-repository-support"
+          href={`${constants.API_BASE_URL}/github/private-repository-support`}
+          openOnNewTab
+        >
+          <SpringAnimatedText
+            style={{
+              flexGrow: 1,
+              lineHeight: 14,
+              fontSize: 11,
+              textAlign: 'center',
+              color: springAnimatedTheme.foregroundColorMuted50,
+            }}
+          >
+            New: Private repositories support!
+          </SpringAnimatedText>
+        </Link>
+      </HeaderMessage>
+
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
