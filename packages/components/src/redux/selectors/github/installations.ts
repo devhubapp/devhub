@@ -115,10 +115,3 @@ export const githubHasPrivateAccessToRepoSelector = (
   return !!installationTokenByRepoSelector(state, ownerName, repoName)
 }
 */
-export const githubHasPrivateAccessToRepoSelector = (
-  state: RootState,
-  ownerName: string | undefined,
-  _repoName: string | undefined,
-) => {
-  return !!githubHasPrivateAccessToOwnerSelector(state, ownerName)
-}

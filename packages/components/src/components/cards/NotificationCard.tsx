@@ -60,6 +60,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
 
+  /*
   const hasPrivateAccess = useReduxState(state =>
     selectors.githubHasPrivateAccessToRepoSelector(
       state,
@@ -67,6 +68,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       repoName,
     ),
   )
+  */
 
   useEffect(
     () => {
@@ -94,7 +96,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const isPrivateAndCantSee = !!(
     isPrivate &&
-    !hasPrivateAccess &&
+    // !hasPrivateAccess &&
     !notification.enhanced
   )
 
