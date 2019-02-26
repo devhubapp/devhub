@@ -179,6 +179,7 @@ export const LoginScreen = React.memo(() => {
       if (!appToken) throw new Error('No app token')
 
       loginRequest({ appToken })
+      setIsExecutingOAuth(false)
     } catch (error) {
       const description = 'OAuth execution failed'
       console.error(description, error)

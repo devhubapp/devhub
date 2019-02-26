@@ -14,8 +14,6 @@ import {
   isNotificationPrivate,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
-import { useReduxState } from '../../hooks/use-redux-state'
-import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import {

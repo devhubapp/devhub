@@ -11,9 +11,9 @@ import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 
 export interface GenericMessageWithButtonViewProps {
   buttonView: React.ReactNode
-  emoji: GitHubEmoji
-  subtitle: string | undefined
-  title: string
+  emoji: GitHubEmoji | null
+  subtitle: string | undefined | null
+  title: string | undefined | null
 }
 
 export const GenericMessageWithButtonView = React.memo(
@@ -22,7 +22,7 @@ export const GenericMessageWithButtonView = React.memo(
 
     const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-    const emojiImageURL = getEmojiImageURL(emoji)
+    const emojiImageURL = emoji ? getEmojiImageURL(emoji) : null
 
     return (
       <View

@@ -16,10 +16,10 @@ import { Button } from '../common/Button'
 import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 export interface NoTokenViewProps {
-  emoji?: GitHubEmoji
+  emoji?: GitHubEmoji | null
   githubAppType: GitHubAppType | 'both'
-  subtitle?: string
-  title?: string
+  subtitle?: string | null
+  title?: string | null
 }
 
 export const NoTokenView = React.memo((props: NoTokenViewProps) => {
@@ -39,6 +39,8 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
     try {
       analytics.trackEvent('engagement', `relogin_add_token_${githubAppType}`)
 
+      setIsExecutingOAuth(true)
+
       const params = await executeOAuth(githubAppType, {
         appToken: existingAppToken,
         scope:
@@ -50,6 +52,7 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
       if (!appToken) throw new Error('No app token')
 
       loginRequest({ appToken })
+      setIsExecutingOAuth(false)
     } catch (error) {
       const description = 'OAuth execution failed'
       console.error(description, error)
@@ -58,7 +61,7 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
       if (error.message === 'Canceled' || error.message === 'Timeout') return
       bugsnag.notify(error, { description })
 
-      alert(`Login failed. ${error || ''}`)
+      alert(`Authentication failed. ${error || ''}`)
     }
   }
 

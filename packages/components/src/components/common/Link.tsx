@@ -80,7 +80,7 @@ export function Link(props: LinkProps) {
     }
   }
 
-  const renderTouchable = href || allowEmptyLink
+  const renderTouchable = href || otherProps.onPress || allowEmptyLink
 
   let finalProps: any
   if (renderTouchable) {

@@ -68,6 +68,7 @@ export const AdvancedSettingsModal = React.memo(
         if (!appToken) throw new Error('No app token')
 
         loginRequest({ appToken })
+        setExecutingOAuth(null)
       } catch (error) {
         const description = 'OAuth execution failed'
         console.error(description, error)
