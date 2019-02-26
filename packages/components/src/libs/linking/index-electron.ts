@@ -10,7 +10,12 @@ export const Linking: LinkingCrossPlatform = {
     if (!(type === 'url' && typeof handler === 'function')) return
 
     const wrapHandler = (_e: any, url: string) => {
-      handler({ type, url })
+      if (typeof (url || '') !== 'string') {
+        if (__DEV__) console.error('[Linking] URL not a string', url)
+        return
+      }
+
+      handler({ type, url: url || '' })
     }
 
     eventHandlers.set(handler, wrapHandler)
@@ -20,7 +25,9 @@ export const Linking: LinkingCrossPlatform = {
     return window.ipc.sendSync('can-open-url', url)
   },
   getCurrentURL() {
-    return window.location.href || ''
+    return typeof window.location.href === 'string'
+      ? window.location.href || ''
+      : ''
   },
   getInitialURL() {
     return LinkingOriginal.getInitialURL()
