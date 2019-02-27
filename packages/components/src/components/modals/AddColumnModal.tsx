@@ -13,7 +13,6 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
-import { Browser } from '../../libs/browser'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
@@ -66,6 +65,7 @@ const columnTypes: Array<{
             subtype: undefined,
           },
           paramList: ['all'],
+          isPrivateSupported: true,
         },
       },
       {
@@ -79,6 +79,7 @@ const columnTypes: Array<{
             subtype: 'REPO_NOTIFICATIONS',
           },
           paramList: ['all', 'owner', 'repo'],
+          isPrivateSupported: true,
         },
       },
     ],
@@ -99,6 +100,7 @@ const columnTypes: Array<{
             subtype: 'USER_RECEIVED_EVENTS',
           },
           paramList: ['username'],
+          isPrivateSupported: false,
         },
       },
       {
@@ -112,6 +114,7 @@ const columnTypes: Array<{
             subtype: 'USER_EVENTS',
           },
           paramList: ['username'],
+          isPrivateSupported: false,
         },
       },
       {
@@ -125,6 +128,7 @@ const columnTypes: Array<{
             subtype: 'REPO_EVENTS',
           },
           paramList: ['owner', 'repo'],
+          isPrivateSupported: true,
         },
       },
       {
@@ -138,6 +142,7 @@ const columnTypes: Array<{
             subtype: 'ORG_PUBLIC_EVENTS',
           },
           paramList: ['org'],
+          isPrivateSupported: false,
         },
       },
     ],

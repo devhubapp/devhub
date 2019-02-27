@@ -20,15 +20,17 @@ import {
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { findNode } from '../../utils/helpers/shared'
-import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
-import { H2 } from '../common/H2'
 import { H3 } from '../common/H3'
+import { HeaderMessage } from '../common/HeaderMessage'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import {
@@ -80,6 +82,7 @@ export const AddColumnDetailsModal = React.memo(
     const {
       defaultParams,
       icon,
+      isPrivateSupported,
       paramList,
       showBackButton,
       subscription,
@@ -265,7 +268,48 @@ export const AddColumnDetailsModal = React.memo(
         title="Add Column"
       >
         <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
-          <SubHeader iconName={icon} title={title} />
+          <SubHeader iconName={icon} title={title}>
+            {typeof isPrivateSupported === 'boolean' &&
+              (() => {
+                const contentLabel =
+                  subscription.type === 'notifications'
+                    ? 'notifications'
+                    : subscription.type === 'activity'
+                    ? 'events'
+                    : 'content'
+
+                const text = isPrivateSupported
+                  ? `This column type supports private ${contentLabel}.`
+                  : `This column type supports public ${contentLabel} only.`
+
+                return (
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <Spacer flex={1} />
+
+                    <SpringAnimatedIcon
+                      name={isPrivateSupported ? 'lock' : 'globe'}
+                      onPress={() => {
+                        alert(text)
+                      }}
+                      size={18}
+                      style={[
+                        { color: springAnimatedTheme.foregroundColorMuted50 },
+                        Platform.select({
+                          web: {
+                            cursor: 'help',
+                          } as any,
+                        }),
+                      ]}
+                      {...Platform.select({
+                        web: {
+                          title: text,
+                        } as any,
+                      })}
+                    />
+                  </View>
+                )
+              })()}
+          </SubHeader>
 
           <View style={{ flex: 1, padding: contentPadding }}>
             {(paramList

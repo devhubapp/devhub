@@ -269,6 +269,7 @@ export interface AddColumnDetailsPayload {
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
   paramList: ColumnParamField[]
   defaultParams?: Partial<Record<ColumnParamField, any>>
+  isPrivateSupported: boolean
 }
 
 export interface ColumnAndSubscriptions {
