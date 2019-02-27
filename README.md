@@ -52,11 +52,10 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Keyboard shortcuts**: Do anything using only the keyboard ([see shortcuts below](#keyboard-shortcuts));
 - [x] **Theme support**: Choose between 6 light or dark themes;
-- [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech stack, ...
+- [x] **And more!**: Private repos support, desktop apps, native mobile apps, open source, modern tech stack, ...
 
 ### Next features:
 
-- [ ] **Support for private repositories**: See what your team members are working on ([#32](https://github.com/devhubapp/devhub/issues/32));
 - [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
 - [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
