@@ -15,7 +15,7 @@ export function FreeTrialHeaderMessage() {
             "For now, it's free." +
             '\n' +
             '\n' +
-            'If you want DevHub to keep being improved and maintaned, ' +
+            'If you want DevHub to keep being improved and maintained, ' +
             "consider purchasing the paid plan once it's available.\n" +
             '\n' +
             'Thank you!' +
