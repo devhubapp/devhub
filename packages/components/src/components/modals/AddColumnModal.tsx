@@ -295,8 +295,12 @@ export function AddColumnModal(props: AddColumnModalProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
-  const columnWidth = useColumnWidth()
+  const username = useReduxState(selectors.currentUsernameSelector)
+  const installationOwnerNames = useReduxState(
+    selectors.installationOwnerNamesSelector,
+  )
 
+  const columnWidth = useColumnWidth()
   const { sizename } = useAppLayout()
 
   const outerSpacing = (3 / 4) * contentPadding
@@ -313,25 +317,31 @@ export function AddColumnModal(props: AddColumnModalProps) {
       showBackButton={showBackButton}
       title="Add Column"
     >
-      <HeaderMessage>
-        <Link
-          analyticsLabel="new-feature-private-repository-support"
-          href={`${constants.API_BASE_URL}/github/private-repository-support`}
-          openOnNewTab
-        >
-          <SpringAnimatedText
-            style={{
-              flexGrow: 1,
-              lineHeight: 14,
-              fontSize: 11,
-              textAlign: 'center',
-              color: springAnimatedTheme.foregroundColorMuted50,
-            }}
+      {!(
+        installationOwnerNames &&
+        installationOwnerNames.length &&
+        username !== 'appledevhub'
+      ) && (
+        <HeaderMessage>
+          <Link
+            analyticsLabel="new-feature-private-repository-support"
+            href={`${constants.API_BASE_URL}/github/private-repository-support`}
+            openOnNewTab
           >
-            New: Private repositories support!
-          </SpringAnimatedText>
-        </Link>
-      </HeaderMessage>
+            <SpringAnimatedText
+              style={{
+                flexGrow: 1,
+                lineHeight: 14,
+                fontSize: 11,
+                textAlign: 'center',
+                color: springAnimatedTheme.foregroundColorMuted50,
+              }}
+            >
+              New: Private repositories support!
+            </SpringAnimatedText>
+          </Link>
+        </HeaderMessage>
+      )}
 
       <ScrollView
         style={{ flex: 1 }}
