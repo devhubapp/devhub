@@ -82,7 +82,7 @@ export function Label(props: LabelProps) {
         {
           borderRadius: defaultRadius,
           borderWidth: separatorSize,
-          paddingHorizontal: contentPadding / (small ? 2 : 1),
+          paddingHorizontal: contentPadding / (small ? 4 : 2),
         },
         containerProps && containerProps.style,
         containerStyle,
@@ -104,7 +104,7 @@ export function Label(props: LabelProps) {
         style={[
           {
             lineHeight: small ? 18 : 19,
-            fontSize: small ? 12 : 13,
+            fontSize: small ? 11 : 12,
             color: foregroundColor,
           },
           textProps && textProps.style,

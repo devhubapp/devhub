@@ -214,7 +214,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   muted={isRead}
                   outline={false}
                   small
-                  textProps={{ style: { paddingBottom: 1 } }}
                 >
                   {reasonDetails.label.toLowerCase()}
                 </Label>
