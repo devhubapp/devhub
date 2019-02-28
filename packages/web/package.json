@@ -37,14 +37,14 @@
     "babel-plugin-react-native-web": "0.9.9",
     "now": "*",
     "postinstall-prepare": "^1.0.1",
-    "prettier": "^1.15.3",
+    "prettier": "^1.16.4",
     "react-app-rewired": "^1.6.2",
     "serve": "^10.1.1",
-    "tslint": "^5.11.0",
+    "tslint": "^5.13.0",
     "tslint-config-airbnb": "^5.11.1",
-    "tslint-config-prettier": "^1.17.0",
+    "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.2",
+    "typescript": "^3.3.3333",
     "webpack-bundle-analyzer": "^3.0.3"
   },
   "browserslist": [

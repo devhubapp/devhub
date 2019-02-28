@@ -518,7 +518,7 @@ function getUpdaterMenuItem() {
     }
 
     case 'error': {
-      enabled = true
+      if (!__DEV__) enabled = true
       label = 'Failed to download update.'
       if (Date.now() - updateInfo.date < 60000) break
     }
@@ -532,7 +532,7 @@ function getUpdaterMenuItem() {
     }
 
     case 'update-downloaded': {
-      enabled = true
+      if (!__DEV__) enabled = true
       label = 'Update downloaded. Click to restart.'
 
       click = () => {
@@ -550,14 +550,14 @@ function getUpdaterMenuItem() {
     }
 
     default: {
-      enabled = true
+      if (!__DEV__) enabled = true
       label = 'Check for updates...'
     }
   }
 
   const menuItem: Electron.MenuItemConstructorOptions = {
     label,
-    enabled: !__DEV__ && enabled,
+    enabled,
     click,
   }
 

@@ -7,7 +7,6 @@ import { GitHubIcon, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
-import * as colors from '../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,

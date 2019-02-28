@@ -4,8 +4,6 @@ const resolve = require('resolve')
 const webpack = require('webpack')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
-const ReactNativeWebPlugin = require('babel-plugin-react-native-web')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt')
 
 const appDirectory = fs.realpathSync(process.cwd())
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath)

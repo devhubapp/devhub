@@ -3,7 +3,6 @@ import { TextInputProps as TextInputComponentProps } from 'react-native'
 
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
-import * as colors from '../../styles/colors'
 import { contentPadding, radius } from '../../styles/variables'
 import { SpringAnimatedTextInput as SpringAnimatedTextInputOriginal } from '../animated/spring/SpringAnimatedTextInput'
 import { separatorSize } from './Separator'

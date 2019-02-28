@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 
 import { ModalPayload, Omit } from '@devhub/core'
-import { NativeComponent, Platform, View } from 'react-native'
+import { NativeComponent } from 'react-native'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'

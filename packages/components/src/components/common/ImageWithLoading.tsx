@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { Image, ImageProps } from 'react-native'
 
 import { Platform } from '../../libs/platform'

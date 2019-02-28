@@ -1,4 +1,4 @@
-import React, { Ref } from 'react'
+import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Column as ColumnType } from '@devhub/core'

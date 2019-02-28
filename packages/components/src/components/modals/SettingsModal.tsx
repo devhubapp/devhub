@@ -11,7 +11,6 @@ import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
 import { Spacer } from '../common/Spacer'
-import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemePreference } from '../widgets/ThemePreference'
 

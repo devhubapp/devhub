@@ -95,7 +95,7 @@ export function fromInstallationRepository(
     nodeId: repo.node_id,
     ownerName: normalizeUsername(owner),
     repoName: normalizeUsername(repo.name || name),
-    private: repo.private === true,
+    private: repo.private,
   }
 
   if (repo.language) result.language = repo.language

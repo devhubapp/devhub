@@ -442,7 +442,7 @@ function* onMarkItemsAsReadOrUnread(
 
   // GitHub api does not support marking as unread yet :(
   // @see https://github.com/octokit/rest.js/issues/1232
-  if (unread === true) return
+  if (unread) return
 
   if (type !== 'notifications') return
   if (!(itemIds && itemIds.length)) return
@@ -496,7 +496,7 @@ function* onMarkAllNotificationsAsReadOrUnread(
 
   // GitHub api does not support marking as unread yet :(
   // @see https://github.com/octokit/rest.js/issues/1232
-  if (unread === true) return
+  if (unread) return
 
   try {
     yield octokit.activity.markAsRead({})
@@ -524,7 +524,7 @@ function* onMarkRepoNotificationsAsReadOrUnread(
 
   // GitHub api does not support marking as unread yet :(
   // @see https://github.com/octokit/rest.js/issues/1232
-  if (unread === true) return
+  if (unread) return
 
   try {
     if (!(owner && repo))

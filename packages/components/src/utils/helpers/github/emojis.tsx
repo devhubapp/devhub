@@ -1,7 +1,7 @@
 import { Omit } from '@devhub/core'
 import _ from 'lodash'
 import React from 'react'
-import { Image, ImageProps, Text } from 'react-native'
+import { Image, ImageProps } from 'react-native'
 
 const emojis = {
   '+1': 'unicode/1f44d',

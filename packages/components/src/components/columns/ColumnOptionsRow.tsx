@@ -7,7 +7,6 @@ import { GitHubIcon } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
-import * as colors from '../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,

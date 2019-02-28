@@ -271,7 +271,7 @@ export const subscriptionsReducer: Reducer<State> = (
               if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
                 return {
                   ...item,
-                  ...(action.payload.unread === true
+                  ...(action.payload.unread
                     ? {
                         forceUnreadLocally: true,
                         last_unread_at: new Date().toISOString(),
@@ -338,7 +338,7 @@ export const subscriptionsReducer: Reducer<State> = (
 
               return {
                 ...item,
-                ...(action.payload.unread === true
+                ...(action.payload.unread
                   ? {
                       forceUnreadLocally: true,
                       last_unread_at: new Date().toISOString(),

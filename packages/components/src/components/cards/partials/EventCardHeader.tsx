@@ -13,11 +13,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-var
 import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
-import * as colors from '../../../styles/colors'
-import {
-  columnHeaderItemContentSize,
-  contentPadding,
-} from '../../../styles/variables'
+import { contentPadding } from '../../../styles/variables'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'

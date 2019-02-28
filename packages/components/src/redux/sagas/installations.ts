@@ -21,7 +21,7 @@ function* init() {
   // let isFirstTime = true
 
   while (true) {
-    const { action } = yield race({
+    yield race({
       delay: delay(1000 * 60 * 50),
       action: take(['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT']),
     })

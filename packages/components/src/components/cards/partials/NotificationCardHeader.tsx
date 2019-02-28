@@ -14,7 +14,6 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-var
 import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
-import * as colors from '../../../styles/colors'
 import {
   columnHeaderItemContentSize,
   contentPadding,

@@ -16,6 +16,7 @@ import {
 
 export interface ScrollViewWithOverlayProps extends ScrollViewProps {
   ScrollViewComponent?: typeof ScrollView | typeof FlatList | any
+  children?: React.ReactNode
   containerStyle?: ViewProps['style']
   overlayThemeColor?: AnimatedTransparentTextOverlayProps['themeColor']
   overlaySize?: AnimatedTransparentTextOverlayProps['size']

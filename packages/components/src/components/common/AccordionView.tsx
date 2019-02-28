@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { ReactSpringHook, useSpring } from 'react-spring/native'
 

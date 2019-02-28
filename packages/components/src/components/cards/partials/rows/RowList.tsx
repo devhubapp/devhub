@@ -4,7 +4,11 @@ import { contentPadding } from '../../../../styles/variables'
 import { ScrollViewWithOverlay } from '../../../common/ScrollViewWithOverlay'
 
 export type RenderItem<T> = (
-  params: { item: T; index: number; showMoreItemsIndicator?: boolean },
+  params: {
+    item: T
+    index: number
+    showMoreItemsIndicator?: boolean
+  },
 ) => ReactNode
 
 export interface RowListProps<T> {
