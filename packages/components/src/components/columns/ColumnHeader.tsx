@@ -22,7 +22,7 @@ export function getColumnHeaderThemeColors(
 
   return {
     normal: 'backgroundColorLighther1',
-    hover: 'backgroundColorLighther2',
+    hover: 'backgroundColorLighther3',
   }
 }
 
