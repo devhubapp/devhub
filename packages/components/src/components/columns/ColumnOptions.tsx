@@ -55,7 +55,7 @@ export type ColumnOptionCategory =
 
 export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const { availableHeight, column, columnIndex } = props
-  const { startWithFiltersExpanded = availableHeight >= 800 } = props
+  const { startWithFiltersExpanded = availableHeight >= 1000 } = props
 
   const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
     column.type === 'notifications' && 'inbox',
