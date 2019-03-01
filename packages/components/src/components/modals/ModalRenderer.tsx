@@ -94,7 +94,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       reset: true,
       unique: true,
       immediate,
-      config: { duration: 200, precision: 0.01 },
+      config: { duration: 400, precision: 0.01 },
       from: { opacity: 0 },
       enter: { opacity: 0.75 },
       leave: { opacity: 0 },
