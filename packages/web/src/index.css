@@ -1,3 +1,13 @@
+::-webkit-scrollbar {
+  width: 1px;
+  height: 1px;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: #49d3b480;
+}
+
 *:focus {
   outline-color: #49d3b4;
 }
