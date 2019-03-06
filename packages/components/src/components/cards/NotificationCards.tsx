@@ -15,7 +15,6 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
-import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
@@ -45,7 +44,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     refresh,
   } = props
 
-  const flatListRef = React.useRef<FlatList<View>>(null)
+  const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
   const visibleItemIndexesRef = useRef<number[]>([])
 
   const getVisibleItemIndex = useCallback(() => {
@@ -224,7 +223,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   }
 
   return (
-    <FlatListWithOverlay
+    <FlatList
       ref={flatListRef}
       key="notification-cards-flat-list"
       ItemSeparatorComponent={CardItemSeparator}

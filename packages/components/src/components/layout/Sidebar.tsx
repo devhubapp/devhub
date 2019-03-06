@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet, View, ViewStyle } from 'react-native'
+import { Image, ScrollView, StyleSheet, View, ViewStyle } from 'react-native'
 
 import {
   getColumnHeaderDetails,
@@ -24,7 +24,6 @@ import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
-import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
@@ -140,7 +139,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           </>
         )}
 
-        <ScrollViewWithOverlay
+        <ScrollView
           alwaysBounceHorizontal={false}
           alwaysBounceVertical={false}
           contentContainerStyle={[
@@ -151,9 +150,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             horizontal && { paddingHorizontal: contentPadding / 2 },
           ]}
           horizontal={horizontal}
-          overlayThemeColor={
-            getColumnHeaderThemeColors(theme.backgroundColor).normal
-          }
           style={{ flex: 1 }}
         >
           {!(columnIds && columnIds.length) ? (
@@ -215,7 +211,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               style={[styles.centerContainer, !showLabel && itemContainerStyle]}
             />
           )}
-        </ScrollViewWithOverlay>
+        </ScrollView>
 
         {!small && (
           <>

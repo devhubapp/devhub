@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 
+import { ScrollView, View } from 'react-native'
 import { contentPadding } from '../../../../styles/variables'
-import { ScrollViewWithOverlay } from '../../../common/ScrollViewWithOverlay'
 
 export type RenderItem<T> = (params: {
   item: T
@@ -32,28 +32,29 @@ export const RowList = React.memo((props: RowListProps<any>) => {
   const isSliced = data.length > slicedData.length
 
   return (
-    <ScrollViewWithOverlay
-      alwaysBounceVertical={false}
-      containerStyle={{
+    <View
+      style={{
         flex: 0,
         flexBasis: 'auto',
         flexGrow: 1,
         marginBottom: -(narrow ? contentPadding / 2 : contentPadding),
       }}
-      contentContainerStyle={{
-        paddingBottom: narrow ? contentPadding / 2 : contentPadding,
-      }}
-      overlaySize={narrow ? contentPadding / 2 : contentPadding}
-      overlaySpacing={0}
-      style={{ maxHeight }}
     >
-      {slicedData.map((item, index) => renderItem({ item, index }))}
-      {isSliced &&
-        renderItem({
-          index: slicedData.length,
-          item: data[slicedData.length],
-          showMoreItemsIndicator: true,
-        })}
-    </ScrollViewWithOverlay>
+      <ScrollView
+        alwaysBounceVertical={false}
+        contentContainerStyle={{
+          paddingBottom: narrow ? contentPadding / 2 : contentPadding,
+        }}
+        style={{ maxHeight }}
+      >
+        {slicedData.map((item, index) => renderItem({ item, index }))}
+        {isSliced &&
+          renderItem({
+            index: slicedData.length,
+            item: data[slicedData.length],
+            showMoreItemsIndicator: true,
+          })}
+      </ScrollView>
+    </View>
   )
 })
