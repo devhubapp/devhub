@@ -145,6 +145,23 @@ export function ModalRenderer(props: ModalRendererProps) {
     },
   )
 
+  const separatorTransitions = useTransition<string, any>(
+    renderSeparator && sizename !== '1-small' && modalStack.length
+      ? [modalStack[0].name]
+      : [],
+    item => `modal-separator-${item}`,
+    {
+      reset: true,
+      unique: true,
+      config: { ...config.default, precision: 1 },
+      immediate,
+      from: { right: size },
+      enter: { right: 0 },
+      update: { right: 0 },
+      leave: { right: size + separatorTickSize },
+    },
+  )
+
   return (
     <>
       {!!overlayTransition && (
@@ -173,7 +190,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       )}
 
       {!!modalTransitions.length && (
-        <SpringAnimatedView
+        <View
           collapsable={false}
           style={{
             position: 'absolute',
@@ -185,8 +202,42 @@ export function ModalRenderer(props: ModalRendererProps) {
             zIndex: 900,
           }}
         >
-          {modalTransitions.map(
-            ({ key, item, props: { width, ...animatedStyle } }) =>
+          <View
+            collapsable={false}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: columnWidth,
+              overflow: 'hidden',
+              zIndex: 900,
+            }}
+          >
+            {modalTransitions.map(
+              ({ key, item, props: { width, ...animatedStyle } }) =>
+                !!item && (
+                  <SpringAnimatedView
+                    key={key}
+                    collapsable={false}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      bottom: 0,
+                      flexDirection: 'row',
+                      ...animatedStyle,
+                      overflow: 'hidden',
+                      zIndex: 900 + item.index,
+                    }}
+                  >
+                    {renderModal(item)}
+                  </SpringAnimatedView>
+                ),
+            )}
+          </View>
+
+          {separatorTransitions.map(
+            ({ key, item, props: animatedStyle }) =>
               !!item && (
                 <SpringAnimatedView
                   key={key}
@@ -195,32 +246,14 @@ export function ModalRenderer(props: ModalRendererProps) {
                     position: 'absolute',
                     top: 0,
                     bottom: 0,
-                    flexDirection: 'row',
                     ...animatedStyle,
-                    overflow: 'hidden',
-                    zIndex: 900 + item.index,
                   }}
                 >
-                  {renderModal(item)}
-
-                  {!!renderSeparator && (
-                    <View
-                      collapsable={false}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        bottom: 0,
-                        right: 0,
-                        zIndex: 1000,
-                      }}
-                    >
-                      <Separator thick zIndex={1000} />
-                    </View>
-                  )}
+                  <Separator thick />
                 </SpringAnimatedView>
               ),
           )}
-        </SpringAnimatedView>
+        </View>
       )}
     </>
   )

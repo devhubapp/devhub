@@ -146,7 +146,11 @@ export const EventOrNotificationColumn = React.memo(
     )
 
     return (
-      <Column columnId={column.id} pagingEnabled={pagingEnabled}>
+      <Column
+        columnId={column.id}
+        pagingEnabled={pagingEnabled}
+        renderSideSeparators
+      >
         <ColumnHeader>
           <ColumnHeaderItem
             analyticsLabel={undefined}

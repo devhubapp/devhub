@@ -337,7 +337,6 @@ export const MainScreen = React.memo(() => {
         />
 
         <Separator
-          half
           horizontal={horizontalSidebar}
           thick={!horizontalSidebar}
           zIndex={1000}

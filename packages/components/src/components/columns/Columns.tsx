@@ -11,6 +11,7 @@ import { Omit } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { bugsnag } from '../../libs/bugsnag'
+import { separatorTickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flex: 1,
+    marginHorizontal: -separatorTickSize / 2,
   },
 })
 
