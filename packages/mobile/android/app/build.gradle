@@ -104,7 +104,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1517
-        versionName "0.47.2"
+        versionName "0.47.3"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
