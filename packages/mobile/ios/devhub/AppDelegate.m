@@ -29,8 +29,8 @@
                                                    launchOptions:launchOptions];
 
 
-  // #313142 (dark-purple)
-  rootView.backgroundColor = [UIColor colorWithRed:0.19 green:0.19 blue:0.26 alpha:1.0];
+  // #292C33 (dark-gray)
+  rootView.backgroundColor = [UIColor colorWithRed:0.16 green:0.17 blue:0.20 alpha:1.0];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
