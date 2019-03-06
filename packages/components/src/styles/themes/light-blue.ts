@@ -2,7 +2,7 @@ import * as colors from '../colors'
 import { createThemeFromColor } from './custom'
 
 export const theme = createThemeFromColor(
-  '#ECF0F1',
+  '#F8F9FA',
   'light-blue',
   'Light Blue',
   { primaryBackgroundColor: colors.blue, primaryForegroundColor: '#FFFFFF' },

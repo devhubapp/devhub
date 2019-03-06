@@ -3,16 +3,14 @@ import React from 'react'
 import { Theme } from '@devhub/core'
 import { darken, lighten } from 'polished'
 import { themeColorFields } from '../utils/helpers/theme'
-import { getSeparatorThemeColor } from './common/Separator'
 import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme }) {
   const t = params.theme
 
   return `
-    ::-webkit-scrollbar-thumb
-    {
-      background-color:${t[getSeparatorThemeColor(t.backgroundColor)]};
+    *:focus {
+      outline-color: ${t.primaryBackgroundColor};
     }
 
     body {

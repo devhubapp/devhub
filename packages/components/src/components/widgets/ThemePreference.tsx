@@ -61,12 +61,14 @@ export const ThemePreference = React.memo(() => {
             color: theme.backgroundColor,
           })
         }}
+        style={{
+          marginBottom: contentPadding / 2,
+        }}
       >
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: contentPadding / 2,
           }}
         >
           <View

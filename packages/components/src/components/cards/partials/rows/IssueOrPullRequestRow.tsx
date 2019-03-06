@@ -129,7 +129,7 @@ export const IssueOrPullRequestRow = React.memo(
                     getCardStylesForTheme(springAnimatedTheme).normalText,
                     getCardStylesForTheme(springAnimatedTheme).icon,
                     { color: iconColor },
-                    isRead && { opacity: mutedOpacity },
+                    // isRead && { opacity: mutedOpacity },
                   ]}
                 />{' '}
                 {title}
@@ -157,7 +157,7 @@ export const IssueOrPullRequestRow = React.memo(
                           alignSelf: 'flex-start',
                           margin: contentPadding / 4,
                         }}
-                        muted={isRead}
+                        // muted={isRead}
                         outline={false}
                         small
                       >

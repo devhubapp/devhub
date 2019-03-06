@@ -6,7 +6,7 @@ import { ThemeColors } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { Separator } from '../common/Separator'
+import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { useTheme } from '../context/ThemeContext'
 
 export function getColumnHeaderThemeColors(
@@ -14,14 +14,11 @@ export function getColumnHeaderThemeColors(
 ): { normal: keyof ThemeColors; hover: keyof ThemeColors } {
   const luminance = getLuminance(backgroundColor)
 
-  if (luminance <= 0.02)
-    return { normal: 'backgroundColorLess2', hover: 'backgroundColorLess3' }
-
   if (luminance >= 0.5)
     return { normal: 'backgroundColorDarker1', hover: 'backgroundColorDarker2' }
 
   return {
-    normal: 'backgroundColorLighther1',
+    normal: 'backgroundColorLighther2',
     hover: 'backgroundColorLighther3',
   }
 }
@@ -66,7 +63,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
         {children}
       </View>
 
-      <Separator horizontal />
+      <CardItemSeparator />
     </SpringAnimatedSafeAreaView>
   )
 }
