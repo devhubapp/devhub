@@ -1,3 +1,4 @@
+import { lighten } from 'polished'
 import React from 'react'
 import {
   Switch as SwitchComponent,
@@ -39,7 +40,14 @@ export function Switch({
     <SwitchComponent
       onValueChange={onValueChange}
       {...Platform.select({
-        default: {
+        android: {
+          thumbColor: props.value ? theme.primaryBackgroundColor : 'gray',
+          trackColor: {
+            false: 'lightgray',
+            true: lighten(0.4, theme.primaryBackgroundColor),
+          },
+        },
+        ios: {
           trackColor: { false: '', true: theme.primaryBackgroundColor },
         },
         web: {
