@@ -3,13 +3,19 @@ import _ from 'lodash'
 import { StatusBar } from 'react-native'
 
 import { octokit } from './libs/github'
+import { Platform } from './libs/platform'
 
 let axiosRequestsCount = 0
 let octokitRequestsCount = 0
 let isNetworkActivityIndicatorVisible = false
 
+const setNetworkActivityIndicatorVisible = Platform.select({
+  default: () => undefined,
+  ios: StatusBar.setNetworkActivityIndicatorVisible,
+})
+
 const debounceSetNetworkActivityIndicatorVisible = _.debounce(
-  StatusBar.setNetworkActivityIndicatorVisible,
+  setNetworkActivityIndicatorVisible,
   500,
 )
 
