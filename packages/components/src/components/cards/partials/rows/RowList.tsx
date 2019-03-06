@@ -3,13 +3,11 @@ import React, { ReactElement, ReactNode } from 'react'
 import { contentPadding } from '../../../../styles/variables'
 import { ScrollViewWithOverlay } from '../../../common/ScrollViewWithOverlay'
 
-export type RenderItem<T> = (
-  params: {
-    item: T
-    index: number
-    showMoreItemsIndicator?: boolean
-  },
-) => ReactNode
+export type RenderItem<T> = (params: {
+  item: T
+  index: number
+  showMoreItemsIndicator?: boolean
+}) => ReactNode
 
 export interface RowListProps<T> {
   data: T[]

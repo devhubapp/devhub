@@ -92,22 +92,16 @@ export const NotificationCardsContainer = React.memo(
 
     const canFetchMoreRef = useRef(false)
 
-    useEffect(
-      () => {
-        canFetchMoreRef.current = (() => {
-          const clearedAt = column.filters && column.filters.clearedAt
-          const olderDate = getOlderNotificationDate(allItems)
+    useEffect(() => {
+      canFetchMoreRef.current = (() => {
+        const clearedAt = column.filters && column.filters.clearedAt
+        const olderDate = getOlderNotificationDate(allItems)
 
-          if (
-            clearedAt &&
-            (!olderDate || (olderDate && clearedAt >= olderDate))
-          )
-            return false
-          return !!data.canFetchMore
-        })()
-      },
-      [filteredItems, column.filters, data.canFetchMore],
-    )
+        if (clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate)))
+          return false
+        return !!data.canFetchMore
+      })()
+    }, [filteredItems, column.filters, data.canFetchMore])
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
@@ -122,25 +116,19 @@ export const NotificationCardsContainer = React.memo(
       [fetchColumnSubscriptionRequest, column.id],
     )
 
-    const fetchNextPage = useCallback(
-      () => {
-        const size = allItems.length
+    const fetchNextPage = useCallback(() => {
+      const size = allItems.length
 
-        const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
-        const currentPage = Math.ceil(size / perPage)
+      const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
+      const currentPage = Math.ceil(size / perPage)
 
-        const nextPage = (currentPage || 0) + 1
-        fetchData({ page: nextPage })
-      },
-      [fetchData, allItems.length],
-    )
+      const nextPage = (currentPage || 0) + 1
+      fetchData({ page: nextPage })
+    }, [fetchData, allItems.length])
 
-    const refresh = useCallback(
-      () => {
-        fetchData()
-      },
-      [fetchData],
-    )
+    const refresh = useCallback(() => {
+      fetchData()
+    }, [fetchData])
 
     if (!firstSubscription) return null
 

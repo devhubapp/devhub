@@ -200,12 +200,9 @@ function AddColumnModalItem({
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
-  useEffect(
-    () => {
-      updateStyles()
-    },
-    [disabled],
-  )
+  useEffect(() => {
+    updateStyles()
+  }, [disabled])
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 

@@ -122,12 +122,9 @@ export const ScrollViewWithOverlay = React.forwardRef(
       if (props.onLayout) props.onLayout(e)
     }
 
-    useEffect(
-      () => {
-        updateOverlayVisibility()
-      },
-      [leftOrTopOverlayRef.current, rightOrBottomOverlayRef.current],
-    )
+    useEffect(() => {
+      updateOverlayVisibility()
+    }, [leftOrTopOverlayRef.current, rightOrBottomOverlayRef.current])
 
     return (
       <View

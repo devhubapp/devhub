@@ -20,13 +20,10 @@ export function useKeyboardScrolling(
 
   useKeyPressCallback(
     'Escape',
-    useCallback(
-      () => {
-        if (!(ref && ref.current)) return
-        setSelectedId(null)
-      },
-      [ref && ref.current],
-    ),
+    useCallback(() => {
+      if (!(ref && ref.current)) return
+      setSelectedId(null)
+    }, [ref && ref.current]),
   )
 
   useEmitter(

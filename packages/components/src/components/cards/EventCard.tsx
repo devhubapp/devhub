@@ -62,12 +62,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
 
-  useEffect(
-    () => {
-      if (isSelected && itemRef.current) itemRef.current.focus()
-    },
-    [isSelected],
-  )
+  useEffect(() => {
+    if (isSelected && itemRef.current) itemRef.current.focus()
+  }, [isSelected])
 
   if (!event) return null
 

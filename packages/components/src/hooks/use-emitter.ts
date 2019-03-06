@@ -7,15 +7,12 @@ export function useEmitter<K extends keyof EmitterTypes>(
   callback: (payload: EmitterTypes[K]) => void,
   deps: DependencyList = [],
 ) {
-  useEffect(
-    () => {
-      if (!(key && callback)) return
+  useEffect(() => {
+    if (!(key && callback)) return
 
-      const listener = emitter.addListener(key, callback)
-      return () => listener.remove()
-    },
-    [key, ...deps],
-  )
+    const listener = emitter.addListener(key, callback)
+    return () => listener.remove()
+  }, [key, ...deps])
 
   return emitter
 }

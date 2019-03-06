@@ -1,4 +1,4 @@
-import { darken, getLuminance, invert, lighten, mix, rgba } from 'polished'
+import { darken, getLuminance, invert, lighten, rgba } from 'polished'
 
 import { Theme } from '@devhub/core'
 import * as colors from '../colors'

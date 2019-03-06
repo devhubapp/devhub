@@ -12,40 +12,37 @@ export function useHover(
   const cacheRef = useRef(false)
   const [isHovered, setIsHovered] = useState(false)
 
-  useEffect(
-    () => {
-      const node = findNode(ref)
+  useEffect(() => {
+    const node = findNode(ref)
 
-      if (!(node && typeof node.addEventListener === 'function')) return
+    if (!(node && typeof node.addEventListener === 'function')) return
 
-      const resolve = (value: boolean) => {
-        if (cacheRef.current === value) return
+    const resolve = (value: boolean) => {
+      if (cacheRef.current === value) return
 
-        cacheRef.current = value
+      cacheRef.current = value
 
-        if (callback) {
-          callback(value)
-          return
-        }
-
-        setIsHovered(value)
+      if (callback) {
+        callback(value)
+        return
       }
 
-      const handleMouseOver = () => resolve(true)
-      const handleMouseOut = () => resolve(false)
+      setIsHovered(value)
+    }
 
-      node.addEventListener('mouseover', handleMouseOver)
-      node.addEventListener('mouseout', handleMouseOut)
+    const handleMouseOver = () => resolve(true)
+    const handleMouseOut = () => resolve(false)
 
-      return () => {
-        if (!node) return
+    node.addEventListener('mouseover', handleMouseOver)
+    node.addEventListener('mouseout', handleMouseOut)
 
-        node.removeEventListener('mouseover', handleMouseOver)
-        node.removeEventListener('mouseout', handleMouseOut)
-      }
-    },
-    [ref && ref.current, callback],
-  )
+    return () => {
+      if (!node) return
+
+      node.removeEventListener('mouseover', handleMouseOver)
+      node.removeEventListener('mouseout', handleMouseOut)
+    }
+  }, [ref && ref.current, callback])
 
   return isHovered
 }

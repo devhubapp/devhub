@@ -99,12 +99,9 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
-  useEffect(
-    () => {
-      updateStyles()
-    },
-    [disabled, forceHoverState, enableBackgroundHover, enableForegroundHover],
-  )
+  useEffect(() => {
+    updateStyles()
+  }, [disabled, forceHoverState, enableBackgroundHover, enableForegroundHover])
 
   const _username = useReduxState(selectors.currentUsernameSelector)
 

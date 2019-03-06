@@ -46,16 +46,13 @@ export function IntervalRefresh(props: IntervalRefreshProps) {
 
   const [, setUpdatedTimes] = useState(0)
 
-  useEffect(
-    () => {
-      const timer = setInterval(() => {
-        setUpdatedTimes(prevValue => prevValue + 1)
-      }, interval)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setUpdatedTimes(prevValue => prevValue + 1)
+    }, interval)
 
-      return () => clearInterval(timer)
-    },
-    [interval],
-  )
+    return () => clearInterval(timer)
+  }, [interval])
 
   return children()
 }

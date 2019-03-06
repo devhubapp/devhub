@@ -80,12 +80,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
-  useEffect(
-    () => {
-      updateStyles()
-    },
-    [isOpen],
-  )
+  useEffect(() => {
+    updateStyles()
+  }, [isOpen])
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current

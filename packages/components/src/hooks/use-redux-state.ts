@@ -25,16 +25,13 @@ export function useReduxState<S extends (state: any) => any>(
     if (callback) callback(result)
   }, [])
 
-  useEffect(
-    () => {
-      update()
+  useEffect(() => {
+    update()
 
-      return store.subscribe(() => {
-        update()
-      })
-    },
-    [store, selector],
-  )
+    return store.subscribe(() => {
+      update()
+    })
+  }, [store, selector])
 
   function update() {
     if (!selector) {

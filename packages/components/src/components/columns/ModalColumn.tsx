@@ -37,33 +37,30 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const popModal = useReduxAction(actions.popModal)
 
-  useEffect(
-    () => {
-      if (!(currentOpenedModal && currentOpenedModal.name === name)) return
-      if (!columnRef.current) return
+  useEffect(() => {
+    if (!(currentOpenedModal && currentOpenedModal.name === name)) return
+    if (!columnRef.current) return
 
-      const node = (columnRef.current as any).getNode
-        ? (columnRef.current as any).getNode()
-        : columnRef.current
+    const node = (columnRef.current as any).getNode
+      ? (columnRef.current as any).getNode()
+      : columnRef.current
 
-      if (node && node.focus)
-        setTimeout(() => {
-          const currentFocusedNodeTag =
-            typeof document !== 'undefined' &&
-            document &&
-            document.activeElement &&
-            document.activeElement.tagName
-          if (
-            currentFocusedNodeTag &&
-            currentFocusedNodeTag.toLowerCase() === 'input'
-          )
-            return
+    if (node && node.focus)
+      setTimeout(() => {
+        const currentFocusedNodeTag =
+          typeof document !== 'undefined' &&
+          document &&
+          document.activeElement &&
+          document.activeElement.tagName
+        if (
+          currentFocusedNodeTag &&
+          currentFocusedNodeTag.toLowerCase() === 'input'
+        )
+          return
 
-          node.focus()
-        }, 500)
-    },
-    [currentOpenedModal && currentOpenedModal.name === name],
-  )
+        node.focus()
+      }, 500)
+  }, [currentOpenedModal && currentOpenedModal.name === name])
 
   return (
     <Column ref={columnRef} columnId={name} style={{ zIndex: 900 }}>

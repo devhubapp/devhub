@@ -68,12 +68,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   )
   */
 
-  useEffect(
-    () => {
-      if (isSelected && itemRef.current) itemRef.current.focus()
-    },
-    [isSelected],
-  )
+  useEffect(() => {
+    if (isSelected && itemRef.current) itemRef.current.focus()
+  }, [isSelected])
 
   if (!notification) return null
 

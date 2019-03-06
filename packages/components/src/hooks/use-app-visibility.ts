@@ -7,44 +7,38 @@ export function useAppVisibility() {
     AppState.currentState === 'active',
   )
 
-  useEffect(
-    () => {
-      const handler = (state: AppStateStatus) => {
-        const newValue = state === 'active'
-        if (newValue === isVisible) return
-        setIsVisible(newValue)
-      }
+  useEffect(() => {
+    const handler = (state: AppStateStatus) => {
+      const newValue = state === 'active'
+      if (newValue === isVisible) return
+      setIsVisible(newValue)
+    }
 
-      AppState.addEventListener('change', handler)
-      return () => AppState.removeEventListener('change', handler)
-    },
-    [isVisible],
-  )
+    AppState.addEventListener('change', handler)
+    return () => AppState.removeEventListener('change', handler)
+  }, [isVisible])
 
-  useEffect(
-    () => {
-      if (!Platform.isElectron) return
+  useEffect(() => {
+    if (!Platform.isElectron) return
 
-      const focusHandler = () => {
-        if (isVisible) return
-        setIsVisible(true)
-      }
+    const focusHandler = () => {
+      if (isVisible) return
+      setIsVisible(true)
+    }
 
-      const blurHandler = () => {
-        if (!isVisible) return
-        setIsVisible(false)
-      }
+    const blurHandler = () => {
+      if (!isVisible) return
+      setIsVisible(false)
+    }
 
-      window.addEventListener('focus', focusHandler)
-      window.addEventListener('blur', blurHandler)
+    window.addEventListener('focus', focusHandler)
+    window.addEventListener('blur', blurHandler)
 
-      return () => {
-        window.removeEventListener('focus', focusHandler)
-        window.removeEventListener('blur', blurHandler)
-      }
-    },
-    [isVisible],
-  )
+    return () => {
+      window.removeEventListener('focus', focusHandler)
+      window.removeEventListener('blur', blurHandler)
+    }
+  }, [isVisible])
 
   return isVisible
 }

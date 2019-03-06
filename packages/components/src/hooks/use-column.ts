@@ -6,12 +6,9 @@ import { useReduxState } from './use-redux-state'
 export function useColumn(columnId: string) {
   const columnSelectorRef = useRef(selectors.createColumnSelector())
 
-  useEffect(
-    () => {
-      columnSelectorRef.current = selectors.createColumnSelector()
-    },
-    [columnId],
-  )
+  useEffect(() => {
+    columnSelectorRef.current = selectors.createColumnSelector()
+  }, [columnId])
 
   const columnSubscriptionsSelector = useRef(
     selectors.createColumnSubscriptionsSelector(),

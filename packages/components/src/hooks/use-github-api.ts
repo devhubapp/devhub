@@ -16,36 +16,33 @@ export function useGitHubAPI<M extends (params?: any, callback?: any) => any>(
     loadingState: 'not_loaded' as LoadState,
   })
 
-  useEffect(
-    () => {
-      if (params === null) {
-        setState({ data: null, error: null, loadingState: 'not_loaded' })
-        return
+  useEffect(() => {
+    if (params === null) {
+      setState({ data: null, error: null, loadingState: 'not_loaded' })
+      return
+    }
+
+    ;(async () => {
+      setState(s => ({ ...s, loadingState: 'loading' }))
+
+      try {
+        const response = (await method(
+          params,
+        )) as GitHubExtractResponseFromMethod<M>
+
+        const data = response && response.data
+
+        setState(s => ({ ...s, data, loadingState: 'loaded' }))
+      } catch (error) {
+        setState(s => ({
+          ...s,
+          data: null,
+          error: `${(error && error.message) || error || 'Error'}`,
+          loadingState: 'error',
+        }))
       }
-
-      ;(async () => {
-        setState(s => ({ ...s, loadingState: 'loading' }))
-
-        try {
-          const response = (await method(
-            params,
-          )) as GitHubExtractResponseFromMethod<M>
-
-          const data = response && response.data
-
-          setState(s => ({ ...s, data, loadingState: 'loaded' }))
-        } catch (error) {
-          setState(s => ({
-            ...s,
-            data: null,
-            error: `${(error && error.message) || error || 'Error'}`,
-            loadingState: 'error',
-          }))
-        }
-      })()
-    },
-    [method, JSON.stringify(params)],
-  )
+    })()
+  }, [method, JSON.stringify(params)])
 
   return state
 }

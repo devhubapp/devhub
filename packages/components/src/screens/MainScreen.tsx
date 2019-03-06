@@ -61,195 +61,165 @@ export const MainScreen = React.memo(() => {
     ? columnIds.findIndex(id => id === focusedColumnId)
     : -1
 
-  const debounceSyncDown = useMemo(
-    () => {
-      return _.debounce(syncDown, 5000, {
-        leading: true,
-        maxWait: 30000,
-        trailing: false,
-      })
-    },
-    [syncDown],
-  )
+  const debounceSyncDown = useMemo(() => {
+    return _.debounce(syncDown, 5000, {
+      leading: true,
+      maxWait: 30000,
+      trailing: false,
+    })
+  }, [syncDown])
 
   const isVisible = useAppVisibility()
   const wasVisible = useRef(isVisible)
 
   // TODO: Use GraphQL Subscriptions, ffs
-  useEffect(
-    () => {
-      if (isVisible && !wasVisible.current) {
-        debounceSyncDown()
+  useEffect(() => {
+    if (isVisible && !wasVisible.current) {
+      debounceSyncDown()
+    }
+
+    wasVisible.current = isVisible
+  }, [isVisible])
+
+  useEffect(() => {
+    const handler = ({
+      isInitial,
+      url: uri,
+    }: {
+      isInitial?: boolean
+      url: string
+    }) => {
+      const querystring = url.parse(uri).query || ''
+      const query = qs.parse(querystring)
+
+      if (!query.installation_id) return
+
+      clearQueryStringFromURL(['installation_id', 'setup_action'])
+
+      if (!isInitial) {
+        refreshInstallationsRequest({
+          appToken,
+          includeInstallationToken: true,
+        })
       }
+    }
 
-      wasVisible.current = isVisible
-    },
-    [isVisible],
-  )
+    Linking.addEventListener('url', handler)
 
-  useEffect(
-    () => {
-      const handler = ({
-        isInitial,
-        url: uri,
-      }: {
-        isInitial?: boolean
-        url: string
-      }) => {
-        const querystring = url.parse(uri).query || ''
-        const query = qs.parse(querystring)
+    handler({ isInitial: true, url: Linking.getCurrentURL() })
 
-        if (!query.installation_id) return
-
-        clearQueryStringFromURL(['installation_id', 'setup_action'])
-
-        if (!isInitial) {
-          refreshInstallationsRequest({
-            appToken,
-            includeInstallationToken: true,
-          })
-        }
-      }
-
-      Linking.addEventListener('url', handler)
-
-      handler({ isInitial: true, url: Linking.getCurrentURL() })
-
-      return () => {
-        Linking.removeEventListener('url', handler)
-      }
-    },
-    [appToken],
-  )
+    return () => {
+      Linking.removeEventListener('url', handler)
+    }
+  }, [appToken])
 
   const horizontalSidebar = appOrientation === 'portrait'
 
   useKeyPressCallback(
     'Escape',
-    useCallback(
-      () => {
-        if (
-          typeof document !== 'undefined' &&
-          document &&
-          document.activeElement &&
-          (document.activeElement as any).blur
-        )
-          (document.activeElement as any).blur()
+    useCallback(() => {
+      if (
+        typeof document !== 'undefined' &&
+        document &&
+        document.activeElement &&
+        (document.activeElement as any).blur
+      )
+        (document.activeElement as any).blur()
 
-        if (currentOpenedModal) popModal()
-        else if (Platform.isElectron && window.ipc)
-          window.ipc.send('exit-full-screen')
-      },
-      [currentOpenedModal],
-    ),
+      if (currentOpenedModal) popModal()
+      else if (Platform.isElectron && window.ipc)
+        window.ipc.send('exit-full-screen')
+    }, [currentOpenedModal]),
   )
 
   useKeyPressCallback(
     'n',
-    useCallback(
-      () => {
-        if (!(!currentOpenedModal || currentOpenedModal.name === 'SETTINGS'))
-          return
-        replaceModal({ name: 'ADD_COLUMN' })
-      },
-      [currentOpenedModal],
-    ),
+    useCallback(() => {
+      if (!(!currentOpenedModal || currentOpenedModal.name === 'SETTINGS'))
+        return
+      replaceModal({ name: 'ADD_COLUMN' })
+    }, [currentOpenedModal]),
   )
 
   useKeyPressCallback(
     'p',
-    useCallback(
-      () => {
-        if (!(!currentOpenedModal || currentOpenedModal.name === 'ADD_COLUMN'))
-          return
-        replaceModal({ name: 'SETTINGS' })
-      },
-      [currentOpenedModal],
-    ),
+    useCallback(() => {
+      if (!(!currentOpenedModal || currentOpenedModal.name === 'ADD_COLUMN'))
+        return
+      replaceModal({ name: 'SETTINGS' })
+    }, [currentOpenedModal]),
   )
 
-  const scrollDown = useCallback(
-    () => {
-      if (currentOpenedModal) return
+  const scrollDown = useCallback(() => {
+    if (currentOpenedModal) return
 
-      const fixedColumnIndex = Math.max(
-        0,
-        Math.min(focusedColumnIndex, columnIds.length - 1),
-      )
+    const fixedColumnIndex = Math.max(
+      0,
+      Math.min(focusedColumnIndex, columnIds.length - 1),
+    )
 
-      emitter.emit('SCROLL_DOWN_COLUMN', {
-        columnId: columnIds[fixedColumnIndex],
-      })
-    },
-    [currentOpenedModal, focusedColumnIndex, columnIds],
-  )
+    emitter.emit('SCROLL_DOWN_COLUMN', {
+      columnId: columnIds[fixedColumnIndex],
+    })
+  }, [currentOpenedModal, focusedColumnIndex, columnIds])
 
   useKeyPressCallback('ArrowDown', scrollDown)
   useKeyPressCallback('j', scrollDown)
 
-  const scrollUp = useCallback(
-    () => {
-      if (currentOpenedModal) return
+  const scrollUp = useCallback(() => {
+    if (currentOpenedModal) return
 
-      const fixedColumnIndex = Math.max(
-        0,
-        Math.min(focusedColumnIndex, columnIds.length - 1),
-      )
+    const fixedColumnIndex = Math.max(
+      0,
+      Math.min(focusedColumnIndex, columnIds.length - 1),
+    )
 
-      emitter.emit('SCROLL_UP_COLUMN', {
-        columnId: columnIds[fixedColumnIndex],
-      })
-    },
-    [currentOpenedModal, focusedColumnIndex, columnIds],
-  )
+    emitter.emit('SCROLL_UP_COLUMN', {
+      columnId: columnIds[fixedColumnIndex],
+    })
+  }, [currentOpenedModal, focusedColumnIndex, columnIds])
 
   useKeyPressCallback('ArrowUp', scrollUp)
   useKeyPressCallback('k', scrollUp)
 
-  const scrollLeft = useCallback(
-    () => {
-      if (currentOpenedModal) return
+  const scrollLeft = useCallback(() => {
+    if (currentOpenedModal) return
 
-      const previousColumnIndex = Math.max(
-        0,
-        Math.min(focusedColumnIndex - 1, columnIds.length - 1),
-      )
+    const previousColumnIndex = Math.max(
+      0,
+      Math.min(focusedColumnIndex - 1, columnIds.length - 1),
+    )
 
-      emitter.emit('FOCUS_ON_COLUMN', {
-        animated: true,
-        columnId: columnIds[previousColumnIndex],
-        columnIndex: previousColumnIndex,
-        focusOnVisibleItem: true,
-        highlight: false,
-        scrollTo: true,
-      })
-    },
-    [currentOpenedModal, focusedColumnIndex, columnIds],
-  )
+    emitter.emit('FOCUS_ON_COLUMN', {
+      animated: true,
+      columnId: columnIds[previousColumnIndex],
+      columnIndex: previousColumnIndex,
+      focusOnVisibleItem: true,
+      highlight: false,
+      scrollTo: true,
+    })
+  }, [currentOpenedModal, focusedColumnIndex, columnIds])
 
   useKeyPressCallback('ArrowLeft', scrollLeft)
   useKeyPressCallback('h', scrollLeft)
 
-  const scrollRight = useCallback(
-    () => {
-      if (currentOpenedModal) return
+  const scrollRight = useCallback(() => {
+    if (currentOpenedModal) return
 
-      const nextColumnIndex = Math.max(
-        0,
-        Math.min(focusedColumnIndex + 1, columnIds.length - 1),
-      )
+    const nextColumnIndex = Math.max(
+      0,
+      Math.min(focusedColumnIndex + 1, columnIds.length - 1),
+    )
 
-      emitter.emit('FOCUS_ON_COLUMN', {
-        animated: true,
-        columnId: columnIds[nextColumnIndex],
-        columnIndex: nextColumnIndex,
-        focusOnVisibleItem: true,
-        highlight: false,
-        scrollTo: true,
-      })
-    },
-    [currentOpenedModal, focusedColumnIndex, columnIds],
-  )
+    emitter.emit('FOCUS_ON_COLUMN', {
+      animated: true,
+      columnId: columnIds[nextColumnIndex],
+      columnIndex: nextColumnIndex,
+      focusOnVisibleItem: true,
+      highlight: false,
+      scrollTo: true,
+    })
+  }, [currentOpenedModal, focusedColumnIndex, columnIds])
 
   useKeyPressCallback('ArrowRight', scrollRight)
   useKeyPressCallback('l', scrollRight)
@@ -298,34 +268,28 @@ export const MainScreen = React.memo(() => {
 
   useMultiKeyPressCallback(
     ['Alt', 'ArrowLeft'],
-    useCallback(
-      () => {
-        if (currentOpenedModal) return
-        if (!focusedColumnId) return
+    useCallback(() => {
+      if (currentOpenedModal) return
+      if (!focusedColumnId) return
 
-        moveColumn({
-          columnId: focusedColumnId,
-          columnIndex: focusedColumnIndex - 1,
-        })
-      },
-      [currentOpenedModal, columnIds, focusedColumnId, focusedColumnIndex],
-    ),
+      moveColumn({
+        columnId: focusedColumnId,
+        columnIndex: focusedColumnIndex - 1,
+      })
+    }, [currentOpenedModal, columnIds, focusedColumnId, focusedColumnIndex]),
   )
 
   useMultiKeyPressCallback(
     ['Alt', 'ArrowRight'],
-    useCallback(
-      () => {
-        if (currentOpenedModal) return
-        if (!focusedColumnId) return
+    useCallback(() => {
+      if (currentOpenedModal) return
+      if (!focusedColumnId) return
 
-        moveColumn({
-          columnId: focusedColumnId,
-          columnIndex: focusedColumnIndex + 1,
-        })
-      },
-      [currentOpenedModal, columnIds, focusedColumnId, focusedColumnIndex],
-    ),
+      moveColumn({
+        columnId: focusedColumnId,
+        columnIndex: focusedColumnIndex + 1,
+      })
+    }, [currentOpenedModal, columnIds, focusedColumnId, focusedColumnIndex]),
   )
 
   const showKeyboardShortcuts = useCallback(() => {

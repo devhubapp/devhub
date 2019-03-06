@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import { View } from 'react-native'
 
 import { Theme } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
@@ -10,13 +9,11 @@ import * as selectors from '../../redux/selectors'
 import { darkThemesArr, lightThemesArr } from '../../styles/themes'
 import { defaultTheme } from '../../styles/utils'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { Switch } from '../common/Switch'
-import { TouchableOpacity } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
 
 export const ThemePreference = React.memo(() => {
@@ -26,8 +23,6 @@ export const ThemePreference = React.memo(() => {
     if (theme.id === 'auto') return
     lastThemeId.current = theme.id
   })
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const currentThemeId = useReduxState(selectors.themePairSelector).id
 

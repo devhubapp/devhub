@@ -149,19 +149,16 @@ export const LoginScreen = React.memo(() => {
     }
   }, [])
 
-  useEffect(
-    () => {
-      if (!error || initialErrorRef.current === error) return
+  useEffect(() => {
+    if (!error || initialErrorRef.current === error) return
 
-      const message = error && error.message
-      alert(
-        `Login failed. Please try again. ${
-          message ? ` \nError: ${message}` : ''
-        }`,
-      )
-    },
-    [error],
-  )
+    const message = error && error.message
+    alert(
+      `Login failed. Please try again. ${
+        message ? ` \nError: ${message}` : ''
+      }`,
+    )
+  }, [error])
 
   analytics.trackScreenView('LOGIN_SCREEN')
 

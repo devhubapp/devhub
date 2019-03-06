@@ -74,33 +74,27 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   useKeyPressCallback(
     's',
-    useCallback(
-      () => {
-        if (!selectedItem) return
+    useCallback(() => {
+      if (!selectedItem) return
 
-        saveItemsForLater({
-          itemIds: [selectedItemId!],
-          save: !selectedItem.saved,
-        })
-      },
-      [selectedItem, selectedItemId],
-    ),
+      saveItemsForLater({
+        itemIds: [selectedItemId!],
+        save: !selectedItem.saved,
+      })
+    }, [selectedItem, selectedItemId]),
   )
 
   useKeyPressCallback(
     'r',
-    useCallback(
-      () => {
-        if (!selectedItem) return
+    useCallback(() => {
+      if (!selectedItem) return
 
-        markItemsAsReadOrUnread({
-          type: 'activity',
-          itemIds: [selectedItemId!],
-          unread: isItemRead(selectedItem),
-        })
-      },
-      [selectedItem, selectedItemId],
-    ),
+      markItemsAsReadOrUnread({
+        type: 'activity',
+        itemIds: [selectedItemId!],
+        unread: isItemRead(selectedItem),
+      })
+    }, [selectedItem, selectedItemId]),
   )
 
   const setColumnClearedAtFilter = useReduxAction(

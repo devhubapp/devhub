@@ -24,12 +24,9 @@ export default function useMultiKeyPressCallback(
     }, 5000)
   }
 
-  useEffect(
-    () => {
-      params.current = { targetKeys, callback, preventDefault }
-    },
-    [...targetKeys, callback, preventDefault],
-  )
+  useEffect(() => {
+    params.current = { targetKeys, callback, preventDefault }
+  }, [...targetKeys, callback, preventDefault])
 
   const downHandler = useCallback((e: KeyboardEvent) => {
     pressedKeysRef.current.add(e.key)
@@ -52,20 +49,17 @@ export default function useMultiKeyPressCallback(
     pingTimeout()
   }, [])
 
-  useEffect(
-    () => {
-      if (!(window && typeof window.addEventListener === 'function')) return
+  useEffect(() => {
+    if (!(window && typeof window.addEventListener === 'function')) return
 
-      window.addEventListener('keydown', downHandler)
-      window.addEventListener('keyup', upHandler)
+    window.addEventListener('keydown', downHandler)
+    window.addEventListener('keyup', upHandler)
 
-      return () => {
-        window.removeEventListener('keydown', downHandler)
-        window.removeEventListener('keyup', upHandler)
-      }
-    },
-    [downHandler, upHandler],
-  )
+    return () => {
+      window.removeEventListener('keydown', downHandler)
+      window.removeEventListener('keyup', upHandler)
+    }
+  }, [downHandler, upHandler])
 }
 
 function areKeysPressed(keys: string[] = [], pressedKeys: string[] = []) {

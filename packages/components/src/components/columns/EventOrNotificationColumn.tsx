@@ -119,13 +119,10 @@ export const EventOrNotificationColumn = React.memo(
       actions.markRepoNotificationsAsReadOrUnread,
     )
 
-    useEffect(
-      () => {
-        if (onColumnOptionsVisibilityChange)
-          onColumnOptionsVisibilityChange(showColumnOptions)
-      },
-      [onColumnOptionsVisibilityChange, showColumnOptions],
-    )
+    useEffect(() => {
+      if (onColumnOptionsVisibilityChange)
+        onColumnOptionsVisibilityChange(showColumnOptions)
+    }, [onColumnOptionsVisibilityChange, showColumnOptions])
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
