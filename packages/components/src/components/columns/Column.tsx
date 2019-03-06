@@ -3,6 +3,7 @@ import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useEmitter } from '../../hooks/use-emitter'
+import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { Separator, separatorTickSize } from '../common/Separator'
@@ -48,7 +49,9 @@ export const Column = React.memo(
           }, 1000)
         }
 
-        if (columnRef.current) columnRef.current.focus()
+        if (Platform.OS === 'web' && columnRef.current) {
+          columnRef.current.focus()
+        }
       },
     )
 

@@ -25,6 +25,7 @@ import {
   isItemRead,
   MultipleStarEvent,
 } from '@devhub/core'
+import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import {
@@ -63,7 +64,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const springAnimatedTheme = useSpringAnimatedTheme()
 
   useEffect(() => {
-    if (isSelected && itemRef.current) itemRef.current.focus()
+    if (Platform.OS === 'web' && isSelected && itemRef.current) {
+      itemRef.current.focus()
+    }
   }, [isSelected])
 
   if (!event) return null

@@ -4,6 +4,7 @@ import { ModalPayload, Omit } from '@devhub/core'
 import { NativeComponent } from 'react-native'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
@@ -38,6 +39,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
   const popModal = useReduxAction(actions.popModal)
 
   useEffect(() => {
+    if (Platform.OS !== 'web') return
     if (!(currentOpenedModal && currentOpenedModal.name === name)) return
     if (!columnRef.current) return
 

@@ -14,6 +14,7 @@ import {
   isNotificationPrivate,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
+import { Platform } from '../../libs/platform'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import {
@@ -69,7 +70,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   */
 
   useEffect(() => {
-    if (isSelected && itemRef.current) itemRef.current.focus()
+    if (Platform.OS === 'web' && isSelected && itemRef.current) {
+      itemRef.current.focus()
+    }
   }, [isSelected])
 
   if (!notification) return null
