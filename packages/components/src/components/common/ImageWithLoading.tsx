@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { Image, ImageProps } from 'react-native'
 
-import { Platform } from '../../libs/platform'
 import { SpringAnimatedImage } from '../animated/spring/SpringAnimatedImage'
 
 export interface ImageWithLoadingProps extends ImageProps {
@@ -50,25 +49,19 @@ export const ImageWithLoading = React.memo(
       [onLoad],
     )
 
-    const handleLoadStart = useCallback(
-      () => {
-        cacheRef.current.isLoading = true
-        updateStyles()
+    const handleLoadStart = useCallback(() => {
+      cacheRef.current.isLoading = true
+      updateStyles()
 
-        if (typeof onLoadStart === 'function') onLoadStart()
-      },
-      [onLoadStart],
-    )
+      if (typeof onLoadStart === 'function') onLoadStart()
+    }, [onLoadStart])
 
-    const handleLoadEnd = useCallback(
-      () => {
-        cacheRef.current.isLoading = false
-        updateStyles()
+    const handleLoadEnd = useCallback(() => {
+      cacheRef.current.isLoading = false
+      updateStyles()
 
-        if (typeof onLoadEnd === 'function') onLoadEnd()
-      },
-      [onLoadEnd],
-    )
+      if (typeof onLoadEnd === 'function') onLoadEnd()
+    }, [onLoadEnd])
 
     const handleError = useCallback(
       e => {
@@ -85,9 +78,6 @@ export const ImageWithLoading = React.memo(
       const { error, isLoading } = cacheRef.current
 
       if (imageRef.current) {
-        const imageURL =
-          otherProps && otherProps.source && (otherProps.source as any).uri
-
         imageRef.current.setNativeProps({
           style: {
             backgroundColor: error
@@ -95,20 +85,13 @@ export const ImageWithLoading = React.memo(
               : isLoading
               ? backgroundColorLoading
               : backgroundColorLoaded,
-            ...(Platform.OS === 'web' &&
-              !!imageURL && {
-                backgroundImage: `url(${JSON.stringify(imageURL)})`,
-                backgroundSize: 'cover',
-              }),
           },
         })
       }
     }
 
-    const ImageComponent = true ? SpringAnimatedImage : Image
-
     return (
-      <ImageComponent
+      <SpringAnimatedImage
         {...otherProps}
         ref={imageRef}
         onError={handleError}
