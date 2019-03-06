@@ -36,7 +36,7 @@
     "react-native-splash-screen": "^3.1.1",
     "react-native-vector-icons": "^6.1.0",
     "react-redux": "6.0.0",
-    "react-spring": "^8.0.4",
+    "react-spring": "^8.0.11",
     "react-test-renderer": "16.8.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.7",
