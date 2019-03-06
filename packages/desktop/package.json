@@ -1,6 +1,6 @@
 {
   "name": "@devhub/desktop",
-  "version": "0.47.1",
+  "version": "0.47.2",
   "private": false,
   "main": "dist/index.js",
   "author": {
