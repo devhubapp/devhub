@@ -62,13 +62,13 @@
     "husky": "^1.2.0",
     "jest": "^23.6.0",
     "postinstall-postinstall": "^2.0.0",
-    "prettier": "^1.16.4",
+    "prettier": "1.16.4",
     "react-native-typescript-transformer": "^1.2.10",
     "ts-jest": "^23.10.5",
-    "tslint": "^5.13.0",
-    "tslint-config-airbnb": "^5.11.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.3.3333"
+    "tslint": "5.13.1",
+    "tslint-config-airbnb": "5.11.1",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-react": "3.6.0",
+    "typescript": "3.3.3333"
   }
 }

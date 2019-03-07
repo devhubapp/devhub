@@ -40,11 +40,11 @@
     "prettier": "^1.16.4",
     "react-app-rewired": "^1.6.2",
     "serve": "^10.1.1",
-    "tslint": "^5.13.0",
-    "tslint-config-airbnb": "^5.11.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.3.3333",
+    "tslint": "5.13.1",
+    "tslint-config-airbnb": "5.11.1",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-react": "3.6.0",
+    "typescript": "3.3.3333",
     "webpack-bundle-analyzer": "^3.0.3"
   },
   "browserslist": [

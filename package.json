@@ -30,25 +30,24 @@
     "studio": "yarn workspace @devhub/mobile studio",
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
-  "dependencies": {},
   "devDependencies": {
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
     "husky": "^1.2.0",
-    "lint-staged-offline": "^0.0.1",
+    "lint-staged": "^8.1.5",
     "now": "*",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
-    "prettier": "^1.16.4",
+    "prettier": "1.16.4",
     "shx": "0.3.2",
-    "tslint": "^5.13.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.3.3333"
+    "tslint": "5.13.1",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-react": "3.6.0",
+    "typescript": "3.3.3333"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn workspace @devhub/desktop compile && lint-staged-offline"
+      "pre-commit": "yarn workspace @devhub/desktop compile && lint-staged"
     }
   },
   "lint-staged": {

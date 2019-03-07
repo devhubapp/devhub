@@ -77,8 +77,8 @@
     "electron-builder": "^20.38.3",
     "electron-devtools-installer": "^2.2.4",
     "nodemon": "^1.18.9",
-    "tslint": "^5.13.0",
-    "typescript": "^3.3.3333",
+    "tslint": "5.13.1",
+    "typescript": "3.3.3333",
     "wait-on": "^3.2.0"
   }
 }
