@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, StyleSheet, View } from 'react-native'
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native'
 
 import { ModalPayloadWithIndex } from '@devhub/core'
 import { config, useTransition } from 'react-spring/native'
@@ -12,6 +12,7 @@ import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { Separator, separatorTickSize } from '../common/Separator'
@@ -88,7 +89,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const size = columnWidth + (renderSeparator ? separatorTickSize : 0)
 
   const overlayTransition = useTransition<boolean, any>(
-    currentOpenedModal ? [true] : [],
+    currentOpenedModal && sizename > '1-small' ? [true] : [],
     () => 'modal-overlay',
     {
       reset: true,
@@ -165,7 +166,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   return (
     <>
       {!!overlayTransition && (
-        <SpringAnimatedView
+        <SpringAnimatedSafeAreaView
           collapsable={false}
           style={{
             ...StyleSheet.absoluteFillObject,
@@ -178,19 +179,19 @@ export function ModalRenderer(props: ModalRendererProps) {
             analyticsLabel="modal"
             activeOpacity={1}
             style={{
-              ...StyleSheet.absoluteFillObject,
+              width: '100%',
+              height: '100%',
               backgroundColor: springAnimatedTheme.backgroundColor,
-              zIndex: 500,
               ...Platform.select({ web: { cursor: 'default' } as any }),
             }}
             onPress={() => closeAllModals()}
             tabIndex={-1}
           />
-        </SpringAnimatedView>
+        </SpringAnimatedSafeAreaView>
       )}
 
       {!!modalTransitions.length && (
-        <View
+        <SafeAreaView
           collapsable={false}
           style={{
             position: 'absolute',
@@ -205,13 +206,9 @@ export function ModalRenderer(props: ModalRendererProps) {
           <View
             collapsable={false}
             style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
               width: columnWidth,
+              height: '100%',
               overflow: 'hidden',
-              zIndex: 900,
             }}
           >
             {modalTransitions.map(
@@ -253,7 +250,7 @@ export function ModalRenderer(props: ModalRendererProps) {
                 </SpringAnimatedView>
               ),
           )}
-        </View>
+        </SafeAreaView>
       )}
     </>
   )
