@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     flex: 1,
-    marginHorizontal: -separatorTickSize / 2,
   },
 })
 
@@ -108,7 +107,13 @@ export const Columns = React.memo((props: ColumnsProps) => {
         scrollEnabled={!swipeable}
         {...otherProps}
         renderItem={renderItem}
-        style={[styles.flatlist, style]}
+        style={[
+          styles.flatlist,
+          sizename > '1-small' && {
+            marginHorizontal: -separatorTickSize / 2,
+          },
+          style,
+        ]}
       />
     </>
   )
