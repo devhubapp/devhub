@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import qs from 'qs'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Dimensions, StyleSheet, View } from 'react-native'
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native'
 import url from 'url'
 
+import { ConditionalWrap } from '../components/common/ConditionalWrap'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
 import { useFocusedColumn } from '../components/context/ColumnFocusContext'
@@ -342,12 +343,33 @@ export const MainScreen = React.memo(() => {
           zIndex={1000}
         />
 
-        <View style={styles.innerContainer}>
-          <ModalRenderer renderSeparator={!horizontalSidebar} />
+        <ConditionalWrap
+          key="main-screen-content-container-conditional-wrap"
+          condition
+          wrap={children =>
+            appOrientation === 'landscape' ? (
+              <SafeAreaView
+                key="main-screen-content-container"
+                style={styles.innerContainer}
+                children={children}
+              />
+            ) : (
+              <View
+                key="main-screen-content-container"
+                style={styles.innerContainer}
+                children={children}
+              />
+            )
+          }
+        >
+          <ModalRenderer
+            key="modal-renderer"
+            renderSeparator={!horizontalSidebar}
+          />
 
-          <ColumnsContainer />
-          <FABRenderer />
-        </View>
+          <ColumnsContainer key="columns-container" />
+          <FABRenderer key="fab-renderer" />
+        </ConditionalWrap>
       </View>
     </Screen>
   )

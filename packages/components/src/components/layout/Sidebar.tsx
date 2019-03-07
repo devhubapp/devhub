@@ -78,7 +78,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   return (
     <SpringAnimatedSafeAreaView
       style={{
-        width: horizontal ? undefined : sidebarSize,
         backgroundColor:
           springAnimatedTheme[
             getColumnHeaderThemeColors(theme.backgroundColor).normal
