@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
 import {
+  CardViewMode,
   Column,
   constants,
   EnhancedGitHubNotification,
@@ -24,6 +25,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
+  cardViewMode?: CardViewMode
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
@@ -165,11 +167,12 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     if (props.swipeable) {
       return (
         <SwipeableNotificationCard
-          notification={notification}
-          repoIsKnown={props.repoIsKnown}
-          isSelected={
+          cardViewMode={props.cardViewMode}
+          isFocused={
             column.id === focusedColumnId && notification.id === selectedItemId
           }
+          notification={notification}
+          repoIsKnown={props.repoIsKnown}
         />
       )
     }
@@ -177,11 +180,12 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     return (
       <ErrorBoundary>
         <NotificationCard
-          notification={notification}
-          repoIsKnown={props.repoIsKnown}
-          isSelected={
+          cardViewMode={props.cardViewMode}
+          isFocused={
             column.id === focusedColumnId && notification.id === selectedItemId
           }
+          notification={notification}
+          repoIsKnown={props.repoIsKnown}
         />
       </ErrorBoundary>
     )

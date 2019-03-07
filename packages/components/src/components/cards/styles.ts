@@ -16,6 +16,12 @@ export const cardStyles = StyleSheet.create({
     flexDirection: 'row',
   } as ViewStyle,
 
+  horizontalAndVerticallyAligned: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+  } as ViewStyle,
+
   leftColumn: {
     marginRight: contentPadding,
     width: avatarSize,
@@ -64,7 +70,6 @@ export const getCardStylesForTheme = _.memoize(
       } as TextStyle,
 
       timestampText: {
-        alignSelf: 'center',
         lineHeight: smallTextSize + 1,
         fontSize: smallTextSize,
         color: theme.foregroundColorMuted50,

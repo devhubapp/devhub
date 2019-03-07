@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native'
 import url from 'url'
 
+import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
 import { ConditionalWrap } from '../components/common/ConditionalWrap'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
@@ -15,7 +16,6 @@ import {
 import { FABRenderer } from '../components/layout/FABRenderer'
 import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
-import { ColumnsContainer } from '../containers/ColumnsContainer'
 import { useAppVisibility } from '../hooks/use-app-visibility'
 import { useEmitter } from '../hooks/use-emitter'
 import useKeyPressCallback from '../hooks/use-key-press-callback'
@@ -364,7 +364,7 @@ export const MainScreen = React.memo(() => {
             renderSeparator={!horizontalSidebar}
           />
 
-          <ColumnsContainer key="columns-container" />
+          <ColumnsRenderer key="columns-renderer" />
           <FABRenderer key="fab-renderer" />
         </ConditionalWrap>
       </View>

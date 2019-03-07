@@ -48,7 +48,7 @@ import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 
 export interface EventCardProps {
   event: EnhancedGitHubEvent
-  isSelected?: boolean
+  isFocused?: boolean
   repoIsKnown?: boolean
 }
 
@@ -59,17 +59,17 @@ const styles = StyleSheet.create({
 })
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const { event, repoIsKnown, isSelected } = props
+  const { event, repoIsKnown, isFocused } = props
 
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
 
   useEffect(() => {
-    if (Platform.OS === 'web' && isSelected && itemRef.current) {
+    if (Platform.OS === 'web' && isFocused && itemRef.current) {
       const node = findNode(itemRef.current)
       node.focus()
     }
-  }, [isSelected])
+  }, [isFocused])
 
   if (!event) return null
 
@@ -199,7 +199,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
           borderWidth: 1,
-          borderColor: isSelected
+          borderColor: isFocused
             ? springAnimatedTheme.primaryBackgroundColor
             : 'transparent',
         },

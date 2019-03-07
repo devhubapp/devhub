@@ -30,11 +30,13 @@ export interface ColumnOptionsRowProps {
   children: React.ReactNode
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle
+  enableBackgroundHover?: boolean
   hasChanged: boolean
+  headerItemFixedIconSize?: number
   iconName: GitHubIcon
+  isOpen: boolean
   onToggle: (() => void) | undefined
   openOnHover?: boolean
-  isOpen: boolean
   subtitle?: string
   title: string
 }
@@ -45,7 +47,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     children,
     containerStyle,
     contentContainerStyle,
+    enableBackgroundHover = true,
     hasChanged,
+    headerItemFixedIconSize = columnHeaderItemContentSize,
     iconName,
     isOpen,
     onToggle,
@@ -82,7 +86,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   useEffect(() => {
     updateStyles()
-  }, [isOpen])
+  }, [enableBackgroundHover, isOpen])
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
@@ -92,7 +96,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       config: { duration: immediate ? 0 : 100 },
       immediate,
       backgroundColor:
-        isHovered || isPressing || isOpen
+        enableBackgroundHover && (isHovered || isPressing || isOpen)
           ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
           : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
     }
@@ -163,6 +167,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             iconStyle={{ lineHeight: 22 }}
             noPadding
             selectable={false}
+            size={headerItemFixedIconSize}
           />
 
           <Spacer width={contentPadding / 2} />
@@ -208,14 +213,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
       <AccordionView isOpen={isOpen}>
         <View
-          style={[
-            {
-              paddingBottom: contentPadding,
-              paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
-              paddingRight: contentPadding,
-            },
-            contentContainerStyle,
-          ]}
+          style={[{ paddingBottom: contentPadding }, contentContainerStyle]}
         >
           {children}
         </View>

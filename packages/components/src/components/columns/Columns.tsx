@@ -10,8 +10,9 @@ import {
 import { Omit } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
-import { Platform } from '../../libs/platform'
+import * as selectors from '../../redux/selectors'
 import { separatorTickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
@@ -19,7 +20,6 @@ import { useAppLayout } from '../context/LayoutContext'
 export interface ColumnsProps
   extends Omit<FlatListProps<string>, 'data' | 'renderItem'> {
   contentContainerStyle?: StyleProp<ViewStyle>
-  columnIds: string[]
   style?: StyleProp<ViewStyle>
 }
 
@@ -38,10 +38,12 @@ function keyExtractor(columnId: string) {
 }
 
 export const Columns = React.memo((props: ColumnsProps) => {
-  const { columnIds, style, ...otherProps } = props
+  const { style, ...otherProps } = props
 
   const { sizename } = useAppLayout()
   const columnWidth = useColumnWidth()
+
+  const columnIds = useReduxState(selectors.columnIdsSelector)
 
   const flatListRef = useRef<FlatList<string>>(null)
 

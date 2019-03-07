@@ -320,3 +320,7 @@ export type EnhancementCache = Map<
   string,
   false | { timestamp: number; data: any }
 >
+
+export type AppViewMode = 'multi-column' | 'single-column'
+
+export type CardViewMode = 'compact' | 'expanded'

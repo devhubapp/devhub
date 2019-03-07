@@ -20,7 +20,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   const wasOpen = usePrevious(isOpen)
 
-  const [size, setSize] = useState<number | 'auto'>(0)
+  const [size, setSize] = useState<number | 'auto'>(isOpen ? 'auto' : 0)
 
   const immediate = Platform.realOS === 'android'
 
@@ -49,8 +49,9 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
         overflow: 'hidden',
 
         // [web] disable keyboard focus for this tree when accordion is collapsed
-        visibility: animatedStyles.height.interpolate((height: number) =>
-          height > 0 ? 'visible' : 'hidden',
+        visibility: animatedStyles.height.interpolate(
+          (height: number | 'auto') =>
+            height === 'auto' || height > 0 ? 'visible' : 'hidden',
         ),
       }}
     >

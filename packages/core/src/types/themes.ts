@@ -37,7 +37,7 @@ export interface ThemeColors {
   backgroundColorMore4: string
   backgroundColorTransparent10: string
   foregroundColor: string
-  foregroundColorMuted20: string
+  foregroundColorMuted25: string
   foregroundColorMuted50: string
 }
 

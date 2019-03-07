@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 
 import {
+  AppViewMode,
   Column as ColumnType,
   ColumnSubscription,
   EnhancedGitHubEvent,
@@ -23,6 +24,7 @@ import {
 } from '../../utils/helpers/filters'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { Spacer } from '../common/Spacer'
+import { ViewMeasurer } from '../render-props/ViewMeasure'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
@@ -32,12 +34,14 @@ export interface EventOrNotificationColumnProps {
   children: React.ReactNode
   column: ColumnType
   columnIndex: number
+  disableColumnOptions?: boolean
   onColumnOptionsVisibilityChange?: (isOpen: boolean) => void
   owner: string | undefined
   pagingEnabled?: boolean
   repo: string | undefined
   repoIsKnown: boolean
   subscriptions: Array<ColumnSubscription | undefined>
+  appViewMode: AppViewMode
 }
 
 export const EventOrNotificationColumn = React.memo(
@@ -46,18 +50,15 @@ export const EventOrNotificationColumn = React.memo(
       children,
       column,
       columnIndex,
+      disableColumnOptions,
       onColumnOptionsVisibilityChange,
       owner,
       pagingEnabled,
       repo,
       repoIsKnown,
       subscriptions,
+      appViewMode,
     } = props
-
-    const [
-      columnOptionsContainerHeight,
-      setColumnOptionsContainerHeight,
-    ] = useState(0)
 
     const [showColumnOptions, setShowColumnOptions] = useState(false)
 
@@ -148,6 +149,7 @@ export const EventOrNotificationColumn = React.memo(
     return (
       <Column
         columnId={column.id}
+        fullWidth={appViewMode === 'single-column'}
         pagingEnabled={pagingEnabled}
         renderSideSeparators
       >
@@ -163,6 +165,26 @@ export const EventOrNotificationColumn = React.memo(
           />
 
           <Spacer width={contentPadding / 2} />
+
+          <ColumnHeaderItem
+            key="column-options-button-clear-column"
+            analyticsLabel="clear_column"
+            disabled={!clearableItems.length}
+            enableForegroundHover
+            fixedIconSize
+            iconName="check"
+            onPress={() => {
+              setColumnClearedAtFilter({
+                columnId: column.id,
+                clearedAt: new Date().toISOString(),
+              })
+
+              focusColumn()
+            }}
+            style={{
+              paddingHorizontal: contentPadding / 3,
+            }}
+          />
 
           <ColumnHeaderItem
             key="column-options-button-toggle-mark-as-read"
@@ -228,60 +250,52 @@ export const EventOrNotificationColumn = React.memo(
             }}
           />
 
-          <ColumnHeaderItem
-            key="column-options-button-clear-column"
-            analyticsLabel="clear_column"
-            disabled={!clearableItems.length}
-            enableForegroundHover
-            fixedIconSize
-            iconName="check"
-            onPress={() => {
-              setColumnClearedAtFilter({
-                columnId: column.id,
-                clearedAt: new Date().toISOString(),
-              })
-
-              focusColumn()
-            }}
-            style={{
-              paddingHorizontal: contentPadding / 3,
-            }}
-          />
-
-          <ColumnHeaderItem
-            key="column-options-button-toggle-column-options"
-            analyticsAction={showColumnOptions ? 'hide' : 'show'}
-            analyticsLabel="column_options"
-            enableForegroundHover
-            fixedIconSize
-            iconName="settings"
-            onPress={toggleOptions}
-            style={{
-              paddingHorizontal: contentPadding / 3,
-            }}
-          />
-        </ColumnHeader>
-
-        <View
-          style={{ flex: 1 }}
-          onLayout={e => {
-            setColumnOptionsContainerHeight(e.nativeEvent.layout.height)
-          }}
-        >
-          {!!isFreeTrial && <FreeTrialHeaderMessage />}
-
-          {columnOptionsContainerHeight > 0 && (
-            <ColumnOptionsRenderer
-              close={toggleOptions}
-              column={column}
-              columnIndex={columnIndex}
-              containerHeight={columnOptionsContainerHeight}
-              visible={!!showColumnOptions}
+          {appViewMode !== 'single-column' && (
+            <ColumnHeaderItem
+              key="column-options-button-toggle-column-options"
+              analyticsAction={showColumnOptions ? 'hide' : 'show'}
+              analyticsLabel="column_options"
+              enableForegroundHover
+              fixedIconSize
+              iconName="settings"
+              onPress={toggleOptions}
+              style={{
+                paddingHorizontal: contentPadding / 3,
+              }}
             />
           )}
+        </ColumnHeader>
 
-          {children}
-        </View>
+        <ViewMeasurer
+          style={{
+            flex: 1,
+            flexDirection: appViewMode === 'single-column' ? 'row' : 'column',
+          }}
+        >
+          {({ height: containerHeight }) => (
+            <>
+              {!disableColumnOptions && (
+                <ColumnOptionsRenderer
+                  key="column-options-renderer"
+                  close={toggleOptions}
+                  columnId={column.id}
+                  containerHeight={containerHeight}
+                  inlineMode={appViewMode === 'single-column'}
+                  startWithFiltersExpanded={appViewMode === 'single-column'}
+                  visible={
+                    !!showColumnOptions || appViewMode === 'single-column'
+                  }
+                />
+              )}
+
+              <View style={{ flex: 1 }}>
+                {!!isFreeTrial && <FreeTrialHeaderMessage />}
+
+                {children}
+              </View>
+            </>
+          )}
+        </ViewMeasurer>
       </Column>
     )
   },

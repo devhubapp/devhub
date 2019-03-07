@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getColumnHeaderDetails } from '@devhub/core'
+import { AppViewMode, getColumnHeaderDetails } from '@devhub/core'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
@@ -10,12 +10,21 @@ import { EventOrNotificationColumn } from './EventOrNotificationColumn'
 export interface NotificationColumnProps
   extends NotificationCardsContainerProps {
   columnIndex: number
+  disableColumnOptions?: boolean
   pagingEnabled?: boolean
+  appViewMode: AppViewMode
 }
 
 export const NotificationColumn = React.memo(
   (props: NotificationColumnProps) => {
-    const { column, columnIndex, pagingEnabled, subscriptions } = props
+    const {
+      column,
+      columnIndex,
+      disableColumnOptions,
+      pagingEnabled,
+      subscriptions,
+      appViewMode,
+    } = props
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
@@ -24,14 +33,19 @@ export const NotificationColumn = React.memo(
         key={`notification-column-${column.id}-inner`}
         column={column}
         columnIndex={columnIndex}
+        disableColumnOptions={disableColumnOptions}
         owner={requestTypeIconAndData.owner}
         pagingEnabled={pagingEnabled}
         repo={requestTypeIconAndData.repo}
         repoIsKnown={requestTypeIconAndData.repoIsKnown}
         subscriptions={subscriptions}
+        appViewMode={appViewMode}
       >
         <NotificationCardsContainer
           key={`notification-cards-container-${column.id}`}
+          cardViewMode={
+            appViewMode === 'single-column' ? 'compact' : 'expanded'
+          }
           repoIsKnown={requestTypeIconAndData.repoIsKnown}
           {...props}
           columnIndex={columnIndex}

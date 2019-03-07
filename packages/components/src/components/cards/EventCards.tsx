@@ -166,7 +166,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         <SwipeableEventCard
           event={event}
           repoIsKnown={props.repoIsKnown}
-          isSelected={
+          isFocused={
             column.id === focusedColumnId && event.id === selectedItemId
           }
         />
@@ -177,10 +177,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       <ErrorBoundary>
         <EventCard
           event={event}
-          repoIsKnown={props.repoIsKnown}
-          isSelected={
+          isFocused={
             column.id === focusedColumnId && event.id === selectedItemId
           }
+          repoIsKnown={props.repoIsKnown}
         />
       </ErrorBoundary>
     )

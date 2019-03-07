@@ -39,6 +39,7 @@ export interface ColumnHeaderItemProps {
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   label?: string
+  mainContainerStyle?: StyleProp<ViewStyle>
   noPadding?: boolean
   onPress?: TouchableOpacityProps['onPress']
   selectable?: boolean
@@ -68,6 +69,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     iconName,
     iconStyle,
     label: _label,
+    mainContainerStyle,
     noPadding,
     onPress,
     selectable,
@@ -102,7 +104,13 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
   useEffect(() => {
     updateStyles()
-  }, [disabled, forceHoverState, enableBackgroundHover, enableForegroundHover])
+  }, [
+    disabled,
+    enableBackgroundHover,
+    enableForegroundHover,
+    forceHoverState,
+    hoverBackgroundThemeColor,
+  ])
 
   const _username = useReduxState(selectors.currentGitHubUsernameSelector)
 
@@ -229,7 +237,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   return (
     <ConditionalWrap condition wrap={wrap}>
       <>
-        <View style={styles.mainContainer}>
+        <View style={[styles.mainContainer, mainContainerStyle]}>
           {(!!iconName || !!username) && (
             <View
               style={{

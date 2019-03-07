@@ -245,7 +245,7 @@ export function getEventTypeMetadata<T extends GitHubEvent['type']>(
       }
 
     case 'IssuesEvent':
-      return { icon: 'issue-opened', label: 'Issue opened or closed', type }
+      return { icon: 'issue-opened', label: 'Issue state changed', type }
 
     case 'MemberEvent':
       return { icon: 'person', label: 'Collaborator added', type }
@@ -256,7 +256,7 @@ export function getEventTypeMetadata<T extends GitHubEvent['type']>(
     case 'PullRequestEvent':
       return {
         icon: 'git-pull-request',
-        label: 'Pull Request opened or closed',
+        label: 'Pull Request state changed',
         type,
       }
 

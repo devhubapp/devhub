@@ -119,7 +119,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <SpringAnimatedView style={cardStyles.horizontal}>
+            <SpringAnimatedView style={cardStyles.horizontalAndVerticallyAligned}>
               <Link href={userLinkURL}>
                 <SpringAnimatedText
                   numberOfLines={1}
@@ -218,7 +218,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
           <ColumnHeaderItem
             analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
-            enableForegroundHover
             fixedIconSize
             iconName="bookmark"
             iconStyle={[

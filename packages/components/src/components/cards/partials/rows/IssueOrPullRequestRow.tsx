@@ -16,12 +16,12 @@ import { SpringAnimatedIconProps } from '../../../animated/spring/SpringAnimated
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
-import { Label } from '../../../common/Label'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
 import { CardSmallThing } from '../CardSmallThing'
+import { LabelsView } from './LabelsView'
 import { cardRowStyles } from './styles'
 
 export interface IssueOrPullRequestRowProps {
@@ -139,30 +139,14 @@ export const IssueOrPullRequestRow = React.memo(
                 <>
                   <Spacer height={contentPadding / 2} />
 
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      margin: -contentPadding / 5,
-                    }}
-                  >
-                    {labels.map(label => (
-                      <Label
-                        key={`issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
-                          label.name}`}
-                        color={label.color && `#${label.color}`}
-                        containerStyle={{
-                          alignSelf: 'flex-start',
-                          margin: contentPadding / 5,
-                        }}
-                        // muted={isRead}
-                        outline={false}
-                        small
-                      >
-                        {label.name.toLowerCase()}
-                      </Label>
-                    ))}
-                  </View>
+                  <LabelsView
+                    labels={labels.map(label => ({
+                      key: `issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
+                        label.name}`,
+                      color: label.color && `#${label.color}`,
+                      name: label.name,
+                    }))}
+                  />
                 </>
               )}
 

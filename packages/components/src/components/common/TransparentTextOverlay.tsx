@@ -20,6 +20,8 @@ export interface AnimatedTransparentTextOverlayProps
 
 export const AnimatedTransparentTextOverlay = React.memo(
   React.forwardRef((props: AnimatedTransparentTextOverlayProps, ref: any) => {
+    return null
+
     const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const { children, containerStyle, themeColor, to, ...otherProps } = props

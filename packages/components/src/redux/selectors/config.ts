@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { constants, isNight } from '@devhub/core'
+import { AppViewMode, constants, isNight } from '@devhub/core'
 import { loadTheme } from '../../styles/utils'
 import { RootState } from '../types'
 
@@ -22,3 +22,7 @@ export const themeSelector = createSelector(
   isNight,
   loadTheme,
 )
+
+export const viewModeSelector = (state: RootState) =>
+  'single-column' as AppViewMode
+// s(state).appViewMode || 'multi-column'

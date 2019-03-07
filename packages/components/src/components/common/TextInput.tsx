@@ -49,7 +49,7 @@ export const SpringAnimatedTextInput = React.forwardRef(
               ? springAnimatedTheme.primaryBackgroundColor
               : isHovered
               ? springAnimatedTheme.foregroundColorMuted50
-              : springAnimatedTheme.foregroundColorMuted20,
+              : springAnimatedTheme.foregroundColorMuted25,
           },
           style,
         ]}
