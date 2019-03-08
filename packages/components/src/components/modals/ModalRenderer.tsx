@@ -209,6 +209,7 @@ export function ModalRenderer(props: ModalRendererProps) {
               width: columnWidth,
               height: '100%',
               overflow: 'hidden',
+              zIndex: 900,
             }}
           >
             {modalTransitions.map(
