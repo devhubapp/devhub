@@ -148,6 +148,7 @@ const columnTypes: Array<{
       },
     ],
   },
+  /*
   {
     soon: true,
     soonLink: 'https://github.com/devhubapp/devhub/issues/110',
@@ -167,6 +168,7 @@ const columnTypes: Array<{
       },
     ],
   },
+  */
 ]
 
 function AddColumnModalItem({
