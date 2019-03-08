@@ -1,8 +1,13 @@
 import React from 'react'
 
+import { useReduxState } from '../../hooks/use-redux-state'
+import * as selectors from '../../redux/selectors'
 import { HeaderMessage } from './HeaderMessage'
 
 export function FreeTrialHeaderMessage() {
+  const username = useReduxState(selectors.currentUsernameSelector)
+  if (username === 'appledevhub') return null
+
   return (
     <HeaderMessage
       analyticsLabel="about_free_trial_column"

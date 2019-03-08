@@ -17,6 +17,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding, radius } from '../../styles/variables'
+import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
@@ -319,31 +320,28 @@ export function AddColumnModal(props: AddColumnModalProps) {
       showBackButton={showBackButton}
       title="Add Column"
     >
-      {!(
-        installationOwnerNames &&
-        installationOwnerNames.length &&
-        username !== 'appledevhub'
-      ) && (
-        <HeaderMessage>
-          <Link
-            analyticsLabel="new-feature-private-repository-support"
-            href={`${constants.API_BASE_URL}/github/private-repository-support`}
-            openOnNewTab
-          >
-            <SpringAnimatedText
-              style={{
-                flexGrow: 1,
-                lineHeight: 14,
-                fontSize: 11,
-                textAlign: 'center',
-                color: springAnimatedTheme.foregroundColorMuted50,
-              }}
+      {!(installationOwnerNames && installationOwnerNames.length) &&
+        username !== 'appledevhub' && (
+          <HeaderMessage>
+            <Link
+              analyticsLabel="install-github-app-to-unlock-private-repository-support"
+              href={getGitHubAppInstallUri()}
+              openOnNewTab
             >
-              New: Private repositories support!
-            </SpringAnimatedText>
-          </Link>
-        </HeaderMessage>
-      )}
+              <SpringAnimatedText
+                style={{
+                  flexGrow: 1,
+                  lineHeight: 14,
+                  fontSize: 11,
+                  textAlign: 'center',
+                  color: springAnimatedTheme.foregroundColorMuted50,
+                }}
+              >
+                ✨ Install the GitHub App to unlock Private Repositories
+              </SpringAnimatedText>
+            </Link>
+          </HeaderMessage>
+        )}
 
       <ScrollView
         style={{ flex: 1 }}
