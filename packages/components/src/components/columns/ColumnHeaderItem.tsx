@@ -103,7 +103,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     updateStyles()
   }, [disabled, forceHoverState, enableBackgroundHover, enableForegroundHover])
 
-  const _username = useReduxState(selectors.currentUsernameSelector)
+  const _username = useReduxState(selectors.currentGitHubUsernameSelector)
 
   function getStyles() {
     const { isHovered: _isHovered, theme } = cacheRef.current

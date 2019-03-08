@@ -54,7 +54,7 @@ export const EventCardsContainer = React.memo(
       .toLowerCase()
       .includes('not found')
 
-    const owner =
+    const subscriptionOwnerOrOrg =
       (firstSubscription &&
         firstSubscription.params &&
         (('owner' in firstSubscription.params &&
@@ -65,11 +65,19 @@ export const EventCardsContainer = React.memo(
 
     const ownerResponse = useGitHubAPI(
       octokit.users.getByUsername,
-      isNotFound && owner ? { username: owner } : null,
+      isNotFound && subscriptionOwnerOrOrg
+        ? { username: subscriptionOwnerOrOrg }
+        : null,
     )
+
+    const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
+    )
+
+    const installationOwnerNames = useReduxState(
+      selectors.installationOwnerNamesSelector,
     )
 
     const fetchColumnSubscriptionRequest = useReduxAction(
@@ -213,6 +221,48 @@ export const EventCardsContainer = React.memo(
           </View>
         )
       }
+    }
+
+    if (
+      username &&
+      `${subscriptionOwnerOrOrg || ''}`.toLowerCase() ===
+        `${username || ''}`.toLowerCase() &&
+      !(installationOwnerNames && installationOwnerNames.length)
+    ) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: contentPadding,
+          }}
+        >
+          <GenericMessageWithButtonView
+            buttonView={
+              <ButtonLink
+                analyticsLabel="setup_github_app_from_user_repo_column"
+                children="Install GitHub App"
+                disabled={
+                  firstSubscription.data.loadState === 'loading' ||
+                  firstSubscription.data.loadState === 'loading_first'
+                }
+                href={getGitHubAppInstallUri()}
+                loading={
+                  installationsLoadState === 'loading' ||
+                  firstSubscription.data.loadState === 'loading' ||
+                  firstSubscription.data.loadState === 'loading_first'
+                }
+                openOnNewTab={false}
+              />
+            }
+            emoji="sunny"
+            subtitle="Please install the GitHub App to continue. No code permission required."
+            title="Not installed"
+          />
+        </View>
+      )
     }
 
     return (

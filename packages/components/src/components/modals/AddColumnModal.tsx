@@ -298,7 +298,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
-  const username = useReduxState(selectors.currentUsernameSelector)
+  const username = useReduxState(selectors.currentGitHubUsernameSelector)
   const installationOwnerNames = useReduxState(
     selectors.installationOwnerNamesSelector,
   )

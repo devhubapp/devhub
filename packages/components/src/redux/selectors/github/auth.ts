@@ -47,7 +47,11 @@ export const githubOAuthTokenCreatedAtSelector = (state: RootState) => {
   return (tokenDetails && tokenDetails.tokenCreatedAt) || undefined
 }
 
-export const currentUsernameSelector = (state: RootState) => {
+export const currentGitHubUserSelector = (state: RootState) => {
+  return s(state).user || undefined
+}
+
+export const currentGitHubUsernameSelector = (state: RootState) => {
   const user = s(state).user
   return (user && user.login) || undefined
 }

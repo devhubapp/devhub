@@ -56,7 +56,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const modalStack = useReduxState(selectors.modalStack)
-  const username = useReduxState(selectors.currentUsernameSelector)
+  const username = useReduxState(selectors.currentGitHubUsernameSelector)
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
 

@@ -25,7 +25,7 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
   const [copied, setCopied] = useState(false)
 
   const userId = useReduxState(selectors.currentUserIdSelector)
-  const username = useReduxState(selectors.currentUsernameSelector)
+  const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
   const email = `enterprise${'@'}devhubapp.com`
 

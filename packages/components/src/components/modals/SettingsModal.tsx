@@ -23,7 +23,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
   const { sizename } = useAppLayout()
 
-  const username = useReduxState(selectors.currentUsernameSelector)
+  const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
   const logout = useReduxAction(actions.logout)
   const pushModal = useReduxAction(actions.pushModal)

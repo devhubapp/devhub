@@ -5,7 +5,7 @@ import * as selectors from '../../redux/selectors'
 import { HeaderMessage } from './HeaderMessage'
 
 export function FreeTrialHeaderMessage() {
-  const username = useReduxState(selectors.currentUsernameSelector)
+  const username = useReduxState(selectors.currentGitHubUsernameSelector)
   if (username === 'appledevhub') return null
 
   return (

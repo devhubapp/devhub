@@ -16,7 +16,7 @@ export interface AccountSettingsProps {}
 export function AccountSettings() {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const username = useReduxState(selectors.currentUsernameSelector)
+  const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
   return (
     <View>
