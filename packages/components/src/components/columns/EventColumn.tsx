@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AppViewMode, getColumnHeaderDetails } from '@devhub/core'
+import { getColumnHeaderDetails } from '@devhub/core'
 import {
   EventCardsContainer,
   EventCardsContainerProps,
@@ -11,7 +11,6 @@ export interface EventColumnProps extends EventCardsContainerProps {
   columnIndex: number
   disableColumnOptions?: boolean
   pagingEnabled?: boolean
-  appViewMode: AppViewMode
 }
 
 export const EventColumn = React.memo((props: EventColumnProps) => {
@@ -21,7 +20,6 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
     disableColumnOptions,
     pagingEnabled,
     subscriptions,
-    appViewMode,
   } = props
 
   const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
@@ -37,7 +35,6 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
       repo={requestTypeIconAndData.repo}
       repoIsKnown={requestTypeIconAndData.repoIsKnown}
       subscriptions={subscriptions}
-      appViewMode={appViewMode}
     >
       <EventCardsContainer
         key={`event-cards-container-${column.id}`}

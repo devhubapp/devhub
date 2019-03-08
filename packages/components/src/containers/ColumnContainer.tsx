@@ -3,9 +3,7 @@ import React from 'react'
 import { EventColumn } from '../components/columns/EventColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
 import { useColumn } from '../hooks/use-column'
-import { useReduxState } from '../hooks/use-redux-state'
 import { bugsnag } from '../libs/bugsnag'
-import * as selectors from '../redux/selectors'
 
 export interface ColumnContainerProps {
   columnId: string
@@ -18,8 +16,6 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
   const { columnId, disableColumnOptions, pagingEnabled, swipeable } = props
 
   const { column, columnIndex, subscriptions } = useColumn(columnId)
-
-  const appViewMode = useReduxState(selectors.viewModeSelector)
 
   if (!column) return null
 
@@ -34,7 +30,6 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           pagingEnabled={pagingEnabled}
           subscriptions={subscriptions}
           swipeable={swipeable}
-          appViewMode={appViewMode}
         />
       )
     }
@@ -49,7 +44,6 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           pagingEnabled={pagingEnabled}
           subscriptions={subscriptions}
           swipeable={swipeable}
-          appViewMode={appViewMode}
         />
       )
     }

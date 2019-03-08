@@ -125,7 +125,9 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <SpringAnimatedView style={cardStyles.horizontalAndVerticallyAligned}>
+            <SpringAnimatedView
+              style={cardStyles.horizontalAndVerticallyAligned}
+            >
               <Link href={userLinkURL}>
                 <SpringAnimatedText
                   numberOfLines={1}
@@ -147,7 +149,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                       getCardStylesForTheme(springAnimatedTheme).timestampText
                     }
                   >
-                    <Text children="•" style={{ fontSize: 9 }} />
+                    <Text children="•" style={{ fontSize: 9, opacity: 0.2 }} />
                     <Text children=" " />
                     BOT
                   </SpringAnimatedText>
@@ -171,7 +173,10 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                           web: { title: getFullDateText(date) },
                         })}
                       >
-                        <Text children="•" style={{ fontSize: 9 }} />
+                        <Text
+                          children="•"
+                          style={{ fontSize: 9, opacity: 0.2 }}
+                        />
                         <Text children=" " />
                         {dateText}
                       </SpringAnimatedText>

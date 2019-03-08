@@ -119,7 +119,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <SpringAnimatedView style={cardStyles.horizontalAndVerticallyAligned}>
+            <SpringAnimatedView
+              style={cardStyles.horizontalAndVerticallyAligned}
+            >
               <Link href={userLinkURL}>
                 <SpringAnimatedText
                   numberOfLines={1}
@@ -141,7 +143,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                       getCardStylesForTheme(springAnimatedTheme).timestampText
                     }
                   >
-                    <Text children="•" style={{ fontSize: 9 }} />
+                    <Text children="•" style={{ fontSize: 9, opacity: 0.2 }} />
                     <Text children=" " />
                     BOT
                   </SpringAnimatedText>
@@ -165,7 +167,10 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                           web: { title: getFullDateText(date) },
                         })}
                       >
-                        <Text children="•" style={{ fontSize: 9 }} />
+                        <Text
+                          children="•"
+                          style={{ fontSize: 9, opacity: 0.2 }}
+                        />
                         <Text children=" " />
                         {dateText}
                       </SpringAnimatedText>
@@ -220,11 +225,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
             fixedIconSize
             iconName="bookmark"
-            iconStyle={[
-              isSaved && {
-                color: springAnimatedTheme.primaryBackgroundColor,
-              },
-            ]}
+            iconStyle={{
+              color: isSaved
+                ? springAnimatedTheme.primaryBackgroundColor
+                : springAnimatedTheme.foregroundColorMuted25,
+            }}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
             size={16}
             style={{

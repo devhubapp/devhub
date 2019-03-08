@@ -4,6 +4,7 @@ import { Dimensions } from 'react-native'
 export const APP_LAYOUT_BREAKPOINTS = {
   SMALL: 420,
   MEDIUM: 600,
+  LARGE: 800,
 }
 
 export interface AppLayoutProviderProps {
@@ -13,7 +14,7 @@ export interface AppLayoutProviderProps {
 export interface AppLayoutProviderState {
   appOrientation: 'landscape' | 'portrait'
   deviceOrientation: 'landscape' | 'portrait'
-  sizename: '1-small' | '2-medium' | '3-large'
+  sizename: '1-small' | '2-medium' | '3-large' | '4-x-large'
 }
 
 export const AppLayoutContext = React.createContext<AppLayoutProviderState>(
@@ -49,11 +50,13 @@ export function getLayoutConsumerState(): AppLayoutProviderState {
       ? '1-small'
       : width <= APP_LAYOUT_BREAKPOINTS.MEDIUM
       ? '2-medium'
-      : '3-large'
+      : width <= APP_LAYOUT_BREAKPOINTS.LARGE
+      ? '3-large'
+      : '4-x-large'
 
   const deviceOrientation = width > height ? 'landscape' : 'portrait'
   const appOrientation =
-    deviceOrientation === 'landscape' || sizename === '3-large'
+    deviceOrientation === 'landscape' || sizename >= '3-large'
       ? 'landscape'
       : 'portrait'
 

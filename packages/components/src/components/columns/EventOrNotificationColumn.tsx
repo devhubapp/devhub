@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 
 import {
-  AppViewMode,
   Column as ColumnType,
   ColumnSubscription,
   EnhancedGitHubEvent,
@@ -12,6 +11,7 @@ import {
   isItemRead,
   isNotificationPrivate,
 } from '@devhub/core'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
@@ -41,7 +41,6 @@ export interface EventOrNotificationColumnProps {
   repo: string | undefined
   repoIsKnown: boolean
   subscriptions: Array<ColumnSubscription | undefined>
-  appViewMode: AppViewMode
 }
 
 export const EventOrNotificationColumn = React.memo(
@@ -57,7 +56,6 @@ export const EventOrNotificationColumn = React.memo(
       repo,
       repoIsKnown,
       subscriptions,
-      appViewMode,
     } = props
 
     const [showColumnOptions, setShowColumnOptions] = useState(false)
@@ -69,6 +67,8 @@ export const EventOrNotificationColumn = React.memo(
     useEffect(() => {
       filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
     }, column.subscriptionIds)
+
+    const { appViewMode } = useAppViewMode()
 
     const filteredItems = useReduxState(
       useCallback(
@@ -250,7 +250,7 @@ export const EventOrNotificationColumn = React.memo(
             }}
           />
 
-          {appViewMode !== 'single-column' && (
+          {!disableColumnOptions && (
             <ColumnHeaderItem
               key="column-options-button-toggle-column-options"
               analyticsAction={showColumnOptions ? 'hide' : 'show'}
@@ -269,7 +269,7 @@ export const EventOrNotificationColumn = React.memo(
         <ViewMeasurer
           style={{
             flex: 1,
-            flexDirection: appViewMode === 'single-column' ? 'row' : 'column',
+            flexDirection: 'column',
           }}
         >
           {({ height: containerHeight }) => (
@@ -280,11 +280,7 @@ export const EventOrNotificationColumn = React.memo(
                   close={toggleOptions}
                   columnId={column.id}
                   containerHeight={containerHeight}
-                  inlineMode={appViewMode === 'single-column'}
-                  startWithFiltersExpanded={appViewMode === 'single-column'}
-                  visible={
-                    !!showColumnOptions || appViewMode === 'single-column'
-                  }
+                  visible={!!showColumnOptions}
                 />
               )}
 

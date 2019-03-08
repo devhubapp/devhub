@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import {
   CardViewMode,
@@ -18,11 +18,9 @@ import {
   isNotificationPrivate,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
-import { useReduxAction } from '../../hooks/use-redux-action'
 import { Platform } from '../../libs/platform'
-import * as actions from '../../redux/actions'
 import * as colors from '../../styles/colors'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, smallTextSize } from '../../styles/variables'
 import { getNotificationReasonMetadata } from '../../utils/helpers/github/notifications'
 import {
   getIssueIconAndColor,
@@ -31,9 +29,9 @@ import {
 } from '../../utils/helpers/github/shared'
 import { fixURL } from '../../utils/helpers/github/url'
 import { findNode } from '../../utils/helpers/shared'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { IntervalRefresh } from '../common/IntervalRefresh'
@@ -41,7 +39,6 @@ import { Label } from '../common/Label'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
-import { CardSmallThing } from './partials/CardSmallThing'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
@@ -56,7 +53,6 @@ export interface NotificationCardProps {
   cardViewMode?: CardViewMode
   isFocused?: boolean
   notification: EnhancedGitHubNotification
-  onlyOneRepository?: boolean
   repoIsKnown?: boolean
 }
 
@@ -67,7 +63,7 @@ const styles = StyleSheet.create({
 })
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { cardViewMode, notification, onlyOneRepository, isFocused } = props
+  const { cardViewMode, isFocused, notification, repoIsKnown } = props
 
   const repoFullName =
     (notification &&
@@ -78,8 +74,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useSpringAnimatedTheme()
-
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   /*
   const hasPrivateAccess = useReduxState(state =>
@@ -238,6 +232,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     (isRead && 'backgroundColorDarker1') || 'backgroundColor'
 
   if (cardViewMode === 'compact') {
+    // if (false && cardViewMode === 'compact') {
     return (
       <SpringAnimatedView
         key={`notification-card-${id}-compact-inner`}
@@ -245,78 +240,174 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         style={{
           width: '100%',
           flexDirection: 'row',
+          alignItems: 'flex-start',
           padding: contentPadding,
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
         }}
       >
-        <SpringAnimatedCheckbox
-          analyticsLabel={undefined}
-          containerStyle={{
-            alignSelf: 'flex-start',
-            height: 22,
-            alignContent: 'center',
-            justifyContent: 'center',
-          }}
-        />
+        {!!isFocused && (
+          <SpringAnimatedView
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: 2,
+              backgroundColor: springAnimatedTheme.primaryBackgroundColor,
+            }}
+          />
+        )}
 
-        <Spacer width={contentPadding} />
-
-        <ColumnHeaderItem
-          analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
-          fixedIconSize
-          iconName="bookmark"
-          iconStyle={[
-            isSaved && {
-              color: springAnimatedTheme.primaryBackgroundColor,
-            },
-          ]}
-          noPadding
-          onPress={() => saveItemsForLater({ itemIds: [id], save: !isSaved })}
-          size={17}
-          style={{
-            alignSelf: 'flex-start',
-            height: 22,
-            alignContent: 'center',
-            justifyContent: 'center',
-          }}
-        />
-
-        <Spacer width={contentPadding} />
+        {/* <CenterGuide /> */}
 
         <View
           style={{
-            alignSelf: 'flex-start',
-            height: 22,
             alignContent: 'center',
-            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <Avatar
-            avatarUrl={repoAvatarDetails.avatar_url}
-            isBot={isBot}
-            linkURL={repoAvatarDetails.html_url}
-            shape={isBot ? undefined : 'circle'}
-            small
-            size={18}
+          {/* <CenterGuide /> */}
+
+          <View
             style={{
-              alignSelf: 'flex-start',
+              height: 22,
               alignContent: 'center',
+              alignItems: 'center',
               justifyContent: 'center',
             }}
-            username={repoAvatarDetails.login}
-          />
+          >
+            <SpringAnimatedCheckbox analyticsLabel={undefined} />
+          </View>
+
+          <Spacer height={contentPadding / 2} />
+
+          {/* <ColumnHeaderItem
+          analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
+          enableBackgroundHover={!isSaved}
+          hoverBackgroundThemeColor={isSaved ? undefined : 'foregroundColor'}
+          fixedIconSize
+          iconName="bookmark"
+          iconStyle={{
+            color: isSaved
+              ? springAnimatedTheme.primaryBackgroundColor
+              : springAnimatedTheme.foregroundColorMuted50,
+          }}
+          noPadding
+          onPress={() => saveItemsForLater({ itemIds: [id], save: !isSaved })}
+          size={18}
+          style={{
+            alignSelf: 'flex-start',
+            alignContent: 'center',
+            justifyContent: 'center',
+            height: 22,
+          }}
+        />
+
+        <Spacer width={contentPadding} /> */}
+
+          <View
+            style={{
+              height: 22,
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <SpringAnimatedIcon
+              name={cardIconName}
+              selectable={false}
+              style={{
+                fontSize: 18,
+                textAlign: 'center',
+                color: cardIconColor || springAnimatedTheme.foregroundColor,
+              }}
+            />
+          </View>
         </View>
 
         <Spacer width={contentPadding} />
 
         <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              height: 22,
+              alignItems: 'center',
+            }}
+          >
+            <Avatar
+              avatarUrl={repoAvatarDetails.avatar_url}
+              isBot={isBot}
+              linkURL={repoAvatarDetails.html_url}
+              shape={isBot ? undefined : 'circle'}
+              small
+              size={18}
+              username={repoAvatarDetails.login}
+            />
+
+            <Spacer width={contentPadding} />
+
+            <SpringAnimatedText
+              key="repo-text"
+              numberOfLines={1}
+              style={{
+                fontSize: smallTextSize,
+                color: springAnimatedTheme.foregroundColorMuted50,
+              }}
+            >
+              {repoFullName.toLowerCase()}
+            </SpringAnimatedText>
+
+            <IntervalRefresh key="updated-at-interval-refresh" date={updatedAt}>
+              {() => {
+                const dateText = getDateSmallText(updatedAt, false)
+                if (!dateText) return null
+
+                return (
+                  <>
+                    <Text children=" " />
+                    <Text children="•" style={{ fontSize: 9, opacity: 0.2 }} />
+                    <Text children=" " />
+
+                    <Link href={subject.latest_comment_url} openOnNewTab>
+                      <SpringAnimatedText
+                        numberOfLines={1}
+                        style={[
+                          getCardStylesForTheme(springAnimatedTheme)
+                            .timestampText,
+                        ]}
+                        {...Platform.select({
+                          web: { title: getFullDateText(updatedAt) },
+                        })}
+                      >
+                        {dateText}
+                      </SpringAnimatedText>
+                    </Link>
+                  </>
+                )
+              }}
+            </IntervalRefresh>
+
+            {!!(reasonDetails && reasonDetails.label) && (
+              <>
+                <Spacer flex={1} minWidth={contentPadding} />
+
+                <Label color={reasonDetails.color} isPrivate={isPrivate} small>
+                  {reasonDetails.label.toLowerCase()}
+                </Label>
+              </>
+            )}
+          </View>
+
+          <Spacer height={contentPadding / 2} />
+
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <View
               style={{
-                alignSelf: 'flex-start',
                 width: 18,
                 height: 22,
-                alignContent: 'center',
+                alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
@@ -328,11 +419,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   shape={isBot ? undefined : 'circle'}
                   small
                   size={18}
-                  style={{
-                    alignSelf: 'flex-start',
-                    alignContent: 'center',
-                    justifyContent: 'center',
-                  }}
                   username={actor.login}
                 />
               )}
@@ -340,150 +426,47 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
             <Spacer width={contentPadding} />
 
-            <ColumnHeaderItem
-              fixedIconSize
-              iconName={cardIconName}
-              iconStyle={
-                !!cardIconColor && { lineHeight: 22, color: cardIconColor }
-              }
-              noPadding
-              size={18}
-              style={{
-                alignSelf: 'flex-start',
-                alignContent: 'center',
-                justifyContent: 'center',
-              }}
-            />
-
-            <Spacer width={contentPadding / 2} />
-
-            <ColumnHeaderItem
-              noPadding
-              size={18}
+            <SpringAnimatedText
+              key="notification-title"
+              numberOfLines={3}
               style={{
                 flex: 1,
-                alignSelf: 'flex-start',
-                alignItems: 'flex-start',
-                alignContent: 'flex-start',
-                justifyContent: 'flex-start',
+                minHeight: 22,
+                lineHeight: 20,
+                color: isRead
+                  ? springAnimatedTheme.foregroundColorMuted50
+                  : springAnimatedTheme.foregroundColor,
+                fontSize: 14,
+                fontWeight: isRead ? '400' : '500',
               }}
-              title={subject.title}
-              subtitle={
-                issueOrPullRequestNumber
-                  ? `#${issueOrPullRequestNumber}`
-                  : undefined
-              }
             >
-              {!!(
-                issueOrPullRequest &&
-                issueOrPullRequest.labels &&
-                issueOrPullRequest.labels.length
-              ) && (
-                <>
-                  <Spacer height={contentPadding / 2} />
-
-                  <LabelsView
-                    labels={issueOrPullRequest.labels.map(label => ({
-                      key: `issue-or-pr-row-${id}-${repoOwnerName}-${repoName}-${issueOrPullRequestNumber}-label-${label.id ||
-                        label.name}`,
-                      color: label.color && `#${label.color}`,
-                      name: label.name,
-                    }))}
-                  />
-                </>
-              )}
-            </ColumnHeaderItem>
-          </View>
-        </View>
-
-        {!!(reasonDetails && reasonDetails.label) && (
-          <Label
-            color={reasonDetails.color}
-            containerStyle={{ alignSelf: 'flex-start' }}
-            isPrivate={isPrivate}
-            // muted={isRead}
-            // outline={false}
-            small
-          >
-            {reasonDetails.label.toLowerCase()}
-          </Label>
-        )}
-
-        <Spacer width={contentPadding} />
-
-        <View style={{ flexDirection: 'row' }}>
-          <Spacer flex={1} />
-
-          <View
-            style={{
-              alignSelf: 'flex-start',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 40,
-            }}
-          >
-            <CardSmallThing
-              icon="comment"
-              isRead={isRead}
-              style={{
-                backgroundColor: 'transparent',
-                borderColor: 'transparent',
-                paddingHorizontal: 0,
-              }}
-              text={
-                (issueOrPullRequest
-                  ? issueOrPullRequest.comments
-                  : undefined) || 0
-              }
-              url={
-                issueOrPullRequest && issueOrPullRequestNumber
-                  ? fixURL(
-                      subject.latest_comment_url || issueOrPullRequest.url,
-                      {
-                        addBottomAnchor: true,
-                        issueOrPullRequestNumber,
-                      },
-                    )
-                  : subject.latest_comment_url || subject.url
-              }
-            />
+              {subject.title}
+            </SpringAnimatedText>
           </View>
 
-          <Spacer flex={1} minWidth={contentPadding} />
+          {!!(
+            issueOrPullRequest &&
+            issueOrPullRequest.labels &&
+            issueOrPullRequest.labels.length
+          ) && (
+            <>
+              <Spacer height={contentPadding / 2 - 4} />
 
-          <View
-            style={{
-              alignSelf: 'flex-start',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              width: 50,
-            }}
-          >
-            <IntervalRefresh date={updatedAt}>
-              {() => {
-                const dateText = getDateSmallText(updatedAt, false)
-                if (!dateText) return null
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+                <Spacer width={18 + contentPadding} />
 
-                return (
-                  <Link href={subject.latest_comment_url} openOnNewTab>
-                    <SpringAnimatedText
-                      numberOfLines={1}
-                      style={[
-                        getCardStylesForTheme(springAnimatedTheme)
-                          .timestampText,
-                        { lineHeight: 22 },
-                      ]}
-                      {...Platform.select({
-                        web: { title: getFullDateText(updatedAt) },
-                      })}
-                    >
-                      {dateText}
-                    </SpringAnimatedText>
-                  </Link>
-                )
-              }}
-            </IntervalRefresh>
-          </View>
+                <LabelsView
+                  labels={issueOrPullRequest.labels.map(label => ({
+                    key: `notification-${id}-${repoOwnerName}-${repoName}-${issueOrPullRequestNumber}-label-${label.id ||
+                      label.name}`,
+                    color: label.color && `#${label.color}`,
+                    name: label.name.toLowerCase(),
+                  }))}
+                  style={{ flex: 1 }}
+                />
+              </View>
+            </>
+          )}
         </View>
       </SpringAnimatedView>
     )
@@ -525,7 +508,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!!(
         repoOwnerName &&
         repoName &&
-        !onlyOneRepository &&
+        !repoIsKnown &&
         !(actor && (actor.login === repoName || actor.login === repoFullName))
       ) && (
         <RepositoryRow

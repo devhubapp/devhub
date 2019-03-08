@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AppViewMode, getColumnHeaderDetails } from '@devhub/core'
+import { getColumnHeaderDetails } from '@devhub/core'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
@@ -12,7 +12,6 @@ export interface NotificationColumnProps
   columnIndex: number
   disableColumnOptions?: boolean
   pagingEnabled?: boolean
-  appViewMode: AppViewMode
 }
 
 export const NotificationColumn = React.memo(
@@ -23,7 +22,6 @@ export const NotificationColumn = React.memo(
       disableColumnOptions,
       pagingEnabled,
       subscriptions,
-      appViewMode,
     } = props
 
     const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
@@ -39,13 +37,9 @@ export const NotificationColumn = React.memo(
         repo={requestTypeIconAndData.repo}
         repoIsKnown={requestTypeIconAndData.repoIsKnown}
         subscriptions={subscriptions}
-        appViewMode={appViewMode}
       >
         <NotificationCardsContainer
           key={`notification-cards-container-${column.id}`}
-          cardViewMode={
-            appViewMode === 'single-column' ? 'compact' : 'expanded'
-          }
           repoIsKnown={requestTypeIconAndData.repoIsKnown}
           {...props}
           columnIndex={columnIndex}

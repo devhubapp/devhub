@@ -205,7 +205,7 @@ export const IssueOrPullRequestRow = React.memo(
                                   <>
                                     <Text
                                       children="•"
-                                      style={{ fontSize: 9 }}
+                                      style={{ fontSize: 9, opacity: 0.2 }}
                                     />
                                     <Text children=" " />
                                   </>

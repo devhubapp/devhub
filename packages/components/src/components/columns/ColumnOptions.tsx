@@ -9,6 +9,7 @@ import {
   isReadFilterChecked,
   isUnreadFilterChecked,
 } from '@devhub/core'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -103,9 +104,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const { appOrientation } = useAppLayout()
+  const { appViewMode } = useAppViewMode()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
-  const appViewMode = useReduxState(selectors.viewModeSelector)
 
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const moveColumn = useReduxAction(actions.moveColumn)

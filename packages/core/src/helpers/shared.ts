@@ -271,3 +271,9 @@ export function genericGitHubResponseMapper(
     return obj
   })
 }
+
+export function intercalateWithArray<T extends any[], U>(arr: T, separator: U) {
+  return _.flatMap(arr, (item, index) =>
+    index === 0 ? item : [separator, item],
+  )
+}

@@ -6,6 +6,7 @@ import {
   getGitHubURLForUser,
   ModalPayload,
 } from '@devhub/core'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -53,12 +54,12 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const theme = useTheme()
+  const { appViewMode } = useAppViewMode()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const modalStack = useReduxState(selectors.modalStack)
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
-  const appViewMode = useReduxState(selectors.viewModeSelector)
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
@@ -66,12 +67,12 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const focusedColumnId = useFocusedColumn() || columnIds[0]
 
   const small = sizename === '1-small'
-  const large = sizename === '3-large'
+  const large = sizename >= '3-large'
 
   const enableBackgroundHover = !horizontal
   const showLabel = !!horizontal
   const showFixedSettingsButton = !horizontal || columnIds.length >= 4
-  const highlightFocusedColumn = small || appViewMode === 'single-column'
+  const highlightFocusedColumn = !small && appViewMode === 'single-column'
 
   const itemContainerStyle = {
     width: sidebarSize,

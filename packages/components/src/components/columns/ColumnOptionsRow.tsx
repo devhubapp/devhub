@@ -174,7 +174,10 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
           <SpringAnimatedText
             numberOfLines={1}
-            style={{ color: springAnimatedTheme.foregroundColor }}
+            style={{
+              color: springAnimatedTheme.foregroundColor,
+              fontWeight: '500',
+            }}
           >
             {title}
           </SpringAnimatedText>

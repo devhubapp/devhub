@@ -150,8 +150,9 @@ export const NotificationCardsContainer = React.memo(
 
     return (
       <NotificationCards
-        {...props}
         key={`notification-cards-${column.id}`}
+        // cardViewMode={appViewMode === 'single-column' ? 'compact' : 'expanded'}
+        cardViewMode="compact"
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
         lastFetchedAt={firstSubscription.data.lastFetchedAt}
@@ -162,6 +163,7 @@ export const NotificationCardsContainer = React.memo(
         }
         notifications={filteredItems}
         refresh={refresh}
+        {...props}
       />
     )
   },

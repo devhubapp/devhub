@@ -205,6 +205,19 @@ export const EventCard = React.memo((props: EventCardProps) => {
         },
       ]}
     >
+      {!!isFocused && (
+        <SpringAnimatedView
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: 2,
+            backgroundColor: springAnimatedTheme.primaryBackgroundColor,
+          }}
+        />
+      )}
+
       <EventCardHeader
         key={`event-card-header-${id}`}
         actionText={actionText}
