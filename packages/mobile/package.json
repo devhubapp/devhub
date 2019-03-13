@@ -16,10 +16,9 @@
   },
   "dependencies": {
     "@devhub/components": "0.47.4",
-    "jsc-android": "236355.1.1",
-    "metro-react-native-babel-preset": "^0.51.0",
-    "react": "16.8.1",
-    "react-native": "npm:@brunolemos/react-native@latest",
+    "metro-react-native-babel-preset": "^0.53.0",
+    "react": "16.8.4",
+    "react-native": "0.59.0",
     "react-native-firebase": "^5.1.1",
     "react-native-google-analytics-bridge": "^7.0.0",
     "react-native-screens": "^1.0.0-alpha.16"

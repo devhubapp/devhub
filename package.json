@@ -30,6 +30,7 @@
     "studio": "yarn workspace @devhub/mobile studio",
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
+  "dependencies": {},
   "devDependencies": {
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
