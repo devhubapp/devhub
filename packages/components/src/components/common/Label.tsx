@@ -103,7 +103,7 @@ export function Label(props: LabelProps) {
         {...textProps}
         style={[
           {
-            lineHeight: small ? 18 : 19,
+            lineHeight: small ? 16 : 18,
             fontSize: small ? 11 : 12,
             color: foregroundColor,
           },

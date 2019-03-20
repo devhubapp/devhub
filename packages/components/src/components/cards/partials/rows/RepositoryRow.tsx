@@ -1,9 +1,8 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForRepo } from '@devhub/core'
+import { getGitHubURLForRepo, getGitHubURLForUser } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
@@ -27,9 +26,9 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
-    isForcePush,
-    isFork,
-    isPush,
+    // isForcePush,
+    // isFork,
+    // isPush,
     isRead,
     ownerName,
     repositoryName,
@@ -37,11 +36,11 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
     smallLeftColumn,
   } = props
 
-  const repoIcon =
-    (isForcePush && 'repo-force-push') ||
-    (isPush && 'repo-push') ||
-    (isFork && 'repo-forked') ||
-    'repo'
+  // const repoIcon =
+  //   (isForcePush && 'repo-force-push') ||
+  //   (isPush && 'repo-push') ||
+  //   (isFork && 'repo-forked') ||
+  //   'repo'
 
   const isBot = Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)
 
@@ -65,16 +64,23 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
       </View>
 
       <View style={cardStyles.rightColumn}>
-        <Link
-          href={
-            showMoreItemsIndicator
-              ? undefined
-              : getGitHubURLForRepo(ownerName, repositoryName)
-          }
-          style={cardRowStyles.mainContentContainer}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignContent: 'center',
+          }}
         >
-          <SpringAnimatedText numberOfLines={1}>
-            <SpringAnimatedIcon
+          <Link
+            href={
+              showMoreItemsIndicator
+                ? undefined
+                : getGitHubURLForRepo(ownerName, repositoryName)
+            }
+          >
+            {/* <SpringAnimatedText numberOfLines={1}> */}
+            {/* <SpringAnimatedIcon
               name={repoIcon}
               size={13}
               style={[
@@ -82,7 +88,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                 getCardStylesForTheme(springAnimatedTheme).icon,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
-            />{' '}
+            />{' '} */}
             <SpringAnimatedText
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
@@ -92,6 +98,15 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
             >
               {showMoreItemsIndicator ? '' : repositoryName}
             </SpringAnimatedText>
+            {/* </SpringAnimatedText> */}
+          </Link>
+          <Link
+            href={
+              showMoreItemsIndicator
+                ? undefined
+                : getGitHubURLForUser(ownerName)
+            }
+          >
             <SpringAnimatedText
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
@@ -103,8 +118,8 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
             >
               {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
             </SpringAnimatedText>
-          </SpringAnimatedText>
-        </Link>
+          </Link>
+        </View>
       </View>
     </View>
   )

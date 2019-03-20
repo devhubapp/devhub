@@ -190,7 +190,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             enableForegroundHover
             fixedIconSize
             iconName={isRead ? 'mail-read' : 'mail'}
-            iconStyle={isRead ? undefined : { lineHeight: 18 }}
+            iconStyle={isRead ? undefined : { lineHeight: 14 }}
             onPress={() =>
               markItemsAsReadOrUnread({
                 type: 'activity',
@@ -199,7 +199,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 localOnly: true,
               })
             }
-            size={18}
+            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
@@ -219,7 +219,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               },
             ]}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
-            size={18}
+            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
@@ -233,11 +233,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             iconName={cardIconName}
             iconStyle={[
               cardIconName === 'star' && {
-                lineHeight: 16,
+                lineHeight: 14,
               },
               !!cardIconColor && { color: cardIconColor },
             ]}
-            size={18}
+            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,

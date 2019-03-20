@@ -8,6 +8,7 @@ import {
   getGitHubURLForUser,
   GitHubIcon,
   GitHubNotificationReason,
+  ThemeColors,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -18,6 +19,7 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../../styles/variables'
+import { getReadableColor } from '../../../utils/helpers/colors'
 import { getNotificationReasonMetadata } from '../../../utils/helpers/github/notifications'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
@@ -25,14 +27,13 @@ import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
-import { Label } from '../../common/Label'
 import { Link } from '../../common/Link'
-import { Spacer } from '../../common/Spacer'
+import { useTheme } from '../../context/ThemeContext'
 import { cardStyles, getCardStylesForTheme } from '../styles'
 
 export interface NotificationCardHeaderProps {
-  actionText: string
   avatarUrl: string
+  backgroundThemeColor: keyof ThemeColors
   cardIconColor?: string
   cardIconName: GitHubIcon
   date: MomentInput
@@ -68,8 +69,8 @@ const styles = StyleSheet.create({
 
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const {
-    actionText,
     avatarUrl,
+    backgroundThemeColor,
     cardIconColor,
     cardIconName,
     date,
@@ -85,6 +86,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const theme = useTheme()
 
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
@@ -179,12 +181,19 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               </IntervalRefresh>
             </SpringAnimatedView>
 
-            {!!actionText && (
+            {!!(reasonDetails && reasonDetails.label) && (
               <SpringAnimatedText
                 numberOfLines={1}
-                style={
-                  getCardStylesForTheme(springAnimatedTheme).descriptionText
-                }
+                style={[
+                  getCardStylesForTheme(springAnimatedTheme).descriptionText,
+                  {
+                    color: getReadableColor(
+                      reasonDetails.color,
+                      theme[backgroundThemeColor],
+                      0.3,
+                    ),
+                  },
+                ]}
               >
                 {!!isPrivate && (
                   <SpringAnimatedText
@@ -192,17 +201,17 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   >
                     <SpringAnimatedIcon
                       name="lock"
-                      style={
-                        getCardStylesForTheme(springAnimatedTheme).mutedText
-                      }
+                      style={[
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      ]}
                     />{' '}
                   </SpringAnimatedText>
                 )}
-                {actionText}
+                {reasonDetails.label.toLowerCase()}
               </SpringAnimatedText>
             )}
 
-            {!!(reasonDetails && reasonDetails.label) && (
+            {/* {!!(reasonDetails && reasonDetails.label) && (
               <>
                 <Spacer height={4} />
 
@@ -217,7 +226,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   {reasonDetails.label.toLowerCase()}
                 </Label>
               </>
-            )}
+            )} */}
           </View>
 
           <ColumnHeaderItem
@@ -225,7 +234,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             enableForegroundHover
             fixedIconSize
             iconName={isRead ? 'mail-read' : 'mail'}
-            iconStyle={isRead ? undefined : { lineHeight: 18 }}
+            iconStyle={isRead ? undefined : { lineHeight: 14 }}
             onPress={() =>
               markItemsAsReadOrUnread({
                 type: 'notifications',
@@ -233,7 +242,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 unread: !!isRead,
               })
             }
-            size={18}
+            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
@@ -253,7 +262,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               },
             ]}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
-            size={18}
+            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
@@ -269,12 +278,9 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               {
                 width: columnHeaderItemContentSize,
               },
-              cardIconName === 'star' && {
-                lineHeight: 16,
-              },
               !!cardIconColor && { color: cardIconColor },
             ]}
-            size={18}
+            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,

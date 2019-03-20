@@ -38,7 +38,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     avatarUrl,
     body: _body,
     isRead,
-    numberOfLines = 3,
+    numberOfLines = 2,
     smallLeftColumn,
     textStyle,
     url,

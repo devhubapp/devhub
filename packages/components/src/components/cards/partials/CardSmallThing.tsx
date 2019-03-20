@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
 
   text: {
     backgroundColor: 'transparent',
-    fontSize: 12,
-    lineHeight: 20,
+    fontSize: 11,
+    lineHeight: 16,
     opacity: 0.9,
   },
 })

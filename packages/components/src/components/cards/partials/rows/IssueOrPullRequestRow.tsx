@@ -12,10 +12,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-
 import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import {
-  SpringAnimatedIcon,
-  SpringAnimatedIconProps,
-} from '../../../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedIconProps } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
@@ -56,8 +53,8 @@ export const IssueOrPullRequestRow = React.memo(
       avatarUrl,
       commentsCount,
       createdAt,
-      iconColor,
-      iconName,
+      // iconColor,
+      // iconName,
       id,
       isRead,
       issueOrPullRequestNumber,
@@ -118,11 +115,12 @@ export const IssueOrPullRequestRow = React.memo(
                 style={[
                   Platform.OS !== 'android' && { flexGrow: 1 },
                   getCardStylesForTheme(springAnimatedTheme).normalText,
+                  cardStyles.boldText,
                   isRead &&
                     getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
-                <SpringAnimatedIcon
+                {/* <SpringAnimatedIcon
                   name={iconName}
                   size={13}
                   style={[
@@ -131,7 +129,7 @@ export const IssueOrPullRequestRow = React.memo(
                     { color: iconColor },
                     // isRead && { opacity: mutedOpacity },
                   ]}
-                />{' '}
+                />{' '} */}
                 {title}
               </SpringAnimatedText>
             </Link>
@@ -145,7 +143,7 @@ export const IssueOrPullRequestRow = React.memo(
                     style={{
                       flexDirection: 'row',
                       flexWrap: 'wrap',
-                      margin: -contentPadding / 4,
+                      margin: -contentPadding / 5,
                     }}
                   >
                     {labels.map(label => (
@@ -155,13 +153,13 @@ export const IssueOrPullRequestRow = React.memo(
                         color={label.color && `#${label.color}`}
                         containerStyle={{
                           alignSelf: 'flex-start',
-                          margin: contentPadding / 4,
+                          margin: contentPadding / 5,
                         }}
                         // muted={isRead}
                         outline={false}
                         small
                       >
-                        {label.name}
+                        {label.name.toLowerCase()}
                       </Label>
                     ))}
                   </View>

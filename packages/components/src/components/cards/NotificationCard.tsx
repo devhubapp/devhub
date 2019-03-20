@@ -23,6 +23,7 @@ import {
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
 import { fixURL } from '../../utils/helpers/github/url'
+import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
@@ -71,7 +72,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   useEffect(() => {
     if (Platform.OS === 'web' && isSelected && itemRef.current) {
-      itemRef.current.focus()
+      const node = findNode(itemRef.current)
+      node.focus()
     }
   }, [isSelected])
 
@@ -193,11 +195,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     avatar_url: getUserAvatarByUsername(repoOwnerName || ''),
     html_url: repo.html_url || getGitHubURLForRepo(repoOwnerName!, repoName!),
   }
-  const actionText = ''
-
   const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
 
   const smallLeftColumn = false
+
+  const backgroundThemeColor =
+    (isSelected && 'backgroundColorLess2') ||
+    (isRead && 'backgroundColorDarker1') ||
+    'backgroundColor'
 
   return (
     <SpringAnimatedView
@@ -206,17 +211,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       style={[
         styles.container,
         {
-          backgroundColor:
-            (isSelected && springAnimatedTheme.backgroundColorLess2) ||
-            (isRead && springAnimatedTheme.backgroundColorDarker1) ||
-            springAnimatedTheme.backgroundColor,
+          backgroundColor: springAnimatedTheme[backgroundThemeColor],
         },
       ]}
     >
       <NotificationCardHeader
         key={`notification-card-header-${id}`}
-        actionText={actionText}
         avatarUrl={actor && actor.avatar_url}
+        backgroundThemeColor={backgroundThemeColor}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         date={updatedAt}

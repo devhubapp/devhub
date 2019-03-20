@@ -2,7 +2,7 @@ import { ThemePair } from '../types'
 
 export const COLUMNS_LIMIT = 20
 export const MIN_COLUMN_WIDTH = 320
-export const MAX_COLUMN_WIDTH = 360
+export const MAX_COLUMN_WIDTH = 350
 
 export const DEFAULT_DARK_THEME = 'dark-gray'
 export const DEFAULT_LIGHT_THEME = 'light-blue'

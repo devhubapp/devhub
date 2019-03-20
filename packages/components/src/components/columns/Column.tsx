@@ -5,6 +5,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
+import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { Separator, separatorTickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -61,7 +62,8 @@ export const Column = React.memo(
         }
 
         if (Platform.OS === 'web' && columnRef.current) {
-          columnRef.current.focus()
+          const node = findNode(columnRef.current)
+          node.focus()
         }
       },
     )
@@ -71,7 +73,6 @@ export const Column = React.memo(
         {...otherProps}
         ref={columnRef}
         key={`column-inner-${columnId}`}
-        className={pagingEnabled ? 'snap-item-start' : ''}
         style={[
           {
             flexDirection: 'row',

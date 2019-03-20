@@ -16,8 +16,8 @@ function getStyles(params: { theme: Theme }) {
     ::-webkit-scrollbar-thumb {
       background-color: ${
         separatorColorLuminance > backgroundColorLuminance
-          ? lighten(0.1, separatorColor)
-          : darken(0.1, separatorColor)
+          ? lighten(0.025, separatorColor)
+          : darken(0.025, separatorColor)
       };
     }
 
