@@ -1,5 +1,4 @@
-import { delay } from 'redux-saga'
-import { all, fork, put } from 'redux-saga/effects'
+import { all, delay, fork, put } from 'redux-saga/effects'
 
 import { isNight } from '@devhub/core'
 import * as actions from '../actions'

@@ -1,11 +1,12 @@
 ::-webkit-scrollbar {
   width: 1px;
   height: 1px;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb
 {
-  background-color: #49d3b480;
+  background-color: transparent;
 }
 
 *:focus {
@@ -33,14 +34,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.input:focus {
+input:focus {
   outline: none !important;
 }
 
-.snap-container {
-  scroll-snap-type: x mandatory;
-}
-
-.snap-item-start {
-  scroll-snap-align: start;
+/* https://github.com/necolas/react-native-web/issues/1299 */
+div[class*='scrollSnapAlign'] > div {
+  height: 100%;
 }

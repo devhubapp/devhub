@@ -84,7 +84,6 @@ export const Columns = React.memo((props: ColumnsProps) => {
         ref={flatListRef}
         key="columns-flat-list"
         bounces={!swipeable}
-        className="snap-container"
         data={columnIds}
         getItemLayout={(_data, index) => ({
           index,

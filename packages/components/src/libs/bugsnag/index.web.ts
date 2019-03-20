@@ -1,5 +1,5 @@
-import bugsnagJS from 'bugsnag-js'
-import createReactPlugin from 'bugsnag-react'
+import bugsnagJS from '@bugsnag/js'
+import bugsnagReact from '@bugsnag/plugin-react'
 import _ from 'lodash'
 import React from 'react'
 
@@ -14,6 +14,8 @@ const client = bugsnagJS({
   autoBreadcrumbs: true,
   notifyReleaseStages: ['production'],
 })
+
+client.use(bugsnagReact, React)
 
 export const bugsnag: BugnsagCrossPlatform = {
   clearUser() {
@@ -57,4 +59,4 @@ export const bugsnag: BugnsagCrossPlatform = {
 
 // overrideConsoleError(bugsnag)
 
-export const ErrorBoundary = client.use(createReactPlugin(React))
+export const ErrorBoundary = client.getPlugin('react')

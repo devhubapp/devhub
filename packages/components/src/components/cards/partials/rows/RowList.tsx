@@ -34,9 +34,9 @@ export const RowList = React.memo((props: RowListProps<any>) => {
   return (
     <View
       style={{
-        flex: 0,
-        flexBasis: 'auto',
-        flexGrow: 1,
+        // flex: 0,
+        // flexBasis: 'auto',
+        // flexGrow: 1,
         marginBottom: -(narrow ? contentPadding / 2 : contentPadding),
       }}
     >

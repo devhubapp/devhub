@@ -8,7 +8,6 @@ import { SpringAnimatedTextInput as SpringAnimatedTextInputOriginal } from '../a
 import { separatorSize } from './Separator'
 
 export interface SpringAnimatedTextInputProps extends TextInputComponentProps {
-  className?: string
   placeholderTextColor?: any
   style?: any
 }
@@ -30,7 +29,6 @@ export const SpringAnimatedTextInput = React.forwardRef(
         ref={ref}
         placeholderTextColor={springAnimatedTheme.foregroundColorMuted50}
         {...otherProps}
-        className={`input ${otherProps.className || ''}`.trim()}
         onBlur={(e: any) => {
           setIsFocused(false)
           if (otherProps.onBlur) otherProps.onBlur(e)

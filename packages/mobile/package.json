@@ -16,12 +16,12 @@
   },
   "dependencies": {
     "@devhub/components": "0.47.4",
-    "metro-react-native-babel-preset": "^0.53.0",
+    "metro-react-native-babel-preset": "0.53.1",
     "react": "16.8.4",
-    "react-native": "0.59.0",
-    "react-native-firebase": "^5.1.1",
-    "react-native-google-analytics-bridge": "^7.0.0",
-    "react-native-screens": "^1.0.0-alpha.16"
+    "react-native": "0.59.1",
+    "react-native-firebase": "5.2.3",
+    "react-native-google-analytics-bridge": "7.1.0",
+    "react-native-screens": "1.0.0-alpha.22"
   },
   "jest": {
     "preset": "react-native",

@@ -1,11 +1,11 @@
 import { Response } from '@octokit/rest'
 import _ from 'lodash'
 import { REHYDRATE } from 'redux-persist'
-import { delay } from 'redux-saga'
 import {
   actionChannel,
   all,
   call,
+  delay,
   fork,
   put,
   race,

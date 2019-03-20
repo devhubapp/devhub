@@ -21,8 +21,6 @@ namespace JSX {
       | 'main' // main
       | 'navigation' // nav
       | 'region' // section
-
-    className?: string
     tabIndex?: number
   }
 }
