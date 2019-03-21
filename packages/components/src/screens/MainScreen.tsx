@@ -318,10 +318,7 @@ export const MainScreen = React.memo(() => {
   }
 
   return (
-    <Screen
-      statusBarBackgroundThemeColor="backgroundColorLess1"
-      useSafeArea={false}
-    >
+    <Screen statusBarBackgroundThemeColor="header" useSafeArea={false}>
       <View
         style={[
           styles.container,

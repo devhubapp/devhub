@@ -14,12 +14,13 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { Platform } from '../../libs/platform'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
 import { ConditionalWrap } from './ConditionalWrap'
 
 export interface ScreenProps {
   children?: ReactNode
-  statusBarBackgroundThemeColor?: keyof ThemeColors
+  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
   style?: StyleProp<ViewStyle>
   useSafeArea?: boolean
 }
@@ -62,12 +63,14 @@ export function Screen(props: ScreenProps) {
     StatusBar.setBarStyle(theme.isDark ? 'light-content' : 'dark-content')
 
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor(
-        statusBarBackgroundThemeColor
-          ? theme[statusBarBackgroundThemeColor]
-          : theme.backgroundColor,
-        false,
-      )
+      const themeColor: keyof ThemeColors =
+        statusBarBackgroundThemeColor === 'header'
+          ? getColumnHeaderThemeColors(theme.backgroundColor).normal
+          : statusBarBackgroundThemeColor || 'backgroundColor'
+
+      const color = theme[themeColor]
+
+      StatusBar.setBackgroundColor(color, false)
     }
   }
 

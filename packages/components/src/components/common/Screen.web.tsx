@@ -4,11 +4,12 @@ import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { ThemeColors } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
 
 export interface ScreenProps {
   children?: ReactNode
-  statusBarBackgroundThemeColor?: keyof ThemeColors
+  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
   style?: StyleProp<ViewStyle>
 }
 
@@ -24,9 +25,12 @@ export const Screen = React.memo((props: ScreenProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   useTheme(theme => {
-    const color = statusBarBackgroundThemeColor
-      ? theme[statusBarBackgroundThemeColor]
-      : theme.backgroundColor
+    const themeColor: keyof ThemeColors =
+      statusBarBackgroundThemeColor === 'header'
+        ? getColumnHeaderThemeColors(theme.backgroundColor).normal
+        : statusBarBackgroundThemeColor || 'backgroundColor'
+
+    const color = theme[themeColor]
 
     const metas = document.getElementsByTagName('meta') as any
 
