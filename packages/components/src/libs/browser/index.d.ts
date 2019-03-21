@@ -9,6 +9,8 @@ export interface BrowserCrossPlatform {
   }
   dismiss(): void
   openURL(url: string): void
+  setBackgroundColor(color: string): void
+  setForegroundColor(color: string): void
 }
 
 export const Browser: BrowserCrossPlatform

@@ -12,5 +12,7 @@ export const Browser: BrowserCrossPlatform = {
   },
   dismiss: () => undefined,
   openURL: Linking.openURL,
+  setBackgroundColor: () => undefined,
+  setForegroundColor: () => undefined,
 }
 ;(Browser as any)._validateURL = (Linking as any)._validateURL

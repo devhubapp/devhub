@@ -1,9 +1,11 @@
-import { StatusBar } from 'react-native'
-import SafariView, { SafaryOptions } from 'react-native-safari-view'
+import SafariView from 'react-native-safari-view'
 
 import { BrowserCrossPlatform } from '.'
 import { bugsnag } from '../bugsnag'
 import { Linking } from '../linking'
+
+let backgroundColor: string
+let foregroundColor: string
 
 export const Browser: BrowserCrossPlatform = {
   ...SafariView,
@@ -20,15 +22,17 @@ export const Browser: BrowserCrossPlatform = {
     console.debug('[BROWSER] Unknown removeEventListener event', e) // tslint:disable-line no-console
   },
   dismiss: SafariView.dismiss,
-  openURL: (url: string, options?: SafaryOptions) => {
+  openURL: url => {
     SafariView.isAvailable()
       .then(isAvailable => {
         if (!isAvailable) throw new Error('SafariView not available.')
 
         return SafariView.show({
           url,
-          tintColor: '#000000',
-          ...options,
+          barTintColor: backgroundColor,
+          tintColor: foregroundColor,
+          fromBottom: false,
+          readerMode: false,
         })
       })
       .catch(error => {
@@ -36,20 +40,19 @@ export const Browser: BrowserCrossPlatform = {
         bugsnag.notify(error, { description })
         console.error(description, error, {
           url,
-          ...options,
+          backgroundColor,
+          foregroundColor,
         })
         return Linking.openURL(url)
       })
   },
+  setBackgroundColor: color => {
+    backgroundColor = color
+  },
+  setForegroundColor: color => {
+    foregroundColor = color
+  },
 }
-
-SafariView.addEventListener('onShow', () => {
-  StatusBar.setHidden(true, 'none')
-})
-
-SafariView.addEventListener('onDismiss', () => {
-  StatusBar.setHidden(false, 'fade')
-})
 
 Linking.addEventListener('url', ({ url }) => {
   if (!(url && url.startsWith('devhub://'))) return
