@@ -7,6 +7,7 @@ import {
   getFullDateText,
   getGitHubURLForUser,
   GitHubIcon,
+  ThemeColors,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -14,6 +15,7 @@ import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import { contentPadding } from '../../../styles/variables'
+import { getReadableColor } from '../../../utils/helpers/colors'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
@@ -21,11 +23,13 @@ import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
+import { useTheme } from '../../context/ThemeContext'
 import { cardStyles, getCardStylesForTheme } from '../styles'
 
 export interface EventCardHeaderProps {
   actionText: string
   avatarUrl: string
+  backgroundThemeColor: keyof ThemeColors
   cardIconColor?: string
   cardIconName: GitHubIcon
   date: MomentInput
@@ -62,6 +66,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   const {
     actionText,
     avatarUrl,
+    backgroundThemeColor,
     cardIconColor,
     cardIconName,
     date,
@@ -76,6 +81,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const theme = useTheme()
 
   const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
@@ -235,7 +241,13 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               cardIconName === 'star' && {
                 lineHeight: 14,
               },
-              !!cardIconColor && { color: cardIconColor },
+              !!cardIconColor && {
+                color: getReadableColor(
+                  cardIconColor,
+                  theme[backgroundThemeColor],
+                  0.3,
+                ),
+              },
             ]}
             size={16}
             style={{

@@ -186,6 +186,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const smallLeftColumn = false
 
+  const backgroundThemeColor =
+    (isSelected && 'backgroundColorLess2') ||
+    (isRead && 'backgroundColorDarker1') ||
+    'backgroundColor'
+
   return (
     <SpringAnimatedView
       key={`event-card-${id}-inner`}
@@ -193,10 +198,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
       style={[
         styles.container,
         {
-          backgroundColor:
-            (isSelected && springAnimatedTheme.backgroundColorLess2) ||
-            (isRead && springAnimatedTheme.backgroundColorDarker1) ||
-            springAnimatedTheme.backgroundColor,
+          backgroundColor: springAnimatedTheme[backgroundThemeColor],
         },
       ]}
     >
@@ -204,6 +206,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         key={`event-card-header-${id}`}
         actionText={actionText}
         avatarUrl={avatarUrl}
+        backgroundThemeColor={backgroundThemeColor}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}
         date={event.created_at}

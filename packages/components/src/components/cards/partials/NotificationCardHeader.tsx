@@ -278,7 +278,13 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               {
                 width: columnHeaderItemContentSize,
               },
-              !!cardIconColor && { color: cardIconColor },
+              !!cardIconColor && {
+                color: getReadableColor(
+                  cardIconColor,
+                  theme[backgroundThemeColor],
+                  0.3,
+                ),
+              },
             ]}
             size={16}
             style={{
