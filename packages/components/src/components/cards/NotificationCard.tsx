@@ -269,7 +269,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!!issue && (
         <IssueOrPullRequestRow
           key={`notification-issue-row-${issueOrPullRequestNumber}`}
-          addBottomAnchor
+          addBottomAnchor={!comment}
           avatarUrl={issue.user.avatar_url}
           commentsCount={issue.comments}
           createdAt={issue.created_at}
@@ -319,7 +319,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!!pullRequest && (
         <IssueOrPullRequestRow
           key={`notification-pr-row-${issueOrPullRequestNumber}`}
-          addBottomAnchor
+          addBottomAnchor={!comment}
           avatarUrl={pullRequest.user.avatar_url}
           commentsCount={pullRequest.comments}
           createdAt={pullRequest.created_at}
