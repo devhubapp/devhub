@@ -31,15 +31,6 @@ function getStyles(params: { theme: Theme }) {
         .join('\n')}
       background-color:${t.backgroundColor};
     }
-
-    a:not(.icon):hover, a:not(.icon):hover *:not(.icon) {
-      ${
-        t.isDark
-          ? `color: ${lighten(1, t.foregroundColor)} !important;`
-          : `color: ${darken(1, t.foregroundColor)} !important;`
-      }
-      transition: none 0s !important;
-    }
   `
 }
 
