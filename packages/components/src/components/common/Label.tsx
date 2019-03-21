@@ -80,6 +80,10 @@ export function Label(props: LabelProps) {
       {...containerProps}
       style={[
         {
+          height: 20,
+          alignContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
           borderRadius: defaultRadius,
           borderWidth: separatorSize,
           paddingHorizontal: contentPadding / (small ? 4 : 2),
