@@ -57,7 +57,7 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
   if (daysDiff < 1) {
     if (hoursDiff < 1) {
       if (minutesDiff < 1) {
-        if (secondsDiff < 10) {
+        if (secondsDiff <= 1) {
           return 'now'
         }
 

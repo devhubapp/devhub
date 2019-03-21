@@ -6,6 +6,7 @@ import {
   constants,
   EnhancedGitHubNotification,
   EnhancedLoadState,
+  getDateSmallText,
   isItemRead,
 } from '@devhub/core'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
@@ -15,6 +16,7 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
+import { RefreshControl } from '../common/RefreshControl'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
@@ -26,6 +28,7 @@ export interface NotificationCardsProps {
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
+  lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
   notifications: EnhancedGitHubNotification[]
   refresh: EmptyCardsProps['refresh']
@@ -39,6 +42,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     columnIndex,
     errorMessage,
     fetchNextPage,
+    lastFetchedAt,
     loadState,
     notifications,
     refresh,
@@ -228,6 +232,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       key="notification-cards-flat-list"
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
+      alwaysBounceVertical
+      bounces
       data={notifications}
       extraData={loadState}
       initialNumToRender={10}
@@ -241,6 +247,18 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         })
       }}
       onViewableItemsChanged={handleViewableItemsChanged}
+      refreshControl={
+        <RefreshControl
+          intervalRefresh={lastFetchedAt}
+          onRefresh={refresh}
+          refreshing={loadState === 'loading' || loadState === 'loading_first'}
+          title={
+            lastFetchedAt
+              ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+              : 'Pull to refresh'
+          }
+        />
+      }
       removeClippedSubviews
       renderItem={renderItem}
       viewabilityConfig={viewabilityConfig}

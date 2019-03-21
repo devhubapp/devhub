@@ -21,7 +21,12 @@ import * as selectors from '../redux/selectors'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
-  'errorMessage' | 'notifications' | 'fetchNextPage' | 'loadState' | 'refresh'
+  | 'errorMessage'
+  | 'fetchNextPage'
+  | 'lastFetchedAt'
+  | 'loadState'
+  | 'notifications'
+  | 'refresh'
 > & {
   column: Column
   subscriptions: ColumnSubscription[]
@@ -149,6 +154,7 @@ export const NotificationCardsContainer = React.memo(
         key={`notification-cards-${column.id}`}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
+        lastFetchedAt={firstSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'

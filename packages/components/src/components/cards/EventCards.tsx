@@ -6,6 +6,7 @@ import {
   constants,
   EnhancedGitHubEvent,
   EnhancedLoadState,
+  getDateSmallText,
   isItemRead,
 } from '@devhub/core'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
@@ -15,6 +16,7 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
+import { RefreshControl } from '../common/RefreshControl'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard } from './EventCard'
@@ -27,6 +29,7 @@ export interface EventCardsProps {
   errorMessage: EmptyCardsProps['errorMessage']
   events: EnhancedGitHubEvent[]
   fetchNextPage: (() => void) | undefined
+  lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
   refresh: EmptyCardsProps['refresh']
   repoIsKnown?: boolean
@@ -40,6 +43,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     errorMessage,
     events,
     fetchNextPage,
+    lastFetchedAt,
     loadState,
     refresh,
   } = props
@@ -226,6 +230,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       ref={flatListRef}
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
+      alwaysBounceVertical
+      bounces
       data={events}
       extraData={loadState}
       initialNumToRender={10}
@@ -239,6 +245,18 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         })
       }}
       onViewableItemsChanged={handleViewableItemsChanged}
+      refreshControl={
+        <RefreshControl
+          intervalRefresh={lastFetchedAt}
+          onRefresh={refresh}
+          refreshing={loadState === 'loading' || loadState === 'loading_first'}
+          title={
+            lastFetchedAt
+              ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+              : 'Pull to refresh'
+          }
+        />
+      }
       removeClippedSubviews
       renderItem={renderItem}
       viewabilityConfig={viewabilityConfig}

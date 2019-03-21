@@ -96,6 +96,8 @@ function* init() {
           .filter(
             s =>
               s &&
+              s.data.loadState !== 'loading' &&
+              s.data.loadState !== 'loading_first' &&
               (forceFetchAll ||
                 minimumRefetchTimeHasPassed(
                   s,
@@ -574,15 +576,16 @@ export function* subscriptionsSagas() {
 }
 
 const minute = 1 * 60 * 1000
+const minPollingInterval = 2 * minute
 function minimumRefetchTimeHasPassed(
   subscription: ColumnSubscription,
-  _interval = minute,
+  _interval = minPollingInterval,
 ) {
   if (!subscription) return false
 
   const interval =
     typeof _interval === 'number' && _interval > 0
-      ? Math.min(Math.max(minute, _interval), 60 * minute)
+      ? Math.min(Math.max(minPollingInterval, _interval), 60 * minute)
       : minute
 
   return (
