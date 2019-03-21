@@ -105,7 +105,6 @@ function getBrowserWindowOptions() {
       process.platform === 'darwin' || process.platform === 'win32'
         ? undefined
         : path.join(__dirname, '../assets/icons/icon.png'),
-    fullscreenable: true,
     resizable: true,
     show: true,
     title: 'DevHub',
@@ -126,6 +125,7 @@ function getBrowserWindowOptions() {
           alwaysOnTop: true,
           center: false,
           frame: false,
+          fullscreenable: false,
           maxWidth: screen.getPrimaryDisplay().workAreaSize.width * 0.8,
           maxHeight: screen.getPrimaryDisplay().workAreaSize.height * 0.8,
           movable: false,
@@ -139,6 +139,7 @@ function getBrowserWindowOptions() {
           alwaysOnTop: false,
           center: true,
           frame: frameIsDifferentBetweenModes,
+          fullscreenable: true,
           maxWidth: undefined,
           maxHeight: undefined,
           movable: !config.get('lockOnCenter'),
@@ -834,6 +835,7 @@ function getWindowMenuItems() {
     },
     {
       role: 'minimize',
+      visible: !config.get('isMenuBarMode'),
     },
     {
       type: 'checkbox',
@@ -849,6 +851,7 @@ function getWindowMenuItems() {
       },
     },
     {
+      visible: !config.get('isMenuBarMode'),
       role: 'togglefullscreen',
     },
   ]
@@ -892,7 +895,9 @@ function getTrayMenuItems() {
           },
         ]
       : []),
-    ...getWindowMenuItems().filter(item => item.label !== 'Close'),
+    ...getWindowMenuItems().filter(
+      item => item.label !== 'Close' && item.visible !== false,
+    ),
     {
       type: 'separator',
       enabled,
@@ -1029,11 +1034,6 @@ function updateMenu() {
 }
 
 function update() {
-  if (mainWindow.isFullScreen()) {
-    mainWindow.setFullScreen(false)
-    return
-  }
-
   showWindow()
   updateMenu()
   updateTrayHightlightMode()
