@@ -1,5 +1,7 @@
 import electron from 'electron'
 
+window.devhub = true
+
 // Communication between webapp and electron main process
 // Used on oauth flow
 window.ipc = electron.ipcRenderer

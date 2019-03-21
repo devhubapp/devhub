@@ -9,6 +9,12 @@ import {
 // From: https://github.com/cheton/is-electron
 function isElectron() {
   if (
+    !(typeof window !== 'undefined' && window.devhub === true && !!window.ipc)
+  ) {
+    return false
+  }
+
+  if (
     typeof window !== 'undefined' &&
     typeof window.process === 'object' &&
     window.process.type === 'renderer'
