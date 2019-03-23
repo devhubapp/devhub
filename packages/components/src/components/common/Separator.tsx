@@ -17,7 +17,7 @@ export function getSeparatorThemeColor(
 
   if (luminance <= 0.02) return 'backgroundColorLess4'
   if (luminance >= 0.5) return 'backgroundColorDarker3'
-  return 'backgroundColorDarker1'
+  return 'backgroundColorDarker2'
 }
 
 export interface SeparatorProps {
