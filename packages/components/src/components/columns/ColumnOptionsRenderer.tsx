@@ -28,13 +28,16 @@ export const ColumnOptionsRenderer = React.memo(
     const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
     const { sizename } = useAppLayout()
 
+    const immediate = Platform.realOS === 'android'
+
     const overlayTransition = useTransition<boolean, any>(
       visible ? [true] : [],
       () => 'column-options-overlay',
       {
         reset: true,
         unique: true,
-        config: { duration: 400, precision: 0.01 },
+        config: { duration: immediate ? 0 : 400, precision: 0.01 },
+        immediate,
         from: { opacity: 0 },
         enter: { opacity: 0.75 },
         leave: { opacity: 0 },

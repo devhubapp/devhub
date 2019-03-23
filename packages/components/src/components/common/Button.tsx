@@ -85,8 +85,11 @@ export const Button = React.memo((props: ButtonProps) => {
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
 
+    const immediate = Platform.realOS === 'android'
+
     return {
-      config: { duration: 100 },
+      config: { duration: immediate ? 0 : 100 },
+      immediate,
       activityIndicatorColor: theme.foregroundColor,
       touchableBorderColor: backgroundColor
         ? backgroundColor

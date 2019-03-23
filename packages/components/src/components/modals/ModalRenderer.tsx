@@ -104,11 +104,12 @@ export function ModalRenderer(props: ModalRendererProps) {
   }, [!!currentOpenedModal])
 
   const immediate =
-    sizename === '1-small' &&
+    Platform.realOS === 'android' ||
+    (sizename === '1-small' &&
     ((isSettings && !previouslyOpenedModal) ||
       (!currentOpenedModal && wasSettings))
       ? true
-      : false
+      : false)
 
   const size = columnWidth + (renderSeparator ? separatorTickSize : 0)
 

@@ -213,9 +213,11 @@ function AddColumnModalItem({
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
+    const immediate = Platform.realOS === 'android'
 
     return {
-      config: { duration: 100 },
+      config: { duration: immediate ? 0 : 100 },
+      immediate,
       backgroundColor:
         (isHovered || isPressing) && !disabled
           ? theme.backgroundColorLess1

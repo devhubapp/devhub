@@ -8,5 +8,6 @@ export interface ColumnsContainerProps {}
 
 export function ColumnsContainer() {
   const columnIds = useReduxState(selectors.columnIdsSelector)
+
   return <Columns key="columns-container" columnIds={columnIds} />
 }

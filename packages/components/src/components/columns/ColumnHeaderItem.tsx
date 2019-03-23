@@ -6,6 +6,7 @@ import { useSpring } from 'react-spring/native'
 import { GitHubIcon, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Platform } from '../../libs/platform'
 import * as selectors from '../../redux/selectors'
 import {
   columnHeaderItemContentSize,
@@ -109,10 +110,13 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     const { isHovered: _isHovered, theme } = cacheRef.current
 
     const isHovered = (_isHovered || forceHoverState) && !disabled
-    const immediate = !!(enableForegroundHover && !enableBackgroundHover)
+    const immediate =
+      Platform.realOS === 'android' ||
+      !!(enableForegroundHover && !enableBackgroundHover)
 
     return {
       config: { duration: immediate ? 0 : 100 },
+      immediate,
       backgroundColor:
         isHovered && enableBackgroundHover
           ? theme[hoverBackgroundThemeColor || 'backgroundColorLess1']

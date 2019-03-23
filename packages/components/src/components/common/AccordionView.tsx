@@ -22,7 +22,10 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   const [size, setSize] = useState<number | 'auto'>(0)
 
+  const immediate = Platform.realOS === 'android'
+
   const animatedStyles = useSpring<any>({
+    immediate,
     from: { height: 0 },
     to: { height: isOpen ? size : 0 },
   })

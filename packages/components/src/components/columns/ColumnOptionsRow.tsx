@@ -86,9 +86,11 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
+    const immediate = Platform.realOS === 'android'
 
     return {
-      config: { duration: 100 },
+      config: { duration: immediate ? 0 : 100 },
+      immediate,
       backgroundColor:
         isHovered || isPressing || isOpen
           ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
