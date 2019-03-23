@@ -12,6 +12,7 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTRootView.h>
 
+#import <BugsnagReactNative/BugsnagReactNative.h>
 #import "RNSplashScreen.h"
 #import <Firebase.h>
 

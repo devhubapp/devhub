@@ -38,11 +38,10 @@
 		2E0B333E21C9FAD800275D1B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2E2247FF21BF44F6000DF69D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E2247FE21BF44F6000DF69D /* GoogleService-Info.plist */; };
 		2E74592C223886010002D4FB /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7458F0223886010002D4FB /* JavaScriptCore.framework */; };
-		2E74593B22388D200002D4FB /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E74593A22388D0B0002D4FB /* libBugsnagReactNative.a */; };
-		2E745941223890110002D4FB /* Bugsnag.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E74593C22388D420002D4FB /* Bugsnag.framework */; };
 		2E745942223890110002D4FB /* Bugsnag.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E74593C22388D420002D4FB /* Bugsnag.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E98FDAB22445E490083350D /* libRNInAppBrowser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E98FDA622445E130083350D /* libRNInAppBrowser.a */; };
 		2E98FDB22246328A0083350D /* libRNStoreReview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E98FDB1224632570083350D /* libRNStoreReview.a */; };
+		2E98FDBD22465C820083350D /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E98FDBC22465C700083350D /* libBugsnagReactNative.a */; };
 		2EAFF5FE1FE1AEEE000A9A11 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 486C758B88E34A52BFB2C474 /* MaterialIcons.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		60EFC7011AA849D496DCEC2C /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AA4F7C08944EB48AFA4996 /* libRNFirebase.a */; };
@@ -201,13 +200,6 @@
 			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
 			remoteInfo = "RNGestureHandler-tvOS";
 		};
-		2E74593922388D0B0002D4FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E74593522388D0B0002D4FB /* BugsnagReactNative.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8AD256131D6DE5F600C7D842;
-			remoteInfo = BugsnagReactNative;
-		};
 		2E98FDA522445E130083350D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E98FD7522445E120083350D /* RNInAppBrowser.xcodeproj */;
@@ -221,6 +213,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNStoreReview;
+		};
+		2E98FDBB22465C700083350D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8AD256131D6DE5F600C7D842;
+			remoteInfo = BugsnagReactNative;
 		};
 		2EA58A552162FB5600B9EBEA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -472,10 +471,12 @@
 		2D02E4901E0B4A5D006451C7 /* devhub-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "devhub-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E2247FE21BF44F6000DF69D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "devhub/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2E7458F0223886010002D4FB /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		2E74593522388D0B0002D4FB /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../../../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
 		2E74593C22388D420002D4FB /* Bugsnag.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Bugsnag.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E98FD7522445E120083350D /* RNInAppBrowser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNInAppBrowser.xcodeproj; path = "../../../node_modules/react-native-inappbrowser-reborn/ios/RNInAppBrowser.xcodeproj"; sourceTree = "<group>"; };
 		2E98FDAC224632560083350D /* RNStoreReview.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNStoreReview.xcodeproj; path = "../../../node_modules/react-native-store-review/ios/RNStoreReview.xcodeproj"; sourceTree = "<group>"; };
+		2E98FDB322465A010083350D /* libBugsnagStatic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libBugsnagStatic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../../../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
+		2E98FDE422465ED90083350D /* devhub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "devhub-Bridging-Header.h"; sourceTree = "<group>"; };
 		40B4448D993A4CA2ABDDA557 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../../../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		486C758B88E34A52BFB2C474 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		57716D5B6BA1484B8D9D4E4B /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
@@ -512,6 +513,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E98FDBD22465C820083350D /* libBugsnagReactNative.a in Frameworks */,
 				2E74592C223886010002D4FB /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -528,7 +530,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				7FC9F95B44E64398A3976B78 /* libRNVectorIcons.a in Frameworks */,
 				C2619E3179B6481FA20E5CEB /* libRNGestureHandler.a in Frameworks */,
-				2E745941223890110002D4FB /* Bugsnag.framework in Frameworks */,
 				072BCFEF97034DD8A762C885 /* libBVLinearGradient.a in Frameworks */,
 				2E0B32F621C9EE9800275D1B /* libSplashScreen.a in Frameworks */,
 				95F555B8BE324524957EC796 /* libRNScreens.a in Frameworks */,
@@ -539,7 +540,6 @@
 				9394292F679C4C23ADC2055F /* libsqlite3.0.tbd in Frameworks */,
 				6A3D419810B34BC2C871D649 /* libPods-devhub.a in Frameworks */,
 				60EFC7011AA849D496DCEC2C /* libRNFirebase.a in Frameworks */,
-				2E74593B22388D200002D4FB /* libBugsnagReactNative.a in Frameworks */,
 				2E98FDAB22445E490083350D /* libRNInAppBrowser.a in Frameworks */,
 				2E98FDB22246328A0083350D /* libRNStoreReview.a in Frameworks */,
 			);
@@ -660,6 +660,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				2E98FDE422465ED90083350D /* devhub-Bridging-Header.h */,
 			);
 			name = devhub;
 			sourceTree = "<group>";
@@ -690,6 +691,7 @@
 		2E416D332162E53200B41E7B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2E98FDB322465A010083350D /* libBugsnagStatic.a */,
 				2E74593C22388D420002D4FB /* Bugsnag.framework */,
 				2E7458F0223886010002D4FB /* JavaScriptCore.framework */,
 				C32C469D820B4B1CB740B0D9 /* libz.tbd */,
@@ -718,14 +720,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2E74593622388D0B0002D4FB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2E74593A22388D0B0002D4FB /* libBugsnagReactNative.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		2E98FD7622445E120083350D /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -738,6 +732,14 @@
 			isa = PBXGroup;
 			children = (
 				2E98FDB1224632570083350D /* libRNStoreReview.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2E98FDB622465C6F0083350D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E98FDBC22465C700083350D /* libBugsnagReactNative.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -820,6 +822,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -839,7 +842,6 @@
 				961B335E70A74BD9B59B6237 /* RNScreens.xcodeproj */,
 				D7601ED2F8134DA4B08D6B30 /* RCTGoogleAnalyticsBridge.xcodeproj */,
 				57716D5B6BA1484B8D9D4E4B /* RNFirebase.xcodeproj */,
-				2E74593522388D0B0002D4FB /* BugsnagReactNative.xcodeproj */,
 				2E98FD7522445E120083350D /* RNInAppBrowser.xcodeproj */,
 				2E98FDAC224632560083350D /* RNStoreReview.xcodeproj */,
 			);
@@ -1002,6 +1004,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = JNXGJS86YQ;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -1028,8 +1031,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 2E74593622388D0B0002D4FB /* Products */;
-					ProjectRef = 2E74593522388D0B0002D4FB /* BugsnagReactNative.xcodeproj */;
+					ProductGroup = 2E98FDB622465C6F0083350D /* Products */;
+					ProjectRef = 2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */;
 				},
 				{
 					ProductGroup = 2E60B5032001851A0076D5AF /* Products */;
@@ -1253,13 +1256,6 @@
 			remoteRef = 2E745925223886010002D4FB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E74593A22388D0B0002D4FB /* libBugsnagReactNative.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libBugsnagReactNative.a;
-			remoteRef = 2E74593922388D0B0002D4FB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		2E98FDA622445E130083350D /* libRNInAppBrowser.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1272,6 +1268,13 @@
 			fileType = archive.ar;
 			path = libRNStoreReview.a;
 			remoteRef = 2E98FDB0224632570083350D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2E98FDBC22465C700083350D /* libBugsnagReactNative.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBugsnagReactNative.a;
+			remoteRef = 2E98FDBB22465C700083350D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2EA58A562162FB5600B9EBEA /* libRNScreens.a */ = {
@@ -1529,7 +1532,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\nexport ENTRY_FILE=\"${ENTRY_FILE}.js\"\nchmod 755 ../../../node_modules/react-native/scripts/react-native-xcode.sh\n../../../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export NODE_BINARY=node\nexport EXTRA_PACKAGER_ARGS=\"--entry-file packages/mobile/index.js\"\n../../../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1694,12 +1697,12 @@
 			baseConfigurationReference = 177AC28CC3E9474928A515C6 /* Pods-devhub.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
-				ENTRY_FILE = packages/mobile/index;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(SRCROOT)/../../../node_modules/react-native-vector-icons/RNVectorIconsManager/**",
@@ -1723,6 +1726,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp;
 				PRODUCT_NAME = devhub;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "devhub-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1733,11 +1739,11 @@
 			baseConfigurationReference = C1520CE5C137943E997C36CD /* Pods-devhub.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
-				ENTRY_FILE = packages/mobile/index;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(SRCROOT)/../../../node_modules/react-native-vector-icons/RNVectorIconsManager/**",
@@ -1761,6 +1767,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp;
 				PRODUCT_NAME = devhub;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "devhub-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

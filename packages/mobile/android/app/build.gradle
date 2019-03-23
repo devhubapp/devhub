@@ -113,8 +113,8 @@ android {
         applicationId "com.devhubapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1529
-        versionName "0.47.4"
+        versionCode 1560
+        versionName "0.48.0"
     }
     splits {
         abi {
