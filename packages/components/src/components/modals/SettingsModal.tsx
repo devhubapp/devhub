@@ -4,14 +4,18 @@ import { ScrollView, View } from 'react-native'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
+import { openAppStore } from '../../utils/helpers/shared'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
+import { ButtonLink } from '../common/ButtonLink'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
@@ -80,6 +84,28 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         </View> */}
 
         <Spacer height={contentPadding} />
+
+        {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
+          <>
+            <SubHeader title="Rate this app">
+              <Spacer flex={1} />
+
+              <Button
+                analyticsLabel="rate_app"
+                onPress={() => openAppStore()}
+                size={32}
+              >
+                <SpringAnimatedIcon
+                  name="star"
+                  size={16}
+                  style={{
+                    color: springAnimatedTheme.foregroundColor,
+                  }}
+                />
+              </Button>
+            </SubHeader>
+          </>
+        )}
 
         <View>
           <SubHeader title="Follow on Twitter" />
