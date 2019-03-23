@@ -1,16 +1,20 @@
 import React from 'react'
 import { ScrollView, View } from 'react-native'
 
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
+import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
+import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemePreference } from '../widgets/ThemePreference'
 
@@ -22,6 +26,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
+
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
@@ -72,6 +78,63 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             Setup GitHub Enterprise
           </Button>
         </View> */}
+
+        <Spacer height={contentPadding} />
+
+        <View>
+          <SubHeader title="Follow on Twitter" />
+
+          <View
+            style={{ flexDirection: 'row', paddingHorizontal: contentPadding }}
+          >
+            <Link
+              analyticsLabel="follow_on_twitter_devhub"
+              href="https://twitter.com/devhub_app"
+              openOnNewTab
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Avatar disableLink username="devhubapp" size={24} />
+
+              <SpringAnimatedText
+                style={{
+                  flex: 1,
+                  paddingHorizontal: contentPadding / 2,
+                  color: springAnimatedTheme.foregroundColor,
+                }}
+              >
+                @devhub_app
+              </SpringAnimatedText>
+            </Link>
+
+            <Link
+              analyticsLabel="follow_on_twitter_brunolemos"
+              href="https://twitter.com/brunolemos"
+              openOnNewTab
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: contentPadding / 2,
+              }}
+            >
+              <Avatar disableLink username="brunolemos" size={24} />
+
+              <SpringAnimatedText
+                style={{
+                  flex: 1,
+                  paddingHorizontal: contentPadding / 2,
+                  color: springAnimatedTheme.foregroundColor,
+                }}
+              >
+                @brunolemos
+              </SpringAnimatedText>
+            </Link>
+          </View>
+        </View>
 
         <Spacer flex={1} minHeight={contentPadding} />
 
