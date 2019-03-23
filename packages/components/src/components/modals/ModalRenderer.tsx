@@ -1,5 +1,11 @@
-import React from 'react'
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native'
+import React, { useEffect } from 'react'
+import {
+  BackHandler,
+  Dimensions,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native'
 
 import { ModalPayloadWithIndex } from '@devhub/core'
 import { config, useTransition } from 'react-spring/native'
@@ -77,6 +83,25 @@ export function ModalRenderer(props: ModalRendererProps) {
   const wasSettings = usePrevious(isSettings)
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
+  const popModal = useReduxAction(actions.popModal)
+
+  useEffect(() => {
+    if (!(BackHandler && BackHandler.addEventListener)) return
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (!!currentOpenedModal) {
+          popModal()
+          return true
+        }
+      },
+    )
+
+    return () => {
+      backHandler.remove()
+    }
+  }, [!!currentOpenedModal])
 
   const immediate =
     sizename === '1-small' &&
