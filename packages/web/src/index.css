@@ -34,7 +34,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a:hover, a:hover * {
+a:hover, a:hover > *:not([class*='touchAction']) {
   text-decoration: underline;
 }
 
