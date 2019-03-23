@@ -9,7 +9,7 @@ export const cardRowStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexGrow: 1,
-    marginTop: contentPadding,
+    marginTop: contentPadding * (2 / 3),
   },
 
   mainContentContainer: {
