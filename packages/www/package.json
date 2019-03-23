@@ -15,7 +15,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^5.9.0",
+    "eslint": "5.9.0",
     "now": "*"
   }
 }

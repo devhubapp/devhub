@@ -110,7 +110,7 @@ const migrations = {
             updatedAt: '',
             lastLoginAt: oldAuth.lastLoginAt || '',
           } as any),
-      }
+      } as any
     }),
   5: (state: RootState) =>
     immer(state, draft => {

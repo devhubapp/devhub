@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import * as StoreReview from 'react-native-store-review'
 import { REHYDRATE } from 'redux-persist'
 import { all, put, select, takeLatest } from 'redux-saga/effects'
 
@@ -141,7 +142,7 @@ function* onLoginRequest(
   }
 }
 
-function onLoginSuccess(
+function* onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
   const { user } = action.payload
@@ -156,6 +157,14 @@ function onLoginSuccess(
   bugsnag.setUser(user._id, user.github.user.name || user.github.user.login)
 
   clearOAuthQueryParams()
+
+  if (StoreReview.isAvailable) {
+    const loginCount = yield select(selectors.loginCountSelector)
+
+    if (loginCount >= 5 && loginCount % 5 === 0) {
+      StoreReview.requestReview()
+    }
+  }
 }
 
 function* onLoginFailure(
