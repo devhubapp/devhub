@@ -84,6 +84,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       <FlatList
         ref={flatListRef}
         key="columns-flat-list"
+        className="pagingEnabledFix"
         bounces={!swipeable}
         data={columnIds}
         getItemLayout={(_data, index) => ({

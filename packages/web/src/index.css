@@ -43,6 +43,6 @@ input:focus {
 }
 
 /* https://github.com/necolas/react-native-web/issues/1299 */
-div[class*='scrollSnapAlign'] > div {
+.pagingEnabledFix > div > div > div {
   height: 100%;
 }
