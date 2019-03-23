@@ -3,9 +3,8 @@ import { TextInputProps as TextInputComponentProps } from 'react-native'
 
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
-import { contentPadding, radius } from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedTextInput as SpringAnimatedTextInputOriginal } from '../animated/spring/SpringAnimatedTextInput'
-import { separatorSize } from './Separator'
 
 export interface SpringAnimatedTextInputProps extends TextInputComponentProps {
   placeholderTextColor?: any
@@ -44,8 +43,8 @@ export const SpringAnimatedTextInput = React.forwardRef(
             padding: 0,
             paddingHorizontal: contentPadding,
             backgroundColor: 'transparent',
-            borderRadius: radius,
-            borderWidth: separatorSize,
+            borderRadius: 36 / 2,
+            borderWidth: 1,
             borderColor: isFocused
               ? springAnimatedTheme.primaryBackgroundColor
               : isHovered

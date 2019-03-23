@@ -6,7 +6,7 @@ import { useSpring } from 'react-spring/native'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
-import { contentPadding, radius } from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import {
   SpringAnimatedActivityIndicator,
   SpringAnimatedActivityIndicatorProps,
@@ -20,7 +20,7 @@ import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 import { separatorSize } from './Separator'
 
-export const defaultButtonSize = 40
+export const defaultButtonSize = 36
 
 export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   backgroundColor?: string
@@ -141,7 +141,7 @@ export const Button = React.memo((props: ButtonProps) => {
             : springAnimatedTheme.backgroundColorLess2,
           borderColor: springAnimatedStyles.touchableBorderColor,
           borderWidth: borderOnly ? separatorSize : 0,
-          borderRadius: radius,
+          borderRadius: (size || defaultButtonSize) / 2,
         },
         style,
       ]}
@@ -156,7 +156,7 @@ export const Button = React.memo((props: ButtonProps) => {
             paddingHorizontal: contentPadding,
             backgroundColor: springAnimatedStyles.innerContainerBackgroundColor,
             borderWidth: 0,
-            borderRadius: radius,
+            borderRadius: (size || defaultButtonSize) / 2,
           },
           contentContainerStyle,
         ]}
@@ -170,7 +170,7 @@ export const Button = React.memo((props: ButtonProps) => {
         ) : typeof children === 'string' ? (
           <SpringAnimatedText
             style={{
-              lineHeight: 14,
+              lineHeight: Platform.select({ web: 14 }),
               fontSize: 14,
               fontWeight: '500',
               color: springAnimatedStyles.textColor,

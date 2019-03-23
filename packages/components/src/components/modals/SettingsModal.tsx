@@ -88,7 +88,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             Show advanced settings
           </Button>
 
-          <Spacer height={contentPadding} />
+          <Spacer height={contentPadding / 2} />
 
           <Button
             key="logout-button"

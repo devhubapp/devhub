@@ -12,7 +12,7 @@ import {
 } from '../../utils/helpers/github/emojis'
 import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { Button } from '../common/Button'
+import { Button, defaultButtonSize } from '../common/Button'
 import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 const clearMessages = [
@@ -135,7 +135,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     )
   }
 
-  const headerOrFooterHeight = 40 + 2 * contentPadding
+  const headerOrFooterHeight = defaultButtonSize + 2 * contentPadding
 
   return (
     <View style={{ flex: 1 }}>
