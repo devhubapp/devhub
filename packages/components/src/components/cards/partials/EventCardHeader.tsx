@@ -123,9 +123,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               <Link href={userLinkURL}>
                 <SpringAnimatedText
                   numberOfLines={1}
-                  style={
-                    getCardStylesForTheme(springAnimatedTheme).usernameText
-                  }
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).usernameText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  ]}
                 >
                   {trimNewLinesAndSpaces(username, 18)}
                 </SpringAnimatedText>
