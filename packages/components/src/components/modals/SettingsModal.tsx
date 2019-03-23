@@ -108,58 +108,27 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         )}
 
         <View>
-          <SubHeader title="Follow on Twitter" />
-
-          <View
-            style={{ flexDirection: 'row', paddingHorizontal: contentPadding }}
-          >
-            <Link
-              analyticsLabel="follow_on_twitter_devhub"
-              href="https://twitter.com/devhub_app"
-              openOnNewTab
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Avatar disableLink username="devhubapp" size={24} />
-
-              <SpringAnimatedText
-                style={{
-                  flex: 1,
-                  paddingHorizontal: contentPadding / 2,
-                  color: springAnimatedTheme.foregroundColor,
-                }}
-              >
-                @devhub_app
-              </SpringAnimatedText>
-            </Link>
+          <SubHeader title="Follow on Twitter">
+            <Spacer flex={1} />
 
             <Link
               analyticsLabel="follow_on_twitter_brunolemos"
               href="https://twitter.com/brunolemos"
               openOnNewTab
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingTop: contentPadding / 2,
-              }}
             >
               <Avatar disableLink username="brunolemos" size={24} />
-
-              <SpringAnimatedText
-                style={{
-                  flex: 1,
-                  paddingHorizontal: contentPadding / 2,
-                  color: springAnimatedTheme.foregroundColor,
-                }}
-              >
-                @brunolemos
-              </SpringAnimatedText>
             </Link>
-          </View>
+
+            <Spacer width={contentPadding} />
+
+            <Link
+              analyticsLabel="follow_on_twitter_devhub"
+              href="https://twitter.com/devhub_app"
+              openOnNewTab
+            >
+              <Avatar disableLink username="devhubapp" size={24} />
+            </Link>
+          </SubHeader>
         </View>
 
         <Spacer flex={1} minHeight={contentPadding} />
