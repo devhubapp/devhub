@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { View } from 'react-native'
 
-import { Theme } from '@devhub/core'
+import { isNight, Theme } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
@@ -34,6 +34,7 @@ export const ThemePreference = React.memo(() => {
   )
 
   const setTheme = useReduxAction(actions.setTheme)
+  const setPreferrableTheme = useReduxAction(actions.setPreferrableTheme)
 
   const preferredDarkThemeId = preferredDarkTheme && preferredDarkTheme.id
   const preferredLightThemeId = preferredLightTheme && preferredLightTheme.id
@@ -62,6 +63,14 @@ export const ThemePreference = React.memo(() => {
             checked === true ||
             (currentThemeId === 'auto' && checked === null)
           ) {
+            if (currentThemeId === 'auto' && theme.isDark === isNight()) {
+              setPreferrableTheme({
+                id: theme.id,
+                color: theme.backgroundColor,
+              })
+              return
+            }
+
             setTheme({
               id: theme.id,
               color: theme.backgroundColor,
