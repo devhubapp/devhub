@@ -187,9 +187,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const smallLeftColumn = false
 
   const backgroundThemeColor =
-    (isSelected && 'backgroundColorLess2') ||
-    (isRead && 'backgroundColorDarker1') ||
-    'backgroundColor'
+    // (isSelected && 'backgroundColorLess2') ||
+    (isRead && 'backgroundColorDarker1') || 'backgroundColor'
 
   return (
     <SpringAnimatedView
@@ -199,6 +198,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
         styles.container,
         {
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
+          borderWidth: 1,
+          borderColor: isSelected
+            ? springAnimatedTheme.primaryBackgroundColor
+            : 'transparent',
         },
       ]}
     >

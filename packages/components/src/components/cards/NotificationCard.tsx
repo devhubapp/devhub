@@ -200,9 +200,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const smallLeftColumn = false
 
   const backgroundThemeColor =
-    (isSelected && 'backgroundColorLess2') ||
-    (isRead && 'backgroundColorDarker1') ||
-    'backgroundColor'
+    // (isSelected && 'backgroundColorLess2') ||
+    (isRead && 'backgroundColorDarker1') || 'backgroundColor'
 
   return (
     <SpringAnimatedView
@@ -212,6 +211,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         styles.container,
         {
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
+          borderWidth: 1,
+          borderColor: isSelected
+            ? springAnimatedTheme.primaryBackgroundColor
+            : 'transparent',
         },
       ]}
     >
