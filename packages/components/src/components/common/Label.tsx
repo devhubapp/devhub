@@ -3,11 +3,7 @@ import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
 
 import { darken, getLuminance, lighten } from 'polished'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
-import {
-  contentPadding,
-  mutedOpacity,
-  radius as defaultRadius,
-} from '../../styles/variables'
+import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { getLuminanceDifference } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -44,7 +40,7 @@ export function Label(props: LabelProps) {
     isPrivate,
     muted,
     outline,
-    radius = defaultRadius,
+    radius,
     small,
     textColor: _textColor,
     textProps = {},
@@ -75,18 +71,20 @@ export function Label(props: LabelProps) {
       ? springAnimatedTheme.foregroundColor
       : springAnimatedTheme.backgroundColor)
 
+  const height = small ? 16 : 18
+
   return (
     <SpringAnimatedView
       {...containerProps}
       style={[
         {
-          height: 20,
+          height,
           alignContent: 'center',
           alignItems: 'center',
           justifyContent: 'center',
-          borderRadius: defaultRadius,
+          borderRadius: typeof radius === 'number' ? radius : height / 2,
           borderWidth: separatorSize,
-          paddingHorizontal: contentPadding / (small ? 4 : 2),
+          paddingHorizontal: contentPadding / (small ? 3 : 2),
         },
         containerProps && containerProps.style,
         containerStyle,
@@ -107,7 +105,7 @@ export function Label(props: LabelProps) {
         {...textProps}
         style={[
           {
-            lineHeight: small ? 16 : 18,
+            lineHeight: height - 2,
             fontSize: small ? 11 : 12,
             color: foregroundColor,
           },
