@@ -1,0 +1,33 @@
+--- a/node_modules/react-native-inappbrowser-reborn/index.js
++++ b/node_modules/react-native-inappbrowser-reborn/index.js
+@@ -42,7 +42,7 @@ async function open(url: string, options: InAppBrowserOptions = {}): Promise<Bro
+   const inAppBrowseroptions = {
+     ...options,
+     url,
+-    dismissButtonStyle: options.dismissButtonStyle || 'close',
++    dismissButtonStyle: options.dismissButtonStyle || 'done',
+     readerMode: options.readerMode !== undefined ? options.readerMode : false
+   }
+   if (inAppBrowseroptions.preferredBarTintColor) {
+diff --git a/node_modules/react-native-inappbrowser-reborn/ios/RNInAppBrowser.m b/node_modules/react-native-inappbrowser-reborn/ios/RNInAppBrowser.m
+index 6cf29c5..2ac52bc 100644
+--- a/node_modules/react-native-inappbrowser-reborn/ios/RNInAppBrowser.m
++++ b/node_modules/react-native-inappbrowser-reborn/ios/RNInAppBrowser.m
+@@ -123,13 +123,13 @@ - (dispatch_queue_t)methodQueue
+  // By setting the modal presentation style to OverFullScreen, we disable the "Swipe to dismiss"
+  // gesture that is causing a bug where sometimes `safariViewControllerDidFinish` is not called.
+  // There are bugs filed already about it on OpenRadar.
+- [safariVC setModalPresentationStyle: UIModalPresentationOverFullScreen];
++// [safariVC setModalPresentationStyle: UIModalPresentationOverFullScreen];
+ 
+  // This is a hack to present the SafariViewController modally
+- UINavigationController *safariHackVC = [[UINavigationController alloc] initWithRootViewController:safariVC];
+- [safariHackVC setNavigationBarHidden:true animated:false];
++// UINavigationController *safariHackVC = [[UINavigationController alloc] initWithRootViewController:safariVC];
++// [safariHackVC setNavigationBarHidden:true animated:false];
+  UIViewController *presentingViewController = RCTPresentedViewController();
+- [presentingViewController presentViewController:safariHackVC animated:true completion:nil];
++ [presentingViewController presentViewController:safariVC animated:true completion:nil];
+ }
+ 
+ - (void)performSynchronouslyOnMainThread:(void (^)(void))block

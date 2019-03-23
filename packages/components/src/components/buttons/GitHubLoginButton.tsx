@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   button: {
     height: 58,
     borderRadius: 58 / 2,
+    overflow: 'hidden',
   },
 
   contentContainer: {
@@ -41,6 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 58,
     borderRadius: 58 / 2,
+    overflow: 'hidden',
   },
 
   iconWrapper: {

@@ -11519,15 +11519,17 @@ react-native-google-analytics-bridge@7.1.0:
   resolved "https://registry.yarnpkg.com/react-native-google-analytics-bridge/-/react-native-google-analytics-bridge-7.1.0.tgz#f950ad05907467fbd0703649b46dc6ddf5ceb1b0"
   integrity sha512-HtFrsTk9fGXumYUKCxS8gzFobAS+vcBMzSgpYN+YQGPAvK4xgogTpz1u19BxzjsjV85xm+aaIA/t0SkRDXVjEQ==
 
+react-native-inappbrowser-reborn@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-inappbrowser-reborn/-/react-native-inappbrowser-reborn-2.0.0.tgz#5ebd4519e6ad2f0565f89200955474c0edc56c13"
+  integrity sha512-i1x7ZtkL6lJs4CVFAsp9cfLn/xdg1fUlsgT+/zyWW9AdDQSYKDL+bPx0c9LAlGgb2+6saJ1wsKuD9jqKniO2SQ==
+  dependencies:
+    invariant "^2.2.4"
+
 react-native-linear-gradient@2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.4.tgz#dce133526f5a5510a639af94544f1ed0c984bd1e"
   integrity sha512-FF1NhlerA4uBiS0gFIHa4FBp8/aftv4vPj14Y47lGNkYjSI94tnI6oYO3EfUxXjEyCUPiOVNKZOB9kScyjc5Ew==
-
-react-native-safari-view@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.1.0.tgz#1e0cd12c62bce79bc1759c7e281646b08b61c959"
-  integrity sha1-HgzRLGK855vBdZx+KBZGsIthyVk=
 
 react-native-screens@1.0.0-alpha.22:
   version "1.0.0-alpha.22"

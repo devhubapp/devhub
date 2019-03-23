@@ -15,5 +15,6 @@ include ':react-native-gesture-handler'
 project(':react-native-gesture-handler').projectDir = new File(rootProject.projectDir, '../../../node_modules/react-native-gesture-handler/android')
 include ':bugsnag-react-native'
 project(':bugsnag-react-native').projectDir = new File(rootProject.projectDir, '../../../node_modules/bugsnag-react-native/android')
-
+include ':react-native-inappbrowser-reborn'
+project(':react-native-inappbrowser-reborn').projectDir = new File(rootProject.projectDir, 	'../../../node_modules/react-native-inappbrowser-reborn/android')
 include ':app'

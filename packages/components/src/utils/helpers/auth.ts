@@ -1,6 +1,7 @@
 import qs from 'qs'
 
 import { GitHubTokenDetails } from '@devhub/core'
+import { Linking } from '../../libs/linking'
 import { OAuthResponseData } from '../../libs/oauth/helpers'
 import { Platform } from '../../libs/platform'
 
@@ -34,6 +35,8 @@ export function clearQueryStringFromURL(fields: string[]) {
 }
 
 export function clearOAuthQueryParams() {
+  Linking.clearCurrentURL()
+
   clearQueryStringFromURL([
     'app_token',
     'code',

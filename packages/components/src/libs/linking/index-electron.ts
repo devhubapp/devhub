@@ -24,6 +24,9 @@ export const Linking: LinkingCrossPlatform = {
   async canOpenURL(url: string) {
     return window.ipc.sendSync('can-open-url', url)
   },
+  clearCurrentURL() {
+    //
+  },
   getCurrentURL() {
     return typeof window.location.href === 'string'
       ? window.location.href || ''

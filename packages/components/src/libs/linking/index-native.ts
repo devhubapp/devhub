@@ -28,6 +28,9 @@ LinkingOriginal.addEventListener('url', e => {
 export const Linking: LinkingCrossPlatform = {
   addEventListener: LinkingOriginal.addEventListener.bind(LinkingOriginal),
   canOpenURL: LinkingOriginal.canOpenURL.bind(LinkingOriginal),
+  clearCurrentURL: () => {
+    currentURL = ''
+  },
   getCurrentURL:
     Platform.OS === 'web' ? () => window.location.href || '' : () => currentURL,
   getInitialURL: () => initialURL,

@@ -1,0 +1,16 @@
+diff --git a/node_modules/polished/lib/internalHelpers/_reduceHexValue.js b/node_modules/polished/lib/internalHelpers/_reduceHexValue.js
+index 8d72784..9f42bf4 100644
+--- a/node_modules/polished/lib/internalHelpers/_reduceHexValue.js
++++ b/node_modules/polished/lib/internalHelpers/_reduceHexValue.js
+@@ -8,9 +8,11 @@ exports.default = void 0;
+  * @private
+  */
+ var reduceHexValue = function reduceHexValue(value) {
++  /*
+   if (value.length === 7 && value[1] === value[2] && value[3] === value[4] && value[5] === value[6]) {
+     return "#" + value[1] + value[3] + value[5];
+   }
++  */
+ 
+   return value;
+ };

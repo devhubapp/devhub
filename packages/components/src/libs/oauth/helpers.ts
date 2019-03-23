@@ -61,32 +61,23 @@ export const listenForNextUrl = () => {
       return url ? resolve(url) : reject(new Error('No URL received'))
     }
 
-    const handleClose = () => {
-      // console.log('[OAUTH] Closed')
-      if (finished) return
-
-      finished = true
-      Linking.removeEventListener('url', handleUrl)
-      if (Platform.OS === 'ios') {
-        Browser.removeEventListener('onDismiss', handleClose)
-      }
-      reject(new Error('Canceled'))
-    }
-
     Linking.addEventListener('url', handleUrl)
-    if (Platform.OS === 'ios') {
-      Browser.addEventListener('onDismiss', handleClose)
-    }
-    setTimeout(() => {
-      if (finished) return
 
-      finished = true
-      Linking.removeEventListener('url', handleUrl)
-      if (Platform.OS === 'ios') {
-        Browser.removeEventListener('onDismiss', handleClose)
-      }
-      reject(new Error('Timeout'))
-    }, 120 * 1000)
+    if (Platform.OS !== 'web') {
+      const onDismissListener = Browser.addListener('onDismiss', () => {
+        setTimeout(() => {
+          // console.log('[OAUTH] Closed')
+          if (finished) return
+
+          finished = true
+          Linking.removeEventListener('url', handleUrl)
+          if (onDismissListener) {
+            onDismissListener.remove()
+          }
+          reject(new Error('Canceled'))
+        }, 500)
+      })
+    }
   })
 }
 

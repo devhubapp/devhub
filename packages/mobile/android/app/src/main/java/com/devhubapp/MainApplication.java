@@ -6,6 +6,8 @@ import com.facebook.react.ReactApplication;
 import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
+
+import com.proyecto26.inappbrowser.RNInAppBrowserPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -41,7 +43,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNScreensPackage(),
             new LinearGradientPackage(),
             new RNGestureHandlerPackage(),
-            BugsnagReactNative.getPackage()
+            BugsnagReactNative.getPackage(),
+            new RNInAppBrowserPackage()
       );
     }
 
