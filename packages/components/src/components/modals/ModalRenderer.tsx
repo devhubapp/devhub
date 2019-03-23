@@ -73,16 +73,15 @@ export function ModalRenderer(props: ModalRendererProps) {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const previouslyOpenedModal = usePrevious(currentOpenedModal)
 
+  const isSettings = !!modalStack.find(m => m.name === 'SETTINGS')
+  const wasSettings = usePrevious(isSettings)
+
   const closeAllModals = useReduxAction(actions.closeAllModals)
 
   const immediate =
     sizename === '1-small' &&
-    ((currentOpenedModal &&
-      currentOpenedModal.name === 'SETTINGS' &&
-      !previouslyOpenedModal) ||
-      (!currentOpenedModal &&
-        previouslyOpenedModal &&
-        previouslyOpenedModal.name === 'SETTINGS'))
+    ((isSettings && !previouslyOpenedModal) ||
+      (!currentOpenedModal && wasSettings))
       ? true
       : false
 
