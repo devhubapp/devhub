@@ -269,6 +269,7 @@ export const AdvancedSettingsModal = React.memo(
                         installation.htmlUrl
                       ) && (
                         <View
+                          key={`github-installation-${installation.id}`}
                           style={{
                             flexDirection: 'row',
                             alignItems: 'center',

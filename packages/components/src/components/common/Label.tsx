@@ -122,6 +122,7 @@ export function Label(props: LabelProps) {
         )}
         {typeof children === 'string'
           ? parseTextWithEmojisToReactComponents(children, {
+              key: `label-text-${children}`,
               imageProps: {
                 style: {
                   width: small ? 10 : 11,

@@ -1,6 +1,6 @@
 import { Omit } from '@devhub/core'
 import _ from 'lodash'
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Image, ImageProps } from 'react-native'
 
 const emojis = {
@@ -1538,10 +1538,11 @@ function surrogatePairToCodepoint(lead: number, trail: number) {
 }
 
 export interface EmojiParseOptions {
+  after?: React.ReactNode
   alt?: string
   before?: React.ReactNode
-  after?: React.ReactNode
   imageProps?: Omit<ImageProps, 'source'>
+  key: string
 }
 
 function getComponent(
@@ -1625,5 +1626,7 @@ export function parseTextWithEmojisToReactComponents(
       if (typeof item !== 'string') return item
       return parseTextWithEmojisToReactComponents_2(item, options)
     }),
-  )
+  ).map((item, index) => (
+    <Fragment key={`${options.key}-${index}`}>{item}</Fragment>
+  ))
 }
