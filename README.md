@@ -8,7 +8,7 @@
   </p>
 </p>
 
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/52172965-b3997380-2761-11e9-80ec-902d6d854917.jpg)
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/54963171-89d12180-4f46-11e9-9622-46972d0f5bd4.jpg)
 
 ![DevHub Menubar](https://user-images.githubusercontent.com/619186/52375458-d9b36200-2a46-11e9-9a50-431293de7fa6.jpg)
 
