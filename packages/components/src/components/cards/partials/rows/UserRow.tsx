@@ -1,19 +1,22 @@
 import React from 'react'
-import { View } from 'react-native'
 
-import { getGitHubURLForUser } from '@devhub/core'
+import { getGitHubURLForUser, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles, getCardRowStylesForTheme } from './styles'
 
-export interface UserRowProps {
+export interface UserRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   avatarUrl: string
   isRead: boolean
   showMoreItemsIndicator?: boolean
-  smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
@@ -27,21 +30,15 @@ export const UserRow = React.memo((props: UserRowProps) => {
     avatarUrl,
     isRead,
     showMoreItemsIndicator,
-    smallLeftColumn,
     userLinkURL,
     username,
+    ...otherProps
   } = props
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-        ]}
-      >
+    <BaseRow
+      {...otherProps}
+      left={
         <Avatar
           avatarUrl={avatarUrl}
           isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
@@ -50,9 +47,8 @@ export const UserRow = React.memo((props: UserRowProps) => {
           style={cardStyles.avatar}
           username={username}
         />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
+      }
+      right={
         <Link
           href={
             showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
@@ -69,7 +65,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
             {showMoreItemsIndicator ? '...' : username}
           </SpringAnimatedText>
         </Link>
-      </View>
-    </View>
+      }
+    />
   )
 })

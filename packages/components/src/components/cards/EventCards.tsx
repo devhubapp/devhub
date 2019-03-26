@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
 import {
+  CardViewMode,
   Column,
   constants,
   EnhancedGitHubEvent,
@@ -24,6 +25,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps {
+  cardViewMode: CardViewMode
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
@@ -164,6 +166,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     if (props.swipeable) {
       return (
         <SwipeableEventCard
+          cardViewMode={props.cardViewMode}
           event={event}
           repoIsKnown={props.repoIsKnown}
           isFocused={
@@ -176,6 +179,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     return (
       <ErrorBoundary>
         <EventCard
+          cardViewMode={props.cardViewMode}
           event={event}
           isFocused={
             column.id === focusedColumnId && event.id === selectedItemId

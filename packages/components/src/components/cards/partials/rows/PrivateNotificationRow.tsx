@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
+import { Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../../hooks/use-redux-action'
 import { useReduxState } from '../../../../hooks/use-redux-state'
@@ -13,19 +14,23 @@ import { tryParseOAuthParams } from '../../../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../../../utils/helpers/shared'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { getCardStylesForTheme } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface PrivateNotificationRowProps {
+export interface PrivateNotificationRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   isRead?: boolean
   ownerId?: number | string | undefined
   repoId?: number | string | undefined
-  smallLeftColumn?: boolean
 }
 
 export const PrivateNotificationRow = React.memo(
   (props: PrivateNotificationRowProps) => {
-    const { ownerId, repoId, smallLeftColumn } = props
+    const { ownerId, repoId, ...otherProps } = props
 
     const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
@@ -111,51 +116,45 @@ export const PrivateNotificationRow = React.memo(
     }
 
     return (
-      <View style={cardRowStyles.container}>
-        <View
-          style={[
-            cardStyles.leftColumn,
-            smallLeftColumn
-              ? cardStyles.leftColumn__small
-              : cardStyles.leftColumn__big,
-            cardStyles.leftColumnAlignTop,
-          ]}
-        />
-
-        <View style={cardStyles.rightColumn}>
-          <View
-            style={{
-              flex: 1,
-              position: 'relative',
-              opacity: showLoadingIndicator ? 0 : 1,
-            }}
-          >
-            {renderContent()}
-          </View>
-
-          {!!showLoadingIndicator && (
+      <BaseRow
+        {...otherProps}
+        left={null}
+        right={
+          <>
             <View
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
-                },
-              ]}
+              style={{
+                flex: 1,
+                position: 'relative',
+                opacity: showLoadingIndicator ? 0 : 1,
+              }}
             >
-              <SpringAnimatedText
+              {renderContent()}
+            </View>
+
+            {!!showLoadingIndicator && (
+              <View
                 style={[
-                  getCardStylesForTheme(springAnimatedTheme).commentText,
-                  getCardStylesForTheme(springAnimatedTheme).mutedText,
-                  { fontStyle: 'italic' },
+                  StyleSheet.absoluteFill,
+                  {
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                  },
                 ]}
               >
-                Checking required permissions...
-              </SpringAnimatedText>
-            </View>
-          )}
-        </View>
-      </View>
+                <SpringAnimatedText
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).commentText,
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    { fontStyle: 'italic' },
+                  ]}
+                >
+                  Checking required permissions...
+                </SpringAnimatedText>
+              </View>
+            )}
+          </>
+        }
+      />
     )
   },
 )

@@ -25,7 +25,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps {
-  cardViewMode?: CardViewMode
+  cardViewMode: CardViewMode
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']

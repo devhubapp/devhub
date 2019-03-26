@@ -15,7 +15,6 @@ import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import { contentPadding } from '../../../styles/variables'
-import { getReadableColor } from '../../../utils/helpers/colors'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
@@ -38,7 +37,6 @@ export interface EventCardHeaderProps {
   isPrivate?: boolean
   isRead: boolean
   isSaved?: boolean
-  smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
@@ -66,7 +64,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   const {
     actionText,
     avatarUrl,
-    backgroundThemeColor,
     cardIconColor,
     cardIconName,
     date,
@@ -75,7 +72,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     isPrivate,
     isRead,
     isSaved,
-    smallLeftColumn,
     userLinkURL: _userLinkURL,
     username: _username,
   } = props
@@ -89,8 +85,8 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     actions.markItemsAsReadOrUnread,
   )
 
+  const smallLeftColumn = false
   const username = isBot ? _username!.replace('[bot]', '') : _username
-
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
   return (
@@ -223,13 +219,16 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
           <ColumnHeaderItem
             analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
+            enableBackgroundHover={false}
+            enableForegroundHover={!isSaved}
             fixedIconSize
+            foregroundColor={
+              isSaved
+                ? theme.primaryBackgroundColor
+                : theme.foregroundColorMuted50
+            }
+            hoverForegroundThemeColor={isSaved ? undefined : 'foregroundColor'}
             iconName="bookmark"
-            iconStyle={{
-              color: isSaved
-                ? springAnimatedTheme.primaryBackgroundColor
-                : springAnimatedTheme.foregroundColorMuted25,
-            }}
             onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
             size={16}
             style={{
@@ -242,17 +241,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
           <ColumnHeaderItem
             fixedIconSize
+            foregroundColor={cardIconColor}
             iconName={cardIconName}
             iconStyle={[
               cardIconName === 'star' && {
                 lineHeight: 14,
-              },
-              !!cardIconColor && {
-                color: getReadableColor(
-                  cardIconColor,
-                  theme[backgroundThemeColor],
-                  0.3,
-                ),
               },
             ]}
             size={16}

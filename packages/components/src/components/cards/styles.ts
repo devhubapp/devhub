@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { Theme } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -12,42 +12,44 @@ import {
 } from '../../styles/variables'
 
 export const cardStyles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
+
   horizontal: {
     flexDirection: 'row',
-  } as ViewStyle,
+  },
 
   horizontalAndVerticallyAligned: {
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
-  } as ViewStyle,
+  },
 
   leftColumn: {
+    alignSelf: 'flex-start',
+    paddingTop: 1,
     marginRight: contentPadding,
     width: avatarSize,
-  } as ViewStyle,
+  },
 
   leftColumn__small: {
     justifyContent: 'center',
     width: smallAvatarSize,
-  } as ViewStyle,
+  },
 
   leftColumn__big: {
     justifyContent: 'flex-start',
     width: avatarSize,
-  } as ViewStyle,
-
-  leftColumnAlignTop: {
-    alignSelf: 'flex-start',
-  } as ViewStyle,
+  },
 
   rightColumn: {
     flex: 1,
-  } as ViewStyle,
+  },
 
   avatar: {
     alignSelf: 'flex-end',
-  } as ViewStyle,
+  },
 
   smallText: {
     fontSize: smallTextSize,
@@ -67,31 +69,23 @@ export const getCardStylesForTheme = _.memoize(
         lineHeight: 20,
         fontWeight: '500',
         color: theme.foregroundColor,
-      } as TextStyle,
+      },
 
       timestampText: {
         lineHeight: smallTextSize + 1,
         fontSize: smallTextSize,
         color: theme.foregroundColorMuted50,
-      } as TextStyle,
+      },
 
       commentText: {
+        flex: 1,
         color: theme.foregroundColor,
         lineHeight: 20,
-        ...(Platform.select({
-          default: {},
-          web: {
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'pre-line',
-            wordWrap: 'break-word',
-          },
-        }) as any),
-      } as TextStyle,
+      },
 
       mutedText: {
         color: theme.foregroundColorMuted50,
-      } as TextStyle,
+      },
 
       normalText: {
         lineHeight: 20,
@@ -102,12 +96,12 @@ export const getCardStylesForTheme = _.memoize(
             wordWrap: 'break-word',
           },
         }),
-      } as TextStyle,
+      },
 
       icon: {
         lineHeight: 20,
         marginRight: 2,
-      } as TextStyle,
+      },
 
       descriptionText: {
         fontSize: smallTextSize,
@@ -119,7 +113,7 @@ export const getCardStylesForTheme = _.memoize(
             wordWrap: 'break-word',
           },
         }),
-      } as TextStyle,
+      },
     }
   },
 )

@@ -6,6 +6,7 @@ import {
   getFullDateText,
   getGitHubURLForUser,
   GitHubLabel,
+  Omit,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -22,9 +23,14 @@ import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { CardItemId } from '../CardItemId'
 import { CardSmallThing } from '../CardSmallThing'
 import { LabelsView } from './LabelsView'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface IssueOrPullRequestRowProps {
+export interface IssueOrPullRequestRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   addBottomAnchor?: boolean
   avatarUrl: string | undefined
   commentsCount?: number
@@ -37,7 +43,6 @@ export interface IssueOrPullRequestRowProps {
   labels?: GitHubLabel[] | undefined
   owner: string
   repo: string
-  smallLeftColumn?: boolean
   title: string
   url: string
   userLinkURL: string | undefined
@@ -61,11 +66,12 @@ export const IssueOrPullRequestRow = React.memo(
       labels,
       owner,
       repo,
-      smallLeftColumn,
       title: _title,
       url,
       userLinkURL,
       username: _username,
+      viewMode,
+      ...otherProps
     } = props
 
     const title = trimNewLinesAndSpaces(_title)
@@ -78,19 +84,10 @@ export const IssueOrPullRequestRow = React.memo(
     const byText = username ? `@${username}` : ''
 
     return (
-      <View
-        key={`issue-or-pr-row-inner-${id}-${owner}-${repo}-${issueOrPullRequestNumber}`}
-        style={cardRowStyles.container}
-      >
-        <View
-          style={[
-            cardStyles.leftColumn,
-            smallLeftColumn
-              ? cardStyles.leftColumn__small
-              : cardStyles.leftColumn__big,
-          ]}
-        >
-          {Boolean(username) && (
+      <BaseRow
+        {...otherProps}
+        left={
+          Boolean(username) && (
             <Avatar
               avatarUrl={avatarUrl}
               isBot={isBot}
@@ -99,10 +96,9 @@ export const IssueOrPullRequestRow = React.memo(
               style={cardStyles.avatar}
               username={username}
             />
-          )}
-        </View>
-
-        <View style={cardStyles.rightColumn}>
+          )
+        }
+        right={
           <View style={cardRowStyles.mainContentContainer}>
             <Link
               href={fixURL(url, {
@@ -111,7 +107,7 @@ export const IssueOrPullRequestRow = React.memo(
               })}
             >
               <SpringAnimatedText
-                numberOfLines={2}
+                numberOfLines={viewMode === 'compact' ? 1 : 2}
                 style={[
                   Platform.OS !== 'android' && { flexGrow: 1 },
                   getCardStylesForTheme(springAnimatedTheme).normalText,
@@ -131,6 +127,17 @@ export const IssueOrPullRequestRow = React.memo(
                   ]}
                 />{' '} */}
                 {title}
+
+                {!!issueOrPullRequestNumber && viewMode === 'compact' && (
+                  <SpringAnimatedText
+                    style={{
+                      fontWeight: '400',
+                      fontSize: 11,
+                    }}
+                  >
+                    {`  #${issueOrPullRequestNumber}`}
+                  </SpringAnimatedText>
+                )}
               </SpringAnimatedText>
             </Link>
 
@@ -150,81 +157,76 @@ export const IssueOrPullRequestRow = React.memo(
                 </>
               )}
 
-              {!!(
-                byText ||
-                createdAt ||
-                commentsCount ||
-                issueOrPullRequestNumber
-              ) && (
-                <>
-                  <Spacer height={contentPadding / 2} />
+              {!!(byText || createdAt || commentsCount) &&
+                viewMode !== 'compact' && (
+                  <>
+                    <Spacer height={contentPadding / 2} />
 
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    {!!byText && (
-                      <Link
-                        href={
-                          userLinkURL ||
-                          (username && getGitHubURLForUser(username))
-                        }
-                      >
-                        <SpringAnimatedText
-                          style={[
-                            getCardStylesForTheme(springAnimatedTheme)
-                              .normalText,
-                            cardStyles.smallText,
-                            getCardStylesForTheme(springAnimatedTheme)
-                              .mutedText,
-                          ]}
+                    <View
+                      style={{ flexDirection: 'row', alignItems: 'center' }}
+                    >
+                      {!!byText && (
+                        <Link
+                          href={
+                            userLinkURL ||
+                            (username && getGitHubURLForUser(username))
+                          }
                         >
-                          {byText}
-                        </SpringAnimatedText>
-                      </Link>
-                    )}
+                          <SpringAnimatedText
+                            style={[
+                              getCardStylesForTheme(springAnimatedTheme)
+                                .normalText,
+                              cardStyles.smallText,
+                              getCardStylesForTheme(springAnimatedTheme)
+                                .mutedText,
+                            ]}
+                          >
+                            {byText}
+                          </SpringAnimatedText>
+                        </Link>
+                      )}
 
-                    {!!createdAt && (
-                      <IntervalRefresh date={createdAt}>
-                        {() => {
-                          const dateText = getDateSmallText(createdAt, false)
-                          if (!dateText) return null
+                      {!!createdAt && (
+                        <IntervalRefresh date={createdAt}>
+                          {() => {
+                            const dateText = getDateSmallText(createdAt, false)
+                            if (!dateText) return null
 
-                          return (
-                            <>
-                              {!!byText && <Text children=" " />}
+                            return (
+                              <>
+                                {!!byText && <Text children=" " />}
 
-                              <SpringAnimatedText
-                                numberOfLines={1}
-                                style={
-                                  getCardStylesForTheme(springAnimatedTheme)
-                                    .timestampText
-                                }
-                                {...Platform.select({
-                                  web: { title: getFullDateText(createdAt) },
-                                })}
-                              >
-                                {!!byText && (
-                                  <>
-                                    <Text
-                                      children="•"
-                                      style={{ fontSize: 9, opacity: 0.2 }}
-                                    />
-                                    <Text children=" " />
-                                  </>
-                                )}
+                                <SpringAnimatedText
+                                  numberOfLines={1}
+                                  style={
+                                    getCardStylesForTheme(springAnimatedTheme)
+                                      .timestampText
+                                  }
+                                  {...Platform.select({
+                                    web: { title: getFullDateText(createdAt) },
+                                  })}
+                                >
+                                  {!!byText && (
+                                    <>
+                                      <Text
+                                        children="•"
+                                        style={{ fontSize: 9, opacity: 0.2 }}
+                                      />
+                                      <Text children=" " />
+                                    </>
+                                  )}
 
-                                {dateText}
-                              </SpringAnimatedText>
-                            </>
-                          )
-                        }}
-                      </IntervalRefresh>
-                    )}
+                                  {dateText}
+                                </SpringAnimatedText>
+                              </>
+                            )
+                          }}
+                        </IntervalRefresh>
+                      )}
 
-                    <Spacer flex={1} />
+                      <Spacer flex={1} />
 
-                    {typeof commentsCount === 'number' && commentsCount >= 0 && (
-                      <>
-                        <Spacer width={contentPadding / 2} />
-
+                      {typeof commentsCount === 'number' && commentsCount >= 0 && (
                         <CardSmallThing
                           icon="comment"
                           isRead={isRead}
@@ -234,26 +236,26 @@ export const IssueOrPullRequestRow = React.memo(
                             issueOrPullRequestNumber,
                           })}
                         />
-                      </>
-                    )}
+                      )}
 
-                    <Spacer width={contentPadding / 2} />
+                      <Spacer width={contentPadding / 2} />
 
-                    <CardItemId
-                      id={issueOrPullRequestNumber}
-                      isRead={isRead}
-                      url={fixURL(url, {
-                        addBottomAnchor,
-                        issueOrPullRequestNumber,
-                      })}
-                    />
-                  </View>
-                </>
-              )}
+                      <CardItemId
+                        id={issueOrPullRequestNumber}
+                        isRead={isRead}
+                        url={fixURL(url, {
+                          addBottomAnchor,
+                          issueOrPullRequestNumber,
+                        })}
+                      />
+                    </View>
+                  </>
+                )}
             </View>
           </View>
-        </View>
-      </View>
+        }
+        viewMode={viewMode}
+      />
     )
   },
 )

@@ -1,7 +1,11 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForRelease, trimNewLinesAndSpaces } from '@devhub/core'
+import {
+  getGitHubURLForRelease,
+  Omit,
+  trimNewLinesAndSpaces,
+} from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
@@ -10,9 +14,14 @@ import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BranchRow } from './BranchRow'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface ReleaseRowProps {
+export interface ReleaseRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   avatarUrl: string
   body: string
   branch?: string
@@ -20,7 +29,6 @@ export interface ReleaseRowProps {
   name: string | undefined
   ownerName: string
   repositoryName: string
-  smallLeftColumn?: boolean
   tagName: string | undefined
   url: string
   userLinkURL: string
@@ -40,11 +48,11 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
     name: _name,
     ownerName,
     repositoryName,
-    smallLeftColumn,
     tagName: _tagName,
     url,
     userLinkURL,
     username,
+    ...otherProps
   } = props
 
   const body = trimNewLinesAndSpaces(_body)
@@ -64,6 +72,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
       {!!branch && (
         <BranchRow
           key={`branch-row-${branch}`}
+          {...otherProps}
           branch={branch}
           isBranchMainEvent={false}
           isRead={isRead}
@@ -73,15 +82,9 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
       )}
 
       {!!(name || tagName) && (
-        <View style={cardRowStyles.container}>
-          <View
-            style={[
-              cardStyles.leftColumn,
-              smallLeftColumn
-                ? cardStyles.leftColumn__small
-                : cardStyles.leftColumn__big,
-            ]}
-          >
+        <BaseRow
+          {...otherProps}
+          left={
             <Avatar
               isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
               linkURL=""
@@ -89,9 +92,8 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               style={cardStyles.avatar}
               username={ownerName}
             />
-          </View>
-
-          <View style={cardStyles.rightColumn}>
+          }
+          right={
             <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
               <SpringAnimatedText
                 style={[
@@ -115,21 +117,14 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 {name || tagName}
               </SpringAnimatedText>
             </Link>
-          </View>
-        </View>
+          }
+        />
       )}
 
       {!!(body && body !== name && body !== tagName) && (
-        <View style={cardRowStyles.container}>
-          <View
-            style={[
-              cardStyles.leftColumn,
-              smallLeftColumn
-                ? cardStyles.leftColumn__small
-                : cardStyles.leftColumn__big,
-              cardStyles.leftColumnAlignTop,
-            ]}
-          >
+        <BaseRow
+          {...otherProps}
+          left={
             <Avatar
               avatarUrl={avatarUrl}
               isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
@@ -138,9 +133,8 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               style={cardStyles.avatar}
               username={username}
             />
-          </View>
-
-          <View style={cardStyles.rightColumn}>
+          }
+          right={
             <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
               <SpringAnimatedText
                 style={[
@@ -164,8 +158,8 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 {body}
               </SpringAnimatedText>
             </Link>
-          </View>
-        </View>
+          }
+        />
       )}
     </View>
   )

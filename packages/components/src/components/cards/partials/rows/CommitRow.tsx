@@ -1,10 +1,10 @@
 import React from 'react'
-import { View } from 'react-native'
 
 import {
   getCommentIdFromUrl,
   getGitHubSearchURL,
   getGitHubURLForUser,
+  Omit,
   trimNewLinesAndSpaces,
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
@@ -15,9 +15,14 @@ import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface CommitRowProps {
+export interface CommitRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   authorEmail: string
   authorName: string
   authorUsername?: string
@@ -25,7 +30,6 @@ export interface CommitRowProps {
   latestCommentUrl?: string
   message: string
   showMoreItemsIndicator?: boolean
-  smallLeftColumn?: boolean
   url: string
 }
 
@@ -42,8 +46,8 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     latestCommentUrl,
     message: _message,
     showMoreItemsIndicator,
-    smallLeftColumn,
     url,
+    ...otherProps
   } = props
 
   const message = trimNewLinesAndSpaces(_message)
@@ -59,15 +63,9 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
   byText = trimNewLinesAndSpaces(byText)
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-        ]}
-      >
+    <BaseRow
+      {...otherProps}
+      left={
         <Avatar
           email={authorEmail}
           isBot={Boolean(
@@ -82,9 +80,8 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
           }
         />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
+      }
+      right={
         <Link
           href={
             showMoreItemsIndicator
@@ -128,7 +125,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             )}
           </SpringAnimatedText>
         </Link>
-      </View>
-    </View>
+      }
+    />
   )
 })

@@ -3,13 +3,17 @@ import React from 'react'
 import { CommitRow } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
 
-import { GitHubPushedCommit } from '@devhub/core'
+import { GitHubPushedCommit, Omit } from '@devhub/core'
+import { BaseRowProps } from './partials/BaseRow'
 
-export interface CommitListRowProps {
+export interface CommitListRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   commits: GitHubPushedCommit[]
   isRead: boolean
   maxHeight?: number
-  smallLeftColumn?: boolean
 }
 
 export const CommitListRow = React.memo((props: CommitListRowProps) => {

@@ -9,6 +9,9 @@ export const cardRowStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexGrow: 1,
+  },
+
+  container__margin: {
     marginTop: contentPadding * (2 / 3),
   },
 
@@ -26,8 +29,9 @@ export const getCardRowStylesForTheme = _.memoize(
       },
 
       repositorySecondaryText: {
-        color: theme.foregroundColorMuted50,
+        lineHeight: undefined,
         fontSize: smallTextSize,
+        color: theme.foregroundColorMuted50,
       },
 
       usernameText: {

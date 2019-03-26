@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import {
+  CardViewMode,
   EnhancedGitHubEvent,
   getEventText,
   getGitHubAvatarURLFromPayload,
@@ -24,9 +25,12 @@ import {
   isEventPrivate,
   isItemRead,
   MultipleStarEvent,
+  Theme,
 } from '@devhub/core'
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
+import { getReadableColor } from '../../utils/helpers/colors'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import {
   getIssueIconAndColor,
@@ -34,7 +38,7 @@ import {
 } from '../../utils/helpers/github/shared'
 import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
+import { useTheme } from '../context/ThemeContext'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { BranchRow } from './partials/rows/BranchRow'
 import { CommentRow } from './partials/rows/CommentRow'
@@ -47,6 +51,7 @@ import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 
 export interface EventCardProps {
+  cardViewMode: CardViewMode
   event: EnhancedGitHubEvent
   isFocused?: boolean
   repoIsKnown?: boolean
@@ -59,10 +64,16 @@ const styles = StyleSheet.create({
 })
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const { event, repoIsKnown, isFocused } = props
+  const { cardViewMode, event, repoIsKnown, isFocused } = props
 
   const itemRef = useRef<View>(null)
-  const springAnimatedTheme = useSpringAnimatedTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const themeRef = useRef<Theme | null>(null)
+  const initialTheme = useTheme(theme => {
+    themeRef.current = theme
+  })
+  themeRef.current = initialTheme
 
   useEffect(() => {
     if (Platform.OS === 'web' && isFocused && itemRef.current) {
@@ -145,7 +156,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const cardIconDetails = getEventIconAndColor(event)
   const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
-  const cardIconColor = cardIconDetails.color
+  const _cardIconColor = cardIconDetails.color
 
   const actionText = getEventText(event, { repoIsKnown })
 
@@ -164,7 +175,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
 
-  const { icon: pullRequestIconName, color: pullRequestIconColor } = pullRequest
+  const {
+    icon: pullRequestIconName,
+    color: _pullRequestIconColor,
+  } = pullRequest
     ? getPullRequestIconAndColor(pullRequest)
     : { icon: undefined, color: undefined }
 
@@ -174,7 +188,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
       ? comment.html_url || comment.url
       : pullRequest.html_url || pullRequest.url)
 
-  const { icon: issueIconName, color: issueIconColor } = issue
+  const { icon: issueIconName, color: _issueIconColor } = issue
     ? getIssueIconAndColor(issue)
     : { icon: undefined, color: undefined }
 
@@ -184,11 +198,33 @@ export const EventCard = React.memo((props: EventCardProps) => {
       ? comment.html_url || comment.url
       : issue.html_url || issue.url)
 
-  const smallLeftColumn = false
-
   const backgroundThemeColor =
-    // (isSelected && 'backgroundColorLess2') ||
+    // (isFocused && 'backgroundColorLess2') ||
     (isRead && 'backgroundColorDarker1') || 'backgroundColor'
+
+  const cardIconColor =
+    _cardIconColor &&
+    getReadableColor(
+      _cardIconColor,
+      themeRef.current![backgroundThemeColor],
+      0.3,
+    )
+
+  const issueIconColor =
+    _issueIconColor &&
+    getReadableColor(
+      _issueIconColor,
+      themeRef.current![backgroundThemeColor],
+      0.3,
+    )
+
+  const pullRequestIconColor =
+    _pullRequestIconColor &&
+    getReadableColor(
+      _pullRequestIconColor,
+      themeRef.current![backgroundThemeColor],
+      0.3,
+    )
 
   return (
     <SpringAnimatedView
@@ -199,13 +235,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
           borderWidth: 1,
-          borderColor: isFocused
-            ? springAnimatedTheme.primaryBackgroundColor
-            : 'transparent',
+          borderColor:
+            isFocused && cardViewMode !== 'compact'
+              ? springAnimatedTheme.primaryBackgroundColor
+              : 'transparent',
         },
       ]}
     >
-      {!!isFocused && (
+      {!!isFocused && cardViewMode === 'compact' && (
         <SpringAnimatedView
           style={{
             position: 'absolute',
@@ -231,7 +268,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
         isPrivate={isPrivate}
         isRead={isRead}
         isSaved={isSaved}
-        smallLeftColumn={smallLeftColumn}
         userLinkURL={actor.html_url || ''}
         username={actor.display_login || actor.login}
       />
@@ -243,7 +279,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isPush={isPush}
           isRead={isRead}
           repos={repos}
-          smallLeftColumn={smallLeftColumn}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
@@ -258,7 +295,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isRead={isRead}
           ownerName={repoOwnerName || ''}
           repositoryName={repoName || ''}
-          smallLeftColumn={smallLeftColumn}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
@@ -270,25 +308,28 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isRead={isRead}
           ownerName={forkRepoOwnerName || ''}
           repositoryName={forkRepoName || ''}
-          smallLeftColumn={smallLeftColumn}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
       {users.length > 0 && (
         <UserListRow
-          key={`event-user-list-row-${userIds.join('-')}`}
           isRead={isRead}
-          smallLeftColumn={smallLeftColumn}
+          key={`event-user-list-row-${userIds.join('-')}`}
           users={users}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
       {pages.length > 0 && (
         <WikiPageListRow
-          key={`event-wiki-page-list-row-${pageIds.join('-')}`}
           isRead={isRead}
+          key={`event-wiki-page-list-row-${pageIds.join('-')}`}
           pages={pages}
-          smallLeftColumn={smallLeftColumn}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
@@ -306,11 +347,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           labels={pullRequest.labels}
           owner={repoOwnerName || ''}
           repo={repoName || ''}
-          smallLeftColumn={smallLeftColumn}
           title={pullRequest.title}
           url={pullRequestURL}
           userLinkURL={pullRequest.user.html_url || ''}
           username={pullRequest.user.display_login || pullRequest.user.login}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
@@ -319,7 +361,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
           key={`event-commit-list-row-${commitIds.join('-')}`}
           commits={commits}
           isRead={isRead}
-          smallLeftColumn={smallLeftColumn}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
@@ -337,11 +380,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           labels={issue.labels}
           owner={repoOwnerName || ''}
           repo={repoName || ''}
-          smallLeftColumn={smallLeftColumn}
           title={issue.title}
           url={issueURL}
           userLinkURL={issue.user.html_url || ''}
           username={issue.user.display_login || issue.user.login}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
 
@@ -353,10 +397,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
             avatarUrl={issue.user.avatar_url}
             body={issue.body}
             isRead={isRead}
-            smallLeftColumn={smallLeftColumn}
             url={issue.html_url || issue.url}
             userLinkURL={issue.user.html_url || ''}
             username={issue.user.display_login || issue.user.login}
+            viewMode={cardViewMode}
+            withTopMargin
           />
         )) ||
         (type === 'PullRequestEvent' &&
@@ -367,12 +412,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
               avatarUrl={pullRequest.user.avatar_url}
               body={pullRequest.body}
               isRead={isRead}
-              smallLeftColumn={smallLeftColumn}
               url={pullRequest.html_url || pullRequest.url}
               userLinkURL={pullRequest.user.html_url || ''}
               username={
                 pullRequest.user.display_login || pullRequest.user.login
               }
+              viewMode={cardViewMode}
+              withTopMargin
             />
           )) ||
         (Boolean(comment && comment.body) && (
@@ -381,10 +427,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
             avatarUrl={comment.user.avatar_url}
             body={comment.body}
             isRead={isRead}
-            smallLeftColumn={smallLeftColumn}
             url={comment.html_url || comment.url}
             userLinkURL={comment.user.html_url || ''}
             username={comment.user.display_login || comment.user.login}
+            viewMode={cardViewMode}
+            withTopMargin
           />
         ))}
 
@@ -398,11 +445,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           name={release.name}
           ownerName={repoOwnerName || ''}
           repositoryName={repoName || ''}
-          smallLeftColumn={smallLeftColumn}
           tagName={release.tag_name}
           url={release.html_url || release.url}
           userLinkURL={release.author.html_url || ''}
           username={release.author.display_login || release.author.login}
+          viewMode={cardViewMode}
+          withTopMargin
         />
       )}
     </SpringAnimatedView>

@@ -1,13 +1,16 @@
 import React from 'react'
 
-import { GitHubUser } from '@devhub/core'
+import { GitHubUser, Omit } from '@devhub/core'
 import { RenderItem, RowList } from './RowList'
-import { UserRow } from './UserRow'
+import { UserRow, UserRowProps } from './UserRow'
 
-export interface UserListRowProps {
+export interface UserListRowProps
+  extends Omit<
+    UserRowProps,
+    'avatarUrl' | 'showMoreItemsIndicator' | 'userLinkURL' | 'username'
+  > {
   isRead: boolean
   maxHeight?: number
-  smallLeftColumn?: boolean
   users: GitHubUser[]
 }
 

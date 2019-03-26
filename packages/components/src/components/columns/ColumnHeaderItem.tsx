@@ -29,13 +29,16 @@ export interface ColumnHeaderItemProps {
   analyticsLabel?: TouchableOpacityProps['analyticsLabel']
   avatarProps?: Partial<AvatarProps>
   avatarStyle?: StyleProp<ImageStyle>
+  backgroundColor?: string
   children?: React.ReactNode
   disabled?: TouchableOpacityProps['disabled']
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
   fixedIconSize?: boolean
   forceHoverState?: boolean
+  foregroundColor?: string
   hoverBackgroundThemeColor?: keyof ThemeColors
+  hoverForegroundThemeColor?: keyof ThemeColors
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   label?: string
@@ -59,13 +62,16 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     analyticsAction,
     analyticsLabel,
     avatarProps: _avatarProps,
+    backgroundColor,
     children,
     disabled,
     enableBackgroundHover,
     enableForegroundHover,
     fixedIconSize,
     forceHoverState,
+    foregroundColor,
     hoverBackgroundThemeColor,
+    hoverForegroundThemeColor,
     iconName,
     iconStyle,
     label: _label,
@@ -105,11 +111,14 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   useEffect(() => {
     updateStyles()
   }, [
+    backgroundColor,
     disabled,
     enableBackgroundHover,
     enableForegroundHover,
     forceHoverState,
+    foregroundColor,
     hoverBackgroundThemeColor,
+    hoverForegroundThemeColor,
   ])
 
   const _username = useReduxState(selectors.currentGitHubUsernameSelector)
@@ -128,11 +137,11 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       backgroundColor:
         isHovered && enableBackgroundHover
           ? theme[hoverBackgroundThemeColor || 'backgroundColorLess1']
-          : rgba(theme.backgroundColor, 0),
+          : rgba(backgroundColor || theme.backgroundColor, 0),
       foregroundColor:
         isHovered && enableForegroundHover
-          ? theme.primaryBackgroundColor
-          : theme.foregroundColor,
+          ? theme[hoverForegroundThemeColor || 'primaryBackgroundColor']
+          : foregroundColor || theme.foregroundColor,
       mutedForegroundColor: theme.foregroundColorMuted50,
     }
   }
@@ -208,8 +217,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },
-          { backgroundColor: springAnimatedStyles.backgroundColor },
           style,
+          { backgroundColor: springAnimatedStyles.backgroundColor },
         ]}
       >
         {child}
@@ -226,8 +235,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },
-          { backgroundColor: springAnimatedStyles.backgroundColor },
           style,
+          { backgroundColor: springAnimatedStyles.backgroundColor },
         ]}
       >
         {child}
@@ -267,8 +276,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                       fixedIconSize && {
                         width: size,
                       },
-                      { color: springAnimatedStyles.foregroundColor },
                       iconStyle,
+                      { color: springAnimatedStyles.foregroundColor },
                     ]}
                   />
                 )
@@ -282,10 +291,10 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
               selectable={selectable}
               style={[
                 styles.title,
+                titleStyle,
                 {
                   color: springAnimatedStyles.foregroundColor,
                 },
-                titleStyle,
               ]}
             >
               {title}
@@ -298,8 +307,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
               selectable={selectable}
               style={[
                 styles.subtitle,
-                { color: springAnimatedStyles.mutedForegroundColor },
                 subtitleStyle,
+                { color: springAnimatedStyles.mutedForegroundColor },
               ]}
             >
               {subtitle}
@@ -312,8 +321,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
               selectable={selectable}
               style={[
                 styles.text,
-                { color: springAnimatedStyles.foregroundColor },
                 textStyle,
+                { color: springAnimatedStyles.foregroundColor },
               ]}
             >
               {text}
@@ -332,9 +341,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 fontSize: 10,
                 textAlign: 'center',
               },
-
-              { color: springAnimatedStyles.foregroundColor },
               style,
+              { color: springAnimatedStyles.foregroundColor },
             ]}
             numberOfLines={1}
           >

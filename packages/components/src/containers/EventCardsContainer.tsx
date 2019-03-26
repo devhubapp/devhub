@@ -26,6 +26,7 @@ import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
+  | 'cardViewMode'
   | 'errorMessage'
   | 'events'
   | 'fetchNextPage'
@@ -274,6 +275,8 @@ export const EventCardsContainer = React.memo(
       <EventCards
         {...props}
         key={`event-cards-${column.id}`}
+        // cardViewMode={appViewMode === 'single-column' ? 'compact' : 'expanded'}
+        cardViewMode="expanded"
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
         lastFetchedAt={firstSubscription.data.lastFetchedAt}

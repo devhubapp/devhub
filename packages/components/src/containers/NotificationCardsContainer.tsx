@@ -14,6 +14,7 @@ import {
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 import { NoTokenView } from '../components/cards/NoTokenView'
+import { useAppViewMode } from '../hooks/use-app-view-mode'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
@@ -21,6 +22,7 @@ import * as selectors from '../redux/selectors'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
+  | 'cardViewMode'
   | 'errorMessage'
   | 'fetchNextPage'
   | 'lastFetchedAt'
@@ -35,6 +37,8 @@ export type NotificationCardsContainerProps = Omit<
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column } = props
+
+    const { appViewMode } = useAppViewMode()
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
@@ -151,8 +155,7 @@ export const NotificationCardsContainer = React.memo(
     return (
       <NotificationCards
         key={`notification-cards-${column.id}`}
-        // cardViewMode={appViewMode === 'single-column' ? 'compact' : 'expanded'}
-        cardViewMode="compact"
+        cardViewMode={appViewMode === 'single-column' ? 'compact' : 'expanded'}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
         lastFetchedAt={firstSubscription.data.lastFetchedAt}

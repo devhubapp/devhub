@@ -41,7 +41,7 @@ export const LabelsView = (props: LabelsViewProps) => {
           outline={false}
           small
         >
-          {label.name}
+          {label.name.toLowerCase()}
         </Label>
       ))}
     </View>

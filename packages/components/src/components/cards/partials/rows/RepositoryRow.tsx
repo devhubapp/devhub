@@ -1,15 +1,22 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForRepo, getGitHubURLForUser } from '@devhub/core'
+import { getGitHubURLForRepo, getGitHubURLForUser, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { contentPadding } from '../../../../styles/variables'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
+import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
-import { cardRowStyles, getCardRowStylesForTheme } from './styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
+import { getCardRowStylesForTheme } from './styles'
 
-export interface RepositoryRowProps {
+export interface RepositoryRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
@@ -17,7 +24,6 @@ export interface RepositoryRowProps {
   ownerName: string
   repositoryName: string
   showMoreItemsIndicator?: boolean
-  smallLeftColumn?: boolean
 }
 
 export interface RepositoryRowState {}
@@ -33,7 +39,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
     ownerName,
     repositoryName,
     showMoreItemsIndicator,
-    smallLeftColumn,
+    ...otherProps
   } = props
 
   // const repoIcon =
@@ -45,15 +51,9 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
   const isBot = Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-        ]}
-      >
+    <BaseRow
+      {...otherProps}
+      left={
         <Avatar
           isBot={isBot}
           linkURL=""
@@ -61,16 +61,10 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           style={cardStyles.avatar}
           username={ownerName}
         />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
+      }
+      right={
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignContent: 'center',
-          }}
+          style={[cardStyles.flex, cardStyles.horizontalAndVerticallyAligned]}
         >
           <Link
             href={
@@ -100,6 +94,11 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
             </SpringAnimatedText>
             {/* </SpringAnimatedText> */}
           </Link>
+
+          {!!(ownerName && repositoryName) && (
+            <Spacer width={contentPadding / 4} />
+          )}
+
           <Link
             href={
               showMoreItemsIndicator
@@ -116,11 +115,11 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                   getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
-              {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
+              {showMoreItemsIndicator ? '...' : ownerName}
             </SpringAnimatedText>
           </Link>
         </View>
-      </View>
-    </View>
+      }
+    />
   )
 })

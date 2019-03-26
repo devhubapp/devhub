@@ -1,22 +1,25 @@
 import React from 'react'
 
-import { getGitHubURLForBranch } from '@devhub/core'
-import { View } from 'react-native'
+import { getGitHubURLForBranch, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface BranchRowProps {
+export interface BranchRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   branch: string
   isBranchMainEvent: boolean
   isRead: boolean
   ownerName: string
   repositoryName: string
-  smallLeftColumn?: boolean
 }
 
 export interface BranchRowState {}
@@ -30,7 +33,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
     isRead,
     ownerName,
     repositoryName,
-    smallLeftColumn,
+    ...otherProps
   } = props
 
   const branch = (_branch || '').replace('refs/heads/', '')
@@ -39,15 +42,9 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
   if (branch === 'master' && !isBranchMainEvent) return null
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-        ]}
-      >
+    <BaseRow
+      {...otherProps}
+      left={
         <Avatar
           isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
           linkURL=""
@@ -55,9 +52,8 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
           style={cardStyles.avatar}
           username={ownerName}
         />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
+      }
+      right={
         <Link
           href={getGitHubURLForBranch(ownerName, repositoryName, branch)}
           style={cardRowStyles.mainContentContainer}
@@ -82,7 +78,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
             {branch}
           </SpringAnimatedText>
         </Link>
-      </View>
-    </View>
+      }
+    />
   )
 })
