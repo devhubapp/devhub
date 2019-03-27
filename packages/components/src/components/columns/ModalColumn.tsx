@@ -8,7 +8,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { findNode } from '../../utils/helpers/shared'
+import { findNode, tryFocus } from '../../utils/helpers/shared'
 import { Spacer } from '../common/Spacer'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
@@ -59,7 +59,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         )
           return
 
-        node.focus()
+        tryFocus(columnRef.current)
       }, 500)
   }, [currentOpenedModal && currentOpenedModal.name === name])
 

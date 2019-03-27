@@ -36,7 +36,7 @@ import {
   getIssueIconAndColor,
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
-import { findNode } from '../../utils/helpers/shared'
+import { findNode, tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
 import { useTheme } from '../context/ThemeContext'
@@ -78,8 +78,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   useEffect(() => {
     if (Platform.OS === 'web' && isFocused && itemRef.current) {
-      const node = findNode(itemRef.current)
-      node.focus()
+      tryFocus(itemRef.current)
     }
   }, [isFocused])
 

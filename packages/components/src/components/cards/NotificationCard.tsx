@@ -32,7 +32,7 @@ import {
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
 import { fixURL } from '../../utils/helpers/github/url'
-import { findNode } from '../../utils/helpers/shared'
+import { findNode, tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -111,8 +111,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   useEffect(() => {
     if (Platform.OS === 'web' && isFocused && itemRef.current) {
-      const node = findNode(itemRef.current)
-      node.focus()
+      tryFocus(itemRef.current)
     }
   }, [isFocused])
 

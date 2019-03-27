@@ -21,6 +21,18 @@ export function findNode(ref: any) {
   return node
 }
 
+export function tryFocus(ref: any) {
+  const node = findNode(ref)
+
+  if (node && node.focus) {
+    if (!(node.tabIndex >= 0)) node.tabIndex = -1
+    node.focus()
+    return true
+  }
+
+  return false
+}
+
 export function getGitHubAppInstallUri(
   options: {
     redirectUri?: string | undefined

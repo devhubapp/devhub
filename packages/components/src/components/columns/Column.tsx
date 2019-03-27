@@ -5,7 +5,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
-import { findNode } from '../../utils/helpers/shared'
+import { findNode, tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { Separator, separatorTickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -62,8 +62,7 @@ export const Column = React.memo(
         }
 
         if (Platform.OS === 'web' && columnRef.current) {
-          const node = findNode(columnRef.current)
-          node.focus()
+          tryFocus(columnRef.current)
         }
       },
     )
