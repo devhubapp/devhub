@@ -8,9 +8,9 @@ import {
   getEventTypeMetadata,
   isReadFilterChecked,
   isUnreadFilterChecked,
+  Theme,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
@@ -33,6 +33,8 @@ import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
+import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 
@@ -101,7 +103,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   const [containerWidth, setContainerWidth] = useState(0)
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const theme = useTheme()
 
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
@@ -147,7 +149,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     <SpringAnimatedView
       style={{
         alignSelf: 'stretch',
-        backgroundColor: springAnimatedTheme.backgroundColorLess1,
+        backgroundColor:
+          theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
         height: fullHeight ? availableHeight : 'auto',
       }}
       onLayout={e => {
@@ -378,9 +381,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundColor={item.color}
-                      checkedForegroundColor={
-                        springAnimatedTheme.backgroundColorDarker1
-                      }
+                      checkedForegroundColor={theme.backgroundColorDarker1}
                       containerStyle={checkboxStyle}
                       squareContainerStyle={checkboxSquareStyle}
                       defaultValue={defaultBooleanValue}
@@ -597,7 +598,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
         <Spacer flex={1} />
 
-        {!forceOpenAll && !allowToggleCategories && (
+        {!forceOpenAll && !!allowToggleCategories && (
           <ColumnHeaderItem
             key="column-options-button-toggle-collapse-filters"
             analyticsLabel={allIsOpen ? 'collapse_filters' : 'expand_filters'}

@@ -96,7 +96,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           </Link>
 
           {!!(ownerName && repositoryName) && (
-            <Spacer width={contentPadding / 4} />
+            <Spacer width={contentPadding / 3} />
           )}
 
           <Link

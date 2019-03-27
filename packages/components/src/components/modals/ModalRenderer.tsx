@@ -206,7 +206,7 @@ export function ModalRenderer(props: ModalRendererProps) {
             style={{
               width: '100%',
               height: '100%',
-              backgroundColor: springAnimatedTheme.backgroundColor,
+              backgroundColor: springAnimatedTheme.backgroundColorMore1,
               ...Platform.select({ web: { cursor: 'default' } as any }),
             }}
             onPress={() => closeAllModals()}

@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import {
   CardViewMode,
   EnhancedGitHubNotification,
+  getDateSmallText,
+  getFullDateText,
   getGitHubURLForRepo,
   getGitHubURLForRepoInvitation,
   getGitHubURLForSecurityAlert,
@@ -32,9 +34,12 @@ import {
 import { fixURL } from '../../utils/helpers/github/url'
 import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
+import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
+import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
 import { useTheme } from '../context/ThemeContext'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
@@ -44,6 +49,7 @@ import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
+import { getCardStylesForTheme } from './styles'
 
 export interface NotificationCardProps {
   cardViewMode: CardViewMode
@@ -65,7 +71,7 @@ const styles = StyleSheet.create({
   },
 
   compactItemFixedHeight: {
-    width: 22,
+    height: 22,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -244,9 +250,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     actor && actor.login && actor.login.indexOf('[bot]') >= 0,
   )
 
+  const backgroundThemeColors = getColumnCardThemeColors(
+    themeRef.current.backgroundColor,
+  )
   const backgroundThemeColor =
     // (isFocused && 'backgroundColorLess2') ||
-    (isRead && 'backgroundColorDarker1') || 'backgroundColor'
+    (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
 
   const cardIconColor =
     _cardIconColor &&
@@ -348,36 +357,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
         )}
 
-        {!comment &&
-          !!(
-            issueOrPullRequest &&
-            issueOrPullRequest.state === 'open' &&
-            issueOrPullRequest.body &&
-            !(
-              issueOrPullRequest.created_at &&
-              issueOrPullRequest.updated_at &&
-              new Date(issueOrPullRequest.updated_at).valueOf() -
-                new Date(issueOrPullRequest.created_at).valueOf() >=
-                1000 * 60 * 60 * 24
-            )
-          ) && (
-            // only show body if this notification is probably from a creation event
-            // because it may be for other updates
-            <CommentRow
-              key={`notification-issueOrPullRequest-body-${
-                issueOrPullRequest.id
-              }`}
-              avatarUrl={issueOrPullRequest.user.avatar_url}
-              body={issueOrPullRequest.body}
-              isRead={isRead}
-              url={issueOrPullRequest.html_url}
-              userLinkURL={issueOrPullRequest.user.html_url || ''}
-              username={issueOrPullRequest.user.login}
-              viewMode={cardViewMode}
-              withTopMargin={getWithTopMargin()}
-            />
-          )}
-
         {!!pullRequest && (
           <IssueOrPullRequestRow
             key={`notification-pr-row-${issueOrPullRequestNumber}`}
@@ -404,27 +383,30 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         {!comment &&
           !!(
-            pullRequest &&
-            pullRequest.state === 'open' &&
-            pullRequest.body &&
+            issueOrPullRequest &&
+            issueOrPullRequest.state === 'open' &&
+            issueOrPullRequest.body &&
             !(
-              pullRequest.created_at &&
-              pullRequest.updated_at &&
-              new Date(pullRequest.updated_at).valueOf() -
-                new Date(pullRequest.created_at).valueOf() >=
+              issueOrPullRequest.created_at &&
+              issueOrPullRequest.updated_at &&
+              new Date(issueOrPullRequest.updated_at).valueOf() -
+                new Date(issueOrPullRequest.created_at).valueOf() >=
                 1000 * 60 * 60 * 24
             )
-          ) && (
+          ) &&
+          cardViewMode !== 'compact' && (
             // only show body if this notification is probably from a creation event
             // because it may be for other updates
             <CommentRow
-              key={`notification-pr-body-${pullRequest.id}`}
-              avatarUrl={pullRequest.user.avatar_url}
-              body={pullRequest.body}
+              key={`notification-issueOrPullRequest-body-${
+                issueOrPullRequest.id
+              }`}
+              avatarUrl={issueOrPullRequest.user.avatar_url}
+              body={issueOrPullRequest.body}
               isRead={isRead}
-              url={pullRequest.html_url}
-              userLinkURL={pullRequest.user.html_url || ''}
-              username={pullRequest.user.login}
+              url={issueOrPullRequest.html_url}
+              userLinkURL={issueOrPullRequest.user.html_url || ''}
+              username={issueOrPullRequest.user.login}
               viewMode={cardViewMode}
               withTopMargin={getWithTopMargin()}
             />
@@ -512,7 +494,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           width: '100%',
           flexDirection: 'row',
           alignItems: 'flex-start',
-          padding: contentPadding,
+          paddingHorizontal: contentPadding,
+          paddingVertical: contentPadding * (2 / 3),
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
         }}
       >
@@ -534,7 +517,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View
           style={[styles.compactItemFixedWidth, styles.compactItemFixedHeight]}
         >
-          <SpringAnimatedCheckbox analyticsLabel={undefined} />
+          <SpringAnimatedCheckbox analyticsLabel={undefined} size={18} />
         </View>
 
         <Spacer width={contentPadding} />
@@ -579,6 +562,31 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <Spacer width={contentPadding} />
 
         <View style={{ flex: 1 }}>{renderContent()}</View>
+
+        <Spacer width={contentPadding} />
+
+        <View style={styles.compactItemFixedHeight}>
+          <IntervalRefresh date={updatedAt}>
+            {() => {
+              const dateText = getDateSmallText(updatedAt, true)
+              if (!dateText) return null
+
+              return (
+                <SpringAnimatedText
+                  numberOfLines={1}
+                  style={
+                    getCardStylesForTheme(springAnimatedTheme).timestampText
+                  }
+                  {...Platform.select({
+                    web: { title: getFullDateText(updatedAt) },
+                  })}
+                >
+                  {dateText}
+                </SpringAnimatedText>
+              )
+            }}
+          </IntervalRefresh>
+        </View>
       </SpringAnimatedView>
     )
   }
@@ -600,7 +608,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     >
       <NotificationCardHeader
         key={`notification-card-header-${id}`}
-        avatarUrl={(actor && actor.avatar_url) || undefined}
+        avatarUrl={repoAvatarDetails.avatar_url || undefined}
         backgroundThemeColor={backgroundThemeColor}
         cardIconColor={cardIconColor}
         cardIconName={cardIconName}

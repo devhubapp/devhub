@@ -38,6 +38,7 @@ import {
 } from '../../utils/helpers/github/shared'
 import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
 import { useTheme } from '../context/ThemeContext'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { BranchRow } from './partials/rows/BranchRow'
@@ -198,9 +199,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
       ? comment.html_url || comment.url
       : issue.html_url || issue.url)
 
+  const backgroundThemeColors = getColumnCardThemeColors(
+    themeRef.current.backgroundColor,
+  )
   const backgroundThemeColor =
     // (isFocused && 'backgroundColorLess2') ||
-    (isRead && 'backgroundColorDarker1') || 'backgroundColor'
+    (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
 
   const cardIconColor =
     _cardIconColor &&

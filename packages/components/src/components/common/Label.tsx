@@ -125,6 +125,7 @@ export function Label(props: LabelProps) {
               key: `label-text-${children}`,
               imageProps: {
                 style: {
+                  marginHorizontal: 2,
                   width: small ? 10 : 11,
                   height: small ? 10 : 11,
                 },

@@ -132,15 +132,14 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               </Link>
               {!!isBot && (
                 <>
-                  <Text children=" " />
+                  <Text children="  " />
                   <SpringAnimatedText
                     numberOfLines={1}
                     style={
                       getCardStylesForTheme(springAnimatedTheme).timestampText
                     }
                   >
-                    <Text children="•" style={{ fontSize: 9, opacity: 0.2 }} />
-                    <Text children=" " />
+                    <Text children="  " />
                     BOT
                   </SpringAnimatedText>
                 </>
@@ -152,7 +151,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
                   return (
                     <>
-                      <Text children=" " />
+                      <Text children="  " />
                       <SpringAnimatedText
                         numberOfLines={1}
                         style={
@@ -163,11 +162,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                           web: { title: getFullDateText(date) },
                         })}
                       >
-                        <Text
-                          children="•"
-                          style={{ fontSize: 9, opacity: 0.2 }}
-                        />
-                        <Text children=" " />
+                        <Text children="  " />
                         {dateText}
                       </SpringAnimatedText>
                     </>

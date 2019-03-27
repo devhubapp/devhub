@@ -194,7 +194,7 @@ export const IssueOrPullRequestRow = React.memo(
 
                             return (
                               <>
-                                {!!byText && <Text children=" " />}
+                                {!!byText && <Text children="  " />}
 
                                 <SpringAnimatedText
                                   numberOfLines={1}
@@ -206,16 +206,6 @@ export const IssueOrPullRequestRow = React.memo(
                                     web: { title: getFullDateText(createdAt) },
                                   })}
                                 >
-                                  {!!byText && (
-                                    <>
-                                      <Text
-                                        children="•"
-                                        style={{ fontSize: 9, opacity: 0.2 }}
-                                      />
-                                      <Text children=" " />
-                                    </>
-                                  )}
-
                                   {dateText}
                                 </SpringAnimatedText>
                               </>

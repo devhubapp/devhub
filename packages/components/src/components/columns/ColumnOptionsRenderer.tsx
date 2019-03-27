@@ -82,7 +82,7 @@ export const ColumnOptionsRenderer = React.memo(
               activeOpacity={1}
               style={{
                 ...StyleSheet.absoluteFillObject,
-                backgroundColor: springAnimatedTheme.backgroundColor,
+                backgroundColor: springAnimatedTheme.backgroundColorMore1,
                 zIndex: 200,
                 ...Platform.select({ web: { cursor: 'default' } as any }),
               }}

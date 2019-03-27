@@ -10,7 +10,9 @@ import {
   isEventPrivate,
   isItemRead,
   isNotificationPrivate,
+  ThemeColors,
 } from '@devhub/core'
+import { getLuminance } from 'polished'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -24,11 +26,38 @@ import {
 } from '../../utils/helpers/filters'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { Spacer } from '../common/Spacer'
+import { useTheme } from '../context/ThemeContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
+
+export function getColumnCardThemeColors(
+  backgroundColor: string,
+): {
+  unread: keyof ThemeColors
+  unread__hover: keyof ThemeColors
+  read: keyof ThemeColors
+  read__hover: keyof ThemeColors
+} {
+  const luminance = getLuminance(backgroundColor)
+
+  if (luminance >= 0.5)
+    return {
+      unread: 'backgroundColor',
+      unread__hover: 'backgroundColorLighther1',
+      read: 'backgroundColorDarker1',
+      read__hover: 'backgroundColorDarker2',
+    }
+
+  return {
+    unread: 'backgroundColorLighther1',
+    unread__hover: 'backgroundColorLighther2',
+    read: 'backgroundColor',
+    read__hover: 'backgroundColorDarker1',
+  }
+}
 
 export interface EventOrNotificationColumnProps {
   children: React.ReactNode
@@ -63,6 +92,19 @@ export const EventOrNotificationColumn = React.memo(
     const filteredSubscriptionsDataSelectorRef = useRef(
       selectors.createFilteredSubscriptionsDataSelector(),
     )
+
+    const columnRef = useRef<View>(null)
+    useTheme(theme => {
+      if (!columnRef.current) return
+
+      const backgroundThemeColors = getColumnCardThemeColors(
+        theme.backgroundColor,
+      )
+
+      columnRef.current!.setNativeProps({
+        style: { backgroundColor: theme[backgroundThemeColors.read] },
+      })
+    })
 
     useEffect(() => {
       filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
@@ -148,6 +190,7 @@ export const EventOrNotificationColumn = React.memo(
 
     return (
       <Column
+        ref={columnRef}
         columnId={column.id}
         fullWidth={appViewMode === 'single-column'}
         pagingEnabled={pagingEnabled}

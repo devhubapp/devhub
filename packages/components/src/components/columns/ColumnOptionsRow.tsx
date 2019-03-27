@@ -30,6 +30,7 @@ export interface ColumnOptionsRowProps {
   children: React.ReactNode
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle
+  disableBackground?: boolean
   enableBackgroundHover?: boolean
   hasChanged: boolean
   headerItemFixedIconSize?: number

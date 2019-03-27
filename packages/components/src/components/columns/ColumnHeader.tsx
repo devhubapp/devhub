@@ -15,11 +15,11 @@ export function getColumnHeaderThemeColors(
   const luminance = getLuminance(backgroundColor)
 
   if (luminance >= 0.5)
-    return { normal: 'backgroundColorDarker1', hover: 'backgroundColorDarker3' }
+    return { normal: 'backgroundColorDarker1', hover: 'backgroundColorDarker2' }
 
   return {
-    normal: 'backgroundColorLighther2',
-    hover: 'backgroundColorLighther3',
+    normal: 'backgroundColor',
+    hover: 'backgroundColorLighther1',
   }
 }
 

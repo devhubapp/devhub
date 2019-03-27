@@ -8,6 +8,7 @@ import {
   avatarSize,
   contentPadding,
   smallAvatarSize,
+  smallerTextSize,
   smallTextSize,
 } from '../../styles/variables'
 
@@ -72,8 +73,8 @@ export const getCardStylesForTheme = _.memoize(
       },
 
       timestampText: {
-        lineHeight: smallTextSize + 1,
-        fontSize: smallTextSize,
+        lineHeight: smallerTextSize + 1,
+        fontSize: smallerTextSize,
         color: theme.foregroundColorMuted50,
       },
 

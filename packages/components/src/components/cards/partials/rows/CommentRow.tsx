@@ -77,7 +77,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
           style={cardRowStyles.mainContentContainer}
         >
           <SpringAnimatedText
-            numberOfLines={1}
+            numberOfLines={numberOfLines}
             style={[
               getCardStylesForTheme(springAnimatedTheme).commentText,
               textStyle,

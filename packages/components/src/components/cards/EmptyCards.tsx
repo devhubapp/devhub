@@ -122,7 +122,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           {clearMessage}
           {!!randomEmojiImageURL && (
             <>
-              <Text children=" " />
+              <Text children="  " />
 
               <Image
                 source={{ uri: randomEmojiImageURL }}

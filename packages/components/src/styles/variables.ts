@@ -4,6 +4,7 @@ export const mutedOpacity = 0.5
 export const radius = 4
 export const smallAvatarSize = avatarSize / 2
 export const smallTextSize = 12
+export const smallerTextSize = 11
 
 export const columnHeaderItemContentSize = 18
 export const columnHeaderItemContentBiggerSize = columnHeaderItemContentSize + 2
