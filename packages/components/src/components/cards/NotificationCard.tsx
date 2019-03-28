@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import {
   CardViewMode,
@@ -20,9 +20,7 @@ import {
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme.web'
-import { useReduxAction } from '../../hooks/use-redux-action'
 import { Platform } from '../../libs/platform'
-import * as actions from '../../redux/actions'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
@@ -32,12 +30,12 @@ import {
   getPullRequestIconAndColor,
 } from '../../utils/helpers/github/shared'
 import { fixURL } from '../../utils/helpers/github/url'
-import { findNode, tryFocus } from '../../utils/helpers/shared'
+import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
+import { BookmarkButton } from '../common/BookmarkButton'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
@@ -96,8 +94,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     themeRef.current = theme
   })
   themeRef.current = initialTheme
-
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   /*
   const hasPrivateAccess = useReduxState(state =>
@@ -524,22 +520,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View
           style={[styles.compactItemFixedWidth, styles.compactItemFixedHeight]}
         >
-          <ColumnHeaderItem
-            analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
-            enableBackgroundHover={false}
-            enableForegroundHover={!isSaved}
-            fixedIconSize
-            foregroundColor={
-              isSaved
-                ? themeRef.current.primaryBackgroundColor
-                : themeRef.current.foregroundColorMuted50
-            }
-            hoverForegroundThemeColor={isSaved ? undefined : 'foregroundColor'}
-            iconName="bookmark"
-            noPadding
-            onPress={() => saveItemsForLater({ itemIds: [id], save: !isSaved })}
-            size={18}
-          />
+          <BookmarkButton isSaved={isSaved} itemIds={[id]} size={18} />
         </View>
 
         <Spacer width={contentPadding} />

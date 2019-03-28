@@ -20,6 +20,7 @@ import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
+import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
 import { useTheme } from '../../context/ThemeContext'
@@ -212,19 +213,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             }}
           />
 
-          <ColumnHeaderItem
-            analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
-            enableBackgroundHover={false}
-            enableForegroundHover={!isSaved}
-            fixedIconSize
-            foregroundColor={
-              isSaved
-                ? theme.primaryBackgroundColor
-                : theme.foregroundColorMuted50
-            }
-            hoverForegroundThemeColor={isSaved ? undefined : 'foregroundColor'}
-            iconName="bookmark"
-            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
+          <BookmarkButton
+            isSaved={!!isSaved}
+            itemIds={ids}
             size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
