@@ -3,10 +3,21 @@ import _ from 'lodash'
 import {
   capitalize,
   EnhancedGitHubNotification,
+  GitHubIcon,
+  GitHubIssue,
+  GitHubNotification,
   GitHubNotificationReason,
+  GitHubPullRequest,
   sortNotifications,
 } from '@devhub/core'
+import { bugsnag } from '../../../libs/bugsnag'
 import * as colors from '../../../styles/colors'
+import {
+  getCommitIconAndColor,
+  getIssueIconAndColor,
+  getPullRequestIconAndColor,
+  getReleaseIconAndColor,
+} from './shared'
 
 export const notificationReasons: GitHubNotificationReason[] = [
   'assign',
@@ -21,6 +32,35 @@ export const notificationReasons: GitHubNotificationReason[] = [
   'subscribed',
   'team_mention',
 ]
+
+export function getNotificationIconAndColor(
+  notification: GitHubNotification,
+  payload?: GitHubIssue | GitHubPullRequest | undefined,
+): { icon: GitHubIcon; color?: string } {
+  const { subject } = notification
+  const { type } = subject
+
+  switch (type) {
+    case 'Commit':
+      return getCommitIconAndColor()
+    case 'Issue':
+      return getIssueIconAndColor(payload as GitHubIssue)
+    case 'PullRequest':
+      return getPullRequestIconAndColor(payload as GitHubPullRequest)
+    case 'Release':
+      return getReleaseIconAndColor()
+    case 'RepositoryInvitation':
+      return { icon: 'mail', color: colors.brown }
+    case 'RepositoryVulnerabilityAlert':
+      return { icon: 'alert', color: colors.yellow }
+    default: {
+      const message = `Unknown event type: ${(event as any).type}`
+      bugsnag.notify(new Error(message))
+      console.error(message)
+      return { icon: 'bell' }
+    }
+  }
+}
 
 export function getNotificationReasonMetadata<
   T extends GitHubNotificationReason

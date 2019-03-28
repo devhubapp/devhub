@@ -1,13 +1,13 @@
-import {
-  getCommitIconAndColor,
-  GitHubIcon,
-  GitHubIssue,
-  GitHubNotification,
-  GitHubPullRequest,
-  isPullRequest,
-} from '@devhub/core'
-import { bugsnag } from '../../../libs/bugsnag'
+import { GitHubIcon, GitHubPullRequest, isPullRequest } from '@devhub/core'
 import * as colors from '../../../styles/colors'
+
+export function getCommitIconAndColor(): { icon: GitHubIcon; color?: string } {
+  return { icon: 'git-commit', color: colors.orange }
+}
+
+export function getReleaseIconAndColor(): { icon: GitHubIcon; color?: string } {
+  return { icon: 'tag', color: colors.pink }
+}
 
 export function getPullRequestIconAndColor(pullRequest: {
   draft: GitHubPullRequest['draft']
@@ -55,34 +55,5 @@ export function getIssueIconAndColor(issue: {
 
     default:
       return { icon: 'issue-opened' }
-  }
-}
-
-export function getNotificationIconAndColor(
-  notification: GitHubNotification,
-  payload?: GitHubIssue | GitHubPullRequest | undefined,
-): { icon: GitHubIcon; color?: string } {
-  const { subject } = notification
-  const { type } = subject
-
-  switch (type) {
-    case 'Commit':
-      return getCommitIconAndColor()
-    case 'Issue':
-      return getIssueIconAndColor(payload as GitHubIssue)
-    case 'PullRequest':
-      return getPullRequestIconAndColor(payload as GitHubPullRequest)
-    case 'Release':
-      return { icon: 'tag' }
-    case 'RepositoryInvitation':
-      return { icon: 'mail' }
-    case 'RepositoryVulnerabilityAlert':
-      return { icon: 'alert', color: colors.yellow }
-    default: {
-      const message = `Unknown event type: ${(event as any).type}`
-      bugsnag.notify(new Error(message))
-      console.error(message)
-      return { icon: 'bell' }
-    }
   }
 }

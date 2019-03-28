@@ -6,7 +6,7 @@ import { fixURL } from '../../../../utils/helpers/github/url'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
+import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
@@ -15,6 +15,8 @@ export interface WikiPageRowProps
     BaseRowProps,
     'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
   > {
+  bold?: boolean
+  hideIcon?: boolean
   isRead: boolean
   name?: string
   showMoreItemsIndicator?: boolean
@@ -28,6 +30,8 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
+    bold,
+    hideIcon,
     isRead,
     name,
     showMoreItemsIndicator,
@@ -52,18 +56,24 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
             numberOfLines={1}
             style={[
               getCardStylesForTheme(springAnimatedTheme).normalText,
+              bold && cardStyles.boldText,
               isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
-            <SpringAnimatedIcon
-              name="book"
-              size={13}
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardStylesForTheme(springAnimatedTheme).icon,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            />{' '}
+            {!hideIcon && (
+              <>
+                <SpringAnimatedIcon
+                  name="book"
+                  size={13}
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    getCardStylesForTheme(springAnimatedTheme).icon,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  ]}
+                />{' '}
+              </>
+            )}
             {showMoreItemsIndicator ? '' : title}
             {!!showMoreItemsIndicator && (
               <SpringAnimatedText

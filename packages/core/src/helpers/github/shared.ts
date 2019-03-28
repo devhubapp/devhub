@@ -7,7 +7,6 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   GitHubAPIHeaders,
-  GitHubIcon,
   GitHubPullRequest,
 } from '../../types'
 import { getSteppedSize } from '../shared'
@@ -117,10 +116,6 @@ export function getOwnerAndRepo(
   const repo = (repoSplitedNames[1] || '').trim()
 
   return { owner, repo }
-}
-
-export function getCommitIconAndColor(): { icon: GitHubIcon; color?: string } {
-  return { icon: 'git-commit' }
 }
 
 export function getUniqueIdForSubscription(subscription: {

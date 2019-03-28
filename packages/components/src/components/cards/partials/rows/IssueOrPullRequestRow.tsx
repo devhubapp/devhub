@@ -14,6 +14,10 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-
 import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
+import {
+  SpringAnimatedIcon,
+  SpringAnimatedIconProps,
+} from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
@@ -34,11 +38,13 @@ export interface IssueOrPullRequestRowProps
   addBottomAnchor?: boolean
   avatarUrl: string | undefined
   body: string | undefined
+  bold?: boolean
   commentsCount?: number
   createdAt: string | undefined
-  // iconColor?: string
-  // iconName: SpringAnimatedIconProps['name']
+  iconColor?: string
+  iconName?: SpringAnimatedIconProps['name']
   id: string | number | undefined
+  hideIcon?: boolean
   isRead: boolean
   issueOrPullRequestNumber: number
   labels?: GitHubLabel[] | undefined
@@ -58,10 +64,12 @@ export const IssueOrPullRequestRow = React.memo(
       addBottomAnchor,
       avatarUrl,
       body: _body,
+      bold,
       commentsCount,
       createdAt,
-      // iconColor,
-      // iconName,
+      hideIcon,
+      iconColor,
+      iconName = 'issue-opened',
       id,
       isRead,
       issueOrPullRequestNumber,
@@ -121,21 +129,25 @@ export const IssueOrPullRequestRow = React.memo(
                 style={[
                   Platform.OS !== 'android' && { flexGrow: 1 },
                   getCardStylesForTheme(springAnimatedTheme).normalText,
-                  cardStyles.boldText,
+                  bold && cardStyles.boldText,
                   isRead &&
                     getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
-                {/* <SpringAnimatedIcon
-                  name={iconName}
-                  size={13}
-                  style={[
-                    getCardStylesForTheme(springAnimatedTheme).normalText,
-                    getCardStylesForTheme(springAnimatedTheme).icon,
-                    { color: iconColor },
-                    // isRead && { opacity: mutedOpacity },
-                  ]}
-                />{' '} */}
+                {!hideIcon && (
+                  <>
+                    <SpringAnimatedIcon
+                      name={iconName}
+                      size={13}
+                      style={[
+                        getCardStylesForTheme(springAnimatedTheme).normalText,
+                        getCardStylesForTheme(springAnimatedTheme).icon,
+                        { color: iconColor },
+                        // isRead && { opacity: mutedOpacity },
+                      ]}
+                    />{' '}
+                  </>
+                )}
                 {title}
 
                 {!!issueOrPullRequestNumber && viewMode === 'compact' && (

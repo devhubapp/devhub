@@ -10,14 +10,22 @@ import {
 } from '@devhub/core'
 import { bugsnag } from '../../../libs/bugsnag'
 import * as colors from '../../../styles/colors'
-import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared'
+import {
+  getCommitIconAndColor,
+  getIssueIconAndColor,
+  getPullRequestIconAndColor,
+  getReleaseIconAndColor,
+} from './shared'
 
 export function getEventIconAndColor(
   event: EnhancedGitHubEvent,
 ): { color?: string; icon: GitHubIcon; subIcon?: GitHubIcon } {
   switch (event.type) {
     case 'CommitCommentEvent':
-      return { icon: 'git-commit', subIcon: 'comment-discussion' }
+      return {
+        ...getCommitIconAndColor(),
+        subIcon: 'comment-discussion',
+      }
 
     case 'CreateEvent': {
       switch (event.payload.ref_type) {
@@ -126,7 +134,7 @@ export function getEventIconAndColor(
       return { icon: 'code' }
 
     case 'ReleaseEvent':
-      return { icon: 'tag' }
+      return getReleaseIconAndColor()
 
     case 'WatchEvent':
     case 'WatchEvent:OneUserMultipleRepos':

@@ -26,6 +26,8 @@ export interface CommitRowProps
   authorEmail: string
   authorName: string
   authorUsername?: string
+  bold?: boolean
+  hideIcon?: boolean
   isRead: boolean
   latestCommentUrl?: string
   message: string
@@ -42,6 +44,8 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     authorEmail,
     authorName,
     authorUsername: _authorUsername,
+    bold,
+    hideIcon,
     isRead,
     latestCommentUrl,
     message: _message,
@@ -99,18 +103,24 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             numberOfLines={1}
             style={[
               getCardStylesForTheme(springAnimatedTheme).normalText,
+              bold && cardStyles.boldText,
               isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
             ]}
           >
-            <SpringAnimatedIcon
-              name="git-commit"
-              size={13}
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardStylesForTheme(springAnimatedTheme).icon,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            />{' '}
+            {!hideIcon && (
+              <>
+                <SpringAnimatedIcon
+                  name="git-commit"
+                  size={13}
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    getCardStylesForTheme(springAnimatedTheme).icon,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  ]}
+                />{' '}
+              </>
+            )}
             {showMoreItemsIndicator ? '' : message}
             {Boolean(byText) && (
               <SpringAnimatedText

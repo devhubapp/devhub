@@ -14,6 +14,7 @@ import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BranchRow } from './BranchRow'
+import { CommentRow } from './CommentRow'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
@@ -24,7 +25,9 @@ export interface ReleaseRowProps
   > {
   avatarUrl: string
   body: string
+  bold?: boolean
   branch?: string
+  hideIcon?: boolean
   isRead: boolean
   name: string | undefined
   ownerName: string
@@ -43,7 +46,9 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
   const {
     avatarUrl,
     body: _body,
+    bold,
     branch,
+    hideIcon,
     isRead,
     name: _name,
     ownerName,
@@ -52,6 +57,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
     url,
     userLinkURL,
     username,
+    viewMode,
     ...otherProps
   } = props
 
@@ -78,6 +84,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
           isRead={isRead}
           ownerName={ownerName || ''}
           repositoryName={repositoryName || ''}
+          viewMode={viewMode}
         />
       )}
 
@@ -98,67 +105,46 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               <SpringAnimatedText
                 style={[
                   getCardStylesForTheme(springAnimatedTheme).normalText,
+                  bold && cardStyles.boldText,
                   isRead &&
                     getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
                 <SpringAnimatedText numberOfLines={1}>
-                  <SpringAnimatedIcon
-                    name="tag"
-                    size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    ]}
-                  />{' '}
+                  {!hideIcon && (
+                    <>
+                      <SpringAnimatedIcon
+                        name="tag"
+                        size={13}
+                        style={[
+                          getCardStylesForTheme(springAnimatedTheme).normalText,
+                          getCardStylesForTheme(springAnimatedTheme).icon,
+                          isRead &&
+                            getCardStylesForTheme(springAnimatedTheme)
+                              .mutedText,
+                        ]}
+                      />{' '}
+                    </>
+                  )}
                 </SpringAnimatedText>
                 {name || tagName}
               </SpringAnimatedText>
             </Link>
           }
+          viewMode={viewMode}
         />
       )}
 
       {!!(body && body !== name && body !== tagName) && (
-        <BaseRow
-          {...otherProps}
-          left={
-            <Avatar
-              avatarUrl={avatarUrl}
-              isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
-              linkURL={userLinkURL}
-              small
-              style={cardStyles.avatar}
-              username={username}
-            />
-          }
-          right={
-            <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
-              <SpringAnimatedText
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  isRead &&
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                <SpringAnimatedText numberOfLines={1}>
-                  <SpringAnimatedIcon
-                    name="megaphone"
-                    size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    ]}
-                  />{' '}
-                </SpringAnimatedText>
-                {body}
-              </SpringAnimatedText>
-            </Link>
-          }
+        <CommentRow
+          avatarUrl={avatarUrl}
+          body={body}
+          isRead={isRead}
+          url={fixedURL}
+          userLinkURL={userLinkURL}
+          username={username}
+          viewMode={viewMode}
+          withTopMargin
         />
       )}
     </View>

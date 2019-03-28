@@ -21,7 +21,7 @@ import { Platform } from '../../libs/platform'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
-import { getNotificationIconAndColor } from '../../utils/helpers/github/shared'
+import { getNotificationIconAndColor } from '../../utils/helpers/github/notifications'
 import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -38,7 +38,6 @@ import { CommitRow } from './partials/rows/CommitRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
-import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { getCardStylesForTheme } from './styles'
 
 export interface NotificationCardProps {
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
 })
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { cardViewMode, isFocused, notification, repoIsKnown } = props
+  const { cardViewMode, isFocused, notification } = props
 
   const repoFullName =
     (notification &&
@@ -277,14 +276,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   function renderContent() {
     return (
       <>
-        {!!(
+        {/* {!!(
           repoOwnerName &&
           repoName &&
           !repoIsKnown &&
-          !(
-            actor &&
-            (actor.login === repoName || actor.login === repoFullName)
-          ) &&
           cardViewMode !== 'compact'
         ) && (
           <RepositoryRow
@@ -295,7 +290,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
-        )}
+        )} */}
 
         {!!commit && (
           <CommitRow
@@ -303,6 +298,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             authorEmail={commit.commit.author.email}
             authorName={commit.commit.author.name}
             authorUsername={commit.author && commit.author.login}
+            bold
+            hideIcon
             isRead={isRead}
             latestCommentUrl={subject.latest_comment_url}
             message={commit.commit.message}
@@ -334,8 +331,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 ? issueOrPullRequest.body
                 : undefined
             }
+            bold
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
+            hideIcon
             // iconColor={issueIconColor || pullRequestIconColor}
             // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}
@@ -358,6 +357,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             key={`notification-release-row-${repo.id}`}
             avatarUrl={release.author.avatar_url}
             body={release.body}
+            bold
+            hideIcon
             isRead={isRead}
             name={release.name || ''}
             ownerName={repoOwnerName || ''}

@@ -336,8 +336,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
               ? issueOrPullRequest.body
               : undefined
           }
+          bold
           commentsCount={issueOrPullRequest.comments}
           createdAt={issueOrPullRequest.created_at}
+          hideIcon
           // iconColor={issueIconColor || pullRequestIconColor}
           // iconName={issueIconName! || pullRequestIconName}
           id={issueOrPullRequest.id}
@@ -367,6 +369,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
       {pages.length > 0 && (
         <WikiPageListRow
+          bold
+          hideIcon
           isRead={isRead}
           key={`event-wiki-page-list-row-${pageIds.join('-')}`}
           pages={pages}
@@ -404,7 +408,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
           key={`event-release-row-${release.id}`}
           avatarUrl={release.author.avatar_url}
           body={release.body}
+          bold
           branch={release.target_commitish}
+          hideIcon
           isRead={isRead}
           name={release.name}
           ownerName={repoOwnerName || ''}
