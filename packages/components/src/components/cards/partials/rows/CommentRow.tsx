@@ -65,61 +65,41 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     <BaseRow
       {...otherProps}
       left={
-        viewMode !== 'compact' && (
-          <Avatar
-            avatarUrl={avatarUrl}
-            isBot={isBot}
-            linkURL={userLinkURL}
-            small
-            style={cardStyles.avatar}
-            username={username}
-          />
-        )
+        <Avatar
+          avatarUrl={avatarUrl}
+          isBot={isBot}
+          linkURL={userLinkURL}
+          small
+          style={cardStyles.avatar}
+          username={username}
+        />
       }
       right={
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          {viewMode === 'compact' && (
-            <>
-              <Avatar
-                avatarUrl={avatarUrl}
-                isBot={isBot}
-                linkURL={userLinkURL}
-                size={14}
-                small
-                style={[cardStyles.avatar, { marginTop: (20 - 14) / 2 }]}
-                username={username}
-              />
-
-              <Spacer width={contentPadding / 2} />
-            </>
-          )}
-
-          <Link
-            analyticsLabel={analyticsLabel}
-            href={fixURL(url, { addBottomAnchor })}
-            style={{ flex: 1 }}
+        <Link
+          analyticsLabel={analyticsLabel}
+          href={fixURL(url, { addBottomAnchor })}
+          style={{ flex: 1 }}
+        >
+          <SpringAnimatedText
+            numberOfLines={numberOfLines}
+            style={[
+              getCardStylesForTheme(springAnimatedTheme).commentText,
+              textStyle,
+              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+            ]}
           >
-            <SpringAnimatedText
-              numberOfLines={numberOfLines}
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).commentText,
-                textStyle,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
-              {parseTextWithEmojisToReactComponents(body, {
-                key: `comment-${url}`,
-                imageProps: {
-                  style: {
-                    marginHorizontal: 2,
-                    width: 10,
-                    height: 10,
-                  },
+            {parseTextWithEmojisToReactComponents(body, {
+              key: `comment-${url}`,
+              imageProps: {
+                style: {
+                  marginHorizontal: 2,
+                  width: 10,
+                  height: 10,
                 },
-              })}
-            </SpringAnimatedText>
-          </Link>
-        </View>
+              },
+            })}
+          </SpringAnimatedText>
+        </Link>
       }
       viewMode={viewMode}
     />
