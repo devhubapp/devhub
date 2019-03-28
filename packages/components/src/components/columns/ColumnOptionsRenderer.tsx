@@ -60,7 +60,7 @@ export const ColumnOptionsRenderer = React.memo(
 
     const availableHeight =
       containerHeight - (isFabVisible ? fabSize + 2 * fabSpacing : 0)
-    const fixedWidth = inlineMode ? 280 : undefined
+    const fixedWidth = inlineMode ? 250 : undefined
 
     if (!column) return null
 

@@ -7,6 +7,7 @@ import { cardRowStyles } from '../styles'
 
 export interface BaseRowProps {
   containerStyle?: ViewProps['style']
+  disableLeft?: boolean
   left: React.ReactNode
   leftContainerStyle?: ViewProps['style']
   right: React.ReactNode
@@ -20,6 +21,7 @@ export interface BaseRowState {}
 export function BaseRow(props: BaseRowProps) {
   const {
     containerStyle,
+    disableLeft,
     left,
     leftContainerStyle,
     right,
@@ -36,17 +38,19 @@ export function BaseRow(props: BaseRowProps) {
         containerStyle,
       ]}
     >
-      <View
-        style={[
-          cardStyles.leftColumn,
-          viewMode === 'compact'
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-          leftContainerStyle,
-        ]}
-      >
-        {left}
-      </View>
+      {!disableLeft && (
+        <View
+          style={[
+            cardStyles.leftColumn,
+            viewMode === 'compact'
+              ? cardStyles.leftColumn__small
+              : cardStyles.leftColumn__big,
+            leftContainerStyle,
+          ]}
+        >
+          {left}
+        </View>
+      )}
 
       <View style={[cardStyles.rightColumn, rightContainerStyle]}>{right}</View>
     </View>

@@ -19,7 +19,7 @@ import {
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme.web'
 import { Platform } from '../../libs/platform'
 import * as colors from '../../styles/colors'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, smallerTextSize } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { getNotificationIconAndColor } from '../../utils/helpers/github/notifications'
 import { tryFocus } from '../../utils/helpers/shared'
@@ -27,8 +27,8 @@ import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
+import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
-import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
 import { useTheme } from '../context/ThemeContext'
@@ -36,9 +36,11 @@ import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
-import { getCardStylesForTheme } from './styles'
+import { RepositoryRow } from './partials/rows/RepositoryRow'
+import { cardStyles, getCardStylesForTheme } from './styles'
 
 export interface NotificationCardProps {
   cardViewMode: CardViewMode
@@ -65,10 +67,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  compactItemFixedMinHeight: {
+    minHeight: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { cardViewMode, isFocused, notification } = props
+  const { cardViewMode, isFocused, notification, repoIsKnown } = props
 
   const repoFullName =
     (notification &&
@@ -280,13 +289,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           repoOwnerName &&
           repoName &&
           !repoIsKnown &&
-          cardViewMode !== 'compact'
+          cardViewMode === 'compact'
         ) && (
           <RepositoryRow
             key={`notification-repo-row-${repo.id}`}
             isRead={isRead}
             ownerName={repoOwnerName}
             repositoryName={repoName}
+            small
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
@@ -414,8 +424,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           width: '100%',
           flexDirection: 'row',
           alignItems: 'flex-start',
-          paddingHorizontal: contentPadding,
-          paddingVertical: contentPadding * (2 / 3),
+          padding: contentPadding,
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
         }}
       >
@@ -434,13 +443,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         {/* <CenterGuide /> */}
 
-        <View
+        {/* <View
           style={[styles.compactItemFixedWidth, styles.compactItemFixedHeight]}
         >
           <SpringAnimatedCheckbox analyticsLabel={undefined} size={18} />
         </View>
 
-        <Spacer width={contentPadding} />
+        <Spacer width={contentPadding} /> */}
 
         <View
           style={[styles.compactItemFixedWidth, styles.compactItemFixedHeight]}
@@ -449,6 +458,48 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         </View>
 
         <Spacer width={contentPadding} />
+
+        {!!(repoOwnerName && repoName && !repoIsKnown) && (
+          <>
+            <View style={styles.compactItemFixedHeight}>
+              <Avatar isBot={isBot} linkURL="" small username={repoOwnerName} />
+            </View>
+
+            <Spacer width={contentPadding} />
+
+            <View
+              style={[
+                styles.compactItemFixedMinHeight,
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  width: 90,
+                  overflow: 'hidden',
+                },
+              ]}
+            >
+              <RepositoryRow
+                key={`notification-repo-row-${repo.id}`}
+                disableLeft
+                // hideOwner
+                isRead={isRead}
+                ownerName={repoOwnerName}
+                repositoryName={repoName}
+                rightContainerStyle={{
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                  width: 90,
+                }}
+                small
+                viewMode={cardViewMode}
+                withTopMargin={false}
+              />
+            </View>
+
+            <Spacer width={contentPadding} />
+          </>
+        )}
 
         <View
           style={[styles.compactItemFixedWidth, styles.compactItemFixedHeight]}
@@ -470,18 +521,20 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         <Spacer width={contentPadding} />
 
-        <View style={styles.compactItemFixedHeight}>
+        <View style={{ alignItems: 'flex-end' }}>
           <IntervalRefresh date={updatedAt}>
             {() => {
-              const dateText = getDateSmallText(updatedAt, true)
+              const dateText = getDateSmallText(updatedAt, false)
               if (!dateText) return null
 
               return (
                 <SpringAnimatedText
                   numberOfLines={1}
-                  style={
-                    getCardStylesForTheme(springAnimatedTheme).timestampText
-                  }
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).timestampText,
+                    cardStyles.smallText,
+                    { fontSize: smallerTextSize },
+                  ]}
                   {...Platform.select({
                     web: { title: getFullDateText(updatedAt) },
                   })}
@@ -491,6 +544,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               )
             }}
           </IntervalRefresh>
+
+          <NotificationReason
+            backgroundThemeColor={backgroundThemeColor}
+            isPrivate={isPrivate}
+            reason={notification.reason as GitHubNotificationReason}
+          />
         </View>
       </SpringAnimatedView>
     )

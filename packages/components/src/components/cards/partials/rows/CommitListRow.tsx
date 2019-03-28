@@ -1,15 +1,14 @@
 import React from 'react'
 
-import { CommitRow } from './CommitRow'
+import { CommitRow, CommitRowProps } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
 
 import { GitHubPushedCommit, Omit } from '@devhub/core'
-import { BaseRowProps } from './partials/BaseRow'
 
 export interface CommitListRowProps
   extends Omit<
-    BaseRowProps,
-    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+    CommitRowProps,
+    'authorEmail' | 'authorName' | 'message' | 'showMoreItemsIndicator' | 'url'
   > {
   commits: GitHubPushedCommit[]
   isRead: boolean

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 
 import { Theme } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
-import { contentPadding, smallTextSize } from '../../../../styles/variables'
+import { contentPadding } from '../../../../styles/variables'
 
 export const cardRowStyles = StyleSheet.create({
   container: {
@@ -29,8 +29,8 @@ export const getCardRowStylesForTheme = _.memoize(
       },
 
       repositorySecondaryText: {
-        lineHeight: undefined,
-        fontSize: smallTextSize,
+        // lineHeight: undefined,
+        // fontSize: smallTextSize,
         color: theme.foregroundColorMuted50,
       },
 

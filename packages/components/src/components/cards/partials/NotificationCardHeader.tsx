@@ -19,9 +19,6 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../../styles/variables'
-import { getReadableColor } from '../../../utils/helpers/colors'
-import { getNotificationReasonMetadata } from '../../../utils/helpers/github/notifications'
-import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
@@ -29,8 +26,8 @@ import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
-import { useTheme } from '../../context/ThemeContext'
 import { cardStyles, getCardStylesForTheme } from '../styles'
+import { NotificationReason } from './rows/partials/NotificationReason'
 
 export interface NotificationCardHeaderProps {
   avatarUrl: string | undefined
@@ -85,14 +82,12 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const theme = useTheme()
 
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
   )
 
   const smallLeftColumn = false
-  const reasonDetails = getNotificationReasonMetadata(reason)
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
@@ -178,35 +173,11 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               </IntervalRefresh>
             </SpringAnimatedView>
 
-            {!!(reasonDetails && reasonDetails.label) && (
-              <SpringAnimatedText
-                numberOfLines={1}
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).descriptionText,
-                  {
-                    color: getReadableColor(
-                      reasonDetails.color,
-                      theme[backgroundThemeColor],
-                      0.3,
-                    ),
-                  },
-                ]}
-              >
-                {!!isPrivate && (
-                  <SpringAnimatedText
-                    style={getCardStylesForTheme(springAnimatedTheme).mutedText}
-                  >
-                    <SpringAnimatedIcon
-                      name="lock"
-                      style={[
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                      ]}
-                    />{' '}
-                  </SpringAnimatedText>
-                )}
-                {reasonDetails.label.toLowerCase()}
-              </SpringAnimatedText>
-            )}
+            <NotificationReason
+              backgroundThemeColor={backgroundThemeColor}
+              isPrivate={isPrivate}
+              reason={reason}
+            />
 
             {/* {!!(reasonDetails && reasonDetails.label) && (
               <>

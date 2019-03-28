@@ -1,10 +1,8 @@
 import React from 'react'
-import { View } from 'react-native'
 
 import { Omit, stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
-import { contentPadding } from '../../../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import {
@@ -13,7 +11,6 @@ import {
 } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link, LinkProps } from '../../../common/Link'
-import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 

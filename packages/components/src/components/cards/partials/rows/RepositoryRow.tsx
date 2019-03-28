@@ -1,5 +1,4 @@
 import React from 'react'
-import { View } from 'react-native'
 
 import { getGitHubURLForRepo, getGitHubURLForUser, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -13,10 +12,8 @@ import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { getCardRowStylesForTheme } from './styles'
 
 export interface RepositoryRowProps
-  extends Omit<
-    BaseRowProps,
-    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
-  > {
+  extends Omit<BaseRowProps, 'contentContainerStyle' | 'left' | 'right'> {
+  hideOwner?: boolean
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
@@ -24,6 +21,7 @@ export interface RepositoryRowProps
   ownerName: string
   repositoryName: string
   showMoreItemsIndicator?: boolean
+  small?: boolean
 }
 
 export interface RepositoryRowState {}
@@ -32,13 +30,16 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
+    hideOwner,
     // isForcePush,
     // isFork,
     // isPush,
     isRead,
     ownerName,
     repositoryName,
+    rightContainerStyle,
     showMoreItemsIndicator,
+    small,
     ...otherProps
   } = props
 
@@ -62,10 +63,13 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           username={ownerName}
         />
       }
+      rightContainerStyle={[
+        cardStyles.flex,
+        cardStyles.horizontalAndVerticallyAligned,
+        rightContainerStyle,
+      ]}
       right={
-        <View
-          style={[cardStyles.flex, cardStyles.horizontalAndVerticallyAligned]}
-        >
+        <>
           <Link
             href={
               showMoreItemsIndicator
@@ -84,8 +88,10 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               ]}
             />{' '} */}
             <SpringAnimatedText
+              numberOfLines={2}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
+                small && cardStyles.smallText,
                 getCardRowStylesForTheme(springAnimatedTheme).repositoryText,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
@@ -95,30 +101,34 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
             {/* </SpringAnimatedText> */}
           </Link>
 
-          {!!(ownerName && repositoryName) && (
-            <Spacer width={contentPadding / 3} />
-          )}
+          {!!(ownerName && !hideOwner) && (
+            <>
+              {!!repositoryName && <Spacer width={contentPadding / 3} />}
 
-          <Link
-            href={
-              showMoreItemsIndicator
-                ? undefined
-                : getGitHubURLForUser(ownerName)
-            }
-          >
-            <SpringAnimatedText
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardRowStylesForTheme(springAnimatedTheme)
-                  .repositorySecondaryText,
-                (isRead || showMoreItemsIndicator) &&
-                  getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
-              {showMoreItemsIndicator ? '...' : ownerName}
-            </SpringAnimatedText>
-          </Link>
-        </View>
+              <Link
+                href={
+                  showMoreItemsIndicator
+                    ? undefined
+                    : getGitHubURLForUser(ownerName)
+                }
+              >
+                <SpringAnimatedText
+                  numberOfLines={2}
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    getCardRowStylesForTheme(springAnimatedTheme)
+                      .repositorySecondaryText,
+                    small && cardStyles.smallText,
+                    (isRead || showMoreItemsIndicator) &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  ]}
+                >
+                  {showMoreItemsIndicator ? '...' : ownerName}
+                </SpringAnimatedText>
+              </Link>
+            </>
+          )}
+        </>
       }
     />
   )

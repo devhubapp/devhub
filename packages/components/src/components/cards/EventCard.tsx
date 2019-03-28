@@ -280,6 +280,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isPush={isPush}
           isRead={isRead}
           repos={repos}
+          small
           viewMode={cardViewMode}
           withTopMargin
         />
@@ -309,6 +310,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           isRead={isRead}
           ownerName={forkRepoOwnerName || ''}
           repositoryName={forkRepoName || ''}
+          small
           viewMode={cardViewMode}
           withTopMargin
         />
@@ -369,8 +371,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
       {pages.length > 0 && (
         <WikiPageListRow
-          bold
-          hideIcon
+          // bold
+          // hideIcon={pages.length === 1}
           isRead={isRead}
           key={`event-wiki-page-list-row-${pageIds.join('-')}`}
           pages={pages}
@@ -382,7 +384,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
       {commits.length > 0 && (
         <CommitListRow
           key={`event-commit-list-row-${commitIds.join('-')}`}
+          // bold
           commits={commits}
+          // hideIcon={commits.length === 1}
           isRead={isRead}
           viewMode={cardViewMode}
           withTopMargin
