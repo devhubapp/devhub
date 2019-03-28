@@ -7,8 +7,6 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForRepo,
-  getGitHubURLForRepoInvitation,
-  getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
   getOwnerAndRepo,
   getUserAvatarByUsername,
@@ -17,19 +15,13 @@ import {
   isItemRead,
   isNotificationPrivate,
   Theme,
-  trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme.web'
 import { Platform } from '../../libs/platform'
 import * as colors from '../../styles/colors'
 import { contentPadding } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
-import {
-  getIssueIconAndColor,
-  getNotificationIconAndColor,
-  getPullRequestIconAndColor,
-} from '../../utils/helpers/github/shared'
-import { fixURL } from '../../utils/helpers/github/url'
+import { getNotificationIconAndColor } from '../../utils/helpers/github/shared'
 import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -134,13 +126,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     !notification.enhanced
   )
 
-  const title = trimNewLinesAndSpaces(subject.title)
-
-  const subjectType = subject.type || ''
-
   const commit =
     notification.commit ||
-    (subjectType === 'Commit' && {
+    (subject.type === 'Commit' && {
       author: { avatar_url: '', login: '', html_url: '' },
       commit: {
         author: {
@@ -156,12 +144,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const issue =
     notification.issue ||
-    (subjectType === 'Issue' && {
+    (subject.type === 'Issue' && {
       id: undefined,
       body: undefined,
       comments: undefined,
       created_at: undefined,
       labels: [] as GitHubLabel[],
+      number: undefined,
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
@@ -171,13 +160,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const pullRequest =
     notification.pullRequest ||
-    (subjectType === 'PullRequest' && {
+    (subject.type === 'PullRequest' && {
       id: undefined,
       body: undefined,
       created_at: undefined,
       comments: undefined,
       labels: [] as GitHubLabel[],
       draft: false,
+      number: undefined,
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
@@ -187,7 +177,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const release =
     notification.release ||
-    (subjectType === 'Release' && {
+    (subject.type === 'Release' && {
       id: undefined,
       author: { avatar_url: '', login: '', html_url: '' },
       body: '',
@@ -198,8 +188,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     }) ||
     null
 
-  const isRepoInvitation = subjectType === 'RepositoryInvitation'
-  const isVulnerabilityAlert = subjectType === 'RepositoryVulnerabilityAlert'
+  // const isRepoInvitation = subject.type === 'RepositoryInvitation'
+  // const isVulnerabilityAlert = subject.type === 'RepositoryVulnerabilityAlert'
 
   const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
     pullRequest ||
@@ -209,21 +199,22 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     ? colors.yellow
     : cardIconDetails.color
 
-  const {
-    icon: pullRequestIconName,
-    color: _pullRequestIconColor,
-  } = pullRequest
-    ? getPullRequestIconAndColor(pullRequest as any)
-    : { icon: undefined, color: undefined }
+  // const {
+  //   icon: pullRequestIconName,
+  //   color: _pullRequestIconColor,
+  // } = pullRequest
+  //   ? getPullRequestIconAndColor(pullRequest as any)
+  //   : { icon: undefined, color: undefined }
 
-  const { icon: issueIconName, color: _issueIconColor } = issue
-    ? getIssueIconAndColor(issue as any)
-    : { icon: undefined, color: undefined }
+  // const { icon: issueIconName, color: _issueIconColor } = issue
+  //   ? getIssueIconAndColor(issue as any)
+  //   : { icon: undefined, color: undefined }
 
   const issueOrPullRequest = issue || pullRequest
 
   const issueOrPullRequestNumber = issueOrPullRequest
-    ? getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
+    ? issueOrPullRequest.number ||
+      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
     : undefined
 
   const repoAvatarDetails = {
@@ -260,21 +251,21 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       0.3,
     )
 
-  const issueIconColor =
-    _issueIconColor &&
-    getReadableColor(
-      _issueIconColor,
-      themeRef.current![backgroundThemeColor],
-      0.3,
-    )
+  // const issueIconColor =
+  //   _issueIconColor &&
+  //   getReadableColor(
+  //     _issueIconColor,
+  //     themeRef.current![backgroundThemeColor],
+  //     0.3,
+  //   )
 
-  const pullRequestIconColor =
-    _pullRequestIconColor &&
-    getReadableColor(
-      _pullRequestIconColor,
-      themeRef.current![backgroundThemeColor],
-      0.3,
-    )
+  // const pullRequestIconColor =
+  //   _pullRequestIconColor &&
+  //   getReadableColor(
+  //     _pullRequestIconColor,
+  //     themeRef.current![backgroundThemeColor],
+  //     0.3,
+  //   )
 
   let withTopMargin = cardViewMode !== 'compact'
   function getWithTopMargin() {
@@ -321,91 +312,46 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
         )}
 
-        {!!issue && (
+        {!!issueOrPullRequest && (
           <IssueOrPullRequestRow
-            key={`notification-issue-row-${issueOrPullRequestNumber}`}
+            key={`notification-issue-or-pr-row-${issueOrPullRequest.id}`}
             addBottomAnchor={!comment}
-            avatarUrl={issue.user.avatar_url}
-            commentsCount={issue.comments}
-            createdAt={issue.created_at}
-            iconColor={
-              issueIconColor &&
-              getReadableColor(
-                issueIconColor,
-                themeRef.current![backgroundThemeColor],
-                0.3,
+            avatarUrl={issueOrPullRequest.user.avatar_url}
+            body={
+              !comment &&
+              !!(
+                issueOrPullRequest &&
+                issueOrPullRequest.state === 'open' &&
+                issueOrPullRequest.body &&
+                !(
+                  issueOrPullRequest.created_at &&
+                  issueOrPullRequest.updated_at &&
+                  new Date(issueOrPullRequest.updated_at).valueOf() -
+                    new Date(issueOrPullRequest.created_at).valueOf() >=
+                    1000 * 60 * 60 * 24
+                )
               )
+                ? issueOrPullRequest.body
+                : undefined
             }
-            iconName={issueIconName!}
-            id={issue.id}
+            commentsCount={issueOrPullRequest.comments}
+            createdAt={issueOrPullRequest.created_at}
+            // iconColor={issueIconColor || pullRequestIconColor}
+            // iconName={issueIconName! || pullRequestIconName}
+            id={issueOrPullRequest.id}
             isRead={isRead}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={issue.labels}
+            labels={issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
-            title={issue.title}
-            url={issue.url}
-            userLinkURL={issue.user.html_url || ''}
-            username={issue.user.login || ''}
+            title={issueOrPullRequest.title}
+            url={issueOrPullRequest.url}
+            userLinkURL={issueOrPullRequest.user.html_url || ''}
+            username={issueOrPullRequest.user.login || ''}
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
-
-        {!!pullRequest && (
-          <IssueOrPullRequestRow
-            key={`notification-pr-row-${issueOrPullRequestNumber}`}
-            addBottomAnchor={!comment}
-            avatarUrl={pullRequest.user.avatar_url}
-            commentsCount={pullRequest.comments}
-            createdAt={pullRequest.created_at}
-            iconColor={pullRequestIconColor!}
-            iconName={pullRequestIconName!}
-            id={pullRequest.id}
-            isRead={isRead}
-            issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={pullRequest.labels}
-            owner={repoOwnerName || ''}
-            repo={repoName || ''}
-            title={pullRequest.title}
-            url={pullRequest.url}
-            userLinkURL={pullRequest.user.html_url || ''}
-            username={pullRequest.user.login || ''}
-            viewMode={cardViewMode}
-            withTopMargin={getWithTopMargin()}
-          />
-        )}
-
-        {!comment &&
-          !!(
-            issueOrPullRequest &&
-            issueOrPullRequest.state === 'open' &&
-            issueOrPullRequest.body &&
-            !(
-              issueOrPullRequest.created_at &&
-              issueOrPullRequest.updated_at &&
-              new Date(issueOrPullRequest.updated_at).valueOf() -
-                new Date(issueOrPullRequest.created_at).valueOf() >=
-                1000 * 60 * 60 * 24
-            )
-          ) &&
-          cardViewMode !== 'compact' && (
-            // only show body if this notification is probably from a creation event
-            // because it may be for other updates
-            <CommentRow
-              key={`notification-issueOrPullRequest-body-${
-                issueOrPullRequest.id
-              }`}
-              avatarUrl={issueOrPullRequest.user.avatar_url}
-              body={issueOrPullRequest.body}
-              isRead={isRead}
-              url={issueOrPullRequest.html_url}
-              userLinkURL={issueOrPullRequest.user.html_url || ''}
-              username={issueOrPullRequest.user.login}
-              viewMode={cardViewMode}
-              withTopMargin={getWithTopMargin()}
-            />
-          )}
 
         {!!release && (
           <ReleaseRow
@@ -425,29 +371,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
         )}
 
-        {!(commit || issue || pullRequest || release) &&
-          !!title &&
-          cardViewMode !== 'compact' && (
-            <CommentRow
-              key={`notification-${id}-comment-row`}
-              avatarUrl=""
-              body={title}
-              isRead={isRead}
-              userLinkURL=""
-              username=""
-              url={
-                isRepoInvitation && repoOwnerName && repoName
-                  ? getGitHubURLForRepoInvitation(repoOwnerName, repoName)
-                  : isVulnerabilityAlert && repoOwnerName && repoName
-                  ? getGitHubURLForSecurityAlert(repoOwnerName, repoName)
-                  : fixURL(subject.latest_comment_url || subject.url)
-              }
-              viewMode={cardViewMode}
-              withTopMargin={getWithTopMargin()}
-            />
-          )}
-
-        {!!comment && cardViewMode !== 'compact' && (
+        {!!comment && (
           <CommentRow
             key={`notification-comment-row-${comment.id}`}
             addBottomAnchor

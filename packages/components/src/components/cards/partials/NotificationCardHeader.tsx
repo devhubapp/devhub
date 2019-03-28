@@ -87,8 +87,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const theme = useTheme()
 
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
-
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
   )

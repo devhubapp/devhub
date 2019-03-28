@@ -5,7 +5,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
-import { findNode, tryFocus } from '../../utils/helpers/shared'
+import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { Separator, separatorTickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'

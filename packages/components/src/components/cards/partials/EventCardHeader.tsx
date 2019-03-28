@@ -23,7 +23,6 @@ import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
-import { useTheme } from '../../context/ThemeContext'
 import { cardStyles, getCardStylesForTheme } from '../styles'
 
 export interface EventCardHeaderProps {
@@ -78,9 +77,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const theme = useTheme()
-
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
 
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,

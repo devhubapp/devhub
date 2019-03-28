@@ -12,6 +12,9 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 
+export const leftColumnSmallSize = smallAvatarSize
+export const leftColumnBigSize = avatarSize
+
 export const cardStyles = StyleSheet.create({
   flex: {
     flex: 1,
@@ -31,17 +34,17 @@ export const cardStyles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingTop: 1,
     marginRight: contentPadding,
-    width: avatarSize,
+    width: leftColumnBigSize,
   },
 
   leftColumn__small: {
     justifyContent: 'center',
-    width: smallAvatarSize,
+    width: leftColumnSmallSize,
   },
 
   leftColumn__big: {
     justifyContent: 'flex-start',
-    width: avatarSize,
+    width: leftColumnBigSize,
   },
 
   rightColumn: {
@@ -82,6 +85,7 @@ export const getCardStylesForTheme = _.memoize(
         flex: 1,
         color: theme.foregroundColor,
         lineHeight: 20,
+        fontSize: smallTextSize,
       },
 
       mutedText: {

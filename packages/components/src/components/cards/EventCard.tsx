@@ -6,6 +6,7 @@ import {
   EnhancedGitHubEvent,
   getEventText,
   getGitHubAvatarURLFromPayload,
+  getIssueOrPullRequestNumberFromUrl,
   getOwnerAndRepo,
   getRepoFullNameFromObject,
   GitHubCommitCommentEvent,
@@ -32,11 +33,7 @@ import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
-import {
-  getIssueIconAndColor,
-  getPullRequestIconAndColor,
-} from '../../utils/helpers/github/shared'
-import { findNode, tryFocus } from '../../utils/helpers/shared'
+import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
 import { useTheme } from '../context/ThemeContext'
@@ -99,6 +96,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
   } = payload as GitHubPullRequestEvent['payload']
   const { issue } = payload as GitHubIssuesEvent['payload']
   let { ref: branchName } = payload as GitHubPushEvent['payload']
+
+  const issueOrPullRequest = issue || pullRequest
+
+  const issueOrPullRequestNumber = issueOrPullRequest
+    ? issueOrPullRequest.number ||
+      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
+    : undefined
 
   const isRead = isItemRead(event)
   const isSaved = saved === true
@@ -175,28 +179,22 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
 
-  const {
-    icon: pullRequestIconName,
-    color: _pullRequestIconColor,
-  } = pullRequest
-    ? getPullRequestIconAndColor(pullRequest)
-    : { icon: undefined, color: undefined }
+  // const {
+  //   icon: pullRequestIconName,
+  //   color: _pullRequestIconColor,
+  // } = pullRequest
+  //   ? getPullRequestIconAndColor(pullRequest)
+  //   : { icon: undefined, color: undefined }
 
-  const pullRequestURL =
-    pullRequest &&
-    (comment && !comment.body && comment.html_url
-      ? comment.html_url || comment.url
-      : pullRequest.html_url || pullRequest.url)
+  // const pullRequestURL =
+  //   pullRequest &&
+  //   (comment && !comment.body && comment.html_url
+  //     ? comment.html_url || comment.url
+  //     : pullRequest.html_url || pullRequest.url)
 
-  const { icon: issueIconName, color: _issueIconColor } = issue
-    ? getIssueIconAndColor(issue)
-    : { icon: undefined, color: undefined }
-
-  const issueURL =
-    issue &&
-    (comment && !comment.body && (comment.html_url || comment.url)
-      ? comment.html_url || comment.url
-      : issue.html_url || issue.url)
+  // const { icon: issueIconName, color: _issueIconColor } = issue
+  //   ? getIssueIconAndColor(issue)
+  //   : { icon: undefined, color: undefined }
 
   const backgroundThemeColors = getColumnCardThemeColors(
     themeRef.current.backgroundColor,
@@ -213,21 +211,21 @@ export const EventCard = React.memo((props: EventCardProps) => {
       0.3,
     )
 
-  const issueIconColor =
-    _issueIconColor &&
-    getReadableColor(
-      _issueIconColor,
-      themeRef.current![backgroundThemeColor],
-      0.3,
-    )
+  // const issueIconColor =
+  //   _issueIconColor &&
+  //   getReadableColor(
+  //     _issueIconColor,
+  //     themeRef.current![backgroundThemeColor],
+  //     0.3,
+  //   )
 
-  const pullRequestIconColor =
-    _pullRequestIconColor &&
-    getReadableColor(
-      _pullRequestIconColor,
-      themeRef.current![backgroundThemeColor],
-      0.3,
-    )
+  // const pullRequestIconColor =
+  //   _pullRequestIconColor &&
+  //   getReadableColor(
+  //     _pullRequestIconColor,
+  //     themeRef.current![backgroundThemeColor],
+  //     0.3,
+  //   )
 
   return (
     <SpringAnimatedView
@@ -316,6 +314,47 @@ export const EventCard = React.memo((props: EventCardProps) => {
         />
       )}
 
+      {!!issueOrPullRequest && (
+        <IssueOrPullRequestRow
+          key={`event-issue-or-pr-row-${issueOrPullRequest.id}`}
+          addBottomAnchor={!comment}
+          avatarUrl={issueOrPullRequest.user.avatar_url}
+          body={
+            !comment &&
+            !!(
+              issueOrPullRequest &&
+              issueOrPullRequest.state === 'open' &&
+              issueOrPullRequest.body &&
+              !(
+                issueOrPullRequest.created_at &&
+                issueOrPullRequest.updated_at &&
+                new Date(issueOrPullRequest.updated_at).valueOf() -
+                  new Date(issueOrPullRequest.created_at).valueOf() >=
+                  1000 * 60 * 60 * 24
+              )
+            )
+              ? issueOrPullRequest.body
+              : undefined
+          }
+          commentsCount={issueOrPullRequest.comments}
+          createdAt={issueOrPullRequest.created_at}
+          // iconColor={issueIconColor || pullRequestIconColor}
+          // iconName={issueIconName! || pullRequestIconName}
+          id={issueOrPullRequest.id}
+          isRead={isRead}
+          issueOrPullRequestNumber={issueOrPullRequestNumber!}
+          labels={issueOrPullRequest.labels}
+          owner={repoOwnerName || ''}
+          repo={repoName || ''}
+          title={issueOrPullRequest.title}
+          url={issueOrPullRequest.url}
+          userLinkURL={issueOrPullRequest.user.html_url || ''}
+          username={issueOrPullRequest.user.login || ''}
+          viewMode={cardViewMode}
+          withTopMargin
+        />
+      )}
+
       {users.length > 0 && (
         <UserListRow
           isRead={isRead}
@@ -336,29 +375,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
         />
       )}
 
-      {Boolean(pullRequest) && (
-        <IssueOrPullRequestRow
-          key={`event-pr-row-${pullRequest.id}`}
-          avatarUrl={pullRequest.user.avatar_url}
-          commentsCount={pullRequest.comments}
-          createdAt={pullRequest.created_at}
-          iconColor={pullRequestIconColor!}
-          iconName={pullRequestIconName!}
-          id={pullRequest.id}
-          isRead={isRead}
-          issueOrPullRequestNumber={pullRequest.number}
-          labels={pullRequest.labels}
-          owner={repoOwnerName || ''}
-          repo={repoName || ''}
-          title={pullRequest.title}
-          url={pullRequestURL}
-          userLinkURL={pullRequest.user.html_url || ''}
-          username={pullRequest.user.display_login || pullRequest.user.login}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
       {commits.length > 0 && (
         <CommitListRow
           key={`event-commit-list-row-${commitIds.join('-')}`}
@@ -369,74 +385,19 @@ export const EventCard = React.memo((props: EventCardProps) => {
         />
       )}
 
-      {Boolean(issue) && (
-        <IssueOrPullRequestRow
-          key={`event-issue-row-${issue.id}`}
-          avatarUrl={issue.user.avatar_url}
-          commentsCount={issue.comments}
-          createdAt={issue.created_at}
-          iconColor={issueIconColor!}
-          iconName={issueIconName!}
-          id={issue.id}
+      {Boolean(comment && comment.body) && (
+        <CommentRow
+          key={`event-comment-row-${comment.id}`}
+          avatarUrl={comment.user.avatar_url}
+          body={comment.body}
           isRead={isRead}
-          issueOrPullRequestNumber={issue.number}
-          labels={issue.labels}
-          owner={repoOwnerName || ''}
-          repo={repoName || ''}
-          title={issue.title}
-          url={issueURL}
-          userLinkURL={issue.user.html_url || ''}
-          username={issue.user.display_login || issue.user.login}
+          url={comment.html_url || comment.url}
+          userLinkURL={comment.user.html_url || ''}
+          username={comment.user.display_login || comment.user.login}
           viewMode={cardViewMode}
           withTopMargin
         />
       )}
-
-      {(type === 'IssuesEvent' &&
-        (payload as GitHubIssuesEvent['payload']).action === 'opened' &&
-        Boolean(issue.body) && (
-          <CommentRow
-            key={`event-issue-body-row-${issue.id}`}
-            avatarUrl={issue.user.avatar_url}
-            body={issue.body}
-            isRead={isRead}
-            url={issue.html_url || issue.url}
-            userLinkURL={issue.user.html_url || ''}
-            username={issue.user.display_login || issue.user.login}
-            viewMode={cardViewMode}
-            withTopMargin
-          />
-        )) ||
-        (type === 'PullRequestEvent' &&
-          (payload as GitHubPullRequestEvent['payload']).action === 'opened' &&
-          Boolean(pullRequest.body) && (
-            <CommentRow
-              key={`event-pr-body-row-${pullRequest.id}`}
-              avatarUrl={pullRequest.user.avatar_url}
-              body={pullRequest.body}
-              isRead={isRead}
-              url={pullRequest.html_url || pullRequest.url}
-              userLinkURL={pullRequest.user.html_url || ''}
-              username={
-                pullRequest.user.display_login || pullRequest.user.login
-              }
-              viewMode={cardViewMode}
-              withTopMargin
-            />
-          )) ||
-        (Boolean(comment && comment.body) && (
-          <CommentRow
-            key={`event-comment-row-${comment.id}`}
-            avatarUrl={comment.user.avatar_url}
-            body={comment.body}
-            isRead={isRead}
-            url={comment.html_url || comment.url}
-            userLinkURL={comment.user.html_url || ''}
-            username={comment.user.display_login || comment.user.login}
-            viewMode={cardViewMode}
-            withTopMargin
-          />
-        ))}
 
       {Boolean(release) && (
         <ReleaseRow

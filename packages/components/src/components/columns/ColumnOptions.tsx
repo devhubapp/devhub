@@ -8,7 +8,6 @@ import {
   getEventTypeMetadata,
   isReadFilterChecked,
   isUnreadFilterChecked,
-  Theme,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'

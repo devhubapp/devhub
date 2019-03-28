@@ -7,13 +7,13 @@ import {
   getGitHubURLForUser,
   GitHubLabel,
   Omit,
+  stripMarkdown,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { contentPadding } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedIconProps } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
@@ -33,10 +33,11 @@ export interface IssueOrPullRequestRowProps
   > {
   addBottomAnchor?: boolean
   avatarUrl: string | undefined
+  body: string | undefined
   commentsCount?: number
   createdAt: string | undefined
-  iconColor?: string
-  iconName: SpringAnimatedIconProps['name']
+  // iconColor?: string
+  // iconName: SpringAnimatedIconProps['name']
   id: string | number | undefined
   isRead: boolean
   issueOrPullRequestNumber: number
@@ -56,6 +57,7 @@ export const IssueOrPullRequestRow = React.memo(
     const {
       addBottomAnchor,
       avatarUrl,
+      body: _body,
       commentsCount,
       createdAt,
       // iconColor,
@@ -77,11 +79,24 @@ export const IssueOrPullRequestRow = React.memo(
     const title = trimNewLinesAndSpaces(_title)
     if (!title) return null
 
+    const body = trimNewLinesAndSpaces(
+      stripMarkdown(`${_body || ''}`),
+      Platform.select({ default: 400, web: 150 }),
+    )
+
     const isBot = Boolean(_username && _username.indexOf('[bot]') >= 0)
+
+    const numberOfLines = viewMode === 'compact' ? 1 : 2
+
     const username =
       isBot && _username ? _username.replace('[bot]', '') : _username
 
     const byText = username ? `@${username}` : ''
+
+    const htmlUrl = fixURL(url, {
+      addBottomAnchor,
+      issueOrPullRequestNumber,
+    })
 
     return (
       <BaseRow
@@ -100,14 +115,9 @@ export const IssueOrPullRequestRow = React.memo(
         }
         right={
           <View style={cardRowStyles.mainContentContainer}>
-            <Link
-              href={fixURL(url, {
-                addBottomAnchor,
-                issueOrPullRequestNumber,
-              })}
-            >
+            <Link href={htmlUrl}>
               <SpringAnimatedText
-                numberOfLines={viewMode === 'compact' ? 1 : 2}
+                numberOfLines={numberOfLines}
                 style={[
                   Platform.OS !== 'android' && { flexGrow: 1 },
                   getCardStylesForTheme(springAnimatedTheme).normalText,
@@ -154,6 +164,28 @@ export const IssueOrPullRequestRow = React.memo(
                       name: label.name,
                     }))}
                   />
+                </>
+              )}
+
+              {!!body && (
+                <>
+                  <Spacer height={contentPadding / 2} />
+
+                  <Link
+                    href={htmlUrl}
+                    style={cardRowStyles.mainContentContainer}
+                  >
+                    <SpringAnimatedText
+                      numberOfLines={numberOfLines}
+                      style={[
+                        getCardStylesForTheme(springAnimatedTheme).commentText,
+                        isRead &&
+                          getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      ]}
+                    >
+                      {body}
+                    </SpringAnimatedText>
+                  </Link>
                 </>
               )}
 
@@ -216,27 +248,22 @@ export const IssueOrPullRequestRow = React.memo(
 
                       <Spacer flex={1} />
 
-                      {typeof commentsCount === 'number' && commentsCount >= 0 && (
-                        <CardSmallThing
-                          icon="comment"
-                          isRead={isRead}
-                          text={commentsCount}
-                          url={fixURL(url, {
-                            addBottomAnchor,
-                            issueOrPullRequestNumber,
-                          })}
-                        />
-                      )}
+                      {typeof commentsCount === 'number' &&
+                        commentsCount >= 0 && (
+                          <CardSmallThing
+                            icon="comment"
+                            isRead={isRead}
+                            text={commentsCount}
+                            url={htmlUrl}
+                          />
+                        )}
 
                       <Spacer width={contentPadding / 2} />
 
                       <CardItemId
                         id={issueOrPullRequestNumber}
                         isRead={isRead}
-                        url={fixURL(url, {
-                          addBottomAnchor,
-                          issueOrPullRequestNumber,
-                        })}
+                        url={htmlUrl}
                       />
                     </View>
                   </>

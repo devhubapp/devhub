@@ -38,7 +38,7 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column } = props
 
-    const { appViewMode, cardViewMode } = useAppViewMode()
+    const { cardViewMode } = useAppViewMode()
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
