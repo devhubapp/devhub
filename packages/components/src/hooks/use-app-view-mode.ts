@@ -1,16 +1,22 @@
+import { AppViewMode, CardViewMode } from '@devhub/core'
 import { useAppLayout } from '../components/context/LayoutContext'
-import * as selectors from '../redux/selectors'
-import { useReduxState } from './use-redux-state'
+// import * as selectors from '../redux/selectors'
+// import { useReduxState } from './use-redux-state'
 
 export function useAppViewMode() {
-  const appViewMode = useReduxState(selectors.viewModeSelector)
   const { sizename } = useAppLayout()
 
-  const supportsSingleColumnViewMode = sizename >= '4-x-large'
+  // const appViewMode = useReduxState(selectors.viewModeSelector)
+  const appViewMode: AppViewMode =
+    sizename > '2-medium' ? 'single-column' : 'multi-column'
+
+  const cardViewMode: CardViewMode =
+    appViewMode === 'single-column' && sizename > '3-large'
+      ? 'compact'
+      : 'expanded'
 
   return {
-    _appViewMode: supportsSingleColumnViewMode ? appViewMode : 'multi-column',
-    appViewMode: 'single-column',
-    supportsSingleColumnViewMode,
+    appViewMode,
+    cardViewMode,
   }
 }

@@ -38,7 +38,7 @@ export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column } = props
 
-    const { appViewMode } = useAppViewMode()
+    const { appViewMode, cardViewMode } = useAppViewMode()
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
@@ -155,7 +155,7 @@ export const NotificationCardsContainer = React.memo(
     return (
       <NotificationCards
         key={`notification-cards-${column.id}`}
-        cardViewMode={appViewMode === 'single-column' ? 'compact' : 'expanded'}
+        cardViewMode={cardViewMode}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
         lastFetchedAt={firstSubscription.data.lastFetchedAt}
