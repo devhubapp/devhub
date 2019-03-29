@@ -4,6 +4,8 @@ import _ from 'lodash'
 import {
   ActivityColumn,
   Column,
+  GitHubEventSubjectType,
+  GitHubNotificationSubjectType,
   normalizeColumns,
   normalizeSubscriptions,
   NotificationColumn,
@@ -230,6 +232,32 @@ export const columnsReducer: Reducer<State> = (
             action.payload.value
         } else {
           delete column.filters.notifications.reasons[action.payload.reason]
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_SUBJECT_TYPE_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.subjectTypes = column.filters.subjectTypes || {}
+
+        const subjectTypes = column.filters.subjectTypes as Partial<
+          Record<
+            GitHubEventSubjectType | GitHubNotificationSubjectType,
+            boolean
+          >
+        >
+
+        if (typeof action.payload.value === 'boolean') {
+          subjectTypes[action.payload.subjectType] = action.payload.value
+        } else {
+          delete subjectTypes[action.payload.subjectType]
         }
 
         draft.updatedAt = new Date().toISOString()

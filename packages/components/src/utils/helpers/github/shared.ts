@@ -1,4 +1,12 @@
-import { GitHubIcon, GitHubPullRequest, isPullRequest } from '@devhub/core'
+import _ from 'lodash'
+
+import {
+  GitHubEventSubjectType,
+  GitHubIcon,
+  GitHubNotificationSubjectType,
+  GitHubPullRequest,
+  isPullRequest,
+} from '@devhub/core'
 import * as colors from '../../../styles/colors'
 
 export function getCommitIconAndColor(): { icon: GitHubIcon; color?: string } {
@@ -55,5 +63,20 @@ export function getIssueIconAndColor(issue: {
 
     default:
       return { icon: 'issue-opened' }
+  }
+}
+
+export function getSubjectTypeMetadata<
+  T extends GitHubEventSubjectType | GitHubNotificationSubjectType
+>(
+  subjectType: T,
+): {
+  color?: string
+  label: string
+  subjectType: T
+} {
+  return {
+    subjectType,
+    label: _.capitalize(_.startCase(subjectType)),
   }
 }

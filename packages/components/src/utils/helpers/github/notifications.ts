@@ -7,6 +7,7 @@ import {
   GitHubIssue,
   GitHubNotification,
   GitHubNotificationReason,
+  GitHubNotificationSubjectType,
   GitHubPullRequest,
   sortNotifications,
 } from '@devhub/core'
@@ -32,6 +33,24 @@ export const notificationReasons: GitHubNotificationReason[] = [
   'subscribed',
   'team_mention',
 ]
+
+export const notificationSubjectTypes: GitHubNotificationSubjectType[] = [
+  'Commit',
+  'Issue',
+  'PullRequest',
+  'Release',
+  'RepositoryInvitation',
+  'RepositoryVulnerabilityAlert',
+]
+
+export function getNotificationSubjectType(
+  notification: GitHubNotification,
+): GitHubNotificationSubjectType | null {
+  if (!(notification && notification.subject && notification.subject.type))
+    return null
+
+  return notification.subject.type
+}
 
 export function getNotificationIconAndColor(
   notification: GitHubNotification,

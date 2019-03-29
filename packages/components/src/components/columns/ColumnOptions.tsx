@@ -6,6 +6,8 @@ import {
   Column,
   eventTypes,
   getEventTypeMetadata,
+  GitHubEventSubjectType,
+  GitHubNotificationSubjectType,
   isReadFilterChecked,
   isUnreadFilterChecked,
 } from '@devhub/core'
@@ -23,10 +25,13 @@ import {
   filterRecordHasAnyForcedValue,
   filterRecordHasThisValue,
 } from '../../utils/helpers/filters'
+import { eventSubjectTypes } from '../../utils/helpers/github/events'
 import {
   getNotificationReasonMetadata,
   notificationReasons,
+  notificationSubjectTypes,
 } from '../../utils/helpers/github/notifications'
+import { getSubjectTypeMetadata } from '../../utils/helpers/github/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
@@ -37,13 +42,24 @@ import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 
-const notificationReasonOptions = notificationReasons
-  .map(getNotificationReasonMetadata)
-  .sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))
+const metadataSortFn = (a: { label: string }, b: { label: string }) =>
+  a.label < b.label ? -1 : a.label > b.label ? 1 : 0
+
+const eventSubjectTypeOptions = eventSubjectTypes
+  .map(getSubjectTypeMetadata)
+  .sort(metadataSortFn)
 
 const eventTypeOptions = eventTypes
   .map(getEventTypeMetadata)
-  .sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))
+  .sort(metadataSortFn)
+
+const notificationReasonOptions = notificationReasons
+  .map(getNotificationReasonMetadata)
+  .sort(metadataSortFn)
+
+const notificationSubjectTypeOptions = notificationSubjectTypes
+  .map(getSubjectTypeMetadata)
+  .sort(metadataSortFn)
 
 export interface ColumnOptionsProps {
   availableHeight: number
@@ -57,6 +73,7 @@ export interface ColumnOptionsProps {
 export type ColumnOptionCategory =
   | 'event_types'
   | 'inbox'
+  | 'subject_types'
   | 'notification_reasons'
   | 'privacy'
   | 'saved_for_later'
@@ -78,6 +95,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     'saved_for_later',
     'unread',
     column.type === 'activity' && 'event_types',
+    'subject_types',
     column.type === 'notifications' && 'notification_reasons',
     column.type === 'notifications' && 'privacy',
   ]
@@ -120,6 +138,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   )
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
+  const setColummSubjectTypeFilter = useReduxAction(
+    actions.setColummSubjectTypeFilter,
+  )
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
   const toggleOpenedOptionCategory = (optionCategory: ColumnOptionCategory) => {
@@ -336,6 +357,93 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             )
           })()}
 
+        {allColumnOptionCategories.includes('subject_types') &&
+          (() => {
+            const filters =
+              column.filters &&
+              (column.filters.subjectTypes as Partial<
+                Record<
+                  GitHubEventSubjectType | GitHubNotificationSubjectType,
+                  boolean
+                >
+              >)
+
+            const subjectTypeOptions: Array<{
+              color?: string | undefined
+              label: string
+              subjectType:
+                | GitHubEventSubjectType
+                | GitHubNotificationSubjectType
+            }> =
+              column.type === 'activity'
+                ? eventSubjectTypeOptions
+                : column.type === 'notifications'
+                ? notificationSubjectTypeOptions
+                : []
+
+            if (!(subjectTypeOptions && subjectTypeOptions.length)) return null
+
+            const defaultBooleanValue = true
+            const isFilterStrict = filterRecordHasThisValue(
+              filters,
+              defaultBooleanValue,
+            )
+
+            return (
+              <ColumnOptionsRow
+                analyticsLabel="subject_types"
+                enableBackgroundHover={allowToggleCategories}
+                hasChanged={filterRecordHasAnyForcedValue(filters)}
+                headerItemFixedIconSize={columnHeaderItemContentSize}
+                iconName="file"
+                isOpen={openedOptionCategories.has('subject_types')}
+                onToggle={
+                  allowToggleCategories
+                    ? () => toggleOpenedOptionCategory('subject_types')
+                    : undefined
+                }
+                title="Subject types"
+                subtitle={
+                  filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
+                }
+              >
+                {subjectTypeOptions.map(item => {
+                  const checked =
+                    filters && typeof filters[item.subjectType] === 'boolean'
+                      ? filters[item.subjectType]
+                      : null
+
+                  return (
+                    <SpringAnimatedCheckbox
+                      key={`notification-subject-type-option-${
+                        item.subjectType
+                      }`}
+                      analyticsLabel={undefined}
+                      checked={checked}
+                      checkedBackgroundColor={item.color}
+                      checkedForegroundColor={theme.backgroundColorDarker1}
+                      containerStyle={checkboxStyle}
+                      squareContainerStyle={checkboxSquareStyle}
+                      defaultValue={defaultBooleanValue}
+                      enableIndeterminateState={
+                        !isFilterStrict || checked === defaultBooleanValue
+                      }
+                      label={item.label}
+                      onChange={value => {
+                        setColummSubjectTypeFilter({
+                          columnId: column.id,
+                          subjectType: item.subjectType,
+                          value,
+                        })
+                      }}
+                      uncheckedForegroundColor={item.color}
+                    />
+                  )
+                })}
+              </ColumnOptionsRow>
+            )
+          })()}
+
         {allColumnOptionCategories.includes('notification_reasons') &&
           column.type === 'notifications' &&
           (() => {
@@ -453,7 +561,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                         !isFilterStrict || checked === defaultBooleanValue
                       }
                       label={item.label}
-                      labelIcon={item.icon}
+                      // labelIcon={item.icon}
                       onChange={value => {
                         setColumnActivityTypeFilter({
                           columnId: column.id,

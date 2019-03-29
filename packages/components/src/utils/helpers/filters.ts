@@ -2,6 +2,7 @@ import _ from 'lodash'
 
 import {
   ActivityColumnFilters,
+  BaseColumnFilters,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
   isEventPrivate,
@@ -12,6 +13,8 @@ import {
   sortEvents,
   sortNotifications,
 } from '@devhub/core'
+import { getEventSubjectType } from './github/events'
+import { getNotificationSubjectType } from './github/notifications'
 
 export const filterRecordHasAnyForcedValue = (
   filtersRecord: Record<string, boolean | undefined> | undefined,
@@ -47,14 +50,20 @@ export function itemPassesFilterRecord(
     : defaultValue
 }
 
-function baseColumnHasAnyFilter(
-  filters: NotificationColumnFilters | undefined,
-) {
+function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
   if (!filters) return false
 
   if (filters.clearedAt) return true
   if (typeof filters.private === 'boolean') return true
   if (typeof filters.saved === 'boolean') return true
+
+  if (
+    filters.subjectTypes &&
+    filterRecordHasAnyForcedValue(filters.subjectTypes)
+  ) {
+    return true
+  }
+
   if (typeof filters.unread === 'boolean') return true
 
   return false
@@ -113,6 +122,15 @@ export function getFilteredNotifications(
         return false
 
       if (
+        !itemPassesFilterRecord(
+          filters.subjectTypes,
+          getNotificationSubjectType(notification),
+          true,
+        )
+      )
+        return false
+
+      if (
         typeof filters.unread === 'boolean' &&
         filters.unread !== !isItemRead(notification)
       ) {
@@ -159,6 +177,15 @@ export function getFilteredEvents(
   if (filters && activityColumnHasAnyFilter(filters)) {
     _events = _events.filter(event => {
       if (!itemPassesFilterRecord(activityFilter, event.type, true))
+        return false
+
+      if (
+        !itemPassesFilterRecord(
+          filters.subjectTypes,
+          getEventSubjectType(event),
+          true,
+        )
+      )
         return false
 
       if (

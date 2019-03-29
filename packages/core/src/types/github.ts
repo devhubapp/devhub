@@ -621,6 +621,18 @@ export type GitHubEvent =
 // | 'StatusEvent'
 // | 'TeamAddEvent'
 
+export type GitHubEventSubjectType =
+  | 'Branch'
+  | 'Commit'
+  | 'Issue'
+  | 'PullRequest'
+  | 'PullRequestReview'
+  | 'Release'
+  | 'Repository'
+  | 'Tag'
+  | 'User'
+  | 'Wiki'
+
 export type GitHubIcon =
   | 'alert'
   | 'archive'
@@ -821,6 +833,14 @@ export type GitHubNotificationReason =
   | 'subscribed' // You're watching the repository.
   | 'team_mention' // A team you are part of were @mentioned in the content.
 
+export type GitHubNotificationSubjectType =
+  | 'Commit'
+  | 'Issue'
+  | 'PullRequest'
+  | 'Release'
+  | 'RepositoryInvitation'
+  | 'RepositoryVulnerabilityAlert'
+
 export interface GitHubNotification {
   id: number | string
   last_read_at?: string
@@ -830,13 +850,7 @@ export interface GitHubNotification {
     title: string
     url: string
     latest_comment_url: string
-    type:
-      | 'Commit'
-      | 'Issue'
-      | 'PullRequest'
-      | 'Release'
-      | 'RepositoryInvitation'
-      | 'RepositoryVulnerabilityAlert'
+    type: GitHubNotificationSubjectType
   }
   unread?: boolean
   updated_at: string

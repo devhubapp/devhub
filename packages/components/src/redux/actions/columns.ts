@@ -4,7 +4,9 @@ import {
   ColumnsAndSubscriptions,
   ColumnSubscriptionCreation,
   GitHubEvent,
+  GitHubEventSubjectType,
   GitHubNotificationReason,
+  GitHubNotificationSubjectType,
   NotificationColumnFilters,
 } from '@devhub/core'
 import { createAction } from '../helpers'
@@ -68,6 +70,12 @@ export function setColumnReasonFilter<
   T extends GitHubNotificationReason
 >(payload: { columnId: string; reason: T; value: boolean | null }) {
   return createAction('SET_COLUMN_REASON_FILTER', payload)
+}
+
+export function setColummSubjectTypeFilter<
+  T extends GitHubEventSubjectType | GitHubNotificationSubjectType
+>(payload: { columnId: string; subjectType: T; value: boolean | null }) {
+  return createAction('SET_COLUMN_SUBJECT_TYPE_FILTER', payload)
 }
 
 export function setColumnUnreadFilter(payload: {

@@ -4,11 +4,13 @@ import {
   GitHubComment,
   GitHubCommit,
   GitHubEvent,
+  GitHubEventSubjectType,
   GitHubExtractParamsFromMethod,
   GitHubIcon,
   GitHubIssue,
   GitHubNotification,
   GitHubNotificationReason,
+  GitHubNotificationSubjectType,
   GitHubPullRequest,
   GitHubRelease,
   GitHubRepo,
@@ -168,6 +170,9 @@ export interface BaseColumnFilters {
   //   regex?: string
   // }
   // sort?: string[]
+  subjectTypes?:
+    | Partial<Record<GitHubEventSubjectType, boolean>>
+    | Partial<Record<GitHubNotificationSubjectType, boolean>>
   unread?: boolean
 }
 
@@ -175,6 +180,7 @@ export interface ActivityColumnFilters extends BaseColumnFilters {
   activity?: {
     types?: Partial<Record<GitHubEvent['type'], boolean>>
   }
+  subjectTypes?: Partial<Record<GitHubEventSubjectType, boolean>>
 }
 
 export interface NotificationColumnFilters extends BaseColumnFilters {
@@ -182,6 +188,7 @@ export interface NotificationColumnFilters extends BaseColumnFilters {
     participating?: boolean
     reasons?: Partial<Record<GitHubNotificationReason, boolean>>
   }
+  subjectTypes?: Partial<Record<GitHubNotificationSubjectType, boolean>>
 }
 
 export type ColumnFilters = ActivityColumnFilters | NotificationColumnFilters
