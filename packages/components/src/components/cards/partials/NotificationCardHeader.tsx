@@ -37,7 +37,7 @@ export interface NotificationCardHeaderProps {
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
-  isPrivate?: boolean
+  isPrivate: boolean
   isRead: boolean
   isSaved?: boolean
   reason: GitHubNotificationReason

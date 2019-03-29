@@ -40,14 +40,9 @@ export function NotificationReason(props: NotificationReasonProps) {
       ]}
     >
       {!!isPrivate && (
-        <SpringAnimatedText
-          style={getCardStylesForTheme(springAnimatedTheme).mutedText}
-        >
-          <SpringAnimatedIcon
-            name="lock"
-            style={[getCardStylesForTheme(springAnimatedTheme).mutedText]}
-          />{' '}
-        </SpringAnimatedText>
+        <>
+          <SpringAnimatedIcon name="lock" />{' '}
+        </>
       )}
       {reasonDetails.label.toLowerCase()}
     </SpringAnimatedText>

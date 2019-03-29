@@ -9,6 +9,8 @@ import {
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import * as colors from '../../../../styles/colors'
+import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
@@ -28,6 +30,7 @@ export interface CommitRowProps
   authorUsername?: string
   bold?: boolean
   hideIcon?: boolean
+  isPrivate: boolean
   isRead: boolean
   latestCommentUrl?: string
   message: string
@@ -46,6 +49,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     authorUsername: _authorUsername,
     bold,
     hideIcon,
+    isPrivate,
     isRead,
     latestCommentUrl,
     message: _message,
@@ -70,20 +74,28 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     <BaseRow
       {...otherProps}
       left={
-        <Avatar
-          email={authorEmail}
-          isBot={Boolean(
-            authorUsername && authorUsername.indexOf('[bot]') >= 0,
-          )}
-          small
-          style={cardStyles.avatar}
-          username={authorUsername}
-          linkURL={
-            authorUsername
-              ? getGitHubURLForUser(authorUsername)
-              : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
-          }
-        />
+        authorEmail || authorUsername ? (
+          <Avatar
+            email={authorEmail}
+            isBot={Boolean(
+              authorUsername && authorUsername.indexOf('[bot]') >= 0,
+            )}
+            small
+            style={cardStyles.avatar}
+            username={authorUsername}
+            linkURL={
+              authorUsername
+                ? getGitHubURLForUser(authorUsername)
+                : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
+            }
+          />
+        ) : isPrivate ? (
+          <SpringAnimatedIcon
+            name="lock"
+            size={smallAvatarSize}
+            style={{ color: colors.orange }}
+          />
+        ) : null
       }
       right={
         <Link

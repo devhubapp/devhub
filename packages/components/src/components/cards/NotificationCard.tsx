@@ -18,8 +18,11 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme.web'
 import { Platform } from '../../libs/platform'
-import * as colors from '../../styles/colors'
-import { contentPadding, smallerTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  smallAvatarSize,
+  smallerTextSize,
+} from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { getNotificationIconAndColor } from '../../utils/helpers/github/notifications'
 import { tryFocus } from '../../utils/helpers/shared'
@@ -128,11 +131,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
 
-  const isPrivateAndCantSee = !!(
+  const isPrivateAndCantSee =
     isPrivate &&
     // !hasPrivateAccess &&
     !notification.enhanced
-  )
 
   const commit =
     notification.commit ||
@@ -202,10 +204,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
     pullRequest ||
     undefined) as any)
-  const cardIconName = isPrivateAndCantSee ? 'lock' : cardIconDetails.icon
-  const _cardIconColor = isPrivateAndCantSee
-    ? colors.yellow
-    : cardIconDetails.color
+  const cardIconName = cardIconDetails.icon
+  const _cardIconColor = cardIconDetails.color
 
   // const {
   //   icon: pullRequestIconName,
@@ -310,6 +310,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             authorUsername={commit.author && commit.author.login}
             bold
             hideIcon
+            isPrivate={isPrivate}
             isRead={isRead}
             latestCommentUrl={subject.latest_comment_url}
             message={commit.commit.message}
@@ -348,6 +349,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             // iconColor={issueIconColor || pullRequestIconColor}
             // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}
+            isPrivate={isPrivate}
             isRead={isRead}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
             labels={issueOrPullRequest.labels}
@@ -369,6 +371,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             body={release.body}
             bold
             hideIcon
+            isPrivate={isPrivate}
             isRead={isRead}
             name={release.name || ''}
             ownerName={repoOwnerName || ''}
@@ -446,7 +449,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         {/* <View
           style={[styles.compactItemFixedWidth, styles.compactItemFixedHeight]}
         >
-          <SpringAnimatedCheckbox analyticsLabel={undefined} size={18} />
+          <SpringAnimatedCheckbox analyticsLabel={undefined} size={smallAvatarSize} />
         </View>
 
         <Spacer width={contentPadding} /> */}
@@ -454,7 +457,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View
           style={[styles.compactItemFixedWidth, styles.compactItemFixedHeight]}
         >
-          <BookmarkButton isSaved={isSaved} itemIds={[id]} size={18} />
+          <BookmarkButton
+            isSaved={isSaved}
+            itemIds={[id]}
+            size={smallAvatarSize}
+          />
         </View>
 
         <Spacer width={contentPadding} />
@@ -508,7 +515,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             name={cardIconName}
             selectable={false}
             style={{
-              fontSize: 18,
+              fontSize: smallAvatarSize,
               textAlign: 'center',
               color: cardIconColor || springAnimatedTheme.foregroundColor,
             }}

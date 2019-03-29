@@ -345,6 +345,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           // iconColor={issueIconColor || pullRequestIconColor}
           // iconName={issueIconName! || pullRequestIconName}
           id={issueOrPullRequest.id}
+          isPrivate={isPrivate}
           isRead={isRead}
           issueOrPullRequestNumber={issueOrPullRequestNumber!}
           labels={issueOrPullRequest.labels}
@@ -387,6 +388,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           // bold
           commits={commits}
           // hideIcon={commits.length === 1}
+          isPrivate={isPrivate}
           isRead={isRead}
           viewMode={cardViewMode}
           withTopMargin
@@ -415,6 +417,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           bold
           branch={release.target_commitish}
           hideIcon
+          isPrivate={isPrivate}
           isRead={isRead}
           name={release.name}
           ownerName={repoOwnerName || ''}

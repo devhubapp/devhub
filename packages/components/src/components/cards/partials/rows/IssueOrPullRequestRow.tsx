@@ -12,7 +12,8 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
-import { contentPadding } from '../../../../styles/variables'
+import * as colors from '../../../../styles/colors'
+import { contentPadding, smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import {
   SpringAnimatedIcon,
@@ -45,6 +46,7 @@ export interface IssueOrPullRequestRowProps
   iconName?: SpringAnimatedIconProps['name']
   id: string | number | undefined
   hideIcon?: boolean
+  isPrivate: boolean
   isRead: boolean
   issueOrPullRequestNumber: number
   labels?: GitHubLabel[] | undefined
@@ -71,6 +73,7 @@ export const IssueOrPullRequestRow = React.memo(
       iconColor,
       iconName = 'issue-opened',
       id,
+      isPrivate,
       isRead,
       issueOrPullRequestNumber,
       labels,
@@ -110,7 +113,7 @@ export const IssueOrPullRequestRow = React.memo(
       <BaseRow
         {...otherProps}
         left={
-          Boolean(username) && (
+          username ? (
             <Avatar
               avatarUrl={avatarUrl}
               isBot={isBot}
@@ -119,7 +122,13 @@ export const IssueOrPullRequestRow = React.memo(
               style={cardStyles.avatar}
               username={username}
             />
-          )
+          ) : isPrivate ? (
+            <SpringAnimatedIcon
+              name="lock"
+              size={smallAvatarSize}
+              style={{ color: colors.orange }}
+            />
+          ) : null
         }
         right={
           <View style={cardRowStyles.mainContentContainer}>

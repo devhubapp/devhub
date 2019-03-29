@@ -7,6 +7,8 @@ import {
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import * as colors from '../../../../styles/colors'
+import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
@@ -28,6 +30,7 @@ export interface ReleaseRowProps
   bold?: boolean
   branch?: string
   hideIcon?: boolean
+  isPrivate: boolean
   isRead: boolean
   name: string | undefined
   ownerName: string
@@ -49,6 +52,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
     bold,
     branch,
     hideIcon,
+    isPrivate,
     isRead,
     name: _name,
     ownerName,
@@ -92,13 +96,21 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
         <BaseRow
           {...otherProps}
           left={
-            <Avatar
-              isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
-              linkURL=""
-              small
-              style={cardStyles.avatar}
-              username={ownerName}
-            />
+            ownerName ? (
+              <Avatar
+                isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+                linkURL=""
+                small
+                style={cardStyles.avatar}
+                username={ownerName}
+              />
+            ) : isPrivate ? (
+              <SpringAnimatedIcon
+                name="lock"
+                size={smallAvatarSize}
+                style={{ color: colors.orange }}
+              />
+            ) : null
           }
           right={
             <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
