@@ -195,7 +195,8 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        subscription.data.canFetchMore = action.payload.canFetchMore
+        if (typeof action.payload.canFetchMore === 'boolean')
+          subscription.data.canFetchMore = action.payload.canFetchMore
         subscription.data.errorMessage = undefined
         subscription.data.lastFetchedAt = new Date().toISOString()
         subscription.data.loadState = 'loaded'

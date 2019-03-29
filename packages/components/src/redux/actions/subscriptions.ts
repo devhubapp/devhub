@@ -36,7 +36,7 @@ export function fetchSubscriptionSuccess(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
   data: any
-  canFetchMore: boolean
+  canFetchMore: boolean | undefined
   github: {
     appTokenType: GitHubAppTokenType
     headers: GitHubAPIHeaders

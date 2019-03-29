@@ -82,7 +82,7 @@ export const createFilteredSubscriptionsDataSelector = () => {
     },
     (state: RootState, subscriptionIds: string[]) =>
       subscriptionsDataSelector(state, subscriptionIds),
-    (state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
+    (_state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
       filters,
     (type, items, filters) => {
       if (!(items && items.length)) return []

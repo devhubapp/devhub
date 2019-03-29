@@ -294,7 +294,7 @@ function* onFetchRequest(
     if (!githubToken) throw new Error('Not logged')
 
     let data
-    let canFetchMore: boolean
+    let canFetchMore: boolean | undefined
     let headers
     if (subscription && subscription.type === 'notifications') {
       const response = yield call(getNotifications, params, {
@@ -309,7 +309,7 @@ function* onFetchRequest(
         prevItems,
       )
 
-      const olderNotificationDate = getOlderNotificationDate(mergedItems)
+      const olderItemDate = getOlderNotificationDate(mergedItems)
       const olderDateFromThisResponse = getOlderNotificationDate(newItems)
 
       if (!notificationsCache) {
@@ -342,12 +342,19 @@ function* onFetchRequest(
 
       data = enhancedItems
 
+      const reponseContainOldest =
+        !olderItemDate ||
+        (!!olderDateFromThisResponse &&
+          olderDateFromThisResponse <= olderItemDate)
+
       canFetchMore =
-        (!olderNotificationDate ||
-          (!!olderDateFromThisResponse &&
-            olderDateFromThisResponse <= olderNotificationDate) ||
-          page === 1) &&
         newItems.length >= perPage
+          ? reponseContainOldest
+            ? true
+            : undefined
+          : reponseContainOldest
+          ? false
+          : undefined
     } else if (subscription && subscription.type === 'activity') {
       const response = yield call(getActivity, subscription.subtype, params, {
         subscriptionId,
@@ -359,15 +366,22 @@ function* onFetchRequest(
       const newItems = (response.data || []) as GitHubEvent[]
       const mergedItems = mergeEventsPreservingEnhancement(newItems, prevItems)
 
-      const olderNotificationDate = getOlderEventDate(mergedItems)
+      const olderItemDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)
 
+      const reponseContainOldest =
+        !olderItemDate ||
+        (!!olderDateFromThisResponse &&
+          olderDateFromThisResponse <= olderItemDate)
+
       canFetchMore =
-        (!olderNotificationDate ||
-          (!!olderDateFromThisResponse &&
-            olderDateFromThisResponse <= olderNotificationDate) ||
-          page === 1) &&
         newItems.length >= perPage
+          ? reponseContainOldest
+            ? true
+            : undefined
+          : reponseContainOldest
+          ? false
+          : undefined
 
       data = newItems
     } else {
