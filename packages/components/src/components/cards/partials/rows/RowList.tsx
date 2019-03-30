@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react'
 
+import { CardViewMode } from '@devhub/core'
 import { ScrollView, View } from 'react-native'
 import { contentPadding } from '../../../../styles/variables'
 
@@ -15,10 +16,17 @@ export interface RowListProps<T> {
   maxLength?: number
   narrow?: boolean
   renderItem: RenderItem<T>
+  viewMode: CardViewMode
 }
 
 export const RowList = React.memo((props: RowListProps<any>) => {
-  const { data, maxHeight = 220, maxLength = 5, narrow, renderItem } = props
+  const {
+    data,
+    maxHeight = 220,
+    maxLength = props.viewMode === 'compact' ? 3 : 5,
+    narrow,
+    renderItem,
+  } = props
   if (!(data && data.length > 0)) return null
 
   if (data.length === 1)

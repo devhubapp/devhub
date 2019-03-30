@@ -49,6 +49,7 @@ export const Touchable = React.forwardRef(
     return (
       <TouchableComponent
         {...props}
+        className={__DEV__ ? undefined : 'touchable'}
         ref={ref}
         onPress={onPress}
         style={[

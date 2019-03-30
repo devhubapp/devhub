@@ -2,6 +2,7 @@ import { Omit } from '@devhub/core'
 import _ from 'lodash'
 import React, { Fragment } from 'react'
 import { Image, ImageProps } from 'react-native'
+import { genericParseText } from '../shared'
 
 const emojis = {
   '+1': 'unicode/1f44d',
@@ -1561,26 +1562,6 @@ function getComponent(
       />
       {after}
     </>
-  )
-}
-
-function genericParseText<T extends string>(
-  text: string,
-  pattern: RegExp,
-  fn: (match: T) => React.ReactNode,
-) {
-  if (!(text && typeof text === 'string')) return [text].filter(Boolean)
-
-  const matches = text.match(new RegExp(pattern, 'g')) as T[]
-  if (!(matches && matches.length)) return [text].filter(Boolean)
-
-  return text.split(pattern).reduce(
-    (result, item, index) => {
-      if (!matches[index]) return result.concat([item].filter(Boolean))
-
-      return result.concat([item, fn(matches[index])].filter(Boolean))
-    },
-    [] as React.ReactNode[],
   )
 }
 

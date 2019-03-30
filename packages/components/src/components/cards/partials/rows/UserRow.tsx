@@ -1,4 +1,5 @@
 import React from 'react'
+import { View } from 'react-native'
 
 import { getGitHubURLForUser, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -15,6 +16,8 @@ export interface UserRowProps
     'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
   > {
   avatarUrl: string
+  bold?: boolean
+  // hideIcon?: boolean
   isRead: boolean
   showMoreItemsIndicator?: boolean
   userLinkURL: string
@@ -28,6 +31,8 @@ export const UserRow = React.memo((props: UserRowProps) => {
 
   const {
     avatarUrl,
+    bold,
+    // hideIcon,
     isRead,
     showMoreItemsIndicator,
     userLinkURL,
@@ -49,22 +54,24 @@ export const UserRow = React.memo((props: UserRowProps) => {
         />
       }
       right={
-        <Link
-          href={
-            showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
-          }
-          style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            style={[
-              getCardRowStylesForTheme(springAnimatedTheme).usernameText,
-              (isRead || showMoreItemsIndicator) &&
-                getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link
+            href={
+              showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
+            }
           >
-            {showMoreItemsIndicator ? '...' : username}
-          </SpringAnimatedText>
-        </Link>
+            <SpringAnimatedText
+              style={[
+                getCardRowStylesForTheme(springAnimatedTheme).usernameText,
+                bold && cardStyles.boldText,
+                (isRead || showMoreItemsIndicator) &&
+                  getCardStylesForTheme(springAnimatedTheme).mutedText,
+              ]}
+            >
+              {showMoreItemsIndicator ? '...' : username}
+            </SpringAnimatedText>
+          </Link>
+        </View>
       }
     />
   )

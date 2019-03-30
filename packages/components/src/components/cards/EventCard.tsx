@@ -1,14 +1,18 @@
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
   CardViewMode,
   EnhancedGitHubEvent,
+  getDateSmallText,
   getEventText,
+  getFullDateText,
   getGitHubAvatarURLFromPayload,
+  getGitHubURLForRepo,
   getIssueOrPullRequestNumberFromUrl,
   getOwnerAndRepo,
   getRepoFullNameFromObject,
+  getRepoFullNameFromUrl,
   GitHubCommitCommentEvent,
   GitHubCreateEvent,
   GitHubEvent,
@@ -23,6 +27,7 @@ import {
   GitHubReleaseEvent,
   GitHubRepo,
   GitHubUser,
+  isBranchMainEvent,
   isEventPrivate,
   isItemRead,
   MultipleStarEvent,
@@ -30,14 +35,26 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
-import { contentPadding } from '../../styles/variables'
+import {
+  contentPadding,
+  smallAvatarSize,
+  smallerTextSize,
+} from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import { tryFocus } from '../../utils/helpers/shared'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
+import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
+import { Avatar } from '../common/Avatar'
+import { BookmarkButton } from '../common/BookmarkButton'
+import { IntervalRefresh } from '../common/IntervalRefresh'
+import { Spacer } from '../common/Spacer'
 import { useTheme } from '../context/ThemeContext'
+import { CardFocusBorder } from './partials/CardFocusBorder'
 import { EventCardHeader } from './partials/EventCardHeader'
+import { ActorActionRow } from './partials/rows/ActorActionRow'
 import { BranchRow } from './partials/rows/BranchRow'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitListRow } from './partials/rows/CommitListRow'
@@ -47,6 +64,7 @@ import { RepositoryListRow } from './partials/rows/RepositoryListRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
+import { cardStyles, getCardStylesForTheme } from './styles'
 
 export interface EventCardProps {
   cardViewMode: CardViewMode
@@ -54,12 +72,6 @@ export interface EventCardProps {
   isFocused?: boolean
   repoIsKnown?: boolean
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: contentPadding,
-  },
-})
 
 export const EventCard = React.memo((props: EventCardProps) => {
   const { cardViewMode, event, repoIsKnown, isFocused } = props
@@ -95,7 +107,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
     pull_request: pullRequest,
   } = payload as GitHubPullRequestEvent['payload']
   const { issue } = payload as GitHubIssuesEvent['payload']
-  let { ref: branchName } = payload as GitHubPushEvent['payload']
+  const { ref: _branchName } = payload as GitHubPushEvent['payload']
+
+  let branchName = (_branchName || '').replace('refs/heads/', '')
 
   const issueOrPullRequest = issue || pullRequest
 
@@ -108,7 +122,32 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const isSaved = saved === true
 
   const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
-  const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(Boolean)
+
+  const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
+    if (!(r && r.name)) return false
+
+    const or = getOwnerAndRepo(r.name)
+    return !!(or.owner && or.repo)
+  })
+
+  // ugly and super edge case workaround for repo not being returned on some commit events
+  if (!_allRepos.length && commits[0]) {
+    const _repoFullName = getRepoFullNameFromUrl(commits[0].url)
+    const { owner, repo: name } = getOwnerAndRepo(_repoFullName)
+    if (owner && name) {
+      _allRepos.push({
+        id: '',
+        fork: false,
+        private: false,
+        full_name: _repoFullName,
+        owner: { login: name } as any,
+        name,
+        url: getGitHubURLForRepo(owner, name)!,
+        html_url: getGitHubURLForRepo(owner, name)!,
+      })
+    }
+  }
+
   const repos: GitHubRepo[] = _allRepos.filter(
     (r, index) => !!(r && !(repoIsKnown && index === 0)),
   )
@@ -162,7 +201,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
   const _cardIconColor = cardIconDetails.color
 
-  const actionText = getEventText(event, { repoIsKnown })
+  const actionText = getEventText(event, {
+    includeBranch: cardViewMode === 'compact',
+    repoIsKnown,
+  })
 
   const isPush = type === 'PushEvent'
   const isForcePush = isPush && (payload as GitHubPushEvent).forced
@@ -227,34 +269,356 @@ export const EventCard = React.memo((props: EventCardProps) => {
   //     0.3,
   //   )
 
+  let withTopMargin = cardViewMode !== 'compact'
+  let withTopMarginCount = withTopMargin ? 1 : 0
+  function getWithTopMargin() {
+    const _withTopMargin = withTopMargin
+    withTopMargin = true
+    withTopMarginCount = withTopMarginCount + 1
+    return _withTopMargin
+  }
+
+  function renderContent() {
+    return (
+      <>
+        {actionText && cardViewMode === 'compact' && (
+          <ActorActionRow
+            avatarUrl={avatarUrl}
+            body={actionText}
+            branch={branchName}
+            isBot={isBot}
+            isBranchMainEvent={isBranchMainEvent(event)}
+            isRead={isRead}
+            ownerName={repoOwnerName || ''}
+            repositoryName={repoName || ''}
+            userLinkURL={actor.html_url || ''}
+            username={actor.display_login || actor.login}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {repos.length > 0 &&
+          (cardViewMode !== 'compact' || repos.length > 1) && (
+            <RepositoryListRow
+              key={`event-repo-list-row-${repoIds.join('-')}`}
+              isForcePush={isForcePush}
+              isPush={isPush}
+              isRead={isRead}
+              repos={repos}
+              small
+              viewMode={cardViewMode}
+              withTopMargin={getWithTopMargin()}
+            />
+          )}
+
+        {Boolean(branchName) && cardViewMode !== 'compact' && (
+          <BranchRow
+            key={`event-branch-row-${branchName}`}
+            branch={branchName}
+            isBranchMainEvent={isBranchMainEvent(event)}
+            isRead={isRead}
+            ownerName={repoOwnerName || ''}
+            repositoryName={repoName || ''}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {Boolean(forkee && forkRepoOwnerName && forkRepoName) && (
+          <RepositoryRow
+            key={`event-fork-row-${forkee.id}`}
+            isForcePush={isForcePush}
+            isFork
+            isRead={isRead}
+            ownerName={forkRepoOwnerName || ''}
+            repositoryName={forkRepoName || ''}
+            small
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {!!issueOrPullRequest && (
+          <IssueOrPullRequestRow
+            key={`event-issue-or-pr-row-${issueOrPullRequest.id}`}
+            addBottomAnchor={!comment}
+            avatarUrl={issueOrPullRequest.user.avatar_url}
+            body={
+              !comment &&
+              !!(
+                issueOrPullRequest &&
+                issueOrPullRequest.state === 'open' &&
+                issueOrPullRequest.body &&
+                !(
+                  issueOrPullRequest.created_at &&
+                  issueOrPullRequest.updated_at &&
+                  new Date(issueOrPullRequest.updated_at).valueOf() -
+                    new Date(issueOrPullRequest.created_at).valueOf() >=
+                    1000 * 60 * 60 * 24
+                )
+              )
+                ? issueOrPullRequest.body
+                : undefined
+            }
+            bold
+            commentsCount={issueOrPullRequest.comments}
+            createdAt={issueOrPullRequest.created_at}
+            hideIcon
+            // iconColor={issueIconColor || pullRequestIconColor}
+            // iconName={issueIconName! || pullRequestIconName}
+            id={issueOrPullRequest.id}
+            isPrivate={isPrivate}
+            isRead={isRead}
+            issueOrPullRequestNumber={issueOrPullRequestNumber!}
+            labels={issueOrPullRequest.labels}
+            owner={repoOwnerName || ''}
+            repo={repoName || ''}
+            title={issueOrPullRequest.title}
+            url={issueOrPullRequest.url}
+            userLinkURL={issueOrPullRequest.user.html_url || ''}
+            username={issueOrPullRequest.user.login || ''}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {users.length > 0 && (
+          <UserListRow
+            bold={false}
+            isRead={isRead}
+            key={`event-user-list-row-${userIds.join('-')}`}
+            users={users}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {pages.length > 0 && (
+          <WikiPageListRow
+            bold={false}
+            isRead={isRead}
+            key={`event-wiki-page-list-row-${pageIds.join('-')}`}
+            pages={pages}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {commits.length > 0 && (
+          <CommitListRow
+            key={`event-commit-list-row-${commitIds.join('-')}`}
+            bold={false}
+            commits={commits}
+            isPrivate={isPrivate}
+            isRead={isRead}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {Boolean(comment && comment.body) && (
+          <CommentRow
+            key={`event-comment-row-${comment.id}`}
+            avatarUrl={comment.user.avatar_url}
+            body={comment.body}
+            isRead={isRead}
+            url={comment.html_url || comment.url}
+            userLinkURL={comment.user.html_url || ''}
+            username={comment.user.display_login || comment.user.login}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {Boolean(release) && (
+          <ReleaseRow
+            key={`event-release-row-${release.id}`}
+            avatarUrl={release.author.avatar_url}
+            body={release.body}
+            bold
+            branch={release.target_commitish}
+            hideIcon
+            isPrivate={isPrivate}
+            isRead={isRead}
+            name={release.name}
+            ownerName={repoOwnerName || ''}
+            repositoryName={repoName || ''}
+            tagName={release.tag_name}
+            url={release.html_url || release.url}
+            userLinkURL={release.author.html_url || ''}
+            username={release.author.display_login || release.author.login}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+      </>
+    )
+  }
+
+  const Content = renderContent()
+
+  const isSingleRow =
+    withTopMarginCount <= 1 &&
+    !(
+      issueOrPullRequest &&
+      issueOrPullRequest.labels &&
+      issueOrPullRequest.labels.length
+    )
+
+  if (cardViewMode === 'compact') {
+    return (
+      <SpringAnimatedView
+        key={`event-card-${id}-compact-inner`}
+        ref={itemRef}
+        style={[
+          cardStyles.compactContainer,
+          isSingleRow && { alignItems: 'center' },
+          {
+            backgroundColor: springAnimatedTheme[backgroundThemeColor],
+          },
+        ]}
+      >
+        {!!isFocused && <CardFocusBorder />}
+
+        {/* <CenterGuide /> */}
+
+        {/* <View
+          style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
+        >
+          <SpringAnimatedCheckbox analyticsLabel={undefined} size={smallAvatarSize} />
+        </View>
+
+        <Spacer width={contentPadding} /> */}
+
+        <View
+          style={[
+            cardStyles.compactItemFixedWidth,
+            cardStyles.compactItemFixedHeight,
+          ]}
+        >
+          <BookmarkButton
+            isSaved={isSaved}
+            itemIds={[id]}
+            size={smallAvatarSize}
+          />
+        </View>
+
+        <Spacer width={contentPadding} />
+
+        {!repoIsKnown && (
+          <>
+            <View style={cardStyles.compactItemFixedHeight}>
+              <Avatar isBot={isBot} linkURL="" small username={repoOwnerName} />
+            </View>
+
+            <Spacer width={contentPadding} />
+
+            <View
+              style={[
+                cardStyles.compactItemFixedMinHeight,
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  width: 120,
+                  overflow: 'hidden',
+                },
+              ]}
+            >
+              {!!(repoOwnerName && repoName) && (
+                <RepositoryRow
+                  key={`notification-repo-row-${repoOwnerName}-${repoName}`}
+                  disableLeft
+                  // hideOwner
+                  isRead={isRead}
+                  ownerName={repoOwnerName}
+                  repositoryName={repoName}
+                  rightContainerStyle={{
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                    width: 120,
+                  }}
+                  small
+                  viewMode={cardViewMode}
+                  withTopMargin={false}
+                />
+              )}
+            </View>
+
+            <Spacer width={contentPadding} />
+          </>
+        )}
+
+        <View
+          style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}
+        >
+          <View
+            style={[
+              cardStyles.compactItemFixedWidth,
+              cardStyles.compactItemFixedHeight,
+            ]}
+          >
+            <SpringAnimatedIcon
+              name={cardIconName}
+              selectable={false}
+              style={{
+                fontSize: smallAvatarSize,
+                textAlign: 'center',
+                color: cardIconColor || springAnimatedTheme.foregroundColor,
+              }}
+            />
+          </View>
+
+          <Spacer width={contentPadding} />
+
+          <View style={{ flex: 1 }}>{Content}</View>
+        </View>
+
+        <Spacer width={contentPadding} />
+
+        <View style={{ alignItems: 'flex-end' }}>
+          {!!event.created_at && (
+            <IntervalRefresh date={event.created_at}>
+              {() => {
+                const dateText = getDateSmallText(event.created_at, false)
+                if (!dateText) return null
+
+                return (
+                  <SpringAnimatedText
+                    numberOfLines={1}
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).timestampText,
+                      cardStyles.smallText,
+                      { fontSize: smallerTextSize },
+                    ]}
+                    {...Platform.select({
+                      web: { title: getFullDateText(event.created_at) },
+                    })}
+                  >
+                    {dateText}
+                  </SpringAnimatedText>
+                )
+              }}
+            </IntervalRefresh>
+          )}
+        </View>
+      </SpringAnimatedView>
+    )
+  }
+
   return (
     <SpringAnimatedView
       key={`event-card-${id}-inner`}
       ref={itemRef}
       style={[
-        styles.container,
+        cardStyles.container,
         {
           backgroundColor: springAnimatedTheme[backgroundThemeColor],
-          borderWidth: 1,
-          borderColor:
-            isFocused && cardViewMode !== 'compact'
-              ? springAnimatedTheme.primaryBackgroundColor
-              : 'transparent',
         },
       ]}
     >
-      {!!isFocused && cardViewMode === 'compact' && (
-        <SpringAnimatedView
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 2,
-            backgroundColor: springAnimatedTheme.primaryBackgroundColor,
-          }}
-        />
-      )}
+      {!!isFocused && <CardFocusBorder />}
 
       <EventCardHeader
         key={`event-card-header-${id}`}
@@ -273,163 +637,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         username={actor.display_login || actor.login}
       />
 
-      {repos.length > 0 && (
-        <RepositoryListRow
-          key={`event-repo-list-row-${repoIds.join('-')}`}
-          isForcePush={isForcePush}
-          isPush={isPush}
-          isRead={isRead}
-          repos={repos}
-          small
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {Boolean(branchName) && (
-        <BranchRow
-          key={`event-branch-row-${branchName}`}
-          branch={branchName}
-          isBranchMainEvent={
-            (type === 'CreateEvent' || type === 'DeleteEvent') &&
-            (payload as GitHubCreateEvent['payload']).ref_type === 'branch'
-          }
-          isRead={isRead}
-          ownerName={repoOwnerName || ''}
-          repositoryName={repoName || ''}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {Boolean(forkee && forkRepoOwnerName && forkRepoName) && (
-        <RepositoryRow
-          key={`event-fork-row-${forkee.id}`}
-          isForcePush={isForcePush}
-          isFork
-          isRead={isRead}
-          ownerName={forkRepoOwnerName || ''}
-          repositoryName={forkRepoName || ''}
-          small
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {!!issueOrPullRequest && (
-        <IssueOrPullRequestRow
-          key={`event-issue-or-pr-row-${issueOrPullRequest.id}`}
-          addBottomAnchor={!comment}
-          avatarUrl={issueOrPullRequest.user.avatar_url}
-          body={
-            !comment &&
-            !!(
-              issueOrPullRequest &&
-              issueOrPullRequest.state === 'open' &&
-              issueOrPullRequest.body &&
-              !(
-                issueOrPullRequest.created_at &&
-                issueOrPullRequest.updated_at &&
-                new Date(issueOrPullRequest.updated_at).valueOf() -
-                  new Date(issueOrPullRequest.created_at).valueOf() >=
-                  1000 * 60 * 60 * 24
-              )
-            )
-              ? issueOrPullRequest.body
-              : undefined
-          }
-          bold
-          commentsCount={issueOrPullRequest.comments}
-          createdAt={issueOrPullRequest.created_at}
-          hideIcon
-          // iconColor={issueIconColor || pullRequestIconColor}
-          // iconName={issueIconName! || pullRequestIconName}
-          id={issueOrPullRequest.id}
-          isPrivate={isPrivate}
-          isRead={isRead}
-          issueOrPullRequestNumber={issueOrPullRequestNumber!}
-          labels={issueOrPullRequest.labels}
-          owner={repoOwnerName || ''}
-          repo={repoName || ''}
-          title={issueOrPullRequest.title}
-          url={issueOrPullRequest.url}
-          userLinkURL={issueOrPullRequest.user.html_url || ''}
-          username={issueOrPullRequest.user.login || ''}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {users.length > 0 && (
-        <UserListRow
-          isRead={isRead}
-          key={`event-user-list-row-${userIds.join('-')}`}
-          users={users}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {pages.length > 0 && (
-        <WikiPageListRow
-          // bold
-          // hideIcon={pages.length === 1}
-          isRead={isRead}
-          key={`event-wiki-page-list-row-${pageIds.join('-')}`}
-          pages={pages}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {commits.length > 0 && (
-        <CommitListRow
-          key={`event-commit-list-row-${commitIds.join('-')}`}
-          // bold
-          commits={commits}
-          // hideIcon={commits.length === 1}
-          isPrivate={isPrivate}
-          isRead={isRead}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {Boolean(comment && comment.body) && (
-        <CommentRow
-          key={`event-comment-row-${comment.id}`}
-          avatarUrl={comment.user.avatar_url}
-          body={comment.body}
-          isRead={isRead}
-          url={comment.html_url || comment.url}
-          userLinkURL={comment.user.html_url || ''}
-          username={comment.user.display_login || comment.user.login}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
-
-      {Boolean(release) && (
-        <ReleaseRow
-          key={`event-release-row-${release.id}`}
-          avatarUrl={release.author.avatar_url}
-          body={release.body}
-          bold
-          branch={release.target_commitish}
-          hideIcon
-          isPrivate={isPrivate}
-          isRead={isRead}
-          name={release.name}
-          ownerName={repoOwnerName || ''}
-          repositoryName={repoName || ''}
-          tagName={release.tag_name}
-          url={release.html_url || release.url}
-          userLinkURL={release.author.html_url || ''}
-          username={release.author.display_login || release.author.login}
-          viewMode={cardViewMode}
-          withTopMargin
-        />
-      )}
+      {Content}
     </SpringAnimatedView>
   )
 })

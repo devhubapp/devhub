@@ -29,7 +29,7 @@ import { CardItemId } from '../CardItemId'
 import { CardSmallThing } from '../CardSmallThing'
 import { LabelsView } from './LabelsView'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
-import { cardRowStyles } from './styles'
+import { cardRowStyles, innerCardMarginTop } from './styles'
 
 export interface IssueOrPullRequestRowProps
   extends Omit<
@@ -136,7 +136,7 @@ export const IssueOrPullRequestRow = React.memo(
               <SpringAnimatedText
                 numberOfLines={numberOfLines}
                 style={[
-                  Platform.OS !== 'android' && { flexGrow: 1 },
+                  cardStyles.flex,
                   getCardStylesForTheme(springAnimatedTheme).normalText,
                   bold && cardStyles.boldText,
                   isRead &&
@@ -172,10 +172,10 @@ export const IssueOrPullRequestRow = React.memo(
               </SpringAnimatedText>
             </Link>
 
-            <View>
+            <View style={{ maxWidth: '100%' }}>
               {!!labels && labels.length > 0 && (
                 <>
-                  <Spacer height={contentPadding / 2} />
+                  <Spacer height={innerCardMarginTop} />
 
                   <LabelsView
                     labels={labels.map(label => ({
@@ -190,7 +190,7 @@ export const IssueOrPullRequestRow = React.memo(
 
               {!!body && (
                 <>
-                  <Spacer height={contentPadding / 2} />
+                  <Spacer height={innerCardMarginTop} />
 
                   <Link
                     href={htmlUrl}
@@ -199,6 +199,7 @@ export const IssueOrPullRequestRow = React.memo(
                     <SpringAnimatedText
                       numberOfLines={numberOfLines}
                       style={[
+                        cardStyles.flex,
                         getCardStylesForTheme(springAnimatedTheme).commentText,
                         isRead &&
                           getCardStylesForTheme(springAnimatedTheme).mutedText,
@@ -213,7 +214,7 @@ export const IssueOrPullRequestRow = React.memo(
               {!!(byText || createdAt || commentsCount) &&
                 viewMode !== 'compact' && (
                   <>
-                    <Spacer height={contentPadding / 2} />
+                    <Spacer height={innerCardMarginTop} />
 
                     <View
                       style={{ flexDirection: 'row', alignItems: 'center' }}

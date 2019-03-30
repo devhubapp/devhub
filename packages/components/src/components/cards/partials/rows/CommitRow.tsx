@@ -1,4 +1,5 @@
 import React from 'react'
+import { View } from 'react-native'
 
 import {
   getCommentIdFromUrl,
@@ -86,7 +87,10 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             linkURL={
               authorUsername
                 ? getGitHubURLForUser(authorUsername)
-                : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
+                : getGitHubSearchURL({
+                    q: authorEmail || '',
+                    type: 'Users',
+                  })
             }
           />
         ) : isPrivate ? (
@@ -98,55 +102,57 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
         ) : null
       }
       right={
-        <Link
-          href={
-            showMoreItemsIndicator
-              ? undefined
-              : fixURL(url, {
-                  commentId:
-                    (latestCommentUrl &&
-                      getCommentIdFromUrl(latestCommentUrl)) ||
-                    undefined,
-                })
-          }
-          style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            numberOfLines={1}
-            style={[
-              getCardStylesForTheme(springAnimatedTheme).normalText,
-              bold && cardStyles.boldText,
-              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link
+            href={
+              showMoreItemsIndicator
+                ? undefined
+                : fixURL(url, {
+                    commentId:
+                      (latestCommentUrl &&
+                        getCommentIdFromUrl(latestCommentUrl)) ||
+                      undefined,
+                  })
+            }
+            style={cardStyles.flex}
           >
-            {!hideIcon && (
-              <>
-                <SpringAnimatedIcon
-                  name="git-commit"
-                  size={13}
+            <SpringAnimatedText
+              numberOfLines={1}
+              style={[
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                bold && cardStyles.boldText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+              ]}
+            >
+              {!hideIcon && (
+                <>
+                  <SpringAnimatedIcon
+                    name="git-commit"
+                    size={13}
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).normalText,
+                      getCardStylesForTheme(springAnimatedTheme).icon,
+                      isRead &&
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    ]}
+                  />{' '}
+                </>
+              )}
+              {showMoreItemsIndicator ? '' : message}
+              {Boolean(byText) && (
+                <SpringAnimatedText
                   style={[
                     getCardStylesForTheme(springAnimatedTheme).normalText,
-                    getCardStylesForTheme(springAnimatedTheme).icon,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    cardStyles.smallText,
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
-                />{' '}
-              </>
-            )}
-            {showMoreItemsIndicator ? '' : message}
-            {Boolean(byText) && (
-              <SpringAnimatedText
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  cardStyles.smallText,
-                  getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                {showMoreItemsIndicator ? '...' : ` by ${byText}`}
-              </SpringAnimatedText>
-            )}
-          </SpringAnimatedText>
-        </Link>
+                >
+                  {showMoreItemsIndicator ? '...' : ` by ${byText}`}
+                </SpringAnimatedText>
+              )}
+            </SpringAnimatedText>
+          </Link>
+        </View>
       }
     />
   )

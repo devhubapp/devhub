@@ -1,4 +1,5 @@
 import React from 'react'
+import { View } from 'react-native'
 
 import { Omit, trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -48,46 +49,48 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
       {...otherProps}
       left={null}
       right={
-        <Link
-          href={showMoreItemsIndicator ? undefined : fixURL(url)}
-          style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            numberOfLines={1}
-            style={[
-              getCardStylesForTheme(springAnimatedTheme).normalText,
-              bold && cardStyles.boldText,
-              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link
+            href={showMoreItemsIndicator ? undefined : fixURL(url)}
+            style={cardRowStyles.mainContentContainer}
           >
-            {!hideIcon && (
-              <>
-                <SpringAnimatedIcon
-                  name="book"
-                  size={13}
+            <SpringAnimatedText
+              numberOfLines={1}
+              style={[
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                bold && cardStyles.boldText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+              ]}
+            >
+              {!hideIcon && (
+                <>
+                  <SpringAnimatedIcon
+                    name="book"
+                    size={13}
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).normalText,
+                      getCardStylesForTheme(springAnimatedTheme).icon,
+                      isRead &&
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    ]}
+                  />{' '}
+                </>
+              )}
+              {showMoreItemsIndicator ? '' : title}
+              {!!showMoreItemsIndicator && (
+                <SpringAnimatedText
+                  numberOfLines={1}
                   style={[
                     getCardStylesForTheme(springAnimatedTheme).normalText,
-                    getCardStylesForTheme(springAnimatedTheme).icon,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
-                />{' '}
-              </>
-            )}
-            {showMoreItemsIndicator ? '' : title}
-            {!!showMoreItemsIndicator && (
-              <SpringAnimatedText
-                numberOfLines={1}
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                ...
-              </SpringAnimatedText>
-            )}
-          </SpringAnimatedText>
-        </Link>
+                >
+                  ...
+                </SpringAnimatedText>
+              )}
+            </SpringAnimatedText>
+          </Link>
+        </View>
       }
     />
   )

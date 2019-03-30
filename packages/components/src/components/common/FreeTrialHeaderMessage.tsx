@@ -2,6 +2,7 @@ import React from 'react'
 
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import * as colors from '../../styles/colors'
 import { HeaderMessage } from './HeaderMessage'
 
 export function FreeTrialHeaderMessage() {
@@ -28,6 +29,7 @@ export function FreeTrialHeaderMessage() {
             '@brunolemos, creator of DevHub.',
         )
       }
+      textStyle={{ color: colors.orange }}
     >
       Free trial. Learn more.
     </HeaderMessage>

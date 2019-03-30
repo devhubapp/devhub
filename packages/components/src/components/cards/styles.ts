@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TextStyle } from 'react-native'
 
 import { Theme } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -28,6 +28,39 @@ export const cardStyles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
+  },
+
+  container: {
+    padding: contentPadding,
+  },
+
+  compactContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: contentPadding * (2 / 3),
+    paddingHorizontal: contentPadding,
+  },
+
+  compactItemFixedWidth: {
+    width: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  compactItemFixedHeight: {
+    height: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  compactItemFixedMinHeight: {
+    minHeight: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   leftColumn: {
@@ -73,7 +106,7 @@ export const getCardStylesForTheme = _.memoize(
         lineHeight: 20,
         fontWeight: '500',
         color: theme.foregroundColor,
-      },
+      } as TextStyle,
 
       timestampText: {
         lineHeight: smallerTextSize + 1,
@@ -82,7 +115,6 @@ export const getCardStylesForTheme = _.memoize(
       },
 
       commentText: {
-        flex: 1,
         color: theme.foregroundColor,
         lineHeight: 20,
         fontSize: smallTextSize,

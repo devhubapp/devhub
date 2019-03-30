@@ -3,7 +3,7 @@ import { ScrollView, View } from 'react-native'
 import { ReactSpringHook, useSpring } from 'react-spring/native'
 
 import { usePrevious } from '../../hooks/use-previous'
-import { Platform } from '../../libs/platform/index.web'
+import { Platform } from '../../libs/platform'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 
 export type Transition = ReactSpringHook

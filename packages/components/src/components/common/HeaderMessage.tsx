@@ -45,7 +45,7 @@ export function HeaderMessage(props: HeaderMessageProps) {
         style={[
           styles.container,
           {
-            backgroundColor: springAnimatedTheme.backgroundColorDarker2,
+            backgroundColor: springAnimatedTheme.backgroundColor,
           },
           style,
         ]}

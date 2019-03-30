@@ -1,10 +1,11 @@
 import React from 'react'
+import { View } from 'react-native'
 
 import { getGitHubURLForBranch, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { smallAvatarSize } from '../../../../styles/variables'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
-import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
@@ -28,7 +29,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const {
-    branch: _branch,
+    branch,
     isBranchMainEvent,
     isRead,
     ownerName,
@@ -36,48 +37,62 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
     ...otherProps
   } = props
 
-  const branch = (_branch || '').replace('refs/heads/', '')
   if (!branch) return null
-
   if (branch === 'master' && !isBranchMainEvent) return null
+
+  const hideIcon = true
+  const muted = isRead || !isBranchMainEvent || branch === 'master'
 
   return (
     <BaseRow
       {...otherProps}
       left={
-        <Avatar
-          isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
-          linkURL=""
-          small
-          style={cardStyles.avatar}
-          username={ownerName}
+        // <Avatar
+        //   isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+        //   linkURL=""
+        //   small
+        //   style={cardStyles.avatar}
+        //   username={ownerName}
+        //   repo={repositoryName}
+        // />
+        <SpringAnimatedIcon
+          name="git-branch"
+          size={smallAvatarSize}
+          style={[
+            { alignSelf: 'flex-end' },
+            muted && getCardStylesForTheme(springAnimatedTheme).mutedText,
+          ]}
         />
       }
       right={
-        <Link
-          href={getGitHubURLForBranch(ownerName, repositoryName, branch)}
-          style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            numberOfLines={1}
-            style={[
-              getCardStylesForTheme(springAnimatedTheme).normalText,
-              (isRead || !isBranchMainEvent) &&
-                getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
-          >
-            <SpringAnimatedIcon
-              name="git-branch"
-              size={13}
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link href={getGitHubURLForBranch(ownerName, repositoryName, branch)}>
+            <SpringAnimatedText
+              numberOfLines={1}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardStylesForTheme(springAnimatedTheme).icon,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+                muted && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
-            />{' '}
-            {branch}
-          </SpringAnimatedText>
-        </Link>
+            >
+              {!hideIcon && (
+                <>
+                  <SpringAnimatedIcon
+                    name="git-branch"
+                    size={13}
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).normalText,
+                      getCardStylesForTheme(springAnimatedTheme).icon,
+                      cardStyles.smallText,
+                      isRead &&
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    ]}
+                  />{' '}
+                </>
+              )}
+              {branch}
+            </SpringAnimatedText>
+          </Link>
+        </View>
       }
     />
   )

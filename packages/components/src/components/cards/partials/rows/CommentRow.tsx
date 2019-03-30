@@ -1,4 +1,5 @@
 import React from 'react'
+import { View } from 'react-native'
 
 import { Omit, stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -13,6 +14,7 @@ import { Avatar } from '../../../common/Avatar'
 import { Link, LinkProps } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
+import { cardRowStyles } from './styles'
 
 export interface CommentRowProps
   extends Omit<
@@ -72,31 +74,32 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
         />
       }
       right={
-        <Link
-          analyticsLabel={analyticsLabel}
-          href={fixURL(url, { addBottomAnchor })}
-          style={{ flex: 1 }}
-        >
-          <SpringAnimatedText
-            numberOfLines={numberOfLines}
-            style={[
-              getCardStylesForTheme(springAnimatedTheme).commentText,
-              textStyle,
-              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link
+            analyticsLabel={analyticsLabel}
+            href={fixURL(url, { addBottomAnchor })}
           >
-            {parseTextWithEmojisToReactComponents(body, {
-              key: `comment-${url}`,
-              imageProps: {
-                style: {
-                  marginHorizontal: 2,
-                  width: 10,
-                  height: 10,
+            <SpringAnimatedText
+              numberOfLines={numberOfLines}
+              style={[
+                getCardStylesForTheme(springAnimatedTheme).commentText,
+                textStyle,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+              ]}
+            >
+              {parseTextWithEmojisToReactComponents(body, {
+                key: `comment-${url}`,
+                imageProps: {
+                  style: {
+                    marginHorizontal: 2,
+                    width: 12,
+                    height: 12,
+                  },
                 },
-              },
-            })}
-          </SpringAnimatedText>
-        </Link>
+              })}
+            </SpringAnimatedText>
+          </Link>
+        </View>
       }
       viewMode={viewMode}
     />

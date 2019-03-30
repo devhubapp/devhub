@@ -17,6 +17,7 @@ export interface UserListRowProps
 export const UserListRow = React.memo((props: UserListRowProps) => {
   const renderItem: RenderItem<GitHubUser> = ({
     item: user,
+    index,
     showMoreItemsIndicator,
   }) => {
     if (!(user && user.id && user.login)) return null
@@ -29,6 +30,7 @@ export const UserListRow = React.memo((props: UserListRowProps) => {
         showMoreItemsIndicator={showMoreItemsIndicator}
         userLinkURL={user.html_url || ''}
         username={user.display_login || user.login}
+        withTopMargin={index === 0 ? props.withTopMargin : true}
       />
     )
   }

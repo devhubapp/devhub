@@ -10,7 +10,7 @@ import {
 import * as colors from '../../../styles/colors'
 
 export function getCommitIconAndColor(): { icon: GitHubIcon; color?: string } {
-  return { icon: 'git-commit', color: colors.orange }
+  return { icon: 'git-commit', color: colors.brown }
 }
 
 export function getReleaseIconAndColor(): { icon: GitHubIcon; color?: string } {

@@ -15,6 +15,7 @@ import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { ButtonLink } from '../components/common/ButtonLink'
+import { useAppViewMode } from '../hooks/use-app-view-mode'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
@@ -41,6 +42,8 @@ export type EventCardsContainerProps = Omit<
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { column } = props
+
+    const { cardViewMode } = useAppViewMode()
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -275,8 +278,7 @@ export const EventCardsContainer = React.memo(
       <EventCards
         {...props}
         key={`event-cards-${column.id}`}
-        // cardViewMode={cardViewMode}
-        cardViewMode="expanded"
+        cardViewMode={cardViewMode}
         errorMessage={firstSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
         lastFetchedAt={firstSubscription.data.lastFetchedAt}

@@ -8,7 +8,6 @@ import {
   getGitHubURLForUser,
   GitHubIcon,
   ThemeColors,
-  trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../hooks/use-redux-action'
@@ -124,7 +123,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
                 >
-                  {trimNewLinesAndSpaces(username, 18)}
+                  {username}
                 </SpringAnimatedText>
               </Link>
               {!!isBot && (
@@ -182,7 +181,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   />{' '}
                 </SpringAnimatedText>
               )}
-              {actionText}
+              {actionText.toLowerCase()}
             </SpringAnimatedText>
           </View>
 

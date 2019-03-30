@@ -14,6 +14,7 @@ export interface WikiPageListRowProps
 export const WikiPageListRow = React.memo((props: WikiPageListRowProps) => {
   const renderItem: RenderItem<GitHubPage> = ({
     item: page,
+    index,
     showMoreItemsIndicator,
   }) => {
     if (!(page && page.sha && page.title)) return null
@@ -25,6 +26,7 @@ export const WikiPageListRow = React.memo((props: WikiPageListRowProps) => {
         showMoreItemsIndicator={showMoreItemsIndicator}
         title={page.title}
         url={page.html_url || page.url}
+        withTopMargin={index === 0 ? props.withTopMargin : true}
       />
     )
   }

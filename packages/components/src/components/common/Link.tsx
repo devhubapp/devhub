@@ -1,5 +1,5 @@
 import React, { AnchorHTMLAttributes, useRef } from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
@@ -82,6 +82,14 @@ export function Link(props: LinkProps) {
 
   const renderTouchable = href || otherProps.onPress || allowEmptyLink
 
+  const finalStyle = StyleSheet.flatten([
+    { maxWidth: '100%' },
+    Platform.select({
+      default: [otherProps.style, mobileProps && mobileProps.style] as any,
+      web: [otherProps.style, webProps && webProps.style] as any,
+    }),
+  ])
+
   let finalProps: any
   if (renderTouchable) {
     finalProps = {
@@ -112,17 +120,20 @@ export function Link(props: LinkProps) {
           ...webProps,
         } as any,
       }),
+      style: finalStyle,
     }
   } else {
     finalProps = Platform.select({
       default: {
         ...otherProps,
         ...mobileProps,
+        style: finalStyle,
       } as any,
 
       web: {
         ...otherProps,
         ...webProps,
+        style: finalStyle,
       } as any,
     })
   }

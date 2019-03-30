@@ -5,6 +5,8 @@ import { Theme } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { contentPadding } from '../../../../styles/variables'
 
+export const innerCardMarginTop = contentPadding / 3
+
 export const cardRowStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -17,7 +19,9 @@ export const cardRowStyles = StyleSheet.create({
 
   mainContentContainer: {
     flex: 1,
+    alignItems: 'flex-start',
     justifyContent: 'center',
+    maxWidth: '100%',
   },
 })
 

@@ -21,6 +21,7 @@ export interface RepositoryListRowProps
 export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {
   const renderItem: RenderItem<GitHubRepo> = ({
     item: repo,
+    index,
     showMoreItemsIndicator,
   }) => {
     if (!(repo && repo.id)) return null
@@ -39,6 +40,7 @@ export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {
         ownerName={repoOwnerName!}
         repositoryName={repoName!}
         showMoreItemsIndicator={showMoreItemsIndicator}
+        withTopMargin={index === 0 ? props.withTopMargin : true}
       />
     )
   }

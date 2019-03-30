@@ -315,7 +315,7 @@ export const EventOrNotificationColumn = React.memo(
             flexDirection: 'column',
           }}
         >
-          {({ height: containerHeight }) => (
+          {({ height: containerHeight, ...x }) => (
             <>
               {!disableColumnOptions && (
                 <ColumnOptionsRenderer
@@ -328,9 +328,8 @@ export const EventOrNotificationColumn = React.memo(
               )}
 
               <View style={{ flex: 1 }}>
-                {!!isFreeTrial && <FreeTrialHeaderMessage />}
-
                 {children}
+                {!!isFreeTrial && <FreeTrialHeaderMessage />}
               </View>
             </>
           )}
