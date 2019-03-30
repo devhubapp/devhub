@@ -41,7 +41,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
   if (branch === 'master' && !isBranchMainEvent) return null
 
   const hideIcon = true
-  const muted = isRead || !isBranchMainEvent || branch === 'master'
+  const muted = isRead || !isBranchMainEvent // || branch === 'master'
 
   return (
     <BaseRow
@@ -60,6 +60,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
           size={smallAvatarSize}
           style={[
             { alignSelf: 'flex-end' },
+            getCardStylesForTheme(springAnimatedTheme).normalText,
             muted && getCardStylesForTheme(springAnimatedTheme).mutedText,
           ]}
         />
@@ -71,6 +72,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
               numberOfLines={1}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
+                cardStyles.smallText,
                 muted && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
@@ -82,7 +84,6 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
                     style={[
                       getCardStylesForTheme(springAnimatedTheme).normalText,
                       getCardStylesForTheme(springAnimatedTheme).icon,
-                      cardStyles.smallText,
                       isRead &&
                         getCardStylesForTheme(springAnimatedTheme).mutedText,
                     ]}

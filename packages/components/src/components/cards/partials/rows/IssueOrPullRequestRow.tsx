@@ -172,7 +172,7 @@ export const IssueOrPullRequestRow = React.memo(
               </SpringAnimatedText>
             </Link>
 
-            <View style={{ maxWidth: '100%' }}>
+            <View style={{ alignSelf: 'stretch', maxWidth: '100%' }}>
               {!!labels && labels.length > 0 && (
                 <>
                   <Spacer height={innerCardMarginTop} />
@@ -217,7 +217,12 @@ export const IssueOrPullRequestRow = React.memo(
                     <Spacer height={innerCardMarginTop} />
 
                     <View
-                      style={{ flexDirection: 'row', alignItems: 'center' }}
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignSelf: 'stretch',
+                        alignItems: 'center',
+                      }}
                     >
                       {!!byText && (
                         <Link

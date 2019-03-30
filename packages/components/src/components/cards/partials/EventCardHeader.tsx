@@ -126,6 +126,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   {username}
                 </SpringAnimatedText>
               </Link>
+
               {!!isBot && (
                 <>
                   <Text children="  " />
@@ -135,11 +136,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                       getCardStylesForTheme(springAnimatedTheme).timestampText
                     }
                   >
-                    <Text children="  " />
                     BOT
                   </SpringAnimatedText>
                 </>
               )}
+
               <IntervalRefresh date={date}>
                 {() => {
                   const dateText = getDateSmallText(date, false)
@@ -158,7 +159,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                           web: { title: getFullDateText(date) },
                         })}
                       >
-                        <Text children="  " />
                         {dateText}
                       </SpringAnimatedText>
                     </>
@@ -199,10 +199,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 localOnly: true,
               })
             }
-            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
+              marginTop: isRead ? 3 : 6,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
             }}
@@ -211,7 +210,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           <BookmarkButton
             isSaved={!!isSaved}
             itemIds={ids}
-            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
@@ -224,15 +222,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             fixedIconSize
             foregroundColor={cardIconColor}
             iconName={cardIconName}
-            iconStyle={[
-              cardIconName === 'star' && {
-                lineHeight: 14,
-              },
-            ]}
-            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
+              marginTop: cardIconName === 'star' ? 3 : 4,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
               marginRight: -contentPadding / 2,

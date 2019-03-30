@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react'
-import {
-  BackHandler,
-  Dimensions,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native'
 
 import { ModalPayloadWithIndex } from '@devhub/core'
 import { config, useTransition } from 'react-spring/native'
@@ -16,6 +10,7 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
+import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'

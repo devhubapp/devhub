@@ -79,7 +79,7 @@ export function CardSmallThing(props: CardSmallThingProps) {
               springAnimatedTextStyles,
               {
                 lineHeight: undefined,
-                marginTop: Platform.select({ web: 2, default: 3 }),
+                marginTop: Platform.select({ web: 3, default: 4 }),
               },
               !!hasText && { marginRight: 4 },
             ]}

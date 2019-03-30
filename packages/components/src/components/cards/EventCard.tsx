@@ -520,7 +520,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                 {
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
-                  width: 120,
+                  width: 100,
                   overflow: 'hidden',
                 },
               ]}
@@ -537,7 +537,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     justifyContent: 'center',
-                    width: 120,
+                    width: 100,
                   }}
                   small
                   viewMode={cardViewMode}

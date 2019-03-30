@@ -3,8 +3,8 @@ import { Dimensions } from 'react-native'
 
 export const APP_LAYOUT_BREAKPOINTS = {
   SMALL: 420,
-  MEDIUM: 600,
-  LARGE: 800,
+  MEDIUM: 580,
+  LARGE: 700,
   XLARGE: 1000,
 }
 

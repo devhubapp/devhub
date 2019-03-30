@@ -2,10 +2,13 @@ import React from 'react'
 
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
-import * as colors from '../../styles/colors'
+import { useTheme } from '../context/ThemeContext'
 import { HeaderMessage } from './HeaderMessage'
+import { getSeparatorThemeColor } from './Separator'
 
 export function FreeTrialHeaderMessage() {
+  const theme = useTheme()
+
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
   if (username === 'appledevhub') return null
 
@@ -29,7 +32,10 @@ export function FreeTrialHeaderMessage() {
             '@brunolemos, creator of DevHub.',
         )
       }
-      textStyle={{ color: colors.orange }}
+      style={{
+        backgroundColor: theme[getSeparatorThemeColor(theme.backgroundColor)],
+      }}
+      textStyle={{ color: theme.primaryBackgroundColor }}
     >
       Free trial. Learn more.
     </HeaderMessage>

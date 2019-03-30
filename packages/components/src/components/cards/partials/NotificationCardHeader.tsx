@@ -210,10 +210,9 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 unread: !!isRead,
               })
             }
-            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
+              marginTop: isRead ? 3 : 6,
               paddingVertical: 0,
               paddingHorizontal: contentPadding / 3,
             }}
@@ -222,7 +221,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           <BookmarkButton
             isSaved={!!isSaved}
             itemIds={ids}
-            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
@@ -240,7 +238,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 width: columnHeaderItemContentSize,
               },
             ]}
-            size={16}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
