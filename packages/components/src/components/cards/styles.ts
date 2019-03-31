@@ -39,7 +39,7 @@ export const cardStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     paddingVertical: contentPadding * (2 / 3),
-    paddingHorizontal: contentPadding,
+    paddingHorizontal: contentPadding / 2,
   },
 
   compactItemFixedWidth: {

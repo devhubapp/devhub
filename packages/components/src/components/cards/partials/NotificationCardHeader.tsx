@@ -26,6 +26,7 @@ import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
+import { ToggleReadButton } from '../../common/ToggleReadButton'
 import { cardStyles, getCardStylesForTheme } from '../styles'
 import { NotificationReason } from './rows/partials/NotificationReason'
 
@@ -197,25 +198,14 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             )} */}
           </View>
 
-          <ColumnHeaderItem
-            analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
-            enableForegroundHover
-            fixedIconSize
-            iconName={isRead ? 'mail-read' : 'mail'}
-            iconStyle={isRead ? undefined : { lineHeight: 14 }}
-            onPress={() =>
-              markItemsAsReadOrUnread({
-                type: 'notifications',
-                itemIds: ids,
-                unread: !!isRead,
-              })
-            }
+          <ToggleReadButton
+            isRead={isRead}
+            itemIds={ids}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: isRead ? 3 : 6,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
+              marginTop: 3,
             }}
+            type="notifications"
           />
 
           <BookmarkButton
@@ -224,8 +214,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
             }}
           />
 

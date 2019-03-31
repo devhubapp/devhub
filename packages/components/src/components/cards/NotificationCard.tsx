@@ -34,6 +34,7 @@ import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
+import { ToggleReadButton } from '../common/ToggleReadButton'
 import { useTheme } from '../context/ThemeContext'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
@@ -434,6 +435,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         {/* <CenterGuide /> */}
 
+        <Spacer width={contentPadding / 2} />
+
         {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
         >
@@ -441,21 +444,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         </View>
 
         <Spacer width={contentPadding} /> */}
-
-        <View
-          style={[
-            cardStyles.compactItemFixedWidth,
-            cardStyles.compactItemFixedHeight,
-          ]}
-        >
-          <BookmarkButton
-            isSaved={isSaved}
-            itemIds={[id]}
-            size={smallAvatarSize}
-          />
-        </View>
-
-        <Spacer width={contentPadding} />
 
         {!!!repoIsKnown && (
           <>
@@ -558,6 +546,25 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             backgroundThemeColor={backgroundThemeColor}
             isPrivate={isPrivate}
             reason={notification.reason as GitHubNotificationReason}
+          />
+        </View>
+
+        <Spacer width={contentPadding} />
+
+        <View style={cardStyles.compactItemFixedHeight}>
+          <ToggleReadButton
+            isRead={isRead}
+            itemIds={[id]}
+            size={smallAvatarSize}
+            type="notifications"
+          />
+        </View>
+
+        <View style={cardStyles.compactItemFixedHeight}>
+          <BookmarkButton
+            isSaved={isSaved}
+            itemIds={[id]}
+            size={smallAvatarSize}
           />
         </View>
       </SpringAnimatedView>

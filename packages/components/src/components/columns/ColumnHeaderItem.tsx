@@ -255,7 +255,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 alignContent: 'center',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginRight: hasText ? 8 : 0,
+                marginRight: hasText ? contentPadding / 2 : 0,
               }}
             >
               {!!username ? (

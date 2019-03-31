@@ -51,6 +51,7 @@ import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
+import { ToggleReadButton } from '../common/ToggleReadButton'
 import { useTheme } from '../context/ThemeContext'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { EventCardHeader } from './partials/EventCardHeader'
@@ -505,25 +506,23 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
         <Spacer width={contentPadding} /> */}
 
-        <View
-          style={[
-            cardStyles.compactItemFixedWidth,
-            cardStyles.compactItemFixedHeight,
-          ]}
-        >
-          <BookmarkButton
-            isSaved={isSaved}
-            itemIds={[id]}
-            size={smallAvatarSize}
-          />
-        </View>
-
-        <Spacer width={contentPadding} />
+        <Spacer width={contentPadding / 2} />
 
         {!repoIsKnown && (
           <>
-            <View style={cardStyles.compactItemFixedHeight}>
-              <Avatar isBot={isBot} linkURL="" small username={repoOwnerName} />
+            <View
+              style={[
+                cardStyles.compactItemFixedHeight,
+                { width: smallAvatarSize },
+              ]}
+            >
+              <Avatar
+                isBot={isBot}
+                linkURL=""
+                small
+                size={smallAvatarSize}
+                username={repoOwnerName}
+              />
             </View>
 
             <Spacer width={contentPadding} />
@@ -616,6 +615,25 @@ export const EventCard = React.memo((props: EventCardProps) => {
               }}
             </IntervalRefresh>
           )}
+        </View>
+
+        <Spacer width={contentPadding} />
+
+        <View style={cardStyles.compactItemFixedHeight}>
+          <ToggleReadButton
+            isRead={isRead}
+            itemIds={[id]}
+            size={smallAvatarSize}
+            type="activity"
+          />
+        </View>
+
+        <View style={cardStyles.compactItemFixedHeight}>
+          <BookmarkButton
+            isSaved={isSaved}
+            itemIds={[id]}
+            size={smallAvatarSize}
+          />
         </View>
       </SpringAnimatedView>
     )

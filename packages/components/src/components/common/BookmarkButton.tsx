@@ -2,6 +2,7 @@ import React from 'react'
 
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
+import { contentPadding } from '../../styles/variables'
 import {
   ColumnHeaderItem,
   ColumnHeaderItemProps,
@@ -34,6 +35,13 @@ export function BookmarkButton(props: BookmarkButtonProps) {
       noPadding
       onPress={() => saveItemsForLater({ itemIds, save: !isSaved })}
       {...otherProps}
+      style={[
+        {
+          paddingVertical: 0,
+          paddingHorizontal: contentPadding / 3,
+        },
+        otherProps.style,
+      ]}
     />
   )
 }

@@ -22,6 +22,7 @@ import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
+import { ToggleReadButton } from '../../common/ToggleReadButton'
 import { cardStyles, getCardStylesForTheme } from '../styles'
 
 export interface EventCardHeaderProps {
@@ -185,26 +186,14 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             </SpringAnimatedText>
           </View>
 
-          <ColumnHeaderItem
-            analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
-            enableForegroundHover
-            fixedIconSize
-            iconName={isRead ? 'mail-read' : 'mail'}
-            iconStyle={isRead ? undefined : { lineHeight: 14 }}
-            onPress={() =>
-              markItemsAsReadOrUnread({
-                type: 'activity',
-                itemIds: ids,
-                unread: !!isRead,
-                localOnly: true,
-              })
-            }
+          <ToggleReadButton
+            isRead={isRead}
+            itemIds={ids}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: isRead ? 3 : 6,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
+              marginTop: 3,
             }}
+            type="activity"
           />
 
           <BookmarkButton
@@ -213,8 +202,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
             }}
           />
 
