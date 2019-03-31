@@ -43,13 +43,23 @@ export function getColumnCardThemeColors(
 } {
   const luminance = getLuminance(backgroundColor)
 
-  if (luminance >= 0.5)
+  if (luminance >= 0.5) {
     return {
       unread: 'backgroundColor',
       unread__hover: 'backgroundColorLighther1',
       read: 'backgroundColorDarker1',
       read__hover: 'backgroundColorDarker2',
     }
+  }
+
+  if (luminance <= 0.02) {
+    return {
+      unread: 'backgroundColorLighther2',
+      unread__hover: 'backgroundColorLighther4',
+      read: 'backgroundColor',
+      read__hover: 'backgroundColorDarker2',
+    }
+  }
 
   return {
     unread: 'backgroundColorLighther1',

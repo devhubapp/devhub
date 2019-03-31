@@ -11,7 +11,8 @@ export function getCardItemSeparatorThemeColor(
 ): keyof ThemeColors {
   const luminance = getLuminance(backgroundColor)
 
-  if (luminance <= 0.02) return 'backgroundColorLess2'
+  if (luminance <= 0.02)
+    return isRead ? 'backgroundColorLighther2' : 'backgroundColorLighther1'
 
   return isRead ? 'backgroundColorDarker2' : 'backgroundColorDarker1'
 }
