@@ -81,8 +81,8 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
     uncheckedForegroundColor = springAnimatedTheme.foregroundColor,
   } = props
 
-  const [, setLastBooleanValue] = useState(
-    typeof props.checked === 'boolean' ? props.checked : undefined,
+  const [lastBooleanValue, setLastBooleanValue] = useState(
+    typeof props.checked === 'boolean' ? props.checked : !!defaultValue,
   )
 
   const isIndeterminateState = enableIndeterminateState && checked === null
@@ -90,9 +90,7 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
   const getNextValue = () =>
     enableIndeterminateState
       ? checked === null
-        ? !!defaultValue
-        : checked === !!defaultValue
-        ? !defaultValue
+        ? !lastBooleanValue
         : null
       : !checked
 
