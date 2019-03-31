@@ -82,6 +82,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const themeRef = useRef<Theme | null>(null)
   const initialTheme = useTheme(theme => {
     themeRef.current = theme
+
+    if (itemRef.current) {
+      itemRef.current.setNativeProps({
+        style: {
+          backgroundColor: theme[getBackgroundThemeColor()],
+        },
+      })
+    }
   })
   themeRef.current = initialTheme
 
@@ -238,12 +246,18 @@ export const EventCard = React.memo((props: EventCardProps) => {
   //   ? getIssueIconAndColor(issue)
   //   : { icon: undefined, color: undefined }
 
-  const backgroundThemeColors = getColumnCardThemeColors(
-    themeRef.current.backgroundColor,
-  )
-  const backgroundThemeColor =
-    // (isFocused && 'backgroundColorLess2') ||
-    (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
+  function getBackgroundThemeColor() {
+    const backgroundThemeColors = getColumnCardThemeColors(
+      themeRef.current!.backgroundColor,
+    )
+    const _backgroundThemeColor =
+      // (isFocused && 'backgroundColorLess2') ||
+      (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
+
+    return _backgroundThemeColor
+  }
+
+  const backgroundThemeColor = getBackgroundThemeColor()
 
   const cardIconColor =
     _cardIconColor &&

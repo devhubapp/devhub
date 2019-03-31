@@ -69,6 +69,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const themeRef = useRef<Theme | null>(null)
   const initialTheme = useTheme(theme => {
     themeRef.current = theme
+
+    if (itemRef.current) {
+      itemRef.current.setNativeProps({
+        style: {
+          backgroundColor: theme[getBackgroundThemeColor()],
+        },
+      })
+    }
   })
   themeRef.current = initialTheme
 
@@ -218,12 +226,18 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     actor && actor.login && actor.login.indexOf('[bot]') >= 0,
   )
 
-  const backgroundThemeColors = getColumnCardThemeColors(
-    themeRef.current.backgroundColor,
-  )
-  const backgroundThemeColor =
-    // (isFocused && 'backgroundColorLess2') ||
-    (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
+  function getBackgroundThemeColor() {
+    const backgroundThemeColors = getColumnCardThemeColors(
+      themeRef.current!.backgroundColor,
+    )
+    const _backgroundThemeColor =
+      // (isFocused && 'backgroundColorLess2') ||
+      (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
+
+    return _backgroundThemeColor
+  }
+
+  const backgroundThemeColor = getBackgroundThemeColor()
 
   const cardIconColor =
     _cardIconColor &&
