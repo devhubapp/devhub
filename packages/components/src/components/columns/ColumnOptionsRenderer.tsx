@@ -5,12 +5,15 @@ import { useTransition } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
+import { columnHeaderHeight } from '../../styles/variables'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { fabSize } from '../common/FAB'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing } from '../layout/FABRenderer'
+import { ColumnHeader } from './ColumnHeader'
+import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptions } from './ColumnOptions'
 
 export interface ColumnOptionsRendererProps {
@@ -107,10 +110,25 @@ export const ColumnOptionsRenderer = React.memo(
             },
           ]}
         >
+          {!!inlineMode && (
+            <ColumnHeader>
+              <ColumnHeaderItem
+                analyticsLabel={undefined}
+                fixedIconSize
+                iconName="settings"
+                subtitle=""
+                title="filters"
+                style={{ flex: 1, alignItems: 'flex-start' }}
+              />
+            </ColumnHeader>
+          )}
+
           <AccordionView isOpen={visible}>
             <ColumnOptions
               key={`column-options-${column.type}`}
-              availableHeight={availableHeight}
+              availableHeight={
+                availableHeight - (inlineMode ? columnHeaderHeight : 0)
+              }
               column={column}
               columnIndex={columnIndex}
               forceOpenAll={forceOpenAll}
