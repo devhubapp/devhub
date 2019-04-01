@@ -18,6 +18,7 @@ import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
+import { AppViewModePreference } from '../widgets/AppViewModePreference'
 import { ThemePreference } from '../widgets/ThemePreference'
 
 export interface SettingsModalProps {
@@ -62,6 +63,10 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
           flexGrow: 1,
         }}
       >
+        <AppViewModePreference />
+
+        <Spacer height={contentPadding} />
+
         <ThemePreference />
 
         {/* <Spacer height={contentPadding * 2} />
@@ -134,7 +139,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         <View style={{ padding: contentPadding }}>
           <AppVersion />
 
-          <Spacer height={contentPadding} />
+          <Spacer height={contentPadding / 2} />
 
           <Button
             key="adbanced-button"

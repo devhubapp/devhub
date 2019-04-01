@@ -237,6 +237,15 @@ const migrations = {
       }
       draft.github.auth.user = auth.user.github.user
     }),
+  9: (state: RootState) =>
+    immer(state, draft => {
+      draft.config = draft.config || {}
+
+      draft.config.appViewMode =
+        draft.config.appViewMode === 'single-column'
+          ? 'single-column'
+          : 'multi-column'
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -246,7 +255,7 @@ export function configureStore(key = 'root') {
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
     throttle: 500,
-    version: 8,
+    version: 9,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 

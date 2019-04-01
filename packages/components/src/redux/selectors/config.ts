@@ -23,6 +23,5 @@ export const themeSelector = createSelector(
   loadTheme,
 )
 
-export const viewModeSelector = (state: RootState) =>
-  'single-column' as AppViewMode
-// s(state).appViewMode || 'multi-column'
+export const appViewModeSelector = (state: RootState) =>
+  s(state).appViewMode || 'multi-column'
