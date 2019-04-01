@@ -15,7 +15,7 @@ const initialState: State = {
   preferredDarkTheme: { id: constants.DEFAULT_DARK_THEME },
   preferredLightTheme: { id: constants.DEFAULT_LIGHT_THEME },
   theme: { id: 'auto' },
-  appViewMode: 'multi-column',
+  appViewMode: 'single-column',
 }
 
 export const configReducer: Reducer<State> = (state = initialState, action) => {
@@ -48,8 +48,12 @@ export const configReducer: Reducer<State> = (state = initialState, action) => {
 
     case 'SET_APP_VIEW_MODE':
       return immer(state, draft => {
-        draft.appViewMode =
-          action.payload === 'single-column' ? 'single-column' : 'multi-column'
+        if (
+          action.payload === 'single-column' ||
+          action.payload === 'multi-column'
+        ) {
+          draft.appViewMode = action.payload
+        }
       })
 
     default:

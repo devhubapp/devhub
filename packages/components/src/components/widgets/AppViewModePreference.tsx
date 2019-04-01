@@ -25,7 +25,11 @@ export const AppViewModePreference = React.memo(() => {
           marginBottom: contentPadding / 2,
         }}
         label={
-          appViewMode === 'single-column' ? 'Single-column' : 'Multi-column'
+          appViewMode === 'single-column'
+            ? 'Single-column'
+            : appViewMode === 'multi-column'
+            ? 'Multi-column'
+            : appViewMode
         }
         onChange={checked => {
           if (checked) setAppViewMode(appViewMode)
@@ -40,15 +44,9 @@ export const AppViewModePreference = React.memo(() => {
 
       <View style={{ paddingHorizontal: contentPadding }}>
         <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 1 }}>
-            {/* <H3 withMargin>Single-column</H3> */}
-            {renderOption('single-column')}
-          </View>
+          <View style={{ flex: 1 }}>{renderOption('single-column')}</View>
 
-          <View style={{ flex: 1 }}>
-            {/* <H3 withMargin>Multi-column</H3> */}
-            {renderOption('multi-column')}
-          </View>
+          <View style={{ flex: 1 }}>{renderOption('multi-column')}</View>
         </View>
       </View>
     </View>

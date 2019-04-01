@@ -328,6 +328,6 @@ export type EnhancementCache = Map<
   false | { timestamp: number; data: any }
 >
 
-export type AppViewMode = 'multi-column' | 'single-column'
+export type AppViewMode = 'single-column' | 'multi-column'
 
 export type CardViewMode = 'compact' | 'expanded'
