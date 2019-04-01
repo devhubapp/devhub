@@ -26,7 +26,6 @@ export function BaseRow(props: BaseRowProps) {
     leftContainerStyle,
     right,
     rightContainerStyle,
-    viewMode,
     withTopMargin,
   } = props
 
@@ -42,9 +41,7 @@ export function BaseRow(props: BaseRowProps) {
         <View
           style={[
             cardStyles.leftColumn,
-            viewMode === 'compact'
-              ? cardStyles.leftColumn__small
-              : cardStyles.leftColumn__big,
+            cardStyles.leftColumn__small,
             leftContainerStyle,
           ]}
         >

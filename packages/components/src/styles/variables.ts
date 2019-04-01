@@ -1,8 +1,9 @@
-export const avatarSize = 36
+export const avatarSize = 28
+export const smallAvatarSize = 18
+
 export const contentPadding = 16
 export const mutedOpacity = 0.5
 export const radius = 4
-export const smallAvatarSize = avatarSize / 2
 export const smallTextSize = 12
 export const smallerTextSize = 11
 

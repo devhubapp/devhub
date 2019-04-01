@@ -7,11 +7,11 @@ export function useAppViewMode() {
   const { sizename } = useAppLayout()
 
   // const appViewMode = useReduxState(selectors.viewModeSelector)
-  const appViewMode: AppViewMode = 'single-column'
+  const appViewMode: AppViewMode = 'multi-column' as AppViewMode
 
   const cardViewMode: CardViewMode =
     appViewMode === 'single-column' && sizename > '3-large'
-      ? 'compact'
+      ? 'expanded'
       : 'expanded'
 
   return {

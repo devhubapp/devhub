@@ -12,16 +12,9 @@ import {
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
-import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
-import * as actions from '../../../redux/actions'
-import {
-  columnHeaderItemContentSize,
-  contentPadding,
-} from '../../../styles/variables'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
-import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
@@ -69,8 +62,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const {
     avatarUrl,
     backgroundThemeColor,
-    cardIconColor,
-    cardIconName,
     date,
     ids,
     isBot,
@@ -84,11 +75,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const markItemsAsReadOrUnread = useReduxAction(
-    actions.markItemsAsReadOrUnread,
-  )
-
-  const smallLeftColumn = false
+  const smallLeftColumn = true
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
@@ -110,6 +97,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           isBot={isBot}
           linkURL={userLinkURL}
           shape={isBot ? undefined : 'circle'}
+          small
           style={cardStyles.avatar}
           username={username}
         />
@@ -214,24 +202,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
-            }}
-          />
-
-          <ColumnHeaderItem
-            fixedIconSize
-            foregroundColor={cardIconColor}
-            iconName={cardIconName}
-            iconStyle={[
-              {
-                width: columnHeaderItemContentSize,
-              },
-            ]}
-            style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
-              marginRight: -contentPadding / 2,
             }}
           />
         </View>

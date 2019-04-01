@@ -29,7 +29,7 @@ export function NotificationReason(props: NotificationReasonProps) {
     <SpringAnimatedText
       numberOfLines={1}
       style={[
-        getCardStylesForTheme(springAnimatedTheme).descriptionText,
+        getCardStylesForTheme(springAnimatedTheme).headerActionText,
         {
           color: getReadableColor(
             reasonDetails.color,

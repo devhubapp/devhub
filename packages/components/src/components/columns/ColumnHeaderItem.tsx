@@ -213,7 +213,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           noPadding
             ? undefined
             : {
-                paddingHorizontal: contentPadding / 2,
+                paddingHorizontal: contentPadding / 3,
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },
@@ -231,7 +231,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           noPadding
             ? undefined
             : {
-                paddingHorizontal: contentPadding / 2,
+                paddingHorizontal: contentPadding / 3,
                 paddingVertical:
                   showLabel && label ? undefined : contentPadding,
               },

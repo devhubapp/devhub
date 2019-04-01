@@ -31,7 +31,8 @@ export const cardStyles = StyleSheet.create({
   },
 
   container: {
-    padding: contentPadding,
+    paddingVertical: contentPadding * (2 / 3),
+    paddingHorizontal: contentPadding / 2,
   },
 
   compactContainer: {
@@ -58,6 +59,27 @@ export const cardStyles = StyleSheet.create({
 
   compactItemFixedMinHeight: {
     minHeight: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  itemFixedWidth: {
+    width: smallAvatarSize,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  itemFixedHeight: {
+    height: smallAvatarSize,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  itemFixedMinHeight: {
+    minHeight: smallAvatarSize,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -140,10 +162,10 @@ export const getCardStylesForTheme = _.memoize(
         marginRight: 2,
       },
 
-      descriptionText: {
+      headerActionText: {
         fontSize: smallTextSize,
-        lineHeight: smallTextSize + 4,
-        color: theme.foregroundColorMuted50,
+        lineHeight: 18,
+        color: theme.foregroundColor,
         ...Platform.select({
           default: {},
           web: {

@@ -498,6 +498,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
         {/* <CenterGuide /> */}
 
+        <Spacer width={contentPadding / 3} />
+
         {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
         >
@@ -505,8 +507,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
         </View>
 
         <Spacer width={contentPadding} /> */}
-
-        <Spacer width={contentPadding / 2} />
 
         {!repoIsKnown && (
           <>
@@ -585,7 +585,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
           <Spacer width={contentPadding} />
 
-          <View style={{ flex: 1 }}>{Content}</View>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>{Content}</View>
+
+            <Spacer width={contentPadding / 3} />
+          </View>
         </View>
 
         <Spacer width={contentPadding} />
@@ -652,24 +656,50 @@ export const EventCard = React.memo((props: EventCardProps) => {
     >
       {!!isFocused && <CardFocusBorder />}
 
-      <EventCardHeader
-        key={`event-card-header-${id}`}
-        actionText={actionText}
-        avatarUrl={avatarUrl}
-        backgroundThemeColor={backgroundThemeColor}
-        cardIconColor={cardIconColor}
-        cardIconName={cardIconName}
-        date={event.created_at}
-        ids={('merged' in event && event.merged) || [id]}
-        isBot={isBot}
-        isPrivate={isPrivate}
-        isRead={isRead}
-        isSaved={isSaved}
-        userLinkURL={actor.html_url || ''}
-        username={actor.display_login || actor.login}
-      />
+      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}>
+        <Spacer width={contentPadding / 3} />
 
-      {Content}
+        <View
+          style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
+        >
+          <SpringAnimatedIcon
+            name={cardIconName}
+            selectable={false}
+            style={{
+              fontSize: smallAvatarSize,
+              textAlign: 'center',
+              color: cardIconColor || springAnimatedTheme.foregroundColor,
+            }}
+          />
+        </View>
+
+        <Spacer width={contentPadding} />
+
+        <View style={{ flex: 1 }}>
+          <EventCardHeader
+            key={`event-card-header-${id}`}
+            actionText={actionText}
+            avatarUrl={avatarUrl}
+            backgroundThemeColor={backgroundThemeColor}
+            cardIconColor={cardIconColor}
+            cardIconName={cardIconName}
+            date={event.created_at}
+            ids={('merged' in event && event.merged) || [id]}
+            isBot={isBot}
+            isPrivate={isPrivate}
+            isRead={isRead}
+            isSaved={isSaved}
+            userLinkURL={actor.html_url || ''}
+            username={actor.display_login || actor.login}
+          />
+
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>{Content}</View>
+
+            <Spacer width={contentPadding / 3} />
+          </View>
+        </View>
+      </View>
     </SpringAnimatedView>
   )
 })

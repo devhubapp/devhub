@@ -435,7 +435,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         {/* <CenterGuide /> */}
 
-        <Spacer width={contentPadding / 2} />
+        <Spacer width={contentPadding / 3} />
 
         {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
@@ -445,7 +445,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         <Spacer width={contentPadding} /> */}
 
-        {!!!repoIsKnown && (
+        {!repoIsKnown && (
           <>
             <View style={cardStyles.compactItemFixedHeight}>
               <Avatar isBot={isBot} linkURL="" small username={repoOwnerName} />
@@ -584,24 +584,52 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     >
       {!!isFocused && <CardFocusBorder />}
 
-      <NotificationCardHeader
-        key={`notification-card-header-${id}`}
-        avatarUrl={repoAvatarDetails.avatar_url || undefined}
-        backgroundThemeColor={backgroundThemeColor}
-        cardIconColor={cardIconColor}
-        cardIconName={cardIconName}
-        date={updatedAt}
-        ids={[id]}
-        isBot={isBot}
-        isPrivate={isPrivate}
-        isRead={isRead}
-        isSaved={isSaved}
-        reason={notification.reason as GitHubNotificationReason}
-        userLinkURL={repoAvatarDetails.html_url || ''}
-        username={repoAvatarDetails.display_login || repoAvatarDetails.login}
-      />
+      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}>
+        <Spacer width={contentPadding / 3} />
 
-      {Content}
+        <View
+          style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
+        >
+          <SpringAnimatedIcon
+            name={cardIconName}
+            selectable={false}
+            style={{
+              fontSize: smallAvatarSize,
+              textAlign: 'center',
+              color: cardIconColor || springAnimatedTheme.foregroundColor,
+            }}
+          />
+        </View>
+
+        <Spacer width={contentPadding} />
+
+        <View style={{ flex: 1 }}>
+          <NotificationCardHeader
+            key={`notification-card-header-${id}`}
+            avatarUrl={repoAvatarDetails.avatar_url || undefined}
+            backgroundThemeColor={backgroundThemeColor}
+            cardIconColor={cardIconColor}
+            cardIconName={cardIconName}
+            date={updatedAt}
+            ids={[id]}
+            isBot={isBot}
+            isPrivate={isPrivate}
+            isRead={isRead}
+            isSaved={isSaved}
+            reason={notification.reason as GitHubNotificationReason}
+            userLinkURL={repoAvatarDetails.html_url || ''}
+            username={
+              repoAvatarDetails.display_login || repoAvatarDetails.login
+            }
+          />
+
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>{Content}</View>
+
+            <Spacer width={contentPadding / 3} />
+          </View>
+        </View>
+      </View>
     </SpringAnimatedView>
   )
 })

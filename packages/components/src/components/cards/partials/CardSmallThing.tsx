@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core'
+import { GitHubIcon, ThemeColors } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../libs/platform'
 import { radius } from '../../../styles/variables'
@@ -12,6 +12,7 @@ import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { getCardStylesForTheme } from '../styles'
 
 export interface CardSmallThingProps {
+  backgroundColorTheme?: keyof ThemeColors
   icon?: GitHubIcon
   isRead: boolean
   style?: StyleProp<ViewStyle>
@@ -21,9 +22,9 @@ export interface CardSmallThingProps {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 4,
     borderRadius: radius,
     borderWidth: 1,
+    borderColor: 'transparent',
   },
 
   innerContainer: {
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
 })
 
 export function CardSmallThing(props: CardSmallThingProps) {
-  const { icon, isRead, style, text, url } = props
+  const { backgroundColorTheme, icon, isRead, style, text, url } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
@@ -64,9 +65,10 @@ export function CardSmallThing(props: CardSmallThingProps) {
       href={fixURL(url)}
       style={[
         styles.container,
-        {
-          backgroundColor: springAnimatedTheme.backgroundColorLess1,
-          borderColor: springAnimatedTheme.backgroundColorLess1,
+        backgroundColorTheme && {
+          paddingHorizontal: 4,
+          backgroundColor: springAnimatedTheme[backgroundColorTheme],
+          borderColor: springAnimatedTheme[backgroundColorTheme],
         },
         style,
       ]}

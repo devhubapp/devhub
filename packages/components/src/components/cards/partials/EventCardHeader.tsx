@@ -10,14 +10,10 @@ import {
   ThemeColors,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
-import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
-import * as actions from '../../../redux/actions'
-import { contentPadding } from '../../../styles/variables'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
-import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
 import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
@@ -64,8 +60,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   const {
     actionText,
     avatarUrl,
-    cardIconColor,
-    cardIconName,
     date,
     ids,
     isBot,
@@ -78,11 +72,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const markItemsAsReadOrUnread = useReduxAction(
-    actions.markItemsAsReadOrUnread,
-  )
-
-  const smallLeftColumn = false
+  const smallLeftColumn = true
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
@@ -104,6 +94,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           isBot={isBot}
           linkURL={userLinkURL}
           shape={isBot ? undefined : 'circle'}
+          small
           style={cardStyles.avatar}
           username={username}
         />
@@ -170,17 +161,15 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
             <SpringAnimatedText
               numberOfLines={1}
-              style={getCardStylesForTheme(springAnimatedTheme).descriptionText}
+              style={[
+                getCardStylesForTheme(springAnimatedTheme).headerActionText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+              ]}
             >
               {!!isPrivate && (
-                <SpringAnimatedText
-                  style={getCardStylesForTheme(springAnimatedTheme).mutedText}
-                >
-                  <SpringAnimatedIcon
-                    name="lock"
-                    style={getCardStylesForTheme(springAnimatedTheme).mutedText}
-                  />{' '}
-                </SpringAnimatedText>
+                <>
+                  <SpringAnimatedIcon name="lock" />{' '}
+                </>
               )}
               {actionText.toLowerCase()}
             </SpringAnimatedText>
@@ -202,19 +191,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
               marginTop: 4,
-            }}
-          />
-
-          <ColumnHeaderItem
-            fixedIconSize
-            foregroundColor={cardIconColor}
-            iconName={cardIconName}
-            style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: cardIconName === 'star' ? 3 : 4,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
-              marginRight: -contentPadding / 2,
             }}
           />
         </View>
