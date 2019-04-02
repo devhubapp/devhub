@@ -99,7 +99,7 @@ function getBrowserWindowOptions() {
   const options: Electron.BrowserWindowConstructorOptions = {
     minWidth: 320,
     minHeight: 450,
-    backgroundColor: '#292C33',
+    backgroundColor: '#242B38',
     darkTheme: true,
     icon:
       process.platform === 'darwin' || process.platform === 'win32'

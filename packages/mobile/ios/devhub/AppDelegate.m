@@ -25,8 +25,8 @@
                                                    moduleName:@"devhub"
                                             initialProperties:nil];
 
-  // #292C33 (dark-gray)
-  rootView.backgroundColor = [UIColor colorWithRed:0.16 green:0.17 blue:0.20 alpha:1.0];
+  // #242B38 (dark-blue)
+  rootView.backgroundColor = [UIColor colorWithRed:0.14 green:0.17 blue:0.22 alpha:1.0];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
