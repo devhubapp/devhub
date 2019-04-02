@@ -185,7 +185,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     } as TextStyle,
 
     title: {
-      fontWeight: '500',
+      fontWeight: '800',
       marginRight: contentPadding / 2,
       lineHeight: size - 1,
       fontSize: size - 3,
