@@ -1,13 +1,12 @@
 import React from 'react'
 
+import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
-import { useTheme } from '../context/ThemeContext'
 import { HeaderMessage } from './HeaderMessage'
-import { getSeparatorThemeColor } from './Separator'
 
 export function FreeTrialHeaderMessage() {
-  const theme = useTheme()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
   if (username === 'appledevhub') return null
@@ -33,9 +32,11 @@ export function FreeTrialHeaderMessage() {
         )
       }
       style={{
-        backgroundColor: theme[getSeparatorThemeColor(theme.backgroundColor)],
+        backgroundColor: springAnimatedTheme.primaryBackgroundColor,
       }}
-      textStyle={{ color: theme.primaryBackgroundColor }}
+      textStyle={{
+        color: springAnimatedTheme.primaryForegroundColor,
+      }}
     >
       Free trial. Learn more.
     </HeaderMessage>

@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
 
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, smallTextSize } from '../../styles/variables'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import {
   SpringAnimatedTouchableOpacity,
@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   text: {
     flexGrow: 1,
     lineHeight: 14,
-    fontSize: 11,
+    fontWeight: '500',
+    fontSize: smallTextSize,
     textAlign: 'center',
   },
 })
