@@ -84,8 +84,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
                     style={[
                       getCardStylesForTheme(springAnimatedTheme).normalText,
                       getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      isRead && cardStyles.readText,
                     ]}
                   />{' '}
                 </>

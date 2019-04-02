@@ -121,7 +121,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 bold && cardStyles.boldText,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+                isRead && cardStyles.readText,
               ]}
             >
               {!hideIcon && (
@@ -132,8 +132,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                     style={[
                       getCardStylesForTheme(springAnimatedTheme).normalText,
                       getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      isRead && cardStyles.readText,
                     ]}
                   />{' '}
                 </>

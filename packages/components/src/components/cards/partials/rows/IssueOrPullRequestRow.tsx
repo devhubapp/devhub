@@ -138,9 +138,8 @@ export const IssueOrPullRequestRow = React.memo(
                 style={[
                   cardStyles.flex,
                   getCardStylesForTheme(springAnimatedTheme).normalText,
-                  bold && cardStyles.boldText,
-                  isRead &&
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  bold && !isRead && cardStyles.boldText,
+                  isRead && cardStyles.readText,
                 ]}
               >
                 {!hideIcon && (
@@ -152,7 +151,6 @@ export const IssueOrPullRequestRow = React.memo(
                         getCardStylesForTheme(springAnimatedTheme).normalText,
                         getCardStylesForTheme(springAnimatedTheme).icon,
                         { color: iconColor },
-                        // isRead && { opacity: mutedOpacity },
                       ]}
                     />{' '}
                   </>
@@ -201,8 +199,6 @@ export const IssueOrPullRequestRow = React.memo(
                       style={[
                         cardStyles.flex,
                         getCardStylesForTheme(springAnimatedTheme).commentText,
-                        isRead &&
-                          getCardStylesForTheme(springAnimatedTheme).mutedText,
                       ]}
                     >
                       {body}

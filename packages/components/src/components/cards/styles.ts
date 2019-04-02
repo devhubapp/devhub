@@ -118,6 +118,10 @@ export const cardStyles = StyleSheet.create({
   boldText: {
     fontWeight: '600',
   },
+
+  readText: {
+    fontWeight: '400',
+  },
 })
 
 export const getCardStylesForTheme = _.memoize(
