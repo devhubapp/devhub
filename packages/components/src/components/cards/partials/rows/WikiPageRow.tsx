@@ -59,7 +59,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 bold && cardStyles.boldText,
-                isRead && cardStyles.readText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
               {!hideIcon && (
@@ -70,7 +70,8 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
                     style={[
                       getCardStylesForTheme(springAnimatedTheme).normalText,
                       getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead && cardStyles.readText,
+                      isRead &&
+                        getCardStylesForTheme(springAnimatedTheme).mutedText,
                     ]}
                   />{' '}
                 </>

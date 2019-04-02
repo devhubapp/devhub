@@ -111,7 +111,8 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   numberOfLines={1}
                   style={[
                     getCardStylesForTheme(springAnimatedTheme).usernameText,
-                    isRead && cardStyles.readText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
                 >
                   {username}
@@ -162,7 +163,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               numberOfLines={1}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).headerActionText,
-                isRead && cardStyles.readText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
               {!!isPrivate && (

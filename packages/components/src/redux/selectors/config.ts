@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { constants, isNight } from '@devhub/core'
+import { AppViewMode, constants, isNight } from '@devhub/core'
 import { loadTheme } from '../../styles/utils'
 import { RootState } from '../types'
 

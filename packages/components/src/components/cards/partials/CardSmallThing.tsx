@@ -9,7 +9,7 @@ import { fixURL } from '../../../utils/helpers/github/url'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedLink } from '../../animated/spring/SpringAnimatedLink'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
-import { cardStyles } from '../styles'
+import { getCardStylesForTheme } from '../styles'
 
 export interface CardSmallThingProps {
   backgroundColorTheme?: keyof ThemeColors
@@ -57,7 +57,7 @@ export function CardSmallThing(props: CardSmallThingProps) {
         ? springAnimatedTheme.foregroundColorMuted50
         : springAnimatedTheme.foregroundColor,
     },
-    isRead && cardStyles.readText,
+    isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
   ]
 
   return (

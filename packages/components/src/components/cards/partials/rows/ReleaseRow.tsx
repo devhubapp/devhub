@@ -118,7 +118,8 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 style={[
                   getCardStylesForTheme(springAnimatedTheme).normalText,
                   bold && cardStyles.boldText,
-                  isRead && cardStyles.readText,
+                  isRead &&
+                    getCardStylesForTheme(springAnimatedTheme).mutedText,
                 ]}
               >
                 <SpringAnimatedText numberOfLines={1}>
@@ -130,7 +131,9 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                         style={[
                           getCardStylesForTheme(springAnimatedTheme).normalText,
                           getCardStylesForTheme(springAnimatedTheme).icon,
-                          isRead && cardStyles.readText,
+                          isRead &&
+                            getCardStylesForTheme(springAnimatedTheme)
+                              .mutedText,
                         ]}
                       />{' '}
                     </>

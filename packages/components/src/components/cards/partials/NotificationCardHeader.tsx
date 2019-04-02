@@ -114,7 +114,8 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   numberOfLines={1}
                   style={[
                     getCardStylesForTheme(springAnimatedTheme).usernameText,
-                    isRead && cardStyles.readText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
                 >
                   {trimNewLinesAndSpaces(username, 18)}

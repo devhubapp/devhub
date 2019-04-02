@@ -84,7 +84,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 getCardStylesForTheme(springAnimatedTheme).icon,
-                isRead && cardStyles.readText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             />{' '} */}
             <SpringAnimatedText
@@ -93,7 +93,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 small && cardStyles.smallText,
                 getCardRowStylesForTheme(springAnimatedTheme).repositoryText,
-                isRead && cardStyles.readText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
               {showMoreItemsIndicator ? '' : repositoryName}

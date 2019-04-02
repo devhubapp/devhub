@@ -84,7 +84,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
               style={[
                 getCardStylesForTheme(springAnimatedTheme).commentText,
                 textStyle,
-                isRead && cardStyles.readText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
               {parseTextWithEmojisToReactComponents(body, {
