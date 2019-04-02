@@ -246,6 +246,12 @@ const migrations = {
           ? 'single-column'
           : 'multi-column'
     }),
+  10: (state: RootState) =>
+    immer(state, draft => {
+      draft.config = draft.config || {}
+
+      draft.config.appViewMode = 'single-column'
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -255,7 +261,7 @@ export function configureStore(key = 'root') {
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
     throttle: 500,
-    version: 9,
+    version: 10,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
