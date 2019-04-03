@@ -158,6 +158,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               alignContent: 'center',
               padding: contentPadding,
             },
+            !!isOpen && !onToggle && { paddingBottom: contentPadding / 2 },
             containerStyle,
           ]}
         >
@@ -190,9 +191,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               numberOfLines={1}
               style={{
                 fontSize: 12,
-                color: hasChanged
-                  ? springAnimatedTheme.primaryBackgroundColor
-                  : springAnimatedTheme.foregroundColorMuted50,
+                color: springAnimatedTheme.foregroundColorMuted50,
               }}
             >
               {subtitle || '●'}

@@ -16,6 +16,7 @@ const checkboxBorderRadius = 4
 
 const styles = StyleSheet.create({
   container: {
+    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
@@ -188,7 +189,6 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
       {!!label && (
         <View
           style={{
-            flexGrow: 1,
             flexDirection: 'row',
             alignItems: 'center',
             alignContent: 'center',

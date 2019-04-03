@@ -23,7 +23,8 @@ import {
 } from '../../styles/variables'
 import {
   filterRecordHasAnyForcedValue,
-  filterRecordHasThisValue,
+  filterRecordWithThisValueCount,
+  getFilterCountMetadata,
 } from '../../utils/helpers/filters'
 import { eventSubjectTypes } from '../../utils/helpers/github/events'
 import {
@@ -156,7 +157,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   }
 
   const checkboxStyle = {
-    flexGrow: 1,
     paddingVertical: contentPadding / 4,
     paddingHorizontal: contentPadding,
   }
@@ -384,8 +384,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             if (!(subjectTypeOptions && subjectTypeOptions.length)) return null
 
             const defaultBooleanValue = true
-            const isFilterStrict = filterRecordHasThisValue(
+            const isFilterStrict = filterRecordWithThisValueCount(
               filters,
+              defaultBooleanValue,
+            )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              subjectTypeOptions.length,
               defaultBooleanValue,
             )
 
@@ -404,7 +409,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
                 title="Subject type"
                 subtitle={
-                  filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : 'All'
                 }
               >
                 {subjectTypeOptions.map(item => {
@@ -453,8 +460,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               column.filters.notifications.reasons
 
             const defaultBooleanValue = true
-            const isFilterStrict = filterRecordHasThisValue(
+            const isFilterStrict = filterRecordWithThisValueCount(
               filters,
+              defaultBooleanValue,
+            )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              notificationReasonOptions.length,
               defaultBooleanValue,
             )
 
@@ -473,7 +485,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
                 title="Subscription reason"
                 subtitle={
-                  filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : 'All'
                 }
               >
                 {notificationReasonOptions.map(item => {
@@ -520,8 +534,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               column.filters.activity.actions
 
             const defaultBooleanValue = true
-            const isFilterStrict = filterRecordHasThisValue(
+            const isFilterStrict = filterRecordWithThisValueCount(
               filters,
+              defaultBooleanValue,
+            )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              eventActionOptions.length,
               defaultBooleanValue,
             )
 
@@ -540,7 +559,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
                 title="Event action"
                 subtitle={
-                  filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : 'All'
                 }
               >
                 {eventActionOptions.map(item => {
