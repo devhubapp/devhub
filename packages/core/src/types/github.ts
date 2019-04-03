@@ -606,6 +606,19 @@ export type GitHubEvent =
   | GitHubReleaseEvent
   | GitHubWatchEvent
 
+export type GitHubEventAction =
+  | 'added'
+  | 'commented'
+  | 'created'
+  | 'deleted'
+  | 'forked'
+  | 'pushed'
+  | 'released'
+  | 'reviewed'
+  | 'starred'
+  | 'state_changed'
+  | 'updated'
+
 // not visible in timelines
 // | 'DeploymentEvent'
 // | 'DeploymentStatusEvent'

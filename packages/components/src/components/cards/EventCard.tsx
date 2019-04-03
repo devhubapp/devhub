@@ -5,7 +5,7 @@ import {
   CardViewMode,
   EnhancedGitHubEvent,
   getDateSmallText,
-  getEventText,
+  getEventMetadata,
   getFullDateText,
   getGitHubAvatarURLFromPayload,
   getGitHubURLForRepo,
@@ -210,7 +210,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
   const _cardIconColor = cardIconDetails.color
 
-  const actionText = getEventText(event, {
+  const { actionText } = getEventMetadata(event, {
     includeBranch: cardViewMode === 'compact',
     repoIsKnown,
   })

@@ -19,12 +19,12 @@ import {
 } from './shared'
 
 export const eventSubjectTypes: GitHubEventSubjectType[] = [
+  'Branch',
   'Commit',
   'Issue',
   'PullRequest',
-  'Release',
-  'Branch',
   'PullRequestReview',
+  'Release',
   'Repository',
   'Tag',
   'User',

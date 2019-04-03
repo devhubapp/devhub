@@ -3,7 +3,7 @@ import {
   ColumnFilters,
   ColumnsAndSubscriptions,
   ColumnSubscriptionCreation,
-  GitHubEvent,
+  GitHubEventAction,
   GitHubEventSubjectType,
   GitHubNotificationReason,
   GitHubNotificationSubjectType,
@@ -60,10 +60,10 @@ export function setColumnParticipatingFilter(payload: {
   return createAction('SET_COLUMN_PARTICIPATING_FILTER', payload)
 }
 
-export function setColumnActivityTypeFilter<
-  T extends GitHubEvent['type']
+export function setColumnActivityActionFilter<
+  T extends GitHubEventAction
 >(payload: { columnId: string; type: T; value: boolean | null }) {
-  return createAction('SET_COLUMN_ACTIVITY_TYPE_FILTER', payload)
+  return createAction('SET_COLUMN_ACTIVITY_ACTION_FILTER', payload)
 }
 
 export function setColumnReasonFilter<

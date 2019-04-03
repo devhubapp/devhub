@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
 
 import {
+  CardViewMode,
   ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
@@ -69,7 +70,9 @@ export const createSubscriptionsDataSelector = () =>
     },
   )
 
-export const createFilteredSubscriptionsDataSelector = () => {
+export const createFilteredSubscriptionsDataSelector = (
+  cardViewMode: CardViewMode,
+) => {
   const subscriptionsDataSelector = createSubscriptionsDataSelector()
 
   return createSelector(
@@ -94,7 +97,11 @@ export const createFilteredSubscriptionsDataSelector = () => {
         )
       }
 
-      return getFilteredEvents(items as EnhancedGitHubEvent[], filters)
+      return getFilteredEvents(
+        items as EnhancedGitHubEvent[],
+        filters,
+        cardViewMode,
+      )
     },
   )
 }

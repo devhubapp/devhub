@@ -75,8 +75,33 @@ export function getSubjectTypeMetadata<
   label: string
   subjectType: T
 } {
-  return {
-    subjectType,
-    label: _.capitalize(_.startCase(subjectType)),
+  switch (subjectType) {
+    case 'PullRequestReview': {
+      return {
+        label: 'Review',
+        subjectType,
+      }
+    }
+
+    case 'RepositoryInvitation': {
+      return {
+        label: 'Invitation',
+        subjectType,
+      }
+    }
+
+    case 'RepositoryVulnerabilityAlert': {
+      return {
+        label: 'Security Alert',
+        subjectType,
+      }
+    }
+
+    default: {
+      return {
+        label: _.startCase(subjectType),
+        subjectType,
+      }
+    }
   }
 }

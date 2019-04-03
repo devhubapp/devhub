@@ -66,13 +66,15 @@ export const NotificationCardsContainer = React.memo(
     )
 
     const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(),
+      selectors.createFilteredSubscriptionsDataSelector(cardViewMode),
     )
 
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
-    }, column.subscriptionIds)
+      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode,
+      )
+    }, [cardViewMode, ...column.subscriptionIds])
 
     const allItems = useReduxState(
       useCallback(

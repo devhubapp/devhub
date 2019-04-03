@@ -11,12 +11,16 @@ import storage from 'redux-persist/lib/storage'
 import createSagaMiddleware from 'redux-saga'
 
 import {
+  ActivityColumn,
   Column,
   ColumnSubscription,
+  getEventMetadata,
+  GitHubEvent,
   GraphQLGitHubUser,
   guid,
   removeUselessURLsFromResponseItem,
 } from '@devhub/core'
+import { filterRecordHasAnyForcedValue } from '../utils/helpers/filters'
 import { analyticsMiddleware } from './middlewares/analytics'
 import { bugsnagMiddleware } from './middlewares/bugsnag'
 import { rootReducer } from './reducers'
@@ -252,6 +256,55 @@ const migrations = {
 
       draft.config.appViewMode = 'single-column'
     }),
+  11: (state: RootState) =>
+    immer(state, draft => {
+      draft.columns = draft.columns || {}
+      draft.columns.byId = draft.columns.byId || {}
+
+      const columnIds = Object.keys(draft.columns.byId)
+      columnIds.forEach(columnId => {
+        const column = draft.columns.byId![columnId] as ActivityColumn
+
+        if (
+          !(
+            column &&
+            column.filters &&
+            'activity' in column.filters &&
+            column.filters.activity &&
+            filterRecordHasAnyForcedValue(
+              (column.filters.activity as any).types,
+            )
+          )
+        )
+          return
+
+        const oldTypesFilter: Partial<
+          Record<GitHubEvent['type'], boolean>
+        > = (column.filters!.activity as any).types
+
+        column.filters.subjectTypes = column.filters.subjectTypes || {}
+        column.filters.activity.actions = column.filters.activity.actions || {}
+
+        Object.keys(oldTypesFilter).forEach((type: any) => {
+          if (typeof (oldTypesFilter as any)[type] !== 'boolean') return
+
+          try {
+            const { action } = getEventMetadata({ type, payload: {} } as any)
+            if (!action) return
+
+            column.filters!.activity!.actions![
+              action
+            ] = (oldTypesFilter as any)[type]
+          } catch (error) {
+            //
+          }
+        })
+
+        // Keeping for now, to minimize sync issues
+        // TODO: Delete this field later in the future
+        // delete (column.filters.activity as any).types
+      })
+    }),
 }
 
 export function configureStore(key = 'root') {
@@ -261,7 +314,7 @@ export function configureStore(key = 'root') {
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
     throttle: 500,
-    version: 10,
+    version: 11,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 

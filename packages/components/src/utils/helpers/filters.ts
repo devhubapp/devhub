@@ -3,8 +3,10 @@ import _ from 'lodash'
 import {
   ActivityColumnFilters,
   BaseColumnFilters,
+  CardViewMode,
   EnhancedGitHubEvent,
   EnhancedGitHubNotification,
+  getEventMetadata,
   isEventPrivate,
   isItemRead,
   isNotificationPrivate,
@@ -78,7 +80,7 @@ export function activityColumnHasAnyFilter(
 
   if (
     filters.activity &&
-    filterRecordHasAnyForcedValue(filters.activity.types)
+    filterRecordHasAnyForcedValue(filters.activity.actions)
   ) {
     return true
   }
@@ -169,14 +171,21 @@ export function getFilteredNotifications(
 export function getFilteredEvents(
   events: EnhancedGitHubEvent[],
   filters: ActivityColumnFilters | undefined,
+  cardViewMode: CardViewMode,
 ) {
   let _events = sortEvents(events)
 
-  const activityFilter = filters && filters.activity && filters.activity.types
+  const actionFilter = filters && filters.activity && filters.activity.actions
 
   if (filters && activityColumnHasAnyFilter(filters)) {
     _events = _events.filter(event => {
-      if (!itemPassesFilterRecord(activityFilter, event.type, true))
+      if (
+        !itemPassesFilterRecord(
+          actionFilter,
+          getEventMetadata(event).action,
+          true,
+        )
+      )
         return false
 
       if (
@@ -220,5 +229,11 @@ export function getFilteredEvents(
     })
   }
 
-  return mergeSimilarEvents(_events)
+  return cardViewMode === 'compact'
+    ? _events
+    : mergeSimilarEvents(_events, getMergeMaxLength(cardViewMode))
+}
+
+export function getMergeMaxLength(cardViewMode: CardViewMode) {
+  return cardViewMode === 'compact' ? 3 : 5
 }

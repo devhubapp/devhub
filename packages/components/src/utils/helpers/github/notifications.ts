@@ -189,7 +189,7 @@ export function getNotificationReasonMetadata<
         reason,
         color: colors.red,
         fullDescription: 'Potential security vulnerability found',
-        smallDescription: 'Security vulnerability',
+        smallDescription: 'Security alert',
         label: 'Security',
       }
 

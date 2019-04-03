@@ -4,6 +4,7 @@ import {
   GitHubComment,
   GitHubCommit,
   GitHubEvent,
+  GitHubEventAction,
   GitHubEventSubjectType,
   GitHubExtractParamsFromMethod,
   GitHubIcon,
@@ -178,7 +179,7 @@ export interface BaseColumnFilters {
 
 export interface ActivityColumnFilters extends BaseColumnFilters {
   activity?: {
-    types?: Partial<Record<GitHubEvent['type'], boolean>>
+    actions?: Partial<Record<GitHubEventAction, boolean>>
   }
   subjectTypes?: Partial<Record<GitHubEventSubjectType, boolean>>
 }

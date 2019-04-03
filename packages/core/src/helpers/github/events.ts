@@ -8,7 +8,8 @@ import {
   EnhancedGitHubEvent,
   GitHubCreateEvent,
   GitHubDeleteEvent,
-  GitHubEvent,
+  GitHubEventAction,
+  GitHubEventSubjectType,
   GitHubIcon,
   GitHubPullRequest,
   MultipleStarEvent,
@@ -198,101 +199,27 @@ export function getColumnHeaderDetails(
   }
 }
 
-export const eventTypes: Array<GitHubEvent['type']> = [
-  'CommitCommentEvent',
-  'CreateEvent',
-  'DeleteEvent',
-  'ForkEvent',
-  'GollumEvent',
-  'IssueCommentEvent',
-  'IssuesEvent',
-  'MemberEvent',
-  'PublicEvent',
-  'PullRequestEvent',
-  'PullRequestReviewCommentEvent',
-  'PullRequestReviewEvent',
-  'PushEvent',
-  'ReleaseEvent',
-  'WatchEvent',
+export const eventActions: GitHubEventAction[] = [
+  'added',
+  'commented',
+  'created',
+  'deleted',
+  'forked',
+  'pushed',
+  'released',
+  'reviewed',
+  'starred',
+  'state_changed',
+  'updated',
 ]
 
-export function getEventTypeMetadata<T extends GitHubEvent['type']>(
-  type: T,
-): { icon: GitHubIcon; label: string; type: T } {
-  switch (type) {
-    case 'CommitCommentEvent':
-      return { icon: 'comment-discussion', label: 'Commented on commit', type }
-
-    case 'CreateEvent':
-      return { icon: 'plus', label: 'Created repo, branch or tag', type }
-
-    case 'DeleteEvent':
-      return {
-        icon: 'trashcan',
-        label: 'Deleted repo, branch or tag',
-        type,
-      }
-
-    case 'ForkEvent':
-      return { icon: 'repo-forked', label: 'Forked repo', type }
-
-    case 'GollumEvent':
-      return { icon: 'book', label: 'Wiki created or updated', type }
-
-    case 'IssueCommentEvent':
-      return {
-        icon: 'comment-discussion',
-        label: 'Commented on issue or pr',
-        type,
-      }
-
-    case 'IssuesEvent':
-      return { icon: 'issue-opened', label: 'Issue state changed', type }
-
-    case 'MemberEvent':
-      return { icon: 'person', label: 'Collaborator added', type }
-
-    case 'PublicEvent':
-      return { icon: 'globe', label: 'Repository made public', type }
-
-    case 'PullRequestEvent':
-      return {
-        icon: 'git-pull-request',
-        label: 'Pull Request state changed',
-        type,
-      }
-
-    case 'PullRequestReviewCommentEvent':
-      return {
-        icon: 'comment-discussion',
-        label: 'Commented on pr review',
-        type,
-      }
-
-    case 'PullRequestReviewEvent':
-      return {
-        icon: 'comment-discussion',
-        label: 'Pull Request reviewed',
-        type,
-      }
-
-    case 'PushEvent':
-      return { icon: 'code', label: 'Pushed commit', type }
-
-    case 'ReleaseEvent':
-      return { icon: 'tag', label: 'Released new version', type }
-
-    case 'WatchEvent':
-      return { icon: 'star', label: 'Starred repository', type }
-
-    default: {
-      console.error(`Unknown event type: ${type}`)
-      return { icon: 'mark-github', label: type, type }
-    }
-  }
+export function getEventActionMetadata<T extends GitHubEventAction>(
+  action: T,
+): { label: string; action: T } {
+  return { label: _.capitalize(_.startCase(action)), action }
 }
 
-export function getEventText(
+export function getEventMetadata(
   event: EnhancedGitHubEvent,
   options:
     | {
@@ -301,7 +228,11 @@ export function getEventText(
         repoIsKnown?: boolean
       }
     | undefined = {},
-): string {
+): {
+  action: GitHubEventAction | undefined
+  actionText: string
+  subjectType: GitHubEventSubjectType | undefined
+} {
   const { includeBranch, issueOrPullRequestIsKnown, repoIsKnown } = options
 
   const isDraftPR =
@@ -318,169 +249,408 @@ export function getEventText(
     : `a ${isDraftPR ? 'draft pr' : 'pr'}`
   const repositoryText = repoIsKnown ? 'this repository' : 'a repository'
 
-  const text = (() => {
+  const result = ((): {
+    action: GitHubEventAction | undefined
+    actionText: string
+    subjectType: GitHubEventSubjectType | undefined
+  } => {
     switch (event.type) {
-      case 'CommitCommentEvent':
-        return 'Commented on a commit'
-      case 'CreateEvent':
+      case 'CommitCommentEvent': {
+        return {
+          action: 'commented',
+          actionText: 'Commented on a commit',
+          subjectType: 'Commit',
+        }
+      }
+      case 'CreateEvent': {
         switch (event.payload.ref_type) {
           case 'repository':
-            return `Created ${repositoryText}`
+            return {
+              action: 'created',
+              actionText: `Created ${repositoryText}`,
+              subjectType: 'Repository',
+            }
           case 'branch': {
             const branch = (event.payload.ref || '').split('/').pop()
-            return includeBranch && branch
-              ? `Created the branch ${branch}`
-              : 'Created a branch'
+            return {
+              action: 'created',
+              actionText:
+                includeBranch && branch
+                  ? `Created the branch ${branch}`
+                  : 'Created a branch',
+              subjectType: 'Branch',
+            }
           }
           case 'tag':
-            return 'Created a tag'
+            return {
+              action: 'created',
+              actionText: 'Created a tag',
+              subjectType: 'Tag',
+            }
           default:
-            return 'Created something'
+            return {
+              action: 'created',
+              actionText: 'Created something',
+              subjectType: undefined,
+            }
         }
-      case 'DeleteEvent':
+      }
+
+      case 'DeleteEvent': {
         switch (event.payload.ref_type) {
           case 'repository':
-            return `Deleted ${repositoryText}`
+            return {
+              action: 'deleted',
+              actionText: `Deleted ${repositoryText}`,
+              subjectType: 'Repository',
+            }
           case 'branch': {
             const branch = (event.payload.ref || '').split('/').pop()
-            return includeBranch && branch
-              ? `Deleted the branch ${branch}`
-              : 'Deleted a branch'
+            return {
+              action: 'deleted',
+              actionText:
+                includeBranch && branch
+                  ? `Deleted the branch ${branch}`
+                  : 'Deleted a branch',
+              subjectType: 'Branch',
+            }
           }
           case 'tag':
-            return 'Deleted a tag'
+            return {
+              action: 'deleted',
+              actionText: 'Deleted a tag',
+              subjectType: 'Tag',
+            }
           default:
-            return 'Deleted something'
+            return {
+              action: 'deleted',
+              actionText: 'Deleted something',
+              subjectType: undefined,
+            }
         }
-      case 'GollumEvent':
-        return (() => {
-          const count = (event.payload.pages || []).length || 1
-          const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page'
-          switch (
-            event.payload.pages &&
-              event.payload.pages[0] &&
-              event.payload.pages[0].action
-          ) {
-            case 'created':
-              return `Created ${pagesText}`
-            default:
-              return `Updated ${pagesText}`
-          }
-        })()
-      case 'ForkEvent':
-        return `Forked ${repositoryText}`
-      case 'IssueCommentEvent':
-        return `Commented on ${
-          isPullRequest(event.payload.issue) ? pullRequestText : issueText
-        }`
-      case 'IssuesEvent': // TODO: Fix these texts
+      }
+
+      case 'ForkEvent': {
+        return {
+          action: 'forked',
+          actionText: `Forked ${repositoryText}`,
+          subjectType: 'Repository',
+        }
+      }
+
+      case 'GollumEvent': {
+        const count = (event.payload.pages || []).length || 1
+        const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page'
+        switch (
+          event.payload.pages &&
+            event.payload.pages[0] &&
+            event.payload.pages[0].action
+        ) {
+          case 'created':
+            return {
+              action: 'created',
+              actionText: `Created ${pagesText}`,
+              subjectType: 'Wiki',
+            }
+          default:
+            return {
+              action: 'updated',
+              actionText: `Updated ${pagesText}`,
+              subjectType: 'Wiki',
+            }
+        }
+      }
+
+      case 'IssueCommentEvent': {
+        return {
+          action: 'commented',
+          actionText: `Commented on ${
+            isPullRequest(event.payload.issue) ? pullRequestText : issueText
+          }`,
+          subjectType: 'Issue',
+        }
+      }
+
+      case 'IssuesEvent': {
+        const subjectType: GitHubEventSubjectType = isPullRequest(event)
+          ? 'PullRequest'
+          : 'Issue'
+
         switch (event.payload.action) {
           case 'closed':
-            return `Closed ${issueText}`
+            return {
+              action: 'state_changed',
+              actionText: `Closed ${issueText}`,
+              subjectType,
+            }
           case 'reopened':
-            return `Reopened ${issueText}`
+            return {
+              action: 'state_changed',
+              actionText: `Reopened ${issueText}`,
+              subjectType,
+            }
           case 'opened':
-            return `Opened ${issueText}`
+            return {
+              action: 'created',
+              actionText: `Opened ${issueText}`,
+              subjectType,
+            }
           case 'assigned':
-            return `Assigned ${issueText}`
+            return {
+              action: 'updated',
+              actionText: `Assigned ${issueText}`,
+              subjectType,
+            }
           case 'unassigned':
-            return `Unassigned ${issueText}`
+            return {
+              action: 'updated',
+              actionText: `Unassigned ${issueText}`,
+              subjectType,
+            }
           case 'labeled':
-            return `Labeled ${issueText}`
+            return {
+              action: 'updated',
+              actionText: `Labeled ${issueText}`,
+              subjectType,
+            }
           case 'unlabeled':
-            return `Unlabeled ${issueText}`
+            return {
+              action: 'updated',
+              actionText: `Unlabeled ${issueText}`,
+              subjectType,
+            }
           case 'edited':
-            return `Edited ${issueText}`
+            return {
+              action: 'updated',
+              actionText: `Edited ${issueText}`,
+              subjectType,
+            }
           case 'milestoned':
-            return `Milestoned ${issueText}`
+            return {
+              action: 'updated',
+              actionText: `Milestoned ${issueText}`,
+              subjectType,
+            }
           case 'demilestoned':
-            return `Demilestoned ${issueText}`
-          default:
-            return `Interacted with ${issueText}`
+            return {
+              action: 'updated',
+              actionText: `Demilestoned ${issueText}`,
+              subjectType,
+            }
+          default: {
+            console.error('Unknown IssuesEvent action', event.payload.action)
+            return {
+              action: 'updated',
+              actionText: `Updated ${issueText}`,
+              subjectType,
+            }
+          }
         }
-      case 'MemberEvent':
-        return `Added an user ${repositoryText && `to ${repositoryText}`}`
-      case 'PublicEvent':
-        return `Made ${repositoryText} public`
-      case 'PullRequestEvent':
+      }
+
+      case 'MemberEvent': {
+        return {
+          action: 'added',
+          actionText: `Added an user ${repositoryText &&
+            `to ${repositoryText}`}`,
+          subjectType: 'User',
+        }
+      }
+
+      case 'PublicEvent': {
+        return {
+          action: 'created',
+          actionText: `Made ${repositoryText} public`,
+          subjectType: 'Repository',
+        }
+      }
+
+      case 'PullRequestEvent': {
+        const subjectType: GitHubEventSubjectType = 'PullRequest'
+
         switch (event.payload.action) {
           case 'assigned':
-            return `Assigned ${pullRequestText}`
+            return {
+              action: 'updated',
+              actionText: `Assigned ${pullRequestText}`,
+              subjectType,
+            }
           case 'unassigned':
-            return `Unassigned ${pullRequestText}`
+            return {
+              action: 'updated',
+              actionText: `Unassigned ${pullRequestText}`,
+              subjectType,
+            }
           case 'labeled':
-            return `Labeled ${pullRequestText}`
+            return {
+              action: 'updated',
+              actionText: `Labeled ${pullRequestText}`,
+              subjectType,
+            }
           case 'unlabeled':
-            return `Unlabeled ${pullRequestText}`
+            return {
+              action: 'updated',
+              actionText: `Unlabeled ${pullRequestText}`,
+              subjectType,
+            }
           case 'opened':
-            return `Opened ${pullRequestText}`
+            return {
+              action: 'created',
+              actionText: `Opened ${pullRequestText}`,
+              subjectType,
+            }
           case 'edited':
-            return `Edited ${pullRequestText}`
+            return {
+              action: 'updated',
+              actionText: `Edited ${pullRequestText}`,
+              subjectType,
+            }
 
           case 'closed':
-            return event.payload.pull_request.merged_at
-              ? `Merged ${pullRequestText}`
-              : `Closed ${pullRequestText}`
+            return {
+              action: 'state_changed',
+              actionText: event.payload.pull_request.merged_at
+                ? `Merged ${pullRequestText}`
+                : `Closed ${pullRequestText}`,
+              subjectType,
+            }
 
           case 'reopened':
-            return `Reopened ${pullRequestText}`
-          default:
-            return `Interacted with ${pullRequestText}`
+            return {
+              action: 'state_changed',
+              actionText: `Reopened ${pullRequestText}`,
+              subjectType,
+            }
+          default: {
+            console.error(
+              'Unknown PullRequestEvent action',
+              event.payload.action,
+            )
+            return {
+              action: 'updated',
+              actionText: `Updated ${pullRequestText}`,
+              subjectType,
+            }
+          }
         }
-      case 'PullRequestReviewEvent':
-        return `Reviewed ${pullRequestText}`
-      case 'PullRequestReviewCommentEvent':
+      }
+
+      case 'PullRequestReviewEvent': {
+        return {
+          action: 'reviewed',
+          actionText: `Reviewed ${pullRequestText}`,
+          subjectType: 'PullRequestReview',
+        }
+      }
+
+      case 'PullRequestReviewCommentEvent': {
         switch (event.payload.action) {
           case 'created':
-            return `Commented on ${pullRequestText} review`
+            return {
+              action: 'reviewed',
+              actionText: `Commented on ${pullRequestText} review`,
+              subjectType: 'Release',
+            }
           case 'edited':
-            return `Edited ${pullRequestText} review`
+            return {
+              action: 'updated',
+              actionText: `Edited ${pullRequestText} review`,
+              subjectType: 'Release',
+            }
           case 'deleted':
-            return `Deleted ${pullRequestText} review`
-          default:
-            return `Interacted with ${pullRequestText} review`
+            return {
+              action: 'deleted',
+              actionText: `Deleted ${pullRequestText} review`,
+              subjectType: 'Release',
+            }
+          default: {
+            console.error(
+              'Unknown PullRequestReviewCommentEvent action',
+              event.payload.action,
+            )
+            return {
+              action: 'reviewed',
+              actionText: `Interacted with ${pullRequestText} review`,
+              subjectType: 'Release',
+            }
+          }
         }
-      case 'PushEvent': {
-        return (() => {
-          const commits = event.payload.commits || [{}]
-          // const commit = event.payload.head_commit || commits[0];
-          const count =
-            Math.max(
-              ...[
-                1,
-                event.payload.size,
-                event.payload.distinct_size,
-                commits.length,
-              ],
-            ) || 1
-
-          const branch = (event.payload.ref || '').split('/').pop()
-          const pushedText = event.forced ? 'Force pushed' : 'Pushed'
-          const commitText = count > 1 ? `${count} commits` : 'a commit'
-          const branchText = includeBranch && branch ? `to ${branch}` : ''
-
-          return `${pushedText} ${commitText} ${branchText}`.trim()
-        })()
       }
-      case 'ReleaseEvent':
-        return 'Published a release'
-      case 'WatchEvent':
-        return `Starred ${repositoryText}`
-      case 'WatchEvent:OneUserMultipleRepos':
-        return (() => {
-          return event.repos.length > 1
-            ? `Starred ${event.repos.length} repositories`
-            : `Starred ${repositoryText}`
-        })()
-      default:
-        return 'Did something'
+
+      case 'PushEvent': {
+        const commits = event.payload.commits || [{}]
+        // const commit = event.payload.head_commit || commits[0];
+        const count =
+          Math.max(
+            ...[
+              1,
+              event.payload.size,
+              event.payload.distinct_size,
+              commits.length,
+            ],
+          ) || 1
+
+        const branch = (event.payload.ref || '').split('/').pop()
+        const pushedText = event.forced ? 'Force pushed' : 'Pushed'
+        const commitText = count > 1 ? `${count} commits` : 'a commit'
+        const branchText = includeBranch && branch ? `to ${branch}` : ''
+
+        return {
+          action: 'pushed',
+          actionText: `${pushedText} ${commitText} ${branchText}`.trim(),
+          subjectType: 'Commit',
+        }
+      }
+
+      case 'ReleaseEvent': {
+        return {
+          action: 'released',
+          actionText: 'Published a release',
+          subjectType: 'Release',
+        }
+      }
+
+      case 'WatchEvent': {
+        return {
+          action: 'starred',
+          actionText: `Starred ${repositoryText}`,
+          subjectType: 'Repository',
+        }
+      }
+
+      case 'WatchEvent:OneUserMultipleRepos': {
+        return {
+          action: 'starred',
+          actionText:
+            event.repos.length > 1
+              ? `Starred ${event.repos.length} repositories`
+              : `Starred ${repositoryText}`,
+          subjectType: 'Repository',
+        }
+      }
+
+      default: {
+        console.error('Unknown event type', (event as any).type)
+        return {
+          action: undefined,
+          actionText: 'Did something',
+          subjectType: undefined,
+        }
+      }
     }
   })()
 
-  return text.replace(/ {2}/g, ' ').trim()
+  return {
+    ...result,
+    actionText: result.actionText.replace(/ {2}/g, ' ').trim(),
+  }
 }
 
-function tryMerge(eventA: EnhancedGitHubEvent, eventB: EnhancedGitHubEvent) {
+function tryMerge(
+  eventA: EnhancedGitHubEvent,
+  eventB: EnhancedGitHubEvent,
+  maxLength: number,
+) {
   if (!eventA || !eventB) return null
 
   const isSameUser =
@@ -503,7 +673,7 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: EnhancedGitHubEvent) {
   if (createdAtMinutesDiff >= 24 * 60) return null
 
   // only merge 5 events at max
-  if ('merged' in eventA && eventA.merged && eventA.merged.length >= 5)
+  if ('merged' in eventA && eventA.merged && eventA.merged.length >= maxLength)
     return null
 
   switch (eventA.type) {
@@ -545,7 +715,10 @@ function tryMerge(eventA: EnhancedGitHubEvent, eventB: EnhancedGitHubEvent) {
   }
 }
 
-export function mergeSimilarEvents(events: EnhancedGitHubEvent[]) {
+export function mergeSimilarEvents(
+  events: EnhancedGitHubEvent[],
+  maxLength: number,
+) {
   const enhancedEvents: EnhancedGitHubEvent[] = []
 
   let enhancedEvent: EnhancedGitHubEvent | null = null
@@ -556,7 +729,7 @@ export function mergeSimilarEvents(events: EnhancedGitHubEvent[]) {
       return
     }
 
-    const mergedEvent = tryMerge(enhancedEvent, event)
+    const mergedEvent = tryMerge(enhancedEvent, event, maxLength)
 
     if (!mergedEvent) {
       enhancedEvents.push(enhancedEvent)

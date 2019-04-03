@@ -99,8 +99,10 @@ export const EventOrNotificationColumn = React.memo(
 
     const [showColumnOptions, setShowColumnOptions] = useState(false)
 
+    const { appViewMode, cardViewMode } = useAppViewMode()
+
     const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(),
+      selectors.createFilteredSubscriptionsDataSelector(cardViewMode),
     )
 
     const columnRef = useRef<View>(null)
@@ -117,10 +119,10 @@ export const EventOrNotificationColumn = React.memo(
     })
 
     useEffect(() => {
-      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
-    }, column.subscriptionIds)
-
-    const { appViewMode } = useAppViewMode()
+      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode,
+      )
+    }, [cardViewMode, ...column.subscriptionIds])
 
     const filteredItems = useReduxState(
       useCallback(

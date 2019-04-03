@@ -193,7 +193,7 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
       })
 
-    case 'SET_COLUMN_ACTIVITY_TYPE_FILTER':
+    case 'SET_COLUMN_ACTIVITY_ACTION_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return
 
@@ -202,13 +202,13 @@ export const columnsReducer: Reducer<State> = (
 
         column.filters = column.filters || {}
         column.filters.activity = column.filters.activity || {}
-        column.filters.activity.types = column.filters.activity.types || {}
+        column.filters.activity.actions = column.filters.activity.actions || {}
 
         if (typeof action.payload.value === 'boolean') {
-          column.filters.activity.types[action.payload.type] =
+          column.filters.activity.actions[action.payload.type] =
             action.payload.value
         } else {
-          delete column.filters.activity.types[action.payload.type]
+          delete column.filters.activity.actions[action.payload.type]
         }
 
         draft.updatedAt = new Date().toISOString()

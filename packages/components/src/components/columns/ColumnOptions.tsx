@@ -4,8 +4,8 @@ import { ScrollView, View } from 'react-native'
 
 import {
   Column,
-  eventTypes,
-  getEventTypeMetadata,
+  eventActions,
+  getEventActionMetadata,
   GitHubEventSubjectType,
   GitHubNotificationSubjectType,
   isReadFilterChecked,
@@ -49,8 +49,8 @@ const eventSubjectTypeOptions = eventSubjectTypes
   .map(getSubjectTypeMetadata)
   .sort(metadataSortFn)
 
-const eventTypeOptions = eventTypes
-  .map(getEventTypeMetadata)
+const eventActionOptions = eventActions
+  .map(getEventActionMetadata)
   .sort(metadataSortFn)
 
 const notificationReasonOptions = notificationReasons
@@ -71,10 +71,10 @@ export interface ColumnOptionsProps {
 }
 
 export type ColumnOptionCategory =
-  | 'event_types'
+  | 'event_action'
   | 'inbox'
   | 'subject_types'
-  | 'notification_reasons'
+  | 'notification_reason'
   | 'privacy'
   | 'saved_for_later'
   | 'unread'
@@ -94,9 +94,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     column.type === 'notifications' && 'inbox',
     'saved_for_later',
     'unread',
-    column.type === 'activity' && 'event_types',
+    column.type === 'activity' && 'event_action',
     'subject_types',
-    column.type === 'notifications' && 'notification_reasons',
+    column.type === 'notifications' && 'notification_reason',
     column.type === 'notifications' && 'privacy',
   ]
 
@@ -133,8 +133,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const setColumnParticipatingFilter = useReduxAction(
     actions.setColumnParticipatingFilter,
   )
-  const setColumnActivityTypeFilter = useReduxAction(
-    actions.setColumnActivityTypeFilter,
+  const setColumnActivityActionFilter = useReduxAction(
+    actions.setColumnActivityActionFilter,
   )
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
@@ -402,7 +402,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     ? () => toggleOpenedOptionCategory('subject_types')
                     : undefined
                 }
-                title="Subject types"
+                title="Subject type"
                 subtitle={
                   filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
                 }
@@ -444,7 +444,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             )
           })()}
 
-        {allColumnOptionCategories.includes('notification_reasons') &&
+        {allColumnOptionCategories.includes('notification_reason') &&
           column.type === 'notifications' &&
           (() => {
             const filters =
@@ -460,18 +460,18 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="notification_reasons"
+                analyticsLabel="notification_reason"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 iconName="rss"
-                isOpen={openedOptionCategories.has('notification_reasons')}
+                isOpen={openedOptionCategories.has('notification_reason')}
                 onToggle={
                   allowToggleCategories
-                    ? () => toggleOpenedOptionCategory('notification_reasons')
+                    ? () => toggleOpenedOptionCategory('notification_reason')
                     : undefined
                 }
-                title="Subscription reasons"
+                title="Subscription reason"
                 subtitle={
                   filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
                 }
@@ -511,13 +511,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             )
           })()}
 
-        {allColumnOptionCategories.includes('event_types') &&
+        {allColumnOptionCategories.includes('event_action') &&
           column.type === 'activity' &&
           (() => {
             const filters =
               column.filters &&
               column.filters.activity &&
-              column.filters.activity.types
+              column.filters.activity.actions
 
             const defaultBooleanValue = true
             const isFilterStrict = filterRecordHasThisValue(
@@ -527,31 +527,31 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="event_types"
+                analyticsLabel="event_action"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 iconName="note"
-                isOpen={openedOptionCategories.has('event_types')}
+                isOpen={openedOptionCategories.has('event_action')}
                 onToggle={
                   allowToggleCategories
-                    ? () => toggleOpenedOptionCategory('event_types')
+                    ? () => toggleOpenedOptionCategory('event_action')
                     : undefined
                 }
-                title="Event types"
+                title="Event action"
                 subtitle={
                   filterRecordHasAnyForcedValue(filters) ? undefined : 'All'
                 }
               >
-                {eventTypeOptions.map(item => {
+                {eventActionOptions.map(item => {
                   const checked =
-                    filters && typeof filters[item.type] === 'boolean'
-                      ? filters[item.type]
+                    filters && typeof filters[item.action] === 'boolean'
+                      ? filters[item.action]
                       : null
 
                   return (
                     <SpringAnimatedCheckbox
-                      key={`event-type-option-${item.type}`}
+                      key={`event-type-option-${item.action}`}
                       analyticsLabel={undefined}
                       checked={checked}
                       containerStyle={checkboxStyle}
@@ -563,9 +563,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       label={item.label}
                       // labelIcon={item.icon}
                       onChange={value => {
-                        setColumnActivityTypeFilter({
+                        setColumnActivityActionFilter({
                           columnId: column.id,
-                          type: item.type,
+                          type: item.action,
                           value,
                         })
                       }}
