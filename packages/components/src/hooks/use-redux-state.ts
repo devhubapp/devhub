@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { useReduxStore } from '../redux/context/ReduxStoreContext'
 import { RootState } from '../redux/types'
+import { useForceRerender } from './use-force-rerender'
 
 export type ExtractSelector<S> = S extends (state: any) => infer R
   ? (state: RootState) => R
@@ -14,26 +15,26 @@ export function useReduxState<S extends (state: any) => any>(
   callback?: (value: Result<S>) => void,
 ) {
   const store = useReduxStore()
+  const cacheRef = useRef<Result<S>>(selector(store.getState()))
+  const forceRerender = useForceRerender()
 
-  const [result, setResult] = useState<Result<S>>(() =>
-    selector(store.getState()),
+  const resolve = useCallback(
+    (value: Result<S>) => {
+      if (cacheRef.current === value) return
+
+      cacheRef.current = value
+
+      if (callback) {
+        callback(value)
+        return
+      }
+
+      forceRerender()
+    },
+    [callback],
   )
 
-  const cacheRef = useRef(result)
-
-  useEffect(() => {
-    if (callback) callback(result)
-  }, [])
-
-  useEffect(() => {
-    update()
-
-    return store.subscribe(() => {
-      update()
-    })
-  }, [store, selector])
-
-  function update() {
+  const update = useCallback(() => {
     if (!selector) {
       resolve(undefined as any)
       return
@@ -41,20 +42,22 @@ export function useReduxState<S extends (state: any) => any>(
 
     const newResult = selector(store.getState())
     resolve(newResult)
-  }
+  }, [resolve, store, selector])
 
-  const resolve = (value: Result<S>) => {
-    if (cacheRef.current === value) return
+  useEffect(() => {
+    update()
 
-    cacheRef.current = value
+    return store.subscribe(() => {
+      update()
+    })
+  }, [store, update])
 
-    if (callback) {
-      callback(value)
-      return
-    }
+  useEffect(() => {
+    if (callback) callback(cacheRef.current)
 
-    setResult(value)
-  }
+    // TODO: investigate why [callback] causes some bugs,
+    // e.g. on single-column mode + toggle modal the sidebar bg gets broken
+  }, [])
 
-  return result
+  return cacheRef.current
 }

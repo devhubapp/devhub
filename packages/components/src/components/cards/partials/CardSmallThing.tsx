@@ -33,17 +33,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
   },
-
-  text: {
-    backgroundColor: 'transparent',
-    fontSize: 11,
-    lineHeight: 16,
-    opacity: 0.9,
-  },
 })
 
 export function CardSmallThing(props: CardSmallThingProps) {
-  const { backgroundColorTheme, icon, isRead, style, text, url } = props
+  const { backgroundColorTheme, icon, style, text, url } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
@@ -51,13 +44,7 @@ export function CardSmallThing(props: CardSmallThingProps) {
   if (!(hasText || icon)) return null
 
   const springAnimatedTextStyles = [
-    styles.text,
-    {
-      color: isRead
-        ? springAnimatedTheme.foregroundColorMuted50
-        : springAnimatedTheme.foregroundColor,
-    },
-    isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+    getCardStylesForTheme(springAnimatedTheme).smallerMutedText,
   ]
 
   return (

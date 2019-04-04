@@ -15,7 +15,6 @@ import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
-import { separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import {
   TouchableOpacity,
@@ -91,7 +90,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
-    const immediate = Platform.realOS === 'android'
+    const immediate = isHovered || Platform.realOS === 'android'
 
     return {
       config: { duration: immediate ? 0 : 100 },
@@ -111,10 +110,10 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     <SpringAnimatedView
       style={{
         backgroundColor: springAnimatedStyles.backgroundColor,
-        borderWidth: 0,
-        borderColor: 'transparent',
-        borderBottomWidth: separatorSize,
-        borderBottomColor: springAnimatedTheme.backgroundColorLess1,
+        // borderWidth: 0,
+        // borderColor: 'transparent',
+        // borderBottomWidth: separatorSize,
+        // borderBottomColor: springAnimatedTheme.backgroundColorLess1,
       }}
     >
       <ConditionalWrap

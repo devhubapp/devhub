@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -90,44 +90,12 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     titleStyle,
   } = props
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
-  })
-
-  const containerRef = useRef(null)
-  useHover(
-    enableBackgroundHover || enableForegroundHover ? containerRef : null,
-    isHovered => {
-      cacheRef.current.isHovered = isHovered
-      updateStyles()
-    },
-  )
-
-  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
-
-  useEffect(() => {
-    updateStyles()
-  }, [
-    backgroundColor,
-    disabled,
-    enableBackgroundHover,
-    enableForegroundHover,
-    forceHoverState,
-    foregroundColor,
-    hoverBackgroundThemeColor,
-    hoverForegroundThemeColor,
-  ])
-
-  const _username = useReduxState(selectors.currentGitHubUsernameSelector)
-
-  function getStyles() {
+  const getStyles = useCallback(() => {
     const { isHovered: _isHovered, theme } = cacheRef.current
 
     const isHovered = (_isHovered || forceHoverState) && !disabled
     const immediate =
+      isHovered ||
       Platform.realOS === 'android' ||
       !!(enableForegroundHover && !enableBackgroundHover)
 
@@ -144,11 +112,49 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           : foregroundColor || theme.foregroundColor,
       mutedForegroundColor: theme.foregroundColorMuted50,
     }
-  }
+  }, [
+    backgroundColor,
+    disabled,
+    enableBackgroundHover,
+    enableForegroundHover,
+    forceHoverState,
+    foregroundColor,
+    hoverBackgroundThemeColor,
+    hoverForegroundThemeColor,
+  ])
 
-  function updateStyles() {
+  const updateStyles = useCallback(() => {
     setSpringAnimatedStyles(getStyles())
-  }
+  }, [getStyles])
+
+  const initialTheme = useTheme(
+    useCallback(
+      theme => {
+        cacheRef.current.theme = theme
+        updateStyles()
+      },
+      [updateStyles],
+    ),
+  )
+
+  const containerRef = useRef(null)
+  useHover(
+    enableBackgroundHover || enableForegroundHover ? containerRef : null,
+    isHovered => {
+      cacheRef.current.isHovered = isHovered
+      updateStyles()
+    },
+  )
+
+  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
+
+  useEffect(() => {
+    updateStyles()
+  }, [updateStyles])
+
+  const _username = useReduxState(selectors.currentGitHubUsernameSelector)
 
   const avatarProps = _avatarProps || {}
 
@@ -341,7 +347,6 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 fontSize: 10,
                 textAlign: 'center',
               },
-              style,
               { color: springAnimatedStyles.foregroundColor },
             ]}
             numberOfLines={1}

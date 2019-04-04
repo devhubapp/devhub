@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 import url from 'url'
 
+import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
 import { ConditionalWrap } from '../components/common/ConditionalWrap'
 import { Screen } from '../components/common/Screen'
@@ -335,11 +336,11 @@ export const MainScreen = React.memo(() => {
           zIndex={1000}
         />
 
-        <Separator
-          horizontal={horizontalSidebar}
-          thick={!horizontalSidebar}
-          zIndex={1000}
-        />
+        {horizontalSidebar ? (
+          <Separator horizontal zIndex={1000} />
+        ) : (
+          <ColumnSeparator zIndex={1000} />
+        )}
 
         <ConditionalWrap
           key="main-screen-content-container-conditional-wrap"

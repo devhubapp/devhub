@@ -26,10 +26,10 @@ export function createThemeFromColor(
 
   const backgroundColor = color
 
-  const amount1 = luminance <= 0.02 ? 0.05 : 0.04
-  const amount2 = 2 * amount1
-  const amount3 = 3 * amount1
-  const amount4 = 4 * amount1
+  const amount1 = 0.03
+  const amount2 = 0.05
+  const amount3 = 0.07
+  const amount4 = 0.09
 
   const backgroundColorDarker1 = darken(amount1, color)
   const backgroundColorDarker2 = darken(amount2, color)

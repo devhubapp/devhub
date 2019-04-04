@@ -36,6 +36,7 @@ import { getSubjectTypeMetadata } from '../../utils/helpers/github/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
+import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
@@ -681,6 +682,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             )
           })()}
       </ScrollView>
+
+      <Separator horizontal />
 
       <View
         style={{

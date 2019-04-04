@@ -12,7 +12,6 @@ import {
   isNotificationPrivate,
   ThemeColors,
 } from '@devhub/core'
-import { getLuminance } from 'polished'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -34,38 +33,32 @@ import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
 
 export function getColumnCardThemeColors(
-  backgroundColor: string,
+  _backgroundColor: string,
 ): {
+  column: keyof ThemeColors
   unread: keyof ThemeColors
   unread__hover: keyof ThemeColors
   read: keyof ThemeColors
   read__hover: keyof ThemeColors
 } {
-  const luminance = getLuminance(backgroundColor)
+  // const luminance = getLuminance(backgroundColor)
 
-  if (luminance >= 0.5) {
-    return {
-      unread: 'backgroundColor',
-      unread__hover: 'backgroundColorLighther1',
-      read: 'backgroundColorDarker1',
-      read__hover: 'backgroundColorDarker2',
-    }
-  }
-
-  if (luminance <= 0.02) {
-    return {
-      unread: 'backgroundColorLighther2',
-      unread__hover: 'backgroundColorLighther4',
-      read: 'backgroundColor',
-      read__hover: 'backgroundColorDarker2',
-    }
-  }
+  // if (luminance <= 0.02) {
+  //   return {
+  //     column: 'backgroundColor',
+  //     unread: 'backgroundColorLighther2',
+  //     unread__hover: 'backgroundColorLighther4',
+  //     read: 'backgroundColor',
+  //     read__hover: 'backgroundColorLess3',
+  //   }
+  // }
 
   return {
-    unread: 'backgroundColorLighther1',
-    unread__hover: 'backgroundColorLighther2',
-    read: 'backgroundColor',
-    read__hover: 'backgroundColorDarker1',
+    column: 'backgroundColor',
+    unread: 'backgroundColorLighther2',
+    unread__hover: 'backgroundColorLighther3',
+    read: 'backgroundColorDarker1',
+    read__hover: 'backgroundColorDarker2',
   }
 }
 
@@ -109,12 +102,11 @@ export const EventOrNotificationColumn = React.memo(
     useTheme(theme => {
       if (!columnRef.current) return
 
-      const backgroundThemeColors = getColumnCardThemeColors(
-        theme.backgroundColor,
-      )
-
       columnRef.current!.setNativeProps({
-        style: { backgroundColor: theme[backgroundThemeColors.read] },
+        style: {
+          backgroundColor:
+            theme[getColumnCardThemeColors(theme.backgroundColor).column],
+        },
       })
     })
 

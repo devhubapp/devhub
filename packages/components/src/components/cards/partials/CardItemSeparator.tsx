@@ -1,4 +1,3 @@
-import { getLuminance } from 'polished'
 import React from 'react'
 
 import { isItemRead, ThemeColors } from '@devhub/core'
@@ -6,15 +5,15 @@ import { Separator } from '../../common/Separator'
 import { useTheme } from '../../context/ThemeContext'
 
 export function getCardItemSeparatorThemeColor(
-  backgroundColor: string,
-  isRead?: boolean,
+  _backgroundColor: string,
+  _isRead?: boolean,
 ): keyof ThemeColors {
-  const luminance = getLuminance(backgroundColor)
+  // const luminance = getLuminance(backgroundColor)
 
-  if (luminance <= 0.02)
-    return isRead ? 'backgroundColorLighther2' : 'backgroundColorLighther1'
+  // if (luminance <= 0.02)
+  //   return isRead ? 'backgroundColorLess1' : 'backgroundColor'
 
-  return isRead ? 'backgroundColorDarker2' : 'backgroundColorDarker1'
+  return 'backgroundColor'
 }
 
 export function CardItemSeparator(props: any) {

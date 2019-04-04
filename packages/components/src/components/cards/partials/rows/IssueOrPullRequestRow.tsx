@@ -234,10 +234,7 @@ export const IssueOrPullRequestRow = React.memo(
                           <SpringAnimatedText
                             style={[
                               getCardStylesForTheme(springAnimatedTheme)
-                                .normalText,
-                              cardStyles.smallText,
-                              getCardStylesForTheme(springAnimatedTheme)
-                                .mutedText,
+                                .smallerMutedText,
                             ]}
                           >
                             {byText}
@@ -259,7 +256,7 @@ export const IssueOrPullRequestRow = React.memo(
                                   numberOfLines={1}
                                   style={
                                     getCardStylesForTheme(springAnimatedTheme)
-                                      .timestampText
+                                      .smallerMutedText
                                   }
                                   {...Platform.select({
                                     web: { title: getFullDateText(createdAt) },

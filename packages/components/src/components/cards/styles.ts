@@ -116,7 +116,7 @@ export const cardStyles = StyleSheet.create({
   },
 
   boldText: {
-    fontWeight: '600',
+    fontWeight: '500',
   },
 })
 
@@ -126,11 +126,17 @@ export const getCardStylesForTheme = _.memoize(
       usernameText: {
         alignSelf: 'center',
         lineHeight: 20,
-        fontWeight: '600',
+        fontWeight: '500',
         color: theme.foregroundColor,
       } as TextStyle,
 
       timestampText: {
+        lineHeight: smallerTextSize + 1,
+        fontSize: smallerTextSize,
+        color: theme.foregroundColorMuted50,
+      },
+
+      smallerMutedText: {
         lineHeight: smallerTextSize + 1,
         fontSize: smallerTextSize,
         color: theme.foregroundColorMuted50,

@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: contentPadding / 2,
+    paddingHorizontal: contentPadding / 2,
+    paddingVertical: contentPadding / 4,
   },
   text: {
     flexGrow: 1,
-    lineHeight: 14,
     fontWeight: '500',
     fontSize: smallTextSize,
     textAlign: 'center',

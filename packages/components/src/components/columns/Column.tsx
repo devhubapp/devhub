@@ -7,9 +7,10 @@ import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
 import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { Separator, separatorTickSize } from '../common/Separator'
+import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { ColumnSeparator } from './ColumnSeparator'
 
 export const columnMargin = contentPadding / 2
 
@@ -83,11 +84,19 @@ export const Column = React.memo(
         ]}
       >
         {!!renderSideSeparators && (
-          <Separator half horizontal={false} thick={sizename > '1-small'} />
+          <ColumnSeparator
+            half
+            horizontal={false}
+            thick={sizename > '1-small'}
+          />
         )}
         <View style={{ flex: 1 }}>{children}</View>
         {!!renderSideSeparators && (
-          <Separator half horizontal={false} thick={sizename > '1-small'} />
+          <ColumnSeparator
+            half
+            horizontal={false}
+            thick={sizename > '1-small'}
+          />
         )}
 
         <SpringAnimatedView
@@ -98,8 +107,8 @@ export const Column = React.memo(
             StyleSheet.absoluteFill,
             {
               borderWidth: 0,
-              borderRightWidth: Math.max(4, separatorTickSize),
-              borderLeftWidth: Math.max(4, separatorTickSize),
+              borderRightWidth: Math.max(4, separatorThickSize),
+              borderLeftWidth: Math.max(4, separatorThickSize),
               borderColor: springAnimatedTheme.foregroundColorMuted50,
               zIndex: 1000,
               opacity: 0,

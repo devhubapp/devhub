@@ -120,6 +120,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               numberOfLines={1}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
+                cardStyles.smallText,
                 bold && cardStyles.boldText,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}

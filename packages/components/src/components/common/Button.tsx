@@ -85,7 +85,7 @@ export const Button = React.memo((props: ButtonProps) => {
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
 
-    const immediate = Platform.realOS === 'android'
+    const immediate = isHovered || Platform.realOS === 'android'
 
     return {
       config: { duration: immediate ? 0 : 100 },

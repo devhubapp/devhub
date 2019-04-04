@@ -26,7 +26,7 @@ import { fabSize } from '../common/FAB'
 import { H2 } from '../common/H2'
 import { HeaderMessage } from '../common/HeaderMessage'
 import { Link } from '../common/Link'
-import { separatorTickSize } from '../common/Separator'
+import { separatorThickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -213,7 +213,7 @@ function AddColumnModalItem({
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
-    const immediate = Platform.realOS === 'android'
+    const immediate = isHovered || Platform.realOS === 'android'
 
     return {
       config: { duration: immediate ? 0 : 100 },
@@ -311,7 +311,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
   const { sizename } = useAppLayout()
 
   const outerSpacing = (3 / 4) * contentPadding
-  const availableWidth = columnWidth - 2 * separatorTickSize - 2 * outerSpacing
+  const availableWidth = columnWidth - 2 * separatorThickSize - 2 * outerSpacing
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 

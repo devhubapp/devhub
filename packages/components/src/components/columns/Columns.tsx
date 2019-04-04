@@ -13,7 +13,7 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import * as selectors from '../../redux/selectors'
-import { separatorTickSize } from '../common/Separator'
+import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 
@@ -113,7 +113,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
         style={[
           styles.flatlist,
           sizename > '1-small' && {
-            marginHorizontal: -separatorTickSize / 2,
+            marginHorizontal: -separatorThickSize / 2,
           },
           style,
         ]}

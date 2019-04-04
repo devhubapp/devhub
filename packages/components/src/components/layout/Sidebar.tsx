@@ -21,7 +21,10 @@ import {
   sidebarSize,
 } from '../../styles/variables'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
+import {
+  ColumnHeader,
+  getColumnHeaderThemeColors,
+} from '../columns/ColumnHeader'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
@@ -39,6 +42,13 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  itemContainerStyle__withLabel: {
+    width: undefined,
+    height: sidebarSize - contentPadding / 4,
+    marginTop: contentPadding / 4,
+    paddingBottom: contentPadding / 4,
   },
 })
 
@@ -69,16 +79,34 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const small = sizename === '1-small'
   const large = sizename >= '3-large'
 
-  const enableBackgroundHover = !horizontal
+  const enableBackgroundHover = true
   const showLabel = !!horizontal
   const showFixedSettingsButton = !horizontal || columnIds.length >= 4
-  const highlightFocusedColumn = !small && appViewMode === 'single-column'
+  const highlightFocusedColumn =
+    appViewMode === 'single-column' && !currentOpenedModal
 
-  const itemContainerStyle = {
+  const itemContainerStyle: ViewStyle = {
     width: sidebarSize,
-    height: sidebarSize,
-    marginBottom: 1,
+    height: horizontal
+      ? sidebarSize
+      : columnHeaderItemContentBiggerSize + contentPadding * (3 / 2),
+    borderRadius: 0,
+    ...(horizontal
+      ? {
+          marginHorizontal: 1,
+          borderTopLeftRadius: sidebarSize / 2,
+          borderTopRightRadius: sidebarSize / 2,
+        }
+      : {
+          marginVertical: 1,
+          borderTopRightRadius: sidebarSize / 2,
+          borderBottomRightRadius: sidebarSize / 2,
+        }),
   }
+
+  const SectionSpacer = horizontal
+    ? () => null
+    : () => <Spacer height={contentPadding / 3} />
 
   function isModalOpen(modalName: ModalPayload['name']) {
     return !!modalStack && modalStack.some(m => m.name === modalName)
@@ -103,7 +131,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         }}
       >
         {!horizontal && (
-          <>
+          <ColumnHeader noPadding>
             <ColumnHeaderItem
               analyticsLabel={undefined}
               hoverBackgroundThemeColor={
@@ -142,10 +170,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 />
               </Link>
             </ColumnHeaderItem>
-
-            <Separator horizontal={!horizontal} />
-          </>
+          </ColumnHeader>
         )}
+
+        <SectionSpacer />
 
         <ScrollView
           alwaysBounceHorizontal={false}
@@ -166,7 +194,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
                   hoverBackgroundThemeColor={
-                    getColumnHeaderThemeColors(theme.backgroundColor).hover
+                    isModalOpen('ADD_COLUMN')
+                      ? getColumnHeaderThemeColors(theme.backgroundColor)
+                          .selected
+                      : getColumnHeaderThemeColors(theme.backgroundColor).hover
                   }
                   enableBackgroundHover={enableBackgroundHover}
                   forceHoverState={isModalOpen('ADD_COLUMN')}
@@ -177,11 +208,12 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   size={columnHeaderItemContentBiggerSize}
                   style={[
                     styles.centerContainer,
-                    !showLabel && itemContainerStyle,
+                    itemContainerStyle,
+                    showLabel && styles.itemContainerStyle__withLabel,
                   ]}
                 />
 
-                <Separator horizontal={!horizontal} />
+                {/* <Separator horizontal={!horizontal} /> */}
               </>
             ) : null
           ) : (
@@ -207,7 +239,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             <ColumnHeaderItem
               analyticsLabel="sidebar_settings"
               hoverBackgroundThemeColor={
-                getColumnHeaderThemeColors(theme.backgroundColor).hover
+                isModalOpen('SETTINGS')
+                  ? getColumnHeaderThemeColors(theme.backgroundColor).selected
+                  : getColumnHeaderThemeColors(theme.backgroundColor).hover
               }
               enableBackgroundHover={enableBackgroundHover}
               forceHoverState={isModalOpen('SETTINGS')}
@@ -220,14 +254,24 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               }
               showLabel={showLabel}
               size={columnHeaderItemContentBiggerSize}
-              style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+              style={[
+                styles.centerContainer,
+                itemContainerStyle,
+                showLabel && styles.itemContainerStyle__withLabel,
+              ]}
             />
           )}
         </ScrollView>
 
+        <SectionSpacer />
+
+        <Separator horizontal={!horizontal} thick={false} />
+
+        <SectionSpacer />
+
         {!small && (
           <>
-            <Separator horizontal={!horizontal} />
+            {/* <Separator horizontal={!horizontal} /> */}
 
             {!!large && (
               <>
@@ -243,13 +287,14 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   style={[
                     styles.centerContainer,
-                    !showLabel && itemContainerStyle,
+                    itemContainerStyle,
+                    showLabel && styles.itemContainerStyle__withLabel,
                   ]}
                   showLabel={showLabel}
                   size={columnHeaderItemContentBiggerSize}
                 />
 
-                <Separator horizontal={!horizontal} />
+                {/* <Separator horizontal={!horizontal} /> */}
               </>
             )}
           </>
@@ -263,7 +308,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           <ColumnHeaderItem
             analyticsLabel="sidebar_settings"
             hoverBackgroundThemeColor={
-              getColumnHeaderThemeColors(theme.backgroundColor).hover
+              isModalOpen('SETTINGS')
+                ? getColumnHeaderThemeColors(theme.backgroundColor).selected
+                : getColumnHeaderThemeColors(theme.backgroundColor).hover
             }
             enableBackgroundHover={enableBackgroundHover}
             forceHoverState={isModalOpen('SETTINGS')}
@@ -276,13 +323,17 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             }
             showLabel={showLabel}
             size={columnHeaderItemContentBiggerSize}
-            style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+            style={[
+              styles.centerContainer,
+              itemContainerStyle,
+              showLabel && styles.itemContainerStyle__withLabel,
+            ]}
           />
         )}
 
         {large && (
           <>
-            <Separator horizontal={!horizontal} />
+            {/* <Separator horizontal={!horizontal} /> */}
 
             <ColumnHeaderItem
               analyticsLabel={undefined}
@@ -292,7 +343,11 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               enableBackgroundHover={enableBackgroundHover}
               noPadding
               size={columnHeaderItemContentBiggerSize}
-              style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+              style={[
+                styles.centerContainer,
+                itemContainerStyle,
+                showLabel && styles.itemContainerStyle__withLabel,
+              ]}
             >
               <Link
                 analyticsLabel="sidebar_devhub_logo"
@@ -316,6 +371,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         {horizontal && (showFixedSettingsButton || large) && (
           <Spacer width={contentPadding / 2} />
         )}
+
+        <SectionSpacer />
       </View>
     </SpringAnimatedSafeAreaView>
   )
@@ -362,7 +419,9 @@ const SidebarColumnItem = React.memo(
         }}
         forceHoverState={highlight}
         hoverBackgroundThemeColor={
-          getColumnHeaderThemeColors(theme.backgroundColor).hover
+          highlight
+            ? getColumnHeaderThemeColors(theme.backgroundColor).selected
+            : getColumnHeaderThemeColors(theme.backgroundColor).hover
         }
         enableBackgroundHover={enableBackgroundHover || highlight}
         iconName={requestTypeIconAndData.icon}
@@ -380,7 +439,11 @@ const SidebarColumnItem = React.memo(
         }}
         showLabel={showLabel}
         size={columnHeaderItemContentBiggerSize}
-        style={[styles.centerContainer, !showLabel && itemContainerStyle]}
+        style={[
+          styles.centerContainer,
+          itemContainerStyle,
+          showLabel && styles.itemContainerStyle__withLabel,
+        ]}
       />
     )
   },
