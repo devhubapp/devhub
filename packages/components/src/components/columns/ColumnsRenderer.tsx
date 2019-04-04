@@ -20,7 +20,7 @@ export function ColumnsRenderer() {
   const focusedColumnId = useFocusedColumn() || columnIds[0]
 
   if (appViewMode === 'single-column') {
-    const shouldRenderFixedColumnOptions = sizename > '4-x-large'
+    const shouldRenderFixedColumnOptions = sizename >= '4-x-large'
 
     return (
       <ViewMeasurer style={{ flex: 1, flexDirection: 'row' }}>
