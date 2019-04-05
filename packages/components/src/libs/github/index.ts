@@ -4,7 +4,7 @@ import { GitHubActivityType } from '@devhub/core'
 
 export const octokit = new Octokit()
 
-export function authenticate(token: string) {
+export function authenticate(token: string | null) {
   try {
     if (!token) {
       octokit.authenticate(null as any)

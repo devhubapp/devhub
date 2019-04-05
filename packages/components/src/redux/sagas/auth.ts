@@ -145,17 +145,6 @@ function* onLoginRequest(
 function* onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
-  const { user } = action.payload
-
-  // TODO: better handle app oauth
-  github.authenticate(
-    (user.github.oauth && user.github.oauth.token)! ||
-      (user.github.app && user.github.app.token)!,
-  )
-
-  analytics.setUser(user._id)
-  bugsnag.setUser(user._id, user.github.user.name || user.github.user.login)
-
   clearOAuthQueryParams()
 
   if (StoreReview.isAvailable) {
@@ -165,6 +154,23 @@ function* onLoginSuccess(
       StoreReview.requestReview()
     }
   }
+}
+
+function* updateLoggedUserOnTools() {
+  const state = yield select()
+
+  const user = selectors.currentUserSelector(state)
+  const githubUser = selectors.currentGitHubUserSelector(state)
+  const githubOAuthToken = selectors.githubOAuthTokenSelector(state)
+  const githubAppToken = selectors.githubAppTokenSelector(state)
+
+  github.authenticate(githubOAuthToken || githubAppToken || null)
+
+  analytics.setUser(user && user._id)
+  bugsnag.setUser(
+    (user && user._id) || null,
+    githubUser && (githubUser.login || githubUser.name || githubUser.id),
+  )
 }
 
 function* onLoginFailure(
@@ -265,6 +271,10 @@ function* onDeleteAccountSuccess() {
 export function* authSagas() {
   yield all([
     yield takeLatest(REHYDRATE, onRehydrate),
+    yield takeLatest(
+      [REHYDRATE, 'LOGIN_SUCCESS', 'LOGOUT'],
+      updateLoggedUserOnTools,
+    ),
     yield takeLatest('LOGIN_REQUEST', onLoginRequest),
     yield takeLatest('LOGIN_FAILURE', onLoginFailure),
     yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
