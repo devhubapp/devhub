@@ -159,23 +159,20 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               </IntervalRefresh>
             </SpringAnimatedView>
 
-            {!!actionText && (
-              <SpringAnimatedText
-                numberOfLines={1}
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).headerActionText,
-                  isRead &&
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                {!!isPrivate && (
-                  <>
-                    <SpringAnimatedIcon name="lock" />{' '}
-                  </>
-                )}
-                {actionText.toLowerCase()}
-              </SpringAnimatedText>
-            )}
+            <SpringAnimatedText
+              numberOfLines={1}
+              style={[
+                getCardStylesForTheme(springAnimatedTheme).headerActionText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+              ]}
+            >
+              {!!isPrivate && (
+                <>
+                  <SpringAnimatedIcon name="lock" />{' '}
+                </>
+              )}
+              {actionText.toLowerCase()}
+            </SpringAnimatedText>
           </View>
 
           <ToggleReadButton

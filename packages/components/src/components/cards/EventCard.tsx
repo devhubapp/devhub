@@ -206,27 +206,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
     forkRepoFullName,
   )
 
+  const cardIconDetails = getEventIconAndColor(event)
+  const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
+  const _cardIconColor = cardIconDetails.color
+
   const { actionText } = getEventMetadata(event, {
     includeBranch: cardViewMode === 'compact',
     repoIsKnown,
   })
-
-  const hideActionRow = !(
-    event.type === 'CreateEvent' ||
-    event.type === 'DeleteEvent' ||
-    event.type === 'MemberEvent' ||
-    event.type === 'PushEvent' ||
-    event.type === 'WatchEvent' ||
-    event.type === 'WatchEvent:OneUserMultipleRepos'
-  )
-
-  const hideActionText = hideActionRow || event.type === 'WatchEvent'
-
-  const cardIconDetails = getEventIconAndColor(event)
-  const cardIconName = hideActionText
-    ? cardIconDetails.icon || cardIconDetails.subIcon
-    : cardIconDetails.subIcon || cardIconDetails.icon
-  const _cardIconColor = cardIconDetails.color
 
   const isPush = type === 'PushEvent'
   const isForcePush = isPush && (payload as GitHubPushEvent).forced
@@ -309,10 +296,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
   function renderContent() {
     return (
       <>
-        {actionText && !hideActionRow && cardViewMode === 'compact' && (
+        {actionText && cardViewMode === 'compact' && (
           <ActorActionRow
             avatarUrl={avatarUrl}
-            body={hideActionText ? '' : actionText}
+            body={actionText}
             branch={branchName}
             isBot={isBot}
             isBranchMainEvent={isBranchMainEvent(event)}
@@ -593,14 +580,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
                 textAlign: 'center',
                 color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
-              {...Platform.select({
-                web: {
-                  title:
-                    actionText && actor && actor.login
-                      ? `@${actor.login} ${actionText.toLowerCase()}`
-                      : actionText || '',
-                },
-              })}
             />
           </View>
 
@@ -699,7 +678,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <View style={{ flex: 1 }}>
           <EventCardHeader
             key={`event-card-header-${id}`}
-            actionText={hideActionText ? '' : actionText}
+            actionText={actionText}
             avatarUrl={avatarUrl}
             backgroundThemeColor={backgroundThemeColor}
             cardIconColor={cardIconColor}

@@ -121,19 +121,17 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
 
           <Spacer width={4} />
 
-          {!!body && (
-            <SpringAnimatedText
-              numberOfLines={numberOfLines}
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                cardStyles.smallText,
-                { lineHeight: smallAvatarSize },
-                textStyle,
-              ]}
-            >
-              {body}
-            </SpringAnimatedText>
-          )}
+          <SpringAnimatedText
+            numberOfLines={numberOfLines}
+            style={[
+              getCardStylesForTheme(springAnimatedTheme).normalText,
+              cardStyles.smallText,
+              { lineHeight: smallAvatarSize },
+              textStyle,
+            ]}
+          >
+            {body}
+          </SpringAnimatedText>
         </View>
       }
       viewMode={viewMode}
