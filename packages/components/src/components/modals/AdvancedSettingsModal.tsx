@@ -11,6 +11,7 @@ import { executeOAuth } from '../../libs/oauth'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
@@ -90,7 +91,7 @@ export const AdvancedSettingsModal = React.memo(
         title="Advanced settings"
       >
         <ScrollView
-          style={{ flex: 1 }}
+          style={sharedStyles.flex}
           contentContainerStyle={{
             flexGrow: 1,
           }}

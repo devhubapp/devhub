@@ -18,6 +18,7 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import {
   contentPadding,
   smallAvatarSize,
@@ -498,7 +499,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         )}
 
         <View
-          style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}
+          style={[
+            sharedStyles.flex,
+            sharedStyles.horizontal,
+            { alignItems: 'flex-start' },
+          ]}
         >
           <View
             style={[
@@ -519,7 +524,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
           <Spacer width={contentPadding} />
 
-          <View style={{ flex: 1 }}>{Content}</View>
+          <View style={sharedStyles.flex}>{Content}</View>
         </View>
 
         <Spacer width={contentPadding} />
@@ -584,7 +589,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     >
       {!!isFocused && <CardFocusBorder />}
 
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}>
+      <View
+        style={[
+          sharedStyles.flex,
+          sharedStyles.horizontal,
+          { alignItems: 'flex-start' },
+        ]}
+      >
         <Spacer width={contentPadding / 3} />
 
         <View
@@ -603,7 +614,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         <Spacer width={contentPadding} />
 
-        <View style={{ flex: 1 }}>
+        <View style={sharedStyles.flex}>
           <NotificationCardHeader
             key={`notification-card-header-${id}`}
             avatarUrl={repoAvatarDetails.avatar_url || undefined}
@@ -623,8 +634,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             }
           />
 
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <View style={{ flex: 1 }}>{Content}</View>
+          <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+            <View style={sharedStyles.flex}>{Content}</View>
 
             <Spacer width={contentPadding / 3} />
           </View>

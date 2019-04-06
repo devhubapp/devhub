@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Omit, ThemeColors } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { sharedStyles } from '../../styles/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { SpringAnimatedGradientLayerOverlay } from './GradientLayerOverlay'
 import {
@@ -34,7 +35,8 @@ export const AnimatedTransparentTextOverlay = React.memo(
         collapsable={false}
         pointerEvents="box-none"
         style={[
-          { flex: 1, alignSelf: 'stretch', flexBasis: 'auto' },
+          sharedStyles.flex,
+          { alignSelf: 'stretch', flexBasis: 'auto' },
           containerStyle,
         ]}
       >

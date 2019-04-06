@@ -7,6 +7,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { openAppStore } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -58,10 +59,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       title="Preferences"
     >
       <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        style={sharedStyles.flex}
+        contentContainerStyle={sharedStyles.flexGrow}
       >
         <AppViewModePreference />
 

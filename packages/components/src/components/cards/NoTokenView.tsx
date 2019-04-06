@@ -9,6 +9,7 @@ import { bugsnag } from '../../libs/bugsnag'
 import { executeOAuth } from '../../libs/oauth'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
 import { GitHubEmoji } from '../../utils/helpers/github/emojis'
@@ -66,7 +67,7 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={sharedStyles.flex}>
       <View
         style={{
           flex: 1,

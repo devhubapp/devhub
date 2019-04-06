@@ -6,6 +6,7 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedCheckbox } from '../common/Checkbox'
 import { SubHeader } from '../common/SubHeader'
@@ -44,9 +45,9 @@ export const AppViewModePreference = React.memo(() => {
 
       <View style={{ paddingHorizontal: contentPadding }}>
         <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 1 }}>{renderOption('single-column')}</View>
+          <View style={sharedStyles.flex}>{renderOption('single-column')}</View>
 
-          <View style={{ flex: 1 }}>{renderOption('multi-column')}</View>
+          <View style={sharedStyles.flex}>{renderOption('multi-column')}</View>
         </View>
       </View>
     </View>

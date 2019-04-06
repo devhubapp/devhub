@@ -9,6 +9,7 @@ export interface EnterpriseSetupModalProps {
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -36,7 +37,7 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
       showBackButton={showBackButton}
       title="GitHub Enterprise"
     >
-      <View style={{ flex: 1, padding: contentPadding }}>
+      <View style={[sharedStyles.flex, { padding: contentPadding }]}>
         <Spacer height={contentPadding} />
 
         <SpringAnimatedText

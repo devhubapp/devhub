@@ -13,6 +13,7 @@ import {
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import * as colors from '../../../../styles/colors'
+import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding, smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import {
@@ -136,7 +137,7 @@ export const IssueOrPullRequestRow = React.memo(
               <SpringAnimatedText
                 numberOfLines={numberOfLines}
                 style={[
-                  cardStyles.flex,
+                  sharedStyles.flex,
                   getCardStylesForTheme(springAnimatedTheme).normalText,
                   bold && cardStyles.boldText,
                   isRead &&
@@ -199,7 +200,7 @@ export const IssueOrPullRequestRow = React.memo(
                     <SpringAnimatedText
                       numberOfLines={numberOfLines}
                       style={[
-                        cardStyles.flex,
+                        sharedStyles.flex,
                         getCardStylesForTheme(springAnimatedTheme).commentText,
                         isRead &&
                           getCardStylesForTheme(springAnimatedTheme).mutedText,

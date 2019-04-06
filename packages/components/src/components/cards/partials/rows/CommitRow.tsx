@@ -11,6 +11,7 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import * as colors from '../../../../styles/colors'
+import { sharedStyles } from '../../../../styles/shared'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
@@ -114,7 +115,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                       undefined,
                   })
             }
-            style={cardStyles.flex}
+            style={sharedStyles.flex}
           >
             <SpringAnimatedText
               numberOfLines={1}

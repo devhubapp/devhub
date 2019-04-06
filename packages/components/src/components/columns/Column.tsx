@@ -4,6 +4,7 @@ import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -74,12 +75,12 @@ export const Column = React.memo(
         ref={columnRef}
         key={`column-inner-${columnId}`}
         style={[
+          sharedStyles.horizontal,
           {
-            flexDirection: 'row',
             height: '100%',
             backgroundColor: springAnimatedTheme.backgroundColor,
           },
-          fullWidth ? { flex: 1 } : { width: columnWidth },
+          fullWidth ? sharedStyles.flex : { width: columnWidth },
           style,
         ]}
       >
@@ -90,7 +91,7 @@ export const Column = React.memo(
             thick={sizename > '1-small'}
           />
         )}
-        <View style={{ flex: 1 }}>{children}</View>
+        <View style={sharedStyles.flex}>{children}</View>
         {!!renderSideSeparators && (
           <ColumnSeparator
             half

@@ -16,20 +16,6 @@ export const leftColumnSmallSize = smallAvatarSize
 export const leftColumnBigSize = avatarSize
 
 export const cardStyles = StyleSheet.create({
-  flex: {
-    flex: 1,
-  },
-
-  horizontal: {
-    flexDirection: 'row',
-  },
-
-  horizontalAndVerticallyAligned: {
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
-
   container: {
     paddingVertical: contentPadding * (2 / 3),
     paddingHorizontal: contentPadding / 2,

@@ -5,6 +5,7 @@ import { useTransition } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import { columnHeaderHeight } from '../../styles/variables'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -118,7 +119,7 @@ export const ColumnOptionsRenderer = React.memo(
                 iconName="settings"
                 subtitle=""
                 title="filters"
-                style={{ flex: 1, alignItems: 'flex-start' }}
+                style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
               />
             </ColumnHeader>
           )}

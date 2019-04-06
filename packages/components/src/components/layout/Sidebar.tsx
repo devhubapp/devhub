@@ -14,10 +14,12 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderHeight,
   columnHeaderItemContentBiggerSize,
   contentPadding,
+  radius,
   sidebarSize,
 } from '../../styles/variables'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
@@ -47,8 +49,6 @@ const styles = StyleSheet.create({
   itemContainerStyle__withLabel: {
     width: undefined,
     height: sidebarSize - contentPadding / 4,
-    marginTop: contentPadding / 4,
-    paddingBottom: contentPadding / 4,
   },
 })
 
@@ -83,7 +83,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const showLabel = !!horizontal
   const showFixedSettingsButton = !horizontal || columnIds.length >= 4
   const highlightFocusedColumn =
-    appViewMode === 'single-column' && !currentOpenedModal
+    (appViewMode === 'single-column' || small) && !currentOpenedModal
 
   const itemContainerStyle: ViewStyle = {
     width: sidebarSize,
@@ -94,8 +94,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
     ...(horizontal
       ? {
           marginHorizontal: 1,
-          borderTopLeftRadius: sidebarSize / 2,
-          borderTopRightRadius: sidebarSize / 2,
+          borderTopLeftRadius: radius,
+          borderTopRightRadius: radius,
         }
       : {
           marginVertical: 1,
@@ -186,7 +186,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             horizontal && { paddingHorizontal: contentPadding / 2 },
           ]}
           horizontal={horizontal}
-          style={{ flex: 1 }}
+          style={sharedStyles.flex}
         >
           {!(columnIds && columnIds.length) ? (
             !large ? (

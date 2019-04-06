@@ -11,6 +11,7 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../libs/platform'
+import { sharedStyles } from '../../../styles/shared'
 import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
@@ -104,7 +105,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
             <SpringAnimatedView
-              style={cardStyles.horizontalAndVerticallyAligned}
+              style={sharedStyles.horizontalAndVerticallyAligned}
             >
               <Link href={userLinkURL}>
                 <SpringAnimatedText

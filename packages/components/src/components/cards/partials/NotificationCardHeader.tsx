@@ -13,6 +13,7 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../libs/platform'
+import { sharedStyles } from '../../../styles/shared'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { Avatar } from '../../common/Avatar'
@@ -107,7 +108,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
             <SpringAnimatedView
-              style={cardStyles.horizontalAndVerticallyAligned}
+              style={sharedStyles.horizontalAndVerticallyAligned}
             >
               <Link href={userLinkURL}>
                 <SpringAnimatedText

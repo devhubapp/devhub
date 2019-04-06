@@ -18,6 +18,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
   activityColumnHasAnyFilter,
@@ -208,7 +209,7 @@ export const EventOrNotificationColumn = React.memo(
             iconName={requestTypeIconAndData.icon}
             subtitle={`${requestTypeIconAndData.subtitle || ''}`.toLowerCase()}
             title={`${requestTypeIconAndData.title || ''}`.toLowerCase()}
-            style={{ flex: 1, alignItems: 'flex-start' }}
+            style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
           />
 
           <Spacer width={contentPadding / 2} />
@@ -331,7 +332,7 @@ export const EventOrNotificationColumn = React.memo(
                 />
               )}
 
-              <View style={{ flex: 1 }}>
+              <View style={sharedStyles.flex}>
                 {children}
                 {!!isFreeTrial && <FreeTrialHeaderMessage />}
               </View>

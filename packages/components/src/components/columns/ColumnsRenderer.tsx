@@ -4,6 +4,7 @@ import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
@@ -23,7 +24,7 @@ export function ColumnsRenderer() {
     const shouldRenderFixedColumnOptions = sizename >= '4-x-large'
 
     return (
-      <ViewMeasurer style={{ flex: 1, flexDirection: 'row' }}>
+      <ViewMeasurer style={[sharedStyles.flex, sharedStyles.horizontal]}>
         {({ height: containerHeight }) => (
           <>
             {!!shouldRenderFixedColumnOptions && (

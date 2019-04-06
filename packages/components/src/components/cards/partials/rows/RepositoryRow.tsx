@@ -2,6 +2,7 @@ import React from 'react'
 
 import { getGitHubURLForRepo, getGitHubURLForUser, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
@@ -64,8 +65,8 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
         />
       }
       rightContainerStyle={[
-        cardStyles.flex,
-        cardStyles.horizontalAndVerticallyAligned,
+        sharedStyles.flex,
+        sharedStyles.horizontalAndVerticallyAligned,
         rightContainerStyle,
       ]}
       right={

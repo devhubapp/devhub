@@ -23,6 +23,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -265,7 +266,10 @@ export const AddColumnDetailsModal = React.memo(
         showBackButton={showBackButton}
         title="Add Column"
       >
-        <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          style={sharedStyles.flex}
+        >
           <SubHeader iconName={icon} title={title}>
             {typeof isPrivateSupported === 'boolean' &&
               (() => {
@@ -281,7 +285,7 @@ export const AddColumnDetailsModal = React.memo(
                   : `This column type supports public ${contentLabel} only.`
 
                 return (
-                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
                     <Spacer flex={1} />
 
                     <SpringAnimatedIcon
@@ -309,7 +313,7 @@ export const AddColumnDetailsModal = React.memo(
               })()}
           </SubHeader>
 
-          <View style={{ flex: 1, padding: contentPadding }}>
+          <View style={[sharedStyles.flex, { padding: contentPadding }]}>
             {(paramList
               .map(p => fields.find(f => f.field === p))
               .filter(Boolean) as FieldDetails[]).map(renderField)}

@@ -5,6 +5,7 @@ import { EnhancedLoadState } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
   getEmojiImageURL,
@@ -138,7 +139,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const headerOrFooterHeight = defaultButtonSize + 2 * contentPadding
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={sharedStyles.flex}>
       <View style={{ height: headerOrFooterHeight }} />
 
       <View

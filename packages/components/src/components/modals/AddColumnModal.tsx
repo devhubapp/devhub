@@ -16,6 +16,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding, radius } from '../../styles/variables'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -348,10 +349,8 @@ export function AddColumnModal(props: AddColumnModalProps) {
         )}
 
       <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        style={sharedStyles.flex}
+        contentContainerStyle={sharedStyles.flexGrow}
       >
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
@@ -365,7 +364,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
                     muted
                     withMargin={false}
                     children=" (soon)"
-                    style={{ flex: 1 }}
+                    style={sharedStyles.flex}
                   />
                 </Link>
               )}

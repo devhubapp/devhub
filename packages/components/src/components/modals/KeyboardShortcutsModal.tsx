@@ -7,6 +7,7 @@ export interface KeyboardShortcutsModalProps {
 }
 
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -48,7 +49,7 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
       showBackButton={showBackButton}
       title="Keyboard Shortcuts"
     >
-      <ScrollView style={{ flex: 1, padding: contentPadding }}>
+      <ScrollView style={[sharedStyles.flex, { padding: contentPadding }]}>
         {keyboardShortcuts.map((ks, index) => (
           <Fragment key={[...ks.keys, index].join('+')}>
             <View style={{ flexDirection: 'row' }}>
