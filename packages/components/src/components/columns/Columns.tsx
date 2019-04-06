@@ -162,11 +162,13 @@ export const Columns = React.memo((props: ColumnsProps) => {
       horizontal
       initialNumToRender={4}
       keyExtractor={keyExtractor}
+      maxToRenderPerBatch={4}
       onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={onViewableItemsChanged}
       pagingEnabled={pagingEnabled}
       removeClippedSubviews
       scrollEnabled={!swipeable}
+      windowSize={3}
       {...otherProps}
       renderItem={renderItem}
       style={flatListStyle}

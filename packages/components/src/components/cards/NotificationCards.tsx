@@ -287,14 +287,16 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       bounces
       data={notifications}
       extraData={rerender}
-      initialNumToRender={10}
+      initialNumToRender={props.cardViewMode === 'compact' ? 15 : 5}
       keyExtractor={keyExtractor}
+      maxToRenderPerBatch={props.cardViewMode === 'compact' ? 15 : 5}
       onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
       refreshControl={refreshControl}
       removeClippedSubviews
       renderItem={renderItem}
       viewabilityConfig={viewabilityConfig}
+      windowSize={2}
     />
   )
 })
