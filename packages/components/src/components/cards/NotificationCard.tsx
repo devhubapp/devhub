@@ -435,8 +435,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         {/* <CenterGuide /> */}
 
-        <Spacer width={contentPadding / 3} />
-
         {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
         >
@@ -444,6 +442,16 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         </View>
 
         <Spacer width={contentPadding} /> */}
+
+        <View style={cardStyles.compactItemFixedHeight}>
+          <BookmarkButton
+            isSaved={isSaved}
+            itemIds={[id]}
+            size={smallAvatarSize}
+          />
+        </View>
+
+        <Spacer width={(contentPadding * 2) / 3} />
 
         {!repoIsKnown && (
           <>
@@ -549,7 +557,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
         </View>
 
-        <Spacer width={contentPadding} />
+        <Spacer width={contentPadding / 2} />
 
         <View style={cardStyles.compactItemFixedHeight}>
           <ToggleReadButton
@@ -557,14 +565,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             itemIds={[id]}
             size={smallAvatarSize}
             type="notifications"
-          />
-        </View>
-
-        <View style={cardStyles.compactItemFixedHeight}>
-          <BookmarkButton
-            isSaved={isSaved}
-            itemIds={[id]}
-            size={smallAvatarSize}
           />
         </View>
       </SpringAnimatedView>
