@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import {
   CardViewMode,
   EnhancedGitHubEvent,
+  getBranchNameFromRef,
   getDateSmallText,
   getEventMetadata,
   getFullDateText,
@@ -30,6 +31,7 @@ import {
   isBranchMainEvent,
   isEventPrivate,
   isItemRead,
+  isTagMainEvent,
   MultipleStarEvent,
   Theme,
 } from '@devhub/core'
@@ -116,9 +118,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
     pull_request: pullRequest,
   } = payload as GitHubPullRequestEvent['payload']
   const { issue } = payload as GitHubIssuesEvent['payload']
-  const { ref: _branchName } = payload as GitHubPushEvent['payload']
+  const { ref: branchOrTagRef } = payload as GitHubPushEvent['payload']
 
-  let branchName = (_branchName || '').replace('refs/heads/', '')
+  let branchName = getBranchNameFromRef(branchOrTagRef)
 
   const issueOrPullRequest = issue || pullRequest
 
@@ -210,10 +212,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
   const _cardIconColor = cardIconDetails.color
 
-  const { actionText } = getEventMetadata(event, {
+  const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
     includeBranch: cardViewMode === 'compact',
+    includeTag: cardViewMode === 'compact',
     repoIsKnown,
-  })
+  }
+  const { actionText } = getEventMetadata(event, actionTextOptions)
 
   const isPush = type === 'PushEvent'
   const isForcePush = isPush && (payload as GitHubPushEvent).forced
@@ -300,12 +304,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <ActorActionRow
             avatarUrl={avatarUrl}
             body={actionText}
-            branch={branchName}
+            branch={isBranchMainEvent(event) ? branchName : undefined}
             isBot={isBot}
-            isBranchMainEvent={isBranchMainEvent(event)}
             isRead={isRead}
             ownerName={repoOwnerName || ''}
             repositoryName={repoName || ''}
+            tag={isTagMainEvent(event) ? branchOrTagRef : undefined}
             userLinkURL={actor.html_url || ''}
             username={actor.display_login || actor.login}
             viewMode={cardViewMode}
@@ -327,18 +331,19 @@ export const EventCard = React.memo((props: EventCardProps) => {
             />
           )}
 
-        {Boolean(branchName) && cardViewMode !== 'compact' && (
-          <BranchRow
-            key={`event-branch-row-${branchName}`}
-            branch={branchName}
-            isBranchMainEvent={isBranchMainEvent(event)}
-            isRead={isRead}
-            ownerName={repoOwnerName || ''}
-            repositoryName={repoName || ''}
-            viewMode={cardViewMode}
-            withTopMargin={getWithTopMargin()}
-          />
-        )}
+        {!!branchName &&
+          !(isBranchMainEvent(event) && actionTextOptions!.includeBranch) && (
+            <BranchRow
+              key={`event-branch-row-${branchName}`}
+              branch={branchName}
+              isBranchMainEvent={isBranchMainEvent(event)}
+              isRead={isRead}
+              ownerName={repoOwnerName || ''}
+              repositoryName={repoName || ''}
+              viewMode={cardViewMode}
+              withTopMargin={getWithTopMargin()}
+            />
+          )}
 
         {Boolean(forkee && forkRepoOwnerName && forkRepoName) && (
           <RepositoryRow
@@ -446,27 +451,28 @@ export const EventCard = React.memo((props: EventCardProps) => {
           />
         )}
 
-        {Boolean(release) && (
-          <ReleaseRow
-            key={`event-release-row-${release.id}`}
-            avatarUrl={release.author.avatar_url}
-            body={release.body}
-            bold
-            branch={release.target_commitish}
-            hideIcon
-            isPrivate={isPrivate}
-            isRead={isRead}
-            name={release.name}
-            ownerName={repoOwnerName || ''}
-            repositoryName={repoName || ''}
-            tagName={release.tag_name}
-            url={release.html_url || release.url}
-            userLinkURL={release.author.html_url || ''}
-            username={release.author.display_login || release.author.login}
-            viewMode={cardViewMode}
-            withTopMargin={getWithTopMargin()}
-          />
-        )}
+        {Boolean(release) &&
+          !(isTagMainEvent(event) && actionTextOptions!.includeTag) && (
+            <ReleaseRow
+              key={`event-release-row-${release.id}`}
+              avatarUrl={release.author.avatar_url}
+              body={release.body}
+              bold
+              branch={release.target_commitish}
+              hideIcon
+              isPrivate={isPrivate}
+              isRead={isRead}
+              name={release.name}
+              ownerName={repoOwnerName || ''}
+              repositoryName={repoName || ''}
+              tagName={release.tag_name}
+              url={release.html_url || release.url}
+              userLinkURL={release.author.html_url || ''}
+              username={release.author.display_login || release.author.login}
+              viewMode={cardViewMode}
+              withTopMargin={getWithTopMargin()}
+            />
+          )}
       </>
     )
   }

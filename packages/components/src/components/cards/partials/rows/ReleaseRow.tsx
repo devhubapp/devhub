@@ -69,12 +69,10 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
   const name = trimNewLinesAndSpaces(_name)
   const tagName = trimNewLinesAndSpaces(_tagName)
 
-  const repoFullName =
-    ownerName && repositoryName ? `${ownerName}/${repositoryName}` : ''
   const fixedURL = fixURL(
     url && !url.includes('api.')
       ? url
-      : getGitHubURLForRelease(repoFullName, tagName),
+      : getGitHubURLForRelease(ownerName, repositoryName, tagName),
   )
 
   return (

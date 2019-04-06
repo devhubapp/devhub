@@ -251,3 +251,12 @@ export function getGitHubAPIHeadersFromHeader(headers: Record<string, any>) {
 
   return github
 }
+
+export function getBranchNameFromRef(ref: string | undefined) {
+  if (!(ref && ref.startsWith('refs/'))) return ref || undefined
+
+  return ref
+    .split('/')
+    .slice(2)
+    .join('/')
+}

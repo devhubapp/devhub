@@ -1,7 +1,12 @@
 import React, { Fragment } from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForBranch, getGitHubURLForUser, Omit } from '@devhub/core'
+import {
+  getGitHubURLForBranch,
+  getGitHubURLForRelease,
+  getGitHubURLForUser,
+  Omit,
+} from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { genericParseText } from '../../../../utils/helpers/shared'
@@ -24,11 +29,11 @@ export interface ActorActionRowProps
   body: string
   branch: string | undefined
   isBot: boolean
-  isBranchMainEvent: boolean
   isRead: boolean
   numberOfLines?: number
   ownerName: string
   repositoryName: string
+  tag: string | undefined
   textStyle?: SpringAnimatedTextProps['style']
   url?: string
   userLinkURL: string | undefined
@@ -43,11 +48,11 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
     body: _body,
     branch,
     isBot,
-    isBranchMainEvent,
     isRead,
     numberOfLines = props.numberOfLines || 1,
     ownerName,
     repositoryName,
+    tag,
     textStyle,
     url,
     userLinkURL: _userLinkURL,
@@ -60,14 +65,20 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
   const body =
-    isBranchMainEvent && branch && ownerName && repositoryName
+    (branch || tag) && ownerName && repositoryName
       ? genericParseText(
           `${_body || ''}`.toLowerCase(),
-          new RegExp(`${branch}`.toLowerCase()),
+          new RegExp(`${branch || tag}`.toLowerCase()),
           match => {
             return (
               <Link
-                href={getGitHubURLForBranch(ownerName, repositoryName, branch)}
+                href={
+                  branch
+                    ? getGitHubURLForBranch(ownerName, repositoryName, branch)
+                    : tag
+                    ? getGitHubURLForRelease(ownerName, repositoryName, tag)
+                    : undefined
+                }
                 openOnNewTab
               >
                 <SpringAnimatedText>{match}</SpringAnimatedText>
@@ -76,7 +87,8 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
           },
         ).map((item, index) => (
           <Fragment
-            key={`action-branch-${ownerName}-${repositoryName}-${branch}-${index}`}
+            key={`action-branchOrTag-${ownerName}-${repositoryName}-${branch ||
+              tag}-${index}`}
           >
             {item}
           </Fragment>

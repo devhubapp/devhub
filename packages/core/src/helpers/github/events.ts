@@ -16,6 +16,7 @@ import {
   NotificationColumnSubscription,
 } from '../../types'
 import {
+  getBranchNameFromRef,
   isPullRequest,
   isReadFilterChecked,
   isUnreadFilterChecked,
@@ -224,6 +225,7 @@ export function getEventMetadata(
   options:
     | {
         includeBranch?: boolean
+        includeTag?: boolean
         issueOrPullRequestIsKnown?: boolean
         repoIsKnown?: boolean
       }
@@ -233,7 +235,12 @@ export function getEventMetadata(
   actionText: string
   subjectType: GitHubEventSubjectType | undefined
 } {
-  const { includeBranch, issueOrPullRequestIsKnown, repoIsKnown } = options
+  const {
+    includeBranch,
+    includeTag,
+    issueOrPullRequestIsKnown,
+    repoIsKnown,
+  } = options
 
   const isDraftPR =
     ('pull_request' in event.payload &&
@@ -271,7 +278,7 @@ export function getEventMetadata(
               subjectType: 'Repository',
             }
           case 'branch': {
-            const branch = (event.payload.ref || '').split('/').pop()
+            const branch = getBranchNameFromRef(event.payload.ref || undefined)
             return {
               action: 'created',
               actionText:
@@ -281,12 +288,15 @@ export function getEventMetadata(
               subjectType: 'Branch',
             }
           }
-          case 'tag':
+          case 'tag': {
+            const tag = event.payload.ref
             return {
               action: 'created',
-              actionText: 'Created a tag',
+              actionText:
+                includeTag && tag ? `Created the tag ${tag}` : 'Created a tag',
               subjectType: 'Tag',
             }
+          }
           default:
             return {
               action: 'created',
@@ -305,7 +315,7 @@ export function getEventMetadata(
               subjectType: 'Repository',
             }
           case 'branch': {
-            const branch = (event.payload.ref || '').split('/').pop()
+            const branch = getBranchNameFromRef(event.payload.ref)
             return {
               action: 'deleted',
               actionText:
@@ -315,12 +325,15 @@ export function getEventMetadata(
               subjectType: 'Branch',
             }
           }
-          case 'tag':
+          case 'tag': {
+            const tag = event.payload.ref
             return {
               action: 'deleted',
-              actionText: 'Deleted a tag',
+              actionText:
+                includeTag && tag ? `Deleted the tag ${tag}` : 'Deleted a tag',
               subjectType: 'Tag',
             }
+          }
           default:
             return {
               action: 'deleted',
@@ -590,7 +603,7 @@ export function getEventMetadata(
             ],
           ) || 1
 
-        const branch = (event.payload.ref || '').split('/').pop()
+        const branch = getBranchNameFromRef(event.payload.ref)
         const pushedText = event.forced ? 'Force pushed' : 'Pushed'
         const commitText = count > 1 ? `${count} commits` : 'a commit'
         const branchText = includeBranch && branch ? `to ${branch}` : ''
@@ -748,21 +761,16 @@ export function mergeSimilarEvents(
 export function isBranchMainEvent(event: EnhancedGitHubEvent) {
   if (!(event && event.type)) return false
 
-  if (event.type === 'PushEvent') return true
-
-  if (
-    event.type === 'CreateEvent' &&
-    (event.payload as GitHubCreateEvent['payload']).ref_type === 'branch'
+  return (
+    getEventMetadata(event).subjectType === 'Branch' ||
+    event.type === 'PushEvent'
   )
-    return true
+}
 
-  if (
-    event.type === 'DeleteEvent' &&
-    (event.payload as GitHubDeleteEvent['payload']).ref_type === 'branch'
-  )
-    return true
+export function isTagMainEvent(event: EnhancedGitHubEvent) {
+  if (!(event && event.type)) return false
 
-  return false
+  return getEventMetadata(event).subjectType === 'Tag'
 }
 
 export function sortEvents(events: EnhancedGitHubEvent[] | undefined) {
