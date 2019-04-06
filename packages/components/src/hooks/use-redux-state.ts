@@ -15,8 +15,11 @@ export function useReduxState<S extends (state: any) => any>(
   callback?: (value: Result<S>) => void,
 ) {
   const store = useReduxStore()
-  const cacheRef = useRef<Result<S>>(selector(store.getState()))
   const forceRerender = useForceRerender()
+
+  const result = selector(store.getState())
+  const cacheRef = useRef<Result<S>>(result)
+  cacheRef.current = result
 
   const resolve = useCallback(
     (value: Result<S>) => {
