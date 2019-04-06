@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -66,58 +66,78 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [flatListRef, columnIds],
   )
 
-  const renderItem: FlatListProps<string>['renderItem'] = ({
-    item: columnId,
-  }) => {
-    return (
-      <ColumnContainer
-        columnId={columnId}
-        pagingEnabled={pagingEnabled}
-        swipeable={swipeable}
-      />
-    )
-  }
-
   const pagingEnabled = sizename < '3-large'
   const swipeable: boolean = false
 
+  const renderItem: FlatListProps<string>['renderItem'] = useCallback(
+    ({ item: columnId }) => {
+      return (
+        <ColumnContainer
+          columnId={columnId}
+          pagingEnabled={pagingEnabled}
+          swipeable={swipeable}
+        />
+      )
+    },
+    [pagingEnabled, swipeable],
+  )
+
+  const getItemLayout: FlatListProps<string>['getItemLayout'] = useCallback(
+    (_data, index) => ({
+      index,
+      length: columnWidth,
+      offset: index * columnWidth,
+    }),
+    [columnWidth],
+  )
+
+  const _onScrollToIndexFailed: FlatListProps<
+    string
+  >['onScrollToIndexFailed'] = (info: {
+    index: number
+    highestMeasuredFrameIndex: number
+    averageItemLength: number
+  }) => {
+    console.error(info)
+    bugsnag.notify({
+      name: 'ScrollToIndexFailed',
+      message: 'Failed to scroll to index',
+      ...info,
+    })
+  }
+  const onScrollToIndexFailed: FlatListProps<
+    string
+  >['onScrollToIndexFailed'] = useCallback(_onScrollToIndexFailed, [])
+
+  const flatListStyle = useMemo(
+    () => [
+      styles.flatlist,
+      sizename > '1-small' && {
+        marginHorizontal: -separatorThickSize / 2,
+      },
+      style,
+    ],
+    [style, sizename, separatorThickSize],
+  )
+
   return (
-    <>
-      <FlatList
-        ref={flatListRef}
-        key="columns-flat-list"
-        className="pagingEnabledFix"
-        bounces={!swipeable}
-        data={columnIds}
-        getItemLayout={(_data, index) => ({
-          index,
-          length: columnWidth,
-          offset: index * columnWidth,
-        })}
-        horizontal
-        initialNumToRender={4}
-        keyExtractor={keyExtractor}
-        onScrollToIndexFailed={e => {
-          console.error(e)
-          bugsnag.notify({
-            name: 'ScrollToIndexFailed',
-            message: 'Failed to scroll to index',
-            ...e,
-          })
-        }}
-        pagingEnabled={pagingEnabled}
-        removeClippedSubviews
-        scrollEnabled={!swipeable}
-        {...otherProps}
-        renderItem={renderItem}
-        style={[
-          styles.flatlist,
-          sizename > '1-small' && {
-            marginHorizontal: -separatorThickSize / 2,
-          },
-          style,
-        ]}
-      />
-    </>
+    <FlatList
+      ref={flatListRef}
+      key="columns-flat-list"
+      className="pagingEnabledFix"
+      bounces={!swipeable}
+      data={columnIds}
+      getItemLayout={getItemLayout}
+      horizontal
+      initialNumToRender={4}
+      keyExtractor={keyExtractor}
+      onScrollToIndexFailed={onScrollToIndexFailed}
+      pagingEnabled={pagingEnabled}
+      removeClippedSubviews
+      scrollEnabled={!swipeable}
+      {...otherProps}
+      renderItem={renderItem}
+      style={flatListStyle}
+    />
   )
 })

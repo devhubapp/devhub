@@ -38,6 +38,10 @@ export interface NotificationCardsProps {
   swipeable?: boolean
 }
 
+function keyExtractor(notification: EnhancedGitHubNotification) {
+  return `notification-card-${notification.id}`
+}
+
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
     column,
@@ -126,44 +130,12 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     [],
   )
 
-  if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
-    return (
-      <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
-        errorMessage={`You have reached the limit of ${
-          constants.COLUMNS_LIMIT
-        } columns. This is to maintain a healthy usage of the GitHub API.`}
-        errorTitle="Too many columns"
-        fetchNextPage={undefined}
-        loadState="error"
-        refresh={undefined}
-      />
-    )
-  }
-
-  if (!(notifications && notifications.length))
-    return (
-      <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
-        errorMessage={errorMessage}
-        fetchNextPage={fetchNextPage}
-        loadState={loadState}
-        refresh={refresh}
-      />
-    )
-
-  function keyExtractor(notification: EnhancedGitHubNotification) {
-    return `notification-card-${notification.id}`
-  }
-
-  function renderItem({
+  const _renderItem = ({
     item: notification,
   }: {
     item: EnhancedGitHubNotification
     index: number
-  }) {
+  }) => {
     if (props.swipeable) {
       return (
         <SwipeableNotificationCard
@@ -190,8 +162,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       </ErrorBoundary>
     )
   }
+  const renderItem = useCallback(_renderItem, [
+    props.swipeable,
+    props.cardViewMode,
+    props.repoIsKnown,
+    column.id === focusedColumnId && selectedItemId,
+  ])
 
-  function renderFooter() {
+  const renderFooter = useCallback(() => {
     return (
       <>
         <CardItemSeparator />
@@ -228,6 +206,75 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         ) : null}
       </>
     )
+  }, [
+    fetchNextPage,
+    loadState,
+    column.filters && column.filters.clearedAt,
+    column.id,
+    refresh,
+  ])
+
+  const _onScrollToIndexFailed: FlatListProps<
+    string
+  >['onScrollToIndexFailed'] = (info: {
+    index: number
+    highestMeasuredFrameIndex: number
+    averageItemLength: number
+  }) => {
+    console.error(info)
+    bugsnag.notify({
+      name: 'ScrollToIndexFailed',
+      message: 'Failed to scroll to index',
+      ...info,
+    })
+  }
+  const onScrollToIndexFailed = useCallback(_onScrollToIndexFailed, [])
+
+  const refreshControl = useMemo(
+    () => (
+      <RefreshControl
+        intervalRefresh={lastFetchedAt}
+        onRefresh={refresh}
+        refreshing={loadState === 'loading' || loadState === 'loading_first'}
+        title={
+          lastFetchedAt
+            ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+            : 'Pull to refresh'
+        }
+      />
+    ),
+    [lastFetchedAt, refresh, loadState],
+  )
+
+  const rerender = useMemo(() => ({}), [renderItem, renderFooter])
+
+  if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
+    return (
+      <EmptyCards
+        clearedAt={column.filters && column.filters.clearedAt}
+        columnId={column.id}
+        errorMessage={`You have reached the limit of ${
+          constants.COLUMNS_LIMIT
+        } columns. This is to maintain a healthy usage of the GitHub API.`}
+        errorTitle="Too many columns"
+        fetchNextPage={undefined}
+        loadState="error"
+        refresh={undefined}
+      />
+    )
+  }
+
+  if (!(notifications && notifications.length)) {
+    return (
+      <EmptyCards
+        clearedAt={column.filters && column.filters.clearedAt}
+        columnId={column.id}
+        errorMessage={errorMessage}
+        fetchNextPage={fetchNextPage}
+        loadState={loadState}
+        refresh={refresh}
+      />
+    )
   }
 
   return (
@@ -239,30 +286,12 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       alwaysBounceVertical
       bounces
       data={notifications}
-      extraData={loadState}
+      extraData={rerender}
       initialNumToRender={10}
       keyExtractor={keyExtractor}
-      onScrollToIndexFailed={e => {
-        console.error(e)
-        bugsnag.notify({
-          name: 'ScrollToIndexFailed',
-          message: 'Failed to scroll to index',
-          ...e,
-        })
-      }}
+      onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
-      refreshControl={
-        <RefreshControl
-          intervalRefresh={lastFetchedAt}
-          onRefresh={refresh}
-          refreshing={loadState === 'loading' || loadState === 'loading_first'}
-          title={
-            lastFetchedAt
-              ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
-              : 'Pull to refresh'
-          }
-        />
-      }
+      refreshControl={refreshControl}
       removeClippedSubviews
       renderItem={renderItem}
       viewabilityConfig={viewabilityConfig}

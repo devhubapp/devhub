@@ -38,6 +38,10 @@ export interface EventCardsProps {
   swipeable?: boolean
 }
 
+function keyExtractor(event: EnhancedGitHubEvent, _index: number) {
+  return `event-card-${event.id}`
+}
+
 export const EventCards = React.memo((props: EventCardsProps) => {
   const {
     column,
@@ -125,42 +129,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     [],
   )
 
-  if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
-    return (
-      <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
-        errorMessage={`You have reached the limit of ${
-          constants.COLUMNS_LIMIT
-        } columns. This is to maintain a healthy usage of the GitHub API.`}
-        errorTitle="Too many columns"
-        fetchNextPage={undefined}
-        loadState="error"
-        refresh={undefined}
-      />
-    )
-  }
-
-  if (!(events && events.length)) {
-    return (
-      <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
-        errorMessage={errorMessage}
-        fetchNextPage={fetchNextPage}
-        loadState={loadState}
-        refresh={refresh}
-      />
-    )
-  }
-
-  const keyExtractor: FlatListProps<
-    EnhancedGitHubEvent
-  >['keyExtractor'] = event => {
-    return `event-card-${event.id}`
-  }
-
-  const renderItem: FlatListProps<EnhancedGitHubEvent>['renderItem'] = ({
+  const _renderItem: FlatListProps<EnhancedGitHubEvent>['renderItem'] = ({
     item: event,
   }) => {
     if (props.swipeable) {
@@ -190,7 +159,14 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     )
   }
 
-  function renderFooter() {
+  const renderItem = useCallback(_renderItem, [
+    props.swipeable,
+    props.cardViewMode,
+    props.repoIsKnown,
+    column.id === focusedColumnId && selectedItemId,
+  ])
+
+  const renderFooter = useCallback(() => {
     return (
       <>
         <CardItemSeparator />
@@ -227,6 +203,75 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         ) : null}
       </>
     )
+  }, [
+    fetchNextPage,
+    loadState,
+    column.id,
+    column.filters && column.filters.clearedAt,
+    refresh,
+  ])
+
+  const _onScrollToIndexFailed: FlatListProps<
+    string
+  >['onScrollToIndexFailed'] = (info: {
+    index: number
+    highestMeasuredFrameIndex: number
+    averageItemLength: number
+  }) => {
+    console.error(info)
+    bugsnag.notify({
+      name: 'ScrollToIndexFailed',
+      message: 'Failed to scroll to index',
+      ...info,
+    })
+  }
+  const onScrollToIndexFailed = useCallback(_onScrollToIndexFailed, [])
+
+  const refreshControl = useMemo(
+    () => (
+      <RefreshControl
+        intervalRefresh={lastFetchedAt}
+        onRefresh={refresh}
+        refreshing={loadState === 'loading' || loadState === 'loading_first'}
+        title={
+          lastFetchedAt
+            ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+            : 'Pull to refresh'
+        }
+      />
+    ),
+    [lastFetchedAt, refresh, loadState],
+  )
+
+  const rerender = useMemo(() => ({}), [renderItem, renderFooter])
+
+  if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
+    return (
+      <EmptyCards
+        clearedAt={column.filters && column.filters.clearedAt}
+        columnId={column.id}
+        errorMessage={`You have reached the limit of ${
+          constants.COLUMNS_LIMIT
+        } columns. This is to maintain a healthy usage of the GitHub API.`}
+        errorTitle="Too many columns"
+        fetchNextPage={undefined}
+        loadState="error"
+        refresh={undefined}
+      />
+    )
+  }
+
+  if (!(events && events.length)) {
+    return (
+      <EmptyCards
+        clearedAt={column.filters && column.filters.clearedAt}
+        columnId={column.id}
+        errorMessage={errorMessage}
+        fetchNextPage={fetchNextPage}
+        loadState={loadState}
+        refresh={refresh}
+      />
+    )
   }
 
   return (
@@ -237,30 +282,12 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       alwaysBounceVertical
       bounces
       data={events}
-      extraData={loadState}
+      extraData={rerender}
       initialNumToRender={10}
       keyExtractor={keyExtractor}
-      onScrollToIndexFailed={e => {
-        console.error(e)
-        bugsnag.notify({
-          name: 'ScrollToIndexFailed',
-          message: 'Failed to scroll to index',
-          ...e,
-        })
-      }}
+      onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
-      refreshControl={
-        <RefreshControl
-          intervalRefresh={lastFetchedAt}
-          onRefresh={refresh}
-          refreshing={loadState === 'loading' || loadState === 'loading_first'}
-          title={
-            lastFetchedAt
-              ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
-              : 'Pull to refresh'
-          }
-        />
-      }
+      refreshControl={refreshControl}
       removeClippedSubviews
       renderItem={renderItem}
       viewabilityConfig={viewabilityConfig}
