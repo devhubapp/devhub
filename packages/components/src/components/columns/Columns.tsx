@@ -12,6 +12,7 @@ import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
+import { emitter } from '../../libs/emitter'
 import * as selectors from '../../redux/selectors'
 import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -44,6 +45,10 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const columnWidth = useColumnWidth()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
+  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+
+  const currentOpenedModalRef = useRef(false)
+  currentOpenedModalRef.current = !!currentOpenedModal
 
   const flatListRef = useRef<FlatList<string>>(null)
 
@@ -120,6 +125,32 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [style, sizename, separatorThickSize],
   )
 
+  const _onViewableItemsChanged: FlatListProps<
+    string
+  >['onViewableItemsChanged'] = info => {
+    if (currentOpenedModalRef.current) return
+
+    const allVisibleItems =
+      info &&
+      info.viewableItems &&
+      info.viewableItems.filter(item => item.isViewable)
+
+    if (!(allVisibleItems && allVisibleItems.length === 1)) return
+
+    emitter.emit('FOCUS_ON_COLUMN', {
+      animated: false,
+      columnId: allVisibleItems[0].item,
+      columnIndex:
+        allVisibleItems[0].index ||
+        columnIds.findIndex(id => id === allVisibleItems[0].item),
+      focusOnVisibleItem: false,
+      highlight: false,
+      scrollTo: false,
+    })
+  }
+
+  const onViewableItemsChanged = useCallback(_onViewableItemsChanged, [])
+
   return (
     <FlatList
       ref={flatListRef}
@@ -132,6 +163,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       initialNumToRender={4}
       keyExtractor={keyExtractor}
       onScrollToIndexFailed={onScrollToIndexFailed}
+      onViewableItemsChanged={onViewableItemsChanged}
       pagingEnabled={pagingEnabled}
       removeClippedSubviews
       scrollEnabled={!swipeable}

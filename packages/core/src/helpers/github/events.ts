@@ -6,8 +6,6 @@ import {
   Column,
   ColumnSubscription,
   EnhancedGitHubEvent,
-  GitHubCreateEvent,
-  GitHubDeleteEvent,
   GitHubEventAction,
   GitHubEventSubjectType,
   GitHubIcon,

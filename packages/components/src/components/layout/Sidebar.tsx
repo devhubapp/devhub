@@ -1,5 +1,5 @@
-import React from 'react'
-import { Image, ScrollView, StyleSheet, View, ViewStyle } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { FlatList, Image, StyleSheet, View, ViewStyle } from 'react-native'
 
 import {
   getColumnHeaderDetails,
@@ -60,11 +60,12 @@ export interface SidebarProps {
 export const Sidebar = React.memo((props: SidebarProps) => {
   const { horizontal, zIndex } = props
 
-  const { sizename } = useAppLayout()
+  const flatListRef = useRef<FlatList<string>>(null)
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const theme = useTheme()
   const { appViewMode } = useAppViewMode()
+  const { sizename } = useAppLayout()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
@@ -75,6 +76,16 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const replaceModal = useReduxAction(actions.replaceModal)
 
   const focusedColumnId = useFocusedColumn() || columnIds[0]
+
+  useEffect(() => {
+    if (!(flatListRef.current && focusedColumnId)) return
+
+    flatListRef.current.scrollToItem({
+      animated: true,
+      item: focusedColumnId,
+      viewPosition: 0.5,
+    })
+  }, [focusedColumnId, flatListRef.current])
 
   const small = sizename === '1-small'
   const large = sizename >= '3-large'
@@ -175,21 +186,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
         <SectionSpacer />
 
-        <ScrollView
-          alwaysBounceHorizontal={false}
-          alwaysBounceVertical={false}
-          contentContainerStyle={[
-            {
-              flexGrow: 1,
-              justifyContent: small && horizontal ? 'space-evenly' : undefined,
-            },
-            horizontal && { paddingHorizontal: contentPadding / 2 },
-          ]}
-          horizontal={horizontal}
-          style={sharedStyles.flex}
-        >
-          {!(columnIds && columnIds.length) ? (
-            !large ? (
+        <FlatList
+          ref={flatListRef}
+          ListHeaderComponent={
+            !(columnIds && columnIds.length) && !large ? (
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
@@ -216,52 +216,62 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 {/* <Separator horizontal={!horizontal} /> */}
               </>
             ) : null
-          ) : (
-            columnIds.map(columnId => (
-              <SidebarColumnItem
-                key={`sidebar-column-item-${columnId}`}
-                closeAllModals={closeAllModals}
-                columnId={columnId}
-                currentOpenedModal={currentOpenedModal}
-                enableBackgroundHover={enableBackgroundHover}
-                highlight={
-                  highlightFocusedColumn && columnId === focusedColumnId
+          }
+          ListFooterComponent={
+            showFixedSettingsButton ? null : (
+              <ColumnHeaderItem
+                analyticsLabel="sidebar_settings"
+                hoverBackgroundThemeColor={
+                  isModalOpen('SETTINGS')
+                    ? getColumnHeaderThemeColors(theme.backgroundColor).selected
+                    : getColumnHeaderThemeColors(theme.backgroundColor).hover
                 }
-                horizontal={horizontal}
-                itemContainerStyle={itemContainerStyle}
+                enableBackgroundHover={enableBackgroundHover}
+                forceHoverState={isModalOpen('SETTINGS')}
+                iconName="gear"
+                label="preferences"
+                onPress={() =>
+                  small && isModalOpen('SETTINGS')
+                    ? undefined
+                    : replaceModal({ name: 'SETTINGS' })
+                }
                 showLabel={showLabel}
-                small={small}
+                size={columnHeaderItemContentBiggerSize}
+                style={[
+                  styles.centerContainer,
+                  itemContainerStyle,
+                  showLabel && styles.itemContainerStyle__withLabel,
+                ]}
               />
-            ))
-          )}
-
-          {!showFixedSettingsButton && (
-            <ColumnHeaderItem
-              analyticsLabel="sidebar_settings"
-              hoverBackgroundThemeColor={
-                isModalOpen('SETTINGS')
-                  ? getColumnHeaderThemeColors(theme.backgroundColor).selected
-                  : getColumnHeaderThemeColors(theme.backgroundColor).hover
-              }
+            )
+          }
+          alwaysBounceHorizontal={false}
+          alwaysBounceVertical={false}
+          contentContainerStyle={[
+            {
+              flexGrow: 1,
+              justifyContent: small && horizontal ? 'space-evenly' : undefined,
+            },
+            horizontal && { paddingHorizontal: contentPadding / 2 },
+          ]}
+          data={columnIds}
+          horizontal={horizontal}
+          keyExtractor={columnId => `sidebar-column-item-${columnId}`}
+          style={sharedStyles.flex}
+          renderItem={({ item: columnId }) => (
+            <SidebarColumnItem
+              closeAllModals={closeAllModals}
+              columnId={columnId}
+              currentOpenedModal={currentOpenedModal}
               enableBackgroundHover={enableBackgroundHover}
-              forceHoverState={isModalOpen('SETTINGS')}
-              iconName="gear"
-              label="preferences"
-              onPress={() =>
-                small && isModalOpen('SETTINGS')
-                  ? undefined
-                  : replaceModal({ name: 'SETTINGS' })
-              }
+              highlight={highlightFocusedColumn && columnId === focusedColumnId}
+              horizontal={horizontal}
+              itemContainerStyle={itemContainerStyle}
               showLabel={showLabel}
-              size={columnHeaderItemContentBiggerSize}
-              style={[
-                styles.centerContainer,
-                itemContainerStyle,
-                showLabel && styles.itemContainerStyle__withLabel,
-              ]}
+              small={small}
             />
           )}
-        </ScrollView>
+        />
 
         <SectionSpacer />
 
