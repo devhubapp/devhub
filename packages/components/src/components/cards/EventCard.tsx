@@ -214,6 +214,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
     includeBranch: cardViewMode === 'compact',
+    includeFork: cardViewMode === 'compact',
     includeTag: cardViewMode === 'compact',
     repoIsKnown,
   }
@@ -300,11 +301,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
   function renderContent() {
     return (
       <>
-        {actionText && cardViewMode === 'compact' && (
+        {!!actionText && cardViewMode === 'compact' && (
           <ActorActionRow
             avatarUrl={avatarUrl}
             body={actionText}
             branch={isBranchMainEvent(event) ? branchName : undefined}
+            forkOwnerName={forkRepoOwnerName}
+            forkRepositoryName={forkRepoName}
             isBot={isBot}
             isRead={isRead}
             ownerName={repoOwnerName || ''}
@@ -345,7 +348,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
             />
           )}
 
-        {Boolean(forkee && forkRepoOwnerName && forkRepoName) && (
+        {!!(
+          forkee &&
+          forkRepoOwnerName &&
+          forkRepoName &&
+          cardViewMode !== 'compact' &&
+          !actionTextOptions!.includeFork
+        ) && (
           <RepositoryRow
             key={`event-fork-row-${forkee.id}`}
             isForcePush={isForcePush}

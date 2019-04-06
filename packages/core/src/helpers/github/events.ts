@@ -225,6 +225,7 @@ export function getEventMetadata(
   options:
     | {
         includeBranch?: boolean
+        includeFork?: boolean
         includeTag?: boolean
         issueOrPullRequestIsKnown?: boolean
         repoIsKnown?: boolean
@@ -237,6 +238,7 @@ export function getEventMetadata(
 } {
   const {
     includeBranch,
+    includeFork,
     includeTag,
     issueOrPullRequestIsKnown,
     repoIsKnown,
@@ -344,9 +346,13 @@ export function getEventMetadata(
       }
 
       case 'ForkEvent': {
+        const fork = event.payload.forkee
+        const forkFullName = fork && fork.full_name
         return {
           action: 'forked',
-          actionText: `Forked ${repositoryText}`,
+          actionText: includeFork
+            ? `Forked ${repositoryText} to ${forkFullName}`
+            : `Forked ${repositoryText}`,
           subjectType: 'Repository',
         }
       }

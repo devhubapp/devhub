@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import {
   getGitHubURLForBranch,
   getGitHubURLForRelease,
+  getGitHubURLForRepo,
   getGitHubURLForUser,
   Omit,
 } from '@devhub/core'
@@ -28,6 +29,8 @@ export interface ActorActionRowProps
   avatarUrl: string | undefined
   body: string
   branch: string | undefined
+  forkOwnerName: string | undefined
+  forkRepositoryName: string | undefined
   isBot: boolean
   isRead: boolean
   numberOfLines?: number
@@ -47,6 +50,8 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
     avatarUrl,
     body: _body,
     branch,
+    forkOwnerName,
+    forkRepositoryName,
     isBot,
     isRead,
     numberOfLines = props.numberOfLines || 1,
@@ -64,10 +69,20 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
+  const fragmentMapper = (item: React.ReactNode, index: number) => (
+    <Fragment
+      key={`action-row-${ownerName}-${repositoryName}-${body}-${index}`}
+    >
+      {item}
+    </Fragment>
+  )
+
+  const bodyStr = `${_body || ''}`.replace(_body[0], _body[0].toLowerCase())
+
   const body =
-    (branch || tag) && ownerName && repositoryName
+    bodyStr && (branch || tag) && ownerName && repositoryName
       ? genericParseText(
-          `${_body || ''}`.toLowerCase(),
+          bodyStr,
           new RegExp(`${branch || tag}`.toLowerCase()),
           match => {
             return (
@@ -85,15 +100,23 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
               </Link>
             )
           },
-        ).map((item, index) => (
-          <Fragment
-            key={`action-branchOrTag-${ownerName}-${repositoryName}-${branch ||
-              tag}-${index}`}
-          >
-            {item}
-          </Fragment>
-        ))
-      : `${_body || ''}`.toLowerCase()
+        ).map(fragmentMapper)
+      : bodyStr && forkOwnerName && forkRepositoryName
+      ? genericParseText(
+          bodyStr,
+          new RegExp(`${forkOwnerName}/${forkRepositoryName}`, 'i'),
+          match => {
+            return (
+              <Link
+                href={getGitHubURLForRepo(forkOwnerName, forkRepositoryName)}
+                openOnNewTab
+              >
+                <SpringAnimatedText>{match}</SpringAnimatedText>
+              </Link>
+            )
+          },
+        ).map(fragmentMapper)
+      : bodyStr
 
   return (
     <BaseRow
