@@ -14,6 +14,10 @@ import {
 import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Button, defaultButtonSize } from '../common/Button'
+import { fabSize } from '../common/FAB'
+import { Spacer } from '../common/Spacer'
+import { useAppLayout } from '../context/LayoutContext'
+import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 const clearMessages = [
@@ -65,6 +69,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     refresh,
   } = props
 
+  const { sizename } = useAppLayout()
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
@@ -180,6 +185,10 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           </View>
         ) : null}
       </View>
+
+      {shouldRenderFAB(sizename) && (
+        <Spacer height={fabSize + 2 * fabSpacing} />
+      )}
     </View>
   )
 })

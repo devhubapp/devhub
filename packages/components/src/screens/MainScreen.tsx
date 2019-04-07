@@ -6,6 +6,7 @@ import url from 'url'
 
 import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
+import { ColumnSwitcher } from '../components/columns/ColumnSwitcher'
 import { ConditionalWrap } from '../components/common/ConditionalWrap'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
@@ -188,20 +189,13 @@ export const MainScreen = React.memo(() => {
   const scrollLeft = useCallback(() => {
     if (currentOpenedModal) return
 
-    const previousColumnIndex = Math.max(
-      0,
-      Math.min(focusedColumnIndex - 1, columnIds.length - 1),
-    )
-
-    emitter.emit('FOCUS_ON_COLUMN', {
+    emitter.emit('FOCUS_ON_PREVIOUS_COLUMN', {
       animated: true,
-      columnId: columnIds[previousColumnIndex],
-      columnIndex: previousColumnIndex,
       focusOnVisibleItem: true,
       highlight: false,
       scrollTo: true,
     })
-  }, [currentOpenedModal, focusedColumnIndex, columnIds])
+  }, [currentOpenedModal])
 
   useKeyPressCallback('ArrowLeft', scrollLeft)
   useKeyPressCallback('h', scrollLeft)
@@ -209,20 +203,13 @@ export const MainScreen = React.memo(() => {
   const scrollRight = useCallback(() => {
     if (currentOpenedModal) return
 
-    const nextColumnIndex = Math.max(
-      0,
-      Math.min(focusedColumnIndex + 1, columnIds.length - 1),
-    )
-
-    emitter.emit('FOCUS_ON_COLUMN', {
+    emitter.emit('FOCUS_ON_NEXT_COLUMN', {
       animated: true,
-      columnId: columnIds[nextColumnIndex],
-      columnIndex: nextColumnIndex,
       focusOnVisibleItem: true,
       highlight: false,
       scrollTo: true,
     })
-  }, [currentOpenedModal, focusedColumnIndex, columnIds])
+  }, [currentOpenedModal])
 
   useKeyPressCallback('ArrowRight', scrollRight)
   useKeyPressCallback('l', scrollRight)
@@ -367,6 +354,7 @@ export const MainScreen = React.memo(() => {
           />
 
           <ColumnsRenderer key="columns-renderer" />
+          <ColumnSwitcher key="column-switcher-renderer" />
           <FABRenderer key="fab-renderer" />
         </ConditionalWrap>
       </View>

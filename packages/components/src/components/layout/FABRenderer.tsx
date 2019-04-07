@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, ViewStyle } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { useKeyboardVisibility } from '../../hooks/use-keyboard-visibility'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -7,18 +7,30 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { defaultButtonSize } from '../common/Button'
-import { FAB, fabSize } from '../common/FAB'
-import { useAppLayout } from '../context/LayoutContext'
+import { FAB } from '../common/FAB'
+import { AppLayoutProviderState, useAppLayout } from '../context/LayoutContext'
 
-export const fabSpacing =
-  contentPadding / 2 + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
+export const fabSpacing = contentPadding / 2 // + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
 
-const fabPositionStyle: ViewStyle = {
-  position: 'absolute',
-  bottom: fabSpacing,
-  right: contentPadding,
-  zIndex: 1000,
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: fabSpacing,
+    right: contentPadding,
+    zIndex: 1000,
+  },
+})
+
+export function shouldRenderFAB(
+  sizename: AppLayoutProviderState['sizename'],
+  keyboardVisibility?: ReturnType<typeof useKeyboardVisibility>,
+) {
+  if (!(sizename <= '3-large')) return false
+
+  if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
+    return false
+
+  return true
 }
 
 export function FABRenderer() {
@@ -32,9 +44,7 @@ export function FABRenderer() {
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
 
-  if (!(sizename < '3-large')) return null
-  if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
-    return null
+  if (!shouldRenderFAB(sizename, keyboardVisibility)) return null
 
   if (!currentOpenedModal) {
     /*
@@ -57,7 +67,7 @@ export function FABRenderer() {
     const iconStyle = undefined
 
     return (
-      <View collapsable={false} style={fabPositionStyle}>
+      <View collapsable={false} style={styles.container}>
         <FAB
           key="fab"
           analyticsLabel="add_column"
@@ -93,7 +103,7 @@ export function FABRenderer() {
       const iconStyle = undefined
 
       return (
-        <View style={fabPositionStyle}>
+        <View style={styles.container}>
           <FAB
             analyticsLabel="close_modals"
             key="fab"

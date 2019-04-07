@@ -17,8 +17,12 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
+import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
+import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
+import { useAppLayout } from '../context/LayoutContext'
+import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard } from './EventCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -167,6 +171,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   ])
 
   const renderFooter = useCallback(() => {
+    const { sizename } = useAppLayout()
+
     return (
       <>
         <CardItemSeparator />
@@ -201,6 +207,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
             />
           </View>
         ) : null}
+
+        {shouldRenderFAB(sizename) && (
+          <Spacer height={fabSize + 2 * fabSpacing} />
+        )}
       </>
     )
   }, [

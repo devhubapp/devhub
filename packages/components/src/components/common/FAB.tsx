@@ -13,7 +13,7 @@ import {
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 
-export const fabSize = 50
+export const fabSize = 44
 
 export interface FABProps extends SpringAnimatedTouchableOpacityProps {
   children?: string | React.ReactElement<any>
@@ -98,11 +98,11 @@ export function FAB(props: FABProps) {
             name={iconName}
             style={[
               {
-                width: 24,
-                height: 24,
-                lineHeight: 24,
+                width: fabSize / 2,
+                height: fabSize / 2,
+                lineHeight: fabSize / 2,
                 marginTop: 1,
-                fontSize: 24,
+                fontSize: fabSize / 2,
                 textAlign: 'center',
                 color: useBrandColor
                   ? springAnimatedTheme.primaryForegroundColor

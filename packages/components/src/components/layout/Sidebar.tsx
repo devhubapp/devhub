@@ -35,6 +35,7 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
+import { shouldRenderFAB } from './FABRenderer'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
 
@@ -189,7 +190,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         <FlatList
           ref={flatListRef}
           ListHeaderComponent={
-            !(columnIds && columnIds.length) && !large ? (
+            !(columnIds && columnIds.length) &&
+            !large &&
+            !shouldRenderFAB(sizename) ? (
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
@@ -283,7 +286,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           <>
             {/* <Separator horizontal={!horizontal} /> */}
 
-            {!!large && (
+            {!!large && !shouldRenderFAB(sizename) && (
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
