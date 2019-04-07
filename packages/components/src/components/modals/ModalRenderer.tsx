@@ -72,7 +72,7 @@ export interface ModalRendererProps {
 export function ModalRenderer(props: ModalRendererProps) {
   const { renderSeparator } = props
 
-  const { sizename } = useAppLayout()
+  const { appOrientation, sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const columnWidth = useColumnWidth()
@@ -144,7 +144,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       reset: true,
       config: { ...config.default, precision: 1 },
       immediate,
-      ...(sizename === '1-small'
+      ...(appOrientation === 'portrait'
         ? {
             from: item =>
               (item.index === 0 && modalStack.length) ||
