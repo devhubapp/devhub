@@ -16,6 +16,7 @@ import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -314,13 +315,8 @@ export const EventOrNotificationColumn = React.memo(
           )}
         </ColumnHeader>
 
-        <ViewMeasurer
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-          }}
-        >
-          {({ height: containerHeight, ...x }) => (
+        <ViewMeasurer style={sharedStyles.flex}>
+          {({ height: containerHeight }) => (
             <>
               {!disableColumnOptions && (
                 <ColumnOptionsRenderer
@@ -332,9 +328,18 @@ export const EventOrNotificationColumn = React.memo(
                 />
               )}
 
-              <View style={sharedStyles.flex}>
-                {children}
+              <View
+                style={[
+                  sharedStyles.flex,
+                  (containerHeight < 500 ||
+                    Platform.realOS === 'ios' ||
+                    Platform.realOS === 'android') && {
+                    flexDirection: 'column-reverse',
+                  },
+                ]}
+              >
                 {!!isFreeTrial && <FreeTrialHeaderMessage />}
+                {children}
               </View>
             </>
           )}
