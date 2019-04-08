@@ -8,10 +8,10 @@
     "build": "cd .",
     "clean": "cd .",
     "compile": "cd .",
-    "deploy": "now && now alias",
+    "deploy": "now  --target production",
     "format": "prettier --write '{.,src/**}/*.js'",
     "lint": "eslint src",
-    "prepare": "cd .. && yarn patch-package"
+    "prepare": "cd ."
   },
   "dependencies": {},
   "devDependencies": {
