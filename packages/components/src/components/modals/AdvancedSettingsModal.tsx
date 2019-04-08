@@ -8,6 +8,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { confirm } from '../../libs/confirm'
 import { executeOAuth } from '../../libs/oauth'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import * as colors from '../../styles/colors'
@@ -51,8 +52,9 @@ export const AdvancedSettingsModal = React.memo(
     const isDeletingAccount = useReduxState(selectors.isDeletingAccountSelector)
     const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
 
-    const loginRequest = useReduxAction(actions.loginRequest)
     const deleteAccountRequest = useReduxAction(actions.deleteAccountRequest)
+    const loginRequest = useReduxAction(actions.loginRequest)
+    const pushModal = useReduxAction(actions.pushModal)
 
     async function startOAuth(githubAppType: GitHubAppType) {
       try {
@@ -96,6 +98,32 @@ export const AdvancedSettingsModal = React.memo(
             flexGrow: 1,
           }}
         >
+          {Platform.realOS === 'web' && (
+            <SubHeader title="Keyboard shortcuts">
+              <>
+                <Spacer flex={1} />
+
+                <Button
+                  analyticsLabel="show_keyboard_shortcuts"
+                  contentContainerStyle={{
+                    width: 52,
+                    paddingHorizontal: contentPadding,
+                  }}
+                  onPress={() => pushModal({ name: 'KEYBOARD_SHORTCUTS' })}
+                  size={32}
+                >
+                  <SpringAnimatedIcon
+                    name="keyboard"
+                    size={16}
+                    style={{
+                      color: springAnimatedTheme.foregroundColor,
+                    }}
+                  />
+                </Button>
+              </>
+            </SubHeader>
+          )}
+
           <View>
             <View>
               <SubHeader title="Manage OAuth access" />
