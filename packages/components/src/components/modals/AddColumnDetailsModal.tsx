@@ -282,7 +282,7 @@ export const AddColumnDetailsModal = React.memo(
 
                 const text = isPrivateSupported
                   ? `This column type supports private ${contentLabel}.`
-                  : `This column type supports public ${contentLabel} only.`
+                  : `This column type only supports public ${contentLabel}.`
 
                 return (
                   <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
