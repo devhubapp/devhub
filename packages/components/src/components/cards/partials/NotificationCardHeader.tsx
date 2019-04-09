@@ -36,6 +36,7 @@ export interface NotificationCardHeaderProps {
   isRead: boolean
   isSaved?: boolean
   reason: GitHubNotificationReason
+  smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
@@ -70,13 +71,13 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
     isRead,
     isSaved,
     reason,
+    smallLeftColumn,
     userLinkURL: _userLinkURL,
     username: _username,
   } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const smallLeftColumn = true
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
@@ -98,7 +99,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           isBot={isBot}
           linkURL={userLinkURL}
           shape={isBot ? undefined : 'circle'}
-          small
+          small={smallLeftColumn}
           style={cardStyles.avatar}
           username={username}
         />
@@ -192,7 +193,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             itemIds={ids}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 3,
             }}
             type="notifications"
           />
@@ -202,7 +202,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             itemIds={ids}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
+              marginTop: 1,
             }}
           />
         </View>

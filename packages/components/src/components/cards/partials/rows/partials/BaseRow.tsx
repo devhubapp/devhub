@@ -12,6 +12,7 @@ export interface BaseRowProps {
   leftContainerStyle?: ViewProps['style']
   right: React.ReactNode
   rightContainerStyle?: ViewProps['style']
+  smallLeftColumn?: boolean
   viewMode: CardViewMode
   withTopMargin: boolean
 }
@@ -26,6 +27,7 @@ export function BaseRow(props: BaseRowProps) {
     leftContainerStyle,
     right,
     rightContainerStyle,
+    smallLeftColumn = true,
     withTopMargin,
   } = props
 
@@ -41,7 +43,9 @@ export function BaseRow(props: BaseRowProps) {
         <View
           style={[
             cardStyles.leftColumn,
-            cardStyles.leftColumn__small,
+            smallLeftColumn
+              ? cardStyles.leftColumn__small
+              : cardStyles.leftColumn__big,
             leftContainerStyle,
           ]}
         >

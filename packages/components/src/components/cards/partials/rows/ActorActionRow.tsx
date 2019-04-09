@@ -57,6 +57,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
     numberOfLines = props.numberOfLines || 1,
     ownerName,
     repositoryName,
+    smallLeftColumn = true,
     tag,
     textStyle,
     url,
@@ -126,7 +127,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
           avatarUrl={avatarUrl}
           isBot={isBot}
           linkURL={userLinkURL}
-          small
+          small={smallLeftColumn}
           style={cardStyles.avatar}
           username={username}
         />
@@ -169,6 +170,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
           </SpringAnimatedText>
         </View>
       }
+      smallLeftColumn={smallLeftColumn}
       viewMode={viewMode}
     />
   )

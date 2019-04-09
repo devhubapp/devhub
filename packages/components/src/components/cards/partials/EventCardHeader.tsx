@@ -34,6 +34,7 @@ export interface EventCardHeaderProps {
   isPrivate?: boolean
   isRead: boolean
   isSaved?: boolean
+  smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
@@ -67,13 +68,13 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     isPrivate,
     isRead,
     isSaved,
+    smallLeftColumn,
     userLinkURL: _userLinkURL,
     username: _username,
   } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const smallLeftColumn = true
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
@@ -95,7 +96,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           isBot={isBot}
           linkURL={userLinkURL}
           shape={isBot ? undefined : 'circle'}
-          small
+          small={smallLeftColumn}
           style={cardStyles.avatar}
           username={username}
         />
@@ -181,7 +182,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             itemIds={ids}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 3,
             }}
             type="activity"
           />
@@ -191,7 +191,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             itemIds={ids}
             style={{
               alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
+              marginTop: 1,
             }}
           />
         </View>

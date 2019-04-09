@@ -39,6 +39,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
+  columnHeaderItemContentSize,
   contentPadding,
   smallAvatarSize,
   smallerTextSize,
@@ -68,7 +69,12 @@ import { RepositoryListRow } from './partials/rows/RepositoryListRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
-import { cardStyles, getCardStylesForTheme } from './styles'
+import {
+  cardStyles,
+  getCardStylesForTheme,
+  leftColumnBigSize,
+  leftColumnSmallSize,
+} from './styles'
 
 export interface EventCardProps {
   cardViewMode: CardViewMode
@@ -517,7 +523,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
         >
-          <SpringAnimatedCheckbox analyticsLabel={undefined} size={smallAvatarSize} />
+          <SpringAnimatedCheckbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
         </View>
 
         <Spacer width={contentPadding} /> */}
@@ -526,7 +532,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <BookmarkButton
             isSaved={isSaved}
             itemIds={[id]}
-            size={smallAvatarSize}
+            size={columnHeaderItemContentSize}
           />
         </View>
 
@@ -604,7 +610,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               name={cardIconName}
               selectable={false}
               style={{
-                fontSize: smallAvatarSize,
+                fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
                 color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
@@ -655,7 +661,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <ToggleReadButton
             isRead={isRead}
             itemIds={[id]}
-            size={smallAvatarSize}
+            size={columnHeaderItemContentSize}
             type="activity"
           />
         </View>
@@ -692,7 +698,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             name={cardIconName}
             selectable={false}
             style={{
-              fontSize: smallAvatarSize,
+              fontSize: columnHeaderItemContentSize,
               textAlign: 'center',
               color: cardIconColor || springAnimatedTheme.foregroundColor,
             }}
@@ -715,11 +721,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
             isPrivate={isPrivate}
             isRead={isRead}
             isSaved={isSaved}
+            smallLeftColumn={false}
             userLinkURL={actor.html_url || ''}
             username={actor.display_login || actor.login}
           />
 
           <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+            <Spacer width={leftColumnBigSize - leftColumnSmallSize} />
+
             <View style={sharedStyles.flex}>{Content}</View>
 
             <Spacer width={contentPadding / 3} />

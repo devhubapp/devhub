@@ -20,6 +20,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
+  columnHeaderItemContentSize,
   contentPadding,
   smallAvatarSize,
   smallerTextSize,
@@ -46,7 +47,12 @@ import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
-import { cardStyles, getCardStylesForTheme } from './styles'
+import {
+  cardStyles,
+  getCardStylesForTheme,
+  leftColumnBigSize,
+  leftColumnSmallSize,
+} from './styles'
 
 export interface NotificationCardProps {
   cardViewMode: CardViewMode
@@ -439,7 +445,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
         >
-          <SpringAnimatedCheckbox analyticsLabel={undefined} size={smallAvatarSize} />
+          <SpringAnimatedCheckbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
         </View>
 
         <Spacer width={contentPadding} /> */}
@@ -448,7 +454,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           <BookmarkButton
             isSaved={isSaved}
             itemIds={[id]}
-            size={smallAvatarSize}
+            size={columnHeaderItemContentSize}
           />
         </View>
 
@@ -515,7 +521,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               name={cardIconName}
               selectable={false}
               style={{
-                fontSize: smallAvatarSize,
+                fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
                 color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
@@ -568,7 +574,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           <ToggleReadButton
             isRead={isRead}
             itemIds={[id]}
-            size={smallAvatarSize}
+            size={columnHeaderItemContentSize}
             type="notifications"
           />
         </View>
@@ -605,7 +611,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             name={cardIconName}
             selectable={false}
             style={{
-              fontSize: smallAvatarSize,
+              fontSize: columnHeaderItemContentSize,
               textAlign: 'center',
               color: cardIconColor || springAnimatedTheme.foregroundColor,
             }}
@@ -628,6 +634,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             isRead={isRead}
             isSaved={isSaved}
             reason={notification.reason as GitHubNotificationReason}
+            smallLeftColumn={false}
             userLinkURL={repoAvatarDetails.html_url || ''}
             username={
               repoAvatarDetails.display_login || repoAvatarDetails.login
@@ -635,6 +642,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
 
           <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+            <Spacer width={leftColumnBigSize - leftColumnSmallSize} />
             <View style={sharedStyles.flex}>{Content}</View>
 
             <Spacer width={contentPadding / 3} />
