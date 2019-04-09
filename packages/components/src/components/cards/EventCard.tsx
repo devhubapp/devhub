@@ -217,7 +217,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
     includeBranch: cardViewMode === 'compact',
     includeFork: cardViewMode === 'compact',
     includeTag: cardViewMode === 'compact',
-    repoIsKnown,
+    repoIsKnown: repoIsKnown || cardViewMode === 'compact',
   }
   const { actionText } = getEventMetadata(event, actionTextOptions)
 
