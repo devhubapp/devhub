@@ -50,7 +50,7 @@ import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { getColumnCardThemeColors } from '../columns/EventOrNotificationColumn'
+import { getColumnCardThemeColors } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
@@ -410,6 +410,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             labels={issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
+            showCreationDetails={cardViewMode !== 'compact'}
             title={issueOrPullRequest.title}
             url={issueOrPullRequest.url}
             userLinkURL={issueOrPullRequest.user.html_url || ''}

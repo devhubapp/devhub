@@ -24,7 +24,7 @@ export const LabelsView = (props: LabelsViewProps) => {
         {
           flexDirection: 'row',
           flexWrap: 'wrap',
-          margin: -contentPadding / 5,
+          marginHorizontal: -contentPadding / 5,
         },
         style,
       ]}

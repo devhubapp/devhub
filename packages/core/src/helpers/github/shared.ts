@@ -2,17 +2,26 @@ import gravatar from 'gravatar'
 import qs from 'qs'
 
 import {
+  ActivityColumnSubscription,
+  Column,
   ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
+  EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   GitHubAPIHeaders,
+  GitHubIcon,
   GitHubPullRequest,
+  IssueOrPullRequestColumnSubscription,
+  NotificationColumnSubscription,
 } from '../../types'
 import { getSteppedSize } from '../shared'
 
 export function isItemRead(
-  item: EnhancedGitHubNotification | EnhancedGitHubEvent,
+  item:
+    | EnhancedGitHubNotification
+    | EnhancedGitHubEvent
+    | EnhancedGitHubIssueOrPullRequest,
 ) {
   return !(item && (item.unread !== false || item.forceUnreadLocally))
 }
@@ -183,7 +192,33 @@ export function getUniqueIdForSubscription(subscription: {
 
         default: {
           throw new Error(
-            `No path configured for subscription type '${(s as any).subtype}'`,
+            `No path configured for subscription type ${(s as any).type}: '${
+              (s as any).subtype
+            }'`,
+          )
+        }
+      }
+    }
+
+    case 'issue_or_pr': {
+      switch (s.subtype) {
+        case 'ISSUES': {
+          const { owner, repo } = s.params!
+          if (!(owner && repo)) throw new Error('Required params: owner, repo')
+          return `/repos/${owner}/${repo}/issues`.toLowerCase()
+        }
+
+        case 'PULLS': {
+          const { owner, repo } = s.params!
+          if (!(owner && repo)) throw new Error('Required params: owner, repo')
+          return `/repos/${owner}/${repo}/pulls`.toLowerCase()
+        }
+
+        default: {
+          throw new Error(
+            `No path configured for subscription type ${(s as any).type}: '${
+              (s as any).subtype
+            }'`,
           )
         }
       }
@@ -211,6 +246,221 @@ export function getUniqueIdForSubscription(subscription: {
 
     default:
       throw new Error(`Unknown subscription type: ${(s as any).type}`)
+  }
+}
+
+export function getColumnHeaderDetails(
+  column: Column,
+  subscriptions: Array<ColumnSubscription | undefined>,
+): {
+  avatarProps?: {
+    repo?: string
+    username: string
+  }
+  icon: GitHubIcon
+  subtitle?: string
+  title: string
+} & (
+  | {
+      repoIsKnown: false
+      owner?: undefined
+      repo?: undefined
+    }
+  | {
+      repoIsKnown: true
+      owner: string
+      repo: string
+    }) {
+  switch (column.type) {
+    case 'activity': {
+      const subscription = subscriptions.filter(
+        Boolean,
+      )[0] as ActivityColumnSubscription
+
+      switch (subscription.subtype) {
+        case 'ORG_PUBLIC_EVENTS': {
+          return {
+            avatarProps: { username: subscription.params!.org },
+            icon: 'organization',
+            repoIsKnown: false,
+            subtitle: 'Activity',
+            title: subscription.params!.org,
+          }
+        }
+        case 'PUBLIC_EVENTS': {
+          return {
+            icon: 'rss',
+            repoIsKnown: false,
+            subtitle: 'Activity',
+            title: 'Public',
+          }
+        }
+        case 'REPO_EVENTS': {
+          return {
+            avatarProps: {
+              repo: subscription.params!.repo,
+              username: subscription.params!.owner,
+            },
+            icon: 'repo',
+            repoIsKnown: true,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
+            subtitle: 'Activity',
+            title: subscription.params!.repo,
+          }
+        }
+        case 'REPO_NETWORK_EVENTS': {
+          return {
+            avatarProps: {
+              repo: subscription.params!.repo,
+              username: subscription.params!.owner,
+            },
+            icon: 'repo',
+            repoIsKnown: true,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
+            subtitle: 'Network',
+            title: subscription.params!.repo,
+          }
+        }
+        case 'USER_EVENTS': {
+          return {
+            avatarProps: { username: subscription.params!.username },
+            icon: 'person',
+            repoIsKnown: false,
+            subtitle: 'Activity',
+            title: subscription.params!.username,
+          }
+        }
+        case 'USER_ORG_EVENTS': {
+          return {
+            avatarProps: { username: subscription.params!.org },
+            icon: 'organization',
+            repoIsKnown: false,
+            subtitle: 'Activity',
+            title: subscription.params!.org,
+          }
+        }
+        case 'USER_PUBLIC_EVENTS': {
+          return {
+            avatarProps: { username: subscription.params!.username },
+            icon: 'person',
+            repoIsKnown: false,
+            subtitle: 'Activity',
+            title: subscription.params!.username,
+          }
+        }
+        case 'USER_RECEIVED_EVENTS':
+        case 'USER_RECEIVED_PUBLIC_EVENTS': {
+          return {
+            avatarProps: { username: subscription.params!.username },
+            icon: 'home',
+            repoIsKnown: false,
+            subtitle: 'Dashboard',
+            title: subscription.params!.username,
+          }
+        }
+        default: {
+          console.error(`Invalid activity type: '${(column as any).subtype}'.`)
+
+          return {
+            icon: 'mark-github',
+            repoIsKnown: false,
+            subtitle: (column as any).subtype || '',
+            title: 'Unknown',
+          }
+        }
+      }
+    }
+
+    case 'issue_or_pr': {
+      const subscription = subscriptions.filter(
+        Boolean,
+      )[0] as IssueOrPullRequestColumnSubscription
+
+      switch (subscription.subtype) {
+        case 'ISSUES': {
+          return {
+            avatarProps: { username: subscription.params!.owner },
+            icon: 'issue-opened',
+            repoIsKnown: true,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
+            subtitle: 'Issues',
+            title: subscription.params!.repo,
+          }
+        }
+
+        case 'PULLS': {
+          return {
+            avatarProps: { username: subscription.params!.owner },
+            icon: 'git-pull-request',
+            repoIsKnown: true,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
+            subtitle: 'Pulls',
+            title: subscription.params!.repo,
+          }
+        }
+
+        default: {
+          return {
+            avatarProps: { username: subscription.params!.owner },
+            icon: 'issue-opened',
+            repoIsKnown: false,
+            subtitle: 'Issues & PRs',
+            title: subscription.params!.repo,
+          }
+        }
+      }
+    }
+
+    case 'notifications': {
+      const subscription = subscriptions.filter(
+        Boolean,
+      )[0] as NotificationColumnSubscription
+
+      switch (subscription.subtype) {
+        case 'REPO_NOTIFICATIONS': {
+          return {
+            icon: 'bell',
+            repoIsKnown: true,
+            owner: subscription.params!.owner,
+            repo: subscription.params!.repo,
+            subtitle: subscription.params!.repo,
+            title: 'Notifications',
+          }
+        }
+
+        default: {
+          return {
+            icon: 'bell',
+            repoIsKnown: false,
+            subtitle: subscription.params.participating
+              ? 'participating'
+              : isReadFilterChecked(column.filters) &&
+                isUnreadFilterChecked(column.filters)
+              ? 'all'
+              : isUnreadFilterChecked(column.filters)
+              ? 'unread'
+              : isReadFilterChecked(column.filters)
+              ? 'read'
+              : '',
+            title: 'Notifications',
+          }
+        }
+      }
+    }
+
+    default: {
+      console.error(`Invalid column type: '${(column as any).type}'.`)
+      return {
+        icon: 'mark-github',
+        repoIsKnown: false,
+        subtitle: (column as any).type || '',
+        title: 'Unknown',
+      }
+    }
   }
 }
 

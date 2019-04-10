@@ -5,17 +5,21 @@ import {
   BaseColumnFilters,
   CardViewMode,
   EnhancedGitHubEvent,
+  EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   getEventMetadata,
   isEventPrivate,
   isItemRead,
   isNotificationPrivate,
+  IssueOrPullRequestColumnFilters,
   mergeSimilarEvents,
   NotificationColumnFilters,
   sortEvents,
+  sortIssuesOrPullRequests,
   sortNotifications,
 } from '@devhub/core'
 import { getEventSubjectType } from './github/events'
+import { getIssueOrPullRequestSubjectType } from './github/issues'
 import { getNotificationSubjectType } from './github/notifications'
 
 export const filterRecordHasAnyForcedValue = (
@@ -145,6 +149,16 @@ export function activityColumnHasAnyFilter(
   return false
 }
 
+export function issueOrPullRequestColumnHasAnyFilter(
+  filters: IssueOrPullRequestColumnFilters | undefined,
+) {
+  if (!filters) return false
+
+  if (baseColumnHasAnyFilter(filters)) return true
+
+  return false
+}
+
 export function notificationColumnHasAnyFilter(
   filters: NotificationColumnFilters | undefined,
 ) {
@@ -164,6 +178,51 @@ export function notificationColumnHasAnyFilter(
   }
 
   return false
+}
+
+export function getFilteredIssueOrPullRequests(
+  items: EnhancedGitHubIssueOrPullRequest[],
+  filters: IssueOrPullRequestColumnFilters | undefined,
+) {
+  let _items = sortIssuesOrPullRequests(items)
+
+  if (filters && issueOrPullRequestColumnHasAnyFilter(filters)) {
+    _items = _items.filter(item => {
+      if (
+        !itemPassesFilterRecord(
+          filters.subjectTypes,
+          getIssueOrPullRequestSubjectType(item),
+          true,
+        )
+      )
+        return false
+
+      if (
+        typeof filters.unread === 'boolean' &&
+        filters.unread !== !isItemRead(item)
+      ) {
+        return false
+      }
+
+      const showSaveForLater = filters.saved !== false
+      const showInbox = filters.saved !== true
+      const showCleared = false
+
+      if (
+        filters.clearedAt &&
+        (!item.updated_at || item.updated_at <= filters.clearedAt)
+      )
+        if (!(showSaveForLater && item.saved))
+          /* && isItemRead(notification) */
+          return showCleared
+
+      if (item.saved) return showSaveForLater
+
+      return showInbox
+    })
+  }
+
+  return _items
 }
 
 export function getFilteredNotifications(

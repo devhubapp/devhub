@@ -27,6 +27,7 @@ import {
   getFilterCountMetadata,
 } from '../../utils/helpers/filters'
 import { eventSubjectTypes } from '../../utils/helpers/github/events'
+import { issueOrPullRequestSubjectTypes } from '../../utils/helpers/github/issues'
 import {
   getNotificationReasonMetadata,
   notificationReasons,
@@ -53,6 +54,10 @@ const eventSubjectTypeOptions = eventSubjectTypes
 
 const eventActionOptions = eventActions
   .map(getEventActionMetadata)
+  .sort(metadataSortFn)
+
+const issueOrPullRequestSubjectTypeOptions = issueOrPullRequestSubjectTypes
+  .map(getSubjectTypeMetadata)
   .sort(metadataSortFn)
 
 const notificationReasonOptions = notificationReasons
@@ -97,7 +102,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     'saved_for_later',
     'unread',
     column.type === 'activity' && 'event_action',
-    'subject_types',
+    column.type !== 'issue_or_pr' && 'subject_types',
     column.type === 'notifications' && 'notification_reason',
     column.type === 'notifications' && 'privacy',
   ]
@@ -378,6 +383,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             }> =
               column.type === 'activity'
                 ? eventSubjectTypeOptions
+                : column.type === 'issue_or_pr'
+                ? issueOrPullRequestSubjectTypeOptions
                 : column.type === 'notifications'
                 ? notificationSubjectTypeOptions
                 : []

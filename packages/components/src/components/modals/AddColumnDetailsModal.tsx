@@ -15,7 +15,10 @@ import {
   ColumnParamField,
   createSubscriptionObjectsWithId,
   guid,
+  IssueOrPullRequestColumn,
+  IssueOrPullRequestColumnSubscription,
   NotificationColumn,
+  NotificationColumnSubscription,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -147,7 +150,11 @@ export const AddColumnDetailsModal = React.memo(
         filters: undefined,
       } as typeof subscriptions extends ActivityColumnSubscription[]
         ? ActivityColumn
-        : NotificationColumn
+        : typeof subscriptions extends IssueOrPullRequestColumnSubscription[]
+        ? IssueOrPullRequestColumn
+        : typeof subscriptions extends NotificationColumnSubscription[]
+        ? NotificationColumn
+        : never
 
       addColumnAndSubscriptions({
         column,

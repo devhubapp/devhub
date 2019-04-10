@@ -2,20 +2,20 @@ import React from 'react'
 
 import { getColumnHeaderDetails } from '@devhub/core'
 import {
-  NotificationCardsContainer,
-  NotificationCardsContainerProps,
-} from '../../containers/NotificationCardsContainer'
+  IssueOrPullRequestCardsContainer,
+  IssueOrPullRequestCardsContainerProps,
+} from '../../containers/IssueOrPullRequestCardsContainer'
 import { ColumnRenderer } from './ColumnRenderer'
 
-export interface NotificationColumnProps
-  extends NotificationCardsContainerProps {
+export interface IssueOrPullRequestColumnProps
+  extends IssueOrPullRequestCardsContainerProps {
   columnIndex: number
   disableColumnOptions?: boolean
   pagingEnabled?: boolean
 }
 
-export const NotificationColumn = React.memo(
-  (props: NotificationColumnProps) => {
+export const IssueOrPullRequestColumn = React.memo(
+  (props: IssueOrPullRequestColumnProps) => {
     const {
       column,
       columnIndex,
@@ -28,7 +28,7 @@ export const NotificationColumn = React.memo(
 
     return (
       <ColumnRenderer
-        key={`notification-column-${column.id}-inner`}
+        key={`issue-or-pr-column-${column.id}-inner`}
         column={column}
         columnIndex={columnIndex}
         disableColumnOptions={disableColumnOptions}
@@ -38,8 +38,8 @@ export const NotificationColumn = React.memo(
         repoIsKnown={requestTypeIconAndData.repoIsKnown}
         subscriptions={subscriptions}
       >
-        <NotificationCardsContainer
-          key={`notification-cards-container-${column.id}`}
+        <IssueOrPullRequestCardsContainer
+          key={`issue-or-pr-cards-container-${column.id}`}
           repoIsKnown={requestTypeIconAndData.repoIsKnown}
           {...props}
           columnIndex={columnIndex}

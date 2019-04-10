@@ -5,7 +5,7 @@ import {
   EventCardsContainer,
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
-import { EventOrNotificationColumn } from './EventOrNotificationColumn'
+import { ColumnRenderer } from './ColumnRenderer'
 
 export interface EventColumnProps extends EventCardsContainerProps {
   columnIndex: number
@@ -25,7 +25,7 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
   const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
   return (
-    <EventOrNotificationColumn
+    <ColumnRenderer
       key={`event-column-${column.id}-inner`}
       column={column}
       columnIndex={columnIndex}
@@ -42,6 +42,6 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
         {...props}
         columnIndex={columnIndex}
       />
-    </EventOrNotificationColumn>
+    </ColumnRenderer>
   )
 })

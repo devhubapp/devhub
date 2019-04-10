@@ -25,15 +25,24 @@ import {
   getGitHubAPIHeadersFromHeader,
   getNotificationsEnhancementMap,
   getOlderEventDate,
+  getOlderIssueOrPullRequestDate,
   getOlderNotificationDate,
   GitHubAppTokenType,
   GitHubEvent,
+  GitHubIssue,
   GitHubNotification,
+  GitHubPullRequest,
 } from '@devhub/core'
 
 import { bugsnag } from '../../libs/bugsnag'
-import { getActivity, getNotifications, octokit } from '../../libs/github'
+import {
+  getActivity,
+  getIssuesOrPullRequests,
+  getNotifications,
+  octokit,
+} from '../../libs/github'
 import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
+import { mergeIssuesOrPullRequestsPreservingEnhancement } from '../../utils/helpers/github/issues'
 import { mergeNotificationsPreservingEnhancement } from '../../utils/helpers/github/notifications'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -128,6 +137,10 @@ function* init() {
             // tslint:disable-next-line no-console
             console.debug(
               'Ignoring subscription re-fetch due to recent fetch error.',
+              subscription.id,
+              subscription.type,
+              subscription.subtype,
+              subscription.data && subscription.data.errorMessage,
             )
           }
           return
@@ -266,7 +279,10 @@ function* onFetchRequest(
   const githubAppToken = selectors.githubAppTokenSelector(state)
 
   const githubToken =
-    (subscription && subscription.type === 'activity' && installationToken) ||
+    (subscription &&
+      (subscription.type === 'activity' ||
+        subscription.type === 'issue_or_pr') &&
+      installationToken) ||
     githubOAuthToken ||
     githubAppToken
 
@@ -368,6 +384,45 @@ function* onFetchRequest(
 
       const olderItemDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)
+
+      const reponseContainOldest =
+        !olderItemDate ||
+        (!!olderDateFromThisResponse &&
+          olderDateFromThisResponse <= olderItemDate)
+
+      canFetchMore =
+        newItems.length >= perPage
+          ? reponseContainOldest
+            ? true
+            : undefined
+          : reponseContainOldest
+          ? false
+          : undefined
+
+      data = newItems
+    } else if (subscription && subscription.type === 'issue_or_pr') {
+      const response = yield call(
+        getIssuesOrPullRequests,
+        subscription.subtype,
+        params,
+        {
+          subscriptionId,
+          githubToken,
+        },
+      )
+      headers = (response && response.headers) || {}
+
+      const prevItems = subscription.data.items || []
+      const newItems = (response.data || []) as Array<
+        GitHubIssue | GitHubPullRequest
+      >
+      const mergedItems = mergeIssuesOrPullRequestsPreservingEnhancement(
+        newItems,
+        prevItems,
+      )
+
+      const olderItemDate = getOlderIssueOrPullRequestDate(mergedItems)
+      const olderDateFromThisResponse = getOlderIssueOrPullRequestDate(newItems)
 
       const reponseContainOldest =
         !olderItemDate ||

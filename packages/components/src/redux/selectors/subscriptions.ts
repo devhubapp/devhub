@@ -5,12 +5,15 @@ import {
   ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
+  EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   sortEvents,
+  sortIssuesOrPullRequests,
   sortNotifications,
 } from '@devhub/core'
 import {
   getFilteredEvents,
+  getFilteredIssueOrPullRequests,
   getFilteredNotifications,
 } from '../../utils/helpers/filters'
 import { RootState } from '../types'
@@ -62,11 +65,22 @@ export const createSubscriptionsDataSelector = () =>
 
       if (!(items && items.length)) return []
 
+      if (subscriptions[0]!.type === 'activity') {
+        return sortEvents(items as EnhancedGitHubEvent[])
+      }
+
+      if (subscriptions[0]!.type === 'issue_or_pr') {
+        return sortIssuesOrPullRequests(
+          items as EnhancedGitHubIssueOrPullRequest[],
+        )
+      }
+
       if (subscriptions[0]!.type === 'notifications') {
         return sortNotifications(items as EnhancedGitHubNotification[])
       }
 
-      return sortEvents(items as EnhancedGitHubEvent[])
+      console.error(`Unhandled subscription type: ${subscriptions[0]!.type}`)
+      return items
     },
   )
 
@@ -90,6 +104,21 @@ export const createFilteredSubscriptionsDataSelector = (
     (type, items, filters) => {
       if (!(items && items.length)) return []
 
+      if (type === 'activity') {
+        return getFilteredEvents(
+          items as EnhancedGitHubEvent[],
+          filters,
+          cardViewMode,
+        )
+      }
+
+      if (type === 'issue_or_pr') {
+        return getFilteredIssueOrPullRequests(
+          items as EnhancedGitHubIssueOrPullRequest[],
+          filters,
+        )
+      }
+
       if (type === 'notifications') {
         return getFilteredNotifications(
           items as EnhancedGitHubNotification[],
@@ -97,11 +126,8 @@ export const createFilteredSubscriptionsDataSelector = (
         )
       }
 
-      return getFilteredEvents(
-        items as EnhancedGitHubEvent[],
-        filters,
-        cardViewMode,
-      )
+      console.error(`Not filtered. Unhandled subscription type: ${type}`)
+      return items
     },
   )
 }

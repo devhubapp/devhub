@@ -194,6 +194,7 @@ export interface GitHubIssue {
   updated_at: string // 2016-11-24T16:00:16Z
   html_url: string // https://github.com/hasadna/Open-Knesset/issues/345
   url: string // https://api.github.com/repos/hasadna/Open-Knesset/issues/345
+  repository_url: string // https://api.github.com/repos/devhubapp/devhub
 }
 
 export interface GitHubOrg {
@@ -243,6 +244,7 @@ export interface GitHubPullRequest {
   changed_files: number // 1
   html_url: string // https://github.com/billy0920/hotsite/pull/2
   url: string // https://api.github.com/repos/billy0920/hotsite/pulls/2
+  repository_url: string // https://api.github.com/repos/devhubapp/devhub
 }
 
 export interface GitHubRepo {
@@ -645,6 +647,8 @@ export type GitHubEventSubjectType =
   | 'Tag'
   | 'User'
   | 'Wiki'
+
+export type GitHubIssueOrPullRequestSubjectType = 'Issue' | 'PullRequest'
 
 export type GitHubIcon =
   | 'alert'

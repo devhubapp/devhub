@@ -7,6 +7,7 @@ import {
   normalizeSubscriptions,
   removeUselessURLsFromResponseItem,
   sortEvents,
+  sortIssuesOrPullRequests,
   sortNotifications,
 } from '@devhub/core'
 import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
@@ -72,6 +73,27 @@ export const subscriptionsReducer: Reducer<State> = (
                   if (item.saved) return true
                   return count <= constants.DEFAULT_PAGINATION_PER_PAGE
                 })
+            } else if (subscription.type === 'issue_or_pr') {
+              subscription.data.items = sortIssuesOrPullRequests(
+                subscription.data.items,
+              )
+                .filter(item => {
+                  if (!item) return false
+                  if (item.saved) return true
+                  // if (item.unread) return true
+                  if (!action.payload.deleteOlderThan) return false
+                  if (!item.updated_at) return true
+
+                  return (
+                    new Date(item.updated_at).toISOString() >=
+                    action.payload.deleteOlderThan
+                  )
+                })
+                .filter(item => {
+                  count = count + 1
+                  if (item.saved) return true
+                  return count <= constants.DEFAULT_PAGINATION_PER_PAGE
+                })
             } else if (subscription.type === 'notifications') {
               subscription.data.items = sortNotifications(
                 subscription.data.items,
@@ -93,6 +115,10 @@ export const subscriptionsReducer: Reducer<State> = (
                   if (item.saved) return true
                   return count <= constants.DEFAULT_PAGINATION_PER_PAGE
                 })
+            } else {
+              console.error(
+                `Unhandled subscription type: ${(subscription as any).type}`,
+              )
             }
           }
         })

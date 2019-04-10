@@ -2,200 +2,20 @@ import _ from 'lodash'
 import moment from 'moment'
 
 import {
-  ActivityColumnSubscription,
-  Column,
-  ColumnSubscription,
   EnhancedGitHubEvent,
   GitHubEventAction,
   GitHubEventSubjectType,
-  GitHubIcon,
   GitHubPullRequest,
   MultipleStarEvent,
-  NotificationColumnSubscription,
 } from '../../types'
-import {
-  getBranchNameFromRef,
-  isPullRequest,
-  isReadFilterChecked,
-  isUnreadFilterChecked,
-} from './shared'
+import { getBranchNameFromRef, isPullRequest } from './shared'
 
-export function getOlderEventDate(events: EnhancedGitHubEvent[]) {
-  const olderItem = sortEvents(events).pop()
-  return olderItem && olderItem.created_at
-}
-
-export function getColumnHeaderDetails(
-  column: Column,
-  subscriptions: Array<ColumnSubscription | undefined>,
-): {
-  avatarProps?: {
-    repo?: string
-    username: string
-  }
-  icon: GitHubIcon
-  subtitle?: string
-  title: string
-} & (
-  | {
-      repoIsKnown: false
-      owner?: undefined
-      repo?: undefined
-    }
-  | {
-      repoIsKnown: true
-      owner: string
-      repo: string
-    }) {
-  switch (column.type) {
-    case 'activity': {
-      const subscription = subscriptions.filter(
-        Boolean,
-      )[0] as ActivityColumnSubscription
-
-      switch (subscription.subtype) {
-        case 'ORG_PUBLIC_EVENTS': {
-          return {
-            avatarProps: { username: subscription.params!.org },
-            icon: 'organization',
-            repoIsKnown: false,
-            subtitle: 'Activity',
-            title: subscription.params!.org,
-          }
-        }
-        case 'PUBLIC_EVENTS': {
-          return {
-            icon: 'rss',
-            repoIsKnown: false,
-            subtitle: 'Activity',
-            title: 'Public',
-          }
-        }
-        case 'REPO_EVENTS': {
-          return {
-            avatarProps: {
-              repo: subscription.params!.repo,
-              username: subscription.params!.owner,
-            },
-            icon: 'repo',
-            repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
-            subtitle: 'Activity',
-            title: subscription.params!.repo,
-          }
-        }
-        case 'REPO_NETWORK_EVENTS': {
-          return {
-            avatarProps: {
-              repo: subscription.params!.repo,
-              username: subscription.params!.owner,
-            },
-            icon: 'repo',
-            repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
-            subtitle: 'Network',
-            title: subscription.params!.repo,
-          }
-        }
-        case 'USER_EVENTS': {
-          return {
-            avatarProps: { username: subscription.params!.username },
-            icon: 'person',
-            repoIsKnown: false,
-            subtitle: 'Activity',
-            title: subscription.params!.username,
-          }
-        }
-        case 'USER_ORG_EVENTS': {
-          return {
-            avatarProps: { username: subscription.params!.org },
-            icon: 'organization',
-            repoIsKnown: false,
-            subtitle: 'Activity',
-            title: subscription.params!.org,
-          }
-        }
-        case 'USER_PUBLIC_EVENTS': {
-          return {
-            avatarProps: { username: subscription.params!.username },
-            icon: 'person',
-            repoIsKnown: false,
-            subtitle: 'Activity',
-            title: subscription.params!.username,
-          }
-        }
-        case 'USER_RECEIVED_EVENTS':
-        case 'USER_RECEIVED_PUBLIC_EVENTS': {
-          return {
-            avatarProps: { username: subscription.params!.username },
-            icon: 'home',
-            repoIsKnown: false,
-            subtitle: 'Dashboard',
-            title: subscription.params!.username,
-          }
-        }
-        default: {
-          console.error(`Invalid activity type: '${(column as any).subtype}'.`)
-
-          return {
-            icon: 'mark-github',
-            repoIsKnown: false,
-            subtitle: (column as any).subtype || '',
-            title: 'Unknown',
-          }
-        }
-      }
-    }
-
-    case 'notifications': {
-      const subscription = subscriptions.filter(
-        Boolean,
-      )[0] as NotificationColumnSubscription
-
-      switch (subscription.subtype) {
-        case 'REPO_NOTIFICATIONS': {
-          return {
-            icon: 'bell',
-            repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
-            subtitle: subscription.params!.repo,
-            title: 'Notifications',
-          }
-        }
-
-        default: {
-          return {
-            icon: 'bell',
-            repoIsKnown: false,
-            subtitle: subscription.params.participating
-              ? 'participating'
-              : isReadFilterChecked(column.filters) &&
-                isUnreadFilterChecked(column.filters)
-              ? 'all'
-              : isUnreadFilterChecked(column.filters)
-              ? 'unread'
-              : isReadFilterChecked(column.filters)
-              ? 'read'
-              : '',
-            title: 'Notifications',
-          }
-        }
-      }
-    }
-
-    default: {
-      console.error(`Invalid column type: '${(column as any).type}'.`)
-      return {
-        icon: 'mark-github',
-        repoIsKnown: false,
-        subtitle: (column as any).type || '',
-        title: 'Unknown',
-      }
-    }
-  }
+export function getOlderEventDate(
+  events: EnhancedGitHubEvent[],
+  field: keyof EnhancedGitHubEvent = 'created_at',
+) {
+  const olderItem = sortEvents(events, field, 'desc').pop()
+  return olderItem && olderItem[field]
 }
 
 export const eventActions: GitHubEventAction[] = [
@@ -777,10 +597,14 @@ export function isTagMainEvent(event: EnhancedGitHubEvent) {
   return getEventMetadata(event).subjectType === 'Tag'
 }
 
-export function sortEvents(events: EnhancedGitHubEvent[] | undefined) {
+export function sortEvents(
+  events: EnhancedGitHubEvent[] | undefined,
+  field: keyof EnhancedGitHubEvent = 'created_at',
+  order: 'asc' | 'desc' = 'desc',
+) {
   if (!events) return []
   return _(events)
     .uniqBy('id')
-    .orderBy('created_at', 'desc')
+    .orderBy(field, order)
     .value()
 }

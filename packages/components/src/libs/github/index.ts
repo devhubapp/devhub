@@ -1,6 +1,9 @@
-import Octokit from '@octokit/rest'
+import Octokit, { SearchIssuesAndPullRequestsParams } from '@octokit/rest'
 
-import { GitHubActivityType } from '@devhub/core'
+import {
+  GitHubActivityType,
+  IssueOrPullRequestColumnSubscription,
+} from '@devhub/core'
 
 export const octokit = new Octokit()
 
@@ -68,7 +71,7 @@ export async function getNotifications(
       status: response.status,
     }
 
-    return response
+    return cache[cacheKey]
   } catch (error) {
     if (error && error.status === 304) return cache[cacheKey]
     throw error
@@ -136,7 +139,74 @@ export async function getActivity<T extends GitHubActivityType>(
       status: response.status,
     }
 
-    return response
+    return cache[cacheKey]
+  } catch (error) {
+    if (error && error.status === 304) return cache[cacheKey]
+    throw error
+  }
+}
+
+export async function getIssuesOrPullRequests<
+  T extends IssueOrPullRequestColumnSubscription['subtype']
+>(
+  type: T,
+  params: any,
+  { githubToken = '', subscriptionId = '', useCache = true } = {},
+) {
+  const cacheKey = JSON.stringify([type, params, subscriptionId])
+  const cacheValue = cache[cacheKey]
+
+  const _params: Record<string, any> & SearchIssuesAndPullRequestsParams = {
+    ...params,
+  }
+  _params.headers = _params.headers || {}
+  _params.headers['If-None-Match'] = ''
+  _params.headers.Accept = 'application/vnd.github.shadow-cat-preview'
+
+  if (githubToken) {
+    _params.headers.Authorization = `token ${githubToken}`
+  }
+
+  if (cacheValue && useCache) {
+    if (cacheValue.headers['last-modified']) {
+      _params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
+    }
+
+    if (cacheValue.headers.etag) {
+      _params.headers['If-None-Match'] = cacheValue.headers.etag
+    }
+  }
+
+  const { owner, repo } = _params
+
+  try {
+    const response = await (() => {
+      switch (type) {
+        case 'ISSUES': {
+          _params.q = `repo:${owner}/${repo} is:issue`
+          return octokit.search.issuesAndPullRequests(_params)
+        }
+
+        case 'PULLS': {
+          _params.q = `repo:${owner}/${repo} is:pr`
+          return octokit.search.issuesAndPullRequests(_params)
+        }
+
+        default: {
+          throw new Error(
+            `No api method configured for activity type '${type}'.`,
+          )
+        }
+      }
+    })()
+
+    cache[cacheKey] = {
+      data: response.data && response.data.items,
+      headers: response.headers,
+      status: response.status,
+    }
+
+    return cache[cacheKey]
   } catch (error) {
     if (error && error.status === 304) return cache[cacheKey]
     throw error

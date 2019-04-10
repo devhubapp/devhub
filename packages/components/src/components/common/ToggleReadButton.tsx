@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { ColumnSubscription } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
@@ -11,7 +12,7 @@ import {
 export interface ToggleReadButtonProps extends ColumnHeaderItemProps {
   isRead: boolean
   itemIds: Array<string | number>
-  type: 'notifications' | 'activity'
+  type: ColumnSubscription['type']
 }
 
 export function ToggleReadButton(props: ToggleReadButtonProps) {

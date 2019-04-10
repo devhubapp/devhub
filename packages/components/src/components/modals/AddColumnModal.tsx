@@ -85,6 +85,41 @@ const columnTypes: Array<{
     ],
   },
   {
+    title: 'Issues & Pull Requests',
+    type: 'issue_or_pr',
+    icon: 'issue-opened',
+    items: [
+      {
+        title: 'Issues',
+        icon: 'issue-opened',
+        payload: {
+          icon: 'issue-opened',
+          title: 'Issues',
+          subscription: {
+            type: 'issue_or_pr',
+            subtype: 'ISSUES',
+          },
+          paramList: ['owner', 'repo'],
+          isPrivateSupported: true,
+        },
+      },
+      {
+        title: 'Pull Requests',
+        icon: 'git-pull-request',
+        payload: {
+          icon: 'git-pull-request',
+          title: 'Pull Requests',
+          subscription: {
+            type: 'issue_or_pr',
+            subtype: 'PULLS',
+          },
+          paramList: ['owner', 'repo'],
+          isPrivateSupported: true,
+        },
+      },
+    ],
+  },
+  {
     title: 'Activities',
     type: 'activity',
     icon: 'note',
@@ -147,27 +182,6 @@ const columnTypes: Array<{
       },
     ],
   },
-  /*
-  {
-    soon: true,
-    soonLink: 'https://github.com/devhubapp/devhub/issues/110',
-    title: 'Issue & PR Management',
-    type: 'activity', // TODO
-    icon: 'issue-opened',
-    items: [
-      {
-        title: 'Issues',
-        icon: 'issue-opened',
-        payload: null,
-      },
-      {
-        title: 'Pull Requests',
-        icon: 'git-pull-request',
-        payload: null,
-      },
-    ],
-  },
-  */
 ]
 
 function AddColumnModalItem({

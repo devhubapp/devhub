@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { EventColumn } from '../components/columns/EventColumn'
+import { IssueOrPullRequestColumn } from '../components/columns/IssueOrPullRequestColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
 import { useColumn } from '../hooks/use-column'
 import { bugsnag } from '../libs/bugsnag'
@@ -24,6 +25,20 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
       return (
         <EventColumn
           key={`event-column-${column.id}`}
+          column={column}
+          columnIndex={columnIndex}
+          disableColumnOptions={disableColumnOptions}
+          pagingEnabled={pagingEnabled}
+          subscriptions={subscriptions}
+          swipeable={swipeable}
+        />
+      )
+    }
+
+    case 'issue_or_pr': {
+      return (
+        <IssueOrPullRequestColumn
+          key={`issue-or-pr-column-${column.id}`}
           column={column}
           columnIndex={columnIndex}
           disableColumnOptions={disableColumnOptions}

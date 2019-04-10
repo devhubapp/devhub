@@ -1,7 +1,6 @@
 import { all, delay, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
-  ActivityColumn,
   ActivityColumnSubscription,
   Column,
   ColumnsAndSubscriptions,
@@ -10,7 +9,6 @@ import {
   getUniqueIdForSubscription,
   guid,
   isReadFilterChecked,
-  NotificationColumn,
   NotificationColumnSubscription,
 } from '@devhub/core'
 import { emitter } from '../../libs/emitter'
@@ -205,7 +203,7 @@ function* onNotificationColumnSubscriptionFilterChange(
 ) {
   if (!action.payload.columnId) return
 
-  const column: ActivityColumn | NotificationColumn = yield select(
+  const column: Column = yield select(
     selectors.createColumnSelector(),
     action.payload.columnId,
   )
@@ -218,9 +216,7 @@ function* onNotificationColumnSubscriptionFilterChange(
   if (!(subscriptions && subscriptions.length)) return
 
   yield all(
-    subscriptions.map(function*(
-      subscription: ActivityColumnSubscription | NotificationColumnSubscription,
-    ) {
+    subscriptions.map(function*(subscription: ColumnSubscription) {
       if (!(subscription && subscription.id)) return
       if (subscription.type !== 'notifications') return
 
