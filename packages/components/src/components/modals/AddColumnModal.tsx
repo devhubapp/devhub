@@ -17,7 +17,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, radius } from '../../styles/variables'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
@@ -27,8 +27,10 @@ import { fabSize } from '../common/FAB'
 import { H2 } from '../common/H2'
 import { HeaderMessage } from '../common/HeaderMessage'
 import { Link } from '../common/Link'
+import { separatorThickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
@@ -125,20 +127,6 @@ const columnTypes: Array<{
     icon: 'note',
     items: [
       {
-        title: 'User',
-        icon: 'person',
-        payload: {
-          icon: 'person',
-          title: 'User activity',
-          subscription: {
-            type: 'activity',
-            subtype: 'USER_EVENTS',
-          },
-          paramList: ['username'],
-          isPrivateSupported: false,
-        },
-      },
-      {
         title: 'Dashboard',
         icon: 'home',
         payload: {
@@ -147,6 +135,20 @@ const columnTypes: Array<{
           subscription: {
             type: 'activity',
             subtype: 'USER_RECEIVED_EVENTS',
+          },
+          paramList: ['username'],
+          isPrivateSupported: false,
+        },
+      },
+      {
+        title: 'User',
+        icon: 'person',
+        payload: {
+          icon: 'person',
+          title: 'User activity',
+          subscription: {
+            type: 'activity',
+            subtype: 'USER_EVENTS',
           },
           paramList: ['username'],
           isPrivateSupported: false,
@@ -185,11 +187,13 @@ const columnTypes: Array<{
 ]
 
 function AddColumnModalItem({
+  availableWidth,
   disabled,
   icon,
   payload,
   title,
 }: {
+  availableWidth: number
   disabled?: boolean
   icon: GitHubIcon
   payload: AddColumnDetailsPayload | null
@@ -231,14 +235,17 @@ function AddColumnModalItem({
       immediate,
       backgroundColor:
         (isHovered || isPressing) && !disabled
-          ? theme.backgroundColorLess1
+          ? theme.backgroundColorLess2
           : rgba(theme.backgroundColor, 0),
+      borderColor: theme.backgroundColorLess2,
     }
   }
 
   function updateStyles() {
     setSpringAnimatedStyles(getStyles())
   }
+
+  if (!(availableWidth > 0)) return null
 
   return (
     <SpringAnimatedTouchableOpacity
@@ -267,30 +274,35 @@ function AddColumnModalItem({
         updateStyles()
       }}
       style={{
-        flex: 1,
+        width:
+          availableWidth / Math.floor(availableWidth / (82 + contentPadding)),
+        borderRadius: radius,
+        borderWidth: 0,
         ...springAnimatedStyles,
       }}
     >
       <View
         style={{
-          flexDirection: 'row',
           alignItems: 'center',
-          padding: contentPadding,
+          justifyContent: 'center',
+          marginHorizontal: contentPadding / 4,
+          paddingVertical: contentPadding,
         }}
       >
         <ColumnHeaderItem
           analyticsLabel={undefined}
-          fixedIconSize
           iconName={icon}
           iconStyle={{ lineHeight: undefined }}
           noPadding
-          size={16}
+          size={24}
+          style={{ alignSelf: 'center', marginBottom: contentPadding / 2 }}
         />
 
-        <Spacer width={contentPadding} />
-
         <SpringAnimatedText
-          style={{ color: springAnimatedTheme.foregroundColor }}
+          style={{
+            color: springAnimatedTheme.foregroundColor,
+            textAlign: 'center',
+          }}
         >
           {title}
         </SpringAnimatedText>
@@ -310,7 +322,11 @@ export function AddColumnModal(props: AddColumnModalProps) {
     selectors.installationOwnerNamesSelector,
   )
 
+  const columnWidth = useColumnWidth()
   const { sizename } = useAppLayout()
+
+  const outerSpacing = (3 / 4) * contentPadding
+  const availableWidth = columnWidth - 2 * separatorThickSize - 2 * outerSpacing
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 
@@ -368,14 +384,23 @@ export function AddColumnModal(props: AddColumnModalProps) {
               )}
             </SubHeader>
 
-            <View style={{ marginBottom: contentPadding }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignContent: 'flex-start',
+                paddingHorizontal: outerSpacing,
+                marginBottom: outerSpacing,
+              }}
+            >
               {group.items.map((item, itemIndex) => (
                 <AddColumnModalItem
                   key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
+                  availableWidth={availableWidth}
                   disabled={hasReachedColumnLimit || !item.payload}
                   icon={item.icon}
                   payload={item.payload}
-                  title={(item.payload && item.payload.title) || item.title}
+                  title={item.title}
                 />
               ))}
             </View>
