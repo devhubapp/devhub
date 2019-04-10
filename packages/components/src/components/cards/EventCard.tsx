@@ -69,12 +69,7 @@ import { RepositoryListRow } from './partials/rows/RepositoryListRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
-import {
-  cardStyles,
-  getCardStylesForTheme,
-  leftColumnBigSize,
-  leftColumnSmallSize,
-} from './styles'
+import { cardStyles, getCardStylesForTheme } from './styles'
 
 export interface EventCardProps {
   cardViewMode: CardViewMode
@@ -722,13 +717,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
             isPrivate={isPrivate}
             isRead={isRead}
             isSaved={isSaved}
-            smallLeftColumn={false}
+            smallLeftColumn
             userLinkURL={actor.html_url || ''}
             username={actor.display_login || actor.login}
           />
 
           <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-            <Spacer width={leftColumnBigSize - leftColumnSmallSize} />
+            {/* <Spacer width={leftColumnBigSize - leftColumnSmallSize} /> */}
 
             <View style={sharedStyles.flex}>{Content}</View>
 

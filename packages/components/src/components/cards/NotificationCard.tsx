@@ -46,12 +46,7 @@ import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
-import {
-  cardStyles,
-  getCardStylesForTheme,
-  leftColumnBigSize,
-  leftColumnSmallSize,
-} from './styles'
+import { cardStyles, getCardStylesForTheme } from './styles'
 
 export interface NotificationCardProps {
   cardViewMode: CardViewMode
@@ -634,7 +629,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             isRead={isRead}
             isSaved={isSaved}
             reason={notification.reason as GitHubNotificationReason}
-            smallLeftColumn={false}
+            smallLeftColumn
             userLinkURL={repoAvatarDetails.html_url || ''}
             username={
               repoAvatarDetails.display_login || repoAvatarDetails.login
@@ -642,7 +637,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
 
           <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-            <Spacer width={leftColumnBigSize - leftColumnSmallSize} />
+            {/* <Spacer width={leftColumnBigSize - leftColumnSmallSize} /> */}
             <View style={sharedStyles.flex}>{Content}</View>
 
             <Spacer width={contentPadding / 3} />
