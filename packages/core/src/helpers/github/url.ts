@@ -96,14 +96,14 @@ export const getGitHubURLForRepoInvitation = (
   ownerName: string,
   repoName: string,
 ) =>
-  ownerName && repoName ? `${baseURL}/${ownerName}${repoName}/invitations` : ''
+  ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}/invitations` : ''
 
 export const getGitHubURLForSecurityAlert = (
   ownerName: string,
   repoName: string,
 ) =>
   ownerName && repoName
-    ? `${baseURL}/${ownerName}${repoName}/network/alerts`
+    ? `${baseURL}/${ownerName}/${repoName}/network/alerts`
     : ''
 
 export const getGitHubAvatarURLFromPayload = (

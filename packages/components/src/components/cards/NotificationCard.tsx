@@ -7,6 +7,8 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForRepo,
+  getGitHubURLForRepoInvitation,
+  getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
   getOwnerAndRepo,
   getUserAvatarByUsername,
@@ -26,6 +28,7 @@ import {
 } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { getNotificationIconAndColor } from '../../utils/helpers/github/notifications'
+import { fixURL } from '../../utils/helpers/github/url'
 import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -182,25 +185,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     }) ||
     null
 
-  // const isRepoInvitation = subject.type === 'RepositoryInvitation'
-  // const isVulnerabilityAlert = subject.type === 'RepositoryVulnerabilityAlert'
+  const isRepoInvitation = subject.type === 'RepositoryInvitation'
+  const isVulnerabilityAlert = subject.type === 'RepositoryVulnerabilityAlert'
 
   const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
     pullRequest ||
     undefined) as any)
   const cardIconName = cardIconDetails.icon
   const _cardIconColor = cardIconDetails.color
-
-  // const {
-  //   icon: pullRequestIconName,
-  //   color: _pullRequestIconColor,
-  // } = pullRequest
-  //   ? getPullRequestIconAndColor(pullRequest as any)
-  //   : { icon: undefined, color: undefined }
-
-  // const { icon: issueIconName, color: _issueIconColor } = issue
-  //   ? getIssueIconAndColor(issue as any)
-  //   : { icon: undefined, color: undefined }
 
   const issueOrPullRequest = issue || pullRequest
 
@@ -249,22 +241,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       0.3,
     )
 
-  // const issueIconColor =
-  //   _issueIconColor &&
-  //   getReadableColor(
-  //     _issueIconColor,
-  //     themeRef.current![backgroundThemeColor],
-  //     0.3,
-  //   )
-
-  // const pullRequestIconColor =
-  //   _pullRequestIconColor &&
-  //   getReadableColor(
-  //     _pullRequestIconColor,
-  //     themeRef.current![backgroundThemeColor],
-  //     0.3,
-  //   )
-
   let withTopMargin = cardViewMode !== 'compact'
   let withTopMarginCount = withTopMargin ? 1 : 0
   function getWithTopMargin() {
@@ -293,6 +269,26 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             withTopMargin={getWithTopMargin()}
           />
         )} */}
+
+        {!(commit || issue || pullRequest || release) && !!subject.title && (
+          <CommentRow
+            key={`notification-${id}-subject-title-row`}
+            avatarUrl=""
+            body={subject.title}
+            isRead={isRead}
+            userLinkURL=""
+            username=""
+            url={
+              isRepoInvitation && repoOwnerName && repoName
+                ? getGitHubURLForRepoInvitation(repoOwnerName, repoName)
+                : isVulnerabilityAlert && repoOwnerName && repoName
+                ? getGitHubURLForSecurityAlert(repoOwnerName, repoName)
+                : fixURL(subject.latest_comment_url || subject.url)
+            }
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
 
         {!!commit && (
           <CommitRow
