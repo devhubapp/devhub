@@ -56,7 +56,7 @@ export function getEventMetadata(
   subjectType: GitHubEventSubjectType | undefined
 } {
   const {
-    appendColon = true,
+    appendColon,
     includeBranch,
     includeFork,
     includeTag,
@@ -80,6 +80,16 @@ export function getEventMetadata(
 
   const colonText = appendColon ? ':' : ''
 
+  const issueTextWithColon = issueOrPullRequestIsKnown
+    ? issueText
+    : `${issueText}${colonText}`
+  const pullRequestTextWithColon = issueOrPullRequestIsKnown
+    ? pullRequestText
+    : `${pullRequestText}${colonText}`
+  const repositoryTextWithColon = repoIsKnown
+    ? repositoryText
+    : `${repositoryText}${colonText}`
+
   const result = ((): {
     action: GitHubEventAction | undefined
     actionText: string
@@ -89,7 +99,7 @@ export function getEventMetadata(
       case 'CommitCommentEvent': {
         return {
           action: 'commented',
-          actionText: 'Commented on a commit',
+          actionText: `Commented on a commit${colonText}`,
           subjectType: 'Commit',
         }
       }
@@ -98,7 +108,7 @@ export function getEventMetadata(
           case 'repository':
             return {
               action: 'created',
-              actionText: `Created ${repositoryText}`,
+              actionText: `Created ${repositoryTextWithColon}`,
               subjectType: 'Repository',
             }
           case 'branch': {
@@ -108,7 +118,7 @@ export function getEventMetadata(
               actionText:
                 includeBranch && branch
                   ? `Created the branch ${branch}`
-                  : 'Created a branch',
+                  : `Created a branch${colonText}`,
               subjectType: 'Branch',
             }
           }
@@ -117,7 +127,9 @@ export function getEventMetadata(
             return {
               action: 'created',
               actionText:
-                includeTag && tag ? `Created the tag ${tag}` : 'Created a tag',
+                includeTag && tag
+                  ? `Created the tag ${tag}`
+                  : `Created a tag${colonText}`,
               subjectType: 'Tag',
             }
           }
@@ -135,7 +147,7 @@ export function getEventMetadata(
           case 'repository':
             return {
               action: 'deleted',
-              actionText: `Deleted ${repositoryText}`,
+              actionText: `Deleted ${repositoryTextWithColon}`,
               subjectType: 'Repository',
             }
           case 'branch': {
@@ -145,7 +157,7 @@ export function getEventMetadata(
               actionText:
                 includeBranch && branch
                   ? `Deleted the branch ${branch}`
-                  : 'Deleted a branch',
+                  : `Deleted a branch${colonText}`,
               subjectType: 'Branch',
             }
           }
@@ -154,7 +166,9 @@ export function getEventMetadata(
             return {
               action: 'deleted',
               actionText:
-                includeTag && tag ? `Deleted the tag ${tag}` : 'Deleted a tag',
+                includeTag && tag
+                  ? `Deleted the tag ${tag}`
+                  : `Deleted a tag${colonText}`,
               subjectType: 'Tag',
             }
           }
@@ -174,7 +188,7 @@ export function getEventMetadata(
           action: 'forked',
           actionText: includeFork
             ? `Forked ${repositoryText} to ${forkFullName}`
-            : `Forked ${repositoryText}`,
+            : `Forked ${repositoryTextWithColon}`,
           subjectType: 'Repository',
         }
       }
@@ -190,13 +204,13 @@ export function getEventMetadata(
           case 'created':
             return {
               action: 'created',
-              actionText: `Created ${pagesText}`,
+              actionText: `Created ${pagesText}${colonText}`,
               subjectType: 'Wiki',
             }
           default:
             return {
               action: 'updated',
-              actionText: `Updated ${pagesText}`,
+              actionText: `Updated ${pagesText}${colonText}`,
               subjectType: 'Wiki',
             }
         }
@@ -206,7 +220,9 @@ export function getEventMetadata(
         return {
           action: 'commented',
           actionText: `Commented on ${
-            isPullRequest(event.payload.issue) ? pullRequestText : issueText
+            isPullRequest(event.payload.issue)
+              ? pullRequestTextWithColon
+              : issueTextWithColon
           }`,
           subjectType: 'Issue',
         }
@@ -221,68 +237,68 @@ export function getEventMetadata(
           case 'closed':
             return {
               action: 'state_changed',
-              actionText: `Closed ${issueText}`,
+              actionText: `Closed ${issueTextWithColon}`,
               subjectType,
             }
           case 'reopened':
             return {
               action: 'state_changed',
-              actionText: `Reopened ${issueText}`,
+              actionText: `Reopened ${issueTextWithColon}`,
               subjectType,
             }
           case 'opened':
             return {
               action: 'created',
-              actionText: `Opened ${issueText}`,
+              actionText: `Opened ${issueTextWithColon}`,
               subjectType,
             }
           case 'assigned':
             return {
               action: 'updated',
-              actionText: `Assigned ${issueText}`,
+              actionText: `Assigned ${issueTextWithColon}`,
               subjectType,
             }
           case 'unassigned':
             return {
               action: 'updated',
-              actionText: `Unassigned ${issueText}`,
+              actionText: `Unassigned ${issueTextWithColon}`,
               subjectType,
             }
           case 'labeled':
             return {
               action: 'updated',
-              actionText: `Labeled ${issueText}`,
+              actionText: `Labeled ${issueTextWithColon}`,
               subjectType,
             }
           case 'unlabeled':
             return {
               action: 'updated',
-              actionText: `Unlabeled ${issueText}`,
+              actionText: `Unlabeled ${issueTextWithColon}`,
               subjectType,
             }
           case 'edited':
             return {
               action: 'updated',
-              actionText: `Edited ${issueText}`,
+              actionText: `Edited ${issueTextWithColon}`,
               subjectType,
             }
           case 'milestoned':
             return {
               action: 'updated',
-              actionText: `Milestoned ${issueText}`,
+              actionText: `Milestoned ${issueTextWithColon}`,
               subjectType,
             }
           case 'demilestoned':
             return {
               action: 'updated',
-              actionText: `Demilestoned ${issueText}`,
+              actionText: `Demilestoned ${issueTextWithColon}`,
               subjectType,
             }
           default: {
             console.error('Unknown IssuesEvent action', event.payload.action)
             return {
               action: 'updated',
-              actionText: `Updated ${issueText}`,
+              actionText: `Updated ${issueTextWithColon}`,
               subjectType,
             }
           }
@@ -293,7 +309,7 @@ export function getEventMetadata(
         return {
           action: 'added',
           actionText: `Added an user ${repositoryText &&
-            `to ${repositoryText}`}`,
+            `to ${repositoryTextWithColon}`}`,
           subjectType: 'User',
         }
       }
@@ -313,37 +329,37 @@ export function getEventMetadata(
           case 'assigned':
             return {
               action: 'updated',
-              actionText: `Assigned ${pullRequestText}`,
+              actionText: `Assigned ${pullRequestTextWithColon}`,
               subjectType,
             }
           case 'unassigned':
             return {
               action: 'updated',
-              actionText: `Unassigned ${pullRequestText}`,
+              actionText: `Unassigned ${pullRequestTextWithColon}`,
               subjectType,
             }
           case 'labeled':
             return {
               action: 'updated',
-              actionText: `Labeled ${pullRequestText}`,
+              actionText: `Labeled ${pullRequestTextWithColon}`,
               subjectType,
             }
           case 'unlabeled':
             return {
               action: 'updated',
-              actionText: `Unlabeled ${pullRequestText}`,
+              actionText: `Unlabeled ${pullRequestTextWithColon}`,
               subjectType,
             }
           case 'opened':
             return {
               action: 'created',
-              actionText: `Opened ${pullRequestText}`,
+              actionText: `Opened ${pullRequestTextWithColon}`,
               subjectType,
             }
           case 'edited':
             return {
               action: 'updated',
-              actionText: `Edited ${pullRequestText}`,
+              actionText: `Edited ${pullRequestTextWithColon}`,
               subjectType,
             }
 
@@ -351,15 +367,15 @@ export function getEventMetadata(
             return {
               action: 'state_changed',
               actionText: event.payload.pull_request.merged_at
-                ? `Merged ${pullRequestText}`
-                : `Closed ${pullRequestText}`,
+                ? `Merged ${pullRequestTextWithColon}`
+                : `Closed ${pullRequestTextWithColon}`,
               subjectType,
             }
 
           case 'reopened':
             return {
               action: 'state_changed',
-              actionText: `Reopened ${pullRequestText}`,
+              actionText: `Reopened ${pullRequestTextWithColon}`,
               subjectType,
             }
           default: {
@@ -369,7 +385,7 @@ export function getEventMetadata(
             )
             return {
               action: 'updated',
-              actionText: `Updated ${pullRequestText}`,
+              actionText: `Updated ${pullRequestTextWithColon}`,
               subjectType,
             }
           }
@@ -379,7 +395,7 @@ export function getEventMetadata(
       case 'PullRequestReviewEvent': {
         return {
           action: 'reviewed',
-          actionText: `Reviewed ${pullRequestText}`,
+          actionText: `Reviewed ${pullRequestTextWithColon}`,
           subjectType: 'PullRequestReview',
         }
       }
@@ -389,19 +405,19 @@ export function getEventMetadata(
           case 'created':
             return {
               action: 'reviewed',
-              actionText: `Commented on ${pullRequestText} review`,
+              actionText: `Commented on ${pullRequestText} review${colonText}`,
               subjectType: 'Release',
             }
           case 'edited':
             return {
               action: 'updated',
-              actionText: `Edited ${pullRequestText} review`,
+              actionText: `Edited ${pullRequestText} review${colonText}`,
               subjectType: 'Release',
             }
           case 'deleted':
             return {
               action: 'deleted',
-              actionText: `Deleted ${pullRequestText} review`,
+              actionText: `Deleted ${pullRequestText} review${colonText}`,
               subjectType: 'Release',
             }
           default: {
@@ -411,7 +427,7 @@ export function getEventMetadata(
             )
             return {
               action: 'reviewed',
-              actionText: `Updated ${pullRequestText} review`,
+              actionText: `Updated ${pullRequestText} review${colonText}`,
               subjectType: 'Release',
             }
           }
@@ -433,12 +449,12 @@ export function getEventMetadata(
 
         const branch = getBranchNameFromRef(event.payload.ref)
         const pushedText = event.forced ? 'Force pushed' : 'Pushed'
-        const commitText = count > 1 ? `${count} commits` : 'a commit'
-        const branchText = includeBranch && branch ? `to ${branch}` : ''
+        const commitText = count > 1 ? ` ${count} commits` : ' a commit'
+        const branchText = includeBranch && branch ? ` to ${branch}` : ''
 
         return {
           action: 'pushed',
-          actionText: `${pushedText} ${commitText} ${branchText}`.trim(),
+          actionText: `${pushedText}${commitText}${branchText}${colonText}`,
           subjectType: 'Commit',
         }
       }
@@ -446,7 +462,7 @@ export function getEventMetadata(
       case 'ReleaseEvent': {
         return {
           action: 'released',
-          actionText: 'Published a release',
+          actionText: `Published a release${colonText}`,
           subjectType: 'Release',
         }
       }
@@ -454,7 +470,7 @@ export function getEventMetadata(
       case 'WatchEvent': {
         return {
           action: 'starred',
-          actionText: `Starred ${repositoryText}`,
+          actionText: `Starred ${repositoryTextWithColon}`,
           subjectType: 'Repository',
         }
       }
@@ -464,8 +480,8 @@ export function getEventMetadata(
           action: 'starred',
           actionText:
             event.repos.length > 1
-              ? `Starred ${event.repos.length} repositories`
-              : `Starred ${repositoryText}`,
+              ? `Starred ${event.repos.length} repositories${colonText}`
+              : `Starred ${repositoryTextWithColon}`,
           subjectType: 'Repository',
         }
       }
@@ -483,7 +499,7 @@ export function getEventMetadata(
 
   return {
     ...result,
-    actionText: result.actionText.replace(/ {2}/g, ' ').trim() + colonText,
+    actionText: result.actionText.replace(/ {2}/g, ' ').trim(),
   }
 }
 

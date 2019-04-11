@@ -216,6 +216,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const _cardIconColor = cardIconDetails.color
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
+    appendColon: true,
     includeBranch: cardViewMode === 'compact',
     includeFork: cardViewMode === 'compact',
     includeTag: cardViewMode === 'compact',
