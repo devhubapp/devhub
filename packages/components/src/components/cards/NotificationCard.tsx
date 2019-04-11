@@ -345,7 +345,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               //   ? true
               //   : false
             }
-            showCreationDetails={cardViewMode !== 'compact'}
+            showCreationDetails
             title={issueOrPullRequest.title}
             url={issueOrPullRequest.url}
             userLinkURL={issueOrPullRequest.user.html_url || ''}

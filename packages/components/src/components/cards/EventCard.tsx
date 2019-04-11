@@ -222,7 +222,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
     includeTag: cardViewMode === 'compact',
     repoIsKnown: repoIsKnown || cardViewMode === 'compact',
   }
-  const { actionText } = getEventMetadata(event, actionTextOptions)
+  const { action, actionText } = getEventMetadata(event, actionTextOptions)
 
   const isPush = type === 'PushEvent'
   const isForcePush = isPush && (payload as GitHubPushEvent).forced
@@ -428,7 +428,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               //   ? true
               //   : false
             }
-            showCreationDetails={cardViewMode !== 'compact'}
+            showCreationDetails={action !== 'created'}
             title={issueOrPullRequest.title}
             url={issueOrPullRequest.url}
             userLinkURL={issueOrPullRequest.user.html_url || ''}
