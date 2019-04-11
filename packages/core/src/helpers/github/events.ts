@@ -42,6 +42,7 @@ export function getEventMetadata(
   event: EnhancedGitHubEvent,
   options:
     | {
+        appendColon?: boolean
         includeBranch?: boolean
         includeFork?: boolean
         includeTag?: boolean
@@ -55,6 +56,7 @@ export function getEventMetadata(
   subjectType: GitHubEventSubjectType | undefined
 } {
   const {
+    appendColon = true,
     includeBranch,
     includeFork,
     includeTag,
@@ -72,9 +74,11 @@ export function getEventMetadata(
 
   const issueText = issueOrPullRequestIsKnown ? 'this issue' : 'an issue'
   const pullRequestText = issueOrPullRequestIsKnown
-    ? `this ${isDraftPR ? 'draft pr' : 'pr'}`
-    : `a ${isDraftPR ? 'draft pr' : 'pr'}`
+    ? `this ${isDraftPR ? 'draft pull request' : 'pull request'}`
+    : `a ${isDraftPR ? 'draft pull request' : 'pull request'}`
   const repositoryText = repoIsKnown ? 'this repository' : 'a repository'
+
+  const colonText = appendColon ? ':' : ''
 
   const result = ((): {
     action: GitHubEventAction | undefined
@@ -407,7 +411,7 @@ export function getEventMetadata(
             )
             return {
               action: 'reviewed',
-              actionText: `Interacted with ${pullRequestText} review`,
+              actionText: `Updated ${pullRequestText} review`,
               subjectType: 'Release',
             }
           }
@@ -479,7 +483,7 @@ export function getEventMetadata(
 
   return {
     ...result,
-    actionText: result.actionText.replace(/ {2}/g, ' ').trim(),
+    actionText: result.actionText.replace(/ {2}/g, ' ').trim() + colonText,
   }
 }
 

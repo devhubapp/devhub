@@ -4,8 +4,10 @@ import { View } from 'react-native'
 import { Omit, stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
+import { smallAvatarSize } from '../../../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
+import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import {
   SpringAnimatedText,
   SpringAnimatedTextProps,
@@ -26,6 +28,7 @@ export interface CommentRowProps
   avatarUrl: string | undefined
   body: string
   isRead: boolean
+  leftContent: 'avatar' | 'icon' | 'none'
   numberOfLines?: number
   textStyle?: SpringAnimatedTextProps['style']
   url?: string
@@ -41,6 +44,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     analyticsLabel,
     avatarUrl,
     body: _body,
+    leftContent,
     isRead,
     numberOfLines = props.numberOfLines ||
       (props.viewMode === 'compact' ? 1 : 2),
@@ -64,14 +68,26 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     <BaseRow
       {...otherProps}
       left={
-        <Avatar
-          avatarUrl={avatarUrl}
-          isBot={isBot}
-          linkURL={userLinkURL}
-          small
-          style={cardStyles.avatar}
-          username={username}
-        />
+        leftContent === 'icon' ? (
+          <SpringAnimatedIcon
+            name="comment"
+            size={smallAvatarSize}
+            style={[
+              { alignSelf: 'flex-end' },
+              getCardStylesForTheme(springAnimatedTheme).normalText,
+              getCardStylesForTheme(springAnimatedTheme).mutedText,
+            ]}
+          />
+        ) : leftContent === 'avatar' ? (
+          <Avatar
+            avatarUrl={avatarUrl}
+            isBot={isBot}
+            linkURL={userLinkURL}
+            small
+            style={cardStyles.avatar}
+            username={username}
+          />
+        ) : null
       }
       right={
         <View style={cardRowStyles.mainContentContainer}>

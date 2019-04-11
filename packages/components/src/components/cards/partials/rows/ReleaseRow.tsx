@@ -150,6 +150,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
           avatarUrl={avatarUrl}
           body={body}
           isRead={isRead}
+          leftContent="avatar"
           url={fixedURL}
           userLinkURL={userLinkURL}
           username={username}

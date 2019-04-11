@@ -276,6 +276,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             avatarUrl=""
             body={subject.title}
             isRead={isRead}
+            leftContent="avatar"
             userLinkURL=""
             username=""
             url={
@@ -380,6 +381,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             avatarUrl={comment.user.avatar_url}
             body={comment.body}
             isRead={isRead}
+            leftContent="avatar"
             url={comment.html_url}
             userLinkURL={comment.user.html_url || ''}
             username={comment.user.login}

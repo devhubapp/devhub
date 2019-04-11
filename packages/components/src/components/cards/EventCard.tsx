@@ -67,6 +67,7 @@ import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryListRow } from './partials/rows/RepositoryListRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
+import { innerCardSpacing } from './partials/rows/styles'
 import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 import { cardStyles, getCardStylesForTheme } from './styles'
@@ -370,6 +371,25 @@ export const EventCard = React.memo((props: EventCardProps) => {
           />
         )}
 
+        {Boolean(comment && comment.body) && (
+          <>
+            <Spacer height={innerCardSpacing} />
+
+            <CommentRow
+              key={`event-comment-row-${comment.id}`}
+              avatarUrl={comment.user.avatar_url}
+              body={comment.body}
+              isRead={isRead}
+              leftContent="none"
+              url={comment.html_url || comment.url}
+              userLinkURL={comment.user.html_url || ''}
+              username={comment.user.display_login || comment.user.login}
+              viewMode={cardViewMode}
+              withTopMargin={false}
+            />
+          </>
+        )}
+
         {!!issueOrPullRequest && (
           <IssueOrPullRequestRow
             key={`event-issue-or-pr-row-${issueOrPullRequest.id}`}
@@ -444,20 +464,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             commits={commits}
             isPrivate={isPrivate}
             isRead={isRead}
-            viewMode={cardViewMode}
-            withTopMargin={getWithTopMargin()}
-          />
-        )}
-
-        {Boolean(comment && comment.body) && (
-          <CommentRow
-            key={`event-comment-row-${comment.id}`}
-            avatarUrl={comment.user.avatar_url}
-            body={comment.body}
-            isRead={isRead}
-            url={comment.html_url || comment.url}
-            userLinkURL={comment.user.html_url || ''}
-            username={comment.user.display_login || comment.user.login}
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />

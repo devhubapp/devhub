@@ -136,7 +136,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
         <View
           style={{
             flexDirection: 'row',
-            flexWrap: 'wrap',
+            flexWrap: 'nowrap',
             alignItems: 'center',
           }}
         >
