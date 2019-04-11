@@ -30,7 +30,7 @@ import { CardItemId } from '../CardItemId'
 import { CardSmallThing } from '../CardSmallThing'
 import { LabelsView } from './LabelsView'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
-import { cardRowStyles, innerCardMarginTop } from './styles'
+import { cardRowStyles, innerCardSpacing } from './styles'
 
 export interface IssueOrPullRequestRowProps
   extends Omit<
@@ -114,6 +114,9 @@ export const IssueOrPullRequestRow = React.memo(
       issueOrPullRequestNumber,
     })
 
+    const inlineLabels = viewMode === 'compact'
+    const keepLabelsTogether = true
+
     return (
       <BaseRow
         {...otherProps}
@@ -137,50 +140,74 @@ export const IssueOrPullRequestRow = React.memo(
         }
         right={
           <View style={cardRowStyles.mainContentContainer}>
-            <Link href={htmlUrl}>
-              <SpringAnimatedText
-                numberOfLines={numberOfLines}
-                style={[
-                  sharedStyles.flex,
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  bold && cardStyles.boldText,
-                  isRead &&
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                {!hideIcon && (
-                  <>
-                    <SpringAnimatedIcon
-                      name={iconName}
-                      size={13}
-                      style={[
-                        getCardStylesForTheme(springAnimatedTheme).normalText,
-                        getCardStylesForTheme(springAnimatedTheme).icon,
-                        { color: iconColor },
-                        // isRead && { opacity: mutedOpacity },
-                      ]}
-                    />{' '}
-                  </>
-                )}
-                {title}
+            <View
+              style={
+                inlineLabels && [sharedStyles.horizontal, sharedStyles.flexWrap]
+              }
+            >
+              <Link href={htmlUrl}>
+                <SpringAnimatedText
+                  numberOfLines={numberOfLines}
+                  style={[
+                    sharedStyles.flex,
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    bold && cardStyles.boldText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    !!inlineLabels &&
+                      labels &&
+                      labels.length > 0 && { marginRight: contentPadding / 2 },
+                    !inlineLabels &&
+                      labels &&
+                      labels.length > 0 && { marginBottom: innerCardSpacing },
+                  ]}
+                >
+                  {!hideIcon && (
+                    <>
+                      <SpringAnimatedIcon
+                        name={iconName}
+                        size={13}
+                        style={[
+                          getCardStylesForTheme(springAnimatedTheme).normalText,
+                          getCardStylesForTheme(springAnimatedTheme).icon,
+                          { color: iconColor },
+                          // isRead && { opacity: mutedOpacity },
+                        ]}
+                      />{' '}
+                    </>
+                  )}
+                  {title}
 
-                {!!issueOrPullRequestNumber && viewMode === 'compact' && (
-                  <SpringAnimatedText
-                    style={{
-                      fontWeight: '400',
-                      fontSize: 11,
-                    }}
-                  >
-                    {`  #${issueOrPullRequestNumber}`}
-                  </SpringAnimatedText>
-                )}
-              </SpringAnimatedText>
-            </Link>
+                  {!!issueOrPullRequestNumber && viewMode === 'compact' && (
+                    <SpringAnimatedText
+                      style={{
+                        fontWeight: '400',
+                        fontSize: 11,
+                      }}
+                    >
+                      {`  #${issueOrPullRequestNumber}`}
+                    </SpringAnimatedText>
+                  )}
+                </SpringAnimatedText>
+              </Link>
+
+              {!!labels && labels.length > 0 && (
+                <LabelsView
+                  fragment={!keepLabelsTogether}
+                  labels={labels.map(label => ({
+                    key: `issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
+                      label.name}`,
+                    color: label.color && `#${label.color}`,
+                    name: label.name,
+                  }))}
+                />
+              )}
+            </View>
 
             <View style={{ alignSelf: 'stretch', maxWidth: '100%' }}>
               {!!body && (
                 <>
-                  <Spacer height={innerCardMarginTop} />
+                  <Spacer height={innerCardSpacing} />
 
                   <Link
                     href={htmlUrl}
@@ -201,25 +228,10 @@ export const IssueOrPullRequestRow = React.memo(
                 </>
               )}
 
-              {!!labels && labels.length > 0 && (
-                <>
-                  <Spacer height={innerCardMarginTop} />
-
-                  <LabelsView
-                    labels={labels.map(label => ({
-                      key: `issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
-                        label.name}`,
-                      color: label.color && `#${label.color}`,
-                      name: label.name,
-                    }))}
-                  />
-                </>
-              )}
-
               {!!(byText || createdAt || updatedAt || commentsCount) &&
                 showCreationDetails && (
                   <>
-                    <Spacer height={innerCardMarginTop} />
+                    <Spacer height={innerCardSpacing} />
 
                     <View
                       style={{

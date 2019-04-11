@@ -10,6 +10,10 @@ export const sharedStyles = StyleSheet.create({
     flex: 1,
   },
 
+  flexWrap: {
+    flexWrap: 'wrap',
+  },
+
   horizontal: {
     flexDirection: 'row',
   },

@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { View, ViewProps } from 'react-native'
 
 import { GitHubLabel } from '@devhub/core'
+import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
+import { ConditionalWrap } from '../../../common/ConditionalWrap'
 import { Label } from '../../../common/Label'
 
 export interface LabelsViewProps {
+  fragment?: boolean
   labels: Array<{
     key: string
     name: GitHubLabel['name']
@@ -16,18 +19,27 @@ export interface LabelsViewProps {
 }
 
 export const LabelsView = (props: LabelsViewProps) => {
-  const { labels, muted, style } = props
+  const { fragment, labels, muted, style } = props
 
   return (
-    <View
-      style={[
-        {
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginHorizontal: -contentPadding / 5,
-        },
-        style,
-      ]}
+    <ConditionalWrap
+      condition
+      wrap={children =>
+        fragment ? (
+          <Fragment>{children}</Fragment>
+        ) : (
+          <View
+            style={[
+              sharedStyles.horizontal,
+              sharedStyles.flexWrap,
+              { marginHorizontal: -contentPadding / 5 },
+              style,
+            ]}
+          >
+            {children}
+          </View>
+        )
+      }
     >
       {labels.map(label => (
         <Label
@@ -44,6 +56,6 @@ export const LabelsView = (props: LabelsViewProps) => {
           {label.name.toLowerCase()}
         </Label>
       ))}
-    </View>
+    </ConditionalWrap>
   )
 }
