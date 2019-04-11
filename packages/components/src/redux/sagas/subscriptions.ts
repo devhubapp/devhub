@@ -19,10 +19,13 @@ import {
   Column,
   ColumnSubscription,
   constants,
+  createIssuesOrPullRequestsCache,
   createNotificationsCache,
+  enhanceIssueOrPullRequests,
   EnhancementCache,
   enhanceNotifications,
   getGitHubAPIHeadersFromHeader,
+  getIssueOrPullRequestsEnhancementMap,
   getNotificationsEnhancementMap,
   getOlderEventDate,
   getOlderIssueOrPullRequestDate,
@@ -30,6 +33,7 @@ import {
   GitHubAppTokenType,
   GitHubEvent,
   GitHubIssue,
+  GitHubIssueOrPullRequest,
   GitHubNotification,
   GitHubPullRequest,
 } from '@devhub/core'
@@ -48,6 +52,7 @@ import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
 
+let issuesOrPullRequestsCache: EnhancementCache
 let notificationsCache: EnhancementCache
 
 function* init() {
@@ -385,6 +390,8 @@ function* onFetchRequest(
       const olderItemDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)
 
+      data = newItems
+
       const reponseContainOldest =
         !olderItemDate ||
         (!!olderDateFromThisResponse &&
@@ -398,8 +405,6 @@ function* onFetchRequest(
           : reponseContainOldest
           ? false
           : undefined
-
-      data = newItems
     } else if (subscription && subscription.type === 'issue_or_pr') {
       const response = yield call(
         getIssuesOrPullRequests,
@@ -413,9 +418,7 @@ function* onFetchRequest(
       headers = (response && response.headers) || {}
 
       const prevItems = subscription.data.items || []
-      const newItems = (response.data || []) as Array<
-        GitHubIssue | GitHubPullRequest
-      >
+      const newItems = (response.data || []) as GitHubIssueOrPullRequest[]
       const mergedItems = mergeIssuesOrPullRequestsPreservingEnhancement(
         newItems,
         prevItems,
@@ -423,6 +426,36 @@ function* onFetchRequest(
 
       const olderItemDate = getOlderIssueOrPullRequestDate(mergedItems)
       const olderDateFromThisResponse = getOlderIssueOrPullRequestDate(newItems)
+
+      if (!issuesOrPullRequestsCache) {
+        issuesOrPullRequestsCache = createIssuesOrPullRequestsCache(prevItems)
+      }
+
+      const enhancementMap = yield call(
+        getIssueOrPullRequestsEnhancementMap,
+        mergedItems,
+        {
+          cache: issuesOrPullRequestsCache,
+          getGitHubInstallationTokenForRepo: (
+            ownerName: string | undefined,
+            repoName: string | undefined,
+          ) =>
+            selectors.installationTokenByRepoSelector(
+              state,
+              ownerName,
+              repoName,
+            ),
+          githubOAuthToken,
+        },
+      )
+
+      const enhancedItems = enhanceIssueOrPullRequests(
+        newItems,
+        enhancementMap,
+        prevItems,
+      )
+
+      data = enhancedItems
 
       const reponseContainOldest =
         !olderItemDate ||
@@ -437,8 +470,6 @@ function* onFetchRequest(
           : reponseContainOldest
           ? false
           : undefined
-
-      data = newItems
     } else {
       throw new Error(
         `Unknown column subscription type: ${subscription &&

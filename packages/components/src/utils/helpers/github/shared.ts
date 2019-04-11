@@ -20,10 +20,11 @@ export function getReleaseIconAndColor(): { icon: GitHubIcon; color?: string } {
 export function getPullRequestIconAndColor(pullRequest: {
   draft: GitHubPullRequest['draft']
   state: GitHubPullRequest['state']
+  merged: GitHubPullRequest['merged'] | undefined
   merged_at: GitHubPullRequest['merged_at'] | undefined
 }): { icon: GitHubIcon; color?: string } {
   const draft = pullRequest.draft
-  const merged = pullRequest.merged_at
+  const merged = !!(pullRequest.merged || pullRequest.merged_at)
   const state = merged ? 'merged' : pullRequest.state
 
   switch (state) {

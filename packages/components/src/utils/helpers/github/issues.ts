@@ -3,6 +3,7 @@ import _ from 'lodash'
 import {
   EnhancedGitHubIssueOrPullRequest,
   GitHubIssue,
+  GitHubIssueOrPullRequest,
   GitHubIssueOrPullRequestSubjectType,
   GitHubPullRequest,
   sortIssuesOrPullRequests,
@@ -14,17 +15,9 @@ export const issueOrPullRequestSubjectTypes: GitHubIssueOrPullRequestSubjectType
   'PullRequest',
 ]
 
-export function getIssueOrPullRequestSubjectType(
-  item: GitHubIssue | GitHubPullRequest,
-): GitHubIssueOrPullRequestSubjectType | null {
-  if (!(item && item.url && item.url)) return null
-
-  return item.url.includes('/pulls') ? 'PullRequest' : 'Issue'
-}
-
 export function getIssueOrPullRequestIconAndColor(
   type: GitHubIssueOrPullRequestSubjectType,
-  issueOrPullRequest: GitHubIssue | GitHubPullRequest,
+  issueOrPullRequest: GitHubIssueOrPullRequest,
 ) {
   return type === 'PullRequest'
     ? getPullRequestIconAndColor(issueOrPullRequest as GitHubPullRequest)

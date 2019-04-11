@@ -33,7 +33,9 @@ export interface SaveForLaterEnhancement {
   saved?: boolean
 }
 
-export interface NotificationPayloadEnhancement {
+export interface NotificationPayloadEnhancement
+  extends ReadUnreadEnhancement,
+    SaveForLaterEnhancement {
   comment?: GitHubComment
   commit?: GitHubCommit
   issue?: GitHubIssue
@@ -42,11 +44,27 @@ export interface NotificationPayloadEnhancement {
   enhanced?: boolean
 }
 
+export interface IssuePayloadEnhancement
+  extends ReadUnreadEnhancement,
+    SaveForLaterEnhancement {
+  merged?: undefined
+  enhanced?: boolean
+}
+
+export interface PullRequestPayloadEnhancement
+  extends ReadUnreadEnhancement,
+    SaveForLaterEnhancement {
+  merged?: boolean
+  enhanced?: boolean
+}
+
+export type IssueOrPullRequestPayloadEnhancement =
+  | IssuePayloadEnhancement
+  | PullRequestPayloadEnhancement
+
 export interface EnhancedGitHubNotification
   extends GitHubNotification,
-    NotificationPayloadEnhancement,
-    ReadUnreadEnhancement,
-    SaveForLaterEnhancement {}
+    NotificationPayloadEnhancement {}
 
 export interface GitHubEnhancedEventBase {
   merged: string[]
@@ -63,13 +81,10 @@ export type EnhancedGitHubEvent = (GitHubEvent | MultipleStarEvent) &
   ReadUnreadEnhancement &
   SaveForLaterEnhancement
 
-export type EnhancedGitHubIssue = GitHubIssue &
-  ReadUnreadEnhancement &
-  SaveForLaterEnhancement
+export type EnhancedGitHubIssue = GitHubIssue & IssuePayloadEnhancement
 
 export type EnhancedGitHubPullRequest = GitHubPullRequest &
-  ReadUnreadEnhancement &
-  SaveForLaterEnhancement
+  PullRequestPayloadEnhancement
 
 export type EnhancedGitHubIssueOrPullRequest =
   | EnhancedGitHubIssue

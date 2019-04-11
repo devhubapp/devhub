@@ -185,7 +185,16 @@ export const IssueOrPullRequestCard = React.memo(
               body={undefined}
               bold
               commentsCount={issueOrPullRequest.comments}
-              createdAt={issueOrPullRequest.created_at}
+              createdAt={
+                cardViewMode === 'compact'
+                  ? issueOrPullRequest.created_at
+                  : undefined
+              }
+              updatedAt={
+                cardViewMode === 'compact'
+                  ? undefined
+                  : issueOrPullRequest.updated_at
+              }
               hideIcon
               // iconColor={issueIconColor || pullRequestIconColor}
               // iconName={issueIconName! || pullRequestIconName}
@@ -359,10 +368,13 @@ export const IssueOrPullRequestCard = React.memo(
                       ]}
                       {...Platform.select({
                         web: {
-                          title: getFullDateText(issueOrPullRequest.updated_at),
+                          title: `Updated: ${getFullDateText(
+                            issueOrPullRequest.updated_at,
+                          )}`,
                         },
                       })}
                     >
+                      {/* <SpringAnimatedIcon name="clock" />{' '} */}
                       {dateText}
                     </SpringAnimatedText>
                   )

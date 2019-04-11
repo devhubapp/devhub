@@ -648,6 +648,8 @@ export type GitHubEventSubjectType =
   | 'User'
   | 'Wiki'
 
+export type GitHubIssueOrPullRequest = GitHubIssue | GitHubPullRequest
+
 export type GitHubIssueOrPullRequestSubjectType = 'Issue' | 'PullRequest'
 
 export type GitHubIcon =

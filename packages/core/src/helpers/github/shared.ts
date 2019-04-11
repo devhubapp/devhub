@@ -381,7 +381,10 @@ export function getColumnHeaderDetails(
       switch (subscription.subtype) {
         case 'ISSUES': {
           return {
-            avatarProps: { username: subscription.params!.owner },
+            avatarProps: {
+              repo: subscription.params!.repo,
+              username: subscription.params!.owner,
+            },
             icon: 'issue-opened',
             repoIsKnown: true,
             owner: subscription.params!.owner,
@@ -393,19 +396,25 @@ export function getColumnHeaderDetails(
 
         case 'PULLS': {
           return {
-            avatarProps: { username: subscription.params!.owner },
+            avatarProps: {
+              repo: subscription.params!.repo,
+              username: subscription.params!.owner,
+            },
             icon: 'git-pull-request',
             repoIsKnown: true,
             owner: subscription.params!.owner,
             repo: subscription.params!.repo,
-            subtitle: 'Pulls',
+            subtitle: 'Pull Requests',
             title: subscription.params!.repo,
           }
         }
 
         default: {
           return {
-            avatarProps: { username: subscription.params!.owner },
+            avatarProps: {
+              repo: subscription.params!.repo,
+              username: subscription.params!.owner,
+            },
             icon: 'issue-opened',
             repoIsKnown: false,
             subtitle: 'Issues & PRs',

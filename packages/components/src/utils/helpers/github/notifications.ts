@@ -5,6 +5,7 @@ import {
   EnhancedGitHubNotification,
   GitHubIcon,
   GitHubIssue,
+  GitHubIssueOrPullRequest,
   GitHubNotification,
   GitHubNotificationReason,
   GitHubNotificationSubjectType,
@@ -54,7 +55,7 @@ export function getNotificationSubjectType(
 
 export function getNotificationIconAndColor(
   notification: GitHubNotification,
-  payload?: GitHubIssue | GitHubPullRequest | undefined,
+  payload?: GitHubIssueOrPullRequest | undefined,
 ): { icon: GitHubIcon; color?: string } {
   const { subject } = notification
   const { type } = subject

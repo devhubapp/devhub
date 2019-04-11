@@ -1,4 +1,7 @@
-import Octokit, { SearchIssuesAndPullRequestsParams } from '@octokit/rest'
+import Octokit, {
+  PullsListParams,
+  SearchIssuesAndPullRequestsParams,
+} from '@octokit/rest'
 
 import {
   GitHubActivityType,
@@ -156,9 +159,7 @@ export async function getIssuesOrPullRequests<
   const cacheKey = JSON.stringify([type, params, subscriptionId])
   const cacheValue = cache[cacheKey]
 
-  const _params: Record<string, any> & SearchIssuesAndPullRequestsParams = {
-    ...params,
-  }
+  const _params: Record<string, any> = { ...params }
   _params.headers = _params.headers || {}
   _params.headers['If-None-Match'] = ''
   _params.headers.Accept = 'application/vnd.github.shadow-cat-preview'
@@ -181,27 +182,22 @@ export async function getIssuesOrPullRequests<
 
   try {
     const response = await (() => {
-      switch (type) {
-        case 'ISSUES': {
-          _params.q = `repo:${owner}/${repo} is:issue`
-          return octokit.search.issuesAndPullRequests(_params)
-        }
-
-        case 'PULLS': {
-          _params.q = `repo:${owner}/${repo} is:pr`
-          return octokit.search.issuesAndPullRequests(_params)
-        }
-
-        default: {
-          throw new Error(
-            `No api method configured for activity type '${type}'.`,
-          )
-        }
+      const p: SearchIssuesAndPullRequestsParams = {
+        order: 'desc',
+        sort: 'updated',
+        q: `repo:${owner}/${repo}${type === 'ISSUES' ? ' is:issue' : ''}${
+          type === 'PULLS' ? ' is:pr' : ''
+        }`,
+        ..._params,
       }
+
+      return octokit.search.issuesAndPullRequests(p)
     })()
 
     cache[cacheKey] = {
-      data: response.data && response.data.items,
+      data: Array.isArray(response.data)
+        ? response.data
+        : response.data && response.data.items,
       headers: response.headers,
       status: response.status,
     }

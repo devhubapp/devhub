@@ -126,7 +126,7 @@ export async function getNotificationsEnhancementMap(
 
     if (!Object.keys(enhance).length) return
 
-    return { notificationId: notification.id, enhance }
+    return { id: notification.id, enhance }
   })
 
   const enhancements = await Promise.all(promises)
@@ -136,7 +136,7 @@ export async function getNotificationsEnhancementMap(
       payload
         ? {
             ...map,
-            [payload.notificationId]: payload.enhance,
+            [payload.id]: payload.enhance,
           }
         : map,
     {},

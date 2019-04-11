@@ -55,6 +55,7 @@ export interface IssueOrPullRequestRowProps
   repo: string
   showCreationDetails: boolean
   title: string
+  updatedAt?: string | undefined
   url: string
   userLinkURL: string | undefined
   username: string | undefined
@@ -83,6 +84,7 @@ export const IssueOrPullRequestRow = React.memo(
       repo,
       showCreationDetails,
       title: _title,
+      updatedAt,
       url,
       userLinkURL,
       username: _username,
@@ -214,94 +216,131 @@ export const IssueOrPullRequestRow = React.memo(
                 </>
               )}
 
-              {!!(byText || createdAt || commentsCount) && showCreationDetails && (
-                <>
-                  <Spacer height={innerCardMarginTop} />
+              {!!(byText || createdAt || updatedAt || commentsCount) &&
+                showCreationDetails && (
+                  <>
+                    <Spacer height={innerCardMarginTop} />
 
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignSelf: 'stretch',
-                      alignItems: 'center',
-                    }}
-                  >
-                    {!!byText && (
-                      <Link
-                        href={
-                          userLinkURL ||
-                          (username && getGitHubURLForUser(username))
-                        }
-                      >
-                        <SpringAnimatedText
-                          style={[
-                            getCardStylesForTheme(springAnimatedTheme)
-                              .smallerMutedText,
-                          ]}
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignSelf: 'stretch',
+                        alignItems: 'center',
+                      }}
+                    >
+                      {!!byText && (
+                        <Link
+                          href={
+                            userLinkURL ||
+                            (username && getGitHubURLForUser(username))
+                          }
                         >
-                          {byText}
-                        </SpringAnimatedText>
-                      </Link>
-                    )}
-
-                    {!!createdAt && (
-                      <IntervalRefresh date={createdAt}>
-                        {() => {
-                          const dateText = getDateSmallText(createdAt, false)
-                          if (!dateText) return null
-
-                          return (
-                            <>
-                              {!!byText && <Text children="  " />}
-
-                              <SpringAnimatedText
-                                numberOfLines={1}
-                                style={
-                                  getCardStylesForTheme(springAnimatedTheme)
-                                    .smallerMutedText
-                                }
-                                {...Platform.select({
-                                  web: { title: getFullDateText(createdAt) },
-                                })}
-                              >
-                                {dateText}
-                              </SpringAnimatedText>
-                            </>
-                          )
-                        }}
-                      </IntervalRefresh>
-                    )}
-
-                    {viewMode === 'compact' ? (
-                      <Spacer width={contentPadding / 2} />
-                    ) : (
-                      <Spacer flex={1} />
-                    )}
-
-                    {typeof commentsCount === 'number' &&
-                      commentsCount >= 0 && (
-                        <CardSmallThing
-                          icon="comment"
-                          isRead={isRead}
-                          text={commentsCount}
-                          url={htmlUrl}
-                        />
+                          <SpringAnimatedText
+                            style={[
+                              getCardStylesForTheme(springAnimatedTheme)
+                                .smallerMutedText,
+                            ]}
+                          >
+                            {byText}
+                          </SpringAnimatedText>
+                        </Link>
                       )}
 
-                    {viewMode !== 'compact' && (
-                      <>
-                        <Spacer width={contentPadding / 2} />
+                      {!!createdAt && (
+                        <IntervalRefresh date={createdAt}>
+                          {() => {
+                            const dateText = getDateSmallText(createdAt, false)
+                            if (!dateText) return null
 
-                        <CardItemId
-                          id={issueOrPullRequestNumber}
-                          isRead={isRead}
-                          url={htmlUrl}
-                        />
-                      </>
-                    )}
-                  </View>
-                </>
-              )}
+                            return (
+                              <>
+                                {!!byText && <Text children="  " />}
+
+                                <SpringAnimatedText
+                                  numberOfLines={1}
+                                  style={
+                                    getCardStylesForTheme(springAnimatedTheme)
+                                      .smallerMutedText
+                                  }
+                                  {...Platform.select({
+                                    web: {
+                                      title: `Created: ${getFullDateText(
+                                        createdAt,
+                                      )}`,
+                                    },
+                                  })}
+                                >
+                                  {dateText}
+                                </SpringAnimatedText>
+                              </>
+                            )
+                          }}
+                        </IntervalRefresh>
+                      )}
+
+                      {!!updatedAt && (
+                        <IntervalRefresh date={updatedAt}>
+                          {() => {
+                            const dateText = getDateSmallText(updatedAt, false)
+                            if (!dateText) return null
+
+                            return (
+                              <>
+                                {!!byText && <Text children="  " />}
+
+                                <SpringAnimatedText
+                                  numberOfLines={1}
+                                  style={
+                                    getCardStylesForTheme(springAnimatedTheme)
+                                      .smallerMutedText
+                                  }
+                                  {...Platform.select({
+                                    web: {
+                                      title: `Updated: ${getFullDateText(
+                                        updatedAt,
+                                      )}`,
+                                    },
+                                  })}
+                                >
+                                  <SpringAnimatedIcon name="clock" /> {dateText}
+                                </SpringAnimatedText>
+                              </>
+                            )
+                          }}
+                        </IntervalRefresh>
+                      )}
+
+                      {viewMode === 'compact' ? (
+                        <Spacer width={contentPadding / 2} />
+                      ) : (
+                        <Spacer flex={1} />
+                      )}
+
+                      {typeof commentsCount === 'number' &&
+                        commentsCount >= 0 && (
+                          <CardSmallThing
+                            icon="comment"
+                            isRead={isRead}
+                            text={commentsCount}
+                            url={htmlUrl}
+                          />
+                        )}
+
+                      {viewMode !== 'compact' && (
+                        <>
+                          <Spacer width={contentPadding / 2} />
+
+                          <CardItemId
+                            id={issueOrPullRequestNumber}
+                            isRead={isRead}
+                            url={htmlUrl}
+                          />
+                        </>
+                      )}
+                    </View>
+                  </>
+                )}
             </View>
           </View>
         }

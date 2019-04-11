@@ -8,6 +8,7 @@ import {
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   getEventMetadata,
+  getIssueOrPullRequestSubjectType,
   isEventPrivate,
   isItemRead,
   isNotificationPrivate,
@@ -19,7 +20,6 @@ import {
   sortNotifications,
 } from '@devhub/core'
 import { getEventSubjectType } from './github/events'
-import { getIssueOrPullRequestSubjectType } from './github/issues'
 import { getNotificationSubjectType } from './github/notifications'
 
 export const filterRecordHasAnyForcedValue = (

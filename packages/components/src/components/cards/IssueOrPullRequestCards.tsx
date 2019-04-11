@@ -7,6 +7,7 @@ import {
   EnhancedGitHubIssueOrPullRequest,
   EnhancedLoadState,
   getDateSmallText,
+  getIssueOrPullRequestSubjectType,
   isItemRead,
   Omit,
 } from '@devhub/core'
@@ -16,7 +17,6 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
-import { getIssueOrPullRequestSubjectType } from '../../utils/helpers/github/issues'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
