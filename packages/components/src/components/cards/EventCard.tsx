@@ -395,23 +395,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             key={`event-issue-or-pr-row-${issueOrPullRequest.id}`}
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
-            body={
-              !comment &&
-              !!(
-                issueOrPullRequest &&
-                issueOrPullRequest.state === 'open' &&
-                issueOrPullRequest.body &&
-                !(
-                  issueOrPullRequest.created_at &&
-                  issueOrPullRequest.updated_at &&
-                  new Date(issueOrPullRequest.updated_at).valueOf() -
-                    new Date(issueOrPullRequest.created_at).valueOf() >=
-                    1000 * 60 * 60 * 24
-                )
-              )
-                ? issueOrPullRequest.body
-                : undefined
-            }
+            body={issueOrPullRequest.body}
             bold
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
@@ -425,6 +409,24 @@ export const EventCard = React.memo((props: EventCardProps) => {
             labels={issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
+            showBodyRow={
+              false
+              // !comment &&
+              // !!(
+              //   issueOrPullRequest &&
+              //   issueOrPullRequest.state === 'open' &&
+              //   issueOrPullRequest.body &&
+              //   !(
+              //     issueOrPullRequest.created_at &&
+              //     issueOrPullRequest.updated_at &&
+              //     new Date(issueOrPullRequest.updated_at).valueOf() -
+              //       new Date(issueOrPullRequest.created_at).valueOf() >=
+              //       1000 * 60 * 60 * 24
+              //   )
+              // )
+              //   ? true
+              //   : false
+            }
             showCreationDetails={cardViewMode !== 'compact'}
             title={issueOrPullRequest.title}
             url={issueOrPullRequest.url}
@@ -497,13 +499,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const Content = renderContent()
 
-  const isSingleRow =
-    withTopMarginCount <= 1 &&
-    !(
-      issueOrPullRequest &&
-      issueOrPullRequest.labels &&
-      issueOrPullRequest.labels.length
-    )
+  const isSingleRow = withTopMarginCount <= 1
+  // &&
+  // !(
+  //   issueOrPullRequest &&
+  //   issueOrPullRequest.labels &&
+  //   issueOrPullRequest.labels.length
+  // )
 
   if (cardViewMode === 'compact') {
     return (

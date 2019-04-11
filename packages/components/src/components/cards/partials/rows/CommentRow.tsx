@@ -56,10 +56,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     ...otherProps
   } = props
 
-  const body = trimNewLinesAndSpaces(
-    stripMarkdown(`${_body || ''}`),
-    Platform.select({ default: 400, web: 150 }),
-  )
+  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), 200)
   if (!body) return null
 
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
@@ -102,6 +99,11 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
                 textStyle,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
+              {...Platform.select({
+                web: {
+                  title: _body,
+                },
+              })}
             >
               {parseTextWithEmojisToReactComponents(body, {
                 key: `comment-${url}`,

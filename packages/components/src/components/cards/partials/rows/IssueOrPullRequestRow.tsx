@@ -53,6 +53,7 @@ export interface IssueOrPullRequestRowProps
   labels?: GitHubLabel[] | undefined
   owner: string
   repo: string
+  showBodyRow: boolean
   showCreationDetails: boolean
   title: string
   updatedAt?: string | undefined
@@ -82,6 +83,7 @@ export const IssueOrPullRequestRow = React.memo(
       labels,
       owner,
       repo,
+      showBodyRow,
       showCreationDetails,
       title: _title,
       updatedAt,
@@ -95,25 +97,16 @@ export const IssueOrPullRequestRow = React.memo(
     const title = trimNewLinesAndSpaces(_title)
     if (!title) return null
 
-    const body = trimNewLinesAndSpaces(
-      stripMarkdown(`${_body || ''}`),
-      Platform.select({ default: 400, web: 150 }),
-    )
-
+    const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), 150)
     const isBot = Boolean(_username && _username.indexOf('[bot]') >= 0)
-
     const numberOfLines = viewMode === 'compact' ? 1 : 2
-
     const username =
       isBot && _username ? _username.replace('[bot]', '') : _username
-
     const byText = username ? `@${username}` : ''
-
     const htmlUrl = fixURL(url, {
       addBottomAnchor,
       issueOrPullRequestNumber,
     })
-
     const inlineLabels = viewMode === 'compact'
     const keepLabelsTogether = true
 
@@ -161,6 +154,11 @@ export const IssueOrPullRequestRow = React.memo(
                       labels &&
                       labels.length > 0 && { marginBottom: innerCardSpacing },
                   ]}
+                  {...Platform.select({
+                    web: {
+                      title: `${title}${_body ? `\n\n${_body}` : ''}`,
+                    },
+                  })}
                 >
                   {!hideIcon && (
                     <>
@@ -205,7 +203,7 @@ export const IssueOrPullRequestRow = React.memo(
             </View>
 
             <View style={{ alignSelf: 'stretch', maxWidth: '100%' }}>
-              {!!body && (
+              {!!showBodyRow && !!body && (
                 <>
                   <Spacer height={innerCardSpacing} />
 

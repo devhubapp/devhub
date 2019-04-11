@@ -10,6 +10,7 @@ import {
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { Platform } from '../../../../libs/platform'
 import * as colors from '../../../../styles/colors'
 import { sharedStyles } from '../../../../styles/shared'
 import { smallAvatarSize } from '../../../../styles/variables'
@@ -60,7 +61,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     ...otherProps
   } = props
 
-  const message = trimNewLinesAndSpaces(_message)
+  const message = trimNewLinesAndSpaces((_message || '').split('\n')[0], 100)
   if (!message) return null
 
   const authorUsername =
@@ -125,6 +126,11 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                 bold && cardStyles.boldText,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
+              {...Platform.select({
+                web: {
+                  title: `${_message}${byText ? `\n\n${byText}` : ''}`,
+                },
+              })}
             >
               {!hideIcon && (
                 <>

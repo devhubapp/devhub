@@ -182,7 +182,7 @@ export const IssueOrPullRequestCard = React.memo(
               key={`issue-or-pr-issue-or-pr-row-${issueOrPullRequest.id}`}
               addBottomAnchor={false}
               avatarUrl={issueOrPullRequest.user.avatar_url}
-              body={undefined}
+              body={issueOrPullRequest.body}
               bold
               commentsCount={issueOrPullRequest.comments}
               createdAt={
@@ -205,6 +205,14 @@ export const IssueOrPullRequestCard = React.memo(
               labels={issueOrPullRequest.labels}
               owner={repoOwnerName || ''}
               repo={repoName || ''}
+              showBodyRow={
+                false
+                // issueOrPullRequest &&
+                // issueOrPullRequest.state === 'open' &&
+                // issueOrPullRequest.body
+                //   ? true
+                //   : false
+              }
               showCreationDetails
               title={issueOrPullRequest.title}
               url={issueOrPullRequest.url}
