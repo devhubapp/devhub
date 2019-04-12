@@ -8,12 +8,18 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import createSagaMiddleware from 'redux-saga'
+import { registerSelectors } from 'reselect-tools'
 
 import { analyticsMiddleware } from './middlewares/analytics'
 import { bugsnagMiddleware } from './middlewares/bugsnag'
 import migrations from './migrations'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
+import * as selectors from './selectors'
+
+if (__DEV__) {
+  registerSelectors(selectors)
+}
 
 export function configureStore(key = 'root') {
   const persistConfig: PersistConfig = {

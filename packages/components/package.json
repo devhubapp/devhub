@@ -63,6 +63,7 @@
     "postinstall-postinstall": "2.0.0",
     "prettier": "1.16.4",
     "react-native-typescript-transformer": "1.2.12",
+    "reselect-tools": "^0.0.7",
     "ts-jest": "24.0.0",
     "tslint": "5.14.0",
     "tslint-config-airbnb": "5.11.1",
