@@ -248,7 +248,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         refreshing={loadState === 'loading' || loadState === 'loading_first'}
         title={
           lastFetchedAt
-            ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+            ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
             : 'Pull to refresh'
         }
       />
