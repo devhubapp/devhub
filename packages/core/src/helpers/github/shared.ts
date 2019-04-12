@@ -16,6 +16,7 @@ import {
   NotificationColumnSubscription,
 } from '../../types'
 import { getSteppedSize } from '../shared'
+import { getGitHubIssueSearchQuery } from './issues'
 
 export function isItemRead(
   item:
@@ -201,27 +202,16 @@ export function getUniqueIdForSubscription(subscription: {
     }
 
     case 'issue_or_pr': {
-      switch (s.subtype) {
-        case 'ISSUES': {
-          const { owner, repo } = s.params!
-          if (!(owner && repo)) throw new Error('Required params: owner, repo')
-          return `/repos/${owner}/${repo}/issues`.toLowerCase()
-        }
-
-        case 'PULLS': {
-          const { owner, repo } = s.params!
-          if (!(owner && repo)) throw new Error('Required params: owner, repo')
-          return `/repos/${owner}/${repo}/pulls`.toLowerCase()
-        }
-
-        default: {
-          throw new Error(
-            `No path configured for subscription type ${(s as any).type}: '${
-              (s as any).subtype
-            }'`,
-          )
-        }
+      if (!s.subtype || (s.subtype === 'ISSUES' || s.subtype === 'PULLS')) {
+        return `/search/issues?q=${getGitHubIssueSearchQuery(
+          s.params,
+        )}`.toLowerCase()
       }
+      throw new Error(
+        `No path configured for subscription type ${(s as any).type}: '${
+          (s as any).subtype
+        }'`,
+      )
     }
 
     case 'notifications': {
@@ -378,47 +368,51 @@ export function getColumnHeaderDetails(
         Boolean,
       )[0] as IssueOrPullRequestColumnSubscription
 
+      const ownerAndRepo = getOwnerAndRepo(subscription.params!.repoFullName!)
+      const owner = ownerAndRepo.owner!
+      const repo = ownerAndRepo.repo!
+
       switch (subscription.subtype) {
         case 'ISSUES': {
           return {
             avatarProps: {
-              repo: subscription.params!.repo,
-              username: subscription.params!.owner,
+              repo,
+              username: owner,
             },
             icon: 'issue-opened',
             repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
+            owner,
+            repo,
             subtitle: 'Issues',
-            title: subscription.params!.repo,
+            title: repo,
           }
         }
 
         case 'PULLS': {
           return {
             avatarProps: {
-              repo: subscription.params!.repo,
-              username: subscription.params!.owner,
+              repo,
+              username: owner,
             },
             icon: 'git-pull-request',
             repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
+            owner,
+            repo,
             subtitle: 'Pull Requests',
-            title: subscription.params!.repo,
+            title: repo,
           }
         }
 
         default: {
           return {
             avatarProps: {
-              repo: subscription.params!.repo,
-              username: subscription.params!.owner,
+              repo,
+              username: owner,
             },
             icon: 'issue-opened',
             repoIsKnown: false,
             subtitle: 'Issues & PRs',
-            title: subscription.params!.repo,
+            title: repo,
           }
         }
       }

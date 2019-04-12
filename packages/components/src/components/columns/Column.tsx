@@ -73,7 +73,7 @@ export const Column = React.memo(
       <SpringAnimatedView
         {...otherProps}
         ref={columnRef}
-        key={`column-inner-${columnId}`}
+        key={`column-${columnId}-inner`}
         style={[
           sharedStyles.horizontal,
           {

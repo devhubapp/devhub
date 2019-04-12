@@ -32,10 +32,9 @@ import {
   getOlderNotificationDate,
   GitHubAppTokenType,
   GitHubEvent,
-  GitHubIssue,
   GitHubIssueOrPullRequest,
   GitHubNotification,
-  GitHubPullRequest,
+  IssueOrPullRequestColumnSubscription,
 } from '@devhub/core'
 
 import { bugsnag } from '../../libs/bugsnag'
@@ -265,7 +264,11 @@ function* onFetchRequest(
 ) {
   const state = yield select()
 
-  const { params: _params, subscriptionId, subscriptionType } = action.payload
+  const {
+    params: payloadParams,
+    subscriptionId,
+    subscriptionType,
+  } = action.payload
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
 
@@ -296,20 +299,20 @@ function* onFetchRequest(
     (githubToken === githubAppToken && 'app-user-to-server') ||
     'oauth'
 
-  const page = Math.max(1, _params.page || 1)
+  const page = Math.max(1, payloadParams.page || 1)
   const perPage = Math.min(
-    _params.perPage || constants.DEFAULT_PAGINATION_PER_PAGE,
+    payloadParams.perPage || constants.DEFAULT_PAGINATION_PER_PAGE,
     50,
   )
 
-  delete _params.page
-  delete _params.perPage
-  const params = {
-    ...(subscription && subscription.params),
-    ..._params,
+  delete payloadParams.page
+  delete payloadParams.perPage
+  const requestParams = {
+    ...payloadParams,
     page,
     per_page: perPage,
   }
+  const subscriptionParams = subscription && subscription.params
 
   try {
     if (!githubToken) throw new Error('Not logged')
@@ -318,9 +321,11 @@ function* onFetchRequest(
     let canFetchMore: boolean | undefined
     let headers
     if (subscription && subscription.type === 'notifications') {
-      const response = yield call(getNotifications, params, {
-        subscriptionId,
-      })
+      const response = yield call(
+        getNotifications,
+        { ...requestParams, ...subscriptionParams },
+        { subscriptionId },
+      )
       headers = (response && response.headers) || {}
 
       const prevItems = subscription.data.items || []
@@ -377,10 +382,12 @@ function* onFetchRequest(
           ? false
           : undefined
     } else if (subscription && subscription.type === 'activity') {
-      const response = yield call(getActivity, subscription.subtype, params, {
-        subscriptionId,
-        githubToken,
-      })
+      const response = yield call(
+        getActivity,
+        subscription.subtype,
+        { ...requestParams, ...subscriptionParams },
+        { subscriptionId, githubToken },
+      )
       headers = (response && response.headers) || {}
 
       const prevItems = subscription.data.items || []
@@ -409,11 +416,9 @@ function* onFetchRequest(
       const response = yield call(
         getIssuesOrPullRequests,
         subscription.subtype,
-        params,
-        {
-          subscriptionId,
-          githubToken,
-        },
+        subscriptionParams as IssueOrPullRequestColumnSubscription['params'],
+        requestParams,
+        { subscriptionId, githubToken },
       )
       headers = (response && response.headers) || {}
 

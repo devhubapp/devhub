@@ -9,9 +9,13 @@ import {
   getUniqueIdForSubscription,
   guid,
   isReadFilterChecked,
+  IssueOrPullRequestColumn,
+  IssueOrPullRequestColumnSubscription,
+  NotificationColumn,
   NotificationColumnSubscription,
 } from '@devhub/core'
 import { emitter } from '../../libs/emitter'
+import { itemPassesFilterRecord } from '../../utils/helpers/filters'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
@@ -194,12 +198,13 @@ function* onSetClearedAt(
   )
 }
 
-function* onNotificationColumnSubscriptionFilterChange(
+function* onColumnSubscriptionFilterChange(
   action:
     | ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>
     | ExtractActionFromActionCreator<
         typeof actions.setColumnParticipatingFilter
-      >,
+      >
+    | ExtractActionFromActionCreator<typeof actions.setColummSubjectTypeFilter>,
 ) {
   if (!action.payload.columnId) return
 
@@ -207,7 +212,7 @@ function* onNotificationColumnSubscriptionFilterChange(
     selectors.createColumnSelector(),
     action.payload.columnId,
   )
-  if (!(column && column.id && column.type === 'notifications')) return
+  if (!(column && column.id)) return
 
   const subscriptions: ColumnSubscription[] = yield select(
     selectors.columnSubscriptionsSelector,
@@ -218,32 +223,84 @@ function* onNotificationColumnSubscriptionFilterChange(
   yield all(
     subscriptions.map(function*(subscription: ColumnSubscription) {
       if (!(subscription && subscription.id)) return
-      if (subscription.type !== 'notifications') return
 
-      const newSubscriptionParams: NotificationColumnSubscription['params'] = {
-        ...subscription.params,
-        all: isReadFilterChecked(column.filters) ? true : false,
-        participating:
-          column.filters &&
-          column.filters.notifications &&
-          column.filters.notifications.participating
-            ? true
-            : false,
-      }
+      let newSubscriptionParams
+      let newSubscriptionId: string
+      let newSubscription
 
-      const newSubscriptionId = getUniqueIdForSubscription({
-        ...subscription,
-        params: newSubscriptionParams,
-      })
+      if (subscription.type === 'notifications') {
+        const c = column as NotificationColumn
 
-      const newSubscription: NotificationColumnSubscription = {
-        id: newSubscriptionId,
-        type: subscription.type,
-        subtype: subscription.subtype as any,
-        params: newSubscriptionParams as any,
-        data: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        newSubscriptionParams = {
+          ...subscription.params,
+          all: isReadFilterChecked(c.filters) ? true : false,
+          participating:
+            c.filters &&
+            c.filters.notifications &&
+            c.filters.notifications.participating
+              ? true
+              : false,
+        } as NotificationColumnSubscription['params']
+
+        newSubscriptionId = getUniqueIdForSubscription({
+          ...subscription,
+          params: newSubscriptionParams,
+        })
+
+        newSubscription = {
+          id: newSubscriptionId,
+          type: subscription.type,
+          subtype: subscription.subtype,
+          params: newSubscriptionParams,
+          data: {
+            items: subscription.data.items,
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } as NotificationColumnSubscription
+      } else if (subscription.type === 'issue_or_pr') {
+        const c = column as IssueOrPullRequestColumn
+
+        const includesIssues =
+          !!c.filters &&
+          itemPassesFilterRecord(c.filters.subjectTypes!, 'Issue', true)
+        const includesPRs =
+          !!c.filters &&
+          itemPassesFilterRecord(c.filters.subjectTypes!, 'PullRequest', true)
+
+        newSubscriptionParams = {
+          ...subscription.params,
+          subjectType:
+            includesIssues && !includesPRs
+              ? 'Issue'
+              : !includesIssues && includesPRs
+              ? 'PullRequest'
+              : undefined,
+        } as IssueOrPullRequestColumnSubscription['params']
+
+        newSubscriptionId = getUniqueIdForSubscription({
+          ...subscription,
+          params: newSubscriptionParams,
+        })
+
+        newSubscription = {
+          id: newSubscriptionId,
+          type: subscription.type,
+          subtype:
+            includesIssues && !includesPRs
+              ? 'ISSUES'
+              : !includesIssues && includesPRs
+              ? 'PULLS'
+              : undefined,
+          params: newSubscriptionParams,
+          data: {
+            items: subscription.data.items,
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } as IssueOrPullRequestColumnSubscription
+      } else {
+        return
       }
 
       const result = []
@@ -290,8 +347,12 @@ export function* columnsSagas() {
     yield takeLatest('DELETE_COLUMN', onDeleteColumn),
     yield takeLatest('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
     yield takeLatest(
-      ['SET_COLUMN_UNREAD_FILTER', 'SET_COLUMN_PARTICIPATING_FILTER'],
-      onNotificationColumnSubscriptionFilterChange,
+      [
+        'SET_COLUMN_UNREAD_FILTER',
+        'SET_COLUMN_PARTICIPATING_FILTER',
+        'SET_COLUMN_SUBJECT_TYPE_FILTER',
+      ],
+      onColumnSubscriptionFilterChange,
     ),
   ])
 }

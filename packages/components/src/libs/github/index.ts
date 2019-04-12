@@ -1,11 +1,10 @@
-import Octokit, {
-  PullsListParams,
-  SearchIssuesAndPullRequestsParams,
-} from '@octokit/rest'
+import Octokit, { SearchIssuesAndPullRequestsParams } from '@octokit/rest'
 
 import {
+  getGitHubIssueSearchQuery,
   GitHubActivityType,
   IssueOrPullRequestColumnSubscription,
+  Omit,
 } from '@devhub/core'
 
 export const octokit = new Octokit()
@@ -153,42 +152,43 @@ export async function getIssuesOrPullRequests<
   T extends IssueOrPullRequestColumnSubscription['subtype']
 >(
   type: T,
-  params: any,
+  subscriptionParams: IssueOrPullRequestColumnSubscription['params'],
+  requestParams: Omit<SearchIssuesAndPullRequestsParams, 'q'> & {
+    headers?: Record<string, string>
+  },
   { githubToken = '', subscriptionId = '', useCache = true } = {},
 ) {
-  const cacheKey = JSON.stringify([type, params, subscriptionId])
+  const cacheKey = JSON.stringify([
+    type,
+    { subscriptionParams, requestParams },
+    subscriptionId,
+  ])
   const cacheValue = cache[cacheKey]
 
-  const _params: Record<string, any> = { ...params }
-  _params.headers = _params.headers || {}
-  _params.headers['If-None-Match'] = ''
-  _params.headers.Accept = 'application/vnd.github.shadow-cat-preview'
-
-  if (githubToken) {
-    _params.headers.Authorization = `token ${githubToken}`
+  const _requestParams: typeof requestParams = {
+    ...requestParams,
+    headers: {
+      'If-None-Match': '',
+      Accept: 'application/vnd.github.shadow-cat-preview',
+      ...(!!githubToken && { Authorization: `token ${githubToken}` }),
+      ...(!!(cacheValue && useCache && cacheValue.headers['last-modified']) && {
+        'If-Modified-Since': cacheValue.headers['last-modified'],
+      }),
+      ...(!!(cacheValue && useCache && cacheValue.headers.etag) && {
+        'If-None-Match': cacheValue.headers.etag,
+      }),
+    },
   }
-
-  if (cacheValue && useCache) {
-    if (cacheValue.headers['last-modified']) {
-      _params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
-    }
-
-    if (cacheValue.headers.etag) {
-      _params.headers['If-None-Match'] = cacheValue.headers.etag
-    }
-  }
-
-  const { owner, repo } = _params
 
   try {
     const response = await (() => {
-      const p: SearchIssuesAndPullRequestsParams = {
+      const p: SearchIssuesAndPullRequestsParams & {
+        headers?: Record<string, string>
+      } = {
         order: 'desc',
         sort: 'updated',
-        q: `repo:${owner}/${repo}${type === 'ISSUES' ? ' is:issue' : ''}${
-          type === 'PULLS' ? ' is:pr' : ''
-        }`,
-        ..._params,
+        ..._requestParams,
+        q: getGitHubIssueSearchQuery(subscriptionParams),
       }
 
       return octokit.search.issuesAndPullRequests(p)

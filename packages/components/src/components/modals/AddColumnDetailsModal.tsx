@@ -12,7 +12,9 @@ import {
   ActivityColumn,
   ActivityColumnSubscription,
   AddColumnDetailsPayload,
+  ColumnFilters,
   ColumnParamField,
+  ColumnSubscription,
   createSubscriptionObjectsWithId,
   guid,
   IssueOrPullRequestColumn,
@@ -82,6 +84,7 @@ const fields: FieldDetails[] = [
 export const AddColumnDetailsModal = React.memo(
   (props: AddColumnDetailsModalProps) => {
     const {
+      defaultFilters,
       defaultParams,
       icon,
       isPrivateSupported,
@@ -135,11 +138,39 @@ export const AddColumnDetailsModal = React.memo(
     }
 
     const _handleCreateColumn = () => {
+      let _params: ColumnSubscription['params']
+      let _filters: ColumnFilters | undefined = defaultFilters
+
+      if (subscription.type === 'issue_or_pr') {
+        const _p = _.pick(params, paramList)
+
+        _params = {
+          repoFullName:
+            _p.owner && _p.repo ? `${_p.owner}/${_p.repo}` : undefined,
+          subjectType:
+            subscription.subtype === 'ISSUES'
+              ? 'Issue'
+              : subscription.subtype === 'PULLS'
+              ? 'PullRequest'
+              : undefined,
+        } as IssueOrPullRequestColumnSubscription['params']
+
+        _filters = _filters || {}
+        _filters.subjectTypes =
+          _params.subjectType === 'Issue'
+            ? { Issue: true }
+            : _params.subjectType === 'PullRequest'
+            ? { PullRequest: true }
+            : undefined
+      } else {
+        _params = _.pick(params, paramList)
+      }
+
       const subscriptions = createSubscriptionObjectsWithId([
         {
           ...(subscription as any),
           id: '',
-          params: _.pick(params, paramList) as any,
+          params: _params,
         },
       ])
 
@@ -147,7 +178,7 @@ export const AddColumnDetailsModal = React.memo(
         id: guid(),
         type: subscription.type,
         subscriptionIds: subscriptions.map(s => s.id),
-        filters: undefined,
+        filters: _filters,
       } as typeof subscriptions extends ActivityColumnSubscription[]
         ? ActivityColumn
         : typeof subscriptions extends IssueOrPullRequestColumnSubscription[]

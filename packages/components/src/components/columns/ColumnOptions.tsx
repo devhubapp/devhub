@@ -102,7 +102,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     'saved_for_later',
     'unread',
     column.type === 'activity' && 'event_action',
-    column.type !== 'issue_or_pr' && 'subject_types',
+    'subject_types',
     column.type === 'notifications' && 'notification_reason',
     column.type === 'notifications' && 'privacy',
   ]

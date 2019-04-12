@@ -166,7 +166,10 @@ export interface IssueOrPullRequestColumnSubscription {
   id: string
   type: IssueOrPullRequestColumn['type']
   subtype: 'ISSUES' | 'PULLS'
-  params: { owner: string; repo: string }
+  params: {
+    repoFullName?: string
+    subjectType: GitHubIssueOrPullRequestSubjectType
+  }
   data: ColumnSubscriptionData<any>
   createdAt: string
   updatedAt: string
@@ -321,6 +324,7 @@ export interface AddColumnDetailsPayload {
   icon: GitHubIcon
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
   paramList: ColumnParamField[]
+  defaultFilters?: Partial<Column['filters']>
   defaultParams?: Partial<Record<ColumnParamField, any>>
   isPrivateSupported: boolean
 }

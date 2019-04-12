@@ -205,13 +205,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
   return (
     <Column
+      key={`column-renderer-${column.id}-inner-container`}
       ref={columnRef}
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}
       renderSideSeparators
     >
-      <ColumnHeader>
+      <ColumnHeader key={`column-renderer-${column.id}-header`}>
         <ColumnHeaderItem
           analyticsLabel={undefined}
           avatarProps={requestTypeIconAndData.avatarProps}

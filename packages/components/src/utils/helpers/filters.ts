@@ -41,12 +41,10 @@ export const filterRecordWithThisValueCount = (
   )
 }
 
-export function itemPassesFilterRecord(
-  filtersRecord: Record<string, boolean | undefined> | undefined,
-  value: any,
-  defaultValue: boolean,
-) {
-  if (!filtersRecord) return defaultValue
+export function itemPassesFilterRecord<
+  F extends Record<string, boolean | undefined>
+>(filtersRecord: F, value: keyof F, defaultValue: boolean) {
+  if (!(filtersRecord && value)) return defaultValue
 
   const hasForcedFilter = filterRecordHasAnyForcedValue(filtersRecord)
   if (!hasForcedFilter) return defaultValue
@@ -190,8 +188,8 @@ export function getFilteredIssueOrPullRequests(
     _items = _items.filter(item => {
       if (
         !itemPassesFilterRecord(
-          filters.subjectTypes,
-          getIssueOrPullRequestSubjectType(item),
+          filters.subjectTypes!,
+          getIssueOrPullRequestSubjectType(item)!,
           true,
         )
       )
@@ -236,13 +234,13 @@ export function getFilteredNotifications(
 
   if (filters && notificationColumnHasAnyFilter(filters)) {
     _notifications = _notifications.filter(notification => {
-      if (!itemPassesFilterRecord(reasonsFilter, notification.reason, true))
+      if (!itemPassesFilterRecord(reasonsFilter!, notification.reason, true))
         return false
 
       if (
         !itemPassesFilterRecord(
-          filters.subjectTypes,
-          getNotificationSubjectType(notification),
+          filters.subjectTypes!,
+          getNotificationSubjectType(notification)!,
           true,
         )
       )
@@ -297,8 +295,8 @@ export function getFilteredEvents(
     _events = _events.filter(event => {
       if (
         !itemPassesFilterRecord(
-          actionFilter,
-          getEventMetadata(event).action,
+          actionFilter!,
+          getEventMetadata(event).action!,
           true,
         )
       )
@@ -306,8 +304,8 @@ export function getFilteredEvents(
 
       if (
         !itemPassesFilterRecord(
-          filters.subjectTypes,
-          getEventSubjectType(event),
+          filters.subjectTypes!,
+          getEventSubjectType(event)!,
           true,
         )
       )

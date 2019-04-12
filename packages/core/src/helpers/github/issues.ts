@@ -6,6 +6,7 @@ import {
   EnhancementCache,
   GitHubIssueOrPullRequest,
   GitHubIssueOrPullRequestSubjectType,
+  IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestPayloadEnhancement,
 } from '../../types'
 import { getOwnerAndRepo } from './shared'
@@ -172,4 +173,19 @@ export function sortIssuesOrPullRequests(
     .uniqBy('id')
     .orderBy(field, order)
     .value()
+}
+
+export function getGitHubIssueSearchQuery(
+  params: IssueOrPullRequestColumnSubscription['params'],
+) {
+  const queryArr: string[] = []
+
+  const { repoFullName, subjectType } = params
+
+  if (repoFullName) queryArr.push(`repo:${repoFullName}`)
+
+  if (subjectType === 'Issue') queryArr.push('is:issue')
+  if (subjectType === 'PullRequest') queryArr.push('is:pr')
+
+  return queryArr.join(' ')
 }
