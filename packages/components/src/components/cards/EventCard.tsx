@@ -324,6 +324,25 @@ export const EventCard = React.memo((props: EventCardProps) => {
           />
         )}
 
+        {Boolean(comment && comment.body) && (
+          <>
+            <Spacer height={innerCardSpacing} />
+
+            <CommentRow
+              key={`event-comment-row-${comment.id}`}
+              avatarUrl={comment.user.avatar_url}
+              body={comment.body}
+              isRead={isRead}
+              leftContent="none"
+              url={comment.html_url || comment.url}
+              userLinkURL={comment.user.html_url || ''}
+              username={comment.user.display_login || comment.user.login}
+              viewMode={cardViewMode}
+              withTopMargin={false}
+            />
+          </>
+        )}
+
         {repos.length > 0 &&
           (cardViewMode !== 'compact' || repos.length > 1) && (
             <RepositoryListRow
@@ -370,25 +389,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
-        )}
-
-        {Boolean(comment && comment.body) && (
-          <>
-            <Spacer height={innerCardSpacing} />
-
-            <CommentRow
-              key={`event-comment-row-${comment.id}`}
-              avatarUrl={comment.user.avatar_url}
-              body={comment.body}
-              isRead={isRead}
-              leftContent="none"
-              url={comment.html_url || comment.url}
-              userLinkURL={comment.user.html_url || ''}
-              username={comment.user.display_login || comment.user.login}
-              viewMode={cardViewMode}
-              withTopMargin={false}
-            />
-          </>
         )}
 
         {!!issueOrPullRequest && (
