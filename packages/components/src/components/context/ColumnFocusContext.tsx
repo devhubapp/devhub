@@ -9,20 +9,36 @@ export interface ColumnFocusProviderProps {
   children?: React.ReactNode
 }
 
-export type ColumnFocusProviderState = string | null
+export interface ColumnFocusProviderState {
+  focusedColumnId: string | null
+  focusedColumnIndex: number
+}
 
+const defaultValue: ColumnFocusProviderState = {
+  focusedColumnId: null,
+  focusedColumnIndex: -1,
+}
 export const ColumnFocusContext = React.createContext<ColumnFocusProviderState>(
-  null,
+  defaultValue,
 )
 
 export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   const store = useReduxStore()
-  const [columnId, setColumnId] = useState<ColumnFocusProviderState>(null)
+  const [value, setValue] = useState<ColumnFocusProviderState>(defaultValue)
 
   useEmitter(
     'FOCUS_ON_COLUMN',
     payload => {
-      setColumnId(payload.columnId || null)
+      const state = store.getState()
+      const columnIds = selectors.columnIdsSelector(state)
+
+      const focusedColumnId = payload.columnId || null
+      const focusedColumnIndex =
+        columnIds && focusedColumnId
+          ? columnIds.findIndex(id => id === focusedColumnId)
+          : -1
+
+      setValue({ focusedColumnId, focusedColumnIndex })
     },
     [],
   )
@@ -33,7 +49,9 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       const state = store.getState()
       const columnIds = selectors.columnIdsSelector(state)
       const focusedColumnIndex = columnIds
-        ? columnIds.findIndex(id => id === (columnId || columnIds[0]))
+        ? columnIds.findIndex(
+            id => id === (value.focusedColumnId || columnIds[0]),
+          )
         : -1
 
       const previousColumnIndex = Math.max(
@@ -47,7 +65,7 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
         columnIndex: previousColumnIndex,
       })
     },
-    [columnId],
+    [value.focusedColumnId],
   )
 
   useEmitter(
@@ -56,7 +74,9 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       const state = store.getState()
       const columnIds = selectors.columnIdsSelector(state)
       const focusedColumnIndex = columnIds
-        ? columnIds.findIndex(id => id === (columnId || columnIds[0]))
+        ? columnIds.findIndex(
+            id => id === (value.focusedColumnId || columnIds[0]),
+          )
         : -1
 
       const nextColumnIndex = Math.max(
@@ -70,13 +90,16 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
         columnIndex: nextColumnIndex,
       })
     },
-    [columnId],
+    [value.focusedColumnId],
   )
 
   useEmitter(
     'SCROLL_DOWN_COLUMN',
     payload => {
-      setColumnId(payload.columnId || null)
+      setValue({
+        focusedColumnId: payload.columnId || null,
+        focusedColumnIndex: payload.columnIndex,
+      })
     },
     [],
   )
@@ -84,13 +107,16 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   useEmitter(
     'SCROLL_UP_COLUMN',
     payload => {
-      setColumnId(payload.columnId || null)
+      setValue({
+        focusedColumnId: payload.columnId || null,
+        focusedColumnIndex: payload.columnIndex,
+      })
     },
     [],
   )
 
   return (
-    <ColumnFocusContext.Provider value={columnId}>
+    <ColumnFocusContext.Provider value={value}>
       {props.children}
     </ColumnFocusContext.Provider>
   )

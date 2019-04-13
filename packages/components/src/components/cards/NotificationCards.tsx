@@ -75,7 +75,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     getVisibleItemIndex,
     items: notifications,
   })
-  const focusedColumnId = useFocusedColumn()
+  const { focusedColumnId } = useFocusedColumn()
   const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
   const selectedItem =
     _hasSelectedItem &&

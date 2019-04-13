@@ -2,6 +2,7 @@ import { all, delay, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
   ActivityColumnSubscription,
+  AppViewMode,
   Column,
   ColumnsAndSubscriptions,
   ColumnSubscription,
@@ -104,6 +105,8 @@ function* onAddColumn(
 function* onMoveColumn(
   action: ExtractActionFromActionCreator<typeof actions.moveColumn>,
 ) {
+  const appViewMode: AppViewMode = yield select(selectors.appViewModeSelector)
+
   const ids: string[] = yield select(selectors.columnIdsSelector)
   if (!(ids && ids.length)) return
 
@@ -113,12 +116,15 @@ function* onMoveColumn(
   )
   if (Number.isNaN(columnIndex)) return
 
+  const columnId = action.payload.columnId
+
   emitter.emit('FOCUS_ON_COLUMN', {
-    animated: true,
-    columnId: action.payload.columnId,
-    columnIndex,
-    highlight: true,
+    animated: appViewMode === 'multi-column',
+    highlight: appViewMode === 'multi-column',
     scrollTo: true,
+    ...action.payload,
+    columnId,
+    columnIndex,
   })
 }
 

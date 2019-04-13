@@ -84,7 +84,7 @@ export const IssueOrPullRequestCards = React.memo(
       getVisibleItemIndex,
       items,
     })
-    const focusedColumnId = useFocusedColumn()
+    const { focusedColumnId } = useFocusedColumn()
     const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
     const selectedItem =
       _hasSelectedItem && items.find(item => item.id === selectedItemId)

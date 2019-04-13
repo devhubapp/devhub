@@ -18,7 +18,9 @@ export function ColumnsRenderer() {
 
   const { sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
-  const focusedColumnId = useFocusedColumn() || columnIds[0]
+  const { focusedColumnId: _focusedColumnId } = useFocusedColumn()
+
+  const focusedColumnId = _focusedColumnId || columnIds[0]
 
   if (appViewMode === 'single-column') {
     const shouldRenderFixedColumnOptions = sizename >= '4-x-large'

@@ -75,7 +75,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     getVisibleItemIndex,
     items: events,
   })
-  const focusedColumnId = useFocusedColumn()
+  const { focusedColumnId } = useFocusedColumn()
   const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
   const selectedItem =
     _hasSelectedItem && events.find(event => event.id === selectedItemId)

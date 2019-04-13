@@ -711,8 +711,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           }
           onPress={() =>
             moveColumn({
+              animated: appViewMode === 'multi-column',
               columnId: column.id,
               columnIndex: columnIndex - 1,
+              highlight: appViewMode === 'multi-column',
+              scrollTo: true,
             })
           }
         />
@@ -730,8 +733,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           }
           onPress={() =>
             moveColumn({
+              animated: appViewMode === 'multi-column',
               columnId: column.id,
               columnIndex: columnIndex + 1,
+              highlight: appViewMode === 'multi-column',
+              scrollTo: true,
             })
           }
         />

@@ -24,8 +24,8 @@ export interface EmitterTypes {
     highlight?: boolean
     scrollTo?: boolean
   }
-  SCROLL_DOWN_COLUMN: { columnId: string }
-  SCROLL_UP_COLUMN: { columnId: string }
+  SCROLL_DOWN_COLUMN: { columnId: string; columnIndex: number }
+  SCROLL_UP_COLUMN: { columnId: string; columnIndex: number }
 }
 
 const _emitter = new EventEmitter()

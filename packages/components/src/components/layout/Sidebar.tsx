@@ -72,7 +72,11 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
 
-  const focusedColumnId = useFocusedColumn() || columnIds[0]
+  const {
+    focusedColumnId: _focusedColumnId,
+    focusedColumnIndex,
+  } = useFocusedColumn()
+  const focusedColumnId = _focusedColumnId || columnIds[0]
 
   useEffect(() => {
     if (!(flatListRef.current && focusedColumnId)) return
@@ -82,7 +86,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       item: focusedColumnId,
       viewPosition: 0.5,
     })
-  }, [focusedColumnId, flatListRef.current])
+  }, [focusedColumnId, focusedColumnIndex, flatListRef.current])
 
   const small = sizename === '1-small'
   const large = sizename >= '3-large'

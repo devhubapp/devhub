@@ -9,6 +9,7 @@ import {
   GitHubNotificationSubjectType,
   NotificationColumnFilters,
 } from '@devhub/core'
+import { EmitterTypes } from '../../libs/emitter'
 import { createAction } from '../helpers'
 
 export function replaceColumnsAndSubscriptions(
@@ -42,7 +43,12 @@ export function deleteColumn(payload: {
   return createAction('DELETE_COLUMN', payload)
 }
 
-export function moveColumn(payload: { columnId: string; columnIndex: number }) {
+export function moveColumn(
+  payload: {
+    columnId: string
+    columnIndex: number
+  } & EmitterTypes['FOCUS_ON_COLUMN'],
+) {
   return createAction('MOVE_COLUMN', payload)
 }
 

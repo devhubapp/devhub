@@ -49,7 +49,7 @@ export const MainScreen = React.memo(() => {
   const appToken = useReduxState(selectors.appTokenSelector)!
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const focusedColumnId = useFocusedColumn()
+  const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const moveColumn = useReduxAction(actions.moveColumn)
@@ -60,10 +60,6 @@ export const MainScreen = React.memo(() => {
   )
   const replaceModal = useReduxAction(actions.replaceModal)
   const syncDown = useReduxAction(actions.syncDown)
-
-  const focusedColumnIndex = focusedColumnId
-    ? columnIds.findIndex(id => id === focusedColumnId)
-    : -1
 
   const debounceSyncDown = useMemo(() => {
     return _.debounce(syncDown, 5000, {
@@ -164,6 +160,7 @@ export const MainScreen = React.memo(() => {
 
     emitter.emit('SCROLL_DOWN_COLUMN', {
       columnId: columnIds[fixedColumnIndex],
+      columnIndex: fixedColumnIndex,
     })
   }, [currentOpenedModal, focusedColumnIndex, columnIds])
 
@@ -180,6 +177,7 @@ export const MainScreen = React.memo(() => {
 
     emitter.emit('SCROLL_UP_COLUMN', {
       columnId: columnIds[fixedColumnIndex],
+      columnIndex: fixedColumnIndex,
     })
   }, [currentOpenedModal, focusedColumnIndex, columnIds])
 

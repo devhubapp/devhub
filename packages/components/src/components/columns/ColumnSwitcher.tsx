@@ -39,10 +39,12 @@ const styles = StyleSheet.create({
 export function ColumnSwitcher() {
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const focusedColumnId = useFocusedColumn() || columnIds[0]
+  const { focusedColumnId: _focusedColumnId } = useFocusedColumn()
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const { appViewMode } = useAppViewMode()
   const { sizename } = useAppLayout()
+
+  const focusedColumnId = _focusedColumnId || columnIds[0]
 
   if (!(appViewMode === 'single-column' && shouldRenderFAB(sizename)))
     return null
