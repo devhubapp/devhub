@@ -4,7 +4,9 @@ import { constants, isNight } from '@devhub/core'
 import { loadTheme } from '../../styles/utils'
 import { RootState } from '../types'
 
-const s = (state: RootState) => state.config || {}
+const emptyObj = {}
+
+const s = (state: RootState) => state.config || emptyObj
 
 export const themePairSelector = (state: RootState) =>
   s(state).theme || constants.DEFAULT_THEME_PAIR

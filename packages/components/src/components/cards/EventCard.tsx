@@ -76,7 +76,7 @@ export interface EventCardProps {
   cardViewMode: CardViewMode
   event: EnhancedGitHubEvent
   isFocused?: boolean
-  repoIsKnown?: boolean
+  repoIsKnown: boolean
 }
 
 export const EventCard = React.memo((props: EventCardProps) => {

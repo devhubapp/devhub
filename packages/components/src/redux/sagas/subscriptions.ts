@@ -206,9 +206,8 @@ function* onAddColumn(
   >,
 ) {
   const state = yield select()
-  const columnSelector = selectors.createColumnSelector()
 
-  const column = columnSelector(state, action.payload.column.id)
+  const column = selectors.columnSelector(state, action.payload.column.id)
   if (!column) return
 
   yield put(
@@ -225,9 +224,8 @@ function* onFetchColumnSubscriptions(
   >,
 ) {
   const state = yield select()
-  const columnSubscriptionsSelector = selectors.createColumnSubscriptionsSelector()
 
-  const columnSubscriptions = columnSubscriptionsSelector(
+  const columnSubscriptions = selectors.columnSubscriptionsSelector(
     state,
     action.payload.columnId,
   )
@@ -235,6 +233,8 @@ function* onFetchColumnSubscriptions(
 
   yield all(
     columnSubscriptions.map(function*(subscription) {
+      if (!subscription) return
+
       return yield put(
         actions.fetchSubscriptionRequest({
           subscriptionType: subscription.type,

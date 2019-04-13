@@ -34,7 +34,7 @@ export function mergeIssuesOrPullRequestsPreservingEnhancement(
       const existingItem = prevItems.find(i => i.id === item.id)
       if (!(newItem && existingItem)) return item
 
-      return {
+      const mergedItem = {
         forceUnreadLocally: existingItem.forceUnreadLocally,
         last_read_at: existingItem.last_read_at,
         last_unread_at: existingItem.last_unread_at,
@@ -42,6 +42,8 @@ export function mergeIssuesOrPullRequestsPreservingEnhancement(
         unread: existingItem.unread,
         ...newItem,
       }
+
+      return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
     }),
   )
 }

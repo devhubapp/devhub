@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
   ActivityColumnSubscription,
-  Column,
-  ColumnSubscription,
   constants,
   EnhancedGitHubEvent,
   getOlderEventDate,
@@ -34,14 +32,11 @@ export type EventCardsContainerProps = Omit<
   | 'lastFetchedAt'
   | 'loadState'
   | 'refresh'
-> & {
-  column: Column
-  subscriptions: ColumnSubscription[]
-}
+>
 
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
-    const { column } = props
+    const { column, ...otherProps } = props
 
     const { cardViewMode } = useAppViewMode()
 
@@ -50,26 +45,25 @@ export const EventCardsContainer = React.memo(
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
 
     // TODO: Support multiple subscriptions per column.
-    const firstSubscription = useReduxState(
-      state =>
-        selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
-          | ActivityColumnSubscription
-          | undefined,
-    )
+    const mainSubscription = useReduxState(
+      useCallback(
+        state => selectors.columnSubscriptionSelector(state, column.id),
+        [column.id],
+      ),
+    ) as ActivityColumnSubscription | undefined
 
-    const data = (firstSubscription && firstSubscription.data) || {}
+    const data = (mainSubscription && mainSubscription.data) || {}
 
     const isNotFound = (data.errorMessage || '')
       .toLowerCase()
       .includes('not found')
 
     const subscriptionOwnerOrOrg =
-      (firstSubscription &&
-        firstSubscription.params &&
-        (('owner' in firstSubscription.params &&
-          firstSubscription.params.owner) ||
-          ('org' in firstSubscription.params &&
-            firstSubscription.params.org))) ||
+      (mainSubscription &&
+        mainSubscription.params &&
+        (('owner' in mainSubscription.params &&
+          mainSubscription.params.owner) ||
+          ('org' in mainSubscription.params && mainSubscription.params.org))) ||
       undefined
 
     const ownerResponse = useGitHubAPI(
@@ -173,7 +167,7 @@ export const EventCardsContainer = React.memo(
       fetchData()
     }, [fetchData])
 
-    if (!firstSubscription) return null
+    if (!mainSubscription) return null
 
     if (!(appToken && githubOAuthToken)) {
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
@@ -211,16 +205,16 @@ export const EventCardsContainer = React.memo(
                   analyticsLabel="setup_github_app_from_column"
                   children="Install GitHub App"
                   disabled={
-                    firstSubscription.data.loadState === 'loading' ||
-                    firstSubscription.data.loadState === 'loading_first'
+                    mainSubscription.data.loadState === 'loading' ||
+                    mainSubscription.data.loadState === 'loading_first'
                   }
                   href={getGitHubAppInstallUri({
                     suggestedTargetId: ownerResponse.data.id,
                   })}
                   loading={
                     installationsLoadState === 'loading' ||
-                    firstSubscription.data.loadState === 'loading' ||
-                    firstSubscription.data.loadState === 'loading_first'
+                    mainSubscription.data.loadState === 'loading' ||
+                    mainSubscription.data.loadState === 'loading_first'
                   }
                   openOnNewTab={false}
                 />
@@ -256,14 +250,14 @@ export const EventCardsContainer = React.memo(
                 analyticsLabel="setup_github_app_from_user_repo_column"
                 children="Install GitHub App"
                 disabled={
-                  firstSubscription.data.loadState === 'loading' ||
-                  firstSubscription.data.loadState === 'loading_first'
+                  mainSubscription.data.loadState === 'loading' ||
+                  mainSubscription.data.loadState === 'loading_first'
                 }
                 href={getGitHubAppInstallUri()}
                 loading={
                   installationsLoadState === 'loading' ||
-                  firstSubscription.data.loadState === 'loading' ||
-                  firstSubscription.data.loadState === 'loading_first'
+                  mainSubscription.data.loadState === 'loading' ||
+                  mainSubscription.data.loadState === 'loading_first'
                 }
                 openOnNewTab={false}
               />
@@ -278,16 +272,17 @@ export const EventCardsContainer = React.memo(
 
     return (
       <EventCards
-        {...props}
+        {...otherProps}
         key={`event-cards-${column.id}`}
         cardViewMode={cardViewMode}
-        errorMessage={firstSubscription.data.errorMessage || ''}
+        column={column}
+        errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        lastFetchedAt={firstSubscription.data.lastFetchedAt}
+        lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'
-            : firstSubscription.data.loadState || 'not_loaded'
+            : mainSubscription.data.loadState || 'not_loaded'
         }
         events={filteredItems}
         refresh={refresh}

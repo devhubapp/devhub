@@ -38,7 +38,7 @@ export interface NotificationCardsProps {
   loadState: EnhancedLoadState
   notifications: EnhancedGitHubNotification[]
   refresh: EmptyCardsProps['refresh']
-  repoIsKnown?: boolean
+  repoIsKnown: boolean
   swipeable?: boolean
 }
 

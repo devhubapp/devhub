@@ -1,3 +1,4 @@
+import immer from 'immer'
 import _ from 'lodash'
 
 import {
@@ -21,13 +22,12 @@ export function normalizeColumns(
   const allIds = items.map((column: ColumnCreation) => {
     const id = column.id || guid()
 
-    byId[id] = {
-      ...column,
-      id,
-      subscriptionIds: column.subscriptionIds || [],
-      createdAt: column.createdAt || new Date().toISOString(),
-      updatedAt: column.updatedAt || new Date().toISOString(),
-    }
+    byId[id] = immer(column, draft => {
+      draft.id = id
+      draft.subscriptionIds = column.subscriptionIds || []
+      draft.createdAt = column.createdAt || new Date().toISOString()
+      draft.updatedAt = column.updatedAt || new Date().toISOString()
+    }) as Column
 
     return id
   })
@@ -47,13 +47,12 @@ export function normalizeSubscriptions(
   const byId: Record<string, ColumnSubscription | undefined> = {}
   const allIds = items.map((subscription: ColumnSubscriptionCreation) => {
     const id = subscription.id || getUniqueIdForSubscription(subscription)
-    byId[id] = {
-      ...subscription,
-      id,
-      data: subscription.data || {},
-      createdAt: subscription.createdAt || new Date().toISOString(),
-      updatedAt: subscription.updatedAt || new Date().toISOString(),
-    } as ColumnSubscription
+    byId[id] = immer(subscription as ColumnSubscription, draft => {
+      draft.id = id
+      draft.data = subscription.data || {}
+      draft.createdAt = subscription.createdAt || new Date().toISOString()
+      draft.updatedAt = subscription.updatedAt || new Date().toISOString()
+    })
 
     return id
   })
@@ -64,7 +63,10 @@ export function normalizeSubscriptions(
 export function normalizeInstallations(
   installations: Installation[],
 ): NormalizedInstallations {
-  const items = installations || []
+  const items = _.orderBy((installations || []).filter(Boolean), [
+    'account.login',
+    'asc',
+  ]) as Installation[]
 
   const allIds: number[] = []
   const allOwnerNames: string[] = []

@@ -290,37 +290,27 @@ export const subscriptionsReducer: Reducer<State> = (
             )
           )
             return
+          subscription.data.items.forEach((item, index) => {
+            if (!(item && stringIds.includes(`${item.id}`))) return
 
-          subscription.data.items = (subscription.data.items as any).map(
-            (item: any) => {
-              if (!(item && stringIds.includes(`${item.id}`))) return item
-
-              if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
-                return {
-                  ...item,
-                  ...(action.payload.unread
-                    ? {
-                        forceUnreadLocally: true,
-                        last_unread_at: new Date().toISOString(),
-                      }
-                    : {
-                        unread: false,
-                        forceUnreadLocally: false,
-                        last_read_at: new Date().toISOString(),
-                      }),
-                }
+            if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
+              if (action.payload.unread) {
+                subscription.data.items![index].forceUnreadLocally = true
+                subscription.data.items![
+                  index
+                ].last_unread_at = new Date().toISOString()
+              } else {
+                subscription.data.items![index].unread = false
+                subscription.data.items![index].forceUnreadLocally = false
+                subscription.data.items![
+                  index
+                ].last_read_at = new Date().toISOString()
               }
-
-              if (action.type === 'SAVE_ITEMS_FOR_LATER') {
-                return {
-                  ...item,
-                  saved: action.payload.save !== false,
-                }
-              }
-
-              return item
-            },
-          )
+            } else if (action.type === 'SAVE_ITEMS_FOR_LATER') {
+              subscription.data.items![index].saved =
+                action.payload.save !== false
+            }
+          })
         })
 
         // draft.updatedAt = new Date().toISOString()
@@ -359,22 +349,21 @@ export const subscriptionsReducer: Reducer<State> = (
               return
           }
 
-          subscription.data.items = (subscription.data.items as any).map(
-            (item: any) => {
-              if (!item) return item
+          ;(subscription.data.items as any).forEach(
+            (item: any, index: number) => {
+              if (!item) return
 
-              return {
-                ...item,
-                ...(action.payload.unread
-                  ? {
-                      forceUnreadLocally: true,
-                      last_unread_at: new Date().toISOString(),
-                    }
-                  : {
-                      unread: false,
-                      forceUnreadLocally: false,
-                      last_read_at: new Date().toISOString(),
-                    }),
+              if (action.payload.unread) {
+                subscription.data.items![index].forceUnreadLocally = true
+                subscription.data.items![
+                  index
+                ].last_unread_at = new Date().toISOString()
+              } else {
+                subscription.data.items![index].unread = false
+                subscription.data.items![index].forceUnreadLocally = false
+                subscription.data.items![
+                  index
+                ].last_read_at = new Date().toISOString()
               }
             },
           )

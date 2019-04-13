@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getColumnHeaderDetails } from '@devhub/core'
+import { getColumnHeaderDetails, Omit } from '@devhub/core'
 import {
   IssueOrPullRequestCardsContainer,
   IssueOrPullRequestCardsContainerProps,
@@ -8,9 +8,10 @@ import {
 import { ColumnRenderer } from './ColumnRenderer'
 
 export interface IssueOrPullRequestColumnProps
-  extends IssueOrPullRequestCardsContainerProps {
+  extends Omit<IssueOrPullRequestCardsContainerProps, 'repoIsKnown'> {
   columnIndex: number
   disableColumnOptions?: boolean
+  headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
 }
 
@@ -20,27 +21,31 @@ export const IssueOrPullRequestColumn = React.memo(
       column,
       columnIndex,
       disableColumnOptions,
+      headerDetails,
       pagingEnabled,
-      subscriptions,
     } = props
-
-    const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
     return (
       <ColumnRenderer
         key={`issue-or-pr-column-${column.id}-inner`}
+        avatarRepo={headerDetails.avatarProps && headerDetails.avatarProps.repo}
+        avatarUsername={
+          headerDetails.avatarProps && headerDetails.avatarProps.username
+        }
         column={column}
         columnIndex={columnIndex}
         disableColumnOptions={disableColumnOptions}
-        owner={requestTypeIconAndData.owner}
+        icon={headerDetails.icon}
+        owner={headerDetails.owner}
         pagingEnabled={pagingEnabled}
-        repo={requestTypeIconAndData.repo}
-        repoIsKnown={requestTypeIconAndData.repoIsKnown}
-        subscriptions={subscriptions}
+        repo={headerDetails.repo}
+        repoIsKnown={headerDetails.repoIsKnown}
+        subtitle={headerDetails.subtitle}
+        title={headerDetails.title}
       >
         <IssueOrPullRequestCardsContainer
           key={`issue-or-pr-cards-container-${column.id}`}
-          repoIsKnown={requestTypeIconAndData.repoIsKnown}
+          repoIsKnown={headerDetails.repoIsKnown}
           {...props}
           columnIndex={columnIndex}
         />

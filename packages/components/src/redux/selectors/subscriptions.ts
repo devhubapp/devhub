@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect'
+import _ from 'lodash'
 
 import {
   CardViewMode,
@@ -17,29 +17,28 @@ import {
   getFilteredNotifications,
 } from '../../utils/helpers/filters'
 import { RootState } from '../types'
+import { createArraySelector } from './helpers'
 
-const s = (state: RootState) => state.subscriptions || {}
+const emptyArray: any[] = []
+const emptyObj = {}
+
+const s = (state: RootState) => state.subscriptions || emptyObj
 
 export const subscriptionIdsSelector = (state: RootState) =>
-  s(state).allIds || []
+  s(state).allIds || emptyArray
 
-export const createSubscriptionSelector = () =>
-  createSelector(
-    (state: RootState) => s(state).byId,
-    (_state: RootState, id: string) => id,
-    (byId, id) => byId && byId[id],
-  )
+export const subscriptionSelector = (state: RootState, id: string) =>
+  (s(state).byId && s(state).byId[id]) || undefined
 
-export const subscriptionSelector = createSubscriptionSelector()
-
-export const subscriptionsArrSelector = createSelector(
-  (state: RootState) => s(state).byId,
+export const subscriptionsArrSelector = createArraySelector(
   (state: RootState) => subscriptionIdsSelector(state),
-  (byId, ids) => ids.map(id => byId && byId[id]).filter(Boolean),
+  (state: RootState) => s(state).byId,
+  (ids, byId) =>
+    byId && ids ? ids.map(id => byId[id]).filter(Boolean) : emptyArray,
 )
 
 export const createSubscriptionsDataSelector = () =>
-  createSelector(
+  createArraySelector(
     (state: RootState, subscriptionIds: string[]) =>
       subscriptionIds.map(id => subscriptionSelector(state, id)),
     subscriptions => {
@@ -58,12 +57,12 @@ export const createSubscriptionsDataSelector = () =>
 
         if (!items) {
           items = subscription.data.items
-        } else {
+        } else if (subscription.data.items) {
           items = [...items, ...subscription.data.items] as any
         }
       })
 
-      if (!(items && items.length)) return []
+      if (!(items && items.length)) return emptyArray
 
       if (subscriptions[0]!.type === 'activity') {
         return sortEvents(items as EnhancedGitHubEvent[])
@@ -89,7 +88,7 @@ export const createFilteredSubscriptionsDataSelector = (
 ) => {
   const subscriptionsDataSelector = createSubscriptionsDataSelector()
 
-  return createSelector(
+  return createArraySelector(
     (state: RootState, subscriptionIds: string[]) => {
       const firstSubscription = subscriptionIds
         .map(id => subscriptionSelector(state, id))
@@ -102,7 +101,7 @@ export const createFilteredSubscriptionsDataSelector = (
     (_state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
       filters,
     (type, items, filters) => {
-      if (!(items && items.length)) return []
+      if (!(items && items.length)) return emptyArray
 
       if (type === 'activity') {
         return getFilteredEvents(

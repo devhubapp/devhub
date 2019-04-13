@@ -150,7 +150,7 @@ function* onSetClearedAt(
   if (!(action.payload.clearedAt && action.payload.columnId)) return
 
   const column: Column = yield select(
-    selectors.createColumnSelector(),
+    selectors.columnSelector,
     action.payload.columnId,
   )
 
@@ -209,7 +209,7 @@ function* onColumnSubscriptionFilterChange(
   if (!action.payload.columnId) return
 
   const column: Column = yield select(
-    selectors.createColumnSelector(),
+    selectors.columnSelector,
     action.payload.columnId,
   )
   if (!(column && column.id)) return

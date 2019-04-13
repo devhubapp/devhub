@@ -1,43 +1,54 @@
-import { createSelector } from 'reselect'
-
+import { getColumnHeaderDetails } from '@devhub/core'
 import { RootState } from '../types'
-import { createSubscriptionSelector } from './subscriptions'
+import { createArraySelector, createDeepEqualSelector } from './helpers'
+import { subscriptionSelector } from './subscriptions'
 
-const s = (state: RootState) => state.columns || {}
+const emptyArray: any[] = []
+const emptyObj = {}
 
-export const createColumnSelector = () =>
-  createSelector(
-    (state: RootState) => s(state).byId,
-    (_state: RootState, id: string) => id,
-    (byId, id) => byId && byId[id],
-  )
+const s = (state: RootState) => state.columns || emptyObj
 
-export const columnIdsSelector = (state: RootState) => s(state).allIds || []
+export const columnSelector = (state: RootState, id: string) =>
+  (s(state).byId && s(state).byId![id]) || undefined
 
-export const columnsArrSelector = createSelector(
+export const columnIdsSelector = (state: RootState) =>
+  s(state).allIds || emptyArray
+
+export const columnsArrSelector = createArraySelector(
   (state: RootState) => columnIdsSelector(state),
   (state: RootState) => s(state).byId,
-  (allIds, byId) => (byId ? allIds.map(id => byId[id]!).filter(Boolean) : []),
+  (ids, byId) =>
+    byId && ids ? ids.map(id => byId[id]).filter(Boolean) : emptyArray,
 )
 
 export const hasCreatedColumnSelector = (state: RootState) =>
   s(state).byId !== null
 
-export const createColumnSubscriptionsSelector = () => {
-  const columnSelector = createColumnSelector()
-  const subscriptionSelector = createSubscriptionSelector()
+export const columnSubscriptionsSelector = createArraySelector(
+  (state: RootState, columnId: string) => {
+    const column = columnSelector(state, columnId)
+    return (column && column.subscriptionIds) || emptyArray
+  },
+  (state: RootState) => state.subscriptions,
+  (subscriptionIds, subscriptions) =>
+    subscriptionIds
+      .map(subscriptionId =>
+        subscriptionSelector({ subscriptions } as any, subscriptionId),
+      )
+      .filter(Boolean),
+)
 
-  return createSelector(
-    (state: RootState) => state.subscriptions,
-    (state: RootState, id: string) =>
-      columnSelector(state, id)
-        ? columnSelector(state, id)!.subscriptionIds
-        : [],
-    (subscriptions, subscriptionIds) =>
-      subscriptionIds
-        .map(id => subscriptionSelector({ subscriptions } as any, id)!)
-        .filter(Boolean),
-  )
-}
+export const columnSubscriptionSelector = (
+  state: RootState,
+  columnId: string,
+) => columnSubscriptionsSelector(state, columnId).slice(-1)[0] || undefined
 
-export const columnSubscriptionsSelector = createColumnSubscriptionsSelector()
+export const columnHeaderDetailsSelector = createDeepEqualSelector(
+  (state: RootState, columnId: string) => columnSelector(state, columnId),
+  (state: RootState, columnId: string) => {
+    const column = columnSelector(state, columnId)
+    const subscription = columnSubscriptionSelector(state, columnId)
+    return subscription
+  },
+  (column, subscription) => getColumnHeaderDetails(column, subscription),
+)

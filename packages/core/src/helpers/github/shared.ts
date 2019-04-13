@@ -240,41 +240,32 @@ export function getUniqueIdForSubscription(subscription: {
 }
 
 export function getColumnHeaderDetails(
-  column: Column,
-  subscriptions: Array<ColumnSubscription | undefined>,
+  column: Column | undefined,
+  subscription: ColumnSubscription | undefined,
 ): {
   avatarProps?: {
     repo?: string
     username: string
   }
   icon: GitHubIcon
+  owner?: string
+  repo?: string
+  repoIsKnown: boolean
   subtitle?: string
   title: string
-} & (
-  | {
-      repoIsKnown: false
-      owner?: undefined
-      repo?: undefined
-    }
-  | {
-      repoIsKnown: true
-      owner: string
-      repo: string
-    }) {
-  switch (column.type) {
+} {
+  switch (column && column.type) {
     case 'activity': {
-      const subscription = subscriptions.filter(
-        Boolean,
-      )[0] as ActivityColumnSubscription
+      const s = (subscription || {}) as Partial<ActivityColumnSubscription>
 
-      switch (subscription.subtype) {
+      switch (s.subtype) {
         case 'ORG_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: subscription.params!.org },
+            avatarProps: { username: s.params!.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params!.org,
+            title: s.params!.org,
           }
         }
         case 'PUBLIC_EVENTS': {
@@ -288,75 +279,78 @@ export function getColumnHeaderDetails(
         case 'REPO_EVENTS': {
           return {
             avatarProps: {
-              repo: subscription.params!.repo,
-              username: subscription.params!.owner,
+              repo: s.params!.repo,
+              username: s.params!.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
+            owner: s.params!.owner,
+            repo: s.params!.repo,
             subtitle: 'Activity',
-            title: subscription.params!.repo,
+            title: s.params!.repo,
           }
         }
         case 'REPO_NETWORK_EVENTS': {
           return {
             avatarProps: {
-              repo: subscription.params!.repo,
-              username: subscription.params!.owner,
+              repo: s.params!.repo,
+              username: s.params!.owner,
             },
             icon: 'repo',
             repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
+            owner: s.params!.owner,
+            repo: s.params!.repo,
             subtitle: 'Network',
-            title: subscription.params!.repo,
+            title: s.params!.repo,
           }
         }
         case 'USER_EVENTS': {
           return {
-            avatarProps: { username: subscription.params!.username },
+            avatarProps: { username: s.params!.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params!.username,
+            title: s.params!.username,
           }
         }
         case 'USER_ORG_EVENTS': {
           return {
-            avatarProps: { username: subscription.params!.org },
+            avatarProps: { username: s.params!.org },
             icon: 'organization',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params!.org,
+            title: s.params!.org,
           }
         }
         case 'USER_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: subscription.params!.username },
+            avatarProps: { username: s.params!.username },
             icon: 'person',
             repoIsKnown: false,
             subtitle: 'Activity',
-            title: subscription.params!.username,
+            title: s.params!.username,
           }
         }
         case 'USER_RECEIVED_EVENTS':
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: subscription.params!.username },
+            avatarProps: { username: s.params!.username },
             icon: 'home',
             repoIsKnown: false,
             subtitle: 'Dashboard',
-            title: subscription.params!.username,
+            title: s.params!.username,
           }
         }
         default: {
-          console.error(`Invalid activity type: '${(column as any).subtype}'.`)
+          console.error(
+            `Invalid activity subtype: '${column && (column as any).subtype}'.`,
+            { column, subscription },
+          )
 
           return {
             icon: 'mark-github',
             repoIsKnown: false,
-            subtitle: (column as any).subtype || '',
+            subtitle: (column && (column as any).subtype) || '',
             title: 'Unknown',
           }
         }
@@ -364,15 +358,17 @@ export function getColumnHeaderDetails(
     }
 
     case 'issue_or_pr': {
-      const subscription = subscriptions.filter(
-        Boolean,
-      )[0] as IssueOrPullRequestColumnSubscription
+      const s = (subscription || {}) as Partial<
+        IssueOrPullRequestColumnSubscription
+      >
 
-      const ownerAndRepo = getOwnerAndRepo(subscription.params!.repoFullName!)
+      const ownerAndRepo = getOwnerAndRepo(
+        (s && s.params && s.params.repoFullName) || '',
+      )
       const owner = ownerAndRepo.owner!
       const repo = ownerAndRepo.repo!
 
-      switch (subscription.subtype) {
+      switch (s && s.subtype) {
         case 'ISSUES': {
           return {
             avatarProps: {
@@ -380,7 +376,7 @@ export function getColumnHeaderDetails(
               username: owner,
             },
             icon: 'issue-opened',
-            repoIsKnown: true,
+            repoIsKnown: !!(owner && repo),
             owner,
             repo,
             subtitle: 'Issues',
@@ -395,7 +391,7 @@ export function getColumnHeaderDetails(
               username: owner,
             },
             icon: 'git-pull-request',
-            repoIsKnown: true,
+            repoIsKnown: !!(owner && repo),
             owner,
             repo,
             subtitle: 'Pull Requests',
@@ -410,7 +406,7 @@ export function getColumnHeaderDetails(
               username: owner,
             },
             icon: 'issue-opened',
-            repoIsKnown: false,
+            repoIsKnown: !!(owner && repo),
             subtitle: 'Issues & PRs',
             title: repo,
           }
@@ -419,18 +415,16 @@ export function getColumnHeaderDetails(
     }
 
     case 'notifications': {
-      const subscription = subscriptions.filter(
-        Boolean,
-      )[0] as NotificationColumnSubscription
+      const s = (subscription || {}) as Partial<NotificationColumnSubscription>
 
-      switch (subscription.subtype) {
+      switch (s.subtype) {
         case 'REPO_NOTIFICATIONS': {
           return {
             icon: 'bell',
             repoIsKnown: true,
-            owner: subscription.params!.owner,
-            repo: subscription.params!.repo,
-            subtitle: subscription.params!.repo,
+            owner: (s && s.params && s.params.owner) || '',
+            repo: (s && s.params && s.params.repo) || '',
+            subtitle: (s && s.params && s.params.repo) || '',
             title: 'Notifications',
           }
         }
@@ -439,16 +433,17 @@ export function getColumnHeaderDetails(
           return {
             icon: 'bell',
             repoIsKnown: false,
-            subtitle: subscription.params.participating
-              ? 'participating'
-              : isReadFilterChecked(column.filters) &&
-                isUnreadFilterChecked(column.filters)
-              ? 'all'
-              : isUnreadFilterChecked(column.filters)
-              ? 'unread'
-              : isReadFilterChecked(column.filters)
-              ? 'read'
-              : '',
+            subtitle:
+              s && s.params && s.params.participating
+                ? 'participating'
+                : isReadFilterChecked(column && column.filters) &&
+                  isUnreadFilterChecked(column && column.filters)
+                ? 'all'
+                : isUnreadFilterChecked(column && column.filters)
+                ? 'unread'
+                : isReadFilterChecked(column && column.filters)
+                ? 'read'
+                : '',
             title: 'Notifications',
           }
         }
@@ -456,11 +451,17 @@ export function getColumnHeaderDetails(
     }
 
     default: {
-      console.error(`Invalid column type: '${(column as any).type}'.`)
+      console.error(
+        `Invalid column type: '${column && (column as any).type}'.`,
+        {
+          column,
+          subscription,
+        },
+      )
       return {
         icon: 'mark-github',
         repoIsKnown: false,
-        subtitle: (column as any).type || '',
+        subtitle: (column && (column as any).type) || '',
         title: 'Unknown',
       }
     }

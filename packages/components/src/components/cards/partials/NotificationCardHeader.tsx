@@ -20,6 +20,7 @@ import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
+import { Spacer } from '../../common/Spacer'
 import { ToggleReadButton } from '../../common/ToggleReadButton'
 import { cardStyles, getCardStylesForTheme } from '../styles'
 import { NotificationReason } from './rows/partials/NotificationReason'
@@ -118,6 +119,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                     getCardStylesForTheme(springAnimatedTheme).usernameText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    { lineHeight: undefined },
                   ]}
                 >
                   {trimNewLinesAndSpaces(username, 18)}
@@ -128,9 +130,10 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   <Text children="  " />
                   <SpringAnimatedText
                     numberOfLines={1}
-                    style={
-                      getCardStylesForTheme(springAnimatedTheme).timestampText
-                    }
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).timestampText,
+                      { lineHeight: undefined },
+                    ]}
                   >
                     <Text children="  " />
                     BOT
@@ -147,10 +150,11 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                       <Text children="  " />
                       <SpringAnimatedText
                         numberOfLines={1}
-                        style={
+                        style={[
                           getCardStylesForTheme(springAnimatedTheme)
-                            .timestampText
-                        }
+                            .timestampText,
+                          { lineHeight: undefined },
+                        ]}
                         {...Platform.select({
                           web: { title: getFullDateText(date) },
                         })}
@@ -163,6 +167,8 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 }}
               </IntervalRefresh>
             </SpringAnimatedView>
+
+            <Spacer height={2} />
 
             <NotificationReason
               backgroundThemeColor={backgroundThemeColor}

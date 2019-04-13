@@ -19,6 +19,7 @@ import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
+import { Spacer } from '../../common/Spacer'
 import { ToggleReadButton } from '../../common/ToggleReadButton'
 import { cardStyles, getCardStylesForTheme } from '../styles'
 
@@ -115,6 +116,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                     getCardStylesForTheme(springAnimatedTheme).usernameText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
+                    { lineHeight: undefined },
                   ]}
                 >
                   {username}
@@ -126,9 +128,10 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   <Text children="  " />
                   <SpringAnimatedText
                     numberOfLines={1}
-                    style={
-                      getCardStylesForTheme(springAnimatedTheme).timestampText
-                    }
+                    style={[
+                      getCardStylesForTheme(springAnimatedTheme).timestampText,
+                      { lineHeight: undefined },
+                    ]}
                   >
                     BOT
                   </SpringAnimatedText>
@@ -145,10 +148,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                       <Text children="  " />
                       <SpringAnimatedText
                         numberOfLines={1}
-                        style={
+                        style={[
                           getCardStylesForTheme(springAnimatedTheme)
-                            .timestampText
-                        }
+                            .timestampText,
+                          { lineHeight: undefined },
+                        ]}
                         {...Platform.select({
                           web: { title: getFullDateText(date) },
                         })}
@@ -160,6 +164,8 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 }}
               </IntervalRefresh>
             </SpringAnimatedView>
+
+            <Spacer height={2} />
 
             <SpringAnimatedText
               numberOfLines={1}

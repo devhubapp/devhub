@@ -1,15 +1,17 @@
 import React from 'react'
 
-import { getColumnHeaderDetails } from '@devhub/core'
+import { getColumnHeaderDetails, Omit } from '@devhub/core'
 import {
   EventCardsContainer,
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
 import { ColumnRenderer } from './ColumnRenderer'
 
-export interface EventColumnProps extends EventCardsContainerProps {
+export interface EventColumnProps
+  extends Omit<EventCardsContainerProps, 'repoIsKnown'> {
   columnIndex: number
   disableColumnOptions?: boolean
+  headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
 }
 
@@ -18,27 +20,31 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
     column,
     columnIndex,
     disableColumnOptions,
+    headerDetails,
     pagingEnabled,
-    subscriptions,
   } = props
-
-  const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
 
   return (
     <ColumnRenderer
       key={`event-column-${column.id}-inner`}
+      avatarRepo={headerDetails.avatarProps && headerDetails.avatarProps.repo}
+      avatarUsername={
+        headerDetails.avatarProps && headerDetails.avatarProps.username
+      }
       column={column}
       columnIndex={columnIndex}
       disableColumnOptions={disableColumnOptions}
-      owner={requestTypeIconAndData.owner}
+      icon={headerDetails.icon}
+      owner={headerDetails.owner}
       pagingEnabled={pagingEnabled}
-      repo={requestTypeIconAndData.repo}
-      repoIsKnown={requestTypeIconAndData.repoIsKnown}
-      subscriptions={subscriptions}
+      repo={headerDetails.repo}
+      repoIsKnown={headerDetails.repoIsKnown}
+      subtitle={headerDetails.subtitle}
+      title={headerDetails.title}
     >
       <EventCardsContainer
         key={`event-cards-container-${column.id}`}
-        repoIsKnown={requestTypeIconAndData.repoIsKnown}
+        repoIsKnown={headerDetails.repoIsKnown}
         {...props}
         columnIndex={columnIndex}
       />

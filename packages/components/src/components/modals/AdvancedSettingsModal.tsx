@@ -293,6 +293,7 @@ export const AdvancedSettingsModal = React.memo(
                   {installations.map(
                     (installation, index) =>
                       !!(
+                        installation &&
                         installation.account &&
                         installation.account.login &&
                         installation.htmlUrl

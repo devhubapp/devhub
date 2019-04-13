@@ -38,7 +38,7 @@ export interface EventCardsProps {
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
   refresh: EmptyCardsProps['refresh']
-  repoIsKnown?: boolean
+  repoIsKnown: boolean
   swipeable?: boolean
 }
 

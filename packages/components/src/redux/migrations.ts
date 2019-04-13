@@ -30,7 +30,9 @@ export default {
     }),
   3: (state: RootState) =>
     immer(state, draft => {
-      let columns: Column[] = selectors.columnsArrSelector(state)
+      let columns = selectors
+        .columnsArrSelector(state)
+        .filter(Boolean) as Column[]
       if (!columns) return
 
       draft.subscriptions = draft.subscriptions || {}

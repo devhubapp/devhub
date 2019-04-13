@@ -46,7 +46,7 @@ export interface IssueOrPullRequestCardProps {
   isFocused?: boolean
   isPrivate?: boolean
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest
-  repoIsKnown?: boolean
+  repoIsKnown: boolean
   type: GitHubIssueOrPullRequestSubjectType
 }
 

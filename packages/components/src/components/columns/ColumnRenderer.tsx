@@ -3,11 +3,10 @@ import { View } from 'react-native'
 
 import {
   Column as ColumnType,
-  ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
-  getColumnHeaderDetails,
+  GitHubIcon,
   isEventPrivate,
   isItemRead,
   isNotificationPrivate,
@@ -66,30 +65,38 @@ export function getColumnCardThemeColors(
 }
 
 export interface ColumnRendererProps {
+  avatarRepo?: string
+  avatarUsername?: string
   children: React.ReactNode
   column: ColumnType
   columnIndex: number
   disableColumnOptions?: boolean
+  icon: GitHubIcon
   onColumnOptionsVisibilityChange?: (isOpen: boolean) => void
   owner: string | undefined
   pagingEnabled?: boolean
   repo: string | undefined
   repoIsKnown: boolean
-  subscriptions: Array<ColumnSubscription | undefined>
+  subtitle: string | undefined
+  title: string
 }
 
 export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const {
+    avatarRepo,
+    avatarUsername,
     children,
     column,
     columnIndex,
     disableColumnOptions,
+    icon,
     onColumnOptionsVisibilityChange,
     owner,
     pagingEnabled,
     repo,
     repoIsKnown,
-    subscriptions,
+    subtitle,
+    title,
   } = props
 
   const [showColumnOptions, setShowColumnOptions] = useState(false)
@@ -178,8 +185,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       onColumnOptionsVisibilityChange(showColumnOptions)
   }, [onColumnOptionsVisibilityChange, showColumnOptions])
 
-  const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
-
   function focusColumn() {
     emitter.emit('FOCUS_ON_COLUMN', {
       columnId: column.id,
@@ -215,11 +220,15 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       <ColumnHeader key={`column-renderer-${column.id}-header`}>
         <ColumnHeaderItem
           analyticsLabel={undefined}
-          avatarProps={requestTypeIconAndData.avatarProps}
+          avatarProps={
+            avatarRepo || avatarUsername
+              ? { repo: avatarRepo, username: avatarUsername }
+              : undefined
+          }
           fixedIconSize
-          iconName={requestTypeIconAndData.icon}
-          subtitle={`${requestTypeIconAndData.subtitle || ''}`.toLowerCase()}
-          title={`${requestTypeIconAndData.title || ''}`.toLowerCase()}
+          iconName={icon}
+          subtitle={`${subtitle || ''}`.toLowerCase()}
+          title={`${title || ''}`.toLowerCase()}
           style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
         />
 

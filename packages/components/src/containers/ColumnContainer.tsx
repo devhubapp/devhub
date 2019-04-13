@@ -16,9 +16,9 @@ export interface ColumnContainerProps {
 export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
   const { columnId, disableColumnOptions, pagingEnabled, swipeable } = props
 
-  const { column, columnIndex, subscriptions } = useColumn(columnId)
+  const { column, columnIndex, headerDetails } = useColumn(columnId)
 
-  if (!column) return null
+  if (!(column && columnIndex >= 0 && headerDetails)) return null
 
   switch (column.type) {
     case 'activity': {
@@ -28,8 +28,8 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           column={column}
           columnIndex={columnIndex}
           disableColumnOptions={disableColumnOptions}
+          headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          subscriptions={subscriptions}
           swipeable={swipeable}
         />
       )
@@ -42,8 +42,8 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           column={column}
           columnIndex={columnIndex}
           disableColumnOptions={disableColumnOptions}
+          headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          subscriptions={subscriptions}
           swipeable={swipeable}
         />
       )
@@ -56,16 +56,16 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           column={column}
           columnIndex={columnIndex}
           disableColumnOptions={disableColumnOptions}
+          headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          subscriptions={subscriptions}
           swipeable={swipeable}
         />
       )
     }
 
     default: {
-      const message = `Invalid Column type: ${(column as any).type}`
-      console.error(message)
+      const message = `Invalid Column type: ${column && (column as any).type}`
+      console.error(message, { column })
       bugsnag.notify(new Error(message))
       return null
     }

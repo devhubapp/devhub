@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { FlatList, Image, StyleSheet, View, ViewStyle } from 'react-native'
 
-import {
-  getColumnHeaderDetails,
-  getGitHubURLForUser,
-  ModalPayload,
-} from '@devhub/core'
+import { getGitHubURLForUser, ModalPayload } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -414,20 +410,19 @@ const SidebarColumnItem = React.memo(
       small,
     } = props
 
-    const { column, columnIndex, subscriptions } = useColumn(columnId)
+    const { column, columnIndex, headerDetails } = useColumn(columnId)
     const theme = useTheme()
 
-    if (!(column && subscriptions)) return null
+    if (!(column && columnIndex >= 0 && headerDetails)) return null
 
-    const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
-    const label = `${requestTypeIconAndData.title || ''}`.toLowerCase()
+    const label = `${headerDetails.title || ''}`.toLowerCase()
 
     return (
       <ColumnHeaderItem
         key={`sidebar-column-${column.id}`}
         analyticsLabel="sidebar_column"
         avatarProps={{
-          ...requestTypeIconAndData.avatarProps,
+          ...headerDetails.avatarProps,
           disableLink: true,
         }}
         forceHoverState={highlight}
@@ -437,7 +432,7 @@ const SidebarColumnItem = React.memo(
             : getColumnHeaderThemeColors(theme.backgroundColor).hover
         }
         enableBackgroundHover={enableBackgroundHover || highlight}
-        iconName={requestTypeIconAndData.icon}
+        iconName={headerDetails.icon}
         label={label}
         onPress={() => {
           if (currentOpenedModal) closeAllModals()

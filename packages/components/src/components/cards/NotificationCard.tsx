@@ -55,7 +55,7 @@ export interface NotificationCardProps {
   cardViewMode: CardViewMode
   isFocused?: boolean
   notification: EnhancedGitHubNotification
-  repoIsKnown?: boolean
+  repoIsKnown: boolean
 }
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {

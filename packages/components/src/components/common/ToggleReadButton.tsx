@@ -3,7 +3,10 @@ import React from 'react'
 import { ColumnSubscription } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
-import { contentPadding } from '../../styles/variables'
+import {
+  columnHeaderItemContentSize,
+  contentPadding,
+} from '../../styles/variables'
 import {
   ColumnHeaderItem,
   ColumnHeaderItemProps,
@@ -16,7 +19,13 @@ export interface ToggleReadButtonProps extends ColumnHeaderItemProps {
 }
 
 export function ToggleReadButton(props: ToggleReadButtonProps) {
-  const { isRead, itemIds, type, ...otherProps } = props
+  const {
+    isRead,
+    itemIds,
+    size = columnHeaderItemContentSize,
+    type,
+    ...otherProps
+  } = props
 
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
@@ -37,6 +46,8 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
         })
       }
       {...otherProps}
+      iconStyle={[!isRead && { lineHeight: size }, otherProps.iconStyle]}
+      size={size}
       style={[
         {
           paddingVertical: 0,

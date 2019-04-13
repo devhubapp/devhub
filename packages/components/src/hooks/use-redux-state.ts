@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { useCallback, useEffect, useRef } from 'react'
 
 import { useReduxStore } from '../redux/context/ReduxStoreContext'
@@ -23,7 +24,8 @@ export function useReduxState<S extends (state: any) => any>(
 
   const resolve = useCallback(
     (value: Result<S>) => {
-      if (cacheRef.current === value) return
+      if (cacheRef.current === value || _.isEqual(cacheRef.current, value))
+        return
 
       cacheRef.current = value
 

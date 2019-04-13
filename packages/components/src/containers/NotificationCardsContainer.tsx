@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
-  Column,
-  ColumnSubscription,
   constants,
   EnhancedGitHubNotification,
   getOlderNotificationDate,
@@ -29,14 +27,11 @@ export type NotificationCardsContainerProps = Omit<
   | 'loadState'
   | 'notifications'
   | 'refresh'
-> & {
-  column: Column
-  subscriptions: ColumnSubscription[]
-}
+>
 
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
-    const { column } = props
+    const { column, ...otherProps } = props
 
     const { cardViewMode } = useAppViewMode()
 
@@ -44,14 +39,15 @@ export const NotificationCardsContainer = React.memo(
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
     const githubOAuthScope = useReduxState(selectors.githubOAuthScopeSelector)
 
-    const firstSubscription = useReduxState(
-      state =>
-        selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
-          | NotificationColumnSubscription
-          | undefined,
-    )
+    // TODO: Support multiple subscriptions per column.
+    const mainSubscription = useReduxState(
+      useCallback(
+        state => selectors.columnSubscriptionSelector(state, column.id),
+        [column.id],
+      ),
+    ) as NotificationColumnSubscription | undefined
 
-    const data = (firstSubscription && firstSubscription.data) || {}
+    const data = (mainSubscription && mainSubscription.data) || {}
 
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
@@ -141,7 +137,7 @@ export const NotificationCardsContainer = React.memo(
       fetchData()
     }, [fetchData])
 
-    if (!firstSubscription) return null
+    if (!mainSubscription) return null
 
     if (
       !(
@@ -156,19 +152,20 @@ export const NotificationCardsContainer = React.memo(
 
     return (
       <NotificationCards
+        {...otherProps}
         key={`notification-cards-${column.id}`}
         cardViewMode={cardViewMode}
-        errorMessage={firstSubscription.data.errorMessage || ''}
+        column={column}
+        errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        lastFetchedAt={firstSubscription.data.lastFetchedAt}
+        lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'
-            : firstSubscription.data.loadState || 'not_loaded'
+            : mainSubscription.data.loadState || 'not_loaded'
         }
         notifications={filteredItems}
         refresh={refresh}
-        {...props}
       />
     )
   },
