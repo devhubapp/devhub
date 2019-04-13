@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   constants,
@@ -32,6 +32,8 @@ export type NotificationCardsContainerProps = Omit<
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column, ...otherProps } = props
+
+    const [canFetchMore, setCanFetchMore] = useState(false)
 
     const { cardViewMode } = useAppViewMode()
 
@@ -97,18 +99,17 @@ export const NotificationCardsContainer = React.memo(
       ),
     ) as EnhancedGitHubNotification[]
 
-    const canFetchMoreRef = useRef(false)
-
     useEffect(() => {
-      canFetchMoreRef.current = (() => {
-        const clearedAt = column.filters && column.filters.clearedAt
-        const olderDate = getOlderNotificationDate(allItems)
+      const clearedAt = column.filters && column.filters.clearedAt
+      const olderDate = getOlderNotificationDate(allItems)
 
-        if (clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate)))
-          return false
-        return !!data.canFetchMore
-      })()
-    }, [filteredItems, column.filters, data.canFetchMore])
+      const newValue =
+        clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
+          ? false
+          : !!data.canFetchMore
+
+      if (newValue !== canFetchMore) setCanFetchMore(newValue)
+    }, [allItems, column.filters, data.canFetchMore, canFetchMore])
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
@@ -157,7 +158,7 @@ export const NotificationCardsContainer = React.memo(
         cardViewMode={cardViewMode}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
-        fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
+        fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
