@@ -703,6 +703,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           analyticsLabel="move_column_left"
           disabled={columnIndex === 0}
           enableForegroundHover
+          fixedIconSize
           iconName={
             appOrientation === 'landscape' && appViewMode === 'single-column'
               ? 'chevron-up'
@@ -721,6 +722,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           analyticsLabel="move_column_right"
           disabled={columnIndex === columnIds.length - 1}
           enableForegroundHover
+          fixedIconSize
           iconName={
             appOrientation === 'landscape' && appViewMode === 'single-column'
               ? 'chevron-down'

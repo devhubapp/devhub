@@ -187,7 +187,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             isRead={isRead}
             itemIds={ids}
             style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              alignSelf: 'flex-start',
             }}
             type="activity"
           />
@@ -196,7 +196,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             isSaved={!!isSaved}
             itemIds={ids}
             style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              alignSelf: 'flex-start',
               marginTop: 1,
             }}
           />

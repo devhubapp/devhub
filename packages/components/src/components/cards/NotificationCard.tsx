@@ -530,7 +530,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         <Spacer width={contentPadding} />
 
-        <View style={{ alignItems: 'flex-end' }}>
+        <View
+          style={[
+            cardStyles.compactItemFixedMinHeight,
+            { alignItems: 'flex-end' },
+          ]}
+        >
           {!!updatedAt && (
             <IntervalRefresh date={updatedAt}>
               {() => {

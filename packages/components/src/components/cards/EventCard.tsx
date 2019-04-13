@@ -633,7 +633,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
         <Spacer width={contentPadding} />
 
-        <View style={{ alignItems: 'flex-end' }}>
+        <View
+          style={[
+            cardStyles.compactItemFixedMinHeight,
+            { alignItems: 'flex-end' },
+          ]}
+        >
           {!!event.created_at && (
             <IntervalRefresh date={event.created_at}>
               {() => {

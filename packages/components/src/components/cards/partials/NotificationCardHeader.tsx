@@ -198,7 +198,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             isRead={isRead}
             itemIds={ids}
             style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              alignSelf: 'flex-start',
             }}
             type="notifications"
           />
@@ -207,7 +207,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             isSaved={!!isSaved}
             itemIds={ids}
             style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
+              alignSelf: 'flex-start',
               marginTop: 1,
             }}
           />

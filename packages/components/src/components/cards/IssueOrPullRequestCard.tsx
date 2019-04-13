@@ -355,7 +355,12 @@ export const IssueOrPullRequestCard = React.memo(
 
           <Spacer width={contentPadding} />
 
-          <View style={{ alignItems: 'flex-end' }}>
+          <View
+            style={[
+              cardStyles.compactItemFixedMinHeight,
+              { alignItems: 'flex-end' },
+            ]}
+          >
             {!!issueOrPullRequest.created_at && (
               <IntervalRefresh date={issueOrPullRequest.created_at}>
                 {() => {
