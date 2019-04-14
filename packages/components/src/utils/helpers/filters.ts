@@ -238,6 +238,13 @@ export function getFilteredNotifications(
         return false
 
       if (
+        filters.notifications &&
+        filters.notifications.participating &&
+        notification.reason === 'subscribed'
+      )
+        return false
+
+      if (
         !itemPassesFilterRecord(
           filters.subjectTypes!,
           getNotificationSubjectType(notification)!,
