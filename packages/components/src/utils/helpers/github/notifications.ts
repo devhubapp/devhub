@@ -135,9 +135,9 @@ export function getNotificationReasonMetadata<
       return {
         reason,
         color: colors.teal,
-        fullDescription: 'You subscribed to the thread',
-        smallDescription: 'You subscribed',
-        label: 'Subscribed',
+        fullDescription: 'You manually subscribed to the thread',
+        smallDescription: 'You subscribed manually',
+        label: 'Manual',
       }
 
     case 'mention':
