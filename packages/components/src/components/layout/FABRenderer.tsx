@@ -9,6 +9,7 @@ import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { FAB } from '../common/FAB'
 import { AppLayoutProviderState, useAppLayout } from '../context/LayoutContext'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 
 export const fabSpacing = contentPadding / 2 // + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
 
@@ -74,7 +75,7 @@ export function FABRenderer() {
           iconName="plus"
           iconStyle={iconStyle}
           onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-          tooltip="Add column"
+          tooltip={`Add column (${keyboardShortcutsById.addColumn.keys[0]})`}
           useBrandColor
         />
       </View>
@@ -111,7 +112,7 @@ export function FABRenderer() {
             iconName="x"
             iconStyle={iconStyle}
             onPress={() => closeAllModals()}
-            tooltip="Close"
+            tooltip={`Close (${keyboardShortcutsById.closeModal.keys[0]})`}
           />
         </View>
       )

@@ -10,6 +10,7 @@ import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { findNode, tryFocus } from '../../utils/helpers/shared'
 import { Spacer } from '../common/Spacer'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
@@ -76,7 +77,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             enableForegroundHover
             iconName="chevron-left"
             onPress={() => popModal()}
-            tooltip="Back"
+            tooltip={`Back (${keyboardShortcutsById.goBack.keys[0]})`}
           />
         )}
 
@@ -99,7 +100,11 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             enableForegroundHover
             iconName="x"
             onPress={() => closeAllModals()}
-            tooltip="Close"
+            tooltip={
+              showBackButton
+                ? 'Close'
+                : `Close (${keyboardShortcutsById.closeModal.keys[0]})`
+            }
           />
         )}
 

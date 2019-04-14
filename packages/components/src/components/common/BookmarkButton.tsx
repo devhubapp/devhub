@@ -9,6 +9,7 @@ import {
   ColumnHeaderItemProps,
 } from '../columns/ColumnHeaderItem'
 import { useTheme } from '../context/ThemeContext'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 
 export interface BookmarkButtonProps
   extends Omit<ColumnHeaderItemProps, 'tooltip'> {
@@ -36,7 +37,11 @@ export function BookmarkButton(props: BookmarkButtonProps) {
       iconName="bookmark"
       noPadding
       onPress={() => saveItemsForLater({ itemIds, save: !isSaved })}
-      tooltip={isSaved ? 'Unsave' : 'Save for later'}
+      tooltip={
+        isSaved
+          ? `Unsave (${keyboardShortcutsById.toggleSave.keys[0]})`
+          : `Save for later (${keyboardShortcutsById.toggleSave.keys[0]})`
+      }
       {...otherProps}
       style={[
         {

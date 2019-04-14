@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef } from 'react'
 export default function useMultiKeyPressCallback(
   targetKeys: string[],
   callback: () => void,
-  preventDefault = true,
+  { caseSensitive = false, preventDefault = true } = {},
 ) {
   const pressedKeysRef = useRef(new Set<string>([]))
   const params = useRef({
@@ -28,20 +28,24 @@ export default function useMultiKeyPressCallback(
     params.current = { targetKeys, callback, preventDefault }
   }, [...targetKeys, callback, preventDefault])
 
-  const downHandler = useCallback((e: KeyboardEvent) => {
-    pressedKeysRef.current.add(e.key)
-    const hasPressedCombo = areKeysPressed(
-      params.current.targetKeys,
-      Array.from(pressedKeysRef.current),
-    )
+  const downHandler = useCallback(
+    (e: KeyboardEvent) => {
+      pressedKeysRef.current.add(e.key)
+      const hasPressedCombo = areKeysPressed(
+        params.current.targetKeys,
+        Array.from(pressedKeysRef.current),
+        caseSensitive,
+      )
 
-    if (hasPressedCombo && params.current.preventDefault) {
-      e.preventDefault()
-      params.current.callback()
-    }
+      if (hasPressedCombo && params.current.preventDefault) {
+        e.preventDefault()
+        params.current.callback()
+      }
 
-    pingTimeout()
-  }, [])
+      pingTimeout()
+    },
+    [caseSensitive],
+  )
 
   const upHandler = useCallback((e: KeyboardEvent) => {
     pressedKeysRef.current.delete(e.key)
@@ -62,11 +66,20 @@ export default function useMultiKeyPressCallback(
   }, [downHandler, upHandler])
 }
 
-function areKeysPressed(keys: string[] = [], pressedKeys: string[] = []) {
+function areKeysPressed(
+  keys: string[] = [],
+  pressedKeys: string[] = [],
+  caseSensitive?: boolean,
+) {
   if (keys.length !== pressedKeys.length) return false
 
-  const keysToCheck = new Set(keys)
-  pressedKeys.forEach(key => {
+  const _keys = caseSensitive ? keys : keys.map(k => `${k}`.toUpperCase())
+  const _pressedKeys = caseSensitive
+    ? pressedKeys
+    : pressedKeys.map(k => `${k}`.toUpperCase())
+
+  const keysToCheck = new Set(_keys)
+  _pressedKeys.forEach(key => {
     keysToCheck.delete(key)
   })
 

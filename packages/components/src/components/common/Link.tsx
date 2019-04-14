@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes, useRef } from 'react'
+import React, { AnchorHTMLAttributes, useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
@@ -7,6 +7,7 @@ import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
+import { findNode } from '../../utils/helpers/shared'
 import {
   SpringAnimatedTouchableOpacity,
   SpringAnimatedTouchableOpacityProps,
@@ -25,6 +26,7 @@ export interface LinkProps
   mobileProps?: SpringAnimatedTouchableOpacityProps
   openOnNewTab?: boolean
   webProps?: AnchorHTMLAttributes<HTMLAnchorElement>
+  tooltip?: string
 }
 
 export function Link(props: LinkProps) {
@@ -38,6 +40,7 @@ export function Link(props: LinkProps) {
     enableBackgroundHover,
     enableForegroundHover,
     hoverBackgroundThemeColor,
+    tooltip,
     ...otherProps
   } = props
 
@@ -56,6 +59,14 @@ export function Link(props: LinkProps) {
       updateStyles()
     },
   )
+
+  useEffect(() => {
+    if (!(Platform.realOS === 'web')) return
+    const node = findNode(ref)
+    if (!node) return
+
+    node.title = tooltip || ''
+  }, [ref.current, tooltip])
 
   const cacheRef = useRef({ theme: initialTheme, isHovered: false })
 

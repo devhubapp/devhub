@@ -11,6 +11,7 @@ import {
   ColumnHeaderItem,
   ColumnHeaderItemProps,
 } from '../columns/ColumnHeaderItem'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 
 export interface ToggleReadButtonProps
   extends Omit<ColumnHeaderItemProps, 'tooltip'> {
@@ -46,7 +47,11 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
           unread: !!isRead,
         })
       }
-      tooltip={isRead ? 'Mark as unread' : 'Mark as read'}
+      tooltip={
+        isRead
+          ? `Mark as unread (${keyboardShortcutsById.toggleRead.keys[0]})`
+          : `Mark as read (${keyboardShortcutsById.toggleRead.keys[0]})`
+      }
       {...otherProps}
       iconStyle={[!isRead && { lineHeight: size }, otherProps.iconStyle]}
       size={size}

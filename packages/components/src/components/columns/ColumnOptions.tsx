@@ -41,6 +41,7 @@ import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
@@ -721,8 +722,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           }
           tooltip={
             appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? 'Move column up'
-              : 'Move column left'
+              ? `Move column up (${
+                  keyboardShortcutsById.moveColumnLeft.keys[0]
+                })`
+              : `Move column left (${
+                  keyboardShortcutsById.moveColumnLeft.keys[0]
+                })`
           }
         />
 
@@ -748,8 +753,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           }
           tooltip={
             appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? 'Move column down'
-              : 'Move column right'
+              ? `Move column down (${
+                  keyboardShortcutsById.moveColumnRight.keys[0]
+                })`
+              : `Move column right (${
+                  keyboardShortcutsById.moveColumnRight.keys[0]
+                })`
           }
         />
 

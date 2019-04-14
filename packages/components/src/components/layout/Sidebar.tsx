@@ -31,6 +31,7 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { shouldRenderFAB } from './FABRenderer'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
@@ -160,7 +161,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   height: columnHeaderHeight,
                 },
               ]}
-              tooltip="Open profile on GitHub"
+              tooltip={undefined}
             >
               <Link
                 analyticsLabel="sidebar_user_avatar"
@@ -174,6 +175,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                     height: columnHeaderHeight,
                   },
                 ]}
+                tooltip="Open profile on GitHub"
               >
                 <Avatar
                   disableLink
@@ -215,7 +217,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                     itemContainerStyle,
                     showLabel && styles.itemContainerStyle__withLabel,
                   ]}
-                  tooltip="Add column"
+                  tooltip={`Add column (${
+                    keyboardShortcutsById.addColumn.keys[0]
+                  })`}
                 />
 
                 {/* <Separator horizontal={!horizontal} /> */}
@@ -247,7 +251,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   itemContainerStyle,
                   showLabel && styles.itemContainerStyle__withLabel,
                 ]}
-                tooltip="Preferences"
+                tooltip={`Preferences (${
+                  keyboardShortcutsById.openPreferences.keys[0]
+                })`}
               />
             )
           }
@@ -308,7 +314,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   ]}
                   showLabel={showLabel}
                   size={columnHeaderItemContentBiggerSize}
-                  tooltip="Add column"
+                  tooltip={`Add column (${
+                    keyboardShortcutsById.addColumn.keys[0]
+                  })`}
                 />
 
                 {/* <Separator horizontal={!horizontal} /> */}
@@ -345,7 +353,9 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               itemContainerStyle,
               showLabel && styles.itemContainerStyle__withLabel,
             ]}
-            tooltip="Preferences"
+            tooltip={`Preferences (${
+              keyboardShortcutsById.openPreferences.keys[0]
+            })`}
           />
         )}
 
@@ -366,13 +376,14 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 itemContainerStyle,
                 showLabel && styles.itemContainerStyle__withLabel,
               ]}
-              tooltip="Open DevHub on GitHub"
+              tooltip={undefined}
             >
               <Link
                 analyticsLabel="sidebar_devhub_logo"
                 href="https://github.com/devhubapp/devhub"
                 openOnNewTab
                 style={[styles.centerContainer, itemContainerStyle]}
+                tooltip="Open DevHub on GitHub"
               >
                 <Image
                   resizeMode="contain"

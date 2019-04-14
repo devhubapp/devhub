@@ -3,7 +3,10 @@ import useMultiKeyPressCallback from './use-multi-key-press-callback'
 export default function useKeyPressCallback(
   targetKey: string,
   callback: () => void,
-  preventDefault = true,
+  { caseSensitive = false, preventDefault = true } = {},
 ) {
-  useMultiKeyPressCallback([targetKey], callback, preventDefault)
+  useMultiKeyPressCallback([targetKey], callback, {
+    caseSensitive,
+    preventDefault,
+  })
 }

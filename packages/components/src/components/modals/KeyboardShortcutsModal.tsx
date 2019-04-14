@@ -16,24 +16,60 @@ import { Label } from '../common/Label'
 import { Spacer } from '../common/Spacer'
 import { useTheme } from '../context/ThemeContext'
 
-const keyboardShortcuts = [
-  { keys: ['Esc'], description: 'Close currently open modal' },
-  { keys: ['Esc'], description: 'Exit full screen mode on desktop' },
-  { keys: ['Esc'], description: 'Unselect currently selected item' },
-  { keys: ['n'], description: 'Add a new column' },
-  { keys: ['p'], description: 'Open preferences' },
-  { keys: ['1...9'], description: 'Go to the nth column' },
-  { keys: ['0'], description: 'Go to the last column' },
-  { keys: ['↑', '↓', 'j', 'k'], description: 'Move up/down inside a column' },
-  {
-    keys: ['←', '→', 'h', 'l'],
-    description: 'Move left/right between columns',
+export const keyboardShortcutsById = {
+  closeModal: { keys: ['Esc'], description: 'Close currently open modal' },
+  goBack: { keys: ['Esc'], description: 'Go back to previous modal' },
+  exitFullScreen: {
+    keys: ['Esc'],
+    description: 'Exit full screen mode on desktop',
   },
-  { keys: ['r'], description: 'Mark item as read/unread' },
-  { keys: ['s'], description: 'Toggle save item for later' },
-  { keys: ['Alt ←', 'Alt →'], description: 'Move currently selected column' },
-  { keys: ['Tab'], description: 'Navigate between buttons and links' },
-  { keys: ['?'], description: 'Show keyboard shortcuts' },
+  unselectItem: {
+    keys: ['Esc'],
+    description: 'Unselect currently selected item',
+  },
+  addColumn: { keys: ['N'], description: 'Add a new column' },
+  openPreferences: { keys: ['P'], description: 'Open preferences' },
+  goToNthColumn: { keys: ['1...9'], description: 'Go to the nth column' },
+  goToLastColumn: { keys: ['0'], description: 'Go to the last column' },
+  selectPreviousItem: { keys: ['↑', 'J'], description: 'Select previous item' },
+  selectNextItem: { keys: ['↓', 'K'], description: 'Select next item' },
+  selectPreviousColumn: {
+    keys: ['←', 'H'],
+    description: 'Select previous column',
+  },
+  selectNextColumn: { keys: ['→', 'L'], description: 'Select next column' },
+  toggleRead: { keys: ['R'], description: 'Mark item as read/unread' },
+  toggleSave: { keys: ['S'], description: 'Toggle save item for later' },
+  moveColumnLeft: { keys: ['Alt ←'], description: 'Move column to the left' },
+  moveColumnRight: { keys: ['Alt →'], description: 'Move column to the right' },
+  focusNextDom: {
+    keys: ['Tab'],
+    description: 'Navigate between buttons and links',
+  },
+  showKeyboardShortcuts: {
+    keys: ['?'],
+    description: 'Show keyboard shortcuts',
+  },
+}
+
+export const keyboardShortcuts = [
+  keyboardShortcutsById.closeModal,
+  keyboardShortcutsById.exitFullScreen,
+  keyboardShortcutsById.unselectItem,
+  keyboardShortcutsById.addColumn,
+  keyboardShortcutsById.openPreferences,
+  keyboardShortcutsById.goToNthColumn,
+  keyboardShortcutsById.goToLastColumn,
+  keyboardShortcutsById.selectPreviousItem,
+  keyboardShortcutsById.selectNextItem,
+  keyboardShortcutsById.selectPreviousColumn,
+  keyboardShortcutsById.selectNextColumn,
+  keyboardShortcutsById.toggleRead,
+  keyboardShortcutsById.toggleSave,
+  keyboardShortcutsById.moveColumnLeft,
+  keyboardShortcutsById.moveColumnRight,
+  keyboardShortcutsById.focusNextDom,
+  keyboardShortcutsById.showKeyboardShortcuts,
 ]
 
 export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
@@ -53,7 +89,7 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
         {keyboardShortcuts.map((ks, index) => (
           <Fragment key={[...ks.keys, index].join('+')}>
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ width: 100 }}>
+              <View style={{ width: 70 }}>
                 <View
                   style={{
                     flexDirection: 'row',

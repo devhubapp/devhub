@@ -14,6 +14,7 @@ import { fabSize } from '../common/FAB'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 
 const spacing = fabSpacing
 
@@ -88,7 +89,9 @@ export function ColumnSwitcher() {
           },
           isFirst && { opacity: 0.5 },
         ]}
-        tooltip="Previous column"
+        tooltip={`Previous column (${
+          keyboardShortcutsById.selectPreviousColumn.keys[0]
+        })`}
       >
         <SpringAnimatedIcon
           name="chevron-left"
@@ -126,7 +129,9 @@ export function ColumnSwitcher() {
           },
           isLast && { opacity: 0.5 },
         ]}
-        tooltip="Next column"
+        tooltip={`Next column (${
+          keyboardShortcutsById.selectNextColumn.keys[0]
+        })`}
       >
         <SpringAnimatedIcon
           name="chevron-right"
