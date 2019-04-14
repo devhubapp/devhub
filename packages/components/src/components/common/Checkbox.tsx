@@ -51,6 +51,7 @@ export interface SpringAnimatedCheckboxProps {
   enableIndeterminateState?: boolean
   label?: string | React.ReactNode
   labelIcon?: SpringAnimatedIconProps['name']
+  labelTooltip?: string
   onChange?: (value: boolean | null) => void
   size?: number
   squareContainerStyle?: ViewStyle
@@ -76,6 +77,7 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
     enableIndeterminateState = false,
     label,
     labelIcon,
+    labelTooltip,
     onChange,
     size = 18,
     uncheckedBackgroundColor,
@@ -202,6 +204,9 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
                 marginLeft: contentPadding / 2,
                 color: springAnimatedTheme.foregroundColor,
               }}
+              {...Platform.select({
+                web: { title: labelTooltip },
+              })}
             >
               {label}
             </SpringAnimatedText>

@@ -2,6 +2,7 @@ import React from 'react'
 
 import { GitHubNotificationReason, ThemeColors } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { Platform } from '../../../../../libs/platform'
 import { getReadableColor } from '../../../../../utils/helpers/colors'
 import { getNotificationReasonMetadata } from '../../../../../utils/helpers/github/notifications'
 import { SpringAnimatedIcon } from '../../../../animated/spring/SpringAnimatedIcon'
@@ -38,6 +39,11 @@ export function NotificationReason(props: NotificationReasonProps) {
           ),
         },
       ]}
+      {...Platform.select({
+        web: {
+          title: reasonDetails.fullDescription,
+        },
+      })}
     >
       {!!isPrivate && (
         <>

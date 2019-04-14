@@ -91,15 +91,15 @@ export function getNotificationReasonMetadata<
   reason: T
   label: string
   fullDescription: string
-  smallDescription: string
+  // smallDescription: string
 } {
   switch (reason) {
     case 'assign':
       return {
         reason,
         color: colors.pink,
-        fullDescription: 'You were assigned to this thread',
-        smallDescription: 'You were assigned',
+        fullDescription: 'You were assigned to the thread',
+        // smallDescription: 'You were assigned',
         label: 'Assigned',
       }
 
@@ -107,8 +107,8 @@ export function getNotificationReasonMetadata<
       return {
         reason,
         color: colors.lightRed,
-        fullDescription: 'You created this thread',
-        smallDescription: 'You created',
+        fullDescription: 'You created the thread',
+        // smallDescription: 'You created',
         label: 'Author',
       }
 
@@ -117,7 +117,7 @@ export function getNotificationReasonMetadata<
         reason,
         color: colors.blue,
         fullDescription: 'You commented on the thread',
-        smallDescription: 'You commented',
+        // smallDescription: 'You commented',
         label: 'Commented',
       }
 
@@ -127,7 +127,7 @@ export function getNotificationReasonMetadata<
         color: colors.brown,
         fullDescription:
           'You accepted an invitation to contribute to the repository',
-        smallDescription: 'You were invited',
+        // smallDescription: 'You were invited',
         label: 'Invited',
       }
 
@@ -136,7 +136,7 @@ export function getNotificationReasonMetadata<
         reason,
         color: colors.teal,
         fullDescription: 'You manually subscribed to the thread',
-        smallDescription: 'You subscribed manually',
+        // smallDescription: 'You subscribed manually',
         label: 'Manual',
       }
 
@@ -144,8 +144,8 @@ export function getNotificationReasonMetadata<
       return {
         reason,
         color: colors.orange,
-        fullDescription: 'You were @mentioned',
-        smallDescription: 'You were mentioned',
+        fullDescription: 'You were @mentioned in the thread',
+        // smallDescription: 'You were mentioned',
         label: 'Mentioned',
       }
 
@@ -153,8 +153,8 @@ export function getNotificationReasonMetadata<
       return {
         reason,
         color: colors.purple,
-        fullDescription: 'You changed the thread state',
-        smallDescription: 'You opened/closed',
+        fullDescription: 'You opened or closed the issue/pr',
+        // smallDescription: 'You opened/closed',
         label: 'State changed',
       }
 
@@ -162,8 +162,8 @@ export function getNotificationReasonMetadata<
       return {
         reason,
         color: colors.blueGray,
-        fullDescription: "You're watching this repository",
-        smallDescription: 'You are watching',
+        fullDescription: "You're watching the repository",
+        // smallDescription: 'You are watching',
         label: 'Watching',
       }
 
@@ -171,8 +171,8 @@ export function getNotificationReasonMetadata<
       return {
         reason,
         color: colors.yellow,
-        fullDescription: 'Your team was mentioned',
-        smallDescription: 'Team mentioned',
+        fullDescription: 'Your team was mentioned in the thread',
+        // smallDescription: 'Team mentioned',
         label: 'Team mentioned',
       }
 
@@ -180,8 +180,8 @@ export function getNotificationReasonMetadata<
       return {
         reason,
         color: colors.yellow,
-        fullDescription: 'Someone requested you a review',
-        smallDescription: 'Review requested',
+        fullDescription: 'Someone requested your review in the pull request',
+        // smallDescription: 'Review requested',
         label: 'Review requested',
       }
 
@@ -190,7 +190,7 @@ export function getNotificationReasonMetadata<
         reason,
         color: colors.red,
         fullDescription: 'Potential security vulnerability found',
-        smallDescription: 'Security alert',
+        // smallDescription: 'Security alert',
         label: 'Security',
       }
 
@@ -199,7 +199,7 @@ export function getNotificationReasonMetadata<
         reason,
         color: colors.gray,
         fullDescription: '',
-        smallDescription: '',
+        // smallDescription: '',
         label: capitalize(reason),
       }
   }

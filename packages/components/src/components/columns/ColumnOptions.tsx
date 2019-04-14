@@ -512,12 +512,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       checkedBackgroundColor={item.color}
                       checkedForegroundColor={theme.backgroundColorDarker1}
                       containerStyle={checkboxStyle}
-                      squareContainerStyle={checkboxSquareStyle}
                       defaultValue={defaultBooleanValue}
                       enableIndeterminateState={
                         !isFilterStrict || checked === defaultBooleanValue
                       }
                       label={item.label}
+                      labelTooltip={item.fullDescription}
                       onChange={value => {
                         setColumnReasonFilter({
                           columnId: column.id,
@@ -525,6 +525,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                           value,
                         })
                       }}
+                      squareContainerStyle={checkboxSquareStyle}
                       uncheckedForegroundColor={item.color}
                     />
                   )
