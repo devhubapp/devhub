@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { ReactSpringHook, useSpring } from 'react-spring/native'
+import { config, ReactSpringHook, useSpring } from 'react-spring/native'
 
 import { usePrevious } from '../../hooks/use-previous'
 import { Platform } from '../../libs/platform'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 
 export type Transition = ReactSpringHook
@@ -26,6 +27,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   const animatedStyles = useSpring<any>({
     immediate,
+    config: getDefaultReactSpringAnimationConfig(),
     from: { height: 0 },
     to: { height: isOpen ? size : 0 },
   })

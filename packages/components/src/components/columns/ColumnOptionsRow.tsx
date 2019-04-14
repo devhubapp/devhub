@@ -11,6 +11,7 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
@@ -93,7 +94,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     const immediate = isHovered || Platform.realOS === 'android'
 
     return {
-      config: { duration: immediate ? 0 : 100 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       backgroundColor:
         enableBackgroundHover && (isHovered || isPressing || isOpen)

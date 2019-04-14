@@ -7,6 +7,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { columnHeaderHeight } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
@@ -52,7 +53,7 @@ export const ColumnOptionsRenderer = React.memo(
       {
         reset: true,
         unique: true,
-        config: { duration: immediate ? 0 : 400, precision: 0.01 },
+        config: getDefaultReactSpringAnimationConfig(),
         immediate,
         from: { opacity: 0 },
         enter: { opacity: 0.75 },

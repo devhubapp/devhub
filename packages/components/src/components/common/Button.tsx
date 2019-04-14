@@ -7,6 +7,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import {
   SpringAnimatedActivityIndicator,
   SpringAnimatedActivityIndicatorProps,
@@ -88,7 +89,7 @@ export const Button = React.memo((props: ButtonProps) => {
     const immediate = isHovered || Platform.realOS === 'android'
 
     return {
-      config: { duration: immediate ? 0 : 100 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       activityIndicatorColor: theme.foregroundColor,
       touchableBorderColor: backgroundColor

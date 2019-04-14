@@ -14,6 +14,7 @@ import { Platform } from '../../libs/platform'
 import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -130,7 +131,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       reset: true,
       unique: true,
       immediate,
-      config: { duration: 400, precision: 0.01 },
+      config: getDefaultReactSpringAnimationConfig(),
       from: { opacity: 0 },
       enter: { opacity: 0.75 },
       leave: { opacity: 0 },
@@ -142,7 +143,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     item => `modal-stack-${item.name}`,
     {
       reset: true,
-      config: { ...config.default, precision: 1 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       ...(appOrientation === 'portrait'
         ? {
@@ -189,7 +190,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     {
       reset: true,
       unique: true,
-      config: { ...config.default, precision: 1 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       from: { right: size },
       enter: { right: 0 },

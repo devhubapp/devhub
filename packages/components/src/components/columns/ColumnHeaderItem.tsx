@@ -12,6 +12,7 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -103,7 +104,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       !!(enableForegroundHover && !enableBackgroundHover)
 
     return {
-      config: { duration: immediate ? 0 : 100 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       backgroundColor:
         isHovered && enableBackgroundHover

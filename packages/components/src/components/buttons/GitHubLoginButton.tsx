@@ -8,6 +8,7 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variab
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -118,7 +119,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     const immediate = isHovered || Platform.realOS === 'android'
 
     return {
-      config: { duration: immediate ? 0 : 100 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       backgroundColor:
         isHovered || isPressing

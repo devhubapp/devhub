@@ -18,6 +18,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, radius } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
@@ -231,7 +232,7 @@ function AddColumnModalItem({
     const immediate = isHovered || Platform.realOS === 'android'
 
     return {
-      config: { duration: immediate ? 0 : 100 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       backgroundColor:
         (isHovered || isPressing) && !disabled
