@@ -29,6 +29,7 @@ export function getPullRequestIconAndColor(pullRequest: {
   state: GitHubPullRequest['state']
   merged: GitHubPullRequest['merged'] | undefined
   merged_at: GitHubPullRequest['merged_at'] | undefined
+  mergeable_state: GitHubPullRequest['mergeable_state'] | undefined
 }): { icon: GitHubIcon; color?: string; tooltip: string } {
   const draft = isDraft(pullRequest)
   const merged = !!(pullRequest.merged || pullRequest.merged_at)

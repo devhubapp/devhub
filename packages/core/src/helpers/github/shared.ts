@@ -35,9 +35,12 @@ export function isUnreadFilterChecked(filters: ColumnFilters | undefined) {
   return !(filters && filters.unread === false)
 }
 
-export function isDraft(pullRequest: { draft?: GitHubPullRequest['draft'] }) {
+export function isDraft(pullRequest: {
+  draft?: GitHubPullRequest['draft']
+  mergeable_state?: GitHubPullRequest['mergeable_state'] | undefined
+}) {
   if (!pullRequest) return false
-  return !!pullRequest.draft
+  return !!pullRequest.draft || pullRequest.mergeable_state === 'draft'
 }
 
 export function getUserAvatarByAvatarURL(

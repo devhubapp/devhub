@@ -178,6 +178,7 @@ export function getEventIconAndColor(
             state: 'open',
             merged: false,
             merged_at: undefined,
+            mergeable_state: pullRequest.mergeable_state,
           })
         // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as GitHubPullRequest);
 
