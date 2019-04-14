@@ -35,6 +35,11 @@ export function isUnreadFilterChecked(filters: ColumnFilters | undefined) {
   return !(filters && filters.unread === false)
 }
 
+export function isDraft(pullRequest: { draft?: GitHubPullRequest['draft'] }) {
+  if (!pullRequest) return false
+  return !!pullRequest.draft
+}
+
 export function getUserAvatarByAvatarURL(
   avatarUrl: string,
   { size }: { size?: number } = {},

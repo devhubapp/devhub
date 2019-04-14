@@ -341,6 +341,10 @@ export const IssueOrPullRequestCard = React.memo(
                   textAlign: 'center',
                   color: cardIconColor || springAnimatedTheme.foregroundColor,
                 }}
+                {...!!cardIconDetails.tooltip &&
+                  Platform.select({
+                    web: { title: cardIconDetails.tooltip },
+                  })}
               />
             </View>
 
@@ -443,6 +447,10 @@ export const IssueOrPullRequestCard = React.memo(
                 textAlign: 'center',
                 color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
+              {...!!cardIconDetails.tooltip &&
+                Platform.select({
+                  web: { title: cardIconDetails.tooltip },
+                })}
             />
           </View>
 

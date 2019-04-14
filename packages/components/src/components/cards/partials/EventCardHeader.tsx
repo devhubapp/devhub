@@ -27,8 +27,8 @@ export interface EventCardHeaderProps {
   actionText: string
   avatarUrl: string
   backgroundThemeColor: keyof ThemeColors
-  cardIconColor?: string
-  cardIconName: GitHubIcon
+  // cardIconColor?: string
+  // cardIconName: GitHubIcon
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean

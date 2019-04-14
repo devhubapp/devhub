@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ColumnSubscription } from '@devhub/core'
+import { ColumnSubscription, Omit } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import {
@@ -12,7 +12,8 @@ import {
   ColumnHeaderItemProps,
 } from '../columns/ColumnHeaderItem'
 
-export interface ToggleReadButtonProps extends ColumnHeaderItemProps {
+export interface ToggleReadButtonProps
+  extends Omit<ColumnHeaderItemProps, 'tooltip'> {
   isRead: boolean
   itemIds: Array<string | number>
   type: ColumnSubscription['type']
@@ -45,6 +46,7 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
           unread: !!isRead,
         })
       }
+      tooltip={isRead ? 'Mark as unread' : 'Mark as read'}
       {...otherProps}
       iconStyle={[!isRead && { lineHeight: size }, otherProps.iconStyle]}
       size={size}

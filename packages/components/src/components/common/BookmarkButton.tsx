@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Omit } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'
@@ -9,7 +10,8 @@ import {
 } from '../columns/ColumnHeaderItem'
 import { useTheme } from '../context/ThemeContext'
 
-export interface BookmarkButtonProps extends ColumnHeaderItemProps {
+export interface BookmarkButtonProps
+  extends Omit<ColumnHeaderItemProps, 'tooltip'> {
   isSaved: boolean
   itemIds: Array<string | number>
 }
@@ -34,6 +36,7 @@ export function BookmarkButton(props: BookmarkButtonProps) {
       iconName="bookmark"
       noPadding
       onPress={() => saveItemsForLater({ itemIds, save: !isSaved })}
+      tooltip={isSaved ? 'Unsave' : 'Save for later'}
       {...otherProps}
       style={[
         {

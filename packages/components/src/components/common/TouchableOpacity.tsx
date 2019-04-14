@@ -10,7 +10,7 @@ export interface TouchableOpacityProps
 }
 
 export const TouchableOpacity = React.forwardRef(
-  (props: TouchableOpacityProps, ref: any) => {
+  (props: TouchableOpacityProps, ref) => {
     return (
       <Touchable
         ref={ref}

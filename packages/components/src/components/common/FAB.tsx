@@ -20,6 +20,7 @@ export interface FABProps extends SpringAnimatedTouchableOpacityProps {
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle> | any
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
+  tooltip: string
   useBrandColor?: boolean
 }
 
@@ -29,6 +30,7 @@ export function FAB(props: FABProps) {
     iconName,
     iconStyle,
     style,
+    tooltip,
     useBrandColor,
     ...otherProps
   } = props
@@ -74,6 +76,7 @@ export function FAB(props: FABProps) {
         },
         style,
       ]}
+      tooltip={tooltip}
     >
       <SpringAnimatedView
         style={[

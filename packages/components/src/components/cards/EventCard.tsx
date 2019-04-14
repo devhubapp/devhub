@@ -223,6 +223,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
     repoIsKnown: repoIsKnown || cardViewMode === 'compact',
   }
   const { action, actionText } = getEventMetadata(event, actionTextOptions)
+  const actionTextWithoutColon = getEventMetadata(event, {
+    ...actionTextOptions,
+    appendColon: false,
+  }).actionText
 
   const isPush = type === 'PushEvent'
   const isForcePush = isPush && (payload as GitHubPushEvent).forced
@@ -619,6 +623,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
                 textAlign: 'center',
                 color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
+              {...!!actionTextWithoutColon &&
+                Platform.select({
+                  web: { title: actionTextWithoutColon },
+                })}
             />
           </View>
 
@@ -712,6 +720,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
               textAlign: 'center',
               color: cardIconColor || springAnimatedTheme.foregroundColor,
             }}
+            {...!!actionTextWithoutColon &&
+              Platform.select({
+                web: { title: actionTextWithoutColon },
+              })}
           />
         </View>
 
@@ -723,8 +735,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
             actionText={actionText}
             avatarUrl={avatarUrl}
             backgroundThemeColor={backgroundThemeColor}
-            cardIconColor={cardIconColor}
-            cardIconName={cardIconName}
+            // cardIconColor={cardIconColor}
+            // cardIconName={cardIconName}
             date={event.created_at}
             ids={('merged' in event && event.merged) || [id]}
             isBot={isBot}

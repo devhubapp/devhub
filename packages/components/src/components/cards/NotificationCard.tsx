@@ -520,6 +520,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 textAlign: 'center',
                 color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
+              {...!!cardIconDetails.tooltip &&
+                Platform.select({
+                  web: { title: cardIconDetails.tooltip },
+                })}
             />
           </View>
 
@@ -615,6 +619,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               textAlign: 'center',
               color: cardIconColor || springAnimatedTheme.foregroundColor,
             }}
+            {...!!cardIconDetails.tooltip &&
+              Platform.select({
+                web: { title: cardIconDetails.tooltip },
+              })}
           />
         </View>
 
@@ -625,8 +633,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             key={`notification-card-header-${id}`}
             avatarUrl={repoAvatarDetails.avatar_url || undefined}
             backgroundThemeColor={backgroundThemeColor}
-            cardIconColor={cardIconColor}
-            cardIconName={cardIconName}
+            // cardIconColor={cardIconColor}
+            // cardIconName={cardIconName}
             date={updatedAt}
             ids={[id]}
             isBot={isBot}

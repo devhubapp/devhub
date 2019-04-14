@@ -296,6 +296,7 @@ function AddColumnModalItem({
           noPadding
           size={24}
           style={{ alignSelf: 'center', marginBottom: contentPadding / 2 }}
+          tooltip=""
         />
 
         <SpringAnimatedText

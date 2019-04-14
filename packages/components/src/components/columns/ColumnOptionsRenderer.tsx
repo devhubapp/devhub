@@ -120,6 +120,7 @@ export const ColumnOptionsRenderer = React.memo(
                 subtitle=""
                 title="filters"
                 style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
+                tooltip={undefined}
               />
             </ColumnHeader>
           )}

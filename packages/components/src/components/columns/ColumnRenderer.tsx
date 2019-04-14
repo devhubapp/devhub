@@ -227,9 +227,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
           }
           fixedIconSize
           iconName={icon}
+          style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
           subtitle={`${subtitle || ''}`.toLowerCase()}
           title={`${title || ''}`.toLowerCase()}
-          style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
+          tooltip={undefined}
         />
 
         <Spacer width={contentPadding / 2} />
@@ -252,6 +253,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
           style={{
             paddingHorizontal: contentPadding / 3,
           }}
+          tooltip="Clear column"
         />
 
         <ColumnHeaderItem
@@ -314,6 +316,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
           style={{
             paddingHorizontal: contentPadding / 3,
           }}
+          tooltip={
+            !hasOneUnreadItem ? 'Mark all as unread' : 'Mark all as read'
+          }
         />
 
         {!disableColumnOptions && (
@@ -328,6 +333,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             style={{
               paddingHorizontal: contentPadding / 3,
             }}
+            tooltip="Filters"
           />
         )}
       </ColumnHeader>

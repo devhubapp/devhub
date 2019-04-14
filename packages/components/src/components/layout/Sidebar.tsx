@@ -160,6 +160,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   height: columnHeaderHeight,
                 },
               ]}
+              tooltip="Open profile on GitHub"
             >
               <Link
                 analyticsLabel="sidebar_user_avatar"
@@ -214,6 +215,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                     itemContainerStyle,
                     showLabel && styles.itemContainerStyle__withLabel,
                   ]}
+                  tooltip="Add column"
                 />
 
                 {/* <Separator horizontal={!horizontal} /> */}
@@ -245,6 +247,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   itemContainerStyle,
                   showLabel && styles.itemContainerStyle__withLabel,
                 ]}
+                tooltip="Preferences"
               />
             )
           }
@@ -305,6 +308,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   ]}
                   showLabel={showLabel}
                   size={columnHeaderItemContentBiggerSize}
+                  tooltip="Add column"
                 />
 
                 {/* <Separator horizontal={!horizontal} /> */}
@@ -341,6 +345,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               itemContainerStyle,
               showLabel && styles.itemContainerStyle__withLabel,
             ]}
+            tooltip="Preferences"
           />
         )}
 
@@ -361,6 +366,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 itemContainerStyle,
                 showLabel && styles.itemContainerStyle__withLabel,
               ]}
+              tooltip="Open DevHub on GitHub"
             >
               <Link
                 analyticsLabel="sidebar_devhub_logo"
@@ -456,6 +462,9 @@ const SidebarColumnItem = React.memo(
           itemContainerStyle,
           showLabel && styles.itemContainerStyle__withLabel,
         ]}
+        tooltip={`${headerDetails.title} (${headerDetails.subtitle})`
+          .toLowerCase()
+          .trim()}
       />
     )
   },

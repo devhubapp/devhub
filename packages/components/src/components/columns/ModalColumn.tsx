@@ -15,7 +15,10 @@ import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
 export interface ModalColumnProps
-  extends Omit<ColumnHeaderItemProps, 'analyticsAction' | 'analyticsLabel'> {
+  extends Omit<
+    ColumnHeaderItemProps,
+    'analyticsAction' | 'analyticsLabel' | 'tooltip'
+  > {
   name: ModalPayload['name']
   hideCloseButton?: boolean
   right?: React.ReactNode
@@ -73,6 +76,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             enableForegroundHover
             iconName="chevron-left"
             onPress={() => popModal()}
+            tooltip="Back"
           />
         )}
 
@@ -83,6 +87,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           style={[showBackButton && { padding: 0 }]}
           subtitle={`${subtitle || ''}`.toLowerCase()}
           title={`${title || ''}`.toLowerCase()}
+          tooltip={undefined}
         />
 
         <Spacer flex={1} />
@@ -94,6 +99,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             enableForegroundHover
             iconName="x"
             onPress={() => closeAllModals()}
+            tooltip="Close"
           />
         )}
 
@@ -104,6 +110,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             style={{
               paddingHorizontal: contentPadding / 2,
             }}
+            tooltip={undefined}
           >
             {right}
           </ColumnHeaderItem>

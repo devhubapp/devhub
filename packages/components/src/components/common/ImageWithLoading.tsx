@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { Image, ImageProps } from 'react-native'
 
+import { Platform } from '../../libs/platform'
+import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedImage } from '../animated/spring/SpringAnimatedImage'
 
 export interface ImageWithLoadingProps extends ImageProps {
@@ -13,6 +15,7 @@ export interface ImageWithLoadingProps extends ImageProps {
   onLoadEnd?: ImageProps['onLoadEnd']
   onLoadStart?: ImageProps['onLoadStart']
   style: any
+  tooltip?: string
 }
 
 export const ImageWithLoading = React.memo(
@@ -28,6 +31,7 @@ export const ImageWithLoading = React.memo(
       onLoad,
       onLoadEnd,
       onLoadStart,
+      tooltip,
       ...otherProps
     } = props
 
@@ -37,6 +41,14 @@ export const ImageWithLoading = React.memo(
     useEffect(() => {
       updateStyles()
     }, [])
+
+    useEffect(() => {
+      if (!(Platform.realOS === 'web')) return
+      const node = findNode(imageRef)
+      if (!node) return
+
+      node.title = tooltip || ''
+    }, [imageRef.current, tooltip])
 
     const handleLoad = useCallback(
       e => {

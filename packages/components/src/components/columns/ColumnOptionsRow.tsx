@@ -169,6 +169,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             noPadding
             selectable={false}
             size={headerItemFixedIconSize}
+            tooltip={undefined}
           />
 
           <Spacer width={contentPadding / 2} />
@@ -207,6 +208,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 iconStyle={{ lineHeight: undefined }}
                 noPadding
                 selectable={false}
+                tooltip={undefined}
               />
             </>
           )}

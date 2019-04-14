@@ -37,6 +37,7 @@ export function SubHeader(props: SubHeaderProps) {
           noPadding
           size={18}
           titleStyle={{ fontWeight: '400' }}
+          tooltip={undefined}
         />
       )}
 

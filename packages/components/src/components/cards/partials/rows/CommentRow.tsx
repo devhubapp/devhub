@@ -99,11 +99,12 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
                 textStyle,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
-              {...Platform.select({
-                web: {
-                  title: _body,
-                },
-              })}
+              {...!!_body &&
+                Platform.select({
+                  web: {
+                    title: _body,
+                  },
+                })}
             >
               {parseTextWithEmojisToReactComponents(body, {
                 key: `comment-${url}`,

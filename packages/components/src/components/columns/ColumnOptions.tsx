@@ -719,6 +719,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               scrollTo: true,
             })
           }
+          tooltip={
+            appOrientation === 'landscape' && appViewMode === 'single-column'
+              ? 'Move column up'
+              : 'Move column left'
+          }
         />
 
         <ColumnHeaderItem
@@ -740,6 +745,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               highlight: appViewMode === 'multi-column',
               scrollTo: true,
             })
+          }
+          tooltip={
+            appOrientation === 'landscape' && appViewMode === 'single-column'
+              ? 'Move column down'
+              : 'Move column right'
           }
         />
 
@@ -769,6 +779,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   : 'Expand filters'
                 : ''
             }
+            tooltip={allIsOpen ? 'Collapse filters' : 'Expand filters'}
           />
         )}
 
@@ -779,6 +790,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           iconName="trashcan"
           onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
           text={containerWidth > 300 ? 'Remove' : ''}
+          tooltip="Remove column"
         />
       </View>
       <CardItemSeparator />

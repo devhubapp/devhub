@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   TouchableOpacity,
   TouchableOpacityProps,
   TouchableWithoutFeedbackProps,
 } from 'react-native'
 import { analytics } from '../../libs/analytics'
+import { Platform } from '../../libs/platform'
+import { findNode } from '../../utils/helpers/shared'
 
 export interface TouchableProps
   extends TouchableWithoutFeedbackProps,
@@ -17,6 +19,7 @@ export interface TouchableProps
   analyticsValue?: number | undefined
   children?: React.ReactNode
   selectable?: boolean
+  tooltip?: string
 }
 
 export const Touchable = React.forwardRef(
@@ -27,12 +30,36 @@ export const Touchable = React.forwardRef(
       analyticsCategory,
       analyticsLabel,
       analyticsValue,
+      onLongPress: _onLongPress,
       onPress: _onPress,
       selectable,
+      tooltip,
       ...props
     }: TouchableProps,
-    ref: any,
+    ref,
   ) => {
+    const touchableRef = useRef<TouchableOpacity>(null)
+
+    useEffect(() => {
+      if (typeof ref === 'function') {
+        ref(touchableRef.current)
+        return
+      }
+
+      if (ref && 'current' in ref) {
+        ;(ref as any).current = touchableRef.current
+      }
+    }, [touchableRef.current])
+
+    useEffect(() => {
+      if (Platform.realOS !== 'web') return
+
+      const node = findNode(touchableRef)
+      if (!node) return
+
+      node.title = tooltip || ''
+    }, [touchableRef.current, tooltip])
+
     const onPress: typeof _onPress =
       analyticsAction || analyticsCategory || analyticsLabel || analyticsValue
         ? e => {
@@ -46,11 +73,20 @@ export const Touchable = React.forwardRef(
           }
         : _onPress
 
+    const onLongPress: typeof _onLongPress =
+      _onLongPress ||
+      (tooltip && Platform.realOS !== 'web'
+        ? () => {
+            alert(tooltip)
+          }
+        : undefined)
+
     return (
       <TouchableComponent
         {...props}
         className={__DEV__ ? undefined : 'touchable'}
-        ref={ref}
+        ref={touchableRef}
+        onLongPress={onLongPress}
         onPress={onPress}
         style={[
           props.style,

@@ -88,6 +88,7 @@ export function ColumnSwitcher() {
           },
           isFirst && { opacity: 0.5 },
         ]}
+        tooltip="Previous column"
       >
         <SpringAnimatedIcon
           name="chevron-left"
@@ -125,6 +126,7 @@ export function ColumnSwitcher() {
           },
           isLast && { opacity: 0.5 },
         ]}
+        tooltip="Next column"
       >
         <SpringAnimatedIcon
           name="chevron-right"

@@ -28,8 +28,8 @@ import { NotificationReason } from './rows/partials/NotificationReason'
 export interface NotificationCardHeaderProps {
   avatarUrl: string | undefined
   backgroundThemeColor: keyof ThemeColors
-  cardIconColor?: string
-  cardIconName: GitHubIcon
+  // cardIconColor?: string
+  // cardIconName: GitHubIcon
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean

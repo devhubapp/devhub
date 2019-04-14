@@ -8,7 +8,7 @@ import {
   GitHubPullRequest,
   MultipleStarEvent,
 } from '../../types'
-import { getBranchNameFromRef, isPullRequest } from './shared'
+import { getBranchNameFromRef, isDraft, isPullRequest } from './shared'
 
 export function getOlderEventDate(
   events: EnhancedGitHubEvent[],
@@ -65,12 +65,10 @@ export function getEventMetadata(
   } = options
 
   const isDraftPR =
-    ('pull_request' in event.payload &&
-      event.payload.pull_request &&
-      event.payload.pull_request.draft) ||
+    ('pull_request' in event.payload && isDraft(event.payload.pull_request)) ||
     ('issue' in event.payload &&
       isPullRequest(event.payload.issue) &&
-      (event.payload.issue as GitHubPullRequest).draft)
+      isDraft(event.payload.issue as GitHubPullRequest))
 
   const issueText = issueOrPullRequestIsKnown ? 'this issue' : 'an issue'
   const pullRequestText = issueOrPullRequestIsKnown

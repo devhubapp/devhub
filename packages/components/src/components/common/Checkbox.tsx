@@ -204,9 +204,10 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
                 marginLeft: contentPadding / 2,
                 color: springAnimatedTheme.foregroundColor,
               }}
-              {...Platform.select({
-                web: { title: labelTooltip },
-              })}
+              {...!!labelTooltip &&
+                Platform.select({
+                  web: { title: labelTooltip },
+                })}
             >
               {label}
             </SpringAnimatedText>

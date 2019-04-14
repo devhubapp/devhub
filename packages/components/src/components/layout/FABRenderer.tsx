@@ -74,6 +74,7 @@ export function FABRenderer() {
           iconName="plus"
           iconStyle={iconStyle}
           onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+          tooltip="Add column"
           useBrandColor
         />
       </View>
@@ -110,6 +111,7 @@ export function FABRenderer() {
             iconName="x"
             iconStyle={iconStyle}
             onPress={() => closeAllModals()}
+            tooltip="Close"
           />
         </View>
       )

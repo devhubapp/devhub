@@ -12,6 +12,7 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
+import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
@@ -55,6 +56,7 @@ export interface ColumnHeaderItemProps {
   textStyle?: StyleProp<TextStyle>
   title?: string
   titleStyle?: StyleProp<TextStyle>
+  tooltip: string | undefined
 }
 
 export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
@@ -88,6 +90,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     textStyle,
     title,
     titleStyle,
+    tooltip,
   } = props
 
   const getStyles = useCallback(() => {
@@ -137,7 +140,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     ),
   )
 
-  const containerRef = useRef(null)
+  const containerRef = useRef<View>(null)
   useHover(
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     isHovered => {
@@ -153,6 +156,14 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   useEffect(() => {
     updateStyles()
   }, [updateStyles])
+
+  useEffect(() => {
+    if (!(Platform.realOS === 'web' && !onPress)) return
+    const node = findNode(containerRef)
+    if (!node) return
+
+    node.title = tooltip || ''
+  }, [containerRef.current, tooltip])
 
   const _username = useReduxState(selectors.currentGitHubUsernameSelector)
 
@@ -226,6 +237,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           style,
           { backgroundColor: springAnimatedStyles.backgroundColor },
         ]}
+        tooltip={tooltip}
       >
         {child}
       </SpringAnimatedTouchableOpacity>
@@ -269,6 +281,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                   isBot={false}
                   linkURL=""
                   size={size}
+                  tooltip={tooltip ? null : undefined}
                   {...avatarProps}
                   username={username}
                 />

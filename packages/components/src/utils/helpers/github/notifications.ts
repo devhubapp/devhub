@@ -56,7 +56,7 @@ export function getNotificationSubjectType(
 export function getNotificationIconAndColor(
   notification: GitHubNotification,
   payload?: GitHubIssueOrPullRequest | undefined,
-): { icon: GitHubIcon; color?: string } {
+): { icon: GitHubIcon; color?: string; tooltip: string } {
   const { subject } = notification
   const { type } = subject
 
@@ -70,14 +70,22 @@ export function getNotificationIconAndColor(
     case 'Release':
       return getReleaseIconAndColor()
     case 'RepositoryInvitation':
-      return { icon: 'mail', color: colors.brown }
+      return {
+        icon: 'mail',
+        color: colors.brown,
+        tooltip: 'Repository invitation',
+      }
     case 'RepositoryVulnerabilityAlert':
-      return { icon: 'alert', color: colors.yellow }
+      return {
+        icon: 'alert',
+        color: colors.yellow,
+        tooltip: 'Repository vulnerability alert',
+      }
     default: {
       const message = `Unknown event type: ${(event as any).type}`
       bugsnag.notify(new Error(message))
       console.error(message)
-      return { icon: 'bell' }
+      return { icon: 'bell', tooltip: '' }
     }
   }
 }
