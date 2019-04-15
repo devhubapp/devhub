@@ -35,8 +35,8 @@ export function App() {
                   <ColumnWidthProvider>
                     <SpringAnimatedThemeProvider>
                       <>
-                        <AppGlobalStyles />
-                        <AppNavigator />
+                        <AppGlobalStyles key="app-global-styles" />
+                        <AppNavigator key="app-navigator" />
                       </>
                     </SpringAnimatedThemeProvider>
                   </ColumnWidthProvider>

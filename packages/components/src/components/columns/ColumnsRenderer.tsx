@@ -26,7 +26,10 @@ export function ColumnsRenderer() {
     const shouldRenderFixedColumnOptions = sizename >= '4-x-large'
 
     return (
-      <ViewMeasurer style={[sharedStyles.flex, sharedStyles.horizontal]}>
+      <ViewMeasurer
+        key="columns-renderer-view-measurer"
+        style={[sharedStyles.flex, sharedStyles.horizontal]}
+      >
         {({ height: containerHeight }) => (
           <>
             {!!shouldRenderFixedColumnOptions && (

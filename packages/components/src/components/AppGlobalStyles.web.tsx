@@ -44,8 +44,8 @@ function getStyles(params: { theme: Theme }) {
   `
 }
 
-export function AppGlobalStyles() {
+export const AppGlobalStyles = React.memo(() => {
   const theme = useTheme()
 
-  return <style key="global-styles">{getStyles({ theme })}</style>
-}
+  return <style key="app-global-styles-inner">{getStyles({ theme })}</style>
+})

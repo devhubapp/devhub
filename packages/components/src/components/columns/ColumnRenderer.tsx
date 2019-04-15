@@ -338,7 +338,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         )}
       </ColumnHeader>
 
-      <ViewMeasurer style={sharedStyles.flex}>
+      <ViewMeasurer
+        key="column-renderer-view-measurer"
+        style={sharedStyles.flex}
+      >
         {({ height: containerHeight }) => (
           <>
             {!disableColumnOptions && (

@@ -5,7 +5,9 @@ import * as selectors from '../redux/selectors'
 import { LoginScreen } from '../screens/LoginScreen'
 import { MainScreen } from '../screens/MainScreen'
 
-export function AppNavigator() {
+export const AppNavigator = React.memo(() => {
   const user = useReduxState(selectors.currentUserSelector)
-  return user ? <MainScreen /> : <LoginScreen />
-}
+
+  if (user) return <MainScreen key="app-main-screen" />
+  return <LoginScreen key="app-login-screen" />
+})
