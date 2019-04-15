@@ -168,8 +168,9 @@ function* updateLoggedUserOnTools() {
 
   analytics.setUser(user && user._id)
   bugsnag.setUser(
-    (user && user._id) || null,
-    githubUser && (githubUser.login || githubUser.name || githubUser.id),
+    (user && user._id) || '',
+    (githubUser && (githubUser.login || githubUser.name || githubUser.id)) ||
+      '',
   )
 }
 

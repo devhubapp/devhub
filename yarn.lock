@@ -1006,23 +1006,23 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@bugsnag/browser@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@bugsnag/browser/-/browser-6.0.0.tgz#d6e55e05d2f7cfa1f729ac5143b60e4a715122bf"
-  integrity sha512-EZ+I9CscLLkCsPdY8+X47yAjb7n/qWdLx299GNdW53/D4pO2Yo2sKCE53flyUx5BtR9yfE1Yu1vCojq89uKq7w==
+"@bugsnag/browser@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/@bugsnag/browser/-/browser-6.1.0.tgz#95be7bdcbbb9acbb9485e1022024f1430de06056"
+  integrity sha512-hbY7pMD4th7Ar5wW4CNjudQVW2KB0RW9UhQBhs4ApOuOR2eZ/W/jq5A5uj1/Pz7lOZQeGJkdb9Xfrzjegbo78Q==
 
-"@bugsnag/js@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@bugsnag/js/-/js-6.0.0.tgz#78c245b9e97bfe445559abeee3004068afa81883"
-  integrity sha512-tF1D7hjhG8aXPk5rx23rDo0j7ZrIjuRSTcgkvD0mJX6cg3f1+qqXL2GlUMQ1siSx6hvNONTr3Q7SnlhEEQ1G6A==
+"@bugsnag/js@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/@bugsnag/js/-/js-6.1.0.tgz#6b699b168a83b592b71ef6546448b816285c7c15"
+  integrity sha512-aWkhIdFClQ0u7cBLqRDAi0eo03UwX+utnWQAxPE22rFPHuEVzidv+GUf4Fl1f/I923CDpsQSs4KU3A2RHsAYdA==
   dependencies:
-    "@bugsnag/browser" "^6.0.0"
-    "@bugsnag/node" "^6.0.0"
+    "@bugsnag/browser" "^6.1.0"
+    "@bugsnag/node" "^6.1.0"
 
-"@bugsnag/node@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@bugsnag/node/-/node-6.0.0.tgz#bae6e6b4d7c172755e66253ecdd66a06505e98e5"
-  integrity sha512-TUsX8N9Dzpxisfml8n6LmMyo2YdjItJ5A3RoIVokZ8qBHbFXp3lQmtvp5nTVQc/buL42hFW2+ZPWxcNRQUDcEA==
+"@bugsnag/node@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/@bugsnag/node/-/node-6.1.0.tgz#26339c3b8427bc7106e736cce5cbb7caf5eaaf28"
+  integrity sha512-nWgvHu9rzgW89scrk2RmHa7r9Uj/0L5St8OIGdZW5LzCD0O1R+KmRyhUZc2q5x1zWDzuvt4CuxzU+vKkADoEFQ==
   dependencies:
     byline "^5.0.0"
     error-stack-parser "^2.0.2"
@@ -1030,10 +1030,10 @@
     pump "^3.0.0"
     stack-generator "^2.0.3"
 
-"@bugsnag/plugin-react@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react/-/plugin-react-6.0.0.tgz#4d42b911c943ce0ef999b9119c6e3150dc4c42bf"
-  integrity sha512-N1W9akB7X3wbpugrPM1ooZiKbWF2o1CXK93JZsHThOFWIh4v6Rv30rwFiRlzX4nu7dUAZAM5PdZ1+g7HQBSWNQ==
+"@bugsnag/plugin-react@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/@bugsnag/plugin-react/-/plugin-react-6.1.0.tgz#d752c5d5657097fc5dcec3730556e2f2403de0d9"
+  integrity sha512-jCI6AfBgxBWOIDQZYBZ1TkLXsqyxm/iITP+8/Qb1W4ZWpNZZFSZiiKgzJ5c0xFlfWflFEuligyRVyk/O2Rey0A==
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"
@@ -3057,10 +3057,10 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-bugsnag-react-native@2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-2.15.0.tgz#8cdee8d62af8b1bdb86437f456072e91d27409a9"
-  integrity sha512-9v6zZ91GSayS0BzzraRM2+FdHZp7iygYFphLXcLMBSx8hkAi7fnGJOgd3LI5NBZH7iv6pG2xxUQxvqrWhjmboA==
+bugsnag-react-native@2.16.0:
+  version "2.16.0"
+  resolved "https://registry.npmjs.org/bugsnag-react-native/-/bugsnag-react-native-2.16.0.tgz#1f0979a2e74694325bc211299fd38df1b1a9226c"
+  integrity sha512-8IL21BboO7I3p/vbIp9x07y05QP7vVKFkCoDT2jq/ZC5CY7fQkbeFkf+e95JlBLUUB4HfqjpCPAf6It3C8YQIg==
   dependencies:
     iserror "^0.0.2"
     promise "^7"

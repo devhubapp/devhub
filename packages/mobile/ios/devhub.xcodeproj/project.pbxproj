@@ -38,11 +38,10 @@
 		2E0B333E21C9FAD800275D1B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2E2247FF21BF44F6000DF69D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E2247FE21BF44F6000DF69D /* GoogleService-Info.plist */; };
 		2E74592C223886010002D4FB /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7458F0223886010002D4FB /* JavaScriptCore.framework */; };
-		2E745942223890110002D4FB /* Bugsnag.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E74593C22388D420002D4FB /* Bugsnag.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E98FDAB22445E490083350D /* libRNInAppBrowser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E98FDA622445E130083350D /* libRNInAppBrowser.a */; };
 		2E98FDB22246328A0083350D /* libRNStoreReview.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E98FDB1224632570083350D /* libRNStoreReview.a */; };
-		2E98FDBD22465C820083350D /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E98FDBC22465C700083350D /* libBugsnagReactNative.a */; };
 		2EAFF5FE1FE1AEEE000A9A11 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 486C758B88E34A52BFB2C474 /* MaterialIcons.ttf */; };
+		38136B483A0F41CFA296051F /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A7B304CE67D4BE2BCFF446B /* libBugsnagReactNative.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		60EFC7011AA849D496DCEC2C /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AA4F7C08944EB48AFA4996 /* libRNFirebase.a */; };
 		6A3D419810B34BC2C871D649 /* libPods-devhub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2D46220C64268F2FC76533 /* libPods-devhub.a */; };
@@ -214,13 +213,6 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNStoreReview;
 		};
-		2E98FDBB22465C700083350D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8AD256131D6DE5F600C7D842;
-			remoteInfo = BugsnagReactNative;
-		};
 		2EA58A552162FB5600B9EBEA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 961B335E70A74BD9B59B6237 /* RNScreens.xcodeproj */;
@@ -304,6 +296,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = A79185C61C30694E001236A6;
 			remoteInfo = RCTGoogleAnalyticsBridge;
+		};
+		2EF683A922644D6C006FC7D1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF2D6EB839AA4F1CBDA91A7A /* BugsnagReactNative.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8AD256131D6DE5F600C7D842;
+			remoteInfo = BugsnagReactNative;
 		};
 		2EFD3E3A218E320300AAB0D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -426,20 +425,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		2E745943223890120002D4FB /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2E745942223890110002D4FB /* Bugsnag.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../../../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
@@ -471,14 +456,12 @@
 		2D02E4901E0B4A5D006451C7 /* devhub-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "devhub-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E2247FE21BF44F6000DF69D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "devhub/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2E7458F0223886010002D4FB /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		2E74593C22388D420002D4FB /* Bugsnag.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Bugsnag.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E98FD7522445E120083350D /* RNInAppBrowser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNInAppBrowser.xcodeproj; path = "../../../node_modules/react-native-inappbrowser-reborn/ios/RNInAppBrowser.xcodeproj"; sourceTree = "<group>"; };
 		2E98FDAC224632560083350D /* RNStoreReview.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNStoreReview.xcodeproj; path = "../../../node_modules/react-native-store-review/ios/RNStoreReview.xcodeproj"; sourceTree = "<group>"; };
-		2E98FDB322465A010083350D /* libBugsnagStatic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libBugsnagStatic.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../../../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
 		2E98FDE422465ED90083350D /* devhub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "devhub-Bridging-Header.h"; sourceTree = "<group>"; };
 		40B4448D993A4CA2ABDDA557 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../../../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		486C758B88E34A52BFB2C474 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		4A7B304CE67D4BE2BCFF446B /* libBugsnagReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBugsnagReactNative.a; sourceTree = "<group>"; };
 		57716D5B6BA1484B8D9D4E4B /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		5C004FC430E247649BC8DCB5 /* CoreData.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../../../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -491,9 +474,9 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../../../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B5DF78792708477FB2343101 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		B6BF65C496E44E78BF211275 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../../../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		BF2D6EB839AA4F1CBDA91A7A /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../../../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
 		C1520CE5C137943E997C36CD /* Pods-devhub.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-devhub.release.xcconfig"; path = "Pods/Target Support Files/Pods-devhub/Pods-devhub.release.xcconfig"; sourceTree = "<group>"; };
 		C32C469D820B4B1CB740B0D9 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		CBFD7354635B4723970EDF30 /* libBugsnagReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBugsnagReactNative.a; sourceTree = "<group>"; };
 		D59EE38FE98B402B99250666 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		D7601ED2F8134DA4B08D6B30 /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
 		FA6EFEAAAEB7487F9CC33B59 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -513,7 +496,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E98FDBD22465C820083350D /* libBugsnagReactNative.a in Frameworks */,
 				2E74592C223886010002D4FB /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -542,6 +524,7 @@
 				60EFC7011AA849D496DCEC2C /* libRNFirebase.a in Frameworks */,
 				2E98FDAB22445E490083350D /* libRNInAppBrowser.a in Frameworks */,
 				2E98FDB22246328A0083350D /* libRNStoreReview.a in Frameworks */,
+				38136B483A0F41CFA296051F /* libBugsnagReactNative.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,8 +674,6 @@
 		2E416D332162E53200B41E7B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2E98FDB322465A010083350D /* libBugsnagStatic.a */,
-				2E74593C22388D420002D4FB /* Bugsnag.framework */,
 				2E7458F0223886010002D4FB /* JavaScriptCore.framework */,
 				C32C469D820B4B1CB740B0D9 /* libz.tbd */,
 				5C004FC430E247649BC8DCB5 /* CoreData.framework */,
@@ -736,14 +717,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2E98FDB622465C6F0083350D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2E98FDBC22465C700083350D /* libBugsnagReactNative.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		2EA58A522162FB5600B9EBEA /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -760,9 +733,9 @@
 				D59EE38FE98B402B99250666 /* libBVLinearGradient.a */,
 				0441F9718DDD44B287FA1B68 /* libSplashScreen.a */,
 				922A6C7C23614601BC85B6D6 /* libRNScreens.a */,
-				CBFD7354635B4723970EDF30 /* libBugsnagReactNative.a */,
 				02455BF605234E42836FB0D9 /* libRCTGoogleAnalyticsBridge.a */,
 				27AA4F7C08944EB48AFA4996 /* libRNFirebase.a */,
+				4A7B304CE67D4BE2BCFF446B /* libBugsnagReactNative.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -801,6 +774,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2EF683A622644D6C006FC7D1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2EF683AA22644D6C006FC7D1 /* libBugsnagReactNative.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -822,7 +803,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -844,6 +824,7 @@
 				57716D5B6BA1484B8D9D4E4B /* RNFirebase.xcodeproj */,
 				2E98FD7522445E120083350D /* RNInAppBrowser.xcodeproj */,
 				2E98FDAC224632560083350D /* RNStoreReview.xcodeproj */,
+				BF2D6EB839AA4F1CBDA91A7A /* BugsnagReactNative.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -942,7 +923,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				2E745943223890120002D4FB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1023,6 +1003,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1031,8 +1012,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 2E98FDB622465C6F0083350D /* Products */;
-					ProjectRef = 2E98FDB522465C6F0083350D /* BugsnagReactNative.xcodeproj */;
+					ProductGroup = 2EF683A622644D6C006FC7D1 /* Products */;
+					ProjectRef = BF2D6EB839AA4F1CBDA91A7A /* BugsnagReactNative.xcodeproj */;
 				},
 				{
 					ProductGroup = 2E60B5032001851A0076D5AF /* Products */;
@@ -1270,13 +1251,6 @@
 			remoteRef = 2E98FDB0224632570083350D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2E98FDBC22465C700083350D /* libBugsnagReactNative.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libBugsnagReactNative.a;
-			remoteRef = 2E98FDBB22465C700083350D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		2EA58A562162FB5600B9EBEA /* libRNScreens.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1359,6 +1333,13 @@
 			fileType = archive.ar;
 			path = libRCTGoogleAnalyticsBridge.a;
 			remoteRef = 2EC3352C21A4989A007C8892 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2EF683AA22644D6C006FC7D1 /* libBugsnagReactNative.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBugsnagReactNative.a;
+			remoteRef = 2EF683A922644D6C006FC7D1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2EFD3E3B218E320300AAB0D8 /* libRNVectorIcons-tvOS.a */ = {
@@ -1646,14 +1627,17 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
 				INFOPLIST_FILE = devhubTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1675,14 +1659,17 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
 				INFOPLIST_FILE = devhubTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1711,9 +1698,9 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient/**",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios/**",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
 				INFOPLIST_FILE = devhub/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1752,9 +1739,9 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient/**",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios/**",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
 				INFOPLIST_FILE = devhub/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1793,13 +1780,16 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
 				INFOPLIST_FILE = "devhub-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1831,13 +1821,16 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
 				INFOPLIST_FILE = "devhub-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1863,7 +1856,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "devhub-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.devhub-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1885,7 +1881,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "devhub-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.devhub-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;

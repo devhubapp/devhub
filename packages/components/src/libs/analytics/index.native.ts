@@ -30,8 +30,8 @@ export const analytics: Analytics = {
     _userId = userId
 
     if (__DEV__) log('set', { user_id: userId })
-    tracker.setUser(userId)
-    firebase.analytics().setUserId(userId)
+    tracker.setUser(userId || '')
+    firebase.analytics().setUserId(userId || '')
   },
 
   trackEvent(category, action, label, value, payload = {}) {

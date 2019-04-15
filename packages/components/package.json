@@ -11,12 +11,12 @@
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
-    "@bugsnag/js": "6.0.0",
-    "@bugsnag/plugin-react": "6.0.0",
+    "@bugsnag/js": "6.1.0",
+    "@bugsnag/plugin-react": "6.1.0",
     "@devhub/core": "0.48.1",
     "@octokit/rest": "16.20.0",
     "axios": "0.18.0",
-    "bugsnag-react-native": "2.15.0",
+    "bugsnag-react-native": "2.16.0",
     "fbemitter": "2.1.1",
     "gravatar": "1.8.0",
     "hoist-non-react-statics": "3.3.0",
