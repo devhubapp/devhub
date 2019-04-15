@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View } from 'react-native'
+import { Dimensions, View } from 'react-native'
 
 import {
   Column as ColumnType,
@@ -20,13 +20,18 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import {
+  columnHeaderHeight,
+  contentPadding,
+  sidebarSize,
+} from '../../styles/variables'
 import {
   activityColumnHasAnyFilter,
   notificationColumnHasAnyFilter,
 } from '../../utils/helpers/filters'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { Spacer } from '../common/Spacer'
+import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
 import { Column } from './Column'
@@ -101,6 +106,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
   const [showColumnOptions, setShowColumnOptions] = useState(false)
 
+  const { appOrientation } = useAppLayout()
   const { appViewMode, cardViewMode } = useAppViewMode()
 
   const filteredSubscriptionsDataSelectorRef = useRef(
@@ -207,6 +213,11 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         | EnhancedGitHubIssueOrPullRequest,
     ) => !isItemRead(item),
   )
+
+  const defaultContainerHeight =
+    appOrientation === 'portrait'
+      ? Dimensions.get('window').height - columnHeaderHeight - sidebarSize - 2
+      : Dimensions.get('window').height - columnHeaderHeight - 1
 
   return (
     <Column
@@ -340,6 +351,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
       <ViewMeasurer
         key="column-renderer-view-measurer"
+        defaultMeasures={{ width: 0, height: defaultContainerHeight }}
+        properties="height"
         style={sharedStyles.flex}
       >
         {({ height: containerHeight }) => (
