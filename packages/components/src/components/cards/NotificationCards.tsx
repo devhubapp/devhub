@@ -297,9 +297,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       bounces
       data={notifications}
       extraData={rerender}
-      initialNumToRender={props.cardViewMode === 'compact' ? 15 : 5}
+      initialNumToRender={15}
       keyExtractor={keyExtractor}
-      maxToRenderPerBatch={props.cardViewMode === 'compact' ? 15 : 5}
+      maxToRenderPerBatch={3}
       onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
       refreshControl={refreshControl}

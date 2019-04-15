@@ -311,9 +311,9 @@ export const IssueOrPullRequestCards = React.memo(
         bounces
         data={items}
         extraData={rerender}
-        initialNumToRender={props.cardViewMode === 'compact' ? 15 : 5}
+        initialNumToRender={15}
         keyExtractor={keyExtractor}
-        maxToRenderPerBatch={props.cardViewMode === 'compact' ? 15 : 5}
+        maxToRenderPerBatch={3}
         onScrollToIndexFailed={onScrollToIndexFailed}
         onViewableItemsChanged={handleViewableItemsChanged}
         refreshControl={refreshControl}
