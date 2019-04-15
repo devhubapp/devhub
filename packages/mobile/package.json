@@ -8,7 +8,7 @@
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package",
-    "start": "node ../../node_modules/react-native/local-cli/cli.js start --projectRoot ../../",
+    "start": "node ../../node_modules/react-native/local-cli/cli.js start",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
     "tsc": "tsc -b",

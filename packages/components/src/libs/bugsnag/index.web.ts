@@ -3,13 +3,14 @@ import bugsnagReact from '@bugsnag/plugin-react'
 import _ from 'lodash'
 import React from 'react'
 
+import { appVersion } from '../../components/common/AppVersion'
 import { BugnsagCrossPlatform } from './'
 import { hideTokenFromString } from './index.shared'
 // import { overrideConsoleError } from './index.shared'
 
 const client = bugsnagJS({
   apiKey: '231f337f6090422c611017d3dab3d32e',
-  appVersion: '0.48.1',
+  appVersion,
   autoBreadcrumbs: true,
   notifyReleaseStages: ['production'],
 })
