@@ -46,6 +46,9 @@
     "tslint-react": "3.6.0",
     "typescript": "3.3.4000"
   },
+  "resolutions": {
+    "metro-react-native-babel-preset": "0.53.1"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "yarn workspace @devhub/desktop compile && lint-staged"
