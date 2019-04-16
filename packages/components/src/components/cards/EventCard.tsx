@@ -504,13 +504,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const Content = renderContent()
 
-  const isSingleRow = withTopMarginCount <= 1
-  // &&
-  // !(
-  //   issueOrPullRequest &&
-  //   issueOrPullRequest.labels &&
-  //   issueOrPullRequest.labels.length
-  // )
+  const isSingleRow =
+    withTopMarginCount <= 1 &&
+    !(
+      issueOrPullRequest &&
+      issueOrPullRequest.labels &&
+      issueOrPullRequest.labels.length
+    ) &&
+    !release
 
   if (cardViewMode === 'compact') {
     return (

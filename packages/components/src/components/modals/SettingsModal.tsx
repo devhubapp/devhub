@@ -118,7 +118,12 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
               href="https://twitter.com/brunolemos"
               openOnNewTab
             >
-              <Avatar disableLink username="brunolemos" size={24} />
+              <Avatar
+                disableLink
+                username="brunolemos"
+                size={24}
+                tooltip="@brunolemos on Twitter"
+              />
             </Link>
 
             <Spacer width={contentPadding} />
@@ -128,7 +133,12 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
               href="https://twitter.com/devhub_app"
               openOnNewTab
             >
-              <Avatar disableLink username="devhubapp" size={24} />
+              <Avatar
+                disableLink
+                username="devhubapp"
+                size={24}
+                tooltip="@devhub_app on Twitter"
+              />
             </Link>
           </SubHeader>
         </View>

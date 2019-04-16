@@ -111,35 +111,38 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
             ) : null
           }
           right={
-            <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
-              <SpringAnimatedText
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  bold && cardStyles.boldText,
-                  isRead &&
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                <SpringAnimatedText numberOfLines={1}>
-                  {!hideIcon && (
-                    <>
-                      <SpringAnimatedIcon
-                        name="tag"
-                        size={13}
-                        style={[
-                          getCardStylesForTheme(springAnimatedTheme).normalText,
-                          getCardStylesForTheme(springAnimatedTheme).icon,
-                          isRead &&
+            <View style={cardRowStyles.mainContentContainer}>
+              <Link href={fixedURL}>
+                <SpringAnimatedText
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    bold && cardStyles.boldText,
+                    isRead &&
+                      getCardStylesForTheme(springAnimatedTheme).mutedText,
+                  ]}
+                >
+                  <SpringAnimatedText numberOfLines={1}>
+                    {!hideIcon && (
+                      <>
+                        <SpringAnimatedIcon
+                          name="tag"
+                          size={13}
+                          style={[
                             getCardStylesForTheme(springAnimatedTheme)
-                              .mutedText,
-                        ]}
-                      />{' '}
-                    </>
-                  )}
+                              .normalText,
+                            getCardStylesForTheme(springAnimatedTheme).icon,
+                            isRead &&
+                              getCardStylesForTheme(springAnimatedTheme)
+                                .mutedText,
+                          ]}
+                        />{' '}
+                      </>
+                    )}
+                  </SpringAnimatedText>
+                  {name || tagName}
                 </SpringAnimatedText>
-                {name || tagName}
-              </SpringAnimatedText>
-            </Link>
+              </Link>
+            </View>
           }
           viewMode={viewMode}
         />

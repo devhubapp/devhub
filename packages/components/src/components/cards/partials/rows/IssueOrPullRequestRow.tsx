@@ -138,7 +138,17 @@ export const IssueOrPullRequestRow = React.memo(
                 inlineLabels && [sharedStyles.horizontal, sharedStyles.flexWrap]
               }
             >
-              <Link href={htmlUrl}>
+              <Link
+                href={htmlUrl}
+                style={[
+                  !!inlineLabels &&
+                    labels &&
+                    labels.length > 0 && { marginRight: contentPadding / 2 },
+                  !inlineLabels &&
+                    labels &&
+                    labels.length > 0 && { marginBottom: innerCardSpacing },
+                ]}
+              >
                 <SpringAnimatedText
                   numberOfLines={numberOfLines}
                   style={[
@@ -147,12 +157,6 @@ export const IssueOrPullRequestRow = React.memo(
                     bold && cardStyles.boldText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    !!inlineLabels &&
-                      labels &&
-                      labels.length > 0 && { marginRight: contentPadding / 2 },
-                    !inlineLabels &&
-                      labels &&
-                      labels.length > 0 && { marginBottom: innerCardSpacing },
                   ]}
                   {...Platform.select({
                     web: {

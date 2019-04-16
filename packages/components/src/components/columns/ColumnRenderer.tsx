@@ -383,7 +383,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 // fixedPosition="right"
                 // fixedWidth={250}
                 // forceOpenAll
-                isOpened={isFiltersOpened}
+                isOpen={isFiltersOpened}
               />
             )}
 

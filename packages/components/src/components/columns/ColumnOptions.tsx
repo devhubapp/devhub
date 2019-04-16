@@ -95,7 +95,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     columnIndex,
     forceOpenAll,
     fullHeight,
-    startWithFiltersExpanded = true,
+    startWithFiltersExpanded,
   } = props
 
   const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [

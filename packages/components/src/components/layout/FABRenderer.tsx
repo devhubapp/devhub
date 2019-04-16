@@ -45,13 +45,12 @@ export function shouldRenderFAB({
 export function FABRenderer() {
   // const addOrCloseAnimatedRef = useRef(new Animated.Value(0))
 
+  const { isSharedFiltersOpened } = useColumnFilters()
   const { sizename } = useAppLayout()
   const keyboardVisibility = useKeyboardVisibility()
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
-
-  const { isSharedFiltersOpened } = useColumnFilters()
 
   if (
     !shouldRenderFAB({

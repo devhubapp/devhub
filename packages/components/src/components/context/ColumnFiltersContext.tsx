@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import immer from 'immer'
+import React, { useContext, useRef, useState } from 'react'
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
-import { useForceRerender } from '../../hooks/use-force-rerender'
 import { useAppLayout } from './LayoutContext'
 
 export interface ColumnFiltersProviderProps {
@@ -25,8 +25,6 @@ export const ColumnFiltersContext = React.createContext<
 >(defaultValue)
 
 export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
-  const forceRerender = useForceRerender()
-
   const { sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
 
@@ -35,16 +33,16 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
 
   const inlineMode = appViewMode === 'single-column' && sizename >= '4-x-large'
 
+  const [isOpen, setIsOpened] = useState(inlineMode)
+
+  const isSharedFiltersOpened =
+    inlineMode || (enableSharedFiltersView && isOpen)
+
   const valueCacheRef = useRef<ColumnFiltersProviderState>({
     enableSharedFiltersView,
     inlineMode,
-    isSharedFiltersOpened: inlineMode,
+    isSharedFiltersOpened,
   })
-
-  const [isOpened, setIsOpened] = useState(inlineMode)
-
-  const isSharedFiltersOpened =
-    inlineMode || (enableSharedFiltersView && isOpened)
 
   useEmitter(
     'TOGGLE_COLUMN_FILTERS',
@@ -55,15 +53,11 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
     [enableSharedFiltersView],
   )
 
-  useEffect(() => {
-    valueCacheRef.current = {
-      enableSharedFiltersView,
-      inlineMode,
-      isSharedFiltersOpened,
-    }
-
-    forceRerender()
-  }, [enableSharedFiltersView, inlineMode, isSharedFiltersOpened])
+  valueCacheRef.current = immer(valueCacheRef.current, draft => {
+    draft.enableSharedFiltersView = enableSharedFiltersView
+    draft.inlineMode = inlineMode
+    draft.isSharedFiltersOpened = isSharedFiltersOpened
+  })
 
   return (
     <ColumnFiltersContext.Provider value={valueCacheRef.current}>

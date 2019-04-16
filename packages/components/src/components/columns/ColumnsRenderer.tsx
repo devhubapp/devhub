@@ -58,7 +58,7 @@ export function ColumnsRenderer() {
                   fixedWidth={250}
                   forceOpenAll
                   inlineMode={inlineMode}
-                  isOpened={isSharedFiltersOpened}
+                  isOpen={isSharedFiltersOpened}
                   renderHeader={inlineMode ? 'yes' : 'spacing-only'}
                   startWithFiltersExpanded
                   close={closeSharedFiltersView}

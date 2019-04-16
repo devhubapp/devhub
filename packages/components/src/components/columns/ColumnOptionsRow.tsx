@@ -216,13 +216,16 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         </View>
       </ConditionalWrap>
 
-      <AccordionView isOpen={isOpen}>
+      <ConditionalWrap
+        condition={!!onToggle}
+        wrap={c => <AccordionView isOpen={isOpen}>{c}</AccordionView>}
+      >
         <View
           style={[{ paddingBottom: contentPadding }, contentContainerStyle]}
         >
           {children}
         </View>
-      </AccordionView>
+      </ConditionalWrap>
     </SpringAnimatedView>
   )
 }

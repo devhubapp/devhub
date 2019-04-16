@@ -28,7 +28,7 @@ export interface ColumnOptionsRendererProps {
   fixedWidth?: number | undefined
   forceOpenAll?: boolean
   inlineMode?: boolean
-  isOpened: boolean
+  isOpen: boolean
   renderHeader?: 'yes' | 'no' | 'spacing-only'
   startWithFiltersExpanded?: boolean
 }
@@ -43,7 +43,7 @@ export const ColumnOptionsRenderer = React.memo(
       fixedWidth,
       forceOpenAll,
       inlineMode,
-      isOpened,
+      isOpen,
       renderHeader,
       startWithFiltersExpanded,
     } = props
@@ -54,7 +54,7 @@ export const ColumnOptionsRenderer = React.memo(
 
     const immediate = Platform.realOS === 'android'
     const overlayTransition = useTransition<boolean, any>(
-      isOpened ? [true] : [],
+      isOpen ? [true] : [],
       () => 'column-options-overlay',
       {
         reset: true,
@@ -78,7 +78,7 @@ export const ColumnOptionsRenderer = React.memo(
         ? {
             config: getDefaultReactSpringAnimationConfig(),
             from: { [fixedPosition]: -fixedWidth },
-            to: { [fixedPosition]: isOpened ? 0 : -fixedWidth },
+            to: { [fixedPosition]: isOpen ? 0 : -fixedWidth },
           }
         : {
             config: getDefaultReactSpringAnimationConfig(),
@@ -167,7 +167,7 @@ export const ColumnOptionsRenderer = React.memo(
           <ConditionalWrap
             condition={!enableAbsolutePositionAnimation}
             wrap={children => (
-              <AccordionView isOpen={isOpened}>{children}</AccordionView>
+              <AccordionView isOpen={isOpen}>{children}</AccordionView>
             )}
           >
             <ColumnOptions

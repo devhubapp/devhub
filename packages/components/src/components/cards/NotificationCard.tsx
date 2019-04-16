@@ -412,13 +412,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const Content = renderContent()
 
-  const isSingleRow = withTopMarginCount <= 1
-  // &&
-  // !(
-  //   issueOrPullRequest &&
-  //   issueOrPullRequest.labels &&
-  //   issueOrPullRequest.labels.length
-  // )
+  const isSingleRow =
+    withTopMarginCount <= 1 &&
+    !(
+      issueOrPullRequest &&
+      issueOrPullRequest.labels &&
+      issueOrPullRequest.labels.length
+    ) &&
+    !release
 
   if (cardViewMode === 'compact') {
     return (
