@@ -211,7 +211,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           </View>
         ) : null}
 
-        {shouldRenderFAB(sizename) && (
+        {shouldRenderFAB({ sizename }) && (
           <Spacer height={fabSize + 2 * fabSpacing} />
         )}
       </>

@@ -225,7 +225,7 @@ export const IssueOrPullRequestCards = React.memo(
             </View>
           ) : null}
 
-          {shouldRenderFAB(sizename) && (
+          {shouldRenderFAB({ sizename }) && (
             <Spacer height={fabSize + 2 * fabSpacing} />
           )}
         </>

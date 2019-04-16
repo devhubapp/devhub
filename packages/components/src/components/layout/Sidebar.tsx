@@ -4,10 +4,10 @@ import { FlatList, Image, StyleSheet, View, ViewStyle } from 'react-native'
 import { getGitHubURLForUser, ModalPayload } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
+import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -18,7 +18,6 @@ import {
   radius,
   sidebarSize,
 } from '../../styles/variables'
-import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import {
   ColumnHeader,
   getColumnHeaderThemeColors,
@@ -60,10 +59,11 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
   const flatListRef = useRef<FlatList<string>>(null)
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const theme = useTheme()
+
   const { appViewMode } = useAppViewMode()
   const { sizename } = useAppLayout()
+  const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
@@ -72,12 +72,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
-
-  const {
-    focusedColumnId: _focusedColumnId,
-    focusedColumnIndex,
-  } = useFocusedColumn()
-  const focusedColumnId = _focusedColumnId || columnIds[0]
 
   useEffect(() => {
     if (!(flatListRef.current && focusedColumnId)) return
@@ -126,12 +120,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   }
 
   return (
-    <SpringAnimatedSafeAreaView
+    <SafeAreaView
       style={{
         backgroundColor:
-          springAnimatedTheme[
-            getColumnHeaderThemeColors(theme.backgroundColor).normal
-          ],
+          theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
         zIndex: zIndex || 1000,
       }}
     >
@@ -195,7 +187,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           ListHeaderComponent={
             !(columnIds && columnIds.length) &&
             !large &&
-            !shouldRenderFAB(sizename) ? (
+            !shouldRenderFAB({ sizename }) ? (
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
@@ -295,7 +287,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           <>
             {/* <Separator horizontal={!horizontal} /> */}
 
-            {!!large && !shouldRenderFAB(sizename) && (
+            {!!large && !shouldRenderFAB({ sizename }) && (
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
@@ -404,7 +396,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
         <SectionSpacer />
       </View>
-    </SpringAnimatedSafeAreaView>
+    </SafeAreaView>
   )
 })
 

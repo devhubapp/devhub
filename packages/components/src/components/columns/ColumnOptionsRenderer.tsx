@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 
-import { useTransition } from 'react-spring/native'
+import { useSpring, useTransition } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
@@ -11,21 +11,26 @@ import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animat
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
+import { ConditionalWrap } from '../common/ConditionalWrap'
 import { fabSize } from '../common/FAB'
+import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
-import { fabSpacing } from '../layout/FABRenderer'
+import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptions } from './ColumnOptions'
 
 export interface ColumnOptionsRendererProps {
-  close?: (() => void) | undefined
+  close: (() => void) | undefined
   columnId: string
   containerHeight: number
+  fixedPosition?: 'left' | 'right'
+  fixedWidth?: number | undefined
   forceOpenAll?: boolean
   inlineMode?: boolean
+  isOpened: boolean
+  renderHeader?: 'yes' | 'no' | 'spacing-only'
   startWithFiltersExpanded?: boolean
-  visible: boolean
 }
 
 export const ColumnOptionsRenderer = React.memo(
@@ -34,21 +39,22 @@ export const ColumnOptionsRenderer = React.memo(
       close,
       columnId,
       containerHeight,
+      fixedPosition,
+      fixedWidth,
       forceOpenAll,
       inlineMode,
+      isOpened,
+      renderHeader,
       startWithFiltersExpanded,
-      visible,
     } = props
 
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
     const { sizename } = useAppLayout()
-
     const { column, columnIndex } = useColumn(columnId)
+    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const immediate = Platform.realOS === 'android'
     const overlayTransition = useTransition<boolean, any>(
-      visible ? [true] : [],
+      isOpened ? [true] : [],
       () => 'column-options-overlay',
       {
         reset: true,
@@ -61,25 +67,51 @@ export const ColumnOptionsRenderer = React.memo(
       },
     )[0]
 
-    const isFabVisible = sizename < '3-large'
+    const enableAbsolutePositionAnimation = !!(
+      !inlineMode &&
+      fixedPosition &&
+      fixedWidth
+    )
 
-    const availableHeight =
-      containerHeight - (isFabVisible ? fabSize + 2 * fabSpacing : 0)
-    const fixedWidth = inlineMode ? 250 : undefined
+    const absolutePositionAnimation = useSpring<any>(
+      !inlineMode && fixedPosition && fixedWidth
+        ? {
+            config: getDefaultReactSpringAnimationConfig(),
+            from: { [fixedPosition]: -fixedWidth },
+            to: { [fixedPosition]: isOpened ? 0 : -fixedWidth },
+          }
+        : {
+            config: getDefaultReactSpringAnimationConfig(),
+            from: { left: 0, right: 0 },
+            to: { left: 0, right: 0 },
+          },
+    )
 
     if (!column) return null
 
+    const availableHeight =
+      containerHeight -
+      (shouldRenderFAB({ sizename, isColumnOptionsVisible: true })
+        ? fabSize + 2 * fabSpacing
+        : 0)
+
     return (
       <>
-        {!!overlayTransition && !fixedWidth && !!close && (
+        {!!overlayTransition && !inlineMode && !!close && (
           <SpringAnimatedView
             collapsable={false}
             style={[
               StyleSheet.absoluteFillObject,
+              {
+                top:
+                  renderHeader === 'yes' || renderHeader === 'spacing-only'
+                    ? columnHeaderHeight
+                    : 0,
+              },
               overlayTransition.props,
-              !!fixedWidth && { width: fixedWidth },
               { zIndex: 200 },
             ]}
+            pointerEvents="box-none"
           >
             <SpringAnimatedTouchableOpacity
               analyticsAction="close_via_overlay"
@@ -97,7 +129,7 @@ export const ColumnOptionsRenderer = React.memo(
           </SpringAnimatedView>
         )}
 
-        <View
+        <SpringAnimatedView
           collapsable={false}
           style={[
             !inlineMode && {
@@ -106,14 +138,18 @@ export const ColumnOptionsRenderer = React.memo(
               left: 0,
               right: 0,
             },
+            enableAbsolutePositionAnimation && absolutePositionAnimation,
+            !!fixedWidth && fixedPosition === 'left' && { right: undefined },
+            !!fixedWidth && fixedPosition === 'right' && { left: undefined },
             !!fixedWidth && { width: fixedWidth },
             {
               zIndex: 200,
             },
           ]}
+          pointerEvents="box-none"
         >
-          {!!inlineMode && (
-            <ColumnHeader>
+          {renderHeader === 'yes' ? (
+            <ColumnHeader pointerEvents="none">
               <ColumnHeaderItem
                 analyticsLabel={undefined}
                 fixedIconSize
@@ -124,22 +160,32 @@ export const ColumnOptionsRenderer = React.memo(
                 tooltip={undefined}
               />
             </ColumnHeader>
-          )}
+          ) : renderHeader === 'spacing-only' ? (
+            <Spacer height={columnHeaderHeight} pointerEvents="none" />
+          ) : null}
 
-          <AccordionView isOpen={visible}>
+          <ConditionalWrap
+            condition={!enableAbsolutePositionAnimation}
+            wrap={children => (
+              <AccordionView isOpen={isOpened}>{children}</AccordionView>
+            )}
+          >
             <ColumnOptions
               key={`column-options-${column.type}`}
               availableHeight={
-                availableHeight - (inlineMode ? columnHeaderHeight : 0)
+                availableHeight -
+                (renderHeader === 'yes' || renderHeader === 'spacing-only'
+                  ? columnHeaderHeight
+                  : 0)
               }
               column={column}
               columnIndex={columnIndex}
               forceOpenAll={forceOpenAll}
-              fullHeight={inlineMode}
+              fullHeight={inlineMode || !!fixedWidth}
               startWithFiltersExpanded={startWithFiltersExpanded}
             />
-          </AccordionView>
-        </View>
+          </ConditionalWrap>
+        </SpringAnimatedView>
       </>
     )
   },

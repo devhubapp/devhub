@@ -14,6 +14,7 @@ import {
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import {
@@ -94,9 +95,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     columnIndex,
     forceOpenAll,
     fullHeight,
+    startWithFiltersExpanded = true,
   } = props
-
-  const { startWithFiltersExpanded = availableHeight >= 1000 } = props
 
   const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
     column.type === 'notifications' && 'inbox',
@@ -126,7 +126,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const allowOnlyOneCategoryToBeOpenedRef = useRef(!allIsOpen)
   const allowToggleCategories = !forceOpenAll
 
-  const [containerWidth, setContainerWidth] = useState(0)
+  // const [containerWidth, setContainerWidth] = useState(0)
 
   const theme = useTheme()
 
@@ -180,12 +180,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
         height: fullHeight ? availableHeight : 'auto',
       }}
-      onLayout={e => {
-        setContainerWidth(e.nativeEvent.layout.width)
-      }}
+      // onLayout={e => {
+      //   setContainerWidth(e.nativeEvent.layout.width)
+      // }}
     >
       <ScrollView
-        alwaysBounceVertical={false}
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical
+        bounces
+        showsHorizontalScrollIndicator={false}
         style={{ maxHeight: availableHeight - columnHeaderHeight - 4 }}
       >
         {allColumnOptionCategories.includes('inbox') &&
@@ -703,8 +706,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         <ColumnHeaderItem
           key="column-options-button-move-column-left"
           analyticsLabel="move_column_left"
-          disabled={columnIndex === 0}
           enableForegroundHover
+          disabled={columnIndex === 0 && Platform.realOS === 'web'}
           fixedIconSize
           iconName={
             appOrientation === 'landscape' && appViewMode === 'single-column'
@@ -716,10 +719,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               animated: appViewMode === 'multi-column',
               columnId: column.id,
               columnIndex: columnIndex - 1,
-              highlight: appViewMode === 'multi-column',
+              highlight: appViewMode === 'multi-column' || columnIndex === 0,
               scrollTo: true,
             })
           }
+          style={{ opacity: columnIndex === 0 ? 0.5 : 1 }}
           tooltip={
             appOrientation === 'landscape' && appViewMode === 'single-column'
               ? `Move column up (${
@@ -734,8 +738,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         <ColumnHeaderItem
           key="column-options-button-move-column-right"
           analyticsLabel="move_column_right"
-          disabled={columnIndex === columnIds.length - 1}
           enableForegroundHover
+          disabled={
+            columnIndex === columnIds.length - 1 && Platform.realOS === 'web'
+          }
           fixedIconSize
           iconName={
             appOrientation === 'landscape' && appViewMode === 'single-column'
@@ -747,10 +753,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               animated: appViewMode === 'multi-column',
               columnId: column.id,
               columnIndex: columnIndex + 1,
-              highlight: appViewMode === 'multi-column',
+              highlight:
+                appViewMode === 'multi-column' ||
+                columnIndex === columnIds.length - 1,
               scrollTo: true,
             })
           }
+          style={{ opacity: columnIndex === columnIds.length - 1 ? 0.5 : 1 }}
           tooltip={
             appOrientation === 'landscape' && appViewMode === 'single-column'
               ? `Move column down (${
@@ -769,6 +778,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             key="column-options-button-toggle-collapse-filters"
             analyticsLabel={allIsOpen ? 'collapse_filters' : 'expand_filters'}
             enableForegroundHover
+            fixedIconSize
             iconName={allIsOpen ? 'fold' : 'unfold'}
             onPress={() => {
               if (allIsOpen) {
@@ -781,13 +791,14 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 setOpenedOptionCategories(new Set(allColumnOptionCategories))
               }
             }}
-            text={
-              containerWidth > 300
-                ? allIsOpen
-                  ? 'Collapse filters'
-                  : 'Expand filters'
-                : ''
-            }
+            text=""
+            // text={
+            //   containerWidth > 300
+            //     ? allIsOpen
+            //       ? 'Collapse filters'
+            //       : 'Expand filters'
+            //     : ''
+            // }
             tooltip={allIsOpen ? 'Collapse filters' : 'Expand filters'}
           />
         )}
@@ -796,9 +807,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           key="column-options-button-remove-column"
           analyticsLabel="remove_column"
           enableForegroundHover
+          fixedIconSize
           iconName="trashcan"
           onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
-          text={containerWidth > 300 ? 'Remove' : ''}
+          // text={containerWidth > 300 ? 'Remove' : ''}
+          text=""
           tooltip="Remove column"
         />
       </View>

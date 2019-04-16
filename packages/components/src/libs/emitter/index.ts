@@ -26,6 +26,7 @@ export interface EmitterTypes {
   }
   SCROLL_DOWN_COLUMN: { columnId: string; columnIndex: number }
   SCROLL_UP_COLUMN: { columnId: string; columnIndex: number }
+  TOGGLE_COLUMN_FILTERS: { columnId: string }
 }
 
 const _emitter = new EventEmitter()

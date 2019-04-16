@@ -208,7 +208,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           </View>
         ) : null}
 
-        {shouldRenderFAB(sizename) && (
+        {shouldRenderFAB({ sizename }) && (
           <Spacer height={fabSize + 2 * fabSpacing} />
         )}
       </>

@@ -4,8 +4,8 @@ export function getDefaultReactSpringAnimationConfig(
   config?: SpringConfig,
 ): SpringConfig {
   return {
-    tension: 340,
     friction: 35,
+    tension: 340,
     ...config,
   }
 }

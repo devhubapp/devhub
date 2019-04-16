@@ -87,7 +87,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
         {children}
       </View>
 
-      <Separator horizontal />
+      {!!children && <Separator horizontal />}
     </SpringAnimatedSafeAreaView>
   )
 }

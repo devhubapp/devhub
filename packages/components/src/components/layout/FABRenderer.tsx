@@ -8,6 +8,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { FAB } from '../common/FAB'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { AppLayoutProviderState, useAppLayout } from '../context/LayoutContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 
@@ -22,11 +23,18 @@ const styles = StyleSheet.create({
   },
 })
 
-export function shouldRenderFAB(
-  sizename: AppLayoutProviderState['sizename'],
-  keyboardVisibility?: ReturnType<typeof useKeyboardVisibility>,
-) {
+export function shouldRenderFAB({
+  isColumnOptionsVisible,
+  keyboardVisibility,
+  sizename,
+}: {
+  isColumnOptionsVisible?: boolean
+  keyboardVisibility?: ReturnType<typeof useKeyboardVisibility>
+  sizename: AppLayoutProviderState['sizename']
+}) {
   if (!(sizename <= '3-large')) return false
+
+  if (sizename === '1-small' && isColumnOptionsVisible) return false
 
   if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
     return false
@@ -37,15 +45,22 @@ export function shouldRenderFAB(
 export function FABRenderer() {
   // const addOrCloseAnimatedRef = useRef(new Animated.Value(0))
 
-  const keyboardVisibility = useKeyboardVisibility()
   const { sizename } = useAppLayout()
-
+  const keyboardVisibility = useKeyboardVisibility()
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
 
-  if (!shouldRenderFAB(sizename, keyboardVisibility)) return null
+  const { isSharedFiltersOpened } = useColumnFilters()
+
+  if (
+    !shouldRenderFAB({
+      sizename,
+      keyboardVisibility,
+      isColumnOptionsVisible: isSharedFiltersOpened,
+    })
+  )
+    return null
 
   if (!currentOpenedModal) {
     /*

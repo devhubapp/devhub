@@ -13,6 +13,7 @@ import {
   ThemeColors,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
+import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
@@ -31,6 +32,7 @@ import {
 } from '../../utils/helpers/filters'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { Spacer } from '../common/Spacer'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
@@ -77,7 +79,6 @@ export interface ColumnRendererProps {
   columnIndex: number
   disableColumnOptions?: boolean
   icon: GitHubIcon
-  onColumnOptionsVisibilityChange?: (isOpen: boolean) => void
   owner: string | undefined
   pagingEnabled?: boolean
   repo: string | undefined
@@ -95,7 +96,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     columnIndex,
     disableColumnOptions,
     icon,
-    onColumnOptionsVisibilityChange,
     owner,
     pagingEnabled,
     repo,
@@ -104,9 +104,17 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     title,
   } = props
 
-  const [showColumnOptions, setShowColumnOptions] = useState(false)
+  const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
+  const {
+    enableSharedFiltersView,
+    inlineMode,
+    isSharedFiltersOpened: _isSharedFiltersOpened,
+  } = useColumnFilters()
+  const isFiltersOpened = enableSharedFiltersView
+    ? _isSharedFiltersOpened
+    : _isLocalFiltersOpened
 
-  const { appOrientation } = useAppLayout()
+  const { appOrientation, sizename } = useAppLayout()
   const { appViewMode, cardViewMode } = useAppViewMode()
 
   const filteredSubscriptionsDataSelectorRef = useRef(
@@ -130,6 +138,16 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       cardViewMode,
     )
   }, [cardViewMode, ...column.subscriptionIds])
+
+  useEmitter(
+    'TOGGLE_COLUMN_FILTERS',
+    payload => {
+      if (payload.columnId !== column.id) return
+      if (enableSharedFiltersView) return
+      setIsLocalFiltersOpened(v => !v)
+    },
+    [column.id, enableSharedFiltersView],
+  )
 
   const filteredItems = useReduxState(
     useCallback(
@@ -186,11 +204,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     actions.markRepoNotificationsAsReadOrUnread,
   )
 
-  useEffect(() => {
-    if (onColumnOptionsVisibilityChange)
-      onColumnOptionsVisibilityChange(showColumnOptions)
-  }, [onColumnOptionsVisibilityChange, showColumnOptions])
-
   function focusColumn() {
     emitter.emit('FOCUS_ON_COLUMN', {
       columnId: column.id,
@@ -200,9 +213,13 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     })
   }
 
+  function toggleColumnFilters() {
+    emitter.emit('TOGGLE_COLUMN_FILTERS', { columnId: column.id })
+  }
+
   const toggleOptions = () => {
-    setShowColumnOptions(v => !v)
     focusColumn()
+    toggleColumnFilters()
   }
 
   const hasOneUnreadItem = (filteredItems as any[]).some(
@@ -335,7 +352,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         {!disableColumnOptions && (
           <ColumnHeaderItem
             key="column-options-button-toggle-column-options"
-            analyticsAction={showColumnOptions ? 'hide' : 'show'}
+            analyticsAction={isFiltersOpened ? 'hide' : 'show'}
             analyticsLabel="column_options"
             enableForegroundHover
             fixedIconSize
@@ -357,13 +374,16 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       >
         {({ height: containerHeight }) => (
           <>
-            {!disableColumnOptions && (
+            {!disableColumnOptions && !enableSharedFiltersView && (
               <ColumnOptionsRenderer
                 key="column-options-renderer"
                 close={toggleOptions}
                 columnId={column.id}
                 containerHeight={containerHeight}
-                visible={!!showColumnOptions}
+                // fixedPosition="right"
+                // fixedWidth={250}
+                // forceOpenAll
+                isOpened={isFiltersOpened}
               />
             )}
 
@@ -376,6 +396,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                   flexDirection: 'column-reverse',
                 },
               ]}
+              pointerEvents={
+                isFiltersOpened && !inlineMode ? 'none' : undefined
+              }
             >
               {!!isFreeTrial && <FreeTrialHeaderMessage />}
               {children}

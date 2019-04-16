@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { BackHandler, Dimensions, StyleSheet, View } from 'react-native'
 
 import { ModalPayloadWithIndex } from '@devhub/core'
-import { config, useTransition } from 'react-spring/native'
+import { useTransition } from 'react-spring/native'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'

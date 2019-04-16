@@ -11,6 +11,7 @@ import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { fabSize } from '../common/FAB'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
@@ -38,16 +39,18 @@ const styles = StyleSheet.create({
 })
 
 export function ColumnSwitcher() {
+  const { appViewMode } = useAppViewMode()
+  const { focusedColumnId } = useFocusedColumn()
+  const { isSharedFiltersOpened } = useColumnFilters()
+  const { sizename } = useAppLayout()
+  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-  const { focusedColumnId: _focusedColumnId } = useFocusedColumn()
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const { appViewMode } = useAppViewMode()
-  const { sizename } = useAppLayout()
 
-  const focusedColumnId = _focusedColumnId || columnIds[0]
-
-  if (!(appViewMode === 'single-column' && shouldRenderFAB(sizename)))
+  if (
+    !isSharedFiltersOpened &&
+    !(appViewMode === 'single-column' && shouldRenderFAB({ sizename }))
+  )
     return null
   if (currentOpenedModal) return null
 
@@ -86,8 +89,8 @@ export function ColumnSwitcher() {
             borderTopLeftRadius: fabSize / 2,
             borderBottomLeftRadius: fabSize / 2,
             backgroundColor: springAnimatedTheme.backgroundColor,
+            opacity: isFirst ? 0.5 : 1,
           },
-          isFirst && { opacity: 0.5 },
         ]}
         tooltip={`Previous column (${
           keyboardShortcutsById.selectPreviousColumn.keys[0]
@@ -126,8 +129,8 @@ export function ColumnSwitcher() {
             borderTopRightRadius: fabSize / 2,
             borderBottomRightRadius: fabSize / 2,
             backgroundColor: springAnimatedTheme.backgroundColor,
+            opacity: isLast ? 0.5 : 1,
           },
-          isLast && { opacity: 0.5 },
         ]}
         tooltip={`Next column (${
           keyboardShortcutsById.selectNextColumn.keys[0]

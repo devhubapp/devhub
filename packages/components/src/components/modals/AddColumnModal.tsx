@@ -332,7 +332,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 
-  const isFabVisible = shouldRenderFAB(sizename)
+  const isFabVisible = shouldRenderFAB({ sizename })
 
   return (
     <ModalColumn

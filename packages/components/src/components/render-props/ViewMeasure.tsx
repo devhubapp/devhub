@@ -39,6 +39,7 @@ export function ViewMeasurer(props: ViewMeasurerProps) {
         setMeasures({ width, height })
         if (onLayout) onLayout(e)
       }}
+      pointerEvents="box-none"
     >
       {children && measures ? children(measures) : null}
     </View>

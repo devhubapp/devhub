@@ -6,7 +6,6 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForUser,
-  GitHubIcon,
   ThemeColors,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'

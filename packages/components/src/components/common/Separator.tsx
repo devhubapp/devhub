@@ -53,6 +53,7 @@ export function Separator(props: SeparatorProps) {
         },
         !!zIndex && { zIndex },
       ]}
+      pointerEvents="none"
     />
   )
 }

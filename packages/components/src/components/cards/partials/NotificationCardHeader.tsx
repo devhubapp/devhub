@@ -6,7 +6,6 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForUser,
-  GitHubIcon,
   GitHubNotificationReason,
   ThemeColors,
   trimNewLinesAndSpaces,

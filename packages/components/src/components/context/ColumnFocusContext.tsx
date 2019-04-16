@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { useEmitter } from '../../hooks/use-emitter'
 import { emitter } from '../../libs/emitter'
@@ -25,6 +25,30 @@ export const ColumnFocusContext = React.createContext<ColumnFocusProviderState>(
 export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   const store = useReduxStore()
   const [value, setValue] = useState<ColumnFocusProviderState>(defaultValue)
+
+  useEffect(() => {
+    const state = store.getState()
+    const columnIds = selectors.columnIdsSelector(state)
+
+    // force always having a valid column focused
+    const focusedColumnIndex =
+      columnIds.length &&
+      (value.focusedColumnIndex >= 0 &&
+        value.focusedColumnIndex < columnIds.length)
+        ? value.focusedColumnIndex
+        : columnIds.length
+        ? 0
+        : -1
+    const focusedColumnId = columnIds[focusedColumnIndex]
+
+    if (
+      focusedColumnIndex === value.focusedColumnIndex &&
+      focusedColumnId === value.focusedColumnId
+    )
+      return
+
+    setValue({ focusedColumnId, focusedColumnIndex })
+  }, [value.focusedColumnId, value.focusedColumnIndex])
 
   useEmitter(
     'FOCUS_ON_COLUMN',

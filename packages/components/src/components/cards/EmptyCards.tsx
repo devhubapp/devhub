@@ -186,7 +186,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
         ) : null}
       </View>
 
-      {shouldRenderFAB(sizename) && (
+      {shouldRenderFAB({ sizename }) && (
         <Spacer height={fabSize + 2 * fabSpacing} />
       )}
     </View>
