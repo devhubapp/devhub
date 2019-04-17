@@ -7,6 +7,7 @@ import {
   GitHubIssue,
   GitHubPullRequest,
   isPullRequest,
+  isTagMainEvent,
   sortEvents,
 } from '@devhub/core'
 import { bugsnag } from '../../../libs/bugsnag'
@@ -16,6 +17,7 @@ import {
   getIssueIconAndColor,
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
+  getTagIconAndColor,
 } from './shared'
 
 export const eventSubjectTypes: GitHubEventSubjectType[] = [
@@ -204,7 +206,9 @@ export function getEventIconAndColor(
       return { icon: 'code' }
 
     case 'ReleaseEvent':
-      return getReleaseIconAndColor()
+      return isTagMainEvent(event)
+        ? getTagIconAndColor()
+        : getReleaseIconAndColor()
 
     case 'WatchEvent':
     case 'WatchEvent:OneUserMultipleRepos':

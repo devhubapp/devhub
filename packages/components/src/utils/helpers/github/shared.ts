@@ -18,10 +18,28 @@ export function getCommitIconAndColor(): {
   return { icon: 'git-commit', color: colors.brown, tooltip: 'Commit' }
 }
 
-export function getReleaseIconAndColor(
-  isTag = false,
-): { icon: GitHubIcon; color?: string; tooltip: string } {
-  return { icon: 'tag', color: colors.pink, tooltip: isTag ? 'Tag' : 'Release' }
+export function getReleaseIconAndColor(): {
+  icon: GitHubIcon
+  color?: string
+  tooltip: string
+} {
+  return {
+    icon: 'rocket',
+    color: colors.pink,
+    tooltip: 'Release',
+  }
+}
+
+export function getTagIconAndColor(): {
+  icon: GitHubIcon
+  color?: string
+  tooltip: string
+} {
+  return {
+    icon: 'tag',
+    color: colors.gray,
+    tooltip: 'Tag',
+  }
 }
 
 export function getPullRequestIconAndColor(pullRequest: {
