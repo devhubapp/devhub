@@ -48,8 +48,10 @@ export function ColumnSwitcher() {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
 
   if (
-    !isSharedFiltersOpened &&
-    !(appViewMode === 'single-column' && shouldRenderFAB({ sizename }))
+    !(
+      (appViewMode === 'single-column' && shouldRenderFAB({ sizename })) ||
+      (appViewMode === 'multi-column' && isSharedFiltersOpened)
+    )
   )
     return null
   if (currentOpenedModal) return null
