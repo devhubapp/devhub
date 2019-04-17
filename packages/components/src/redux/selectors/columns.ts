@@ -51,6 +51,8 @@ export const columnHeaderDetailsSelector = createDeepEqualSelector(
   (state: RootState, columnId: string) => columnSelector(state, columnId),
   (state: RootState, columnId: string) => {
     const column = columnSelector(state, columnId)
+    if (!column) return undefined
+
     const subscription = columnSubscriptionSelector(state, columnId)
     return subscription
   },

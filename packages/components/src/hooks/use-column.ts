@@ -21,7 +21,7 @@ export function useColumn(columnId: string) {
   )
 
   return {
-    column: column!,
+    column,
     columnIndex,
     headerDetails,
   }

@@ -114,7 +114,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     ? _isSharedFiltersOpened
     : _isLocalFiltersOpened
 
-  const { appOrientation, sizename } = useAppLayout()
+  const { appOrientation } = useAppLayout()
   const { appViewMode, cardViewMode } = useAppViewMode()
 
   const filteredSubscriptionsDataSelectorRef = useRef(

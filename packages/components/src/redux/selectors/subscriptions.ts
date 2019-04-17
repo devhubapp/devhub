@@ -40,7 +40,9 @@ export const subscriptionsArrSelector = createArraySelector(
 export const createSubscriptionsDataSelector = () =>
   createArraySelector(
     (state: RootState, subscriptionIds: string[]) =>
-      subscriptionIds.map(id => subscriptionSelector(state, id)),
+      subscriptionIds
+        .map(id => subscriptionSelector(state, id))
+        .filter(Boolean),
     subscriptions => {
       let items: ColumnSubscription['data']['items']
 
@@ -64,17 +66,17 @@ export const createSubscriptionsDataSelector = () =>
 
       if (!(items && items.length)) return emptyArray
 
-      if (subscriptions[0]!.type === 'activity') {
+      if (subscriptions[0] && subscriptions[0]!.type === 'activity') {
         return sortEvents(items as EnhancedGitHubEvent[])
       }
 
-      if (subscriptions[0]!.type === 'issue_or_pr') {
+      if (subscriptions[0] && subscriptions[0]!.type === 'issue_or_pr') {
         return sortIssuesOrPullRequests(
           items as EnhancedGitHubIssueOrPullRequest[],
         )
       }
 
-      if (subscriptions[0]!.type === 'notifications') {
+      if (subscriptions[0] && subscriptions[0]!.type === 'notifications') {
         return sortNotifications(items as EnhancedGitHubNotification[])
       }
 

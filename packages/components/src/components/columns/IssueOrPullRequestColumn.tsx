@@ -25,6 +25,8 @@ export const IssueOrPullRequestColumn = React.memo(
       pagingEnabled,
     } = props
 
+    if (!headerDetails) return null
+
     return (
       <ColumnRenderer
         key={`issue-or-pr-column-${column.id}-inner`}

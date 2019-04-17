@@ -250,18 +250,22 @@ export function getUniqueIdForSubscription(subscription: {
 export function getColumnHeaderDetails(
   column: Column | undefined,
   subscription: ColumnSubscription | undefined,
-): {
-  avatarProps?: {
-    repo?: string
-    username: string
-  }
-  icon: GitHubIcon
-  owner?: string
-  repo?: string
-  repoIsKnown: boolean
-  subtitle?: string
-  title: string
-} {
+):
+  | {
+      avatarProps?: {
+        repo?: string
+        username: string
+      }
+      icon: GitHubIcon
+      owner?: string
+      repo?: string
+      repoIsKnown: boolean
+      subtitle?: string
+      title: string
+    }
+  | undefined {
+  if (!column) return undefined
+
   switch (column && column.type) {
     case 'activity': {
       const s = (subscription || {}) as Partial<ActivityColumnSubscription>

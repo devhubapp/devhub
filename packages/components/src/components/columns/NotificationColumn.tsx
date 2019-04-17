@@ -25,6 +25,8 @@ export const NotificationColumn = React.memo(
       pagingEnabled,
     } = props
 
+    if (!headerDetails) return null
+
     return (
       <ColumnRenderer
         key={`notification-column-${column.id}-inner`}

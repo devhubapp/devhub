@@ -24,6 +24,8 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
     pagingEnabled,
   } = props
 
+  if (!headerDetails) return null
+
   return (
     <ColumnRenderer
       key={`event-column-${column.id}-inner`}
