@@ -29,13 +29,22 @@ html {
 
 body {
   background-color: #292C33;
+  cursor: default;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+a, a > * {
+  cursor: pointer;
+}
+
 input:focus {
   outline: none !important;
+}
+
+.touchable:not(a) {
+  cursor: inherit;
 }
 
 /* https://github.com/necolas/react-native-web/issues/1299 */

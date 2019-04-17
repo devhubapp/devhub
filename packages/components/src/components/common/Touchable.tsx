@@ -84,7 +84,7 @@ export const Touchable = React.forwardRef(
     return (
       <TouchableComponent
         {...props}
-        className={__DEV__ ? undefined : 'touchable'}
+        className="touchable"
         ref={touchableRef}
         onLongPress={onLongPress}
         onPress={onPress}

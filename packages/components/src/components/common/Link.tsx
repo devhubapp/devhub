@@ -37,7 +37,7 @@ export function Link(props: LinkProps) {
     mobileProps,
     openOnNewTab: _openOnNewTab = true,
     webProps,
-    enableBackgroundHover,
+    enableBackgroundHover = true,
     enableForegroundHover,
     hoverBackgroundThemeColor,
     tooltip,
@@ -77,7 +77,8 @@ export function Link(props: LinkProps) {
 
     if (ref.current) {
       const hoverBackgroundColor =
-        hoverBackgroundThemeColor && theme[hoverBackgroundThemeColor]
+        (hoverBackgroundThemeColor && theme[hoverBackgroundThemeColor]) ||
+        rgba(theme.invert().foregroundColor, 0.2)
 
       ref.current!.setNativeProps({
         style: {

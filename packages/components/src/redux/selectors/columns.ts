@@ -8,8 +8,12 @@ const emptyObj = {}
 
 const s = (state: RootState) => state.columns || emptyObj
 
-export const columnSelector = (state: RootState, id: string) =>
-  (s(state).byId && s(state).byId![id]) || undefined
+export const columnSelector = (state: RootState, id: string) => {
+  if (!id) return
+
+  const byId = s(state).byId
+  return (byId && byId[id]) || undefined
+}
 
 export const columnIdsSelector = (state: RootState) =>
   s(state).allIds || emptyArray

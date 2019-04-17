@@ -139,10 +139,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           <ColumnHeader noPadding>
             <ColumnHeaderItem
               analyticsLabel={undefined}
-              hoverBackgroundThemeColor={
-                getColumnHeaderThemeColors(theme.backgroundColor).hover
-              }
-              enableBackgroundHover={enableBackgroundHover}
               noPadding
               size={columnHeaderItemContentBiggerSize}
               style={[
@@ -157,6 +153,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             >
               <Link
                 analyticsLabel="sidebar_user_avatar"
+                enableBackgroundHover={enableBackgroundHover}
+                hoverBackgroundThemeColor={
+                  getColumnHeaderThemeColors(theme.backgroundColor).hover
+                }
                 href={getGitHubURLForUser(username!)}
                 openOnNewTab
                 style={[
@@ -357,10 +357,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
             <ColumnHeaderItem
               analyticsLabel={undefined}
-              hoverBackgroundThemeColor={
-                getColumnHeaderThemeColors(theme.backgroundColor).hover
-              }
-              enableBackgroundHover={enableBackgroundHover}
               noPadding
               size={columnHeaderItemContentBiggerSize}
               style={[
@@ -372,6 +368,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             >
               <Link
                 analyticsLabel="sidebar_devhub_logo"
+                enableBackgroundHover={enableBackgroundHover}
+                hoverBackgroundThemeColor={
+                  getColumnHeaderThemeColors(theme.backgroundColor).hover
+                }
                 href="https://github.com/devhubapp/devhub"
                 openOnNewTab
                 style={[styles.centerContainer, itemContainerStyle]}

@@ -1,14 +1,16 @@
-import React from 'react'
-
-import { Theme } from '@devhub/core'
 import { darken, getLuminance, lighten } from 'polished'
-import { Platform } from '../libs/platform'
+import React, { useCallback, useMemo } from 'react'
+
+import { ColumnSubscription, Theme } from '@devhub/core'
+import { useReduxState } from '../hooks/use-redux-state'
+import * as selectors from '../redux/selectors'
 import { themeColorFields } from '../utils/helpers/theme'
 import { getSeparatorThemeColor } from './common/Separator'
+import { useFocusedColumn } from './context/ColumnFocusContext'
 import { useTheme } from './context/ThemeContext'
 
-function getStyles(params: { theme: Theme }) {
-  const t = params.theme
+function getStyles(params: { theme: Theme; isLoading: boolean }) {
+  const { isLoading, theme: t } = params
   const separatorColor = t[getSeparatorThemeColor(t.backgroundColor)]
   const separatorColorLuminance = getLuminance(separatorColor)
   const backgroundColorLuminance = getLuminance(t.backgroundColor)
@@ -26,20 +28,13 @@ function getStyles(params: { theme: Theme }) {
       outline-color: ${t.primaryBackgroundColor};
     }
 
-    ${
-      Platform.realOS === 'web'
-        ? `a:hover, a:hover > *:not([class*='touchable']) {
-      text-decoration: underline;
-    }`
-        : ''
-    }
-
     body {
       ${themeColorFields
         .map(field => `--theme_${field}:${t[field]};`)
         .join('\n')}
       background-color:${t.backgroundColor};
       color: ${t.foregroundColor};
+      cursor: ${isLoading ? 'progress' : 'default'};
     }
   `
 }
@@ -47,5 +42,25 @@ function getStyles(params: { theme: Theme }) {
 export const AppGlobalStyles = React.memo(() => {
   const theme = useTheme()
 
-  return <style key="app-global-styles-inner">{getStyles({ theme })}</style>
+  const { focusedColumnId } = useFocusedColumn()
+  const mainSubscription = useReduxState(
+    useCallback(
+      state =>
+        selectors.columnSubscriptionSelector(state, focusedColumnId || ''),
+      [focusedColumnId],
+    ),
+  ) as ColumnSubscription | undefined
+
+  const isLoading = !!(
+    mainSubscription &&
+    mainSubscription.data &&
+    (mainSubscription.data.loadState === 'loading' ||
+      mainSubscription.data.loadState === 'loading_first' ||
+      mainSubscription.data.loadState === 'loading_more')
+  )
+  const styles = getStyles({ theme, isLoading })
+
+  return useMemo(() => <style key="app-global-styles-inner">{styles}</style>, [
+    styles,
+  ])
 })
