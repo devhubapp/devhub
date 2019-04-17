@@ -89,7 +89,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               ]}
             />{' '} */}
             <SpringAnimatedText
-              numberOfLines={2}
+              numberOfLines={1}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 small && cardStyles.smallText,
@@ -114,7 +114,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                 }
               >
                 <SpringAnimatedText
-                  numberOfLines={2}
+                  numberOfLines={1}
                   style={[
                     getCardStylesForTheme(springAnimatedTheme).normalText,
                     getCardRowStylesForTheme(springAnimatedTheme)
