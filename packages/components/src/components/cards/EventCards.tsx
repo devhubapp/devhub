@@ -23,7 +23,11 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
-import { EmptyCards, EmptyCardsProps } from './EmptyCards'
+import {
+  defaultCardFooterSpacing,
+  EmptyCards,
+  EmptyCardsProps,
+} from './EmptyCards'
 import { EventCard } from './EventCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
@@ -178,7 +182,12 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         <CardItemSeparator />
 
         {fetchNextPage ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
@@ -190,7 +199,12 @@ export const EventCards = React.memo((props: EventCardsProps) => {
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel="show_cleared"
               borderOnly

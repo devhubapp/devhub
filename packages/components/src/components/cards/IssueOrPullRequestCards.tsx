@@ -24,7 +24,11 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
-import { EmptyCards, EmptyCardsProps } from './EmptyCards'
+import {
+  defaultCardFooterSpacing,
+  EmptyCards,
+  EmptyCardsProps,
+} from './EmptyCards'
 import {
   IssueOrPullRequestCard,
   IssueOrPullRequestCardProps,
@@ -191,7 +195,12 @@ export const IssueOrPullRequestCards = React.memo(
           <CardItemSeparator />
 
           {fetchNextPage ? (
-            <View style={{ padding: contentPadding }}>
+            <View
+              style={{
+                paddingHorizontal: contentPadding,
+                paddingVertical: defaultCardFooterSpacing,
+              }}
+            >
               <Button
                 analyticsLabel={
                   loadState === 'error' ? 'try_again' : 'load_more'
@@ -207,7 +216,12 @@ export const IssueOrPullRequestCards = React.memo(
               />
             </View>
           ) : column.filters && column.filters.clearedAt ? (
-            <View style={{ padding: contentPadding }}>
+            <View
+              style={{
+                paddingHorizontal: contentPadding,
+                paddingVertical: defaultCardFooterSpacing,
+              }}
+            >
               <Button
                 analyticsLabel="show_cleared"
                 borderOnly

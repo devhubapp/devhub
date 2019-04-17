@@ -23,7 +23,11 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
-import { EmptyCards, EmptyCardsProps } from './EmptyCards'
+import {
+  defaultCardFooterSpacing,
+  EmptyCards,
+  EmptyCardsProps,
+} from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
@@ -181,7 +185,12 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         <CardItemSeparator />
 
         {fetchNextPage ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
@@ -193,7 +202,12 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel="show_cleared"
               borderOnly

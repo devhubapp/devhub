@@ -46,6 +46,11 @@ const clearMessage = getRandomClearMessage()
 const randomEmoji = getRandomEmoji()
 const randomEmojiImageURL = getEmojiImageURL(randomEmoji)
 
+export const defaultCardFooterSpacing =
+  fabSpacing + Math.abs(fabSize - defaultButtonSize) / 2
+export const defaultCardFooterHeight =
+  defaultButtonSize + 2 * defaultCardFooterSpacing
+
 export interface EmptyCardsProps {
   clearedAt: string | undefined
   columnId: string
@@ -141,11 +146,9 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     )
   }
 
-  const headerOrFooterHeight = defaultButtonSize + 2 * contentPadding
-
   return (
     <View style={sharedStyles.flex}>
-      <View style={{ height: headerOrFooterHeight }} />
+      <View style={{ height: defaultCardFooterHeight }} />
 
       <View
         style={{
@@ -159,9 +162,14 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
         {renderContent()}
       </View>
 
-      <View style={{ minHeight: headerOrFooterHeight }}>
+      <View>
         {hasError || loadState === 'loading_first' ? null : fetchNextPage ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel="load_more"
               children="Load more"
@@ -171,7 +179,12 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
             />
           </View>
         ) : clearedAt ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel="show_cleared"
               borderOnly
@@ -183,12 +196,10 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
               }}
             />
           </View>
+        ) : shouldRenderFAB({ sizename }) ? (
+          <Spacer height={fabSize + 2 * fabSpacing} />
         ) : null}
       </View>
-
-      {shouldRenderFAB({ sizename }) && (
-        <Spacer height={fabSize + 2 * fabSpacing} />
-      )}
     </View>
   )
 })
