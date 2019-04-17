@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
@@ -84,7 +84,7 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
     uncheckedForegroundColor = springAnimatedTheme.foregroundColor,
   } = props
 
-  const [lastBooleanValue, setLastBooleanValue] = useState(
+  const lastBooleanRef = useRef(
     typeof props.checked === 'boolean' ? props.checked : !!defaultValue,
   )
 
@@ -93,7 +93,7 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
   const getNextValue = () =>
     enableIndeterminateState
       ? checked === null
-        ? !lastBooleanValue
+        ? !lastBooleanRef.current
         : null
       : !checked
 
@@ -102,9 +102,13 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
 
     const nextValue = getNextValue()
 
-    if (typeof nextValue === 'boolean') setLastBooleanValue(nextValue)
+    if (typeof nextValue === 'boolean') {
+      lastBooleanRef.current = nextValue
+    }
 
-    onChange(nextValue)
+    setTimeout(() => {
+      onChange(nextValue)
+    }, 1)
   }
 
   const borderWidth = 1
