@@ -31,7 +31,7 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
   const enableSharedFiltersView =
     appViewMode === 'single-column' || sizename === '1-small'
 
-  const inlineMode = appViewMode === 'single-column' && sizename >= '4-x-large'
+  const inlineMode = appViewMode === 'single-column' && sizename >= '5-xx-large'
 
   const [isOpen, setIsOpened] = useState(inlineMode)
 

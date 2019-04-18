@@ -19,6 +19,7 @@ import {
   Theme,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
@@ -70,6 +71,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
+  const repoTableColumnWidth = useRepoTableColumnWidth()
 
   const themeRef = useRef<Theme | null>(null)
   const initialTheme = useTheme(theme => {
@@ -470,7 +473,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 {
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
-                  width: 100,
+                  width: repoTableColumnWidth,
                   overflow: 'hidden',
                 },
               ]}
@@ -487,7 +490,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     justifyContent: 'center',
-                    width: 100,
+                    width: repoTableColumnWidth,
                   }}
                   small
                   viewMode={cardViewMode}

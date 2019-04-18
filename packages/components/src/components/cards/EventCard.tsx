@@ -36,6 +36,7 @@ import {
   Theme,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
@@ -98,6 +99,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
     }
   })
   themeRef.current = initialTheme
+
+  const repoTableColumnWidth = useRepoTableColumnWidth()
 
   useEffect(() => {
     if (Platform.OS === 'web' && isFocused && itemRef.current) {
@@ -573,7 +576,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                 {
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
-                  width: 100,
+                  width: repoTableColumnWidth,
                   overflow: 'hidden',
                 },
               ]}
@@ -590,7 +593,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     justifyContent: 'center',
-                    width: 100,
+                    width: repoTableColumnWidth,
                   }}
                   small
                   viewMode={cardViewMode}
