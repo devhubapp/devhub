@@ -33,7 +33,7 @@ export const LabelsView = (props: LabelsViewProps) => {
             style={[
               sharedStyles.horizontalAndVerticallyAligned,
               sharedStyles.flexWrap,
-              { marginHorizontal: -contentPadding / 5 },
+              { maxWidth: '100%', marginHorizontal: -contentPadding / 5 },
               style,
             ]}
           >

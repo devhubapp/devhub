@@ -107,7 +107,16 @@ export const IssueOrPullRequestRow = React.memo(
       addBottomAnchor,
       issueOrPullRequestNumber,
     })
-    const inlineLabels = viewMode === 'compact'
+
+    const labelsCharLenght =
+      labels && labels.length > 0
+        ? labels.reduce((sum, label) => {
+            return sum + `${label.name || ''}`.length
+          }, 0)
+        : 0
+
+    const inlineLabels =
+      viewMode === 'compact' && numberOfLines === 1 && labelsCharLenght < 30
     const keepLabelsTogether = true
 
     return (
@@ -134,13 +143,18 @@ export const IssueOrPullRequestRow = React.memo(
         right={
           <View style={cardRowStyles.mainContentContainer}>
             <View
-              style={
-                inlineLabels && [sharedStyles.horizontal, sharedStyles.flexWrap]
-              }
+              style={[
+                sharedStyles.flex,
+                { width: '100%' },
+                inlineLabels && sharedStyles.horizontal,
+                inlineLabels && sharedStyles.flexWrap,
+              ]}
             >
               <Link
                 href={htmlUrl}
                 style={[
+                  !inlineLabels && sharedStyles.flexGrow,
+                  { alignSelf: 'flex-start' },
                   !!inlineLabels &&
                     labels &&
                     labels.length > 0 && { marginRight: contentPadding / 2 },
