@@ -1,3 +1,3 @@
 import { createThemeFromColor } from './custom'
 
-export const theme = createThemeFromColor('#292C33', 'dark-gray', 'Dark Gray')
+export const theme = createThemeFromColor('#1F2229', 'dark-gray', 'Dark Gray')
