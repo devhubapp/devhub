@@ -79,7 +79,7 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
     labelIcon,
     labelTooltip,
     onChange,
-    size = 18,
+    size = 16,
     uncheckedBackgroundColor,
     uncheckedForegroundColor = springAnimatedTheme.foregroundColor,
   } = props
@@ -177,9 +177,9 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
           >
             <SpringAnimatedIcon
               name="check"
-              size={13}
+              size={size - 3}
               style={{
-                lineHeight: 13,
+                lineHeight: size - 3,
                 paddingLeft: Platform.OS === 'android' ? 0 : 1,
                 paddingTop: Platform.OS === 'ios' ? 1 : 0,
                 paddingBottom: Platform.OS === 'android' ? 1 : 0,
