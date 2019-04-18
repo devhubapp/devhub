@@ -3,6 +3,7 @@ import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
 
 import { darken, getLuminance, lighten } from 'polished'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { Platform } from '../../libs/platform'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { getLuminanceDifference } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
@@ -18,6 +19,7 @@ export interface LabelProps {
   color?: string
   containerProps?: ViewProps
   containerStyle?: StyleProp<ViewStyle>
+  hideText?: boolean
   isPrivate?: boolean
   muted?: boolean
   outline?: boolean
@@ -37,6 +39,7 @@ export function Label(props: LabelProps) {
     color: _color,
     containerProps = {},
     containerStyle,
+    hideText,
     isPrivate,
     muted,
     outline,
@@ -71,7 +74,8 @@ export function Label(props: LabelProps) {
       ? springAnimatedTheme.foregroundColor
       : springAnimatedTheme.backgroundColor)
 
-  const height = small ? 16 : 18
+  const minWidth = hideText ? 16 : undefined
+  const height = hideText ? 4 : small ? 16 : 18
 
   return (
     <SpringAnimatedView
@@ -84,7 +88,6 @@ export function Label(props: LabelProps) {
           justifyContent: 'center',
           borderRadius: typeof radius === 'number' ? radius : height / 2,
           borderWidth: separatorSize,
-          paddingHorizontal: contentPadding / (small ? 3 : 2),
         },
         containerProps && containerProps.style,
         containerStyle,
@@ -105,12 +108,19 @@ export function Label(props: LabelProps) {
         {...textProps}
         style={[
           {
+            minWidth,
+            height,
             lineHeight: height - 2,
             fontSize: small ? 11 : 12,
             color: foregroundColor,
+            paddingHorizontal: contentPadding / (small ? 3 : 2),
           },
           textProps && textProps.style,
         ]}
+        {...!!hideText &&
+          Platform.select({
+            web: { title: typeof children === 'string' ? children : '' },
+          })}
       >
         {Boolean(isPrivate) && (
           <Text>
@@ -120,7 +130,9 @@ export function Label(props: LabelProps) {
             />{' '}
           </Text>
         )}
-        {typeof children === 'string'
+        {hideText
+          ? ''
+          : typeof children === 'string'
           ? parseTextWithEmojisToReactComponents(children, {
               key: `label-text-${children}`,
               imageProps: {

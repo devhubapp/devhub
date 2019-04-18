@@ -196,6 +196,7 @@ export const IssueOrPullRequestRow = React.memo(
               {!!labels && labels.length > 0 && (
                 <LabelsView
                   fragment={!keepLabelsTogether}
+                  // hideText={viewMode !== 'compact'}
                   labels={labels.map(label => ({
                     key: `issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
                       label.name}`,

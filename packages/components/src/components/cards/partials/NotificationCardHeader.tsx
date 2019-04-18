@@ -174,23 +174,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               isPrivate={isPrivate}
               reason={reason}
             />
-
-            {/* {!!(reasonDetails && reasonDetails.label) && (
-              <>
-                <Spacer height={4} />
-
-                <Label
-                  color={reasonDetails.color}
-                  containerStyle={{ alignSelf: 'flex-start' }}
-                  isPrivate={isPrivate}
-                  // muted={isRead}
-                  outline={false}
-                  small
-                >
-                  {reasonDetails.label.toLowerCase()}
-                </Label>
-              </>
-            )} */}
           </View>
 
           <ToggleReadButton

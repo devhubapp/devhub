@@ -9,6 +9,7 @@ import { Label } from '../../../common/Label'
 
 export interface LabelsViewProps {
   fragment?: boolean
+  hideText?: boolean
   labels: Array<{
     key: string
     name: GitHubLabel['name']
@@ -19,7 +20,7 @@ export interface LabelsViewProps {
 }
 
 export const LabelsView = (props: LabelsViewProps) => {
-  const { fragment, labels, muted, style } = props
+  const { fragment, hideText, labels, muted, style } = props
 
   return (
     <ConditionalWrap
@@ -30,7 +31,7 @@ export const LabelsView = (props: LabelsViewProps) => {
         ) : (
           <View
             style={[
-              sharedStyles.horizontal,
+              sharedStyles.horizontalAndVerticallyAligned,
               sharedStyles.flexWrap,
               { marginHorizontal: -contentPadding / 5 },
               style,
@@ -49,6 +50,7 @@ export const LabelsView = (props: LabelsViewProps) => {
             alignSelf: 'flex-start',
             margin: contentPadding / 5,
           }}
+          hideText={hideText}
           muted={muted}
           outline={false}
           small
