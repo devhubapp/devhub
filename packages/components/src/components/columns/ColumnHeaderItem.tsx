@@ -205,13 +205,13 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     title: {
       fontWeight: '800',
       marginRight: contentPadding / 2,
-      lineHeight: size - 1,
-      fontSize: size - 3,
+      lineHeight: size,
+      fontSize: size - 1,
     } as TextStyle,
 
     subtitle: {
       marginRight: contentPadding / 2,
-      fontSize: size - 7,
+      fontSize: size - 5,
     } as TextStyle,
 
     text: {} as TextStyle,
