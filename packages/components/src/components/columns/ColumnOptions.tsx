@@ -406,6 +406,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               defaultBooleanValue,
             )
 
+            const enableIndeterminateState =
+              subjectTypeOptions.length > 2 && !isFilterStrict
+
             return (
               <ColumnOptionsRow
                 analyticsLabel="subject_types"
@@ -430,7 +433,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   const checked =
                     filters && typeof filters[item.subjectType] === 'boolean'
                       ? filters[item.subjectType]
-                      : null
+                      : enableIndeterminateState || isFilterStrict
+                      ? null
+                      : defaultBooleanValue
 
                   return (
                     <SpringAnimatedCheckbox
@@ -442,11 +447,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       checkedBackgroundColor={item.color}
                       checkedForegroundColor={theme.backgroundColorDarker1}
                       containerStyle={checkboxStyle}
+                      disabled={
+                        !enableIndeterminateState &&
+                        countMetadata.checked === 1 &&
+                        countMetadata.total === 2 &&
+                        !!checked
+                      }
                       squareContainerStyle={checkboxSquareStyle}
                       defaultValue={defaultBooleanValue}
-                      enableIndeterminateState={
-                        !isFilterStrict || checked === defaultBooleanValue
-                      }
+                      enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
                       onChange={value => {
                         setColummSubjectTypeFilter({
