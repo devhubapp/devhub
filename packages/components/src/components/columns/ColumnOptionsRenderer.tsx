@@ -77,8 +77,15 @@ export const ColumnOptionsRenderer = React.memo(
       !inlineMode && fixedPosition && fixedWidth
         ? {
             config: getDefaultReactSpringAnimationConfig(),
-            from: { [fixedPosition]: -fixedWidth },
-            to: { [fixedPosition]: isOpen ? 0 : -fixedWidth },
+            from: {
+              [fixedPosition]:
+                -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+            },
+            to: {
+              [fixedPosition]: isOpen
+                ? 0
+                : -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+            },
           }
         : {
             config: getDefaultReactSpringAnimationConfig(),
@@ -137,6 +144,17 @@ export const ColumnOptionsRenderer = React.memo(
               top: 0,
               left: 0,
               right: 0,
+              opacity:
+                enableAbsolutePositionAnimation &&
+                absolutePositionAnimation &&
+                fixedPosition &&
+                fixedWidth
+                  ? fixedPosition === 'left' || fixedPosition === 'right'
+                    ? absolutePositionAnimation[fixedPosition].interpolate(
+                        (value: number) => (fixedWidth + value <= 0 ? 0 : 1),
+                      )
+                    : 1
+                  : 1,
             },
             enableAbsolutePositionAnimation && absolutePositionAnimation,
             !!fixedWidth && fixedPosition === 'left' && { right: undefined },
