@@ -380,9 +380,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 close={toggleOptions}
                 columnId={column.id}
                 containerHeight={containerHeight}
-                // fixedPosition="right"
-                // fixedWidth={250}
-                // forceOpenAll
+                fixedPosition="right"
+                fixedWidth={250}
+                forceOpenAll
                 isOpen={isFiltersOpened}
               />
             )}
