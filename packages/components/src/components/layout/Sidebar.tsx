@@ -201,6 +201,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   forceHoverState={isModalOpen('ADD_COLUMN')}
                   iconName="plus"
                   label="add column"
+                  noPadding
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   showLabel={showLabel}
                   size={columnHeaderItemContentBiggerSize}
@@ -231,6 +232,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 forceHoverState={isModalOpen('SETTINGS')}
                 iconName="gear"
                 label="preferences"
+                noPadding
                 onPress={() =>
                   small && isModalOpen('SETTINGS')
                     ? undefined
@@ -298,6 +300,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   forceHoverState={isModalOpen('ADD_COLUMN')}
                   iconName="plus"
                   label="add column"
+                  noPadding
                   onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
                   style={[
                     styles.centerContainer,
@@ -333,6 +336,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             forceHoverState={isModalOpen('SETTINGS')}
             iconName="gear"
             label="preferences"
+            noPadding
             onPress={() =>
               small && isModalOpen('SETTINGS')
                 ? undefined
@@ -447,6 +451,7 @@ const SidebarColumnItem = React.memo(
         enableBackgroundHover={enableBackgroundHover || highlight}
         iconName={headerDetails.icon}
         label={label}
+        noPadding
         onPress={() => {
           if (currentOpenedModal) closeAllModals()
 
