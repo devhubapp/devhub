@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useState } from 'react'
+import { RefObject, useCallback, useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 
 import { useEmitter } from './use-emitter'
@@ -16,7 +16,20 @@ export function useKeyboardScrolling(
     items: Array<{ [key: string]: any; id: string | number } | undefined>
   },
 ) {
-  const [selectedId, setSelectedId] = useState<string | number | null>(null)
+  function getFirstId(_items: typeof items) {
+    return _items && _items[0] && _items[0]!.id
+  }
+
+  const [selectedId, setSelectedId] = useState<
+    string | number | null | undefined
+  >(getFirstId(items))
+
+  // focus on first item by default
+  useEffect(() => {
+    if (selectedId === undefined && getFirstId(items)) {
+      setSelectedId(items[0]!.id)
+    }
+  }, [selectedId, getFirstId(items)])
 
   useKeyPressCallback(
     'Escape',
@@ -44,7 +57,7 @@ export function useKeyboardScrolling(
         viewPosition: 0.5,
       })
 
-      setSelectedId((item && item.id) || null)
+      setSelectedId((item && item.id) || getFirstId(items))
     },
     [ref && ref.current, columnId, items, getVisibleItemIndex, selectedId],
   )
@@ -67,7 +80,7 @@ export function useKeyboardScrolling(
         viewPosition: 0.5,
       })
 
-      setSelectedId((item && item.id) || null)
+      setSelectedId((item && item.id) || getFirstId(items))
     },
     [ref && ref.current, columnId, getVisibleItemIndex, items, selectedId],
   )
@@ -83,7 +96,7 @@ export function useKeyboardScrolling(
       const newIndex = Math.max(-1, Math.min(index, items.length - 1))
       const item = items[newIndex]
 
-      setSelectedId((item && item.id) || null)
+      setSelectedId((item && item.id) || getFirstId(items))
     },
     [ref && ref.current, columnId, getVisibleItemIndex, items],
   )
