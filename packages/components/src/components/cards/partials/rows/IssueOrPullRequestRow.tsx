@@ -120,7 +120,7 @@ export const IssueOrPullRequestRow = React.memo(
     const inlineLabels =
       viewMode === 'compact' &&
       numberOfLines === 1 &&
-      (hideLabelText ? labels && labels.length <= 10 : labelsCharLenght < 30)
+      (hideLabelText ? labels && labels.length <= 12 : labelsCharLenght < 30)
     const keepLabelsTogether = true
 
     return (
@@ -172,15 +172,15 @@ export const IssueOrPullRequestRow = React.memo(
                   style={[
                     sharedStyles.flex,
                     getCardStylesForTheme(springAnimatedTheme).normalText,
-                    bold && cardStyles.boldText,
+                    bold && !isRead && cardStyles.boldText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}
-                  {...Platform.select({
-                    web: {
-                      title: `${title}${_body ? `\n\n${_body}` : ''}`,
-                    },
-                  })}
+                  // {...Platform.select({
+                  //   web: {
+                  //     title: `${title}${_body ? `\n\n${_body}` : ''}`,
+                  //   },
+                  // })}
                 >
                   {!hideIcon && (
                     <>
@@ -198,16 +198,17 @@ export const IssueOrPullRequestRow = React.memo(
                   )}
                   {title}
 
-                  {!!issueOrPullRequestNumber && viewMode === 'compact' && (
-                    <SpringAnimatedText
-                      style={{
-                        fontWeight: '400',
-                        fontSize: 11,
-                      }}
-                    >
-                      {`  #${issueOrPullRequestNumber}`}
-                    </SpringAnimatedText>
-                  )}
+                  {!!issueOrPullRequestNumber &&
+                    (viewMode === 'compact' || !showCreationDetails) && (
+                      <SpringAnimatedText
+                        style={{
+                          fontSize: 11,
+                          fontWeight: '400',
+                        }}
+                      >
+                        {`  #${issueOrPullRequestNumber}`}
+                      </SpringAnimatedText>
+                    )}
                 </SpringAnimatedText>
               </Link>
 

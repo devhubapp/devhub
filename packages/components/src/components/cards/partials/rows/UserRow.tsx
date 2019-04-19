@@ -63,7 +63,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
             <SpringAnimatedText
               style={[
                 getCardRowStylesForTheme(springAnimatedTheme).usernameText,
-                bold && cardStyles.boldText,
+                bold && !isRead && cardStyles.boldText,
                 (isRead || showMoreItemsIndicator) &&
                   getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}

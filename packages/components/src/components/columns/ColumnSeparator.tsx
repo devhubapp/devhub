@@ -4,7 +4,6 @@ import { AppViewMode, ThemeColors } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { Separator, SeparatorProps } from '../common/Separator'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 
 export function getColumnCardBackgroundThemeColor(
   _backgroundColor: string,
@@ -18,16 +17,16 @@ export interface ColumnSeparatorProps extends SeparatorProps {}
 export function ColumnSeparator(props: ColumnSeparatorProps) {
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
-  const theme = useTheme()
 
   const horizontalSidebar = appOrientation === 'portrait'
 
   return (
     <Separator
-      backgroundThemeColor={getColumnCardBackgroundThemeColor(
-        theme.backgroundColor,
-        appViewMode,
-      )}
+      backgroundThemeColor={
+        appViewMode === 'single-column'
+          ? 'backgroundColor'
+          : 'backgroundColorDarker1'
+      }
       horizontal={horizontalSidebar}
       thick={!horizontalSidebar}
       {...props}

@@ -2,38 +2,41 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
 import {
-  CardViewMode,
   Column,
   constants,
   EnhancedGitHubNotification,
   EnhancedLoadState,
   getDateSmallText,
   isItemRead,
+  Omit,
 } from '@devhub/core'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
-import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { EmptyCards, EmptyCardsProps } from './EmptyCards'
+import { NotificationCard, NotificationCardProps } from './NotificationCard'
 import {
-  defaultCardFooterSpacing,
-  EmptyCards,
-  EmptyCardsProps,
-} from './EmptyCards'
-import { NotificationCard } from './NotificationCard'
-import { CardItemSeparator } from './partials/CardItemSeparator'
+  CardItemSeparator,
+  getCardItemSeparatorThemeColor,
+} from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
-export interface NotificationCardsProps {
-  cardViewMode: CardViewMode
+export interface NotificationCardsProps
+  extends Omit<
+    NotificationCardProps,
+    'cardViewMode' | 'notification' | 'isFocused'
+  > {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
@@ -63,6 +66,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
+
+  const { appViewMode, cardViewMode } = useAppViewMode()
+  const theme = useTheme()
+
   const visibleItemIndexesRef = useRef<number[]>([])
 
   const getVisibleItemIndex = useCallback(() => {
@@ -147,7 +154,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     if (props.swipeable) {
       return (
         <SwipeableNotificationCard
-          cardViewMode={props.cardViewMode}
+          cardViewMode={cardViewMode}
           isFocused={
             column.id === focusedColumnId && notification.id === selectedItemId
           }
@@ -160,7 +167,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     return (
       <ErrorBoundary>
         <NotificationCard
-          cardViewMode={props.cardViewMode}
+          cardViewMode={cardViewMode}
           isFocused={
             column.id === focusedColumnId && notification.id === selectedItemId
           }
@@ -171,10 +178,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     )
   }
   const renderItem = useCallback(_renderItem, [
-    props.swipeable,
-    props.cardViewMode,
-    props.repoIsKnown,
+    cardViewMode,
     column.id === focusedColumnId && selectedItemId,
+    props.repoIsKnown,
+    props.swipeable,
   ])
 
   const renderFooter = useCallback(() => {
@@ -185,12 +192,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         <CardItemSeparator />
 
         {fetchNextPage ? (
-          <View
-            style={{
-              paddingHorizontal: contentPadding,
-              paddingVertical: defaultCardFooterSpacing,
-            }}
-          >
+          <View>
             <Button
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
@@ -199,15 +201,11 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
                 loadState === 'loading_first' || loadState === 'loading_more'
               }
               onPress={fetchNextPage}
+              round={false}
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (
-          <View
-            style={{
-              paddingHorizontal: contentPadding,
-              paddingVertical: defaultCardFooterSpacing,
-            }}
-          >
+          <View>
             <Button
               analyticsLabel="show_cleared"
               borderOnly
@@ -221,6 +219,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
                 if (refresh) refresh()
               }}
+              round={false}
             />
           </View>
         ) : null}
@@ -272,6 +271,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const rerender = useMemo(() => ({}), [renderItem, renderFooter])
 
+  const contentContainerStyle = useMemo(
+    () => ({
+      borderWidth: appViewMode === 'single-column' ? 1 : 0,
+      borderColor:
+        theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
+    }),
+    [theme],
+  )
+
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
@@ -309,6 +317,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       ListFooterComponent={renderFooter}
       alwaysBounceVertical
       bounces
+      contentContainerStyle={contentContainerStyle}
       data={notifications}
       extraData={rerender}
       initialNumToRender={15}

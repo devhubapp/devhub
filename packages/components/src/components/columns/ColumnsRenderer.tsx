@@ -55,7 +55,7 @@ export function ColumnsRenderer() {
                   columnId={focusedColumnId}
                   containerHeight={containerHeight}
                   fixedPosition="right"
-                  fixedWidth={250}
+                  fixedWidth={240}
                   forceOpenAll
                   inlineMode={inlineMode}
                   isOpen={isSharedFiltersOpened}

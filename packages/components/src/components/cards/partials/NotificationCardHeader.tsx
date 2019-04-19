@@ -188,10 +188,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           <BookmarkButton
             isSaved={!!isSaved}
             itemIds={ids}
-            style={{
-              alignSelf: 'flex-start',
-              marginTop: 1,
-            }}
+            style={{ alignSelf: 'flex-start' }}
           />
         </View>
       </View>

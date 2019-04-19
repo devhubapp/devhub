@@ -123,7 +123,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 cardStyles.smallText,
-                bold && cardStyles.boldText,
+                bold && !isRead && cardStyles.boldText,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
               {...Platform.select({

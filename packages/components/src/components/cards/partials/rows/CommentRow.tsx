@@ -56,7 +56,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     ...otherProps
   } = props
 
-  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), 200)
+  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), 100)
   if (!body) return null
 
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)

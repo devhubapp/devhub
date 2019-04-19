@@ -25,6 +25,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
+  smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
@@ -50,7 +51,11 @@ import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
-import { cardStyles, getCardStylesForTheme } from './styles'
+import {
+  cardStyles,
+  getCardStylesForTheme,
+  spacingBetweenLeftAndRightColumn,
+} from './styles'
 
 export interface NotificationCardProps {
   cardViewMode: CardViewMode
@@ -458,15 +463,24 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
         </View>
 
-        <Spacer width={(contentPadding * 2) / 3} />
+        <Spacer
+          width={
+            spacingBetweenLeftAndRightColumn - columnHeaderItemContentSize / 4
+          }
+        />
 
         {!repoIsKnown && (
           <>
-            <View style={cardStyles.compactItemFixedHeight}>
+            <View
+              style={[
+                cardStyles.compactItemFixedWidth,
+                cardStyles.compactItemFixedHeight,
+              ]}
+            >
               <Avatar isBot={isBot} linkURL="" small username={repoOwnerName} />
             </View>
 
-            <Spacer width={contentPadding} />
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
 
             <View
               style={[
@@ -500,7 +514,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               )}
             </View>
 
-            <Spacer width={contentPadding} />
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
           </>
         )}
 
@@ -532,12 +546,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             />
           </View>
 
-          <Spacer width={contentPadding} />
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
 
           <View style={sharedStyles.flex}>{Content}</View>
         </View>
 
-        <Spacer width={contentPadding} />
+        <Spacer width={spacingBetweenLeftAndRightColumn} />
 
         <View
           style={[
@@ -548,12 +562,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           {!!updatedAt && (
             <IntervalRefresh date={updatedAt}>
               {() => {
-                const updatedAtDateText = getDateSmallText(updatedAt, false)
-                if (!updatedAtDateText) return null
-
-                const createdAtDateText = createdAt
-                  ? getDateSmallText(createdAt, false)
-                  : ''
+                const dateText = getDateSmallText(updatedAt, false)
+                if (!dateText) return null
 
                 return (
                   <SpringAnimatedText
@@ -566,14 +576,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                     {...Platform.select({
                       web: {
                         title: `${
-                          createdAtDateText && createdAt
+                          createdAt
                             ? `Created: ${getFullDateText(createdAt)}\n`
                             : ''
                         }Updated: ${getFullDateText(updatedAt)}`,
                       },
                     })}
                   >
-                    {updatedAtDateText}
+                    {dateText}
                   </SpringAnimatedText>
                 )
               }}
@@ -641,7 +651,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           />
         </View>
 
-        <Spacer width={contentPadding} />
+        <Spacer width={spacingBetweenLeftAndRightColumn} />
 
         <View style={sharedStyles.flex}>
           <NotificationCardHeader

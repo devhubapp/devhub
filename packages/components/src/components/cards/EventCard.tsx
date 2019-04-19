@@ -71,7 +71,11 @@ import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { innerCardSpacing } from './partials/rows/styles'
 import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
-import { cardStyles, getCardStylesForTheme } from './styles'
+import {
+  cardStyles,
+  getCardStylesForTheme,
+  spacingBetweenLeftAndRightColumn,
+} from './styles'
 
 export interface EventCardProps {
   cardViewMode: CardViewMode
@@ -345,7 +349,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               userLinkURL={comment.user.html_url || ''}
               username={comment.user.display_login || comment.user.login}
               viewMode={cardViewMode}
-              withTopMargin={false}
+              withTopMargin={getWithTopMargin() && false}
             />
           </>
         )}
@@ -549,14 +553,18 @@ export const EventCard = React.memo((props: EventCardProps) => {
           />
         </View>
 
-        <Spacer width={(contentPadding * 2) / 3} />
+        <Spacer
+          width={
+            spacingBetweenLeftAndRightColumn - columnHeaderItemContentSize / 4
+          }
+        />
 
         {!repoIsKnown && (
           <>
             <View
               style={[
+                cardStyles.compactItemFixedWidth,
                 cardStyles.compactItemFixedHeight,
-                { width: smallAvatarSize },
               ]}
             >
               <Avatar
@@ -568,7 +576,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               />
             </View>
 
-            <Spacer width={contentPadding} />
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
 
             <View
               style={[
@@ -602,7 +610,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               )}
             </View>
 
-            <Spacer width={contentPadding} />
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
           </>
         )}
 
@@ -634,7 +642,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             />
           </View>
 
-          <Spacer width={contentPadding} />
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
 
           <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
             <View style={sharedStyles.flex}>{Content}</View>
@@ -643,7 +651,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           </View>
         </View>
 
-        <Spacer width={contentPadding} />
+        <Spacer width={spacingBetweenLeftAndRightColumn} />
 
         <View
           style={[
@@ -731,7 +739,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           />
         </View>
 
-        <Spacer width={contentPadding} />
+        <Spacer width={spacingBetweenLeftAndRightColumn} />
 
         <View style={sharedStyles.flex}>
           <EventCardHeader

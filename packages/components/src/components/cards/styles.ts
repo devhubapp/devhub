@@ -14,6 +14,7 @@ import {
 
 export const leftColumnSmallSize = smallAvatarSize
 export const leftColumnBigSize = avatarSize
+export const spacingBetweenLeftAndRightColumn = (contentPadding * 2) / 3
 
 export const cardStyles = StyleSheet.create({
   container: {
@@ -74,7 +75,7 @@ export const cardStyles = StyleSheet.create({
   leftColumn: {
     alignSelf: 'flex-start',
     paddingTop: 1,
-    marginRight: contentPadding,
+    marginRight: spacingBetweenLeftAndRightColumn,
     width: leftColumnBigSize,
   },
 

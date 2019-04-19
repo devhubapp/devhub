@@ -42,7 +42,7 @@ import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
 
 export function getColumnCardThemeColors(
-  _backgroundColor: string,
+  _backgroundColor?: string,
 ): {
   column: keyof ThemeColors
   unread: keyof ThemeColors
@@ -381,7 +381,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 columnId={column.id}
                 containerHeight={containerHeight}
                 fixedPosition="right"
-                fixedWidth={250}
+                fixedWidth={240}
                 forceOpenAll
                 isOpen={isFiltersOpened}
               />

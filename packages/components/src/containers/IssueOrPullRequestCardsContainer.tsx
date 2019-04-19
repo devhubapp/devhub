@@ -279,7 +279,6 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       <IssueOrPullRequestCards
         {...otherProps}
         key={`issue-or-pr-cards-${column.id}`}
-        cardViewMode={cardViewMode}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}

@@ -116,7 +116,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 <SpringAnimatedText
                   style={[
                     getCardStylesForTheme(springAnimatedTheme).normalText,
-                    bold && cardStyles.boldText,
+                    bold && !isRead && cardStyles.boldText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ]}

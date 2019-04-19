@@ -275,7 +275,6 @@ export const EventCardsContainer = React.memo(
       <EventCards
         {...otherProps}
         key={`event-cards-${column.id}`}
-        cardViewMode={cardViewMode}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}

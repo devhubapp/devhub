@@ -155,7 +155,6 @@ export const NotificationCardsContainer = React.memo(
       <NotificationCards
         {...otherProps}
         key={`notification-cards-${column.id}`}
-        cardViewMode={cardViewMode}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}

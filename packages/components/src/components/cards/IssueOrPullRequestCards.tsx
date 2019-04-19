@@ -11,35 +11,35 @@ import {
   isItemRead,
   Omit,
 } from '@devhub/core'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
-import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
-import {
-  defaultCardFooterSpacing,
-  EmptyCards,
-  EmptyCardsProps,
-} from './EmptyCards'
+import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import {
   IssueOrPullRequestCard,
   IssueOrPullRequestCardProps,
 } from './IssueOrPullRequestCard'
-import { CardItemSeparator } from './partials/CardItemSeparator'
+import {
+  CardItemSeparator,
+  getCardItemSeparatorThemeColor,
+} from './partials/CardItemSeparator'
 import { SwipeableIssueOrPullRequestCard } from './SwipeableIssueOrPullRequestCard'
 
 export interface IssueOrPullRequestCardsProps
   extends Omit<
     IssueOrPullRequestCardProps,
-    'isFocused' | 'issueOrPullRequest' | 'type'
+    'cardViewMode' | 'isFocused' | 'issueOrPullRequest' | 'type'
   > {
   column: Column
   columnIndex: number
@@ -72,8 +72,11 @@ export const IssueOrPullRequestCards = React.memo(
     const flatListRef = React.useRef<
       FlatList<EnhancedGitHubIssueOrPullRequest>
     >(null)
-    const visibleItemIndexesRef = useRef<number[]>([])
 
+    const { appViewMode, cardViewMode } = useAppViewMode()
+    const theme = useTheme()
+
+    const visibleItemIndexesRef = useRef<number[]>([])
     const getVisibleItemIndex = useCallback(() => {
       if (
         !(visibleItemIndexesRef.current && visibleItemIndexesRef.current.length)
@@ -155,7 +158,7 @@ export const IssueOrPullRequestCards = React.memo(
       if (props.swipeable) {
         return (
           <SwipeableIssueOrPullRequestCard
-            cardViewMode={props.cardViewMode}
+            cardViewMode={cardViewMode}
             isFocused={
               column.id === focusedColumnId && item.id === selectedItemId
             }
@@ -169,7 +172,7 @@ export const IssueOrPullRequestCards = React.memo(
       return (
         <ErrorBoundary>
           <IssueOrPullRequestCard
-            cardViewMode={props.cardViewMode}
+            cardViewMode={cardViewMode}
             isFocused={
               column.id === focusedColumnId && item.id === selectedItemId
             }
@@ -181,8 +184,8 @@ export const IssueOrPullRequestCards = React.memo(
       )
     }
     const renderItem = useCallback(_renderItem, [
+      cardViewMode,
       column.id === focusedColumnId && selectedItemId,
-      props.cardViewMode,
       props.repoIsKnown,
       props.swipeable,
     ])
@@ -195,12 +198,7 @@ export const IssueOrPullRequestCards = React.memo(
           <CardItemSeparator />
 
           {fetchNextPage ? (
-            <View
-              style={{
-                paddingHorizontal: contentPadding,
-                paddingVertical: defaultCardFooterSpacing,
-              }}
-            >
+            <View>
               <Button
                 analyticsLabel={
                   loadState === 'error' ? 'try_again' : 'load_more'
@@ -213,15 +211,11 @@ export const IssueOrPullRequestCards = React.memo(
                   loadState === 'loading_first' || loadState === 'loading_more'
                 }
                 onPress={fetchNextPage}
+                round={false}
               />
             </View>
           ) : column.filters && column.filters.clearedAt ? (
-            <View
-              style={{
-                paddingHorizontal: contentPadding,
-                paddingVertical: defaultCardFooterSpacing,
-              }}
-            >
+            <View>
               <Button
                 analyticsLabel="show_cleared"
                 borderOnly
@@ -235,6 +229,7 @@ export const IssueOrPullRequestCards = React.memo(
 
                   if (refresh) refresh()
                 }}
+                round={false}
               />
             </View>
           ) : null}
@@ -286,6 +281,15 @@ export const IssueOrPullRequestCards = React.memo(
 
     const rerender = useMemo(() => ({}), [renderItem, renderFooter])
 
+    const contentContainerStyle = useMemo(
+      () => ({
+        borderWidth: appViewMode === 'single-column' ? 1 : 0,
+        borderColor:
+          theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
+      }),
+      [theme],
+    )
+
     if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
       return (
         <EmptyCards
@@ -323,6 +327,7 @@ export const IssueOrPullRequestCards = React.memo(
         ListFooterComponent={renderFooter}
         alwaysBounceVertical
         bounces
+        contentContainerStyle={contentContainerStyle}
         data={items}
         extraData={rerender}
         initialNumToRender={15}

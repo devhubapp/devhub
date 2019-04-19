@@ -40,7 +40,11 @@ import { useTheme } from '../context/ThemeContext'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
-import { cardStyles, getCardStylesForTheme } from './styles'
+import {
+  cardStyles,
+  getCardStylesForTheme,
+  spacingBetweenLeftAndRightColumn,
+} from './styles'
 
 export interface IssueOrPullRequestCardProps {
   cardViewMode: CardViewMode
@@ -266,14 +270,18 @@ export const IssueOrPullRequestCard = React.memo(
             />
           </View>
 
-          <Spacer width={(contentPadding * 2) / 3} />
+          <Spacer
+            width={
+              spacingBetweenLeftAndRightColumn - columnHeaderItemContentSize / 4
+            }
+          />
 
           {!repoIsKnown && (
             <>
               <View
                 style={[
+                  cardStyles.compactItemFixedWidth,
                   cardStyles.compactItemFixedHeight,
-                  { width: smallAvatarSize },
                 ]}
               >
                 <Avatar
@@ -285,7 +293,7 @@ export const IssueOrPullRequestCard = React.memo(
                 />
               </View>
 
-              <Spacer width={contentPadding} />
+              <Spacer width={spacingBetweenLeftAndRightColumn} />
 
               <View
                 style={[
@@ -319,7 +327,7 @@ export const IssueOrPullRequestCard = React.memo(
                 )}
               </View>
 
-              <Spacer width={contentPadding} />
+              <Spacer width={spacingBetweenLeftAndRightColumn} />
             </>
           )}
 
@@ -351,7 +359,7 @@ export const IssueOrPullRequestCard = React.memo(
               />
             </View>
 
-            <Spacer width={contentPadding} />
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
 
             <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
               <View style={sharedStyles.flex}>{Content}</View>
@@ -360,7 +368,7 @@ export const IssueOrPullRequestCard = React.memo(
             </View>
           </View>
 
-          <Spacer width={contentPadding} />
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
 
           <View
             style={[
@@ -371,10 +379,10 @@ export const IssueOrPullRequestCard = React.memo(
             {!!issueOrPullRequest.created_at && (
               <IntervalRefresh date={issueOrPullRequest.created_at}>
                 {() => {
-                  const dateText = getDateSmallText(
-                    issueOrPullRequest.updated_at,
-                    false,
-                  )
+                  const createdAt = issueOrPullRequest.created_at
+                  const updatedAt = issueOrPullRequest.updated_at
+
+                  const dateText = getDateSmallText(updatedAt, false)
                   if (!dateText) return null
 
                   return (
@@ -388,9 +396,11 @@ export const IssueOrPullRequestCard = React.memo(
                       ]}
                       {...Platform.select({
                         web: {
-                          title: `Updated: ${getFullDateText(
-                            issueOrPullRequest.updated_at,
-                          )}`,
+                          title: `${
+                            createdAt
+                              ? `Created: ${getFullDateText(createdAt)}\n`
+                              : ''
+                          }Updated: ${getFullDateText(updatedAt)}`,
                         },
                       })}
                     >
@@ -457,7 +467,7 @@ export const IssueOrPullRequestCard = React.memo(
             />
           </View>
 
-          <Spacer width={contentPadding} />
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
 
           <View style={sharedStyles.flex}>
             {/* <IssueOrPullRequestCardHeader

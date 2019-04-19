@@ -2,38 +2,38 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
 import {
-  CardViewMode,
   Column,
   constants,
   EnhancedGitHubEvent,
   EnhancedLoadState,
   getDateSmallText,
   isItemRead,
+  Omit,
 } from '@devhub/core'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import * as actions from '../../redux/actions'
-import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { EmptyCards, EmptyCardsProps } from './EmptyCards'
+import { EventCard, EventCardProps } from './EventCard'
 import {
-  defaultCardFooterSpacing,
-  EmptyCards,
-  EmptyCardsProps,
-} from './EmptyCards'
-import { EventCard } from './EventCard'
-import { CardItemSeparator } from './partials/CardItemSeparator'
+  CardItemSeparator,
+  getCardItemSeparatorThemeColor,
+} from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
-export interface EventCardsProps {
-  cardViewMode: CardViewMode
+export interface EventCardsProps
+  extends Omit<EventCardProps, 'cardViewMode' | 'event' | 'isFocused'> {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
@@ -63,6 +63,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubEvent>>(null)
+
+  const { appViewMode, cardViewMode } = useAppViewMode()
+  const theme = useTheme()
+
   const visibleItemIndexesRef = useRef<number[]>([])
 
   const getVisibleItemIndex = useCallback(() => {
@@ -143,7 +147,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     if (props.swipeable) {
       return (
         <SwipeableEventCard
-          cardViewMode={props.cardViewMode}
+          cardViewMode={cardViewMode}
           event={event}
           repoIsKnown={props.repoIsKnown}
           isFocused={
@@ -156,7 +160,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     return (
       <ErrorBoundary>
         <EventCard
-          cardViewMode={props.cardViewMode}
+          cardViewMode={cardViewMode}
           event={event}
           isFocused={
             column.id === focusedColumnId && event.id === selectedItemId
@@ -168,10 +172,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   }
 
   const renderItem = useCallback(_renderItem, [
-    props.swipeable,
-    props.cardViewMode,
-    props.repoIsKnown,
+    cardViewMode,
     column.id === focusedColumnId && selectedItemId,
+    props.swipeable,
+    props.repoIsKnown,
   ])
 
   const renderFooter = useCallback(() => {
@@ -182,12 +186,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         <CardItemSeparator />
 
         {fetchNextPage ? (
-          <View
-            style={{
-              paddingHorizontal: contentPadding,
-              paddingVertical: defaultCardFooterSpacing,
-            }}
-          >
+          <View>
             <Button
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
@@ -196,15 +195,11 @@ export const EventCards = React.memo((props: EventCardsProps) => {
                 loadState === 'loading_first' || loadState === 'loading_more'
               }
               onPress={fetchNextPage}
+              round={false}
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (
-          <View
-            style={{
-              paddingHorizontal: contentPadding,
-              paddingVertical: defaultCardFooterSpacing,
-            }}
-          >
+          <View>
             <Button
               analyticsLabel="show_cleared"
               borderOnly
@@ -218,6 +213,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
                 if (refresh) refresh()
               }}
+              round={false}
             />
           </View>
         ) : null}
@@ -269,6 +265,15 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const rerender = useMemo(() => ({}), [renderItem, renderFooter])
 
+  const contentContainerStyle = useMemo(
+    () => ({
+      borderWidth: appViewMode === 'single-column' ? 1 : 0,
+      borderColor:
+        theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
+    }),
+    [theme],
+  )
+
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
@@ -305,6 +310,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       ListFooterComponent={renderFooter}
       alwaysBounceVertical
       bounces
+      contentContainerStyle={contentContainerStyle}
       data={events}
       extraData={rerender}
       initialNumToRender={15}

@@ -35,6 +35,7 @@ export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   loading?: boolean
   loadingIndicatorStyle?: SpringAnimatedActivityIndicatorProps['style']
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
+  round?: boolean
   size?: number | null
 }
 
@@ -50,6 +51,7 @@ export const Button = React.memo((props: ButtonProps) => {
     hoverForegroundColor,
     loading,
     loadingIndicatorStyle,
+    round = true,
     size: _size,
     style,
     ...otherProps
@@ -99,14 +101,13 @@ export const Button = React.memo((props: ButtonProps) => {
         : isHovered || isPressing
         ? hoverBackgroundColor || theme.backgroundColorLess3
         : theme.backgroundColorLess2,
-      innerContainerBackgroundColor: borderOnly
-        ? rgba(theme.backgroundColorLess2, 0)
-        : isHovered || isPressing
-        ? hoverBackgroundColor ||
-          (backgroundColor
-            ? theme.backgroundColorTransparent10
-            : theme.backgroundColorLess3)
-        : rgba(theme.backgroundColorLess2, 0),
+      innerContainerBackgroundColor:
+        isHovered || isPressing
+          ? hoverBackgroundColor ||
+            (backgroundColor
+              ? theme.backgroundColorTransparent10
+              : theme.backgroundColorLess3)
+          : rgba(theme.backgroundColorLess2, 0),
       textColor: foregroundColor
         ? foregroundColor
         : borderOnly
@@ -147,7 +148,7 @@ export const Button = React.memo((props: ButtonProps) => {
             : springAnimatedTheme.backgroundColorLess2,
           borderColor: springAnimatedStyles.touchableBorderColor,
           borderWidth: borderOnly ? separatorSize : 0,
-          borderRadius: (size || defaultButtonSize) / 2,
+          borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
         },
         style,
       ]}
@@ -162,7 +163,7 @@ export const Button = React.memo((props: ButtonProps) => {
             paddingHorizontal: contentPadding,
             backgroundColor: springAnimatedStyles.innerContainerBackgroundColor,
             borderWidth: 0,
-            borderRadius: (size || defaultButtonSize) / 2,
+            borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
           },
           contentContainerStyle,
         ]}

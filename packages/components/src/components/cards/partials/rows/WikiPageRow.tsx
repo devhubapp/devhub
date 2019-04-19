@@ -58,7 +58,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
               numberOfLines={1}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
-                bold && cardStyles.boldText,
+                bold && !isRead && cardStyles.boldText,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
