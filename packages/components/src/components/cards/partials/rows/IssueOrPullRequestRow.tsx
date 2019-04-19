@@ -44,6 +44,7 @@ export interface IssueOrPullRequestRowProps
   commentsCount?: number
   createdAt: string | undefined
   hideIcon?: boolean
+  hideLabelText?: boolean
   iconColor?: string
   iconName?: SpringAnimatedIconProps['name']
   id: string | number | undefined
@@ -74,6 +75,7 @@ export const IssueOrPullRequestRow = React.memo(
       commentsCount,
       createdAt,
       hideIcon,
+      hideLabelText = true,
       iconColor,
       iconName = 'issue-opened',
       id,
@@ -116,7 +118,9 @@ export const IssueOrPullRequestRow = React.memo(
         : 0
 
     const inlineLabels =
-      viewMode === 'compact' && numberOfLines === 1 && labelsCharLenght < 30
+      viewMode === 'compact' &&
+      numberOfLines === 1 &&
+      (hideLabelText ? labels && labels.length <= 10 : labelsCharLenght < 30)
     const keepLabelsTogether = true
 
     return (
@@ -210,7 +214,7 @@ export const IssueOrPullRequestRow = React.memo(
               {!!labels && labels.length > 0 && (
                 <LabelsView
                   fragment={!keepLabelsTogether}
-                  // hideText={viewMode !== 'compact'}
+                  hideText={hideLabelText}
                   labels={labels.map(label => ({
                     key: `issue-or-pr-row-${id}-${owner}-${repo}-${issueOrPullRequestNumber}-label-${label.id ||
                       label.name}`,

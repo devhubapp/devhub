@@ -435,7 +435,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               //   ? true
               //   : false
             }
-            showCreationDetails={action !== 'created'}
+            showCreationDetails={false}
             title={issueOrPullRequest.title}
             url={issueOrPullRequest.url}
             userLinkURL={issueOrPullRequest.user.html_url || ''}
@@ -509,11 +509,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const isSingleRow =
     withTopMarginCount <= 1 &&
-    !(
-      issueOrPullRequest &&
-      issueOrPullRequest.labels &&
-      issueOrPullRequest.labels.length
-    ) &&
+    // !(
+    //   issueOrPullRequest &&
+    //   issueOrPullRequest.labels &&
+    //   issueOrPullRequest.labels.length
+    // ) &&
     !release
 
   if (cardViewMode === 'compact') {
@@ -585,7 +585,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                 <RepositoryRow
                   key={`notification-repo-row-${repoOwnerName}-${repoName}`}
                   disableLeft
-                  // hideOwner
+                  hideOwner
                   isRead={isRead}
                   ownerName={repoOwnerName}
                   repositoryName={repoName}

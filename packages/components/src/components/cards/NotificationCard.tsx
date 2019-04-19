@@ -188,6 +188,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     }) ||
     null
 
+  const issueOrPullRequest = issue || pullRequest
+  const createdAt = issueOrPullRequest && issueOrPullRequest.created_at
+
   const isRepoInvitation = subject.type === 'RepositoryInvitation'
   const isVulnerabilityAlert = subject.type === 'RepositoryVulnerabilityAlert'
 
@@ -196,8 +199,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     undefined) as any)
   const cardIconName = cardIconDetails.icon
   const _cardIconColor = cardIconDetails.color
-
-  const issueOrPullRequest = issue || pullRequest
 
   const issueOrPullRequestNumber = issueOrPullRequest
     ? issueOrPullRequest.number ||
@@ -348,7 +349,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               //   ? true
               //   : false
             }
-            showCreationDetails
+            showCreationDetails={false}
             title={issueOrPullRequest.title}
             url={issueOrPullRequest.url}
             userLinkURL={issueOrPullRequest.user.html_url || ''}
@@ -417,11 +418,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const isSingleRow =
     withTopMarginCount <= 1 &&
-    !(
-      issueOrPullRequest &&
-      issueOrPullRequest.labels &&
-      issueOrPullRequest.labels.length
-    ) &&
+    // !(
+    //   issueOrPullRequest &&
+    //   issueOrPullRequest.labels &&
+    //   issueOrPullRequest.labels.length
+    // ) &&
     !release
 
   if (cardViewMode === 'compact') {
@@ -482,7 +483,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 <RepositoryRow
                   key={`notification-repo-row-${repo.id}`}
                   disableLeft
-                  // hideOwner
+                  hideOwner
                   isRead={isRead}
                   ownerName={repoOwnerName}
                   repositoryName={repoName}
@@ -547,8 +548,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           {!!updatedAt && (
             <IntervalRefresh date={updatedAt}>
               {() => {
-                const dateText = getDateSmallText(updatedAt, false)
-                if (!dateText) return null
+                const updatedAtDateText = getDateSmallText(updatedAt, false)
+                if (!updatedAtDateText) return null
+
+                const createdAtDateText = createdAt
+                  ? getDateSmallText(createdAt, false)
+                  : ''
 
                 return (
                   <SpringAnimatedText
@@ -559,10 +564,16 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                       { fontSize: smallerTextSize },
                     ]}
                     {...Platform.select({
-                      web: { title: getFullDateText(updatedAt) },
+                      web: {
+                        title: `${
+                          createdAtDateText && createdAt
+                            ? `Created: ${getFullDateText(createdAt)}\n`
+                            : ''
+                        }Updated: ${getFullDateText(updatedAt)}`,
+                      },
                     })}
                   >
-                    {dateText}
+                    {updatedAtDateText}
                   </SpringAnimatedText>
                 )
               }}

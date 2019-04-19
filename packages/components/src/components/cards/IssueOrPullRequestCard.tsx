@@ -216,7 +216,7 @@ export const IssueOrPullRequestCard = React.memo(
                 //   ? true
                 //   : false
               }
-              showCreationDetails
+              showCreationDetails={false}
               title={issueOrPullRequest.title}
               url={issueOrPullRequest.url}
               userLinkURL={issueOrPullRequest.user.html_url || ''}
@@ -302,7 +302,7 @@ export const IssueOrPullRequestCard = React.memo(
                   <RepositoryRow
                     key={`issue-or-pr-repo-row-${repoOwnerName}-${repoName}`}
                     disableLeft
-                    // hideOwner
+                    hideOwner
                     isRead={isRead}
                     ownerName={repoOwnerName}
                     repositoryName={repoName}

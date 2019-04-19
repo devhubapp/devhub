@@ -89,7 +89,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               ]}
             />{' '} */}
             <SpringAnimatedText
-              numberOfLines={1}
+              numberOfLines={hideOwner ? 2 : 1}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 small && cardStyles.smallText,

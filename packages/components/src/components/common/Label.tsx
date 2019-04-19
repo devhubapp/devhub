@@ -74,13 +74,14 @@ export function Label(props: LabelProps) {
       ? springAnimatedTheme.foregroundColor
       : springAnimatedTheme.backgroundColor)
 
-  const minWidth = hideText ? 16 : undefined
-  const height = hideText ? 4 : small ? 16 : 18
+  const width = hideText ? contentPadding / 2 : undefined
+  const height = hideText ? contentPadding / 2 : small ? 16 : 18
 
   return (
     <SpringAnimatedView
       {...containerProps}
       style={[
+        hideText ? { width } : { minWidth: width },
         {
           height,
           alignContent: 'center',
@@ -107,22 +108,22 @@ export function Label(props: LabelProps) {
         numberOfLines={1}
         {...textProps}
         style={[
+          hideText ? { width } : { minWidth: width },
           {
-            minWidth,
             height,
-            lineHeight: height - 2,
-            fontSize: small ? 11 : 12,
+            lineHeight: hideText ? height : height - 2,
+            fontSize: hideText ? 0 : small ? 11 : 12,
             color: foregroundColor,
-            paddingHorizontal: contentPadding / (small ? 3 : 2),
+            paddingHorizontal: hideText ? 0 : contentPadding / (small ? 3 : 2),
           },
-          textProps && textProps.style,
+          textProps && !hideText && textProps.style,
         ]}
         {...!!hideText &&
           Platform.select({
             web: { title: typeof children === 'string' ? children : '' },
           })}
       >
-        {Boolean(isPrivate) && (
+        {!!(isPrivate && !hideText) && (
           <Text>
             <SpringAnimatedIcon
               name="lock"
