@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -94,48 +94,56 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     tooltip,
   } = props
 
-  const getStyles = useCallback(() => {
-    const { isHovered: _isHovered, theme } = cacheRef.current
+  const getStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
+      const { isHovered: _isHovered, theme } = cacheRef.current
 
-    const isHovered = (_isHovered || forceHoverState) && !disabled
-    const immediate =
-      isHovered ||
-      Platform.realOS === 'android' ||
-      !!(enableForegroundHover && !enableBackgroundHover)
+      const isHovered = (_isHovered || forceHoverState) && !disabled
+      const immediate =
+        forceImmediate ||
+        isHovered ||
+        Platform.realOS === 'android' ||
+        !!(enableForegroundHover && !enableBackgroundHover)
 
-    return {
-      config: getDefaultReactSpringAnimationConfig(),
-      immediate,
-      backgroundColor:
-        isHovered && enableBackgroundHover
-          ? theme[hoverBackgroundThemeColor || 'backgroundColorLess1']
-          : rgba(backgroundColor || theme.backgroundColor, 0),
-      foregroundColor:
-        isHovered && enableForegroundHover
-          ? theme[hoverForegroundThemeColor || 'primaryBackgroundColor']
-          : foregroundColor || theme.foregroundColor,
-      mutedForegroundColor: theme.foregroundColorMuted50,
-    }
-  }, [
-    backgroundColor,
-    disabled,
-    enableBackgroundHover,
-    enableForegroundHover,
-    forceHoverState,
-    foregroundColor,
-    hoverBackgroundThemeColor,
-    hoverForegroundThemeColor,
-  ])
+      return {
+        config: getDefaultReactSpringAnimationConfig(),
+        immediate,
+        backgroundColor:
+          isHovered && enableBackgroundHover
+            ? theme[hoverBackgroundThemeColor || 'backgroundColorLess1']
+            : rgba(backgroundColor || theme.backgroundColor, 0),
+        foregroundColor:
+          isHovered && enableForegroundHover
+            ? theme[hoverForegroundThemeColor || 'primaryBackgroundColor']
+            : foregroundColor || theme.foregroundColor,
+        mutedForegroundColor: theme.foregroundColorMuted50,
+      }
+    },
+    [
+      backgroundColor,
+      disabled,
+      enableBackgroundHover,
+      enableForegroundHover,
+      forceHoverState,
+      foregroundColor,
+      hoverBackgroundThemeColor,
+      hoverForegroundThemeColor,
+    ],
+  )
 
-  const updateStyles = useCallback(() => {
-    setSpringAnimatedStyles(getStyles())
-  }, [getStyles])
+  const updateStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate?: boolean }) => {
+      setSpringAnimatedStyles(getStyles({ forceImmediate }))
+    },
+    [getStyles],
+  )
 
   const initialTheme = useTheme(
     useCallback(
       theme => {
+        if (cacheRef.current.theme === theme) return
         cacheRef.current.theme = theme
-        updateStyles()
+        updateStyles({ forceImmediate: true })
       },
       [updateStyles],
     ),
@@ -146,19 +154,20 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     isHovered => {
       cacheRef.current.isHovered = isHovered
-      updateStyles()
+      updateStyles({ forceImmediate: false })
     },
   )
 
   const cacheRef = useRef({ isHovered: false, theme: initialTheme })
+  cacheRef.current.theme = initialTheme
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
-  useEffect(() => {
-    updateStyles()
+  useLayoutEffect(() => {
+    updateStyles({ forceImmediate: false })
   }, [updateStyles])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!(Platform.realOS === 'web' && !onPress)) return
     const node = findNode(containerRef)
     if (!node) return

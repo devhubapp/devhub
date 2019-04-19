@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import { FlatList, Image, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { getGitHubURLForUser, ModalPayload } from '@devhub/core'
@@ -73,7 +73,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!(flatListRef.current && focusedColumnId)) return
 
     flatListRef.current.scrollToItem({

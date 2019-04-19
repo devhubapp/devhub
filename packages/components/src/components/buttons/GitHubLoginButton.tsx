@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -92,28 +92,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
-  })
-
-  const touchableRef = useRef(null)
-  const initialIsHovered = useHover(touchableRef, isHovered => {
-    cacheRef.current.isHovered = isHovered
-    updateStyles()
-  })
-
-  const cacheRef = useRef({
-    isHovered: initialIsHovered,
-    isPressing: false,
-    theme: initialTheme,
-  })
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
-    ReturnType<typeof getStyles>
-  >(getStyles)
-
-  function getStyles() {
+  const getStyles = useCallback(() => {
     const { isHovered, isPressing, theme } = cacheRef.current
 
     const immediate = isHovered || Platform.realOS === 'android'
@@ -126,11 +105,39 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
           ? theme.backgroundColorLess2
           : rgba(theme.backgroundColorLess2, 0),
     }
-  }
+  }, [])
 
-  function updateStyles() {
+  const updateStyles = useCallback(() => {
     setSpringAnimatedStyles(getStyles())
-  }
+  }, [getStyles])
+
+  const initialTheme = useTheme(
+    useCallback(
+      theme => {
+        if (cacheRef.current.theme === theme) return
+        cacheRef.current.theme = theme
+        updateStyles()
+      },
+      [updateStyles],
+    ),
+  )
+
+  const touchableRef = useRef(null)
+  const initialIsHovered = useHover(touchableRef, isHovered => {
+    cacheRef.current.isHovered = isHovered
+    updateStyles()
+  })
+
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
+  cacheRef.current.theme = initialTheme
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
+    ReturnType<typeof getStyles>
+  >(getStyles)
 
   return (
     <SpringAnimatedTouchableOpacity

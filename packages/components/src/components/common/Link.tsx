@@ -1,4 +1,9 @@
-import React, { AnchorHTMLAttributes, useEffect, useRef } from 'react'
+import React, {
+  AnchorHTMLAttributes,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
@@ -46,31 +51,7 @@ export function Link(props: LinkProps) {
 
   const openOnNewTab = _openOnNewTab || Platform.isElectron
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
-  })
-
-  const ref = useRef<View>(null)
-  useHover(
-    enableBackgroundHover || enableForegroundHover ? ref : null,
-    isHovered => {
-      cacheRef.current.isHovered = isHovered
-      updateStyles()
-    },
-  )
-
-  useEffect(() => {
-    if (!(Platform.realOS === 'web')) return
-    const node = findNode(ref)
-    if (!node) return
-
-    node.title = tooltip || ''
-  }, [ref.current, tooltip])
-
-  const cacheRef = useRef({ theme: initialTheme, isHovered: false })
-
-  function updateStyles() {
+  const updateStyles = useCallback(() => {
     if (!(enableBackgroundHover || enableForegroundHover)) return
 
     const { isHovered, theme } = cacheRef.current
@@ -90,7 +71,38 @@ export function Link(props: LinkProps) {
         },
       })
     }
-  }
+  }, [enableBackgroundHover, enableForegroundHover, hoverBackgroundThemeColor])
+
+  const initialTheme = useTheme(
+    useCallback(
+      theme => {
+        if (cacheRef.current.theme === theme) return
+        cacheRef.current.theme = theme
+        updateStyles()
+      },
+      [updateStyles],
+    ),
+  )
+
+  const ref = useRef<View>(null)
+  useHover(
+    enableBackgroundHover || enableForegroundHover ? ref : null,
+    isHovered => {
+      cacheRef.current.isHovered = isHovered
+      updateStyles()
+    },
+  )
+
+  useEffect(() => {
+    if (!(Platform.realOS === 'web')) return
+    const node = findNode(ref)
+    if (!node) return
+
+    node.title = tooltip || ''
+  }, [ref.current, tooltip])
+
+  const cacheRef = useRef({ theme: initialTheme, isHovered: false })
+  cacheRef.current.theme = initialTheme
 
   const renderTouchable = href || otherProps.onPress || allowEmptyLink
 

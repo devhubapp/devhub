@@ -61,6 +61,7 @@ export const Button = React.memo((props: ButtonProps) => {
       : defaultButtonSize
 
   const initialTheme = useTheme(theme => {
+    if (cacheRef.current.theme === theme) return
     cacheRef.current.theme = theme
     updateStyles()
   })
@@ -76,6 +77,7 @@ export const Button = React.memo((props: ButtonProps) => {
     isPressing: false,
     theme: initialTheme,
   })
+  cacheRef.current.theme = initialTheme
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 

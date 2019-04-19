@@ -201,6 +201,7 @@ function AddColumnModalItem({
   title: string
 }) {
   const initialTheme = useTheme(theme => {
+    if (cacheRef.current.theme === theme) return
     cacheRef.current.theme = theme
     updateStyles()
   })
@@ -216,6 +217,7 @@ function AddColumnModalItem({
     isPressing: false,
     theme: initialTheme,
   })
+  cacheRef.current.theme = initialTheme
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 

@@ -59,10 +59,7 @@ export function useReduxState<S extends (state: any) => any>(
 
   useEffect(() => {
     if (callback) callback(cacheRef.current)
-
-    // TODO: investigate why [callback] causes some bugs,
-    // e.g. on single-column mode + toggle modal the sidebar bg gets broken
-  }, [])
+  })
 
   return cacheRef.current
 }

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -35,6 +35,7 @@ export interface ColumnOptionsRowProps {
   hasChanged: boolean
   headerItemFixedIconSize?: number
   iconName: GitHubIcon
+  forceImmediate?: boolean
   isOpen: boolean
   onToggle: (() => void) | undefined
   openOnHover?: boolean
@@ -61,17 +62,48 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
-  })
+  const getStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
+      const { isHovered, isPressing, theme } = cacheRef.current
+      const immediate =
+        forceImmediate || isHovered || Platform.realOS === 'android'
+
+      return {
+        config: getDefaultReactSpringAnimationConfig(),
+        immediate,
+        backgroundColor:
+          enableBackgroundHover && (isHovered || isPressing || isOpen)
+            ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
+            : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
+      }
+    },
+    [enableBackgroundHover, isOpen],
+  )
+
+  const updateStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate?: boolean }) => {
+      setSpringAnimatedStyles(getStyles({ forceImmediate }))
+    },
+    [getStyles],
+  )
+
+  const initialTheme = useTheme(
+    useCallback(
+      theme => {
+        if (cacheRef.current.theme === theme) return
+        cacheRef.current.theme = theme
+        updateStyles({ forceImmediate: true })
+      },
+      [updateStyles],
+    ),
+  )
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(
     onToggle ? touchableRef : null,
     isHovered => {
       cacheRef.current.isHovered = isHovered
-      updateStyles()
+      updateStyles({ forceImmediate: false })
 
       if (openOnHover && onToggle && !isOpen) onToggle()
     },
@@ -82,30 +114,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     isPressing: false,
     theme: initialTheme,
   })
+  cacheRef.current.theme = initialTheme
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
-  useEffect(() => {
-    updateStyles()
-  }, [enableBackgroundHover, isOpen])
-
-  function getStyles() {
-    const { isHovered, isPressing, theme } = cacheRef.current
-    const immediate = isHovered || Platform.realOS === 'android'
-
-    return {
-      config: getDefaultReactSpringAnimationConfig(),
-      immediate,
-      backgroundColor:
-        enableBackgroundHover && (isHovered || isPressing || isOpen)
-          ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
-          : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
-    }
-  }
-
-  function updateStyles() {
-    setSpringAnimatedStyles(getStyles())
-  }
+  useLayoutEffect(() => {
+    updateStyles({ forceImmediate: false })
+  }, [updateStyles])
 
   return (
     <SpringAnimatedView
@@ -134,13 +149,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 if (Platform.realOS === 'web') return
 
                 cacheRef.current.isPressing = true
-                updateStyles()
+                updateStyles({ forceImmediate: false })
               }}
               onPressOut={() => {
                 if (Platform.realOS === 'web') return
 
                 cacheRef.current.isPressing = false
-                updateStyles()
+                updateStyles({ forceImmediate: false })
               }}
             >
               {child}

@@ -45,11 +45,13 @@ export function Screen(props: ScreenProps) {
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const initialTheme = useTheme(theme => {
+    if (cacheRef.current.theme === theme) return
     cacheRef.current.theme = theme
     updateStyles()
   })
 
   const cacheRef = useRef({ theme: initialTheme })
+  cacheRef.current.theme = initialTheme
 
   useEffect(() => {
     if (SplashScreen) {
