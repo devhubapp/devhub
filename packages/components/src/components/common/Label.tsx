@@ -1,5 +1,12 @@
 import React, { ReactNode } from 'react'
-import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextProps,
+  ViewProps,
+  ViewStyle,
+} from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
@@ -10,7 +17,6 @@ import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
-import { separatorSize } from './Separator'
 
 export interface LabelProps {
   backgroundThemeColor?: keyof ThemeColors
@@ -29,7 +35,7 @@ export interface LabelProps {
   textProps?: TextProps
 }
 
-export const hiddenLabelSize = { width: 12, height: 12 }
+export const hiddenLabelSize = { width: 10, height: 10 }
 
 export function Label(props: LabelProps) {
   const theme = useTheme()
@@ -51,16 +57,20 @@ export function Label(props: LabelProps) {
     textProps = {},
   } = props
 
-  const color = _color || theme.foregroundColor
+  const color = _color || theme.foregroundColorMuted50
+
+  const circleColor = getReadableColor(color, theme[backgroundThemeColor], 0.3)
 
   const backgroundColor = outline
     ? undefined
-    : getReadableColor(color, theme[backgroundThemeColor], 0.3)
+    : hideText
+    ? circleColor
+    : theme[backgroundThemeColor]
 
   const foregroundColor =
     _textColor ||
     (backgroundColor
-      ? getReadableColor(backgroundColor, backgroundColor, 0.9)
+      ? getReadableColor(backgroundColor, backgroundColor, 0.4)
       : getReadableColor(color, theme[backgroundThemeColor], 0.4))
 
   const borderColor =
@@ -81,11 +91,12 @@ export function Label(props: LabelProps) {
         hideText ? { width } : { minWidth: width },
         {
           height,
+          flexDirection: 'row',
           alignContent: 'center',
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: typeof radius === 'number' ? radius : height / 2,
-          borderWidth: separatorSize,
+          borderWidth: StyleSheet.hairlineWidth,
         },
         containerProps && containerProps.style,
         containerStyle,
@@ -97,6 +108,20 @@ export function Label(props: LabelProps) {
         Boolean(radius) && { borderRadius: radius },
       ]}
     >
+      {!hideText && (
+        <>
+          {/* <Spacer width={contentPadding / (small ? 3 : 2)} /> */}
+          <SpringAnimatedView
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: 6 / 2,
+              backgroundColor: circleColor,
+            }}
+          />
+        </>
+      )}
+
       <SpringAnimatedText
         numberOfLines={1}
         {...textProps}

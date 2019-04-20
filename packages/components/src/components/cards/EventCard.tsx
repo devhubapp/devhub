@@ -616,7 +616,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <View
           style={[
             cardStyles.compactItemFixedMinHeight,
-            { alignItems: 'flex-end' },
+            { width: 50, alignItems: 'flex-end' },
           ]}
         >
           {!!event.created_at && (

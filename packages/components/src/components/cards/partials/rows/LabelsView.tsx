@@ -23,21 +23,20 @@ export interface LabelsViewProps
 export const LabelsView = (props: LabelsViewProps) => {
   const { fragment, hideText, labels, style, ...otherProps } = props
 
-  const horizontalSpacing = hideText
-    ? -hiddenLabelSize.width / 8
-    : contentPadding / 8
-  const verticalSpacing = contentPadding / 8
+  const horizontalSpacing = hideText ? -hiddenLabelSize.width / 8 : 1
+  const verticalSpacing = 1
 
   const texts = labels
     .map(label => label && label.name)
     .filter(text => !!text && typeof text === 'string')
 
-  const tooltip =
-    texts.length === 1
+  const tooltip = hideText
+    ? texts.length === 1
       ? `Label: ${texts[0]}`
       : texts.length > 1
       ? `Labels:\n${texts.join('\n')}`
       : ''
+    : ''
 
   return (
     <ConditionalWrap

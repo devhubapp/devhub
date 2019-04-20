@@ -291,7 +291,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                   isBot={false}
                   linkURL=""
                   size={size}
-                  tooltip={tooltip ? null : undefined}
+                  tooltip={tooltip ? '' : undefined}
                   {...avatarProps}
                   username={username}
                 />

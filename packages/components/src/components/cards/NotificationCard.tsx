@@ -550,7 +550,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View
           style={[
             cardStyles.compactItemFixedMinHeight,
-            { alignItems: 'flex-end' },
+            { width: 102, alignItems: 'flex-end' },
           ]}
         >
           {!!updatedAt && (

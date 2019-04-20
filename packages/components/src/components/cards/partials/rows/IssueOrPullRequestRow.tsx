@@ -144,7 +144,7 @@ export const IssueOrPullRequestRow = React.memo(
             <View
               style={[
                 sharedStyles.flex,
-                { width: '100%' },
+                { justifyContent: 'space-between', width: '100%' },
                 inlineLabels && sharedStyles.horizontal,
                 inlineLabels && sharedStyles.flexWrap,
               ]}
@@ -209,7 +209,12 @@ export const IssueOrPullRequestRow = React.memo(
 
               {!!labels && labels.length > 0 && (
                 <LabelsView
-                  borderColor={hideLabelText ? backgroundThemeColor : undefined}
+                  backgroundThemeColor={backgroundThemeColor}
+                  borderColor={
+                    hideLabelText && backgroundThemeColor
+                      ? springAnimatedTheme[backgroundThemeColor]
+                      : undefined
+                  }
                   fragment={!keepLabelsTogether}
                   hideText={hideLabelText}
                   labels={labels.map(label => ({
@@ -218,6 +223,7 @@ export const IssueOrPullRequestRow = React.memo(
                     color: label.color && `#${label.color}`,
                     name: label.name,
                   }))}
+                  muted={isRead}
                 />
               )}
             </View>

@@ -33,7 +33,7 @@ export interface AvatarProps
   size?: number
   small?: boolean
   style?: StyleProp<any>
-  tooltip?: string | null
+  tooltip?: string
   username?: string
 }
 

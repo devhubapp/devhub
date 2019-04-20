@@ -367,7 +367,7 @@ export const IssueOrPullRequestCard = React.memo(
           <View
             style={[
               cardStyles.compactItemFixedMinHeight,
-              { alignItems: 'flex-end' },
+              { width: 50, alignItems: 'flex-end' },
             ]}
           >
             {!!issueOrPullRequest.created_at && (
