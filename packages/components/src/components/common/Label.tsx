@@ -1,11 +1,9 @@
 import React, { ReactNode } from 'react'
 import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
 
-import { darken, getLuminance, lighten } from 'polished'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
-import { getLuminanceDifference } from '../../utils/helpers/colors'
+import { getReadableColor } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
@@ -30,11 +28,10 @@ export interface LabelProps {
 }
 
 export function Label(props: LabelProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const theme = useTheme()
 
   const {
-    borderColor,
+    borderColor: _borderColor,
     children,
     color: _color,
     containerProps = {},
@@ -49,30 +46,20 @@ export function Label(props: LabelProps) {
     textProps = {},
   } = props
 
-  const _colorLuminanceDiff = _color
-    ? Math.abs(getLuminanceDifference(_color, theme.backgroundColor))
-    : 0
+  const color = _color || theme.foregroundColor
 
-  const _readableColor =
-    _color &&
-    (outline && _colorLuminanceDiff < 0.4
-      ? theme.isDark
-        ? lighten(0.6 - _colorLuminanceDiff, _color)
-        : darken(0.6 - _colorLuminanceDiff, _color)
-      : _color)
-
-  const color = _readableColor || springAnimatedTheme.foregroundColor
+  const backgroundColor = outline
+    ? undefined
+    : getReadableColor(color, theme.backgroundColor, 0.3)
 
   const foregroundColor =
     _textColor ||
-    (outline && color) ||
-    (_readableColor
-      ? getLuminance(_readableColor) > 0.4
-        ? darken(0.9, _readableColor)
-        : lighten(0.9, _readableColor)
-      : outline
-      ? springAnimatedTheme.foregroundColor
-      : springAnimatedTheme.backgroundColor)
+    (backgroundColor
+      ? getReadableColor(backgroundColor, backgroundColor, 0.9)
+      : getReadableColor(color, theme.backgroundColor, 0.4))
+
+  const borderColor =
+    _borderColor || (outline ? foregroundColor : backgroundColor)
 
   const width = hideText ? contentPadding / 2 : undefined
   const height = hideText ? contentPadding / 2 : small ? 16 : 18
@@ -93,12 +80,8 @@ export function Label(props: LabelProps) {
         containerProps && containerProps.style,
         containerStyle,
         {
-          borderColor: borderColor || color,
-          backgroundColor: outline
-            ? _readableColor
-              ? springAnimatedTheme.backgroundColor
-              : undefined
-            : color,
+          borderColor,
+          backgroundColor,
         },
         muted && { opacity: mutedOpacity },
         Boolean(radius) && { borderRadius: radius },

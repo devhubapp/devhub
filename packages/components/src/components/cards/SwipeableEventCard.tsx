@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { SwipeableRow } from '../../libs/swipeable'
-import * as colors from '../../styles/colors'
 import { useTheme } from '../context/ThemeContext'
 import { EventCard, EventCardProps } from './EventCard'
 
@@ -22,7 +21,7 @@ export function SwipeableEventCard(props: SwipeableEventCardProps) {
     <SwipeableRow
       leftActions={[
         {
-          color: colors.blue,
+          color: theme.blue,
           icon: 'isRead',
           key: 'isRead',
           label: 'Read',

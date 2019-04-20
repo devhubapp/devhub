@@ -12,7 +12,6 @@ import {
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
-import * as colors from '../../../../styles/colors'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding, smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
@@ -140,7 +139,7 @@ export const IssueOrPullRequestRow = React.memo(
             <SpringAnimatedIcon
               name="lock"
               size={smallAvatarSize}
-              style={{ color: colors.orange }}
+              style={{ color: springAnimatedTheme.orange }}
             />
           ) : null
         }

@@ -17,7 +17,7 @@ export function getColumnHeaderThemeColors(
 } {
   // const luminance = getLuminance(backgroundColor)
 
-  // if (luminance >= 0.5) {
+  // if (luminance >= 0.4) {
   //   return {
   //     normal: 'backgroundColor',
   //     hover: 'backgroundColorLess1',

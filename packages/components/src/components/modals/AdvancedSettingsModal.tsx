@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
 import { constants, GitHubAppType } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
@@ -11,7 +10,6 @@ import { executeOAuth } from '../../libs/oauth'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import * as colors from '../../styles/colors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
@@ -25,6 +23,7 @@ import { ButtonLink } from '../common/ButtonLink'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
 
 export interface AdvancedSettingsModalProps {
   showBackButton: boolean
@@ -36,7 +35,7 @@ export const AdvancedSettingsModal = React.memo(
 
     const { sizename } = useAppLayout()
 
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+    const theme = useTheme()
 
     const [executingOAuth, setExecutingOAuth] = useState<GitHubAppType | null>(
       null,
@@ -116,7 +115,7 @@ export const AdvancedSettingsModal = React.memo(
                     name="keyboard"
                     size={16}
                     style={{
-                      color: springAnimatedTheme.foregroundColor,
+                      color: theme.foregroundColor,
                     }}
                   />
                 </Button>
@@ -138,7 +137,7 @@ export const AdvancedSettingsModal = React.memo(
                 <SpringAnimatedText
                   style={{
                     flex: 1,
-                    color: springAnimatedTheme.foregroundColor,
+                    color: theme.foregroundColor,
                   }}
                 >
                   GitHub OAuth
@@ -160,7 +159,7 @@ export const AdvancedSettingsModal = React.memo(
                     <SpringAnimatedIcon
                       name="gear"
                       size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
+                      style={{ color: theme.foregroundColor }}
                     />
                   </ButtonLink>
                 ) : (
@@ -181,7 +180,7 @@ export const AdvancedSettingsModal = React.memo(
                     <SpringAnimatedIcon
                       name={githubOAuthToken ? 'sync' : 'plus'}
                       size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
+                      style={{ color: theme.foregroundColor }}
                     />
                   </Button>
                 )}
@@ -199,7 +198,7 @@ export const AdvancedSettingsModal = React.memo(
                 <SpringAnimatedText
                   style={{
                     flex: 1,
-                    color: springAnimatedTheme.foregroundColor,
+                    color: theme.foregroundColor,
                   }}
                 >
                   GitHub App
@@ -221,7 +220,7 @@ export const AdvancedSettingsModal = React.memo(
                     <SpringAnimatedIcon
                       name="gear"
                       size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
+                      style={{ color: theme.foregroundColor }}
                     />
                   </ButtonLink>
                 ) : (
@@ -244,7 +243,7 @@ export const AdvancedSettingsModal = React.memo(
                     <SpringAnimatedIcon
                       name={githubAppToken ? 'sync' : 'plus'}
                       size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
+                      style={{ color: theme.foregroundColor }}
                     />
                   </Button>
                 )}
@@ -282,7 +281,7 @@ export const AdvancedSettingsModal = React.memo(
                             name="plus"
                             size={16}
                             style={{
-                              color: springAnimatedTheme.foregroundColor,
+                              color: theme.foregroundColor,
                             }}
                           />
                         </ButtonLink>
@@ -320,7 +319,7 @@ export const AdvancedSettingsModal = React.memo(
                             style={{
                               flex: 1,
                               paddingHorizontal: contentPadding / 2,
-                              color: springAnimatedTheme.foregroundColor,
+                              color: theme.foregroundColor,
                             }}
                           >
                             {installation.account.login}
@@ -340,7 +339,7 @@ export const AdvancedSettingsModal = React.memo(
                               name="gear"
                               size={16}
                               style={{
-                                color: springAnimatedTheme.foregroundColor,
+                                color: theme.foregroundColor,
                               }}
                             />
                           </ButtonLink>
@@ -363,7 +362,7 @@ export const AdvancedSettingsModal = React.memo(
               analyticsLabel=""
               disabled={isDeletingAccount || isLoggingIn}
               loading={isDeletingAccount}
-              hoverBackgroundColor={colors.red}
+              hoverBackgroundColor={theme.red}
               hoverForegroundColor="#FFFFFF"
               onPress={() =>
                 confirm(

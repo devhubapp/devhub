@@ -12,8 +12,8 @@ import {
   GitHubPullRequest,
   sortNotifications,
 } from '@devhub/core'
+import { StaticThemeColors } from '@devhub/core/src'
 import { bugsnag } from '../../../libs/bugsnag'
-import * as colors from '../../../styles/colors'
 import {
   getCommitIconAndColor,
   getIssueIconAndColor,
@@ -55,20 +55,21 @@ export function getNotificationSubjectType(
 
 export function getNotificationIconAndColor(
   notification: GitHubNotification,
-  payload?: GitHubIssueOrPullRequest | undefined,
+  payload: GitHubIssueOrPullRequest | undefined,
+  colors: StaticThemeColors,
 ): { icon: GitHubIcon; color?: string; tooltip: string } {
   const { subject } = notification
   const { type } = subject
 
   switch (type) {
     case 'Commit':
-      return getCommitIconAndColor()
+      return getCommitIconAndColor(colors)
     case 'Issue':
-      return getIssueIconAndColor(payload as GitHubIssue)
+      return getIssueIconAndColor(payload as GitHubIssue, colors)
     case 'PullRequest':
-      return getPullRequestIconAndColor(payload as GitHubPullRequest)
+      return getPullRequestIconAndColor(payload as GitHubPullRequest, colors)
     case 'Release':
-      return getReleaseIconAndColor()
+      return getReleaseIconAndColor(colors)
     case 'RepositoryInvitation':
       return {
         icon: 'mail',
@@ -94,6 +95,7 @@ export function getNotificationReasonMetadata<
   T extends GitHubNotificationReason
 >(
   reason: T,
+  colors: StaticThemeColors,
 ): {
   color: string
   reason: T

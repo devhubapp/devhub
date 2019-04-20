@@ -45,7 +45,6 @@ import {
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
-import { getReadableColor } from '../../utils/helpers/colors'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -218,9 +217,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
     forkRepoFullName,
   )
 
-  const cardIconDetails = getEventIconAndColor(event)
+  const cardIconDetails = getEventIconAndColor(event, springAnimatedTheme)
   const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
-  const _cardIconColor = cardIconDetails.color
+  const cardIconColor = cardIconDetails.color
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
     appendColon: true,
@@ -229,7 +228,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
     includeTag: cardViewMode === 'compact',
     repoIsKnown: repoIsKnown || cardViewMode === 'compact',
   }
-  const { action, actionText } = getEventMetadata(event, actionTextOptions)
+  const { actionText } = getEventMetadata(event, actionTextOptions)
   const actionTextWithoutColon = getEventMetadata(event, {
     ...actionTextOptions,
     appendColon: false,
@@ -250,23 +249,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
 
-  // const {
-  //   icon: pullRequestIconName,
-  //   color: _pullRequestIconColor,
-  // } = pullRequest
-  //   ? getPullRequestIconAndColor(pullRequest)
-  //   : { icon: undefined, color: undefined }
-
-  // const pullRequestURL =
-  //   pullRequest &&
-  //   (comment && !comment.body && comment.html_url
-  //     ? comment.html_url || comment.url
-  //     : pullRequest.html_url || pullRequest.url)
-
-  // const { icon: issueIconName, color: _issueIconColor } = issue
-  //   ? getIssueIconAndColor(issue)
-  //   : { icon: undefined, color: undefined }
-
   function getBackgroundThemeColor() {
     const backgroundThemeColors = getColumnCardThemeColors(
       themeRef.current!.backgroundColor,
@@ -279,30 +261,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
   }
 
   const backgroundThemeColor = getBackgroundThemeColor()
-
-  const cardIconColor =
-    _cardIconColor &&
-    getReadableColor(
-      _cardIconColor,
-      themeRef.current![backgroundThemeColor],
-      0.3,
-    )
-
-  // const issueIconColor =
-  //   _issueIconColor &&
-  //   getReadableColor(
-  //     _issueIconColor,
-  //     themeRef.current![backgroundThemeColor],
-  //     0.3,
-  //   )
-
-  // const pullRequestIconColor =
-  //   _pullRequestIconColor &&
-  //   getReadableColor(
-  //     _pullRequestIconColor,
-  //     themeRef.current![backgroundThemeColor],
-  //     0.3,
-  //   )
 
   let withTopMargin = cardViewMode !== 'compact'
   let withTopMarginCount = withTopMargin ? 1 : 0
@@ -747,8 +705,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             actionText={actionText}
             avatarUrl={avatarUrl}
             backgroundThemeColor={backgroundThemeColor}
-            // cardIconColor={cardIconColor}
-            // cardIconName={cardIconName}
             date={event.created_at}
             ids={('merged' in event && event.merged) || [id]}
             isBot={isBot}

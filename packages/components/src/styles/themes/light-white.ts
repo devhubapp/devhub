@@ -4,5 +4,7 @@ export const theme = createThemeFromColor(
   '#FFFFFF',
   'light-white',
   'Light White',
-  { primaryBackgroundColor: '#000000', primaryForegroundColor: '#FFFFFF' },
+  {
+    primaryBackgroundColor: '#000000',
+  },
 )

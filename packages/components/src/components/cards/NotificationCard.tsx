@@ -25,10 +25,8 @@ import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
-  smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
-import { getReadableColor } from '../../utils/helpers/colors'
 import { getNotificationIconAndColor } from '../../utils/helpers/github/notifications'
 import { fixURL } from '../../utils/helpers/github/url'
 import { tryFocus } from '../../utils/helpers/shared'
@@ -199,11 +197,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isRepoInvitation = subject.type === 'RepositoryInvitation'
   const isVulnerabilityAlert = subject.type === 'RepositoryVulnerabilityAlert'
 
-  const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
-    pullRequest ||
-    undefined) as any)
+  const cardIconDetails = getNotificationIconAndColor(
+    notification,
+    (issue || pullRequest || undefined) as any,
+    springAnimatedTheme,
+  )
   const cardIconName = cardIconDetails.icon
-  const _cardIconColor = cardIconDetails.color
+  const cardIconColor = cardIconDetails.color
 
   const issueOrPullRequestNumber = issueOrPullRequest
     ? issueOrPullRequest.number ||
@@ -241,14 +241,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   }
 
   const backgroundThemeColor = getBackgroundThemeColor()
-
-  const cardIconColor =
-    _cardIconColor &&
-    getReadableColor(
-      _cardIconColor,
-      themeRef.current![backgroundThemeColor],
-      0.3,
-    )
 
   let withTopMargin = cardViewMode !== 'compact'
   let withTopMarginCount = withTopMargin ? 1 : 0
@@ -591,7 +583,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           )}
 
           <NotificationReason
-            backgroundThemeColor={backgroundThemeColor}
             isPrivate={isPrivate}
             reason={notification.reason as GitHubNotificationReason}
           />
@@ -657,9 +648,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           <NotificationCardHeader
             key={`notification-card-header-${id}`}
             avatarUrl={repoAvatarDetails.avatar_url || undefined}
-            backgroundThemeColor={backgroundThemeColor}
-            // cardIconColor={cardIconColor}
-            // cardIconName={cardIconName}
             date={updatedAt}
             ids={[id]}
             isBot={isBot}

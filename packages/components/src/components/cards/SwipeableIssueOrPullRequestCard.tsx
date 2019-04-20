@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { SwipeableRow } from '../../libs/swipeable'
-import * as colors from '../../styles/colors'
 import { useTheme } from '../context/ThemeContext'
 import {
   IssueOrPullRequestCard,
@@ -32,7 +31,7 @@ export function SwipeableIssueOrPullRequestCard(
     <SwipeableRow
       leftActions={[
         {
-          color: colors.blue,
+          color: theme.blue,
           icon: 'isRead',
           key: 'isRead',
           label: 'Read',
@@ -42,7 +41,7 @@ export function SwipeableIssueOrPullRequestCard(
       ]}
       rightActions={[
         {
-          color: colors.orange,
+          color: theme.orange,
           icon: 'snooze',
           key: 'snooze',
           label: 'Snooze',

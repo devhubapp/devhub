@@ -7,10 +7,13 @@ import {
   GitHubPullRequest,
   isDraft,
   isPullRequest,
+  StaticThemeColors,
 } from '@devhub/core'
-import * as colors from '../../../styles/colors'
+// import * as colors from '../../../styles/colors'
 
-export function getCommitIconAndColor(): {
+export function getCommitIconAndColor(
+  colors: StaticThemeColors,
+): {
   icon: GitHubIcon
   color?: string
   tooltip: string
@@ -18,7 +21,9 @@ export function getCommitIconAndColor(): {
   return { icon: 'git-commit', color: colors.brown, tooltip: 'Commit' }
 }
 
-export function getReleaseIconAndColor(): {
+export function getReleaseIconAndColor(
+  colors: StaticThemeColors,
+): {
   icon: GitHubIcon
   color?: string
   tooltip: string
@@ -30,7 +35,9 @@ export function getReleaseIconAndColor(): {
   }
 }
 
-export function getTagIconAndColor(): {
+export function getTagIconAndColor(
+  colors: StaticThemeColors,
+): {
   icon: GitHubIcon
   color?: string
   tooltip: string
@@ -42,13 +49,16 @@ export function getTagIconAndColor(): {
   }
 }
 
-export function getPullRequestIconAndColor(pullRequest: {
-  draft: GitHubPullRequest['draft']
-  state: GitHubPullRequest['state']
-  merged: GitHubPullRequest['merged'] | undefined
-  merged_at: GitHubPullRequest['merged_at'] | undefined
-  mergeable_state: GitHubPullRequest['mergeable_state'] | undefined
-}): { icon: GitHubIcon; color?: string; tooltip: string } {
+export function getPullRequestIconAndColor(
+  pullRequest: {
+    draft: GitHubPullRequest['draft']
+    state: GitHubPullRequest['state']
+    merged: GitHubPullRequest['merged'] | undefined
+    merged_at: GitHubPullRequest['merged_at'] | undefined
+    mergeable_state: GitHubPullRequest['mergeable_state'] | undefined
+  },
+  colors: StaticThemeColors,
+): { icon: GitHubIcon; color?: string; tooltip: string } {
   const draft = isDraft(pullRequest)
   const merged = !!(pullRequest.merged || pullRequest.merged_at)
   const state = merged ? 'merged' : pullRequest.state
@@ -64,7 +74,7 @@ export function getPullRequestIconAndColor(pullRequest: {
     case 'closed':
       return {
         icon: 'git-pull-request',
-        color: colors.red,
+        color: colors.lightRed,
         tooltip: `Closed${draft ? ' draft' : ''} pull request`,
       }
 
@@ -83,14 +93,17 @@ export function getPullRequestIconAndColor(pullRequest: {
   }
 }
 
-export function getIssueIconAndColor(issue: {
-  state?: GitHubPullRequest['state']
-  merged_at?: GitHubPullRequest['merged_at']
-}): { icon: GitHubIcon; color?: string; tooltip: string } {
+export function getIssueIconAndColor(
+  issue: {
+    state?: GitHubPullRequest['state']
+    merged_at?: GitHubPullRequest['merged_at']
+  },
+  colors: StaticThemeColors,
+): { icon: GitHubIcon; color?: string; tooltip: string } {
   const { state } = issue
 
   if (isPullRequest(issue)) {
-    return getPullRequestIconAndColor(issue as GitHubPullRequest)
+    return getPullRequestIconAndColor(issue as GitHubPullRequest, colors)
   }
 
   switch (state) {
@@ -104,7 +117,7 @@ export function getIssueIconAndColor(issue: {
     case 'closed':
       return {
         icon: 'issue-closed',
-        color: colors.red,
+        color: colors.lightRed,
         tooltip: 'Closed issue',
       }
 

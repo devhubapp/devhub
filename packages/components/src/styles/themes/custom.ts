@@ -1,7 +1,7 @@
 import { darken, getLuminance, invert, lighten, rgba } from 'polished'
 
-import { Theme } from '@devhub/core'
-import * as colors from '../colors'
+import { Theme, ThemeColors } from '@devhub/core'
+import { getStaticColors } from '../colors'
 
 function createTheme(theme: Theme): Theme {
   return theme
@@ -11,18 +11,10 @@ export function createThemeFromColor(
   color: string,
   id: Theme['id'],
   displayName: Theme['displayName'],
-  options: {
-    primaryBackgroundColor?: string
-    primaryForegroundColor?: string
-  } = {},
+  override: Partial<ThemeColors> = {},
 ): Theme {
-  const {
-    primaryBackgroundColor = colors.defaultBrandBackgroundColor,
-    primaryForegroundColor = colors.defaultBrandForegroundColor,
-  } = options
-
   const luminance = getLuminance(color)
-  const isDark = luminance <= 0.5
+  const isDark = luminance <= 0.4
 
   const backgroundColor = color
 
@@ -75,6 +67,19 @@ export function createThemeFromColor(
     ? lighten(0.6, color)
     : darken(0.6, color)
 
+  if (
+    override &&
+    override.primaryBackgroundColor &&
+    !override.primaryForegroundColor
+  ) {
+    const isPrimaryBackgroundDark =
+      getLuminance(override.primaryBackgroundColor) <= 0.4
+
+    override.primaryForegroundColor = isPrimaryBackgroundDark
+      ? lighten(0.95, override.primaryBackgroundColor)
+      : darken(0.95, override.primaryBackgroundColor)
+  }
+
   let invertedTheme: Theme
   return createTheme({
     id: id || 'custom',
@@ -87,12 +92,14 @@ export function createThemeFromColor(
         invert(color),
         id,
         displayName,
-        options,
+        override,
       )
       return invertedTheme
     },
-    primaryBackgroundColor,
-    primaryForegroundColor,
+
+    primaryBackgroundColor: '#49D3B4',
+    primaryForegroundColor: '#141C26',
+
     backgroundColor,
     backgroundColorDarker1,
     backgroundColorDarker2,
@@ -111,8 +118,13 @@ export function createThemeFromColor(
     backgroundColorMore3,
     backgroundColorMore4,
     backgroundColorTransparent10,
+
     foregroundColor,
     foregroundColorMuted25,
     foregroundColorMuted50,
+
+    ...getStaticColors({ isDark }),
+
+    ...override,
   })
 }

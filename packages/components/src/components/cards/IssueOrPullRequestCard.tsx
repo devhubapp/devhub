@@ -24,7 +24,6 @@ import {
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
-import { getReadableColor } from '../../utils/helpers/colors'
 import { getIssueOrPullRequestIconAndColor } from '../../utils/helpers/github/issues'
 import { tryFocus } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -132,9 +131,10 @@ export const IssueOrPullRequestCard = React.memo(
     const cardIconDetails = getIssueOrPullRequestIconAndColor(
       type,
       issueOrPullRequest,
+      springAnimatedTheme,
     )
     const cardIconName = cardIconDetails.icon
-    const _cardIconColor = cardIconDetails.color
+    const cardIconColor = cardIconDetails.color
 
     function getBackgroundThemeColor() {
       const backgroundThemeColors = getColumnCardThemeColors(
@@ -148,14 +148,6 @@ export const IssueOrPullRequestCard = React.memo(
     }
 
     const backgroundThemeColor = getBackgroundThemeColor()
-
-    const cardIconColor =
-      _cardIconColor &&
-      getReadableColor(
-        _cardIconColor,
-        themeRef.current![backgroundThemeColor],
-        0.3,
-      )
 
     let withTopMargin = false
     function getWithTopMargin() {

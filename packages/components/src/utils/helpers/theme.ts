@@ -5,6 +5,7 @@ import { Theme, ThemeColors } from '@devhub/core'
 export const themeColorFields: Array<keyof ThemeColors> = [
   'primaryBackgroundColor',
   'primaryForegroundColor',
+
   'backgroundColor',
   'backgroundColorDarker1',
   'backgroundColorDarker2',
@@ -23,9 +24,23 @@ export const themeColorFields: Array<keyof ThemeColors> = [
   'backgroundColorMore3',
   'backgroundColorMore4',
   'backgroundColorTransparent10',
+
   'foregroundColor',
   'foregroundColorMuted25',
   'foregroundColorMuted50',
+
+  'blue',
+  'blueGray',
+  'brown',
+  'gray',
+  'green',
+  'lightRed',
+  'orange',
+  'pink',
+  'purple',
+  'red',
+  'teal',
+  'yellow',
 ]
 
 export const pickThemeColors = (theme: Theme) => _.pick(theme, themeColorFields)

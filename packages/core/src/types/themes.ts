@@ -15,9 +15,25 @@ export interface ThemePair {
   color?: string
 }
 
-export interface ThemeColors {
+export interface StaticThemeColors {
+  blue: string
+  blueGray: string
+  brown: string
+  gray: string
+  green: string
+  lightRed: string
+  orange: string
+  pink: string
+  purple: string
+  red: string
+  teal: string
+  yellow: string
+}
+
+export interface ThemeColors extends StaticThemeColors {
   primaryBackgroundColor: string
   primaryForegroundColor: string
+
   backgroundColor: string
   backgroundColorDarker1: string
   backgroundColorDarker2: string
@@ -36,6 +52,7 @@ export interface ThemeColors {
   backgroundColorMore3: string
   backgroundColorMore4: string
   backgroundColorTransparent10: string
+
   foregroundColor: string
   foregroundColorMuted25: string
   foregroundColorMuted50: string

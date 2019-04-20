@@ -62,10 +62,6 @@ const issueOrPullRequestSubjectTypeOptions = issueOrPullRequestSubjectTypes
   .map(getSubjectTypeMetadata)
   .sort(metadataSortFn)
 
-const notificationReasonOptions = notificationReasons
-  .map(getNotificationReasonMetadata)
-  .sort(metadataSortFn)
-
 const notificationSubjectTypeOptions = notificationSubjectTypes
   .map(getSubjectTypeMetadata)
   .sort(metadataSortFn)
@@ -171,6 +167,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const checkboxSquareStyle = {
     width: columnHeaderItemContentSize,
   }
+
+  const notificationReasonOptions = notificationReasons
+    .map(reason => getNotificationReasonMetadata(reason, theme))
+    .sort(metadataSortFn)
 
   return (
     <SpringAnimatedView
@@ -445,7 +445,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundColor={item.color}
-                      checkedForegroundColor={theme.backgroundColorDarker1}
                       containerStyle={checkboxStyle}
                       disabled={
                         !enableIndeterminateState &&
@@ -523,7 +522,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundColor={item.color}
-                      checkedForegroundColor={theme.backgroundColorDarker1}
                       containerStyle={checkboxStyle}
                       defaultValue={defaultBooleanValue}
                       enableIndeterminateState={

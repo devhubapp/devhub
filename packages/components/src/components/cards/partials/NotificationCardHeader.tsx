@@ -7,7 +7,6 @@ import {
   getFullDateText,
   getGitHubURLForUser,
   GitHubNotificationReason,
-  ThemeColors,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
@@ -26,9 +25,6 @@ import { NotificationReason } from './rows/partials/NotificationReason'
 
 export interface NotificationCardHeaderProps {
   avatarUrl: string | undefined
-  backgroundThemeColor: keyof ThemeColors
-  // cardIconColor?: string
-  // cardIconName: GitHubIcon
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
@@ -63,7 +59,6 @@ const styles = StyleSheet.create({
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const {
     avatarUrl,
-    backgroundThemeColor,
     date,
     ids,
     isBot,
@@ -169,11 +164,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
 
             <Spacer height={2} />
 
-            <NotificationReason
-              backgroundThemeColor={backgroundThemeColor}
-              isPrivate={isPrivate}
-              reason={reason}
-            />
+            <NotificationReason isPrivate={isPrivate} reason={reason} />
           </View>
 
           <ToggleReadButton
