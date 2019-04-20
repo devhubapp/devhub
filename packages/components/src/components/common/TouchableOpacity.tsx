@@ -15,7 +15,7 @@ export const TouchableOpacity = React.forwardRef(
       <Touchable
         ref={ref}
         TouchableComponent={TouchableOpacityOriginal}
-        activeOpacity={0.5}
+        activeOpacity={props.onPress ? 0.5 : 1}
         {...props}
       />
     )

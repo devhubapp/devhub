@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import {
   TouchableOpacity,
   TouchableOpacityProps,
@@ -40,7 +40,7 @@ export const Touchable = React.forwardRef(
   ) => {
     const touchableRef = useRef<TouchableOpacity>(null)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (typeof ref === 'function') {
         ref(touchableRef.current)
         return
@@ -51,7 +51,7 @@ export const Touchable = React.forwardRef(
       }
     }, [touchableRef.current])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (Platform.realOS !== 'web') return
 
       const node = findNode(touchableRef)

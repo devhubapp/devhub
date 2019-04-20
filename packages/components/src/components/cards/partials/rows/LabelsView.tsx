@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react'
-import { View, ViewProps } from 'react-native'
+import { ViewProps } from 'react-native'
 
 import { GitHubLabel, Omit } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
 import { hiddenLabelSize, Label, LabelProps } from '../../../common/Label'
+import { TouchableOpacity } from '../../../common/TouchableOpacity'
 
 export interface LabelsViewProps
   extends Omit<LabelProps, 'children' | 'color' | 'containerStyle'> {
@@ -27,6 +28,17 @@ export const LabelsView = (props: LabelsViewProps) => {
     : contentPadding / 8
   const verticalSpacing = contentPadding / 8
 
+  const texts = labels
+    .map(label => label && label.name)
+    .filter(text => !!text && typeof text === 'string')
+
+  const tooltip =
+    texts.length === 1
+      ? `Label: ${texts[0]}`
+      : texts.length > 1
+      ? `Labels:\n${texts.join('\n')}`
+      : ''
+
   return (
     <ConditionalWrap
       condition
@@ -34,7 +46,7 @@ export const LabelsView = (props: LabelsViewProps) => {
         fragment ? (
           <Fragment>{children}</Fragment>
         ) : (
-          <View
+          <TouchableOpacity
             style={[
               sharedStyles.horizontalAndVerticallyAligned,
               sharedStyles.flexWrap,
@@ -45,9 +57,10 @@ export const LabelsView = (props: LabelsViewProps) => {
               },
               style,
             ]}
+            tooltip={tooltip}
           >
             {children}
-          </View>
+          </TouchableOpacity>
         )
       }
     >
@@ -65,7 +78,7 @@ export const LabelsView = (props: LabelsViewProps) => {
           small
           {...otherProps}
         >
-          {label.name.toLowerCase()}
+          {hideText && !fragment ? '' : label.name.toLowerCase()}
         </Label>
       ))}
     </ConditionalWrap>

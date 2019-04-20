@@ -113,7 +113,9 @@ export function Label(props: LabelProps) {
         ]}
         {...!!hideText &&
           Platform.select({
-            web: { title: typeof children === 'string' ? children : '' },
+            web: {
+              title: children && typeof children === 'string' ? children : null,
+            },
           })}
       >
         {!!(isPrivate && !hideText) && (
