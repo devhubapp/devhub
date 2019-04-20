@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
   constants,
@@ -32,8 +32,6 @@ export type NotificationCardsContainerProps = Omit<
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
     const { column, ...otherProps } = props
-
-    const [canFetchMore, setCanFetchMore] = useState(false)
 
     const { cardViewMode } = useAppViewMode()
 
@@ -99,17 +97,13 @@ export const NotificationCardsContainer = React.memo(
       ),
     ) as EnhancedGitHubNotification[]
 
-    useEffect(() => {
-      const clearedAt = column.filters && column.filters.clearedAt
-      const olderDate = getOlderNotificationDate(allItems)
+    const clearedAt = column.filters && column.filters.clearedAt
+    const olderDate = getOlderNotificationDate(allItems)
 
-      const newValue =
-        clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
-          ? false
-          : !!data.canFetchMore
-
-      if (newValue !== canFetchMore) setCanFetchMore(newValue)
-    }, [allItems, column.filters, data.canFetchMore, canFetchMore])
+    const canFetchMore =
+      clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
+        ? false
+        : !!data.canFetchMore
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {

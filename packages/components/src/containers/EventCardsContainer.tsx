@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
   ActivityColumnSubscription,
@@ -37,8 +37,6 @@ export type EventCardsContainerProps = Omit<
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { column, ...otherProps } = props
-
-    const [canFetchMore, setCanFetchMore] = useState(false)
 
     const { cardViewMode } = useAppViewMode()
 
@@ -129,17 +127,13 @@ export const EventCardsContainer = React.memo(
       ),
     ) as EnhancedGitHubEvent[]
 
-    useEffect(() => {
-      const clearedAt = column.filters && column.filters.clearedAt
-      const olderDate = getOlderEventDate(allItems)
+    const clearedAt = column.filters && column.filters.clearedAt
+    const olderDate = getOlderEventDate(allItems)
 
-      const newValue =
-        clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
-          ? false
-          : !!data.canFetchMore
-
-      if (newValue !== canFetchMore) setCanFetchMore(newValue)
-    }, [allItems, column.filters, data.canFetchMore, canFetchMore])
+    const canFetchMore =
+      clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
+        ? false
+        : !!data.canFetchMore
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
