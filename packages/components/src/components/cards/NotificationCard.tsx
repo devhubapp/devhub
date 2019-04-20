@@ -314,6 +314,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             key={`notification-issue-or-pr-row-${issueOrPullRequest.id}`}
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
+            backgroundThemeColor={backgroundThemeColor}
             body={issueOrPullRequest.body}
             bold
             commentsCount={issueOrPullRequest.comments}

@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
 
+import { ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
@@ -12,6 +13,7 @@ import { useTheme } from '../context/ThemeContext'
 import { separatorSize } from './Separator'
 
 export interface LabelProps {
+  backgroundThemeColor?: keyof ThemeColors
   borderColor?: string
   children: ReactNode
   color?: string
@@ -27,10 +29,13 @@ export interface LabelProps {
   textProps?: TextProps
 }
 
+export const hiddenLabelSize = { width: 12, height: 12 }
+
 export function Label(props: LabelProps) {
   const theme = useTheme()
 
   const {
+    backgroundThemeColor = 'backgroundColor',
     borderColor: _borderColor,
     children,
     color: _color,
@@ -50,19 +55,24 @@ export function Label(props: LabelProps) {
 
   const backgroundColor = outline
     ? undefined
-    : getReadableColor(color, theme.backgroundColor, 0.3)
+    : getReadableColor(color, theme[backgroundThemeColor], 0.3)
 
   const foregroundColor =
     _textColor ||
     (backgroundColor
       ? getReadableColor(backgroundColor, backgroundColor, 0.9)
-      : getReadableColor(color, theme.backgroundColor, 0.4))
+      : getReadableColor(color, theme[backgroundThemeColor], 0.4))
 
   const borderColor =
-    _borderColor || (outline ? foregroundColor : backgroundColor)
+    _borderColor ||
+    (outline
+      ? foregroundColor
+      : hideText
+      ? theme[backgroundThemeColor]
+      : backgroundColor)
 
-  const width = hideText ? contentPadding / 2 : undefined
-  const height = hideText ? contentPadding / 2 : small ? 16 : 18
+  const width = hideText ? hiddenLabelSize.width : undefined
+  const height = hideText ? hiddenLabelSize.height : small ? 16 : 18
 
   return (
     <SpringAnimatedView

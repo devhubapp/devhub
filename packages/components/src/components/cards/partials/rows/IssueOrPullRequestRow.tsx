@@ -22,6 +22,7 @@ import {
 import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
+import { LabelProps } from '../../../common/Label'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
@@ -38,6 +39,7 @@ export interface IssueOrPullRequestRowProps
   > {
   addBottomAnchor?: boolean
   avatarUrl: string | undefined
+  backgroundThemeColor: LabelProps['backgroundThemeColor']
   body: string | undefined
   bold?: boolean
   commentsCount?: number
@@ -69,6 +71,7 @@ export const IssueOrPullRequestRow = React.memo(
     const {
       addBottomAnchor,
       avatarUrl,
+      backgroundThemeColor,
       body: _body,
       bold,
       commentsCount,
@@ -119,7 +122,7 @@ export const IssueOrPullRequestRow = React.memo(
     const inlineLabels =
       viewMode === 'compact' &&
       numberOfLines === 1 &&
-      (hideLabelText ? labels && labels.length <= 12 : labelsCharLenght < 30)
+      (hideLabelText ? labels && labels.length <= 20 : labelsCharLenght < 30)
     const keepLabelsTogether = true
 
     return (
@@ -213,6 +216,7 @@ export const IssueOrPullRequestRow = React.memo(
 
               {!!labels && labels.length > 0 && (
                 <LabelsView
+                  borderColor={hideLabelText ? backgroundThemeColor : undefined}
                   fragment={!keepLabelsTogether}
                   hideText={hideLabelText}
                   labels={labels.map(label => ({

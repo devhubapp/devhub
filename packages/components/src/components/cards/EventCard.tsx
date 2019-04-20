@@ -365,6 +365,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             key={`event-issue-or-pr-row-${issueOrPullRequest.id}`}
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
+            backgroundThemeColor={backgroundThemeColor}
             body={issueOrPullRequest.body}
             bold
             commentsCount={issueOrPullRequest.comments}

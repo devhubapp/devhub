@@ -5,7 +5,7 @@ import { GitHubLabel, Omit } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
-import { Label, LabelProps } from '../../../common/Label'
+import { hiddenLabelSize, Label, LabelProps } from '../../../common/Label'
 
 export interface LabelsViewProps
   extends Omit<LabelProps, 'children' | 'color' | 'containerStyle'> {
@@ -20,7 +20,12 @@ export interface LabelsViewProps
 }
 
 export const LabelsView = (props: LabelsViewProps) => {
-  const { fragment, labels, style, ...otherProps } = props
+  const { fragment, hideText, labels, style, ...otherProps } = props
+
+  const horizontalSpacing = hideText
+    ? -hiddenLabelSize.width / 8
+    : contentPadding / 8
+  const verticalSpacing = contentPadding / 8
 
   return (
     <ConditionalWrap
@@ -33,7 +38,11 @@ export const LabelsView = (props: LabelsViewProps) => {
             style={[
               sharedStyles.horizontalAndVerticallyAligned,
               sharedStyles.flexWrap,
-              { maxWidth: '100%', marginHorizontal: -contentPadding / 5 },
+              {
+                maxWidth: '100%',
+                marginHorizontal: -horizontalSpacing,
+                marginVertical: -verticalSpacing,
+              },
               style,
             ]}
           >
@@ -48,8 +57,10 @@ export const LabelsView = (props: LabelsViewProps) => {
           color={label.color}
           containerStyle={{
             alignSelf: 'flex-start',
-            margin: contentPadding / 5,
+            marginHorizontal: horizontalSpacing,
+            marginVertical: verticalSpacing,
           }}
+          hideText={hideText}
           outline={false}
           small
           {...otherProps}

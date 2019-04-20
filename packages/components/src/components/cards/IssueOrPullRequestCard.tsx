@@ -181,6 +181,7 @@ export const IssueOrPullRequestCard = React.memo(
               key={`issue-or-pr-issue-or-pr-row-${issueOrPullRequest.id}`}
               addBottomAnchor={false}
               avatarUrl={issueOrPullRequest.user.avatar_url}
+              backgroundThemeColor={backgroundThemeColor}
               body={issueOrPullRequest.body}
               bold
               commentsCount={issueOrPullRequest.comments}
