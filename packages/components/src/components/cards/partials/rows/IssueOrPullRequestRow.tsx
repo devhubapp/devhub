@@ -112,17 +112,10 @@ export const IssueOrPullRequestRow = React.memo(
       issueOrPullRequestNumber,
     })
 
-    const labelsCharLenght =
-      labels && labels.length > 0
-        ? labels.reduce((sum, label) => {
-            return sum + `${label.name || ''}`.length
-          }, 0)
-        : 0
-
     const inlineLabels =
       viewMode === 'compact' &&
       numberOfLines === 1 &&
-      (hideLabelText ? labels && labels.length <= 20 : labelsCharLenght < 30)
+      (hideLabelText ? labels && labels.length <= 20 : true)
     const keepLabelsTogether = true
 
     return (
