@@ -38,6 +38,7 @@ import { ToggleReadButton } from '../common/ToggleReadButton'
 import { useTheme } from '../context/ThemeContext'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { LabelsView } from './partials/rows/LabelsView'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 import {
   cardStyles,
@@ -150,9 +151,11 @@ export const IssueOrPullRequestCard = React.memo(
     const backgroundThemeColor = getBackgroundThemeColor()
 
     let withTopMargin = false
+    let withTopMarginCount = withTopMargin ? 1 : 0
     function getWithTopMargin() {
       const _withTopMargin = withTopMargin
       withTopMargin = true
+      withTopMarginCount = withTopMarginCount + 1
       return _withTopMargin
     }
 
@@ -203,7 +206,9 @@ export const IssueOrPullRequestCard = React.memo(
               isPrivate={!!isPrivate}
               isRead={isRead}
               issueOrPullRequestNumber={issueOrPullRequestNumber!}
-              labels={issueOrPullRequest.labels}
+              labels={
+                cardViewMode === 'compact' ? [] : issueOrPullRequest.labels
+              }
               owner={repoOwnerName || ''}
               repo={repoName || ''}
               showBodyRow={
@@ -229,7 +234,8 @@ export const IssueOrPullRequestCard = React.memo(
 
     const Content = renderContent()
 
-    const isSingleRow = false
+    const isSingleRow = withTopMarginCount <= 1
+    const alignVertically = isSingleRow
 
     if (cardViewMode === 'compact') {
       return (
@@ -238,7 +244,7 @@ export const IssueOrPullRequestCard = React.memo(
           ref={itemRef}
           style={[
             cardStyles.compactContainer,
-            isSingleRow && { alignItems: 'center' },
+            alignVertically && { alignItems: 'center' },
             {
               backgroundColor: springAnimatedTheme[backgroundThemeColor],
             },
@@ -363,6 +369,39 @@ export const IssueOrPullRequestCard = React.memo(
           </View>
 
           <Spacer width={spacingBetweenLeftAndRightColumn} />
+
+          {!!issueOrPullRequest &&
+            !!issueOrPullRequest.labels &&
+            issueOrPullRequest.labels.length > 0 && (
+              <>
+                <LabelsView
+                  backgroundThemeColor={backgroundThemeColor}
+                  enableScrollView={isSingleRow}
+                  labels={issueOrPullRequest.labels.map(label => ({
+                    key: `issue-or-pr-row-${
+                      issueOrPullRequest.id
+                    }-${issueOrPullRequestNumber}-label-${label.id ||
+                      label.name}`,
+                    color: label.color && `#${label.color}`,
+                    name: label.name,
+                  }))}
+                  muted={isRead}
+                  style={{
+                    justifyContent: 'flex-end',
+                    maxWidth:
+                      320 +
+                      (repoIsKnown ? 120 : 0) +
+                      (`${issueOrPullRequest.title || ''}`.length <= 50
+                        ? 100
+                        : 0),
+                    overflow: 'hidden',
+                  }}
+                  textColor={springAnimatedTheme.foregroundColorMuted50}
+                />
+
+                <Spacer width={spacingBetweenLeftAndRightColumn} />
+              </>
+            )}
 
           <View
             style={[

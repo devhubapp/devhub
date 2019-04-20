@@ -1,15 +1,15 @@
-import React, { Fragment } from 'react'
-import { ViewProps } from 'react-native'
+import React, { Fragment, useEffect, useRef } from 'react'
+import { ScrollView, ViewProps } from 'react-native'
 
 import { GitHubLabel, Omit } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
-import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
 import { hiddenLabelSize, Label, LabelProps } from '../../../common/Label'
 import { TouchableOpacity } from '../../../common/TouchableOpacity'
 
 export interface LabelsViewProps
   extends Omit<LabelProps, 'children' | 'color' | 'containerStyle'> {
+  enableScrollView?: boolean
   fragment?: boolean
   hideText?: boolean
   labels: Array<{
@@ -21,7 +21,21 @@ export interface LabelsViewProps
 }
 
 export const LabelsView = (props: LabelsViewProps) => {
-  const { fragment, hideText, labels, style, ...otherProps } = props
+  const {
+    enableScrollView,
+    fragment,
+    hideText,
+    labels,
+    style,
+    ...otherProps
+  } = props
+
+  const scrollViewRef = useRef<ScrollView>(null)
+
+  useEffect(() => {
+    if (!scrollViewRef.current) return
+    scrollViewRef.current.scrollToEnd({ animated: false })
+  }, [scrollViewRef.current])
 
   const horizontalSpacing = hideText ? -hiddenLabelSize.width / 8 : 1
   const verticalSpacing = 1
@@ -48,8 +62,8 @@ export const LabelsView = (props: LabelsViewProps) => {
           <TouchableOpacity
             style={[
               sharedStyles.horizontalAndVerticallyAligned,
-              sharedStyles.flexWrap,
               {
+                flexWrap: enableScrollView ? 'nowrap' : 'wrap',
                 maxWidth: '100%',
                 marginHorizontal: -horizontalSpacing,
                 marginVertical: -verticalSpacing,
@@ -58,7 +72,16 @@ export const LabelsView = (props: LabelsViewProps) => {
             ]}
             tooltip={tooltip}
           >
-            {children}
+            <ConditionalWrap
+              condition={!!enableScrollView}
+              wrap={c => (
+                <ScrollView ref={scrollViewRef} horizontal>
+                  {c}
+                </ScrollView>
+              )}
+            >
+              {children}
+            </ConditionalWrap>
           </TouchableOpacity>
         )
       }

@@ -77,7 +77,7 @@ export const IssueOrPullRequestRow = React.memo(
       commentsCount,
       createdAt,
       hideIcon,
-      hideLabelText = true,
+      hideLabelText,
       iconColor,
       iconName = 'issue-opened',
       id,
@@ -144,7 +144,12 @@ export const IssueOrPullRequestRow = React.memo(
             <View
               style={[
                 sharedStyles.flex,
-                { justifyContent: 'space-between', width: '100%' },
+                {
+                  justifyContent: keepLabelsTogether
+                    ? 'space-between'
+                    : 'flex-start',
+                  width: '100%',
+                },
                 inlineLabels && sharedStyles.horizontal,
                 inlineLabels && sharedStyles.flexWrap,
               ]}
@@ -224,6 +229,7 @@ export const IssueOrPullRequestRow = React.memo(
                     name: label.name,
                   }))}
                   muted={isRead}
+                  textColor={springAnimatedTheme.foregroundColorMuted50}
                 />
               )}
             </View>

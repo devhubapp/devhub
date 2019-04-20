@@ -303,6 +303,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               body={comment.body}
               isRead={isRead}
               leftContent="none"
+              maxLength={100}
               url={comment.html_url || comment.url}
               userLinkURL={comment.user.html_url || ''}
               username={comment.user.display_login || comment.user.login}
@@ -378,7 +379,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             isPrivate={isPrivate}
             isRead={isRead}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={issueOrPullRequest.labels}
+            labels={[]} // issueOrPullRequest.labels
             owner={repoOwnerName || ''}
             repo={repoName || ''}
             showBodyRow={
@@ -471,14 +472,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const Content = renderContent()
 
-  const isSingleRow =
-    withTopMarginCount <= 1 &&
-    // !(
-    //   issueOrPullRequest &&
-    //   issueOrPullRequest.labels &&
-    //   issueOrPullRequest.labels.length
-    // ) &&
-    !release
+  const isSingleRow = withTopMarginCount <= 1 && !release
+  const alignVertically = isSingleRow
 
   if (cardViewMode === 'compact') {
     return (
@@ -487,7 +482,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         ref={itemRef}
         style={[
           cardStyles.compactContainer,
-          isSingleRow && { alignItems: 'center' },
+          alignVertically && { alignItems: 'center' },
           {
             backgroundColor: springAnimatedTheme[backgroundThemeColor],
           },

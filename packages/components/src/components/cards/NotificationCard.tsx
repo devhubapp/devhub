@@ -45,6 +45,7 @@ import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { LabelsView } from './partials/rows/LabelsView'
 import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
@@ -320,14 +321,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
             hideIcon
-            hideLabelText
+            // hideLabelText
             // iconColor={issueIconColor || pullRequestIconColor}
             // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}
             isPrivate={isPrivate}
             isRead={isRead}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={issueOrPullRequest.labels}
+            labels={cardViewMode === 'compact' ? [] : issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
             showBodyRow={
@@ -415,14 +416,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const Content = renderContent()
 
-  const isSingleRow =
-    withTopMarginCount <= 1 &&
-    // !(
-    //   issueOrPullRequest &&
-    //   issueOrPullRequest.labels &&
-    //   issueOrPullRequest.labels.length
-    // ) &&
-    !release
+  const isSingleRow = withTopMarginCount <= 1 && !release
+  const alignVertically = isSingleRow
 
   if (cardViewMode === 'compact') {
     return (
@@ -431,7 +426,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         ref={itemRef}
         style={[
           cardStyles.compactContainer,
-          isSingleRow && { alignItems: 'center' },
+          alignVertically && { alignItems: 'center' },
           {
             backgroundColor: springAnimatedTheme[backgroundThemeColor],
           },
@@ -546,6 +541,39 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         </View>
 
         <Spacer width={spacingBetweenLeftAndRightColumn} />
+
+        {!!issueOrPullRequest &&
+          !!issueOrPullRequest.labels &&
+          issueOrPullRequest.labels.length > 0 && (
+            <>
+              <LabelsView
+                backgroundThemeColor={backgroundThemeColor}
+                enableScrollView={isSingleRow}
+                labels={issueOrPullRequest.labels.map(label => ({
+                  key: `issue-or-pr-row-${
+                    issueOrPullRequest.id
+                  }-${issueOrPullRequestNumber}-label-${label.id ||
+                    label.name}`,
+                  color: label.color && `#${label.color}`,
+                  name: label.name,
+                }))}
+                muted={isRead}
+                style={{
+                  justifyContent: 'flex-end',
+                  maxWidth:
+                    320 +
+                    (repoIsKnown ? 120 : 0) +
+                    (`${issueOrPullRequest.title || ''}`.length <= 50
+                      ? 100
+                      : 0),
+                  overflow: 'hidden',
+                }}
+                textColor={springAnimatedTheme.foregroundColorMuted50}
+              />
+
+              <Spacer width={spacingBetweenLeftAndRightColumn} />
+            </>
+          )}
 
         <View
           style={[

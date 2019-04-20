@@ -29,6 +29,7 @@ export interface CommentRowProps
   body: string
   isRead: boolean
   leftContent: 'avatar' | 'icon' | 'none'
+  maxLength?: number | undefined
   numberOfLines?: number
   textStyle?: SpringAnimatedTextProps['style']
   url?: string
@@ -46,6 +47,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     body: _body,
     leftContent,
     isRead,
+    maxLength = props.viewMode === 'compact' ? 60 : 120,
     numberOfLines = props.numberOfLines ||
       (props.viewMode === 'compact' ? 1 : 2),
     textStyle,
@@ -56,7 +58,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     ...otherProps
   } = props
 
-  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), 100)
+  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), maxLength)
   if (!body) return null
 
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
