@@ -196,6 +196,7 @@ export const IssueOrPullRequestCard = React.memo(
                   : issueOrPullRequest.updated_at
               }
               hideIcon
+              hideLabelText={false}
               // iconColor={issueIconColor || pullRequestIconColor}
               // iconName={issueIconName! || pullRequestIconName}
               id={issueOrPullRequest.id}

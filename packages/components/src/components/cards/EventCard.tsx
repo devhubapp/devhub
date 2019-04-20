@@ -371,6 +371,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
             hideIcon
+            hideLabelText
             // iconColor={issueIconColor || pullRequestIconColor}
             // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}

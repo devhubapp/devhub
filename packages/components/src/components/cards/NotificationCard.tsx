@@ -320,6 +320,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
             hideIcon
+            hideLabelText
             // iconColor={issueIconColor || pullRequestIconColor}
             // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}
