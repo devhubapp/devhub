@@ -3,6 +3,7 @@ import { Dimensions, View } from 'react-native'
 
 import {
   Column as ColumnType,
+  constants,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
@@ -204,6 +205,17 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     actions.markRepoNotificationsAsReadOrUnread,
   )
 
+  const fetchColumnSubscriptionRequest = useReduxAction(
+    actions.fetchColumnSubscriptionRequest,
+  )
+
+  const refresh = useCallback(() => {
+    fetchColumnSubscriptionRequest({
+      columnId: column.id,
+      params: { page: 1, perPage: constants.DEFAULT_PAGINATION_PER_PAGE },
+    })
+  }, [fetchColumnSubscriptionRequest, column.id])
+
   function focusColumn() {
     emitter.emit('FOCUS_ON_COLUMN', {
       columnId: column.id,
@@ -265,23 +277,29 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
         <ColumnHeaderItem
           key="column-options-button-clear-column"
-          analyticsLabel="clear_column"
-          disabled={!clearableItems.length}
-          enableForegroundHover
+          analyticsLabel={
+            clearableItems.length ? 'clear_column' : 'unclear_column'
+          }
+          enableForegroundHover={!!clearableItems.length}
           fixedIconSize
           iconName="check"
           onPress={() => {
             setColumnClearedAtFilter({
               columnId: column.id,
-              clearedAt: new Date().toISOString(),
+              clearedAt: clearableItems.length
+                ? new Date().toISOString()
+                : null,
             })
 
             focusColumn()
+
+            if (!clearableItems.length) refresh()
           }}
           style={{
             paddingHorizontal: contentPadding / 3,
+            opacity: clearableItems.length ? 1 : 0.5,
           }}
-          tooltip="Clear column"
+          tooltip={clearableItems.length ? 'Clear items' : 'Show cleared items'}
         />
 
         <ColumnHeaderItem
