@@ -49,6 +49,7 @@ export interface IssueOrPullRequestRowProps
   iconColor?: string
   iconName?: SpringAnimatedIconProps['name']
   id: string | number | undefined
+  inlineLabels?: boolean
   isPrivate: boolean
   isRead: boolean
   issueOrPullRequestNumber: number
@@ -81,6 +82,7 @@ export const IssueOrPullRequestRow = React.memo(
       iconColor,
       iconName = 'issue-opened',
       id,
+      inlineLabels: _inlineLabels,
       isPrivate,
       isRead,
       issueOrPullRequestNumber,
@@ -113,9 +115,11 @@ export const IssueOrPullRequestRow = React.memo(
     })
 
     const inlineLabels =
-      viewMode === 'compact' &&
-      numberOfLines === 1 &&
-      (hideLabelText ? labels && labels.length <= 20 : true)
+      typeof _inlineLabels === 'boolean'
+        ? _inlineLabels
+        : viewMode === 'compact' &&
+          numberOfLines === 1 &&
+          (hideLabelText ? labels && labels.length <= 20 : true)
     const keepLabelsTogether = true
 
     return (

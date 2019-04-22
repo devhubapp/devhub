@@ -11,12 +11,14 @@ export interface ColumnFiltersProviderProps {
 
 export interface ColumnFiltersProviderState {
   enableSharedFiltersView: boolean
+  fixedWidth: number
   inlineMode: boolean
   isSharedFiltersOpened: boolean
 }
 
 const defaultValue: ColumnFiltersProviderState = {
   enableSharedFiltersView: false,
+  fixedWidth: 240,
   inlineMode: false,
   isSharedFiltersOpened: false,
 }
@@ -40,6 +42,7 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
 
   const valueCacheRef = useRef<ColumnFiltersProviderState>({
     enableSharedFiltersView,
+    fixedWidth: 240,
     inlineMode,
     isSharedFiltersOpened,
   })

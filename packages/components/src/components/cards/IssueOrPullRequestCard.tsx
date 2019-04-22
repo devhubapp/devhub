@@ -48,6 +48,7 @@ import {
 
 export interface IssueOrPullRequestCardProps {
   cardViewMode: CardViewMode
+  enableCompactLabels: boolean
   isFocused?: boolean
   isPrivate?: boolean
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest
@@ -59,6 +60,7 @@ export const IssueOrPullRequestCard = React.memo(
   (props: IssueOrPullRequestCardProps) => {
     const {
       cardViewMode,
+      enableCompactLabels,
       isFocused,
       isPrivate,
       issueOrPullRequest,
@@ -206,9 +208,7 @@ export const IssueOrPullRequestCard = React.memo(
               isPrivate={!!isPrivate}
               isRead={isRead}
               issueOrPullRequestNumber={issueOrPullRequestNumber!}
-              labels={
-                cardViewMode === 'compact' ? [] : issueOrPullRequest.labels
-              }
+              labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
               owner={repoOwnerName || ''}
               repo={repoName || ''}
               showBodyRow={
@@ -370,7 +370,8 @@ export const IssueOrPullRequestCard = React.memo(
 
           <Spacer width={spacingBetweenLeftAndRightColumn} />
 
-          {!!issueOrPullRequest &&
+          {!!enableCompactLabels &&
+            !!issueOrPullRequest &&
             !!issueOrPullRequest.labels &&
             issueOrPullRequest.labels.length > 0 && (
               <>

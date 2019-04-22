@@ -1,7 +1,6 @@
 import _ from 'lodash'
 
 import {
-  CardViewMode,
   ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
@@ -86,7 +85,7 @@ export const createSubscriptionsDataSelector = () =>
   )
 
 export const createFilteredSubscriptionsDataSelector = (
-  cardViewMode: CardViewMode,
+  mergeSimilar: boolean,
 ) => {
   const subscriptionsDataSelector = createSubscriptionsDataSelector()
 
@@ -109,7 +108,7 @@ export const createFilteredSubscriptionsDataSelector = (
         return getFilteredEvents(
           items as EnhancedGitHubEvent[],
           filters,
-          cardViewMode,
+          mergeSimilar,
         )
       }
 

@@ -3,7 +3,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import { CardViewMode } from '@devhub/core'
 import { ScrollView, View } from 'react-native'
 import { contentPadding } from '../../../../styles/variables'
-import { getMergeMaxLength } from '../../../../utils/helpers/filters'
+import { mergeMaxLength } from '../../../../utils/helpers/filters'
 
 export type RenderItem<T> = (params: {
   item: T
@@ -24,7 +24,7 @@ export const RowList = React.memo((props: RowListProps<any>) => {
   const {
     data,
     maxHeight = 220,
-    maxLength = getMergeMaxLength(props.viewMode),
+    maxLength = mergeMaxLength,
     narrow,
     renderItem,
   } = props

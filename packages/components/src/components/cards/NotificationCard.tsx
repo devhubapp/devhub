@@ -58,13 +58,20 @@ import {
 
 export interface NotificationCardProps {
   cardViewMode: CardViewMode
-  isFocused?: boolean
+  enableCompactLabels: boolean
+  isFocused: boolean
   notification: EnhancedGitHubNotification
   repoIsKnown: boolean
 }
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { cardViewMode, isFocused, notification, repoIsKnown } = props
+  const {
+    cardViewMode,
+    isFocused,
+    notification,
+    repoIsKnown,
+    enableCompactLabels,
+  } = props
 
   const repoFullName =
     (notification &&
@@ -321,14 +328,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
             hideIcon
-            // hideLabelText
-            // iconColor={issueIconColor || pullRequestIconColor}
-            // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}
+            inlineLabels={false}
             isPrivate={isPrivate}
             isRead={isRead}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={cardViewMode === 'compact' ? [] : issueOrPullRequest.labels}
+            labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
             showBodyRow={
@@ -542,7 +547,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
         <Spacer width={spacingBetweenLeftAndRightColumn} />
 
-        {!!issueOrPullRequest &&
+        {!!enableCompactLabels &&
+          !!issueOrPullRequest &&
           !!issueOrPullRequest.labels &&
           issueOrPullRequest.labels.length > 0 && (
             <>

@@ -39,7 +39,7 @@ import { SwipeableIssueOrPullRequestCard } from './SwipeableIssueOrPullRequestCa
 export interface IssueOrPullRequestCardsProps
   extends Omit<
     IssueOrPullRequestCardProps,
-    'cardViewMode' | 'isFocused' | 'issueOrPullRequest' | 'type'
+    'isFocused' | 'issueOrPullRequest' | 'type'
   > {
   column: Column
   columnIndex: number
@@ -59,13 +59,15 @@ function keyExtractor(item: EnhancedGitHubIssueOrPullRequest) {
 export const IssueOrPullRequestCards = React.memo(
   (props: IssueOrPullRequestCardsProps) => {
     const {
+      cardViewMode,
       column,
       columnIndex,
+      enableCompactLabels,
       errorMessage,
       fetchNextPage,
+      items,
       lastFetchedAt,
       loadState,
-      items,
       refresh,
     } = props
 
@@ -73,7 +75,7 @@ export const IssueOrPullRequestCards = React.memo(
       FlatList<EnhancedGitHubIssueOrPullRequest>
     >(null)
 
-    const { appViewMode, cardViewMode } = useAppViewMode()
+    const { appViewMode } = useAppViewMode()
     const theme = useTheme()
 
     const visibleItemIndexesRef = useRef<number[]>([])
@@ -159,6 +161,7 @@ export const IssueOrPullRequestCards = React.memo(
         return (
           <SwipeableIssueOrPullRequestCard
             cardViewMode={cardViewMode}
+            enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId && item.id === selectedItemId
             }
@@ -173,6 +176,7 @@ export const IssueOrPullRequestCards = React.memo(
         <ErrorBoundary>
           <IssueOrPullRequestCard
             cardViewMode={cardViewMode}
+            enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId && item.id === selectedItemId
             }
@@ -186,6 +190,7 @@ export const IssueOrPullRequestCards = React.memo(
     const renderItem = useCallback(_renderItem, [
       cardViewMode,
       column.id === focusedColumnId && selectedItemId,
+      enableCompactLabels,
       props.repoIsKnown,
       props.swipeable,
     ])

@@ -12,7 +12,6 @@ import {
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 import { NoTokenView } from '../components/cards/NoTokenView'
-import { useAppViewMode } from '../hooks/use-app-view-mode'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
@@ -20,7 +19,6 @@ import * as selectors from '../redux/selectors'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
-  | 'cardViewMode'
   | 'errorMessage'
   | 'fetchNextPage'
   | 'lastFetchedAt'
@@ -31,9 +29,7 @@ export type NotificationCardsContainerProps = Omit<
 
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
-    const { column, ...otherProps } = props
-
-    const { cardViewMode } = useAppViewMode()
+    const { cardViewMode, column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
@@ -62,13 +58,15 @@ export const NotificationCardsContainer = React.memo(
     )
 
     const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(cardViewMode),
+      selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode !== 'compact',
+      ),
     )
 
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
       filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
-        cardViewMode,
+        cardViewMode !== 'compact',
       )
     }, [cardViewMode, ...column.subscriptionIds])
 
@@ -150,6 +148,7 @@ export const NotificationCardsContainer = React.memo(
         {...otherProps}
         key={`notification-cards-${column.id}`}
         column={column}
+        cardViewMode={cardViewMode}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}

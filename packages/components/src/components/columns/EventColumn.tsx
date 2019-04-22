@@ -8,7 +8,10 @@ import {
 import { ColumnRenderer } from './ColumnRenderer'
 
 export interface EventColumnProps
-  extends Omit<EventCardsContainerProps, 'repoIsKnown'> {
+  extends Omit<
+    EventCardsContainerProps,
+    'cardViewMode' | 'enableCompactLabels' | 'repoIsKnown'
+  > {
   columnIndex: number
   disableColumnOptions?: boolean
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
@@ -44,12 +47,16 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
       subtitle={headerDetails.subtitle}
       title={headerDetails.title}
     >
-      <EventCardsContainer
-        key={`event-cards-container-${column.id}`}
-        repoIsKnown={headerDetails.repoIsKnown}
-        {...props}
-        columnIndex={columnIndex}
-      />
+      {({ cardViewMode, enableCompactLabels }) => (
+        <EventCardsContainer
+          {...props}
+          key={`event-cards-container-${column.id}`}
+          cardViewMode={cardViewMode}
+          enableCompactLabels={enableCompactLabels}
+          repoIsKnown={headerDetails.repoIsKnown}
+          columnIndex={columnIndex}
+        />
+      )}
     </ColumnRenderer>
   )
 })

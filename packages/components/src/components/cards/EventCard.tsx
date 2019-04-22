@@ -78,6 +78,7 @@ import {
 
 export interface EventCardProps {
   cardViewMode: CardViewMode
+  enableCompactLabels?: boolean
   event: EnhancedGitHubEvent
   isFocused?: boolean
   repoIsKnown: boolean

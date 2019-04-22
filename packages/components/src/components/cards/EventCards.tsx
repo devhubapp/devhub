@@ -33,7 +33,7 @@ import {
 import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps
-  extends Omit<EventCardProps, 'cardViewMode' | 'event' | 'isFocused'> {
+  extends Omit<EventCardProps, 'event' | 'isFocused'> {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
@@ -52,8 +52,10 @@ function keyExtractor(event: EnhancedGitHubEvent, _index: number) {
 
 export const EventCards = React.memo((props: EventCardsProps) => {
   const {
+    cardViewMode,
     column,
     columnIndex,
+    enableCompactLabels,
     errorMessage,
     events,
     fetchNextPage,
@@ -64,7 +66,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubEvent>>(null)
 
-  const { appViewMode, cardViewMode } = useAppViewMode()
+  const { appViewMode } = useAppViewMode()
   const theme = useTheme()
 
   const visibleItemIndexesRef = useRef<number[]>([])
@@ -148,6 +150,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       return (
         <SwipeableEventCard
           cardViewMode={cardViewMode}
+          enableCompactLabels={enableCompactLabels}
           event={event}
           repoIsKnown={props.repoIsKnown}
           isFocused={
@@ -161,6 +164,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       <ErrorBoundary>
         <EventCard
           cardViewMode={cardViewMode}
+          enableCompactLabels={enableCompactLabels}
           event={event}
           isFocused={
             column.id === focusedColumnId && event.id === selectedItemId
@@ -174,6 +178,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   const renderItem = useCallback(_renderItem, [
     cardViewMode,
     column.id === focusedColumnId && selectedItemId,
+    enableCompactLabels,
     props.swipeable,
     props.repoIsKnown,
   ])

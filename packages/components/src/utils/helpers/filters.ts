@@ -3,7 +3,6 @@ import _ from 'lodash'
 import {
   ActivityColumnFilters,
   BaseColumnFilters,
-  CardViewMode,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
@@ -292,7 +291,7 @@ export function getFilteredNotifications(
 export function getFilteredEvents(
   events: EnhancedGitHubEvent[],
   filters: ActivityColumnFilters | undefined,
-  cardViewMode: CardViewMode,
+  mergeSimilar: boolean,
 ) {
   let _events = sortEvents(events)
 
@@ -350,11 +349,7 @@ export function getFilteredEvents(
     })
   }
 
-  return cardViewMode === 'compact'
-    ? _events
-    : mergeSimilarEvents(_events, getMergeMaxLength(cardViewMode))
+  return mergeSimilar ? mergeSimilarEvents(_events, mergeMaxLength) : _events
 }
 
-export function getMergeMaxLength(cardViewMode: CardViewMode) {
-  return cardViewMode === 'compact' ? 3 : 5
-}
+export const mergeMaxLength = 5

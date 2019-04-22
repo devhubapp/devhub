@@ -6,6 +6,7 @@ export const APP_LAYOUT_BREAKPOINTS = {
   MEDIUM: 580,
   LARGE: 700,
   XLARGE: 1000,
+  XXLARGE: 1200,
 }
 
 export interface AppLayoutProviderProps {
@@ -15,7 +16,13 @@ export interface AppLayoutProviderProps {
 export interface AppLayoutProviderState {
   appOrientation: 'landscape' | 'portrait'
   deviceOrientation: 'landscape' | 'portrait'
-  sizename: '1-small' | '2-medium' | '3-large' | '4-x-large' | '5-xx-large'
+  sizename:
+    | '1-small'
+    | '2-medium'
+    | '3-large'
+    | '4-x-large'
+    | '5-xx-large'
+    | '6-larger'
 }
 
 export const AppLayoutContext = React.createContext<AppLayoutProviderState>(
@@ -55,7 +62,9 @@ export function getLayoutConsumerState(): AppLayoutProviderState {
       ? '3-large'
       : width <= APP_LAYOUT_BREAKPOINTS.XLARGE
       ? '4-x-large'
-      : '5-xx-large'
+      : width <= APP_LAYOUT_BREAKPOINTS.XXLARGE
+      ? '5-xx-large'
+      : '6-larger'
 
   const deviceOrientation = width > height ? 'landscape' : 'portrait'
   const appOrientation =

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 
 import {
+  CardViewMode,
   Column as ColumnType,
   constants,
   EnhancedGitHubEvent,
@@ -17,6 +18,7 @@ import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
@@ -32,8 +34,10 @@ import {
   notificationColumnHasAnyFilter,
 } from '../../utils/helpers/filters'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
+import { separatorSize, separatorThickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
+import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
@@ -75,7 +79,10 @@ export function getColumnCardThemeColors(
 export interface ColumnRendererProps {
   avatarRepo?: string
   avatarUsername?: string
-  children: React.ReactNode
+  children: (p: {
+    cardViewMode: CardViewMode
+    enableCompactLabels: boolean
+  }) => React.ReactNode
   column: ColumnType
   columnIndex: number
   disableColumnOptions?: boolean
@@ -108,6 +115,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
   const {
     enableSharedFiltersView,
+    fixedWidth,
     inlineMode,
     isSharedFiltersOpened: _isSharedFiltersOpened,
   } = useColumnFilters()
@@ -116,10 +124,16 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     : _isLocalFiltersOpened
 
   const { appOrientation } = useAppLayout()
-  const { appViewMode, cardViewMode } = useAppViewMode()
+  const {
+    appViewMode,
+    getCardViewMode,
+    getEnableCompactLabels,
+  } = useAppViewMode()
+  const columnWidth = useColumnWidth()
+  const repoTableColumnWidth = useRepoTableColumnWidth()
 
   const filteredSubscriptionsDataSelectorRef = useRef(
-    selectors.createFilteredSubscriptionsDataSelector(cardViewMode),
+    selectors.createFilteredSubscriptionsDataSelector(false),
   )
 
   const columnRef = useRef<View>(null)
@@ -136,9 +150,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
   useEffect(() => {
     filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
-      cardViewMode,
+      false,
     )
-  }, [cardViewMode, ...column.subscriptionIds])
+  }, column.subscriptionIds)
 
   useEmitter(
     'TOGGLE_COLUMN_FILTERS',
@@ -243,10 +257,19 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     ) => !isItemRead(item),
   )
 
-  const defaultContainerHeight =
+  const estimatedContainerHeight =
     appOrientation === 'portrait'
       ? Dimensions.get('window').height - columnHeaderHeight - sidebarSize - 2
       : Dimensions.get('window').height - columnHeaderHeight - 1
+
+  const estimatedInitialCardWidth =
+    appViewMode === 'multi-column'
+      ? columnWidth
+      : Dimensions.get('window').width -
+        (enableSharedFiltersView && inlineMode ? fixedWidth : 0) -
+        (appOrientation !== 'portrait'
+          ? sidebarSize + 2 * separatorThickSize
+          : separatorSize)
 
   return (
     <Column
@@ -386,11 +409,11 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
       <ViewMeasurer
         key="column-renderer-view-measurer"
-        defaultMeasures={{ width: 0, height: defaultContainerHeight }}
-        properties="height"
+        initialResult={estimatedContainerHeight}
+        mapper={({ height }) => height}
         style={sharedStyles.flex}
       >
-        {({ height: containerHeight }) => (
+        {(containerHeight: number) => (
           <>
             {!disableColumnOptions && !enableSharedFiltersView && (
               <ColumnOptionsRenderer
@@ -399,7 +422,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 columnId={column.id}
                 containerHeight={containerHeight}
                 fixedPosition="right"
-                fixedWidth={240}
+                fixedWidth={fixedWidth}
                 forceOpenAll
                 isOpen={isFiltersOpened}
               />
@@ -419,7 +442,35 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               }
             >
               {!!isFreeTrial && <FreeTrialHeaderMessage />}
-              {children}
+
+              <ViewMeasurer
+                key="column-renderer-view-measurer"
+                initialResult={{
+                  width: estimatedInitialCardWidth,
+                  cardViewMode: getCardViewMode(estimatedInitialCardWidth),
+                  enableCompactLabels: getEnableCompactLabels(
+                    estimatedInitialCardWidth,
+                    repoTableColumnWidth,
+                  ),
+                }}
+                mapper={({ width }) => ({
+                  width,
+                  cardViewMode: getCardViewMode(width),
+                  enableCompactLabels: getEnableCompactLabels(
+                    width,
+                    repoTableColumnWidth,
+                  ),
+                })}
+                style={sharedStyles.flex}
+              >
+                {({
+                  cardViewMode,
+                  enableCompactLabels,
+                }: {
+                  cardViewMode: CardViewMode
+                  enableCompactLabels: boolean
+                }) => children({ cardViewMode, enableCompactLabels })}
+              </ViewMeasurer>
             </View>
           </>
         )}

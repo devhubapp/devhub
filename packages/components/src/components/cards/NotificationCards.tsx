@@ -33,10 +33,7 @@ import {
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps
-  extends Omit<
-    NotificationCardProps,
-    'cardViewMode' | 'notification' | 'isFocused'
-  > {
+  extends Omit<NotificationCardProps, 'notification' | 'isFocused'> {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
@@ -55,8 +52,10 @@ function keyExtractor(notification: EnhancedGitHubNotification) {
 
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
+    cardViewMode,
     column,
     columnIndex,
+    enableCompactLabels,
     errorMessage,
     fetchNextPage,
     lastFetchedAt,
@@ -67,7 +66,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
 
-  const { appViewMode, cardViewMode } = useAppViewMode()
+  const { appViewMode } = useAppViewMode()
   const theme = useTheme()
 
   const visibleItemIndexesRef = useRef<number[]>([])
@@ -155,6 +154,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       return (
         <SwipeableNotificationCard
           cardViewMode={cardViewMode}
+          enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId && notification.id === selectedItemId
           }
@@ -168,6 +168,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       <ErrorBoundary>
         <NotificationCard
           cardViewMode={cardViewMode}
+          enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId && notification.id === selectedItemId
           }
@@ -180,6 +181,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const renderItem = useCallback(_renderItem, [
     cardViewMode,
     column.id === focusedColumnId && selectedItemId,
+    enableCompactLabels,
     props.repoIsKnown,
     props.swipeable,
   ])

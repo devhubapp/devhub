@@ -22,6 +22,7 @@ export function ColumnsRenderer() {
   const { focusedColumnId } = useFocusedColumn()
   const {
     enableSharedFiltersView,
+    fixedWidth,
     inlineMode,
     isSharedFiltersOpened,
   } = useColumnFilters()
@@ -43,11 +44,11 @@ export function ColumnsRenderer() {
       <SafeAreaView style={sharedStyles.flex}>
         <ViewMeasurer
           key="columns-renderer-view-measurer"
-          defaultMeasures={{ width: 0, height: defaultContainerHeight }}
-          properties="height"
+          initialResult={defaultContainerHeight}
+          mapper={({ height }) => height}
           style={[sharedStyles.flex, sharedStyles.horizontal]}
         >
-          {({ height: containerHeight }) => (
+          {(containerHeight: number) => (
             <>
               {!!enableSharedFiltersView && (
                 <ColumnOptionsRenderer
@@ -55,7 +56,7 @@ export function ColumnsRenderer() {
                   columnId={focusedColumnId}
                   containerHeight={containerHeight}
                   fixedPosition="right"
-                  fixedWidth={240}
+                  fixedWidth={fixedWidth}
                   forceOpenAll
                   inlineMode={inlineMode}
                   isOpen={isSharedFiltersOpened}

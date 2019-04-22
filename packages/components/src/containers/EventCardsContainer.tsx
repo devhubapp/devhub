@@ -13,7 +13,6 @@ import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { ButtonLink } from '../components/common/ButtonLink'
-import { useAppViewMode } from '../hooks/use-app-view-mode'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
@@ -25,7 +24,6 @@ import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
-  | 'cardViewMode'
   | 'errorMessage'
   | 'events'
   | 'fetchNextPage'
@@ -36,9 +34,7 @@ export type EventCardsContainerProps = Omit<
 
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
-    const { column, ...otherProps } = props
-
-    const { cardViewMode } = useAppViewMode()
+    const { cardViewMode, column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -92,13 +88,15 @@ export const EventCardsContainer = React.memo(
     )
 
     const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(cardViewMode),
+      selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode !== 'compact',
+      ),
     )
 
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
       filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
-        cardViewMode,
+        cardViewMode !== 'compact',
       )
     }, [cardViewMode, ...column.subscriptionIds])
 
@@ -269,6 +267,7 @@ export const EventCardsContainer = React.memo(
       <EventCards
         {...otherProps}
         key={`event-cards-${column.id}`}
+        cardViewMode={cardViewMode}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
