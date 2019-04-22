@@ -79,6 +79,7 @@ export const Column = React.memo(
           {
             height: '100%',
             backgroundColor: springAnimatedTheme.backgroundColor,
+            overflow: 'hidden',
           },
           fullWidth ? sharedStyles.flex : { width: columnWidth },
           style,
