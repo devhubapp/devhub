@@ -10,7 +10,6 @@ import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-
 import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
@@ -111,35 +110,37 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
           }
           right={
             <View style={cardRowStyles.mainContentContainer}>
-              <Link href={fixedURL}>
-                <SpringAnimatedText
-                  style={[
+              <Link
+                enableTextWrapper
+                href={fixedURL}
+                textProps={{
+                  numberOfLines: 1,
+
+                  style: [
                     getCardStylesForTheme(springAnimatedTheme).normalText,
                     bold && !isRead && cardStyles.boldText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
-                  ]}
-                >
-                  <SpringAnimatedText numberOfLines={1}>
-                    {!hideIcon && (
-                      <>
-                        <SpringAnimatedIcon
-                          name="tag"
-                          size={13}
-                          style={[
-                            getCardStylesForTheme(springAnimatedTheme)
-                              .normalText,
-                            getCardStylesForTheme(springAnimatedTheme).icon,
-                            isRead &&
-                              getCardStylesForTheme(springAnimatedTheme)
-                                .mutedText,
-                          ]}
-                        />{' '}
-                      </>
-                    )}
-                  </SpringAnimatedText>
+                  ],
+                }}
+              >
+                <>
+                  {!hideIcon && (
+                    <>
+                      <SpringAnimatedIcon
+                        name="tag"
+                        size={13}
+                        style={[
+                          getCardStylesForTheme(springAnimatedTheme).normalText,
+                          getCardStylesForTheme(springAnimatedTheme).icon,
+                          { color: undefined },
+                        ]}
+                      />{' '}
+                    </>
+                  )}
+
                   {name || tagName}
-                </SpringAnimatedText>
+                </>
               </Link>
             </View>
           }

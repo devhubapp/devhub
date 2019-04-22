@@ -106,18 +106,19 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
             <SpringAnimatedView
               style={sharedStyles.horizontalAndVerticallyAligned}
             >
-              <Link href={userLinkURL}>
-                <SpringAnimatedText
-                  numberOfLines={1}
-                  style={[
+              <Link
+                href={userLinkURL}
+                textProps={{
+                  numberOfLines: 1,
+                  style: [
                     getCardStylesForTheme(springAnimatedTheme).usernameText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
                     { lineHeight: undefined },
-                  ]}
-                >
-                  {trimNewLinesAndSpaces(username, 18)}
-                </SpringAnimatedText>
+                  ],
+                }}
+              >
+                {trimNewLinesAndSpaces(username, 18)}
               </Link>
               {!!isBot && (
                 <>

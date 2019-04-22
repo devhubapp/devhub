@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
@@ -13,6 +13,10 @@ import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
 import { findNode } from '../../utils/helpers/shared'
+import {
+  SpringAnimatedText,
+  SpringAnimatedTextProps,
+} from '../animated/spring/SpringAnimatedText'
 import {
   SpringAnimatedTouchableOpacity,
   SpringAnimatedTouchableOpacityProps,
@@ -26,28 +30,37 @@ export interface LinkProps
   analyticsLabel?: SpringAnimatedTouchableOpacityProps['analyticsLabel']
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
+  enableTextWrapper?: boolean
   hoverBackgroundThemeColor?: keyof ThemeColors
+  hoverForegroundThemeColor?: keyof ThemeColors
   href?: string
   mobileProps?: SpringAnimatedTouchableOpacityProps
   openOnNewTab?: boolean
-  webProps?: AnchorHTMLAttributes<HTMLAnchorElement>
+  textProps?: SpringAnimatedTextProps
   tooltip?: string
+  webProps?: AnchorHTMLAttributes<HTMLAnchorElement>
 }
 
 export function Link(props: LinkProps) {
   const {
     allowEmptyLink,
     analyticsLabel,
-    href,
-    mobileProps,
-    openOnNewTab: _openOnNewTab = true,
-    webProps,
-    enableBackgroundHover = true,
-    enableForegroundHover,
+    enableBackgroundHover,
+    enableForegroundHover = true,
+    enableTextWrapper,
     hoverBackgroundThemeColor,
+    hoverForegroundThemeColor,
+    href,
+    openOnNewTab: _openOnNewTab = true,
+    textProps,
     tooltip,
     ...otherProps
   } = props
+
+  const flatContainerStyle =
+    StyleSheet.flatten([{ maxWidth: '100%' }, otherProps.style]) || {}
+
+  const flatTextStyle = StyleSheet.flatten([textProps && textProps.style]) || {}
 
   const openOnNewTab = _openOnNewTab || Platform.isElectron
 
@@ -56,22 +69,47 @@ export function Link(props: LinkProps) {
 
     const { isHovered, theme } = cacheRef.current
 
-    if (ref.current) {
-      const hoverBackgroundColor =
-        (hoverBackgroundThemeColor && theme[hoverBackgroundThemeColor]) ||
-        rgba(theme.invert().foregroundColor, 0.2)
+    if (containerRef.current) {
+      const hoverBackgroundColor = enableBackgroundHover
+        ? (hoverBackgroundThemeColor && theme[hoverBackgroundThemeColor]) ||
+          rgba(theme.invert().foregroundColor, 0.2)
+        : undefined
 
-      ref.current!.setNativeProps({
+      containerRef.current!.setNativeProps({
         style: {
-          backgroundColor: hoverBackgroundColor
-            ? isHovered
+          backgroundColor:
+            hoverBackgroundColor && isHovered
               ? hoverBackgroundColor
-              : rgba(hoverBackgroundColor, 0)
-            : null,
+              : flatContainerStyle.backgroundColor ||
+                (hoverBackgroundColor ? rgba(hoverBackgroundColor, 0) : null),
         },
       })
     }
-  }, [enableBackgroundHover, enableForegroundHover, hoverBackgroundThemeColor])
+
+    if (textRef.current) {
+      const hoverForegroundColor = enableForegroundHover
+        ? (hoverForegroundThemeColor && theme[hoverForegroundThemeColor]) ||
+          theme.primaryBackgroundColor
+        : undefined
+
+      textRef.current.setNativeProps({
+        style: {
+          color:
+            hoverForegroundColor && isHovered
+              ? hoverForegroundColor
+              : flatTextStyle.color ||
+                (hoverForegroundColor ? rgba(hoverForegroundColor, 0) : null),
+        },
+      })
+    }
+  }, [
+    enableBackgroundHover,
+    enableForegroundHover,
+    flatContainerStyle.backgroundColor,
+    flatTextStyle.color,
+    hoverBackgroundThemeColor,
+    hoverForegroundThemeColor,
+  ])
 
   const initialTheme = useTheme(
     useCallback(
@@ -84,9 +122,10 @@ export function Link(props: LinkProps) {
     ),
   )
 
-  const ref = useRef<View>(null)
+  const containerRef = useRef<View>(null)
+  const textRef = useRef<Text>(null)
   useHover(
-    enableBackgroundHover || enableForegroundHover ? ref : null,
+    enableBackgroundHover || enableForegroundHover ? containerRef : null,
     isHovered => {
       cacheRef.current.isHovered = isHovered
       updateStyles()
@@ -95,24 +134,16 @@ export function Link(props: LinkProps) {
 
   useEffect(() => {
     if (!(Platform.realOS === 'web')) return
-    const node = findNode(ref)
+    const node = findNode(containerRef)
     if (!node) return
 
     node.title = tooltip || ''
-  }, [ref.current, tooltip])
+  }, [containerRef.current, tooltip])
 
   const cacheRef = useRef({ theme: initialTheme, isHovered: false })
   cacheRef.current.theme = initialTheme
 
   const renderTouchable = href || otherProps.onPress || allowEmptyLink
-
-  const finalStyle = StyleSheet.flatten([
-    { maxWidth: '100%' },
-    Platform.select({
-      default: [otherProps.style, mobileProps && mobileProps.style] as any,
-      web: [otherProps.style, webProps && webProps.style] as any,
-    }),
-  ])
 
   let finalProps: any
   if (renderTouchable) {
@@ -132,7 +163,6 @@ export function Link(props: LinkProps) {
               : () => Linking.openURL(href)
             : undefined,
           ...otherProps,
-          ...mobileProps,
         } as any,
 
         web: {
@@ -141,27 +171,29 @@ export function Link(props: LinkProps) {
           selectable: true,
           target: openOnNewTab ? '_blank' : '_self',
           ...otherProps,
-          ...webProps,
         } as any,
       }),
-      style: finalStyle,
+      style: flatContainerStyle,
     }
   } else {
-    finalProps = Platform.select({
-      default: {
-        ...otherProps,
-        ...mobileProps,
-        style: finalStyle,
-      } as any,
-
-      web: {
-        ...otherProps,
-        ...webProps,
-        style: finalStyle,
-      } as any,
-    })
+    finalProps = {
+      ...otherProps,
+      style: flatContainerStyle,
+    }
   }
 
-  if (!renderTouchable) return <SpringAnimatedView ref={ref} {...finalProps} />
-  return <SpringAnimatedTouchableOpacity ref={ref} {...finalProps} />
+  if (
+    (typeof finalProps.children === 'string' && enableTextWrapper !== false) ||
+    (typeof finalProps.children !== 'string' && enableTextWrapper === true)
+  ) {
+    finalProps.children = (
+      <SpringAnimatedText ref={textRef} {...textProps}>
+        {finalProps.children}
+      </SpringAnimatedText>
+    )
+  }
+
+  if (!renderTouchable)
+    return <SpringAnimatedView ref={containerRef} {...finalProps} />
+  return <SpringAnimatedTouchableOpacity ref={containerRef} {...finalProps} />
 }

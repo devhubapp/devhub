@@ -97,7 +97,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
                 }
                 openOnNewTab
               >
-                <SpringAnimatedText>{match}</SpringAnimatedText>
+                {match}
               </Link>
             )
           },
@@ -112,7 +112,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
                 href={getGitHubURLForRepo(forkOwnerName, forkRepositoryName)}
                 openOnNewTab
               >
-                <SpringAnimatedText>{match}</SpringAnimatedText>
+                {match}
               </Link>
             )
           },
@@ -140,19 +140,21 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
             alignItems: 'center',
           }}
         >
-          <Link href={userLinkURL} openOnNewTab>
-            <SpringAnimatedText
-              numberOfLines={numberOfLines}
-              style={[
+          <Link
+            href={userLinkURL}
+            openOnNewTab
+            textProps={{
+              numberOfLines,
+              style: [
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 cardStyles.boldText,
                 cardStyles.smallText,
                 { lineHeight: smallAvatarSize },
                 textStyle,
-              ]}
-            >
-              {`@${username}`}
-            </SpringAnimatedText>
+              ],
+            }}
+          >
+            {`@${username}`}
           </Link>
 
           <Spacer width={4} />

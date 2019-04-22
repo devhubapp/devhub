@@ -35,7 +35,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a, a > * {
+a:hover, a:hover > * {
+  cursor: default;
+}
+
+a[target^="_blank"]:hover, a[target^="_blank"]:hover > * {
   cursor: pointer;
 }
 

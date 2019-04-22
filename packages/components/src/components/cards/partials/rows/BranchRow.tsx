@@ -5,7 +5,6 @@ import { getGitHubURLForBranch, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
@@ -67,31 +66,32 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
       }
       right={
         <View style={cardRowStyles.mainContentContainer}>
-          <Link href={getGitHubURLForBranch(ownerName, repositoryName, branch)}>
-            <SpringAnimatedText
-              numberOfLines={1}
-              style={[
+          <Link
+            enableTextWrapper
+            href={getGitHubURLForBranch(ownerName, repositoryName, branch)}
+            textProps={{
+              numberOfLines: 1,
+              style: [
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 cardStyles.smallText,
                 muted && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
-              {!hideIcon && (
-                <>
-                  <SpringAnimatedIcon
-                    name="git-branch"
-                    size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    ]}
-                  />{' '}
-                </>
-              )}
-              {branch}
-            </SpringAnimatedText>
+              ],
+            }}
+          >
+            {!hideIcon && (
+              <>
+                <SpringAnimatedIcon
+                  name="git-branch"
+                  size={13}
+                  style={[
+                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    getCardStylesForTheme(springAnimatedTheme).icon,
+                    { color: undefined },
+                  ]}
+                />{' '}
+              </>
+            )}
+            {branch}
           </Link>
         </View>
       }

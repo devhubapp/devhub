@@ -350,18 +350,17 @@ export function AddColumnModal(props: AddColumnModalProps) {
               analyticsLabel="install-github-app-to-unlock-private-repository-support"
               href={getGitHubAppInstallUri()}
               openOnNewTab
-            >
-              <SpringAnimatedText
-                style={{
+              textProps={{
+                style: {
                   flexGrow: 1,
                   lineHeight: 14,
                   fontSize: 11,
                   textAlign: 'center',
                   color: springAnimatedTheme.foregroundColorMuted50,
-                }}
-              >
-                ✨ Install the GitHub App to unlock Private Repositories
-              </SpringAnimatedText>
+                },
+              }}
+            >
+              ✨ Install the GitHub App to unlock Private Repositories
             </Link>
           </HeaderMessage>
         )}

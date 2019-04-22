@@ -4,7 +4,6 @@ import { getGitHubURLForRepo, getGitHubURLForUser, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
@@ -77,29 +76,26 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                 ? undefined
                 : getGitHubURLForRepo(ownerName, repositoryName)
             }
+            textProps={{
+              numberOfLines: hideOwner ? 2 : 1,
+              style: [
+                getCardStylesForTheme(springAnimatedTheme).normalText,
+                small && cardStyles.smallText,
+                getCardRowStylesForTheme(springAnimatedTheme).repositoryText,
+                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+              ],
+            }}
           >
-            {/* <SpringAnimatedText numberOfLines={1}> */}
             {/* <SpringAnimatedIcon
               name={repoIcon}
               size={13}
               style={[
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 getCardStylesForTheme(springAnimatedTheme).icon,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+                { color: undefined },
               ]}
             />{' '} */}
-            <SpringAnimatedText
-              numberOfLines={hideOwner ? 2 : 1}
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                small && cardStyles.smallText,
-                getCardRowStylesForTheme(springAnimatedTheme).repositoryText,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
-              {showMoreItemsIndicator ? '' : repositoryName}
-            </SpringAnimatedText>
-            {/* </SpringAnimatedText> */}
+            {showMoreItemsIndicator ? '' : repositoryName}
           </Link>
 
           {!!(ownerName && !hideOwner) && (
@@ -112,20 +108,19 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                     ? undefined
                     : getGitHubURLForUser(ownerName)
                 }
-              >
-                <SpringAnimatedText
-                  numberOfLines={1}
-                  style={[
+                textProps={{
+                  numberOfLines: 1,
+                  style: [
                     getCardStylesForTheme(springAnimatedTheme).normalText,
                     getCardRowStylesForTheme(springAnimatedTheme)
                       .repositorySecondaryText,
                     small && cardStyles.smallText,
                     (isRead || showMoreItemsIndicator) &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
-                  ]}
-                >
-                  {showMoreItemsIndicator ? '...' : ownerName}
-                </SpringAnimatedText>
+                  ],
+                }}
+              >
+                {showMoreItemsIndicator ? '...' : ownerName}
               </Link>
             </>
           )}

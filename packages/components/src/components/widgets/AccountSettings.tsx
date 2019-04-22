@@ -36,15 +36,16 @@ export function AccountSettings() {
         >
           Logged in as{' '}
         </SpringAnimatedText>
-        <Link href={`https://github.com/${username}`}>
-          <SpringAnimatedText
-            style={{
+        <Link
+          href={`https://github.com/${username}`}
+          textProps={{
+            style: {
               color: springAnimatedTheme.foregroundColor,
               fontWeight: 'bold',
-            }}
-          >
-            {username}
-          </SpringAnimatedText>
+            },
+          }}
+        >
+          {username}
         </Link>
       </View>
     </View>

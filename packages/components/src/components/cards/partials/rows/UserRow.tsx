@@ -3,7 +3,6 @@ import { View } from 'react-native'
 
 import { getGitHubURLForUser, Omit } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles, getCardStylesForTheme } from '../../styles'
@@ -59,17 +58,16 @@ export const UserRow = React.memo((props: UserRowProps) => {
             href={
               showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
             }
-          >
-            <SpringAnimatedText
-              style={[
+            textProps={{
+              style: [
                 getCardRowStylesForTheme(springAnimatedTheme).usernameText,
                 bold && !isRead && cardStyles.boldText,
                 (isRead || showMoreItemsIndicator) &&
                   getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
-              {showMoreItemsIndicator ? '...' : username}
-            </SpringAnimatedText>
+              ],
+            }}
+          >
+            {showMoreItemsIndicator ? '...' : username}
           </Link>
         </View>
       }

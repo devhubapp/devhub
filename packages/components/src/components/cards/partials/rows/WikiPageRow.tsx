@@ -51,27 +51,27 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
       right={
         <View style={cardRowStyles.mainContentContainer}>
           <Link
+            enableTextWrapper
             href={showMoreItemsIndicator ? undefined : fixURL(url)}
             style={cardRowStyles.mainContentContainer}
-          >
-            <SpringAnimatedText
-              numberOfLines={1}
-              style={[
+            textProps={{
+              numberOfLines: 1,
+              style: [
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 bold && !isRead && cardStyles.boldText,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
+              ],
+            }}
+          >
+            <>
               {!hideIcon && (
                 <>
                   <SpringAnimatedIcon
                     name="book"
                     size={13}
                     style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
                       getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      { color: undefined },
                     ]}
                   />{' '}
                 </>
@@ -80,15 +80,12 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
               {!!showMoreItemsIndicator && (
                 <SpringAnimatedText
                   numberOfLines={1}
-                  style={[
-                    getCardStylesForTheme(springAnimatedTheme).normalText,
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                  ]}
+                  style={[getCardStylesForTheme(springAnimatedTheme).mutedText]}
                 >
                   ...
                 </SpringAnimatedText>
               )}
-            </SpringAnimatedText>
+            </>
           </Link>
         </View>
       }

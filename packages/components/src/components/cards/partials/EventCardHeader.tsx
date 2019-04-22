@@ -108,18 +108,19 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             <SpringAnimatedView
               style={sharedStyles.horizontalAndVerticallyAligned}
             >
-              <Link href={userLinkURL}>
-                <SpringAnimatedText
-                  numberOfLines={1}
-                  style={[
+              <Link
+                href={userLinkURL}
+                textProps={{
+                  numberOfLines: 1,
+                  style: [
                     getCardStylesForTheme(springAnimatedTheme).usernameText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
                     { lineHeight: undefined },
-                  ]}
-                >
-                  {username}
-                </SpringAnimatedText>
+                  ],
+                }}
+              >
+                {username}
               </Link>
 
               {!!isBot && (

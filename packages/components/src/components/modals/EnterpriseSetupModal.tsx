@@ -61,12 +61,11 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
             analyticsLabel={`mailto:${email}`}
             href={`mailto:${email}`}
             openOnNewTab={false}
+            textProps={{
+              style: { color: springAnimatedTheme.foregroundColor },
+            }}
           >
-            <SpringAnimatedText
-              style={{ color: springAnimatedTheme.foregroundColor }}
-            >
-              {email}
-            </SpringAnimatedText>
+            {email}
           </Link>
         </View>
 

@@ -155,6 +155,7 @@ export const IssueOrPullRequestRow = React.memo(
               ]}
             >
               <Link
+                enableTextWrapper
                 href={htmlUrl}
                 style={[
                   !inlineLabels && sharedStyles.flexGrow,
@@ -166,22 +167,19 @@ export const IssueOrPullRequestRow = React.memo(
                     labels &&
                     labels.length > 0 && { marginBottom: innerCardSpacing },
                 ]}
-              >
-                <SpringAnimatedText
-                  numberOfLines={numberOfLines}
-                  style={[
+                textProps={{
+                  numberOfLines,
+                  style: [
                     sharedStyles.flex,
                     getCardStylesForTheme(springAnimatedTheme).normalText,
                     bold && !isRead && cardStyles.boldText,
                     isRead &&
                       getCardStylesForTheme(springAnimatedTheme).mutedText,
-                  ]}
-                  // {...Platform.select({
-                  //   web: {
-                  //     title: `${title}${_body ? `\n\n${_body}` : ''}`,
-                  //   },
-                  // })}
-                >
+                  ],
+                }}
+                // tooltip={`${title}${_body ? `\n\n${_body}` : ''}`}
+              >
+                <>
                   {!hideIcon && (
                     <>
                       <SpringAnimatedIcon
@@ -190,8 +188,7 @@ export const IssueOrPullRequestRow = React.memo(
                         style={[
                           getCardStylesForTheme(springAnimatedTheme).normalText,
                           getCardStylesForTheme(springAnimatedTheme).icon,
-                          { color: iconColor },
-                          // isRead && { opacity: mutedOpacity },
+                          { color: iconColor || undefined },
                         ]}
                       />{' '}
                     </>
@@ -209,7 +206,7 @@ export const IssueOrPullRequestRow = React.memo(
                         {`  #${issueOrPullRequestNumber}`}
                       </SpringAnimatedText>
                     )}
-                </SpringAnimatedText>
+                </>
               </Link>
 
               {!!labels && labels.length > 0 && (
@@ -242,18 +239,17 @@ export const IssueOrPullRequestRow = React.memo(
                   <Link
                     href={htmlUrl}
                     style={cardRowStyles.mainContentContainer}
-                  >
-                    <SpringAnimatedText
-                      numberOfLines={numberOfLines}
-                      style={[
+                    textProps={{
+                      numberOfLines,
+                      style: [
                         sharedStyles.flex,
                         getCardStylesForTheme(springAnimatedTheme).commentText,
                         isRead &&
                           getCardStylesForTheme(springAnimatedTheme).mutedText,
-                      ]}
-                    >
-                      {body}
-                    </SpringAnimatedText>
+                      ],
+                    }}
+                  >
+                    {body}
                   </Link>
                 </>
               )}
@@ -277,15 +273,14 @@ export const IssueOrPullRequestRow = React.memo(
                             userLinkURL ||
                             (username && getGitHubURLForUser(username))
                           }
-                        >
-                          <SpringAnimatedText
-                            style={[
+                          textProps={{
+                            style: [
                               getCardStylesForTheme(springAnimatedTheme)
                                 .smallerMutedText,
-                            ]}
-                          >
-                            {byText}
-                          </SpringAnimatedText>
+                            ],
+                          }}
+                        >
+                          {byText}
                         </Link>
                       )}
 

@@ -77,16 +77,15 @@ export const PrivateNotificationRow = React.memo(
             disabled={showLoadingIndicator}
             onPress={() => startOAuth()}
             style={cardRowStyles.mainContentContainer}
-          >
-            <SpringAnimatedText
-              style={[
+            textProps={{
+              style: [
                 getCardStylesForTheme(springAnimatedTheme).commentText,
                 getCardStylesForTheme(springAnimatedTheme).mutedText,
                 { fontStyle: 'italic' },
-              ]}
-            >
-              Required permission is missing. Tap to login again.
-            </SpringAnimatedText>
+              ],
+            }}
+          >
+            Required permission is missing. Tap to login again.
           </Link>
         )
       }
@@ -100,17 +99,16 @@ export const PrivateNotificationRow = React.memo(
           })}
           openOnNewTab={false}
           style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            style={[
+          textProps={{
+            style: [
               getCardStylesForTheme(springAnimatedTheme).commentText,
               getCardStylesForTheme(springAnimatedTheme).mutedText,
               { fontStyle: 'italic' },
-            ]}
-          >
-            Install the GitHub App on this repo to unlock details from private
-            notifications.
-          </SpringAnimatedText>
+            ],
+          }}
+        >
+          Install the GitHub App on this repo to unlock details from private
+          notifications.
         </Link>
       )
     }

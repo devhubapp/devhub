@@ -10,7 +10,6 @@ import {
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
-import { Platform } from '../../../../libs/platform'
 import { sharedStyles } from '../../../../styles/shared'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
@@ -105,6 +104,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
       right={
         <View style={cardRowStyles.mainContentContainer}>
           <Link
+            enableTextWrapper
             href={
               showMoreItemsIndicator
                 ? undefined
@@ -116,21 +116,19 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                   })
             }
             style={sharedStyles.flex}
-          >
-            <SpringAnimatedText
-              numberOfLines={1}
-              style={[
+            textProps={{
+              numberOfLines: 1,
+              style: [
                 getCardStylesForTheme(springAnimatedTheme).normalText,
                 cardStyles.smallText,
                 bold && !isRead && cardStyles.boldText,
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-              {...Platform.select({
-                web: {
-                  title: `${_message}${byText ? `\n\n${byText}` : ''}`,
-                },
-              })}
-            >
+              ],
+            }}
+            tooltip={`${_message}${byText ? `\n\n${byText}` : ''}`}
+          >
+            <>
+              {' '}
               {!hideIcon && (
                 <>
                   <SpringAnimatedIcon
@@ -139,8 +137,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                     style={[
                       getCardStylesForTheme(springAnimatedTheme).normalText,
                       getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
+                      { color: undefined },
                     ]}
                   />{' '}
                 </>
@@ -157,7 +154,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                   {showMoreItemsIndicator ? '...' : ` by ${byText}`}
                 </SpringAnimatedText>
               )}
-            </SpringAnimatedText>
+            </>
           </Link>
         </View>
       }
