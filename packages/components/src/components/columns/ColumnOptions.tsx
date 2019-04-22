@@ -406,9 +406,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               defaultBooleanValue,
             )
 
-            const enableIndeterminateState =
-              subjectTypeOptions.length > 2 && !isFilterStrict
-
             return (
               <ColumnOptionsRow
                 analyticsLabel="subject_types"
@@ -430,12 +427,19 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
               >
                 {subjectTypeOptions.map(item => {
+                  const _enableIndeterminateState =
+                    subjectTypeOptions.length > 2 && !isFilterStrict
+
                   const checked =
                     filters && typeof filters[item.subjectType] === 'boolean'
                       ? filters[item.subjectType]
-                      : enableIndeterminateState || isFilterStrict
+                      : _enableIndeterminateState || isFilterStrict
                       ? null
                       : defaultBooleanValue
+
+                  const enableIndeterminateState =
+                    subjectTypeOptions.length > 2 &&
+                    (!isFilterStrict || checked === defaultBooleanValue)
 
                   return (
                     <SpringAnimatedCheckbox
