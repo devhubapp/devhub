@@ -64,6 +64,7 @@ import { BranchRow } from './partials/rows/BranchRow'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitListRow } from './partials/rows/CommitListRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { LabelsView } from './partials/rows/LabelsView'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryListRow } from './partials/rows/RepositoryListRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
@@ -85,7 +86,13 @@ export interface EventCardProps {
 }
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const { cardViewMode, event, repoIsKnown, isFocused } = props
+  const {
+    cardViewMode,
+    enableCompactLabels,
+    event,
+    repoIsKnown,
+    isFocused,
+  } = props
 
   const itemRef = useRef<View>(null)
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
@@ -373,14 +380,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
             hideIcon
-            hideLabelText
+            hideLabelText={false}
             // iconColor={issueIconColor || pullRequestIconColor}
             // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}
             isPrivate={isPrivate}
             isRead={isRead}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={[]} // issueOrPullRequest.labels
+            labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
             showBodyRow={
@@ -608,6 +615,40 @@ export const EventCard = React.memo((props: EventCardProps) => {
         </View>
 
         <Spacer width={spacingBetweenLeftAndRightColumn} />
+
+        {!!enableCompactLabels &&
+          !!issueOrPullRequest &&
+          !!issueOrPullRequest.labels &&
+          issueOrPullRequest.labels.length > 0 && (
+            <>
+              <LabelsView
+                backgroundThemeColor={backgroundThemeColor}
+                enableScrollView={isSingleRow}
+                labels={issueOrPullRequest.labels.map(label => ({
+                  key: `issue-or-pr-row-${
+                    issueOrPullRequest.id
+                  }-${issueOrPullRequestNumber}-label-${label.id ||
+                    label.name}`,
+                  color: label.color && `#${label.color}`,
+                  name: label.name,
+                }))}
+                muted={isRead}
+                style={{
+                  justifyContent: 'flex-end',
+                  maxWidth:
+                    320 +
+                    (repoIsKnown ? 120 : 0) +
+                    (`${issueOrPullRequest.title || ''}`.length <= 50
+                      ? 100
+                      : 0),
+                  overflow: 'hidden',
+                }}
+                textColor={springAnimatedTheme.foregroundColorMuted50}
+              />
+
+              <Spacer width={spacingBetweenLeftAndRightColumn} />
+            </>
+          )}
 
         <View
           style={[

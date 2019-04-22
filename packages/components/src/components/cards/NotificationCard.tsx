@@ -328,6 +328,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             commentsCount={issueOrPullRequest.comments}
             createdAt={issueOrPullRequest.created_at}
             hideIcon
+            hideLabelText={false}
             id={issueOrPullRequest.id}
             inlineLabels={false}
             isPrivate={isPrivate}
