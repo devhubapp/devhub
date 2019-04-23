@@ -13,7 +13,6 @@ import { Platform } from '../../libs/platform'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
@@ -27,7 +26,6 @@ export interface LabelProps {
   containerStyle?: StyleProp<ViewStyle>
   enableEmojis?: boolean
   hideText?: boolean
-  isPrivate?: boolean
   muted?: boolean
   outline?: boolean
   radius?: number
@@ -50,7 +48,6 @@ export function Label(props: LabelProps) {
     containerStyle,
     enableEmojis,
     hideText,
-    isPrivate,
     muted,
     outline,
     radius,
@@ -148,17 +145,6 @@ export function Label(props: LabelProps) {
             },
           })}
       >
-        {!!(isPrivate && !hideText) && (
-          <Text>
-            <SpringAnimatedIcon
-              name="lock"
-              style={[
-                { color: foregroundColor },
-                muted && { opacity: mutedOpacity },
-              ]}
-            />{' '}
-          </Text>
-        )}
         {hideText
           ? ''
           : typeof children === 'string'

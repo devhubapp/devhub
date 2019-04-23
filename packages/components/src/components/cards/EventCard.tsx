@@ -653,7 +653,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <View
           style={[
             cardStyles.compactItemFixedMinHeight,
-            { width: 50, alignItems: 'flex-end' },
+            { width: 60, alignItems: 'flex-end' },
           ]}
         >
           {!!event.created_at && (
@@ -674,6 +674,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
                       web: { title: getFullDateText(event.created_at) },
                     })}
                   >
+                    {!!isPrivate && (
+                      <>
+                        <SpringAnimatedIcon name="lock" />{' '}
+                      </>
+                    )}
                     {dateText}
                   </SpringAnimatedText>
                 )

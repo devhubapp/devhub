@@ -407,7 +407,7 @@ export const IssueOrPullRequestCard = React.memo(
           <View
             style={[
               cardStyles.compactItemFixedMinHeight,
-              { width: 50, alignItems: 'flex-end' },
+              { width: 60, alignItems: 'flex-end' },
             ]}
           >
             {!!issueOrPullRequest.created_at && (
@@ -438,6 +438,11 @@ export const IssueOrPullRequestCard = React.memo(
                         },
                       })}
                     >
+                      {!!isPrivate && (
+                        <>
+                          <SpringAnimatedIcon name="lock" />{' '}
+                        </>
+                      )}
                       {/* <SpringAnimatedIcon name="clock" />{' '} */}
                       {dateText}
                     </SpringAnimatedText>

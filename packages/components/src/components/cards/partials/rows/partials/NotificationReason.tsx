@@ -4,17 +4,15 @@ import { GitHubNotificationReason } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../../libs/platform'
 import { getNotificationReasonMetadata } from '../../../../../utils/helpers/github/notifications'
-import { SpringAnimatedIcon } from '../../../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../../../animated/spring/SpringAnimatedText'
 import { getCardStylesForTheme } from '../../../styles'
 
 export interface NotificationReasonProps {
-  isPrivate?: boolean
   reason: GitHubNotificationReason
 }
 
 export function NotificationReason(props: NotificationReasonProps) {
-  const { isPrivate, reason } = props
+  const { reason } = props
 
   const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
@@ -40,11 +38,6 @@ export function NotificationReason(props: NotificationReasonProps) {
         },
       })}
     >
-      {!!isPrivate && (
-        <>
-          <SpringAnimatedIcon name="lock" />{' '}
-        </>
-      )}
       {reasonDetails.label.toLowerCase()}
     </SpringAnimatedText>
   )

@@ -157,6 +157,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                           web: { title: getFullDateText(date) },
                         })}
                       >
+                        {!!isPrivate && (
+                          <>
+                            <SpringAnimatedIcon name="lock" />{' '}
+                          </>
+                        )}
                         {dateText}
                       </SpringAnimatedText>
                     </>
@@ -174,11 +179,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ]}
             >
-              {!!isPrivate && (
-                <>
-                  <SpringAnimatedIcon name="lock" />{' '}
-                </>
-              )}
               {actionText.toLowerCase()}
             </SpringAnimatedText>
           </View>

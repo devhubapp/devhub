@@ -12,6 +12,7 @@ import {
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../libs/platform'
 import { sharedStyles } from '../../../styles/shared'
+import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
 import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { Avatar } from '../../common/Avatar'
@@ -155,6 +156,11 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                         })}
                       >
                         <Text children="  " />
+                        {!!isPrivate && (
+                          <>
+                            <SpringAnimatedIcon name="lock" />{' '}
+                          </>
+                        )}
                         {dateText}
                       </SpringAnimatedText>
                     </>
@@ -165,7 +171,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
 
             <Spacer height={2} />
 
-            <NotificationReason isPrivate={isPrivate} reason={reason} />
+            <NotificationReason reason={reason} />
           </View>
 
           <ToggleReadButton

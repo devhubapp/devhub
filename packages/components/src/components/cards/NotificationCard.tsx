@@ -612,6 +612,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                       },
                     })}
                   >
+                    {!!isPrivate && (
+                      <>
+                        <SpringAnimatedIcon name="lock" />{' '}
+                      </>
+                    )}
                     {dateText}
                   </SpringAnimatedText>
                 )
@@ -620,7 +625,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           )}
 
           <NotificationReason
-            isPrivate={isPrivate}
             reason={notification.reason as GitHubNotificationReason}
           />
         </View>
