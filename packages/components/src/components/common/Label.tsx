@@ -104,20 +104,23 @@ export function Label(props: LabelProps) {
           borderColor,
           backgroundColor,
         },
-        muted && { opacity: mutedOpacity },
         Boolean(radius) && { borderRadius: radius },
+        muted && hideText && { opacity: mutedOpacity },
       ]}
     >
       {!hideText && (
         <>
           {/* <Spacer width={contentPadding / (small ? 3 : 2)} /> */}
           <SpringAnimatedView
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: 6 / 2,
-              backgroundColor: circleColor,
-            }}
+            style={[
+              {
+                width: 6,
+                height: 6,
+                borderRadius: 6 / 2,
+                backgroundColor: circleColor,
+              },
+              muted && { opacity: mutedOpacity },
+            ]}
           />
         </>
       )}
@@ -147,7 +150,10 @@ export function Label(props: LabelProps) {
           <Text>
             <SpringAnimatedIcon
               name="lock"
-              style={{ color: foregroundColor }}
+              style={[
+                { color: foregroundColor },
+                muted && { opacity: mutedOpacity },
+              ]}
             />{' '}
           </Text>
         )}
