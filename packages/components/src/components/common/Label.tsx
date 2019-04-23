@@ -168,8 +168,8 @@ export function Label(props: LabelProps) {
                 style: enableEmojis
                   ? {
                       marginHorizontal: 2,
-                      width: small ? 10 : 11,
-                      height: small ? 10 : 11,
+                      width: small ? 13 : 14,
+                      height: small ? 13 : 14,
                     }
                   : {
                       marginHorizontal: 0,
