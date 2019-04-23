@@ -6,6 +6,7 @@ import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { bugsnag } from '../../libs/bugsnag'
 import { emitter } from '../../libs/emitter'
 import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
@@ -263,6 +264,18 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           data={columnIds}
           horizontal={horizontal}
           keyExtractor={columnId => `sidebar-column-item-${columnId}`}
+          onScrollToIndexFailed={(info: {
+            index: number
+            highestMeasuredFrameIndex: number
+            averageItemLength: number
+          }) => {
+            console.error(info)
+            bugsnag.notify({
+              name: 'ScrollToIndexFailed',
+              message: 'Failed to scroll to index',
+              ...info,
+            })
+          }}
           style={sharedStyles.flex}
           renderItem={({ item: columnId }) => (
             <SidebarColumnItem
