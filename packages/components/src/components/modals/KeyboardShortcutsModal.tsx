@@ -8,11 +8,10 @@ export interface KeyboardShortcutsModalProps {
 
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, smallTextSize } from '../../styles/variables'
 import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ModalColumn } from '../columns/ModalColumn'
-import { H2 } from '../common/H2'
-import { Label } from '../common/Label'
 import { Spacer } from '../common/Spacer'
 import { useTheme } from '../context/ThemeContext'
 
@@ -97,19 +96,27 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
                   }}
                 >
                   {ks.keys.map(key => (
-                    <Label
+                    <SpringAnimatedView
                       key={`keyboard-shortcut-label-${index}-${key}`}
-                      color={theme.backgroundColorLess2}
-                      textColor={theme.foregroundColor}
-                      containerStyle={{
+                      style={{
                         alignSelf: 'flex-start',
                         marginBottom: contentPadding / 2,
                         marginRight: contentPadding / 2,
+                        paddingVertical: contentPadding / 4,
+                        paddingHorizontal: contentPadding / 2,
+                        backgroundColor: theme.backgroundColorLess2,
+                        borderRadius: contentPadding,
                       }}
-                      small
                     >
-                      <H2>{key}</H2>
-                    </Label>
+                      <SpringAnimatedText
+                        style={{
+                          fontSize: smallTextSize,
+                          color: theme.foregroundColor,
+                        }}
+                      >
+                        {key}
+                      </SpringAnimatedText>
+                    </SpringAnimatedView>
                   ))}
                 </View>
               </View>
