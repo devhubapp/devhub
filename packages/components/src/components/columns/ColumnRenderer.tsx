@@ -20,7 +20,6 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { emitter } from '../../libs/emitter'
-import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -429,20 +428,11 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             )}
 
             <View
-              style={[
-                sharedStyles.flex,
-                (containerHeight < 500 ||
-                  Platform.realOS === 'ios' ||
-                  Platform.realOS === 'android') && {
-                  flexDirection: 'column-reverse',
-                },
-              ]}
+              style={sharedStyles.flex}
               pointerEvents={
                 isFiltersOpened && !inlineMode ? 'none' : undefined
               }
             >
-              {!!isFreeTrial && <FreeTrialHeaderMessage />}
-
               <ViewMeasurer
                 key="column-renderer-view-measurer"
                 initialResult={{
@@ -471,6 +461,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                   enableCompactLabels: boolean
                 }) => children({ cardViewMode, enableCompactLabels })}
               </ViewMeasurer>
+
+              {!!isFreeTrial && <FreeTrialHeaderMessage />}
             </View>
           </>
         )}
