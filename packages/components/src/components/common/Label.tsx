@@ -25,6 +25,7 @@ export interface LabelProps {
   color?: string
   containerProps?: ViewProps
   containerStyle?: StyleProp<ViewStyle>
+  enableEmojis?: boolean
   hideText?: boolean
   isPrivate?: boolean
   muted?: boolean
@@ -47,6 +48,7 @@ export function Label(props: LabelProps) {
     color: _color,
     containerProps = {},
     containerStyle,
+    enableEmojis,
     hideText,
     isPrivate,
     muted,
@@ -163,11 +165,17 @@ export function Label(props: LabelProps) {
           ? parseTextWithEmojisToReactComponents(children, {
               key: `label-text-${children}`,
               imageProps: {
-                style: {
-                  marginHorizontal: 2,
-                  width: small ? 10 : 11,
-                  height: small ? 10 : 11,
-                },
+                style: enableEmojis
+                  ? {
+                      marginHorizontal: 2,
+                      width: small ? 10 : 11,
+                      height: small ? 10 : 11,
+                    }
+                  : {
+                      marginHorizontal: 0,
+                      width: 0,
+                      height: 0,
+                    },
               },
             })
           : children}
