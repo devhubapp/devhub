@@ -275,13 +275,13 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
+        items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'
             : mainSubscription.data.loadState || 'not_loaded'
         }
-        items={filteredItems}
         refresh={refresh}
       />
     )

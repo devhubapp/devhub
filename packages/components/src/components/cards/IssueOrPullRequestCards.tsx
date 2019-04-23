@@ -88,15 +88,15 @@ export const IssueOrPullRequestCards = React.memo(
       return visibleItemIndexesRef.current[0]
     }, [])
 
-    const [selectedItemId] = useKeyboardScrolling(flatListRef, {
+    const { selectedItemIdRef } = useKeyboardScrolling(flatListRef, {
       columnId: column.id,
       getVisibleItemIndex,
       items,
     })
     const { focusedColumnId } = useFocusedColumn()
-    const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
-    const selectedItem =
-      _hasSelectedItem && items.find(item => item.id === selectedItemId)
+
+    const hasSelectedItem =
+      !!selectedItemIdRef.current && column.id === focusedColumnId
 
     const markItemsAsReadOrUnread = useReduxAction(
       actions.markItemsAsReadOrUnread,
@@ -106,26 +106,32 @@ export const IssueOrPullRequestCards = React.memo(
     useKeyPressCallback(
       's',
       useCallback(() => {
+        const selectedItem =
+          hasSelectedItem &&
+          items.find(item => item.id === selectedItemIdRef.current)
         if (!selectedItem) return
 
         saveItemsForLater({
-          itemIds: [selectedItemId!],
+          itemIds: [selectedItemIdRef.current!],
           save: !selectedItem.saved,
         })
-      }, [selectedItem, selectedItemId]),
+      }, [hasSelectedItem, items]),
     )
 
     useKeyPressCallback(
       'r',
       useCallback(() => {
+        const selectedItem =
+          hasSelectedItem &&
+          items.find(item => item.id === selectedItemIdRef.current)
         if (!selectedItem) return
 
         markItemsAsReadOrUnread({
           type: 'issue_or_pr',
-          itemIds: [selectedItemId!],
+          itemIds: [selectedItemIdRef.current!],
           unread: isItemRead(selectedItem),
         })
-      }, [selectedItem, selectedItemId]),
+      }, [hasSelectedItem, items]),
     )
 
     const setColumnClearedAtFilter = useReduxAction(
@@ -163,7 +169,8 @@ export const IssueOrPullRequestCards = React.memo(
             cardViewMode={cardViewMode}
             enableCompactLabels={enableCompactLabels}
             isFocused={
-              column.id === focusedColumnId && item.id === selectedItemId
+              column.id === focusedColumnId &&
+              item.id === selectedItemIdRef.current
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
@@ -178,7 +185,8 @@ export const IssueOrPullRequestCards = React.memo(
             cardViewMode={cardViewMode}
             enableCompactLabels={enableCompactLabels}
             isFocused={
-              column.id === focusedColumnId && item.id === selectedItemId
+              column.id === focusedColumnId &&
+              item.id === selectedItemIdRef.current
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
@@ -189,7 +197,7 @@ export const IssueOrPullRequestCards = React.memo(
     }
     const renderItem = useCallback(_renderItem, [
       cardViewMode,
-      column.id === focusedColumnId && selectedItemId,
+      column.id === focusedColumnId && selectedItemIdRef.current,
       enableCompactLabels,
       props.repoIsKnown,
       props.swipeable,

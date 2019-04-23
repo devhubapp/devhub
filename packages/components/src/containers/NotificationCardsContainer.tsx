@@ -21,9 +21,9 @@ export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
   | 'errorMessage'
   | 'fetchNextPage'
+  | 'items'
   | 'lastFetchedAt'
   | 'loadState'
-  | 'notifications'
   | 'refresh'
 >
 
@@ -151,13 +151,13 @@ export const NotificationCardsContainer = React.memo(
         cardViewMode={cardViewMode}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
+        items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'
             : mainSubscription.data.loadState || 'not_loaded'
         }
-        notifications={filteredItems}
         refresh={refresh}
       />
     )

@@ -25,8 +25,8 @@ import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
   | 'errorMessage'
-  | 'events'
   | 'fetchNextPage'
+  | 'items'
   | 'lastFetchedAt'
   | 'loadState'
   | 'refresh'
@@ -271,13 +271,13 @@ export const EventCardsContainer = React.memo(
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
+        items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'
             : mainSubscription.data.loadState || 'not_loaded'
         }
-        events={filteredItems}
         refresh={refresh}
       />
     )

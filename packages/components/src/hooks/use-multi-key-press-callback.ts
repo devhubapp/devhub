@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { emitter } from '../libs/emitter'
+import { useEmitter } from './use-emitter'
 
 export default function useMultiKeyPressCallback(
   targetKeys: string[],
@@ -37,9 +39,17 @@ export default function useMultiKeyPressCallback(
         caseSensitive,
       )
 
-      if (hasPressedCombo && params.current.preventDefault) {
-        e.preventDefault()
+      if (hasPressedCombo) {
+        if (params.current.preventDefault) e.preventDefault()
+
         params.current.callback()
+
+        const keys = Array.from(pressedKeysRef.current)
+        setTimeout(() => {
+          emitter.emit('PRESSED_KEYBOARD_SHORTCUT', {
+            keys,
+          })
+        }, 10)
       }
 
       pingTimeout()
@@ -64,6 +74,14 @@ export default function useMultiKeyPressCallback(
       window.removeEventListener('keyup', upHandler)
     }
   }, [downHandler, upHandler])
+
+  useEmitter(
+    'PRESSED_KEYBOARD_SHORTCUT',
+    payload => {
+      if (payload.keys.length === 1) pressedKeysRef.current.clear()
+    },
+    [],
+  )
 }
 
 function areKeysPressed(

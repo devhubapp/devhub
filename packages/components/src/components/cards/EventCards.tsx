@@ -37,7 +37,7 @@ export interface EventCardsProps
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
-  events: EnhancedGitHubEvent[]
+  items: EnhancedGitHubEvent[]
   fetchNextPage: (() => void) | undefined
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
@@ -46,8 +46,8 @@ export interface EventCardsProps
   swipeable?: boolean
 }
 
-function keyExtractor(event: EnhancedGitHubEvent, _index: number) {
-  return `event-card-${event.id}`
+function keyExtractor(item: EnhancedGitHubEvent, _index: number) {
+  return `event-card-${item.id}`
 }
 
 export const EventCards = React.memo((props: EventCardsProps) => {
@@ -57,8 +57,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     columnIndex,
     enableCompactLabels,
     errorMessage,
-    events,
     fetchNextPage,
+    items,
     lastFetchedAt,
     loadState,
     refresh,
@@ -80,15 +80,15 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     return visibleItemIndexesRef.current[0]
   }, [])
 
-  const [selectedItemId] = useKeyboardScrolling(flatListRef, {
+  const { selectedItemIdRef } = useKeyboardScrolling(flatListRef, {
     columnId: column.id,
     getVisibleItemIndex,
-    items: events,
+    items,
   })
   const { focusedColumnId } = useFocusedColumn()
-  const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
-  const selectedItem =
-    _hasSelectedItem && events.find(event => event.id === selectedItemId)
+
+  const hasSelectedItem =
+    !!selectedItemIdRef.current && column.id === focusedColumnId
 
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
@@ -98,26 +98,33 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   useKeyPressCallback(
     's',
     useCallback(() => {
+      const selectedItem =
+        hasSelectedItem &&
+        items.find(item => item.id === selectedItemIdRef.current)
+
       if (!selectedItem) return
 
       saveItemsForLater({
-        itemIds: [selectedItemId!],
+        itemIds: [selectedItemIdRef.current!],
         save: !selectedItem.saved,
       })
-    }, [selectedItem, selectedItemId]),
+    }, [hasSelectedItem, items]),
   )
 
   useKeyPressCallback(
     'r',
     useCallback(() => {
+      const selectedItem =
+        hasSelectedItem &&
+        items.find(item => item.id === selectedItemIdRef.current)
       if (!selectedItem) return
 
       markItemsAsReadOrUnread({
         type: 'activity',
-        itemIds: [selectedItemId!],
+        itemIds: [selectedItemIdRef.current!],
         unread: isItemRead(selectedItem),
       })
-    }, [selectedItem, selectedItemId]),
+    }, [hasSelectedItem, items]),
   )
 
   const setColumnClearedAtFilter = useReduxAction(
@@ -144,17 +151,18 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   )
 
   const _renderItem: FlatListProps<EnhancedGitHubEvent>['renderItem'] = ({
-    item: event,
+    item: item,
   }) => {
     if (props.swipeable) {
       return (
         <SwipeableEventCard
           cardViewMode={cardViewMode}
           enableCompactLabels={enableCompactLabels}
-          event={event}
+          event={item}
           repoIsKnown={props.repoIsKnown}
           isFocused={
-            column.id === focusedColumnId && event.id === selectedItemId
+            column.id === focusedColumnId &&
+            item.id === selectedItemIdRef.current
           }
         />
       )
@@ -165,9 +173,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         <EventCard
           cardViewMode={cardViewMode}
           enableCompactLabels={enableCompactLabels}
-          event={event}
+          event={item}
           isFocused={
-            column.id === focusedColumnId && event.id === selectedItemId
+            column.id === focusedColumnId &&
+            item.id === selectedItemIdRef.current
           }
           repoIsKnown={props.repoIsKnown}
         />
@@ -177,7 +186,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const renderItem = useCallback(_renderItem, [
     cardViewMode,
-    column.id === focusedColumnId && selectedItemId,
+    column.id === focusedColumnId && selectedItemIdRef.current,
     enableCompactLabels,
     props.swipeable,
     props.repoIsKnown,
@@ -295,7 +304,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     )
   }
 
-  if (!(events && events.length)) {
+  if (!(items && items.length)) {
     return (
       <EmptyCards
         clearedAt={column.filters && column.filters.clearedAt}
@@ -316,7 +325,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       alwaysBounceVertical
       bounces
       contentContainerStyle={contentContainerStyle}
-      data={events}
+      data={items}
       extraData={rerender}
       initialNumToRender={15}
       keyExtractor={keyExtractor}

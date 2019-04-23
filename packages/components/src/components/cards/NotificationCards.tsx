@@ -38,16 +38,16 @@ export interface NotificationCardsProps
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
+  items: EnhancedGitHubNotification[]
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
-  notifications: EnhancedGitHubNotification[]
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
   swipeable?: boolean
 }
 
-function keyExtractor(notification: EnhancedGitHubNotification) {
-  return `notification-card-${notification.id}`
+function keyExtractor(item: EnhancedGitHubNotification) {
+  return `notification-card-${item.id}`
 }
 
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
@@ -60,7 +60,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     fetchNextPage,
     lastFetchedAt,
     loadState,
-    notifications,
+    items,
     refresh,
   } = props
 
@@ -80,16 +80,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     return visibleItemIndexesRef.current[0]
   }, [])
 
-  const [selectedItemId] = useKeyboardScrolling(flatListRef, {
+  const { selectedItemIdRef } = useKeyboardScrolling(flatListRef, {
     columnId: column.id,
     getVisibleItemIndex,
-    items: notifications,
+    items,
   })
   const { focusedColumnId } = useFocusedColumn()
-  const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
-  const selectedItem =
-    _hasSelectedItem &&
-    notifications.find(notification => notification.id === selectedItemId)
+
+  const hasSelectedItem =
+    !!selectedItemIdRef.current && column.id === focusedColumnId
 
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
@@ -99,26 +98,32 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   useKeyPressCallback(
     's',
     useCallback(() => {
+      const selectedItem =
+        hasSelectedItem &&
+        items.find(item => item.id === selectedItemIdRef.current)
       if (!selectedItem) return
 
       saveItemsForLater({
-        itemIds: [selectedItemId!],
+        itemIds: [selectedItemIdRef.current!],
         save: !selectedItem.saved,
       })
-    }, [selectedItem, selectedItemId]),
+    }, [hasSelectedItem, items]),
   )
 
   useKeyPressCallback(
     'r',
     useCallback(() => {
+      const selectedItem =
+        hasSelectedItem &&
+        items.find(item => item.id === selectedItemIdRef.current)
       if (!selectedItem) return
 
       markItemsAsReadOrUnread({
         type: 'notifications',
-        itemIds: [selectedItemId!],
+        itemIds: [selectedItemIdRef.current!],
         unread: isItemRead(selectedItem),
       })
-    }, [selectedItem, selectedItemId]),
+    }, [hasSelectedItem, items]),
   )
 
   const setColumnClearedAtFilter = useReduxAction(
@@ -145,7 +150,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   )
 
   const _renderItem = ({
-    item: notification,
+    item: item,
   }: {
     item: EnhancedGitHubNotification
     index: number
@@ -156,9 +161,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           cardViewMode={cardViewMode}
           enableCompactLabels={enableCompactLabels}
           isFocused={
-            column.id === focusedColumnId && notification.id === selectedItemId
+            column.id === focusedColumnId &&
+            item.id === selectedItemIdRef.current
           }
-          notification={notification}
+          notification={item}
           repoIsKnown={props.repoIsKnown}
         />
       )
@@ -170,9 +176,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           cardViewMode={cardViewMode}
           enableCompactLabels={enableCompactLabels}
           isFocused={
-            column.id === focusedColumnId && notification.id === selectedItemId
+            column.id === focusedColumnId &&
+            item.id === selectedItemIdRef.current
           }
-          notification={notification}
+          notification={item}
           repoIsKnown={props.repoIsKnown}
         />
       </ErrorBoundary>
@@ -180,7 +187,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   }
   const renderItem = useCallback(_renderItem, [
     cardViewMode,
-    column.id === focusedColumnId && selectedItemId,
+    column.id === focusedColumnId && selectedItemIdRef.current,
     enableCompactLabels,
     props.repoIsKnown,
     props.swipeable,
@@ -298,7 +305,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     )
   }
 
-  if (!(notifications && notifications.length)) {
+  if (!(items && items.length)) {
     return (
       <EmptyCards
         clearedAt={column.filters && column.filters.clearedAt}
@@ -320,7 +327,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       alwaysBounceVertical
       bounces
       contentContainerStyle={contentContainerStyle}
-      data={notifications}
+      data={items}
       extraData={rerender}
       initialNumToRender={15}
       keyExtractor={keyExtractor}

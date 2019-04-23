@@ -1,7 +1,8 @@
-import { RefObject, useCallback, useEffect, useState } from 'react'
+import { RefObject, useCallback, useEffect, useRef } from 'react'
 import { FlatList } from 'react-native'
 
 import { useEmitter } from './use-emitter'
+import { useForceRerender } from './use-force-rerender'
 import useKeyPressCallback from './use-key-press-callback'
 
 export function useKeyboardScrolling(
@@ -20,22 +21,28 @@ export function useKeyboardScrolling(
     return _items && _items[0] && _items[0]!.id
   }
 
-  const [selectedId, setSelectedId] = useState<
-    string | number | null | undefined
-  >(getFirstId(items))
+  const forceRerender = useForceRerender()
+
+  const selectedItemIdRef = useRef<string | number | null | undefined>(
+    getFirstId(items),
+  )
 
   // focus on first item by default
   useEffect(() => {
-    if (selectedId === undefined && getFirstId(items)) {
-      setSelectedId(items[0]!.id)
+    if (selectedItemIdRef.current === undefined && getFirstId(items)) {
+      selectedItemIdRef.current = items[0]!.id
+      forceRerender()
     }
-  }, [selectedId, getFirstId(items)])
+  }, [selectedItemIdRef.current, getFirstId(items)])
 
   useKeyPressCallback(
     'Escape',
     useCallback(() => {
       if (!(ref && ref.current)) return
-      setSelectedId(null)
+      if (selectedItemIdRef.current === null) return
+
+      selectedItemIdRef.current = null
+      forceRerender()
     }, [ref && ref.current]),
   )
 
@@ -45,21 +52,27 @@ export function useKeyboardScrolling(
       if (!ref.current) return
       if (columnId !== payload.columnId) return
 
-      const selectedIndex = items.findIndex(i => !!(i && i.id === selectedId))
-      const newIndex = !selectedId
+      const selectedIndex = items.findIndex(
+        i => !!(i && i.id === selectedItemIdRef.current),
+      )
+      const newIndex = !selectedItemIdRef.current
         ? (getVisibleItemIndex && getVisibleItemIndex()) || 0
         : Math.max(0, Math.min(selectedIndex - 1, items.length - 1))
       const item = items[newIndex]
 
       ref.current.scrollToItem({
-        animated: true,
+        animated: false,
         item,
         viewPosition: 0.5,
       })
 
-      setSelectedId((item && item.id) || getFirstId(items))
+      const newValue = (item && item.id) || getFirstId(items)
+      if (selectedItemIdRef.current === newValue) return
+
+      selectedItemIdRef.current = newValue
+      forceRerender()
     },
-    [ref && ref.current, columnId, items, getVisibleItemIndex, selectedId],
+    [ref && ref.current, columnId, items, getVisibleItemIndex],
   )
 
   useEmitter(
@@ -68,21 +81,27 @@ export function useKeyboardScrolling(
       if (!ref.current) return
       if (columnId !== payload.columnId) return
 
-      const selectedIndex = items.findIndex(i => !!(i && i.id === selectedId))
-      const newIndex = !selectedId
+      const selectedIndex = items.findIndex(
+        i => !!(i && i.id === selectedItemIdRef.current),
+      )
+      const newIndex = !selectedItemIdRef.current
         ? (getVisibleItemIndex && getVisibleItemIndex()) || 0
         : Math.max(0, Math.min(selectedIndex + 1, items.length - 1))
       const item = items[newIndex]
 
       ref.current.scrollToItem({
-        animated: true,
+        animated: false,
         item,
         viewPosition: 0.5,
       })
 
-      setSelectedId((item && item.id) || getFirstId(items))
+      const newValue = (item && item.id) || getFirstId(items)
+      if (selectedItemIdRef.current === newValue) return
+
+      selectedItemIdRef.current = newValue
+      forceRerender()
     },
-    [ref && ref.current, columnId, getVisibleItemIndex, items, selectedId],
+    [ref && ref.current, columnId, getVisibleItemIndex, items],
   )
 
   useEmitter(
@@ -96,13 +115,14 @@ export function useKeyboardScrolling(
       const newIndex = Math.max(-1, Math.min(index, items.length - 1))
       const item = items[newIndex]
 
-      setSelectedId((item && item.id) || getFirstId(items))
+      const newValue = (item && item.id) || getFirstId(items)
+      if (selectedItemIdRef.current === newValue) return
+
+      selectedItemIdRef.current = newValue
+      forceRerender()
     },
     [ref && ref.current, columnId, getVisibleItemIndex, items],
   )
 
-  return [selectedId, setSelectedId] as [
-    typeof selectedId,
-    typeof setSelectedId
-  ]
+  return { selectedItemId: selectedItemIdRef.current, selectedItemIdRef }
 }
