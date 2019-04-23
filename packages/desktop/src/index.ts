@@ -615,7 +615,7 @@ function getModeMenuItems() {
       type: 'radio',
       label: 'Menubar mode',
       checked: !!config.get('isMenuBarMode'),
-      enabled,
+      enabled, // : enabled && !mainWindow.isFullScreen(),
       click() {
         enableMenuBarMode()
       },
@@ -851,7 +851,7 @@ function getWindowMenuItems() {
       },
     },
     {
-      visible: !config.get('isMenuBarMode'),
+      visible: !config.get('isMenuBarMode') || mainWindow.isFullScreen(),
       role: 'togglefullscreen',
     },
   ]
@@ -1052,12 +1052,24 @@ function updateOrRecreateWindow() {
 
 function enableDesktopMode() {
   config.set('isMenuBarMode', false)
-  updateOrRecreateWindow()
+
+  if (mainWindow.isFullScreen()) {
+    mainWindow.setFullScreen(false)
+    setTimeout(updateOrRecreateWindow, 1000)
+  } else {
+    updateOrRecreateWindow()
+  }
 }
 
 function enableMenuBarMode() {
   config.set('isMenuBarMode', true)
-  updateOrRecreateWindow()
+
+  if (mainWindow.isFullScreen()) {
+    mainWindow.setFullScreen(false)
+    setTimeout(updateOrRecreateWindow, 1000)
+  } else {
+    updateOrRecreateWindow()
+  }
 }
 
 init()
