@@ -25,6 +25,7 @@ import {
 } from '../common/ConditionalWrap'
 import { TouchableOpacityProps } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface ColumnHeaderItemProps {
   analyticsAction?: TouchableOpacityProps['analyticsAction']
@@ -39,8 +40,12 @@ export interface ColumnHeaderItemProps {
   fixedIconSize?: boolean
   forceHoverState?: boolean
   foregroundColor?: string
-  hoverBackgroundThemeColor?: keyof ThemeColors
-  hoverForegroundThemeColor?: keyof ThemeColors
+  hoverBackgroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
+  hoverForegroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   label?: string
@@ -73,8 +78,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     fixedIconSize,
     forceHoverState,
     foregroundColor,
-    hoverBackgroundThemeColor,
-    hoverForegroundThemeColor,
+    hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
+    hoverForegroundThemeColor: _hoverForegroundThemeColor,
     iconName,
     iconStyle,
     label: _label,
@@ -98,6 +103,15 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
       const { isHovered: _isHovered, theme } = cacheRef.current
 
+      const hoverBackgroundThemeColor = getThemeColorOrItself(
+        theme,
+        _hoverBackgroundThemeColor,
+      )
+      const hoverForegroundThemeColor = getThemeColorOrItself(
+        theme,
+        _hoverForegroundThemeColor,
+      )
+
       const isHovered = (_isHovered || forceHoverState) && !disabled
       const immediate =
         forceImmediate ||
@@ -110,11 +124,11 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         immediate,
         backgroundColor:
           isHovered && enableBackgroundHover
-            ? theme[hoverBackgroundThemeColor || 'backgroundColorLess1']
+            ? hoverBackgroundThemeColor || theme.backgroundColorLess1
             : rgba(backgroundColor || theme.backgroundColor, 0),
         foregroundColor:
           isHovered && enableForegroundHover
-            ? theme[hoverForegroundThemeColor || 'primaryBackgroundColor']
+            ? hoverForegroundThemeColor || theme.primaryBackgroundColor
             : foregroundColor || theme.foregroundColor,
         mutedForegroundColor: theme.foregroundColorMuted50,
       }
@@ -126,8 +140,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       enableForegroundHover,
       forceHoverState,
       foregroundColor,
-      hoverBackgroundThemeColor,
-      hoverForegroundThemeColor,
+      _hoverBackgroundThemeColor,
+      _hoverForegroundThemeColor,
     ],
   )
 

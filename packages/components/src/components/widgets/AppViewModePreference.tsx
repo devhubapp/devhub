@@ -8,7 +8,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedCheckbox } from '../common/Checkbox'
+import { Checkbox } from '../common/Checkbox'
 import { SubHeader } from '../common/SubHeader'
 
 export const AppViewModePreference = React.memo(() => {
@@ -17,7 +17,7 @@ export const AppViewModePreference = React.memo(() => {
 
   function renderOption(appViewMode: AppViewMode) {
     return (
-      <SpringAnimatedCheckbox
+      <Checkbox
         analyticsLabel={undefined}
         key={`app-layout-item-checkbox-${appViewMode}`}
         checked={currentAppViewMode === appViewMode}

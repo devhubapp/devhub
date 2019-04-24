@@ -1,13 +1,12 @@
 import React from 'react'
 import { Image, Text, View } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { contentPadding } from '../../styles/variables'
 import {
   getEmojiImageURL,
   GitHubEmoji,
 } from '../../utils/helpers/github/emojis'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { ThemedText } from '../themed/ThemedText'
 
 export interface GenericMessageWithButtonViewProps {
   buttonView: React.ReactNode
@@ -19,8 +18,6 @@ export interface GenericMessageWithButtonViewProps {
 export const GenericMessageWithButtonView = React.memo(
   (props: GenericMessageWithButtonViewProps) => {
     const { buttonView, emoji, subtitle, title } = props
-
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const emojiImageURL = emoji ? getEmojiImageURL(emoji) : null
 
@@ -43,11 +40,11 @@ export const GenericMessageWithButtonView = React.memo(
           />
         )}
 
-        <SpringAnimatedText
+        <ThemedText
+          color="foregroundColorMuted50"
           style={{
             lineHeight: 20,
             fontSize: 14,
-            color: springAnimatedTheme.foregroundColorMuted50,
             textAlign: 'center',
           }}
         >
@@ -59,7 +56,7 @@ export const GenericMessageWithButtonView = React.memo(
               <Text style={{ fontSize: 13 }}>{subtitle}</Text>
             </>
           )}
-        </SpringAnimatedText>
+        </ThemedText>
 
         {!!buttonView && (
           <View style={{ padding: contentPadding }}>{buttonView}</View>

@@ -2,15 +2,14 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { Omit, stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedTextProps } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link, LinkProps } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { ThemedTextProps } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
@@ -27,15 +26,13 @@ export interface CommentRowProps
   leftContent: 'avatar' | 'icon' | 'none'
   maxLength?: number | undefined
   numberOfLines?: number
-  textStyle?: SpringAnimatedTextProps['style']
+  textStyle?: ThemedTextProps['style']
   url?: string
   userLinkURL: string | undefined
   username: string | undefined
 }
 
 export const CommentRow = React.memo((props: CommentRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     addBottomAnchor,
     analyticsLabel,
@@ -64,14 +61,11 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
       {...otherProps}
       left={
         leftContent === 'icon' ? (
-          <SpringAnimatedIcon
+          <ThemedIcon
+            color="foregroundColorMuted50"
             name="comment"
             size={smallAvatarSize}
-            style={[
-              { alignSelf: 'flex-end' },
-              getCardStylesForTheme(springAnimatedTheme).normalText,
-              getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
+            style={[{ alignSelf: 'flex-end' }, cardStyles.normalText]}
           />
         ) : leftContent === 'avatar' ? (
           <Avatar
@@ -91,12 +85,9 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             enableTextWrapper
             href={fixURL(url, { addBottomAnchor })}
             textProps={{
+              color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
               numberOfLines,
-              style: [
-                getCardStylesForTheme(springAnimatedTheme).commentText,
-                textStyle,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ],
+              style: [cardStyles.commentText, textStyle],
             }}
             tooltip={_body}
           >

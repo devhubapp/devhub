@@ -6,28 +6,23 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForUser,
-  ThemeColors,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../libs/platform'
 import { sharedStyles } from '../../../styles/shared'
-import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
 import { Spacer } from '../../common/Spacer'
 import { ToggleReadButton } from '../../common/ToggleReadButton'
-import { cardStyles, getCardStylesForTheme } from '../styles'
+import { ThemedIcon } from '../../themed/ThemedIcon'
+import { ThemedText } from '../../themed/ThemedText'
+import { ThemedView } from '../../themed/ThemedView'
+import { cardStyles } from '../styles'
 
 export interface EventCardHeaderProps {
   actionText: string
   avatarUrl: string
-  backgroundThemeColor: keyof ThemeColors
-  // cardIconColor?: string
-  // cardIconName: GitHubIcon
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
@@ -73,8 +68,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     username: _username,
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
@@ -83,7 +76,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
       key={`event-card-header-${ids.join(',')}-inner`}
       style={styles.container}
     >
-      <SpringAnimatedView
+      <ThemedView
         style={[
           cardStyles.leftColumn,
           smallLeftColumn
@@ -100,24 +93,18 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           style={cardStyles.avatar}
           username={username}
         />
-      </SpringAnimatedView>
+      </ThemedView>
 
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <SpringAnimatedView
-              style={sharedStyles.horizontalAndVerticallyAligned}
-            >
+            <View style={sharedStyles.horizontalAndVerticallyAligned}>
               <Link
                 href={userLinkURL}
                 textProps={{
+                  color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
                   numberOfLines: 1,
-                  style: [
-                    getCardStylesForTheme(springAnimatedTheme).usernameText,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    { lineHeight: undefined },
-                  ],
+                  style: [cardStyles.usernameText, { lineHeight: undefined }],
                 }}
               >
                 {username}
@@ -126,15 +113,16 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               {!!isBot && (
                 <>
                   <Text children="  " />
-                  <SpringAnimatedText
+                  <ThemedText
+                    color="foregroundColorMuted50"
                     numberOfLines={1}
                     style={[
-                      getCardStylesForTheme(springAnimatedTheme).timestampText,
+                      cardStyles.timestampText,
                       { lineHeight: undefined },
                     ]}
                   >
                     BOT
-                  </SpringAnimatedText>
+                  </ThemedText>
                 </>
               )}
 
@@ -146,11 +134,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   return (
                     <>
                       <Text children="  " />
-                      <SpringAnimatedText
+                      <ThemedText
+                        color="foregroundColorMuted50"
                         numberOfLines={1}
                         style={[
-                          getCardStylesForTheme(springAnimatedTheme)
-                            .timestampText,
+                          cardStyles.timestampText,
                           { lineHeight: undefined },
                         ]}
                         {...Platform.select({
@@ -159,28 +147,26 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                       >
                         {!!isPrivate && (
                           <>
-                            <SpringAnimatedIcon name="lock" />{' '}
+                            <ThemedIcon name="lock" />{' '}
                           </>
                         )}
                         {dateText}
-                      </SpringAnimatedText>
+                      </ThemedText>
                     </>
                   )
                 }}
               </IntervalRefresh>
-            </SpringAnimatedView>
+            </View>
 
             <Spacer height={2} />
 
-            <SpringAnimatedText
+            <ThemedText
+              color={isRead ? 'foregroundColorMuted50' : 'foregroundColor'}
               numberOfLines={1}
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).headerActionText,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
+              style={cardStyles.headerActionText}
             >
               {actionText.toLowerCase()}
-            </SpringAnimatedText>
+            </ThemedText>
           </View>
 
           <ToggleReadButton

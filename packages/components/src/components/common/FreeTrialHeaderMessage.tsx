@@ -1,19 +1,18 @@
 import React from 'react'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { HeaderMessage } from './HeaderMessage'
 
 export function FreeTrialHeaderMessage() {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
   if (username === 'appledevhub') return null
 
   return (
     <HeaderMessage
       analyticsLabel="about_free_trial_column"
+      backgroundColor="primaryBackgroundColor"
+      color="primaryForegroundColor"
       onPress={() =>
         alert(
           'Access to private repositories will be a paid feature' +
@@ -31,12 +30,6 @@ export function FreeTrialHeaderMessage() {
             '@brunolemos, creator of DevHub.',
         )
       }
-      style={{
-        backgroundColor: springAnimatedTheme.primaryBackgroundColor,
-      }}
-      textStyle={{
-        color: springAnimatedTheme.primaryForegroundColor,
-      }}
     >
       Free trial. Learn more.
     </HeaderMessage>

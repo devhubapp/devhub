@@ -3,12 +3,10 @@ import { StyleSheet } from 'react-native'
 
 import { useSpring, useTransition } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { columnHeaderHeight } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
-import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
@@ -16,6 +14,7 @@ import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptions } from './ColumnOptions'
@@ -50,7 +49,6 @@ export const ColumnOptionsRenderer = React.memo(
 
     const { sizename } = useAppLayout()
     const { column, columnIndex } = useColumn(columnId)
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const immediate = Platform.realOS === 'android'
     const overlayTransition = useTransition<boolean, any>(
@@ -77,6 +75,7 @@ export const ColumnOptionsRenderer = React.memo(
       !inlineMode && fixedPosition && fixedWidth
         ? {
             config: getDefaultReactSpringAnimationConfig(),
+            immediate: Platform.OS === 'android',
             from: {
               [fixedPosition]:
                 -fixedWidth - Platform.select({ default: 0, ios: 40 }),
@@ -89,6 +88,7 @@ export const ColumnOptionsRenderer = React.memo(
           }
         : {
             config: getDefaultReactSpringAnimationConfig(),
+            immediate: Platform.OS === 'android',
             from: { left: 0, right: 0 },
             to: { left: 0, right: 0 },
           },
@@ -120,13 +120,13 @@ export const ColumnOptionsRenderer = React.memo(
             ]}
             pointerEvents="box-none"
           >
-            <SpringAnimatedTouchableOpacity
+            <ThemedTouchableOpacity
               analyticsAction="close_via_overlay"
               analyticsLabel="column_options"
               activeOpacity={1}
+              backgroundColor="backgroundColorMore1"
               style={{
                 ...StyleSheet.absoluteFillObject,
-                backgroundColor: springAnimatedTheme.backgroundColorMore1,
                 zIndex: 200,
                 ...Platform.select({ web: { cursor: 'default' } as any }),
               }}

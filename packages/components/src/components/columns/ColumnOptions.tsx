@@ -10,6 +10,7 @@ import {
   GitHubNotificationSubjectType,
   isReadFilterChecked,
   isUnreadFilterChecked,
+  ThemeColors,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -35,14 +36,13 @@ import {
   notificationSubjectTypes,
 } from '../../utils/helpers/github/notifications'
 import { getSubjectTypeMetadata } from '../../utils/helpers/github/shared'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { SpringAnimatedCheckbox } from '../common/Checkbox'
+import { Checkbox } from '../common/Checkbox'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
+import { ThemedView } from '../themed/ThemedView'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
@@ -64,6 +64,10 @@ const issueOrPullRequestSubjectTypeOptions = issueOrPullRequestSubjectTypes
 
 const notificationSubjectTypeOptions = notificationSubjectTypes
   .map(getSubjectTypeMetadata)
+  .sort(metadataSortFn)
+
+const notificationReasonOptions = notificationReasons
+  .map(getNotificationReasonMetadata)
   .sort(metadataSortFn)
 
 export interface ColumnOptionsProps {
@@ -124,8 +128,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   // const [containerWidth, setContainerWidth] = useState(0)
 
-  const theme = useTheme()
-
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
 
@@ -168,16 +170,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     width: columnHeaderItemContentSize,
   }
 
-  const notificationReasonOptions = notificationReasons
-    .map(reason => getNotificationReasonMetadata(reason, theme))
-    .sort(metadataSortFn)
-
   return (
-    <SpringAnimatedView
+    <ThemedView
+      backgroundColor={theme =>
+        theme[getColumnHeaderThemeColors(theme.backgroundColor).normal]
+      }
       style={{
         alignSelf: 'stretch',
-        backgroundColor:
-          theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
         height: fullHeight ? availableHeight : 'auto',
       }}
       // onLayout={e => {
@@ -215,7 +214,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 subtitle={participating ? 'Participating' : 'All'}
                 title="Inbox"
               >
-                <SpringAnimatedCheckbox
+                <Checkbox
                   analyticsLabel="all_notifications"
                   checked={!participating}
                   circle
@@ -229,7 +228,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     })
                   }}
                 />
-                <SpringAnimatedCheckbox
+                <Checkbox
                   analyticsLabel="participating_notifications"
                   checked={participating}
                   circle
@@ -273,7 +272,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
                 title="Saved for later"
               >
-                <SpringAnimatedCheckbox
+                <Checkbox
                   analyticsLabel="save_for_later"
                   checked={
                     typeof savedForLater === 'boolean' ? savedForLater : null
@@ -332,7 +331,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
                 title="Read status"
               >
-                <SpringAnimatedCheckbox
+                <Checkbox
                   analyticsLabel="read"
                   checked={isReadChecked}
                   containerStyle={checkboxStyle}
@@ -348,7 +347,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   }}
                 />
 
-                <SpringAnimatedCheckbox
+                <Checkbox
                   analyticsLabel="unread"
                   checked={isUnreadChecked}
                   containerStyle={checkboxStyle}
@@ -379,7 +378,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               >)
 
             const subjectTypeOptions: Array<{
-              color?: string | undefined
+              color?: keyof ThemeColors | undefined
               label: string
               subjectType:
                 | GitHubEventSubjectType
@@ -442,13 +441,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     (!isFilterStrict || checked === defaultBooleanValue)
 
                   return (
-                    <SpringAnimatedCheckbox
+                    <Checkbox
                       key={`notification-subject-type-option-${
                         item.subjectType
                       }`}
                       analyticsLabel={undefined}
                       checked={checked}
-                      checkedBackgroundColor={item.color}
+                      checkedBackgroundThemeColor={item.color}
                       containerStyle={checkboxStyle}
                       disabled={
                         !enableIndeterminateState &&
@@ -467,7 +466,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                           value,
                         })
                       }}
-                      uncheckedForegroundColor={item.color}
+                      uncheckedForegroundThemeColor={item.color}
                     />
                   )
                 })}
@@ -521,11 +520,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       : null
 
                   return (
-                    <SpringAnimatedCheckbox
+                    <Checkbox
                       key={`notification-reason-option-${item.reason}`}
                       analyticsLabel={undefined}
                       checked={checked}
-                      checkedBackgroundColor={item.color}
+                      checkedBackgroundThemeColor={item.color}
                       containerStyle={checkboxStyle}
                       defaultValue={defaultBooleanValue}
                       enableIndeterminateState={
@@ -541,7 +540,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                         })
                       }}
                       squareContainerStyle={checkboxSquareStyle}
-                      uncheckedForegroundColor={item.color}
+                      uncheckedForegroundThemeColor={item.color}
                     />
                   )
                 })}
@@ -595,7 +594,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       : null
 
                   return (
-                    <SpringAnimatedCheckbox
+                    <Checkbox
                       key={`event-type-option-${item.action}`}
                       analyticsLabel={undefined}
                       checked={checked}
@@ -670,7 +669,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
                 title="Privacy"
               >
-                <SpringAnimatedCheckbox
+                <Checkbox
                   analyticsLabel="public"
                   checked={isPublicChecked}
                   containerStyle={checkboxStyle}
@@ -686,7 +685,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   }}
                 />
 
-                <SpringAnimatedCheckbox
+                <Checkbox
                   analyticsLabel="private"
                   checked={isPrivateChecked}
                   containerStyle={checkboxStyle}
@@ -827,6 +826,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         />
       </View>
       <CardItemSeparator />
-    </SpringAnimatedView>
+    </ThemedView>
   )
 })

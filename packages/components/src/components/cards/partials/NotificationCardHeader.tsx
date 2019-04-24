@@ -9,19 +9,17 @@ import {
   GitHubNotificationReason,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../libs/platform'
 import { sharedStyles } from '../../../styles/shared'
-import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
 import { Avatar } from '../../common/Avatar'
 import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
 import { Spacer } from '../../common/Spacer'
 import { ToggleReadButton } from '../../common/ToggleReadButton'
-import { cardStyles, getCardStylesForTheme } from '../styles'
+import { ThemedIcon } from '../../themed/ThemedIcon'
+import { ThemedText } from '../../themed/ThemedText'
+import { cardStyles } from '../styles'
 import { NotificationReason } from './rows/partials/NotificationReason'
 
 export interface NotificationCardHeaderProps {
@@ -72,8 +70,6 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
     username: _username,
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const username = isBot ? _username!.replace('[bot]', '') : _username
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
@@ -82,7 +78,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
       key={`notification-card-header-${ids.join(',')}-inner`}
       style={styles.container}
     >
-      <SpringAnimatedView
+      <View
         style={[
           cardStyles.leftColumn,
           smallLeftColumn
@@ -99,24 +95,18 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           style={cardStyles.avatar}
           username={username}
         />
-      </SpringAnimatedView>
+      </View>
 
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <SpringAnimatedView
-              style={sharedStyles.horizontalAndVerticallyAligned}
-            >
+            <View style={sharedStyles.horizontalAndVerticallyAligned}>
               <Link
                 href={userLinkURL}
                 textProps={{
+                  color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
                   numberOfLines: 1,
-                  style: [
-                    getCardStylesForTheme(springAnimatedTheme).usernameText,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    { lineHeight: undefined },
-                  ],
+                  style: [cardStyles.usernameText, { lineHeight: undefined }],
                 }}
               >
                 {trimNewLinesAndSpaces(username, 18)}
@@ -124,16 +114,17 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
               {!!isBot && (
                 <>
                   <Text children="  " />
-                  <SpringAnimatedText
+                  <ThemedText
+                    color="foregroundColorMuted50"
                     numberOfLines={1}
                     style={[
-                      getCardStylesForTheme(springAnimatedTheme).timestampText,
+                      cardStyles.timestampText,
                       { lineHeight: undefined },
                     ]}
                   >
                     <Text children="  " />
                     BOT
-                  </SpringAnimatedText>
+                  </ThemedText>
                 </>
               )}
               <IntervalRefresh date={date}>
@@ -144,11 +135,11 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   return (
                     <>
                       <Text children="  " />
-                      <SpringAnimatedText
+                      <ThemedText
+                        color="foregroundColorMuted50"
                         numberOfLines={1}
                         style={[
-                          getCardStylesForTheme(springAnimatedTheme)
-                            .timestampText,
+                          cardStyles.timestampText,
                           { lineHeight: undefined },
                         ]}
                         {...Platform.select({
@@ -158,16 +149,16 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                         <Text children="  " />
                         {!!isPrivate && (
                           <>
-                            <SpringAnimatedIcon name="lock" />{' '}
+                            <ThemedIcon name="lock" />{' '}
                           </>
                         )}
                         {dateText}
-                      </SpringAnimatedText>
+                      </ThemedText>
                     </>
                   )
                 }}
               </IntervalRefresh>
-            </SpringAnimatedView>
+            </View>
 
             <Spacer height={2} />
 

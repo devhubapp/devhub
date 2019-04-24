@@ -1,11 +1,10 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useCallback, useRef } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { Theme, ThemeColors } from '@devhub/core'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
+import { ThemedView } from '../themed/ThemedView'
 
 export interface ScreenProps {
   children?: ReactNode
@@ -20,32 +19,54 @@ const styles = StyleSheet.create({
 })
 
 export const Screen = React.memo((props: ScreenProps) => {
-  const { statusBarBackgroundThemeColor } = props
+  const { statusBarBackgroundThemeColor, ...viewProps } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const initialTheme = useTheme(
+    useCallback(theme => {
+      if (cacheRef.current.theme === theme) return
 
-  useTheme(theme => {
-    const themeColor: keyof ThemeColors =
-      statusBarBackgroundThemeColor === 'header'
-        ? getColumnHeaderThemeColors(theme.backgroundColor).normal
-        : statusBarBackgroundThemeColor || 'backgroundColor'
+      cacheRef.current.theme = theme
 
-    const color = theme[themeColor]
+      updateStyles({
+        theme: cacheRef.current.theme,
+        statusBarBackgroundThemeColor:
+          cacheRef.current.statusBarBackgroundThemeColor,
+      })
+    }, []),
+  )
 
-    const metas = document.getElementsByTagName('meta') as any
-
-    metas['theme-color'].content = color
-    metas['msapplication-navbutton-color'].content = color
+  const cacheRef = useRef({
+    theme: initialTheme,
+    statusBarBackgroundThemeColor,
   })
+  cacheRef.current.theme = initialTheme
+  cacheRef.current.statusBarBackgroundThemeColor = statusBarBackgroundThemeColor
 
   return (
-    <SpringAnimatedView
-      {...props}
-      style={[
-        styles.container,
-        props.style,
-        { backgroundColor: springAnimatedTheme.backgroundColor },
-      ]}
+    <ThemedView
+      {...viewProps}
+      backgroundColor="backgroundColor"
+      style={[styles.container, props.style]}
     />
   )
 })
+
+function updateStyles({
+  theme,
+  statusBarBackgroundThemeColor,
+}: {
+  theme: Theme
+  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
+}) {
+  const themeColor: keyof ThemeColors =
+    statusBarBackgroundThemeColor === 'header'
+      ? getColumnHeaderThemeColors(theme.backgroundColor).normal
+      : statusBarBackgroundThemeColor || 'backgroundColor'
+
+  const color = theme[themeColor]
+
+  const metas = document.getElementsByTagName('meta') as any
+
+  metas['theme-color'].content = color
+  metas['msapplication-navbutton-color'].content = color
+}

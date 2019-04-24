@@ -9,15 +9,14 @@ import {
   trimNewLinesAndSpaces,
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { sharedStyles } from '../../../../styles/shared'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { ThemedText } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
@@ -42,8 +41,6 @@ export interface CommitRowProps
 export interface CommitRowState {}
 
 export const CommitRow = React.memo((props: CommitRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     authorEmail,
     authorName,
@@ -94,11 +91,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             }
           />
         ) : isPrivate ? (
-          <SpringAnimatedIcon
-            name="lock"
-            size={smallAvatarSize}
-            style={{ color: springAnimatedTheme.orange }}
-          />
+          <ThemedIcon color="orange" name="lock" size={smallAvatarSize} />
         ) : null
       }
       right={
@@ -117,12 +110,12 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             }
             style={sharedStyles.flex}
             textProps={{
+              color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
               numberOfLines: 1,
               style: [
-                getCardStylesForTheme(springAnimatedTheme).normalText,
+                cardStyles.normalText,
                 cardStyles.smallText,
                 bold && !isRead && cardStyles.boldText,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ],
             }}
             tooltip={`${_message}${byText ? `\n\n${byText}` : ''}`}
@@ -131,28 +124,21 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               {' '}
               {!hideIcon && (
                 <>
-                  <SpringAnimatedIcon
+                  <ThemedIcon
                     name="git-commit"
                     size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      { color: undefined },
-                    ]}
+                    style={[cardStyles.normalText, cardStyles.icon]}
                   />{' '}
                 </>
               )}
               {showMoreItemsIndicator ? '' : message}
               {Boolean(byText) && (
-                <SpringAnimatedText
-                  style={[
-                    getCardStylesForTheme(springAnimatedTheme).normalText,
-                    cardStyles.smallText,
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                  ]}
+                <ThemedText
+                  color="foregroundColorMuted50"
+                  style={[cardStyles.normalText, cardStyles.smallText]}
                 >
                   {showMoreItemsIndicator ? '...' : ` by ${byText}`}
-                </SpringAnimatedText>
+                </ThemedText>
               )}
             </>
           </Link>

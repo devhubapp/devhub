@@ -8,24 +8,21 @@ import {
   GitHubLabel,
   Omit,
   stripMarkdown,
+  ThemeColors,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../libs/platform'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding, smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import {
-  SpringAnimatedIcon,
-  SpringAnimatedIconProps,
-} from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
 import { LabelProps } from '../../../common/Label'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon, ThemedIconProps } from '../../../themed/ThemedIcon'
+import { ThemedText } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
 import { CardItemId } from '../CardItemId'
 import { CardSmallThing } from '../CardSmallThing'
 import { LabelsView } from './LabelsView'
@@ -46,8 +43,8 @@ export interface IssueOrPullRequestRowProps
   createdAt: string | undefined
   hideIcon?: boolean
   hideLabelText?: boolean
-  iconColor?: string
-  iconName?: SpringAnimatedIconProps['name']
+  iconColor?: keyof ThemeColors
+  iconName?: ThemedIconProps['name']
   id: string | number | undefined
   inlineLabels?: boolean
   isPrivate: boolean
@@ -67,8 +64,6 @@ export interface IssueOrPullRequestRowProps
 
 export const IssueOrPullRequestRow = React.memo(
   (props: IssueOrPullRequestRowProps) => {
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
     const {
       addBottomAnchor,
       avatarUrl,
@@ -136,11 +131,7 @@ export const IssueOrPullRequestRow = React.memo(
               username={username}
             />
           ) : isPrivate ? (
-            <SpringAnimatedIcon
-              name="lock"
-              size={smallAvatarSize}
-              style={{ color: springAnimatedTheme.orange }}
-            />
+            <ThemedIcon color="orange" name="lock" size={smallAvatarSize} />
           ) : null
         }
         right={
@@ -172,13 +163,12 @@ export const IssueOrPullRequestRow = React.memo(
                     labels.length > 0 && { marginBottom: innerCardSpacing },
                 ]}
                 textProps={{
+                  color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
                   numberOfLines,
                   style: [
                     sharedStyles.flex,
-                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    cardStyles.normalText,
                     bold && !isRead && cardStyles.boldText,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ],
                 }}
                 // tooltip={`${title}${_body ? `\n\n${_body}` : ''}`}
@@ -186,14 +176,11 @@ export const IssueOrPullRequestRow = React.memo(
                 <>
                   {!hideIcon && (
                     <>
-                      <SpringAnimatedIcon
+                      <ThemedIcon
+                        color={iconColor}
                         name={iconName}
                         size={13}
-                        style={[
-                          getCardStylesForTheme(springAnimatedTheme).normalText,
-                          getCardStylesForTheme(springAnimatedTheme).icon,
-                          { color: iconColor || undefined },
-                        ]}
+                        style={[cardStyles.normalText, cardStyles.icon]}
                       />{' '}
                     </>
                   )}
@@ -201,14 +188,14 @@ export const IssueOrPullRequestRow = React.memo(
 
                   {!!issueOrPullRequestNumber &&
                     (viewMode === 'compact' || !showCreationDetails) && (
-                      <SpringAnimatedText
+                      <Text
                         style={{
                           fontSize: 11,
                           fontWeight: '400',
                         }}
                       >
                         {`  #${issueOrPullRequestNumber}`}
-                      </SpringAnimatedText>
+                      </Text>
                     )}
                 </>
               </Link>
@@ -216,9 +203,9 @@ export const IssueOrPullRequestRow = React.memo(
               {!!labels && labels.length > 0 && (
                 <LabelsView
                   backgroundThemeColor={backgroundThemeColor}
-                  borderColor={
+                  borderThemeColor={
                     hideLabelText && backgroundThemeColor
-                      ? springAnimatedTheme[backgroundThemeColor]
+                      ? backgroundThemeColor
                       : undefined
                   }
                   fragment={!keepLabelsTogether}
@@ -230,7 +217,7 @@ export const IssueOrPullRequestRow = React.memo(
                     name: label.name,
                   }))}
                   muted={isRead}
-                  textColor={springAnimatedTheme.foregroundColorMuted50}
+                  textThemeColor="foregroundColorMuted50"
                 />
               )}
             </View>
@@ -244,13 +231,11 @@ export const IssueOrPullRequestRow = React.memo(
                     href={htmlUrl}
                     style={cardRowStyles.mainContentContainer}
                     textProps={{
+                      color: isRead
+                        ? 'foregroundColorMuted50'
+                        : 'foregroundColor',
                       numberOfLines,
-                      style: [
-                        sharedStyles.flex,
-                        getCardStylesForTheme(springAnimatedTheme).commentText,
-                        isRead &&
-                          getCardStylesForTheme(springAnimatedTheme).mutedText,
-                      ],
+                      style: [sharedStyles.flex, cardStyles.commentText],
                     }}
                   >
                     {body}
@@ -278,10 +263,8 @@ export const IssueOrPullRequestRow = React.memo(
                             (username && getGitHubURLForUser(username))
                           }
                           textProps={{
-                            style: [
-                              getCardStylesForTheme(springAnimatedTheme)
-                                .smallerMutedText,
-                            ],
+                            color: 'foregroundColorMuted50',
+                            style: [cardStyles.smallerText],
                           }}
                         >
                           {byText}
@@ -298,12 +281,10 @@ export const IssueOrPullRequestRow = React.memo(
                               <>
                                 {!!byText && <Text children="  " />}
 
-                                <SpringAnimatedText
+                                <ThemedText
+                                  color="foregroundColorMuted50"
                                   numberOfLines={1}
-                                  style={
-                                    getCardStylesForTheme(springAnimatedTheme)
-                                      .smallerMutedText
-                                  }
+                                  style={cardStyles.smallerText}
                                   {...Platform.select({
                                     web: {
                                       title: `Created: ${getFullDateText(
@@ -313,7 +294,7 @@ export const IssueOrPullRequestRow = React.memo(
                                   })}
                                 >
                                   {dateText}
-                                </SpringAnimatedText>
+                                </ThemedText>
                               </>
                             )
                           }}
@@ -330,12 +311,10 @@ export const IssueOrPullRequestRow = React.memo(
                               <>
                                 {!!byText && <Text children="  " />}
 
-                                <SpringAnimatedText
+                                <ThemedText
+                                  color="foregroundColorMuted50"
                                   numberOfLines={1}
-                                  style={
-                                    getCardStylesForTheme(springAnimatedTheme)
-                                      .smallerMutedText
-                                  }
+                                  style={cardStyles.smallerText}
                                   {...Platform.select({
                                     web: {
                                       title: `Updated: ${getFullDateText(
@@ -344,8 +323,8 @@ export const IssueOrPullRequestRow = React.memo(
                                     },
                                   })}
                                 >
-                                  <SpringAnimatedIcon name="clock" /> {dateText}
-                                </SpringAnimatedText>
+                                  <ThemedIcon name="clock" /> {dateText}
+                                </ThemedText>
                               </>
                             )
                           }}

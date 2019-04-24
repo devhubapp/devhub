@@ -9,7 +9,6 @@ import {
   constants,
   GitHubIcon,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -20,7 +19,6 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding, radius } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -35,6 +33,7 @@ import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { ThemedText } from '../themed/ThemedText'
 
 export interface AddColumnModalProps {
   showBackButton: boolean
@@ -225,8 +224,6 @@ function AddColumnModalItem({
     updateStyles()
   }, [disabled])
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const pushModal = useReduxAction(actions.pushModal)
 
   function getStyles() {
@@ -302,14 +299,9 @@ function AddColumnModalItem({
           tooltip={undefined}
         />
 
-        <SpringAnimatedText
-          style={{
-            color: springAnimatedTheme.foregroundColor,
-            textAlign: 'center',
-          }}
-        >
+        <ThemedText color="foregroundColor" style={{ textAlign: 'center' }}>
           {title}
-        </SpringAnimatedText>
+        </ThemedText>
       </View>
     </SpringAnimatedTouchableOpacity>
   )
@@ -317,8 +309,6 @@ function AddColumnModalItem({
 
 export function AddColumnModal(props: AddColumnModalProps) {
   const { showBackButton } = props
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
@@ -351,12 +341,12 @@ export function AddColumnModal(props: AddColumnModalProps) {
               href={getGitHubAppInstallUri()}
               openOnNewTab
               textProps={{
+                color: 'foregroundColorMuted50',
                 style: {
                   flexGrow: 1,
                   lineHeight: 14,
                   fontSize: 11,
                   textAlign: 'center',
-                  color: springAnimatedTheme.foregroundColorMuted50,
                 },
               }}
             >
@@ -411,20 +401,20 @@ export function AddColumnModal(props: AddColumnModalProps) {
         ))}
 
         {!!hasReachedColumnLimit && (
-          <SpringAnimatedText
+          <ThemedText
+            color="foregroundColorMuted50"
             style={{
               marginTop: contentPadding,
               paddingHorizontal: contentPadding,
               lineHeight: 20,
               fontSize: 14,
-              color: springAnimatedTheme.foregroundColorMuted50,
               textAlign: 'center',
             }}
           >
             {`You have reached the limit of ${
               constants.COLUMNS_LIMIT
             } columns. This is to maintain a healthy usage of the GitHub API.`}
-          </SpringAnimatedText>
+          </ThemedText>
         )}
 
         <Spacer flex={1} minHeight={contentPadding} />

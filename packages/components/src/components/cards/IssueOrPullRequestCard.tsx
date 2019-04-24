@@ -12,9 +12,7 @@ import {
   getRepoFullNameFromUrl,
   GitHubIssueOrPullRequestSubjectType,
   isItemRead,
-  Theme,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -26,25 +24,20 @@ import {
 } from '../../styles/variables'
 import { getIssueOrPullRequestIconAndColor } from '../../utils/helpers/github/issues'
 import { tryFocus } from '../../utils/helpers/shared'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { getColumnCardThemeColors } from '../columns/ColumnRenderer'
+import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
 import { ToggleReadButton } from '../common/ToggleReadButton'
-import { useTheme } from '../context/ThemeContext'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
+import { ThemedView } from '../themed/ThemedView'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { LabelsView } from './partials/rows/LabelsView'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
-import {
-  cardStyles,
-  getCardStylesForTheme,
-  spacingBetweenLeftAndRightColumn,
-} from './styles'
+import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface IssueOrPullRequestCardProps {
   cardViewMode: CardViewMode
@@ -69,21 +62,6 @@ export const IssueOrPullRequestCard = React.memo(
     } = props
 
     const itemRef = useRef<View>(null)
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
-    const themeRef = useRef<Theme | null>(null)
-    const initialTheme = useTheme(theme => {
-      themeRef.current = theme
-
-      if (itemRef.current) {
-        itemRef.current.setNativeProps({
-          style: {
-            backgroundColor: theme[getBackgroundThemeColor()],
-          },
-        })
-      }
-    })
-    themeRef.current = initialTheme
 
     const repoTableColumnWidth = useRepoTableColumnWidth()
 
@@ -134,23 +112,9 @@ export const IssueOrPullRequestCard = React.memo(
     const cardIconDetails = getIssueOrPullRequestIconAndColor(
       type,
       issueOrPullRequest,
-      springAnimatedTheme,
     )
     const cardIconName = cardIconDetails.icon
     const cardIconColor = cardIconDetails.color
-
-    function getBackgroundThemeColor() {
-      const backgroundThemeColors = getColumnCardThemeColors(
-        themeRef.current!.backgroundColor,
-      )
-      const _backgroundThemeColor =
-        // (isFocused && 'backgroundColorLess2') ||
-        (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
-
-      return _backgroundThemeColor
-    }
-
-    const backgroundThemeColor = getBackgroundThemeColor()
 
     let withTopMargin = false
     let withTopMarginCount = withTopMargin ? 1 : 0
@@ -186,7 +150,9 @@ export const IssueOrPullRequestCard = React.memo(
               key={`issue-or-pr-issue-or-pr-row-${issueOrPullRequest.id}`}
               addBottomAnchor={false}
               avatarUrl={issueOrPullRequest.user.avatar_url}
-              backgroundThemeColor={backgroundThemeColor}
+              backgroundThemeColor={theme =>
+                getCardBackgroundThemeColor(theme, { isRead })
+              }
               body={issueOrPullRequest.body}
               bold
               commentsCount={issueOrPullRequest.comments}
@@ -239,15 +205,15 @@ export const IssueOrPullRequestCard = React.memo(
 
     if (cardViewMode === 'compact') {
       return (
-        <SpringAnimatedView
+        <ThemedView
           key={`issue-or-pr-card-${id}-compact-inner`}
           ref={itemRef}
+          backgroundColor={theme =>
+            getCardBackgroundThemeColor(theme, { isRead })
+          }
           style={[
             cardStyles.compactContainer,
             alignVertically && { alignItems: 'center' },
-            {
-              backgroundColor: springAnimatedTheme[backgroundThemeColor],
-            },
           ]}
         >
           {!!isFocused && <CardFocusBorder />}
@@ -257,7 +223,7 @@ export const IssueOrPullRequestCard = React.memo(
           {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
         >
-          <SpringAnimatedCheckbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
+          <Checkbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
         </View>
 
         <Spacer width={contentPadding} /> */}
@@ -344,13 +310,13 @@ export const IssueOrPullRequestCard = React.memo(
                 cardStyles.compactItemFixedHeight,
               ]}
             >
-              <SpringAnimatedIcon
+              <ThemedIcon
+                color={cardIconColor || 'foregroundColor'}
                 name={cardIconName}
                 selectable={false}
                 style={{
                   fontSize: columnHeaderItemContentSize,
                   textAlign: 'center',
-                  color: cardIconColor || springAnimatedTheme.foregroundColor,
                 }}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
@@ -376,7 +342,9 @@ export const IssueOrPullRequestCard = React.memo(
             issueOrPullRequest.labels.length > 0 && (
               <>
                 <LabelsView
-                  backgroundThemeColor={backgroundThemeColor}
+                  backgroundThemeColor={theme =>
+                    getCardBackgroundThemeColor(theme, { isRead })
+                  }
                   enableScrollView={isSingleRow}
                   labels={issueOrPullRequest.labels.map(label => ({
                     key: `issue-or-pr-row-${
@@ -397,7 +365,7 @@ export const IssueOrPullRequestCard = React.memo(
                         : 0),
                     overflow: 'hidden',
                   }}
-                  textColor={springAnimatedTheme.foregroundColorMuted50}
+                  textThemeColor="foregroundColorMuted50"
                 />
 
                 <Spacer width={spacingBetweenLeftAndRightColumn} />
@@ -420,11 +388,11 @@ export const IssueOrPullRequestCard = React.memo(
                   if (!dateText) return null
 
                   return (
-                    <SpringAnimatedText
+                    <ThemedText
+                      color="foregroundColorMuted50"
                       numberOfLines={1}
                       style={[
-                        getCardStylesForTheme(springAnimatedTheme)
-                          .timestampText,
+                        cardStyles.timestampText,
                         cardStyles.smallText,
                         { fontSize: smallerTextSize },
                       ]}
@@ -440,12 +408,12 @@ export const IssueOrPullRequestCard = React.memo(
                     >
                       {!!isPrivate && (
                         <>
-                          <SpringAnimatedIcon name="lock" />{' '}
+                          <ThemedIcon name="lock" />{' '}
                         </>
                       )}
-                      {/* <SpringAnimatedIcon name="clock" />{' '} */}
+                      {/* <ThemedIcon name="clock" />{' '} */}
                       {dateText}
-                    </SpringAnimatedText>
+                    </ThemedText>
                   )
                 }}
               </IntervalRefresh>
@@ -462,20 +430,18 @@ export const IssueOrPullRequestCard = React.memo(
               type="issue_or_pr"
             />
           </View>
-        </SpringAnimatedView>
+        </ThemedView>
       )
     }
 
     return (
-      <SpringAnimatedView
+      <ThemedView
         key={`issue-or-pr-card-${id}-inner`}
         ref={itemRef}
-        style={[
-          cardStyles.container,
-          {
-            backgroundColor: springAnimatedTheme[backgroundThemeColor],
-          },
-        ]}
+        backgroundColor={theme =>
+          getCardBackgroundThemeColor(theme, { isRead })
+        }
+        style={cardStyles.container}
       >
         {!!isFocused && <CardFocusBorder />}
 
@@ -491,13 +457,13 @@ export const IssueOrPullRequestCard = React.memo(
           <View
             style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
           >
-            <SpringAnimatedIcon
+            <ThemedIcon
+              color={cardIconColor || 'foregroundColor'}
               name={cardIconName}
               selectable={false}
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
               {...!!cardIconDetails.tooltip &&
                 Platform.select({
@@ -539,7 +505,7 @@ export const IssueOrPullRequestCard = React.memo(
             </View>
           </View>
         </View>
-      </SpringAnimatedView>
+      </ThemedView>
     )
   },
 )

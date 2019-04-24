@@ -13,30 +13,30 @@ import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
 import { findNode } from '../../utils/helpers/shared'
-import {
-  SpringAnimatedText,
-  SpringAnimatedTextProps,
-} from '../animated/spring/SpringAnimatedText'
-import {
-  SpringAnimatedTouchableOpacity,
-  SpringAnimatedTouchableOpacityProps,
-} from '../animated/spring/SpringAnimatedTouchableOpacity'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
+import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
+import { ThemedView } from '../themed/ThemedView'
+import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export interface LinkProps
-  extends Omit<SpringAnimatedTouchableOpacityProps, 'analyticsLabel'> {
+  extends Omit<TouchableOpacityProps, 'analyticsLabel'> {
   allowEmptyLink?: boolean
-  analyticsLabel?: SpringAnimatedTouchableOpacityProps['analyticsLabel']
+  analyticsLabel?: TouchableOpacityProps['analyticsLabel']
+  backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
   enableTextWrapper?: boolean
-  hoverBackgroundThemeColor?: keyof ThemeColors
-  hoverForegroundThemeColor?: keyof ThemeColors
+  hoverBackgroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
+  hoverForegroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
   href?: string
-  mobileProps?: SpringAnimatedTouchableOpacityProps
+  mobileProps?: TouchableOpacityProps
   openOnNewTab?: boolean
-  textProps?: SpringAnimatedTextProps
+  textProps?: ThemedTextProps
   tooltip?: string
   webProps?: AnchorHTMLAttributes<HTMLAnchorElement>
 }
@@ -45,11 +45,12 @@ export function Link(props: LinkProps) {
   const {
     allowEmptyLink,
     analyticsLabel,
+    backgroundThemeColor,
     enableBackgroundHover,
     enableForegroundHover = true,
     enableTextWrapper,
-    hoverBackgroundThemeColor,
-    hoverForegroundThemeColor,
+    hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
+    hoverForegroundThemeColor: _hoverForegroundThemeColor,
     href,
     openOnNewTab: _openOnNewTab = true,
     textProps,
@@ -69,18 +70,32 @@ export function Link(props: LinkProps) {
 
     const { isHovered, theme } = cacheRef.current
 
+    const hoverBackgroundThemeColor = getThemeColorOrItself(
+      theme,
+      _hoverBackgroundThemeColor,
+    )
+    const hoverForegroundThemeColor = getThemeColorOrItself(
+      theme,
+      _hoverForegroundThemeColor,
+    )
+
     if (containerRef.current) {
       const hoverBackgroundColor = enableBackgroundHover
-        ? (hoverBackgroundThemeColor && theme[hoverBackgroundThemeColor]) ||
+        ? (hoverBackgroundThemeColor && hoverBackgroundThemeColor) ||
           rgba(theme.invert().foregroundColor, 0.2)
         : undefined
+
+      const backgroundColor =
+        (backgroundThemeColor &&
+          getThemeColorOrItself(theme, backgroundThemeColor)) ||
+        flatContainerStyle.backgroundColor
 
       containerRef.current!.setNativeProps({
         style: {
           backgroundColor:
             hoverBackgroundColor && isHovered
               ? hoverBackgroundColor
-              : flatContainerStyle.backgroundColor ||
+              : backgroundColor ||
                 (hoverBackgroundColor ? rgba(hoverBackgroundColor, 0) : null),
         },
       })
@@ -88,27 +103,35 @@ export function Link(props: LinkProps) {
 
     if (textRef.current) {
       const hoverForegroundColor = enableForegroundHover
-        ? (hoverForegroundThemeColor && theme[hoverForegroundThemeColor]) ||
+        ? (hoverForegroundThemeColor && hoverForegroundThemeColor) ||
           theme.primaryBackgroundColor
         : undefined
+
+      const color =
+        (textProps &&
+          textProps.color &&
+          getThemeColorOrItself(theme, textProps.color)) ||
+        flatTextStyle.color
 
       textRef.current.setNativeProps({
         style: {
           color:
             hoverForegroundColor && isHovered
               ? hoverForegroundColor
-              : flatTextStyle.color ||
+              : color ||
                 (hoverForegroundColor ? rgba(hoverForegroundColor, 0) : null),
         },
       })
     }
   }, [
+    _hoverBackgroundThemeColor,
+    _hoverForegroundThemeColor,
+    backgroundThemeColor,
     enableBackgroundHover,
     enableForegroundHover,
     flatContainerStyle.backgroundColor,
     flatTextStyle.color,
-    hoverBackgroundThemeColor,
-    hoverForegroundThemeColor,
+    textProps && textProps.color,
   ])
 
   const initialTheme = useTheme(
@@ -126,10 +149,13 @@ export function Link(props: LinkProps) {
   const textRef = useRef<Text>(null)
   useHover(
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
-    isHovered => {
-      cacheRef.current.isHovered = isHovered
-      updateStyles()
-    },
+    useCallback(
+      isHovered => {
+        cacheRef.current.isHovered = isHovered
+        updateStyles()
+      },
+      [updateStyles],
+    ),
   )
 
   useEffect(() => {
@@ -187,13 +213,12 @@ export function Link(props: LinkProps) {
     (typeof finalProps.children !== 'string' && enableTextWrapper === true)
   ) {
     finalProps.children = (
-      <SpringAnimatedText ref={textRef} {...textProps}>
+      <ThemedText ref={textRef} {...textProps}>
         {finalProps.children}
-      </SpringAnimatedText>
+      </ThemedText>
     )
   }
 
-  if (!renderTouchable)
-    return <SpringAnimatedView ref={containerRef} {...finalProps} />
-  return <SpringAnimatedTouchableOpacity ref={containerRef} {...finalProps} />
+  if (!renderTouchable) return <ThemedView ref={containerRef} {...finalProps} />
+  return <TouchableOpacity ref={containerRef} {...finalProps} />
 }

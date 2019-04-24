@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Link } from './Link'
 
 const pkg = require('@devhub/core/package.json') // tslint:disable-line
@@ -22,8 +21,6 @@ const styles = StyleSheet.create({
 })
 
 export function AppVersion() {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   return (
     <Link
       analyticsLabel="app_version"
@@ -31,10 +28,8 @@ export function AppVersion() {
       openOnNewTab
       style={styles.appVersionLink}
       textProps={{
-        style: [
-          styles.appVersion,
-          { color: springAnimatedTheme.foregroundColorMuted50 },
-        ],
+        color: 'foregroundColorMuted50',
+        style: styles.appVersion,
       }}
     >
       {`v${appVersion}`}

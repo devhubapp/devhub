@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Omit } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../../../hooks/use-redux-action'
 import { useReduxState } from '../../../../hooks/use-redux-state'
 import { analytics } from '../../../../libs/analytics'
@@ -12,9 +11,9 @@ import * as actions from '../../../../redux/actions'
 import * as selectors from '../../../../redux/selectors'
 import { tryParseOAuthParams } from '../../../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../../../utils/helpers/shared'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Link } from '../../../common/Link'
-import { getCardStylesForTheme } from '../../styles'
+import { ThemedText } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
@@ -31,8 +30,6 @@ export interface PrivateNotificationRowProps
 export const PrivateNotificationRow = React.memo(
   (props: PrivateNotificationRowProps) => {
     const { ownerId, repoId, ...otherProps } = props
-
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const existingAppToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -78,11 +75,8 @@ export const PrivateNotificationRow = React.memo(
             onPress={() => startOAuth()}
             style={cardRowStyles.mainContentContainer}
             textProps={{
-              style: [
-                getCardStylesForTheme(springAnimatedTheme).commentText,
-                getCardStylesForTheme(springAnimatedTheme).mutedText,
-                { fontStyle: 'italic' },
-              ],
+              color: 'foregroundColorMuted50',
+              style: [cardStyles.commentText, { fontStyle: 'italic' }],
             }}
           >
             Required permission is missing. Tap to login again.
@@ -100,11 +94,8 @@ export const PrivateNotificationRow = React.memo(
           openOnNewTab={false}
           style={cardRowStyles.mainContentContainer}
           textProps={{
-            style: [
-              getCardStylesForTheme(springAnimatedTheme).commentText,
-              getCardStylesForTheme(springAnimatedTheme).mutedText,
-              { fontStyle: 'italic' },
-            ],
+            color: 'foregroundColorMuted50',
+            style: [cardStyles.commentText, { fontStyle: 'italic' }],
           }}
         >
           Install the GitHub App on this repo to unlock details from private
@@ -139,15 +130,12 @@ export const PrivateNotificationRow = React.memo(
                   },
                 ]}
               >
-                <SpringAnimatedText
-                  style={[
-                    getCardStylesForTheme(springAnimatedTheme).commentText,
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    { fontStyle: 'italic' },
-                  ]}
+                <ThemedText
+                  color="foregroundColorMuted50"
+                  style={[cardStyles.commentText, { fontStyle: 'italic' }]}
                 >
                   Checking required permissions...
-                </SpringAnimatedText>
+                </ThemedText>
               </View>
             )}
           </>

@@ -11,8 +11,8 @@ import {
   GitHubNotificationSubjectType,
   GitHubPullRequest,
   sortNotifications,
+  ThemeColors,
 } from '@devhub/core'
-import { StaticThemeColors } from '@devhub/core/src'
 import { bugsnag } from '../../../libs/bugsnag'
 import {
   getCommitIconAndColor,
@@ -56,30 +56,29 @@ export function getNotificationSubjectType(
 export function getNotificationIconAndColor(
   notification: GitHubNotification,
   payload: GitHubIssueOrPullRequest | undefined,
-  colors: StaticThemeColors,
-): { icon: GitHubIcon; color?: string; tooltip: string } {
+): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
   const { subject } = notification
   const { type } = subject
 
   switch (type) {
     case 'Commit':
-      return getCommitIconAndColor(colors)
+      return getCommitIconAndColor()
     case 'Issue':
-      return getIssueIconAndColor(payload as GitHubIssue, colors)
+      return getIssueIconAndColor(payload as GitHubIssue)
     case 'PullRequest':
-      return getPullRequestIconAndColor(payload as GitHubPullRequest, colors)
+      return getPullRequestIconAndColor(payload as GitHubPullRequest)
     case 'Release':
-      return getReleaseIconAndColor(colors)
+      return getReleaseIconAndColor()
     case 'RepositoryInvitation':
       return {
         icon: 'mail',
-        color: colors.brown,
+        color: 'brown',
         tooltip: 'Repository invitation',
       }
     case 'RepositoryVulnerabilityAlert':
       return {
         icon: 'alert',
-        color: colors.yellow,
+        color: 'yellow',
         tooltip: 'Repository vulnerability alert',
       }
     default: {
@@ -95,9 +94,8 @@ export function getNotificationReasonMetadata<
   T extends GitHubNotificationReason
 >(
   reason: T,
-  colors: StaticThemeColors,
 ): {
-  color: string
+  color: keyof ThemeColors
   reason: T
   label: string
   fullDescription: string
@@ -107,7 +105,7 @@ export function getNotificationReasonMetadata<
     case 'assign':
       return {
         reason,
-        color: colors.pink,
+        color: 'pink',
         fullDescription: 'You were assigned to the thread',
         // smallDescription: 'You were assigned',
         label: 'Assigned',
@@ -116,7 +114,7 @@ export function getNotificationReasonMetadata<
     case 'author':
       return {
         reason,
-        color: colors.lightRed,
+        color: 'lightRed',
         fullDescription: 'You created the thread',
         // smallDescription: 'You created',
         label: 'Author',
@@ -125,7 +123,7 @@ export function getNotificationReasonMetadata<
     case 'comment':
       return {
         reason,
-        color: colors.blue,
+        color: 'blue',
         fullDescription: 'You commented on the thread',
         // smallDescription: 'You commented',
         label: 'Commented',
@@ -134,7 +132,7 @@ export function getNotificationReasonMetadata<
     case 'invitation':
       return {
         reason,
-        color: colors.brown,
+        color: 'brown',
         fullDescription:
           'You accepted an invitation to contribute to the repository',
         // smallDescription: 'You were invited',
@@ -144,7 +142,7 @@ export function getNotificationReasonMetadata<
     case 'manual':
       return {
         reason,
-        color: colors.teal,
+        color: 'teal',
         fullDescription: 'You manually subscribed to the thread',
         // smallDescription: 'You subscribed manually',
         label: 'Manual',
@@ -153,7 +151,7 @@ export function getNotificationReasonMetadata<
     case 'mention':
       return {
         reason,
-        color: colors.orange,
+        color: 'orange',
         fullDescription: 'You were @mentioned in the thread',
         // smallDescription: 'You were mentioned',
         label: 'Mentioned',
@@ -162,7 +160,7 @@ export function getNotificationReasonMetadata<
     case 'state_change':
       return {
         reason,
-        color: colors.purple,
+        color: 'purple',
         fullDescription: 'You opened or closed the issue/pr',
         // smallDescription: 'You opened/closed',
         label: 'State changed',
@@ -171,7 +169,7 @@ export function getNotificationReasonMetadata<
     case 'subscribed':
       return {
         reason,
-        color: colors.blueGray,
+        color: 'blueGray',
         fullDescription: "You're watching the repository",
         // smallDescription: 'You are watching',
         label: 'Watching',
@@ -180,7 +178,7 @@ export function getNotificationReasonMetadata<
     case 'team_mention':
       return {
         reason,
-        color: colors.yellow,
+        color: 'yellow',
         fullDescription: 'Your team was mentioned in the thread',
         // smallDescription: 'Team mentioned',
         label: 'Team mentioned',
@@ -189,7 +187,7 @@ export function getNotificationReasonMetadata<
     case 'review_requested':
       return {
         reason,
-        color: colors.yellow,
+        color: 'yellow',
         fullDescription: 'Someone requested your review in the pull request',
         // smallDescription: 'Review requested',
         label: 'Review requested',
@@ -198,7 +196,7 @@ export function getNotificationReasonMetadata<
     case 'security_alert':
       return {
         reason,
-        color: colors.red,
+        color: 'red',
         fullDescription: 'Potential security vulnerability found',
         // smallDescription: 'Security alert',
         label: 'Security',
@@ -207,7 +205,7 @@ export function getNotificationReasonMetadata<
     default:
       return {
         reason,
-        color: colors.gray,
+        color: 'gray',
         fullDescription: '',
         // smallDescription: '',
         label: capitalize(reason),

@@ -9,19 +9,18 @@ import {
   getUserAvatarByUsername,
   Omit,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
 import {
-  SpringAnimatedImageWithLoading,
-  SpringAnimatedImageWithLoadingProps,
-} from '../animated/spring/SpringAnimatedImageWithLoading'
+  ThemedImageWithLoading,
+  ThemedImageWithLoadingProps,
+} from '../themed/ThemedImageWithLoading'
 import { ConditionalWrap } from './ConditionalWrap'
 import { Link } from './Link'
 import { TouchableOpacityProps } from './TouchableOpacity'
 
 export interface AvatarProps
-  extends Partial<Omit<SpringAnimatedImageWithLoadingProps, 'tooltip'>> {
+  extends Partial<Omit<ThemedImageWithLoadingProps, 'tooltip'>> {
   avatarUrl?: string
   disableLink?: boolean
   email?: string
@@ -40,8 +39,6 @@ export interface AvatarProps
 export const size = avatarSize
 
 export function Avatar(props: AvatarProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     avatarUrl: _avatarUrl,
     disableLink,
@@ -113,10 +110,10 @@ export function Avatar(props: AvatarProps) {
         )
       }
     >
-      <SpringAnimatedImageWithLoading
+      <ThemedImageWithLoading
         backgroundColorFailed="#FFFFFF"
         backgroundColorLoaded="#FFFFFF"
-        backgroundColorLoading={springAnimatedTheme.backgroundColorLess1}
+        backgroundColorLoading="backgroundColorLess1"
         {...otherProps}
         source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
         style={[

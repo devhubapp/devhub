@@ -33,9 +33,7 @@ import {
   isItemRead,
   isTagMainEvent,
   MultipleStarEvent,
-  Theme,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -47,16 +45,15 @@ import {
 } from '../../styles/variables'
 import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import { tryFocus } from '../../utils/helpers/shared'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { getColumnCardThemeColors } from '../columns/ColumnRenderer'
+import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
 import { ToggleReadButton } from '../common/ToggleReadButton'
-import { useTheme } from '../context/ThemeContext'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
+import { ThemedView } from '../themed/ThemedView'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { ActorActionRow } from './partials/rows/ActorActionRow'
@@ -71,11 +68,7 @@ import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { innerCardSpacing } from './partials/rows/styles'
 import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
-import {
-  cardStyles,
-  getCardStylesForTheme,
-  spacingBetweenLeftAndRightColumn,
-} from './styles'
+import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface EventCardProps {
   cardViewMode: CardViewMode
@@ -95,21 +88,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
   } = props
 
   const itemRef = useRef<View>(null)
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
-  const themeRef = useRef<Theme | null>(null)
-  const initialTheme = useTheme(theme => {
-    themeRef.current = theme
-
-    if (itemRef.current) {
-      itemRef.current.setNativeProps({
-        style: {
-          backgroundColor: theme[getBackgroundThemeColor()],
-        },
-      })
-    }
-  })
-  themeRef.current = initialTheme
 
   const repoTableColumnWidth = useRepoTableColumnWidth()
 
@@ -225,7 +203,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
     forkRepoFullName,
   )
 
-  const cardIconDetails = getEventIconAndColor(event, springAnimatedTheme)
+  const cardIconDetails = getEventIconAndColor(event)
   const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
   const cardIconColor = cardIconDetails.color
 
@@ -256,19 +234,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
     : undefined
 
   const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
-
-  function getBackgroundThemeColor() {
-    const backgroundThemeColors = getColumnCardThemeColors(
-      themeRef.current!.backgroundColor,
-    )
-    const _backgroundThemeColor =
-      // (isFocused && 'backgroundColorLess2') ||
-      (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
-
-    return _backgroundThemeColor
-  }
-
-  const backgroundThemeColor = getBackgroundThemeColor()
 
   let withTopMargin = cardViewMode !== 'compact'
   let withTopMarginCount = withTopMargin ? 1 : 0
@@ -374,7 +339,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
             key={`event-issue-or-pr-row-${issueOrPullRequest.id}`}
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
-            backgroundThemeColor={backgroundThemeColor}
+            backgroundThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { isRead })
+            }
             body={issueOrPullRequest.body}
             bold
             commentsCount={issueOrPullRequest.comments}
@@ -485,15 +452,15 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   if (cardViewMode === 'compact') {
     return (
-      <SpringAnimatedView
+      <ThemedView
         key={`event-card-${id}-compact-inner`}
         ref={itemRef}
+        backgroundColor={theme =>
+          getCardBackgroundThemeColor(theme, { isRead })
+        }
         style={[
           cardStyles.compactContainer,
           alignVertically && { alignItems: 'center' },
-          {
-            backgroundColor: springAnimatedTheme[backgroundThemeColor],
-          },
         ]}
       >
         {!!isFocused && <CardFocusBorder />}
@@ -503,7 +470,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {/* <View
           style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
         >
-          <SpringAnimatedCheckbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
+          <Checkbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
         </View>
 
         <Spacer width={contentPadding} /> */}
@@ -590,13 +557,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
               cardStyles.compactItemFixedHeight,
             ]}
           >
-            <SpringAnimatedIcon
+            <ThemedIcon
+              color={cardIconColor || 'foregroundColor'}
               name={cardIconName}
               selectable={false}
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                color: cardIconColor || springAnimatedTheme.foregroundColor,
               }}
               {...!!actionTextWithoutColon &&
                 Platform.select({
@@ -622,7 +589,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
           issueOrPullRequest.labels.length > 0 && (
             <>
               <LabelsView
-                backgroundThemeColor={backgroundThemeColor}
+                backgroundThemeColor={theme =>
+                  getCardBackgroundThemeColor(theme, { isRead })
+                }
                 enableScrollView={isSingleRow}
                 labels={issueOrPullRequest.labels.map(label => ({
                   key: `issue-or-pr-row-${
@@ -643,7 +612,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                       : 0),
                   overflow: 'hidden',
                 }}
-                textColor={springAnimatedTheme.foregroundColorMuted50}
+                textThemeColor="foregroundColorMuted50"
               />
 
               <Spacer width={spacingBetweenLeftAndRightColumn} />
@@ -663,10 +632,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
                 if (!dateText) return null
 
                 return (
-                  <SpringAnimatedText
+                  <ThemedText
+                    color="foregroundColorMuted50"
                     numberOfLines={1}
                     style={[
-                      getCardStylesForTheme(springAnimatedTheme).timestampText,
+                      cardStyles.timestampText,
                       cardStyles.smallText,
                       { fontSize: smallerTextSize },
                     ]}
@@ -676,11 +646,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   >
                     {!!isPrivate && (
                       <>
-                        <SpringAnimatedIcon name="lock" />{' '}
+                        <ThemedIcon name="lock" />{' '}
                       </>
                     )}
                     {dateText}
-                  </SpringAnimatedText>
+                  </ThemedText>
                 )
               }}
             </IntervalRefresh>
@@ -697,20 +667,16 @@ export const EventCard = React.memo((props: EventCardProps) => {
             type="activity"
           />
         </View>
-      </SpringAnimatedView>
+      </ThemedView>
     )
   }
 
   return (
-    <SpringAnimatedView
+    <ThemedView
       key={`event-card-${id}-inner`}
       ref={itemRef}
-      style={[
-        cardStyles.container,
-        {
-          backgroundColor: springAnimatedTheme[backgroundThemeColor],
-        },
-      ]}
+      backgroundColor={theme => getCardBackgroundThemeColor(theme, { isRead })}
+      style={cardStyles.container}
     >
       {!!isFocused && <CardFocusBorder />}
 
@@ -726,13 +692,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <View
           style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
         >
-          <SpringAnimatedIcon
+          <ThemedIcon
+            color={cardIconColor || 'foregroundColor'}
             name={cardIconName}
             selectable={false}
             style={{
               fontSize: columnHeaderItemContentSize,
               textAlign: 'center',
-              color: cardIconColor || springAnimatedTheme.foregroundColor,
             }}
             {...!!actionTextWithoutColon &&
               Platform.select({
@@ -748,7 +714,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             key={`event-card-header-${id}`}
             actionText={actionText}
             avatarUrl={avatarUrl}
-            backgroundThemeColor={backgroundThemeColor}
             date={event.created_at}
             ids={('merged' in event && event.merged) || [id]}
             isBot={isBot}
@@ -769,6 +734,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
           </View>
         </View>
       </View>
-    </SpringAnimatedView>
+    </ThemedView>
   )
 })

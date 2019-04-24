@@ -6,14 +6,12 @@ export interface KeyboardShortcutsModalProps {
   showBackButton: boolean
 }
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallTextSize } from '../../styles/variables'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Spacer } from '../common/Spacer'
-import { useTheme } from '../context/ThemeContext'
+import { ThemedText } from '../themed/ThemedText'
+import { ThemedView } from '../themed/ThemedView'
 
 export const keyboardShortcutsById = {
   closeModal: { keys: ['Esc'], description: 'Close currently open modal' },
@@ -74,9 +72,6 @@ export const keyboardShortcuts = [
 export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
   const { showBackButton } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const theme = useTheme()
-
   return (
     <ModalColumn
       iconName="keyboard"
@@ -96,40 +91,38 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
                   }}
                 >
                   {ks.keys.map(key => (
-                    <SpringAnimatedView
+                    <ThemedView
                       key={`keyboard-shortcut-label-${index}-${key}`}
+                      backgroundColor="backgroundColorLess2"
                       style={{
                         alignSelf: 'flex-start',
                         marginBottom: contentPadding / 2,
                         marginRight: contentPadding / 2,
                         paddingVertical: contentPadding / 4,
                         paddingHorizontal: contentPadding / 2,
-                        backgroundColor: theme.backgroundColorLess2,
                         borderRadius: contentPadding,
                       }}
                     >
-                      <SpringAnimatedText
-                        style={{
-                          fontSize: smallTextSize,
-                          color: theme.foregroundColor,
-                        }}
+                      <ThemedText
+                        color="foregroundColor"
+                        style={{ fontSize: smallTextSize }}
                       >
                         {key}
-                      </SpringAnimatedText>
-                    </SpringAnimatedView>
+                      </ThemedText>
+                    </ThemedView>
                   ))}
                 </View>
               </View>
 
-              <SpringAnimatedText
+              <ThemedText
+                color="foregroundColor"
                 style={{
                   marginBottom: contentPadding,
                   lineHeight: 16,
-                  color: springAnimatedTheme.foregroundColor,
                 }}
               >
                 {ks.description}
-              </SpringAnimatedText>
+              </ThemedText>
             </View>
             <Spacer height={contentPadding / 2} />
           </Fragment>

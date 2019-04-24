@@ -2,20 +2,19 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { fabSize } from '../common/FAB'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
+import { ThemedView } from '../themed/ThemedView'
 
 const spacing = fabSpacing
 
@@ -36,6 +35,29 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
   },
+
+  leftSwitcher: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: fabSize,
+    height: fabSize,
+    borderRadius: 0,
+    borderTopLeftRadius: fabSize / 2,
+    borderBottomLeftRadius: fabSize / 2,
+    opacity: 1,
+  },
+
+  rightSwitcher: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: fabSize,
+    height: fabSize,
+    borderRadius: 0,
+    borderTopRightRadius: fabSize / 2,
+    borderBottomRightRadius: fabSize / 2,
+  },
 })
 
 export function ColumnSwitcher() {
@@ -43,7 +65,6 @@ export function ColumnSwitcher() {
   const { focusedColumnId } = useFocusedColumn()
   const { isSharedFiltersOpened } = useColumnFilters()
   const { sizename } = useAppLayout()
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
 
@@ -60,16 +81,10 @@ export function ColumnSwitcher() {
   const isLast = focusedColumnId === columnIds.slice(-1)[0]
 
   return (
-    <SpringAnimatedView
-      style={[
-        styles.container,
-        {
-          backgroundColor: springAnimatedTheme.backgroundColorMore1,
-        },
-      ]}
-    >
-      <SpringAnimatedTouchableOpacity
+    <ThemedView backgroundColor="backgroundColorMore1" style={styles.container}>
+      <ThemedTouchableOpacity
         analyticsCategory="switch-column-previous"
+        backgroundColor="backgroundColor"
         hitSlop={{
           top: contentPadding / 2,
           bottom: contentPadding / 2,
@@ -80,36 +95,21 @@ export function ColumnSwitcher() {
             highlight: isFirst,
           })
         }}
-        style={[
-          {
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'center',
-            width: fabSize,
-            height: fabSize,
-            borderRadius: 0,
-            borderTopLeftRadius: fabSize / 2,
-            borderBottomLeftRadius: fabSize / 2,
-            backgroundColor: springAnimatedTheme.backgroundColor,
-            opacity: isFirst ? 0.5 : 1,
-          },
-        ]}
+        style={[styles.leftSwitcher, !!isFirst && { opacity: 0.5 }]}
         tooltip={`Previous column (${
           keyboardShortcutsById.selectPreviousColumn.keys[0]
         })`}
       >
-        <SpringAnimatedIcon
+        <ThemedIcon
+          color="foregroundColor"
           name="chevron-left"
           size={14}
-          style={{
-            lineHeight: fabSize / 2.5,
-            fontSize: fabSize / 2.5,
-            color: springAnimatedTheme.foregroundColor,
-          }}
+          style={{ lineHeight: fabSize / 2.5, fontSize: fabSize / 2.5 }}
         />
-      </SpringAnimatedTouchableOpacity>
-      <SpringAnimatedTouchableOpacity
+      </ThemedTouchableOpacity>
+      <ThemedTouchableOpacity
         analyticsCategory="switch-column-next"
+        backgroundColor="backgroundColor"
         hitSlop={{
           top: contentPadding / 2,
           bottom: contentPadding / 2,
@@ -120,34 +120,18 @@ export function ColumnSwitcher() {
             highlight: isLast,
           })
         }}
-        style={[
-          {
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'center',
-            width: fabSize,
-            height: fabSize,
-            borderRadius: 0,
-            borderTopRightRadius: fabSize / 2,
-            borderBottomRightRadius: fabSize / 2,
-            backgroundColor: springAnimatedTheme.backgroundColor,
-            opacity: isLast ? 0.5 : 1,
-          },
-        ]}
+        style={[styles.rightSwitcher, isLast && { opacity: 0.5 }]}
         tooltip={`Next column (${
           keyboardShortcutsById.selectNextColumn.keys[0]
         })`}
       >
-        <SpringAnimatedIcon
+        <ThemedIcon
+          color="foregroundColor"
           name="chevron-right"
           size={14}
-          style={{
-            lineHeight: fabSize / 2.5,
-            fontSize: fabSize / 2.5,
-            color: springAnimatedTheme.foregroundColor,
-          }}
+          style={{ lineHeight: fabSize / 2.5, fontSize: fabSize / 2.5 }}
         />
-      </SpringAnimatedTouchableOpacity>
-    </SpringAnimatedView>
+      </ThemedTouchableOpacity>
+    </ThemedView>
   )
 }

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TextProps,
+  View,
   ViewProps,
   ViewStyle,
 } from 'react-native'
@@ -13,13 +14,12 @@ import { Platform } from '../../libs/platform'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface LabelProps {
-  backgroundThemeColor?: keyof ThemeColors
-  borderColor?: string
+  backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  borderThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   children: ReactNode
   color?: string
   containerProps?: ViewProps
@@ -30,8 +30,8 @@ export interface LabelProps {
   outline?: boolean
   radius?: number
   small?: boolean
-  textColor?: string
   textProps?: TextProps
+  textThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
 }
 
 export const hiddenLabelSize = { width: 10, height: 10 }
@@ -40,8 +40,9 @@ export function Label(props: LabelProps) {
   const theme = useTheme()
 
   const {
-    backgroundThemeColor = 'backgroundColor',
-    borderColor: _borderColor,
+    backgroundThemeColor: _backgroundThemeColor = 'backgroundColor',
+    borderThemeColor: _borderThemeColor,
+    textThemeColor: _textThemeColor,
     children,
     color: _color,
     containerProps = {},
@@ -52,39 +53,45 @@ export function Label(props: LabelProps) {
     outline,
     radius,
     small,
-    textColor: _textColor,
     textProps = {},
   } = props
 
+  const backgroundThemeColor = getThemeColorOrItself(
+    theme,
+    _backgroundThemeColor,
+  )!
+  const borderThemeColor = getThemeColorOrItself(theme, _borderThemeColor)
+  const textThemeColor = getThemeColorOrItself(theme, _textThemeColor)
+
   const color = _color || theme.foregroundColorMuted50
 
-  const circleColor = getReadableColor(color, theme[backgroundThemeColor], 0.3)
+  const circleColor = getReadableColor(color, backgroundThemeColor, 0.3)
 
   const backgroundColor = outline
     ? undefined
     : hideText
     ? circleColor
-    : theme[backgroundThemeColor]
+    : backgroundThemeColor
 
   const foregroundColor =
-    _textColor ||
+    textThemeColor ||
     (backgroundColor
       ? getReadableColor(backgroundColor, backgroundColor, 0.4)
-      : getReadableColor(color, theme[backgroundThemeColor], 0.4))
+      : getReadableColor(color, backgroundThemeColor, 0.4))
 
   const borderColor =
-    _borderColor ||
+    borderThemeColor ||
     (outline
       ? foregroundColor
       : hideText
-      ? theme[backgroundThemeColor]
+      ? backgroundThemeColor
       : backgroundColor)
 
   const width = hideText ? hiddenLabelSize.width : undefined
   const height = hideText ? hiddenLabelSize.height : small ? 16 : 18
 
   return (
-    <SpringAnimatedView
+    <View
       {...containerProps}
       style={[
         hideText ? { width } : { minWidth: width },
@@ -110,7 +117,7 @@ export function Label(props: LabelProps) {
       {!hideText && (
         <>
           {/* <Spacer width={contentPadding / (small ? 3 : 2)} /> */}
-          <SpringAnimatedView
+          <View
             style={[
               {
                 width: 6,
@@ -124,7 +131,7 @@ export function Label(props: LabelProps) {
         </>
       )}
 
-      <SpringAnimatedText
+      <Text
         numberOfLines={1}
         {...textProps}
         style={[
@@ -165,7 +172,7 @@ export function Label(props: LabelProps) {
               },
             })
           : children}
-      </SpringAnimatedText>
-    </SpringAnimatedView>
+      </Text>
+    </View>
   )
 }

@@ -2,11 +2,9 @@ import React, { ReactNode } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
-import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { Separator } from '../common/Separator'
-import { useTheme } from '../context/ThemeContext'
+import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
 
 export function getColumnHeaderThemeColors(
   _backgroundColor?: string,
@@ -59,22 +57,14 @@ const styles = StyleSheet.create({
 })
 
 export function ColumnHeader(props: ColumnHeaderProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const theme = useTheme()
-
   const { children, noPadding, style, ...otherProps } = props
 
   return (
-    <SpringAnimatedSafeAreaView
-      style={[
-        styles.container,
-        {
-          backgroundColor:
-            springAnimatedTheme[
-              getColumnHeaderThemeColors(theme.backgroundColor).normal
-            ],
-        },
-      ]}
+    <ThemedSafeAreaView
+      backgroundColor={theme =>
+        theme[getColumnHeaderThemeColors(theme.backgroundColor).normal]
+      }
+      style={styles.container}
     >
       <View
         {...otherProps}
@@ -88,6 +78,6 @@ export function ColumnHeader(props: ColumnHeaderProps) {
       </View>
 
       {!!children && <Separator horizontal />}
-    </SpringAnimatedSafeAreaView>
+    </ThemedSafeAreaView>
   )
 }

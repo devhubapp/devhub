@@ -4,7 +4,6 @@ import { View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import { GitHubIcon } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import {
@@ -12,7 +11,6 @@ import {
   contentPadding,
 } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
@@ -22,6 +20,7 @@ import {
   TouchableOpacityProps,
 } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
+import { ThemedText } from '../themed/ThemedText'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 
@@ -59,8 +58,6 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     subtitle,
     title,
   } = props
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
@@ -190,28 +187,24 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
           <Spacer width={contentPadding / 2} />
 
-          <SpringAnimatedText
+          <ThemedText
+            color="foregroundColor"
             numberOfLines={1}
-            style={{
-              color: springAnimatedTheme.foregroundColor,
-              fontWeight: '500',
-            }}
+            style={{ fontWeight: '500' }}
           >
             {title}
-          </SpringAnimatedText>
+          </ThemedText>
 
           <Spacer flex={1} minWidth={contentPadding / 2} />
 
           {!!(subtitle || hasChanged) && (
-            <SpringAnimatedText
+            <ThemedText
+              color="foregroundColorMuted50"
               numberOfLines={1}
-              style={{
-                fontSize: 12,
-                color: springAnimatedTheme.foregroundColorMuted50,
-              }}
+              style={{ fontSize: 12 }}
             >
               {subtitle || '●'}
-            </SpringAnimatedText>
+            </ThemedText>
           )}
 
           {!!onToggle && (

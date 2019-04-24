@@ -2,12 +2,11 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { getGitHubURLForUser, Omit } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
-import { cardRowStyles, getCardRowStylesForTheme } from './styles'
+import { cardRowStyles } from './styles'
 
 export interface UserRowProps
   extends Omit<
@@ -26,8 +25,6 @@ export interface UserRowProps
 export interface UserRowState {}
 
 export const UserRow = React.memo((props: UserRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     avatarUrl,
     bold,
@@ -59,12 +56,11 @@ export const UserRow = React.memo((props: UserRowProps) => {
               showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
             }
             textProps={{
-              style: [
-                getCardRowStylesForTheme(springAnimatedTheme).usernameText,
-                bold && !isRead && cardStyles.boldText,
-                (isRead || showMoreItemsIndicator) &&
-                  getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ],
+              color:
+                isRead || showMoreItemsIndicator
+                  ? 'foregroundColorMuted50'
+                  : 'foregroundColor',
+              style: [bold && !isRead && cardStyles.boldText],
             }}
           >
             {showMoreItemsIndicator ? '...' : username}

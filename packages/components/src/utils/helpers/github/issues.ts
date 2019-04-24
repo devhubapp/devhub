@@ -7,7 +7,6 @@ import {
   GitHubIssueOrPullRequestSubjectType,
   GitHubPullRequest,
   sortIssuesOrPullRequests,
-  StaticThemeColors,
 } from '@devhub/core'
 import { getIssueIconAndColor, getPullRequestIconAndColor } from './shared'
 
@@ -19,14 +18,10 @@ export const issueOrPullRequestSubjectTypes: GitHubIssueOrPullRequestSubjectType
 export function getIssueOrPullRequestIconAndColor(
   type: GitHubIssueOrPullRequestSubjectType,
   issueOrPullRequest: GitHubIssueOrPullRequest,
-  colors: StaticThemeColors,
 ) {
   return type === 'PullRequest'
-    ? getPullRequestIconAndColor(
-        issueOrPullRequest as GitHubPullRequest,
-        colors,
-      )
-    : getIssueIconAndColor(issueOrPullRequest as GitHubIssue, colors)
+    ? getPullRequestIconAndColor(issueOrPullRequest as GitHubPullRequest)
+    : getIssueIconAndColor(issueOrPullRequest as GitHubIssue)
 }
 
 export function mergeIssuesOrPullRequestsPreservingEnhancement(

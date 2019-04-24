@@ -2,14 +2,13 @@ import React from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { GitHubIcon, ThemeColors } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../libs/platform'
 import { radius } from '../../../styles/variables'
 import { fixURL } from '../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedLink } from '../../animated/spring/SpringAnimatedLink'
-import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
-import { getCardStylesForTheme } from '../styles'
+import { Link } from '../../common/Link'
+import { ThemedIcon } from '../../themed/ThemedIcon'
+import { ThemedText } from '../../themed/ThemedText'
+import { cardStyles } from '../styles'
 
 export interface CardSmallThingProps {
   backgroundColorTheme?: keyof ThemeColors
@@ -38,34 +37,30 @@ const styles = StyleSheet.create({
 export function CardSmallThing(props: CardSmallThingProps) {
   const { backgroundColorTheme, icon, style, text, url } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const hasText = typeof text === 'number' || !!text
   if (!(hasText || icon)) return null
 
-  const springAnimatedTextStyles = [
-    getCardStylesForTheme(springAnimatedTheme).smallerMutedText,
-  ]
-
   return (
-    <SpringAnimatedLink
+    <Link
+      backgroundThemeColor={backgroundColorTheme}
+      // borderThemeColor={backgroundColorTheme}
       href={fixURL(url)}
       style={[
         styles.container,
         backgroundColorTheme && {
           paddingHorizontal: 4,
-          backgroundColor: springAnimatedTheme[backgroundColorTheme],
-          borderColor: springAnimatedTheme[backgroundColorTheme],
+          borderWidth: 0,
         },
         style,
       ]}
     >
       <View style={styles.innerContainer}>
         {!!icon && (
-          <SpringAnimatedIcon
+          <ThemedIcon
+            color="foregroundColorMuted50"
             name={icon}
             style={[
-              springAnimatedTextStyles,
+              cardStyles.smallerText,
               {
                 lineHeight: undefined,
                 marginTop: Platform.select({ web: 3, default: 4 }),
@@ -76,11 +71,14 @@ export function CardSmallThing(props: CardSmallThingProps) {
         )}
 
         {!!hasText && (
-          <SpringAnimatedText style={springAnimatedTextStyles}>
+          <ThemedText
+            color="foregroundColorMuted50"
+            style={cardStyles.smallText}
+          >
             {text}
-          </SpringAnimatedText>
+          </ThemedText>
         )}
       </View>
-    </SpringAnimatedLink>
+    </Link>
   )
 }

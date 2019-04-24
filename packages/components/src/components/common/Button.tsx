@@ -3,7 +3,6 @@ import React, { useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
@@ -18,6 +17,7 @@ import {
   SpringAnimatedTouchableOpacityProps,
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 import { useTheme } from '../context/ThemeContext'
 import { separatorSize } from './Separator'
 
@@ -81,7 +81,7 @@ export const Button = React.memo((props: ButtonProps) => {
   })
   cacheRef.current.theme = initialTheme
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const springAnimatedTheme = useSpringAnimatedTheme()
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
     ReturnType<typeof getStyles>

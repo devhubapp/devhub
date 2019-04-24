@@ -2,11 +2,10 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { getGitHubURLForBranch, Omit } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { smallAvatarSize } from '../../../../styles/variables'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
@@ -25,8 +24,6 @@ export interface BranchRowProps
 export interface BranchRowState {}
 
 export const BranchRow = React.memo((props: BranchRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     branch,
     isBranchMainEvent,
@@ -54,14 +51,11 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
         //   username={ownerName}
         //   repo={repositoryName}
         // />
-        <SpringAnimatedIcon
+        <ThemedIcon
+          color={muted ? 'foregroundColorMuted50' : 'foregroundColor'}
           name="git-branch"
           size={smallAvatarSize}
-          style={[
-            { alignSelf: 'flex-end' },
-            getCardStylesForTheme(springAnimatedTheme).normalText,
-            muted && getCardStylesForTheme(springAnimatedTheme).mutedText,
-          ]}
+          style={[{ alignSelf: 'flex-end' }, cardStyles.normalText]}
         />
       }
       right={
@@ -70,24 +64,17 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
             enableTextWrapper
             href={getGitHubURLForBranch(ownerName, repositoryName, branch)}
             textProps={{
+              color: muted ? 'foregroundColorMuted50' : 'foregroundColor',
               numberOfLines: 1,
-              style: [
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                cardStyles.smallText,
-                muted && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ],
+              style: [cardStyles.normalText, cardStyles.smallText],
             }}
           >
             {!hideIcon && (
               <>
-                <SpringAnimatedIcon
+                <ThemedIcon
                   name="git-branch"
                   size={13}
-                  style={[
-                    getCardStylesForTheme(springAnimatedTheme).normalText,
-                    getCardStylesForTheme(springAnimatedTheme).icon,
-                    { color: undefined },
-                  ]}
+                  style={[cardStyles.normalText, cardStyles.icon]}
                 />{' '}
               </>
             )}

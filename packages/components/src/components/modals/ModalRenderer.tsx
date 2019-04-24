@@ -5,7 +5,6 @@ import { ModalPayloadWithIndex } from '@devhub/core'
 import { useTransition } from 'react-spring/native'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { usePrevious } from '../../hooks/use-previous'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -16,7 +15,6 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ColumnSeparator } from '../columns/ColumnSeparator'
 import {
@@ -26,6 +24,7 @@ import {
 } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
 import { AddColumnModal } from './AddColumnModal'
 import { AdvancedSettingsModal } from './AdvancedSettingsModal'
@@ -75,7 +74,6 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const { appOrientation, sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const columnWidth = useColumnWidth()
 
   const modalStack = useReduxState(selectors.modalStack)
@@ -210,14 +208,14 @@ export function ModalRenderer(props: ModalRendererProps) {
             zIndex: 500,
           }}
         >
-          <SpringAnimatedTouchableOpacity
+          <ThemedTouchableOpacity
             analyticsAction="close_via_overlay"
             analyticsLabel="modal"
             activeOpacity={1}
+            backgroundColor="backgroundColorMore1"
             style={{
               width: '100%',
               height: '100%',
-              backgroundColor: springAnimatedTheme.backgroundColorMore1,
               ...Platform.select({ web: { cursor: 'default' } as any }),
             }}
             onPress={() => closeAllModals()}

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Image, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { Image, Text, View, ViewStyle } from 'react-native'
 
 import { EnhancedLoadState } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
@@ -11,13 +10,13 @@ import {
   getEmojiImageURL,
   GitHubEmoji,
 } from '../../utils/helpers/github/emojis'
-import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'
+import { ThemedText } from '../themed/ThemedText'
 import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 const clearMessages = [
@@ -75,7 +74,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   } = props
 
   const { sizename } = useAppLayout()
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
   )
@@ -87,24 +86,13 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       loadState === 'loading_first' ||
       (loadState === 'loading' && !refresh && !fetchNextPage)
     ) {
-      return (
-        <SpringAnimatedActivityIndicator
-          color={springAnimatedTheme.foregroundColor}
-        />
-      )
+      return <ThemedActivityIndicator color="foregroundColor" />
     }
 
     const containerStyle: ViewStyle = {
       width: '100%',
       padding: contentPadding,
     }
-
-    const springAnimatedTextStyle = {
-      lineHeight: 20,
-      fontSize: 14,
-      color: springAnimatedTheme.foregroundColorMuted50,
-      textAlign: 'center',
-    } as TextStyle
 
     if (hasError) {
       return (
@@ -129,7 +117,14 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
 
     return (
       <View style={containerStyle}>
-        <SpringAnimatedText style={springAnimatedTextStyle}>
+        <ThemedText
+          color="foregroundColorMuted50"
+          style={{
+            lineHeight: 20,
+            fontSize: 14,
+            textAlign: 'center',
+          }}
+        >
           {clearMessage}
           {!!randomEmojiImageURL && (
             <>
@@ -141,7 +136,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
               />
             </>
           )}
-        </SpringAnimatedText>
+        </ThemedText>
       </View>
     )
   }

@@ -10,7 +10,7 @@ import { sharedStyles } from '../../styles/shared'
 import { darkThemesArr, lightThemesArr } from '../../styles/themes'
 import { defaultTheme } from '../../styles/utils'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedCheckbox } from '../common/Checkbox'
+import { Checkbox } from '../common/Checkbox'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
@@ -49,7 +49,7 @@ export const ThemePreference = React.memo(() => {
           : theme.id === preferredLightThemeId))
 
     return (
-      <SpringAnimatedCheckbox
+      <Checkbox
         analyticsLabel={undefined}
         key={`theme-item-checkbox-${theme.id}`}
         checked={selected ? (currentThemeId === 'auto' ? null : true) : false}

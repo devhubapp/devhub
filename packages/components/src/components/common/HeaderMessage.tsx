@@ -1,20 +1,19 @@
 import React from 'react'
-import { StyleSheet, TextProps, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { contentPadding, smallTextSize } from '../../styles/variables'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
 import {
-  SpringAnimatedTouchableOpacity,
-  SpringAnimatedTouchableOpacityProps,
-} from '../animated/spring/SpringAnimatedTouchableOpacity'
+  ThemedTouchableOpacity,
+  ThemedTouchableOpacityProps,
+} from '../themed/ThemedTouchableOpacity'
 
 export const HeaderMessageColor = 'rgba(0, 0, 0, 0.15)'
 
-export interface HeaderMessageProps
-  extends SpringAnimatedTouchableOpacityProps {
+export interface HeaderMessageProps extends ThemedTouchableOpacityProps {
   children: string | React.ReactNode
-  textStyle?: TextProps['style']
+  color?: ThemedTextProps['color']
+  textStyle?: ThemedTextProps['style']
 }
 
 const styles = StyleSheet.create({
@@ -35,36 +34,26 @@ const styles = StyleSheet.create({
 })
 
 export function HeaderMessage(props: HeaderMessageProps) {
-  const { children, style, textStyle, ...restProps } = props
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const { children, color, style, textStyle, ...restProps } = props
 
   return (
     <View style={{ width: '100%' }}>
-      <SpringAnimatedTouchableOpacity
+      <ThemedTouchableOpacity
+        backgroundColor="backgroundColor"
         {...restProps}
-        style={[
-          styles.container,
-          {
-            backgroundColor: springAnimatedTheme.backgroundColor,
-          },
-          style,
-        ]}
+        style={[styles.container, style]}
       >
         {typeof children === 'string' ? (
-          <SpringAnimatedText
-            style={[
-              styles.text,
-              { color: springAnimatedTheme.foregroundColorMuted50 },
-              textStyle,
-            ]}
+          <ThemedText
+            color={color || 'foregroundColorMuted50'}
+            style={[styles.text, textStyle]}
           >
             {children}
-          </SpringAnimatedText>
+          </ThemedText>
         ) : (
           children
         )}
-      </SpringAnimatedTouchableOpacity>
+      </ThemedTouchableOpacity>
     </View>
   )
 }

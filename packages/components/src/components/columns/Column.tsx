@@ -1,16 +1,15 @@
 import React, { ReactNode, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryFocus } from '../../utils/helpers/shared'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedView } from '../themed/ThemedView'
 import { ColumnSeparator } from './ColumnSeparator'
 
 export const columnMargin = contentPadding / 2
@@ -42,7 +41,6 @@ export const Column = React.memo(
     const columnBorderRef = useRef<View>(null)
 
     const { sizename } = useAppLayout()
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
     const columnWidth = useColumnWidth()
 
     useEmitter(
@@ -70,15 +68,15 @@ export const Column = React.memo(
     )
 
     return (
-      <SpringAnimatedView
+      <ThemedView
         {...otherProps}
         ref={columnRef}
         key={`column-${columnId}-inner`}
+        backgroundColor="backgroundColor"
         style={[
           sharedStyles.horizontal,
           {
             height: '100%',
-            backgroundColor: springAnimatedTheme.backgroundColor,
             overflow: 'hidden',
           },
           fullWidth ? sharedStyles.flex : { width: columnWidth },
@@ -101,8 +99,9 @@ export const Column = React.memo(
           />
         )}
 
-        <SpringAnimatedView
+        <ThemedView
           ref={columnBorderRef}
+          borderColor="foregroundColorMuted50"
           collapsable={false}
           pointerEvents="box-none"
           style={[
@@ -111,13 +110,12 @@ export const Column = React.memo(
               borderWidth: 0,
               borderRightWidth: Math.max(4, separatorThickSize),
               borderLeftWidth: Math.max(4, separatorThickSize),
-              borderColor: springAnimatedTheme.foregroundColorMuted50,
               zIndex: 1000,
               opacity: 0,
             },
           ]}
         />
-      </SpringAnimatedView>
+      </ThemedView>
     )
   }),
 )

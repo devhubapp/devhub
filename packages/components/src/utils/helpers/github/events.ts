@@ -9,8 +9,8 @@ import {
   isPullRequest,
   isTagMainEvent,
   sortEvents,
+  ThemeColors,
 } from '@devhub/core'
-import { StaticThemeColors } from '@devhub/core/src'
 import { bugsnag } from '../../../libs/bugsnag'
 import {
   getCommitIconAndColor,
@@ -89,12 +89,11 @@ export function getEventSubjectType(
 
 export function getEventIconAndColor(
   event: EnhancedGitHubEvent,
-  colors: StaticThemeColors,
-): { color?: string; icon: GitHubIcon; subIcon?: GitHubIcon } {
+): { color?: keyof ThemeColors; icon: GitHubIcon; subIcon?: GitHubIcon } {
   switch (event.type) {
     case 'CommitCommentEvent':
       return {
-        ...getCommitIconAndColor(colors),
+        ...getCommitIconAndColor(),
         subIcon: 'comment-discussion',
       }
 
@@ -114,11 +113,11 @@ export function getEventIconAndColor(
     case 'DeleteEvent': {
       switch (event.payload.ref_type) {
         case 'repository':
-          return { icon: 'repo', color: colors.red }
+          return { icon: 'repo', color: 'red' }
         case 'branch':
-          return { icon: 'git-branch', color: colors.red }
+          return { icon: 'git-branch', color: 'red' }
         case 'tag':
-          return { icon: 'tag', color: colors.red }
+          return { icon: 'tag', color: 'red' }
         default:
           return { icon: 'trashcan' }
       }
@@ -133,11 +132,8 @@ export function getEventIconAndColor(
     case 'IssueCommentEvent': {
       return {
         ...(isPullRequest(event.payload.issue)
-          ? getPullRequestIconAndColor(
-              event.payload.issue as GitHubPullRequest,
-              colors,
-            )
-          : getIssueIconAndColor(event.payload.issue, colors)),
+          ? getPullRequestIconAndColor(event.payload.issue as GitHubPullRequest)
+          : getIssueIconAndColor(event.payload.issue)),
         subIcon: 'comment-discussion',
       }
     }
@@ -147,16 +143,13 @@ export function getEventIconAndColor(
 
       switch (event.payload.action) {
         case 'opened':
-          return getIssueIconAndColor({ state: 'open' } as GitHubIssue, colors)
+          return getIssueIconAndColor({ state: 'open' } as GitHubIssue)
         case 'closed':
-          return getIssueIconAndColor(
-            { state: 'closed' } as GitHubIssue,
-            colors,
-          )
+          return getIssueIconAndColor({ state: 'closed' } as GitHubIssue)
 
         case 'reopened':
           return {
-            ...getIssueIconAndColor({ state: 'open' } as GitHubIssue, colors),
+            ...getIssueIconAndColor({ state: 'open' } as GitHubIssue),
             icon: 'issue-reopened',
           }
         // case 'assigned':
@@ -167,14 +160,14 @@ export function getEventIconAndColor(
         // case 'milestoned':
         // case 'demilestoned':
         default:
-          return getIssueIconAndColor(issue, colors)
+          return getIssueIconAndColor(issue)
       }
     }
     case 'MemberEvent':
       return { icon: 'person' }
 
     case 'PublicEvent':
-      return { icon: 'globe', color: colors.blue }
+      return { icon: 'globe', color: 'blue' }
 
     case 'PullRequestEvent': {
       const pullRequest = event.payload.pull_request
@@ -182,16 +175,13 @@ export function getEventIconAndColor(
       switch (event.payload.action) {
         case 'opened':
         case 'reopened':
-          return getPullRequestIconAndColor(
-            {
-              draft: pullRequest.draft,
-              state: 'open',
-              merged: false,
-              merged_at: undefined,
-              mergeable_state: pullRequest.mergeable_state,
-            },
-            colors,
-          )
+          return getPullRequestIconAndColor({
+            draft: pullRequest.draft,
+            state: 'open',
+            merged: false,
+            merged_at: undefined,
+            mergeable_state: pullRequest.mergeable_state,
+          })
         // case 'closed': return getPullRequestIconAndColor({ state: 'closed' } as GitHubPullRequest);
 
         // case 'assigned':
@@ -200,14 +190,14 @@ export function getEventIconAndColor(
         // case 'unlabeled':
         // case 'edited':
         default:
-          return getPullRequestIconAndColor(pullRequest, colors)
+          return getPullRequestIconAndColor(pullRequest)
       }
     }
 
     case 'PullRequestReviewCommentEvent':
     case 'PullRequestReviewEvent': {
       return {
-        ...getPullRequestIconAndColor(event.payload.pull_request, colors),
+        ...getPullRequestIconAndColor(event.payload.pull_request),
         subIcon: 'comment-discussion',
       }
     }
@@ -217,12 +207,12 @@ export function getEventIconAndColor(
 
     case 'ReleaseEvent':
       return isTagMainEvent(event)
-        ? getTagIconAndColor(colors)
-        : getReleaseIconAndColor(colors)
+        ? getTagIconAndColor()
+        : getReleaseIconAndColor()
 
     case 'WatchEvent':
     case 'WatchEvent:OneUserMultipleRepos':
-      return { icon: 'star', color: colors.yellow }
+      return { icon: 'star', color: 'yellow' }
 
     default: {
       const message = `Unknown event type: ${(event as any).type}`

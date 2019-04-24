@@ -2,12 +2,11 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { Omit, trimNewLinesAndSpaces } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { ThemedText } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
@@ -28,8 +27,6 @@ export interface WikiPageRowProps
 export interface WikiPageRowState {}
 
 export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     bold,
     hideIcon,
@@ -55,35 +52,25 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
             href={showMoreItemsIndicator ? undefined : fixURL(url)}
             style={cardRowStyles.mainContentContainer}
             textProps={{
+              color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
               numberOfLines: 1,
               style: [
-                getCardStylesForTheme(springAnimatedTheme).normalText,
+                cardStyles.normalText,
                 bold && !isRead && cardStyles.boldText,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
               ],
             }}
           >
             <>
               {!hideIcon && (
                 <>
-                  <SpringAnimatedIcon
-                    name="book"
-                    size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      { color: undefined },
-                    ]}
-                  />{' '}
+                  <ThemedIcon name="book" size={13} style={cardStyles.icon} />{' '}
                 </>
               )}
               {showMoreItemsIndicator ? '' : title}
               {!!showMoreItemsIndicator && (
-                <SpringAnimatedText
-                  numberOfLines={1}
-                  style={[getCardStylesForTheme(springAnimatedTheme).mutedText]}
-                >
+                <ThemedText color="foregroundColorMuted50" numberOfLines={1}>
                   ...
-                </SpringAnimatedText>
+                </ThemedText>
               )}
             </>
           </Link>

@@ -1,15 +1,12 @@
 import React, { useRef } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
-import {
-  SpringAnimatedIcon,
-  SpringAnimatedIconProps,
-} from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
+import { ThemedView } from '../themed/ThemedView'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 const checkboxBorderRadius = 4
@@ -39,38 +36,43 @@ const styles = StyleSheet.create({
   },
 })
 
-export interface SpringAnimatedCheckboxProps {
+export interface CheckboxProps {
   analyticsLabel: TouchableOpacityProps['analyticsLabel']
   checked?: boolean | null
-  checkedBackgroundColor?: string | any
-  checkedForegroundColor?: string | any
   circle?: boolean
   containerStyle?: ViewStyle
   defaultValue?: boolean | null
   disabled?: boolean
   enableIndeterminateState?: boolean
   label?: string | React.ReactNode
-  labelIcon?: SpringAnimatedIconProps['name']
+  labelIcon?: ThemedIconProps['name']
   labelTooltip?: string
   onChange?: (value: boolean | null) => void
   size?: number
   squareContainerStyle?: ViewStyle
-  uncheckedBackgroundColor?: string | any
-  uncheckedForegroundColor?: string | any
   useBrandColor?: boolean
+
+  checkedBackgroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
+  checkedForegroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
+  uncheckedBackgroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
+  uncheckedForegroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
 }
 
-export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
+export function Checkbox(props: CheckboxProps) {
   const {
     defaultValue,
     checked = defaultValue,
 
     analyticsLabel,
     squareContainerStyle,
-    checkedBackgroundColor = springAnimatedTheme.primaryBackgroundColor,
-    checkedForegroundColor = springAnimatedTheme.primaryForegroundColor,
     circle,
     containerStyle,
     disabled,
@@ -80,8 +82,11 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
     labelTooltip,
     onChange,
     size = 16,
-    uncheckedBackgroundColor,
-    uncheckedForegroundColor = springAnimatedTheme.foregroundColor,
+
+    checkedBackgroundThemeColor = 'primaryBackgroundColor',
+    checkedForegroundThemeColor = 'primaryForegroundColor',
+    uncheckedBackgroundThemeColor,
+    uncheckedForegroundThemeColor = 'foregroundColor',
   } = props
 
   const lastBooleanRef = useRef(
@@ -124,7 +129,7 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
       onPress={disabled ? undefined : handleOnChange}
       style={[styles.container, containerStyle]}
     >
-      <SpringAnimatedView
+      <View
         style={[
           styles.checkboxContainer,
           {
@@ -135,17 +140,18 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
           squareContainerStyle,
         ]}
       >
-        <SpringAnimatedView
+        <ThemedView
+          borderColor={
+            checked || isIndeterminateState
+              ? checkedBackgroundThemeColor
+              : uncheckedForegroundThemeColor
+          }
           style={[
             styles.checkbox,
             {
               width: size,
               height: size,
               borderWidth,
-              borderColor:
-                checked || isIndeterminateState
-                  ? checkedBackgroundColor
-                  : uncheckedForegroundColor,
               borderRadius: circle ? size / 2 : checkboxBorderRadius,
             },
           ]}
@@ -154,7 +160,12 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
             collapsable={false}
             style={[StyleSheet.absoluteFill, styles.center, { zIndex: 1 }]}
           >
-            <SpringAnimatedView
+            <ThemedView
+              backgroundColor={
+                checked || isIndeterminateState
+                  ? checkedBackgroundThemeColor
+                  : uncheckedBackgroundThemeColor
+              }
               style={{
                 width: Math.floor(
                   (isIndeterminateState ? size * 0.8 : size) - 2 * borderWidth,
@@ -162,10 +173,6 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
                 height: Math.floor(
                   (isIndeterminateState ? size * 0.8 : size) - 2 * borderWidth,
                 ),
-                backgroundColor:
-                  checked || isIndeterminateState
-                    ? checkedBackgroundColor
-                    : uncheckedBackgroundColor,
                 borderRadius: circle ? size / 2 : checkboxBorderRadius / 2,
               }}
             />
@@ -175,7 +182,8 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
             collapsable={false}
             style={[StyleSheet.absoluteFill, styles.center, { zIndex: 2 }]}
           >
-            <SpringAnimatedIcon
+            <ThemedIcon
+              color={checkedForegroundThemeColor}
               name="check"
               size={size - 3}
               style={{
@@ -185,12 +193,11 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
                 paddingBottom: Platform.OS === 'android' ? 1 : 0,
                 textAlign: 'center',
                 opacity: checked ? 1 : 0,
-                color: checkedForegroundColor,
               }}
             />
           </View>
-        </SpringAnimatedView>
-      </SpringAnimatedView>
+        </ThemedView>
+      </View>
 
       {!!label && (
         <View
@@ -202,11 +209,11 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
           }}
         >
           {typeof label === 'string' ? (
-            <SpringAnimatedText
+            <ThemedText
+              color="foregroundColor"
               style={{
                 lineHeight: size,
                 marginLeft: contentPadding / 2,
-                color: springAnimatedTheme.foregroundColor,
               }}
               {...!!labelTooltip &&
                 Platform.select({
@@ -214,19 +221,17 @@ export function SpringAnimatedCheckbox(props: SpringAnimatedCheckboxProps) {
                 })}
             >
               {label}
-            </SpringAnimatedText>
+            </ThemedText>
           ) : (
             label
           )}
 
           {!!labelIcon && (
-            <SpringAnimatedIcon
+            <ThemedIcon
+              color="foregroundColor"
               name={labelIcon}
               size={16}
-              style={{
-                lineHeight: 16,
-                color: springAnimatedTheme.foregroundColor,
-              }}
+              style={{ lineHeight: 16 }}
             />
           )}
         </View>

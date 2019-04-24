@@ -1,7 +1,7 @@
 import React from 'react'
 
+import { View } from 'react-native'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import {
   ColumnHeaderItem,
   ColumnHeaderItemProps,
@@ -20,7 +20,7 @@ export function SubHeader(props: SubHeaderProps) {
   const { children, iconName, muted, title } = props
 
   return (
-    <SpringAnimatedView
+    <View
       style={{
         flexDirection: 'row',
         justifyContent: 'flex-start',
@@ -50,6 +50,6 @@ export function SubHeader(props: SubHeaderProps) {
       )}
 
       {children}
-    </SpringAnimatedView>
+    </View>
   )
 }

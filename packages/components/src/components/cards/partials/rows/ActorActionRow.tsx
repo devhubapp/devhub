@@ -7,18 +7,15 @@ import {
   getGitHubURLForRepo,
   getGitHubURLForUser,
   Omit,
+  ThemeColors,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { genericParseText } from '../../../../utils/helpers/shared'
-import {
-  SpringAnimatedText,
-  SpringAnimatedTextProps,
-} from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedText, ThemedTextProps } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 
 export interface ActorActionRowProps
@@ -37,15 +34,13 @@ export interface ActorActionRowProps
   ownerName: string
   repositoryName: string
   tag: string | undefined
-  textStyle?: SpringAnimatedTextProps['style']
+  textStyle?: ThemedTextProps['style']
   url?: string
   userLinkURL: string | undefined
   username: string
 }
 
 export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     avatarUrl,
     body: _body,
@@ -78,6 +73,10 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
     </Fragment>
   )
 
+  const color: keyof ThemeColors = isRead
+    ? 'foregroundColorMuted50'
+    : 'foregroundColor'
+
   const bodyStr = `${_body || ''}`.replace(_body[0], _body[0].toLowerCase())
 
   const body =
@@ -96,6 +95,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
                     : undefined
                 }
                 openOnNewTab
+                textProps={{ color }}
               >
                 {match}
               </Link>
@@ -111,6 +111,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
               <Link
                 href={getGitHubURLForRepo(forkOwnerName, forkRepositoryName)}
                 openOnNewTab
+                textProps={{ color }}
               >
                 {match}
               </Link>
@@ -144,9 +145,10 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
             href={userLinkURL}
             openOnNewTab
             textProps={{
+              color,
               numberOfLines,
               style: [
-                getCardStylesForTheme(springAnimatedTheme).normalText,
+                cardStyles.normalText,
                 cardStyles.boldText,
                 cardStyles.smallText,
                 { lineHeight: smallAvatarSize },
@@ -159,17 +161,18 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
 
           <Spacer width={4} />
 
-          <SpringAnimatedText
+          <ThemedText
+            color={color}
             numberOfLines={numberOfLines}
             style={[
-              getCardStylesForTheme(springAnimatedTheme).normalText,
+              cardStyles.normalText,
               cardStyles.smallText,
               { lineHeight: smallAvatarSize },
               textStyle,
             ]}
           >
             {body}
-          </SpringAnimatedText>
+          </ThemedText>
         </View>
       }
       smallLeftColumn={smallLeftColumn}

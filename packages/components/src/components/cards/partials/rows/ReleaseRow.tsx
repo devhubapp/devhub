@@ -6,13 +6,12 @@ import {
   Omit,
   trimNewLinesAndSpaces,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { cardStyles } from '../../styles'
 import { BranchRow } from './BranchRow'
 import { CommentRow } from './CommentRow'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
@@ -42,8 +41,6 @@ export interface ReleaseRowProps
 export interface ReleaseRowState {}
 
 export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     avatarUrl,
     body: _body,
@@ -101,11 +98,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 username={ownerName}
               />
             ) : isPrivate ? (
-              <SpringAnimatedIcon
-                name="lock"
-                size={smallAvatarSize}
-                style={{ color: springAnimatedTheme.orange }}
-              />
+              <ThemedIcon color="orange" name="lock" size={smallAvatarSize} />
             ) : null
           }
           right={
@@ -114,27 +107,21 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 enableTextWrapper
                 href={fixedURL}
                 textProps={{
+                  color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
                   numberOfLines: 1,
-
                   style: [
-                    getCardStylesForTheme(springAnimatedTheme).normalText,
+                    cardStyles.normalText,
                     bold && !isRead && cardStyles.boldText,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
                   ],
                 }}
               >
                 <>
                   {!hideIcon && (
                     <>
-                      <SpringAnimatedIcon
+                      <ThemedIcon
                         name="tag"
                         size={13}
-                        style={[
-                          getCardStylesForTheme(springAnimatedTheme).normalText,
-                          getCardStylesForTheme(springAnimatedTheme).icon,
-                          { color: undefined },
-                        ]}
+                        style={[cardStyles.normalText, cardStyles.icon]}
                       />{' '}
                     </>
                   )}

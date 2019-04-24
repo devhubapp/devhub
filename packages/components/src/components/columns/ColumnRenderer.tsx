@@ -75,6 +75,19 @@ export function getColumnCardThemeColors(
   }
 }
 
+export function getCardBackgroundThemeColor(
+  theme: ThemeColors,
+  { isRead }: { isRead: boolean },
+) {
+  const backgroundThemeColors = getColumnCardThemeColors(theme.backgroundColor)
+
+  const _backgroundThemeColor =
+    // (isFocused && 'backgroundColorLess2') ||
+    (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
+
+  return _backgroundThemeColor
+}
+
 export interface ColumnRendererProps {
   avatarRepo?: string
   avatarUsername?: string

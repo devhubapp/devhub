@@ -2,9 +2,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { useTheme } from '../context/ThemeContext'
+import { ThemedView } from '../themed/ThemedView'
 
 export const separatorSize = StyleSheet.hairlineWidth
 export const separatorThickSize = 5
@@ -26,34 +24,25 @@ export interface SeparatorProps {
   zIndex?: number
 }
 
-export function Separator(props: SeparatorProps) {
+export const Separator = React.memo((props: SeparatorProps) => {
   const { backgroundThemeColor, half, horizontal, thick, zIndex } = props
 
-  const theme = useTheme()
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const size = (thick ? separatorThickSize : separatorSize) / (half ? 2 : 1)
-  const themeField =
-    backgroundThemeColor || getSeparatorThemeColor(theme.backgroundColor)
 
   return (
-    <SpringAnimatedView
+    <ThemedView
+      backgroundColor={theme => {
+        const themeField =
+          backgroundThemeColor || getSeparatorThemeColor(theme.backgroundColor)
+        return theme[themeField]
+      }}
       style={[
         horizontal
-          ? {
-              width: '100%',
-              height: size,
-            }
-          : {
-              width: size,
-              height: '100%',
-            },
-        {
-          backgroundColor: springAnimatedTheme[themeField],
-        },
+          ? { width: '100%', height: size }
+          : { width: size, height: '100%' },
         !!zIndex && { zIndex },
       ]}
       pointerEvents="none"
     />
   )
-}
+})

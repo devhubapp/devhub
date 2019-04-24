@@ -1,7 +1,6 @@
 import React from 'react'
 import { ScrollView, View } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
@@ -10,7 +9,6 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { openAppStore } from '../../utils/helpers/shared'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
@@ -19,6 +17,7 @@ import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { AppViewModePreference } from '../widgets/AppViewModePreference'
 import { ThemePreference } from '../widgets/ThemePreference'
 
@@ -30,8 +29,6 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
@@ -46,7 +43,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       right={
         sizename === '1-small' && username ? (
           <Avatar
-            backgroundColorLoading={null}
+            backgroundColorLoading=""
             shape="circle"
             size={28}
             username={username}
@@ -97,13 +94,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 onPress={() => openAppStore()}
                 size={32}
               >
-                <SpringAnimatedIcon
-                  name="star"
-                  size={16}
-                  style={{
-                    color: springAnimatedTheme.foregroundColor,
-                  }}
-                />
+                <ThemedIcon color="foregroundColor" name="star" size={16} />
               </Button>
             </SubHeader>
           </>

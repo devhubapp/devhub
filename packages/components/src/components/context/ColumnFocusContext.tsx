@@ -4,7 +4,6 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useForceRerender } from '../../hooks/use-force-rerender'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
-import { useReduxStore } from '../../redux/context/ReduxStoreContext'
 import * as selectors from '../../redux/selectors'
 
 export interface ColumnFocusProviderProps {

@@ -1,11 +1,10 @@
 import React from 'react'
 
 import { GitHubNotificationReason } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../../../../libs/platform'
 import { getNotificationReasonMetadata } from '../../../../../utils/helpers/github/notifications'
-import { SpringAnimatedText } from '../../../../animated/spring/SpringAnimatedText'
-import { getCardStylesForTheme } from '../../../styles'
+import { ThemedText } from '../../../../themed/ThemedText'
+import { cardStyles } from '../../../styles'
 
 export interface NotificationReasonProps {
   reason: GitHubNotificationReason
@@ -14,24 +13,15 @@ export interface NotificationReasonProps {
 export function NotificationReason(props: NotificationReasonProps) {
   const { reason } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
-  const reasonDetails = getNotificationReasonMetadata(
-    reason,
-    springAnimatedTheme,
-  )
+  const reasonDetails = getNotificationReasonMetadata(reason)
 
   if (!(reasonDetails && reasonDetails.label)) return null
 
   return (
-    <SpringAnimatedText
+    <ThemedText
+      color={reasonDetails.color || 'foregroundColor'}
       numberOfLines={1}
-      style={[
-        getCardStylesForTheme(springAnimatedTheme).headerActionText,
-        {
-          color: reasonDetails.color,
-        },
-      ]}
+      style={cardStyles.headerActionText}
       {...Platform.select({
         web: {
           title: reasonDetails.fullDescription,
@@ -39,6 +29,6 @@ export function NotificationReason(props: NotificationReasonProps) {
       })}
     >
       {reasonDetails.label.toLowerCase()}
-    </SpringAnimatedText>
+    </ThemedText>
   )
 }

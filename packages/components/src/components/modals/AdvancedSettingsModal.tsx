@@ -14,8 +14,6 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
@@ -24,6 +22,8 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
 
 export interface AdvancedSettingsModalProps {
   showBackButton: boolean
@@ -111,7 +111,8 @@ export const AdvancedSettingsModal = React.memo(
                   onPress={() => pushModal({ name: 'KEYBOARD_SHORTCUTS' })}
                   size={32}
                 >
-                  <SpringAnimatedIcon
+                  <ThemedIcon
+                    color="foregroundColor"
                     name="keyboard"
                     size={16}
                     style={{
@@ -134,14 +135,9 @@ export const AdvancedSettingsModal = React.memo(
                   paddingHorizontal: contentPadding,
                 }}
               >
-                <SpringAnimatedText
-                  style={{
-                    flex: 1,
-                    color: theme.foregroundColor,
-                  }}
-                >
+                <ThemedText color="foregroundColor" style={sharedStyles.flex}>
                   GitHub OAuth
-                </SpringAnimatedText>
+                </ThemedText>
 
                 <Spacer flex={1} minWidth={contentPadding / 2} />
 
@@ -156,11 +152,7 @@ export const AdvancedSettingsModal = React.memo(
                     openOnNewTab
                     size={32}
                   >
-                    <SpringAnimatedIcon
-                      name="gear"
-                      size={16}
-                      style={{ color: theme.foregroundColor }}
-                    />
+                    <ThemedIcon color="foregroundColor" name="gear" size={16} />
                   </ButtonLink>
                 ) : (
                   <Button
@@ -177,10 +169,10 @@ export const AdvancedSettingsModal = React.memo(
                     onPress={() => startOAuth('oauth')}
                     size={32}
                   >
-                    <SpringAnimatedIcon
+                    <ThemedIcon
+                      color="foregroundColor"
                       name={githubOAuthToken ? 'sync' : 'plus'}
                       size={16}
-                      style={{ color: theme.foregroundColor }}
                     />
                   </Button>
                 )}
@@ -195,14 +187,9 @@ export const AdvancedSettingsModal = React.memo(
                   paddingHorizontal: contentPadding,
                 }}
               >
-                <SpringAnimatedText
-                  style={{
-                    flex: 1,
-                    color: theme.foregroundColor,
-                  }}
-                >
+                <ThemedText color="foregroundColor" style={sharedStyles.flex}>
                   GitHub App
-                </SpringAnimatedText>
+                </ThemedText>
 
                 <Spacer flex={1} minWidth={contentPadding / 2} />
 
@@ -217,11 +204,7 @@ export const AdvancedSettingsModal = React.memo(
                     openOnNewTab
                     size={32}
                   >
-                    <SpringAnimatedIcon
-                      name="gear"
-                      size={16}
-                      style={{ color: theme.foregroundColor }}
-                    />
+                    <ThemedIcon color="foregroundColor" name="gear" size={16} />
                   </ButtonLink>
                 ) : (
                   <Button
@@ -240,10 +223,10 @@ export const AdvancedSettingsModal = React.memo(
                     onPress={() => startOAuth('app')}
                     size={32}
                   >
-                    <SpringAnimatedIcon
+                    <ThemedIcon
+                      color="foregroundColor"
                       name={githubAppToken ? 'sync' : 'plus'}
                       size={16}
-                      style={{ color: theme.foregroundColor }}
                     />
                   </Button>
                 )}
@@ -277,12 +260,10 @@ export const AdvancedSettingsModal = React.memo(
                           openOnNewTab={false}
                           size={32}
                         >
-                          <SpringAnimatedIcon
+                          <ThemedIcon
+                            color="foregroundColor"
                             name="plus"
                             size={16}
-                            style={{
-                              color: theme.foregroundColor,
-                            }}
                           />
                         </ButtonLink>
                       )}
@@ -315,15 +296,17 @@ export const AdvancedSettingsModal = React.memo(
                             size={24}
                           />
 
-                          <SpringAnimatedText
-                            style={{
-                              flex: 1,
-                              paddingHorizontal: contentPadding / 2,
-                              color: theme.foregroundColor,
-                            }}
+                          <ThemedText
+                            color="foregroundColor"
+                            style={[
+                              sharedStyles.flex,
+                              {
+                                paddingHorizontal: contentPadding / 2,
+                              },
+                            ]}
                           >
                             {installation.account.login}
-                          </SpringAnimatedText>
+                          </ThemedText>
 
                           <ButtonLink
                             analyticsLabel="open_installation"
@@ -335,12 +318,10 @@ export const AdvancedSettingsModal = React.memo(
                             openOnNewTab
                             size={32}
                           >
-                            <SpringAnimatedIcon
+                            <ThemedIcon
+                              color="foregroundColor"
                               name="gear"
                               size={16}
-                              style={{
-                                color: theme.foregroundColor,
-                              }}
                             />
                           </ButtonLink>
                         </View>

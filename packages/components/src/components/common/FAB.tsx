@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react'
 import { StyleProp, TextStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -12,6 +11,7 @@ import {
   SpringAnimatedTouchableOpacityProps,
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 
 export const fabSize = 44
 
@@ -35,7 +35,7 @@ export function FAB(props: FABProps) {
     ...otherProps
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const springAnimatedTheme = useSpringAnimatedTheme()
 
   const [isPressing, setIsPressing] = useState(false)
 
