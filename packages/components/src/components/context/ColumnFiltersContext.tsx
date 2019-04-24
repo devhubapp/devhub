@@ -1,5 +1,5 @@
 import immer from 'immer'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
@@ -46,6 +46,10 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
     inlineMode,
     isSharedFiltersOpened,
   })
+
+  useEffect(() => {
+    if (!inlineMode && isSharedFiltersOpened) setIsOpened(false)
+  }, [inlineMode])
 
   useEmitter(
     'TOGGLE_COLUMN_FILTERS',
