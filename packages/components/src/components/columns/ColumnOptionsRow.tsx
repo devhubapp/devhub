@@ -3,7 +3,7 @@ import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { GitHubIcon } from '@devhub/core'
+import { constants, GitHubIcon } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import {
@@ -63,7 +63,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
       const { isHovered, isPressing, theme } = cacheRef.current
       const immediate =
-        forceImmediate || isHovered || Platform.realOS === 'android'
+        constants.DISABLE_ANIMATIONS || forceImmediate || isHovered
 
       return {
         config: getDefaultReactSpringAnimationConfig(),

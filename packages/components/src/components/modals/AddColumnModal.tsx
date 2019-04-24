@@ -228,7 +228,7 @@ function AddColumnModalItem({
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
-    const immediate = isHovered || Platform.realOS === 'android'
+    const immediate = constants.DISABLE_ANIMATIONS || isHovered
 
     return {
       config: getDefaultReactSpringAnimationConfig(),

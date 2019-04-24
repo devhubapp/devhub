@@ -3,7 +3,7 @@ import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { GitHubIcon, ThemeColors } from '@devhub/core'
+import { constants, GitHubIcon, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
@@ -114,9 +114,9 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
       const isHovered = (_isHovered || forceHoverState) && !disabled
       const immediate =
+        constants.DISABLE_ANIMATIONS ||
         forceImmediate ||
         isHovered ||
-        Platform.realOS === 'android' ||
         !!(enableForegroundHover && !enableBackgroundHover)
 
       return {

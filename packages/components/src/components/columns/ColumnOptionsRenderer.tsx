@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
+import { constants } from '@devhub/core'
 import { useSpring, useTransition } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { Platform } from '../../libs/platform'
@@ -50,7 +51,7 @@ export const ColumnOptionsRenderer = React.memo(
     const { sizename } = useAppLayout()
     const { column, columnIndex } = useColumn(columnId)
 
-    const immediate = Platform.realOS === 'android'
+    const immediate = constants.DISABLE_ANIMATIONS
     const overlayTransition = useTransition<boolean, any>(
       isOpen ? [true] : [],
       () => 'column-options-overlay',
@@ -75,7 +76,7 @@ export const ColumnOptionsRenderer = React.memo(
       !inlineMode && fixedPosition && fixedWidth
         ? {
             config: getDefaultReactSpringAnimationConfig(),
-            immediate: Platform.OS === 'android',
+            immediate: constants.DISABLE_ANIMATIONS,
             from: {
               [fixedPosition]:
                 -fixedWidth - Platform.select({ default: 0, ios: 40 }),
@@ -88,7 +89,7 @@ export const ColumnOptionsRenderer = React.memo(
           }
         : {
             config: getDefaultReactSpringAnimationConfig(),
-            immediate: Platform.OS === 'android',
+            immediate: constants.DISABLE_ANIMATIONS,
             from: { left: 0, right: 0 },
             to: { left: 0, right: 0 },
           },

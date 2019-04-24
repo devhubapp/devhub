@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { BackHandler, Dimensions, StyleSheet, View } from 'react-native'
 
-import { ModalPayloadWithIndex } from '@devhub/core'
+import { constants, ModalPayloadWithIndex } from '@devhub/core'
 import { useTransition } from 'react-spring/native'
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -105,7 +105,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   }, [!!currentOpenedModal])
 
   const immediate =
-    Platform.realOS === 'android' ||
+    constants.DISABLE_ANIMATIONS ||
     (sizename === '1-small' &&
     ((isSettings && !previouslyOpenedModal) ||
       (!currentOpenedModal && wasSettings))

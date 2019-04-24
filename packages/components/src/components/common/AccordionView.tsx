@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent, ScrollView, View } from 'react-native'
 import { ReactSpringHook, useSpring } from 'react-spring/native'
 
+import { constants } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
 import { Platform } from '../../libs/platform'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
@@ -25,7 +26,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
   const wasOpen = usePrevious(isOpen)
   const [size, setSize] = useState<number | 'auto'>(isOpen ? 'auto' : 0)
 
-  const immediate = Platform.realOS === 'android'
+  const immediate = constants.DISABLE_ANIMATIONS
   const animatedStyles = useSpring<any>({
     immediate,
     config: getDefaultReactSpringAnimationConfig(),

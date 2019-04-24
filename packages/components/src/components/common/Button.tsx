@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
+import { constants } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
@@ -90,7 +91,7 @@ export const Button = React.memo((props: ButtonProps) => {
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
 
-    const immediate = isHovered || Platform.realOS === 'android'
+    const immediate = constants.DISABLE_ANIMATIONS || isHovered
 
     return {
       config: getDefaultReactSpringAnimationConfig(),
