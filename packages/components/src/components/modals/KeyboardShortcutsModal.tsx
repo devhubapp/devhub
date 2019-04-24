@@ -37,8 +37,14 @@ export const keyboardShortcutsById = {
   selectNextColumn: { keys: ['→', 'L'], description: 'Select next column' },
   toggleRead: { keys: ['R'], description: 'Mark item as read/unread' },
   toggleSave: { keys: ['S'], description: 'Toggle save item for later' },
-  moveColumnLeft: { keys: ['Alt ←'], description: 'Move column to the left' },
-  moveColumnRight: { keys: ['Alt →'], description: 'Move column to the right' },
+  moveColumnLeft: {
+    keys: ['Alt ←', 'Alt ↑'],
+    description: 'Move column to the left',
+  },
+  moveColumnRight: {
+    keys: ['Alt →', 'Alt ↓'],
+    description: 'Move column to the right',
+  },
   focusNextDom: {
     keys: ['Tab'],
     description: 'Navigate between buttons and links',

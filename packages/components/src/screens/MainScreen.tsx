@@ -309,31 +309,29 @@ export const MainScreen = React.memo(() => {
     useMemo(() => scrollToColumnNumber.bind(null, 0), []),
   )
 
-  useMultiKeyPressCallback(
-    ['Alt', 'ArrowLeft'],
-    useCallback(() => {
-      if (keyboardShortcutsParamsRef.current.currentOpenedModal) return
-      if (!keyboardShortcutsParamsRef.current.focusedColumnId) return
+  const moveColumnTopOrLeft = useCallback(() => {
+    if (keyboardShortcutsParamsRef.current.currentOpenedModal) return
+    if (!keyboardShortcutsParamsRef.current.focusedColumnId) return
 
-      moveColumn({
-        columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
-        columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex - 1,
-      })
-    }, []),
-  )
+    moveColumn({
+      columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
+      columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex - 1,
+    })
+  }, [])
+  useMultiKeyPressCallback(['Alt', 'ArrowUp'], moveColumnTopOrLeft)
+  useMultiKeyPressCallback(['Alt', 'ArrowLeft'], moveColumnTopOrLeft)
 
-  useMultiKeyPressCallback(
-    ['Alt', 'ArrowRight'],
-    useCallback(() => {
-      if (keyboardShortcutsParamsRef.current.currentOpenedModal) return
-      if (!keyboardShortcutsParamsRef.current.focusedColumnId) return
+  const moveColumnBottomOrRight = useCallback(() => {
+    if (keyboardShortcutsParamsRef.current.currentOpenedModal) return
+    if (!keyboardShortcutsParamsRef.current.focusedColumnId) return
 
-      moveColumn({
-        columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
-        columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex + 1,
-      })
-    }, []),
-  )
+    moveColumn({
+      columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
+      columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex + 1,
+    })
+  }, [])
+  useMultiKeyPressCallback(['Alt', 'ArrowDown'], moveColumnBottomOrRight)
+  useMultiKeyPressCallback(['Alt', 'ArrowRight'], moveColumnBottomOrRight)
 
   const showKeyboardShortcuts = useCallback(() => {
     pushModal({ name: 'KEYBOARD_SHORTCUTS' })
