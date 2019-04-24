@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { StyleProp, Text, TextProps, TextStyle } from 'react-native'
+import React from 'react'
+import { StyleProp, TextProps, TextStyle } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'

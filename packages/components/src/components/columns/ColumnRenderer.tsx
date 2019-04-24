@@ -96,7 +96,6 @@ export interface ColumnRendererProps {
     enableCompactLabels: boolean
   }) => React.ReactNode
   column: ColumnType
-  columnIndex: number
   disableColumnOptions?: boolean
   icon: GitHubIcon
   owner: string | undefined
@@ -113,7 +112,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     avatarUsername,
     children,
     column,
-    columnIndex,
     disableColumnOptions,
     icon,
     owner,
@@ -245,7 +243,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   function focusColumn() {
     emitter.emit('FOCUS_ON_COLUMN', {
       columnId: column.id,
-      columnIndex,
       highlight: false,
       scrollTo: false,
     })

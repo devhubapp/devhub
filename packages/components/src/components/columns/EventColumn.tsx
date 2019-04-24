@@ -37,7 +37,6 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
         headerDetails.avatarProps && headerDetails.avatarProps.username
       }
       column={column}
-      columnIndex={columnIndex}
       disableColumnOptions={disableColumnOptions}
       icon={headerDetails.icon}
       owner={headerDetails.owner}
@@ -52,9 +51,9 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
           {...props}
           key={`event-cards-container-${column.id}`}
           cardViewMode={cardViewMode}
+          columnIndex={columnIndex}
           enableCompactLabels={enableCompactLabels}
           repoIsKnown={headerDetails.repoIsKnown}
-          columnIndex={columnIndex}
         />
       )}
     </ColumnRenderer>

@@ -11,8 +11,6 @@ import SplashScreen from 'react-native-splash-screen'
 
 import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
-import { SafeAreaView } from '../../libs/safe-area-view'
-import { sharedStyles } from '../../styles/shared'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
 import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'

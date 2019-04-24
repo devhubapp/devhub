@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useRef } from 'react'
+import _ from 'lodash'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -15,6 +16,7 @@ import { bugsnag } from '../../libs/bugsnag'
 import { emitter } from '../../libs/emitter'
 import * as selectors from '../../redux/selectors'
 import { separatorThickSize } from '../common/Separator'
+import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 
@@ -43,6 +45,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
 
   const { sizename } = useAppLayout()
   const columnWidth = useColumnWidth()
+  const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
@@ -57,19 +60,36 @@ export const Columns = React.memo((props: ColumnsProps) => {
     payload => {
       if (!flatListRef.current) return
       if (!(columnIds && columnIds.length)) return
+      if (!payload.columnId) return
 
-      if (payload.columnIndex >= 0 && payload.columnIndex < columnIds.length) {
-        if (payload.scrollTo) {
-          flatListRef.current.scrollToIndex({
-            animated: payload.animated,
-            index: payload.columnIndex,
-            viewPosition: 0.5,
-          })
-        }
+      if (payload.scrollTo) {
+        flatListRef.current.scrollToItem({
+          animated: payload.animated,
+          item: payload.columnId,
+          viewPosition: 0.5,
+        })
       }
     },
     [flatListRef, columnIds],
   )
+
+  useEffect(() => {
+    if (!flatListRef.current) return
+    if (!(focusedColumnId && focusedColumnIndex >= 0)) return
+    if (sizename !== '1-small') return
+
+    flatListRef.current.scrollToItem({
+      animated: true,
+      item: focusedColumnId,
+      viewPosition: 0.5,
+    })
+  }, [
+    flatListRef.current,
+    columnIds,
+    focusedColumnId,
+    focusedColumnIndex,
+    sizename,
+  ])
 
   const pagingEnabled = sizename < '3-large'
   const swipeable: boolean = false
@@ -140,16 +160,21 @@ export const Columns = React.memo((props: ColumnsProps) => {
     emitter.emit('FOCUS_ON_COLUMN', {
       animated: false,
       columnId: allVisibleItems[0].item,
-      columnIndex:
-        allVisibleItems[0].index ||
-        columnIds.findIndex(id => id === allVisibleItems[0].item),
       focusOnVisibleItem: false,
       highlight: false,
       scrollTo: false,
     })
   }
 
-  const onViewableItemsChanged = useCallback(_onViewableItemsChanged, [])
+  const _debouncedOnViewableItemsChanged = _.debounce(
+    _onViewableItemsChanged,
+    800,
+  )
+
+  const onViewableItemsChanged = useCallback(
+    _debouncedOnViewableItemsChanged,
+    [],
+  )
 
   return (
     <FlatList

@@ -38,7 +38,6 @@ export const IssueOrPullRequestColumn = React.memo(
           headerDetails.avatarProps && headerDetails.avatarProps.username
         }
         column={column}
-        columnIndex={columnIndex}
         disableColumnOptions={disableColumnOptions}
         icon={headerDetails.icon}
         owner={headerDetails.owner}
@@ -53,9 +52,9 @@ export const IssueOrPullRequestColumn = React.memo(
             {...props}
             key={`issue-or-pr-cards-container-${column.id}`}
             cardViewMode={cardViewMode}
+            columnIndex={columnIndex}
             enableCompactLabels={enableCompactLabels}
             repoIsKnown={headerDetails.repoIsKnown}
-            columnIndex={columnIndex}
           />
         )}
       </ColumnRenderer>

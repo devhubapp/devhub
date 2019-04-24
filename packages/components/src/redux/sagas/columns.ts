@@ -90,13 +90,10 @@ function* onAddColumn(
   const columnId = action.payload.column.id
 
   yield delay(300)
-  const ids: string[] = yield select(selectors.columnIdsSelector)
-  const columnIndex = ids.findIndex(id => id === columnId)
 
   emitter.emit('FOCUS_ON_COLUMN', {
     animated: true,
     columnId,
-    columnIndex,
     highlight: true,
     scrollTo: true,
   })
@@ -124,7 +121,6 @@ function* onMoveColumn(
     scrollTo: true,
     ...action.payload,
     columnId,
-    columnIndex,
   })
 }
 
@@ -141,7 +137,6 @@ function* onDeleteColumn(
     emitter.emit('FOCUS_ON_COLUMN', {
       animated: false,
       columnId: ids[ids.length - 1],
-      columnIndex: ids.length - 1,
       highlight: false,
       scrollTo: true,
     })

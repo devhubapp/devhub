@@ -250,7 +250,6 @@ export const MainScreen = React.memo(() => {
       emitter.emit('FOCUS_ON_COLUMN', {
         animated: true,
         columnId: keyboardShortcutsParamsRef.current.columnIds[columnIndex],
-        columnIndex,
         highlight: true,
         scrollTo: true,
       })
@@ -262,7 +261,6 @@ export const MainScreen = React.memo(() => {
       emitter.emit('FOCUS_ON_COLUMN', {
         animated: true,
         columnId: keyboardShortcutsParamsRef.current.columnIds[columnIndex],
-        columnIndex,
         highlight: true,
         scrollTo: true,
       })

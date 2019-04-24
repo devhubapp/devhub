@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { StyleProp, Text, TextProps, TextStyle } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 
 import { useEmitter } from '../../hooks/use-emitter'
 import { useForceRerender } from '../../hooks/use-force-rerender'
@@ -28,32 +28,30 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   const valueRef = useRef<ColumnFocusProviderState>(defaultValue)
   const columnIds = useReduxState(selectors.columnIdsSelector)
 
-  useEffect(() => {
-    // force always having a valid column focused
-    const focusedColumnIndex = columnIds.length
-      ? valueRef.current.focusedColumnIndex >= 0 &&
+  // force always having a valid column focused
+  const fixedFocusedColumnIndex = columnIds.length
+    ? valueRef.current.focusedColumnId &&
+      columnIds.findIndex(id => id === valueRef.current.focusedColumnId) >= 0
+      ? columnIds.findIndex(id => id === valueRef.current.focusedColumnId)
+      : valueRef.current.focusedColumnIndex >= 0 &&
         valueRef.current.focusedColumnIndex < columnIds.length
-        ? valueRef.current.focusedColumnIndex
-        : valueRef.current.focusedColumnIndex > 1
-        ? columnIds.length - 1
-        : 0
-      : -1
+      ? valueRef.current.focusedColumnIndex
+      : valueRef.current.focusedColumnIndex > 1
+      ? columnIds.length - 1
+      : 0
+    : -1
 
-    const focusedColumnId = columnIds[focusedColumnIndex]
+  const fixedFocusedColumnId = columnIds[fixedFocusedColumnIndex]
 
-    if (
-      valueRef.current.focusedColumnId === focusedColumnId &&
-      valueRef.current.focusedColumnIndex === focusedColumnIndex
-    )
-      return
-
-    valueRef.current = { focusedColumnId, focusedColumnIndex }
-    forceRerender()
-  }, [
-    columnIds,
-    valueRef.current.focusedColumnId,
-    valueRef.current.focusedColumnIndex,
-  ])
+  if (
+    valueRef.current.focusedColumnId !== fixedFocusedColumnId ||
+    valueRef.current.focusedColumnIndex !== fixedFocusedColumnIndex
+  ) {
+    valueRef.current = {
+      focusedColumnId: fixedFocusedColumnId,
+      focusedColumnIndex: fixedFocusedColumnIndex,
+    }
+  }
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -93,7 +91,6 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       emitter.emit('FOCUS_ON_COLUMN', {
         ...payload,
         columnId: columnIds[previousColumnIndex],
-        columnIndex: previousColumnIndex,
       })
     },
     [columnIds],
@@ -116,7 +113,6 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       emitter.emit('FOCUS_ON_COLUMN', {
         ...payload,
         columnId: columnIds[nextColumnIndex],
-        columnIndex: nextColumnIndex,
       })
     },
     [columnIds],

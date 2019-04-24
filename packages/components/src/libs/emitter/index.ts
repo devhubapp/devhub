@@ -7,7 +7,6 @@ export interface EmitterTypes {
   FOCUS_ON_COLUMN: {
     animated?: boolean
     columnId: string
-    columnIndex: number
     focusOnVisibleItem?: boolean
     highlight?: boolean
     scrollTo?: boolean
