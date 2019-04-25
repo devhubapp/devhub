@@ -165,7 +165,16 @@ export const ColumnOptionsRenderer = React.memo(
               zIndex: 200,
             },
           ]}
-          pointerEvents="box-none"
+          pointerEvents={
+            enableAbsolutePositionAnimation &&
+            absolutePositionAnimation &&
+            fixedPosition &&
+            fixedWidth
+              ? absolutePositionAnimation[fixedPosition].interpolate(
+                  (value: number) => (value < 0 ? 'none' : 'box-none'),
+                )
+              : 'box-none'
+          }
         >
           {renderHeader === 'yes' ? (
             <ColumnHeader pointerEvents="none">
