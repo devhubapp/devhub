@@ -33,10 +33,13 @@ import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
+import { CardActions } from './partials/CardActions'
+import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { LabelsView } from './partials/rows/LabelsView'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
+import { topCardMargin } from './partials/rows/styles'
 import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface IssueOrPullRequestCardProps {
@@ -185,7 +188,7 @@ export const IssueOrPullRequestCard = React.memo(
                 //   ? true
                 //   : false
               }
-              showCreationDetails={false}
+              showCreationDetails={cardViewMode !== 'compact'}
               title={issueOrPullRequest.title}
               url={issueOrPullRequest.url}
               userLinkURL={issueOrPullRequest.user.html_url || ''}
@@ -317,6 +320,7 @@ export const IssueOrPullRequestCard = React.memo(
                 style={{
                   fontSize: columnHeaderItemContentSize,
                   textAlign: 'center',
+                  // opacity: isRead ? mutedOpacity : 1,
                 }}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
@@ -356,6 +360,7 @@ export const IssueOrPullRequestCard = React.memo(
                   }))}
                   muted={isRead}
                   style={{
+                    alignSelf: 'center',
                     justifyContent: 'flex-end',
                     maxWidth:
                       320 +
@@ -375,7 +380,11 @@ export const IssueOrPullRequestCard = React.memo(
           <View
             style={[
               cardStyles.compactItemFixedMinHeight,
-              { width: 60, alignItems: 'flex-end' },
+              {
+                alignSelf: 'center',
+                alignItems: 'flex-end',
+                width: 60,
+              },
             ]}
           >
             {!!issueOrPullRequest.created_at && (
@@ -408,7 +417,10 @@ export const IssueOrPullRequestCard = React.memo(
                     >
                       {!!isPrivate && (
                         <>
-                          <ThemedIcon name="lock" />{' '}
+                          <ThemedIcon
+                            name="lock"
+                            style={cardStyles.smallerText}
+                          />{' '}
                         </>
                       )}
                       {/* <ThemedIcon name="clock" />{' '} */}
@@ -422,7 +434,14 @@ export const IssueOrPullRequestCard = React.memo(
 
           <Spacer width={contentPadding / 2} />
 
-          <View style={cardStyles.compactItemFixedHeight}>
+          <View
+            style={[
+              cardStyles.compactItemFixedHeight,
+              {
+                alignSelf: 'center',
+              },
+            ]}
+          >
             <ToggleReadButton
               isRead={isRead}
               itemIds={[id]}
@@ -443,39 +462,42 @@ export const IssueOrPullRequestCard = React.memo(
         }
         style={cardStyles.container}
       >
+        {!!isSaved && <CardBookmarkIndicator />}
         {!!isFocused && <CardFocusBorder />}
 
-        <View
-          style={[
-            sharedStyles.flex,
-            sharedStyles.horizontal,
-            { alignItems: 'flex-start' },
-          ]}
-        >
-          <Spacer width={contentPadding / 3} />
-
+        <View style={sharedStyles.flex}>
           <View
-            style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
+            style={[
+              sharedStyles.flex,
+              sharedStyles.horizontal,
+              { alignItems: 'flex-start' },
+            ]}
           >
-            <ThemedIcon
-              color={cardIconColor || 'foregroundColor'}
-              name={cardIconName}
-              selectable={false}
-              style={{
-                fontSize: columnHeaderItemContentSize,
-                textAlign: 'center',
-              }}
-              {...!!cardIconDetails.tooltip &&
-                Platform.select({
-                  web: { title: cardIconDetails.tooltip },
-                })}
-            />
-          </View>
+            <Spacer width={contentPadding / 3} />
 
-          <Spacer width={spacingBetweenLeftAndRightColumn} />
+            <View
+              style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
+            >
+              <ThemedIcon
+                color={cardIconColor || 'foregroundColor'}
+                name={cardIconName}
+                selectable={false}
+                style={{
+                  fontSize: columnHeaderItemContentSize,
+                  textAlign: 'center',
+                  // opacity: isRead ? mutedOpacity : 1,
+                }}
+                {...!!cardIconDetails.tooltip &&
+                  Platform.select({
+                    web: { title: cardIconDetails.tooltip },
+                  })}
+              />
+            </View>
 
-          <View style={sharedStyles.flex}>
-            {/* <IssueOrPullRequestCardHeader
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
+
+            <View style={sharedStyles.flex}>
+              {/* <IssueOrPullRequestCardHeader
               key={`issue-or-pr-card-header-${id}`}
               actionText=""
               avatarUrl={avatarUrl}
@@ -496,14 +518,24 @@ export const IssueOrPullRequestCard = React.memo(
               username={actor.display_login || actor.login}
             /> */}
 
-            <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-              {/* <Spacer width={leftColumnBigSize - leftColumnSmallSize} /> */}
+              <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+                {/* <Spacer width={leftColumnBigSize - leftColumnSmallSize} /> */}
 
-              <View style={sharedStyles.flex}>{Content}</View>
-
-              <Spacer width={contentPadding / 3} />
+                <View style={sharedStyles.flex}>{Content}</View>
+              </View>
             </View>
           </View>
+
+          <Spacer height={topCardMargin} />
+
+          <CardActions
+            isRead={isRead}
+            isSaved={isSaved}
+            itemIds={[id]}
+            type="issue_or_pr"
+          />
+
+          <Spacer width={contentPadding / 3} />
         </View>
       </ThemedView>
     )

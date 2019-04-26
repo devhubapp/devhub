@@ -86,6 +86,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             href={fixURL(url, { addBottomAnchor })}
             textProps={{
               color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+              // color: 'foregroundColor',
               numberOfLines,
               style: [cardStyles.commentText, textStyle],
             }}

@@ -164,11 +164,13 @@ export const IssueOrPullRequestRow = React.memo(
                 ]}
                 textProps={{
                   color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+                  // color: 'foregroundColor',
                   numberOfLines,
                   style: [
                     sharedStyles.flex,
                     cardStyles.normalText,
-                    bold && !isRead && cardStyles.boldText,
+                    bold && cardStyles.boldText,
+                    // isRead && { fontWeight: undefined },
                   ],
                 }}
                 // tooltip={`${title}${_body ? `\n\n${_body}` : ''}`}
@@ -186,17 +188,9 @@ export const IssueOrPullRequestRow = React.memo(
                   )}
                   {title}
 
-                  {!!issueOrPullRequestNumber &&
-                    (viewMode === 'compact' || !showCreationDetails) && (
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          fontWeight: '400',
-                        }}
-                      >
-                        {`  #${issueOrPullRequestNumber}`}
-                      </Text>
-                    )}
+                  {/* {!!issueOrPullRequestNumber &&
+                    (viewMode === 'compact' || !showCreationDetails) &&
+                    ` #${issueOrPullRequestNumber}`} */}
                 </>
               </Link>
 
@@ -216,7 +210,7 @@ export const IssueOrPullRequestRow = React.memo(
                     color: label.color && `#${label.color}`,
                     name: label.name,
                   }))}
-                  muted={isRead}
+                  // muted={isRead}
                   textThemeColor="foregroundColorMuted50"
                 />
               )}
@@ -234,6 +228,7 @@ export const IssueOrPullRequestRow = React.memo(
                       color: isRead
                         ? 'foregroundColorMuted50'
                         : 'foregroundColor',
+                      // color: 'foregroundColor',
                       numberOfLines,
                       style: [sharedStyles.flex, cardStyles.commentText],
                     }}
@@ -323,7 +318,11 @@ export const IssueOrPullRequestRow = React.memo(
                                     },
                                   })}
                                 >
-                                  <ThemedIcon name="clock" /> {dateText}
+                                  <ThemedIcon
+                                    name="clock"
+                                    style={cardStyles.smallerText}
+                                  />{' '}
+                                  {dateText}
                                 </ThemedText>
                               </>
                             )

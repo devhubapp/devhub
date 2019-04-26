@@ -825,7 +825,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           tooltip="Remove column"
         />
       </View>
-      <CardItemSeparator />
+
+      <CardItemSeparator isRead />
     </ThemedView>
   )
 })

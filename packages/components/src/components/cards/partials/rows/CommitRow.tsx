@@ -111,11 +111,13 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             style={sharedStyles.flex}
             textProps={{
               color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+              // color: 'foregroundColor',
               numberOfLines: 1,
               style: [
                 cardStyles.normalText,
                 cardStyles.smallText,
-                bold && !isRead && cardStyles.boldText,
+                bold && cardStyles.boldText,
+                // isRead && { fontWeight: undefined },
               ],
             }}
             tooltip={`${_message}${byText ? `\n\n${byText}` : ''}`}

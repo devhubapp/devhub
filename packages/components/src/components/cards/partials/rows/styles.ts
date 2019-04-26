@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native'
 import { contentPadding } from '../../../../styles/variables'
 
 export const innerCardSpacing = contentPadding / 3
+export const topCardMargin = contentPadding * (2 / 3)
 
 export const cardRowStyles = StyleSheet.create({
   container: {
@@ -12,7 +13,7 @@ export const cardRowStyles = StyleSheet.create({
   },
 
   container__margin: {
-    marginTop: contentPadding * (2 / 3),
+    marginTop: topCardMargin,
   },
 
   mainContentContainer: {

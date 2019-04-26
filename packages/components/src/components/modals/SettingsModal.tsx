@@ -56,12 +56,14 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       title="Preferences"
     >
       <ScrollView
+        alwaysBounceVertical
+        bounces
         style={sharedStyles.flex}
         contentContainerStyle={sharedStyles.flexGrow}
       >
-        <AppViewModePreference />
-
-        <Spacer height={contentPadding} />
+        <AppViewModePreference>
+          <Spacer height={contentPadding} />
+        </AppViewModePreference>
 
         <ThemePreference />
 

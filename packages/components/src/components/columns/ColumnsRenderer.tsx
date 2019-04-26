@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { Dimensions } from 'react-native'
 
+import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { emitter } from '../../libs/emitter'
@@ -71,7 +72,10 @@ export function ColumnsRenderer() {
                   key="single-column-container"
                   columnId={focusedColumnId}
                   disableColumnOptions={inlineMode}
-                  // swipeable
+                  pointerEvents={
+                    isSharedFiltersOpened && !inlineMode ? 'none' : undefined
+                  }
+                  swipeable={!constants.DISABLE_SWIPEABLE_CARDS}
                 />
               ) : (
                 <Columns

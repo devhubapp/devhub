@@ -54,6 +54,8 @@ import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
+import { CardActions } from './partials/CardActions'
+import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { ActorActionRow } from './partials/rows/ActorActionRow'
@@ -65,7 +67,7 @@ import { LabelsView } from './partials/rows/LabelsView'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryListRow } from './partials/rows/RepositoryListRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
-import { innerCardSpacing } from './partials/rows/styles'
+import { innerCardSpacing, topCardMargin } from './partials/rows/styles'
 import { UserListRow } from './partials/rows/UserListRow'
 import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
@@ -208,7 +210,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
   const cardIconColor = cardIconDetails.color
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
-    appendColon: true,
+    appendColon: false,
     includeBranch: cardViewMode === 'compact',
     includeFork: cardViewMode === 'compact',
     includeTag: cardViewMode === 'compact',
@@ -564,6 +566,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
+                // opacity: isRead ? mutedOpacity : 1,
               }}
               {...!!actionTextWithoutColon &&
                 Platform.select({
@@ -601,8 +604,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   color: label.color && `#${label.color}`,
                   name: label.name,
                 }))}
-                muted={isRead}
+                // muted={isRead}
                 style={{
+                  alignSelf: 'center',
                   justifyContent: 'flex-end',
                   maxWidth:
                     320 +
@@ -622,7 +626,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <View
           style={[
             cardStyles.compactItemFixedMinHeight,
-            { width: 60, alignItems: 'flex-end' },
+            {
+              alignSelf: 'center',
+              alignItems: 'flex-end',
+              width: 60,
+            },
           ]}
         >
           {!!event.created_at && (
@@ -646,7 +654,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   >
                     {!!isPrivate && (
                       <>
-                        <ThemedIcon name="lock" />{' '}
+                        <ThemedIcon
+                          name="lock"
+                          style={cardStyles.smallerText}
+                        />{' '}
                       </>
                     )}
                     {dateText}
@@ -659,7 +670,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
         <Spacer width={contentPadding / 2} />
 
-        <View style={cardStyles.compactItemFixedHeight}>
+        <View
+          style={[
+            cardStyles.compactItemFixedHeight,
+            {
+              alignSelf: 'center',
+            },
+          ]}
+        >
           <ToggleReadButton
             isRead={isRead}
             itemIds={[id]}
@@ -678,61 +696,71 @@ export const EventCard = React.memo((props: EventCardProps) => {
       backgroundColor={theme => getCardBackgroundThemeColor(theme, { isRead })}
       style={cardStyles.container}
     >
+      {!!isSaved && <CardBookmarkIndicator />}
       {!!isFocused && <CardFocusBorder />}
 
-      <View
-        style={[
-          sharedStyles.flex,
-          sharedStyles.horizontal,
-          { alignItems: 'flex-start' },
-        ]}
-      >
-        <Spacer width={contentPadding / 3} />
+      <View style={sharedStyles.flex}>
+        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+          <Spacer width={contentPadding / 3} />
 
-        <View
-          style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
-        >
-          <ThemedIcon
-            color={cardIconColor || 'foregroundColor'}
-            name={cardIconName}
-            selectable={false}
-            style={{
-              fontSize: columnHeaderItemContentSize,
-              textAlign: 'center',
-            }}
-            {...!!actionTextWithoutColon &&
-              Platform.select({
-                web: { title: actionTextWithoutColon },
-              })}
-          />
-        </View>
+          <View style={[cardStyles.itemFixedWidth, cardStyles.itemFixedHeight]}>
+            <ThemedIcon
+              color={cardIconColor || 'foregroundColor'}
+              name={cardIconName}
+              selectable={false}
+              style={{
+                fontSize: columnHeaderItemContentSize,
+                textAlign: 'center',
+                // opacity: isRead ? mutedOpacity : 1,
+              }}
+              {...!!actionTextWithoutColon &&
+                Platform.select({
+                  web: { title: actionTextWithoutColon },
+                })}
+            />
+          </View>
 
-        <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
 
-        <View style={sharedStyles.flex}>
-          <EventCardHeader
-            key={`event-card-header-${id}`}
-            actionText={actionText}
-            avatarUrl={avatarUrl}
-            date={event.created_at}
-            ids={('merged' in event && event.merged) || [id]}
-            isBot={isBot}
-            isPrivate={isPrivate}
-            isRead={isRead}
-            isSaved={isSaved}
-            smallLeftColumn
-            userLinkURL={actor.html_url || ''}
-            username={actor.display_login || actor.login}
-          />
-
-          <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-            {/* <Spacer width={leftColumnBigSize - leftColumnSmallSize} /> */}
-
-            <View style={sharedStyles.flex}>{Content}</View>
-
-            <Spacer width={contentPadding / 3} />
+          <View style={sharedStyles.flex}>
+            <EventCardHeader
+              key={`event-card-header-${id}`}
+              actionText={actionText}
+              avatarUrl={avatarUrl}
+              date={event.created_at}
+              ids={('merged' in event && event.merged) || [id]}
+              isBot={isBot}
+              isPrivate={isPrivate}
+              isRead={isRead}
+              smallLeftColumn
+              userLinkURL={actor.html_url || ''}
+              username={actor.display_login || actor.login}
+            />
           </View>
         </View>
+
+        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+          <Spacer width={contentPadding / 3} />
+
+          <View style={cardStyles.itemFixedWidth} />
+
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <View style={sharedStyles.flex}>{Content}</View>
+
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <View style={cardStyles.itemFixedWidth} />
+        </View>
+
+        <Spacer height={topCardMargin} />
+
+        <CardActions
+          isRead={isRead}
+          isSaved={isSaved}
+          itemIds={[id]}
+          type="activity"
+        />
+
+        <Spacer width={contentPadding / 3} />
       </View>
     </ThemedView>
   )

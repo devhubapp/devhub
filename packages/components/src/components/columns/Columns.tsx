@@ -8,12 +8,11 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { Omit } from '@devhub/core'
+import { constants, Omit } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
-import { emitter } from '../../libs/emitter'
 import * as selectors from '../../redux/selectors'
 import { separatorThickSize } from '../common/Separator'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
@@ -41,7 +40,7 @@ function keyExtractor(columnId: string) {
 }
 
 export const Columns = React.memo((props: ColumnsProps) => {
-  const { style, ...otherProps } = props
+  const { pointerEvents, style, ...otherProps } = props
 
   const { sizename } = useAppLayout()
   const columnWidth = useColumnWidth()
@@ -92,7 +91,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
   ])
 
   const pagingEnabled = sizename < '3-large'
-  const swipeable: boolean = false
+  const swipeable = constants.DISABLE_SWIPEABLE_CARDS
+    ? false
+    : sizename === '1-small'
 
   const renderItem: FlatListProps<string>['renderItem'] = useCallback(
     ({ item: columnId }) => {
@@ -100,11 +101,12 @@ export const Columns = React.memo((props: ColumnsProps) => {
         <ColumnContainer
           columnId={columnId}
           pagingEnabled={pagingEnabled}
+          pointerEvents={pointerEvents}
           swipeable={swipeable}
         />
       )
     },
-    [pagingEnabled, swipeable],
+    [pagingEnabled, pointerEvents, swipeable],
   )
 
   const getItemLayout: FlatListProps<string>['getItemLayout'] = useCallback(
@@ -145,6 +147,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [style, sizename, separatorThickSize],
   )
 
+  /*
   const _onViewableItemsChanged: FlatListProps<
     string
   >['onViewableItemsChanged'] = info => {
@@ -175,6 +178,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
     _debouncedOnViewableItemsChanged,
     [],
   )
+  */
 
   return (
     <FlatList
@@ -189,8 +193,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
       keyExtractor={keyExtractor}
       maxToRenderPerBatch={1}
       onScrollToIndexFailed={onScrollToIndexFailed}
-      onViewableItemsChanged={onViewableItemsChanged}
+      // onViewableItemsChanged={onViewableItemsChanged}
       pagingEnabled={pagingEnabled}
+      pointerEvents={pointerEvents}
       removeClippedSubviews
       scrollEnabled={!swipeable}
       windowSize={2}

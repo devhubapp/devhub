@@ -281,6 +281,15 @@ export const subscriptionsReducer: Reducer<State> = (
 
         keys.forEach(id => {
           const subscription = draft.byId[id]
+
+          if (
+            'type' in action.payload &&
+            action.payload.type &&
+            subscription &&
+            subscription.type !== action.payload.type
+          )
+            return
+
           if (
             !(
               subscription &&
@@ -290,6 +299,7 @@ export const subscriptionsReducer: Reducer<State> = (
             )
           )
             return
+
           subscription.data.items.forEach((item, index) => {
             if (!(item && stringIds.includes(`${item.id}`))) return
 

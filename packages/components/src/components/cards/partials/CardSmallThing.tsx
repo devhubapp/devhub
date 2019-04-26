@@ -73,7 +73,7 @@ export function CardSmallThing(props: CardSmallThingProps) {
         {!!hasText && (
           <ThemedText
             color="foregroundColorMuted50"
-            style={cardStyles.smallText}
+            style={cardStyles.smallerText}
           >
             {text}
           </ThemedText>

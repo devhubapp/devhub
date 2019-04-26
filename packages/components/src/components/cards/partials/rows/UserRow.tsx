@@ -60,7 +60,10 @@ export const UserRow = React.memo((props: UserRowProps) => {
                 isRead || showMoreItemsIndicator
                   ? 'foregroundColorMuted50'
                   : 'foregroundColor',
-              style: [bold && !isRead && cardStyles.boldText],
+              style: [
+                bold && cardStyles.boldText,
+                // isRead && { fontWeight: undefined },
+              ],
             }}
           >
             {showMoreItemsIndicator ? '...' : username}

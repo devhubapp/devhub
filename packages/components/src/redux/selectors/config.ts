@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect'
 
 import { constants, isNight } from '@devhub/core'
+import { Dimensions } from 'react-native'
+import { APP_LAYOUT_BREAKPOINTS } from '../../components/context/LayoutContext'
 import { loadTheme } from '../../styles/utils'
 import { RootState } from '../types'
 
@@ -25,5 +27,8 @@ export const themeSelector = createSelector(
   loadTheme,
 )
 
-export const appViewModeSelector = (state: RootState) =>
-  s(state).appViewMode || 'single-column'
+// Do not use this directly. Use useAppViewMode() instead.
+export const _appViewModeSelector = (state: RootState) =>
+  Dimensions.get('window').width >= APP_LAYOUT_BREAKPOINTS.MEDIUM
+    ? s(state).appViewMode || 'single-column'
+    : 'single-column'

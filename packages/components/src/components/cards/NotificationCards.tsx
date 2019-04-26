@@ -20,6 +20,7 @@ import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
@@ -41,6 +42,7 @@ export interface NotificationCardsProps
   items: EnhancedGitHubNotification[]
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
+  pointerEvents: FlatListProps<any>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
   swipeable?: boolean
@@ -58,15 +60,17 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     enableCompactLabels,
     errorMessage,
     fetchNextPage,
+    items,
     lastFetchedAt,
     loadState,
-    items,
+    pointerEvents,
     refresh,
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
 
   const { appViewMode } = useAppViewMode()
+  const { inlineMode } = useColumnFilters()
   const theme = useTheme()
 
   const visibleItemIndexesRef = useRef<number[]>([])
@@ -198,7 +202,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator />
+        <CardItemSeparator isRead />
 
         {fetchNextPage ? (
           <View>
@@ -282,7 +286,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const contentContainerStyle = useMemo(
     () => ({
-      borderWidth: appViewMode === 'single-column' ? 1 : 0,
+      borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
       borderColor:
         theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
     }),
@@ -334,6 +338,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       maxToRenderPerBatch={3}
       onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
+      pointerEvents={pointerEvents}
       refreshControl={refreshControl}
       removeClippedSubviews
       renderItem={renderItem}

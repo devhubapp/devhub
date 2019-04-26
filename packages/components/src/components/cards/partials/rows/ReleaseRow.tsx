@@ -108,10 +108,12 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 href={fixedURL}
                 textProps={{
                   color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+                  // color: 'foregroundColor',
                   numberOfLines: 1,
                   style: [
                     cardStyles.normalText,
-                    bold && !isRead && cardStyles.boldText,
+                    bold && cardStyles.boldText,
+                    // isRead && { fontWeight: undefined },
                   ],
                 }}
               >

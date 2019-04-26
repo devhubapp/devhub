@@ -166,6 +166,9 @@ export const ColumnOptionsRenderer = React.memo(
             },
           ]}
           pointerEvents={
+            // prevent clicking on filters even when they are hidden behind column
+            // (only enabled for web desktop because this is causing bugs on ios safari)
+            Platform.realOS === 'web' &&
             enableAbsolutePositionAnimation &&
             absolutePositionAnimation &&
             fixedPosition &&

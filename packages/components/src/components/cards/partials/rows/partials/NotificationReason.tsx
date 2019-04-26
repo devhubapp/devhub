@@ -2,16 +2,17 @@ import React from 'react'
 
 import { GitHubNotificationReason } from '@devhub/core'
 import { Platform } from '../../../../../libs/platform'
+import { mutedOpacity, smallerTextSize } from '../../../../../styles/variables'
 import { getNotificationReasonMetadata } from '../../../../../utils/helpers/github/notifications'
 import { ThemedText } from '../../../../themed/ThemedText'
-import { cardStyles } from '../../../styles'
 
 export interface NotificationReasonProps {
+  muted?: boolean
   reason: GitHubNotificationReason
 }
 
 export function NotificationReason(props: NotificationReasonProps) {
-  const { reason } = props
+  const { muted, reason } = props
 
   const reasonDetails = getNotificationReasonMetadata(reason)
 
@@ -19,9 +20,13 @@ export function NotificationReason(props: NotificationReasonProps) {
 
   return (
     <ThemedText
-      color={reasonDetails.color || 'foregroundColor'}
+      color={reasonDetails.color || 'foregroundColorMuted50'}
       numberOfLines={1}
-      style={cardStyles.headerActionText}
+      style={{
+        fontSize: smallerTextSize,
+        fontStyle: 'italic',
+        opacity: muted ? mutedOpacity : 1,
+      }}
       {...Platform.select({
         web: {
           title: reasonDetails.fullDescription,

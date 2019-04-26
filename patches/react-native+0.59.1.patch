@@ -1,0 +1,27 @@
+diff --git a/node_modules/react-native/React/Views/RCTBorderDrawing.m b/node_modules/react-native/React/Views/RCTBorderDrawing.m
+index 2a8d105..a92db47 100644
+--- a/node_modules/react-native/React/Views/RCTBorderDrawing.m
++++ b/node_modules/react-native/React/Views/RCTBorderDrawing.m
+@@ -224,13 +224,15 @@ static CGContextRef RCTUIGraphicsBeginImageContext(CGSize size, CGColorRef backg
+     borderInsets.right + MAX(cornerInsets.bottomRight.width, cornerInsets.topRight.width)
+   };
+ 
+-  // Asymmetrical edgeInsets cause strange artifacting on iOS 10 and earlier.
+-  edgeInsets = (UIEdgeInsets){
+-    MAX(edgeInsets.top, edgeInsets.bottom),
+-    MAX(edgeInsets.left, edgeInsets.right),
+-    MAX(edgeInsets.top, edgeInsets.bottom),
+-    MAX(edgeInsets.left, edgeInsets.right),
+-  };
++  if (hasCornerRadii) {
++    // Asymmetrical edgeInsets cause strange artifacting on iOS 10 and earlier.
++    edgeInsets = (UIEdgeInsets){
++      MAX(edgeInsets.top, edgeInsets.bottom),
++      MAX(edgeInsets.left, edgeInsets.right),
++      MAX(edgeInsets.top, edgeInsets.bottom),
++      MAX(edgeInsets.left, edgeInsets.right),
++    };
++  }
+ 
+   const CGSize size = makeStretchable ? (CGSize){
+     // 1pt for the middle stretchable area along each axis

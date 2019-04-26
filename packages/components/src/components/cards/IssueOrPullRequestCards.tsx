@@ -21,6 +21,7 @@ import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
@@ -48,6 +49,7 @@ export interface IssueOrPullRequestCardsProps
   items: EnhancedGitHubIssueOrPullRequest[]
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
+  pointerEvents: FlatListProps<any>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   swipeable?: boolean
 }
@@ -68,6 +70,7 @@ export const IssueOrPullRequestCards = React.memo(
       items,
       lastFetchedAt,
       loadState,
+      pointerEvents,
       refresh,
     } = props
 
@@ -76,6 +79,7 @@ export const IssueOrPullRequestCards = React.memo(
     >(null)
 
     const { appViewMode } = useAppViewMode()
+    const { inlineMode } = useColumnFilters()
     const theme = useTheme()
 
     const visibleItemIndexesRef = useRef<number[]>([])
@@ -208,7 +212,7 @@ export const IssueOrPullRequestCards = React.memo(
 
       return (
         <>
-          <CardItemSeparator />
+          <CardItemSeparator isRead />
 
           {fetchNextPage ? (
             <View>
@@ -296,7 +300,7 @@ export const IssueOrPullRequestCards = React.memo(
 
     const contentContainerStyle = useMemo(
       () => ({
-        borderWidth: appViewMode === 'single-column' ? 1 : 0,
+        borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
         borderColor:
           theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
       }),
@@ -348,6 +352,7 @@ export const IssueOrPullRequestCards = React.memo(
         maxToRenderPerBatch={3}
         onScrollToIndexFailed={onScrollToIndexFailed}
         onViewableItemsChanged={handleViewableItemsChanged}
+        pointerEvents={pointerEvents}
         refreshControl={refreshControl}
         removeClippedSubviews
         renderItem={renderItem}

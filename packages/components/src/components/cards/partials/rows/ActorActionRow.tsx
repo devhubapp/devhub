@@ -73,9 +73,8 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
     </Fragment>
   )
 
-  const color: keyof ThemeColors = isRead
-    ? 'foregroundColorMuted50'
-    : 'foregroundColor'
+  const color: keyof ThemeColors =
+    (isRead && 'foregroundColorMuted50') || 'foregroundColor'
 
   const bodyStr = `${_body || ''}`.replace(_body[0], _body[0].toLowerCase())
 
@@ -151,6 +150,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
                 cardStyles.normalText,
                 cardStyles.boldText,
                 cardStyles.smallText,
+                // isRead && { fontWeight: undefined },
                 { lineHeight: smallAvatarSize },
                 textStyle,
               ],

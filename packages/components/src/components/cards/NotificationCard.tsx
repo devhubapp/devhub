@@ -37,6 +37,8 @@ import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
+import { CardActions } from './partials/CardActions'
+import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
 import { CardFocusBorder } from './partials/CardFocusBorder'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
@@ -47,6 +49,7 @@ import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
+import { topCardMargin } from './partials/rows/styles'
 import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface NotificationCardProps {
@@ -498,6 +501,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
+                // opacity: isRead ? mutedOpacity : 1,
               }}
               {...!!cardIconDetails.tooltip &&
                 Platform.select({
@@ -533,6 +537,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 }))}
                 muted={isRead}
                 style={{
+                  alignSelf: 'center',
                   justifyContent: 'flex-end',
                   maxWidth:
                     320 +
@@ -552,7 +557,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View
           style={[
             cardStyles.compactItemFixedMinHeight,
-            { width: 102, alignItems: 'flex-end' },
+            {
+              alignSelf: 'center',
+              alignItems: 'flex-end',
+              width: 102,
+            },
           ]}
         >
           {!!updatedAt && (
@@ -582,7 +591,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   >
                     {!!isPrivate && (
                       <>
-                        <ThemedIcon name="lock" />{' '}
+                        <ThemedIcon
+                          name="lock"
+                          style={cardStyles.smallerText}
+                        />{' '}
                       </>
                     )}
                     {dateText}
@@ -593,13 +605,21 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           )}
 
           <NotificationReason
+            // muted={isRead}
             reason={notification.reason as GitHubNotificationReason}
           />
         </View>
 
         <Spacer width={contentPadding / 2} />
 
-        <View style={cardStyles.compactItemFixedHeight}>
+        <View
+          style={[
+            cardStyles.compactItemFixedHeight,
+            {
+              alignSelf: 'center',
+            },
+          ]}
+        >
           <ToggleReadButton
             isRead={isRead}
             itemIds={[id]}
@@ -618,62 +638,75 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       backgroundColor={theme => getCardBackgroundThemeColor(theme, { isRead })}
       style={cardStyles.container}
     >
+      {!!isSaved && <CardBookmarkIndicator />}
       {!!isFocused && <CardFocusBorder />}
 
-      <View
-        style={[
-          sharedStyles.flex,
-          sharedStyles.horizontal,
-          { alignItems: 'flex-start' },
-        ]}
-      >
-        <Spacer width={contentPadding / 3} />
+      <View style={sharedStyles.flex}>
+        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+          <Spacer width={contentPadding / 3} />
 
-        <View
-          style={[cardStyles.itemFixedWidth, cardStyles.itemFixedMinHeight]}
-        >
-          <ThemedIcon
-            color={cardIconColor || 'foregroundColor'}
-            name={cardIconName}
-            selectable={false}
-            style={{
-              fontSize: columnHeaderItemContentSize,
-              textAlign: 'center',
-            }}
-            {...!!cardIconDetails.tooltip &&
-              Platform.select({
-                web: { title: cardIconDetails.tooltip },
-              })}
-          />
-        </View>
+          <View style={[cardStyles.itemFixedWidth, cardStyles.itemFixedHeight]}>
+            <ThemedIcon
+              color={cardIconColor || 'foregroundColor'}
+              name={cardIconName}
+              selectable={false}
+              style={{
+                fontSize: columnHeaderItemContentSize,
+                textAlign: 'center',
+                // opacity: isRead ? mutedOpacity : 1,
+              }}
+              {...!!cardIconDetails.tooltip &&
+                Platform.select({
+                  web: { title: cardIconDetails.tooltip },
+                })}
+            />
+          </View>
 
-        <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
 
-        <View style={sharedStyles.flex}>
-          <NotificationCardHeader
-            key={`notification-card-header-${id}`}
-            avatarUrl={repoAvatarDetails.avatar_url || undefined}
-            date={updatedAt}
-            ids={[id]}
-            isBot={isBot}
-            isPrivate={isPrivate}
-            isRead={isRead}
-            isSaved={isSaved}
-            reason={notification.reason as GitHubNotificationReason}
-            smallLeftColumn
-            userLinkURL={repoAvatarDetails.html_url || ''}
-            username={
-              repoAvatarDetails.display_login || repoAvatarDetails.login
-            }
-          />
-
-          <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-            {/* <Spacer width={leftColumnBigSize - leftColumnSmallSize} /> */}
-            <View style={sharedStyles.flex}>{Content}</View>
-
-            <Spacer width={contentPadding / 3} />
+          <View style={sharedStyles.flex}>
+            <NotificationCardHeader
+              key={`notification-card-header-${id}`}
+              avatarUrl={repoAvatarDetails.avatar_url || undefined}
+              date={updatedAt}
+              ids={[id]}
+              isBot={isBot}
+              isPrivate={isPrivate}
+              isRead={isRead}
+              reason={notification.reason as GitHubNotificationReason}
+              smallLeftColumn
+              userLinkURL={repoAvatarDetails.html_url || ''}
+              username={
+                repoAvatarDetails.display_login || repoAvatarDetails.login
+              }
+            />
           </View>
         </View>
+
+        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+          <Spacer width={contentPadding / 3} />
+
+          <View style={cardStyles.itemFixedWidth} />
+
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <View style={sharedStyles.flex}>{Content}</View>
+
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <View style={cardStyles.itemFixedWidth} />
+
+          {/* <Spacer width={contentPadding / 3} /> */}
+        </View>
+
+        <Spacer height={topCardMargin} />
+
+        <CardActions
+          isRead={isRead}
+          isSaved={isSaved}
+          itemIds={[id]}
+          type="notifications"
+        />
+
+        <Spacer width={contentPadding / 3} />
       </View>
     </ThemedView>
   )

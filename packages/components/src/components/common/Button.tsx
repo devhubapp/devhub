@@ -30,6 +30,7 @@ export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   children: string | React.ReactNode
   contentContainerStyle?: ViewProps['style']
   disabled?: boolean
+  fontSize?: number
   foregroundColor?: string
   hoverBackgroundColor?: string
   hoverForegroundColor?: string
@@ -47,6 +48,7 @@ export const Button = React.memo((props: ButtonProps) => {
     children,
     contentContainerStyle,
     disabled,
+    fontSize,
     foregroundColor,
     hoverBackgroundColor,
     hoverForegroundColor,
@@ -100,15 +102,15 @@ export const Button = React.memo((props: ButtonProps) => {
       touchableBorderColor: backgroundColor
         ? backgroundColor
         : isHovered || isPressing
-        ? hoverBackgroundColor || theme.backgroundColorLess3
-        : theme.backgroundColorLess2,
+        ? hoverBackgroundColor || theme.backgroundColorLess4
+        : theme.backgroundColorLess3,
       innerContainerBackgroundColor:
         isHovered || isPressing
           ? hoverBackgroundColor ||
             (backgroundColor
               ? theme.backgroundColorTransparent10
-              : theme.backgroundColorLess3)
-          : rgba(theme.backgroundColorLess2, 0),
+              : theme.backgroundColorLess4)
+          : rgba(theme.backgroundColorLess3, 0),
       textColor: foregroundColor
         ? foregroundColor
         : borderOnly
@@ -146,7 +148,7 @@ export const Button = React.memo((props: ButtonProps) => {
             ? 'transparent'
             : backgroundColor
             ? backgroundColor
-            : springAnimatedTheme.backgroundColorLess2,
+            : springAnimatedTheme.backgroundColorLess3,
           borderColor: springAnimatedStyles.touchableBorderColor,
           borderWidth: borderOnly ? separatorSize : 0,
           borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
@@ -178,8 +180,8 @@ export const Button = React.memo((props: ButtonProps) => {
         ) : typeof children === 'string' ? (
           <SpringAnimatedText
             style={{
-              lineHeight: Platform.select({ web: 14 }),
-              fontSize: 14,
+              lineHeight: Platform.select({ web: fontSize }),
+              fontSize,
               fontWeight: '500',
               color: springAnimatedStyles.textColor,
             }}

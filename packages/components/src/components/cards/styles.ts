@@ -18,6 +18,7 @@ export const cardStyles = StyleSheet.create({
   container: {
     paddingVertical: contentPadding * (2 / 3),
     paddingHorizontal: contentPadding / 2,
+    overflow: 'hidden',
   },
 
   compactContainer: {
@@ -57,14 +58,14 @@ export const cardStyles = StyleSheet.create({
   },
 
   itemFixedHeight: {
-    height: smallAvatarSize,
+    height: Math.max(20, smallAvatarSize),
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   itemFixedMinHeight: {
-    minHeight: smallAvatarSize,
+    minHeight: Math.max(20, smallAvatarSize),
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',

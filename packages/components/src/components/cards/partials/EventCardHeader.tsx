@@ -9,12 +9,11 @@ import {
 } from '@devhub/core'
 import { Platform } from '../../../libs/platform'
 import { sharedStyles } from '../../../styles/shared'
+import { contentPadding } from '../../../styles/variables'
 import { Avatar } from '../../common/Avatar'
-import { BookmarkButton } from '../../common/BookmarkButton'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
 import { Spacer } from '../../common/Spacer'
-import { ToggleReadButton } from '../../common/ToggleReadButton'
 import { ThemedIcon } from '../../themed/ThemedIcon'
 import { ThemedText } from '../../themed/ThemedText'
 import { ThemedView } from '../../themed/ThemedView'
@@ -28,7 +27,6 @@ export interface EventCardHeaderProps {
   isBot: boolean
   isPrivate?: boolean
   isRead: boolean
-  isSaved?: boolean
   smallLeftColumn?: boolean
   userLinkURL: string
   username: string
@@ -62,7 +60,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     isBot,
     isPrivate,
     isRead,
-    isSaved,
     smallLeftColumn,
     userLinkURL: _userLinkURL,
     username: _username,
@@ -103,8 +100,13 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 href={userLinkURL}
                 textProps={{
                   color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+                  // color: 'foregroundColor',
                   numberOfLines: 1,
-                  style: [cardStyles.usernameText, { lineHeight: undefined }],
+                  style: [
+                    cardStyles.usernameText,
+                    // isRead && { fontWeight: undefined },
+                    { lineHeight: undefined },
+                  ],
                 }}
               >
                 {username}
@@ -125,37 +127,6 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   </ThemedText>
                 </>
               )}
-
-              <IntervalRefresh date={date}>
-                {() => {
-                  const dateText = getDateSmallText(date, false)
-                  if (!dateText) return null
-
-                  return (
-                    <>
-                      <Text children="  " />
-                      <ThemedText
-                        color="foregroundColorMuted50"
-                        numberOfLines={1}
-                        style={[
-                          cardStyles.timestampText,
-                          { lineHeight: undefined },
-                        ]}
-                        {...Platform.select({
-                          web: { title: getFullDateText(date) },
-                        })}
-                      >
-                        {!!isPrivate && (
-                          <>
-                            <ThemedIcon name="lock" />{' '}
-                          </>
-                        )}
-                        {dateText}
-                      </ThemedText>
-                    </>
-                  )
-                }}
-              </IntervalRefresh>
             </View>
 
             <Spacer height={2} />
@@ -169,20 +140,55 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             </ThemedText>
           </View>
 
-          <ToggleReadButton
-            isRead={isRead}
-            itemIds={ids}
-            style={{
-              alignSelf: 'flex-start',
-            }}
-            type="activity"
-          />
+          <View
+            style={[
+              sharedStyles.horizontalAndVerticallyAligned,
+              { alignSelf: 'flex-start' },
+            ]}
+          >
+            {/* {!isRead && (
+              <>
+                <Spacer width={contentPadding / 2} />
+                <ThemedView
+                  backgroundColor={isRead ? undefined : 'foregroundColor'}
+                  style={{ width: 6, height: 6, borderRadius: 6 / 2 }}
+                />
+              </>
+            )} */}
 
-          <BookmarkButton
-            isSaved={!!isSaved}
-            itemIds={ids}
-            style={{ alignSelf: 'flex-start' }}
-          />
+            <IntervalRefresh date={date}>
+              {() => {
+                const dateText = getDateSmallText(date, false)
+                if (!dateText) return null
+
+                return (
+                  <>
+                    <Text children="  " />
+                    <ThemedText
+                      color="foregroundColorMuted50"
+                      numberOfLines={1}
+                      style={cardStyles.timestampText}
+                      {...Platform.select({
+                        web: { title: getFullDateText(date) },
+                      })}
+                    >
+                      {!!isPrivate && (
+                        <>
+                          <ThemedIcon
+                            name="lock"
+                            style={cardStyles.smallerText}
+                          />{' '}
+                        </>
+                      )}
+                      {dateText}
+                    </ThemedText>
+                  </>
+                )
+              }}
+            </IntervalRefresh>
+
+            <Spacer width={contentPadding / 3} />
+          </View>
         </View>
       </View>
     </View>

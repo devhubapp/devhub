@@ -1,3 +1,4 @@
+import { getLuminance } from 'polished'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 
@@ -46,7 +47,7 @@ import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
 
 export function getColumnCardThemeColors(
-  _backgroundColor?: string,
+  backgroundColor: string,
 ): {
   column: keyof ThemeColors
   unread: keyof ThemeColors
@@ -54,24 +55,34 @@ export function getColumnCardThemeColors(
   read: keyof ThemeColors
   read__hover: keyof ThemeColors
 } {
-  // const luminance = getLuminance(backgroundColor)
+  const luminance = getLuminance(backgroundColor)
 
-  // if (luminance <= 0.02) {
-  //   return {
-  //     column: 'backgroundColor',
-  //     unread: 'backgroundColorLighther2',
-  //     unread__hover: 'backgroundColorLighther4',
-  //     read: 'backgroundColor',
-  //     read__hover: 'backgroundColorLess3',
-  //   }
-  // }
+  if (luminance <= 0.02) {
+    return {
+      column: 'backgroundColor',
+      read: 'backgroundColor',
+      read__hover: 'backgroundColorLighther2',
+      unread: 'backgroundColorLighther3',
+      unread__hover: 'backgroundColorLighther4',
+    }
+  }
+
+  if (luminance >= 0.6) {
+    return {
+      column: 'backgroundColor',
+      read: 'backgroundColorDarker1',
+      read__hover: 'backgroundColorDarker2',
+      unread: 'backgroundColorLighther1',
+      unread__hover: 'backgroundColorLighther2',
+    }
+  }
 
   return {
     column: 'backgroundColor',
+    read: 'backgroundColor',
+    read__hover: 'backgroundColorDarker1',
     unread: 'backgroundColorLighther2',
     unread__hover: 'backgroundColorLighther3',
-    read: 'backgroundColorDarker1',
-    read__hover: 'backgroundColorDarker2',
   }
 }
 
@@ -437,12 +448,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               />
             )}
 
-            <View
-              style={sharedStyles.flex}
-              pointerEvents={
-                isFiltersOpened && !inlineMode ? 'none' : undefined
-              }
-            >
+            <View style={sharedStyles.flex}>
               <ViewMeasurer
                 key="column-renderer-view-measurer"
                 initialResult={{
