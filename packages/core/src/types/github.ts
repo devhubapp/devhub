@@ -610,15 +610,18 @@ export type GitHubEvent =
 
 export type GitHubEventAction =
   | 'added'
+  | 'closed'
   | 'commented'
   | 'created'
   | 'deleted'
   | 'forked'
+  | 'merged'
+  | 'opened'
   | 'pushed'
   | 'released'
+  | 'reopened'
   | 'reviewed'
   | 'starred'
-  | 'state_changed'
   | 'updated'
 
 // not visible in timelines

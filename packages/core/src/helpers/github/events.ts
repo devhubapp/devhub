@@ -20,15 +20,18 @@ export function getOlderEventDate(
 
 export const eventActions: GitHubEventAction[] = [
   'added',
+  'closed',
   'commented',
   'created',
   'deleted',
   'forked',
+  'merged',
+  'opened',
   'pushed',
   'released',
+  'reopened',
   'reviewed',
   'starred',
-  'state_changed',
   'updated',
 ]
 
@@ -234,19 +237,19 @@ export function getEventMetadata(
         switch (event.payload.action) {
           case 'closed':
             return {
-              action: 'state_changed',
+              action: 'closed',
               actionText: `Closed ${issueTextWithColon}`,
               subjectType,
             }
           case 'reopened':
             return {
-              action: 'state_changed',
+              action: 'reopened',
               actionText: `Reopened ${issueTextWithColon}`,
               subjectType,
             }
           case 'opened':
             return {
-              action: 'created',
+              action: 'opened',
               actionText: `Opened ${issueTextWithColon}`,
               subjectType,
             }
@@ -350,7 +353,7 @@ export function getEventMetadata(
             }
           case 'opened':
             return {
-              action: 'created',
+              action: 'opened',
               actionText: `Opened ${pullRequestTextWithColon}`,
               subjectType,
             }
@@ -361,18 +364,24 @@ export function getEventMetadata(
               subjectType,
             }
 
-          case 'closed':
+          case 'closed': {
+            const isMerged = !!(
+              event.payload.pull_request.merged ||
+              event.payload.pull_request.merged_at
+            )
+
             return {
-              action: 'state_changed',
-              actionText: event.payload.pull_request.merged_at
+              action: isMerged ? 'merged' : 'closed',
+              actionText: isMerged
                 ? `Merged ${pullRequestTextWithColon}`
                 : `Closed ${pullRequestTextWithColon}`,
               subjectType,
             }
+          }
 
           case 'reopened':
             return {
-              action: 'state_changed',
+              action: 'reopened',
               actionText: `Reopened ${pullRequestTextWithColon}`,
               subjectType,
             }
