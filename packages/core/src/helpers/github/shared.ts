@@ -700,7 +700,7 @@ export function getSubjectTypeMetadata<
   ) {
     case 'PullRequestReview': {
       return {
-        label: 'Review',
+        label: 'Pull Request Review',
         subjectType,
       }
     }
