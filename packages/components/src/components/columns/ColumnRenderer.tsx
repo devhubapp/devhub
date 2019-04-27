@@ -246,6 +246,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     fetchColumnSubscriptionRequest({
       columnId: column.id,
       params: { page: 1, perPage: constants.DEFAULT_PAGINATION_PER_PAGE },
+      replaceAllItems: false,
     })
   }, [fetchColumnSubscriptionRequest, column.id])
 

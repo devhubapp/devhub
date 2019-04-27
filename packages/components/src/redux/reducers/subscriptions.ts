@@ -5,6 +5,7 @@ import {
   ColumnSubscription,
   constants,
   mergeEventsPreservingEnhancement,
+  mergeIssuesOrPullRequestsPreservingEnhancement,
   mergeNotificationsPreservingEnhancement,
   normalizeSubscriptions,
   removeUselessURLsFromResponseItem,
@@ -53,68 +54,50 @@ export const subscriptionsReducer: Reducer<State> = (
           // remove old items from the cache
           // unless they were marked as Save for Later
           if (subscription.data.items.length) {
-            let count = 0
-
             if (subscription.type === 'activity') {
-              subscription.data.items = sortEvents(subscription.data.items)
-                .filter(item => {
-                  if (!item) return false
-                  if (item.saved) return true
-                  if (!action.payload.deleteOlderThan) return false
-                  if (!item.created_at) return true
+              subscription.data.items = sortEvents(
+                subscription.data.items,
+              ).filter(item => {
+                if (!item) return false
+                if (item.saved) return true
+                if (!action.payload.deleteOlderThan) return false
+                if (!item.created_at) return true
 
-                  return (
-                    new Date(item.created_at).toISOString() >=
-                    action.payload.deleteOlderThan
-                  )
-                })
-                .filter(item => {
-                  count = count + 1
-                  if (item.saved) return true
-                  return count <= constants.DEFAULT_PAGINATION_PER_PAGE
-                })
+                return (
+                  new Date(item.created_at).toISOString() >=
+                  action.payload.deleteOlderThan
+                )
+              })
             } else if (subscription.type === 'issue_or_pr') {
               subscription.data.items = sortIssuesOrPullRequests(
                 subscription.data.items,
-              )
-                .filter(item => {
-                  if (!item) return false
-                  if (item.saved) return true
-                  // if (item.unread) return true
-                  if (!action.payload.deleteOlderThan) return false
-                  if (!item.updated_at) return true
+              ).filter(item => {
+                if (!item) return false
+                if (item.saved) return true
+                // if (item.unread) return true
+                if (!action.payload.deleteOlderThan) return false
+                if (!item.updated_at) return true
 
-                  return (
-                    new Date(item.updated_at).toISOString() >=
-                    action.payload.deleteOlderThan
-                  )
-                })
-                .filter(item => {
-                  count = count + 1
-                  if (item.saved) return true
-                  return count <= constants.DEFAULT_PAGINATION_PER_PAGE
-                })
+                return (
+                  new Date(item.updated_at).toISOString() >=
+                  action.payload.deleteOlderThan
+                )
+              })
             } else if (subscription.type === 'notifications') {
               subscription.data.items = sortNotifications(
                 subscription.data.items,
-              )
-                .filter(item => {
-                  if (!item) return false
-                  if (item.saved) return true
-                  // if (item.unread) return true
-                  if (!action.payload.deleteOlderThan) return false
-                  if (!item.updated_at) return true
+              ).filter(item => {
+                if (!item) return false
+                if (item.saved) return true
+                // if (item.unread) return true
+                if (!action.payload.deleteOlderThan) return false
+                if (!item.updated_at) return true
 
-                  return (
-                    new Date(item.updated_at).toISOString() >=
-                    action.payload.deleteOlderThan
-                  )
-                })
-                .filter(item => {
-                  count = count + 1
-                  if (item.saved) return true
-                  return count <= constants.DEFAULT_PAGINATION_PER_PAGE
-                })
+                return (
+                  new Date(item.updated_at).toISOString() >=
+                  action.payload.deleteOlderThan
+                )
+              })
             } else {
               console.error(
                 `Unhandled subscription type: ${(subscription as any).type}`,
@@ -230,10 +213,15 @@ export const subscriptionsReducer: Reducer<State> = (
         const prevItems = (subscription.data.items || []) as any
         const newItems = (action.payload.data || []) as any
 
-        const mergedItems: any[] =
-          action.payload.subscriptionType === 'notifications'
-            ? mergeNotificationsPreservingEnhancement(newItems, prevItems)
-            : mergeEventsPreservingEnhancement(newItems, prevItems)
+        const mergedItems: any[] = action.payload.replaceAllItems
+          ? newItems
+          : action.payload.subscriptionType === 'activity'
+          ? mergeEventsPreservingEnhancement(newItems, prevItems)
+          : action.payload.subscriptionType === 'issue_or_pr'
+          ? mergeIssuesOrPullRequestsPreservingEnhancement(newItems, prevItems)
+          : action.payload.subscriptionType === 'notifications'
+          ? mergeNotificationsPreservingEnhancement(newItems, prevItems)
+          : mergeEventsPreservingEnhancement(newItems, prevItems)
 
         subscription.data.items = mergedItems.map(
           removeUselessURLsFromResponseItem,

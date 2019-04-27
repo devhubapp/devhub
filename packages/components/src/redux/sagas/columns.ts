@@ -336,6 +336,7 @@ function* onColumnSubscriptionFilterChange(
             params: { ...newSubscription.params, page: 1, perPage: 10 },
             subscriptionId: newSubscription.id,
             subscriptionType: newSubscription.type,
+            replaceAllItems: true,
           }),
         ),
       )

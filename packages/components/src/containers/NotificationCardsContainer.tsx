@@ -111,6 +111,7 @@ export const NotificationCardsContainer = React.memo(
             page: page || 1,
             perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
           },
+          replaceAllItems: false,
         })
       },
       [fetchColumnSubscriptionRequest, column.id],

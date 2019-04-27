@@ -1,6 +1,5 @@
 import { Response } from '@octokit/rest'
 import _ from 'lodash'
-import { REHYDRATE } from 'redux-persist'
 import {
   actionChannel,
   all,
@@ -58,10 +57,10 @@ function* init() {
   // yield take('LOGIN_SUCCESS')
   yield take(['REFRESH_INSTALLATIONS_SUCCESS', 'REFRESH_INSTALLATIONS_FAILURE'])
 
-  let isFirstTime = true
+  let _isFirstTime = true
   while (true) {
     const { action } = yield race({
-      delay: delay(isFirstTime ? 0 : 10 * 1000),
+      delay: delay(_isFirstTime ? 0 : 10 * 1000),
       action: take([
         'LOGIN_SUCCESS',
         'LOGIN_FAILURE',
@@ -77,12 +76,12 @@ function* init() {
         action.type === 'REFRESH_INSTALLATIONS_SUCCESS')
     )
 
-    const _isFirstTime = isFirstTime
-    isFirstTime = false
+    const isFirstTime = _isFirstTime
+    _isFirstTime = false
 
     const state = yield select()
 
-    if (_isFirstTime) {
+    if (isFirstTime) {
       const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
       if (!hasCreatedColumn)
         yield take([
@@ -102,7 +101,7 @@ function* init() {
     // TODO: Eventually the number of subscriptions wont be 1x1 with the number of columns
     // Because columns will be able to have multiple subscriptions.
     // When that happens, improve this. Limit based on number of columns or subscriptions?
-    const subscriptionsToFetch = _isFirstTime
+    const subscriptionsToFetch = isFirstTime
       ? subscriptions.slice(0, constants.COLUMNS_LIMIT)
       : subscriptions
           .slice(0, constants.COLUMNS_LIMIT)
@@ -155,22 +154,12 @@ function* init() {
             subscriptionType: subscription.type,
             subscriptionId: subscription.id,
             params: { page: 1 },
+            replaceAllItems: isFirstTime,
           }),
         )
       }),
     )
   }
-}
-
-function* onRehydrate() {
-  const state = yield select()
-  const isLogged = !!selectors.currentUserSelector(state)
-  if (!isLogged) return
-
-  const sevenDays = 1000 * 60 * 60 * 24 * 7
-  const deleteOlderThan = new Date(Date.now() - sevenDays).toISOString()
-
-  yield put(actions.cleanupSubscriptionsData({ deleteOlderThan }))
 }
 
 function* cleanupSubscriptions() {
@@ -214,6 +203,7 @@ function* onAddColumn(
     actions.fetchColumnSubscriptionRequest({
       columnId: column.id,
       params: { page: 1 },
+      replaceAllItems: false,
     }),
   )
 }
@@ -240,6 +230,7 @@ function* onFetchColumnSubscriptions(
           subscriptionType: subscription.type,
           subscriptionId: subscription.id,
           params: action.payload.params,
+          replaceAllItems: action.payload.replaceAllItems,
         }),
       )
     }),
@@ -266,6 +257,7 @@ function* onFetchRequest(
 
   const {
     params: payloadParams,
+    replaceAllItems,
     subscriptionId,
     subscriptionType,
   } = action.payload
@@ -335,8 +327,10 @@ function* onFetchRequest(
         prevItems,
       )
 
-      const olderItemDate = getOlderNotificationDate(mergedItems)
       const olderDateFromThisResponse = getOlderNotificationDate(newItems)
+      const olderItemDate = replaceAllItems
+        ? olderDateFromThisResponse
+        : getOlderNotificationDate(mergedItems)
 
       if (!notificationsCache) {
         notificationsCache = createNotificationsCache(prevItems)
@@ -394,8 +388,10 @@ function* onFetchRequest(
       const newItems = (response.data || []) as GitHubEvent[]
       const mergedItems = mergeEventsPreservingEnhancement(newItems, prevItems)
 
-      const olderItemDate = getOlderEventDate(mergedItems)
       const olderDateFromThisResponse = getOlderEventDate(newItems)
+      const olderItemDate = replaceAllItems
+        ? olderDateFromThisResponse
+        : getOlderEventDate(mergedItems)
 
       data = newItems
 
@@ -429,8 +425,10 @@ function* onFetchRequest(
         prevItems,
       )
 
-      const olderItemDate = getOlderIssueOrPullRequestDate(mergedItems)
       const olderDateFromThisResponse = getOlderIssueOrPullRequestDate(newItems)
+      const olderItemDate = replaceAllItems
+        ? olderDateFromThisResponse
+        : getOlderIssueOrPullRequestDate(mergedItems)
 
       if (!issuesOrPullRequestsCache) {
         issuesOrPullRequestsCache = createIssuesOrPullRequestsCache(prevItems)
@@ -490,6 +488,7 @@ function* onFetchRequest(
         subscriptionId,
         data,
         canFetchMore,
+        replaceAllItems,
         github: { appTokenType, headers: githubAPIHeaders },
       }),
     )
@@ -508,6 +507,7 @@ function* onFetchRequest(
         {
           subscriptionType,
           subscriptionId,
+          replaceAllItems,
           github: { appTokenType, headers: githubAPIHeaders },
         },
         error,
@@ -659,7 +659,6 @@ export function* subscriptionsSagas() {
   yield all([
     yield fork(init),
     yield fork(watchFetchRequests),
-    yield takeLatest(REHYDRATE, onRehydrate),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
     yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
