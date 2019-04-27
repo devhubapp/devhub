@@ -240,12 +240,6 @@ export default {
     }),
   10: (state: RootState) =>
     immer(state, draft => {
-      draft.config = draft.config || {}
-
-      draft.config.appViewMode = 'single-column'
-    }),
-  11: (state: RootState) =>
-    immer(state, draft => {
       draft.columns = draft.columns || {}
       draft.columns.byId = draft.columns.byId || {}
 

@@ -19,13 +19,15 @@ export function useAppViewMode() {
   const { sizename } = useAppLayout()
   const _appViewMode = useReduxState(selectors._appViewModeSelector)
 
-  const canSwitchAppViewMode = sizename >= '2-medium'
+  const isBigEnoughForMultiColumnView = sizename >= '2-medium'
 
-  const appViewMode = canSwitchAppViewMode ? _appViewMode : 'single-column'
+  const appViewMode = isBigEnoughForMultiColumnView
+    ? _appViewMode
+    : 'single-column'
 
   return {
     appViewMode,
-    canSwitchAppViewMode,
+    canSwitchAppViewMode: isBigEnoughForMultiColumnView,
     getCardViewMode,
     getEnableCompactLabels,
   }

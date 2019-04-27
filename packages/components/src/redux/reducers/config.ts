@@ -15,7 +15,7 @@ const initialState: State = {
   preferredDarkTheme: { id: constants.DEFAULT_DARK_THEME },
   preferredLightTheme: { id: constants.DEFAULT_LIGHT_THEME },
   theme: constants.DEFAULT_THEME_PAIR,
-  appViewMode: 'single-column',
+  appViewMode: 'multi-column',
 }
 
 export const configReducer: Reducer<State> = (state = initialState, action) => {
