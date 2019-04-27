@@ -652,6 +652,8 @@ export type GitHubEventSubjectType =
   | 'User'
   | 'Wiki'
 
+export type GitHubStateType = 'open' | 'closed' | 'merged'
+
 export type GitHubIssueOrPullRequest = GitHubIssue | GitHubPullRequest
 
 export type GitHubIssueOrPullRequestSubjectType = 'Issue' | 'PullRequest'

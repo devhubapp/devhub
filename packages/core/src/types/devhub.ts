@@ -16,6 +16,7 @@ import {
   GitHubPullRequest,
   GitHubRelease,
   GitHubRepo,
+  GitHubStateType,
   GitHubWatchEvent,
 } from './github'
 import { Omit } from './typescript'
@@ -169,6 +170,8 @@ export interface IssueOrPullRequestColumnSubscription {
   params: {
     repoFullName?: string
     subjectType: GitHubIssueOrPullRequestSubjectType
+    state?: ColumnFilters['state']
+    draft?: ColumnFilters['draft']
   }
   data: ColumnSubscriptionData<any>
   createdAt: string
@@ -201,6 +204,7 @@ export type NotificationColumnSubscription = {
 
 export interface BaseColumnFilters {
   clearedAt?: string
+  draft?: boolean
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
   private?: boolean
@@ -212,6 +216,7 @@ export interface BaseColumnFilters {
   //   regex?: string
   // }
   // sort?: string[]
+  state?: Partial<Record<GitHubStateType, boolean>>
   subjectTypes?:
     | Partial<Record<GitHubEventSubjectType, boolean>>
     | Partial<Record<GitHubNotificationSubjectType, boolean>>

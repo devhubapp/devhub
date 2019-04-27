@@ -9,8 +9,10 @@ import {
   NotificationColumnFilters,
 } from '../types'
 import {
+  getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
   getNotificationSubjectType,
+  isDraft,
   isItemRead,
   sortIssuesOrPullRequests,
   sortNotifications,
@@ -118,7 +120,12 @@ function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
   if (filters.clearedAt) return true
   if (typeof filters.private === 'boolean') return true
   if (typeof filters.saved === 'boolean') return true
+  if (typeof filters.draft === 'boolean') return true
   if (typeof filters.unread === 'boolean') return true
+
+  if (filters.state && filterRecordHasAnyForcedValue(filters.state)) {
+    return true
+  }
 
   if (
     filters.subjectTypes &&
@@ -187,6 +194,41 @@ export function getFilteredIssueOrPullRequests(
   if (filters && issueOrPullRequestColumnHasAnyFilter(filters)) {
     _items = _items.filter(item => {
       const subjectType = getIssueOrPullRequestSubjectType(item)
+      const issueOrPR =
+        subjectType === 'Issue' || subjectType === 'PullRequest'
+          ? item
+          : undefined
+
+      const isStateFilterStrict = filterRecordWithThisValueCount(
+        filters.state,
+        true,
+      )
+      if (
+        (isStateFilterStrict &&
+          (!issueOrPR ||
+            !itemPassesFilterRecord(
+              filters.state!,
+              getIssueOrPullRequestState(issueOrPR)!,
+              true,
+            ))) ||
+        (!isStateFilterStrict &&
+          issueOrPR &&
+          !itemPassesFilterRecord(
+            filters.state!,
+            getIssueOrPullRequestState(issueOrPR)!,
+            true,
+          ))
+      )
+        return false
+
+      if (
+        (filters.draft === true &&
+          (!issueOrPR || filters.draft !== isDraft(issueOrPR))) ||
+        (filters.draft === false &&
+          issueOrPR &&
+          filters.draft !== isDraft(issueOrPR))
+      )
+        return false
 
       if (!itemPassesFilterRecord(filters.subjectTypes!, subjectType!, true))
         return false
@@ -231,6 +273,10 @@ export function getFilteredNotifications(
   if (filters && notificationColumnHasAnyFilter(filters)) {
     _notifications = _notifications.filter(item => {
       const subjectType = getNotificationSubjectType(item)
+      const issueOrPR =
+        subjectType === 'Issue' || subjectType === 'PullRequest'
+          ? item.issue || item.pullRequest
+          : undefined
 
       if (!itemPassesFilterRecord(reasonsFilter!, item.reason, true))
         return false
@@ -239,6 +285,37 @@ export function getFilteredNotifications(
         filters.notifications &&
         filters.notifications.participating &&
         item.reason === 'subscribed'
+      )
+        return false
+
+      const isStateFilterStrict = filterRecordWithThisValueCount(
+        filters.state,
+        true,
+      )
+      if (
+        (isStateFilterStrict &&
+          (!issueOrPR ||
+            !itemPassesFilterRecord(
+              filters.state!,
+              getIssueOrPullRequestState(issueOrPR)!,
+              true,
+            ))) ||
+        (!isStateFilterStrict &&
+          issueOrPR &&
+          !itemPassesFilterRecord(
+            filters.state!,
+            getIssueOrPullRequestState(issueOrPR)!,
+            true,
+          ))
+      )
+        return false
+
+      if (
+        (filters.draft === true &&
+          (!issueOrPR || filters.draft !== isDraft(issueOrPR))) ||
+        (filters.draft === false &&
+          issueOrPR &&
+          filters.draft !== isDraft(issueOrPR))
       )
         return false
 
@@ -292,6 +369,46 @@ export function getFilteredEvents(
   if (filters && activityColumnHasAnyFilter(filters)) {
     _events = _events.filter(item => {
       const subjectType = getEventSubjectType(item)
+
+      const issueOrPR =
+        item &&
+        item.payload &&
+        ('issue' in item.payload
+          ? item.payload.issue
+          : 'pull_request' in item.payload
+          ? item.payload.pull_request
+          : undefined)
+
+      const isStateFilterStrict = filterRecordWithThisValueCount(
+        filters.state,
+        true,
+      )
+      if (
+        (isStateFilterStrict &&
+          (!issueOrPR ||
+            !itemPassesFilterRecord(
+              filters.state!,
+              getIssueOrPullRequestState(issueOrPR)!,
+              true,
+            ))) ||
+        (!isStateFilterStrict &&
+          issueOrPR &&
+          !itemPassesFilterRecord(
+            filters.state!,
+            getIssueOrPullRequestState(issueOrPR)!,
+            true,
+          ))
+      )
+        return false
+
+      if (
+        (filters.draft === true &&
+          (!issueOrPR || filters.draft !== isDraft(issueOrPR))) ||
+        (filters.draft === false &&
+          issueOrPR &&
+          filters.draft !== isDraft(issueOrPR))
+      )
+        return false
 
       if (!itemPassesFilterRecord(filters.subjectTypes!, subjectType!, true))
         return false

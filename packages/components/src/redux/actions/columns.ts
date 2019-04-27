@@ -7,6 +7,7 @@ import {
   GitHubEventSubjectType,
   GitHubNotificationReason,
   GitHubNotificationSubjectType,
+  GitHubStateType,
   NotificationColumnFilters,
 } from '@devhub/core'
 import { EmitterTypes } from '../../libs/emitter'
@@ -76,6 +77,22 @@ export function setColumnReasonFilter<
   T extends GitHubNotificationReason
 >(payload: { columnId: string; reason: T; value: boolean | null }) {
   return createAction('SET_COLUMN_REASON_FILTER', payload)
+}
+
+export function setColummStateTypeFilter<T extends GitHubStateType>(payload: {
+  columnId: string
+  state: T
+  value: boolean | null
+  supportsOnlyOne?: boolean
+}) {
+  return createAction('SET_COLUMN_STATE_FILTER', payload)
+}
+
+export function setColummDraftFilter(payload: {
+  columnId: string
+  draft: ColumnFilters['draft']
+}) {
+  return createAction('SET_COLUMN_DRAFT_FILTER', payload)
 }
 
 export function setColummSubjectTypeFilter<

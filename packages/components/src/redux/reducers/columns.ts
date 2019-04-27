@@ -6,6 +6,7 @@ import {
   Column,
   GitHubEventSubjectType,
   GitHubNotificationSubjectType,
+  GitHubStateType,
   normalizeColumns,
   normalizeSubscriptions,
   NotificationColumn,
@@ -233,6 +234,48 @@ export const columnsReducer: Reducer<State> = (
         } else {
           delete column.filters.notifications.reasons[action.payload.reason]
         }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_STATE_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.state = action.payload.supportsOnlyOne
+          ? {}
+          : column.filters.state || {}
+
+        const value = column.filters.state as Partial<
+          Record<GitHubStateType, boolean>
+        >
+
+        if (action.payload.supportsOnlyOne) {
+          if (action.payload.value === true) {
+            value[action.payload.state] = action.payload.value
+          }
+        } else if (typeof action.payload.value === 'boolean') {
+          value[action.payload.state] = action.payload.value
+        } else {
+          delete value[action.payload.state]
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_DRAFT_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.draft = action.payload.draft
 
         draft.updatedAt = new Date().toISOString()
       })

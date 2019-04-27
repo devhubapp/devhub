@@ -8,13 +8,19 @@ import {
   GitHubIssueOrPullRequest,
   GitHubIssueOrPullRequestSubjectType,
   GitHubPullRequest,
+  GitHubStateType,
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestPayloadEnhancement,
 } from '../../types'
 import {
+  filterRecordHasAnyForcedValue,
+  itemPassesFilterRecord,
+} from '../filters'
+import {
   getIssueIconAndColor,
   getOwnerAndRepo,
   getPullRequestIconAndColor,
+  isPullRequest,
 } from './shared'
 import { getRepoFullNameFromUrl } from './url'
 
@@ -54,6 +60,22 @@ export function mergeIssuesOrPullRequestsPreservingEnhancement(
       return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
     }),
   )
+}
+
+export function getIssueOrPullRequestState(
+  item: GitHubIssueOrPullRequest | undefined,
+): GitHubStateType | null {
+  if (!item) return null
+
+  const isPR = isPullRequest(item)
+
+  if (
+    (isPR && ('merged' in item && item.merged)) ||
+    ('merged_at' in item && item.merged_at)
+  )
+    return 'merged'
+
+  return item.state || null
 }
 
 export function getIssueOrPullRequestSubjectType(
@@ -224,12 +246,68 @@ export function getGitHubIssueSearchQuery(
 ) {
   const queryArr: string[] = []
 
-  const { repoFullName, subjectType } = params
+  const { draft, repoFullName, state, subjectType } = params
 
   if (repoFullName) queryArr.push(`repo:${repoFullName}`)
 
   if (subjectType === 'Issue') queryArr.push('is:issue')
   else if (subjectType === 'PullRequest') queryArr.push('is:pr')
+
+  if (typeof draft === 'boolean') {
+    if (draft) queryArr.push('is:draft')
+    else queryArr.push('-is:draft')
+  }
+
+  if (state && filterRecordHasAnyForcedValue(state)) {
+    const open = itemPassesFilterRecord(state, 'open', true) ? 'open' : ''
+    const closed = itemPassesFilterRecord(state, 'closed', true) ? 'closed' : ''
+    const merged = itemPassesFilterRecord(state, 'merged', true) ? 'merged' : ''
+    const includesExactly = [open, closed, merged].filter(Boolean).join(',')
+
+    switch (includesExactly) {
+      // 001
+      case 'merged': {
+        queryArr.push('is:merged')
+        break
+      }
+
+      // 010
+      case 'closed': {
+        queryArr.push('state:closed')
+        break
+      }
+
+      // 011
+      case 'closed,merged': {
+        queryArr.push('-state:open')
+        break
+      }
+
+      // 100
+      case 'open': {
+        queryArr.push('state:open')
+        break
+      }
+
+      // 101 (NOT POSSIBLE ON GITHUB)
+      // case 'open,merged': {
+      //   queryArr.push('is:merged')
+      //   break
+      // }
+
+      // 110 (NOT POSSIBLE ON GITHUB)
+      // case 'open,closed': {
+      //   queryArr.push('is:unmerged')
+      //   break
+      // }
+
+      // 000 (not valid)
+      // 111 (return all)
+      default: {
+        break
+      }
+    }
+  }
 
   return queryArr.join(' ')
 }

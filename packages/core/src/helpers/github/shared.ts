@@ -15,6 +15,7 @@ import {
   GitHubIcon,
   GitHubNotificationSubjectType,
   GitHubPullRequest,
+  GitHubStateType,
   IssueOrPullRequestColumnSubscription,
   NotificationColumnSubscription,
   ThemeColors,
@@ -39,10 +40,14 @@ export function isUnreadFilterChecked(filters: ColumnFilters | undefined) {
   return !(filters && filters.unread === false)
 }
 
-export function isDraft(pullRequest: {
-  draft?: GitHubPullRequest['draft']
-  mergeable_state?: GitHubPullRequest['mergeable_state'] | undefined
-}) {
+export function isDraft(
+  pullRequest:
+    | {
+        draft?: GitHubPullRequest['draft']
+        mergeable_state?: GitHubPullRequest['mergeable_state'] | undefined
+      }
+    | undefined,
+) {
   if (!pullRequest) return false
   return !!pullRequest.draft || pullRequest.mergeable_state === 'draft'
 }
@@ -530,6 +535,11 @@ export function getBranchNameFromRef(ref: string | undefined) {
     .slice(2)
     .join('/')
 }
+export const issueOrPullRequestStateTypes: GitHubStateType[] = [
+  'open',
+  'closed',
+  'merged',
+]
 
 export function getCommitIconAndColor(): {
   icon: GitHubIcon
@@ -631,6 +641,48 @@ export function getIssueIconAndColor(issue: {
 
     default:
       return { icon: 'issue-opened', tooltip: 'Issue' }
+  }
+}
+
+export function getStateTypeMetadata<T extends GitHubStateType>(
+  state: T,
+): {
+  color: keyof ThemeColors
+  label: string
+  state: T
+} {
+  switch (state as GitHubStateType) {
+    case 'open': {
+      return {
+        color: 'green',
+        label: 'Open',
+        state,
+      }
+    }
+
+    case 'closed': {
+      return {
+        color: 'lightRed',
+        label: 'Closed',
+        state,
+      }
+    }
+
+    case 'merged': {
+      return {
+        color: 'purple',
+        label: 'Merged',
+        state,
+      }
+    }
+
+    default: {
+      return {
+        color: 'primaryBackgroundColor',
+        label: _.startCase(state),
+        state,
+      }
+    }
   }
 }
 

@@ -13,9 +13,11 @@ import {
   getNotificationReasonMetadata,
   GitHubEventSubjectType,
   GitHubNotificationSubjectType,
+  GitHubStateType,
   isReadFilterChecked,
   issueOrPullRequestSubjectTypes,
   isUnreadFilterChecked,
+  itemPassesFilterRecord,
   notificationReasons,
   notificationSubjectTypes,
   ThemeColors,
@@ -31,7 +33,11 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
-import { getSubjectTypeMetadata } from '../../utils/helpers/github/shared'
+import {
+  getStateTypeMetadata,
+  getSubjectTypeMetadata,
+  issueOrPullRequestStateTypes,
+} from '../../utils/helpers/github/shared'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
 import { Separator } from '../common/Separator'
@@ -45,6 +51,8 @@ import { ColumnOptionsRow } from './ColumnOptionsRow'
 
 const metadataSortFn = (a: { label: string }, b: { label: string }) =>
   a.label < b.label ? -1 : a.label > b.label ? 1 : 0
+
+const stateTypeOptions = issueOrPullRequestStateTypes.map(getStateTypeMetadata)
 
 const eventSubjectTypeOptions = eventSubjectTypes
   .map(getSubjectTypeMetadata)
@@ -81,6 +89,8 @@ export type ColumnOptionCategory =
   | 'notification_reason'
   | 'privacy'
   | 'saved_for_later'
+  | 'state'
+  | 'draft'
   | 'subject_types'
   | 'unread'
 
@@ -98,6 +108,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     column.type === 'notifications' && 'inbox',
     'saved_for_later',
     'unread',
+    'state',
+    'draft',
     'subject_types',
     column.type === 'activity' && 'event_action',
     column.type === 'notifications' && 'notification_reason',
@@ -140,6 +152,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   )
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
+  const setColummStateTypeFilter = useReduxAction(
+    actions.setColummStateTypeFilter,
+  )
+  const setColummDraftFilter = useReduxAction(actions.setColummDraftFilter)
   const setColummSubjectTypeFilter = useReduxAction(
     actions.setColummSubjectTypeFilter,
   )
@@ -357,6 +373,161 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       unread: getUnreadFilterValue(isReadChecked, !!checked),
                     })
                   }}
+                />
+              </ColumnOptionsRow>
+            )
+          })()}
+
+        {allColumnOptionCategories.includes('state') &&
+          (() => {
+            const filters =
+              column.filters &&
+              (column.filters.state as Partial<
+                Record<GitHubStateType, boolean>
+              >)
+
+            const defaultBooleanValue = true
+            const isFilterStrict = filterRecordWithThisValueCount(
+              filters,
+              defaultBooleanValue,
+            )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              stateTypeOptions.length,
+              defaultBooleanValue,
+            )
+
+            const supportsOnlyOne = column.type === 'issue_or_pr'
+
+            return (
+              <ColumnOptionsRow
+                analyticsLabel="state_options_row"
+                enableBackgroundHover={allowToggleCategories}
+                hasChanged={filterRecordHasAnyForcedValue(filters)}
+                headerItemFixedIconSize={columnHeaderItemContentSize}
+                iconName={
+                  hasForcedValue
+                    ? itemPassesFilterRecord(
+                        filters!,
+                        'merged',
+                        defaultBooleanValue,
+                      )
+                      ? 'git-merge'
+                      : itemPassesFilterRecord(
+                          filters!,
+                          'closed',
+                          defaultBooleanValue,
+                        )
+                      ? 'issue-closed'
+                      : 'issue-opened'
+                    : 'issue-opened'
+                }
+                isOpen={openedOptionCategories.has('state')}
+                onToggle={
+                  allowToggleCategories
+                    ? () => toggleOpenedOptionCategory('state')
+                    : undefined
+                }
+                title="State"
+                subtitle={
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : 'All'
+                }
+              >
+                {stateTypeOptions.map(item => {
+                  const _enableIndeterminateState =
+                    stateTypeOptions.length > 2 && !isFilterStrict
+
+                  const checked =
+                    filters && typeof filters[item.state] === 'boolean'
+                      ? filters[item.state]
+                      : _enableIndeterminateState || isFilterStrict
+                      ? null
+                      : defaultBooleanValue
+
+                  const enableIndeterminateState =
+                    stateTypeOptions.length > 2 &&
+                    (!isFilterStrict || checked === defaultBooleanValue)
+
+                  return (
+                    <Checkbox
+                      key={`state-type-option-${item.state}`}
+                      analyticsLabel={undefined}
+                      checked={checked}
+                      checkedBackgroundThemeColor={item.color}
+                      circle={supportsOnlyOne}
+                      containerStyle={checkboxStyle}
+                      defaultValue={!supportsOnlyOne}
+                      disabled={
+                        !enableIndeterminateState &&
+                        countMetadata.checked === 1 &&
+                        countMetadata.total === 2 &&
+                        !!checked
+                      }
+                      squareContainerStyle={checkboxSquareStyle}
+                      enableIndeterminateState={enableIndeterminateState}
+                      label={item.label}
+                      onChange={value => {
+                        setColummStateTypeFilter({
+                          columnId: column.id,
+                          state: item.state,
+                          supportsOnlyOne,
+                          value,
+                        })
+                      }}
+                      uncheckedForegroundThemeColor={item.color}
+                    />
+                  )
+                })}
+              </ColumnOptionsRow>
+            )
+          })()}
+
+        {allColumnOptionCategories.includes('draft') &&
+          (() => {
+            const draft = column.filters && column.filters.draft
+            const defaultBooleanValue = true
+
+            return (
+              <ColumnOptionsRow
+                analyticsLabel="draft_options_row"
+                enableBackgroundHover={allowToggleCategories}
+                hasChanged={typeof draft === 'boolean'}
+                headerItemFixedIconSize={columnHeaderItemContentSize}
+                iconName="pencil"
+                isOpen={openedOptionCategories.has('draft')}
+                onToggle={
+                  allowToggleCategories
+                    ? () => toggleOpenedOptionCategory('draft')
+                    : undefined
+                }
+                title="Draft"
+                subtitle={
+                  draft === true
+                    ? 'Draft only'
+                    : draft === false
+                    ? 'Excluded'
+                    : 'Included'
+                }
+              >
+                <Checkbox
+                  key="draft-type-option"
+                  analyticsLabel={undefined}
+                  checked={typeof draft === 'boolean' ? draft : null}
+                  checkedBackgroundThemeColor="gray"
+                  containerStyle={checkboxStyle}
+                  squareContainerStyle={checkboxSquareStyle}
+                  defaultValue={defaultBooleanValue}
+                  enableIndeterminateState
+                  label="Draft"
+                  onChange={value => {
+                    setColummDraftFilter({
+                      columnId: column.id,
+                      draft: typeof value === 'boolean' ? value : undefined,
+                    })
+                  }}
+                  uncheckedForegroundThemeColor="gray"
                 />
               </ColumnOptionsRow>
             )

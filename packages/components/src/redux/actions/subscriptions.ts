@@ -24,7 +24,12 @@ export function fetchSubscriptionRequest(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
   params: {
-    [key: string]: string | number | boolean | undefined
+    [key: string]:
+      | string
+      | number
+      | boolean
+      | Record<string, boolean | undefined>
+      | undefined
     page: number
     perPage?: number
   }

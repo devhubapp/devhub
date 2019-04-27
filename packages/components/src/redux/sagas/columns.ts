@@ -205,7 +205,9 @@ function* onColumnSubscriptionFilterChange(
     | ExtractActionFromActionCreator<
         typeof actions.setColumnParticipatingFilter
       >
-    | ExtractActionFromActionCreator<typeof actions.setColummSubjectTypeFilter>,
+    | ExtractActionFromActionCreator<typeof actions.setColummSubjectTypeFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColummStateTypeFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>,
 ) {
   if (!action.payload.columnId) return
 
@@ -271,6 +273,8 @@ function* onColumnSubscriptionFilterChange(
 
         newSubscriptionParams = {
           ...subscription.params,
+          draft: c.filters ? c.filters.draft : subscription.params.draft,
+          state: c.filters ? c.filters.state : subscription.params.state,
           subjectType:
             includesIssues && !includesPRs
               ? 'Issue'
@@ -351,6 +355,8 @@ export function* columnsSagas() {
       [
         'SET_COLUMN_UNREAD_FILTER',
         'SET_COLUMN_PARTICIPATING_FILTER',
+        'SET_COLUMN_STATE_FILTER',
+        'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_SUBJECT_TYPE_FILTER',
       ],
       onColumnSubscriptionFilterChange,

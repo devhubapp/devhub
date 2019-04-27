@@ -5,10 +5,17 @@ import {
   GitHubIcon,
   GitHubNotificationSubjectType,
   GitHubPullRequest,
+  GitHubStateType,
   isDraft,
   isPullRequest,
   ThemeColors,
 } from '@devhub/core'
+
+export const issueOrPullRequestStateTypes: GitHubStateType[] = [
+  'open',
+  'closed',
+  'merged',
+]
 
 export function getCommitIconAndColor(): {
   icon: GitHubIcon
@@ -110,6 +117,48 @@ export function getIssueIconAndColor(issue: {
 
     default:
       return { icon: 'issue-opened', tooltip: 'Issue' }
+  }
+}
+
+export function getStateTypeMetadata<T extends GitHubStateType>(
+  state: T,
+): {
+  color: keyof ThemeColors
+  label: string
+  state: T
+} {
+  switch (state as GitHubStateType) {
+    case 'open': {
+      return {
+        color: 'green',
+        label: 'Open',
+        state,
+      }
+    }
+
+    case 'closed': {
+      return {
+        color: 'lightRed',
+        label: 'Closed',
+        state,
+      }
+    }
+
+    case 'merged': {
+      return {
+        color: 'purple',
+        label: 'Merged',
+        state,
+      }
+    }
+
+    default: {
+      return {
+        color: 'primaryBackgroundColor',
+        label: _.startCase(state),
+        state,
+      }
+    }
   }
 }
 
