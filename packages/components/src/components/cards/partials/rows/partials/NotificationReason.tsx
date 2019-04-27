@@ -1,9 +1,11 @@
 import React from 'react'
 
-import { GitHubNotificationReason } from '@devhub/core'
+import {
+  getNotificationReasonMetadata,
+  GitHubNotificationReason,
+} from '@devhub/core'
 import { Platform } from '../../../../../libs/platform'
 import { mutedOpacity, smallerTextSize } from '../../../../../styles/variables'
-import { getNotificationReasonMetadata } from '../../../../../utils/helpers/github/notifications'
 import { ThemedText } from '../../../../themed/ThemedText'
 
 export interface NotificationReasonProps {

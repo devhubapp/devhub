@@ -4,14 +4,14 @@ import _ from 'lodash'
 import {
   ColumnSubscription,
   constants,
+  mergeEventsPreservingEnhancement,
+  mergeNotificationsPreservingEnhancement,
   normalizeSubscriptions,
   removeUselessURLsFromResponseItem,
   sortEvents,
   sortIssuesOrPullRequests,
   sortNotifications,
 } from '@devhub/core'
-import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
-import { mergeNotificationsPreservingEnhancement } from '../../utils/helpers/github/notifications'
 import { Reducer } from '../types'
 
 export interface State {

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 
 import {
+  activityColumnHasAnyFilter,
   CardViewMode,
   Column as ColumnType,
   constants,
@@ -13,6 +14,7 @@ import {
   isEventPrivate,
   isItemRead,
   isNotificationPrivate,
+  notificationColumnHasAnyFilter,
   ThemeColors,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -29,10 +31,6 @@ import {
   contentPadding,
   sidebarSize,
 } from '../../styles/variables'
-import {
-  activityColumnHasAnyFilter,
-  notificationColumnHasAnyFilter,
-} from '../../utils/helpers/filters'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { separatorSize, separatorThickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'

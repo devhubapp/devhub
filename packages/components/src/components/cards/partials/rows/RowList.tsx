@@ -1,8 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 
-import { CardViewMode } from '@devhub/core'
+import { CardViewMode, mergeMaxLength } from '@devhub/core'
 import { ScrollView, View } from 'react-native'
-import { mergeMaxLength } from '../../../../utils/helpers/filters'
 import { topCardMargin } from './styles'
 
 export type RenderItem<T> = (params: {

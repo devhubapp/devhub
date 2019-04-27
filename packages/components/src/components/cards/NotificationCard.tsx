@@ -10,6 +10,7 @@ import {
   getGitHubURLForRepoInvitation,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
+  getNotificationIconAndColor,
   getOwnerAndRepo,
   getUserAvatarByUsername,
   GitHubLabel,
@@ -25,7 +26,6 @@ import {
   contentPadding,
   smallerTextSize,
 } from '../../styles/variables'
-import { getNotificationIconAndColor } from '../../utils/helpers/github/notifications'
 import { fixURL } from '../../utils/helpers/github/url'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'

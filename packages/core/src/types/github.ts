@@ -187,6 +187,7 @@ export interface GitHubIssue {
   title: string
   labels: GitHubLabel[]
   state: 'open' | 'closed'
+  draft?: boolean
   locked: boolean
   milestone?: GitHubMilestone | null
   comments: number

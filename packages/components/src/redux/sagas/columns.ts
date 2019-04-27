@@ -12,11 +12,11 @@ import {
   isReadFilterChecked,
   IssueOrPullRequestColumn,
   IssueOrPullRequestColumnSubscription,
+  itemPassesFilterRecord,
   NotificationColumn,
   NotificationColumnSubscription,
 } from '@devhub/core'
 import { emitter } from '../../libs/emitter'
-import { itemPassesFilterRecord } from '../../utils/helpers/filters'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'

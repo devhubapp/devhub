@@ -5,11 +5,19 @@ import { ScrollView, View } from 'react-native'
 import {
   Column,
   eventActions,
+  eventSubjectTypes,
+  filterRecordHasAnyForcedValue,
+  filterRecordWithThisValueCount,
   getEventActionMetadata,
+  getFilterCountMetadata,
+  getNotificationReasonMetadata,
   GitHubEventSubjectType,
   GitHubNotificationSubjectType,
   isReadFilterChecked,
+  issueOrPullRequestSubjectTypes,
   isUnreadFilterChecked,
+  notificationReasons,
+  notificationSubjectTypes,
   ThemeColors,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -23,18 +31,6 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
-import {
-  filterRecordHasAnyForcedValue,
-  filterRecordWithThisValueCount,
-  getFilterCountMetadata,
-} from '../../utils/helpers/filters'
-import { eventSubjectTypes } from '../../utils/helpers/github/events'
-import { issueOrPullRequestSubjectTypes } from '../../utils/helpers/github/issues'
-import {
-  getNotificationReasonMetadata,
-  notificationReasons,
-  notificationSubjectTypes,
-} from '../../utils/helpers/github/notifications'
 import { getSubjectTypeMetadata } from '../../utils/helpers/github/shared'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Checkbox } from '../common/Checkbox'
@@ -82,10 +78,10 @@ export interface ColumnOptionsProps {
 export type ColumnOptionCategory =
   | 'event_action'
   | 'inbox'
-  | 'subject_types'
   | 'notification_reason'
   | 'privacy'
   | 'saved_for_later'
+  | 'subject_types'
   | 'unread'
 
 export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
@@ -102,8 +98,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     column.type === 'notifications' && 'inbox',
     'saved_for_later',
     'unread',
-    column.type === 'activity' && 'event_action',
     'subject_types',
+    column.type === 'activity' && 'event_action',
     column.type === 'notifications' && 'notification_reason',
     column.type === 'notifications' && 'privacy',
   ]

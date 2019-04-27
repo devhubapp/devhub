@@ -6,6 +6,7 @@ import {
   EnhancedGitHubEvent,
   getBranchNameFromRef,
   getDateSmallText,
+  getEventIconAndColor,
   getEventMetadata,
   getFullDateText,
   getGitHubAvatarURLFromPayload,
@@ -43,7 +44,6 @@ import {
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
-import { getEventIconAndColor } from '../../utils/helpers/github/events'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'

@@ -122,7 +122,9 @@ export function getSubjectTypeMetadata<
   label: string
   subjectType: T
 } {
-  switch (subjectType) {
+  switch (
+    subjectType as GitHubEventSubjectType | GitHubNotificationSubjectType
+  ) {
     case 'PullRequestReview': {
       return {
         label: 'Review',

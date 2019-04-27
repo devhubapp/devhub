@@ -7,6 +7,7 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForRepo,
+  getIssueOrPullRequestIconAndColor,
   getIssueOrPullRequestNumberFromUrl,
   getOwnerAndRepo,
   getRepoFullNameFromUrl,
@@ -22,7 +23,6 @@ import {
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
-import { getIssueOrPullRequestIconAndColor } from '../../utils/helpers/github/issues'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'

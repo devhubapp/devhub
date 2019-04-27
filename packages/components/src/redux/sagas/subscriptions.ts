@@ -35,6 +35,9 @@ import {
   GitHubIssueOrPullRequest,
   GitHubNotification,
   IssueOrPullRequestColumnSubscription,
+  mergeEventsPreservingEnhancement,
+  mergeIssuesOrPullRequestsPreservingEnhancement,
+  mergeNotificationsPreservingEnhancement,
 } from '@devhub/core'
 
 import { bugsnag } from '../../libs/bugsnag'
@@ -44,9 +47,6 @@ import {
   getNotifications,
   octokit,
 } from '../../libs/github'
-import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
-import { mergeIssuesOrPullRequestsPreservingEnhancement } from '../../utils/helpers/github/issues'
-import { mergeNotificationsPreservingEnhancement } from '../../utils/helpers/github/notifications'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'

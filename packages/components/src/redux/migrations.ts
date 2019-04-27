@@ -4,13 +4,13 @@ import {
   ActivityColumn,
   Column,
   ColumnSubscription,
+  filterRecordHasAnyForcedValue,
   getEventMetadata,
   GitHubEvent,
   GraphQLGitHubUser,
   guid,
   removeUselessURLsFromResponseItem,
 } from '@devhub/core'
-import { filterRecordHasAnyForcedValue } from '../utils/helpers/filters'
 import * as selectors from './selectors'
 import { RootState } from './types'
 

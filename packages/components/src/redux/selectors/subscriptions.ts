@@ -6,15 +6,13 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
+  getFilteredEvents,
+  getFilteredIssueOrPullRequests,
+  getFilteredNotifications,
   sortEvents,
   sortIssuesOrPullRequests,
   sortNotifications,
 } from '@devhub/core'
-import {
-  getFilteredEvents,
-  getFilteredIssueOrPullRequests,
-  getFilteredNotifications,
-} from '../../utils/helpers/filters'
 import { RootState } from '../types'
 import { createArraySelector } from './helpers'
 
