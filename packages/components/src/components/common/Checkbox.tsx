@@ -90,7 +90,11 @@ export function Checkbox(props: CheckboxProps) {
   } = props
 
   const lastBooleanRef = useRef(
-    typeof props.checked === 'boolean' ? props.checked : !!defaultValue,
+    typeof props.checked === 'boolean'
+      ? props.checked
+      : enableIndeterminateState
+      ? !defaultValue
+      : !!defaultValue,
   )
 
   const isIndeterminateState = enableIndeterminateState && checked === null

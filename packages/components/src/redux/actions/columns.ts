@@ -5,6 +5,7 @@ import {
   ColumnSubscriptionCreation,
   GitHubEventAction,
   GitHubEventSubjectType,
+  GitHubIssueOrPullRequestSubjectType,
   GitHubNotificationReason,
   GitHubNotificationSubjectType,
   GitHubStateType,
@@ -96,7 +97,10 @@ export function setColummDraftFilter(payload: {
 }
 
 export function setColummSubjectTypeFilter<
-  T extends GitHubEventSubjectType | GitHubNotificationSubjectType
+  T extends
+    | GitHubEventSubjectType
+    | GitHubNotificationSubjectType
+    | GitHubIssueOrPullRequestSubjectType
 >(payload: { columnId: string; subjectType: T; value: boolean | null }) {
   return createAction('SET_COLUMN_SUBJECT_TYPE_FILTER', payload)
 }

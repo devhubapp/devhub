@@ -12,6 +12,7 @@ import {
   getFilterCountMetadata,
   getNotificationReasonMetadata,
   GitHubEventSubjectType,
+  GitHubIssueOrPullRequestSubjectType,
   GitHubNotificationSubjectType,
   GitHubStateType,
   isReadFilterChecked,
@@ -231,12 +232,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   checked={!participating}
                   circle
                   containerStyle={checkboxStyle}
+                  defaultValue={false}
                   squareContainerStyle={checkboxSquareStyle}
                   label="All"
                   onChange={checked => {
                     setColumnParticipatingFilter({
                       columnId: column.id,
-                      participating: !checked,
+                      participating: false,
                     })
                   }}
                 />
@@ -245,12 +247,13 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   checked={participating}
                   circle
                   containerStyle={checkboxStyle}
+                  defaultValue={false}
                   squareContainerStyle={checkboxSquareStyle}
                   label="Participating"
                   onChange={checked => {
                     setColumnParticipatingFilter({
                       columnId: column.id,
-                      participating: !!checked,
+                      participating: true,
                     })
                   }}
                 />
@@ -290,6 +293,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     typeof savedForLater === 'boolean' ? savedForLater : null
                   }
                   containerStyle={checkboxStyle}
+                  defaultValue
                   squareContainerStyle={checkboxSquareStyle}
                   enableIndeterminateState
                   label="Saved for later"
@@ -308,10 +312,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           (() => {
             const isReadChecked = isReadFilterChecked(column.filters)
             const isUnreadChecked = isUnreadFilterChecked(column.filters)
-
-            function getUnreadFilterValue(read?: boolean, unread?: boolean) {
-              return read && unread ? undefined : read ? false : unread
-            }
 
             return (
               <ColumnOptionsRow
@@ -345,32 +345,52 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               >
                 <Checkbox
                   analyticsLabel="read"
-                  checked={isReadChecked}
+                  checked={
+                    isReadChecked && isUnreadChecked ? null : isReadChecked
+                  }
                   containerStyle={checkboxStyle}
-                  squareContainerStyle={checkboxSquareStyle}
-                  disabled={isReadChecked && !isUnreadChecked}
+                  defaultValue
+                  enableIndeterminateState={isReadChecked && isUnreadChecked}
                   label="Read"
                   // labelIcon="mail-read"
+                  squareContainerStyle={checkboxSquareStyle}
                   onChange={checked => {
                     setColumnUnreadFilter({
                       columnId: column.id,
-                      unread: getUnreadFilterValue(!!checked, isUnreadChecked),
+                      unread:
+                        isReadChecked && isUnreadChecked
+                          ? false
+                          : isReadChecked
+                          ? undefined
+                          : isUnreadChecked
+                          ? undefined
+                          : false,
                     })
                   }}
                 />
 
                 <Checkbox
                   analyticsLabel="unread"
-                  checked={isUnreadChecked}
+                  checked={
+                    isReadChecked && isUnreadChecked ? null : isUnreadChecked
+                  }
                   containerStyle={checkboxStyle}
-                  squareContainerStyle={checkboxSquareStyle}
-                  disabled={isUnreadChecked && !isReadChecked}
+                  defaultValue
+                  enableIndeterminateState={isReadChecked && isUnreadChecked}
                   label="Unread"
                   // labelIcon="mail"
+                  squareContainerStyle={checkboxSquareStyle}
                   onChange={checked => {
                     setColumnUnreadFilter({
                       columnId: column.id,
-                      unread: getUnreadFilterValue(isReadChecked, !!checked),
+                      unread:
+                        isReadChecked && isUnreadChecked
+                          ? true
+                          : isUnreadChecked
+                          ? undefined
+                          : isReadChecked
+                          ? undefined
+                          : true,
                     })
                   }}
                 />
@@ -391,6 +411,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               filters,
               defaultBooleanValue,
             )
+            const hasForcedValue = filterRecordHasAnyForcedValue(filters)
             const countMetadata = getFilterCountMetadata(
               filters,
               stateTypeOptions.length,
@@ -436,19 +457,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
               >
                 {stateTypeOptions.map(item => {
-                  const _enableIndeterminateState =
-                    stateTypeOptions.length > 2 && !isFilterStrict
-
                   const checked =
                     filters && typeof filters[item.state] === 'boolean'
                       ? filters[item.state]
-                      : _enableIndeterminateState || isFilterStrict
-                      ? null
-                      : defaultBooleanValue
+                      : isFilterStrict
+                      ? !defaultBooleanValue
+                      : null
 
                   const enableIndeterminateState =
-                    stateTypeOptions.length > 2 &&
-                    (!isFilterStrict || checked === defaultBooleanValue)
+                    !isFilterStrict || checked === defaultBooleanValue
 
                   return (
                     <Checkbox
@@ -458,13 +475,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       checkedBackgroundThemeColor={item.color}
                       circle={supportsOnlyOne}
                       containerStyle={checkboxStyle}
-                      defaultValue={!supportsOnlyOne}
-                      disabled={
-                        !enableIndeterminateState &&
-                        countMetadata.checked === 1 &&
-                        countMetadata.total === 2 &&
-                        !!checked
-                      }
+                      defaultValue={defaultBooleanValue}
                       squareContainerStyle={checkboxSquareStyle}
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
@@ -473,7 +484,19 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                           columnId: column.id,
                           state: item.state,
                           supportsOnlyOne,
-                          value,
+                          value: supportsOnlyOne
+                            ? typeof value === 'boolean'
+                              ? true
+                              : null
+                            : isFilterStrict
+                            ? typeof value === 'boolean'
+                              ? defaultBooleanValue
+                              : null
+                            : hasForcedValue
+                            ? typeof value === 'boolean'
+                              ? !defaultBooleanValue
+                              : null
+                            : value,
                         })
                       }}
                       uncheckedForegroundThemeColor={item.color}
@@ -517,8 +540,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   checked={typeof draft === 'boolean' ? draft : null}
                   checkedBackgroundThemeColor="gray"
                   containerStyle={checkboxStyle}
-                  squareContainerStyle={checkboxSquareStyle}
                   defaultValue={defaultBooleanValue}
+                  squareContainerStyle={checkboxSquareStyle}
                   enableIndeterminateState
                   label="Draft"
                   onChange={value => {
@@ -539,7 +562,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               column.filters &&
               (column.filters.subjectTypes as Partial<
                 Record<
-                  GitHubEventSubjectType | GitHubNotificationSubjectType,
+                  | GitHubEventSubjectType
+                  | GitHubIssueOrPullRequestSubjectType
+                  | GitHubNotificationSubjectType,
                   boolean
                 >
               >)
@@ -549,6 +574,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               label: string
               subjectType:
                 | GitHubEventSubjectType
+                | GitHubIssueOrPullRequestSubjectType
                 | GitHubNotificationSubjectType
             }> =
               column.type === 'activity'
@@ -566,6 +592,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               filters,
               defaultBooleanValue,
             )
+            const hasForcedValue = filterRecordHasAnyForcedValue(filters)
             const countMetadata = getFilterCountMetadata(
               filters,
               subjectTypeOptions.length,
@@ -593,19 +620,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 }
               >
                 {subjectTypeOptions.map(item => {
-                  const _enableIndeterminateState =
-                    subjectTypeOptions.length > 2 && !isFilterStrict
-
                   const checked =
                     filters && typeof filters[item.subjectType] === 'boolean'
                       ? filters[item.subjectType]
-                      : _enableIndeterminateState || isFilterStrict
-                      ? null
-                      : defaultBooleanValue
+                      : isFilterStrict
+                      ? !defaultBooleanValue
+                      : null
 
                   const enableIndeterminateState =
-                    subjectTypeOptions.length > 2 &&
-                    (!isFilterStrict || checked === defaultBooleanValue)
+                    !isFilterStrict || checked === defaultBooleanValue
 
                   return (
                     <Checkbox
@@ -616,13 +639,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       checked={checked}
                       checkedBackgroundThemeColor={item.color}
                       containerStyle={checkboxStyle}
-                      disabled={
-                        !enableIndeterminateState &&
-                        countMetadata.checked === 1 &&
-                        countMetadata.total === 2 &&
-                        !!checked
-                      }
-                      squareContainerStyle={checkboxSquareStyle}
                       defaultValue={defaultBooleanValue}
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
@@ -630,9 +646,18 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                         setColummSubjectTypeFilter({
                           columnId: column.id,
                           subjectType: item.subjectType,
-                          value,
+                          value: isFilterStrict
+                            ? typeof value === 'boolean'
+                              ? defaultBooleanValue
+                              : null
+                            : hasForcedValue
+                            ? typeof value === 'boolean'
+                              ? !defaultBooleanValue
+                              : null
+                            : value,
                         })
                       }}
+                      squareContainerStyle={checkboxSquareStyle}
                       uncheckedForegroundThemeColor={item.color}
                     />
                   )
@@ -654,6 +679,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               filters,
               defaultBooleanValue,
             )
+            const hasForcedValue = filterRecordHasAnyForcedValue(filters)
             const countMetadata = getFilterCountMetadata(
               filters,
               notificationReasonOptions.length,
@@ -703,7 +729,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                         setColumnReasonFilter({
                           columnId: column.id,
                           reason: item.reason,
-                          value,
+                          value: isFilterStrict
+                            ? typeof value === 'boolean'
+                              ? defaultBooleanValue
+                              : null
+                            : hasForcedValue
+                            ? typeof value === 'boolean'
+                              ? !defaultBooleanValue
+                              : null
+                            : value,
                         })
                       }}
                       squareContainerStyle={checkboxSquareStyle}
@@ -728,6 +762,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               filters,
               defaultBooleanValue,
             )
+            const hasForcedValue = filterRecordHasAnyForcedValue(filters)
             const countMetadata = getFilterCountMetadata(
               filters,
               eventActionOptions.length,
@@ -758,7 +793,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   const checked =
                     filters && typeof filters[item.action] === 'boolean'
                       ? filters[item.action]
+                      : isFilterStrict
+                      ? !defaultBooleanValue
                       : null
+
+                  const enableIndeterminateState =
+                    !isFilterStrict || checked === defaultBooleanValue
 
                   return (
                     <Checkbox
@@ -766,20 +806,26 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       analyticsLabel={undefined}
                       checked={checked}
                       containerStyle={checkboxStyle}
-                      squareContainerStyle={checkboxSquareStyle}
                       defaultValue={defaultBooleanValue}
-                      enableIndeterminateState={
-                        !isFilterStrict || checked === defaultBooleanValue
-                      }
+                      enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
                       // labelIcon={item.icon}
                       onChange={value => {
                         setColumnActivityActionFilter({
                           columnId: column.id,
                           type: item.action,
-                          value,
+                          value: isFilterStrict
+                            ? typeof value === 'boolean'
+                              ? defaultBooleanValue
+                              : null
+                            : hasForcedValue
+                            ? typeof value === 'boolean'
+                              ? !defaultBooleanValue
+                              : null
+                            : value,
                         })
                       }}
+                      squareContainerStyle={checkboxSquareStyle}
                     />
                   )
                 })}
@@ -796,16 +842,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             const isPublicChecked = !(
               column.filters && column.filters.private === true
             )
-
-            const getFilterValue = (
-              showPublic?: boolean,
-              showPrivate?: boolean,
-            ) =>
-              showPublic && showPrivate
-                ? undefined
-                : showPublic
-                ? false
-                : showPrivate
 
             return (
               <ColumnOptionsRow
@@ -838,32 +874,54 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               >
                 <Checkbox
                   analyticsLabel="public"
-                  checked={isPublicChecked}
+                  checked={
+                    isPublicChecked && isPrivateChecked ? null : isPublicChecked
+                  }
                   containerStyle={checkboxStyle}
-                  squareContainerStyle={checkboxSquareStyle}
-                  disabled={isPublicChecked && !isPrivateChecked}
+                  defaultValue
+                  enableIndeterminateState={isPublicChecked && isPrivateChecked}
                   label="Public"
                   // labelIcon="globe"
+                  squareContainerStyle={checkboxSquareStyle}
                   onChange={checked => {
                     setColumnPrivacyFilter({
                       columnId: column.id,
-                      private: getFilterValue(!!checked, isPrivateChecked),
+                      private:
+                        isPublicChecked && isPrivateChecked
+                          ? false
+                          : isPublicChecked
+                          ? undefined
+                          : isPrivateChecked
+                          ? undefined
+                          : false,
                     })
                   }}
                 />
 
                 <Checkbox
                   analyticsLabel="private"
-                  checked={isPrivateChecked}
+                  checked={
+                    isPublicChecked && isPrivateChecked
+                      ? null
+                      : isPrivateChecked
+                  }
                   containerStyle={checkboxStyle}
-                  squareContainerStyle={checkboxSquareStyle}
-                  disabled={isPrivateChecked && !isPublicChecked}
+                  defaultValue
+                  enableIndeterminateState={isPublicChecked && isPrivateChecked}
                   label="Private"
                   // labelIcon="lock"
+                  squareContainerStyle={checkboxSquareStyle}
                   onChange={checked => {
                     setColumnPrivacyFilter({
                       columnId: column.id,
-                      private: getFilterValue(isPublicChecked, !!checked),
+                      private:
+                        isPublicChecked && isPrivateChecked
+                          ? true
+                          : isPrivateChecked
+                          ? undefined
+                          : isPublicChecked
+                          ? undefined
+                          : true,
                     })
                   }}
                 />

@@ -4,9 +4,7 @@ import _ from 'lodash'
 import {
   ActivityColumn,
   Column,
-  GitHubEventSubjectType,
-  GitHubNotificationSubjectType,
-  GitHubStateType,
+  filterRecordHasAnyForcedValue,
   normalizeColumns,
   normalizeSubscriptions,
   NotificationColumn,
@@ -212,6 +210,10 @@ export const columnsReducer: Reducer<State> = (
           delete column.filters.activity.actions[action.payload.type]
         }
 
+        if (!filterRecordHasAnyForcedValue(column.filters.activity.actions)) {
+          column.filters.activity.actions = {}
+        }
+
         draft.updatedAt = new Date().toISOString()
       })
 
@@ -235,6 +237,12 @@ export const columnsReducer: Reducer<State> = (
           delete column.filters.notifications.reasons[action.payload.reason]
         }
 
+        if (
+          !filterRecordHasAnyForcedValue(column.filters.notifications.reasons)
+        ) {
+          column.filters.notifications.reasons = {}
+        }
+
         draft.updatedAt = new Date().toISOString()
       })
 
@@ -246,22 +254,22 @@ export const columnsReducer: Reducer<State> = (
         if (!column) return
 
         column.filters = column.filters || {}
-        column.filters.state = action.payload.supportsOnlyOne
-          ? {}
-          : column.filters.state || {}
-
-        const value = column.filters.state as Partial<
-          Record<GitHubStateType, boolean>
-        >
+        column.filters.state = column.filters.state || {}
 
         if (action.payload.supportsOnlyOne) {
+          column.filters.state = {}
+
           if (action.payload.value === true) {
-            value[action.payload.state] = action.payload.value
+            column.filters.state[action.payload.state] = action.payload.value
           }
         } else if (typeof action.payload.value === 'boolean') {
-          value[action.payload.state] = action.payload.value
+          column.filters.state[action.payload.state] = action.payload.value
         } else {
-          delete value[action.payload.state]
+          delete column.filters.state[action.payload.state]
+        }
+
+        if (!filterRecordHasAnyForcedValue(column.filters.state)) {
+          column.filters.state = {}
         }
 
         draft.updatedAt = new Date().toISOString()
@@ -290,17 +298,17 @@ export const columnsReducer: Reducer<State> = (
         column.filters = column.filters || {}
         column.filters.subjectTypes = column.filters.subjectTypes || {}
 
-        const subjectTypes = column.filters.subjectTypes as Partial<
-          Record<
-            GitHubEventSubjectType | GitHubNotificationSubjectType,
-            boolean
-          >
-        >
-
         if (typeof action.payload.value === 'boolean') {
-          subjectTypes[action.payload.subjectType] = action.payload.value
+          ;(column.filters.subjectTypes as any)[action.payload.subjectType] =
+            action.payload.value
         } else {
-          delete subjectTypes[action.payload.subjectType]
+          delete (column.filters.subjectTypes as any)[
+            action.payload.subjectType
+          ]
+        }
+
+        if (!filterRecordHasAnyForcedValue(column.filters.subjectTypes)) {
+          column.filters.subjectTypes = {}
         }
 
         draft.updatedAt = new Date().toISOString()
