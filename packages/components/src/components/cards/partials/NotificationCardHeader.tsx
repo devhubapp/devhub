@@ -7,7 +7,7 @@ import {
   getFullDateText,
   getGitHubURLForUser,
   GitHubNotificationReason,
-  trimNewLinesAndSpaces,
+  ThemeColors,
 } from '@devhub/core'
 import { Platform } from '../../../libs/platform'
 import { sharedStyles } from '../../../styles/shared'
@@ -23,6 +23,7 @@ import { NotificationReason } from './rows/partials/NotificationReason'
 
 export interface NotificationCardHeaderProps {
   avatarUrl: string | undefined
+  backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
 export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const {
     avatarUrl,
+    backgroundThemeColor,
     date,
     ids,
     isBot,
@@ -97,43 +99,61 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <View style={sharedStyles.horizontalAndVerticallyAligned}>
-              <Link
-                href={userLinkURL}
-                textProps={{
-                  color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
-                  // color: 'foregroundColor',
-                  numberOfLines: 1,
-                  style: [
-                    cardStyles.usernameText,
-                    // isRead && { fontWeight: undefined },
-                    { lineHeight: undefined },
-                  ],
-                }}
+            <View
+              style={[
+                sharedStyles.flex,
+                sharedStyles.horizontalAndVerticallyAligned,
+                { maxWidth: '100%', overflow: 'hidden' },
+              ]}
+            >
+              <View
+                style={[
+                  sharedStyles.flex,
+                  sharedStyles.horizontalAndVerticallyAligned,
+                  { maxWidth: '100%', overflow: 'hidden' },
+                ]}
               >
-                {trimNewLinesAndSpaces(username, 16)}
-              </Link>
-
-              {!!isBot && (
-                <>
-                  <Text children="  " />
-                  <ThemedText
-                    color="foregroundColorMuted50"
-                    numberOfLines={1}
-                    style={[
-                      cardStyles.timestampText,
+                <Link
+                  href={userLinkURL}
+                  textProps={{
+                    color: isRead
+                      ? 'foregroundColorMuted50'
+                      : 'foregroundColor',
+                    // color: 'foregroundColor',
+                    numberOfLines: 1,
+                    style: [
+                      { maxWidth: '100%' },
+                      cardStyles.usernameText,
+                      // isRead && { fontWeight: undefined },
                       { lineHeight: undefined },
-                    ]}
-                  >
+                    ],
+                  }}
+                >
+                  {username}
+                </Link>
+
+                {!!isBot && (
+                  <>
                     <Text children="  " />
-                    BOT
-                  </ThemedText>
-                </>
-              )}
+                    <ThemedText
+                      color="foregroundColorMuted50"
+                      numberOfLines={1}
+                      style={[
+                        cardStyles.timestampText,
+                        { lineHeight: undefined },
+                      ]}
+                    >
+                      <Text children="  " />
+                      BOT
+                    </ThemedText>
+                  </>
+                )}
+              </View>
 
               <Spacer width={contentPadding / 2} />
 
               <NotificationReason
+                backgroundThemeColor={backgroundThemeColor}
                 // muted={isRead}
                 reason={reason}
               />

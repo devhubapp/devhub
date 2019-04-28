@@ -21,7 +21,10 @@ export interface LabelProps {
   backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   borderThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   children: ReactNode
-  color?: string
+  colorThemeColor?:
+    | string
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
   containerProps?: ViewProps
   containerStyle?: StyleProp<ViewStyle>
   enableEmojis?: boolean
@@ -44,7 +47,7 @@ export function Label(props: LabelProps) {
     borderThemeColor: _borderThemeColor,
     textThemeColor: _textThemeColor,
     children,
-    color: _color,
+    colorThemeColor: _colorThemeColor,
     containerProps = {},
     containerStyle,
     enableEmojis,
@@ -63,7 +66,9 @@ export function Label(props: LabelProps) {
   const borderThemeColor = getThemeColorOrItself(theme, _borderThemeColor)
   const textThemeColor = getThemeColorOrItself(theme, _textThemeColor)
 
-  const color = _color || theme.foregroundColorMuted50
+  const color =
+    getThemeColorOrItself(theme, _colorThemeColor) ||
+    theme.foregroundColorMuted50
 
   const circleColor = getReadableColor(color, backgroundThemeColor, 0.3)
 

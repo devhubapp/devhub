@@ -605,6 +605,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           )}
 
           <NotificationReason
+            backgroundThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { isRead })
+            }
             // muted={isRead}
             reason={notification.reason as GitHubNotificationReason}
           />
@@ -668,6 +671,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             <NotificationCardHeader
               key={`notification-card-header-${id}`}
               avatarUrl={repoAvatarDetails.avatar_url || undefined}
+              backgroundThemeColor={theme =>
+                getCardBackgroundThemeColor(theme, { isRead })
+              }
               date={updatedAt}
               ids={[id]}
               isBot={isBot}

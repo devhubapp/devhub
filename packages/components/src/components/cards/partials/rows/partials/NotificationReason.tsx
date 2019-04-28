@@ -3,39 +3,32 @@ import React from 'react'
 import {
   getNotificationReasonMetadata,
   GitHubNotificationReason,
+  ThemeColors,
 } from '@devhub/core'
-import { Platform } from '../../../../../libs/platform'
-import { mutedOpacity, smallerTextSize } from '../../../../../styles/variables'
-import { ThemedText } from '../../../../themed/ThemedText'
+import { Label } from '../../../../common/Label'
 
 export interface NotificationReasonProps {
+  backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
   muted?: boolean
   reason: GitHubNotificationReason
 }
 
 export function NotificationReason(props: NotificationReasonProps) {
-  const { muted, reason } = props
+  const { backgroundThemeColor, reason } = props
 
   const reasonDetails = getNotificationReasonMetadata(reason)
 
   if (!(reasonDetails && reasonDetails.label)) return null
 
   return (
-    <ThemedText
-      color={reasonDetails.color || 'foregroundColorMuted50'}
-      numberOfLines={1}
-      style={{
-        fontSize: smallerTextSize,
-        fontStyle: 'italic',
-        opacity: muted ? mutedOpacity : 1,
-      }}
-      {...Platform.select({
-        web: {
-          title: reasonDetails.fullDescription,
-        },
-      })}
+    <Label
+      backgroundThemeColor={backgroundThemeColor}
+      colorThemeColor={reasonDetails.color}
+      containerStyle={{ alignSelf: 'center' }}
+      outline={false}
+      small
     >
       {reasonDetails.label.toLowerCase()}
-    </ThemedText>
+    </Label>
   )
 }

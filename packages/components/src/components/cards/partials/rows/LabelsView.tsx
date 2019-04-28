@@ -89,7 +89,7 @@ export const LabelsView = (props: LabelsViewProps) => {
       {labels.map(label => (
         <Label
           key={label.key}
-          color={label.color}
+          colorThemeColor={label.color}
           containerStyle={{
             alignSelf: 'flex-start',
             marginHorizontal: horizontalSpacing,
