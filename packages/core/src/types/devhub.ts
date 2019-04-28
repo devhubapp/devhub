@@ -28,10 +28,12 @@ export interface ReadUnreadEnhancement {
   last_read_at?: string
   last_unread_at?: string
   unread?: boolean // GitHub server's value
+  enhanced?: boolean
 }
 
 export interface SaveForLaterEnhancement {
   saved?: boolean
+  enhanced?: boolean
 }
 
 export interface NotificationPayloadEnhancement
@@ -91,9 +93,12 @@ export type EnhancedGitHubIssueOrPullRequest =
   | EnhancedGitHubIssue
   | EnhancedGitHubPullRequest
 
-export interface ColumnSubscriptionData<
-  Item extends EnhancedGitHubNotification | EnhancedGitHubEvent
-> {
+export type EnhancedItem =
+  | EnhancedGitHubNotification
+  | EnhancedGitHubEvent
+  | EnhancedGitHubIssueOrPullRequest
+
+export interface ColumnSubscriptionData<Item extends EnhancedItem> {
   items?: Item[]
   loadState?: EnhancedLoadState
   errorMessage?: string

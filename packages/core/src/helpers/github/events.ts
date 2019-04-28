@@ -3,12 +3,14 @@ import moment from 'moment'
 
 import {
   EnhancedGitHubEvent,
+  GitHubEvent,
   GitHubEventAction,
   GitHubEventSubjectType,
   GitHubIcon,
   GitHubIssue,
   GitHubPullRequest,
   MultipleStarEvent,
+  Omit,
   ThemeColors,
 } from '../../types'
 import {
@@ -853,23 +855,50 @@ export function getEventIconAndColor(
 export function mergeEventsPreservingEnhancement(
   newItems: EnhancedGitHubEvent[],
   prevItems: EnhancedGitHubEvent[],
+  { dropPrevItems }: { dropPrevItems?: boolean } = {},
 ) {
+  const allItems = dropPrevItems
+    ? newItems || []
+    : _.concat(newItems || [], prevItems || [])
+
   return sortEvents(
-    _.uniqBy(_.concat(newItems, prevItems), 'id').map(item => {
+    _.uniqBy(allItems, 'id').map(item => {
       const newItem = newItems.find(i => i.id === item.id)
       const existingItem = prevItems.find(i => i.id === item.id)
-      if (!(newItem && existingItem)) return item
 
-      const mergedItem = {
-        forceUnreadLocally: existingItem.forceUnreadLocally,
-        last_read_at: existingItem.last_read_at,
-        last_unread_at: existingItem.last_unread_at,
-        saved: existingItem.saved,
-        unread: existingItem.unread,
-        ...newItem,
-      }
-
-      return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
+      return mergeEventPreservingEnhancement(newItem!, existingItem)
     }),
   )
+}
+
+export function mergeEventPreservingEnhancement(
+  newItem: EnhancedGitHubEvent,
+  existingItem: EnhancedGitHubEvent | undefined,
+) {
+  if (!(newItem && existingItem)) return newItem || existingItem
+
+  delete newItem.last_read_at
+  delete newItem.last_unread_at
+
+  const enhancements: Record<
+    keyof Omit<EnhancedGitHubEvent, keyof GitHubEvent>,
+    any
+  > = {
+    enhanced: existingItem.enhanced,
+    forceUnreadLocally: existingItem.forceUnreadLocally,
+    last_read_at: _.max([existingItem.last_read_at, newItem.last_read_at]),
+    last_unread_at: _.max([
+      existingItem.last_unread_at,
+      newItem.last_unread_at,
+    ]),
+    saved: existingItem.saved,
+    unread: existingItem.unread,
+  }
+
+  const mergedItem: EnhancedGitHubEvent = {
+    ...enhancements,
+    ...newItem,
+  }
+
+  return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
 }

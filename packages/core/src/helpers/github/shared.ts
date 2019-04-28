@@ -10,6 +10,7 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
+  EnhancedItem,
   GitHubAPIHeaders,
   GitHubEventSubjectType,
   GitHubIcon,
@@ -23,12 +24,7 @@ import {
 import { getSteppedSize } from '../shared'
 import { getGitHubIssueSearchQuery } from './issues'
 
-export function isItemRead(
-  item:
-    | EnhancedGitHubNotification
-    | EnhancedGitHubEvent
-    | EnhancedGitHubIssueOrPullRequest,
-) {
+export function isItemRead(item: EnhancedItem) {
   return !(item && (item.unread !== false || item.forceUnreadLocally))
 }
 

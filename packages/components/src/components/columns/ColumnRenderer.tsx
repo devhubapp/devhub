@@ -10,6 +10,7 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
+  EnhancedItem,
   GitHubIcon,
   isEventPrivate,
   isItemRead,
@@ -355,8 +356,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             const unread = !hasOneUnreadItem
 
             const visibleItemIds = (filteredItems as any[]).map(
-              (item: EnhancedGitHubNotification | EnhancedGitHubEvent) =>
-                item && item.id,
+              (item: EnhancedItem) => item && item.id,
             )
 
             const hasAnyFilter =

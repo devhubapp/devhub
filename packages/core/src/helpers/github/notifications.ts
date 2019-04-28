@@ -12,6 +12,7 @@ import {
   GitHubNotificationSubjectType,
   GitHubPullRequest,
   NotificationPayloadEnhancement,
+  Omit,
   ThemeColors,
 } from '../../types'
 import { capitalize } from '../shared'
@@ -218,25 +219,66 @@ export function getNotificationReasonMetadata<
 export function mergeNotificationsPreservingEnhancement(
   newItems: EnhancedGitHubNotification[],
   prevItems: EnhancedGitHubNotification[],
+  { dropPrevItems }: { dropPrevItems?: boolean } = {},
 ) {
+  const allItems = dropPrevItems
+    ? newItems || []
+    : _.concat(newItems || [], prevItems || [])
+
   return sortNotifications(
-    _.uniqBy(_.concat(newItems, prevItems), 'id').map(item => {
+    _.uniqBy(allItems, 'id').map(item => {
       const newItem = newItems.find(i => i.id === item.id)
       const existingItem = prevItems.find(i => i.id === item.id)
-      if (!(newItem && existingItem)) return item
 
-      const mergedItem = {
-        forceUnreadLocally: existingItem.forceUnreadLocally,
-        last_read_at: existingItem.last_read_at,
-        last_unread_at: existingItem.last_unread_at,
-        saved: existingItem.saved,
-        unread: existingItem.unread,
-        ...newItem,
-      }
-
-      return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
+      return mergeNotificationPreservingEnhancement(newItem!, existingItem)
     }),
   )
+}
+
+export function mergeNotificationPreservingEnhancement(
+  newItem: EnhancedGitHubNotification,
+  existingItem: EnhancedGitHubNotification | undefined,
+) {
+  if (!(newItem && existingItem)) return newItem || existingItem
+
+  const lastReadAt = _.max([existingItem.last_read_at, newItem.last_read_at])
+  const lastUnreadAt = _.max([
+    existingItem.last_unread_at,
+    newItem.last_unread_at,
+  ])
+
+  const latestDate = _.max([lastReadAt, lastUnreadAt, newItem.updated_at])
+
+  const enhancements: Record<
+    keyof Omit<EnhancedGitHubNotification, keyof GitHubNotification>,
+    any
+  > = {
+    comment: existingItem.comment,
+    commit: existingItem.commit,
+    enhanced: existingItem.enhanced,
+    forceUnreadLocally:
+      existingItem.forceUnreadLocally &&
+      latestDate &&
+      latestDate === newItem.updated_at
+        ? newItem.unread
+        : existingItem.forceUnreadLocally,
+    issue: existingItem.issue,
+    last_unread_at: lastUnreadAt,
+    pullRequest: existingItem.pullRequest,
+    release: existingItem.release,
+    saved: existingItem.saved,
+  }
+
+  const mergedItem: EnhancedGitHubNotification = {
+    ...enhancements,
+    ...newItem,
+    forceUnreadLocally: enhancements.forceUnreadLocally,
+    last_read_at: lastReadAt,
+    last_unread_at: enhancements.last_unread_at,
+    updated_at: _.max([existingItem.updated_at, newItem.updated_at])!,
+  }
+
+  return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
 }
 
 export async function getNotificationsEnhancementMap(
@@ -379,25 +421,17 @@ export function enhanceNotifications(
   enhancementMap: Record<string, NotificationPayloadEnhancement>,
   currentEnhancedNotifications: EnhancedGitHubNotification[] = [],
 ) {
-  return notifications.map(cen => {
-    const enhanced = currentEnhancedNotifications.find(n => n.id === cen.id)
+  return notifications.map(item => {
+    const enhanced = currentEnhancedNotifications.find(n => n.id === item.id)
 
-    const enhance = enhancementMap[cen.id]
+    const enhance = enhancementMap[item.id]
     if (!enhance) {
-      if (!enhanced) return cen
-      return { ...enhanced, ...cen }
+      if (!enhanced) return item
+      return mergeNotificationPreservingEnhancement(item, enhanced)
     }
 
     return {
-      ..._.pick(enhanced, [
-        'comment',
-        'commit',
-        'issue',
-        'pullRequest',
-        'release',
-        'enhanced',
-      ]),
-      ...cen,
+      ...mergeNotificationPreservingEnhancement(item, enhanced),
       ...enhance,
     } as EnhancedGitHubNotification
   })

@@ -3,7 +3,6 @@ import _ from 'lodash'
 
 import {
   ColumnSubscription,
-  constants,
   mergeEventsPreservingEnhancement,
   mergeIssuesOrPullRequestsPreservingEnhancement,
   mergeNotificationsPreservingEnhancement,
@@ -213,15 +212,26 @@ export const subscriptionsReducer: Reducer<State> = (
         const prevItems = (subscription.data.items || []) as any
         const newItems = (action.payload.data || []) as any
 
-        const mergedItems: any[] = action.payload.replaceAllItems
-          ? newItems
-          : action.payload.subscriptionType === 'activity'
-          ? mergeEventsPreservingEnhancement(newItems, prevItems)
-          : action.payload.subscriptionType === 'issue_or_pr'
-          ? mergeIssuesOrPullRequestsPreservingEnhancement(newItems, prevItems)
-          : action.payload.subscriptionType === 'notifications'
-          ? mergeNotificationsPreservingEnhancement(newItems, prevItems)
-          : mergeEventsPreservingEnhancement(newItems, prevItems)
+        const mergedItems: any[] =
+          action.payload.subscriptionType === 'activity'
+            ? mergeEventsPreservingEnhancement(newItems, prevItems, {
+                dropPrevItems: action.payload.replaceAllItems,
+              })
+            : action.payload.subscriptionType === 'issue_or_pr'
+            ? mergeIssuesOrPullRequestsPreservingEnhancement(
+                newItems,
+                prevItems,
+                {
+                  dropPrevItems: action.payload.replaceAllItems,
+                },
+              )
+            : action.payload.subscriptionType === 'notifications'
+            ? mergeNotificationsPreservingEnhancement(newItems, prevItems, {
+                dropPrevItems: action.payload.replaceAllItems,
+              })
+            : mergeEventsPreservingEnhancement(newItems, prevItems, {
+                dropPrevItems: action.payload.replaceAllItems,
+              })
 
         subscription.data.items = mergedItems.map(
           removeUselessURLsFromResponseItem,

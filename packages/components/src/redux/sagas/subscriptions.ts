@@ -325,12 +325,11 @@ function* onFetchRequest(
       const mergedItems = mergeNotificationsPreservingEnhancement(
         newItems,
         prevItems,
+        { dropPrevItems: replaceAllItems },
       )
 
       const olderDateFromThisResponse = getOlderNotificationDate(newItems)
-      const olderItemDate = replaceAllItems
-        ? olderDateFromThisResponse
-        : getOlderNotificationDate(mergedItems)
+      const olderItemDate = getOlderNotificationDate(mergedItems)
 
       if (!notificationsCache) {
         notificationsCache = createNotificationsCache(prevItems)
@@ -386,12 +385,14 @@ function* onFetchRequest(
 
       const prevItems = subscription.data.items || []
       const newItems = (response.data || []) as GitHubEvent[]
-      const mergedItems = mergeEventsPreservingEnhancement(newItems, prevItems)
+      const mergedItems = mergeEventsPreservingEnhancement(
+        newItems,
+        prevItems,
+        { dropPrevItems: replaceAllItems },
+      )
 
       const olderDateFromThisResponse = getOlderEventDate(newItems)
-      const olderItemDate = replaceAllItems
-        ? olderDateFromThisResponse
-        : getOlderEventDate(mergedItems)
+      const olderItemDate = getOlderEventDate(mergedItems)
 
       data = newItems
 
@@ -423,12 +424,11 @@ function* onFetchRequest(
       const mergedItems = mergeIssuesOrPullRequestsPreservingEnhancement(
         newItems,
         prevItems,
+        { dropPrevItems: replaceAllItems },
       )
 
       const olderDateFromThisResponse = getOlderIssueOrPullRequestDate(newItems)
-      const olderItemDate = replaceAllItems
-        ? olderDateFromThisResponse
-        : getOlderIssueOrPullRequestDate(mergedItems)
+      const olderItemDate = getOlderIssueOrPullRequestDate(mergedItems)
 
       if (!issuesOrPullRequestsCache) {
         issuesOrPullRequestsCache = createIssuesOrPullRequestsCache(prevItems)
