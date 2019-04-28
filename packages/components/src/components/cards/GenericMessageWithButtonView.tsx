@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, View, ViewProps } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
 import {
@@ -13,20 +13,24 @@ export interface GenericMessageWithButtonViewProps {
   emoji: GitHubEmoji | null
   subtitle: string | undefined | null
   title: string | undefined | null
+  style?: ViewProps['style']
 }
 
 export const GenericMessageWithButtonView = React.memo(
   (props: GenericMessageWithButtonViewProps) => {
-    const { buttonView, emoji, subtitle, title } = props
+    const { buttonView, emoji, style, subtitle, title } = props
 
     const emojiImageURL = emoji ? getEmojiImageURL(emoji) : null
 
     return (
       <View
-        style={{
-          width: '100%',
-          padding: contentPadding,
-        }}
+        style={[
+          {
+            width: '100%',
+            padding: contentPadding,
+          },
+          style,
+        ]}
       >
         {!!emojiImageURL && (
           <Image

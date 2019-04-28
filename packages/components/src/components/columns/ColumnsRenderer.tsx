@@ -4,16 +4,21 @@ import { Dimensions } from 'react-native'
 import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import { SafeAreaView } from '../../libs/safe-area-view'
+import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { columnHeaderHeight, sidebarSize } from '../../styles/variables'
+import { EmptyCards } from '../cards/EmptyCards'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
 import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
 import { Columns } from './Columns'
+import { NoColumns } from './NoColumns'
+import { NoFocusedColumn } from './NoFocusedColumn'
 
 export interface ColumnsRendererProps {}
 
@@ -27,14 +32,21 @@ export function ColumnsRenderer() {
     inlineMode,
     isSharedFiltersOpened,
   } = useColumnFilters()
+  const columnIds = useReduxState(selectors.columnIdsSelector)
 
   const closeSharedFiltersView = useCallback(
     () => emitter.emit('TOGGLE_COLUMN_FILTERS', { columnId: focusedColumnId! }),
     [focusedColumnId],
   )
 
+  if (!columnIds.length) {
+    return <NoColumns fullWidth />
+  }
+
   if (appViewMode === 'single-column' || sizename === '1-small') {
-    if (!focusedColumnId) return null
+    if (!focusedColumnId) {
+      return <NoFocusedColumn />
+    }
 
     const defaultContainerHeight =
       appOrientation === 'portrait'

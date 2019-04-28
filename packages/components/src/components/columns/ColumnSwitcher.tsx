@@ -68,6 +68,8 @@ export function ColumnSwitcher() {
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
 
+  if (columnIds.length < 2) return null
+
   if (
     !(
       (appViewMode === 'single-column' && shouldRenderFAB({ sizename })) ||

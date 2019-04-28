@@ -76,6 +76,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const { appViewMode } = useAppViewMode()
   const columnWidth = useColumnWidth()
 
+  const columnIds = useReduxState(selectors.columnIdsSelector)
   const modalStack = useReduxState(selectors.modalStack)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const previouslyOpenedModal = usePrevious(currentOpenedModal)
@@ -108,7 +109,8 @@ export function ModalRenderer(props: ModalRendererProps) {
     constants.DISABLE_ANIMATIONS ||
     (sizename === '1-small' &&
     ((isSettings && !previouslyOpenedModal) ||
-      (!currentOpenedModal && wasSettings))
+      (!currentOpenedModal && wasSettings)) &&
+    columnIds.length > 0
       ? true
       : false)
 

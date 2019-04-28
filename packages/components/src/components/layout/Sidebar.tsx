@@ -182,9 +182,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
         <FlatList
           ref={flatListRef}
           ListHeaderComponent={
-            !(columnIds && columnIds.length) &&
-            !large &&
-            !shouldRenderFAB({ sizename }) ? (
+            !(columnIds && columnIds.length) && !large ? (
               <>
                 <ColumnHeaderItem
                   analyticsLabel="sidebar_add"
@@ -237,8 +235,12 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 label="preferences"
                 noPadding
                 onPress={() =>
-                  small && isModalOpen('SETTINGS')
-                    ? undefined
+                  small &&
+                  currentOpenedModal &&
+                  currentOpenedModal.name === 'SETTINGS'
+                    ? columnIds.length === 0
+                      ? closeAllModals()
+                      : undefined
                     : replaceModal({ name: 'SETTINGS' })
                 }
                 showLabel={showLabel}
@@ -355,8 +357,12 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             label="preferences"
             noPadding
             onPress={() =>
-              small && isModalOpen('SETTINGS')
-                ? undefined
+              small &&
+              currentOpenedModal &&
+              currentOpenedModal.name === 'SETTINGS'
+                ? columnIds.length === 0
+                  ? closeAllModals()
+                  : undefined
                 : replaceModal({ name: 'SETTINGS' })
             }
             showLabel={showLabel}
