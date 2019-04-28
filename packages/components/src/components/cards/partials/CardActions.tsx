@@ -60,7 +60,7 @@ export function CardActions(props: CardActionsProps) {
           },
         }}
       >
-        {isSaved ? 'unsave' : 'save'}
+        {isSaved ? 'saved' : 'save'}
       </Link>
 
       <Spacer width={contentPadding / 2} />
