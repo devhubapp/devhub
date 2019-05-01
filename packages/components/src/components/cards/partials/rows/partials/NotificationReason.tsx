@@ -9,12 +9,12 @@ import { Label } from '../../../../common/Label'
 
 export interface NotificationReasonProps {
   backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
-  muted?: boolean
+  muted: boolean
   reason: GitHubNotificationReason
 }
 
 export function NotificationReason(props: NotificationReasonProps) {
-  const { backgroundThemeColor, reason } = props
+  const { backgroundThemeColor, muted, reason } = props
 
   const reasonDetails = getNotificationReasonMetadata(reason)
 
@@ -24,9 +24,10 @@ export function NotificationReason(props: NotificationReasonProps) {
     <Label
       backgroundThemeColor={backgroundThemeColor}
       colorThemeColor={reasonDetails.color}
-      containerStyle={{ alignSelf: 'center' }}
+      muted={muted}
       outline={false}
       small
+      textThemeColor="foregroundColorMuted50"
     >
       {reasonDetails.label.toLowerCase()}
     </Label>

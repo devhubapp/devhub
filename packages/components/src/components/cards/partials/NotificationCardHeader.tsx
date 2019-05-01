@@ -154,7 +154,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
 
               <NotificationReason
                 backgroundThemeColor={backgroundThemeColor}
-                // muted={isRead}
+                muted={isRead}
                 reason={reason}
               />
             </View>

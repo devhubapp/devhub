@@ -3,6 +3,7 @@ import { ScrollView, ViewProps } from 'react-native'
 
 import { GitHubLabel, Omit } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
+import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
 import { hiddenLabelSize, Label, LabelProps } from '../../../common/Label'
 import { TouchableOpacity } from '../../../common/TouchableOpacity'
@@ -37,7 +38,9 @@ export const LabelsView = (props: LabelsViewProps) => {
     scrollViewRef.current.scrollToEnd({ animated: false })
   }, [scrollViewRef.current])
 
-  const horizontalSpacing = hideText ? -hiddenLabelSize.width / 8 : 1
+  const horizontalSpacing = hideText
+    ? -hiddenLabelSize.width / 8
+    : contentPadding / 3
   const verticalSpacing = 1
 
   const texts = labels
@@ -92,8 +95,8 @@ export const LabelsView = (props: LabelsViewProps) => {
           colorThemeColor={label.color}
           containerStyle={{
             alignSelf: 'flex-start',
-            marginHorizontal: horizontalSpacing,
-            marginVertical: verticalSpacing,
+            paddingHorizontal: horizontalSpacing,
+            paddingVertical: verticalSpacing,
           }}
           hideText={hideText}
           outline={false}

@@ -78,6 +78,7 @@ export interface EventCardProps {
   event: EnhancedGitHubEvent
   isFocused?: boolean
   repoIsKnown: boolean
+  swipeable: boolean
 }
 
 export const EventCard = React.memo((props: EventCardProps) => {
@@ -85,8 +86,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
     cardViewMode,
     enableCompactLabels,
     event,
-    repoIsKnown,
     isFocused,
+    repoIsKnown,
+    swipeable,
   } = props
 
   const itemRef = useRef<View>(null)
@@ -119,7 +121,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   let branchName = getBranchNameFromRef(branchOrTagRef)
 
-  const issueOrPullRequest = issue || pullRequest
+  const issueOrPullRequest = (issue || pullRequest) as
+    | typeof issue
+    | typeof pullRequest
+    | undefined
 
   const issueOrPullRequestNumber = issueOrPullRequest
     ? issueOrPullRequest.number ||
@@ -237,6 +242,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
 
+  const showCardActions = cardViewMode !== 'compact' && !swipeable
+
   let withTopMargin = cardViewMode !== 'compact'
   let withTopMarginCount = withTopMargin ? 1 : 0
   function getWithTopMargin() {
@@ -346,7 +353,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
             }
             body={issueOrPullRequest.body}
             bold
-            commentsCount={issueOrPullRequest.comments}
+            commentsCount={
+              showCardActions ? undefined : issueOrPullRequest.comments
+            }
             createdAt={issueOrPullRequest.created_at}
             hideIcon
             hideLabelText={false}
@@ -604,7 +613,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   color: label.color && `#${label.color}`,
                   name: label.name,
                 }))}
-                // muted={isRead}
+                muted={isRead}
                 style={{
                   alignSelf: 'center',
                   justifyContent: 'flex-end',
@@ -751,14 +760,27 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <View style={cardStyles.itemFixedWidth} />
         </View>
 
-        <Spacer height={topCardMargin} />
+        {!!showCardActions && (
+          <>
+            <Spacer height={topCardMargin} />
 
-        <CardActions
-          isRead={isRead}
-          isSaved={isSaved}
-          itemIds={[id]}
-          type="activity"
-        />
+            <CardActions
+              commentsCount={
+                issueOrPullRequest ? issueOrPullRequest.comments : undefined
+              }
+              commentsLink={
+                (comment && (comment.html_url || comment.url)) ||
+                (issueOrPullRequest &&
+                  (issueOrPullRequest.html_url || issueOrPullRequest.url)) ||
+                undefined
+              }
+              isRead={isRead}
+              isSaved={isSaved}
+              itemIds={[id]}
+              type="activity"
+            />
+          </>
+        )}
 
         <Spacer width={contentPadding / 3} />
       </View>

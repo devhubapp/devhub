@@ -45,7 +45,7 @@ export interface NotificationCardsProps
   pointerEvents: FlatListProps<any>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
-  swipeable?: boolean
+  swipeable: boolean
 }
 
 function keyExtractor(item: EnhancedGitHubNotification) {
@@ -170,6 +170,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           }
           notification={item}
           repoIsKnown={props.repoIsKnown}
+          swipeable={props.swipeable}
         />
       )
     }
@@ -185,6 +186,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           }
           notification={item}
           repoIsKnown={props.repoIsKnown}
+          swipeable={props.swipeable}
         />
       </ErrorBoundary>
     )

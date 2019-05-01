@@ -49,6 +49,7 @@ export interface IssueOrPullRequestCardProps {
   isPrivate?: boolean
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest
   repoIsKnown: boolean
+  swipeable: boolean
   type: GitHubIssueOrPullRequestSubjectType
 }
 
@@ -61,6 +62,7 @@ export const IssueOrPullRequestCard = React.memo(
       isPrivate,
       issueOrPullRequest,
       repoIsKnown,
+      swipeable,
       type,
     } = props
 
@@ -119,6 +121,8 @@ export const IssueOrPullRequestCard = React.memo(
     const cardIconName = cardIconDetails.icon
     const cardIconColor = cardIconDetails.color
 
+    const showCardActions = cardViewMode !== 'compact' && !swipeable
+
     let withTopMargin = false
     let withTopMarginCount = withTopMargin ? 1 : 0
     function getWithTopMargin() {
@@ -158,17 +162,11 @@ export const IssueOrPullRequestCard = React.memo(
               }
               body={issueOrPullRequest.body}
               bold
-              commentsCount={issueOrPullRequest.comments}
-              createdAt={
-                cardViewMode === 'compact'
-                  ? issueOrPullRequest.created_at
-                  : undefined
+              commentsCount={
+                showCardActions ? undefined : issueOrPullRequest.comments
               }
-              updatedAt={
-                cardViewMode === 'compact'
-                  ? undefined
-                  : issueOrPullRequest.updated_at
-              }
+              createdAt={issueOrPullRequest.created_at}
+              // updatedAt={issueOrPullRequest.updated_at}
               hideIcon
               hideLabelText={false}
               // iconColor={issueIconColor || pullRequestIconColor}
@@ -180,6 +178,56 @@ export const IssueOrPullRequestCard = React.memo(
               labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
               owner={repoOwnerName || ''}
               repo={repoName || ''}
+              rightTitle={
+                !!issueOrPullRequest.updated_at &&
+                cardViewMode !== 'compact' && (
+                  <View
+                    style={[
+                      cardStyles.compactItemFixedHeight,
+                      sharedStyles.horizontal,
+                    ]}
+                  >
+                    <IntervalRefresh date={issueOrPullRequest.updated_at}>
+                      {() => {
+                        const createdAt = issueOrPullRequest.created_at
+                        const updatedAt = issueOrPullRequest.updated_at
+
+                        const dateText = getDateSmallText(updatedAt, false)
+                        if (!dateText) return null
+
+                        return (
+                          <>
+                            <ThemedText
+                              color="foregroundColorMuted50"
+                              numberOfLines={1}
+                              style={cardStyles.smallerText}
+                              {...Platform.select({
+                                web: {
+                                  title: `${
+                                    createdAt
+                                      ? `Created: ${getFullDateText(
+                                          createdAt,
+                                        )}\n`
+                                      : ''
+                                  }Updated: ${getFullDateText(updatedAt)}`,
+                                },
+                              })}
+                            >
+                              {/* <ThemedIcon
+                                name="clock"
+                                style={cardStyles.smallerText}
+                              />{' '} */}
+                              {dateText}
+                            </ThemedText>
+                          </>
+                        )
+                      }}
+                    </IntervalRefresh>
+
+                    <Spacer width={contentPadding / 3} />
+                  </View>
+                )
+              }
               showBodyRow={
                 false
                 // issueOrPullRequest &&
@@ -188,7 +236,7 @@ export const IssueOrPullRequestCard = React.memo(
                 //   ? true
                 //   : false
               }
-              showCreationDetails={cardViewMode !== 'compact'}
+              showCreationDetails={false}
               title={issueOrPullRequest.title}
               url={issueOrPullRequest.url}
               userLinkURL={issueOrPullRequest.user.html_url || ''}
@@ -526,14 +574,26 @@ export const IssueOrPullRequestCard = React.memo(
             </View>
           </View>
 
-          <Spacer height={topCardMargin} />
+          {!!showCardActions && (
+            <>
+              <Spacer height={topCardMargin} />
 
-          <CardActions
-            isRead={isRead}
-            isSaved={isSaved}
-            itemIds={[id]}
-            type="issue_or_pr"
-          />
+              <CardActions
+                commentsCount={
+                  issueOrPullRequest ? issueOrPullRequest.comments : undefined
+                }
+                commentsLink={
+                  (issueOrPullRequest &&
+                    (issueOrPullRequest.html_url || issueOrPullRequest.url)) ||
+                  undefined
+                }
+                isRead={isRead}
+                isSaved={isSaved}
+                itemIds={[id]}
+                type="issue_or_pr"
+              />
+            </>
+          )}
 
           <Spacer width={contentPadding / 3} />
         </View>

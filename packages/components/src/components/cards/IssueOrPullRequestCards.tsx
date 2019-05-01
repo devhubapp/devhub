@@ -51,7 +51,7 @@ export interface IssueOrPullRequestCardsProps
   loadState: EnhancedLoadState
   pointerEvents: FlatListProps<any>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
-  swipeable?: boolean
+  swipeable: boolean
 }
 
 function keyExtractor(item: EnhancedGitHubIssueOrPullRequest) {
@@ -178,6 +178,7 @@ export const IssueOrPullRequestCards = React.memo(
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
+            swipeable={props.swipeable}
             type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
           />
         )
@@ -194,6 +195,7 @@ export const IssueOrPullRequestCards = React.memo(
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
+            swipeable={props.swipeable}
             type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
           />
         </ErrorBoundary>

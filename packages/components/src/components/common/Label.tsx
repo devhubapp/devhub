@@ -107,7 +107,7 @@ export function Label(props: LabelProps) {
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: typeof radius === 'number' ? radius : height / 2,
-          borderWidth: StyleSheet.hairlineWidth,
+          borderWidth: outline ? StyleSheet.hairlineWidth : 0,
         },
         containerProps && containerProps.style,
         containerStyle,
@@ -116,7 +116,6 @@ export function Label(props: LabelProps) {
           backgroundColor,
         },
         Boolean(radius) && { borderRadius: radius },
-        muted && hideText && { opacity: mutedOpacity },
       ]}
     >
       {!hideText && (
@@ -127,6 +126,7 @@ export function Label(props: LabelProps) {
               {
                 width: 6,
                 height: 6,
+                marginTop: 1,
                 borderRadius: 6 / 2,
                 backgroundColor: circleColor,
               },
@@ -143,10 +143,10 @@ export function Label(props: LabelProps) {
           hideText ? { width } : { minWidth: width },
           {
             height,
-            lineHeight: hideText ? height : height - 2,
+            lineHeight: height,
             fontSize: hideText ? 0 : small ? 11 : 12,
             color: foregroundColor,
-            paddingHorizontal: hideText ? 0 : contentPadding / (small ? 3 : 2),
+            paddingLeft: hideText ? 0 : contentPadding / (small ? 3 : 2),
           },
           textProps && !hideText && textProps.style,
         ]}

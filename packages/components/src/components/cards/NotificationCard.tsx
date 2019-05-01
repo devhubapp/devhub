@@ -58,15 +58,17 @@ export interface NotificationCardProps {
   isFocused: boolean
   notification: EnhancedGitHubNotification
   repoIsKnown: boolean
+  swipeable: boolean
 }
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const {
     cardViewMode,
+    enableCompactLabels,
     isFocused,
     notification,
     repoIsKnown,
-    enableCompactLabels,
+    swipeable,
   } = props
 
   const repoFullName =
@@ -146,6 +148,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
+      html_url: '',
       user: { avatar_url: '', login: '', html_url: '' },
     }) ||
     null
@@ -163,6 +166,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
+      html_url: '',
       user: { avatar_url: '', login: '', html_url: '' },
     }) ||
     null
@@ -215,6 +219,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isBot = Boolean(
     actor && actor.login && actor.login.indexOf('[bot]') >= 0,
   )
+
+  const showCardActions = cardViewMode !== 'compact' && !swipeable
 
   let withTopMargin = cardViewMode !== 'compact'
   let withTopMarginCount = withTopMargin ? 1 : 0
@@ -293,7 +299,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             }
             body={issueOrPullRequest.body}
             bold
-            commentsCount={issueOrPullRequest.comments}
+            commentsCount={
+              showCardActions ? undefined : issueOrPullRequest.comments
+            }
             createdAt={issueOrPullRequest.created_at}
             hideIcon
             hideLabelText={false}
@@ -608,7 +616,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             backgroundThemeColor={theme =>
               getCardBackgroundThemeColor(theme, { isRead })
             }
-            // muted={isRead}
+            muted={isRead}
             reason={notification.reason as GitHubNotificationReason}
           />
         </View>
@@ -703,14 +711,27 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           {/* <Spacer width={contentPadding / 3} /> */}
         </View>
 
-        <Spacer height={topCardMargin} />
+        {!!showCardActions && (
+          <>
+            <Spacer height={topCardMargin} />
 
-        <CardActions
-          isRead={isRead}
-          isSaved={isSaved}
-          itemIds={[id]}
-          type="notifications"
-        />
+            <CardActions
+              commentsCount={
+                issueOrPullRequest ? issueOrPullRequest.comments : undefined
+              }
+              commentsLink={
+                (comment && (comment.html_url || comment.url)) ||
+                (issueOrPullRequest &&
+                  (issueOrPullRequest.html_url || issueOrPullRequest.url)) ||
+                undefined
+              }
+              isRead={isRead}
+              isSaved={isSaved}
+              itemIds={[id]}
+              type="notifications"
+            />
+          </>
+        )}
 
         <Spacer width={contentPadding / 3} />
       </View>

@@ -1,8 +1,9 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { ColumnSubscription } from '@devhub/core'
+import { ColumnSubscription, fixURLForPlatform } from '@devhub/core'
 import { useReduxAction } from '../../../hooks/use-redux-action'
+import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import { sharedStyles } from '../../../styles/shared'
 import {
@@ -15,6 +16,8 @@ import { Spacer } from '../../common/Spacer'
 import { spacingBetweenLeftAndRightColumn } from '../styles'
 
 export interface CardActionsProps {
+  commentsCount: number | undefined
+  commentsLink: string | (() => void) | undefined
   isRead: boolean
   isSaved: boolean
   itemIds: Array<string | number>
@@ -25,6 +28,8 @@ export interface CardActionsProps {
 
 export function CardActions(props: CardActionsProps) {
   const {
+    commentsCount,
+    commentsLink,
     isRead,
     isSaved,
     itemIds,
@@ -45,11 +50,12 @@ export function CardActions(props: CardActionsProps) {
       {leftSpacing > 0 && <Spacer width={leftSpacing} />}
 
       <Link
+        analyticsCategory="card_action"
         analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
         hitSlop={{
           top: contentPadding / 2,
           bottom: contentPadding / 2,
-          left: contentPadding,
+          left: contentPadding / 4,
           right: contentPadding / 4,
         }}
         onPress={() => saveItemsForLater({ itemIds, save: !isSaved })}
@@ -66,12 +72,13 @@ export function CardActions(props: CardActionsProps) {
       <Spacer width={contentPadding / 2} />
 
       <Link
+        analyticsCategory="card_action"
         analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
         hitSlop={{
           top: contentPadding / 2,
           bottom: contentPadding / 2,
           left: contentPadding / 4,
-          right: contentPadding,
+          right: contentPadding / 4,
         }}
         onPress={() =>
           markItemsAsReadOrUnread({ type, itemIds, unread: !!isRead })
@@ -85,6 +92,46 @@ export function CardActions(props: CardActionsProps) {
       >
         {isRead ? 'mark as unread' : 'mark as read'}
       </Link>
+
+      {typeof commentsCount === 'number' &&
+        commentsCount >= 0 &&
+        !!commentsLink && (
+          <>
+            <Spacer width={contentPadding / 2} />
+
+            <Link
+              analyticsCategory="card_action"
+              analyticsLabel="commentsCount"
+              hitSlop={{
+                top: contentPadding / 2,
+                bottom: contentPadding / 2,
+                left: contentPadding / 4,
+                right: contentPadding / 4,
+              }}
+              href={
+                typeof commentsLink === 'string'
+                  ? fixURLForPlatform(commentsLink, Platform.realOS, {
+                      addBottomAnchor: true,
+                    })
+                  : undefined
+              }
+              onPress={
+                typeof commentsLink === 'function' ? commentsLink : undefined
+              }
+              openOnNewTab
+              textProps={{
+                color: 'foregroundColorMuted50',
+                style: {
+                  fontSize: smallerTextSize,
+                },
+              }}
+            >
+              {commentsCount === 1
+                ? 'comment (1)'
+                : `comments (${commentsCount})`}
+            </Link>
+          </>
+        )}
 
       {rightSpacing > 0 && <Spacer width={rightSpacing} />}
     </View>

@@ -45,7 +45,7 @@ export interface EventCardsProps
   pointerEvents: FlatListProps<any>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
-  swipeable?: boolean
+  swipeable: boolean
 }
 
 function keyExtractor(item: EnhancedGitHubEvent, _index: number) {
@@ -163,11 +163,12 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           cardViewMode={cardViewMode}
           enableCompactLabels={enableCompactLabels}
           event={item}
-          repoIsKnown={props.repoIsKnown}
           isFocused={
             column.id === focusedColumnId &&
             item.id === selectedItemIdRef.current
           }
+          repoIsKnown={props.repoIsKnown}
+          swipeable={props.swipeable}
         />
       )
     }
@@ -183,6 +184,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
             item.id === selectedItemIdRef.current
           }
           repoIsKnown={props.repoIsKnown}
+          swipeable={props.swipeable}
         />
       </ErrorBoundary>
     )

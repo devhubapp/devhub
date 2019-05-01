@@ -16,6 +16,7 @@ import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding, smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'
+import { ConditionalWrap } from '../../../common/ConditionalWrap'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
 import { LabelProps } from '../../../common/Label'
 import { Link } from '../../../common/Link'
@@ -53,6 +54,7 @@ export interface IssueOrPullRequestRowProps
   labels?: GitHubLabel[] | undefined
   owner: string
   repo: string
+  rightTitle?: React.ReactNode
   showBodyRow: boolean
   showCreationDetails: boolean
   title: string
@@ -84,6 +86,7 @@ export const IssueOrPullRequestRow = React.memo(
       labels,
       owner,
       repo,
+      rightTitle,
       showBodyRow,
       showCreationDetails,
       title: _title,
@@ -149,50 +152,67 @@ export const IssueOrPullRequestRow = React.memo(
                 inlineLabels && sharedStyles.flexWrap,
               ]}
             >
-              <Link
-                enableTextWrapper
-                href={htmlUrl}
-                style={[
-                  !inlineLabels && sharedStyles.flexGrow,
-                  { alignSelf: 'flex-start' },
-                  !!inlineLabels &&
-                    labels &&
-                    labels.length > 0 && { marginRight: contentPadding / 2 },
-                  !inlineLabels &&
-                    labels &&
-                    labels.length > 0 && { marginBottom: innerCardSpacing },
-                ]}
-                textProps={{
-                  color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
-                  // color: 'foregroundColor',
-                  numberOfLines,
-                  style: [
-                    sharedStyles.flex,
-                    cardStyles.normalText,
-                    bold && cardStyles.boldText,
-                    // isRead && { fontWeight: undefined },
-                  ],
-                }}
-                // tooltip={`${title}${_body ? `\n\n${_body}` : ''}`}
-              >
-                <>
-                  {!hideIcon && (
-                    <>
-                      <ThemedIcon
-                        color={iconColor}
-                        name={iconName}
-                        size={13}
-                        style={[cardStyles.normalText, cardStyles.icon]}
-                      />{' '}
-                    </>
-                  )}
-                  {title}
+              <ConditionalWrap
+                condition={!!rightTitle}
+                wrap={c => (
+                  <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+                    <View style={sharedStyles.flex}>{c}</View>
 
-                  {/* {!!issueOrPullRequestNumber &&
+                    <Spacer width={contentPadding / 2} />
+
+                    <View style={{ alignSelf: 'flex-start' }}>
+                      {rightTitle}
+                    </View>
+                  </View>
+                )}
+              >
+                <Link
+                  enableTextWrapper
+                  href={htmlUrl}
+                  style={[
+                    !inlineLabels && !rightTitle && sharedStyles.flexGrow,
+                    { alignSelf: 'flex-start' },
+                    !!inlineLabels &&
+                      labels &&
+                      labels.length > 0 && { marginRight: contentPadding / 2 },
+                    !inlineLabels &&
+                      labels &&
+                      labels.length > 0 && { marginBottom: innerCardSpacing },
+                  ]}
+                  textProps={{
+                    color: isRead
+                      ? 'foregroundColorMuted50'
+                      : 'foregroundColor',
+                    // color: 'foregroundColor',
+                    numberOfLines,
+                    style: [
+                      sharedStyles.flex,
+                      cardStyles.normalText,
+                      bold && cardStyles.boldText,
+                      // isRead && { fontWeight: undefined },
+                    ],
+                  }}
+                  // tooltip={`${title}${_body ? `\n\n${_body}` : ''}`}
+                >
+                  <>
+                    {!hideIcon && (
+                      <>
+                        <ThemedIcon
+                          color={iconColor}
+                          name={iconName}
+                          size={13}
+                          style={[cardStyles.normalText, cardStyles.icon]}
+                        />{' '}
+                      </>
+                    )}
+                    {title}
+
+                    {/* {!!issueOrPullRequestNumber &&
                     (viewMode === 'compact' || !showCreationDetails) &&
                     ` #${issueOrPullRequestNumber}`} */}
-                </>
-              </Link>
+                  </>
+                </Link>
+              </ConditionalWrap>
 
               {!!labels && labels.length > 0 && (
                 <LabelsView
@@ -210,7 +230,7 @@ export const IssueOrPullRequestRow = React.memo(
                     color: label.color && `#${label.color}`,
                     name: label.name,
                   }))}
-                  // muted={isRead}
+                  muted={isRead}
                   textThemeColor="foregroundColorMuted50"
                 />
               )}

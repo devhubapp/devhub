@@ -11,7 +11,7 @@ export interface ColumnContainerProps {
   columnId: string
   disableColumnOptions?: boolean
   pagingEnabled?: boolean
-  swipeable?: boolean
+  swipeable: boolean
   pointerEvents: FlatListProps<any>['pointerEvents']
 }
 
