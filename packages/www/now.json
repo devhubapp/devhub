@@ -2,10 +2,10 @@
   "name": "devhub-www",
   "alias": "www.devhubapp.com",
   "builds": [
-    { "src": "index.js", "use": "@now/node" }
+    { "src": "src/index.js", "use": "@now/node" }
   ],
   "routes": [
-    { "src": "/.*", "dest": "index.js" }
+    { "src": "/.*", "dest": "src/index.js" }
   ],
   "regions": ["gru1"],
   "version": 2

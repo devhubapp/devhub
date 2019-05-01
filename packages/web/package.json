@@ -7,7 +7,7 @@
     "build": "yarn compile && react-app-rewired build && shx rm -rf dist && mv build dist",
     "clean": "shx rm -rf dist/*",
     "compile": "tsc -b",
-    "deploy": "yarn build && yarn now && yarn now alias",
+    "deploy": "yarn build && yarn now --target production",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",

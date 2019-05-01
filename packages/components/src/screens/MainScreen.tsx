@@ -353,9 +353,11 @@ export const MainScreen = React.memo(() => {
     [],
   )
 
-  if (!currentOpenedModal) {
-    analytics.trackScreenView('MAIN_SCREEN')
-  }
+  useEffect(() => {
+    if (!currentOpenedModal) {
+      analytics.trackScreenView('MAIN_SCREEN')
+    }
+  }, [currentOpenedModal])
 
   return (
     <Screen statusBarBackgroundThemeColor="header" useSafeArea={false}>
