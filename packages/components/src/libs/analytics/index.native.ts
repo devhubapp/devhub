@@ -21,7 +21,7 @@ tracker.customDimensionsFieldsIndexMap = {
 }
 
 const log = (...args: any[]) => {
-  // console.log('[ANALYTICS]', ...args) // tslint:disable-line no-console
+  console.log('[ANALYTICS]', ...args) // tslint:disable-line no-console
 }
 
 let _userId: string
