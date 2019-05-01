@@ -1,7 +1,9 @@
+import _ from 'lodash'
 import React, { RefObject, useCallback, useRef } from 'react'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
+import { usePrevious } from '../../hooks/use-previous'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 
@@ -22,22 +24,27 @@ export const ThemedView = React.forwardRef<View, ThemedViewProps>(
     const initialTheme = useTheme(
       useCallback(
         theme => {
-          updateStyle(ref, theme, { backgroundColor, borderColor })
+          updateStyle(
+            ref,
+            theme,
+            { backgroundColor, borderColor },
+            previousStyleRef,
+          )
         },
         [backgroundColor, borderColor],
       ),
     )
 
-    return (
-      <View
-        {...otherProps}
-        ref={ref}
-        style={[
-          style,
-          getStyle(initialTheme, { backgroundColor, borderColor }),
-        ]}
-      />
-    )
+    const initialStyle = getStyle(initialTheme, {
+      backgroundColor,
+      borderColor,
+    })
+
+    const previousStyle = usePrevious(initialStyle) || initialStyle
+    const previousStyleRef = useRef(previousStyle)
+    previousStyleRef.current = previousStyle
+
+    return <View {...otherProps} ref={ref} style={[style, initialStyle]} />
   },
 )
 
@@ -69,10 +76,16 @@ function updateStyle(
     backgroundColor,
     borderColor,
   }: Pick<ThemedViewProps, 'backgroundColor' | 'borderColor'>,
+  previousStyleRef: React.MutableRefObject<
+    ReturnType<typeof getStyle> | undefined
+  >,
 ) {
   if (!(ref && ref.current)) return
 
-  ref.current.setNativeProps({
-    style: getStyle(theme, { backgroundColor, borderColor }),
-  })
+  const newStyle = getStyle(theme, { backgroundColor, borderColor })
+
+  if (previousStyleRef && _.isEqual(newStyle, previousStyleRef.current)) return
+
+  ref.current.setNativeProps({ style: newStyle })
+  previousStyleRef.current = newStyle
 }

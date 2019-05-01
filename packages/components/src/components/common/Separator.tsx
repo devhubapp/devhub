@@ -32,9 +32,9 @@ export const Separator = React.memo((props: SeparatorProps) => {
   return (
     <ThemedView
       backgroundColor={theme => {
-        const themeField =
+        return (
           backgroundThemeColor || getSeparatorThemeColor(theme.backgroundColor)
-        return theme[themeField]
+        )
       }}
       style={[
         horizontal

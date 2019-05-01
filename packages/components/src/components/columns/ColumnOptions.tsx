@@ -186,7 +186,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   return (
     <ThemedView
       backgroundColor={theme =>
-        theme[getColumnHeaderThemeColors(theme.backgroundColor).normal]
+        getColumnHeaderThemeColors(theme.backgroundColor).normal
       }
       style={{
         alignSelf: 'stretch',
