@@ -6,6 +6,7 @@ import {
   Column,
   ColumnsAndSubscriptions,
   ColumnSubscription,
+  constants,
   createSubscriptionObjectWithId,
   getUniqueIdForSubscription,
   guid,
@@ -333,7 +334,11 @@ function* onColumnSubscriptionFilterChange(
       result.push(
         yield put(
           actions.fetchSubscriptionRequest({
-            params: { ...newSubscription.params, page: 1, perPage: 10 },
+            params: {
+              ...newSubscription.params,
+              page: 1,
+              perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
+            },
             subscriptionId: newSubscription.id,
             subscriptionType: newSubscription.type,
             replaceAllItems: true,

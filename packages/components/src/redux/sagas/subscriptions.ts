@@ -292,10 +292,7 @@ function* onFetchRequest(
     'oauth'
 
   const page = Math.max(1, payloadParams.page || 1)
-  const perPage = Math.min(
-    payloadParams.perPage || constants.DEFAULT_PAGINATION_PER_PAGE,
-    50,
-  )
+  const perPage = payloadParams.perPage || constants.DEFAULT_PAGINATION_PER_PAGE
 
   delete payloadParams.page
   delete payloadParams.perPage
