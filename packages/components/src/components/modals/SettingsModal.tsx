@@ -1,6 +1,7 @@
 import React from 'react'
 import { ScrollView, View } from 'react-native'
 
+import { constants } from '@devhub/core'
 import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -112,6 +113,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             <Spacer flex={1} />
 
             <Link
+              analyticsCategory="preferences_link"
               analyticsLabel="follow_on_twitter_brunolemos"
               href="https://twitter.com/brunolemos"
               openOnNewTab
@@ -122,11 +124,31 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             <Spacer width={contentPadding} />
 
             <Link
+              analyticsCategory="preferences_link"
               analyticsLabel="follow_on_twitter_devhub"
               href="https://twitter.com/devhub_app"
               openOnNewTab
             >
               <Avatar disableLink username="devhubapp" size={24} />
+            </Link>
+          </SubHeader>
+        </View>
+
+        <View>
+          <SubHeader title="Join Slack Community">
+            <Spacer flex={1} />
+
+            <Link
+              analyticsCategory="preferences_link"
+              analyticsLabel="join_slack_community"
+              href={constants.SLACK_INVITE_LINK}
+              openOnNewTab
+            >
+              <Avatar
+                avatarUrl="https://user-images.githubusercontent.com/619186/57062615-133ae880-6c97-11e9-915d-ae40de664b12.png"
+                disableLink
+                size={24}
+              />
             </Link>
           </SubHeader>
         </View>

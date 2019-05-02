@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native'
 import url from 'url'
 
+import { AppBannerMessage } from '../components/banners/AppBannerMessage'
 import { ConditionalWrap } from '../components/common/ConditionalWrap'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
@@ -321,6 +322,8 @@ export const MainScreen = React.memo(() => {
 
   return (
     <Screen statusBarBackgroundThemeColor="header" useSafeArea={false}>
+      <AppBannerMessage />
+
       <View
         style={[
           styles.container,

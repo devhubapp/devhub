@@ -16,3 +16,6 @@ export const GOOGLEPLAY_ID = 'com.devhubapp'
 
 export const API_BASE_URL = 'https://api.devhubapp.com'
 export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
+
+export const SLACK_INVITE_LINK =
+  'https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q'

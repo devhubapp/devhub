@@ -175,8 +175,9 @@ Alternatively, you can contribute using Gitpod, a free online dev environment fo
 
 ## Author
 
-Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)<br/>
-Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
+Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
+<br/>Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
+<br/>Join our Slack Community: [Slack Invitation](https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q)
 
 <a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=100" height="100" /></a>
 

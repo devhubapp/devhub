@@ -320,3 +320,12 @@ export type EnhancementCache = Map<
   string,
   false | { timestamp: number; data: any }
 >
+
+export interface BannerMessage {
+  id: string
+  message: string
+  href?: string
+  openOnNewTab?: boolean
+  closedAt?: string | undefined
+  createdAt?: string
+}
