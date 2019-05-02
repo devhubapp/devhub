@@ -8,6 +8,7 @@
     "clean": "shx rm -rf dist/*",
     "compile": "tsc -b",
     "deploy": "yarn build && yarn now --target production",
+    "deploy:beta": "yarn build && yarn now --target staging && yarn now alias beta.devhubapp.com",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
