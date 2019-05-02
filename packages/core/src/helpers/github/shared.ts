@@ -20,6 +20,10 @@ import {
 import { getSteppedSize } from '../shared'
 import { getGitHubIssueSearchQuery } from './issues'
 
+export function getDefaultPaginationPerPage(columnType: Column['type']) {
+  return columnType === 'notifications' ? 50 : 100
+}
+
 export function isItemRead(item: EnhancedItem) {
   return !(item && (item.unread !== false || item.forceUnreadLocally))
 }

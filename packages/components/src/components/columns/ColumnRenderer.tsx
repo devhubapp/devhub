@@ -6,11 +6,11 @@ import {
   activityColumnHasAnyFilter,
   CardViewMode,
   Column as ColumnType,
-  constants,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   EnhancedItem,
+  getDefaultPaginationPerPage,
   GitHubIcon,
   isEventPrivate,
   isItemRead,
@@ -246,7 +246,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const refresh = useCallback(() => {
     fetchColumnSubscriptionRequest({
       columnId: column.id,
-      params: { page: 1, perPage: constants.DEFAULT_PAGINATION_PER_PAGE },
+      params: { page: 1, perPage: getDefaultPaginationPerPage(column.type) },
       replaceAllItems: false,
     })
   }, [fetchColumnSubscriptionRequest, column.id])

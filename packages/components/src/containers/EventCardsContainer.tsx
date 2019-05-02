@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
   ActivityColumnSubscription,
-  constants,
   EnhancedGitHubEvent,
+  getDefaultPaginationPerPage,
   getOlderEventDate,
   Omit,
 } from '@devhub/core'
@@ -139,7 +139,7 @@ export const EventCardsContainer = React.memo(
           columnId: column.id,
           params: {
             page: page || 1,
-            perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
+            perPage: getDefaultPaginationPerPage(column.type),
           },
           replaceAllItems: false,
         })
@@ -150,7 +150,7 @@ export const EventCardsContainer = React.memo(
     const fetchNextPage = useCallback(() => {
       const size = allItems.length
 
-      const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
+      const perPage = getDefaultPaginationPerPage(column.type)
       const currentPage = Math.ceil(size / perPage)
 
       const nextPage = (currentPage || 0) + 1

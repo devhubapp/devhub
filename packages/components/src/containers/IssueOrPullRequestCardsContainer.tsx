@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
-  constants,
   EnhancedGitHubIssueOrPullRequest,
+  getDefaultPaginationPerPage,
   getOlderIssueOrPullRequestDate,
   getOwnerAndRepo,
   IssueOrPullRequestColumnSubscription,
@@ -143,7 +143,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
           columnId: column.id,
           params: {
             page: page || 1,
-            perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
+            perPage: getDefaultPaginationPerPage(column.type),
           },
           replaceAllItems: false,
         })
@@ -154,7 +154,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     const fetchNextPage = useCallback(() => {
       const size = allItems.length
 
-      const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
+      const perPage = getDefaultPaginationPerPage(column.type)
       const currentPage = Math.ceil(size / perPage)
 
       const nextPage = (currentPage || 0) + 1

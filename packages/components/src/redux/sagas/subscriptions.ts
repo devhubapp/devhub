@@ -23,6 +23,7 @@ import {
   enhanceIssueOrPullRequests,
   EnhancementCache,
   enhanceNotifications,
+  getDefaultPaginationPerPage,
   getGitHubAPIHeadersFromHeader,
   getIssueOrPullRequestsEnhancementMap,
   getNotificationsEnhancementMap,
@@ -292,7 +293,15 @@ function* onFetchRequest(
     'oauth'
 
   const page = Math.max(1, payloadParams.page || 1)
-  const perPage = payloadParams.perPage || constants.DEFAULT_PAGINATION_PER_PAGE
+  const perPage =
+    payloadParams.perPage ||
+    (subscription && subscription.type
+      ? getDefaultPaginationPerPage(subscription.type)
+      : _.min([
+          getDefaultPaginationPerPage('activity'),
+          getDefaultPaginationPerPage('issue_or_pr'),
+          getDefaultPaginationPerPage('notifications'),
+        ]))!
 
   delete payloadParams.page
   delete payloadParams.perPage

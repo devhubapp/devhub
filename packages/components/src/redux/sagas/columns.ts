@@ -6,8 +6,8 @@ import {
   Column,
   ColumnsAndSubscriptions,
   ColumnSubscription,
-  constants,
   createSubscriptionObjectWithId,
+  getDefaultPaginationPerPage,
   getUniqueIdForSubscription,
   guid,
   isReadFilterChecked,
@@ -337,7 +337,7 @@ function* onColumnSubscriptionFilterChange(
             params: {
               ...newSubscription.params,
               page: 1,
-              perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
+              perPage: getDefaultPaginationPerPage(column.type),
             },
             subscriptionId: newSubscription.id,
             subscriptionType: newSubscription.type,
