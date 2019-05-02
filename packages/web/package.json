@@ -1,6 +1,6 @@
 {
   "name": "@devhub/web",
-  "version": "0.48.1",
+  "version": "0.48.2",
   "private": false,
   "homepage": "./",
   "scripts": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.4.0",
-    "@devhub/components": "0.48.1",
+    "@devhub/components": "0.48.2",
     "react": "16.8.4",
     "react-app-polyfill": "0.2.2",
     "react-art": "16.8.4",
