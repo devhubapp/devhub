@@ -1,6 +1,6 @@
 {
   "name": "@devhub/components",
-  "version": "0.48.1",
+  "version": "0.9.0-beta.1",
   "private": false,
   "main": "dist",
   "scripts": {
@@ -13,7 +13,7 @@
   "dependencies": {
     "@bugsnag/js": "6.1.0",
     "@bugsnag/plugin-react": "6.1.0",
-    "@devhub/core": "0.48.1",
+    "@devhub/core": "0.9.0-beta.1",
     "@octokit/rest": "16.20.0",
     "axios": "0.18.0",
     "bugsnag-react-native": "2.16.0",
