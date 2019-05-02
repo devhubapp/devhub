@@ -9,9 +9,8 @@ import {
   ColumnSubscription,
   EnhancedItem,
   GitHubAPIHeaders,
-  GitHubEventSubjectType,
   GitHubIcon,
-  GitHubNotificationSubjectType,
+  GitHubItemSubjectType,
   GitHubPullRequest,
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
@@ -110,13 +109,15 @@ export function getUserAvatarByEmail(
 }
 
 export function isPullRequest(issue: {
+  pull_request?: object
   merged_at?: GitHubPullRequest['merged_at']
   html_url?: GitHubPullRequest['html_url']
   url?: GitHubPullRequest['url']
 }) {
-  return (
+  return !!(
     issue &&
     ((issue as GitHubPullRequest).merged_at ||
+      issue.pull_request ||
       (issue.html_url && issue.html_url.indexOf('pull') >= 0) ||
       (issue.url && issue.url.indexOf('pull') >= 0))
   )
@@ -679,18 +680,14 @@ export function getStateTypeMetadata<T extends GitHubStateType>(
   }
 }
 
-export function getSubjectTypeMetadata<
-  T extends GitHubEventSubjectType | GitHubNotificationSubjectType
->(
+export function getSubjectTypeMetadata<T extends GitHubItemSubjectType>(
   subjectType: T,
 ): {
   color?: keyof ThemeColors
   label: string
   subjectType: T
 } {
-  switch (
-    subjectType as GitHubEventSubjectType | GitHubNotificationSubjectType
-  ) {
+  switch (subjectType as GitHubItemSubjectType) {
     case 'PullRequestReview': {
       return {
         label: 'Pull Request Review',

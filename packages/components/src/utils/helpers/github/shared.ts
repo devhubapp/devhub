@@ -1,9 +1,8 @@
 import _ from 'lodash'
 
 import {
-  GitHubEventSubjectType,
   GitHubIcon,
-  GitHubNotificationSubjectType,
+  GitHubItemSubjectType,
   GitHubPullRequest,
   GitHubStateType,
   isDraft,
@@ -162,18 +161,14 @@ export function getStateTypeMetadata<T extends GitHubStateType>(
   }
 }
 
-export function getSubjectTypeMetadata<
-  T extends GitHubEventSubjectType | GitHubNotificationSubjectType
->(
+export function getSubjectTypeMetadata<T extends GitHubItemSubjectType>(
   subjectType: T,
 ): {
   color?: keyof ThemeColors
   label: string
   subjectType: T
 } {
-  switch (
-    subjectType as GitHubEventSubjectType | GitHubNotificationSubjectType
-  ) {
+  switch (subjectType as GitHubItemSubjectType) {
     case 'PullRequestReview': {
       return {
         label: 'Pull Request Review',

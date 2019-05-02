@@ -252,12 +252,16 @@ export function getEventMetadata(
               ? pullRequestTextWithColon
               : issueTextWithColon
           }`,
-          subjectType: 'Issue',
+          subjectType: isPullRequest(event.payload.issue)
+            ? 'PullRequest'
+            : 'Issue',
         }
       }
 
       case 'IssuesEvent': {
-        const subjectType: GitHubEventSubjectType = isPullRequest(event)
+        const subjectType: GitHubEventSubjectType = isPullRequest(
+          event.payload.issue,
+        )
           ? 'PullRequest'
           : 'Issue'
 
@@ -440,19 +444,19 @@ export function getEventMetadata(
             return {
               action: 'reviewed',
               actionText: `Commented on ${pullRequestText} review${colonText}`,
-              subjectType: 'Release',
+              subjectType: 'PullRequestReview',
             }
           case 'edited':
             return {
               action: 'updated',
               actionText: `Edited ${pullRequestText} review${colonText}`,
-              subjectType: 'Release',
+              subjectType: 'PullRequestReview',
             }
           case 'deleted':
             return {
               action: 'deleted',
               actionText: `Deleted ${pullRequestText} review${colonText}`,
-              subjectType: 'Release',
+              subjectType: 'PullRequestReview',
             }
           default: {
             console.error(
@@ -462,7 +466,7 @@ export function getEventMetadata(
             return {
               action: 'reviewed',
               actionText: `Updated ${pullRequestText} review${colonText}`,
-              subjectType: 'Release',
+              subjectType: 'PullRequestReview',
             }
           }
         }
@@ -661,60 +665,6 @@ export function sortEvents(
     .uniqBy('id')
     .orderBy(field, order)
     .value()
-}
-
-export function getEventSubjectType(
-  event: EnhancedGitHubEvent,
-): GitHubEventSubjectType | null {
-  if (!(event && event.type)) return null
-
-  switch (event.type) {
-    case 'CommitCommentEvent':
-      return 'Commit'
-
-    case 'CreateEvent':
-    case 'DeleteEvent': {
-      switch (event.payload.ref_type) {
-        case 'repository':
-          return 'Repository'
-        case 'branch':
-          return 'Branch'
-        case 'tag':
-          return 'Tag'
-        default:
-          return null
-      }
-    }
-
-    case 'ForkEvent':
-      return 'Repository'
-    case 'GollumEvent':
-      return 'Wiki'
-    case 'IssueCommentEvent':
-      return 'Issue'
-    case 'IssuesEvent':
-      return 'Issue'
-    case 'MemberEvent':
-      return 'User'
-    case 'PublicEvent':
-      return 'Repository'
-    case 'PullRequestEvent':
-      return 'PullRequest'
-    case 'PullRequestReviewCommentEvent':
-      return 'PullRequestReview'
-    case 'PullRequestReviewEvent':
-      return 'PullRequestReview'
-    case 'PushEvent':
-      return 'Commit'
-    case 'ReleaseEvent':
-      return 'Release'
-    case 'WatchEvent':
-    case 'WatchEvent:OneUserMultipleRepos':
-      return 'Repository'
-
-    default:
-      return null
-  }
 }
 
 export function getEventIconAndColor(

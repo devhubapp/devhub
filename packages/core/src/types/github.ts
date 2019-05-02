@@ -658,6 +658,11 @@ export type GitHubIssueOrPullRequest = GitHubIssue | GitHubPullRequest
 
 export type GitHubIssueOrPullRequestSubjectType = 'Issue' | 'PullRequest'
 
+export type GitHubItemSubjectType =
+  | GitHubEventSubjectType
+  | GitHubNotificationSubjectType
+  | GitHubIssueOrPullRequestSubjectType
+
 export type GitHubIcon =
   | 'alert'
   | 'archive'

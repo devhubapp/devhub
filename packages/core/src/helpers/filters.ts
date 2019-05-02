@@ -19,7 +19,6 @@ import {
 } from './github'
 import {
   getEventMetadata,
-  getEventSubjectType,
   mergeSimilarEvents,
   sortEvents,
 } from './github/events'
@@ -368,7 +367,7 @@ export function getFilteredEvents(
 
   if (filters && activityColumnHasAnyFilter(filters)) {
     _events = _events.filter(item => {
-      const subjectType = getEventSubjectType(item)
+      const subjectType = getEventMetadata(item).subjectType
 
       const issueOrPR =
         item &&
