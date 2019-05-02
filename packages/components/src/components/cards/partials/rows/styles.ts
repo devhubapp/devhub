@@ -10,6 +10,7 @@ export const cardRowStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexGrow: 1,
+    overflow: 'hidden',
   },
 
   container__margin: {
