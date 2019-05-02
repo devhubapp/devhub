@@ -118,7 +118,7 @@ export const subscriptionsReducer: Reducer<State> = (
           Boolean,
         )
 
-        Object.assign(draft.byId, normalized.byId)
+        _.merge(draft.byId, normalized.byId)
 
         draft.updatedAt = normalized.updatedAt
       })
@@ -138,7 +138,7 @@ export const subscriptionsReducer: Reducer<State> = (
           Boolean,
         )
 
-        Object.assign(draft.byId, normalized.byId)
+        _.merge(draft.byId, normalized.byId)
 
         draft.updatedAt = normalized.updatedAt
       })

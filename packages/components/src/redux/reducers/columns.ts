@@ -52,7 +52,7 @@ export const columnsReducer: Reducer<State> = (
 
         draft.allIds.push(normalized.allIds[0])
 
-        Object.assign(draft.byId, normalized.byId)
+        _.merge(draft.byId, normalized.byId)
 
         draft.updatedAt = normalized.updatedAt
       })
