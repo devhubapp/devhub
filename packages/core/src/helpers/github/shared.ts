@@ -21,7 +21,11 @@ import { getSteppedSize } from '../shared'
 import { getGitHubIssueSearchQuery } from './issues'
 
 export function getDefaultPaginationPerPage(columnType: Column['type']) {
-  return columnType === 'notifications' ? 50 : 100
+  if (columnType === 'activity') return 50
+  if (columnType === 'issue_or_pr') return 10
+  if (columnType === 'notifications') return 50
+
+  return 10
 }
 
 export function isItemRead(item: EnhancedItem) {
