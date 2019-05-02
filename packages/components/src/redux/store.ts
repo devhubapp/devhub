@@ -28,7 +28,7 @@ export function configureStore(key = 'root') {
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage,
     throttle: 500,
-    version: 10,
+    version: 11,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 

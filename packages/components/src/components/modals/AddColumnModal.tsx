@@ -138,6 +138,14 @@ const columnTypes: Array<{
           },
           paramList: ['username'],
           isPrivateSupported: false,
+          defaultFilters: {
+            subjectTypes: {
+              Release: true,
+              Repository: true,
+              Tag: true,
+              User: true,
+            },
+          },
         },
       },
       {

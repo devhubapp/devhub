@@ -287,4 +287,50 @@ export default {
         // delete (column.filters.activity as any).types
       })
     }),
+  11: (state: RootState) =>
+    immer(state, draft => {
+      draft.columns = draft.columns || {}
+      draft.columns.byId = draft.columns.byId || {}
+      draft.subscriptions = draft.subscriptions || {}
+      draft.subscriptions.byId = draft.subscriptions.byId || {}
+
+      const columnIds = Object.keys(draft.columns.byId)
+      columnIds.forEach(columnId => {
+        const column = draft.columns.byId![columnId] as ActivityColumn
+
+        // we only wanna change User Dashboard columns
+        if (!(column && column.type === 'activity')) return
+        const subscription = draft.subscriptions.byId[column.subscriptionIds[0]]
+        if (
+          !(
+            subscription &&
+            subscription.type === 'activity' &&
+            subscription.subtype === 'USER_RECEIVED_EVENTS'
+          )
+        )
+          return
+
+        // if column has some custom filters, let's not touch it
+        if (
+          column &&
+          column.filters &&
+          (filterRecordHasAnyForcedValue(column.filters.subjectTypes) ||
+            (column.filters.activity &&
+              (filterRecordHasAnyForcedValue(column.filters.activity.actions) ||
+                filterRecordHasAnyForcedValue(
+                  (column.filters.activity as any).types,
+                ))))
+        )
+          return
+
+        // change default column filters to match github's dashboard
+        column.filters = column.filters || {}
+        column.filters.subjectTypes = {
+          Release: true,
+          Repository: true,
+          Tag: true,
+          User: true,
+        }
+      })
+    }),
 }
