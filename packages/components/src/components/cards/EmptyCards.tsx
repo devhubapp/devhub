@@ -157,7 +157,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
         {renderContent()}
       </View>
 
-      <View>
+      <View style={{ minHeight: defaultCardFooterHeight }}>
         {hasError || loadState === 'loading_first' ? null : fetchNextPage ? (
           <View
             style={{
