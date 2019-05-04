@@ -1,11 +1,11 @@
 import React from 'react'
-import { FlatListProps } from 'react-native'
 
 import { EventColumn } from '../components/columns/EventColumn'
 import { IssueOrPullRequestColumn } from '../components/columns/IssueOrPullRequestColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
 import { useColumn } from '../hooks/use-column'
 import { bugsnag } from '../libs/bugsnag'
+import { FlatListProps } from '../libs/flatlist'
 
 export interface ColumnContainerProps {
   columnId: string

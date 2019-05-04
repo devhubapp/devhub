@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import { FlatList, FlatListProps, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
   Column,
@@ -15,6 +15,7 @@ import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
+import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { Button } from '../common/Button'

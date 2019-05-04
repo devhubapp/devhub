@@ -1,18 +1,13 @@
 import _ from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import {
-  FlatList,
-  FlatListProps,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { constants, Omit } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
+import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as selectors from '../../redux/selectors'
 import { separatorThickSize } from '../common/Separator'

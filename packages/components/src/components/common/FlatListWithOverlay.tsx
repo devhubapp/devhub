@@ -1,6 +1,6 @@
 import React from 'react'
-import { FlatList, FlatListProps } from 'react-native'
 
+import { FlatList, FlatListProps } from '../../libs/flatlist'
 import {
   ScrollViewWithOverlay,
   ScrollViewWithOverlayProps,

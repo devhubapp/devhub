@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useEffect, useRef } from 'react'
-import { FlatList } from 'react-native'
 
+import { FlatList } from '../libs/flatlist'
 import { useEmitter } from './use-emitter'
 import { useForceRerender } from './use-force-rerender'
 import useKeyPressCallback from './use-key-press-callback'
