@@ -15,6 +15,7 @@ import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
@@ -332,6 +333,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       bounces
       contentContainerStyle={contentContainerStyle}
       data={items}
+      disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}
       initialNumToRender={15}
       keyExtractor={keyExtractor}
@@ -340,7 +342,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       onViewableItemsChanged={handleViewableItemsChanged}
       pointerEvents={pointerEvents}
       refreshControl={refreshControl}
-      removeClippedSubviews
+      removeClippedSubviews={Platform.OS !== 'web'}
       renderItem={renderItem}
       viewabilityConfig={viewabilityConfig}
       windowSize={2}

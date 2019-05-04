@@ -13,6 +13,7 @@ import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
+import { Platform } from '../../libs/platform'
 import * as selectors from '../../redux/selectors'
 import { separatorThickSize } from '../common/Separator'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
@@ -187,6 +188,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       className="pagingEnabledFix"
       bounces={!swipeable}
       data={columnIds}
+      disableVirtualization={Platform.OS === 'web'}
       getItemLayout={getItemLayout}
       horizontal
       initialNumToRender={4}
@@ -196,7 +198,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       // onViewableItemsChanged={onViewableItemsChanged}
       pagingEnabled={pagingEnabled}
       pointerEvents={pointerEvents}
-      removeClippedSubviews
+      removeClippedSubviews={Platform.OS !== 'web'}
       scrollEnabled={!swipeable}
       windowSize={2}
       {...otherProps}
