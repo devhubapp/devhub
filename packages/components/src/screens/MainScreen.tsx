@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 import url from 'url'
 
+import { AppBannerMessage } from '../components/banners/AppBannerMessage'
 import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
 import { ColumnSwitcher } from '../components/columns/ColumnSwitcher'
@@ -361,6 +362,8 @@ export const MainScreen = React.memo(() => {
 
   return (
     <Screen statusBarBackgroundThemeColor="header" useSafeArea={false}>
+      <AppBannerMessage />
+
       <View
         style={[
           styles.container,

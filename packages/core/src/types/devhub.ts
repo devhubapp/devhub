@@ -391,3 +391,12 @@ export type EnhancementCache = Map<
 export type AppViewMode = 'single-column' | 'multi-column'
 
 export type CardViewMode = 'compact' | 'expanded'
+
+export interface BannerMessage {
+  id: string
+  message: string
+  href?: string
+  openOnNewTab?: boolean
+  closedAt?: string | undefined
+  createdAt?: string
+}
