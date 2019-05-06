@@ -3,6 +3,7 @@ import { View } from 'react-native'
 
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
@@ -23,7 +24,7 @@ export function AppBannerMessage() {
   if (!(bannerMessage && bannerMessage.message)) return null
 
   return (
-    <View style={{ width: '100%' }}>
+    <SafeAreaView style={{ width: '100%' }}>
       <View style={{ width: '100%', flexDirection: 'row' }}>
         <Spacer width={contentPadding / 2} />
         <View style={{ width: 18 + contentPadding }} />
@@ -88,6 +89,6 @@ export function AppBannerMessage() {
       </View>
 
       <CardItemSeparator />
-    </View>
+    </SafeAreaView>
   )
 }
