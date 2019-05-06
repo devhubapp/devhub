@@ -27,7 +27,7 @@ export function useAppViewMode() {
 
   return {
     appViewMode,
-    canSwitchAppViewMode: false, // isBigEnoughForMultiColumnView,
+    canSwitchAppViewMode: isBigEnoughForMultiColumnView,
     getCardViewMode,
     getEnableCompactLabels,
   }
