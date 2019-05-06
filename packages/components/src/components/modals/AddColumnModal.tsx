@@ -90,8 +90,6 @@ const columnTypes: Array<{
     title: 'Issues & Pull Requests',
     type: 'issue_or_pr',
     icon: 'issue-opened',
-    soon: true,
-    soonLink: 'https://beta.devhubapp.com/',
     items: [
       {
         title: 'Issues',
@@ -400,9 +398,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
                 <AddColumnModalItem
                   key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
                   availableWidth={availableWidth}
-                  disabled={
-                    hasReachedColumnLimit || !item.payload || group.soon
-                  }
+                  disabled={hasReachedColumnLimit || !item.payload}
                   icon={item.icon}
                   payload={item.payload}
                   title={item.title}
