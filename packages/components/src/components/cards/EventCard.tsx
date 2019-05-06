@@ -709,7 +709,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
       {!!isFocused && <CardFocusBorder />}
 
       <View style={sharedStyles.flex}>
-        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+        <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
           <Spacer width={contentPadding / 3} />
 
           <View style={[cardStyles.itemFixedWidth, cardStyles.itemFixedHeight]}>
@@ -748,7 +748,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           </View>
         </View>
 
-        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+        <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
           <Spacer width={contentPadding / 3} />
 
           <View style={cardStyles.itemFixedWidth} />

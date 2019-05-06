@@ -516,9 +516,8 @@ export const IssueOrPullRequestCard = React.memo(
         <View style={sharedStyles.flex}>
           <View
             style={[
-              sharedStyles.flex,
+              { alignItems: 'flex-start', width: '100%' },
               sharedStyles.horizontal,
-              { alignItems: 'flex-start' },
             ]}
           >
             <Spacer width={contentPadding / 3} />

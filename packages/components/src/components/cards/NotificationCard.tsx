@@ -653,7 +653,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       {!!isFocused && <CardFocusBorder />}
 
       <View style={sharedStyles.flex}>
-        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+        <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
           <Spacer width={contentPadding / 3} />
 
           <View style={[cardStyles.itemFixedWidth, cardStyles.itemFixedHeight]}>
@@ -697,7 +697,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           </View>
         </View>
 
-        <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+        <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
           <Spacer width={contentPadding / 3} />
 
           <View style={cardStyles.itemFixedWidth} />
