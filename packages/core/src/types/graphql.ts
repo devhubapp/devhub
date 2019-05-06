@@ -36,7 +36,7 @@ export interface GitHubTokenDetails {
   scope?: string[] | undefined
   token: string
   tokenType?: 'bearer' | string
-  tokenCreatedAt: string
+  tokenCreatedAt: string | Date // TODO: Fix this. Should be only one of the two.
 }
 
 export interface User {
