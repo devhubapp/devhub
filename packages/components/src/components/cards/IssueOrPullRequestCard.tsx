@@ -411,8 +411,8 @@ export const IssueOrPullRequestCard = React.memo(
                     alignSelf: 'center',
                     justifyContent: 'flex-end',
                     maxWidth:
-                      320 +
-                      (repoIsKnown ? 120 : 0) +
+                      260 +
+                      (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
                       (`${issueOrPullRequest.title || ''}`.length <= 50
                         ? 100
                         : 0),

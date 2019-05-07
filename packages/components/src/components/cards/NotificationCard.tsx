@@ -534,7 +534,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 backgroundThemeColor={theme =>
                   getCardBackgroundThemeColor(theme, { isRead })
                 }
-                enableScrollView={isSingleRow}
                 labels={issueOrPullRequest.labels.map(label => ({
                   key: `issue-or-pr-row-${
                     issueOrPullRequest.id
@@ -548,8 +547,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   alignSelf: 'center',
                   justifyContent: 'flex-end',
                   maxWidth:
-                    320 +
-                    (repoIsKnown ? 120 : 0) +
+                    260 +
+                    (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
                     (`${issueOrPullRequest.title || ''}`.length <= 50
                       ? 100
                       : 0),
