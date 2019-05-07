@@ -8,15 +8,14 @@
   </p>
 </p>
 
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/54963171-89d12180-4f46-11e9-9622-46972d0f5bd4.jpg)
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/57279337-28d95500-707f-11e9-9b2b-60c1af41277a.jpg)
 
-![DevHub Menubar](https://user-images.githubusercontent.com/619186/52375458-d9b36200-2a46-11e9-9a50-431293de7fa6.jpg)
+![DevHub Menubar](assets/static/menubar-co.jpg)
 
 <p align="center">
-  <img alt="DevHub Mobile - Notifications" height="460" src="https://user-images.githubusercontent.com/619186/52172527-5cdb6c00-2758-11e9-9f2c-d7c28b523045.png" />
-  <img alt="DevHub Mobile - Notification Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172528-5cdb6c00-2758-11e9-9072-4ae96c3c1795.png" />
-  <img alt="DevHub Mobile - Events" height="460" src="https://user-images.githubusercontent.com/619186/52172529-5cdb6c00-2758-11e9-999e-322f67d44fe1.png" />
-  <img alt="DevHub Mobile - Event Filters" height="460" src="https://user-images.githubusercontent.com/619186/52172530-5cdb6c00-2758-11e9-86cf-291a30c37c96.png" />
+  <img alt="DevHub Mobile - Notifications" height="620" src="https://user-images.githubusercontent.com/619186/57279347-2f67cc80-707f-11e9-8457-e892ff1f57c0.png" />
+  <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/57279348-2f67cc80-707f-11e9-8804-073b5d88a4cd.png" />
+  <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/57279349-30006300-707f-11e9-9edc-283fea7785a4.png" />
 </p>
 
 <br/>
