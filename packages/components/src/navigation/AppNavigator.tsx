@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 
+import { Screen } from '../components/common/Screen'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
-import { LoginScreen } from '../screens/LoginScreen'
-import { MainScreen } from '../screens/MainScreen'
 
 export const AppNavigator = React.memo(() => {
   const user = useReduxState(selectors.currentUserSelector)
 
-  if (user) return <MainScreen key="app-main-screen" />
-  return <LoginScreen key="app-login-screen" />
+  if (user) {
+    const MainScreen = React.lazy(() => import('../screens/MainScreen'))
+    return (
+      <Suspense fallback={<Screen />}>
+        <MainScreen key="app-main-screen" />
+      </Suspense>
+    )
+  }
+
+  const LoginScreen = React.lazy(() => import('../screens/LoginScreen'))
+  return (
+    <Suspense fallback={<Screen />}>
+      <LoginScreen key="app-login-screen" />
+    </Suspense>
+  )
 })

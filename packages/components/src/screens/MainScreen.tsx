@@ -417,3 +417,5 @@ export const MainScreen = React.memo(() => {
     </Screen>
   )
 })
+
+export default MainScreen
