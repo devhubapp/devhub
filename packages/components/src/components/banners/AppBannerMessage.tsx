@@ -8,16 +8,13 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
-import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
+import { ThemedText } from '../themed/ThemedText'
 
 export function AppBannerMessage() {
-  const springAnimatedTheme = useSpringAnimatedTheme()
-
   const bannerMessage = useReduxState(selectors.bannerMessageSelector)
   const closeBannerMessage = useReduxAction(actions.closeBannerMessage)
 
@@ -47,12 +44,7 @@ export function AppBannerMessage() {
             openOnNewTab={bannerMessage.openOnNewTab}
             tooltip={undefined}
           >
-            <SpringAnimatedText
-              style={{
-                color: springAnimatedTheme.foregroundColor,
-                textAlign: 'center',
-              }}
-            >
+            <ThemedText color="foregroundColor" style={{ textAlign: 'center' }}>
               {parseTextWithEmojisToReactComponents(bannerMessage.message, {
                 key: `banner-message-${bannerMessage.message}`,
                 imageProps: {
@@ -62,7 +54,7 @@ export function AppBannerMessage() {
                   },
                 },
               })}
-            </SpringAnimatedText>
+            </ThemedText>
           </Link>
         </View>
 
