@@ -7,20 +7,20 @@ import {
   getUserAvatarByAvatarURL,
   getUserAvatarByEmail,
   getUserAvatarByUsername,
+  Omit,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
 import {
-  SpringAnimatedImageWithLoading,
-  SpringAnimatedImageWithLoadingProps,
-} from '../animated/spring/SpringAnimatedImageWithLoading'
+  ThemedImageWithLoading,
+  ThemedImageWithLoadingProps,
+} from '../themed/ThemedImageWithLoading'
 import { ConditionalWrap } from './ConditionalWrap'
 import { Link } from './Link'
 import { TouchableOpacityProps } from './TouchableOpacity'
 
 export interface AvatarProps
-  extends Partial<SpringAnimatedImageWithLoadingProps> {
+  extends Partial<Omit<ThemedImageWithLoadingProps, 'tooltip'>> {
   avatarUrl?: string
   disableLink?: boolean
   email?: string
@@ -32,14 +32,13 @@ export interface AvatarProps
   size?: number
   small?: boolean
   style?: StyleProp<any>
+  tooltip?: string
   username?: string
 }
 
 export const size = avatarSize
 
 export function Avatar(props: AvatarProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     avatarUrl: _avatarUrl,
     disableLink,
@@ -52,8 +51,9 @@ export function Avatar(props: AvatarProps) {
     size: _size,
     small,
     style,
+    tooltip: _tooltip,
     username: _username,
-    ...oherProps
+    ...otherProps
   } = props
 
   const finalSize = _size || (small ? smallAvatarSize : avatarSize)
@@ -85,6 +85,8 @@ export function Avatar(props: AvatarProps) {
 
   if (!uri) return null
 
+  const tooltip = _tooltip === null ? '' : _tooltip || `@${username}`
+
   const linkUri = disableLink
     ? undefined
     : linkURL && !isBot
@@ -108,11 +110,11 @@ export function Avatar(props: AvatarProps) {
         )
       }
     >
-      <SpringAnimatedImageWithLoading
+      <ThemedImageWithLoading
         backgroundColorFailed="#FFFFFF"
         backgroundColorLoaded="#FFFFFF"
-        backgroundColorLoading={springAnimatedTheme.backgroundColorLess1}
-        {...oherProps}
+        backgroundColorLoading="backgroundColorLess1"
+        {...otherProps}
         source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
         style={[
           {
@@ -128,6 +130,7 @@ export function Avatar(props: AvatarProps) {
           },
           style,
         ]}
+        tooltip={tooltip}
       />
     </ConditionalWrap>
   )

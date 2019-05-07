@@ -1,0 +1,105 @@
+import React from 'react'
+import { Image, StyleProp } from 'react-native'
+
+import { Omit, ThemeColors } from '@devhub/core'
+import {
+  ImageWithLoading,
+  ImageWithLoadingProps,
+} from '../common/ImageWithLoading'
+import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from './helpers'
+
+export interface ThemedImageWithLoadingProps
+  extends Omit<
+    ImageWithLoadingProps,
+    | 'backgroundColorFailed'
+    | 'backgroundColorLoaded'
+    | 'backgroundColorLoading'
+    | 'style'
+  > {
+  backgroundColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundColorFailed?:
+    | keyof ThemeColors
+    | string
+    | ((theme: ThemeColors) => string)
+  backgroundColorLoaded?:
+    | keyof ThemeColors
+    | string
+    | ((theme: ThemeColors) => string)
+  backgroundColorLoading?:
+    | keyof ThemeColors
+    | string
+    | ((theme: ThemeColors) => string)
+  borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  children?: React.ReactNode
+  style?: StyleProp<
+    Omit<ImageWithLoadingProps['style'], 'backgroundColor' | 'borderColor'>
+  >
+}
+
+export const ThemedImageWithLoading = React.forwardRef<
+  Image,
+  ThemedImageWithLoadingProps
+>((props, ref) => {
+  const {
+    backgroundColor,
+    backgroundColorFailed: _backgroundColorFailed,
+    backgroundColorLoaded: _backgroundColorLoaded,
+    backgroundColorLoading: _backgroundColorLoading,
+    borderColor,
+    style,
+    ...otherProps
+  } = props
+
+  const theme = useTheme()
+
+  const backgroundColorFailed = getThemeColorOrItself(
+    theme,
+    _backgroundColorFailed,
+    { enableCSSVariable: true },
+  )
+  const backgroundColorLoaded = getThemeColorOrItself(
+    theme,
+    _backgroundColorLoaded,
+    { enableCSSVariable: true },
+  )
+  const backgroundColorLoading = getThemeColorOrItself(
+    theme,
+    _backgroundColorLoading,
+    { enableCSSVariable: true },
+  )
+
+  return (
+    <ImageWithLoading
+      {...otherProps}
+      ref={ref}
+      backgroundColorFailed={backgroundColorFailed}
+      backgroundColorLoaded={backgroundColorLoaded}
+      backgroundColorLoading={backgroundColorLoading}
+      style={[style, getStyle(theme, { backgroundColor, borderColor })]}
+    />
+  )
+})
+
+export type ThemedImageWithLoading = typeof ThemedImageWithLoading
+
+function getStyle(
+  theme: ThemeColors,
+  {
+    backgroundColor: _backgroundColor,
+    borderColor: _borderColor,
+  }: Pick<ThemedImageWithLoadingProps, 'backgroundColor' | 'borderColor'>,
+) {
+  const backgroundColor = getThemeColorOrItself(theme, _backgroundColor, {
+    enableCSSVariable: true,
+  })
+  const borderColor = getThemeColorOrItself(theme, _borderColor, {
+    enableCSSVariable: true,
+  })
+
+  const style: ImageWithLoadingProps['style'] = {}
+  if (backgroundColor) style.backgroundColor = backgroundColor
+  if (borderColor) style.borderColor = borderColor
+
+  return style
+}

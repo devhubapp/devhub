@@ -8,14 +8,18 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { findNode } from '../../utils/helpers/shared'
+import { findNode, tryFocus } from '../../utils/helpers/shared'
 import { Spacer } from '../common/Spacer'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem, ColumnHeaderItemProps } from './ColumnHeaderItem'
 
 export interface ModalColumnProps
-  extends Omit<ColumnHeaderItemProps, 'analyticsAction' | 'analyticsLabel'> {
+  extends Omit<
+    ColumnHeaderItemProps,
+    'analyticsAction' | 'analyticsLabel' | 'tooltip'
+  > {
   name: ModalPayload['name']
   hideCloseButton?: boolean
   right?: React.ReactNode
@@ -59,7 +63,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         )
           return
 
-        node.focus()
+        tryFocus(columnRef.current)
       }, 500)
   }, [currentOpenedModal && currentOpenedModal.name === name])
 
@@ -71,8 +75,10 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             analyticsLabel="modal"
             analyticsAction="back"
             enableForegroundHover
+            fixedIconSize
             iconName="chevron-left"
             onPress={() => popModal()}
+            tooltip={`Back (${keyboardShortcutsById.goBack.keys[0]})`}
           />
         )}
 
@@ -83,6 +89,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           style={[showBackButton && { padding: 0 }]}
           subtitle={`${subtitle || ''}`.toLowerCase()}
           title={`${title || ''}`.toLowerCase()}
+          tooltip={undefined}
         />
 
         <Spacer flex={1} />
@@ -92,8 +99,14 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             analyticsAction="close"
             analyticsLabel="modal"
             enableForegroundHover
+            fixedIconSize
             iconName="x"
             onPress={() => closeAllModals()}
+            tooltip={
+              showBackButton
+                ? 'Close'
+                : `Close (${keyboardShortcutsById.closeModal.keys[0]})`
+            }
           />
         )}
 
@@ -104,6 +117,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             style={{
               paddingHorizontal: contentPadding / 2,
             }}
+            tooltip={undefined}
           >
             {right}
           </ColumnHeaderItem>

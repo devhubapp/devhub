@@ -4,14 +4,19 @@ import {
   GitHubComment,
   GitHubCommit,
   GitHubEvent,
+  GitHubEventAction,
+  GitHubEventSubjectType,
   GitHubExtractParamsFromMethod,
   GitHubIcon,
   GitHubIssue,
+  GitHubIssueOrPullRequestSubjectType,
   GitHubNotification,
   GitHubNotificationReason,
+  GitHubNotificationSubjectType,
   GitHubPullRequest,
   GitHubRelease,
   GitHubRepo,
+  GitHubStateType,
   GitHubWatchEvent,
 } from './github'
 import { Omit } from './typescript'
@@ -23,13 +28,17 @@ export interface ReadUnreadEnhancement {
   last_read_at?: string
   last_unread_at?: string
   unread?: boolean // GitHub server's value
+  enhanced?: boolean
 }
 
 export interface SaveForLaterEnhancement {
   saved?: boolean
+  enhanced?: boolean
 }
 
-export interface NotificationPayloadEnhancement {
+export interface NotificationPayloadEnhancement
+  extends ReadUnreadEnhancement,
+    SaveForLaterEnhancement {
   comment?: GitHubComment
   commit?: GitHubCommit
   issue?: GitHubIssue
@@ -38,11 +47,27 @@ export interface NotificationPayloadEnhancement {
   enhanced?: boolean
 }
 
+export interface IssuePayloadEnhancement
+  extends ReadUnreadEnhancement,
+    SaveForLaterEnhancement {
+  merged?: undefined
+  enhanced?: boolean
+}
+
+export interface PullRequestPayloadEnhancement
+  extends ReadUnreadEnhancement,
+    SaveForLaterEnhancement {
+  merged?: boolean
+  enhanced?: boolean
+}
+
+export type IssueOrPullRequestPayloadEnhancement =
+  | IssuePayloadEnhancement
+  | PullRequestPayloadEnhancement
+
 export interface EnhancedGitHubNotification
   extends GitHubNotification,
-    NotificationPayloadEnhancement,
-    ReadUnreadEnhancement,
-    SaveForLaterEnhancement {}
+    NotificationPayloadEnhancement {}
 
 export interface GitHubEnhancedEventBase {
   merged: string[]
@@ -59,9 +84,21 @@ export type EnhancedGitHubEvent = (GitHubEvent | MultipleStarEvent) &
   ReadUnreadEnhancement &
   SaveForLaterEnhancement
 
-export interface ColumnSubscriptionData<
-  Item extends EnhancedGitHubNotification | EnhancedGitHubEvent
-> {
+export type EnhancedGitHubIssue = GitHubIssue & IssuePayloadEnhancement
+
+export type EnhancedGitHubPullRequest = GitHubPullRequest &
+  PullRequestPayloadEnhancement
+
+export type EnhancedGitHubIssueOrPullRequest =
+  | EnhancedGitHubIssue
+  | EnhancedGitHubPullRequest
+
+export type EnhancedItem =
+  | EnhancedGitHubNotification
+  | EnhancedGitHubEvent
+  | EnhancedGitHubIssueOrPullRequest
+
+export interface ColumnSubscriptionData<Item extends EnhancedItem> {
   items?: Item[]
   loadState?: EnhancedLoadState
   errorMessage?: string
@@ -69,33 +106,9 @@ export interface ColumnSubscriptionData<
   lastFetchedAt?: string
 }
 
-export type NotificationColumnSubscription = {
-  id: string
-  type: 'notifications'
-  params: {
-    all?: boolean
-    participating?: boolean
-  }
-  data: ColumnSubscriptionData<EnhancedGitHubNotification>
-  createdAt: string
-  updatedAt: string
-} & (
-  | {
-      subtype: undefined | ''
-      params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listNotifications']
-      >
-    }
-  | {
-      subtype: 'REPO_NOTIFICATIONS'
-      params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listNotificationsForRepo']
-      >
-    })
-
 export type ActivityColumnSubscription = {
   id: string
-  type: 'activity'
+  type: ActivityColumn['type']
   data: ColumnSubscriptionData<EnhancedGitHubEvent>
   createdAt: string
   updatedAt: string
@@ -155,8 +168,48 @@ export type ActivityColumnSubscription = {
       >
     })
 
+export interface IssueOrPullRequestColumnSubscription {
+  id: string
+  type: IssueOrPullRequestColumn['type']
+  subtype: 'ISSUES' | 'PULLS'
+  params: {
+    repoFullName?: string
+    subjectType: GitHubIssueOrPullRequestSubjectType
+    state?: ColumnFilters['state']
+    draft?: ColumnFilters['draft']
+  }
+  data: ColumnSubscriptionData<any>
+  createdAt: string
+  updatedAt: string
+}
+
+export type NotificationColumnSubscription = {
+  id: string
+  type: NotificationColumn['type']
+  params: {
+    all?: boolean
+    participating?: boolean
+  }
+  data: ColumnSubscriptionData<EnhancedGitHubNotification>
+  createdAt: string
+  updatedAt: string
+} & (
+  | {
+      subtype: undefined | ''
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotifications']
+      >
+    }
+  | {
+      subtype: 'REPO_NOTIFICATIONS'
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotificationsForRepo']
+      >
+    })
+
 export interface BaseColumnFilters {
   clearedAt?: string
+  draft?: boolean
   // order?: Array<'asc' | 'desc'>
   // owners?: string[]
   private?: boolean
@@ -168,13 +221,22 @@ export interface BaseColumnFilters {
   //   regex?: string
   // }
   // sort?: string[]
+  state?: Partial<Record<GitHubStateType, boolean>>
+  subjectTypes?:
+    | Partial<Record<GitHubEventSubjectType, boolean>>
+    | Partial<Record<GitHubNotificationSubjectType, boolean>>
   unread?: boolean
 }
 
 export interface ActivityColumnFilters extends BaseColumnFilters {
   activity?: {
-    types?: Partial<Record<GitHubEvent['type'], boolean>>
+    actions?: Partial<Record<GitHubEventAction, boolean>>
   }
+  subjectTypes?: Partial<Record<GitHubEventSubjectType, boolean>>
+}
+
+export interface IssueOrPullRequestColumnFilters extends BaseColumnFilters {
+  subjectTypes?: Partial<Record<GitHubIssueOrPullRequestSubjectType, boolean>>
 }
 
 export interface NotificationColumnFilters extends BaseColumnFilters {
@@ -182,9 +244,13 @@ export interface NotificationColumnFilters extends BaseColumnFilters {
     participating?: boolean
     reasons?: Partial<Record<GitHubNotificationReason, boolean>>
   }
+  subjectTypes?: Partial<Record<GitHubNotificationSubjectType, boolean>>
 }
 
-export type ColumnFilters = ActivityColumnFilters | NotificationColumnFilters
+export type ColumnFilters =
+  | ActivityColumnFilters
+  | IssueOrPullRequestColumnFilters
+  | NotificationColumnFilters
 
 // export interface ColumnOptions {
 //   enableBadge?: boolean
@@ -193,6 +259,7 @@ export type ColumnFilters = ActivityColumnFilters | NotificationColumnFilters
 
 export type ColumnSubscription =
   | ActivityColumnSubscription
+  | IssueOrPullRequestColumnSubscription
   | NotificationColumnSubscription
 
 export interface BaseColumn {
@@ -211,55 +278,54 @@ export interface ActivityColumn extends BaseColumn {
   filters?: ActivityColumnFilters
 }
 
+export interface IssueOrPullRequestColumn extends BaseColumn {
+  id: string
+  type: 'issue_or_pr'
+  filters?: IssueOrPullRequestColumnFilters
+}
+
 export interface NotificationColumn extends BaseColumn {
   id: string
   type: 'notifications'
   filters?: NotificationColumnFilters
 }
 
-export type Column = ActivityColumn | NotificationColumn
+export type Column =
+  | ActivityColumn
+  | IssueOrPullRequestColumn
+  | NotificationColumn
 
-export type ActivityColumnCreation = Omit<
-  ActivityColumn,
-  'createdAt' | 'updatedAt'
-> & {
+export type GenericColumnCreation<
+  ColumnType extends
+    | ActivityColumn
+    | IssueOrPullRequestColumn
+    | NotificationColumn
+> = Omit<ColumnType, 'createdAt' | 'updatedAt'> & {
   createdAt?: string
   updatedAt?: string
 }
 
-export type NotificationColumnCreation = Omit<
-  NotificationColumn,
-  'createdAt' | 'updatedAt'
-> & {
-  createdAt?: string
-  updatedAt?: string
-}
+export type ColumnCreation =
+  | GenericColumnCreation<ActivityColumn>
+  | GenericColumnCreation<IssueOrPullRequestColumn>
+  | GenericColumnCreation<NotificationColumn>
 
-export type ColumnCreation = ActivityColumnCreation | NotificationColumnCreation
-
-export type ActivityColumnSubscriptionCreation = Omit<
-  ActivityColumnSubscription,
-  'id' | 'data' | 'createdAt' | 'updatedAt'
-> & {
+export type GenericColumnSubscriptionCreation<
+  ColumnSubscriptionType extends
+    | ActivityColumnSubscription
+    | IssueOrPullRequestColumnSubscription
+    | NotificationColumnSubscription
+> = Omit<ColumnSubscriptionType, 'id' | 'data' | 'createdAt' | 'updatedAt'> & {
   id?: string | undefined
-  data?: ActivityColumnSubscription['data'] | undefined
-  createdAt?: string | undefined
-  updatedAt?: string | undefined
-}
-
-export type NotificationColumnSubscriptionCreation = Omit<
-  NotificationColumnSubscription,
-  'id' | 'data' | 'createdAt' | 'updatedAt'
-> & {
-  id?: string | undefined
-  data?: NotificationColumnSubscription['data'] | undefined
+  data?: ColumnSubscriptionType['data'] | undefined
   createdAt?: string | undefined
   updatedAt?: string | undefined
 }
 
 export type ColumnSubscriptionCreation =
-  | ActivityColumnSubscriptionCreation
-  | NotificationColumnSubscriptionCreation
+  | GenericColumnSubscriptionCreation<ActivityColumnSubscription>
+  | GenericColumnSubscriptionCreation<IssueOrPullRequestColumnSubscription>
+  | GenericColumnSubscriptionCreation<NotificationColumnSubscription>
 
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
@@ -268,6 +334,7 @@ export interface AddColumnDetailsPayload {
   icon: GitHubIcon
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
   paramList: ColumnParamField[]
+  defaultFilters?: Partial<Column['filters']>
   defaultParams?: Partial<Record<ColumnParamField, any>>
   isPrivateSupported: boolean
 }
@@ -320,6 +387,10 @@ export type EnhancementCache = Map<
   string,
   false | { timestamp: number; data: any }
 >
+
+export type AppViewMode = 'single-column' | 'multi-column'
+
+export type CardViewMode = 'compact' | 'expanded'
 
 export interface BannerMessage {
   id: string

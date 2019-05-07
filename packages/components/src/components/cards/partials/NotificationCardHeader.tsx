@@ -6,42 +6,29 @@ import {
   getDateSmallText,
   getFullDateText,
   getGitHubURLForUser,
-  GitHubIcon,
   GitHubNotificationReason,
   ThemeColors,
-  trimNewLinesAndSpaces,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
-import { useReduxAction } from '../../../hooks/use-redux-action'
 import { Platform } from '../../../libs/platform'
-import * as actions from '../../../redux/actions'
-import {
-  columnHeaderItemContentSize,
-  contentPadding,
-} from '../../../styles/variables'
-import { getReadableColor } from '../../../utils/helpers/colors'
-import { getNotificationReasonMetadata } from '../../../utils/helpers/github/notifications'
-import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../../animated/spring/SpringAnimatedView'
-import { ColumnHeaderItem } from '../../columns/ColumnHeaderItem'
+import { sharedStyles } from '../../../styles/shared'
+import { contentPadding } from '../../../styles/variables'
 import { Avatar } from '../../common/Avatar'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Link } from '../../common/Link'
-import { useTheme } from '../../context/ThemeContext'
-import { cardStyles, getCardStylesForTheme } from '../styles'
+import { Spacer } from '../../common/Spacer'
+import { ThemedIcon } from '../../themed/ThemedIcon'
+import { ThemedText } from '../../themed/ThemedText'
+import { cardStyles } from '../styles'
+import { NotificationReason } from './rows/partials/NotificationReason'
 
 export interface NotificationCardHeaderProps {
-  avatarUrl: string
-  backgroundThemeColor: keyof ThemeColors
-  cardIconColor?: string
-  cardIconName: GitHubIcon
+  avatarUrl: string | undefined
+  backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
-  isPrivate?: boolean
+  isPrivate: boolean
   isRead: boolean
-  isSaved?: boolean
   reason: GitHubNotificationReason
   smallLeftColumn?: boolean
   userLinkURL: string
@@ -71,32 +58,18 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const {
     avatarUrl,
     backgroundThemeColor,
-    cardIconColor,
-    cardIconName,
     date,
     ids,
     isBot,
     isPrivate,
     isRead,
-    isSaved,
     reason,
     smallLeftColumn,
     userLinkURL: _userLinkURL,
     username: _username,
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const theme = useTheme()
-
-  const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
-
-  const markItemsAsReadOrUnread = useReduxAction(
-    actions.markItemsAsReadOrUnread,
-  )
-
-  const reasonDetails = getNotificationReasonMetadata(reason)
   const username = isBot ? _username!.replace('[bot]', '') : _username
-
   const userLinkURL = _userLinkURL || getGitHubURLForUser(username, { isBot })
 
   return (
@@ -104,7 +77,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
       key={`notification-card-header-${ids.join(',')}-inner`}
       style={styles.container}
     >
-      <SpringAnimatedView
+      <View
         style={[
           cardStyles.leftColumn,
           smallLeftColumn
@@ -117,184 +90,126 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           isBot={isBot}
           linkURL={userLinkURL}
           shape={isBot ? undefined : 'circle'}
+          small={smallLeftColumn}
           style={cardStyles.avatar}
           username={username}
         />
-      </SpringAnimatedView>
+      </View>
 
       <View style={styles.rightColumnCentered}>
         <View style={styles.outerContainer}>
           <View style={styles.innerContainer}>
-            <SpringAnimatedView style={cardStyles.horizontal}>
-              <Link href={userLinkURL}>
-                <SpringAnimatedText
-                  numberOfLines={1}
-                  style={[
-                    getCardStylesForTheme(springAnimatedTheme).usernameText,
-                    isRead &&
-                      getCardStylesForTheme(springAnimatedTheme).mutedText,
-                  ]}
-                >
-                  {trimNewLinesAndSpaces(username, 18)}
-                </SpringAnimatedText>
-              </Link>
-              {!!isBot && (
-                <>
-                  <Text children=" " />
-                  <SpringAnimatedText
-                    numberOfLines={1}
-                    style={
-                      getCardStylesForTheme(springAnimatedTheme).timestampText
-                    }
-                  >
-                    <Text children="•" style={{ fontSize: 9 }} />
-                    <Text children=" " />
-                    BOT
-                  </SpringAnimatedText>
-                </>
-              )}
-              <IntervalRefresh date={date}>
-                {() => {
-                  const dateText = getDateSmallText(date, false)
-                  if (!dateText) return null
-
-                  return (
-                    <>
-                      <Text children=" " />
-                      <SpringAnimatedText
-                        numberOfLines={1}
-                        style={
-                          getCardStylesForTheme(springAnimatedTheme)
-                            .timestampText
-                        }
-                        {...Platform.select({
-                          web: { title: getFullDateText(date) },
-                        })}
-                      >
-                        <Text children="•" style={{ fontSize: 9 }} />
-                        <Text children=" " />
-                        {dateText}
-                      </SpringAnimatedText>
-                    </>
-                  )
-                }}
-              </IntervalRefresh>
-            </SpringAnimatedView>
-
-            {!!(reasonDetails && reasonDetails.label) && (
-              <SpringAnimatedText
-                numberOfLines={1}
+            <View
+              style={[
+                sharedStyles.flex,
+                sharedStyles.horizontalAndVerticallyAligned,
+                { maxWidth: '100%', overflow: 'hidden' },
+              ]}
+            >
+              <View
                 style={[
-                  getCardStylesForTheme(springAnimatedTheme).descriptionText,
-                  {
-                    color: getReadableColor(
-                      reasonDetails.color,
-                      theme[backgroundThemeColor],
-                      0.3,
-                    ),
-                  },
+                  sharedStyles.flex,
+                  sharedStyles.horizontalAndVerticallyAligned,
+                  { maxWidth: '100%', overflow: 'hidden' },
                 ]}
               >
-                {!!isPrivate && (
-                  <SpringAnimatedText
-                    style={getCardStylesForTheme(springAnimatedTheme).mutedText}
-                  >
-                    <SpringAnimatedIcon
-                      name="lock"
-                      style={[
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                      ]}
-                    />{' '}
-                  </SpringAnimatedText>
-                )}
-                {reasonDetails.label.toLowerCase()}
-              </SpringAnimatedText>
-            )}
-
-            {/* {!!(reasonDetails && reasonDetails.label) && (
-              <>
-                <Spacer height={4} />
-
-                <Label
-                  color={reasonDetails.color}
-                  containerStyle={{ alignSelf: 'flex-start' }}
-                  isPrivate={isPrivate}
-                  // muted={isRead}
-                  outline={false}
-                  small
+                <Link
+                  href={userLinkURL}
+                  textProps={{
+                    color: isRead
+                      ? 'foregroundColorMuted50'
+                      : 'foregroundColor',
+                    // color: 'foregroundColor',
+                    numberOfLines: 1,
+                    style: [
+                      { maxWidth: '100%' },
+                      cardStyles.usernameText,
+                      // isRead && { fontWeight: undefined },
+                      { lineHeight: undefined },
+                    ],
+                  }}
                 >
-                  {reasonDetails.label.toLowerCase()}
-                </Label>
-              </>
-            )} */}
+                  {username}
+                </Link>
+
+                {!!isBot && (
+                  <>
+                    <Text children="  " />
+                    <ThemedText
+                      color="foregroundColorMuted50"
+                      numberOfLines={1}
+                      style={[
+                        cardStyles.timestampText,
+                        { lineHeight: undefined },
+                      ]}
+                    >
+                      <Text children="  " />
+                      BOT
+                    </ThemedText>
+                  </>
+                )}
+              </View>
+
+              <Spacer width={contentPadding / 2} />
+
+              <NotificationReason
+                backgroundThemeColor={backgroundThemeColor}
+                muted={isRead}
+                reason={reason}
+              />
+            </View>
           </View>
 
-          <ColumnHeaderItem
-            analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
-            enableForegroundHover
-            fixedIconSize
-            iconName={isRead ? 'mail-read' : 'mail'}
-            iconStyle={isRead ? undefined : { lineHeight: 14 }}
-            onPress={() =>
-              markItemsAsReadOrUnread({
-                type: 'notifications',
-                itemIds: ids,
-                unread: !!isRead,
-              })
-            }
-            size={16}
-            style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
-            }}
-          />
-
-          <ColumnHeaderItem
-            analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
-            enableForegroundHover
-            fixedIconSize
-            iconName="bookmark"
-            iconStyle={[
-              isSaved && {
-                color: springAnimatedTheme.primaryBackgroundColor,
-              },
+          <View
+            style={[
+              sharedStyles.horizontalAndVerticallyAligned,
+              { alignSelf: 'flex-start' },
             ]}
-            onPress={() => saveItemsForLater({ itemIds: ids, save: !isSaved })}
-            size={16}
-            style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
-            }}
-          />
+          >
+            {/* {!isRead && (
+              <>
+                <Spacer width={contentPadding / 2} />
+                <ThemedView
+                  backgroundColor={isRead ? undefined : 'foregroundColor'}
+                  style={{ width: 6, height: 6, borderRadius: 6 / 2 }}
+                />
+              </>
+            )} */}
 
-          <ColumnHeaderItem
-            fixedIconSize
-            iconName={cardIconName}
-            iconStyle={[
-              {
-                width: columnHeaderItemContentSize,
-              },
-              !!cardIconColor && {
-                color: getReadableColor(
-                  cardIconColor,
-                  theme[backgroundThemeColor],
-                  0.3,
-                ),
-              },
-            ]}
-            size={16}
-            style={{
-              alignSelf: smallLeftColumn ? 'center' : 'flex-start',
-              marginTop: 4,
-              paddingVertical: 0,
-              paddingHorizontal: contentPadding / 3,
-              marginRight: -contentPadding / 2,
-            }}
-          />
+            <IntervalRefresh date={date}>
+              {() => {
+                const dateText = getDateSmallText(date, false)
+                if (!dateText) return null
+
+                return (
+                  <>
+                    <Text children="  " />
+                    <ThemedText
+                      color="foregroundColorMuted50"
+                      numberOfLines={1}
+                      style={cardStyles.timestampText}
+                      {...Platform.select({
+                        web: { title: getFullDateText(date) },
+                      })}
+                    >
+                      {!!isPrivate && (
+                        <>
+                          <ThemedIcon
+                            name="lock"
+                            style={cardStyles.smallerText}
+                          />{' '}
+                        </>
+                      )}
+
+                      {dateText}
+                    </ThemedText>
+                  </>
+                )
+              }}
+            </IntervalRefresh>
+
+            <Spacer width={contentPadding / 3} />
+          </View>
         </View>
       </View>
     </View>

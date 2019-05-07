@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { SwipeableRow } from '../../libs/swipeable'
-import * as colors from '../../styles/colors'
 import { useTheme } from '../context/ThemeContext'
 import { NotificationCard, NotificationCardProps } from './NotificationCard'
 
@@ -28,7 +27,7 @@ export function SwipeableNotificationCard(
     <SwipeableRow
       leftActions={[
         {
-          color: colors.blue,
+          color: theme.blue,
           icon: 'isRead',
           key: 'isRead',
           label: 'Read',
@@ -38,7 +37,7 @@ export function SwipeableNotificationCard(
       ]}
       rightActions={[
         {
-          color: colors.orange,
+          color: theme.orange,
           icon: 'snooze',
           key: 'snooze',
           label: 'Snooze',

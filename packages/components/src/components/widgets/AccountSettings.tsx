@@ -1,21 +1,18 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { ThemedText } from '../themed/ThemedText'
 
 export interface AccountSettingsProps {}
 
 export function AccountSettings() {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
   return (
@@ -31,20 +28,15 @@ export function AccountSettings() {
       >
         <Avatar size={28} username={username} />
         <Spacer width={contentPadding / 2} />
-        <SpringAnimatedText
-          style={{ color: springAnimatedTheme.foregroundColor }}
+        <ThemedText color="foregroundColor">Logged in as </ThemedText>
+        <Link
+          href={`https://github.com/${username}`}
+          textProps={{
+            color: 'foregroundColor',
+            style: { fontWeight: 'bold' },
+          }}
         >
-          Logged in as{' '}
-        </SpringAnimatedText>
-        <Link href={`https://github.com/${username}`}>
-          <SpringAnimatedText
-            style={{
-              color: springAnimatedTheme.foregroundColor,
-              fontWeight: 'bold',
-            }}
-          >
-            {username}
-          </SpringAnimatedText>
+          {username}
         </Link>
       </View>
     </View>

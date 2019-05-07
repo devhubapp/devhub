@@ -1,22 +1,32 @@
 import React from 'react'
 
 import { EventColumn } from '../components/columns/EventColumn'
+import { IssueOrPullRequestColumn } from '../components/columns/IssueOrPullRequestColumn'
 import { NotificationColumn } from '../components/columns/NotificationColumn'
 import { useColumn } from '../hooks/use-column'
 import { bugsnag } from '../libs/bugsnag'
+import { FlatListProps } from '../libs/flatlist'
 
 export interface ColumnContainerProps {
   columnId: string
+  disableColumnOptions?: boolean
   pagingEnabled?: boolean
-  swipeable?: boolean
+  swipeable: boolean
+  pointerEvents: FlatListProps<any>['pointerEvents']
 }
 
 export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
-  const { columnId, pagingEnabled, swipeable } = props
+  const {
+    columnId,
+    disableColumnOptions,
+    pagingEnabled,
+    pointerEvents,
+    swipeable,
+  } = props
 
-  const { column, columnIndex, subscriptions } = useColumn(columnId)
+  const { column, columnIndex, headerDetails } = useColumn(columnId)
 
-  if (!column) return null
+  if (!(column && columnIndex >= 0 && headerDetails)) return null
 
   switch (column.type) {
     case 'activity': {
@@ -25,8 +35,25 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           key={`event-column-${column.id}`}
           column={column}
           columnIndex={columnIndex}
+          disableColumnOptions={disableColumnOptions}
+          headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          subscriptions={subscriptions}
+          pointerEvents={pointerEvents}
+          swipeable={swipeable}
+        />
+      )
+    }
+
+    case 'issue_or_pr': {
+      return (
+        <IssueOrPullRequestColumn
+          key={`issue-or-pr-column-${column.id}`}
+          column={column}
+          columnIndex={columnIndex}
+          disableColumnOptions={disableColumnOptions}
+          headerDetails={headerDetails}
+          pagingEnabled={pagingEnabled}
+          pointerEvents={pointerEvents}
           swipeable={swipeable}
         />
       )
@@ -38,16 +65,18 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           key={`notification-column-${column.id}`}
           column={column}
           columnIndex={columnIndex}
+          disableColumnOptions={disableColumnOptions}
+          headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          subscriptions={subscriptions}
+          pointerEvents={pointerEvents}
           swipeable={swipeable}
         />
       )
     }
 
     default: {
-      const message = `Invalid Column type: ${(column as any).type}`
-      console.error(message)
+      const message = `Invalid Column type: ${column && (column as any).type}`
+      console.error(message, { column })
       bugsnag.notify(new Error(message))
       return null
     }

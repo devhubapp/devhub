@@ -1,9 +1,10 @@
 import { createThemeFromColor } from './custom'
 
 export const theme = createThemeFromColor(
-  '#F0F0F0',
+  '#F5F5F5',
   'light-gray',
   'Light Gray',
-
-  { primaryBackgroundColor: '#000000', primaryForegroundColor: '#FFFFFF' },
+  {
+    primaryBackgroundColor: '#000000',
+  },
 )

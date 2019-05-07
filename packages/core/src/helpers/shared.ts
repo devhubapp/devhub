@@ -97,7 +97,7 @@ export function randomBetween(minNumber: number, maxNumber: number) {
   return Math.floor(Math.random() * maxNumber) + minNumber
 }
 
-export function trimNewLinesAndSpaces(text?: string, maxLength: number = 100) {
+export function trimNewLinesAndSpaces(text?: string, maxLength: number = 120) {
   if (!text || typeof text !== 'string') return ''
 
   let newText = text.replace(/\s+/g, ' ').trim()
@@ -270,4 +270,10 @@ export function genericGitHubResponseMapper(
     if (_.isPlainObject(obj)) return genericGitHubResponseMapper(obj)
     return obj
   })
+}
+
+export function intercalateWithArray<T extends any[], U>(arr: T, separator: U) {
+  return _.flatMap(arr, (item, index) =>
+    index === 0 ? item : [separator, item],
+  )
 }

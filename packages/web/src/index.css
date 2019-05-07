@@ -1,6 +1,6 @@
 ::-webkit-scrollbar {
-  width: 1px;
-  height: 1px;
+  width: 0px;
+  height: 0px;
   background-color: transparent;
 }
 
@@ -28,18 +28,27 @@ html {
 }
 
 body {
-  background-color: #292C33;
+  background-color: #1F2229;
+  cursor: default;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a:hover, a:hover > *:not([class*='touchAction']) {
-  text-decoration: underline;
+a:hover, a:hover > * {
+  cursor: default;
+}
+
+a[target^="_blank"]:hover, a[target^="_blank"]:hover > * {
+  cursor: pointer;
 }
 
 input:focus {
   outline: none !important;
+}
+
+.touchable:not(a) {
+  cursor: inherit;
 }
 
 /* https://github.com/necolas/react-native-web/issues/1299 */

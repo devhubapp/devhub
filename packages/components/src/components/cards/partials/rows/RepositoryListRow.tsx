@@ -4,23 +4,24 @@ import {
   getOwnerAndRepo,
   getRepoFullNameFromObject,
   GitHubRepo,
+  Omit,
 } from '@devhub/core'
-import { RepositoryRow } from './RepositoryRow'
+import { RepositoryRow, RepositoryRowProps } from './RepositoryRow'
 import { RenderItem, RowList } from './RowList'
 
-export interface RepositoryListRowProps {
-  isForcePush?: boolean
-  isFork?: boolean
-  isPush?: boolean
-  isRead: boolean
+export interface RepositoryListRowProps
+  extends Omit<
+    RepositoryRowProps,
+    'ownerName' | 'repositoryName' | 'showMoreItemsIndicator'
+  > {
   maxHeight?: number
   repos: GitHubRepo[]
-  smallLeftColumn?: boolean
 }
 
 export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {
   const renderItem: RenderItem<GitHubRepo> = ({
     item: repo,
+    index,
     showMoreItemsIndicator,
   }) => {
     if (!(repo && repo.id)) return null
@@ -39,6 +40,7 @@ export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {
         ownerName={repoOwnerName!}
         repositoryName={repoName!}
         showMoreItemsIndicator={showMoreItemsIndicator}
+        withTopMargin={index === 0 ? props.withTopMargin : true}
       />
     )
   }

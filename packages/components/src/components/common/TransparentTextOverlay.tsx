@@ -1,11 +1,12 @@
 import React from 'react'
+import { View } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { SpringAnimatedGradientLayerOverlay } from './GradientLayerOverlay'
+import { sharedStyles } from '../../styles/shared'
+import { useTheme } from '../context/ThemeContext'
+import { GradientLayerOverlay } from './GradientLayerOverlay'
 import {
-  AnimatedGradientLayerOverlayProps,
+  GradientLayerOverlayProps,
   To,
   ToWithVH,
 } from './GradientLayerOverlay.shared'
@@ -13,63 +14,64 @@ import {
 export { To as From, ToWithVH as FromWithVH }
 
 export interface AnimatedTransparentTextOverlayProps
-  extends Omit<AnimatedGradientLayerOverlayProps, 'to' | 'color'> {
+  extends Omit<GradientLayerOverlayProps, 'to' | 'color'> {
   to: ToWithVH
   themeColor: keyof ThemeColors
 }
 
 export const AnimatedTransparentTextOverlay = React.memo(
-  React.forwardRef((props: AnimatedTransparentTextOverlayProps, ref: any) => {
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  React.forwardRef<View, AnimatedTransparentTextOverlayProps>((props, ref) => {
+    return null
 
     const { children, containerStyle, themeColor, to, ...otherProps } = props
 
-    const springAnimatedColor = springAnimatedTheme[themeColor]
+    const theme = useTheme()
 
     return (
-      <SpringAnimatedView
+      <View
         ref={ref}
         collapsable={false}
         pointerEvents="box-none"
         style={[
-          { flex: 1, alignSelf: 'stretch', flexBasis: 'auto' },
+          sharedStyles.flex,
+          { alignSelf: 'stretch', flexBasis: 'auto' },
           containerStyle,
         ]}
       >
         {(to === 'vertical' || to === 'bottom') && (
-          <SpringAnimatedGradientLayerOverlay
+          <GradientLayerOverlay
             {...otherProps}
-            color={springAnimatedColor}
+            color={theme[themeColor]}
             to="bottom"
           />
         )}
 
         {(to === 'vertical' || to === 'top') && (
-          <SpringAnimatedGradientLayerOverlay
+          <GradientLayerOverlay
             {...otherProps}
-            color={springAnimatedColor}
+            color={theme[themeColor]}
             to="top"
           />
         )}
 
         {(to === 'horizontal' || to === 'right') && (
-          <SpringAnimatedGradientLayerOverlay
+          <GradientLayerOverlay
             {...otherProps}
-            color={springAnimatedColor}
+            color={theme[themeColor]}
             to="right"
           />
         )}
 
         {(to === 'horizontal' || to === 'left') && (
-          <SpringAnimatedGradientLayerOverlay
+          <GradientLayerOverlay
             {...otherProps}
-            color={springAnimatedColor}
+            color={theme[themeColor]}
             to="left"
           />
         )}
 
         {children}
-      </SpringAnimatedView>
+      </View>
     )
   }),
 )

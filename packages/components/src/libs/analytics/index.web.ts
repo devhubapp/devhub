@@ -14,7 +14,7 @@ gtag('config', trackingId, {
 // }
 
 const gtagAndLog = (...args: any[]) => {
-  // if (__DEV__) console.debug('[ANALYTICS]', ...args) // tslint:disable-line no-console
+  if (__DEV__) console.debug('[ANALYTICS]', ...args) // tslint:disable-line no-console
   gtag(...args)
 }
 
@@ -22,7 +22,7 @@ gtagAndLog('set', { is_electron: Platform.isElectron })
 
 export const analytics: Analytics = {
   setUser(userId) {
-    gtagAndLog('set', { user_id: userId })
+    gtagAndLog('set', { user_id: userId || '' })
   },
 
   trackEvent(category, action, label, value, payload) {

@@ -3,14 +3,15 @@ import _ from 'lodash'
 
 import {
   ColumnSubscription,
-  constants,
+  mergeEventsPreservingEnhancement,
+  mergeIssuesOrPullRequestsPreservingEnhancement,
+  mergeNotificationsPreservingEnhancement,
   normalizeSubscriptions,
   removeUselessURLsFromResponseItem,
   sortEvents,
+  sortIssuesOrPullRequests,
   sortNotifications,
 } from '@devhub/core'
-import { mergeEventsPreservingEnhancement } from '../../utils/helpers/github/events'
-import { mergeNotificationsPreservingEnhancement } from '../../utils/helpers/github/notifications'
 import { Reducer } from '../types'
 
 export interface State {
@@ -52,47 +53,54 @@ export const subscriptionsReducer: Reducer<State> = (
           // remove old items from the cache
           // unless they were marked as Save for Later
           if (subscription.data.items.length) {
-            let count = 0
-
             if (subscription.type === 'activity') {
-              subscription.data.items = sortEvents(subscription.data.items)
-                .filter(item => {
-                  if (!item) return false
-                  if (item.saved) return true
-                  if (!action.payload.deleteOlderThan) return false
-                  if (!item.created_at) return true
+              subscription.data.items = sortEvents(
+                subscription.data.items,
+              ).filter(item => {
+                if (!item) return false
+                if (item.saved) return true
+                if (!action.payload.deleteOlderThan) return false
+                if (!item.created_at) return true
 
-                  return (
-                    new Date(item.created_at).toISOString() >=
-                    action.payload.deleteOlderThan
-                  )
-                })
-                .filter(item => {
-                  count = count + 1
-                  if (item.saved) return true
-                  return count <= constants.DEFAULT_PAGINATION_PER_PAGE
-                })
+                return (
+                  new Date(item.created_at).toISOString() >=
+                  action.payload.deleteOlderThan
+                )
+              })
+            } else if (subscription.type === 'issue_or_pr') {
+              subscription.data.items = sortIssuesOrPullRequests(
+                subscription.data.items,
+              ).filter(item => {
+                if (!item) return false
+                if (item.saved) return true
+                // if (item.unread) return true
+                if (!action.payload.deleteOlderThan) return false
+                if (!item.updated_at) return true
+
+                return (
+                  new Date(item.updated_at).toISOString() >=
+                  action.payload.deleteOlderThan
+                )
+              })
             } else if (subscription.type === 'notifications') {
               subscription.data.items = sortNotifications(
                 subscription.data.items,
-              )
-                .filter(item => {
-                  if (!item) return false
-                  if (item.saved) return true
-                  // if (item.unread) return true
-                  if (!action.payload.deleteOlderThan) return false
-                  if (!item.updated_at) return true
+              ).filter(item => {
+                if (!item) return false
+                if (item.saved) return true
+                // if (item.unread) return true
+                if (!action.payload.deleteOlderThan) return false
+                if (!item.updated_at) return true
 
-                  return (
-                    new Date(item.updated_at).toISOString() >=
-                    action.payload.deleteOlderThan
-                  )
-                })
-                .filter(item => {
-                  count = count + 1
-                  if (item.saved) return true
-                  return count <= constants.DEFAULT_PAGINATION_PER_PAGE
-                })
+                return (
+                  new Date(item.updated_at).toISOString() >=
+                  action.payload.deleteOlderThan
+                )
+              })
+            } else {
+              console.error(
+                `Unhandled subscription type: ${(subscription as any).type}`,
+              )
             }
           }
         })
@@ -110,7 +118,7 @@ export const subscriptionsReducer: Reducer<State> = (
           Boolean,
         )
 
-        Object.assign(draft.byId, normalized.byId)
+        _.merge(draft.byId, normalized.byId)
 
         draft.updatedAt = normalized.updatedAt
       })
@@ -130,7 +138,7 @@ export const subscriptionsReducer: Reducer<State> = (
           Boolean,
         )
 
-        Object.assign(draft.byId, normalized.byId)
+        _.merge(draft.byId, normalized.byId)
 
         draft.updatedAt = normalized.updatedAt
       })
@@ -195,7 +203,8 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        subscription.data.canFetchMore = action.payload.canFetchMore
+        if (typeof action.payload.canFetchMore === 'boolean')
+          subscription.data.canFetchMore = action.payload.canFetchMore
         subscription.data.errorMessage = undefined
         subscription.data.lastFetchedAt = new Date().toISOString()
         subscription.data.loadState = 'loaded'
@@ -204,9 +213,25 @@ export const subscriptionsReducer: Reducer<State> = (
         const newItems = (action.payload.data || []) as any
 
         const mergedItems: any[] =
-          action.payload.subscriptionType === 'notifications'
-            ? mergeNotificationsPreservingEnhancement(newItems, prevItems)
-            : mergeEventsPreservingEnhancement(newItems, prevItems)
+          action.payload.subscriptionType === 'activity'
+            ? mergeEventsPreservingEnhancement(newItems, prevItems, {
+                dropPrevItems: action.payload.replaceAllItems,
+              })
+            : action.payload.subscriptionType === 'issue_or_pr'
+            ? mergeIssuesOrPullRequestsPreservingEnhancement(
+                newItems,
+                prevItems,
+                {
+                  dropPrevItems: action.payload.replaceAllItems,
+                },
+              )
+            : action.payload.subscriptionType === 'notifications'
+            ? mergeNotificationsPreservingEnhancement(newItems, prevItems, {
+                dropPrevItems: action.payload.replaceAllItems,
+              })
+            : mergeEventsPreservingEnhancement(newItems, prevItems, {
+                dropPrevItems: action.payload.replaceAllItems,
+              })
 
         subscription.data.items = mergedItems.map(
           removeUselessURLsFromResponseItem,
@@ -254,6 +279,15 @@ export const subscriptionsReducer: Reducer<State> = (
 
         keys.forEach(id => {
           const subscription = draft.byId[id]
+
+          if (
+            'type' in action.payload &&
+            action.payload.type &&
+            subscription &&
+            subscription.type !== action.payload.type
+          )
+            return
+
           if (
             !(
               subscription &&
@@ -264,36 +298,27 @@ export const subscriptionsReducer: Reducer<State> = (
           )
             return
 
-          subscription.data.items = (subscription.data.items as any).map(
-            (item: any) => {
-              if (!(item && stringIds.includes(`${item.id}`))) return item
+          subscription.data.items.forEach((item, index) => {
+            if (!(item && stringIds.includes(`${item.id}`))) return
 
-              if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
-                return {
-                  ...item,
-                  ...(action.payload.unread
-                    ? {
-                        forceUnreadLocally: true,
-                        last_unread_at: new Date().toISOString(),
-                      }
-                    : {
-                        unread: false,
-                        forceUnreadLocally: false,
-                        last_read_at: new Date().toISOString(),
-                      }),
-                }
+            if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
+              if (action.payload.unread) {
+                subscription.data.items![index].forceUnreadLocally = true
+                subscription.data.items![
+                  index
+                ].last_unread_at = new Date().toISOString()
+              } else {
+                subscription.data.items![index].unread = false
+                subscription.data.items![index].forceUnreadLocally = false
+                subscription.data.items![
+                  index
+                ].last_read_at = new Date().toISOString()
               }
-
-              if (action.type === 'SAVE_ITEMS_FOR_LATER') {
-                return {
-                  ...item,
-                  saved: action.payload.save !== false,
-                }
-              }
-
-              return item
-            },
-          )
+            } else if (action.type === 'SAVE_ITEMS_FOR_LATER') {
+              subscription.data.items![index].saved =
+                action.payload.save !== false
+            }
+          })
         })
 
         // draft.updatedAt = new Date().toISOString()
@@ -332,22 +357,21 @@ export const subscriptionsReducer: Reducer<State> = (
               return
           }
 
-          subscription.data.items = (subscription.data.items as any).map(
-            (item: any) => {
-              if (!item) return item
+          ;(subscription.data.items as any).forEach(
+            (item: any, index: number) => {
+              if (!item) return
 
-              return {
-                ...item,
-                ...(action.payload.unread
-                  ? {
-                      forceUnreadLocally: true,
-                      last_unread_at: new Date().toISOString(),
-                    }
-                  : {
-                      unread: false,
-                      forceUnreadLocally: false,
-                      last_read_at: new Date().toISOString(),
-                    }),
+              if (action.payload.unread) {
+                subscription.data.items![index].forceUnreadLocally = true
+                subscription.data.items![
+                  index
+                ].last_unread_at = new Date().toISOString()
+              } else {
+                subscription.data.items![index].unread = false
+                subscription.data.items![index].forceUnreadLocally = false
+                subscription.data.items![
+                  index
+                ].last_read_at = new Date().toISOString()
               }
             },
           )

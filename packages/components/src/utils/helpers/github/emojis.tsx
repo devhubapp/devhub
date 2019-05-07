@@ -2,6 +2,7 @@ import { Omit } from '@devhub/core'
 import _ from 'lodash'
 import React, { Fragment } from 'react'
 import { Image, ImageProps } from 'react-native'
+import { genericParseText } from '../shared'
 
 const emojis = {
   '+1': 'unicode/1f44d',
@@ -1514,6 +1515,8 @@ const emojis = {
   zzz: 'unicode/1f4a4',
 }
 
+const suffixes = _.invert(emojis)
+
 export type GitHubEmoji = keyof typeof emojis
 
 export function isEmojiValid(emoji: GitHubEmoji) {
@@ -1530,11 +1533,9 @@ export function getEmojiImageURL(emoji: GitHubEmoji) {
 
 export function getEmojiImageURLForHex(hex: string | undefined) {
   if (!hex) return undefined
-  return `https://github.githubassets.com/images/icons/emoji/unicode/${hex}.png?v8`
-}
+  if (!suffixes[`unicode/${hex}`]) return
 
-function surrogatePairToCodepoint(lead: number, trail: number) {
-  return (lead - 0xd800) * 0x400 + (trail - 0xdc00) + 0x10000
+  return `https://github.githubassets.com/images/icons/emoji/unicode/${hex}.png?v8`
 }
 
 export interface EmojiParseOptions {
@@ -1564,26 +1565,6 @@ function getComponent(
   )
 }
 
-function genericParseText<T extends string>(
-  text: string,
-  pattern: RegExp,
-  fn: (match: T) => React.ReactNode,
-) {
-  if (!(text && typeof text === 'string')) return [text].filter(Boolean)
-
-  const matches = text.match(new RegExp(pattern, 'g')) as T[]
-  if (!(matches && matches.length)) return [text].filter(Boolean)
-
-  return text.split(pattern).reduce(
-    (result, item, index) => {
-      if (!matches[index]) return result.concat([item].filter(Boolean))
-
-      return result.concat([item, fn(matches[index])].filter(Boolean))
-    },
-    [] as React.ReactNode[],
-  )
-}
-
 function parseTextWithEmojisToReactComponents_1(
   text: string,
   options: EmojiParseOptions,
@@ -1593,7 +1574,9 @@ function parseTextWithEmojisToReactComponents_1(
   return genericParseText(text, pattern, match => {
     const emoji = match.slice(1, -1)
     const emojiImageURL = getEmojiImageURL(emoji as GitHubEmoji)
-    return getComponent(emojiImageURL, { alt: emoji, ...options })
+    return emojiImageURL
+      ? getComponent(emojiImageURL, { alt: emoji, ...options })
+      : match
   })
 }
 
@@ -1601,17 +1584,19 @@ function parseTextWithEmojisToReactComponents_2(
   text: string,
   options: EmojiParseOptions,
 ) {
-  const pattern = /[\ud800-\udbff][\udc00-\udfff]/
+  const pattern = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?)*/
 
   return genericParseText(text, pattern, match => {
-    const codepoint = surrogatePairToCodepoint(
-      match.charCodeAt(0),
-      match.charCodeAt(1),
-    )
-    const hex = codepoint.toString(16)
+    const codePoint1 = match.codePointAt(0)
+    const codePoint2 =
+      match.length > 2 ? match.codePointAt(match.length - 2) : undefined
+
+    const hex1 = codePoint1 ? codePoint1.toString(16) : undefined
+    const hex2 = codePoint2 ? codePoint2.toString(16) : undefined
+    const hex = hex1 && hex2 ? `${hex1}-${hex2}` : hex1 || hex2
 
     const emojiImageURL = getEmojiImageURLForHex(hex)
-    return getComponent(emojiImageURL, options)
+    return emojiImageURL ? getComponent(emojiImageURL, options) : match
   })
 }
 

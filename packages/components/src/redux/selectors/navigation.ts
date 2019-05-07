@@ -1,8 +1,12 @@
 import { RootState } from '../types'
 
-const s = (state: RootState) => state.navigation || {}
+const emptyArray: any[] = []
+const emptyObj = {}
 
-export const modalStack = (state: RootState) => s(state).modalStack
+const s = (state: RootState) => state.navigation || emptyObj
+
+export const modalStack = (state: RootState) =>
+  s(state).modalStack || emptyArray
 
 export const currentOpenedModal = (state: RootState) =>
-  modalStack(state).slice(-1)[0]
+  modalStack(state) && modalStack(state)!.slice(-1)[0]

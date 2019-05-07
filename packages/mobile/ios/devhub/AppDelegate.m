@@ -12,7 +12,6 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTRootView.h>
 
-#import <BugsnagReactNative/BugsnagReactNative.h>
 #import "RNSplashScreen.h"
 #import <Firebase.h>
 
@@ -25,8 +24,8 @@
                                                    moduleName:@"devhub"
                                             initialProperties:nil];
 
-  // #292C33 (dark-gray)
-  rootView.backgroundColor = [UIColor colorWithRed:0.16 green:0.17 blue:0.20 alpha:1.0];
+  // #1F2229 (dark-gray)
+  rootView.backgroundColor = [UIColor colorWithRed:0.12 green:0.13 blue:0.16 alpha:1.0];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];

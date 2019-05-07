@@ -3,10 +3,11 @@ import React, { useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { constants } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import {
   SpringAnimatedActivityIndicator,
   SpringAnimatedActivityIndicatorProps,
@@ -17,6 +18,7 @@ import {
   SpringAnimatedTouchableOpacityProps,
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 import { useTheme } from '../context/ThemeContext'
 import { separatorSize } from './Separator'
 
@@ -28,12 +30,14 @@ export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   children: string | React.ReactNode
   contentContainerStyle?: ViewProps['style']
   disabled?: boolean
+  fontSize?: number
   foregroundColor?: string
   hoverBackgroundColor?: string
   hoverForegroundColor?: string
   loading?: boolean
   loadingIndicatorStyle?: SpringAnimatedActivityIndicatorProps['style']
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
+  round?: boolean
   size?: number | null
 }
 
@@ -44,11 +48,13 @@ export const Button = React.memo((props: ButtonProps) => {
     children,
     contentContainerStyle,
     disabled,
+    fontSize,
     foregroundColor,
     hoverBackgroundColor,
     hoverForegroundColor,
     loading,
     loadingIndicatorStyle,
+    round = true,
     size: _size,
     style,
     ...otherProps
@@ -60,6 +66,7 @@ export const Button = React.memo((props: ButtonProps) => {
       : defaultButtonSize
 
   const initialTheme = useTheme(theme => {
+    if (cacheRef.current.theme === theme) return
     cacheRef.current.theme = theme
     updateStyles()
   })
@@ -75,8 +82,9 @@ export const Button = React.memo((props: ButtonProps) => {
     isPressing: false,
     theme: initialTheme,
   })
+  cacheRef.current.theme = initialTheme
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const springAnimatedTheme = useSpringAnimatedTheme()
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
     ReturnType<typeof getStyles>
@@ -85,25 +93,24 @@ export const Button = React.memo((props: ButtonProps) => {
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
 
-    const immediate = Platform.realOS === 'android'
+    const immediate = constants.DISABLE_ANIMATIONS || isHovered
 
     return {
-      config: { duration: immediate ? 0 : 100 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       activityIndicatorColor: theme.foregroundColor,
       touchableBorderColor: backgroundColor
         ? backgroundColor
         : isHovered || isPressing
-        ? hoverBackgroundColor || theme.backgroundColorLess3
-        : theme.backgroundColorLess2,
-      innerContainerBackgroundColor: borderOnly
-        ? rgba(theme.backgroundColorLess2, 0)
-        : isHovered || isPressing
-        ? hoverBackgroundColor ||
-          (backgroundColor
-            ? theme.backgroundColorTransparent10
-            : theme.backgroundColorLess3)
-        : rgba(theme.backgroundColorLess2, 0),
+        ? hoverBackgroundColor || theme.backgroundColorLess4
+        : theme.backgroundColorLess3,
+      innerContainerBackgroundColor:
+        isHovered || isPressing
+          ? hoverBackgroundColor ||
+            (backgroundColor
+              ? theme.backgroundColorTransparent10
+              : theme.backgroundColorLess4)
+          : rgba(theme.backgroundColorLess3, 0),
       textColor: foregroundColor
         ? foregroundColor
         : borderOnly
@@ -141,10 +148,10 @@ export const Button = React.memo((props: ButtonProps) => {
             ? 'transparent'
             : backgroundColor
             ? backgroundColor
-            : springAnimatedTheme.backgroundColorLess2,
+            : springAnimatedTheme.backgroundColorLess3,
           borderColor: springAnimatedStyles.touchableBorderColor,
           borderWidth: borderOnly ? separatorSize : 0,
-          borderRadius: (size || defaultButtonSize) / 2,
+          borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
         },
         style,
       ]}
@@ -159,7 +166,7 @@ export const Button = React.memo((props: ButtonProps) => {
             paddingHorizontal: contentPadding,
             backgroundColor: springAnimatedStyles.innerContainerBackgroundColor,
             borderWidth: 0,
-            borderRadius: (size || defaultButtonSize) / 2,
+            borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
           },
           contentContainerStyle,
         ]}
@@ -173,8 +180,8 @@ export const Button = React.memo((props: ButtonProps) => {
         ) : typeof children === 'string' ? (
           <SpringAnimatedText
             style={{
-              lineHeight: Platform.select({ web: 14 }),
-              fontSize: 14,
+              lineHeight: Platform.select({ web: fontSize }),
+              fontSize,
               fontWeight: '500',
               color: springAnimatedStyles.textColor,
             }}

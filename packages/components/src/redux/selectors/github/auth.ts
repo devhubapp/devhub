@@ -1,6 +1,8 @@
 import { RootState } from '../../types'
 
-const s = (state: RootState) => (state.github && state.github.auth) || {}
+const emptyObj = {}
+
+const s = (state: RootState) => (state.github && state.github.auth) || emptyObj
 
 export const githubAppTokenDetailsSelector = (state: RootState) => s(state).app
 

@@ -1,4 +1,4 @@
-import { ThemePair } from '@devhub/core'
+import { AppViewMode, ThemePair } from '@devhub/core'
 import { createAction } from '../helpers'
 
 export function setTheme(payload: {
@@ -17,4 +17,8 @@ export function setPreferrableTheme(payload: {
 
 export function dayNightSwitch() {
   return createAction('DAY_NIGHT_SWITCH')
+}
+
+export function setAppViewMode(appViewMode: AppViewMode) {
+  return createAction('SET_APP_VIEW_MODE', appViewMode)
 }

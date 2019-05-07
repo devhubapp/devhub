@@ -79,13 +79,14 @@ export const getGitHubURLForBranch = (
     : undefined
 
 export const getGitHubURLForRelease = (
-  repoFullName: string,
+  ownerName: string,
+  repoName: string,
   tagName: string | undefined,
 ) =>
-  repoFullName
+  ownerName && repoName
     ? tagName
-      ? `${baseURL}/${repoFullName}/releases/tag/${tagName}`
-      : `${baseURL}/${repoFullName}/releases`
+      ? `${baseURL}/${ownerName}/${repoName}/releases/tag/${tagName}`
+      : `${baseURL}/${ownerName}/${repoName}/releases`
     : ''
 
 export const getGitHubURLForRepo = (ownerName: string, repoName: string) =>
@@ -95,14 +96,14 @@ export const getGitHubURLForRepoInvitation = (
   ownerName: string,
   repoName: string,
 ) =>
-  ownerName && repoName ? `${baseURL}/${ownerName}${repoName}/invitations` : ''
+  ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}/invitations` : ''
 
 export const getGitHubURLForSecurityAlert = (
   ownerName: string,
   repoName: string,
 ) =>
   ownerName && repoName
-    ? `${baseURL}/${ownerName}${repoName}/network/alerts`
+    ? `${baseURL}/${ownerName}/${repoName}/network/alerts`
     : ''
 
 export const getGitHubAvatarURLFromPayload = (

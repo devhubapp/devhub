@@ -3,6 +3,7 @@ import { Animated, StyleSheet, Text } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
+import { sharedStyles } from '../../styles/shared'
 import {
   BaseSwipeableRow,
   BaseSwipeableRowAction,
@@ -56,7 +57,7 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
     return (
       <Animated.View
         key={`swipeable-button-action-${action.key}`}
-        style={{ flex: 1, transform: [transform] }}
+        style={[sharedStyles.flex, { transform: [transform] }]}
       >
         <RectButton
           onPress={pressHandler}

@@ -1,17 +1,17 @@
 import React from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../hooks/use-css-variables-or-spring--animated-theme'
+import { GitHubIcon, ThemeColors } from '@devhub/core'
 import { Platform } from '../../../libs/platform'
 import { radius } from '../../../styles/variables'
 import { fixURL } from '../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedLink } from '../../animated/spring/SpringAnimatedLink'
-import { SpringAnimatedText } from '../../animated/spring/SpringAnimatedText'
-import { getCardStylesForTheme } from '../styles'
+import { Link } from '../../common/Link'
+import { ThemedIcon } from '../../themed/ThemedIcon'
+import { ThemedText } from '../../themed/ThemedText'
+import { cardStyles } from '../styles'
 
 export interface CardSmallThingProps {
+  backgroundColorTheme?: keyof ThemeColors
   icon?: GitHubIcon
   isRead: boolean
   style?: StyleProp<ViewStyle>
@@ -21,9 +21,9 @@ export interface CardSmallThingProps {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 4,
     borderRadius: radius,
     borderWidth: 1,
+    borderColor: 'transparent',
   },
 
   innerContainer: {
@@ -32,54 +32,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
   },
-
-  text: {
-    backgroundColor: 'transparent',
-    fontSize: 11,
-    lineHeight: 16,
-    opacity: 0.9,
-  },
 })
 
 export function CardSmallThing(props: CardSmallThingProps) {
-  const { icon, isRead, style, text, url } = props
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const { backgroundColorTheme, icon, style, text, url } = props
 
   const hasText = typeof text === 'number' || !!text
   if (!(hasText || icon)) return null
 
-  const springAnimatedTextStyles = [
-    styles.text,
-    {
-      color: isRead
-        ? springAnimatedTheme.foregroundColorMuted50
-        : springAnimatedTheme.foregroundColor,
-    },
-    isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-  ]
-
   return (
-    <SpringAnimatedLink
+    <Link
+      backgroundThemeColor={backgroundColorTheme}
+      // borderThemeColor={backgroundColorTheme}
       href={fixURL(url)}
       style={[
         styles.container,
-        {
-          backgroundColor: springAnimatedTheme.backgroundColorLess1,
-          borderColor: springAnimatedTheme.backgroundColorLess1,
+        backgroundColorTheme && {
+          paddingHorizontal: 4,
+          borderWidth: 0,
         },
         style,
       ]}
     >
       <View style={styles.innerContainer}>
         {!!icon && (
-          <SpringAnimatedIcon
+          <ThemedIcon
+            color="foregroundColorMuted50"
             name={icon}
             style={[
-              springAnimatedTextStyles,
+              cardStyles.smallerText,
               {
                 lineHeight: undefined,
-                marginTop: Platform.select({ web: 2, default: 3 }),
+                marginTop: Platform.select({ web: 3, default: 4 }),
               },
               !!hasText && { marginRight: 4 },
             ]}
@@ -87,11 +71,14 @@ export function CardSmallThing(props: CardSmallThingProps) {
         )}
 
         {!!hasText && (
-          <SpringAnimatedText style={springAnimatedTextStyles}>
+          <ThemedText
+            color="foregroundColorMuted50"
+            style={cardStyles.smallerText}
+          >
             {text}
-          </SpringAnimatedText>
+          </ThemedText>
         )}
       </View>
-    </SpringAnimatedLink>
+    </Link>
   )
 }

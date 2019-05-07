@@ -11,6 +11,8 @@ export function FreeTrialHeaderMessage() {
   return (
     <HeaderMessage
       analyticsLabel="about_free_trial_column"
+      backgroundColor="primaryBackgroundColor"
+      color="primaryForegroundColor"
       onPress={() =>
         alert(
           'Access to private repositories will be a paid feature' +

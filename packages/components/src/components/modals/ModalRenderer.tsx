@@ -1,29 +1,30 @@
 import React, { useEffect } from 'react'
-import {
-  BackHandler,
-  Dimensions,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native'
 
-import { ModalPayloadWithIndex } from '@devhub/core'
-import { config, useTransition } from 'react-spring/native'
+import { constants, ModalPayloadWithIndex } from '@devhub/core'
+import { useTransition } from 'react-spring/native'
 import { SettingsModal } from '../../components/modals/SettingsModal'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { usePrevious } from '../../hooks/use-previous'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
+import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { Separator, separatorTickSize } from '../common/Separator'
+import { ColumnSeparator } from '../columns/ColumnSeparator'
+import {
+  Separator,
+  separatorSize,
+  separatorThickSize,
+} from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
 import { AddColumnModal } from './AddColumnModal'
 import { AdvancedSettingsModal } from './AdvancedSettingsModal'
@@ -71,10 +72,11 @@ export interface ModalRendererProps {
 export function ModalRenderer(props: ModalRendererProps) {
   const { renderSeparator } = props
 
-  const { sizename } = useAppLayout()
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const { appOrientation, sizename } = useAppLayout()
+  const { appViewMode } = useAppViewMode()
   const columnWidth = useColumnWidth()
 
+  const columnIds = useReduxState(selectors.columnIdsSelector)
   const modalStack = useReduxState(selectors.modalStack)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const previouslyOpenedModal = usePrevious(currentOpenedModal)
@@ -104,14 +106,23 @@ export function ModalRenderer(props: ModalRendererProps) {
   }, [!!currentOpenedModal])
 
   const immediate =
-    Platform.realOS === 'android' ||
+    constants.DISABLE_ANIMATIONS ||
     (sizename === '1-small' &&
     ((isSettings && !previouslyOpenedModal) ||
-      (!currentOpenedModal && wasSettings))
+      (!currentOpenedModal && wasSettings)) &&
+    columnIds.length > 0
       ? true
       : false)
 
-  const size = columnWidth + (renderSeparator ? separatorTickSize : 0)
+  const separatorMetadata =
+    appViewMode === 'multi-column'
+      ? { Component: () => <ColumnSeparator />, size: separatorThickSize }
+      : {
+          Component: () => <Separator horizontal={false} thick={false} />,
+          size: separatorSize,
+        }
+
+  const size = columnWidth + (renderSeparator ? separatorMetadata.size : 0)
 
   const overlayTransition = useTransition<boolean, any>(
     currentOpenedModal && sizename > '1-small' ? [true] : [],
@@ -120,7 +131,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       reset: true,
       unique: true,
       immediate,
-      config: { duration: 400, precision: 0.01 },
+      config: getDefaultReactSpringAnimationConfig(),
       from: { opacity: 0 },
       enter: { opacity: 0.75 },
       leave: { opacity: 0 },
@@ -132,9 +143,9 @@ export function ModalRenderer(props: ModalRendererProps) {
     item => `modal-stack-${item.name}`,
     {
       reset: true,
-      config: { ...config.default, precision: 1 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
-      ...(sizename === '1-small'
+      ...(appOrientation === 'portrait'
         ? {
             from: item =>
               (item.index === 0 && modalStack.length) ||
@@ -179,12 +190,12 @@ export function ModalRenderer(props: ModalRendererProps) {
     {
       reset: true,
       unique: true,
-      config: { ...config.default, precision: 1 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       from: { right: size },
       enter: { right: 0 },
       update: { right: 0 },
-      leave: { right: size + separatorTickSize },
+      leave: { right: size + separatorThickSize },
     },
   )
 
@@ -199,14 +210,14 @@ export function ModalRenderer(props: ModalRendererProps) {
             zIndex: 500,
           }}
         >
-          <SpringAnimatedTouchableOpacity
+          <ThemedTouchableOpacity
             analyticsAction="close_via_overlay"
             analyticsLabel="modal"
             activeOpacity={1}
+            backgroundColor="backgroundColorMore1"
             style={{
               width: '100%',
               height: '100%',
-              backgroundColor: springAnimatedTheme.backgroundColor,
               ...Platform.select({ web: { cursor: 'default' } as any }),
             }}
             onPress={() => closeAllModals()}
@@ -272,7 +283,7 @@ export function ModalRenderer(props: ModalRendererProps) {
                     ...animatedStyle,
                   }}
                 >
-                  <Separator thick />
+                  <separatorMetadata.Component />
                 </SpringAnimatedView>
               ),
           )}

@@ -4,12 +4,11 @@ import { Image, StyleSheet, View } from 'react-native'
 import url from 'url'
 
 import { constants } from '@devhub/core'
-import { SpringAnimatedText } from '../components/animated/spring/SpringAnimatedText'
 import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
 import { AppVersion } from '../components/common/AppVersion'
 import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../hooks/use-css-variables-or-spring--animated-theme'
+import { ThemedText } from '../components/themed/ThemedText'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
@@ -91,8 +90,6 @@ export const LoginScreen = React.memo(() => {
   const error = useReduxState(selectors.authErrorSelector)
   const initialErrorRef = useRef(error)
   const loginRequest = useReduxAction(actions.loginRequest)
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   // handle oauth flow without popup
   // that passes the token via query string
@@ -200,6 +197,8 @@ export const LoginScreen = React.memo(() => {
             style={styles.logo as any}
           />
 
+          <Spacer height={contentPadding / 2} />
+
           <GitHubLoginButton
             analyticsLabel="github_login_public"
             loading={isLoggingIn || isExecutingOAuth}
@@ -212,22 +211,12 @@ export const LoginScreen = React.memo(() => {
         </View>
 
         <View style={styles.footer}>
-          <SpringAnimatedText
-            style={[
-              styles.title,
-              { color: springAnimatedTheme.foregroundColor },
-            ]}
-          >
+          <ThemedText color="foregroundColor" style={styles.title}>
             DevHub
-          </SpringAnimatedText>
-          <SpringAnimatedText
-            style={[
-              styles.subtitle,
-              { color: springAnimatedTheme.foregroundColor },
-            ]}
-          >
+          </ThemedText>
+          <ThemedText color="foregroundColor" style={styles.subtitle}>
             TweetDeck for GitHub
-          </SpringAnimatedText>
+          </ThemedText>
           <AppVersion />
         </View>
       </View>

@@ -10,7 +10,7 @@ import { Analytics } from './'
 
 GoogleAnalyticsSettings.setDryRun(false) // __DEV__
 GoogleAnalyticsSettings.setDispatchInterval(5)
-firebase.analytics().setAnalyticsCollectionEnabled(false) // __DEV__
+firebase.analytics().setAnalyticsCollectionEnabled(true) // !__DEV__
 
 const tracker = new GoogleAnalyticsTracker('UA-52350759-2')
 tracker.setAppName(__DEV__ ? 'devhub-dev' : 'devhub')
@@ -21,7 +21,7 @@ tracker.customDimensionsFieldsIndexMap = {
 }
 
 const log = (...args: any[]) => {
-  // console.log('[ANALYTICS]', ...args) // tslint:disable-line no-console
+  console.log('[ANALYTICS]', ...args) // tslint:disable-line no-console
 }
 
 let _userId: string
@@ -30,8 +30,8 @@ export const analytics: Analytics = {
     _userId = userId
 
     if (__DEV__) log('set', { user_id: userId })
-    tracker.setUser(userId)
-    firebase.analytics().setUserId(userId)
+    tracker.setUser(userId || '')
+    firebase.analytics().setUserId(userId || '')
   },
 
   trackEvent(category, action, label, value, payload = {}) {

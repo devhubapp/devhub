@@ -1,19 +1,22 @@
-export const blue = '#497AFC'
-export const blueGray = '#607D8B'
-export const brown = '#795548'
-export const darkGray = '#444444'
-export const gray = '#9E9E9E'
-export const green = '#2cbe4e'
-export const indigo = '#3F51B5'
-export const lightBlue = '#49d3b4'
-export const lightRed = '#F44336'
-export const orange = '#FF9800'
-export const pink = '#E91E63'
-export const purple = '#6e5494'
-export const red = '#cb2431'
-export const star = '#edb800'
-export const teal = '#49d3b4'
-export const yellow = '#FFC107'
+import { StaticThemeColors } from '@devhub/core'
 
-export const defaultBrandBackgroundColor = '#49d3b4'
-export const defaultBrandForegroundColor = '#141c26'
+export function getStaticColors({
+  isDark,
+}: {
+  isDark: boolean
+}): StaticThemeColors {
+  return {
+    blue: isDark ? '#4C9DFF' : '#4895FF',
+    blueGray: isDark ? '#7493A2' : '#607D8B',
+    brown: isDark ? '#9C7162' : '#795548',
+    gray: isDark ? '#ACACB0' : '#A4A4A8',
+    green: isDark ? '#69DF73' : '#2ECE45',
+    lightRed: isDark ? '#FF6E64' : '#FF665C',
+    orange: isDark ? '#FFB251' : '#FFAA4D',
+    pink: isDark ? '#FF6496' : '#FF5C91',
+    purple: isDark ? '#8569AF' : '#6E5494',
+    red: isDark ? '#F54538' : '#FF3F34',
+    teal: isDark ? '#49D3B4' : '#43C3A7',
+    yellow: isDark ? '#FFDE57' : '#F1CC52',
+  }
+}

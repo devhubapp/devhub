@@ -2,8 +2,7 @@ import React from 'react'
 import { ViewStyle } from 'react-native'
 
 import { rgba } from 'polished'
-import { SpringAnimatedLinearGradient } from '../../libs/linear-gradient'
-import { createSpringAnimatedComponent } from '../animated/spring/helpers'
+import { LinearGradient } from '../../libs/linear-gradient'
 import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
 function getStyle(to: To, size: number, spacing = 0): ViewStyle {
@@ -70,7 +69,7 @@ function getProps(to: To) {
   }
 }
 
-const GradientLayerOverlay = React.forwardRef(
+export const GradientLayerOverlay = React.forwardRef(
   (props: GradientLayerOverlayProps, ref) => {
     React.useImperativeHandle(ref, () => ({}))
 
@@ -86,7 +85,7 @@ const GradientLayerOverlay = React.forwardRef(
     }
 
     return (
-      <SpringAnimatedLinearGradient
+      <LinearGradient
         collapsable={false}
         colors={colors}
         pointerEvents="box-none"
@@ -101,8 +100,4 @@ const GradientLayerOverlay = React.forwardRef(
       />
     )
   },
-)
-
-export const SpringAnimatedGradientLayerOverlay = createSpringAnimatedComponent(
-  GradientLayerOverlay,
 )

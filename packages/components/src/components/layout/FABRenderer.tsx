@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, ViewStyle } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { useKeyboardVisibility } from '../../hooks/use-keyboard-visibility'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -7,36 +7,64 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
-import { defaultButtonSize } from '../common/Button'
-import { FAB, fabSize } from '../common/FAB'
-import { useAppLayout } from '../context/LayoutContext'
+import { FAB } from '../common/FAB'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
+import { AppLayoutProviderState, useAppLayout } from '../context/LayoutContext'
+import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 
-export const fabSpacing =
-  contentPadding / 2 + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
+export const fabSpacing = contentPadding / 2 // + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
 
-const fabPositionStyle: ViewStyle = {
-  position: 'absolute',
-  bottom: fabSpacing,
-  right: contentPadding,
-  zIndex: 1000,
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: fabSpacing,
+    right: contentPadding,
+    zIndex: 1000,
+  },
+})
+
+export function shouldRenderFAB({
+  isColumnOptionsVisible,
+  keyboardVisibility,
+  sizename,
+}: {
+  isColumnOptionsVisible?: boolean
+  keyboardVisibility?: ReturnType<typeof useKeyboardVisibility>
+  sizename: AppLayoutProviderState['sizename']
+}) {
+  if (!(sizename <= '3-large')) return false
+
+  if (sizename === '1-small' && isColumnOptionsVisible) return false
+
+  if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
+    return false
+
+  return true
 }
 
 export function FABRenderer() {
   // const addOrCloseAnimatedRef = useRef(new Animated.Value(0))
 
-  const keyboardVisibility = useKeyboardVisibility()
+  const { isSharedFiltersOpened } = useColumnFilters()
   const { sizename } = useAppLayout()
-
+  const keyboardVisibility = useKeyboardVisibility()
+  const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
 
-  if (!(sizename < '3-large')) return null
-  if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
+  if (
+    !shouldRenderFAB({
+      sizename,
+      keyboardVisibility,
+      isColumnOptionsVisible: isSharedFiltersOpened,
+    })
+  )
     return null
 
   if (!currentOpenedModal) {
+    if (!columnIds.length) return null
+
     /*
     Animated.timing(addOrCloseAnimatedRef.current, {
       toValue: 0,
@@ -57,13 +85,14 @@ export function FABRenderer() {
     const iconStyle = undefined
 
     return (
-      <View collapsable={false} style={fabPositionStyle}>
+      <View collapsable={false} style={styles.container}>
         <FAB
           key="fab"
           analyticsLabel="add_column"
           iconName="plus"
           iconStyle={iconStyle}
           onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+          tooltip={`Add column (${keyboardShortcutsById.addColumn.keys[0]})`}
           useBrandColor
         />
       </View>
@@ -93,13 +122,14 @@ export function FABRenderer() {
       const iconStyle = undefined
 
       return (
-        <View style={fabPositionStyle}>
+        <View style={styles.container}>
           <FAB
             analyticsLabel="close_modals"
             key="fab"
             iconName="x"
             iconStyle={iconStyle}
             onPress={() => closeAllModals()}
+            tooltip={`Close (${keyboardShortcutsById.closeModal.keys[0]})`}
           />
         </View>
       )

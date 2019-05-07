@@ -1,7 +1,8 @@
 import React, { ReactElement, ReactNode } from 'react'
 
+import { CardViewMode, mergeMaxLength } from '@devhub/core'
 import { ScrollView, View } from 'react-native'
-import { contentPadding } from '../../../../styles/variables'
+import { topCardMargin } from './styles'
 
 export type RenderItem<T> = (params: {
   item: T
@@ -13,12 +14,17 @@ export interface RowListProps<T> {
   data: T[]
   maxHeight?: number
   maxLength?: number
-  narrow?: boolean
   renderItem: RenderItem<T>
+  viewMode: CardViewMode
 }
 
 export const RowList = React.memo((props: RowListProps<any>) => {
-  const { data, maxHeight = 220, maxLength = 5, narrow, renderItem } = props
+  const {
+    data,
+    maxHeight = 220,
+    maxLength = mergeMaxLength,
+    renderItem,
+  } = props
   if (!(data && data.length > 0)) return null
 
   if (data.length === 1)
@@ -37,13 +43,13 @@ export const RowList = React.memo((props: RowListProps<any>) => {
         // flex: 0,
         // flexBasis: 'auto',
         // flexGrow: 1,
-        marginBottom: -(narrow ? contentPadding / 2 : contentPadding),
+        marginBottom: -topCardMargin,
       }}
     >
       <ScrollView
         alwaysBounceVertical={false}
         contentContainerStyle={{
-          paddingBottom: narrow ? contentPadding / 2 : contentPadding,
+          paddingBottom: topCardMargin,
         }}
         style={{ maxHeight }}
       >

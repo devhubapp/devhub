@@ -1,10 +1,15 @@
-import Octokit from '@octokit/rest'
+import Octokit, { SearchIssuesAndPullRequestsParams } from '@octokit/rest'
 
-import { GitHubActivityType } from '@devhub/core'
+import {
+  getGitHubIssueSearchQuery,
+  GitHubActivityType,
+  IssueOrPullRequestColumnSubscription,
+  Omit,
+} from '@devhub/core'
 
 export const octokit = new Octokit()
 
-export function authenticate(token: string) {
+export function authenticate(token: string | null) {
   try {
     if (!token) {
       octokit.authenticate(null as any)
@@ -68,7 +73,7 @@ export async function getNotifications(
       status: response.status,
     }
 
-    return response
+    return cache[cacheKey]
   } catch (error) {
     if (error && error.status === 304) return cache[cacheKey]
     throw error
@@ -136,7 +141,68 @@ export async function getActivity<T extends GitHubActivityType>(
       status: response.status,
     }
 
-    return response
+    return cache[cacheKey]
+  } catch (error) {
+    if (error && error.status === 304) return cache[cacheKey]
+    throw error
+  }
+}
+
+export async function getIssuesOrPullRequests<
+  T extends IssueOrPullRequestColumnSubscription['subtype']
+>(
+  type: T,
+  subscriptionParams: IssueOrPullRequestColumnSubscription['params'],
+  requestParams: Omit<SearchIssuesAndPullRequestsParams, 'q'> & {
+    headers?: Record<string, string>
+  },
+  { githubToken = '', subscriptionId = '', useCache = true } = {},
+) {
+  const cacheKey = JSON.stringify([
+    type,
+    { subscriptionParams, requestParams },
+    subscriptionId,
+  ])
+  const cacheValue = cache[cacheKey]
+
+  const _requestParams: typeof requestParams = {
+    ...requestParams,
+    headers: {
+      'If-None-Match': '',
+      Accept: 'application/vnd.github.shadow-cat-preview',
+      ...(!!githubToken && { Authorization: `token ${githubToken}` }),
+      ...(!!(cacheValue && useCache && cacheValue.headers['last-modified']) && {
+        'If-Modified-Since': cacheValue.headers['last-modified'],
+      }),
+      ...(!!(cacheValue && useCache && cacheValue.headers.etag) && {
+        'If-None-Match': cacheValue.headers.etag,
+      }),
+    },
+  }
+
+  try {
+    const response = await (() => {
+      const p: SearchIssuesAndPullRequestsParams & {
+        headers?: Record<string, string>
+      } = {
+        order: 'desc',
+        sort: 'updated',
+        ..._requestParams,
+        q: getGitHubIssueSearchQuery(subscriptionParams),
+      }
+
+      return octokit.search.issuesAndPullRequests(p)
+    })()
+
+    cache[cacheKey] = {
+      data: Array.isArray(response.data)
+        ? response.data
+        : response.data && response.data.items,
+      headers: response.headers,
+      status: response.status,
+    }
+
+    return cache[cacheKey]
   } catch (error) {
     if (error && error.status === 304) return cache[cacheKey]
     throw error

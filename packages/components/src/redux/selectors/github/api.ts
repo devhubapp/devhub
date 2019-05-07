@@ -1,6 +1,9 @@
+import { GitHubAPIHeaders } from '@devhub/core'
 import { RootState } from '../../types'
 
-const s = (state: RootState) => (state.github && state.github.api) || {}
+const emptyObj = {}
+
+const s = (state: RootState) => (state.github && state.github.api) || emptyObj
 
 export const githubAPIHeadersSelector = (state: RootState) =>
-  s(state).headers || {}
+  s(state).headers || (emptyObj as Partial<GitHubAPIHeaders>)

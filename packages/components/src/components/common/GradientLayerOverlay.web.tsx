@@ -1,8 +1,6 @@
 import React from 'react'
-import { ViewStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 
-import { createSpringAnimatedComponent } from '../animated/spring/helpers'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
 function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
@@ -53,7 +51,7 @@ function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
   }
 }
 
-const GradientLayerOverlay = React.forwardRef(
+export const GradientLayerOverlay = React.forwardRef(
   (props: GradientLayerOverlayProps, ref) => {
     React.useImperativeHandle(ref, () => ({}))
 
@@ -62,7 +60,7 @@ const GradientLayerOverlay = React.forwardRef(
     if (!color) return null
 
     return (
-      <SpringAnimatedView
+      <View
         collapsable={false}
         pointerEvents="box-none"
         style={[
@@ -75,8 +73,4 @@ const GradientLayerOverlay = React.forwardRef(
       />
     )
   },
-)
-
-export const SpringAnimatedGradientLayerOverlay = createSpringAnimatedComponent(
-  GradientLayerOverlay,
 )

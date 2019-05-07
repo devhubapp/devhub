@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
-  Column,
-  ColumnSubscription,
-  constants,
   EnhancedGitHubNotification,
+  getDefaultPaginationPerPage,
   getOlderNotificationDate,
   NotificationColumnSubscription,
   Omit,
@@ -23,31 +21,29 @@ export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
   | 'errorMessage'
   | 'fetchNextPage'
+  | 'items'
   | 'lastFetchedAt'
   | 'loadState'
-  | 'notifications'
   | 'refresh'
-> & {
-  column: Column
-  subscriptions: ColumnSubscription[]
-}
+>
 
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
-    const { column } = props
+    const { cardViewMode, column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
     const githubOAuthScope = useReduxState(selectors.githubOAuthScopeSelector)
 
-    const firstSubscription = useReduxState(
-      state =>
-        selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
-          | NotificationColumnSubscription
-          | undefined,
-    )
+    // TODO: Support multiple subscriptions per column.
+    const mainSubscription = useReduxState(
+      useCallback(
+        state => selectors.columnSubscriptionSelector(state, column.id),
+        [column.id],
+      ),
+    ) as NotificationColumnSubscription | undefined
 
-    const data = (firstSubscription && firstSubscription.data) || {}
+    const data = (mainSubscription && mainSubscription.data) || {}
 
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
@@ -62,13 +58,17 @@ export const NotificationCardsContainer = React.memo(
     )
 
     const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(),
+      selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode !== 'compact',
+      ),
     )
 
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
-    }, column.subscriptionIds)
+      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode !== 'compact',
+      )
+    }, [cardViewMode, ...column.subscriptionIds])
 
     const allItems = useReduxState(
       useCallback(
@@ -95,18 +95,13 @@ export const NotificationCardsContainer = React.memo(
       ),
     ) as EnhancedGitHubNotification[]
 
-    const canFetchMoreRef = useRef(false)
+    const clearedAt = column.filters && column.filters.clearedAt
+    const olderDate = getOlderNotificationDate(allItems)
 
-    useEffect(() => {
-      canFetchMoreRef.current = (() => {
-        const clearedAt = column.filters && column.filters.clearedAt
-        const olderDate = getOlderNotificationDate(allItems)
-
-        if (clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate)))
-          return false
-        return !!data.canFetchMore
-      })()
-    }, [filteredItems, column.filters, data.canFetchMore])
+    const canFetchMore =
+      clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
+        ? false
+        : !!data.canFetchMore
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
@@ -114,8 +109,9 @@ export const NotificationCardsContainer = React.memo(
           columnId: column.id,
           params: {
             page: page || 1,
-            perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
+            perPage: getDefaultPaginationPerPage(column.type),
           },
+          replaceAllItems: false,
         })
       },
       [fetchColumnSubscriptionRequest, column.id],
@@ -124,7 +120,7 @@ export const NotificationCardsContainer = React.memo(
     const fetchNextPage = useCallback(() => {
       const size = allItems.length
 
-      const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
+      const perPage = getDefaultPaginationPerPage(column.type)
       const currentPage = Math.ceil(size / perPage)
 
       const nextPage = (currentPage || 0) + 1
@@ -135,7 +131,7 @@ export const NotificationCardsContainer = React.memo(
       fetchData()
     }, [fetchData])
 
-    if (!firstSubscription) return null
+    if (!mainSubscription) return null
 
     if (
       !(
@@ -150,17 +146,19 @@ export const NotificationCardsContainer = React.memo(
 
     return (
       <NotificationCards
-        {...props}
+        {...otherProps}
         key={`notification-cards-${column.id}`}
-        errorMessage={firstSubscription.data.errorMessage || ''}
-        fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        lastFetchedAt={firstSubscription.data.lastFetchedAt}
+        column={column}
+        cardViewMode={cardViewMode}
+        errorMessage={mainSubscription.data.errorMessage || ''}
+        fetchNextPage={canFetchMore ? fetchNextPage : undefined}
+        items={filteredItems}
+        lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'
-            : firstSubscription.data.loadState || 'not_loaded'
+            : mainSubscription.data.loadState || 'not_loaded'
         }
-        notifications={filteredItems}
         refresh={refresh}
       />
     )

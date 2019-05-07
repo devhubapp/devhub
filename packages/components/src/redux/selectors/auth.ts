@@ -1,7 +1,9 @@
 import { RootState } from '../types'
 import { githubAppTokenSelector, githubOAuthTokenSelector } from './github/auth'
 
-const s = (state: RootState) => state.auth || {}
+const emptyObj = {}
+
+const s = (state: RootState) => state.auth || emptyObj
 
 export const authErrorSelector = (state: RootState) => s(state).error
 

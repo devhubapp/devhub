@@ -1,137 +1,183 @@
 import React, { ReactNode } from 'react'
-import { StyleProp, Text, TextProps, ViewProps, ViewStyle } from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextProps,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native'
 
-import { darken, getLuminance, lighten } from 'polished'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { ThemeColors } from '@devhub/core'
+import { Platform } from '../../libs/platform'
 import { contentPadding, mutedOpacity } from '../../styles/variables'
-import { getLuminanceDifference } from '../../utils/helpers/colors'
+import { getReadableColor } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
-import { separatorSize } from './Separator'
+import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface LabelProps {
-  borderColor?: string
+  backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  borderThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   children: ReactNode
-  color?: string
+  colorThemeColor?:
+    | string
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
   containerProps?: ViewProps
   containerStyle?: StyleProp<ViewStyle>
-  isPrivate?: boolean
+  enableEmojis?: boolean
+  hideText?: boolean
   muted?: boolean
   outline?: boolean
   radius?: number
   small?: boolean
-  textColor?: string
   textProps?: TextProps
+  textThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
 }
 
+export const hiddenLabelSize = { width: 10, height: 10 }
+
 export function Label(props: LabelProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
   const theme = useTheme()
 
   const {
-    borderColor,
+    backgroundThemeColor: _backgroundThemeColor = 'backgroundColor',
+    borderThemeColor: _borderThemeColor,
+    textThemeColor: _textThemeColor,
     children,
-    color: _color,
+    colorThemeColor: _colorThemeColor,
     containerProps = {},
     containerStyle,
-    isPrivate,
+    enableEmojis,
+    hideText,
     muted,
     outline,
     radius,
     small,
-    textColor: _textColor,
     textProps = {},
   } = props
 
-  const _colorLuminanceDiff = _color
-    ? Math.abs(getLuminanceDifference(_color, theme.backgroundColor))
-    : 0
+  const backgroundThemeColor = getThemeColorOrItself(
+    theme,
+    _backgroundThemeColor,
+  )!
+  const borderThemeColor = getThemeColorOrItself(theme, _borderThemeColor)
+  const textThemeColor = getThemeColorOrItself(theme, _textThemeColor)
 
-  const _readableColor =
-    _color &&
-    (outline && _colorLuminanceDiff < 0.4
-      ? theme.isDark
-        ? lighten(0.6 - _colorLuminanceDiff, _color)
-        : darken(0.6 - _colorLuminanceDiff, _color)
-      : _color)
+  const color =
+    getThemeColorOrItself(theme, _colorThemeColor) ||
+    theme.foregroundColorMuted50
 
-  const color = _readableColor || springAnimatedTheme.foregroundColor
+  const circleColor = getReadableColor(color, backgroundThemeColor, 0.3)
+
+  const backgroundColor = outline
+    ? undefined
+    : hideText
+    ? circleColor
+    : backgroundThemeColor
 
   const foregroundColor =
-    _textColor ||
-    (outline && color) ||
-    (_readableColor
-      ? getLuminance(_readableColor) > 0.4
-        ? darken(0.9, _readableColor)
-        : lighten(0.9, _readableColor)
-      : outline
-      ? springAnimatedTheme.foregroundColor
-      : springAnimatedTheme.backgroundColor)
+    textThemeColor ||
+    (backgroundColor
+      ? getReadableColor(backgroundColor, backgroundColor, 0.4)
+      : getReadableColor(color, backgroundThemeColor, 0.4))
 
-  const height = small ? 16 : 18
+  const borderColor =
+    borderThemeColor ||
+    (outline
+      ? foregroundColor
+      : hideText
+      ? backgroundThemeColor
+      : backgroundColor)
+
+  const width = hideText ? hiddenLabelSize.width : undefined
+  const height = hideText ? hiddenLabelSize.height : small ? 16 : 18
 
   return (
-    <SpringAnimatedView
+    <View
       {...containerProps}
       style={[
+        hideText ? { width } : { minWidth: width },
         {
           height,
+          flexDirection: 'row',
           alignContent: 'center',
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: typeof radius === 'number' ? radius : height / 2,
-          borderWidth: separatorSize,
-          paddingHorizontal: contentPadding / (small ? 3 : 2),
+          borderWidth: outline ? StyleSheet.hairlineWidth : 0,
         },
         containerProps && containerProps.style,
         containerStyle,
         {
-          borderColor: borderColor || color,
-          backgroundColor: outline
-            ? _readableColor
-              ? springAnimatedTheme.backgroundColor
-              : undefined
-            : color,
+          borderColor,
+          backgroundColor,
         },
-        muted && { opacity: mutedOpacity },
         Boolean(radius) && { borderRadius: radius },
       ]}
     >
-      <SpringAnimatedText
+      {!hideText && (
+        <>
+          {/* <Spacer width={contentPadding / (small ? 3 : 2)} /> */}
+          <View
+            style={[
+              {
+                width: 6,
+                height: 6,
+                marginTop: 1,
+                borderRadius: 6 / 2,
+                backgroundColor: circleColor,
+              },
+              muted && { opacity: mutedOpacity },
+            ]}
+          />
+        </>
+      )}
+
+      <Text
         numberOfLines={1}
         {...textProps}
         style={[
+          hideText ? { width } : { minWidth: width },
           {
-            lineHeight: height - 2,
-            fontSize: small ? 11 : 12,
+            height,
+            lineHeight: height,
+            fontSize: hideText ? 0 : small ? 11 : 12,
             color: foregroundColor,
+            paddingLeft: hideText ? 0 : contentPadding / (small ? 3 : 2),
           },
-          textProps && textProps.style,
+          textProps && !hideText && textProps.style,
         ]}
+        {...!!hideText &&
+          Platform.select({
+            web: {
+              title: children && typeof children === 'string' ? children : null,
+            },
+          })}
       >
-        {Boolean(isPrivate) && (
-          <Text>
-            <SpringAnimatedIcon
-              name="lock"
-              style={{ color: foregroundColor }}
-            />{' '}
-          </Text>
-        )}
-        {typeof children === 'string'
+        {hideText
+          ? ''
+          : typeof children === 'string'
           ? parseTextWithEmojisToReactComponents(children, {
               key: `label-text-${children}`,
               imageProps: {
-                style: {
-                  width: small ? 10 : 11,
-                  height: small ? 10 : 11,
-                },
+                style: enableEmojis
+                  ? {
+                      marginHorizontal: 2,
+                      width: small ? 13 : 14,
+                      height: small ? 13 : 14,
+                    }
+                  : {
+                      marginHorizontal: 0,
+                      width: 0,
+                      height: 0,
+                    },
               },
             })
           : children}
-      </SpringAnimatedText>
-    </SpringAnimatedView>
+      </Text>
+    </View>
   )
 }

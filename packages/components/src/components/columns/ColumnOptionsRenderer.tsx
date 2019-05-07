@@ -1,42 +1,64 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 
-import { Column as ColumnType } from '@devhub/core'
-import { useTransition } from 'react-spring/native'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { constants } from '@devhub/core'
+import { useSpring, useTransition } from 'react-spring/native'
+import { useColumn } from '../../hooks/use-column'
 import { Platform } from '../../libs/platform'
-import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
+import { sharedStyles } from '../../styles/shared'
+import { columnHeaderHeight } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
+import { ConditionalWrap } from '../common/ConditionalWrap'
 import { fabSize } from '../common/FAB'
+import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
-import { fabSpacing } from '../layout/FABRenderer'
+import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
+import { ColumnHeader } from './ColumnHeader'
+import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptions } from './ColumnOptions'
 
 export interface ColumnOptionsRendererProps {
-  close: () => void
-  column: ColumnType
-  columnIndex: number
+  close: (() => void) | undefined
+  columnId: string
   containerHeight: number
-  visible: boolean
+  fixedPosition?: 'left' | 'right'
+  fixedWidth?: number | undefined
+  forceOpenAll?: boolean
+  inlineMode?: boolean
+  isOpen: boolean
+  renderHeader?: 'yes' | 'no' | 'spacing-only'
+  startWithFiltersExpanded?: boolean
 }
 
 export const ColumnOptionsRenderer = React.memo(
   (props: ColumnOptionsRendererProps) => {
-    const { close, column, columnIndex, containerHeight, visible } = props
+    const {
+      close,
+      columnId,
+      containerHeight,
+      fixedPosition,
+      fixedWidth,
+      forceOpenAll,
+      inlineMode,
+      isOpen,
+      renderHeader,
+      startWithFiltersExpanded,
+    } = props
 
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
     const { sizename } = useAppLayout()
+    const { column, columnIndex } = useColumn(columnId)
 
-    const immediate = Platform.realOS === 'android'
-
+    const immediate = constants.DISABLE_ANIMATIONS
     const overlayTransition = useTransition<boolean, any>(
-      visible ? [true] : [],
+      isOpen ? [true] : [],
       () => 'column-options-overlay',
       {
         reset: true,
         unique: true,
-        config: { duration: immediate ? 0 : 400, precision: 0.01 },
+        config: getDefaultReactSpringAnimationConfig(),
         immediate,
         from: { opacity: 0 },
         enter: { opacity: 0.75 },
@@ -44,55 +66,157 @@ export const ColumnOptionsRenderer = React.memo(
       },
     )[0]
 
-    const isFabVisible = sizename < '3-large'
+    const enableAbsolutePositionAnimation = !!(
+      !inlineMode &&
+      fixedPosition &&
+      fixedWidth
+    )
+
+    const absolutePositionAnimation = useSpring<any>(
+      !inlineMode && fixedPosition && fixedWidth
+        ? {
+            config: getDefaultReactSpringAnimationConfig(),
+            immediate: constants.DISABLE_ANIMATIONS,
+            from: {
+              [fixedPosition]:
+                -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+            },
+            to: {
+              [fixedPosition]: isOpen
+                ? 0
+                : -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+            },
+          }
+        : {
+            config: getDefaultReactSpringAnimationConfig(),
+            immediate: constants.DISABLE_ANIMATIONS,
+            from: { left: 0, right: 0 },
+            to: { left: 0, right: 0 },
+          },
+    )
+
+    if (!column) return null
+
+    const availableHeight =
+      containerHeight -
+      (shouldRenderFAB({ sizename, isColumnOptionsVisible: true })
+        ? fabSize + 2 * fabSpacing
+        : 0)
 
     return (
       <>
-        {!!overlayTransition && (
+        {!!overlayTransition && !inlineMode && !!close && (
           <SpringAnimatedView
             collapsable={false}
-            style={{
-              ...StyleSheet.absoluteFillObject,
-              ...overlayTransition.props,
-              zIndex: 200,
-            }}
+            style={[
+              StyleSheet.absoluteFillObject,
+              {
+                top:
+                  renderHeader === 'yes' || renderHeader === 'spacing-only'
+                    ? columnHeaderHeight
+                    : 0,
+              },
+              overlayTransition.props,
+              { zIndex: 200 },
+            ]}
+            pointerEvents="box-none"
           >
-            <SpringAnimatedTouchableOpacity
+            <ThemedTouchableOpacity
               analyticsAction="close_via_overlay"
               analyticsLabel="column_options"
               activeOpacity={1}
+              backgroundColor="backgroundColorMore1"
               style={{
                 ...StyleSheet.absoluteFillObject,
-                backgroundColor: springAnimatedTheme.backgroundColor,
                 zIndex: 200,
                 ...Platform.select({ web: { cursor: 'default' } as any }),
               }}
-              onPress={() => close()}
+              onPress={close && (() => close())}
               tabIndex={-1}
             />
           </SpringAnimatedView>
         )}
 
-        <View
+        <SpringAnimatedView
           collapsable={false}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 200,
-          }}
+          style={[
+            !inlineMode && {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              opacity:
+                enableAbsolutePositionAnimation &&
+                absolutePositionAnimation &&
+                fixedPosition &&
+                fixedWidth
+                  ? fixedPosition === 'left' || fixedPosition === 'right'
+                    ? absolutePositionAnimation[fixedPosition].interpolate(
+                        (value: number) => (fixedWidth + value <= 0 ? 0 : 1),
+                      )
+                    : 1
+                  : 1,
+            },
+            enableAbsolutePositionAnimation && absolutePositionAnimation,
+            !!fixedWidth && fixedPosition === 'left' && { right: undefined },
+            !!fixedWidth && fixedPosition === 'right' && { left: undefined },
+            !!fixedWidth && { width: fixedWidth },
+            {
+              zIndex: 200,
+            },
+          ]}
+          pointerEvents={
+            // prevent clicking on filters even when they are hidden behind column
+            // (only enabled for web desktop because this is causing bugs on ios safari)
+            Platform.realOS === 'web' &&
+            enableAbsolutePositionAnimation &&
+            absolutePositionAnimation &&
+            fixedPosition &&
+            fixedWidth
+              ? absolutePositionAnimation[fixedPosition].interpolate(
+                  (value: number) => (value < 0 ? 'none' : 'box-none'),
+                )
+              : 'box-none'
+          }
         >
-          <AccordionView isOpen={visible}>
+          {renderHeader === 'yes' ? (
+            <ColumnHeader pointerEvents="none">
+              <ColumnHeaderItem
+                analyticsLabel={undefined}
+                fixedIconSize
+                iconName="settings"
+                subtitle=""
+                title="filters"
+                style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
+                tooltip={undefined}
+              />
+            </ColumnHeader>
+          ) : renderHeader === 'spacing-only' ? (
+            <Spacer height={columnHeaderHeight} pointerEvents="none" />
+          ) : null}
+
+          <ConditionalWrap
+            condition={!enableAbsolutePositionAnimation}
+            wrap={children => (
+              <AccordionView isOpen={isOpen}>{children}</AccordionView>
+            )}
+          >
             <ColumnOptions
+              key={`column-options-${column.type}`}
               availableHeight={
-                containerHeight - (isFabVisible ? fabSize + 2 * fabSpacing : 0)
+                availableHeight -
+                (renderHeader === 'yes' || renderHeader === 'spacing-only'
+                  ? columnHeaderHeight
+                  : 0)
               }
               column={column}
               columnIndex={columnIndex}
+              forceOpenAll={forceOpenAll}
+              fullHeight={inlineMode || !!fixedWidth}
+              startWithFiltersExpanded={startWithFiltersExpanded}
             />
-          </AccordionView>
-        </View>
+          </ConditionalWrap>
+        </SpringAnimatedView>
       </>
     )
   },
