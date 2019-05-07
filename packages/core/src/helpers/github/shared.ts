@@ -548,7 +548,7 @@ export function getCommitIconAndColor(): {
   color?: keyof ThemeColors
   tooltip: string
 } {
-  return { icon: 'git-commit', color: 'brown', tooltip: 'Commit' }
+  return { icon: 'git-commit', color: 'blueGray', tooltip: 'Commit' }
 }
 
 export function getReleaseIconAndColor(): {
