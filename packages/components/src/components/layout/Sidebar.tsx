@@ -267,6 +267,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             horizontal && { paddingHorizontal: contentPadding / 2 },
           ]}
           data={columnIds}
+          disableVirtualization
           horizontal={horizontal}
           keyExtractor={columnId => `sidebar-column-item-${columnId}`}
           onScrollToIndexFailed={(info: {
@@ -282,6 +283,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             })
           }}
           style={sharedStyles.flex}
+          removeClippedSubviews={false}
           renderItem={({ item: columnId }) => (
             <SidebarColumnItem
               closeAllModals={closeAllModals}
