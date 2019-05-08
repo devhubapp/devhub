@@ -11682,10 +11682,10 @@ react-native-web@0.11.1:
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.4"
 
-react-native@0.59.1:
-  version "0.59.1"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.1.tgz#3274dcc0f9558799bd41c8092acac2a79bd627ce"
-  integrity sha512-KA/MyoCQLGavPBc/Q2QRfdbxHuKHTcYTks9xwwRPzgDqTfmTuDcyoC6jUBTfhZ0LEes5GMoKVM4eVrYUbprOmw==
+react-native@0.59.5:
+  version "0.59.5"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.5.tgz#79500d2885a3dc83216715e1fc6effa878ad6ea9"
+  integrity sha512-8Q/9cS6IMsGNiFhJgzmncbUeuacXQMe5EJl0c63fW30DvjEjeTVCvhM08eGzSpsNlOvL2XDRa4YOiCrwI7S1TA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@react-native-community/cli" "^1.2.1"
