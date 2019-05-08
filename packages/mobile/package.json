@@ -18,7 +18,7 @@
     "@devhub/components": "0.90.0-beta.2",
     "metro-react-native-babel-preset": "0.53.1",
     "react": "16.8.6",
-    "react-native": "0.59.1",
+    "react-native": "0.59.5",
     "react-native-firebase": "5.2.3",
     "react-native-google-analytics-bridge": "7.1.0",
     "react-native-inappbrowser-reborn": "2.0.0",
