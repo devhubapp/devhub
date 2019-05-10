@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -14,6 +14,7 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
@@ -30,9 +31,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
-
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
-
   const logout = useReduxAction(actions.logout)
   const pushModal = useReduxAction(actions.pushModal)
 
@@ -56,11 +55,10 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       showBackButton={showBackButton}
       title="Preferences"
     >
-      <ScrollView
+      <FullHeightScrollView
         alwaysBounceVertical
         bounces
         style={sharedStyles.flex}
-        contentContainerStyle={sharedStyles.flexGrow}
       >
         <AppViewModePreference>
           <Spacer height={contentPadding} />
@@ -185,7 +183,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             Logout
           </Button>
         </View>
-      </ScrollView>
+      </FullHeightScrollView>
     </ModalColumn>
   )
 })
