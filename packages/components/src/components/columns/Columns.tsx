@@ -191,6 +191,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       maxToRenderPerBatch={1}
       onScrollToIndexFailed={onScrollToIndexFailed}
       // onViewableItemsChanged={onViewableItemsChanged}
+      overScrollMode="never"
       pagingEnabled={pagingEnabled}
       pointerEvents={pointerEvents}
       removeClippedSubviews={Platform.OS !== 'web'}

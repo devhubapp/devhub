@@ -293,6 +293,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               ...info,
             })
           }}
+          overScrollMode="never"
           style={sharedStyles.flex}
           removeClippedSubviews={false}
           renderItem={({ item: columnId }) => (
