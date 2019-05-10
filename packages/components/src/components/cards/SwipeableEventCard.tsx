@@ -22,8 +22,8 @@ export function SwipeableEventCard(props: SwipeableEventCardProps) {
       leftActions={[
         {
           color: theme.blue,
-          icon: 'isRead',
-          key: 'isRead',
+          icon: 'mail-read',
+          key: 'read',
           label: 'Read',
           onPress: onMarkAsRead,
           type: 'FULL',
