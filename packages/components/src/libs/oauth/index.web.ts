@@ -53,7 +53,9 @@ export async function executeOAuth(
     platform: Platform.OS,
     redirect_uri:
       schemaRedirectUri ||
-      (Platform.OS === 'web' && window.location.origin) ||
+      (Platform.OS === 'web' &&
+        getPopupTarget() === '_self' &&
+        window.location.origin) ||
       '',
     scope: scopeStr,
   })
