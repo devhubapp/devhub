@@ -12,7 +12,7 @@ const initialState: State = {
     {
       id: 'join_our_slack',
       message:
-        'Join our brand new Slack Community! Get access to the next DevHub versions before everyone else, suggest new features and discuss new ideas :rocket:',
+        'Join our brand new Slack Community and get exclusive access to new features in beta :rocket:',
       href: constants.SLACK_INVITE_LINK,
       openOnNewTab: true,
       closedAt: undefined,
