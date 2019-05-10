@@ -16,6 +16,7 @@ const initialState: State = {
         'Join our brand new Slack Community and get exclusive access to new features in beta :rocket:',
       href: constants.SLACK_INVITE_LINK,
       openOnNewTab: true,
+      minLoginCount: 3,
       closedAt: undefined,
       createdAt: '2019-05-02T08:00:00.000Z',
     },
@@ -41,6 +42,7 @@ export const appReducer: Reducer<State> = (state = initialState, action) => {
               ...banner,
               href: updatedBanner.href,
               message: updatedBanner.message,
+              minLoginCount: updatedBanner.minLoginCount,
               openOnNewTab: updatedBanner.openOnNewTab,
             }
           }
