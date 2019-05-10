@@ -181,7 +181,7 @@ export const IssueOrPullRequestRow = React.memo(
                   ]}
                   textProps={{
                     color: isRead
-                      ? 'foregroundColorMuted50'
+                      ? 'foregroundColorMuted60'
                       : 'foregroundColor',
                     // color: 'foregroundColor',
                     numberOfLines,
@@ -231,7 +231,7 @@ export const IssueOrPullRequestRow = React.memo(
                     name: label.name,
                   }))}
                   muted={isRead}
-                  textThemeColor="foregroundColorMuted50"
+                  textThemeColor="foregroundColorMuted60"
                 />
               )}
             </View>
@@ -246,7 +246,7 @@ export const IssueOrPullRequestRow = React.memo(
                     style={cardRowStyles.mainContentContainer}
                     textProps={{
                       color: isRead
-                        ? 'foregroundColorMuted50'
+                        ? 'foregroundColorMuted60'
                         : 'foregroundColor',
                       // color: 'foregroundColor',
                       numberOfLines,
@@ -278,7 +278,7 @@ export const IssueOrPullRequestRow = React.memo(
                             (username && getGitHubURLForUser(username))
                           }
                           textProps={{
-                            color: 'foregroundColorMuted50',
+                            color: 'foregroundColorMuted60',
                             style: [cardStyles.smallerText],
                           }}
                         >
@@ -297,7 +297,7 @@ export const IssueOrPullRequestRow = React.memo(
                                 {!!byText && <Text children="  " />}
 
                                 <ThemedText
-                                  color="foregroundColorMuted50"
+                                  color="foregroundColorMuted60"
                                   numberOfLines={1}
                                   style={cardStyles.smallerText}
                                   {...Platform.select({
@@ -327,7 +327,7 @@ export const IssueOrPullRequestRow = React.memo(
                                 {!!byText && <Text children="  " />}
 
                                 <ThemedText
-                                  color="foregroundColorMuted50"
+                                  color="foregroundColorMuted60"
                                   numberOfLines={1}
                                   style={cardStyles.smallerText}
                                   {...Platform.select({

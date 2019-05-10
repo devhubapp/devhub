@@ -349,7 +349,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
               href={getGitHubAppInstallUri()}
               openOnNewTab
               textProps={{
-                color: 'foregroundColorMuted50',
+                color: 'foregroundColorMuted60',
                 style: {
                   flexGrow: 1,
                   lineHeight: 14,
@@ -410,7 +410,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
 
         {!!hasReachedColumnLimit && (
           <ThemedText
-            color="foregroundColorMuted50"
+            color="foregroundColorMuted60"
             style={{
               marginTop: contentPadding,
               paddingHorizontal: contentPadding,

@@ -110,7 +110,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             }
             style={sharedStyles.flex}
             textProps={{
-              color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
               // color: 'foregroundColor',
               numberOfLines: 1,
               style: [
@@ -136,7 +136,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               {showMoreItemsIndicator ? '' : message}
               {Boolean(byText) && (
                 <ThemedText
-                  color="foregroundColorMuted50"
+                  color="foregroundColorMuted60"
                   style={[cardStyles.normalText, cardStyles.smallText]}
                 >
                   {showMoreItemsIndicator ? '...' : ` by ${byText}`}

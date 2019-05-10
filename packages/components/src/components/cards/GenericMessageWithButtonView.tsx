@@ -45,7 +45,7 @@ export const GenericMessageWithButtonView = React.memo(
         )}
 
         <ThemedText
-          color="foregroundColorMuted50"
+          color="foregroundColorMuted60"
           style={{
             lineHeight: 20,
             fontSize: 14,

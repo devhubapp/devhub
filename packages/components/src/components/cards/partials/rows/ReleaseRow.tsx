@@ -107,7 +107,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
                 enableTextWrapper
                 href={fixedURL}
                 textProps={{
-                  color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+                  color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
                   // color: 'foregroundColor',
                   numberOfLines: 1,
                   style: [

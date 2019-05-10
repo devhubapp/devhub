@@ -58,7 +58,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
             textProps={{
               color:
                 isRead || showMoreItemsIndicator
-                  ? 'foregroundColorMuted50'
+                  ? 'foregroundColorMuted60'
                   : 'foregroundColor',
               style: [
                 bold && cardStyles.boldText,

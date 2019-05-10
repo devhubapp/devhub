@@ -62,7 +62,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
       left={
         leftContent === 'icon' ? (
           <ThemedIcon
-            color="foregroundColorMuted50"
+            color="foregroundColorMuted60"
             name="comment"
             size={smallAvatarSize}
             style={[{ alignSelf: 'flex-end' }, cardStyles.normalText]}
@@ -85,7 +85,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             enableTextWrapper
             href={fixURL(url, { addBottomAnchor })}
             textProps={{
-              color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
               // color: 'foregroundColor',
               numberOfLines,
               style: [cardStyles.commentText, textStyle],

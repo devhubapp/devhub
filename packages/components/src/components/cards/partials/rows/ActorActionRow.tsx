@@ -74,7 +74,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
   )
 
   const color: keyof ThemeColors =
-    (isRead && 'foregroundColorMuted50') || 'foregroundColor'
+    (isRead && 'foregroundColorMuted60') || 'foregroundColor'
 
   const bodyStr = `${_body || ''}`.replace(_body[0], _body[0].toLowerCase())
 

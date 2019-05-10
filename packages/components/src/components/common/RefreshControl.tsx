@@ -24,7 +24,7 @@ export const RefreshControl = React.memo((props: RefreshControlProps) => {
       colors={[theme.primaryBackgroundColor]}
       progressBackgroundColor={theme.backgroundColorDarker1}
       tintColor={theme.primaryBackgroundColor}
-      titleColor={theme.foregroundColorMuted50}
+      titleColor={theme.foregroundColorMuted60}
       title={title}
       {...otherProps}
     />

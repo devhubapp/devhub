@@ -118,7 +118,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     return (
       <View style={containerStyle}>
         <ThemedText
-          color="foregroundColorMuted50"
+          color="foregroundColorMuted60"
           style={{
             lineHeight: 20,
             fontSize: 14,

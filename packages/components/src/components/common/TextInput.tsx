@@ -25,7 +25,7 @@ export const TextInput = React.forwardRef(
     return (
       <TextInputOriginal
         ref={ref}
-        placeholderTextColor={theme.foregroundColorMuted50}
+        placeholderTextColor={theme.foregroundColorMuted60}
         {...otherProps}
         onBlur={(e: any) => {
           setIsFocused(false)
@@ -47,7 +47,7 @@ export const TextInput = React.forwardRef(
             borderColor: isFocused
               ? theme.primaryBackgroundColor
               : isHovered
-              ? theme.foregroundColorMuted50
+              ? theme.foregroundColorMuted60
               : theme.foregroundColorMuted25,
           },
           style,

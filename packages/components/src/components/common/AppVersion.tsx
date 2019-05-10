@@ -28,7 +28,7 @@ export function AppVersion() {
       openOnNewTab
       style={styles.appVersionLink}
       textProps={{
-        color: 'foregroundColorMuted50',
+        color: 'foregroundColorMuted60',
         style: styles.appVersion,
       }}
     >

@@ -63,7 +63,7 @@ export function createThemeFromColor(
   const foregroundColorMuted25 = isDark
     ? lighten(0.2, color)
     : darken(0.2, color)
-  const foregroundColorMuted50 = isDark
+  const foregroundColorMuted60 = isDark
     ? lighten(0.6, color)
     : darken(0.6, color)
 
@@ -121,7 +121,7 @@ export function createThemeFromColor(
 
     foregroundColor,
     foregroundColorMuted25,
-    foregroundColorMuted50,
+    foregroundColorMuted60,
 
     ...getStaticColors({ isDark }),
 

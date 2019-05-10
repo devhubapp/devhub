@@ -15,7 +15,7 @@ export function H2(props: H2Props) {
 
   return (
     <ThemedText
-      color={muted ? 'foregroundColorMuted50' : 'foregroundColor'}
+      color={muted ? 'foregroundColorMuted60' : 'foregroundColor'}
       {...otherProps}
       style={[
         {

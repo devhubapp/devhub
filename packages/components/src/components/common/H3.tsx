@@ -11,7 +11,7 @@ export function H3(props: H3Props) {
 
   return (
     <ThemedText
-      color="foregroundColorMuted50"
+      color="foregroundColorMuted60"
       {...otherProps}
       style={[
         {

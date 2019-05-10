@@ -112,7 +112,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
 
           {!!subtitle && (
             <ThemedText
-              color="foregroundColorMuted50"
+              color="foregroundColorMuted60"
               {...subtitleProps}
               style={[styles.subtitleText, subtitleProps.style]}
             >

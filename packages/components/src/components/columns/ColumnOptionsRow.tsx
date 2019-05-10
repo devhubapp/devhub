@@ -199,7 +199,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
           {!!(subtitle || hasChanged) && (
             <ThemedText
-              color="foregroundColorMuted50"
+              color="foregroundColorMuted60"
               numberOfLines={1}
               style={{ fontSize: 12 }}
             >

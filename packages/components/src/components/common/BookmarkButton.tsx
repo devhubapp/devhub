@@ -31,7 +31,7 @@ export function BookmarkButton(props: BookmarkButtonProps) {
       enableForegroundHover={!isSaved}
       fixedIconSize
       foregroundColor={
-        isSaved ? theme.primaryBackgroundColor : theme.foregroundColorMuted50
+        isSaved ? theme.primaryBackgroundColor : theme.foregroundColorMuted60
       }
       iconName="bookmark"
       noPadding

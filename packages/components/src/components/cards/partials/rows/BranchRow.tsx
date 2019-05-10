@@ -52,7 +52,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
         //   repo={repositoryName}
         // />
         <ThemedIcon
-          color={muted ? 'foregroundColorMuted50' : 'foregroundColor'}
+          color={muted ? 'foregroundColorMuted60' : 'foregroundColor'}
           name="git-branch"
           size={smallAvatarSize}
           style={[{ alignSelf: 'flex-end' }, cardStyles.normalText]}
@@ -64,7 +64,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
             enableTextWrapper
             href={getGitHubURLForBranch(ownerName, repositoryName, branch)}
             textProps={{
-              color: muted ? 'foregroundColorMuted50' : 'foregroundColor',
+              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
               numberOfLines: 1,
               style: [cardStyles.normalText, cardStyles.smallText],
             }}

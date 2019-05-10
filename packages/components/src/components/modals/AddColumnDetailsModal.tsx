@@ -321,7 +321,7 @@ export const AddColumnDetailsModal = React.memo(
                     <Spacer flex={1} />
 
                     <ThemedIcon
-                      color="foregroundColorMuted50"
+                      color="foregroundColorMuted60"
                       name={isPrivateSupported ? 'lock' : 'globe'}
                       onPress={() => {
                         alert(text)

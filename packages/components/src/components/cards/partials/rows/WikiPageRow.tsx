@@ -52,7 +52,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
             href={showMoreItemsIndicator ? undefined : fixURL(url)}
             style={cardRowStyles.mainContentContainer}
             textProps={{
-              color: isRead ? 'foregroundColorMuted50' : 'foregroundColor',
+              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
               // color: 'foregroundColor',
               numberOfLines: 1,
               style: [
@@ -70,7 +70,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
               )}
               {showMoreItemsIndicator ? '' : title}
               {!!showMoreItemsIndicator && (
-                <ThemedText color="foregroundColorMuted50" numberOfLines={1}>
+                <ThemedText color="foregroundColorMuted60" numberOfLines={1}>
                   ...
                 </ThemedText>
               )}

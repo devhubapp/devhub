@@ -130,7 +130,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           isHovered && enableForegroundHover
             ? hoverForegroundThemeColor || theme.primaryBackgroundColor
             : foregroundColor || theme.foregroundColor,
-        mutedForegroundColor: theme.foregroundColorMuted50,
+        mutedForegroundColor: theme.foregroundColorMuted60,
       }
     },
     [

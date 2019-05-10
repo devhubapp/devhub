@@ -115,13 +115,13 @@ export const cardStyles = StyleSheet.create({
   timestampText: {
     lineHeight: smallerTextSize + 1,
     fontSize: smallerTextSize,
-    // color: theme.foregroundColorMuted50,
+    // color: theme.foregroundColorMuted60,
   },
 
   smallerText: {
     lineHeight: smallerTextSize + 1,
     fontSize: smallerTextSize,
-    // color: theme.foregroundColorMuted50,
+    // color: theme.foregroundColorMuted60,
   },
 
   commentText: {
@@ -131,7 +131,7 @@ export const cardStyles = StyleSheet.create({
   },
 
   // mutedText: {
-  //   // color: theme.foregroundColorMuted50,
+  //   // color: theme.foregroundColorMuted60,
   // },
 
   normalText: {
