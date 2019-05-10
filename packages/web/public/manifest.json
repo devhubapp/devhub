@@ -14,23 +14,13 @@
       "type": "image/png"
     },
     {
-      "src": "static/media/logo.png",
+      "src": "static/media/logo@2x.png",
       "sizes": "200x200",
       "type": "image/png"
     },
     {
-      "src": "static/media/logo.png",
-      "sizes": "300x300",
-      "type": "image/png"
-    },
-    {
-      "src": "static/media/logo@2x.png",
-      "sizes": "600x600",
-      "type": "image/png"
-    },
-    {
       "src": "static/media/logo@3x.png",
-      "sizes": "900x900",
+      "sizes": "300x300",
       "type": "image/png"
     }
   ],
