@@ -27,7 +27,9 @@ export function NotificationReason(props: NotificationReasonProps) {
       muted={muted}
       outline={false}
       small
-      textThemeColor="foregroundColorMuted60"
+      textThemeColor={
+        muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+      }
     >
       {reasonDetails.label.toLowerCase()}
     </Label>

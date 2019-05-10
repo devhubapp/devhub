@@ -231,7 +231,9 @@ export const IssueOrPullRequestRow = React.memo(
                     name: label.name,
                   }))}
                   muted={isRead}
-                  textThemeColor="foregroundColorMuted60"
+                  textThemeColor={
+                    isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                  }
                 />
               )}
             </View>
@@ -297,7 +299,11 @@ export const IssueOrPullRequestRow = React.memo(
                                 {!!byText && <Text children="  " />}
 
                                 <ThemedText
-                                  color="foregroundColorMuted60"
+                                  color={
+                                    isRead
+                                      ? 'foregroundColorMuted40'
+                                      : 'foregroundColorMuted60'
+                                  }
                                   numberOfLines={1}
                                   style={cardStyles.smallerText}
                                   {...Platform.select({
@@ -327,7 +333,11 @@ export const IssueOrPullRequestRow = React.memo(
                                 {!!byText && <Text children="  " />}
 
                                 <ThemedText
-                                  color="foregroundColorMuted60"
+                                  color={
+                                    isRead
+                                      ? 'foregroundColorMuted40'
+                                      : 'foregroundColorMuted60'
+                                  }
                                   numberOfLines={1}
                                   style={cardStyles.smallerText}
                                   {...Platform.select({

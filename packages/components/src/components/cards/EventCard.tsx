@@ -625,7 +625,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
                       : 0),
                   overflow: 'hidden',
                 }}
-                textThemeColor="foregroundColorMuted60"
+                textThemeColor={
+                  isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                }
               />
 
               <Spacer width={spacingBetweenLeftAndRightColumn} />
@@ -650,7 +652,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
                 return (
                   <ThemedText
-                    color="foregroundColorMuted60"
+                    color={
+                      isRead
+                        ? 'foregroundColorMuted40'
+                        : 'foregroundColorMuted60'
+                    }
                     numberOfLines={1}
                     style={[
                       cardStyles.timestampText,

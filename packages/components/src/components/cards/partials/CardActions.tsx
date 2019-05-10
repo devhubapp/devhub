@@ -60,10 +60,8 @@ export function CardActions(props: CardActionsProps) {
         }}
         onPress={() => saveItemsForLater({ itemIds, save: !isSaved })}
         textProps={{
-          color: 'foregroundColorMuted60',
-          style: {
-            fontSize: smallerTextSize,
-          },
+          color: isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
+          style: { fontSize: smallerTextSize },
         }}
       >
         {isSaved ? 'saved' : 'save'}
@@ -84,10 +82,8 @@ export function CardActions(props: CardActionsProps) {
           markItemsAsReadOrUnread({ type, itemIds, unread: !!isRead })
         }
         textProps={{
-          color: 'foregroundColorMuted60',
-          style: {
-            fontSize: smallerTextSize,
-          },
+          color: isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
+          style: { fontSize: smallerTextSize },
         }}
       >
         {isRead ? 'mark as unread' : 'mark as read'}
@@ -120,10 +116,10 @@ export function CardActions(props: CardActionsProps) {
               }
               openOnNewTab
               textProps={{
-                color: 'foregroundColorMuted60',
-                style: {
-                  fontSize: smallerTextSize,
-                },
+                color: isRead
+                  ? 'foregroundColorMuted40'
+                  : 'foregroundColorMuted60',
+                style: { fontSize: smallerTextSize },
               }}
             >
               {commentsCount === 1

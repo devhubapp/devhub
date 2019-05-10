@@ -554,7 +554,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                       : 0),
                   overflow: 'hidden',
                 }}
-                textThemeColor="foregroundColorMuted60"
+                textThemeColor={
+                  isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                }
               />
 
               <Spacer width={spacingBetweenLeftAndRightColumn} />
@@ -579,7 +581,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
                 return (
                   <ThemedText
-                    color="foregroundColorMuted60"
+                    color={
+                      isRead
+                        ? 'foregroundColorMuted40'
+                        : 'foregroundColorMuted60'
+                    }
                     numberOfLines={1}
                     style={[
                       cardStyles.timestampText,

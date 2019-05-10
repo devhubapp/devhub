@@ -165,7 +165,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                   <>
                     <Text children="  " />
                     <ThemedText
-                      color="foregroundColorMuted60"
+                      color={
+                        isRead
+                          ? 'foregroundColorMuted40'
+                          : 'foregroundColorMuted60'
+                      }
                       numberOfLines={1}
                       style={cardStyles.timestampText}
                       {...Platform.select({
