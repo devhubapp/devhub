@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import { Image, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { getGitHubURLForUser, ModalPayload } from '@devhub/core'
@@ -59,7 +59,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   const { horizontal, zIndex } = props
 
   const flatListRef = useRef<FlatList<string>>(null)
-  const sidebarLastClickedAtRef = useRef(0)
 
   const { appViewMode } = useAppViewMode()
   const { sizename } = useAppLayout()
@@ -76,22 +75,12 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   useLayoutEffect(() => {
     if (!(flatListRef.current && focusedColumnId)) return
 
-    if (
-      sidebarLastClickedAtRef.current &&
-      Date.now() - sidebarLastClickedAtRef.current < 1000
-    )
-      return
-
     flatListRef.current.scrollToItem({
       animated: true,
       item: focusedColumnId,
       viewPosition: 0.5,
     })
   }, [focusedColumnId, focusedColumnIndex, flatListRef.current])
-
-  const onSidebarItemPress = useCallback(() => {
-    sidebarLastClickedAtRef.current = Date.now()
-  }, [])
 
   const small = sizename === '1-small'
   const large = sizename >= '3-large'
@@ -305,7 +294,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               highlight={highlightFocusedColumn && columnId === focusedColumnId}
               horizontal={horizontal}
               itemContainerStyle={itemContainerStyle}
-              onPress={onSidebarItemPress}
               showLabel={showLabel}
               small={small}
             />
@@ -452,7 +440,6 @@ const SidebarColumnItem = React.memo(
     highlight: boolean
     horizontal: boolean
     itemContainerStyle: ViewStyle
-    onPress: (columnId: string) => void
     showLabel: boolean
     small: boolean | undefined
   }) => {
@@ -463,7 +450,6 @@ const SidebarColumnItem = React.memo(
       enableBackgroundHover,
       highlight,
       itemContainerStyle,
-      onPress,
       showLabel,
       small,
     } = props
@@ -494,8 +480,6 @@ const SidebarColumnItem = React.memo(
         label={label}
         noPadding
         onPress={() => {
-          if (onPress) onPress(column.id)
-
           if (currentOpenedModal) closeAllModals()
 
           emitter.emit('FOCUS_ON_COLUMN', {
