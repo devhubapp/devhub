@@ -29,6 +29,8 @@ export const themeSelector = createSelector(
 
 // Do not use this directly. Use useAppViewMode() instead.
 export const _appViewModeSelector = (state: RootState) => {
+  if (constants.DISABLE_SINGLE_COLUMN) return 'multi-column'
+
   const isBigEnoughForMultiColumnView =
     Dimensions.get('window').width >= APP_LAYOUT_BREAKPOINTS.MEDIUM
 

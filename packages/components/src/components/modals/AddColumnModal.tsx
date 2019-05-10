@@ -90,6 +90,8 @@ const columnTypes: Array<{
     title: 'Issues & Pull Requests',
     type: 'issue_or_pr',
     icon: 'issue-opened',
+    soon: constants.DISABLE_ISSUES_AND_PRS_COLUMN,
+    soonLink: 'https://beta.devhubapp.com/',
     items: [
       {
         title: 'Issues',
@@ -378,7 +380,11 @@ export function AddColumnModal(props: AddColumnModalProps) {
                   <H2
                     muted
                     withMargin={false}
-                    children=" (soon)"
+                    children={
+                      group.soonLink && group.soonLink.includes('beta')
+                        ? ' (beta)'
+                        : ' (soon)'
+                    }
                     style={sharedStyles.flex}
                   />
                 </Link>
@@ -398,7 +404,9 @@ export function AddColumnModal(props: AddColumnModalProps) {
                 <AddColumnModalItem
                   key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
                   availableWidth={availableWidth}
-                  disabled={hasReachedColumnLimit || !item.payload}
+                  disabled={
+                    hasReachedColumnLimit || !item.payload || group.soon
+                  }
                   icon={item.icon}
                   payload={item.payload}
                   title={item.title}

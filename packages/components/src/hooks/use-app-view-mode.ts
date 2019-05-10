@@ -1,4 +1,4 @@
-import { CardViewMode } from '@devhub/core'
+import { CardViewMode, constants } from '@devhub/core'
 import { useAppLayout } from '../components/context/LayoutContext'
 import * as selectors from '../redux/selectors'
 import { useReduxState } from './use-redux-state'
@@ -27,7 +27,8 @@ export function useAppViewMode() {
 
   return {
     appViewMode,
-    canSwitchAppViewMode: isBigEnoughForMultiColumnView,
+    canSwitchAppViewMode:
+      !constants.DISABLE_SINGLE_COLUMN && isBigEnoughForMultiColumnView,
     getCardViewMode,
     getEnableCompactLabels,
   }

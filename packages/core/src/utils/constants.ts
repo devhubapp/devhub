@@ -1,11 +1,26 @@
 import { ThemePair } from '../types'
 
+const pkg = require('../../package.json') // tslint:disable-line
+
+export const appVersion = pkg.version as string
+const isBeta = appVersion.includes('beta')
+
+const _window = typeof window !== 'undefined' ? window : undefined
+const _hostname =
+  _window &&
+  _window.location &&
+  _window.location.hostname &&
+  _window.location.hostname
+const isLocal = _hostname === 'localhost'
+
 export const COLUMNS_LIMIT = 20
 export const MIN_COLUMN_WIDTH = 300
 export const MAX_COLUMN_WIDTH = 340
 
 export const DISABLE_ANIMATIONS = false
 export const DISABLE_SWIPEABLE_CARDS = true
+export const DISABLE_SINGLE_COLUMN = !isBeta && !isLocal
+export const DISABLE_ISSUES_AND_PRS_COLUMN = !isBeta && !isLocal
 
 export const DEFAULT_DARK_THEME = 'dark-gray'
 export const DEFAULT_LIGHT_THEME = 'light-blue'
