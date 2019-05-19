@@ -7,6 +7,7 @@ import { createAction, createErrorActionWithPayload } from '../helpers'
 
 export function fetchColumnSubscriptionRequest(payload: {
   columnId: string
+  replaceAllItems: boolean
   params: {
     [key: string]: string | number | undefined
     page: number
@@ -23,8 +24,14 @@ export function deleteColumnSubscriptions(subscriptionIds: string[]) {
 export function fetchSubscriptionRequest(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
+  replaceAllItems: boolean
   params: {
-    [key: string]: string | number | boolean | undefined
+    [key: string]:
+      | string
+      | number
+      | boolean
+      | Record<string, boolean | undefined>
+      | undefined
     page: number
     perPage?: number
   }
@@ -36,7 +43,8 @@ export function fetchSubscriptionSuccess(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
   data: any
-  canFetchMore: boolean
+  canFetchMore: boolean | undefined
+  replaceAllItems: boolean
   github: {
     appTokenType: GitHubAppTokenType
     headers: GitHubAPIHeaders
@@ -49,6 +57,7 @@ export function fetchSubscriptionFailure<E extends Error>(
   payload: {
     subscriptionType: ColumnSubscription['type']
     subscriptionId: string
+    replaceAllItems: boolean
     github: {
       appTokenType: GitHubAppTokenType
       headers: GitHubAPIHeaders

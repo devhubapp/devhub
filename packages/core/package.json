@@ -1,6 +1,6 @@
 {
   "name": "@devhub/core",
-  "version": "0.48.1",
+  "version": "0.81.0",
   "private": false,
   "main": "dist/index.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "dependencies": {
     "@octokit/rest": "16.20.0",
     "gravatar": "1.8.0",
+    "immer": "2.1.4",
     "json-to-graphql-query": "1.9.0",
     "lodash": "4.17.11",
     "moment": "2.24.0"

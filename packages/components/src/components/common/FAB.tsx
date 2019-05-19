@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react'
 import { StyleProp, TextStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { contentPadding } from '../../styles/variables'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -12,14 +11,16 @@ import {
   SpringAnimatedTouchableOpacityProps,
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 
-export const fabSize = 50
+export const fabSize = 44
 
 export interface FABProps extends SpringAnimatedTouchableOpacityProps {
   children?: string | React.ReactElement<any>
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle> | any
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
+  tooltip: string
   useBrandColor?: boolean
 }
 
@@ -29,11 +30,12 @@ export function FAB(props: FABProps) {
     iconName,
     iconStyle,
     style,
+    tooltip,
     useBrandColor,
     ...otherProps
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const springAnimatedTheme = useSpringAnimatedTheme()
 
   const [isPressing, setIsPressing] = useState(false)
 
@@ -74,6 +76,7 @@ export function FAB(props: FABProps) {
         },
         style,
       ]}
+      tooltip={tooltip}
     >
       <SpringAnimatedView
         style={[
@@ -98,11 +101,11 @@ export function FAB(props: FABProps) {
             name={iconName}
             style={[
               {
-                width: 24,
-                height: 24,
-                lineHeight: 24,
+                width: fabSize / 2,
+                height: fabSize / 2,
+                lineHeight: fabSize / 2,
                 marginTop: 1,
-                fontSize: 24,
+                fontSize: fabSize / 2,
                 textAlign: 'center',
                 color: useBrandColor
                   ? springAnimatedTheme.primaryForegroundColor

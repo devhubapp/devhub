@@ -12,29 +12,35 @@ import {
   ActivityColumn,
   ActivityColumnSubscription,
   AddColumnDetailsPayload,
+  ColumnFilters,
   ColumnParamField,
+  ColumnSubscription,
   createSubscriptionObjectsWithId,
   guid,
+  IssueOrPullRequestColumn,
+  IssueOrPullRequestColumnSubscription,
   NotificationColumn,
+  NotificationColumnSubscription,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { findNode } from '../../utils/helpers/shared'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { TextInput } from '../common/TextInput'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import {
-  SpringAnimatedTextInput,
-  SpringAnimatedTextInputProps,
-} from '../common/TextInput'
+  ThemedTextInput,
+  ThemedTextInputProps,
+} from '../themed/ThemedTextInput'
 
 interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {
   showBackButton: boolean
@@ -44,7 +50,7 @@ interface FieldDetails {
   title: string
   field: ColumnParamField
   placeholder: string
-  ref: RefObject<SpringAnimatedTextInput>
+  ref: RefObject<TextInput>
 }
 
 const fields: FieldDetails[] = [
@@ -78,6 +84,7 @@ const fields: FieldDetails[] = [
 export const AddColumnDetailsModal = React.memo(
   (props: AddColumnDetailsModalProps) => {
     const {
+      defaultFilters,
       defaultParams,
       icon,
       isPrivateSupported,
@@ -97,8 +104,6 @@ export const AddColumnDetailsModal = React.memo(
       username: '',
       ...defaultParams,
     })
-
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
     const username = useReduxState(selectors.currentGitHubUsernameSelector)
 
@@ -131,11 +136,39 @@ export const AddColumnDetailsModal = React.memo(
     }
 
     const _handleCreateColumn = () => {
+      let _params: ColumnSubscription['params']
+      let _filters: ColumnFilters | undefined = defaultFilters
+
+      if (subscription.type === 'issue_or_pr') {
+        const _p = _.pick(params, paramList)
+
+        _params = {
+          repoFullName:
+            _p.owner && _p.repo ? `${_p.owner}/${_p.repo}` : undefined,
+          subjectType:
+            subscription.subtype === 'ISSUES'
+              ? 'Issue'
+              : subscription.subtype === 'PULLS'
+              ? 'PullRequest'
+              : undefined,
+        } as IssueOrPullRequestColumnSubscription['params']
+
+        _filters = _filters || {}
+        _filters.subjectTypes =
+          _params.subjectType === 'Issue'
+            ? { Issue: true }
+            : _params.subjectType === 'PullRequest'
+            ? { PullRequest: true }
+            : undefined
+      } else {
+        _params = _.pick(params, paramList)
+      }
+
       const subscriptions = createSubscriptionObjectsWithId([
         {
           ...(subscription as any),
           id: '',
-          params: _.pick(params, paramList) as any,
+          params: _params,
         },
       ])
 
@@ -143,10 +176,14 @@ export const AddColumnDetailsModal = React.memo(
         id: guid(),
         type: subscription.type,
         subscriptionIds: subscriptions.map(s => s.id),
-        filters: undefined,
+        filters: _filters,
       } as typeof subscriptions extends ActivityColumnSubscription[]
         ? ActivityColumn
-        : NotificationColumn
+        : typeof subscriptions extends IssueOrPullRequestColumnSubscription[]
+        ? IssueOrPullRequestColumn
+        : typeof subscriptions extends NotificationColumnSubscription[]
+        ? NotificationColumn
+        : never
 
       addColumnAndSubscriptions({
         column,
@@ -155,9 +192,7 @@ export const AddColumnDetailsModal = React.memo(
     }
 
     const createTextInputChangeHandler = useCallback(
-      (
-        fieldDetails: FieldDetails,
-      ): SpringAnimatedTextInputProps['onChange'] => e => {
+      (fieldDetails: FieldDetails): ThemedTextInputProps['onChange'] => e => {
         if (!(e && e.nativeEvent)) return
         const text = e.nativeEvent.text
 
@@ -172,7 +207,7 @@ export const AddColumnDetailsModal = React.memo(
     const createTextInputSubmitHandler = useCallback(
       (
         fieldDetails: FieldDetails,
-      ): SpringAnimatedTextInputProps['onSubmitEditing'] => () => {
+      ): ThemedTextInputProps['onSubmitEditing'] => () => {
         const index = paramList.findIndex(fd => fd === fieldDetails.field)
 
         if (index < paramList.length - 1) {
@@ -201,7 +236,7 @@ export const AddColumnDetailsModal = React.memo(
     const renderTextInput = useCallback(
       (
         fieldDetails: FieldDetails,
-        { autoFocus, ...textInputProps }: SpringAnimatedTextInputProps,
+        { autoFocus, ...textInputProps }: ThemedTextInputProps,
       ) => {
         // autofocus is breaking the react-spring animation
         // need to find a real fix (propably inside react-spring)
@@ -225,12 +260,13 @@ export const AddColumnDetailsModal = React.memo(
           <Fragment key={`add-column-details-text-input-${fieldDetails.field}`}>
             <H3 withMargin>{fieldDetails.title}</H3>
 
-            <SpringAnimatedTextInput
+            <ThemedTextInput
               ref={fieldDetails.ref}
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus={false}
               blurOnSubmit={false}
+              color="foregroundColor"
               placeholder={`${fieldDetails.placeholder || ''}`.replace(
                 'brunolemos',
                 username!,
@@ -238,10 +274,7 @@ export const AddColumnDetailsModal = React.memo(
               {...textInputProps}
               onChange={createTextInputChangeHandler(fieldDetails)}
               onSubmitEditing={createTextInputSubmitHandler(fieldDetails)}
-              style={[
-                { color: springAnimatedTheme.foregroundColor },
-                textInputProps.style,
-              ]}
+              style={textInputProps.style}
               value={params[fieldDetails.field]}
             />
 
@@ -265,7 +298,10 @@ export const AddColumnDetailsModal = React.memo(
         showBackButton={showBackButton}
         title="Add Column"
       >
-        <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          style={sharedStyles.flex}
+        >
           <SubHeader iconName={icon} title={title}>
             {typeof isPrivateSupported === 'boolean' &&
               (() => {
@@ -278,20 +314,20 @@ export const AddColumnDetailsModal = React.memo(
 
                 const text = isPrivateSupported
                   ? `This column type supports private ${contentLabel}.`
-                  : `This column type supports public ${contentLabel} only.`
+                  : `This column type only supports public ${contentLabel}.`
 
                 return (
-                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                  <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
                     <Spacer flex={1} />
 
-                    <SpringAnimatedIcon
+                    <ThemedIcon
+                      color="foregroundColorMuted60"
                       name={isPrivateSupported ? 'lock' : 'globe'}
                       onPress={() => {
                         alert(text)
                       }}
                       size={18}
                       style={[
-                        { color: springAnimatedTheme.foregroundColorMuted50 },
                         Platform.select({
                           web: {
                             cursor: 'help',
@@ -309,7 +345,7 @@ export const AddColumnDetailsModal = React.memo(
               })()}
           </SubHeader>
 
-          <View style={{ flex: 1, padding: contentPadding }}>
+          <View style={[sharedStyles.flex, { padding: contentPadding }]}>
             {(paramList
               .map(p => fields.find(f => f.field === p))
               .filter(Boolean) as FieldDetails[]).map(renderField)}

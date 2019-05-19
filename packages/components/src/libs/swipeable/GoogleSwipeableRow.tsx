@@ -3,6 +3,7 @@ import { Animated, StyleSheet } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
+import { GitHubIcon } from '@devhub/core'
 import { MaterialIcons as Icon } from '../../libs/vector-icons'
 import {
   BaseSwipeableRow,
@@ -14,7 +15,7 @@ import {
 export { defaultWidth } from './BaseSwipeableRow'
 
 export interface GoogleSwipeableRowAction extends BaseSwipeableRowAction {
-  icon: string
+  icon: GitHubIcon
   label: undefined
 }
 

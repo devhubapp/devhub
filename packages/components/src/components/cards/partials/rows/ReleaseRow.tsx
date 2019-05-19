@@ -1,26 +1,37 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForRelease, trimNewLinesAndSpaces } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import {
+  getGitHubURLForRelease,
+  Omit,
+  trimNewLinesAndSpaces,
+} from '@devhub/core'
+import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { cardStyles } from '../../styles'
 import { BranchRow } from './BranchRow'
+import { CommentRow } from './CommentRow'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface ReleaseRowProps {
+export interface ReleaseRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   avatarUrl: string
   body: string
+  bold?: boolean
   branch?: string
+  hideIcon?: boolean
+  isPrivate: boolean
   isRead: boolean
   name: string | undefined
   ownerName: string
   repositoryName: string
-  smallLeftColumn?: boolean
   tagName: string | undefined
   url: string
   userLinkURL: string
@@ -30,33 +41,33 @@ export interface ReleaseRowProps {
 export interface ReleaseRowState {}
 
 export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     avatarUrl,
     body: _body,
+    bold,
     branch,
+    hideIcon,
+    isPrivate,
     isRead,
     name: _name,
     ownerName,
     repositoryName,
-    smallLeftColumn,
     tagName: _tagName,
     url,
     userLinkURL,
     username,
+    viewMode,
+    ...otherProps
   } = props
 
   const body = trimNewLinesAndSpaces(_body)
   const name = trimNewLinesAndSpaces(_name)
   const tagName = trimNewLinesAndSpaces(_tagName)
 
-  const repoFullName =
-    ownerName && repositoryName ? `${ownerName}/${repositoryName}` : ''
   const fixedURL = fixURL(
     url && !url.includes('api.')
       ? url
-      : getGitHubURLForRelease(repoFullName, tagName),
+      : getGitHubURLForRelease(ownerName, repositoryName, tagName),
   )
 
   return (
@@ -64,108 +75,80 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
       {!!branch && (
         <BranchRow
           key={`branch-row-${branch}`}
+          {...otherProps}
           branch={branch}
           isBranchMainEvent={false}
           isRead={isRead}
           ownerName={ownerName || ''}
           repositoryName={repositoryName || ''}
+          viewMode={viewMode}
         />
       )}
 
       {!!(name || tagName) && (
-        <View style={cardRowStyles.container}>
-          <View
-            style={[
-              cardStyles.leftColumn,
-              smallLeftColumn
-                ? cardStyles.leftColumn__small
-                : cardStyles.leftColumn__big,
-            ]}
-          >
-            <Avatar
-              isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
-              linkURL=""
-              small
-              style={cardStyles.avatar}
-              username={ownerName}
-            />
-          </View>
-
-          <View style={cardStyles.rightColumn}>
-            <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
-              <SpringAnimatedText
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  isRead &&
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
+        <BaseRow
+          {...otherProps}
+          left={
+            ownerName ? (
+              <Avatar
+                isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
+                linkURL=""
+                small
+                style={cardStyles.avatar}
+                username={ownerName}
+              />
+            ) : isPrivate ? (
+              <ThemedIcon color="orange" name="lock" size={smallAvatarSize} />
+            ) : null
+          }
+          right={
+            <View style={cardRowStyles.mainContentContainer}>
+              <Link
+                enableTextWrapper
+                href={fixedURL}
+                textProps={{
+                  color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
+                  // color: 'foregroundColor',
+                  numberOfLines: 1,
+                  style: [
+                    cardStyles.normalText,
+                    bold && cardStyles.boldText,
+                    // isRead && { fontWeight: undefined },
+                  ],
+                }}
               >
-                <SpringAnimatedText numberOfLines={1}>
-                  <SpringAnimatedIcon
-                    name="tag"
-                    size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    ]}
-                  />{' '}
-                </SpringAnimatedText>
-                {name || tagName}
-              </SpringAnimatedText>
-            </Link>
-          </View>
-        </View>
+                <>
+                  {!hideIcon && (
+                    <>
+                      <ThemedIcon
+                        name="tag"
+                        size={13}
+                        style={[cardStyles.normalText, cardStyles.icon]}
+                      />{' '}
+                    </>
+                  )}
+
+                  {name || tagName}
+                </>
+              </Link>
+            </View>
+          }
+          viewMode={viewMode}
+        />
       )}
 
       {!!(body && body !== name && body !== tagName) && (
-        <View style={cardRowStyles.container}>
-          <View
-            style={[
-              cardStyles.leftColumn,
-              smallLeftColumn
-                ? cardStyles.leftColumn__small
-                : cardStyles.leftColumn__big,
-              cardStyles.leftColumnAlignTop,
-            ]}
-          >
-            <Avatar
-              avatarUrl={avatarUrl}
-              isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
-              linkURL={userLinkURL}
-              small
-              style={cardStyles.avatar}
-              username={username}
-            />
-          </View>
-
-          <View style={cardStyles.rightColumn}>
-            <Link href={fixedURL} style={cardRowStyles.mainContentContainer}>
-              <SpringAnimatedText
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  isRead &&
-                    getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                <SpringAnimatedText numberOfLines={1}>
-                  <SpringAnimatedIcon
-                    name="megaphone"
-                    size={13}
-                    style={[
-                      getCardStylesForTheme(springAnimatedTheme).normalText,
-                      getCardStylesForTheme(springAnimatedTheme).icon,
-                      isRead &&
-                        getCardStylesForTheme(springAnimatedTheme).mutedText,
-                    ]}
-                  />{' '}
-                </SpringAnimatedText>
-                {body}
-              </SpringAnimatedText>
-            </Link>
-          </View>
-        </View>
+        <CommentRow
+          avatarUrl={avatarUrl}
+          body={body}
+          isRead={isRead}
+          leftContent="avatar"
+          url={fixedURL}
+          userLinkURL={userLinkURL}
+          username={username}
+          viewMode={viewMode}
+          withTopMargin
+        />
       )}
     </View>
   )

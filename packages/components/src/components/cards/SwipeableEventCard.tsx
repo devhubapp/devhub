@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { SwipeableRow } from '../../libs/swipeable'
-import * as colors from '../../styles/colors'
 import { useTheme } from '../context/ThemeContext'
 import { EventCard, EventCardProps } from './EventCard'
 
@@ -22,9 +21,9 @@ export function SwipeableEventCard(props: SwipeableEventCardProps) {
     <SwipeableRow
       leftActions={[
         {
-          color: colors.blue,
-          icon: 'isRead',
-          key: 'isRead',
+          color: theme.blue,
+          icon: 'mail-read',
+          key: 'read',
           label: 'Read',
           onPress: onMarkAsRead,
           type: 'FULL',

@@ -2,10 +2,8 @@ import React, { useCallback, useEffect, useRef } from 'react'
 
 import {
   ActivityColumnSubscription,
-  Column,
-  ColumnSubscription,
-  constants,
   EnhancedGitHubEvent,
+  getDefaultPaginationPerPage,
   getOlderEventDate,
   Omit,
 } from '@devhub/core'
@@ -27,45 +25,41 @@ import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
   | 'errorMessage'
-  | 'events'
   | 'fetchNextPage'
+  | 'items'
   | 'lastFetchedAt'
   | 'loadState'
   | 'refresh'
-> & {
-  column: Column
-  subscriptions: ColumnSubscription[]
-}
+>
 
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
-    const { column } = props
+    const { cardViewMode, column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
 
     // TODO: Support multiple subscriptions per column.
-    const firstSubscription = useReduxState(
-      state =>
-        selectors.subscriptionSelector(state, column.subscriptionIds[0]) as
-          | ActivityColumnSubscription
-          | undefined,
-    )
+    const mainSubscription = useReduxState(
+      useCallback(
+        state => selectors.columnSubscriptionSelector(state, column.id),
+        [column.id],
+      ),
+    ) as ActivityColumnSubscription | undefined
 
-    const data = (firstSubscription && firstSubscription.data) || {}
+    const data = (mainSubscription && mainSubscription.data) || {}
 
     const isNotFound = (data.errorMessage || '')
       .toLowerCase()
       .includes('not found')
 
     const subscriptionOwnerOrOrg =
-      (firstSubscription &&
-        firstSubscription.params &&
-        (('owner' in firstSubscription.params &&
-          firstSubscription.params.owner) ||
-          ('org' in firstSubscription.params &&
-            firstSubscription.params.org))) ||
+      (mainSubscription &&
+        mainSubscription.params &&
+        (('owner' in mainSubscription.params &&
+          mainSubscription.params.owner) ||
+          ('org' in mainSubscription.params && mainSubscription.params.org))) ||
       undefined
 
     const ownerResponse = useGitHubAPI(
@@ -94,13 +88,17 @@ export const EventCardsContainer = React.memo(
     )
 
     const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(),
+      selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode !== 'compact',
+      ),
     )
 
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector()
-    }, column.subscriptionIds)
+      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
+        cardViewMode !== 'compact',
+      )
+    }, [cardViewMode, ...column.subscriptionIds])
 
     const allItems = useReduxState(
       useCallback(
@@ -127,18 +125,13 @@ export const EventCardsContainer = React.memo(
       ),
     ) as EnhancedGitHubEvent[]
 
-    const canFetchMoreRef = useRef(false)
+    const clearedAt = column.filters && column.filters.clearedAt
+    const olderDate = getOlderEventDate(allItems)
 
-    useEffect(() => {
-      canFetchMoreRef.current = (() => {
-        const clearedAt = column.filters && column.filters.clearedAt
-        const olderDate = getOlderEventDate(allItems)
-
-        if (clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate)))
-          return false
-        return !!data.canFetchMore
-      })()
-    }, [allItems, column.filters, data.canFetchMore])
+    const canFetchMore =
+      clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
+        ? false
+        : !!data.canFetchMore
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
@@ -146,8 +139,9 @@ export const EventCardsContainer = React.memo(
           columnId: column.id,
           params: {
             page: page || 1,
-            perPage: constants.DEFAULT_PAGINATION_PER_PAGE,
+            perPage: getDefaultPaginationPerPage(column.type),
           },
+          replaceAllItems: false,
         })
       },
       [fetchColumnSubscriptionRequest, column.id],
@@ -156,7 +150,7 @@ export const EventCardsContainer = React.memo(
     const fetchNextPage = useCallback(() => {
       const size = allItems.length
 
-      const perPage = constants.DEFAULT_PAGINATION_PER_PAGE
+      const perPage = getDefaultPaginationPerPage(column.type)
       const currentPage = Math.ceil(size / perPage)
 
       const nextPage = (currentPage || 0) + 1
@@ -167,7 +161,7 @@ export const EventCardsContainer = React.memo(
       fetchData()
     }, [fetchData])
 
-    if (!firstSubscription) return null
+    if (!mainSubscription) return null
 
     if (!(appToken && githubOAuthToken)) {
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
@@ -205,16 +199,16 @@ export const EventCardsContainer = React.memo(
                   analyticsLabel="setup_github_app_from_column"
                   children="Install GitHub App"
                   disabled={
-                    firstSubscription.data.loadState === 'loading' ||
-                    firstSubscription.data.loadState === 'loading_first'
+                    mainSubscription.data.loadState === 'loading' ||
+                    mainSubscription.data.loadState === 'loading_first'
                   }
                   href={getGitHubAppInstallUri({
                     suggestedTargetId: ownerResponse.data.id,
                   })}
                   loading={
                     installationsLoadState === 'loading' ||
-                    firstSubscription.data.loadState === 'loading' ||
-                    firstSubscription.data.loadState === 'loading_first'
+                    mainSubscription.data.loadState === 'loading' ||
+                    mainSubscription.data.loadState === 'loading_first'
                   }
                   openOnNewTab={false}
                 />
@@ -250,14 +244,14 @@ export const EventCardsContainer = React.memo(
                 analyticsLabel="setup_github_app_from_user_repo_column"
                 children="Install GitHub App"
                 disabled={
-                  firstSubscription.data.loadState === 'loading' ||
-                  firstSubscription.data.loadState === 'loading_first'
+                  mainSubscription.data.loadState === 'loading' ||
+                  mainSubscription.data.loadState === 'loading_first'
                 }
                 href={getGitHubAppInstallUri()}
                 loading={
                   installationsLoadState === 'loading' ||
-                  firstSubscription.data.loadState === 'loading' ||
-                  firstSubscription.data.loadState === 'loading_first'
+                  mainSubscription.data.loadState === 'loading' ||
+                  mainSubscription.data.loadState === 'loading_first'
                 }
                 openOnNewTab={false}
               />
@@ -272,17 +266,19 @@ export const EventCardsContainer = React.memo(
 
     return (
       <EventCards
-        {...props}
+        {...otherProps}
         key={`event-cards-${column.id}`}
-        errorMessage={firstSubscription.data.errorMessage || ''}
-        fetchNextPage={canFetchMoreRef.current ? fetchNextPage : undefined}
-        lastFetchedAt={firstSubscription.data.lastFetchedAt}
+        cardViewMode={cardViewMode}
+        column={column}
+        errorMessage={mainSubscription.data.errorMessage || ''}
+        fetchNextPage={canFetchMore ? fetchNextPage : undefined}
+        items={filteredItems}
+        lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={
           installationsLoadState === 'loading' && !filteredItems.length
             ? 'loading_first'
-            : firstSubscription.data.loadState || 'not_loaded'
+            : mainSubscription.data.loadState || 'not_loaded'
         }
-        events={filteredItems}
         refresh={refresh}
       />
     )

@@ -7,13 +7,26 @@ export interface EmitterTypes {
   FOCUS_ON_COLUMN: {
     animated?: boolean
     columnId: string
-    columnIndex: number
     focusOnVisibleItem?: boolean
     highlight?: boolean
     scrollTo?: boolean
   }
-  SCROLL_DOWN_COLUMN: { columnId: string }
-  SCROLL_UP_COLUMN: { columnId: string }
+  FOCUS_ON_PREVIOUS_COLUMN: {
+    animated?: boolean
+    focusOnVisibleItem?: boolean
+    highlight?: boolean
+    scrollTo?: boolean
+  }
+  FOCUS_ON_NEXT_COLUMN: {
+    animated?: boolean
+    focusOnVisibleItem?: boolean
+    highlight?: boolean
+    scrollTo?: boolean
+  }
+  PRESSED_KEYBOARD_SHORTCUT: { keys: string[] }
+  SCROLL_DOWN_COLUMN: { columnId: string; columnIndex: number }
+  SCROLL_UP_COLUMN: { columnId: string; columnIndex: number }
+  TOGGLE_COLUMN_FILTERS: { columnId: string }
 }
 
 const _emitter = new EventEmitter()

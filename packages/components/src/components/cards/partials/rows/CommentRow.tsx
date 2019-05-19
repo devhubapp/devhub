@@ -1,106 +1,111 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
-import { Platform } from '../../../../libs/platform'
+import { Omit, stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
+import { smallAvatarSize } from '../../../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import {
-  SpringAnimatedText,
-  SpringAnimatedTextProps,
-} from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link, LinkProps } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { ThemedTextProps } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface CommentRowProps {
+export interface CommentRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   addBottomAnchor?: boolean
   analyticsLabel?: LinkProps['analyticsLabel']
   avatarUrl: string | undefined
   body: string
   isRead: boolean
+  leftContent: 'avatar' | 'icon' | 'none'
+  maxLength?: number | undefined
   numberOfLines?: number
-  smallLeftColumn?: boolean
-  textStyle?: SpringAnimatedTextProps['style']
+  textStyle?: ThemedTextProps['style']
   url?: string
   userLinkURL: string | undefined
   username: string | undefined
 }
 
 export const CommentRow = React.memo((props: CommentRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     addBottomAnchor,
     analyticsLabel,
     avatarUrl,
     body: _body,
+    leftContent,
     isRead,
-    numberOfLines = 2,
-    smallLeftColumn,
+    maxLength = props.viewMode === 'compact' ? 60 : 120,
+    numberOfLines = props.numberOfLines ||
+      (props.viewMode === 'compact' ? 1 : 2),
     textStyle,
     url,
     userLinkURL,
     username,
+    viewMode,
+    ...otherProps
   } = props
 
-  const body = trimNewLinesAndSpaces(
-    stripMarkdown(`${_body || ''}`),
-    Platform.select({ default: 400, web: 150 }),
-  )
+  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), maxLength)
   if (!body) return null
 
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-          cardStyles.leftColumnAlignTop,
-        ]}
-      >
-        <Avatar
-          avatarUrl={avatarUrl}
-          isBot={isBot}
-          linkURL={userLinkURL}
-          small
-          style={cardStyles.avatar}
-          username={username}
-        />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
-        <Link
-          analyticsLabel={analyticsLabel}
-          href={fixURL(url, { addBottomAnchor })}
-          style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            numberOfLines={numberOfLines}
-            style={[
-              getCardStylesForTheme(springAnimatedTheme).commentText,
-              textStyle,
-              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
+    <BaseRow
+      {...otherProps}
+      left={
+        leftContent === 'icon' ? (
+          <ThemedIcon
+            color="foregroundColorMuted60"
+            name="comment"
+            size={smallAvatarSize}
+            style={[{ alignSelf: 'flex-end' }, cardStyles.normalText]}
+          />
+        ) : leftContent === 'avatar' ? (
+          <Avatar
+            avatarUrl={avatarUrl}
+            isBot={isBot}
+            linkURL={userLinkURL}
+            small
+            style={cardStyles.avatar}
+            username={username}
+          />
+        ) : null
+      }
+      right={
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link
+            analyticsLabel={analyticsLabel}
+            enableTextWrapper
+            href={fixURL(url, { addBottomAnchor })}
+            textProps={{
+              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
+              // color: 'foregroundColor',
+              numberOfLines,
+              style: [cardStyles.commentText, textStyle],
+            }}
+            tooltip={_body}
           >
             {parseTextWithEmojisToReactComponents(body, {
-              key: `comment-text-${body}`,
+              key: `comment-${url}`,
               imageProps: {
                 style: {
-                  width: 14,
-                  height: 14,
+                  marginHorizontal: 2,
+                  width: 12,
+                  height: 12,
                 },
               },
             })}
-          </SpringAnimatedText>
-        </Link>
-      </View>
-    </View>
+          </Link>
+        </View>
+      }
+      viewMode={viewMode}
+    />
   )
 })

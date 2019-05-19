@@ -1,45 +1,98 @@
+import _ from 'lodash'
+
 import {
-  getCommitIconAndColor,
   GitHubIcon,
-  GitHubIssue,
-  GitHubNotification,
+  GitHubItemSubjectType,
   GitHubPullRequest,
+  GitHubStateType,
+  isDraft,
   isPullRequest,
+  ThemeColors,
 } from '@devhub/core'
-import { bugsnag } from '../../../libs/bugsnag'
-import * as colors from '../../../styles/colors'
+
+export const issueOrPullRequestStateTypes: GitHubStateType[] = [
+  'open',
+  'closed',
+  'merged',
+]
+
+export function getCommitIconAndColor(): {
+  icon: GitHubIcon
+  color?: keyof ThemeColors
+  tooltip: string
+} {
+  return { icon: 'git-commit', color: 'brown', tooltip: 'Commit' }
+}
+
+export function getReleaseIconAndColor(): {
+  icon: GitHubIcon
+  color?: keyof ThemeColors
+  tooltip: string
+} {
+  return {
+    icon: 'rocket',
+    color: 'pink',
+    tooltip: 'Release',
+  }
+}
+
+export function getTagIconAndColor(): {
+  icon: GitHubIcon
+  color?: keyof ThemeColors
+  tooltip: string
+} {
+  return {
+    icon: 'tag',
+    color: 'gray',
+    tooltip: 'Tag',
+  }
+}
 
 export function getPullRequestIconAndColor(pullRequest: {
   draft: GitHubPullRequest['draft']
   state: GitHubPullRequest['state']
+  merged: GitHubPullRequest['merged'] | undefined
   merged_at: GitHubPullRequest['merged_at'] | undefined
-}): { icon: GitHubIcon; color?: string } {
-  const draft = pullRequest.draft
-  const merged = pullRequest.merged_at
+  mergeable_state: GitHubPullRequest['mergeable_state'] | undefined
+}): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
+  const draft = isDraft(pullRequest)
+  const merged = !!(pullRequest.merged || pullRequest.merged_at)
   const state = merged ? 'merged' : pullRequest.state
 
   switch (state) {
     case 'open':
       return {
         icon: 'git-pull-request',
-        color: draft ? colors.gray : colors.green,
+        color: draft ? 'gray' : 'green',
+        tooltip: `Open${draft ? ' draft' : ''} pull request`,
       }
 
     case 'closed':
-      return { icon: 'git-pull-request', color: colors.red }
+      return {
+        icon: 'git-pull-request',
+        color: 'lightRed',
+        tooltip: `Closed${draft ? ' draft' : ''} pull request`,
+      }
 
     case 'merged':
-      return { icon: 'git-merge', color: colors.purple }
+      return {
+        icon: 'git-merge',
+        color: 'purple',
+        tooltip: `Merged pull request`,
+      }
 
     default:
-      return { icon: 'git-pull-request' }
+      return {
+        icon: 'git-pull-request',
+        tooltip: 'Pull Request',
+      }
   }
 }
 
 export function getIssueIconAndColor(issue: {
   state?: GitHubPullRequest['state']
   merged_at?: GitHubPullRequest['merged_at']
-}): { icon: GitHubIcon; color?: string } {
+}): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
   const { state } = issue
 
   if (isPullRequest(issue)) {
@@ -48,41 +101,100 @@ export function getIssueIconAndColor(issue: {
 
   switch (state) {
     case 'open':
-      return { icon: 'issue-opened', color: colors.green }
+      return {
+        icon: 'issue-opened',
+        color: 'green',
+        tooltip: `Open issue`,
+      }
 
     case 'closed':
-      return { icon: 'issue-closed', color: colors.red }
+      return {
+        icon: 'issue-closed',
+        color: 'lightRed',
+        tooltip: 'Closed issue',
+      }
 
     default:
-      return { icon: 'issue-opened' }
+      return { icon: 'issue-opened', tooltip: 'Issue' }
   }
 }
 
-export function getNotificationIconAndColor(
-  notification: GitHubNotification,
-  payload?: GitHubIssue | GitHubPullRequest | undefined,
-): { icon: GitHubIcon; color?: string } {
-  const { subject } = notification
-  const { type } = subject
+export function getStateTypeMetadata<T extends GitHubStateType>(
+  state: T,
+): {
+  color: keyof ThemeColors
+  label: string
+  state: T
+} {
+  switch (state as GitHubStateType) {
+    case 'open': {
+      return {
+        color: 'green',
+        label: 'Open',
+        state,
+      }
+    }
 
-  switch (type) {
-    case 'Commit':
-      return getCommitIconAndColor()
-    case 'Issue':
-      return getIssueIconAndColor(payload as GitHubIssue)
-    case 'PullRequest':
-      return getPullRequestIconAndColor(payload as GitHubPullRequest)
-    case 'Release':
-      return { icon: 'tag' }
-    case 'RepositoryInvitation':
-      return { icon: 'mail' }
-    case 'RepositoryVulnerabilityAlert':
-      return { icon: 'alert', color: colors.yellow }
+    case 'closed': {
+      return {
+        color: 'lightRed',
+        label: 'Closed',
+        state,
+      }
+    }
+
+    case 'merged': {
+      return {
+        color: 'purple',
+        label: 'Merged',
+        state,
+      }
+    }
+
     default: {
-      const message = `Unknown event type: ${(event as any).type}`
-      bugsnag.notify(new Error(message))
-      console.error(message)
-      return { icon: 'bell' }
+      return {
+        color: 'primaryBackgroundColor',
+        label: _.startCase(state),
+        state,
+      }
+    }
+  }
+}
+
+export function getSubjectTypeMetadata<T extends GitHubItemSubjectType>(
+  subjectType: T,
+): {
+  color?: keyof ThemeColors
+  label: string
+  subjectType: T
+} {
+  switch (subjectType as GitHubItemSubjectType) {
+    case 'PullRequestReview': {
+      return {
+        label: 'Pull Request Review',
+        subjectType,
+      }
+    }
+
+    case 'RepositoryInvitation': {
+      return {
+        label: 'Invitation',
+        subjectType,
+      }
+    }
+
+    case 'RepositoryVulnerabilityAlert': {
+      return {
+        label: 'Security Alert',
+        subjectType,
+      }
+    }
+
+    default: {
+      return {
+        label: _.startCase(subjectType),
+        subjectType,
+      }
     }
   }
 }

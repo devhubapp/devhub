@@ -2,20 +2,18 @@ import React, { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
 import { constants, GitHubAppType } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { confirm } from '../../libs/confirm'
 import { executeOAuth } from '../../libs/oauth'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
-import * as colors from '../../styles/colors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
@@ -23,6 +21,9 @@ import { ButtonLink } from '../common/ButtonLink'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
 
 export interface AdvancedSettingsModalProps {
   showBackButton: boolean
@@ -34,7 +35,7 @@ export const AdvancedSettingsModal = React.memo(
 
     const { sizename } = useAppLayout()
 
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+    const theme = useTheme()
 
     const [executingOAuth, setExecutingOAuth] = useState<GitHubAppType | null>(
       null,
@@ -50,8 +51,9 @@ export const AdvancedSettingsModal = React.memo(
     const isDeletingAccount = useReduxState(selectors.isDeletingAccountSelector)
     const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
 
-    const loginRequest = useReduxAction(actions.loginRequest)
     const deleteAccountRequest = useReduxAction(actions.deleteAccountRequest)
+    const loginRequest = useReduxAction(actions.loginRequest)
+    const pushModal = useReduxAction(actions.pushModal)
 
     async function startOAuth(githubAppType: GitHubAppType) {
       try {
@@ -90,11 +92,38 @@ export const AdvancedSettingsModal = React.memo(
         title="Advanced settings"
       >
         <ScrollView
-          style={{ flex: 1 }}
+          style={sharedStyles.flex}
           contentContainerStyle={{
             flexGrow: 1,
           }}
         >
+          {Platform.realOS === 'web' && (
+            <SubHeader title="Keyboard shortcuts">
+              <>
+                <Spacer flex={1} />
+
+                <Button
+                  analyticsLabel="show_keyboard_shortcuts"
+                  contentContainerStyle={{
+                    width: 52,
+                    paddingHorizontal: contentPadding,
+                  }}
+                  onPress={() => pushModal({ name: 'KEYBOARD_SHORTCUTS' })}
+                  size={32}
+                >
+                  <ThemedIcon
+                    color="foregroundColor"
+                    name="keyboard"
+                    size={16}
+                    style={{
+                      color: theme.foregroundColor,
+                    }}
+                  />
+                </Button>
+              </>
+            </SubHeader>
+          )}
+
           <View>
             <View>
               <SubHeader title="Manage OAuth access" />
@@ -106,14 +135,9 @@ export const AdvancedSettingsModal = React.memo(
                   paddingHorizontal: contentPadding,
                 }}
               >
-                <SpringAnimatedText
-                  style={{
-                    flex: 1,
-                    color: springAnimatedTheme.foregroundColor,
-                  }}
-                >
+                <ThemedText color="foregroundColor" style={sharedStyles.flex}>
                   GitHub OAuth
-                </SpringAnimatedText>
+                </ThemedText>
 
                 <Spacer flex={1} minWidth={contentPadding / 2} />
 
@@ -128,11 +152,7 @@ export const AdvancedSettingsModal = React.memo(
                     openOnNewTab
                     size={32}
                   >
-                    <SpringAnimatedIcon
-                      name="gear"
-                      size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
-                    />
+                    <ThemedIcon color="foregroundColor" name="gear" size={16} />
                   </ButtonLink>
                 ) : (
                   <Button
@@ -149,10 +169,10 @@ export const AdvancedSettingsModal = React.memo(
                     onPress={() => startOAuth('oauth')}
                     size={32}
                   >
-                    <SpringAnimatedIcon
+                    <ThemedIcon
+                      color="foregroundColor"
                       name={githubOAuthToken ? 'sync' : 'plus'}
                       size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
                     />
                   </Button>
                 )}
@@ -167,14 +187,9 @@ export const AdvancedSettingsModal = React.memo(
                   paddingHorizontal: contentPadding,
                 }}
               >
-                <SpringAnimatedText
-                  style={{
-                    flex: 1,
-                    color: springAnimatedTheme.foregroundColor,
-                  }}
-                >
+                <ThemedText color="foregroundColor" style={sharedStyles.flex}>
                   GitHub App
-                </SpringAnimatedText>
+                </ThemedText>
 
                 <Spacer flex={1} minWidth={contentPadding / 2} />
 
@@ -189,11 +204,7 @@ export const AdvancedSettingsModal = React.memo(
                     openOnNewTab
                     size={32}
                   >
-                    <SpringAnimatedIcon
-                      name="gear"
-                      size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
-                    />
+                    <ThemedIcon color="foregroundColor" name="gear" size={16} />
                   </ButtonLink>
                 ) : (
                   <Button
@@ -212,10 +223,10 @@ export const AdvancedSettingsModal = React.memo(
                     onPress={() => startOAuth('app')}
                     size={32}
                   >
-                    <SpringAnimatedIcon
+                    <ThemedIcon
+                      color="foregroundColor"
                       name={githubAppToken ? 'sync' : 'plus'}
                       size={16}
-                      style={{ color: springAnimatedTheme.foregroundColor }}
                     />
                   </Button>
                 )}
@@ -249,12 +260,10 @@ export const AdvancedSettingsModal = React.memo(
                           openOnNewTab={false}
                           size={32}
                         >
-                          <SpringAnimatedIcon
+                          <ThemedIcon
+                            color="foregroundColor"
                             name="plus"
                             size={16}
-                            style={{
-                              color: springAnimatedTheme.foregroundColor,
-                            }}
                           />
                         </ButtonLink>
                       )}
@@ -264,6 +273,7 @@ export const AdvancedSettingsModal = React.memo(
                   {installations.map(
                     (installation, index) =>
                       !!(
+                        installation &&
                         installation.account &&
                         installation.account.login &&
                         installation.htmlUrl
@@ -286,15 +296,17 @@ export const AdvancedSettingsModal = React.memo(
                             size={24}
                           />
 
-                          <SpringAnimatedText
-                            style={{
-                              flex: 1,
-                              paddingHorizontal: contentPadding / 2,
-                              color: springAnimatedTheme.foregroundColor,
-                            }}
+                          <ThemedText
+                            color="foregroundColor"
+                            style={[
+                              sharedStyles.flex,
+                              {
+                                paddingHorizontal: contentPadding / 2,
+                              },
+                            ]}
                           >
                             {installation.account.login}
-                          </SpringAnimatedText>
+                          </ThemedText>
 
                           <ButtonLink
                             analyticsLabel="open_installation"
@@ -306,12 +318,10 @@ export const AdvancedSettingsModal = React.memo(
                             openOnNewTab
                             size={32}
                           >
-                            <SpringAnimatedIcon
+                            <ThemedIcon
+                              color="foregroundColor"
                               name="gear"
                               size={16}
-                              style={{
-                                color: springAnimatedTheme.foregroundColor,
-                              }}
                             />
                           </ButtonLink>
                         </View>
@@ -333,7 +343,7 @@ export const AdvancedSettingsModal = React.memo(
               analyticsLabel=""
               disabled={isDeletingAccount || isLoggingIn}
               loading={isDeletingAccount}
-              hoverBackgroundColor={colors.red}
+              hoverBackgroundColor={theme.red}
               hoverForegroundColor="#FFFFFF"
               onPress={() =>
                 confirm(

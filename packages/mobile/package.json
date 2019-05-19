@@ -1,6 +1,6 @@
 {
   "name": "@devhub/mobile",
-  "version": "0.48.1",
+  "version": "0.81.0",
   "private": false,
   "scripts": {
     "clean": "cd .",
@@ -8,17 +8,17 @@
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package",
-    "start": "node ../../node_modules/react-native/local-cli/cli.js start",
+    "start": "node ../../node_modules/react-native/local-cli/cli.js start --projectRoot=../../",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
     "test": "jest",
     "tsc": "tsc -b",
     "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
-    "@devhub/components": "0.48.1",
+    "@devhub/components": "0.81.0",
     "metro-react-native-babel-preset": "0.53.1",
-    "react": "16.8.4",
-    "react-native": "0.59.1",
+    "react": "16.8.6",
+    "react-native": "0.59.8",
     "react-native-firebase": "5.2.3",
     "react-native-google-analytics-bridge": "7.1.0",
     "react-native-inappbrowser-reborn": "2.0.0",

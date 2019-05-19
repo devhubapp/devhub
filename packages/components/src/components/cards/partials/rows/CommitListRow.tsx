@@ -1,20 +1,24 @@
 import React from 'react'
 
-import { CommitRow } from './CommitRow'
+import { CommitRow, CommitRowProps } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
 
-import { GitHubPushedCommit } from '@devhub/core'
+import { GitHubPushedCommit, Omit } from '@devhub/core'
 
-export interface CommitListRowProps {
+export interface CommitListRowProps
+  extends Omit<
+    CommitRowProps,
+    'authorEmail' | 'authorName' | 'message' | 'showMoreItemsIndicator' | 'url'
+  > {
   commits: GitHubPushedCommit[]
   isRead: boolean
   maxHeight?: number
-  smallLeftColumn?: boolean
 }
 
 export const CommitListRow = React.memo((props: CommitListRowProps) => {
   const renderItem: RenderItem<GitHubPushedCommit> = ({
     showMoreItemsIndicator,
+    index,
     item: commit,
   }) => {
     if (!(commit && commit.sha && commit.message)) return null
@@ -28,6 +32,7 @@ export const CommitListRow = React.memo((props: CommitListRowProps) => {
         message={commit.message}
         showMoreItemsIndicator={showMoreItemsIndicator}
         url={commit.url}
+        withTopMargin={index === 0 ? props.withTopMargin : true}
       />
     )
   }

@@ -1,25 +1,26 @@
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { constants } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { openAppStore } from '../../utils/helpers/shared'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
-import { ButtonLink } from '../common/ButtonLink'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { AppViewModePreference } from '../widgets/AppViewModePreference'
 import { ThemePreference } from '../widgets/ThemePreference'
 
 export interface SettingsModalProps {
@@ -30,11 +31,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
-
   const logout = useReduxAction(actions.logout)
   const pushModal = useReduxAction(actions.pushModal)
 
@@ -46,7 +43,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       right={
         sizename === '1-small' && username ? (
           <Avatar
-            backgroundColorLoading={null}
+            backgroundColorLoading=""
             shape="circle"
             size={28}
             username={username}
@@ -58,12 +55,15 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       showBackButton={showBackButton}
       title="Preferences"
     >
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+      <FullHeightScrollView
+        alwaysBounceVertical
+        bounces
+        style={sharedStyles.flex}
       >
+        <AppViewModePreference>
+          <Spacer height={contentPadding} />
+        </AppViewModePreference>
+
         <ThemePreference />
 
         {/* <Spacer height={contentPadding * 2} />
@@ -95,13 +95,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 onPress={() => openAppStore()}
                 size={32}
               >
-                <SpringAnimatedIcon
-                  name="star"
-                  size={16}
-                  style={{
-                    color: springAnimatedTheme.foregroundColor,
-                  }}
-                />
+                <ThemedIcon color="foregroundColor" name="star" size={16} />
               </Button>
             </SubHeader>
           </>
@@ -112,21 +106,52 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             <Spacer flex={1} />
 
             <Link
+              analyticsCategory="preferences_link"
               analyticsLabel="follow_on_twitter_brunolemos"
               href="https://twitter.com/brunolemos"
               openOnNewTab
             >
-              <Avatar disableLink username="brunolemos" size={24} />
+              <Avatar
+                disableLink
+                username="brunolemos"
+                size={24}
+                tooltip="@brunolemos on Twitter"
+              />
             </Link>
 
             <Spacer width={contentPadding} />
 
             <Link
+              analyticsCategory="preferences_link"
               analyticsLabel="follow_on_twitter_devhub"
               href="https://twitter.com/devhub_app"
               openOnNewTab
             >
-              <Avatar disableLink username="devhubapp" size={24} />
+              <Avatar
+                disableLink
+                username="devhubapp"
+                size={24}
+                tooltip="@devhub_app on Twitter"
+              />
+            </Link>
+          </SubHeader>
+        </View>
+
+        <View>
+          <SubHeader title="Join Slack Community">
+            <Spacer flex={1} />
+
+            <Link
+              analyticsCategory="preferences_link"
+              analyticsLabel="join_slack_community"
+              href={constants.SLACK_INVITE_LINK}
+              openOnNewTab
+            >
+              <Avatar
+                avatarUrl="https://user-images.githubusercontent.com/619186/57062615-133ae880-6c97-11e9-915d-ae40de664b12.png"
+                disableLink
+                size={24}
+              />
             </Link>
           </SubHeader>
         </View>
@@ -136,7 +161,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         <View style={{ padding: contentPadding }}>
           <AppVersion />
 
-          <Spacer height={contentPadding} />
+          <Spacer height={contentPadding / 2} />
 
           <Button
             key="adbanced-button"
@@ -158,7 +183,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             Logout
           </Button>
         </View>
-      </ScrollView>
+      </FullHeightScrollView>
     </ModalColumn>
   )
 })

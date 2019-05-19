@@ -1,54 +1,75 @@
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
+  CardViewMode,
   EnhancedGitHubNotification,
+  getDateSmallText,
+  getFullDateText,
   getGitHubURLForRepo,
   getGitHubURLForRepoInvitation,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestNumberFromUrl,
+  getNotificationIconAndColor,
   getOwnerAndRepo,
   getUserAvatarByUsername,
+  GitHubLabel,
   GitHubNotificationReason,
   isItemRead,
   isNotificationPrivate,
-  trimNewLinesAndSpaces,
 } from '@devhub/core'
+import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
-import * as colors from '../../styles/colors'
-import { contentPadding } from '../../styles/variables'
+import { sharedStyles } from '../../styles/shared'
 import {
-  getIssueIconAndColor,
-  getNotificationIconAndColor,
-  getPullRequestIconAndColor,
-} from '../../utils/helpers/github/shared'
+  columnHeaderItemContentSize,
+  contentPadding,
+  smallerTextSize,
+} from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
-import { findNode } from '../../utils/helpers/shared'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
+import { tryFocus } from '../../utils/helpers/shared'
+import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
+import { Avatar } from '../common/Avatar'
+import { BookmarkButton } from '../common/BookmarkButton'
+import { IntervalRefresh } from '../common/IntervalRefresh'
+import { Spacer } from '../common/Spacer'
+import { ToggleReadButton } from '../common/ToggleReadButton'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
+import { ThemedView } from '../themed/ThemedView'
+import { CardActions } from './partials/CardActions'
+import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
+import { CardFocusBorder } from './partials/CardFocusBorder'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
+import { LabelsView } from './partials/rows/LabelsView'
+import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
+import { topCardMargin } from './partials/rows/styles'
+import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface NotificationCardProps {
-  isSelected?: boolean
+  cardViewMode: CardViewMode
+  enableCompactLabels: boolean
+  isFocused: boolean
   notification: EnhancedGitHubNotification
-  onlyOneRepository?: boolean
-  repoIsKnown?: boolean
+  repoIsKnown: boolean
+  swipeable: boolean
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: contentPadding,
-  },
-})
-
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const { notification, onlyOneRepository, isSelected } = props
+  const {
+    cardViewMode,
+    enableCompactLabels,
+    isFocused,
+    notification,
+    repoIsKnown,
+    swipeable,
+  } = props
 
   const repoFullName =
     (notification &&
@@ -58,7 +79,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(repoFullName)
 
   const itemRef = useRef<View>(null)
-  const springAnimatedTheme = useSpringAnimatedTheme()
+
+  const repoTableColumnWidth = useRepoTableColumnWidth()
 
   /*
   const hasPrivateAccess = useReduxState(state =>
@@ -71,11 +93,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   */
 
   useEffect(() => {
-    if (Platform.OS === 'web' && isSelected && itemRef.current) {
-      const node = findNode(itemRef.current)
-      node.focus()
+    if (Platform.OS === 'web' && isFocused && itemRef.current) {
+      tryFocus(itemRef.current)
     }
-  }, [isSelected])
+  }, [isFocused])
 
   if (!notification) return null
 
@@ -94,19 +115,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
 
-  const isPrivateAndCantSee = !!(
+  const isPrivateAndCantSee =
     isPrivate &&
     // !hasPrivateAccess &&
     !notification.enhanced
-  )
-
-  const title = trimNewLinesAndSpaces(subject.title)
-
-  const subjectType = subject.type || ''
 
   const commit =
     notification.commit ||
-    (subjectType === 'Commit' && {
+    (subject.type === 'Commit' && {
       author: { avatar_url: '', login: '', html_url: '' },
       commit: {
         author: {
@@ -122,38 +138,42 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const issue =
     notification.issue ||
-    (subjectType === 'Issue' && {
+    (subject.type === 'Issue' && {
       id: undefined,
       body: undefined,
       comments: undefined,
       created_at: undefined,
-      labels: [],
+      labels: [] as GitHubLabel[],
+      number: undefined,
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
+      html_url: '',
       user: { avatar_url: '', login: '', html_url: '' },
     }) ||
     null
 
   const pullRequest =
     notification.pullRequest ||
-    (subjectType === 'PullRequest' && {
+    (subject.type === 'PullRequest' && {
       id: undefined,
       body: undefined,
       created_at: undefined,
       comments: undefined,
-      labels: [],
+      labels: [] as GitHubLabel[],
       draft: false,
+      number: undefined,
       state: undefined,
       title: subject.title,
       url: subject.latest_comment_url || subject.url,
+      html_url: '',
       user: { avatar_url: '', login: '', html_url: '' },
     }) ||
     null
 
   const release =
     notification.release ||
-    (subjectType === 'Release' && {
+    (subject.type === 'Release' && {
       id: undefined,
       author: { avatar_url: '', login: '', html_url: '' },
       body: '',
@@ -164,274 +184,562 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     }) ||
     null
 
-  const isRepoInvitation = subjectType === 'RepositoryInvitation'
-  const isVulnerabilityAlert = subjectType === 'RepositoryVulnerabilityAlert'
+  const issueOrPullRequest = issue || pullRequest
+  const createdAt = issueOrPullRequest && issueOrPullRequest.created_at
+
+  const isRepoInvitation = subject.type === 'RepositoryInvitation'
+  const isVulnerabilityAlert = subject.type === 'RepositoryVulnerabilityAlert'
 
   const cardIconDetails = getNotificationIconAndColor(notification, (issue ||
     pullRequest ||
     undefined) as any)
-  const cardIconName = isPrivateAndCantSee ? 'lock' : cardIconDetails.icon
-  const cardIconColor = isPrivateAndCantSee
-    ? colors.yellow
-    : cardIconDetails.color
+  const cardIconName = cardIconDetails.icon
+  const cardIconColor = cardIconDetails.color
 
-  const { icon: pullRequestIconName, color: pullRequestIconColor } = pullRequest
-    ? getPullRequestIconAndColor(pullRequest as any)
-    : { icon: undefined, color: undefined }
+  const issueOrPullRequestNumber = issueOrPullRequest
+    ? issueOrPullRequest.number ||
+      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
+    : undefined
 
-  const { icon: issueIconName, color: issueIconColor } = issue
-    ? getIssueIconAndColor(issue as any)
-    : { icon: undefined, color: undefined }
-
-  const issueOrPullRequestNumber =
-    issue || pullRequest
-      ? getIssueOrPullRequestNumberFromUrl((issue || pullRequest)!.url)
-      : undefined
-
-  // TODO: Show user actor + action text like activity events?
-  const actor = {
+  const repoAvatarDetails = {
     display_login: repoName,
     login: repoFullName,
     avatar_url: getUserAvatarByUsername(repoOwnerName || ''),
     html_url: repo.html_url || getGitHubURLForRepo(repoOwnerName!, repoName!),
   }
-  const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
 
-  const smallLeftColumn = false
+  const actor =
+    (comment && comment.user) ||
+    (commit && commit.author) ||
+    (release && release.author) ||
+    (issue && issue.user) ||
+    (pullRequest && pullRequest.user) ||
+    null
 
-  const backgroundThemeColor =
-    // (isSelected && 'backgroundColorLess2') ||
-    (isRead && 'backgroundColorDarker1') || 'backgroundColor'
+  const isBot = Boolean(
+    actor && actor.login && actor.login.indexOf('[bot]') >= 0,
+  )
+
+  const showCardActions = cardViewMode !== 'compact' && !swipeable
+
+  let withTopMargin = cardViewMode !== 'compact'
+  let withTopMarginCount = withTopMargin ? 1 : 0
+  function getWithTopMargin() {
+    const _withTopMargin = withTopMargin
+    withTopMargin = true
+    withTopMarginCount = withTopMarginCount + 1
+    return _withTopMargin
+  }
+
+  function renderContent() {
+    return (
+      <>
+        {/* {!!(
+          repoOwnerName &&
+          repoName &&
+          !repoIsKnown &&
+          cardViewMode === 'compact'
+        ) && (
+          <RepositoryRow
+            key={`notification-repo-row-${repo.id}`}
+            isRead={isRead}
+            ownerName={repoOwnerName}
+            repositoryName={repoName}
+            small
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )} */}
+
+        {!(commit || issue || pullRequest || release) && !!subject.title && (
+          <CommentRow
+            key={`notification-${id}-subject-title-row`}
+            avatarUrl=""
+            body={subject.title}
+            isRead={isRead}
+            leftContent="avatar"
+            userLinkURL=""
+            username=""
+            url={
+              isRepoInvitation && repoOwnerName && repoName
+                ? getGitHubURLForRepoInvitation(repoOwnerName, repoName)
+                : isVulnerabilityAlert && repoOwnerName && repoName
+                ? getGitHubURLForSecurityAlert(repoOwnerName, repoName)
+                : fixURL(subject.latest_comment_url || subject.url)
+            }
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {!!commit && (
+          <CommitRow
+            key={`notification-commit-row-${commit.url}`}
+            authorEmail={commit.commit.author.email}
+            authorName={commit.commit.author.name}
+            authorUsername={commit.author && commit.author.login}
+            bold
+            isPrivate={isPrivate}
+            isRead={isRead}
+            latestCommentUrl={subject.latest_comment_url}
+            message={commit.commit.message}
+            url={commit.url || commit.commit.url}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {!!issueOrPullRequest && (
+          <IssueOrPullRequestRow
+            key={`notification-issue-or-pr-row-${issueOrPullRequest.id}`}
+            addBottomAnchor={!comment}
+            avatarUrl={issueOrPullRequest.user.avatar_url}
+            backgroundThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { isRead })
+            }
+            body={issueOrPullRequest.body}
+            bold
+            commentsCount={
+              showCardActions ? undefined : issueOrPullRequest.comments
+            }
+            createdAt={issueOrPullRequest.created_at}
+            hideIcon
+            hideLabelText={false}
+            id={issueOrPullRequest.id}
+            inlineLabels={false}
+            isPrivate={isPrivate}
+            isRead={isRead}
+            issueOrPullRequestNumber={issueOrPullRequestNumber!}
+            labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
+            owner={repoOwnerName || ''}
+            repo={repoName || ''}
+            showBodyRow={
+              false
+              // !comment &&
+              // !!(
+              //   issueOrPullRequest &&
+              //   issueOrPullRequest.state === 'open' &&
+              //   issueOrPullRequest.body &&
+              //   !(
+              //     issueOrPullRequest.created_at &&
+              //     issueOrPullRequest.updated_at &&
+              //     new Date(issueOrPullRequest.updated_at).valueOf() -
+              //       new Date(issueOrPullRequest.created_at).valueOf() >=
+              //       1000 * 60 * 60 * 24
+              //   )
+              // )
+              //   ? true
+              //   : false
+            }
+            showCreationDetails={false}
+            title={issueOrPullRequest.title}
+            url={issueOrPullRequest.url}
+            userLinkURL={issueOrPullRequest.user.html_url || ''}
+            username={issueOrPullRequest.user.login || ''}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {!!release && (
+          <ReleaseRow
+            key={`notification-release-row-${repo.id}`}
+            avatarUrl={release.author.avatar_url}
+            body={release.body}
+            bold
+            hideIcon
+            isPrivate={isPrivate}
+            isRead={isRead}
+            name={release.name || ''}
+            ownerName={repoOwnerName || ''}
+            repositoryName={repoName || ''}
+            tagName={release.tag_name || ''}
+            url={release.url}
+            userLinkURL={release.author.html_url || ''}
+            username={release.author.login || ''}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {!!comment && (
+          <CommentRow
+            key={`notification-comment-row-${comment.id}`}
+            addBottomAnchor
+            avatarUrl={comment.user.avatar_url}
+            body={comment.body}
+            isRead={isRead}
+            leftContent="avatar"
+            url={comment.html_url}
+            userLinkURL={comment.user.html_url || ''}
+            username={comment.user.login}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+
+        {!!isPrivateAndCantSee && (
+          <PrivateNotificationRow
+            key={`private-notification-row-${notification.id}`}
+            isRead={isRead}
+            ownerId={
+              (notification.repository.owner &&
+                notification.repository.owner.id) ||
+              undefined
+            }
+            repoId={repo.id}
+            viewMode={cardViewMode}
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
+      </>
+    )
+  }
+
+  const Content = renderContent()
+
+  const isSingleRow = withTopMarginCount <= 1 && !release
+  const alignVertically = isSingleRow
+
+  if (cardViewMode === 'compact') {
+    return (
+      <ThemedView
+        key={`notification-card-${id}-compact-inner`}
+        ref={itemRef}
+        backgroundColor={theme =>
+          getCardBackgroundThemeColor(theme, { isRead })
+        }
+        style={[
+          cardStyles.compactContainer,
+          alignVertically && { alignItems: 'center' },
+        ]}
+      >
+        {!!isFocused && <CardFocusBorder />}
+
+        {/* <CenterGuide /> */}
+
+        {/* <View
+          style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
+        >
+          <Checkbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
+        </View>
+
+        <Spacer width={contentPadding} /> */}
+
+        <View style={cardStyles.compactItemFixedHeight}>
+          <BookmarkButton
+            isSaved={isSaved}
+            itemIds={[id]}
+            size={columnHeaderItemContentSize}
+          />
+        </View>
+
+        <Spacer
+          width={
+            spacingBetweenLeftAndRightColumn - columnHeaderItemContentSize / 4
+          }
+        />
+
+        {!repoIsKnown && (
+          <>
+            <View
+              style={[
+                cardStyles.compactItemFixedWidth,
+                cardStyles.compactItemFixedHeight,
+              ]}
+            >
+              <Avatar isBot={isBot} linkURL="" small username={repoOwnerName} />
+            </View>
+
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
+
+            <View
+              style={[
+                cardStyles.compactItemFixedMinHeight,
+                {
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  width: repoTableColumnWidth,
+                  overflow: 'hidden',
+                },
+              ]}
+            >
+              {!!(repoOwnerName && repoName) && (
+                <RepositoryRow
+                  key={`notification-repo-row-${repo.id}`}
+                  disableLeft
+                  hideOwner
+                  isRead={isRead}
+                  ownerName={repoOwnerName}
+                  repositoryName={repoName}
+                  rightContainerStyle={{
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                    width: repoTableColumnWidth,
+                  }}
+                  small
+                  viewMode={cardViewMode}
+                  withTopMargin={false}
+                />
+              )}
+            </View>
+
+            <Spacer width={spacingBetweenLeftAndRightColumn} />
+          </>
+        )}
+
+        <View
+          style={[
+            sharedStyles.flex,
+            sharedStyles.horizontal,
+            { alignItems: 'flex-start' },
+          ]}
+        >
+          <View
+            style={[
+              cardStyles.compactItemFixedWidth,
+              cardStyles.compactItemFixedHeight,
+            ]}
+          >
+            <ThemedIcon
+              color={cardIconColor || 'foregroundColor'}
+              name={cardIconName}
+              selectable={false}
+              style={{
+                fontSize: columnHeaderItemContentSize,
+                textAlign: 'center',
+                // opacity: isRead ? mutedOpacity : 1,
+              }}
+              {...!!cardIconDetails.tooltip &&
+                Platform.select({
+                  web: { title: cardIconDetails.tooltip },
+                })}
+            />
+          </View>
+
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
+
+          <View style={sharedStyles.flex}>{Content}</View>
+        </View>
+
+        <Spacer width={spacingBetweenLeftAndRightColumn} />
+
+        {!!enableCompactLabels &&
+          !!issueOrPullRequest &&
+          !!issueOrPullRequest.labels &&
+          issueOrPullRequest.labels.length > 0 && (
+            <>
+              <LabelsView
+                backgroundThemeColor={theme =>
+                  getCardBackgroundThemeColor(theme, { isRead })
+                }
+                labels={issueOrPullRequest.labels.map(label => ({
+                  key: `issue-or-pr-row-${
+                    issueOrPullRequest.id
+                  }-${issueOrPullRequestNumber}-label-${label.id ||
+                    label.name}`,
+                  color: label.color && `#${label.color}`,
+                  name: label.name,
+                }))}
+                muted={isRead}
+                style={{
+                  alignSelf: 'center',
+                  justifyContent: 'flex-end',
+                  maxWidth:
+                    260 +
+                    (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
+                    (`${issueOrPullRequest.title || ''}`.length <= 50
+                      ? 100
+                      : 0),
+                  overflow: 'hidden',
+                }}
+                textThemeColor={
+                  isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                }
+              />
+
+              <Spacer width={spacingBetweenLeftAndRightColumn} />
+            </>
+          )}
+
+        <View
+          style={[
+            cardStyles.compactItemFixedMinHeight,
+            {
+              alignSelf: 'center',
+              alignItems: 'flex-end',
+              width: 102,
+            },
+          ]}
+        >
+          {!!updatedAt && (
+            <IntervalRefresh date={updatedAt}>
+              {() => {
+                const dateText = getDateSmallText(updatedAt, false)
+                if (!dateText) return null
+
+                return (
+                  <ThemedText
+                    color={
+                      isRead
+                        ? 'foregroundColorMuted40'
+                        : 'foregroundColorMuted60'
+                    }
+                    numberOfLines={1}
+                    style={[
+                      cardStyles.timestampText,
+                      cardStyles.smallText,
+                      { fontSize: smallerTextSize },
+                    ]}
+                    {...Platform.select({
+                      web: {
+                        title: `${
+                          createdAt
+                            ? `Created: ${getFullDateText(createdAt)}\n`
+                            : ''
+                        }Updated: ${getFullDateText(updatedAt)}`,
+                      },
+                    })}
+                  >
+                    {!!isPrivate && (
+                      <>
+                        <ThemedIcon
+                          name="lock"
+                          style={cardStyles.smallerText}
+                        />{' '}
+                      </>
+                    )}
+                    {dateText}
+                  </ThemedText>
+                )
+              }}
+            </IntervalRefresh>
+          )}
+
+          <NotificationReason
+            backgroundThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { isRead })
+            }
+            muted={isRead}
+            reason={notification.reason as GitHubNotificationReason}
+          />
+        </View>
+
+        <Spacer width={contentPadding / 2} />
+
+        <View
+          style={[
+            cardStyles.compactItemFixedHeight,
+            {
+              alignSelf: 'center',
+            },
+          ]}
+        >
+          <ToggleReadButton
+            isRead={isRead}
+            itemIds={[id]}
+            size={columnHeaderItemContentSize}
+            type="notifications"
+          />
+        </View>
+      </ThemedView>
+    )
+  }
 
   return (
-    <SpringAnimatedView
+    <ThemedView
       key={`notification-card-${id}-inner`}
       ref={itemRef}
-      style={[
-        styles.container,
-        {
-          backgroundColor: springAnimatedTheme[backgroundThemeColor],
-          borderWidth: 1,
-          borderColor: isSelected
-            ? springAnimatedTheme.primaryBackgroundColor
-            : 'transparent',
-        },
-      ]}
+      backgroundColor={theme => getCardBackgroundThemeColor(theme, { isRead })}
+      style={cardStyles.container}
     >
-      <NotificationCardHeader
-        key={`notification-card-header-${id}`}
-        avatarUrl={actor && actor.avatar_url}
-        backgroundThemeColor={backgroundThemeColor}
-        cardIconColor={cardIconColor}
-        cardIconName={cardIconName}
-        date={updatedAt}
-        ids={[id]}
-        isBot={isBot}
-        isPrivate={isPrivate}
-        isRead={isRead}
-        isSaved={isSaved}
-        reason={notification.reason as GitHubNotificationReason}
-        smallLeftColumn={smallLeftColumn}
-        userLinkURL={actor.html_url || ''}
-        username={actor.display_login || actor.login}
-      />
+      {!!isSaved && <CardBookmarkIndicator />}
+      {!!isFocused && <CardFocusBorder />}
 
-      {!!(
-        repoOwnerName &&
-        repoName &&
-        !onlyOneRepository &&
-        !(
-          (actor &&
-            (actor.display_login === repoName || actor.login === repoName)) ||
-          (actor.display_login === repoFullName || actor.login === repoFullName)
-        )
-      ) && (
-        <RepositoryRow
-          key={`notification-repo-row-${repo.id}`}
-          isRead={isRead}
-          ownerName={repoOwnerName}
-          repositoryName={repoName}
-          smallLeftColumn={smallLeftColumn}
-        />
-      )}
+      <View style={sharedStyles.flex}>
+        <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
+          <Spacer width={contentPadding / 3} />
 
-      {!!commit && (
-        <CommitRow
-          key={`notification-commit-row-${commit.url}`}
-          authorEmail={commit.commit.author.email}
-          authorName={commit.commit.author.name}
-          authorUsername={commit.author && commit.author.login}
-          isRead={isRead}
-          latestCommentUrl={subject.latest_comment_url}
-          message={commit.commit.message}
-          smallLeftColumn={smallLeftColumn}
-          url={commit.url || commit.commit.url}
-        />
-      )}
+          <View style={[cardStyles.itemFixedWidth, cardStyles.itemFixedHeight]}>
+            <ThemedIcon
+              color={cardIconColor || 'foregroundColor'}
+              name={cardIconName}
+              selectable={false}
+              style={{
+                fontSize: columnHeaderItemContentSize,
+                textAlign: 'center',
+                // opacity: isRead ? mutedOpacity : 1,
+              }}
+              {...!!cardIconDetails.tooltip &&
+                Platform.select({
+                  web: { title: cardIconDetails.tooltip },
+                })}
+            />
+          </View>
 
-      {!!issue && (
-        <IssueOrPullRequestRow
-          key={`notification-issue-row-${issueOrPullRequestNumber}`}
-          addBottomAnchor={!comment}
-          avatarUrl={issue.user.avatar_url}
-          commentsCount={issue.comments}
-          createdAt={issue.created_at}
-          iconColor={issueIconColor!}
-          iconName={issueIconName!}
-          id={issue.id}
-          isRead={isRead}
-          issueOrPullRequestNumber={issueOrPullRequestNumber!}
-          labels={issue.labels}
-          owner={repoOwnerName || ''}
-          repo={repoName || ''}
-          smallLeftColumn={smallLeftColumn}
-          title={issue.title}
-          url={issue.url}
-          userLinkURL={issue.user.html_url || ''}
-          username={issue.user.login || ''}
-        />
-      )}
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
 
-      {!comment &&
-        !!(
-          issue &&
-          issue.state === 'open' &&
-          issue.body &&
-          !(
-            issue.created_at &&
-            issue.updated_at &&
-            new Date(issue.updated_at).valueOf() -
-              new Date(issue.created_at).valueOf() >=
-              1000 * 60 * 60 * 24
-          )
-        ) && (
-          // only show body if this notification is probably from a creation event
-          // because it may be for other updates
-          <CommentRow
-            key={`notification-issue-body-${issue.id}`}
-            avatarUrl={issue.user.avatar_url}
-            body={issue.body}
-            isRead={isRead}
-            smallLeftColumn={smallLeftColumn}
-            url={issue.html_url}
-            userLinkURL={issue.user.html_url || ''}
-            username={issue.user.login}
-          />
+          <View style={sharedStyles.flex}>
+            <NotificationCardHeader
+              key={`notification-card-header-${id}`}
+              avatarUrl={repoAvatarDetails.avatar_url || undefined}
+              backgroundThemeColor={theme =>
+                getCardBackgroundThemeColor(theme, { isRead })
+              }
+              date={updatedAt}
+              ids={[id]}
+              isBot={isBot}
+              isPrivate={isPrivate}
+              isRead={isRead}
+              reason={notification.reason as GitHubNotificationReason}
+              smallLeftColumn
+              userLinkURL={repoAvatarDetails.html_url || ''}
+              username={
+                repoAvatarDetails.display_login || repoAvatarDetails.login
+              }
+            />
+          </View>
+        </View>
+
+        <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
+          <Spacer width={contentPadding / 3} />
+
+          <View style={cardStyles.itemFixedWidth} />
+
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <View style={sharedStyles.flex}>{Content}</View>
+
+          <Spacer width={spacingBetweenLeftAndRightColumn} />
+          <View style={cardStyles.itemFixedWidth} />
+
+          {/* <Spacer width={contentPadding / 3} /> */}
+        </View>
+
+        {!!showCardActions && (
+          <>
+            <Spacer height={topCardMargin} />
+
+            <CardActions
+              commentsCount={
+                issueOrPullRequest ? issueOrPullRequest.comments : undefined
+              }
+              commentsLink={
+                (comment && (comment.html_url || comment.url)) ||
+                (issueOrPullRequest &&
+                  (issueOrPullRequest.html_url || issueOrPullRequest.url)) ||
+                undefined
+              }
+              isRead={isRead}
+              isSaved={isSaved}
+              itemIds={[id]}
+              type="notifications"
+            />
+          </>
         )}
 
-      {!!pullRequest && (
-        <IssueOrPullRequestRow
-          key={`notification-pr-row-${issueOrPullRequestNumber}`}
-          addBottomAnchor={!comment}
-          avatarUrl={pullRequest.user.avatar_url}
-          commentsCount={pullRequest.comments}
-          createdAt={pullRequest.created_at}
-          iconColor={pullRequestIconColor!}
-          iconName={pullRequestIconName!}
-          id={pullRequest.id}
-          isRead={isRead}
-          issueOrPullRequestNumber={issueOrPullRequestNumber!}
-          labels={pullRequest.labels}
-          owner={repoOwnerName || ''}
-          repo={repoName || ''}
-          smallLeftColumn={smallLeftColumn}
-          title={pullRequest.title}
-          url={pullRequest.url}
-          userLinkURL={pullRequest.user.html_url || ''}
-          username={pullRequest.user.login || ''}
-        />
-      )}
-
-      {!comment &&
-        !!(
-          pullRequest &&
-          pullRequest.state === 'open' &&
-          pullRequest.body &&
-          !(
-            pullRequest.created_at &&
-            pullRequest.updated_at &&
-            new Date(pullRequest.updated_at).valueOf() -
-              new Date(pullRequest.created_at).valueOf() >=
-              1000 * 60 * 60 * 24
-          )
-        ) && (
-          // only show body if this notification is probably from a creation event
-          // because it may be for other updates
-          <CommentRow
-            key={`notification-pr-body-${pullRequest.id}`}
-            avatarUrl={pullRequest.user.avatar_url}
-            body={pullRequest.body}
-            isRead={isRead}
-            smallLeftColumn={smallLeftColumn}
-            url={pullRequest.html_url}
-            userLinkURL={pullRequest.user.html_url || ''}
-            username={pullRequest.user.login}
-          />
-        )}
-
-      {!!release && (
-        <ReleaseRow
-          key={`notification-release-row-${repo.id}`}
-          avatarUrl={release.author.avatar_url}
-          body={release.body}
-          isRead={isRead}
-          name={release.name || ''}
-          ownerName={repoOwnerName || ''}
-          repositoryName={repoName || ''}
-          smallLeftColumn={smallLeftColumn}
-          tagName={release.tag_name || ''}
-          url={release.url}
-          userLinkURL={release.author.html_url || ''}
-          username={release.author.login || ''}
-        />
-      )}
-
-      {!(commit || issue || pullRequest || release) && !!title && (
-        <CommentRow
-          key={`notification-${id}-comment-row`}
-          avatarUrl=""
-          body={title}
-          isRead={isRead}
-          smallLeftColumn={smallLeftColumn}
-          userLinkURL=""
-          username=""
-          url={
-            isRepoInvitation && repoOwnerName && repoName
-              ? getGitHubURLForRepoInvitation(repoOwnerName, repoName)
-              : isVulnerabilityAlert && repoOwnerName && repoName
-              ? getGitHubURLForSecurityAlert(repoOwnerName, repoName)
-              : fixURL(subject.latest_comment_url || subject.url)
-          }
-        />
-      )}
-
-      {!!comment && (
-        <CommentRow
-          key={`notification-comment-row-${comment.id}`}
-          addBottomAnchor
-          avatarUrl={comment.user.avatar_url}
-          body={comment.body}
-          isRead={isRead}
-          smallLeftColumn={smallLeftColumn}
-          url={comment.html_url}
-          userLinkURL={comment.user.html_url || ''}
-          username={comment.user.login}
-        />
-      )}
-
-      {!!isPrivateAndCantSee && (
-        <PrivateNotificationRow
-          key={`private-notification-row-${notification.id}`}
-          isRead={isRead}
-          smallLeftColumn={smallLeftColumn}
-          ownerId={
-            (notification.repository.owner &&
-              notification.repository.owner.id) ||
-            undefined
-          }
-          repoId={repo.id}
-        />
-      )}
-    </SpringAnimatedView>
+        <Spacer width={contentPadding / 3} />
+      </View>
+    </ThemedView>
   )
 })

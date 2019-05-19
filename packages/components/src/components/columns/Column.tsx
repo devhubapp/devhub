@@ -1,15 +1,16 @@
 import React, { ReactNode, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { findNode } from '../../utils/helpers/shared'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { Separator, separatorTickSize } from '../common/Separator'
+import { tryFocus } from '../../utils/helpers/shared'
+import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedView } from '../themed/ThemedView'
+import { ColumnSeparator } from './ColumnSeparator'
 
 export const columnMargin = contentPadding / 2
 
@@ -40,7 +41,6 @@ export const Column = React.memo(
     const columnBorderRef = useRef<View>(null)
 
     const { sizename } = useAppLayout()
-    const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
     const columnWidth = useColumnWidth()
 
     useEmitter(
@@ -62,52 +62,60 @@ export const Column = React.memo(
         }
 
         if (Platform.OS === 'web' && columnRef.current) {
-          const node = findNode(columnRef.current)
-          node.focus()
+          tryFocus(columnRef.current)
         }
       },
     )
 
     return (
-      <SpringAnimatedView
+      <ThemedView
         {...otherProps}
         ref={columnRef}
-        key={`column-inner-${columnId}`}
+        key={`column-${columnId}-inner`}
+        backgroundColor="backgroundColor"
         style={[
+          sharedStyles.horizontal,
           {
-            flexDirection: 'row',
             height: '100%',
-            backgroundColor: springAnimatedTheme.backgroundColor,
+            overflow: 'hidden',
           },
-          fullWidth ? { flex: 1 } : { width: columnWidth },
+          fullWidth ? sharedStyles.flex : { width: columnWidth },
           style,
         ]}
       >
         {!!renderSideSeparators && (
-          <Separator half horizontal={false} thick={sizename > '1-small'} />
+          <ColumnSeparator
+            half
+            horizontal={false}
+            thick={sizename > '1-small'}
+          />
         )}
-        <View style={{ flex: 1 }}>{children}</View>
+        <View style={sharedStyles.flex}>{children}</View>
         {!!renderSideSeparators && (
-          <Separator half horizontal={false} thick={sizename > '1-small'} />
+          <ColumnSeparator
+            half
+            horizontal={false}
+            thick={sizename > '1-small'}
+          />
         )}
 
-        <SpringAnimatedView
+        <ThemedView
           ref={columnBorderRef}
+          borderColor="foregroundColorMuted60"
           collapsable={false}
           pointerEvents="box-none"
           style={[
             StyleSheet.absoluteFill,
             {
               borderWidth: 0,
-              borderRightWidth: Math.max(4, separatorTickSize),
-              borderLeftWidth: Math.max(4, separatorTickSize),
-              borderColor: springAnimatedTheme.foregroundColorMuted50,
+              borderRightWidth: Math.max(4, separatorThickSize),
+              borderLeftWidth: Math.max(4, separatorThickSize),
               zIndex: 1000,
               opacity: 0,
             },
           ]}
         />
-      </SpringAnimatedView>
+      </ThemedView>
     )
   }),
 )

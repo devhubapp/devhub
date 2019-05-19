@@ -1,18 +1,22 @@
 import React from 'react'
-import { Image, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { Image, Text, View, ViewStyle } from 'react-native'
 
 import { EnhancedLoadState } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
   getEmojiImageURL,
   GitHubEmoji,
 } from '../../utils/helpers/github/emojis'
-import { SpringAnimatedActivityIndicator } from '../animated/spring/SpringAnimatedActivityIndicator'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { Button, defaultButtonSize } from '../common/Button'
+import { fabSize } from '../common/FAB'
+import { Spacer } from '../common/Spacer'
+import { useAppLayout } from '../context/LayoutContext'
+import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'
+import { ThemedText } from '../themed/ThemedText'
 import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 const clearMessages = [
@@ -41,6 +45,11 @@ const clearMessage = getRandomClearMessage()
 const randomEmoji = getRandomEmoji()
 const randomEmojiImageURL = getEmojiImageURL(randomEmoji)
 
+export const defaultCardFooterSpacing =
+  fabSpacing + Math.abs(fabSize - defaultButtonSize) / 2
+export const defaultCardFooterHeight =
+  defaultButtonSize + 2 * defaultCardFooterSpacing
+
 export interface EmptyCardsProps {
   clearedAt: string | undefined
   columnId: string
@@ -64,7 +73,8 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     refresh,
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const { sizename } = useAppLayout()
+
   const setColumnClearedAtFilter = useReduxAction(
     actions.setColumnClearedAtFilter,
   )
@@ -76,24 +86,13 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       loadState === 'loading_first' ||
       (loadState === 'loading' && !refresh && !fetchNextPage)
     ) {
-      return (
-        <SpringAnimatedActivityIndicator
-          color={springAnimatedTheme.foregroundColor}
-        />
-      )
+      return <ThemedActivityIndicator color="foregroundColor" />
     }
 
     const containerStyle: ViewStyle = {
       width: '100%',
       padding: contentPadding,
     }
-
-    const springAnimatedTextStyle = {
-      lineHeight: 20,
-      fontSize: 14,
-      color: springAnimatedTheme.foregroundColorMuted50,
-      textAlign: 'center',
-    } as TextStyle
 
     if (hasError) {
       return (
@@ -118,11 +117,18 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
 
     return (
       <View style={containerStyle}>
-        <SpringAnimatedText style={springAnimatedTextStyle}>
+        <ThemedText
+          color="foregroundColorMuted60"
+          style={{
+            lineHeight: 20,
+            fontSize: 14,
+            textAlign: 'center',
+          }}
+        >
           {clearMessage}
           {!!randomEmojiImageURL && (
             <>
-              <Text children=" " />
+              <Text children="  " />
 
               <Image
                 source={{ uri: randomEmojiImageURL }}
@@ -130,16 +136,14 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
               />
             </>
           )}
-        </SpringAnimatedText>
+        </ThemedText>
       </View>
     )
   }
 
-  const headerOrFooterHeight = defaultButtonSize + 2 * contentPadding
-
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ height: headerOrFooterHeight }} />
+    <View style={sharedStyles.flex}>
+      <View style={{ height: defaultCardFooterHeight }} />
 
       <View
         style={{
@@ -153,9 +157,14 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
         {renderContent()}
       </View>
 
-      <View style={{ minHeight: headerOrFooterHeight }}>
+      <View style={{ minHeight: defaultCardFooterHeight }}>
         {hasError || loadState === 'loading_first' ? null : fetchNextPage ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel="load_more"
               children="Load more"
@@ -165,7 +174,12 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
             />
           </View>
         ) : clearedAt ? (
-          <View style={{ padding: contentPadding }}>
+          <View
+            style={{
+              paddingHorizontal: contentPadding,
+              paddingVertical: defaultCardFooterSpacing,
+            }}
+          >
             <Button
               analyticsLabel="show_cleared"
               borderOnly
@@ -177,6 +191,8 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
               }}
             />
           </View>
+        ) : shouldRenderFAB({ sizename }) ? (
+          <Spacer height={fabSize + 2 * fabSpacing} />
         ) : null}
       </View>
     </View>

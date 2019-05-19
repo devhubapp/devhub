@@ -1,35 +1,32 @@
 import _ from 'lodash'
 import { createSelector } from 'reselect'
 
-import { Installation } from '@devhub/core'
 import { RootState } from '../../types'
+import { createArraySelector } from '../helpers'
+
+const emptyArray: any[] = []
+const emptyObj = {}
 
 const s = (state: RootState) =>
-  (state.github && state.github.installations) || {}
+  (state.github && state.github.installations) || emptyObj
 
 export const installationIdsSelector = (state: RootState) =>
-  s(state).allIds || []
+  s(state).allIds || emptyArray
 
 export const installationOwnerNamesSelector = (state: RootState) =>
-  s(state).allOwnerNames || []
+  s(state).allOwnerNames || emptyArray
 
 export const installationsLoadStateSelector = (state: RootState) =>
   s(state).loadState
 
-export const installationSelector = createSelector(
-  (state: RootState) => s(state).byId,
-  (_state: RootState, id: number) => id,
-  (byId, id) => byId[id],
-)
+export const installationSelector = (state: RootState, id: number) =>
+  s(state).byId && s(state).byId![id]
 
-export const installationsArrSelector = createSelector(
-  (state: RootState) => s(state).byId,
+export const installationsArrSelector = createArraySelector(
   (state: RootState) => installationIdsSelector(state),
-  (byId, allIds) =>
-    _.orderBy(allIds.map(id => byId[id]).filter(Boolean), [
-      'account.login',
-      'asc',
-    ]) as Installation[],
+  (state: RootState) => s(state).byId,
+  (ids, byId) =>
+    byId && ids ? ids.map(id => byId[id]).filter(Boolean) : emptyArray,
 )
 
 export const installationByOwnerSelector = createSelector(

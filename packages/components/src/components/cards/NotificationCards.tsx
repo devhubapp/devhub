@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import { FlatList, FlatListProps, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
   Column,
@@ -8,47 +8,73 @@ import {
   EnhancedLoadState,
   getDateSmallText,
   isItemRead,
+  Omit,
 } from '@devhub/core'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
+import { FlatList, FlatListProps } from '../../libs/flatlist'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
-import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
+import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
+import { Spacer } from '../common/Spacer'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
+import { useAppLayout } from '../context/LayoutContext'
+import { useTheme } from '../context/ThemeContext'
+import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
-import { NotificationCard } from './NotificationCard'
-import { CardItemSeparator } from './partials/CardItemSeparator'
+import { NotificationCard, NotificationCardProps } from './NotificationCard'
+import {
+  CardItemSeparator,
+  getCardItemSeparatorThemeColor,
+} from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
-export interface NotificationCardsProps {
+export interface NotificationCardsProps
+  extends Omit<NotificationCardProps, 'notification' | 'isFocused'> {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
+  items: EnhancedGitHubNotification[]
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
-  notifications: EnhancedGitHubNotification[]
+  pointerEvents: FlatListProps<any>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
-  repoIsKnown?: boolean
-  swipeable?: boolean
+  repoIsKnown: boolean
+  swipeable: boolean
+}
+
+function keyExtractor(item: EnhancedGitHubNotification) {
+  return `notification-card-${item.id}`
 }
 
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
+    cardViewMode,
     column,
     columnIndex,
+    enableCompactLabels,
     errorMessage,
     fetchNextPage,
+    items,
     lastFetchedAt,
     loadState,
-    notifications,
+    pointerEvents,
     refresh,
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
+
+  const { appViewMode } = useAppViewMode()
+  const { inlineMode } = useColumnFilters()
+  const theme = useTheme()
+
   const visibleItemIndexesRef = useRef<number[]>([])
 
   const getVisibleItemIndex = useCallback(() => {
@@ -60,16 +86,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     return visibleItemIndexesRef.current[0]
   }, [])
 
-  const [selectedItemId] = useKeyboardScrolling(flatListRef, {
+  const { selectedItemIdRef } = useKeyboardScrolling(flatListRef, {
     columnId: column.id,
     getVisibleItemIndex,
-    items: notifications,
+    items,
   })
-  const focusedColumnId = useFocusedColumn()
-  const _hasSelectedItem = !!selectedItemId && column.id === focusedColumnId
-  const selectedItem =
-    _hasSelectedItem &&
-    notifications.find(notification => notification.id === selectedItemId)
+  const { focusedColumnId } = useFocusedColumn()
+
+  const hasSelectedItem =
+    !!selectedItemIdRef.current && column.id === focusedColumnId
 
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
@@ -79,26 +104,32 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   useKeyPressCallback(
     's',
     useCallback(() => {
+      const selectedItem =
+        hasSelectedItem &&
+        items.find(item => item.id === selectedItemIdRef.current)
       if (!selectedItem) return
 
       saveItemsForLater({
-        itemIds: [selectedItemId!],
+        itemIds: [selectedItemIdRef.current!],
         save: !selectedItem.saved,
       })
-    }, [selectedItem, selectedItemId]),
+    }, [hasSelectedItem, items]),
   )
 
   useKeyPressCallback(
     'r',
     useCallback(() => {
+      const selectedItem =
+        hasSelectedItem &&
+        items.find(item => item.id === selectedItemIdRef.current)
       if (!selectedItem) return
 
       markItemsAsReadOrUnread({
         type: 'notifications',
-        itemIds: [selectedItemId!],
+        itemIds: [selectedItemIdRef.current!],
         unread: isItemRead(selectedItem),
       })
-    }, [selectedItem, selectedItemId]),
+    }, [hasSelectedItem, items]),
   )
 
   const setColumnClearedAtFilter = useReduxAction(
@@ -124,6 +155,148 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     [],
   )
 
+  const _renderItem = ({
+    item: item,
+  }: {
+    item: EnhancedGitHubNotification
+    index: number
+  }) => {
+    if (props.swipeable) {
+      return (
+        <SwipeableNotificationCard
+          cardViewMode={cardViewMode}
+          enableCompactLabels={enableCompactLabels}
+          isFocused={
+            column.id === focusedColumnId &&
+            item.id === selectedItemIdRef.current
+          }
+          notification={item}
+          repoIsKnown={props.repoIsKnown}
+          swipeable={props.swipeable}
+        />
+      )
+    }
+
+    return (
+      <ErrorBoundary>
+        <NotificationCard
+          cardViewMode={cardViewMode}
+          enableCompactLabels={enableCompactLabels}
+          isFocused={
+            column.id === focusedColumnId &&
+            item.id === selectedItemIdRef.current
+          }
+          notification={item}
+          repoIsKnown={props.repoIsKnown}
+          swipeable={props.swipeable}
+        />
+      </ErrorBoundary>
+    )
+  }
+  const renderItem = useCallback(_renderItem, [
+    cardViewMode,
+    column.id === focusedColumnId && selectedItemIdRef.current,
+    enableCompactLabels,
+    props.repoIsKnown,
+    props.swipeable,
+  ])
+
+  const renderFooter = useCallback(() => {
+    const { sizename } = useAppLayout()
+
+    return (
+      <>
+        <CardItemSeparator isRead />
+
+        {fetchNextPage ? (
+          <View>
+            <Button
+              analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
+              children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
+              disabled={loadState !== 'loaded'}
+              loading={
+                loadState === 'loading_first' || loadState === 'loading_more'
+              }
+              onPress={fetchNextPage}
+              round={false}
+            />
+          </View>
+        ) : column.filters && column.filters.clearedAt ? (
+          <View>
+            <Button
+              analyticsLabel="show_cleared"
+              borderOnly
+              children="Show cleared items"
+              disabled={loadState !== 'loaded'}
+              onPress={() => {
+                setColumnClearedAtFilter({
+                  clearedAt: null,
+                  columnId: column.id,
+                })
+
+                if (refresh) refresh()
+              }}
+              round={false}
+            />
+          </View>
+        ) : null}
+
+        {shouldRenderFAB({ sizename }) && (
+          <Spacer height={fabSize + 2 * fabSpacing} />
+        )}
+      </>
+    )
+  }, [
+    fetchNextPage,
+    loadState,
+    column.filters && column.filters.clearedAt,
+    column.id,
+    refresh,
+  ])
+
+  const _onScrollToIndexFailed: FlatListProps<
+    string
+  >['onScrollToIndexFailed'] = (info: {
+    index: number
+    highestMeasuredFrameIndex: number
+    averageItemLength: number
+  }) => {
+    console.error(info)
+    bugsnag.notify({
+      name: 'ScrollToIndexFailed',
+      message: 'Failed to scroll to index',
+      ...info,
+    })
+  }
+  const onScrollToIndexFailed = useCallback(_onScrollToIndexFailed, [])
+
+  const refreshControl = useMemo(
+    () => (
+      <RefreshControl
+        intervalRefresh={lastFetchedAt}
+        onRefresh={refresh}
+        refreshing={loadState === 'loading' || loadState === 'loading_first'}
+        title={
+          lastFetchedAt
+            ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+            : 'Pull to refresh'
+        }
+      />
+    ),
+    [lastFetchedAt, refresh, loadState],
+  )
+
+  const rerender = useMemo(() => ({}), [renderItem, renderFooter])
+
+  const contentContainerStyle = useMemo(
+    () => ({
+      borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
+      borderColor:
+        theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
+    }),
+    [theme],
+  )
+
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
@@ -140,7 +313,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     )
   }
 
-  if (!(notifications && notifications.length))
+  if (!(items && items.length)) {
     return (
       <EmptyCards
         clearedAt={column.filters && column.filters.clearedAt}
@@ -150,79 +323,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         loadState={loadState}
         refresh={refresh}
       />
-    )
-
-  function keyExtractor(notification: EnhancedGitHubNotification) {
-    return `notification-card-${notification.id}`
-  }
-
-  function renderItem({
-    item: notification,
-  }: {
-    item: EnhancedGitHubNotification
-    index: number
-  }) {
-    if (props.swipeable) {
-      return (
-        <SwipeableNotificationCard
-          notification={notification}
-          repoIsKnown={props.repoIsKnown}
-          isSelected={
-            column.id === focusedColumnId && notification.id === selectedItemId
-          }
-        />
-      )
-    }
-
-    return (
-      <ErrorBoundary>
-        <NotificationCard
-          notification={notification}
-          repoIsKnown={props.repoIsKnown}
-          isSelected={
-            column.id === focusedColumnId && notification.id === selectedItemId
-          }
-        />
-      </ErrorBoundary>
-    )
-  }
-
-  function renderFooter() {
-    return (
-      <>
-        <CardItemSeparator />
-
-        {fetchNextPage ? (
-          <View style={{ padding: contentPadding }}>
-            <Button
-              analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
-              children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
-              disabled={loadState !== 'loaded'}
-              loading={
-                loadState === 'loading_first' || loadState === 'loading_more'
-              }
-              onPress={fetchNextPage}
-            />
-          </View>
-        ) : column.filters && column.filters.clearedAt ? (
-          <View style={{ padding: contentPadding }}>
-            <Button
-              analyticsLabel="show_cleared"
-              borderOnly
-              children="Show cleared items"
-              disabled={loadState !== 'loaded'}
-              onPress={() => {
-                setColumnClearedAtFilter({
-                  clearedAt: null,
-                  columnId: column.id,
-                })
-
-                if (refresh) refresh()
-              }}
-            />
-          </View>
-        ) : null}
-      </>
     )
   }
 
@@ -234,34 +334,21 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       ListFooterComponent={renderFooter}
       alwaysBounceVertical
       bounces
-      data={notifications}
-      extraData={loadState}
-      initialNumToRender={10}
+      contentContainerStyle={contentContainerStyle}
+      data={items}
+      disableVirtualization={Platform.OS === 'web'}
+      extraData={rerender}
+      initialNumToRender={15}
       keyExtractor={keyExtractor}
-      onScrollToIndexFailed={e => {
-        console.error(e)
-        bugsnag.notify({
-          name: 'ScrollToIndexFailed',
-          message: 'Failed to scroll to index',
-          ...e,
-        })
-      }}
+      maxToRenderPerBatch={3}
+      onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
-      refreshControl={
-        <RefreshControl
-          intervalRefresh={lastFetchedAt}
-          onRefresh={refresh}
-          refreshing={loadState === 'loading' || loadState === 'loading_first'}
-          title={
-            lastFetchedAt
-              ? () => `Last updated ${getDateSmallText(lastFetchedAt, true)}`
-              : 'Pull to refresh'
-          }
-        />
-      }
-      removeClippedSubviews
+      pointerEvents={pointerEvents}
+      refreshControl={refreshControl}
+      removeClippedSubviews={Platform.OS !== 'web'}
       renderItem={renderItem}
       viewabilityConfig={viewabilityConfig}
+      windowSize={2}
     />
   )
 })

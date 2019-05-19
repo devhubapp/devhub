@@ -1,42 +1,63 @@
 import React from 'react'
 
-import { getColumnHeaderDetails } from '@devhub/core'
+import { getColumnHeaderDetails, Omit } from '@devhub/core'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
-import { EventOrNotificationColumn } from './EventOrNotificationColumn'
+import { ColumnRenderer } from './ColumnRenderer'
 
 export interface NotificationColumnProps
-  extends NotificationCardsContainerProps {
+  extends Omit<
+    NotificationCardsContainerProps,
+    'cardViewMode' | 'enableCompactLabels' | 'repoIsKnown'
+  > {
   columnIndex: number
+  disableColumnOptions?: boolean
+  headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
 }
 
 export const NotificationColumn = React.memo(
   (props: NotificationColumnProps) => {
-    const { column, columnIndex, pagingEnabled, subscriptions } = props
+    const {
+      column,
+      columnIndex,
+      disableColumnOptions,
+      headerDetails,
+      pagingEnabled,
+    } = props
 
-    const requestTypeIconAndData = getColumnHeaderDetails(column, subscriptions)
+    if (!headerDetails) return null
 
     return (
-      <EventOrNotificationColumn
+      <ColumnRenderer
         key={`notification-column-${column.id}-inner`}
+        avatarRepo={headerDetails.avatarProps && headerDetails.avatarProps.repo}
+        avatarUsername={
+          headerDetails.avatarProps && headerDetails.avatarProps.username
+        }
         column={column}
-        columnIndex={columnIndex}
-        owner={requestTypeIconAndData.owner}
+        disableColumnOptions={disableColumnOptions}
+        icon={headerDetails.icon}
+        owner={headerDetails.owner}
         pagingEnabled={pagingEnabled}
-        repo={requestTypeIconAndData.repo}
-        repoIsKnown={requestTypeIconAndData.repoIsKnown}
-        subscriptions={subscriptions}
+        repo={headerDetails.repo}
+        repoIsKnown={headerDetails.repoIsKnown}
+        subtitle={headerDetails.subtitle}
+        title={headerDetails.title}
       >
-        <NotificationCardsContainer
-          key={`notification-cards-container-${column.id}`}
-          repoIsKnown={requestTypeIconAndData.repoIsKnown}
-          {...props}
-          columnIndex={columnIndex}
-        />
-      </EventOrNotificationColumn>
+        {({ cardViewMode, enableCompactLabels }) => (
+          <NotificationCardsContainer
+            {...props}
+            key={`notification-cards-container-${column.id}`}
+            cardViewMode={cardViewMode}
+            columnIndex={columnIndex}
+            enableCompactLabels={enableCompactLabels}
+            repoIsKnown={headerDetails.repoIsKnown}
+          />
+        )}
+      </ColumnRenderer>
     )
   },
 )

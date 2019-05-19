@@ -1,6 +1,6 @@
 {
   "name": "@devhub/web",
-  "version": "0.48.1",
+  "version": "0.81.0",
   "private": false,
   "homepage": "./",
   "scripts": {
@@ -8,6 +8,7 @@
     "clean": "shx rm -rf dist/*",
     "compile": "tsc -b",
     "deploy": "yarn build && yarn now --target production",
+    "deploy:beta": "yarn build && yarn now --target staging && yarn now alias beta.devhubapp.com",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
@@ -19,11 +20,11 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.4.0",
-    "@devhub/components": "0.48.1",
-    "react": "16.8.4",
+    "@devhub/components": "0.81.0",
+    "react": "16.8.6",
     "react-app-polyfill": "0.2.2",
-    "react-art": "16.8.4",
-    "react-dom": "16.8.4",
+    "react-art": "16.8.6",
+    "react-dom": "16.8.6",
     "react-native-web": "0.11.1",
     "react-scripts": "2.1.8",
     "resize-observer-polyfill": "1.5.1",
@@ -32,8 +33,8 @@
   "devDependencies": {
     "@types/jest": "24.0.11",
     "@types/node": "11.11.4",
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.3",
+    "@types/react": "16.8.15",
+    "@types/react-dom": "16.8.4",
     "babel-plugin-react-native-web": "0.11.1",
     "now": "*",
     "postinstall-prepare": "1.0.1",

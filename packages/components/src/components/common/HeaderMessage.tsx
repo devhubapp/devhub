@@ -1,20 +1,19 @@
 import React from 'react'
-import { StyleSheet, TextProps, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
-import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { contentPadding, smallTextSize } from '../../styles/variables'
+import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
 import {
-  SpringAnimatedTouchableOpacity,
-  SpringAnimatedTouchableOpacityProps,
-} from '../animated/spring/SpringAnimatedTouchableOpacity'
+  ThemedTouchableOpacity,
+  ThemedTouchableOpacityProps,
+} from '../themed/ThemedTouchableOpacity'
 
 export const HeaderMessageColor = 'rgba(0, 0, 0, 0.15)'
 
-export interface HeaderMessageProps
-  extends SpringAnimatedTouchableOpacityProps {
+export interface HeaderMessageProps extends ThemedTouchableOpacityProps {
   children: string | React.ReactNode
-  textStyle?: TextProps['style']
+  color?: ThemedTextProps['color']
+  textStyle?: ThemedTextProps['style']
 }
 
 const styles = StyleSheet.create({
@@ -23,47 +22,38 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: contentPadding / 2,
+    paddingHorizontal: contentPadding / 2,
+    paddingVertical: contentPadding / 4,
   },
   text: {
     flexGrow: 1,
-    lineHeight: 14,
-    fontSize: 11,
+    fontWeight: '500',
+    fontSize: smallTextSize,
     textAlign: 'center',
   },
 })
 
 export function HeaderMessage(props: HeaderMessageProps) {
-  const { children, style, textStyle, ...restProps } = props
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const { children, color, style, textStyle, ...restProps } = props
 
   return (
     <View style={{ width: '100%' }}>
-      <SpringAnimatedTouchableOpacity
+      <ThemedTouchableOpacity
+        backgroundColor="backgroundColor"
         {...restProps}
-        style={[
-          styles.container,
-          {
-            backgroundColor: springAnimatedTheme.backgroundColorDarker2,
-          },
-          style,
-        ]}
+        style={[styles.container, style]}
       >
         {typeof children === 'string' ? (
-          <SpringAnimatedText
-            style={[
-              styles.text,
-              { color: springAnimatedTheme.foregroundColorMuted50 },
-              textStyle,
-            ]}
+          <ThemedText
+            color={color || 'foregroundColorMuted60'}
+            style={[styles.text, textStyle]}
           >
             {children}
-          </SpringAnimatedText>
+          </ThemedText>
         ) : (
           children
         )}
-      </SpringAnimatedTouchableOpacity>
+      </ThemedTouchableOpacity>
     </View>
   )
 }

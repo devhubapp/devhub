@@ -22,7 +22,7 @@ gtagAndLog('set', { is_electron: Platform.isElectron })
 
 export const analytics: Analytics = {
   setUser(userId) {
-    gtagAndLog('set', { user_id: userId })
+    gtagAndLog('set', { user_id: userId || '' })
   },
 
   trackEvent(category, action, label, value, payload) {

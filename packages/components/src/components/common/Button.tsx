@@ -1,12 +1,14 @@
 import { rgba } from 'polished'
-import React, { useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { constants } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
+import { defaultTheme } from '../../styles/utils'
 import { contentPadding } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import {
   SpringAnimatedActivityIndicator,
   SpringAnimatedActivityIndicatorProps,
@@ -28,12 +30,14 @@ export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   children: string | React.ReactNode
   contentContainerStyle?: ViewProps['style']
   disabled?: boolean
+  fontSize?: number
   foregroundColor?: string
   hoverBackgroundColor?: string
   hoverForegroundColor?: string
   loading?: boolean
   loadingIndicatorStyle?: SpringAnimatedActivityIndicatorProps['style']
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
+  round?: boolean
   size?: number | null
 }
 
@@ -44,11 +48,13 @@ export const Button = React.memo((props: ButtonProps) => {
     children,
     contentContainerStyle,
     disabled,
+    fontSize,
     foregroundColor,
     hoverBackgroundColor,
     hoverForegroundColor,
     loading,
     loadingIndicatorStyle,
+    round = true,
     size: _size,
     style,
     ...otherProps
@@ -59,64 +65,94 @@ export const Button = React.memo((props: ButtonProps) => {
       ? _size || undefined
       : defaultButtonSize
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
+  const cacheRef = useRef({
+    isHovered: false,
+    isPressing: false,
+    theme: defaultTheme,
   })
+
+  const getStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate: boolean }) => {
+      const { isHovered, isPressing, theme } = cacheRef.current
+
+      const immediate =
+        forceImmediate || constants.DISABLE_ANIMATIONS || isHovered
+
+      return {
+        config: getDefaultReactSpringAnimationConfig(),
+        immediate,
+        activityIndicatorColor: theme.foregroundColor,
+        touchableBackgroundColor: borderOnly
+          ? 'transparent'
+          : backgroundColor
+          ? backgroundColor
+          : theme.backgroundColorLess3,
+        touchableBorderColor: backgroundColor
+          ? backgroundColor
+          : isHovered || isPressing
+          ? hoverBackgroundColor || theme.backgroundColorLess4
+          : theme.backgroundColorLess3,
+        innerContainerBackgroundColor:
+          isHovered || isPressing
+            ? hoverBackgroundColor ||
+              (backgroundColor
+                ? theme.backgroundColorTransparent10
+                : theme.backgroundColorLess4)
+            : rgba(theme.backgroundColorLess3, 0),
+        textColor: foregroundColor
+          ? foregroundColor
+          : borderOnly
+          ? isHovered || isPressing
+            ? hoverForegroundColor || theme.foregroundColor
+            : theme.foregroundColorMuted60
+          : theme.foregroundColor,
+      }
+    },
+    [
+      backgroundColor,
+      borderOnly,
+      cacheRef.current.isHovered,
+      cacheRef.current.isPressing,
+      cacheRef.current.theme,
+      foregroundColor,
+      hoverBackgroundColor,
+      hoverForegroundColor,
+    ],
+  )
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
+    ReturnType<typeof getStyles>
+  >(() => getStyles({ forceImmediate: true }))
+
+  const updateStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate: boolean }) => {
+      setSpringAnimatedStyles(getStyles({ forceImmediate }))
+    },
+    [getStyles],
+  )
+
+  const initialTheme = useTheme(
+    useCallback(
+      theme => {
+        if (cacheRef.current.theme === theme) return
+        cacheRef.current.theme = theme
+        updateStyles({ forceImmediate: true })
+      },
+      [updateStyles],
+    ),
+  )
+  cacheRef.current.theme = initialTheme
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(touchableRef, isHovered => {
     cacheRef.current.isHovered = isHovered
-    updateStyles()
+    updateStyles({ forceImmediate: false })
   })
+  cacheRef.current.isHovered = initialIsHovered
 
-  const cacheRef = useRef({
-    isHovered: initialIsHovered,
-    isPressing: false,
-    theme: initialTheme,
+  useLayoutEffect(() => {
+    updateStyles({ forceImmediate: true })
   })
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
-    ReturnType<typeof getStyles>
-  >(getStyles)
-
-  function getStyles() {
-    const { isHovered, isPressing, theme } = cacheRef.current
-
-    const immediate = Platform.realOS === 'android'
-
-    return {
-      config: { duration: immediate ? 0 : 100 },
-      immediate,
-      activityIndicatorColor: theme.foregroundColor,
-      touchableBorderColor: backgroundColor
-        ? backgroundColor
-        : isHovered || isPressing
-        ? hoverBackgroundColor || theme.backgroundColorLess3
-        : theme.backgroundColorLess2,
-      innerContainerBackgroundColor: borderOnly
-        ? rgba(theme.backgroundColorLess2, 0)
-        : isHovered || isPressing
-        ? hoverBackgroundColor ||
-          (backgroundColor
-            ? theme.backgroundColorTransparent10
-            : theme.backgroundColorLess3)
-        : rgba(theme.backgroundColorLess2, 0),
-      textColor: foregroundColor
-        ? foregroundColor
-        : borderOnly
-        ? isHovered || isPressing
-          ? hoverForegroundColor || theme.foregroundColor
-          : theme.foregroundColorMuted50
-        : theme.foregroundColor,
-    }
-  }
-
-  function updateStyles() {
-    setSpringAnimatedStyles(getStyles())
-  }
 
   return (
     <SpringAnimatedTouchableOpacity
@@ -126,25 +162,21 @@ export const Button = React.memo((props: ButtonProps) => {
         if (Platform.realOS === 'web') return
 
         cacheRef.current.isPressing = true
-        updateStyles()
+        updateStyles({ forceImmediate: true })
       }}
       onPressOut={() => {
         if (Platform.realOS === 'web') return
 
         cacheRef.current.isPressing = false
-        updateStyles()
+        updateStyles({ forceImmediate: true })
       }}
       style={[
         {
           height: size,
-          backgroundColor: borderOnly
-            ? 'transparent'
-            : backgroundColor
-            ? backgroundColor
-            : springAnimatedTheme.backgroundColorLess2,
+          backgroundColor: springAnimatedStyles.touchableBackgroundColor,
           borderColor: springAnimatedStyles.touchableBorderColor,
           borderWidth: borderOnly ? separatorSize : 0,
-          borderRadius: (size || defaultButtonSize) / 2,
+          borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
         },
         style,
       ]}
@@ -159,7 +191,7 @@ export const Button = React.memo((props: ButtonProps) => {
             paddingHorizontal: contentPadding,
             backgroundColor: springAnimatedStyles.innerContainerBackgroundColor,
             borderWidth: 0,
-            borderRadius: (size || defaultButtonSize) / 2,
+            borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
           },
           contentContainerStyle,
         ]}
@@ -173,8 +205,8 @@ export const Button = React.memo((props: ButtonProps) => {
         ) : typeof children === 'string' ? (
           <SpringAnimatedText
             style={{
-              lineHeight: Platform.select({ web: 14 }),
-              fontSize: 14,
+              lineHeight: Platform.select({ web: fontSize }),
+              fontSize,
               fontWeight: '500',
               color: springAnimatedStyles.textColor,
             }}

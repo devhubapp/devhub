@@ -11,7 +11,9 @@ import {
   OAuthResponseData,
 } from './helpers'
 
-const redirectUri = 'devhub://github/oauth'
+const schemaRedirectUri = Platform.isElectron
+  ? 'devhub://github/oauth'
+  : undefined
 
 function getPopupTarget() {
   const currentURL = Linking.getCurrentURL()
@@ -49,7 +51,12 @@ export async function executeOAuth(
     github_app_type: gitHubAppType,
     is_electron: Platform.isElectron,
     platform: Platform.OS,
-    redirect_uri: Platform.isElectron ? redirectUri : '',
+    redirect_uri:
+      schemaRedirectUri ||
+      (Platform.OS === 'web' &&
+        getPopupTarget() === '_self' &&
+        window.location.origin) ||
+      '',
     scope: scopeStr,
   })
 
@@ -61,11 +68,11 @@ export async function executeOAuth(
   try {
     let params: OAuthResponseData | null
 
-    if (Platform.isElectron && (await Linking.canOpenURL(redirectUri))) {
+    if (schemaRedirectUri && (await Linking.canOpenURL(schemaRedirectUri))) {
       const uri = await listenForNextUrl()
       // console.log('[OAUTH] Received URL:', uri)
 
-      params = getUrlParamsIfMatches(uri, redirectUri)
+      params = getUrlParamsIfMatches(uri, schemaRedirectUri)
       // console.log('[OAUTH] URL params:', params)
     } else {
       params = await listenForNextMessageData(popup)

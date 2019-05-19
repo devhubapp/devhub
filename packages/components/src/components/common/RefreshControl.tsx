@@ -6,31 +6,27 @@ import {
 
 import { Omit } from '@devhub/core'
 import { useTheme } from '../context/ThemeContext'
-import { IntervalRefresh, IntervalRefreshProps } from './IntervalRefresh'
+import { IntervalRefreshProps } from './IntervalRefresh'
 
 export interface RefreshControlProps
   extends Omit<RefreshControlPropsOriginal, 'title'> {
   intervalRefresh?: IntervalRefreshProps['date']
-  title: string | (() => string)
+  title: string
 }
 
-export function RefreshControl(props: RefreshControlProps) {
+export const RefreshControl = React.memo((props: RefreshControlProps) => {
   const { intervalRefresh, title, ...otherProps } = props
 
   const theme = useTheme()
 
   return (
-    <IntervalRefresh date={intervalRefresh}>
-      {() => (
-        <RefreshControlOriginal
-          colors={[theme.primaryBackgroundColor]}
-          progressBackgroundColor={theme.backgroundColorDarker1}
-          tintColor={theme.primaryBackgroundColor}
-          titleColor={theme.foregroundColorMuted50}
-          title={typeof title === 'function' ? title() : title}
-          {...otherProps}
-        />
-      )}
-    </IntervalRefresh>
+    <RefreshControlOriginal
+      colors={[theme.primaryBackgroundColor]}
+      progressBackgroundColor={theme.backgroundColorDarker1}
+      tintColor={theme.primaryBackgroundColor}
+      titleColor={theme.foregroundColorMuted60}
+      title={title}
+      {...otherProps}
+    />
   )
-}
+})

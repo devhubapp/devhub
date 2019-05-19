@@ -1,47 +1,100 @@
 import _ from 'lodash'
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
+import { StyleSheet, TextStyle } from 'react-native'
 
-import { Theme } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { Platform } from '../../libs/platform'
 import {
   avatarSize,
   contentPadding,
   smallAvatarSize,
+  smallerTextSize,
   smallTextSize,
 } from '../../styles/variables'
 
+export const leftColumnSmallSize = smallAvatarSize
+export const leftColumnBigSize = avatarSize
+export const spacingBetweenLeftAndRightColumn = (contentPadding * 2) / 3
+
 export const cardStyles = StyleSheet.create({
-  horizontal: {
+  container: {
+    paddingVertical: contentPadding * (2 / 3),
+    paddingHorizontal: contentPadding / 2,
+    overflow: 'hidden',
+  },
+
+  compactContainer: {
+    width: '100%',
     flexDirection: 'row',
-  } as ViewStyle,
+    alignItems: 'flex-start',
+    paddingVertical: contentPadding * (2 / 3),
+    paddingHorizontal: contentPadding / 2,
+  },
+
+  compactItemFixedWidth: {
+    width: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  compactItemFixedHeight: {
+    height: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  compactItemFixedMinHeight: {
+    minHeight: 22,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  itemFixedWidth: {
+    width: smallAvatarSize,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  itemFixedHeight: {
+    height: Math.max(20, smallAvatarSize),
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  itemFixedMinHeight: {
+    minHeight: Math.max(20, smallAvatarSize),
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
   leftColumn: {
-    marginRight: contentPadding,
-    width: avatarSize,
-  } as ViewStyle,
+    alignSelf: 'flex-start',
+    paddingTop: 1,
+    marginRight: spacingBetweenLeftAndRightColumn,
+    width: leftColumnBigSize,
+  },
 
   leftColumn__small: {
     justifyContent: 'center',
-    width: smallAvatarSize,
-  } as ViewStyle,
+    width: leftColumnSmallSize,
+  },
 
   leftColumn__big: {
     justifyContent: 'flex-start',
-    width: avatarSize,
-  } as ViewStyle,
-
-  leftColumnAlignTop: {
-    alignSelf: 'flex-start',
-  } as ViewStyle,
+    width: leftColumnBigSize,
+  },
 
   rightColumn: {
     flex: 1,
-  } as ViewStyle,
+  },
 
   avatar: {
     alignSelf: 'flex-end',
-  } as ViewStyle,
+  },
 
   smallText: {
     fontSize: smallTextSize,
@@ -49,72 +102,63 @@ export const cardStyles = StyleSheet.create({
   },
 
   boldText: {
-    fontWeight: '600',
+    fontWeight: '500',
+  },
+
+  usernameText: {
+    alignSelf: 'center',
+    lineHeight: 20,
+    fontWeight: '500',
+    // color: theme.foregroundColor,
+  } as TextStyle,
+
+  timestampText: {
+    lineHeight: smallerTextSize + 1,
+    fontSize: smallerTextSize,
+    // color: theme.foregroundColorMuted60,
+  },
+
+  smallerText: {
+    lineHeight: smallerTextSize + 1,
+    fontSize: smallerTextSize,
+    // color: theme.foregroundColorMuted60,
+  },
+
+  commentText: {
+    // color: theme.foregroundColor,
+    lineHeight: 20,
+    fontSize: smallTextSize,
+  },
+
+  // mutedText: {
+  //   // color: theme.foregroundColorMuted60,
+  // },
+
+  normalText: {
+    lineHeight: 20,
+    // color: theme.foregroundColor,
+    ...Platform.select({
+      default: {},
+      web: {
+        wordWrap: 'break-word',
+      },
+    }),
+  },
+
+  icon: {
+    lineHeight: 20,
+    marginRight: 2,
+  },
+
+  headerActionText: {
+    fontSize: smallTextSize,
+    lineHeight: 18,
+    // color: theme.foregroundColor,
+    ...Platform.select({
+      default: {},
+      web: {
+        wordWrap: 'break-word',
+      },
+    }),
   },
 })
-
-export const getCardStylesForTheme = _.memoize(
-  (theme: Theme | ReturnType<typeof useCSSVariablesOrSpringAnimatedTheme>) => {
-    return {
-      usernameText: {
-        alignSelf: 'center',
-        lineHeight: 20,
-        fontWeight: '500',
-        color: theme.foregroundColor,
-      } as TextStyle,
-
-      timestampText: {
-        alignSelf: 'center',
-        lineHeight: smallTextSize + 1,
-        fontSize: smallTextSize,
-        color: theme.foregroundColorMuted50,
-      } as TextStyle,
-
-      commentText: {
-        color: theme.foregroundColor,
-        lineHeight: 20,
-        ...(Platform.select({
-          default: {},
-          web: {
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'pre-line',
-            wordWrap: 'break-word',
-          },
-        }) as any),
-      } as TextStyle,
-
-      mutedText: {
-        color: theme.foregroundColorMuted50,
-      } as TextStyle,
-
-      normalText: {
-        lineHeight: 20,
-        color: theme.foregroundColor,
-        ...Platform.select({
-          default: {},
-          web: {
-            wordWrap: 'break-word',
-          },
-        }),
-      } as TextStyle,
-
-      icon: {
-        lineHeight: 20,
-        marginRight: 2,
-      } as TextStyle,
-
-      descriptionText: {
-        fontSize: smallTextSize,
-        lineHeight: smallTextSize + 4,
-        color: theme.foregroundColorMuted50,
-        ...Platform.select({
-          default: {},
-          web: {
-            wordWrap: 'break-word',
-          },
-        }),
-      } as TextStyle,
-    }
-  },
-)

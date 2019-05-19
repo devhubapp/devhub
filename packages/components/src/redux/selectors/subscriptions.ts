@@ -1,43 +1,45 @@
-import { createSelector } from 'reselect'
+import _ from 'lodash'
 
 import {
   ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
+  EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
+  getFilteredEvents,
+  getFilteredIssueOrPullRequests,
+  getFilteredNotifications,
   sortEvents,
+  sortIssuesOrPullRequests,
   sortNotifications,
 } from '@devhub/core'
-import {
-  getFilteredEvents,
-  getFilteredNotifications,
-} from '../../utils/helpers/filters'
 import { RootState } from '../types'
+import { createArraySelector } from './helpers'
 
-const s = (state: RootState) => state.subscriptions || {}
+const emptyArray: any[] = []
+const emptyObj = {}
+
+const s = (state: RootState) => state.subscriptions || emptyObj
 
 export const subscriptionIdsSelector = (state: RootState) =>
-  s(state).allIds || []
+  s(state).allIds || emptyArray
 
-export const createSubscriptionSelector = () =>
-  createSelector(
-    (state: RootState) => s(state).byId,
-    (_state: RootState, id: string) => id,
-    (byId, id) => byId && byId[id],
-  )
+export const subscriptionSelector = (state: RootState, id: string) =>
+  (s(state).byId && s(state).byId[id]) || undefined
 
-export const subscriptionSelector = createSubscriptionSelector()
-
-export const subscriptionsArrSelector = createSelector(
-  (state: RootState) => s(state).byId,
+export const subscriptionsArrSelector = createArraySelector(
   (state: RootState) => subscriptionIdsSelector(state),
-  (byId, ids) => ids.map(id => byId && byId[id]).filter(Boolean),
+  (state: RootState) => s(state).byId,
+  (ids, byId) =>
+    byId && ids ? ids.map(id => byId[id]).filter(Boolean) : emptyArray,
 )
 
 export const createSubscriptionsDataSelector = () =>
-  createSelector(
+  createArraySelector(
     (state: RootState, subscriptionIds: string[]) =>
-      subscriptionIds.map(id => subscriptionSelector(state, id)),
+      subscriptionIds
+        .map(id => subscriptionSelector(state, id))
+        .filter(Boolean),
     subscriptions => {
       let items: ColumnSubscription['data']['items']
 
@@ -54,25 +56,38 @@ export const createSubscriptionsDataSelector = () =>
 
         if (!items) {
           items = subscription.data.items
-        } else {
+        } else if (subscription.data.items) {
           items = [...items, ...subscription.data.items] as any
         }
       })
 
-      if (!(items && items.length)) return []
+      if (!(items && items.length)) return emptyArray
 
-      if (subscriptions[0]!.type === 'notifications') {
+      if (subscriptions[0] && subscriptions[0]!.type === 'activity') {
+        return sortEvents(items as EnhancedGitHubEvent[])
+      }
+
+      if (subscriptions[0] && subscriptions[0]!.type === 'issue_or_pr') {
+        return sortIssuesOrPullRequests(
+          items as EnhancedGitHubIssueOrPullRequest[],
+        )
+      }
+
+      if (subscriptions[0] && subscriptions[0]!.type === 'notifications') {
         return sortNotifications(items as EnhancedGitHubNotification[])
       }
 
-      return sortEvents(items as EnhancedGitHubEvent[])
+      console.error(`Unhandled subscription type: ${subscriptions[0]!.type}`)
+      return items
     },
   )
 
-export const createFilteredSubscriptionsDataSelector = () => {
+export const createFilteredSubscriptionsDataSelector = (
+  mergeSimilar: boolean,
+) => {
   const subscriptionsDataSelector = createSubscriptionsDataSelector()
 
-  return createSelector(
+  return createArraySelector(
     (state: RootState, subscriptionIds: string[]) => {
       const firstSubscription = subscriptionIds
         .map(id => subscriptionSelector(state, id))
@@ -82,10 +97,25 @@ export const createFilteredSubscriptionsDataSelector = () => {
     },
     (state: RootState, subscriptionIds: string[]) =>
       subscriptionsDataSelector(state, subscriptionIds),
-    (state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
+    (_state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
       filters,
     (type, items, filters) => {
-      if (!(items && items.length)) return []
+      if (!(items && items.length)) return emptyArray
+
+      if (type === 'activity') {
+        return getFilteredEvents(
+          items as EnhancedGitHubEvent[],
+          filters,
+          mergeSimilar,
+        )
+      }
+
+      if (type === 'issue_or_pr') {
+        return getFilteredIssueOrPullRequests(
+          items as EnhancedGitHubIssueOrPullRequest[],
+          filters,
+        )
+      }
 
       if (type === 'notifications') {
         return getFilteredNotifications(
@@ -94,7 +124,8 @@ export const createFilteredSubscriptionsDataSelector = () => {
         )
       }
 
-      return getFilteredEvents(items as EnhancedGitHubEvent[], filters)
+      console.error(`Not filtered. Unhandled subscription type: ${type}`)
+      return items
     },
   )
 }

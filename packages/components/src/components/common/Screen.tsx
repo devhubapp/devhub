@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
 import {
   KeyboardAvoidingView,
   StatusBar,
@@ -9,13 +9,12 @@ import {
 } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 
-import { ThemeColors } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
-import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
+import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
+import { ThemedView } from '../themed/ThemedView'
 import { ConditionalWrap } from './ConditionalWrap'
 
 export interface ScreenProps {
@@ -39,40 +38,35 @@ export function Screen(props: ScreenProps) {
     statusBarBackgroundThemeColor,
     useSafeArea = true,
     style,
-    ...otherProps
+    ...viewProps
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const initialTheme = useTheme(
+    useCallback(theme => {
+      if (cacheRef.current.theme === theme) return
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
+      cacheRef.current.theme = theme
+
+      updateStyles({
+        theme: cacheRef.current.theme,
+        statusBarBackgroundThemeColor:
+          cacheRef.current.statusBarBackgroundThemeColor,
+      })
+    }, []),
+  )
+
+  const cacheRef = useRef({
+    theme: initialTheme,
+    statusBarBackgroundThemeColor,
   })
-
-  const cacheRef = useRef({ theme: initialTheme })
+  cacheRef.current.theme = initialTheme
+  cacheRef.current.statusBarBackgroundThemeColor = statusBarBackgroundThemeColor
 
   useEffect(() => {
     if (SplashScreen) {
       SplashScreen.hide()
     }
   }, [])
-
-  function updateStyles() {
-    const { theme } = cacheRef.current
-
-    StatusBar.setBarStyle(theme.isDark ? 'light-content' : 'dark-content')
-
-    if (Platform.OS === 'android') {
-      const themeColor: keyof ThemeColors =
-        statusBarBackgroundThemeColor === 'header'
-          ? getColumnHeaderThemeColors(theme.backgroundColor).normal
-          : statusBarBackgroundThemeColor || 'backgroundColor'
-
-      const color = theme[themeColor]
-
-      StatusBar.setBackgroundColor(color, false)
-    }
-  }
 
   return (
     <ConditionalWrap
@@ -89,24 +83,39 @@ export function Screen(props: ScreenProps) {
       }
     >
       {useSafeArea ? (
-        <SpringAnimatedSafeAreaView
-          {...otherProps}
-          style={[
-            styles.container,
-            { backgroundColor: springAnimatedTheme.backgroundColor },
-            style,
-          ]}
+        <ThemedSafeAreaView
+          backgroundColor="backgroundColor"
+          {...viewProps}
+          style={[styles.container, style]}
         />
       ) : (
-        <SpringAnimatedView
-          {...otherProps}
-          style={[
-            styles.container,
-            { backgroundColor: springAnimatedTheme.backgroundColor },
-            style,
-          ]}
+        <ThemedView
+          backgroundColor="backgroundColor"
+          {...viewProps}
+          style={[styles.container, style]}
         />
       )}
     </ConditionalWrap>
   )
+}
+
+function updateStyles({
+  theme,
+  statusBarBackgroundThemeColor,
+}: {
+  theme: Theme
+  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
+}) {
+  StatusBar.setBarStyle(theme.isDark ? 'light-content' : 'dark-content')
+
+  if (Platform.OS === 'android') {
+    const themeColor: keyof ThemeColors =
+      statusBarBackgroundThemeColor === 'header'
+        ? getColumnHeaderThemeColors(theme.backgroundColor).normal
+        : statusBarBackgroundThemeColor || 'backgroundColor'
+
+    const color = theme[themeColor]
+
+    StatusBar.setBackgroundColor(color, false)
+  }
 }

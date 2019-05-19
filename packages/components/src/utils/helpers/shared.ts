@@ -7,18 +7,36 @@ import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
 
 export function findNode(ref: any) {
-  let node = ref && (ref.current || ref)
+  try {
+    let node = ref && (ref.current || ref)
 
-  if (node && (node as any).getNode && (node as any).getNode())
-    node = (node as any).getNode()
+    if (node && (node as any).getNode && (node as any).getNode())
+      node = (node as any).getNode()
 
-  if (node && (node as any)._touchableNode) node = (node as any)._touchableNode
+    if (node && (node as any)._touchableNode)
+      node = (node as any)._touchableNode
 
-  if (node && (node as any)._node) node = (node as any)._node
+    if (node && (node as any)._node) node = (node as any)._node
 
-  if (node && Platform.OS === 'web') node = findDOMNode(node)
+    if (node && Platform.OS === 'web') node = findDOMNode(node)
 
-  return node
+    return node
+  } catch (error) {
+    console.error('Failed to find node', error, { ref })
+    return null
+  }
+}
+
+export function tryFocus(ref: any) {
+  const node = findNode(ref)
+
+  if (node && node.focus) {
+    if (!(node.tabIndex >= 0)) node.tabIndex = -1
+    node.focus()
+    return true
+  }
+
+  return false
 }
 
 export function getGitHubAppInstallUri(
@@ -95,4 +113,24 @@ export async function openAppStore() {
     if (__DEV__) console.error(`Failed to open App Store: ${error}`) // tslint:disable-line no-console
     return false
   }
+}
+
+export function genericParseText<T extends string>(
+  text: string,
+  pattern: RegExp,
+  fn: (match: T) => React.ReactNode,
+) {
+  if (!(text && typeof text === 'string')) return [text].filter(Boolean)
+
+  const matches = text.match(new RegExp(pattern, 'g')) as T[]
+  if (!(matches && matches.length)) return [text].filter(Boolean)
+
+  return text.split(pattern).reduce(
+    (result, item, index) => {
+      if (!matches[index]) return result.concat([item].filter(Boolean))
+
+      return result.concat([item, fn(matches[index])].filter(Boolean))
+    },
+    [] as React.ReactNode[],
+  )
 }

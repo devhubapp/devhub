@@ -42,7 +42,7 @@ export const bugsnag: BugnsagCrossPlatform = {
   },
 
   setUser(id, name, email) {
-    client.setUser(id, name || '', email || '')
+    client.setUser(id || '', name || '', email || '')
   },
 }
 

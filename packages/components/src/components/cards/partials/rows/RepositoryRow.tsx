@@ -1,15 +1,17 @@
 import React from 'react'
-import { View } from 'react-native'
 
-import { getGitHubURLForRepo, getGitHubURLForUser } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
+import { getGitHubURLForRepo, getGitHubURLForUser, Omit } from '@devhub/core'
+import { sharedStyles } from '../../../../styles/shared'
+import { contentPadding } from '../../../../styles/variables'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
-import { cardRowStyles, getCardRowStylesForTheme } from './styles'
+import { Spacer } from '../../../common/Spacer'
+import { cardStyles } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 
-export interface RepositoryRowProps {
+export interface RepositoryRowProps
+  extends Omit<BaseRowProps, 'contentContainerStyle' | 'left' | 'right'> {
+  hideOwner?: boolean
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
@@ -17,23 +19,24 @@ export interface RepositoryRowProps {
   ownerName: string
   repositoryName: string
   showMoreItemsIndicator?: boolean
-  smallLeftColumn?: boolean
+  small?: boolean
 }
 
 export interface RepositoryRowState {}
 
 export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
+    hideOwner,
     // isForcePush,
     // isFork,
     // isPush,
     isRead,
     ownerName,
     repositoryName,
+    rightContainerStyle,
     showMoreItemsIndicator,
-    smallLeftColumn,
+    small,
+    ...otherProps
   } = props
 
   // const repoIcon =
@@ -45,15 +48,9 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
   const isBot = Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-        ]}
-      >
+    <BaseRow
+      {...otherProps}
+      left={
         <Avatar
           isBot={isBot}
           linkURL=""
@@ -61,66 +58,60 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           style={cardStyles.avatar}
           username={ownerName}
         />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignContent: 'center',
-          }}
-        >
+      }
+      rightContainerStyle={[
+        sharedStyles.flex,
+        sharedStyles.horizontalAndVerticallyAligned,
+        rightContainerStyle,
+      ]}
+      right={
+        <>
           <Link
             href={
               showMoreItemsIndicator
                 ? undefined
                 : getGitHubURLForRepo(ownerName, repositoryName)
             }
+            textProps={{
+              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
+              // color: 'foregroundColor',
+              numberOfLines: hideOwner ? 2 : 1,
+              style: [cardStyles.normalText, small && cardStyles.smallText],
+            }}
           >
-            {/* <SpringAnimatedText numberOfLines={1}> */}
-            {/* <SpringAnimatedIcon
+            {/* <ThemedIcon
               name={repoIcon}
               size={13}
               style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardStylesForTheme(springAnimatedTheme).icon,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
+                cardStyles.normalText,
+                cardStyles.icon,
               ]}
             />{' '} */}
-            <SpringAnimatedText
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardRowStylesForTheme(springAnimatedTheme).repositoryText,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
-              {showMoreItemsIndicator ? '' : repositoryName}
-            </SpringAnimatedText>
-            {/* </SpringAnimatedText> */}
+            {showMoreItemsIndicator ? '' : repositoryName}
           </Link>
-          <Link
-            href={
-              showMoreItemsIndicator
-                ? undefined
-                : getGitHubURLForUser(ownerName)
-            }
-          >
-            <SpringAnimatedText
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardRowStylesForTheme(springAnimatedTheme)
-                  .repositorySecondaryText,
-                (isRead || showMoreItemsIndicator) &&
-                  getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            >
-              {showMoreItemsIndicator ? '...' : ` ${ownerName}`}
-            </SpringAnimatedText>
-          </Link>
-        </View>
-      </View>
-    </View>
+
+          {!!(ownerName && !hideOwner) && (
+            <>
+              {!!repositoryName && <Spacer width={contentPadding / 3} />}
+
+              <Link
+                href={
+                  showMoreItemsIndicator
+                    ? undefined
+                    : getGitHubURLForUser(ownerName)
+                }
+                textProps={{
+                  color: 'foregroundColorMuted60',
+                  numberOfLines: 1,
+                  style: [cardStyles.normalText, small && cardStyles.smallText],
+                }}
+              >
+                {showMoreItemsIndicator ? '...' : ownerName}
+              </Link>
+            </>
+          )}
+        </>
+      }
+    />
   )
 })

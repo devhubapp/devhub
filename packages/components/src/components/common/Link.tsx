@@ -1,5 +1,10 @@
-import React, { AnchorHTMLAttributes, useRef } from 'react'
-import { View } from 'react-native'
+import React, {
+  AnchorHTMLAttributes,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { Omit, ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
@@ -7,23 +12,32 @@ import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
-import {
-  SpringAnimatedTouchableOpacity,
-  SpringAnimatedTouchableOpacityProps,
-} from '../animated/spring/SpringAnimatedTouchableOpacity'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
+import { findNode } from '../../utils/helpers/shared'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
+import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
+import { ThemedView } from '../themed/ThemedView'
+import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
 export interface LinkProps
-  extends Omit<SpringAnimatedTouchableOpacityProps, 'analyticsLabel'> {
+  extends Omit<TouchableOpacityProps, 'analyticsLabel'> {
   allowEmptyLink?: boolean
-  analyticsLabel?: SpringAnimatedTouchableOpacityProps['analyticsLabel']
+  analyticsLabel?: TouchableOpacityProps['analyticsLabel']
+  backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
-  hoverBackgroundThemeColor?: keyof ThemeColors
+  enableTextWrapper?: boolean
+  hoverBackgroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
+  hoverForegroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
   href?: string
-  mobileProps?: SpringAnimatedTouchableOpacityProps
+  mobileProps?: TouchableOpacityProps
   openOnNewTab?: boolean
+  textProps?: ThemedTextProps
+  tooltip?: string
   webProps?: AnchorHTMLAttributes<HTMLAnchorElement>
 }
 
@@ -31,54 +45,129 @@ export function Link(props: LinkProps) {
   const {
     allowEmptyLink,
     analyticsLabel,
-    href,
-    mobileProps,
-    openOnNewTab: _openOnNewTab = true,
-    webProps,
+    backgroundThemeColor,
     enableBackgroundHover,
-    enableForegroundHover,
-    hoverBackgroundThemeColor,
+    enableForegroundHover = true,
+    enableTextWrapper,
+    hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
+    hoverForegroundThemeColor: _hoverForegroundThemeColor,
+    href,
+    openOnNewTab: _openOnNewTab = true,
+    textProps,
+    tooltip,
     ...otherProps
   } = props
 
+  const flatContainerStyle =
+    StyleSheet.flatten([{ maxWidth: '100%' }, otherProps.style]) || {}
+
+  const flatTextStyle = StyleSheet.flatten([textProps && textProps.style]) || {}
+
   const openOnNewTab = _openOnNewTab || Platform.isElectron
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
-  })
-
-  const ref = useRef<View>(null)
-  useHover(
-    enableBackgroundHover || enableForegroundHover ? ref : null,
-    isHovered => {
-      cacheRef.current.isHovered = isHovered
-      updateStyles()
-    },
-  )
-
-  const cacheRef = useRef({ theme: initialTheme, isHovered: false })
-
-  function updateStyles() {
+  const updateStyles = useCallback(() => {
     if (!(enableBackgroundHover || enableForegroundHover)) return
 
     const { isHovered, theme } = cacheRef.current
 
-    if (ref.current) {
-      const hoverBackgroundColor =
-        hoverBackgroundThemeColor && theme[hoverBackgroundThemeColor]
+    const hoverBackgroundThemeColor = getThemeColorOrItself(
+      theme,
+      _hoverBackgroundThemeColor,
+    )
+    const hoverForegroundThemeColor = getThemeColorOrItself(
+      theme,
+      _hoverForegroundThemeColor,
+    )
 
-      ref.current!.setNativeProps({
+    if (containerRef.current) {
+      const hoverBackgroundColor = enableBackgroundHover
+        ? (hoverBackgroundThemeColor && hoverBackgroundThemeColor) ||
+          rgba(theme.invert().foregroundColor, 0.2)
+        : undefined
+
+      const backgroundColor =
+        (backgroundThemeColor &&
+          getThemeColorOrItself(theme, backgroundThemeColor)) ||
+        flatContainerStyle.backgroundColor
+
+      containerRef.current!.setNativeProps({
         style: {
-          backgroundColor: hoverBackgroundColor
-            ? isHovered
+          backgroundColor:
+            hoverBackgroundColor && isHovered
               ? hoverBackgroundColor
-              : rgba(hoverBackgroundColor, 0)
-            : null,
+              : backgroundColor ||
+                (hoverBackgroundColor ? rgba(hoverBackgroundColor, 0) : null),
         },
       })
     }
-  }
+
+    if (textRef.current) {
+      const hoverForegroundColor = enableForegroundHover
+        ? (hoverForegroundThemeColor && hoverForegroundThemeColor) ||
+          theme.primaryBackgroundColor
+        : undefined
+
+      const color =
+        (textProps &&
+          textProps.color &&
+          getThemeColorOrItself(theme, textProps.color)) ||
+        flatTextStyle.color
+
+      textRef.current.setNativeProps({
+        style: {
+          color:
+            hoverForegroundColor && isHovered
+              ? hoverForegroundColor
+              : color ||
+                (hoverForegroundColor ? rgba(hoverForegroundColor, 0) : null),
+        },
+      })
+    }
+  }, [
+    _hoverBackgroundThemeColor,
+    _hoverForegroundThemeColor,
+    backgroundThemeColor,
+    enableBackgroundHover,
+    enableForegroundHover,
+    flatContainerStyle.backgroundColor,
+    flatTextStyle.color,
+    textProps && textProps.color,
+  ])
+
+  const initialTheme = useTheme(
+    useCallback(
+      theme => {
+        if (cacheRef.current.theme === theme) return
+        cacheRef.current.theme = theme
+        updateStyles()
+      },
+      [updateStyles],
+    ),
+  )
+
+  const containerRef = useRef<View>(null)
+  const textRef = useRef<Text>(null)
+  useHover(
+    enableBackgroundHover || enableForegroundHover ? containerRef : null,
+    useCallback(
+      isHovered => {
+        cacheRef.current.isHovered = isHovered
+        updateStyles()
+      },
+      [updateStyles],
+    ),
+  )
+
+  useEffect(() => {
+    if (!(Platform.realOS === 'web')) return
+    const node = findNode(containerRef)
+    if (!node) return
+
+    node.title = tooltip || ''
+  }, [containerRef.current, tooltip])
+
+  const cacheRef = useRef({ theme: initialTheme, isHovered: false })
+  cacheRef.current.theme = initialTheme
 
   const renderTouchable = href || otherProps.onPress || allowEmptyLink
 
@@ -100,7 +189,6 @@ export function Link(props: LinkProps) {
               : () => Linking.openURL(href)
             : undefined,
           ...otherProps,
-          ...mobileProps,
         } as any,
 
         web: {
@@ -109,24 +197,28 @@ export function Link(props: LinkProps) {
           selectable: true,
           target: openOnNewTab ? '_blank' : '_self',
           ...otherProps,
-          ...webProps,
         } as any,
       }),
+      style: flatContainerStyle,
     }
   } else {
-    finalProps = Platform.select({
-      default: {
-        ...otherProps,
-        ...mobileProps,
-      } as any,
-
-      web: {
-        ...otherProps,
-        ...webProps,
-      } as any,
-    })
+    finalProps = {
+      ...otherProps,
+      style: flatContainerStyle,
+    }
   }
 
-  if (!renderTouchable) return <SpringAnimatedView ref={ref} {...finalProps} />
-  return <SpringAnimatedTouchableOpacity ref={ref} {...finalProps} />
+  if (
+    (typeof finalProps.children === 'string' && enableTextWrapper !== false) ||
+    (typeof finalProps.children !== 'string' && enableTextWrapper === true)
+  ) {
+    finalProps.children = (
+      <ThemedText ref={textRef} {...textProps}>
+        {finalProps.children}
+      </ThemedText>
+    )
+  }
+
+  if (!renderTouchable) return <ThemedView ref={containerRef} {...finalProps} />
+  return <TouchableOpacity ref={containerRef} {...finalProps} />
 }

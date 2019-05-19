@@ -3,10 +3,15 @@ import {
   ColumnFilters,
   ColumnsAndSubscriptions,
   ColumnSubscriptionCreation,
-  GitHubEvent,
+  GitHubEventAction,
+  GitHubEventSubjectType,
+  GitHubIssueOrPullRequestSubjectType,
   GitHubNotificationReason,
+  GitHubNotificationSubjectType,
+  GitHubStateType,
   NotificationColumnFilters,
 } from '@devhub/core'
+import { EmitterTypes } from '../../libs/emitter'
 import { createAction } from '../helpers'
 
 export function replaceColumnsAndSubscriptions(
@@ -40,7 +45,12 @@ export function deleteColumn(payload: {
   return createAction('DELETE_COLUMN', payload)
 }
 
-export function moveColumn(payload: { columnId: string; columnIndex: number }) {
+export function moveColumn(
+  payload: {
+    columnId: string
+    columnIndex: number
+  } & EmitterTypes['FOCUS_ON_COLUMN'],
+) {
   return createAction('MOVE_COLUMN', payload)
 }
 
@@ -58,16 +68,41 @@ export function setColumnParticipatingFilter(payload: {
   return createAction('SET_COLUMN_PARTICIPATING_FILTER', payload)
 }
 
-export function setColumnActivityTypeFilter<
-  T extends GitHubEvent['type']
+export function setColumnActivityActionFilter<
+  T extends GitHubEventAction
 >(payload: { columnId: string; type: T; value: boolean | null }) {
-  return createAction('SET_COLUMN_ACTIVITY_TYPE_FILTER', payload)
+  return createAction('SET_COLUMN_ACTIVITY_ACTION_FILTER', payload)
 }
 
 export function setColumnReasonFilter<
   T extends GitHubNotificationReason
 >(payload: { columnId: string; reason: T; value: boolean | null }) {
   return createAction('SET_COLUMN_REASON_FILTER', payload)
+}
+
+export function setColummStateTypeFilter<T extends GitHubStateType>(payload: {
+  columnId: string
+  state: T
+  value: boolean | null
+  supportsOnlyOne?: boolean
+}) {
+  return createAction('SET_COLUMN_STATE_FILTER', payload)
+}
+
+export function setColummDraftFilter(payload: {
+  columnId: string
+  draft: ColumnFilters['draft']
+}) {
+  return createAction('SET_COLUMN_DRAFT_FILTER', payload)
+}
+
+export function setColummSubjectTypeFilter<
+  T extends
+    | GitHubEventSubjectType
+    | GitHubNotificationSubjectType
+    | GitHubIssueOrPullRequestSubjectType
+>(payload: { columnId: string; subjectType: T; value: boolean | null }) {
+  return createAction('SET_COLUMN_SUBJECT_TYPE_FILTER', payload)
 }
 
 export function setColumnUnreadFilter(payload: {

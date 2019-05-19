@@ -1,18 +1,19 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { RefObject, useCallback, useEffect, useRef } from 'react'
 import { Image, ImageProps } from 'react-native'
 
-import { SpringAnimatedImage } from '../animated/spring/SpringAnimatedImage'
+import { Platform } from '../../libs/platform'
+import { findNode } from '../../utils/helpers/shared'
 
 export interface ImageWithLoadingProps extends ImageProps {
   animated?: boolean
-  backgroundColorFailed: string | any
-  backgroundColorLoaded: string | any
-  backgroundColorLoading: string | any
+  backgroundColorFailed: string | undefined
+  backgroundColorLoaded: string | undefined
+  backgroundColorLoading: string | undefined
   onError?: ImageProps['onError']
   onLoad?: ImageProps['onLoad']
   onLoadEnd?: ImageProps['onLoadEnd']
   onLoadStart?: ImageProps['onLoadStart']
-  style: any
+  tooltip?: string
 }
 
 export const ImageWithLoading = React.memo(
@@ -28,70 +29,82 @@ export const ImageWithLoading = React.memo(
       onLoad,
       onLoadEnd,
       onLoadStart,
+      tooltip,
       ...otherProps
     } = props
 
     const imageRef = useRef<Image>(null)
-    const cacheRef = useRef({ error: false, isLoading: false })
+    const stateRef = useRef({
+      error: false,
+      isLoading: false,
+    })
+
+    const propsRef = useRef({
+      backgroundColorFailed,
+      backgroundColorLoaded,
+      backgroundColorLoading,
+      onError,
+      onLoad,
+      onLoadEnd,
+      onLoadStart,
+    })
+    propsRef.current.backgroundColorFailed = backgroundColorFailed
+    propsRef.current.backgroundColorLoaded = backgroundColorLoaded
+    propsRef.current.backgroundColorLoading = backgroundColorLoading
+    propsRef.current.onError = onError
+    propsRef.current.onLoad = onLoad
+    propsRef.current.onLoadEnd = onLoadEnd
+    propsRef.current.onLoadStart = onLoadStart
 
     useEffect(() => {
-      updateStyles()
+      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
     }, [])
 
-    const handleLoad = useCallback(
-      e => {
-        cacheRef.current.isLoading = false
-        cacheRef.current.error = false
-        updateStyles()
+    useEffect(() => {
+      if (!(Platform.realOS === 'web')) return
 
-        if (typeof onLoad === 'function') onLoad(e)
-      },
-      [onLoad],
-    )
+      const node = findNode(imageRef)
+      if (!node) return
+
+      node.title = tooltip || ''
+    }, [imageRef.current, tooltip])
+
+    const handleLoad = useCallback(e => {
+      stateRef.current.isLoading = false
+      stateRef.current.error = false
+      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
+
+      if (typeof propsRef.current.onLoad === 'function')
+        propsRef.current.onLoad(e)
+    }, [])
 
     const handleLoadStart = useCallback(() => {
-      cacheRef.current.isLoading = true
-      updateStyles()
+      stateRef.current.isLoading = true
+      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
 
-      if (typeof onLoadStart === 'function') onLoadStart()
-    }, [onLoadStart])
+      if (typeof propsRef.current.onLoadStart === 'function')
+        propsRef.current.onLoadStart()
+    }, [])
 
     const handleLoadEnd = useCallback(() => {
-      cacheRef.current.isLoading = false
-      updateStyles()
+      stateRef.current.isLoading = false
+      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
 
-      if (typeof onLoadEnd === 'function') onLoadEnd()
-    }, [onLoadEnd])
+      if (typeof propsRef.current.onLoadEnd === 'function')
+        propsRef.current.onLoadEnd()
+    }, [])
 
-    const handleError = useCallback(
-      e => {
-        cacheRef.current.isLoading = false
-        cacheRef.current.error = true
-        updateStyles()
+    const handleError = useCallback(e => {
+      stateRef.current.isLoading = false
+      stateRef.current.error = true
+      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
 
-        if (typeof onError === 'function') onError(e)
-      },
-      [onError],
-    )
-
-    function updateStyles() {
-      const { error, isLoading } = cacheRef.current
-
-      if (imageRef.current) {
-        imageRef.current.setNativeProps({
-          style: {
-            backgroundColor: error
-              ? backgroundColorFailed
-              : isLoading
-              ? backgroundColorLoading
-              : backgroundColorLoaded,
-          },
-        })
-      }
-    }
+      if (typeof propsRef.current.onError === 'function')
+        propsRef.current.onError(e)
+    }, [])
 
     return (
-      <SpringAnimatedImage
+      <Image
         {...otherProps}
         ref={imageRef}
         onError={handleError}
@@ -102,3 +115,29 @@ export const ImageWithLoading = React.memo(
     )
   }),
 )
+
+function updateStyles(
+  imageRef: RefObject<Image>,
+  {
+    error,
+    isLoading,
+    backgroundColorFailed,
+    backgroundColorLoading,
+    backgroundColorLoaded,
+  }: { error: boolean; isLoading: boolean } & Pick<
+    ImageWithLoadingProps,
+    'backgroundColorFailed' | 'backgroundColorLoaded' | 'backgroundColorLoading'
+  >,
+) {
+  if (!(imageRef && imageRef.current)) return
+
+  imageRef.current.setNativeProps({
+    style: {
+      backgroundColor: error
+        ? backgroundColorFailed
+        : isLoading
+        ? backgroundColorLoading
+        : backgroundColorLoaded,
+    },
+  })
+}

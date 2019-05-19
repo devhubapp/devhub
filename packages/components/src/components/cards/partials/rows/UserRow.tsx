@@ -1,19 +1,23 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForUser } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
+import { getGitHubURLForUser, Omit } from '@devhub/core'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
-import { cardRowStyles, getCardRowStylesForTheme } from './styles'
+import { cardStyles } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
+import { cardRowStyles } from './styles'
 
-export interface UserRowProps {
+export interface UserRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   avatarUrl: string
+  bold?: boolean
+  // hideIcon?: boolean
   isRead: boolean
   showMoreItemsIndicator?: boolean
-  smallLeftColumn?: boolean
   userLinkURL: string
   username: string
 }
@@ -21,27 +25,21 @@ export interface UserRowProps {
 export interface UserRowState {}
 
 export const UserRow = React.memo((props: UserRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     avatarUrl,
+    bold,
+    // hideIcon,
     isRead,
     showMoreItemsIndicator,
-    smallLeftColumn,
     userLinkURL,
     username,
+    ...otherProps
   } = props
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-        ]}
-      >
+    <BaseRow
+      {...otherProps}
+      left={
         <Avatar
           avatarUrl={avatarUrl}
           isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
@@ -50,26 +48,28 @@ export const UserRow = React.memo((props: UserRowProps) => {
           style={cardStyles.avatar}
           username={username}
         />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
-        <Link
-          href={
-            showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
-          }
-          style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            style={[
-              getCardRowStylesForTheme(springAnimatedTheme).usernameText,
-              (isRead || showMoreItemsIndicator) &&
-                getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
+      }
+      right={
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link
+            href={
+              showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
+            }
+            textProps={{
+              color:
+                isRead || showMoreItemsIndicator
+                  ? 'foregroundColorMuted60'
+                  : 'foregroundColor',
+              style: [
+                bold && cardStyles.boldText,
+                // isRead && { fontWeight: undefined },
+              ],
+            }}
           >
             {showMoreItemsIndicator ? '...' : username}
-          </SpringAnimatedText>
-        </Link>
-      </View>
-    </View>
+          </Link>
+        </View>
+      }
+    />
   )
 })

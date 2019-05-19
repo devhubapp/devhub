@@ -3,7 +3,7 @@ import useMultiKeyPressCallback from './use-multi-key-press-callback'
 export default function useKeyPressCallback(
   targetKey: string,
   callback: () => void,
-  preventDefault = true,
+  options: Parameters<typeof useMultiKeyPressCallback>[2] = {},
 ) {
-  useMultiKeyPressCallback([targetKey], callback, preventDefault)
+  useMultiKeyPressCallback([targetKey], callback, options)
 }

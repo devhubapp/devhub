@@ -1,19 +1,20 @@
 import React from 'react'
 
-import { GitHubPage } from '@devhub/core'
+import { GitHubPage, Omit } from '@devhub/core'
 import { RenderItem, RowList } from './RowList'
-import { WikiPageRow } from './WikiPageRow'
+import { WikiPageRow, WikiPageRowProps } from './WikiPageRow'
 
-export interface WikiPageListRowProps {
+export interface WikiPageListRowProps
+  extends Omit<WikiPageRowProps, 'showMoreItemsIndicator' | 'title' | 'url'> {
   isRead: boolean
   maxHeight?: number
   pages: GitHubPage[]
-  smallLeftColumn?: boolean
 }
 
 export const WikiPageListRow = React.memo((props: WikiPageListRowProps) => {
   const renderItem: RenderItem<GitHubPage> = ({
     item: page,
+    index,
     showMoreItemsIndicator,
   }) => {
     if (!(page && page.sha && page.title)) return null
@@ -25,6 +26,7 @@ export const WikiPageListRow = React.memo((props: WikiPageListRowProps) => {
         showMoreItemsIndicator={showMoreItemsIndicator}
         title={page.title}
         url={page.html_url || page.url}
+        withTopMargin={index === 0 ? props.withTopMargin : true}
       />
     )
   }

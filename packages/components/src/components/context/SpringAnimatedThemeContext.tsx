@@ -11,11 +11,13 @@ export interface SpringAnimatedThemeProviderProps {
   children?: React.ReactNode
 }
 
-export type SpringAnimatedThemeProviderState = UseSpringProps<ThemeColors>
+export type SpringAnimatedThemeProviderState = UseSpringProps<
+  ThemeColors & { isDark: 0 | 1 }
+>
 
 export const SpringAnimatedThemeContext = React.createContext<
   SpringAnimatedThemeProviderState
->(pickThemeColors(defaultTheme))
+>({ ...pickThemeColors(defaultTheme), isDark: defaultTheme.isDark ? 1 : 0 })
 
 export const SpringAnimatedThemeConsumer = SpringAnimatedThemeContext.Consumer
 
@@ -25,12 +27,14 @@ export function SpringAnimatedThemeProvider(
   const initialTheme = useReduxState(selectors.themeSelector, theme => {
     setSpringAnimatedTheme({
       ...pickThemeColors(theme),
+      isDark: (theme.isDark ? 1 : 0) as (0 | 1),
     })
   })
 
   const [springAnimatedTheme, setSpringAnimatedTheme] = useSpring(() => ({
     immediate: true,
     ...pickThemeColors(initialTheme),
+    isDark: (initialTheme.isDark ? 1 : 0) as (0 | 1),
   }))
 
   return (

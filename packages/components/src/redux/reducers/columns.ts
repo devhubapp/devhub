@@ -4,6 +4,7 @@ import _ from 'lodash'
 import {
   ActivityColumn,
   Column,
+  filterRecordHasAnyForcedValue,
   normalizeColumns,
   normalizeSubscriptions,
   NotificationColumn,
@@ -51,7 +52,7 @@ export const columnsReducer: Reducer<State> = (
 
         draft.allIds.push(normalized.allIds[0])
 
-        Object.assign(draft.byId, normalized.byId)
+        _.merge(draft.byId, normalized.byId)
 
         draft.updatedAt = normalized.updatedAt
       })
@@ -191,7 +192,7 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
       })
 
-    case 'SET_COLUMN_ACTIVITY_TYPE_FILTER':
+    case 'SET_COLUMN_ACTIVITY_ACTION_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return
 
@@ -200,13 +201,17 @@ export const columnsReducer: Reducer<State> = (
 
         column.filters = column.filters || {}
         column.filters.activity = column.filters.activity || {}
-        column.filters.activity.types = column.filters.activity.types || {}
+        column.filters.activity.actions = column.filters.activity.actions || {}
 
         if (typeof action.payload.value === 'boolean') {
-          column.filters.activity.types[action.payload.type] =
+          column.filters.activity.actions[action.payload.type] =
             action.payload.value
         } else {
-          delete column.filters.activity.types[action.payload.type]
+          delete column.filters.activity.actions[action.payload.type]
+        }
+
+        if (!filterRecordHasAnyForcedValue(column.filters.activity.actions)) {
+          column.filters.activity.actions = {}
         }
 
         draft.updatedAt = new Date().toISOString()
@@ -230,6 +235,80 @@ export const columnsReducer: Reducer<State> = (
             action.payload.value
         } else {
           delete column.filters.notifications.reasons[action.payload.reason]
+        }
+
+        if (
+          !filterRecordHasAnyForcedValue(column.filters.notifications.reasons)
+        ) {
+          column.filters.notifications.reasons = {}
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_STATE_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.state = column.filters.state || {}
+
+        if (action.payload.supportsOnlyOne) {
+          column.filters.state = {}
+
+          if (action.payload.value === true) {
+            column.filters.state[action.payload.state] = action.payload.value
+          }
+        } else if (typeof action.payload.value === 'boolean') {
+          column.filters.state[action.payload.state] = action.payload.value
+        } else {
+          delete column.filters.state[action.payload.state]
+        }
+
+        if (!filterRecordHasAnyForcedValue(column.filters.state)) {
+          column.filters.state = {}
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_DRAFT_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.draft = action.payload.draft
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_SUBJECT_TYPE_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.subjectTypes = column.filters.subjectTypes || {}
+
+        if (typeof action.payload.value === 'boolean') {
+          ;(column.filters.subjectTypes as any)[action.payload.subjectType] =
+            action.payload.value
+        } else {
+          delete (column.filters.subjectTypes as any)[
+            action.payload.subjectType
+          ]
+        }
+
+        if (!filterRecordHasAnyForcedValue(column.filters.subjectTypes)) {
+          column.filters.subjectTypes = {}
         }
 
         draft.updatedAt = new Date().toISOString()

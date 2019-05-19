@@ -1,7 +1,7 @@
 import { darken, getLuminance, invert, lighten, rgba } from 'polished'
 
-import { Theme } from '@devhub/core'
-import * as colors from '../colors'
+import { Theme, ThemeColors } from '@devhub/core'
+import { getStaticColors } from '../colors'
 
 function createTheme(theme: Theme): Theme {
   return theme
@@ -11,25 +11,17 @@ export function createThemeFromColor(
   color: string,
   id: Theme['id'],
   displayName: Theme['displayName'],
-  options: {
-    primaryBackgroundColor?: string
-    primaryForegroundColor?: string
-  } = {},
+  override: Partial<ThemeColors> = {},
 ): Theme {
-  const {
-    primaryBackgroundColor = colors.defaultBrandBackgroundColor,
-    primaryForegroundColor = colors.defaultBrandForegroundColor,
-  } = options
-
   const luminance = getLuminance(color)
-  const isDark = luminance <= 0.5
+  const isDark = luminance <= 0.4
 
   const backgroundColor = color
 
-  const amount1 = luminance <= 0.02 ? 0.05 : 0.04
-  const amount2 = 2 * amount1
-  const amount3 = 3 * amount1
-  const amount4 = 4 * amount1
+  const amount1 = 0.03
+  const amount2 = 0.05
+  const amount3 = 0.07
+  const amount4 = 0.09
 
   const backgroundColorDarker1 = darken(amount1, color)
   const backgroundColorDarker2 = darken(amount2, color)
@@ -68,12 +60,28 @@ export function createThemeFromColor(
 
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
   const foregroundColor = isDark ? lighten(0.95, color) : darken(0.95, color)
-  const foregroundColorMuted20 = isDark
+  const foregroundColorMuted25 = isDark
     ? lighten(0.2, color)
     : darken(0.2, color)
-  const foregroundColorMuted50 = isDark
+  const foregroundColorMuted40 = isDark
+    ? lighten(0.4, color)
+    : darken(0.4, color)
+  const foregroundColorMuted60 = isDark
     ? lighten(0.6, color)
     : darken(0.6, color)
+
+  if (
+    override &&
+    override.primaryBackgroundColor &&
+    !override.primaryForegroundColor
+  ) {
+    const isPrimaryBackgroundDark =
+      getLuminance(override.primaryBackgroundColor) <= 0.4
+
+    override.primaryForegroundColor = isPrimaryBackgroundDark
+      ? lighten(0.95, override.primaryBackgroundColor)
+      : darken(0.95, override.primaryBackgroundColor)
+  }
 
   let invertedTheme: Theme
   return createTheme({
@@ -87,12 +95,14 @@ export function createThemeFromColor(
         invert(color),
         id,
         displayName,
-        options,
+        override,
       )
       return invertedTheme
     },
-    primaryBackgroundColor,
-    primaryForegroundColor,
+
+    primaryBackgroundColor: '#49D3B4',
+    primaryForegroundColor: '#141C26',
+
     backgroundColor,
     backgroundColorDarker1,
     backgroundColorDarker2,
@@ -111,8 +121,14 @@ export function createThemeFromColor(
     backgroundColorMore3,
     backgroundColorMore4,
     backgroundColorTransparent10,
+
     foregroundColor,
-    foregroundColorMuted20,
-    foregroundColorMuted50,
+    foregroundColorMuted25,
+    foregroundColorMuted40,
+    foregroundColorMuted60,
+
+    ...getStaticColors({ isDark }),
+
+    ...override,
   })
 }

@@ -1,27 +1,26 @@
 import _ from 'lodash'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { GitHubIcon } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
+import { constants, GitHubIcon } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
-import { separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import {
   TouchableOpacity,
   TouchableOpacityProps,
 } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
+import { ThemedText } from '../themed/ThemedText'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 
@@ -30,11 +29,15 @@ export interface ColumnOptionsRowProps {
   children: React.ReactNode
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle
+  disableBackground?: boolean
+  enableBackgroundHover?: boolean
   hasChanged: boolean
+  headerItemFixedIconSize?: number
   iconName: GitHubIcon
+  forceImmediate?: boolean
+  isOpen: boolean
   onToggle: (() => void) | undefined
   openOnHover?: boolean
-  isOpen: boolean
   subtitle?: string
   title: string
 }
@@ -45,7 +48,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     children,
     containerStyle,
     contentContainerStyle,
+    enableBackgroundHover = true,
     hasChanged,
+    headerItemFixedIconSize = columnHeaderItemContentSize,
     iconName,
     isOpen,
     onToggle,
@@ -54,19 +59,48 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     title,
   } = props
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
+  const getStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
+      const { isHovered, isPressing, theme } = cacheRef.current
+      const immediate =
+        constants.DISABLE_ANIMATIONS || forceImmediate || isHovered
 
-  const initialTheme = useTheme(theme => {
-    cacheRef.current.theme = theme
-    updateStyles()
-  })
+      return {
+        config: getDefaultReactSpringAnimationConfig(),
+        immediate,
+        backgroundColor:
+          enableBackgroundHover && (isHovered || isPressing || isOpen)
+            ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
+            : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
+      }
+    },
+    [enableBackgroundHover, isOpen],
+  )
+
+  const updateStyles = useCallback(
+    ({ forceImmediate }: { forceImmediate?: boolean }) => {
+      setSpringAnimatedStyles(getStyles({ forceImmediate }))
+    },
+    [getStyles],
+  )
+
+  const initialTheme = useTheme(
+    useCallback(
+      theme => {
+        if (cacheRef.current.theme === theme) return
+        cacheRef.current.theme = theme
+        updateStyles({ forceImmediate: true })
+      },
+      [updateStyles],
+    ),
+  )
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(
     onToggle ? touchableRef : null,
     isHovered => {
       cacheRef.current.isHovered = isHovered
-      updateStyles()
+      updateStyles({ forceImmediate: false })
 
       if (openOnHover && onToggle && !isOpen) onToggle()
     },
@@ -77,39 +111,22 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     isPressing: false,
     theme: initialTheme,
   })
+  cacheRef.current.theme = initialTheme
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
-  useEffect(() => {
-    updateStyles()
-  }, [isOpen])
-
-  function getStyles() {
-    const { isHovered, isPressing, theme } = cacheRef.current
-    const immediate = Platform.realOS === 'android'
-
-    return {
-      config: { duration: immediate ? 0 : 100 },
-      immediate,
-      backgroundColor:
-        isHovered || isPressing || isOpen
-          ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
-          : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
-    }
-  }
-
-  function updateStyles() {
-    setSpringAnimatedStyles(getStyles())
-  }
+  useLayoutEffect(() => {
+    updateStyles({ forceImmediate: false })
+  }, [updateStyles])
 
   return (
     <SpringAnimatedView
       style={{
         backgroundColor: springAnimatedStyles.backgroundColor,
-        borderWidth: 0,
-        borderColor: 'transparent',
-        borderBottomWidth: separatorSize,
-        borderBottomColor: springAnimatedTheme.backgroundColorLess1,
+        // borderWidth: 0,
+        // borderColor: 'transparent',
+        // borderBottomWidth: separatorSize,
+        // borderBottomColor: springAnimatedTheme.backgroundColorLess1,
       }}
     >
       <ConditionalWrap
@@ -129,13 +146,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 if (Platform.realOS === 'web') return
 
                 cacheRef.current.isPressing = true
-                updateStyles()
+                updateStyles({ forceImmediate: false })
               }}
               onPressOut={() => {
                 if (Platform.realOS === 'web') return
 
                 cacheRef.current.isPressing = false
-                updateStyles()
+                updateStyles({ forceImmediate: false })
               }}
             >
               {child}
@@ -153,6 +170,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               alignContent: 'center',
               padding: contentPadding,
             },
+            !!isOpen && !onToggle && { paddingBottom: contentPadding / 2 },
             containerStyle,
           ]}
         >
@@ -163,31 +181,30 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             iconStyle={{ lineHeight: 22 }}
             noPadding
             selectable={false}
+            size={headerItemFixedIconSize}
+            tooltip={undefined}
           />
 
           <Spacer width={contentPadding / 2} />
 
-          <SpringAnimatedText
+          <ThemedText
+            color="foregroundColor"
             numberOfLines={1}
-            style={{ color: springAnimatedTheme.foregroundColor }}
+            style={{ fontWeight: '500' }}
           >
             {title}
-          </SpringAnimatedText>
+          </ThemedText>
 
           <Spacer flex={1} minWidth={contentPadding / 2} />
 
           {!!(subtitle || hasChanged) && (
-            <SpringAnimatedText
+            <ThemedText
+              color="foregroundColorMuted60"
               numberOfLines={1}
-              style={{
-                fontSize: 12,
-                color: hasChanged
-                  ? springAnimatedTheme.primaryBackgroundColor
-                  : springAnimatedTheme.foregroundColorMuted50,
-              }}
+              style={{ fontSize: 12 }}
             >
               {subtitle || '●'}
-            </SpringAnimatedText>
+            </ThemedText>
           )}
 
           {!!onToggle && (
@@ -200,26 +217,23 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 iconStyle={{ lineHeight: undefined }}
                 noPadding
                 selectable={false}
+                tooltip={undefined}
               />
             </>
           )}
         </View>
       </ConditionalWrap>
 
-      <AccordionView isOpen={isOpen}>
+      <ConditionalWrap
+        condition={!!onToggle}
+        wrap={c => <AccordionView isOpen={isOpen}>{c}</AccordionView>}
+      >
         <View
-          style={[
-            {
-              paddingBottom: contentPadding,
-              paddingLeft: columnHeaderItemContentSize + 1.5 * contentPadding,
-              paddingRight: contentPadding,
-            },
-            contentContainerStyle,
-          ]}
+          style={[{ paddingBottom: contentPadding }, contentContainerStyle]}
         >
           {children}
         </View>
-      </AccordionView>
+      </ConditionalWrap>
     </SpringAnimatedView>
   )
 }

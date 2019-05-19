@@ -6,21 +6,19 @@ export interface EnterpriseSetupModalProps {
   showBackButton: boolean
 }
 
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H3 } from '../common/H3'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
+import { ThemedText } from '../themed/ThemedText'
 
 export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
   const { showBackButton } = props
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const [copied, setCopied] = useState(false)
 
@@ -36,15 +34,13 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
       showBackButton={showBackButton}
       title="GitHub Enterprise"
     >
-      <View style={{ flex: 1, padding: contentPadding }}>
+      <View style={[sharedStyles.flex, { padding: contentPadding }]}>
         <Spacer height={contentPadding} />
 
-        <SpringAnimatedText
-          style={{ lineHeight: 16, color: springAnimatedTheme.foregroundColor }}
-        >
+        <ThemedText color="foregroundColor" style={{ lineHeight: 16 }}>
           To enable DevHub on your GitHub Enterprise, contact us via e-mail
           below:{' '}
-        </SpringAnimatedText>
+        </ThemedText>
 
         <Spacer height={contentPadding} />
 
@@ -60,12 +56,9 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
             analyticsLabel={`mailto:${email}`}
             href={`mailto:${email}`}
             openOnNewTab={false}
+            textProps={{ color: 'foregroundColor' }}
           >
-            <SpringAnimatedText
-              style={{ color: springAnimatedTheme.foregroundColor }}
-            >
-              {email}
-            </SpringAnimatedText>
+            {email}
           </Link>
         </View>
 

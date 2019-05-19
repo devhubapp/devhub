@@ -9,16 +9,16 @@ import {
   constants,
   GitHubIcon,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding, radius } from '../../styles/variables'
+import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -26,13 +26,14 @@ import { fabSize } from '../common/FAB'
 import { H2 } from '../common/H2'
 import { HeaderMessage } from '../common/HeaderMessage'
 import { Link } from '../common/Link'
-import { separatorTickSize } from '../common/Separator'
+import { separatorThickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
-import { fabSpacing } from '../layout/FABRenderer'
+import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { ThemedText } from '../themed/ThemedText'
 
 export interface AddColumnModalProps {
   showBackButton: boolean
@@ -86,7 +87,44 @@ const columnTypes: Array<{
     ],
   },
   {
-    title: 'Activity',
+    title: 'Issues & Pull Requests',
+    type: 'issue_or_pr',
+    icon: 'issue-opened',
+    soon: constants.DISABLE_ISSUES_AND_PRS_COLUMN,
+    soonLink: 'https://beta.devhubapp.com/',
+    items: [
+      {
+        title: 'Issues',
+        icon: 'issue-opened',
+        payload: {
+          icon: 'issue-opened',
+          title: 'Issues',
+          subscription: {
+            type: 'issue_or_pr',
+            subtype: 'ISSUES',
+          },
+          paramList: ['owner', 'repo'],
+          isPrivateSupported: true,
+        },
+      },
+      {
+        title: 'Pull Requests',
+        icon: 'git-pull-request',
+        payload: {
+          icon: 'git-pull-request',
+          title: 'Pull Requests',
+          subscription: {
+            type: 'issue_or_pr',
+            subtype: 'PULLS',
+          },
+          paramList: ['owner', 'repo'],
+          isPrivateSupported: true,
+        },
+      },
+    ],
+  },
+  {
+    title: 'Activities',
     type: 'activity',
     icon: 'note',
     items: [
@@ -102,6 +140,14 @@ const columnTypes: Array<{
           },
           paramList: ['username'],
           isPrivateSupported: false,
+          defaultFilters: {
+            subjectTypes: {
+              Release: true,
+              Repository: true,
+              Tag: true,
+              User: true,
+            },
+          },
         },
       },
       {
@@ -148,27 +194,6 @@ const columnTypes: Array<{
       },
     ],
   },
-  /*
-  {
-    soon: true,
-    soonLink: 'https://github.com/devhubapp/devhub/issues/110',
-    title: 'Issue & PR Management',
-    type: 'activity', // TODO
-    icon: 'issue-opened',
-    items: [
-      {
-        title: 'Issues',
-        icon: 'issue-opened',
-        payload: null,
-      },
-      {
-        title: 'Pull Requests',
-        icon: 'git-pull-request',
-        payload: null,
-      },
-    ],
-  },
-  */
 ]
 
 function AddColumnModalItem({
@@ -185,6 +210,7 @@ function AddColumnModalItem({
   title: string
 }) {
   const initialTheme = useTheme(theme => {
+    if (cacheRef.current.theme === theme) return
     cacheRef.current.theme = theme
     updateStyles()
   })
@@ -200,6 +226,7 @@ function AddColumnModalItem({
     isPressing: false,
     theme: initialTheme,
   })
+  cacheRef.current.theme = initialTheme
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
@@ -207,22 +234,20 @@ function AddColumnModalItem({
     updateStyles()
   }, [disabled])
 
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const pushModal = useReduxAction(actions.pushModal)
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
-    const immediate = Platform.realOS === 'android'
+    const immediate = constants.DISABLE_ANIMATIONS || isHovered
 
     return {
-      config: { duration: immediate ? 0 : 100 },
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       backgroundColor:
         (isHovered || isPressing) && !disabled
-          ? theme.backgroundColorLess1
+          ? theme.backgroundColorLess2
           : rgba(theme.backgroundColor, 0),
-      borderColor: theme.backgroundColorLess1,
+      borderColor: theme.backgroundColorLess2,
     }
   }
 
@@ -281,16 +306,12 @@ function AddColumnModalItem({
           noPadding
           size={24}
           style={{ alignSelf: 'center', marginBottom: contentPadding / 2 }}
+          tooltip={undefined}
         />
 
-        <SpringAnimatedText
-          style={{
-            color: springAnimatedTheme.foregroundColor,
-            textAlign: 'center',
-          }}
-        >
+        <ThemedText color="foregroundColor" style={{ textAlign: 'center' }}>
           {title}
-        </SpringAnimatedText>
+        </ThemedText>
       </View>
     </SpringAnimatedTouchableOpacity>
   )
@@ -298,8 +319,6 @@ function AddColumnModalItem({
 
 export function AddColumnModal(props: AddColumnModalProps) {
   const { showBackButton } = props
-
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
@@ -311,11 +330,11 @@ export function AddColumnModal(props: AddColumnModalProps) {
   const { sizename } = useAppLayout()
 
   const outerSpacing = (3 / 4) * contentPadding
-  const availableWidth = columnWidth - 2 * separatorTickSize - 2 * outerSpacing
+  const availableWidth = columnWidth - 2 * separatorThickSize - 2 * outerSpacing
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 
-  const isFabVisible = sizename < '3-large'
+  const isFabVisible = shouldRenderFAB({ sizename })
 
   return (
     <ModalColumn
@@ -331,27 +350,24 @@ export function AddColumnModal(props: AddColumnModalProps) {
               analyticsLabel="install-github-app-to-unlock-private-repository-support"
               href={getGitHubAppInstallUri()}
               openOnNewTab
-            >
-              <SpringAnimatedText
-                style={{
+              textProps={{
+                color: 'foregroundColorMuted60',
+                style: {
                   flexGrow: 1,
                   lineHeight: 14,
                   fontSize: 11,
                   textAlign: 'center',
-                  color: springAnimatedTheme.foregroundColorMuted50,
-                }}
-              >
-                ✨ Install the GitHub App to unlock Private Repositories
-              </SpringAnimatedText>
+                },
+              }}
+            >
+              ✨ Install the GitHub App to unlock Private Repositories
             </Link>
           </HeaderMessage>
         )}
 
       <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
+        style={sharedStyles.flex}
+        contentContainerStyle={sharedStyles.flexGrow}
       >
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
@@ -364,8 +380,12 @@ export function AddColumnModal(props: AddColumnModalProps) {
                   <H2
                     muted
                     withMargin={false}
-                    children=" (soon)"
-                    style={{ flex: 1 }}
+                    children={
+                      group.soonLink && group.soonLink.includes('beta')
+                        ? ' (beta)'
+                        : ' (soon)'
+                    }
+                    style={sharedStyles.flex}
                   />
                 </Link>
               )}
@@ -384,7 +404,9 @@ export function AddColumnModal(props: AddColumnModalProps) {
                 <AddColumnModalItem
                   key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
                   availableWidth={availableWidth}
-                  disabled={hasReachedColumnLimit || !item.payload}
+                  disabled={
+                    hasReachedColumnLimit || !item.payload || group.soon
+                  }
                   icon={item.icon}
                   payload={item.payload}
                   title={item.title}
@@ -395,20 +417,20 @@ export function AddColumnModal(props: AddColumnModalProps) {
         ))}
 
         {!!hasReachedColumnLimit && (
-          <SpringAnimatedText
+          <ThemedText
+            color="foregroundColorMuted60"
             style={{
               marginTop: contentPadding,
               paddingHorizontal: contentPadding,
               lineHeight: 20,
               fontSize: 14,
-              color: springAnimatedTheme.foregroundColorMuted50,
               textAlign: 'center',
             }}
           >
             {`You have reached the limit of ${
               constants.COLUMNS_LIMIT
             } columns. This is to maintain a healthy usage of the GitHub API.`}
-          </SpringAnimatedText>
+          </ThemedText>
         )}
 
         <Spacer flex={1} minHeight={contentPadding} />

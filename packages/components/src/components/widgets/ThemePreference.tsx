@@ -6,10 +6,11 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { darkThemesArr, lightThemesArr } from '../../styles/themes'
 import { defaultTheme } from '../../styles/utils'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedCheckbox } from '../common/Checkbox'
+import { Checkbox } from '../common/Checkbox'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
@@ -48,7 +49,7 @@ export const ThemePreference = React.memo(() => {
           : theme.id === preferredLightThemeId))
 
     return (
-      <SpringAnimatedCheckbox
+      <Checkbox
         analyticsLabel={undefined}
         key={`theme-item-checkbox-${theme.id}`}
         checked={selected ? (currentThemeId === 'auto' ? null : true) : false}
@@ -86,13 +87,13 @@ export const ThemePreference = React.memo(() => {
       <SubHeader title="Theme" />
 
       <View style={{ paddingHorizontal: contentPadding }}>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 1 }}>
+        <View style={sharedStyles.horizontal}>
+          <View style={sharedStyles.flex}>
             <H3 withMargin>Light Theme</H3>
             {lightThemesArr.map(t => renderThemeButton(t))}
           </View>
 
-          <View style={{ flex: 1 }}>
+          <View style={sharedStyles.flex}>
             <H3 withMargin>Dark Theme</H3>
             {darkThemesArr.map(t => renderThemeButton(t))}
           </View>

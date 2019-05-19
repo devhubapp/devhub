@@ -1,31 +1,47 @@
-import { getLuminance } from 'polished'
 import React, { ReactNode } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../hooks/use-css-variables-or-spring--animated-theme'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
-import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { useTheme } from '../context/ThemeContext'
+import { Separator } from '../common/Separator'
+import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
 
 export function getColumnHeaderThemeColors(
-  backgroundColor: string,
-): { normal: keyof ThemeColors; hover: keyof ThemeColors } {
-  const luminance = getLuminance(backgroundColor)
+  _backgroundColor?: string,
+): {
+  normal: keyof ThemeColors
+  hover: keyof ThemeColors
+  selected: keyof ThemeColors
+} {
+  // const luminance = getLuminance(backgroundColor)
 
-  if (luminance >= 0.5)
-    return { normal: 'backgroundColorDarker1', hover: 'backgroundColorDarker2' }
+  // if (luminance >= 0.4) {
+  //   return {
+  //     normal: 'backgroundColor',
+  //     hover: 'backgroundColorLess1',
+  //     selected: 'backgroundColorLess2',
+  //   }
+  // }
+
+  // if (luminance <= 0.02) {
+  //   return {
+  //     normal: 'backgroundColor',
+  //     hover: 'backgroundColorLess2',
+  //     selected: 'backgroundColorLess4',
+  //   }
+  // }
 
   return {
-    normal: 'backgroundColorLighther2',
-    hover: 'backgroundColorLighther3',
+    normal: 'backgroundColor',
+    hover: 'backgroundColorLess2',
+    selected: 'backgroundColorLess3',
   }
 }
 
 export interface ColumnHeaderProps extends ViewProps {
   children?: ReactNode
   maxWidth?: number
+  noPadding?: boolean
   style?: StyleProp<ViewStyle>
 }
 
@@ -37,33 +53,31 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flexDirection: 'row',
     height: columnHeaderHeight,
-    paddingHorizontal: contentPadding / 2,
   },
 })
 
 export function ColumnHeader(props: ColumnHeaderProps) {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-  const theme = useTheme()
-
-  const { children, style, ...otherProps } = props
+  const { children, noPadding, style, ...otherProps } = props
 
   return (
-    <SpringAnimatedSafeAreaView
-      style={[
-        styles.container,
-        {
-          backgroundColor:
-            springAnimatedTheme[
-              getColumnHeaderThemeColors(theme.backgroundColor).normal
-            ],
-        },
-      ]}
+    <ThemedSafeAreaView
+      backgroundColor={theme =>
+        theme[getColumnHeaderThemeColors(theme.backgroundColor).normal]
+      }
+      style={styles.container}
     >
-      <View {...otherProps} style={[styles.innerContainer, style]}>
+      <View
+        {...otherProps}
+        style={[
+          styles.innerContainer,
+          !noPadding && { paddingHorizontal: contentPadding / 2 },
+          style,
+        ]}
+      >
         {children}
       </View>
 
-      <CardItemSeparator />
-    </SpringAnimatedSafeAreaView>
+      {!!children && <Separator horizontal />}
+    </ThemedSafeAreaView>
   )
 }

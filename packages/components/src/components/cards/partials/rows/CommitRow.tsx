@@ -5,48 +5,58 @@ import {
   getCommentIdFromUrl,
   getGitHubSearchURL,
   getGitHubURLForUser,
+  Omit,
   trimNewLinesAndSpaces,
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
-import { useCSSVariablesOrSpringAnimatedTheme } from '../../../../hooks/use-css-variables-or-spring--animated-theme'
+import { sharedStyles } from '../../../../styles/shared'
+import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
-import { SpringAnimatedIcon } from '../../../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../../../animated/spring/SpringAnimatedText'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
-import { cardStyles, getCardStylesForTheme } from '../../styles'
+import { ThemedIcon } from '../../../themed/ThemedIcon'
+import { ThemedText } from '../../../themed/ThemedText'
+import { cardStyles } from '../../styles'
+import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
 
-export interface CommitRowProps {
+export interface CommitRowProps
+  extends Omit<
+    BaseRowProps,
+    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
+  > {
   authorEmail: string
   authorName: string
   authorUsername?: string
+  bold?: boolean
+  hideIcon?: boolean
+  isPrivate: boolean
   isRead: boolean
   latestCommentUrl?: string
   message: string
   showMoreItemsIndicator?: boolean
-  smallLeftColumn?: boolean
   url: string
 }
 
 export interface CommitRowState {}
 
 export const CommitRow = React.memo((props: CommitRowProps) => {
-  const springAnimatedTheme = useCSSVariablesOrSpringAnimatedTheme()
-
   const {
     authorEmail,
     authorName,
     authorUsername: _authorUsername,
+    bold,
+    hideIcon,
+    isPrivate,
     isRead,
     latestCommentUrl,
     message: _message,
     showMoreItemsIndicator,
-    smallLeftColumn,
     url,
+    ...otherProps
   } = props
 
-  const message = trimNewLinesAndSpaces(_message)
+  const message = trimNewLinesAndSpaces((_message || '').split('\n')[0], 100)
   if (!message) return null
 
   const authorUsername =
@@ -59,76 +69,83 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
   byText = trimNewLinesAndSpaces(byText)
 
   return (
-    <View style={cardRowStyles.container}>
-      <View
-        style={[
-          cardStyles.leftColumn,
-          smallLeftColumn
-            ? cardStyles.leftColumn__small
-            : cardStyles.leftColumn__big,
-        ]}
-      >
-        <Avatar
-          email={authorEmail}
-          isBot={Boolean(
-            authorUsername && authorUsername.indexOf('[bot]') >= 0,
-          )}
-          small
-          style={cardStyles.avatar}
-          username={authorUsername}
-          linkURL={
-            authorUsername
-              ? getGitHubURLForUser(authorUsername)
-              : getGitHubSearchURL({ q: authorEmail || '', type: 'Users' })
-          }
-        />
-      </View>
-
-      <View style={cardStyles.rightColumn}>
-        <Link
-          href={
-            showMoreItemsIndicator
-              ? undefined
-              : fixURL(url, {
-                  commentId:
-                    (latestCommentUrl &&
-                      getCommentIdFromUrl(latestCommentUrl)) ||
-                    undefined,
-                })
-          }
-          style={cardRowStyles.mainContentContainer}
-        >
-          <SpringAnimatedText
-            numberOfLines={1}
-            style={[
-              getCardStylesForTheme(springAnimatedTheme).normalText,
-              isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-            ]}
-          >
-            <SpringAnimatedIcon
-              name="git-commit"
-              size={13}
-              style={[
-                getCardStylesForTheme(springAnimatedTheme).normalText,
-                getCardStylesForTheme(springAnimatedTheme).icon,
-                isRead && getCardStylesForTheme(springAnimatedTheme).mutedText,
-              ]}
-            />{' '}
-            {showMoreItemsIndicator ? '' : message}
-            {Boolean(byText) && (
-              <SpringAnimatedText
-                style={[
-                  getCardStylesForTheme(springAnimatedTheme).normalText,
-                  cardStyles.smallText,
-                  getCardStylesForTheme(springAnimatedTheme).mutedText,
-                ]}
-              >
-                {showMoreItemsIndicator ? '...' : ` by ${byText}`}
-              </SpringAnimatedText>
+    <BaseRow
+      {...otherProps}
+      left={
+        authorEmail || authorUsername ? (
+          <Avatar
+            email={authorEmail}
+            isBot={Boolean(
+              authorUsername && authorUsername.indexOf('[bot]') >= 0,
             )}
-          </SpringAnimatedText>
-        </Link>
-      </View>
-    </View>
+            small
+            style={cardStyles.avatar}
+            username={authorUsername}
+            linkURL={
+              authorUsername
+                ? getGitHubURLForUser(authorUsername)
+                : getGitHubSearchURL({
+                    q: authorEmail || '',
+                    type: 'Users',
+                  })
+            }
+          />
+        ) : isPrivate ? (
+          <ThemedIcon color="orange" name="lock" size={smallAvatarSize} />
+        ) : null
+      }
+      right={
+        <View style={cardRowStyles.mainContentContainer}>
+          <Link
+            enableTextWrapper
+            href={
+              showMoreItemsIndicator
+                ? undefined
+                : fixURL(url, {
+                    commentId:
+                      (latestCommentUrl &&
+                        getCommentIdFromUrl(latestCommentUrl)) ||
+                      undefined,
+                  })
+            }
+            style={sharedStyles.flex}
+            textProps={{
+              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
+              // color: 'foregroundColor',
+              numberOfLines: 1,
+              style: [
+                cardStyles.normalText,
+                cardStyles.smallText,
+                bold && cardStyles.boldText,
+                // isRead && { fontWeight: undefined },
+              ],
+            }}
+            tooltip={`${_message}${byText ? `\n\n${byText}` : ''}`}
+          >
+            <>
+              {' '}
+              {!hideIcon && (
+                <>
+                  <ThemedIcon
+                    name="git-commit"
+                    size={13}
+                    style={[cardStyles.normalText, cardStyles.icon]}
+                  />{' '}
+                </>
+              )}
+              {showMoreItemsIndicator ? '' : message}
+              {Boolean(byText) && (
+                <ThemedText
+                  color="foregroundColorMuted60"
+                  style={[cardStyles.normalText, cardStyles.smallText]}
+                >
+                  {showMoreItemsIndicator ? '...' : ` by ${byText}`}
+                </ThemedText>
+              )}
+            </>
+          </Link>
+        </View>
+      }
+    />
   )
 })

@@ -1,16 +1,17 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 
 import { Platform } from '../libs/platform'
 import { findNode } from '../utils/helpers/shared'
+import { useForceRerender } from './use-force-rerender'
 
 export function useHover(
   ref: RefObject<Element | any> | null,
   callback?: (isHovered: boolean) => void,
 ) {
-  if (Platform.realOS !== 'web') return false
-
+  const forceRerender = useForceRerender()
   const cacheRef = useRef(false)
-  const [isHovered, setIsHovered] = useState(false)
+
+  if (Platform.realOS !== 'web') return false
 
   useEffect(() => {
     const node = findNode(ref)
@@ -19,7 +20,6 @@ export function useHover(
 
     const resolve = (value: boolean) => {
       if (cacheRef.current === value) return
-
       cacheRef.current = value
 
       if (callback) {
@@ -27,7 +27,7 @@ export function useHover(
         return
       }
 
-      setIsHovered(value)
+      forceRerender()
     }
 
     const handleMouseOver = () => resolve(true)
@@ -44,5 +44,5 @@ export function useHover(
     }
   }, [ref && ref.current, callback])
 
-  return isHovered
+  return cacheRef.current
 }
