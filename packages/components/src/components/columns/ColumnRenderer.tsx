@@ -1,5 +1,5 @@
 import { getLuminance } from 'polished'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 
 import {
@@ -19,13 +19,12 @@ import {
   ThemeColors,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
+import { useColumnData } from '../../hooks/use-column-data'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
-import { useReduxState } from '../../hooks/use-redux-state'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
-import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderHeight,
@@ -152,10 +151,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const columnWidth = useColumnWidth()
   const repoTableColumnWidth = useRepoTableColumnWidth()
 
-  const filteredSubscriptionsDataSelectorRef = useRef(
-    selectors.createFilteredSubscriptionsDataSelector(false),
-  )
-
   const columnRef = useRef<View>(null)
   useTheme(theme => {
     if (!columnRef.current) return
@@ -168,12 +163,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     })
   })
 
-  useEffect(() => {
-    filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
-      false,
-    )
-  }, column.subscriptionIds)
-
   useEmitter(
     'TOGGLE_COLUMN_FILTERS',
     payload => {
@@ -184,18 +173,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     [column.id, enableSharedFiltersView],
   )
 
-  const filteredItems = useReduxState(
-    useCallback(
-      state => {
-        return filteredSubscriptionsDataSelectorRef.current(
-          state,
-          column.subscriptionIds,
-          column.filters,
-        )
-      },
-      [column.subscriptionIds, column.filters],
-    ),
-  )
+  const { filteredItems } = useColumnData(column.id, false)
 
   const clearableItems = (filteredItems as any[]).filter(
     (

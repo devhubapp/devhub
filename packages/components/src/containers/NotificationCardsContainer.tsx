@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback } from 'react'
 
 import {
   EnhancedGitHubNotification,
@@ -12,6 +12,7 @@ import {
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 import { NoTokenView } from '../components/cards/NoTokenView'
+import { useColumnData } from '../hooks/use-column-data'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
@@ -53,47 +54,9 @@ export const NotificationCardsContainer = React.memo(
       actions.fetchColumnSubscriptionRequest,
     )
 
-    const subscriptionsDataSelectorRef = useRef(
-      selectors.createSubscriptionsDataSelector(),
-    )
-
-    const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(
-        cardViewMode !== 'compact',
-      ),
-    )
-
-    useEffect(() => {
-      subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
-        cardViewMode !== 'compact',
-      )
-    }, [cardViewMode, ...column.subscriptionIds])
-
-    const allItems = useReduxState(
-      useCallback(
-        state => {
-          return subscriptionsDataSelectorRef.current(
-            state,
-            column.subscriptionIds,
-          )
-        },
-        [column.subscriptionIds, column.filters],
-      ),
-    ) as EnhancedGitHubNotification[]
-
-    const filteredItems = useReduxState(
-      useCallback(
-        state => {
-          return filteredSubscriptionsDataSelectorRef.current(
-            state,
-            column.subscriptionIds,
-            column.filters,
-          )
-        },
-        [column.subscriptionIds, column.filters],
-      ),
-    ) as EnhancedGitHubNotification[]
+    const { allItems, filteredItems } = useColumnData<
+      EnhancedGitHubNotification
+    >(column.id, cardViewMode !== 'compact')
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderNotificationDate(allItems)
