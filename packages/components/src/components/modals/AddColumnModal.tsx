@@ -175,7 +175,7 @@ const columnTypes: Array<{
             subtype: 'REPO_EVENTS',
           },
           paramList: ['owner', 'repo'],
-          isPrivateSupported: true,
+          isPrivateSupported: false, // https://github.com/devhubapp/devhub/issues/140
         },
       },
       {
