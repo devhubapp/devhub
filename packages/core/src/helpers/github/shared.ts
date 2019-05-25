@@ -7,18 +7,42 @@ import {
   Column,
   ColumnFilters,
   ColumnSubscription,
+  EnhancedGitHubEvent,
+  EnhancedGitHubIssue,
+  EnhancedGitHubIssueOrPullRequest,
+  EnhancedGitHubNotification,
+  EnhancedGitHubPullRequest,
   EnhancedItem,
   GitHubAPIHeaders,
   GitHubIcon,
+  GitHubIssueOrPullRequest,
   GitHubItemSubjectType,
+  GitHubPrivacy,
   GitHubPullRequest,
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
+  ItemFilterCountMetadata,
+  ItemsFilterMetadata,
   NotificationColumnSubscription,
   ThemeColors,
 } from '../../types'
-import { getSteppedSize } from '../shared'
-import { getGitHubIssueSearchQuery } from './issues'
+import {
+  getFilteredEvents,
+  getFilteredIssueOrPullRequests,
+  getFilteredNotifications,
+} from '../filters'
+import {
+  getSteppedSize,
+  isEventPrivate,
+  isNotificationPrivate,
+} from '../shared'
+import { getEventMetadata } from './events'
+import {
+  getGitHubIssueSearchQuery,
+  getIssueOrPullRequestState,
+  getIssueOrPullRequestSubjectType,
+} from './issues'
+import { getNotificationSubjectType } from './notifications'
 
 export function getDefaultPaginationPerPage(columnType: Column['type']) {
   if (columnType === 'activity') return 50
@@ -724,4 +748,245 @@ export function getSubjectTypeMetadata<T extends GitHubItemSubjectType>(
       }
     }
   }
+}
+
+export function getItemSubjectType(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): GitHubItemSubjectType | undefined {
+  switch (type) {
+    case 'activity':
+      return (
+        getEventMetadata(item as EnhancedGitHubEvent).subjectType || undefined
+      )
+
+    case 'issue_or_pr':
+      return (
+        getIssueOrPullRequestSubjectType(
+          item as EnhancedGitHubIssueOrPullRequest,
+        ) || undefined
+      )
+
+    case 'notifications':
+      return (
+        getNotificationSubjectType(item as EnhancedGitHubNotification) ||
+        undefined
+      )
+
+    default:
+      return undefined
+  }
+}
+
+export function getItemPrivacy(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): GitHubPrivacy | undefined {
+  if (!item) return undefined
+
+  switch (type) {
+    case 'activity':
+      return isEventPrivate(item as EnhancedGitHubEvent) ? 'private' : 'public'
+
+    case 'issue_or_pr':
+      return undefined // TODO
+
+    case 'notifications':
+      return isNotificationPrivate(item as EnhancedGitHubNotification)
+        ? 'private'
+        : 'public'
+
+    default:
+      return undefined
+  }
+}
+
+export function getItemIssueOrPullRequest(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): GitHubIssueOrPullRequest | undefined {
+  if (!item) return undefined
+
+  switch (type) {
+    case 'activity': {
+      const event = item as EnhancedGitHubEvent
+
+      return (
+        event &&
+        event.payload &&
+        ('issue' in event.payload
+          ? event.payload.issue
+          : 'pull_request' in event.payload
+          ? event.payload.pull_request
+          : undefined)
+      )
+    }
+
+    case 'issue_or_pr': {
+      const issueOrPR = item as EnhancedGitHubIssueOrPullRequest
+      const subjectType = getIssueOrPullRequestSubjectType(issueOrPR)
+
+      return subjectType === 'Issue'
+        ? (issueOrPR as EnhancedGitHubIssue)
+        : subjectType === 'PullRequest'
+        ? (issueOrPR as EnhancedGitHubPullRequest)
+        : undefined
+    }
+
+    case 'notifications': {
+      const notification = item as EnhancedGitHubNotification
+      const subjectType = getNotificationSubjectType(notification)
+
+      return subjectType === 'Issue' || subjectType === 'PullRequest'
+        ? (notification.issue as EnhancedGitHubIssue) ||
+            (notification.pullRequest as EnhancedGitHubPullRequest)
+        : undefined
+    }
+
+    default:
+      return undefined
+  }
+}
+
+export function getFilteredItems(
+  type: ColumnSubscription['type'] | undefined,
+  items: EnhancedItem[],
+  filters: ColumnFilters | undefined,
+  mergeSimilar: boolean,
+) {
+  if (type === 'activity') {
+    return getFilteredEvents(
+      items as EnhancedGitHubEvent[],
+      filters,
+      mergeSimilar,
+    )
+  }
+
+  if (type === 'issue_or_pr') {
+    return getFilteredIssueOrPullRequests(
+      items as EnhancedGitHubIssueOrPullRequest[],
+      filters,
+    )
+  }
+
+  if (type === 'notifications') {
+    return getFilteredNotifications(
+      items as EnhancedGitHubNotification[],
+      filters,
+    )
+  }
+
+  console.error(`Not filtered. Unhandled subscription type: ${type}`)
+  return items
+}
+
+const _defaultItemFilterCountMetadata: ItemFilterCountMetadata = {
+  read: 0,
+  unread: 0,
+  saved: 0,
+  total: 0,
+}
+
+function getDefaultItemFilterCountMetadata() {
+  return _.cloneDeep(_defaultItemFilterCountMetadata)
+}
+
+const _defaultItemsFilterMetadata: ItemsFilterMetadata = {
+  inbox: {
+    all: getDefaultItemFilterCountMetadata(),
+    participating: getDefaultItemFilterCountMetadata(),
+  },
+  saved: getDefaultItemFilterCountMetadata(),
+  state: {
+    open: getDefaultItemFilterCountMetadata(),
+    closed: getDefaultItemFilterCountMetadata(),
+    merged: getDefaultItemFilterCountMetadata(),
+  },
+  draft: getDefaultItemFilterCountMetadata(),
+  subjectType: {}, // { issue: getDefaultItemFilterCountMetadata(), ... }
+  subscriptionReason: {}, // { mentioned: getDefaultItemFilterCountMetadata(), ... }
+  eventAction: {}, // { starred: getDefaultItemFilterCountMetadata(), ... }
+  privacy: {
+    public: getDefaultItemFilterCountMetadata(),
+    private: getDefaultItemFilterCountMetadata(),
+  },
+}
+
+function getDefaultItemsFilterMetadata() {
+  return _.cloneDeep(_defaultItemsFilterMetadata)
+}
+
+export function getItemsFilterMetadata(
+  type: ColumnSubscription['type'],
+  items: EnhancedItem[],
+): ItemsFilterMetadata {
+  const result: ItemsFilterMetadata = getDefaultItemsFilterMetadata()
+  if (!(items && items.length > 0)) return result
+
+  items.filter(Boolean).forEach(item => {
+    const event =
+      type === 'activity' ? (item as EnhancedGitHubEvent) : undefined
+    const notification =
+      type === 'notifications'
+        ? (item as EnhancedGitHubNotification)
+        : undefined
+
+    const issueOrPR = getItemIssueOrPullRequest(type, item)
+
+    const read = isItemRead(item)
+    const saved = !!item.saved
+    const subjectType = getItemSubjectType(type, item)
+    const subscriptionReason = notification && notification.reason
+    const eventAction = event && getEventMetadata(event).action
+    const privacy = getItemPrivacy(type, item)
+
+    function updateNestedCounter(objRef: ItemFilterCountMetadata) {
+      if (read) objRef.read++
+      if (!read) objRef.unread++
+      if (saved) objRef.saved++
+      objRef.total++
+    }
+
+    const inbox =
+      notification && notification.reason !== 'subscribed'
+        ? 'participating'
+        : 'all'
+    updateNestedCounter(result.inbox[inbox])
+    if (inbox !== 'all') updateNestedCounter(result.inbox.all)
+
+    if (saved) updateNestedCounter(result.saved)
+
+    const state = getIssueOrPullRequestState(issueOrPR)
+    if (state) updateNestedCounter(result.state[state])
+
+    if (isDraft(issueOrPR)) updateNestedCounter(result.draft)
+
+    if (subjectType) {
+      if (!result.subjectType[subjectType])
+        result.subjectType[subjectType] = getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.subjectType[subjectType]!)
+    }
+
+    if (subscriptionReason) {
+      if (!result.subscriptionReason[subscriptionReason])
+        result.subscriptionReason[
+          subscriptionReason
+        ] = getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.subscriptionReason[subscriptionReason]!)
+    }
+
+    if (eventAction) {
+      result.eventAction[eventAction] =
+        result.eventAction[eventAction] || getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.eventAction[eventAction]!)
+    }
+
+    if (privacy) {
+      if (!result.privacy[privacy])
+        result.privacy[privacy] = getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.privacy[privacy]!)
+    }
+  })
+
+  return result
 }

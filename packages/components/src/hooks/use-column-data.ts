@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { EnhancedItem } from '@devhub/core'
+import { EnhancedItem, getFilteredItems } from '@devhub/core'
 import * as selectors from '../redux/selectors'
 import { useReduxState } from './use-redux-state'
 
@@ -13,19 +13,12 @@ export function useColumnData<ItemT extends EnhancedItem>(
     selectors.createSubscriptionsDataSelector(),
   )
 
-  const filteredSubscriptionsDataSelectorRef = useRef(
-    selectors.createFilteredSubscriptionsDataSelector(mergeSimilar),
-  )
-
   const column = useReduxState(
     useCallback(state => selectors.columnSelector(state, columnId), [columnId]),
   )
 
   useEffect(() => {
     subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-    filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
-      mergeSimilar,
-    )
   }, [column && column.subscriptionIds && column.subscriptionIds.join(',')])
 
   const allItems = useReduxState(
@@ -45,24 +38,18 @@ export function useColumnData<ItemT extends EnhancedItem>(
     ),
   ) as ItemT[]
 
-  const filteredItems = useReduxState(
-    useCallback(
-      state => {
-        if (!column) return []
-
-        return filteredSubscriptionsDataSelectorRef.current(
-          state,
-          column.subscriptionIds,
-          column.filters,
-        )
-      },
-      [column && column.subscriptionIds, column && column.filters],
-    ),
-  ) as ItemT[]
+  const filteredItems = useMemo(() => {
+    if (!column) return allItems
+    return getFilteredItems(column.type, allItems, column.filters, mergeSimilar)
+  }, [
+    column && column.type,
+    allItems,
+    column && column.filters,
+    mergeSimilar,
+  ]) as ItemT[]
 
   return {
     allItems,
-    column,
     filteredItems,
   }
 }

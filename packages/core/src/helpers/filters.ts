@@ -11,6 +11,7 @@ import {
 import {
   getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
+  getItemIssueOrPullRequest,
   getNotificationSubjectType,
   isDraft,
   isItemRead,
@@ -193,10 +194,8 @@ export function getFilteredIssueOrPullRequests(
   if (filters && issueOrPullRequestColumnHasAnyFilter(filters)) {
     _items = _items.filter(item => {
       const subjectType = getIssueOrPullRequestSubjectType(item)
-      const issueOrPR =
-        subjectType === 'Issue' || subjectType === 'PullRequest'
-          ? item
-          : undefined
+
+      const issueOrPR = getItemIssueOrPullRequest('issue_or_pr', item)
 
       const isStateFilterStrict = filterRecordWithThisValueCount(
         filters.state,
@@ -272,10 +271,8 @@ export function getFilteredNotifications(
   if (filters && notificationColumnHasAnyFilter(filters)) {
     _notifications = _notifications.filter(item => {
       const subjectType = getNotificationSubjectType(item)
-      const issueOrPR =
-        subjectType === 'Issue' || subjectType === 'PullRequest'
-          ? item.issue || item.pullRequest
-          : undefined
+
+      const issueOrPR = getItemIssueOrPullRequest('notifications', item)
 
       if (!itemPassesFilterRecord(reasonsFilter!, item.reason, true))
         return false
@@ -369,14 +366,7 @@ export function getFilteredEvents(
     _events = _events.filter(item => {
       const subjectType = getEventMetadata(item).subjectType
 
-      const issueOrPR =
-        item &&
-        item.payload &&
-        ('issue' in item.payload
-          ? item.payload.issue
-          : 'pull_request' in item.payload
-          ? item.payload.pull_request
-          : undefined)
+      const issueOrPR = getItemIssueOrPullRequest('activity', item)
 
       const isStateFilterStrict = filterRecordWithThisValueCount(
         filters.state,

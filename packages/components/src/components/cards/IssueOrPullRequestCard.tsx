@@ -84,9 +84,12 @@ export const IssueOrPullRequestCard = React.memo(
       saved,
       url,
       user,
+      html_url: htmlURL,
     } = issueOrPullRequest as EnhancedGitHubIssueOrPullRequest
 
-    const repoFullName = getRepoFullNameFromUrl(repository_url || url)
+    const repoFullName = getRepoFullNameFromUrl(
+      repository_url || url || htmlURL,
+    )
     const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
       repoFullName,
     )

@@ -4,7 +4,7 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import { ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
-import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
@@ -45,9 +45,9 @@ export interface CheckboxProps {
   disabled?: boolean
   enableIndeterminateState?: boolean
   label?: string | React.ReactNode
-  labelIcon?: ThemedIconProps['name']
   labelTooltip?: string
   onChange?: (value: boolean | null) => void
+  right?: React.ReactNode
   size?: number
   squareContainerStyle?: ViewStyle
   useBrandColor?: boolean
@@ -72,16 +72,16 @@ export function Checkbox(props: CheckboxProps) {
     checked = defaultValue,
 
     analyticsLabel,
-    squareContainerStyle,
     circle,
     containerStyle,
     disabled,
     enableIndeterminateState = false,
     label,
-    labelIcon,
     labelTooltip,
     onChange,
+    right,
     size = 16,
+    squareContainerStyle,
 
     checkedBackgroundThemeColor = 'primaryBackgroundColor',
     checkedForegroundThemeColor = 'primaryForegroundColor',
@@ -229,17 +229,10 @@ export function Checkbox(props: CheckboxProps) {
           ) : (
             label
           )}
-
-          {!!labelIcon && (
-            <ThemedIcon
-              color="foregroundColor"
-              name={labelIcon}
-              size={16}
-              style={{ lineHeight: 16 }}
-            />
-          )}
         </View>
       )}
+
+      {!!right && right}
     </TouchableOpacity>
   )
 }

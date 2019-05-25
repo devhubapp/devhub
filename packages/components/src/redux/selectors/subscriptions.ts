@@ -1,14 +1,10 @@
 import _ from 'lodash'
 
 import {
-  ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
-  getFilteredEvents,
-  getFilteredIssueOrPullRequests,
-  getFilteredNotifications,
   sortEvents,
   sortIssuesOrPullRequests,
   sortNotifications,
@@ -81,51 +77,3 @@ export const createSubscriptionsDataSelector = () =>
       return items
     },
   )
-
-export const createFilteredSubscriptionsDataSelector = (
-  mergeSimilar: boolean,
-) => {
-  const subscriptionsDataSelector = createSubscriptionsDataSelector()
-
-  return createArraySelector(
-    (state: RootState, subscriptionIds: string[]) => {
-      const firstSubscription = subscriptionIds
-        .map(id => subscriptionSelector(state, id))
-        .filter(Boolean)[0]
-
-      return firstSubscription && firstSubscription.type
-    },
-    (state: RootState, subscriptionIds: string[]) =>
-      subscriptionsDataSelector(state, subscriptionIds),
-    (_state: RootState, _subscriptionIds: string[], filters: ColumnFilters) =>
-      filters,
-    (type, items, filters) => {
-      if (!(items && items.length)) return emptyArray
-
-      if (type === 'activity') {
-        return getFilteredEvents(
-          items as EnhancedGitHubEvent[],
-          filters,
-          mergeSimilar,
-        )
-      }
-
-      if (type === 'issue_or_pr') {
-        return getFilteredIssueOrPullRequests(
-          items as EnhancedGitHubIssueOrPullRequest[],
-          filters,
-        )
-      }
-
-      if (type === 'notifications') {
-        return getFilteredNotifications(
-          items as EnhancedGitHubNotification[],
-          filters,
-        )
-      }
-
-      console.error(`Not filtered. Unhandled subscription type: ${type}`)
-      return items
-    },
-  )
-}
