@@ -35,34 +35,43 @@
 
 <br/>
 
+
+## Community
+
+Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
+<br/>Join our Slack Community: [Slack Invitation](https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q) (+ beta access!)
+
+<br/>
+
+
 ## Why
 
-DevHub helps you take back control of your GitHub workflow and stay on top of everything important going on.
+DevHub is a mobile and desktop app to help you manage GitHub Notifications and stay on top of repository activities.
 
 ## Features
 
-- [x] **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on; made for power users;
-- [x] **Inbox Zero**: Clear all the seen items and keep your mind clean; Archived items will be moved to a separate place;
-- [x] **Filters**: Apply different filters to each column; remove all the noise and make them show just what you want;
-- [x] **Enhanced notifications**: See all the relevant information before opening the notification, like issue/pull request status, comment content, release description, etc.;
+- [x] **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on;
+- [x] **Inbox Zero**: Clear all the seen items and keep your mind clean; See what's new since the last time you checked;
+- [x] **Filters**: Apply different filters to each column, remove all the noise and make them show just what you want;
+- [x] **Enhanced notifications**: See all the relevant information before opening the notification, like comment content, issue/pull request status, release description, etc.;
 - [x] **Sanely watch repositories**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
-- [x] **Stalker mode**: Follow user activities without using the `follow` button and see activities that GitHub doesn't show on your feed, like issue comments and pushed commits;
-- [x] **Dashboard viewer**: See other users' home screen (their GitHub dashboard) so you can discover new interesting people and repositories;
+- [x] **Stalk users**: Follow user activities without using the `follow` button; see activities that GitHub doesn't show on your feed, like their issue comments and pushed commits;
+- [x] **Home/Dashboard**: See yours or other users' home screen (a.k.a. GitHub Dashboard), a great way to discover new repositories and interesting developers;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Keyboard shortcuts**: Do anything using only the keyboard ([see shortcuts below](#keyboard-shortcuts));
-- [x] **Theme support**: Choose between 6 light or dark themes;
+- [x] **Theme support**: Choose between 6 light or dark themes; Automatically toggle on day/night switch;
 - [x] **And more!**: Private repos support, desktop apps, native mobile apps, open source, modern tech stack, ...
 
 ### Next features:
 
-- [ ] **More filters**: Filter items by type (issue, pr, etc.); filter by regex; filter by org/repos;
+- [ ] **More filters**: Filter by org/repos, labes, users and regex; ([#131](https://github.com/devhubapp/devhub/issues/131))
 - [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
 - [ ] **Drag & Drop**: Allow moving columns using drag&drop ([#42](https://github.com/devhubapp/devhub/issues/42))
 - [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks; contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com) to show your interest.
 
-> Which one do you want first? Any other recommendations? Search for [existing feature requests](https://github.com/devhubapp/devhub/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc) and add a 👍 reaction on them, or create a new one.
+> Which one do you want first? Any other recommendations? Search for [existing feature requests](https://github.com/devhubapp/devhub/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc) and add a 👍 reaction on them, or create a new one. Feel free to ping me (@brunolemos) if you feel it's something important.
 
 #### About paid features
 
@@ -71,24 +80,21 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 - Support for private repositories
 - Support for GitHub Enterprise
 - Push notifications
-- Unlimited number of columns and workspaces
+- Unlimited number of columns
+- Unlimited history of notifications and activities
+  > GitHub API only returns notifications from the last 7 days and at max 300 activities; the paid feature will allow you to have access to all the data from the past by saving them on DevHub's database
 
 ##### Why is this app not completely free?
 
 > "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
 
-DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. If you want the project to live and be actively maintained, understand that it will need a revenue and consider donating or subscribing to the paid plan once it launches.
+DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook, it is made by a single developer that could be making $200k+ on Facebook, but instead makes $0 working on this full time. If you want the project to live and be actively maintained, understand that it will need a revenue and consider donating or subscribing to the paid plan once it launches.
 
 > [Join the discussion](https://github.com/devhubapp/devhub/issues/106)!
 
 
 <br/>
 
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
-<br/>
 
 ## Contributors
 
@@ -116,11 +122,18 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/devhub/sponsor/8/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/devhub/sponsor/9/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/9/avatar.svg"></a>
 
-## Donate
 
-- [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
-- [Patreon](https://www.patreon.com/brunolemos)
+## Donate...
+
+### ...to DevHub
+
 - [OpenCollective](https://opencollective.com/devhub)
+- [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
+
+### ...to [@brunolemos](https://twitter.com/brunolemos)
+
+- [Patreon](https://www.patreon.com/brunolemos)
+- [Crypto](https://commerce.coinbase.com/checkout/f314f3d3-2310-43ad-a2d0-c0c6462e792c)
 
 <br/>
 
@@ -128,8 +141,8 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [Create React App](https://github.com/facebook/create-react-app)
-- [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) (Monorepo)
-- [React](https://github.com/facebook/react) with [Hooks](https://reactjs.org/docs/hooks-intro.html)
+- [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) _(Monorepo)_
+- [React](https://github.com/facebook/react) _(100% [Hooks](https://reactjs.org/docs/hooks-intro.html), zero classes)_
 - [React Native](https://github.com/facebook/react-native)
 - [React Native Web](https://github.com/necolas/react-native-web)
 - [Redux](https://github.com/reduxjs/react-redux)
@@ -138,6 +151,11 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 - [Reselect](https://github.com/reduxjs/reselect)
 - [GraphQL](https://github.com/facebook/graphql)
 
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+<br/>
 <br/>
 
 
@@ -169,11 +187,10 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 ## Author
 
 Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
-<br/>Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
-<br/>Join our Slack Community: [Slack Invitation](https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q)
-<br/>Donate: [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53) | [Patreon](https://www.patreon.com/brunolemos) | [OpenCollective](https://opencollective.com/devhub)
+<br/>Donate to me: [Patreon](https://www.patreon.com/brunolemos) | [Crypto](https://commerce.coinbase.com/checkout/f314f3d3-2310-43ad-a2d0-c0c6462e792c)
+<br/>Donate to DevHub: [OpenCollective](https://opencollective.com/devhub) | [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
 
-<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=100" height="100" /></a>
+<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=200" height="100" /></a>
 
 <br/>
 
