@@ -77,10 +77,66 @@ DevHub helps you take back control of your GitHub workflow and stay on top of ev
 
 > "If you find something you think is cool then give that person some money for it so they can make more things you think are cool" 💙
 
-DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. DevHub does not intend to work with donations and, instead, plans to create real value for its users and have a few paid features. If you want the project to live and be actively maintained, understand that it will need a revenue and consider subscribing to the paid plan once it launches.
+DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook. It is made by a single developer that could be making $200k on Facebook, but instead makes $0 working on this full time. If you want the project to live and be actively maintained, understand that it will need a revenue and consider donating or subscribing to the paid plan once it launches.
 
 > [Join the discussion](https://github.com/devhubapp/devhub/issues/106)!
 
+
+<br/>
+
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
+<br/>
+
+## Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/undefined/undefinedgraphs/contributors"><img src="https://opencollective.com/devhub/contributors.svg?width=890&button=false" /></a>
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/devhub#backer)]
+
+<a href="https://opencollective.com/devhub#backers" target="_blank"><img src="https://opencollective.com/devhub/backers.svg?width=890"></a>
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/devhub#sponsor)]
+
+<a href="https://opencollective.com/devhub/sponsor/0/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/1/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/2/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/3/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/4/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/5/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/6/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/7/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/8/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/devhub/sponsor/9/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/9/avatar.svg"></a>
+
+## Donate
+
+- [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
+- [Patreon](https://www.patreon.com/brunolemos)
+- [OpenCollective](https://opencollective.com/devhub)
+
+<br/>
+
+## Tech Stack
+
+- [TypeScript](https://github.com/Microsoft/TypeScript)
+- [Create React App](https://github.com/facebook/create-react-app)
+- [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) (Monorepo)
+- [React](https://github.com/facebook/react) with [Hooks](https://reactjs.org/docs/hooks-intro.html)
+- [React Native](https://github.com/facebook/react-native)
+- [React Native Web](https://github.com/necolas/react-native-web)
+- [Redux](https://github.com/reduxjs/react-redux)
+- [Redux Persist](https://github.com/rt2zz/redux-persist)
+- [Redux Saga](https://github.com/redux-saga/redux-saga/)
+- [Reselect](https://github.com/reduxjs/reselect)
+- [GraphQL](https://github.com/facebook/graphql)
 
 <br/>
 
@@ -107,29 +163,6 @@ DevHub plans to be a sustainable open source project. It's not made by a huge co
 > **Tip:** To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
 
 <br/>
-
-<br/>
-
-## Tech Stack
-
-- [TypeScript](https://github.com/Microsoft/TypeScript)
-- [Create React App](https://github.com/facebook/create-react-app)
-- [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) (Monorepo)
-- [React](https://github.com/facebook/react) with [Hooks](https://reactjs.org/docs/hooks-intro.html)
-- [React Native](https://github.com/facebook/react-native)
-- [React Native Web](https://github.com/necolas/react-native-web)
-- [Redux](https://github.com/reduxjs/react-redux)
-- [Redux Persist](https://github.com/rt2zz/redux-persist)
-- [Redux Saga](https://github.com/redux-saga/redux-saga/)
-- [Reselect](https://github.com/reduxjs/reselect)
-- [GraphQL](https://github.com/facebook/graphql)
-
-
-<br/>
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
 <br/>
 
 
@@ -138,11 +171,9 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
 <br/>Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
 <br/>Join our Slack Community: [Slack Invitation](https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q)
+<br/>Donate: [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53) | [Patreon](https://www.patreon.com/brunolemos) | [OpenCollective](https://opencollective.com/devhub)
 
 <a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=100" height="100" /></a>
-
-BTC: `3KpFKpbEhXsNfTGXRA3P4psxxXd9gNSXzH`<br/>
-ETH: `0x1f6314A3F01A2f579369bD04B507166fe45b2880`
 
 <br/>
 

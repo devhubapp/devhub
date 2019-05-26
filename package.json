@@ -9,6 +9,10 @@
   },
   "description": "TweetDeck for GitHub",
   "repository": "https://github.com/devhubapp/devhub",
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/devhub"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
@@ -26,11 +30,14 @@
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "patch-package": "patch-package",
+    "postinstall": "opencollective-postinstall",
     "prepare": "yarn patch-package",
     "studio": "yarn workspace @devhub/mobile studio",
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
-  "dependencies": {},
+  "dependencies": {
+    "opencollective-postinstall": "^2.0.0"
+  },
   "devDependencies": {
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
