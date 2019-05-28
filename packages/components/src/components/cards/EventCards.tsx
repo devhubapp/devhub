@@ -228,7 +228,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
               analyticsLabel="show_cleared"
               borderOnly
               children="Show cleared items"
-              disabled={loadState !== 'loaded'}
               onPress={() => {
                 setColumnClearedAtFilter({
                   clearedAt: null,

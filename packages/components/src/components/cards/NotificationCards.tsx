@@ -227,7 +227,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
               analyticsLabel="show_cleared"
               borderOnly
               children="Show cleared items"
-              disabled={loadState !== 'loaded'}
               onPress={() => {
                 setColumnClearedAtFilter({
                   clearedAt: null,
