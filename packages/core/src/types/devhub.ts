@@ -213,9 +213,16 @@ export interface BaseColumnFilters {
   clearedAt?: string
   draft?: boolean
   // order?: Array<'asc' | 'desc'>
-  // owners?: string[]
+  owners?: Partial<
+    Record<
+      string,
+      {
+        value: boolean | undefined
+        repos: Partial<Record<string, boolean>> | undefined
+      }
+    >
+  >
   private?: boolean
-  // repos?: string[]
   saved?: boolean
   // search: {
   //   exclude?: string
@@ -427,4 +434,11 @@ export interface ItemsFilterMetadata {
   >
   eventAction: Partial<Record<GitHubEventAction, ItemFilterCountMetadata>>
   privacy: Record<GitHubPrivacy, ItemFilterCountMetadata>
+  owners: Record<
+    string,
+    {
+      metadata: ItemFilterCountMetadata | undefined
+      repos: Record<string, ItemFilterCountMetadata | undefined>
+    }
+  >
 }

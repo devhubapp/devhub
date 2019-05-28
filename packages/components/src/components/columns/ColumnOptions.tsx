@@ -12,6 +12,7 @@ import {
   getFilteredItems,
   getItemsFilterMetadata,
   getNotificationReasonMetadata,
+  getOwnerAndRepoFormattedFilter,
   GitHubEventSubjectType,
   GitHubIssueOrPullRequestSubjectType,
   GitHubNotificationSubjectType,
@@ -43,7 +44,12 @@ import {
   issueOrPullRequestStateTypes,
 } from '../../utils/helpers/github/shared'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { Checkbox } from '../common/Checkbox'
+import { Avatar } from '../common/Avatar'
+import {
+  Checkbox,
+  checkboxLabelSpacing,
+  defaultCheckboxSize,
+} from '../common/Checkbox'
 import {
   CounterMetadata,
   CounterMetadataProps,
@@ -97,6 +103,7 @@ export type ColumnOptionCategory =
   | 'inbox'
   | 'notification_reason'
   | 'privacy'
+  | 'repos'
   | 'saved_for_later'
   | 'state'
   | 'subject_types'
@@ -112,6 +119,35 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     startWithFiltersExpanded,
   } = props
 
+  const { allItems } = useColumnData(column.id, false)
+
+  const ownerOrRepoFilteredItemsMetadata = getItemsFilterMetadata(
+    column.type,
+    getFilteredItems(
+      column.type,
+      allItems,
+      {
+        ...column.filters,
+        owners: undefined,
+      },
+      false,
+    ),
+  )
+
+  const {
+    ownerFilters,
+    ownerFiltersWithRepos,
+    repoFilters,
+  } = getOwnerAndRepoFormattedFilter(column.filters)
+
+  const _owners = Object.keys(ownerOrRepoFilteredItemsMetadata.owners || {})
+  const _shouldShowOwnerOrRepoFilters =
+    _owners.length > 1 ||
+    (_owners.length === 1 &&
+      ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos &&
+      Object.keys(ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos)
+        .length > 1)
+
   const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
     column.type === 'notifications' && 'inbox',
     'saved_for_later',
@@ -122,6 +158,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     column.type === 'activity' && 'event_action',
     column.type === 'notifications' && 'notification_reason',
     column.type === 'notifications' && 'privacy',
+    _shouldShowOwnerOrRepoFilters && 'repos',
   ]
 
   const allColumnOptionCategories = _allColumnOptionCategories.filter(
@@ -149,8 +186,6 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
 
-  const { allItems } = useColumnData(column.id, false)
-
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const moveColumn = useReduxAction(actions.moveColumn)
   const setColumnSavedFilter = useReduxAction(actions.setColumnSavedFilter)
@@ -160,6 +195,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const setColumnActivityActionFilter = useReduxAction(
     actions.setColumnActivityActionFilter,
   )
+  const setColumnOwnerFilter = useReduxAction(actions.setColumnOwnerFilter)
+  const setColumnRepoFilter = useReduxAction(actions.setColumnRepoFilter)
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
   const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
   const setColummStateTypeFilter = useReduxAction(
@@ -186,7 +223,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const allItemsMetadata = getItemsFilterMetadata(column.type, allItems)
 
   const checkboxStyle: ViewStyle = {
+    flex: 1,
     alignSelf: 'stretch',
+    maxWidth: '100%',
     paddingVertical: contentPadding / 4,
     paddingHorizontal: contentPadding,
   }
@@ -209,7 +248,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   ) {
     return (
       <>
-        <Spacer flex={1} minWidth={contentPadding / 4} />
+        <Spacer width={contentPadding / 2} />
         <CounterMetadata
           {...counterMetadataProps}
           alwaysRenderANumber={alwaysRenderANumber}
@@ -1081,6 +1120,195 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     filteredItemsMetadata.privacy.private,
                   )}
                 />
+              </ColumnOptionsRow>
+            )
+          })()}
+
+        {allColumnOptionCategories.includes('repos') &&
+          (() => {
+            const defaultBooleanValue = true
+
+            const isOwnerFilterStrict =
+              filterRecordWithThisValueCount(ownerFilters, true) >= 1
+            const isRepoFilterStrict =
+              filterRecordWithThisValueCount(repoFilters, true) >= 1
+
+            const ownerFilterHasForcedValue = filterRecordHasAnyForcedValue(
+              ownerFilters,
+            )
+            const repoFilterHasForcedValue = filterRecordHasAnyForcedValue(
+              repoFilters,
+            )
+
+            const owners = _.sortBy(
+              Object.keys(ownerOrRepoFilteredItemsMetadata.owners),
+            )
+
+            // const ownerCountMetadata = getFilterCountMetadata(
+            //   ownerFilters,
+            //   owners.length,
+            //   defaultBooleanValue,
+            // )
+
+            return (
+              <ColumnOptionsRow
+                analyticsLabel="repositories"
+                enableBackgroundHover={allowToggleCategories}
+                hasChanged={
+                  ownerFilterHasForcedValue || repoFilterHasForcedValue
+                }
+                headerItemFixedIconSize={columnHeaderItemContentSize}
+                iconName="repo"
+                isOpen={openedOptionCategories.has('repos')}
+                onToggle={
+                  allowToggleCategories
+                    ? () => toggleOpenedOptionCategory('repos')
+                    : undefined
+                }
+                title="Repositories"
+                // subtitle={
+                //   ownerFilterHasForcedValue || repoFilterHasForcedValue
+                //     ? `${ownerCountMetadata.checked}/${ownerCountMetadata.total}`
+                //     : 'All'
+                // }
+              >
+                {owners.map(owner => {
+                  const ownerItem =
+                    ownerOrRepoFilteredItemsMetadata.owners[owner]
+                  if (!ownerItem) return null
+
+                  const ownerFiltersWithRepo =
+                    ownerFiltersWithRepos && ownerFiltersWithRepos[owner]
+                      ? ownerFiltersWithRepos[owner]
+                      : null
+
+                  const ownerChecked =
+                    ownerFilters && typeof ownerFilters[owner] === 'boolean'
+                      ? ownerFilters[owner]
+                      : null
+
+                  const repos = _.sortBy(Object.keys(ownerItem.repos))
+
+                  const thisOwnerRepoFilters =
+                    ownerFiltersWithRepos &&
+                    ownerFiltersWithRepos[owner] &&
+                    ownerFiltersWithRepos[owner]!.repos
+                  const thisOwnerHasStrictRepoFilter =
+                    filterRecordWithThisValueCount(
+                      thisOwnerRepoFilters,
+                      defaultBooleanValue,
+                    ) >= 1
+
+                  const thisOwnerRepoFilterHasForcedValue = filterRecordHasAnyForcedValue(
+                    thisOwnerRepoFilters,
+                  )
+
+                  return (
+                    <>
+                      <Checkbox
+                        key={`owner-option-${owner}`}
+                        analyticsLabel={undefined}
+                        checked={ownerChecked}
+                        containerStyle={checkboxStyle}
+                        defaultValue={defaultBooleanValue}
+                        enableIndeterminateState={
+                          !(isOwnerFilterStrict || isRepoFilterStrict) ||
+                          thisOwnerHasStrictRepoFilter ||
+                          ownerChecked === defaultBooleanValue
+                        }
+                        label={owner}
+                        labelTooltip={owner}
+                        left={
+                          <Avatar
+                            size={defaultCheckboxSize}
+                            shape="circle"
+                            username={owner}
+                          />
+                        }
+                        onChange={value => {
+                          setColumnOwnerFilter({
+                            columnId: column.id,
+                            owner,
+                            value: isOwnerFilterStrict
+                              ? typeof value === 'boolean'
+                                ? defaultBooleanValue
+                                : null
+                              : ownerFilterHasForcedValue
+                              ? typeof value === 'boolean'
+                                ? !defaultBooleanValue
+                                : null
+                              : value,
+                          })
+                        }}
+                        right={getCheckboxRight(ownerItem.metadata!)}
+                        squareContainerStyle={checkboxSquareStyle}
+                      />
+
+                      {repos.map(repo => {
+                        const repoFullName = `${owner}/${repo}`
+
+                        const repoItem = ownerItem.repos[repo]
+                        if (!repoItem) return null
+
+                        const repoChecked =
+                          ownerFiltersWithRepo &&
+                          ownerFiltersWithRepo.repos &&
+                          typeof ownerFiltersWithRepo.repos[repo] === 'boolean'
+                            ? ownerFiltersWithRepo.repos[repo]
+                            : null
+
+                        const disabled = ownerChecked === false
+
+                        return (
+                          <Checkbox
+                            key={`owner-repo-option-${owner}/${repo}`}
+                            analyticsLabel={undefined}
+                            checked={disabled ? false : repoChecked}
+                            containerStyle={[
+                              checkboxStyle,
+                              {
+                                marginLeft:
+                                  defaultCheckboxSize + checkboxLabelSpacing,
+                              },
+                            ]}
+                            defaultValue={defaultBooleanValue}
+                            disabled={disabled}
+                            enableIndeterminateState={
+                              !disabled &&
+                              (!(isOwnerFilterStrict || isRepoFilterStrict) ||
+                                (ownerChecked === true &&
+                                  !thisOwnerHasStrictRepoFilter) ||
+                                repoChecked === defaultBooleanValue)
+                            }
+                            label={repo}
+                            labelTooltip={repoFullName}
+                            onChange={value => {
+                              setColumnRepoFilter({
+                                columnId: column.id,
+                                owner,
+                                repo,
+                                value: thisOwnerHasStrictRepoFilter
+                                  ? typeof value === 'boolean'
+                                    ? defaultBooleanValue
+                                    : null
+                                  : thisOwnerRepoFilterHasForcedValue
+                                  ? isRepoFilterStrict &&
+                                    value !== !defaultBooleanValue
+                                    ? defaultBooleanValue
+                                    : typeof value === 'boolean'
+                                    ? !defaultBooleanValue
+                                    : null
+                                  : value,
+                              })
+                            }}
+                            right={getCheckboxRight(repoItem)}
+                            squareContainerStyle={checkboxSquareStyle}
+                          />
+                        )
+                      })}
+                    </>
+                  )
+                })}
               </ColumnOptionsRow>
             )
           })()}

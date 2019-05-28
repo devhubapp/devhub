@@ -14,15 +14,20 @@ import {
   EnhancedGitHubPullRequest,
   EnhancedItem,
   GitHubAPIHeaders,
+  GitHubEvent,
   GitHubIcon,
   GitHubIssueOrPullRequest,
   GitHubItemSubjectType,
   GitHubPrivacy,
   GitHubPullRequest,
+  GitHubPushedCommit,
+  GitHubPushEvent,
+  GitHubRepo,
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
   ItemFilterCountMetadata,
   ItemsFilterMetadata,
+  MultipleStarEvent,
   NotificationColumnSubscription,
   ThemeColors,
 } from '../../types'
@@ -43,6 +48,7 @@ import {
   getIssueOrPullRequestSubjectType,
 } from './issues'
 import { getNotificationSubjectType } from './notifications'
+import { getRepoFullNameFromUrl } from './url'
 
 export function getDefaultPaginationPerPage(columnType: Column['type']) {
   if (columnType === 'activity') return 50
@@ -848,6 +854,97 @@ export function getItemIssueOrPullRequest(
   }
 }
 
+export function getItemOwnersAndRepos(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): Array<{ owner: string; repo: string }> {
+  const mapResult: Record<string, any> = {}
+
+  function mapToResult(map: Record<string, any>) {
+    return Object.keys(map)
+      .map(repoFullName => getOwnerAndRepo(repoFullName))
+      .filter(or => !!(or.owner && or.repo)) as Array<{
+      owner: string
+      repo: string
+    }>
+  }
+
+  function addOwnerAndRepo(
+    owner: string | undefined,
+    repo: string | undefined,
+  ) {
+    const _owner = `${owner || ''}`.toLowerCase().trim()
+    const _repo = `${repo || ''}`.toLowerCase().trim()
+    if (!(_owner && _repo)) return -1
+
+    const repoFullName = `${_owner}/${_repo}`
+
+    if (repoFullName in mapResult) return 0
+
+    mapResult[repoFullName] = true
+    return 1
+  }
+
+  if (!item) return []
+
+  switch (type) {
+    case 'activity': {
+      const event = item as EnhancedGitHubEvent
+      const { repo: _repo } = event as GitHubEvent
+      const { repos: _repos } = event as MultipleStarEvent
+      const { commits: _commits } = event.payload as GitHubPushEvent['payload']
+      const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
+
+      const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
+        if (!(r && r.name)) return false
+
+        const { owner, repo } = getOwnerAndRepo(r.name)
+        if (addOwnerAndRepo(owner, repo) === 1) return true
+        return false
+      })
+
+      // ugly and super edge case workaround for repo not being returned on some commit events
+      if (!_allRepos.length && commits[0]) {
+        const _repoFullName = getRepoFullNameFromUrl(commits[0].url)
+        const { owner, repo } = getOwnerAndRepo(_repoFullName)
+        addOwnerAndRepo(owner, repo)
+      }
+
+      return mapToResult(mapResult)
+    }
+
+    case 'issue_or_pr': {
+      const issueOrPR = item as EnhancedGitHubIssueOrPullRequest
+
+      const repoFullName = getRepoFullNameFromUrl(
+        issueOrPR.repository_url || issueOrPR.url || issueOrPR.html_url,
+      )
+      const { owner, repo } = getOwnerAndRepo(repoFullName)
+      addOwnerAndRepo(owner, repo)
+
+      return mapToResult(mapResult)
+    }
+
+    case 'notifications': {
+      const notification = item as EnhancedGitHubNotification
+
+      const repoFullName =
+        (notification &&
+          (notification.repository.full_name ||
+            notification.repository.name)) ||
+        ''
+
+      const { owner, repo } = getOwnerAndRepo(repoFullName)
+      addOwnerAndRepo(owner, repo)
+
+      return mapToResult(mapResult)
+    }
+
+    default:
+      return []
+  }
+}
+
 export function getFilteredItems(
   type: ColumnSubscription['type'] | undefined,
   items: EnhancedItem[],
@@ -910,6 +1007,7 @@ const _defaultItemsFilterMetadata: ItemsFilterMetadata = {
     public: getDefaultItemFilterCountMetadata(),
     private: getDefaultItemFilterCountMetadata(),
   },
+  owners: {},
 }
 
 function getDefaultItemsFilterMetadata() {
@@ -939,6 +1037,8 @@ export function getItemsFilterMetadata(
     const subscriptionReason = notification && notification.reason
     const eventAction = event && getEventMetadata(event).action
     const privacy = getItemPrivacy(type, item)
+
+    const ownersAndrepos = getItemOwnersAndRepos(type, item)
 
     function updateNestedCounter(objRef: ItemFilterCountMetadata) {
       if (read) objRef.read++
@@ -985,6 +1085,26 @@ export function getItemsFilterMetadata(
       if (!result.privacy[privacy])
         result.privacy[privacy] = getDefaultItemFilterCountMetadata()
       updateNestedCounter(result.privacy[privacy]!)
+    }
+
+    if (ownersAndrepos && ownersAndrepos.length) {
+      ownersAndrepos.forEach(or => {
+        if (or.owner) {
+          result.owners[or.owner] = result.owners[or.owner] || {
+            metadata: getDefaultItemFilterCountMetadata(),
+            repos: {},
+          }
+
+          updateNestedCounter(result.owners[or.owner]!.metadata!)
+
+          if (or.repo) {
+            result.owners[or.owner].repos![or.repo] =
+              result.owners[or.owner].repos![or.repo] ||
+              getDefaultItemFilterCountMetadata()
+            updateNestedCounter(result.owners[or.owner].repos![or.repo]!)
+          }
+        }
+      })
     }
   })
 

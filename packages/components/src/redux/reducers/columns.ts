@@ -314,6 +314,71 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
       })
 
+    case 'SET_COLUMN_OWNER_FILTER':
+      return immer(state, draft => {
+        const { columnId, value } = action.payload
+
+        const owner = `${action.payload.owner || ''}`.toLowerCase()
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.owners = column.filters.owners || {}
+
+        column.filters.owners[owner] = column.filters.owners[owner] || {
+          value: undefined,
+          repos: {},
+        }
+
+        if (typeof value === 'boolean') {
+          column.filters.owners[owner]!.value = value
+        } else {
+          column.filters.owners[owner]!.value = undefined
+
+          if (
+            !filterRecordHasAnyForcedValue(column.filters.owners[owner]!.repos)
+          ) {
+            delete column.filters.owners[owner]
+          }
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_REPO_FILTER':
+      return immer(state, draft => {
+        const { columnId, value } = action.payload
+
+        const owner = `${action.payload.owner || ''}`.toLowerCase()
+        const repo = `${action.payload.repo || ''}`.toLowerCase()
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.owners = column.filters.owners || {}
+
+        column.filters.owners[owner] = column.filters.owners[owner] || {
+          value: undefined,
+          repos: {},
+        }
+        column.filters.owners[owner]!.repos =
+          column.filters.owners[owner]!.repos || {}
+
+        if (typeof value === 'boolean') {
+          column.filters.owners[owner]!.repos![repo] = value
+        } else {
+          delete column.filters.owners[owner]!.repos![repo]
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
     case 'SET_COLUMN_UNREAD_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return
