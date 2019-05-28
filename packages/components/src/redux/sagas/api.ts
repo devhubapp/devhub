@@ -7,6 +7,7 @@ import {
   jsonToGraphQLQuery,
   removeUndefinedFields,
   User,
+  VariableType,
 } from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
 import * as actions from '../actions'
@@ -156,14 +157,14 @@ async function syncUp(state: RootState) {
         // TODO: do it the right way ffs
         query: jsonToGraphQLQuery({
           mutation: {
+            __variables: {
+              columns: '[ColumnInput]!',
+              subscriptions: '[ColumnSubscriptionInput]!',
+            },
             replaceColumnsAndSubscriptions: {
               __args: {
-                columns: columns
-                  .filter(Boolean)
-                  .map(c => removeUndefinedFields(c!)),
-                subscriptions: subscriptions
-                  .filter(Boolean)
-                  .map(s => _.omit(removeUndefinedFields(s!), 'data')),
+                columns: new VariableType('columns'),
+                subscriptions: new VariableType('subscriptions'),
                 columnsUpdatedAt:
                   state.columns.updatedAt || new Date().toISOString(),
                 subscriptionsUpdatedAt:
@@ -172,6 +173,12 @@ async function syncUp(state: RootState) {
             },
           },
         }),
+        variables: {
+          columns: columns.filter(Boolean).map(c => removeUndefinedFields(c!)),
+          subscriptions: subscriptions
+            .filter(Boolean)
+            .map(s => _.omit(removeUndefinedFields(s!), 'data')),
+        },
       },
       {
         headers: { Authorization: `bearer ${appToken}` },
