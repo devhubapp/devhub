@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useRef, useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import { View, ViewStyle } from 'react-native'
 
 import {
@@ -1212,7 +1212,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   )
 
                   return (
-                    <>
+                    <Fragment key={`owner-option-fragment-${owner}`}>
                       <Checkbox
                         key={`owner-option-${owner}`}
                         analyticsLabel={undefined}
@@ -1314,7 +1314,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                           />
                         )
                       })}
-                    </>
+                    </Fragment>
                   )
                 })}
               </ColumnOptionsRow>
