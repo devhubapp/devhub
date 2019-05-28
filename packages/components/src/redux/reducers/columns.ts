@@ -158,11 +158,23 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = normalized.updatedAt
       })
 
+    case 'CLEAR_COLUMN_FILTERS':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = {}
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
     case 'SET_COLUMN_SAVED_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return
 
-        const column = draft.byId[action.payload.columnId] as NotificationColumn
+        const column = draft.byId[action.payload.columnId]
         if (!column) return
 
         column.filters = column.filters || {}

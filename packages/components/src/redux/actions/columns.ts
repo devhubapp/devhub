@@ -54,6 +54,10 @@ export function moveColumn(
   return createAction('MOVE_COLUMN', payload)
 }
 
+export function clearColumnFilters(payload: { columnId: string }) {
+  return createAction('CLEAR_COLUMN_FILTERS', payload)
+}
+
 export function setColumnSavedFilter(payload: {
   columnId: string
   saved?: boolean | null

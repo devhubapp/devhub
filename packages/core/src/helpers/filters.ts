@@ -2,6 +2,8 @@ import _ from 'lodash'
 import {
   ActivityColumnFilters,
   BaseColumnFilters,
+  Column,
+  ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
@@ -241,49 +243,34 @@ function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
   return false
 }
 
-export function activityColumnHasAnyFilter(
-  filters: ActivityColumnFilters | undefined,
+export function columnHasAnyFilter(
+  type: Column['type'],
+  filters: ColumnFilters | undefined,
 ) {
   if (!filters) return false
 
   if (baseColumnHasAnyFilter(filters)) return true
 
-  if (
-    filters.activity &&
-    filterRecordHasAnyForcedValue(filters.activity.actions)
-  ) {
-    return true
+  if (type === 'activity') {
+    const f = filters as ActivityColumnFilters
+    if (f.activity && filterRecordHasAnyForcedValue(f.activity.actions)) {
+      return true
+    }
   }
 
-  return false
-}
+  if (type === 'notifications') {
+    const f = filters as NotificationColumnFilters
 
-export function issueOrPullRequestColumnHasAnyFilter(
-  filters: IssueOrPullRequestColumnFilters | undefined,
-) {
-  if (!filters) return false
+    if (f.notifications && f.notifications.participating) {
+      return true
+    }
 
-  if (baseColumnHasAnyFilter(filters)) return true
-
-  return false
-}
-
-export function notificationColumnHasAnyFilter(
-  filters: NotificationColumnFilters | undefined,
-) {
-  if (!filters) return false
-
-  if (baseColumnHasAnyFilter(filters)) return true
-
-  if (filters.notifications && filters.notifications.participating) {
-    return true
-  }
-
-  if (
-    filters.notifications &&
-    filterRecordHasAnyForcedValue(filters.notifications.reasons)
-  ) {
-    return true
+    if (
+      f.notifications &&
+      filterRecordHasAnyForcedValue(f.notifications.reasons)
+    ) {
+      return true
+    }
   }
 
   return false
@@ -297,7 +284,7 @@ export function getFilteredIssueOrPullRequests(
 
   const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
 
-  if (filters && issueOrPullRequestColumnHasAnyFilter(filters)) {
+  if (filters && columnHasAnyFilter('issue_or_pr', filters)) {
     _items = _items.filter(item => {
       const subjectType = getIssueOrPullRequestSubjectType(item)
       const issueOrPR = getItemIssueOrPullRequest('issue_or_pr', item)
@@ -384,7 +371,7 @@ export function getFilteredNotifications(
 
   const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
 
-  if (filters && notificationColumnHasAnyFilter(filters)) {
+  if (filters && columnHasAnyFilter('notifications', filters)) {
     _notifications = _notifications.filter(item => {
       const subjectType = getNotificationSubjectType(item)
       const issueOrPR = getItemIssueOrPullRequest('notifications', item)
@@ -488,7 +475,7 @@ export function getFilteredEvents(
 
   const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
 
-  if (filters && activityColumnHasAnyFilter(filters)) {
+  if (filters && columnHasAnyFilter('activity', filters)) {
     _events = _events.filter(item => {
       const subjectType = getEventMetadata(item).subjectType
       const issueOrPR = getItemIssueOrPullRequest('activity', item)

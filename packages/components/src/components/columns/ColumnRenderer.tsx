@@ -3,9 +3,9 @@ import React, { useCallback, useRef, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 
 import {
-  activityColumnHasAnyFilter,
   CardViewMode,
   Column as ColumnType,
+  columnHasAnyFilter,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
@@ -15,7 +15,6 @@ import {
   isEventPrivate,
   isItemRead,
   isNotificationPrivate,
-  notificationColumnHasAnyFilter,
   ThemeColors,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -337,18 +336,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               (item: EnhancedItem) => item && item.id,
             )
 
-            const hasAnyFilter =
-              column.type === 'notifications'
-                ? notificationColumnHasAnyFilter({
-                    ...column.filters,
-                    clearedAt: undefined,
-                  })
-                : column.type === 'activity'
-                ? activityColumnHasAnyFilter({
-                    ...column.filters,
-                    clearedAt: undefined,
-                  })
-                : false
+            const hasAnyFilter = columnHasAnyFilter(column.type, {
+              ...column.filters,
+              clearedAt: undefined,
+            })
 
             // column doesnt have any filter,
             // so lets mark ALL notifications on github as read at once,

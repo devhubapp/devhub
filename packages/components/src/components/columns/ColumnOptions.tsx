@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import React, { useRef, useState } from 'react'
-import { ScrollView, View, ViewStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 
 import {
   Column,
+  columnHasAnyFilter,
   eventActions,
   eventSubjectTypes,
   filterRecordHasAnyForcedValue,
@@ -33,6 +34,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderHeight,
   columnHeaderItemContentSize,
@@ -45,6 +47,7 @@ import {
 } from '../../utils/helpers/github/shared'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Avatar } from '../common/Avatar'
+import { Button } from '../common/Button'
 import {
   Checkbox,
   checkboxLabelSpacing,
@@ -54,6 +57,7 @@ import {
   CounterMetadata,
   CounterMetadataProps,
 } from '../common/CounterMetadata'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
@@ -186,6 +190,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
 
+  const clearColumnFilters = useReduxAction(actions.clearColumnFilters)
   const deleteColumn = useReduxAction(actions.deleteColumn)
   const moveColumn = useReduxAction(actions.moveColumn)
   const setColumnSavedFilter = useReduxAction(actions.setColumnSavedFilter)
@@ -270,12 +275,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
       //   setContainerWidth(e.nativeEvent.layout.width)
       // }}
     >
-      <ScrollView
+      <FullHeightScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical
         bounces
         showsHorizontalScrollIndicator={false}
-        style={{ maxHeight: availableHeight - columnHeaderHeight - 4 }}
+        style={[
+          sharedStyles.flex,
+          { maxHeight: availableHeight - columnHeaderHeight - 4 },
+        ]}
       >
         {allColumnOptionCategories.includes('inbox') &&
           column.type === 'notifications' &&
@@ -1312,7 +1320,25 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               </ColumnOptionsRow>
             )
           })()}
-      </ScrollView>
+
+        <Spacer flex={1} minHeight={contentPadding / 2} />
+
+        <View
+          style={{
+            paddingVertical: contentPadding / 2,
+            paddingHorizontal: contentPadding,
+          }}
+        >
+          <Button
+            analyticsLabel="clear_column_filters"
+            children="Clear filters"
+            disabled={!columnHasAnyFilter(column.type, column.filters)}
+            onPress={() => {
+              clearColumnFilters({ columnId: column.id })
+            }}
+          />
+        </View>
+      </FullHeightScrollView>
 
       <Separator horizontal />
 
