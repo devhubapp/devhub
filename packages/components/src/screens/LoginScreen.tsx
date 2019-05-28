@@ -223,5 +223,3 @@ export const LoginScreen = React.memo(() => {
     </Screen>
   )
 })
-
-export default LoginScreen
