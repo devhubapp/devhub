@@ -47,7 +47,6 @@ export const Button = React.memo((props: ButtonProps) => {
     borderOnly,
     children,
     contentContainerStyle,
-    disabled,
     fontSize,
     foregroundColor,
     hoverBackgroundColor,
