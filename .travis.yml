@@ -34,6 +34,7 @@ script:
       yarn workspace @devhub/web build
       yarn workspace @devhub/desktop build:skipweb --mac
       now --token $NOW_TOKEN --target production
+      now alias beta.devhubapp.com
     fi
 
 before_cache:
