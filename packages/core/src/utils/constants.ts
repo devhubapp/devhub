@@ -2,7 +2,7 @@ import { ThemePair } from '../types'
 
 const pkg = require('../../package.json') // tslint:disable-line
 
-export const appVersion = pkg.version as string
+export const APP_VERSION = pkg.version as string
 
 const _window = typeof window !== 'undefined' ? window : undefined
 const _hostname =
@@ -14,7 +14,7 @@ const _hostname =
 export const IS_LOCALHOST = _hostname === 'localhost'
 
 export const IS_BETA =
-  appVersion.includes('beta') || (!!_hostname && _hostname.includes('beta'))
+  APP_VERSION.includes('beta') || (!!_hostname && _hostname.includes('beta'))
 
 export const COLUMNS_LIMIT = 20
 export const MIN_COLUMN_WIDTH = 300

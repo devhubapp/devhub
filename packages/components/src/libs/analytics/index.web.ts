@@ -1,10 +1,10 @@
-import { appVersion } from '../../components/common/AppVersion'
+import { constants } from '@devhub/core'
 import { Platform } from '../platform'
 import { Analytics } from './'
 
 const trackingId = 'UA-52350759-2'
 gtag('config', trackingId, {
-  app_version: appVersion,
+  app_version: constants.APP_VERSION,
   app_name: __DEV__ ? 'devhub-dev' : 'devhub',
   custom_map: { dimension1: 'user_id', dimension2: 'is_electron' },
 })
