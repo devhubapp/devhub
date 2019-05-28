@@ -20,7 +20,6 @@ export const MAX_COLUMN_WIDTH = 340
 export const DISABLE_ANIMATIONS = false
 export const DISABLE_SWIPEABLE_CARDS = true
 export const DISABLE_SINGLE_COLUMN = !isBeta && !isLocal
-export const DISABLE_ISSUES_AND_PRS_COLUMN = !isBeta && !isLocal
 
 export const DEFAULT_DARK_THEME = 'dark-gray'
 export const DEFAULT_LIGHT_THEME = 'light-blue'

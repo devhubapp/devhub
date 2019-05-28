@@ -90,8 +90,6 @@ const columnTypes: Array<{
     title: 'Issues & Pull Requests',
     type: 'issue_or_pr',
     icon: 'issue-opened',
-    soon: constants.DISABLE_ISSUES_AND_PRS_COLUMN,
-    soonLink: 'https://beta.devhubapp.com/',
     items: [
       {
         title: 'Issues',
