@@ -183,12 +183,14 @@ export function Link(props: LinkProps) {
         : {}),
       ...Platform.select({
         default: {
-          onPress: href
-            ? href.startsWith('http')
-              ? () => Browser.openURL(href)
-              : () => Linking.openURL(href)
-            : undefined,
           ...otherProps,
+          onPress:
+            otherProps.onPress ||
+            (href
+              ? href.startsWith('http')
+                ? () => Browser.openURL(href)
+                : () => Linking.openURL(href)
+              : undefined),
         } as any,
 
         web: {
