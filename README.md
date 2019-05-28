@@ -64,7 +64,7 @@ DevHub is a mobile and desktop app to help you manage GitHub Notifications and s
 
 ### Next features:
 
-- [ ] **More filters**: Filter by org/repos, labes, users and regex; ([#131](https://github.com/devhubapp/devhub/issues/131))
+- [ ] **More filters**: Filter by labels, users, regex text and more; ([#131](https://github.com/devhubapp/devhub/issues/131))
 - [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
