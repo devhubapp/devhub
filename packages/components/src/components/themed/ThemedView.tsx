@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { RefObject, useCallback, useRef } from 'react'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'

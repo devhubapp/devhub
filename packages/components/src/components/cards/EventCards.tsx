@@ -8,7 +8,6 @@ import {
   EnhancedLoadState,
   getDateSmallText,
   isItemRead,
-  Omit,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
@@ -19,6 +18,7 @@ import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { Button } from '../common/Button'
+import { ButtonLink } from '../common/ButtonLink'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
@@ -29,6 +29,7 @@ import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard, EventCardProps } from './EventCard'
+import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 import {
   CardItemSeparator,
   getCardItemSeparatorThemeColor,
@@ -226,7 +227,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
               analyticsLabel="show_cleared"
               borderOnly
               children="Show cleared items"
-              disabled={loadState !== 'loaded'}
               onPress={() => {
                 setColumnClearedAtFilter({
                   clearedAt: null,
@@ -313,6 +313,28 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   }
 
   if (!(items && items.length)) {
+    if (errorMessage === 'Resource not accessible by integration') {
+      return (
+        <GenericMessageWithButtonView
+          buttonView={
+            !!refresh && (
+              <ButtonLink
+                analyticsLabel="open_private_issue"
+                children="Open GitHub Issue To Upvote"
+                disabled={loadState !== 'error'}
+                href="https://github.com/devhubapp/devhub/issues/140"
+                loading={loadState === 'loading'}
+              />
+            )
+          }
+          emoji="confused"
+          fullCenter
+          title="Private access temporarily disabled"
+          subtitle="GitHub has temporarily disabled private access for GitHub Apps on their API. Please upvote the issue below to show your interest on a fix."
+        />
+      )
+    }
+
     return (
       <EmptyCards
         clearedAt={column.filters && column.filters.clearedAt}

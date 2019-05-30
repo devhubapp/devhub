@@ -2,15 +2,21 @@ import _ from 'lodash'
 import {
   ActivityColumnFilters,
   BaseColumnFilters,
+  Column,
+  ColumnFilters,
+  ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
+  EnhancedItem,
   IssueOrPullRequestColumnFilters,
   NotificationColumnFilters,
 } from '../types'
 import {
   getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
+  getItemIssueOrPullRequest,
+  getItemOwnersAndRepos,
   getNotificationSubjectType,
   isDraft,
   isItemRead,
@@ -113,6 +119,99 @@ export function getFilterCountMetadata(
   )
 }
 
+export function getOwnerAndRepoFormattedFilter(
+  filters: BaseColumnFilters | undefined,
+) {
+  const ownerFiltersWithRepos = filters && filters.owners
+  const ownerFilters = _.mapValues(
+    ownerFiltersWithRepos,
+    obj => obj && obj.value,
+  )
+  const repoFilters: typeof ownerFilters = {}
+
+  if (ownerFiltersWithRepos) {
+    Object.keys(ownerFiltersWithRepos).forEach(owner => {
+      if (
+        !(ownerFiltersWithRepos[owner] && ownerFiltersWithRepos[owner]!.repos)
+      )
+        return
+
+      Object.entries(
+        (ownerFiltersWithRepos[owner] && ownerFiltersWithRepos[owner]!.repos) ||
+          {},
+      ).forEach(([repo, value]) => {
+        const repoFullName = `${owner}/${repo}`.toLowerCase()
+        repoFilters[repoFullName] = value
+      })
+    })
+  }
+
+  const ownerFilterIsStrict = !!(
+    ownerFilters && filterRecordWithThisValueCount(ownerFilters, true)
+  )
+
+  const repoFilterIsStrict = !!(
+    repoFilters && filterRecordWithThisValueCount(repoFilters, true)
+  )
+
+  return {
+    ownerFilterIsStrict,
+    ownerFilters,
+    ownerFiltersWithRepos,
+    repoFilterIsStrict,
+    repoFilters,
+  }
+}
+
+export function itemPassesOwnerOrRepoFilter(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem,
+  ownerAndRepoFormattedFilter: ReturnType<
+    typeof getOwnerAndRepoFormattedFilter
+  >,
+) {
+  const {
+    ownerFilterIsStrict,
+    ownerFilters,
+    ownerFiltersWithRepos,
+    repoFilterIsStrict,
+    repoFilters,
+  } = ownerAndRepoFormattedFilter
+
+  if (
+    ownerFilters &&
+    ownerFiltersWithRepos &&
+    repoFilters &&
+    !getItemOwnersAndRepos(type, item).every(or => {
+      const thisOwnerRepoFilters =
+        ownerFiltersWithRepos &&
+        ownerFiltersWithRepos[or.owner] &&
+        ownerFiltersWithRepos[or.owner]!.repos
+      const thisOwnerRepoFilterIsStrict =
+        thisOwnerRepoFilters &&
+        filterRecordWithThisValueCount(thisOwnerRepoFilters, true)
+
+      const ownerIsChecked =
+        ownerFilters[or.owner] === true ||
+        (ownerFilters[or.owner] !== false &&
+          ((!ownerFilterIsStrict && !repoFilterIsStrict) ||
+            thisOwnerRepoFilterIsStrict))
+      if (!ownerIsChecked) return false
+
+      if (!thisOwnerRepoFilters) return true
+
+      const repoIsChecked =
+        thisOwnerRepoFilters[or.repo] === true ||
+        (thisOwnerRepoFilters[or.repo] !== false &&
+          !thisOwnerRepoFilterIsStrict)
+      return !!repoIsChecked
+    })
+  )
+    return false
+
+  return true
+}
+
 function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
   if (!filters) return false
 
@@ -133,52 +232,45 @@ function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
     return true
   }
 
-  return false
-}
-
-export function activityColumnHasAnyFilter(
-  filters: ActivityColumnFilters | undefined,
-) {
-  if (!filters) return false
-
-  if (baseColumnHasAnyFilter(filters)) return true
-
-  if (
-    filters.activity &&
-    filterRecordHasAnyForcedValue(filters.activity.actions)
-  ) {
+  const { ownerFilters, repoFilters } = getOwnerAndRepoFormattedFilter(filters)
+  if (ownerFilters && filterRecordHasAnyForcedValue(ownerFilters)) {
+    return true
+  }
+  if (repoFilters && filterRecordHasAnyForcedValue(repoFilters)) {
     return true
   }
 
   return false
 }
 
-export function issueOrPullRequestColumnHasAnyFilter(
-  filters: IssueOrPullRequestColumnFilters | undefined,
+export function columnHasAnyFilter(
+  type: Column['type'],
+  filters: ColumnFilters | undefined,
 ) {
   if (!filters) return false
 
   if (baseColumnHasAnyFilter(filters)) return true
 
-  return false
-}
-
-export function notificationColumnHasAnyFilter(
-  filters: NotificationColumnFilters | undefined,
-) {
-  if (!filters) return false
-
-  if (baseColumnHasAnyFilter(filters)) return true
-
-  if (filters.notifications && filters.notifications.participating) {
-    return true
+  if (type === 'activity') {
+    const f = filters as ActivityColumnFilters
+    if (f.activity && filterRecordHasAnyForcedValue(f.activity.actions)) {
+      return true
+    }
   }
 
-  if (
-    filters.notifications &&
-    filterRecordHasAnyForcedValue(filters.notifications.reasons)
-  ) {
-    return true
+  if (type === 'notifications') {
+    const f = filters as NotificationColumnFilters
+
+    if (f.notifications && f.notifications.participating) {
+      return true
+    }
+
+    if (
+      f.notifications &&
+      filterRecordHasAnyForcedValue(f.notifications.reasons)
+    ) {
+      return true
+    }
   }
 
   return false
@@ -190,13 +282,21 @@ export function getFilteredIssueOrPullRequests(
 ) {
   let _items = sortIssuesOrPullRequests(items)
 
-  if (filters && issueOrPullRequestColumnHasAnyFilter(filters)) {
+  const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
+
+  if (filters && columnHasAnyFilter('issue_or_pr', filters)) {
     _items = _items.filter(item => {
       const subjectType = getIssueOrPullRequestSubjectType(item)
-      const issueOrPR =
-        subjectType === 'Issue' || subjectType === 'PullRequest'
-          ? item
-          : undefined
+      const issueOrPR = getItemIssueOrPullRequest('issue_or_pr', item)
+
+      if (
+        !itemPassesOwnerOrRepoFilter(
+          'issue_or_pr',
+          item,
+          ownerAndRepoFormattedFilter,
+        )
+      )
+        return false
 
       const isStateFilterStrict = filterRecordWithThisValueCount(
         filters.state,
@@ -269,15 +369,23 @@ export function getFilteredNotifications(
   const reasonsFilter =
     filters && filters.notifications && filters.notifications.reasons
 
-  if (filters && notificationColumnHasAnyFilter(filters)) {
+  const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
+
+  if (filters && columnHasAnyFilter('notifications', filters)) {
     _notifications = _notifications.filter(item => {
       const subjectType = getNotificationSubjectType(item)
-      const issueOrPR =
-        subjectType === 'Issue' || subjectType === 'PullRequest'
-          ? item.issue || item.pullRequest
-          : undefined
+      const issueOrPR = getItemIssueOrPullRequest('notifications', item)
 
       if (!itemPassesFilterRecord(reasonsFilter!, item.reason, true))
+        return false
+
+      if (
+        !itemPassesOwnerOrRepoFilter(
+          'notifications',
+          item,
+          ownerAndRepoFormattedFilter,
+        )
+      )
         return false
 
       if (
@@ -365,18 +473,21 @@ export function getFilteredEvents(
 
   const actionFilter = filters && filters.activity && filters.activity.actions
 
-  if (filters && activityColumnHasAnyFilter(filters)) {
+  const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
+
+  if (filters && columnHasAnyFilter('activity', filters)) {
     _events = _events.filter(item => {
       const subjectType = getEventMetadata(item).subjectType
+      const issueOrPR = getItemIssueOrPullRequest('activity', item)
 
-      const issueOrPR =
-        item &&
-        item.payload &&
-        ('issue' in item.payload
-          ? item.payload.issue
-          : 'pull_request' in item.payload
-          ? item.payload.pull_request
-          : undefined)
+      if (
+        !itemPassesOwnerOrRepoFilter(
+          'activity',
+          item,
+          ownerAndRepoFormattedFilter,
+        )
+      )
+        return false
 
       const isStateFilterStrict = filterRecordWithThisValueCount(
         filters.state,

@@ -1,15 +1,18 @@
 import React, { useRef } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { contentPadding } from '../../styles/variables'
-import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
+import { Spacer } from './Spacer'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
-const checkboxBorderRadius = 4
+export const checkboxBorderRadius = 4
+export const defaultCheckboxSize = 16
+export const checkboxLabelSpacing = contentPadding / 2
 
 const styles = StyleSheet.create({
   container: {
@@ -40,16 +43,17 @@ export interface CheckboxProps {
   analyticsLabel: TouchableOpacityProps['analyticsLabel']
   checked?: boolean | null
   circle?: boolean
-  containerStyle?: ViewStyle
+  containerStyle?: StyleProp<ViewStyle>
   defaultValue?: boolean | null
   disabled?: boolean
   enableIndeterminateState?: boolean
   label?: string | React.ReactNode
-  labelIcon?: ThemedIconProps['name']
   labelTooltip?: string
+  left?: React.ReactNode
   onChange?: (value: boolean | null) => void
+  right?: React.ReactNode
   size?: number
-  squareContainerStyle?: ViewStyle
+  squareContainerStyle?: StyleProp<ViewStyle>
   useBrandColor?: boolean
 
   checkedBackgroundThemeColor?:
@@ -72,16 +76,17 @@ export function Checkbox(props: CheckboxProps) {
     checked = defaultValue,
 
     analyticsLabel,
-    squareContainerStyle,
     circle,
     containerStyle,
     disabled,
     enableIndeterminateState = false,
     label,
-    labelIcon,
     labelTooltip,
+    left,
     onChange,
-    size = 16,
+    right,
+    size = defaultCheckboxSize,
+    squareContainerStyle,
 
     checkedBackgroundThemeColor = 'primaryBackgroundColor',
     checkedForegroundThemeColor = 'primaryForegroundColor',
@@ -203,9 +208,19 @@ export function Checkbox(props: CheckboxProps) {
         </ThemedView>
       </View>
 
+      <Spacer width={checkboxLabelSpacing} />
+
+      {!!left && (
+        <>
+          {left}
+          <Spacer width={checkboxLabelSpacing} />
+        </>
+      )}
+
       {!!label && (
         <View
           style={{
+            flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
             alignContent: 'center',
@@ -215,9 +230,10 @@ export function Checkbox(props: CheckboxProps) {
           {typeof label === 'string' ? (
             <ThemedText
               color="foregroundColor"
+              numberOfLines={1}
               style={{
+                flex: 1,
                 lineHeight: size,
-                marginLeft: contentPadding / 2,
               }}
               {...!!labelTooltip &&
                 Platform.select({
@@ -229,17 +245,10 @@ export function Checkbox(props: CheckboxProps) {
           ) : (
             label
           )}
-
-          {!!labelIcon && (
-            <ThemedIcon
-              color="foregroundColor"
-              name={labelIcon}
-              size={16}
-              style={{ lineHeight: 16 }}
-            />
-          )}
         </View>
       )}
+
+      {!!right && right}
     </TouchableOpacity>
   )
 }

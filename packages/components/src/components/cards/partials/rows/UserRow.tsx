@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForUser, Omit } from '@devhub/core'
+import { getGitHubURLForUser } from '@devhub/core'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
 import { cardStyles } from '../../styles'

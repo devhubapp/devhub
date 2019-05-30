@@ -5,7 +5,6 @@ import {
   getCommentIdFromUrl,
   getGitHubSearchURL,
   getGitHubURLForUser,
-  Omit,
   trimNewLinesAndSpaces,
   tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'

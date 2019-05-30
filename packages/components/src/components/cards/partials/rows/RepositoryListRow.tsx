@@ -4,7 +4,6 @@ import {
   getOwnerAndRepo,
   getRepoFullNameFromObject,
   GitHubRepo,
-  Omit,
 } from '@devhub/core'
 import { RepositoryRow, RepositoryRowProps } from './RepositoryRow'
 import { RenderItem, RowList } from './RowList'

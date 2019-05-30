@@ -1,6 +1,6 @@
 {
   "name": "@devhub/desktop",
-  "version": "0.81.0",
+  "version": "0.90.1",
   "private": false,
   "main": "dist/index.js",
   "author": {
@@ -78,7 +78,7 @@
     "electron-devtools-installer": "2.2.4",
     "nodemon": "1.18.10",
     "tslint": "5.14.0",
-    "typescript": "3.3.4000",
+    "typescript": "3.5.1",
     "wait-on": "3.2.0"
   }
 }

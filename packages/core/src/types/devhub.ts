@@ -10,16 +10,17 @@ import {
   GitHubIcon,
   GitHubIssue,
   GitHubIssueOrPullRequestSubjectType,
+  GitHubItemSubjectType,
   GitHubNotification,
   GitHubNotificationReason,
   GitHubNotificationSubjectType,
+  GitHubPrivacy,
   GitHubPullRequest,
   GitHubRelease,
   GitHubRepo,
   GitHubStateType,
   GitHubWatchEvent,
 } from './github'
-import { Omit } from './typescript'
 
 type octokit = InstanceType<typeof Octokit>
 
@@ -211,9 +212,16 @@ export interface BaseColumnFilters {
   clearedAt?: string
   draft?: boolean
   // order?: Array<'asc' | 'desc'>
-  // owners?: string[]
+  owners?: Partial<
+    Record<
+      string,
+      {
+        value: boolean | undefined
+        repos: Partial<Record<string, boolean>> | undefined
+      }
+    >
+  >
   private?: boolean
-  // repos?: string[]
   saved?: boolean
   // search: {
   //   exclude?: string
@@ -400,4 +408,36 @@ export interface BannerMessage {
   minLoginCount?: number
   closedAt?: string | undefined
   createdAt?: string
+}
+
+export interface ItemFilterCountMetadata {
+  read: 0
+  unread: 0
+  saved: 0
+  total: 0
+}
+
+export interface ItemsFilterMetadata {
+  inbox: {
+    all: ItemFilterCountMetadata
+    participating: ItemFilterCountMetadata
+  }
+  saved: ItemFilterCountMetadata
+  state: Record<GitHubStateType, ItemFilterCountMetadata>
+  draft: ItemFilterCountMetadata
+  subjectType: Partial<
+    Record<GitHubItemSubjectType, ItemFilterCountMetadata | undefined>
+  >
+  subscriptionReason: Partial<
+    Record<GitHubNotificationReason, ItemFilterCountMetadata | undefined>
+  >
+  eventAction: Partial<Record<GitHubEventAction, ItemFilterCountMetadata>>
+  privacy: Record<GitHubPrivacy, ItemFilterCountMetadata>
+  owners: Record<
+    string,
+    {
+      metadata: ItemFilterCountMetadata | undefined
+      repos: Record<string, ItemFilterCountMetadata | undefined>
+    }
+  >
 }

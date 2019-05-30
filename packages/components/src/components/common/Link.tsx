@@ -6,7 +6,7 @@ import React, {
 } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
@@ -183,12 +183,14 @@ export function Link(props: LinkProps) {
         : {}),
       ...Platform.select({
         default: {
-          onPress: href
-            ? href.startsWith('http')
-              ? () => Browser.openURL(href)
-              : () => Linking.openURL(href)
-            : undefined,
           ...otherProps,
+          onPress:
+            otherProps.onPress ||
+            (href
+              ? href.startsWith('http')
+                ? () => Browser.openURL(href)
+                : () => Linking.openURL(href)
+              : undefined),
         } as any,
 
         web: {

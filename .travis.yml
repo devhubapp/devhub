@@ -27,13 +27,14 @@ script:
         -v ~/.cache/electron:/root/.cache/electron \
         -v ~/.cache/electron-builder:/root/.cache/electron-builder \
         electronuserland/builder:wine \
-        /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn clean && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --linux --win"
+        /bin/bash -c "yarn --pure-lockfile && yarn clean && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --linux --win"
     else
-      yarn --link-duplicates --pure-lockfile
+      yarn --pure-lockfile
       yarn clean
       yarn workspace @devhub/web build
       yarn workspace @devhub/desktop build:skipweb --mac
       now --token $NOW_TOKEN --target production
+      now alias beta.devhubapp.com
     fi
 
 before_cache:

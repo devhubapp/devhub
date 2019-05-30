@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import { GitHubAppType, Omit } from '@devhub/core'
+import { GitHubAppType } from '@devhub/core'
 import { Browser } from '../browser'
 import { Linking } from '../linking'
 import { Platform } from '../platform'

@@ -1,18 +1,17 @@
 {
   "name": "@devhub/web",
-  "version": "0.81.0",
+  "version": "0.90.1",
   "private": false,
   "homepage": "./",
   "scripts": {
     "build": "yarn compile && react-app-rewired build && shx rm -rf dist && mv build dist",
     "clean": "shx rm -rf dist/*",
     "compile": "tsc -b",
-    "deploy": "yarn build && yarn now --target production",
-    "deploy:beta": "yarn build && yarn now --target staging && yarn now alias beta.devhubapp.com",
+    "deploy": "yarn build && cd ../../ && now --target production && cd -",
+    "deploy:beta": "yarn build && cd ../../ && now --target staging && now alias beta.devhubapp.com && cd -",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
-    "now": "now --local-config=../../now.json",
     "prepare": "cd .. && yarn patch-package",
     "serve": "serve dist",
     "start": "react-app-rewired start",
@@ -20,7 +19,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.4.0",
-    "@devhub/components": "0.81.0",
+    "@devhub/components": "0.90.1",
     "react": "16.8.6",
     "react-app-polyfill": "0.2.2",
     "react-art": "16.8.6",
@@ -45,7 +44,7 @@
     "tslint-config-airbnb": "5.11.1",
     "tslint-config-prettier": "1.18.0",
     "tslint-react": "3.6.0",
-    "typescript": "3.3.4000",
+    "typescript": "3.5.1",
     "webpack-bundle-analyzer": "3.1.0"
   },
   "browserslist": [

@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef } from 'react'
 import { ScrollView, ViewProps } from 'react-native'
 
-import { GitHubLabel, Omit } from '@devhub/core'
+import { GitHubLabel } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'

@@ -1,4 +1,5 @@
 *.jsbundle
+*.tsbuildinfo
 .DS_Store
 .history
 .jest

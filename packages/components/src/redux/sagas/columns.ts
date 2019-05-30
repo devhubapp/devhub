@@ -359,11 +359,12 @@ export function* columnsSagas() {
     yield takeLatest('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
     yield takeLatest(
       [
-        'SET_COLUMN_UNREAD_FILTER',
+        'CLEAR_COLUMN_FILTERS',
+        'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_PARTICIPATING_FILTER',
         'SET_COLUMN_STATE_FILTER',
-        'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_SUBJECT_TYPE_FILTER',
+        'SET_COLUMN_UNREAD_FILTER',
       ],
       onColumnSubscriptionFilterChange,
     ),

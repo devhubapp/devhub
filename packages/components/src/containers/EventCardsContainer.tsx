@@ -5,7 +5,6 @@ import {
   EnhancedGitHubEvent,
   getDefaultPaginationPerPage,
   getOlderEventDate,
-  Omit,
 } from '@devhub/core'
 import { View } from 'react-native'
 import { EmptyCards } from '../components/cards/EmptyCards'
@@ -13,6 +12,7 @@ import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { ButtonLink } from '../components/common/ButtonLink'
+import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
@@ -87,43 +87,14 @@ export const EventCardsContainer = React.memo(
       selectors.createSubscriptionsDataSelector(),
     )
 
-    const filteredSubscriptionsDataSelectorRef = useRef(
-      selectors.createFilteredSubscriptionsDataSelector(
-        cardViewMode !== 'compact',
-      ),
-    )
-
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-      filteredSubscriptionsDataSelectorRef.current = selectors.createFilteredSubscriptionsDataSelector(
-        cardViewMode !== 'compact',
-      )
     }, [cardViewMode, ...column.subscriptionIds])
 
-    const allItems = useReduxState(
-      useCallback(
-        state => {
-          return subscriptionsDataSelectorRef.current(
-            state,
-            column.subscriptionIds,
-          )
-        },
-        [column.subscriptionIds, column.filters],
-      ),
-    ) as EnhancedGitHubEvent[]
-
-    const filteredItems = useReduxState(
-      useCallback(
-        state => {
-          return filteredSubscriptionsDataSelectorRef.current(
-            state,
-            column.subscriptionIds,
-            column.filters,
-          )
-        },
-        [column.subscriptionIds, column.filters],
-      ),
-    ) as EnhancedGitHubEvent[]
+    const { allItems, filteredItems } = useColumnData<EnhancedGitHubEvent>(
+      column.id,
+      cardViewMode !== 'compact',
+    )
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderEventDate(allItems)

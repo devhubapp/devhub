@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { Omit } from '@devhub/core'
 import { useReduxAction } from '../../../../hooks/use-redux-action'
 import { useReduxState } from '../../../../hooks/use-redux-state'
 import { analytics } from '../../../../libs/analytics'

@@ -1,11 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import {
-  getGitHubURLForRelease,
-  Omit,
-  trimNewLinesAndSpaces,
-} from '@devhub/core'
+import { getGitHubURLForRelease, trimNewLinesAndSpaces } from '@devhub/core'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'

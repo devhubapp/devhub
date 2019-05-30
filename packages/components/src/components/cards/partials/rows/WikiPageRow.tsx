@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { Omit, trimNewLinesAndSpaces } from '@devhub/core'
+import { trimNewLinesAndSpaces } from '@devhub/core'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Link } from '../../../common/Link'
 import { ThemedIcon } from '../../../themed/ThemedIcon'

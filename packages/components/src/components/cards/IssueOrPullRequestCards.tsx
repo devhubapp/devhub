@@ -9,7 +9,6 @@ import {
   getDateSmallText,
   getIssueOrPullRequestSubjectType,
   isItemRead,
-  Omit,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
@@ -241,7 +240,6 @@ export const IssueOrPullRequestCards = React.memo(
                 analyticsLabel="show_cleared"
                 borderOnly
                 children="Show cleared items"
-                disabled={loadState !== 'loaded'}
                 onPress={() => {
                   setColumnClearedAtFilter({
                     clearedAt: null,

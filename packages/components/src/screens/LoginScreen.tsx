@@ -76,11 +76,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     marginTop: contentPadding / 2,
   },
-
-  appVersion: {
-    fontSize: 14,
-    lineHeight: 18,
-  },
 })
 
 export const LoginScreen = React.memo(() => {
@@ -223,5 +218,3 @@ export const LoginScreen = React.memo(() => {
     </Screen>
   )
 })
-
-export default LoginScreen

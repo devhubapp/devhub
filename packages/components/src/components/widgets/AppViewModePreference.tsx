@@ -1,13 +1,15 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { AppViewMode } from '@devhub/core'
+import { AppViewMode, constants } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { Checkbox } from '../common/Checkbox'
+import { H2 } from '../common/H2'
+import { Link } from '../common/Link'
 import { SubHeader } from '../common/SubHeader'
 
 export interface AppViewModePreferenceProps {
@@ -36,7 +38,7 @@ export const AppViewModePreference = React.memo(
           containerStyle={{
             marginBottom: contentPadding / 2,
           }}
-          disabled={!canSwitchAppViewMode}
+          disabled={constants.DISABLE_SINGLE_COLUMN || !canSwitchAppViewMode}
           label={
             appViewMode === 'single-column'
               ? 'Single-column'
@@ -53,7 +55,21 @@ export const AppViewModePreference = React.memo(
 
     return (
       <View>
-        <SubHeader title="Layout mode" />
+        <SubHeader muted={constants.DISABLE_SINGLE_COLUMN} title="Layout mode">
+          {!!constants.DISABLE_SINGLE_COLUMN && !constants.IS_BETA && (
+            <Link
+              analyticsLabel={`appview-mode-beta-link`}
+              href={constants.DEVHUB_BETA_URL}
+            >
+              <H2
+                muted
+                withMargin={false}
+                children=" (beta)"
+                style={sharedStyles.flex}
+              />
+            </Link>
+          )}
+        </SubHeader>
 
         <View style={{ paddingHorizontal: contentPadding }}>
           <View style={{ flexDirection: 'row' }}>

@@ -1,9 +1,8 @@
 import React from 'react'
 
+import { GitHubPushedCommit } from '@devhub/core'
 import { CommitRow, CommitRowProps } from './CommitRow'
 import { RenderItem, RowList } from './RowList'
-
-import { GitHubPushedCommit, Omit } from '@devhub/core'
 
 export interface CommitListRowProps
   extends Omit<

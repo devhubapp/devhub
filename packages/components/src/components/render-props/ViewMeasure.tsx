@@ -2,8 +2,6 @@ import _ from 'lodash'
 import React, { useRef, useState } from 'react'
 import { View, ViewProps } from 'react-native'
 
-import { Omit } from '@devhub/core'
-
 export interface ViewMeasurerProps<
   M extends (measures: { width: number; height: number }) => any = (measures: {
     width: number

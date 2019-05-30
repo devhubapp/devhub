@@ -5,7 +5,7 @@ import {
   GoogleAnalyticsTracker,
 } from 'react-native-google-analytics-bridge'
 
-import { appVersion } from '../../components/common/AppVersion'
+import { constants } from '@devhub/core'
 import { Analytics } from './'
 
 GoogleAnalyticsSettings.setDryRun(false) // __DEV__
@@ -14,7 +14,7 @@ firebase.analytics().setAnalyticsCollectionEnabled(true) // !__DEV__
 
 const tracker = new GoogleAnalyticsTracker('UA-52350759-2')
 tracker.setAppName(__DEV__ ? 'devhub-dev' : 'devhub')
-tracker.setAppVersion(appVersion)
+tracker.setAppVersion(constants.APP_VERSION)
 tracker.customDimensionsFieldsIndexMap = {
   user_id: 1,
   is_electron: 2,

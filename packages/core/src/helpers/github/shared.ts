@@ -7,18 +7,48 @@ import {
   Column,
   ColumnFilters,
   ColumnSubscription,
+  EnhancedGitHubEvent,
+  EnhancedGitHubIssue,
+  EnhancedGitHubIssueOrPullRequest,
+  EnhancedGitHubNotification,
+  EnhancedGitHubPullRequest,
   EnhancedItem,
   GitHubAPIHeaders,
+  GitHubEvent,
   GitHubIcon,
+  GitHubIssueOrPullRequest,
   GitHubItemSubjectType,
+  GitHubPrivacy,
   GitHubPullRequest,
+  GitHubPushedCommit,
+  GitHubPushEvent,
+  GitHubRepo,
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
+  ItemFilterCountMetadata,
+  ItemsFilterMetadata,
+  MultipleStarEvent,
   NotificationColumnSubscription,
   ThemeColors,
 } from '../../types'
-import { getSteppedSize } from '../shared'
-import { getGitHubIssueSearchQuery } from './issues'
+import {
+  getFilteredEvents,
+  getFilteredIssueOrPullRequests,
+  getFilteredNotifications,
+} from '../filters'
+import {
+  getSteppedSize,
+  isEventPrivate,
+  isNotificationPrivate,
+} from '../shared'
+import { getEventMetadata } from './events'
+import {
+  getGitHubIssueSearchQuery,
+  getIssueOrPullRequestState,
+  getIssueOrPullRequestSubjectType,
+} from './issues'
+import { getNotificationSubjectType } from './notifications'
+import { getRepoFullNameFromUrl } from './url'
 
 export function getDefaultPaginationPerPage(columnType: Column['type']) {
   if (columnType === 'activity') return 50
@@ -724,4 +754,359 @@ export function getSubjectTypeMetadata<T extends GitHubItemSubjectType>(
       }
     }
   }
+}
+
+export function getItemSubjectType(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): GitHubItemSubjectType | undefined {
+  switch (type) {
+    case 'activity':
+      return (
+        getEventMetadata(item as EnhancedGitHubEvent).subjectType || undefined
+      )
+
+    case 'issue_or_pr':
+      return (
+        getIssueOrPullRequestSubjectType(
+          item as EnhancedGitHubIssueOrPullRequest,
+        ) || undefined
+      )
+
+    case 'notifications':
+      return (
+        getNotificationSubjectType(item as EnhancedGitHubNotification) ||
+        undefined
+      )
+
+    default:
+      return undefined
+  }
+}
+
+export function getItemPrivacy(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): GitHubPrivacy | undefined {
+  if (!item) return undefined
+
+  switch (type) {
+    case 'activity':
+      return isEventPrivate(item as EnhancedGitHubEvent) ? 'private' : 'public'
+
+    case 'issue_or_pr':
+      return undefined // TODO
+
+    case 'notifications':
+      return isNotificationPrivate(item as EnhancedGitHubNotification)
+        ? 'private'
+        : 'public'
+
+    default:
+      return undefined
+  }
+}
+
+export function getItemIssueOrPullRequest(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): GitHubIssueOrPullRequest | undefined {
+  if (!item) return undefined
+
+  switch (type) {
+    case 'activity': {
+      const event = item as EnhancedGitHubEvent
+
+      return (
+        event &&
+        event.payload &&
+        ('issue' in event.payload
+          ? event.payload.issue
+          : 'pull_request' in event.payload
+          ? event.payload.pull_request
+          : undefined)
+      )
+    }
+
+    case 'issue_or_pr': {
+      const issueOrPR = item as EnhancedGitHubIssueOrPullRequest
+      const subjectType = getIssueOrPullRequestSubjectType(issueOrPR)
+
+      return subjectType === 'Issue'
+        ? (issueOrPR as EnhancedGitHubIssue)
+        : subjectType === 'PullRequest'
+        ? (issueOrPR as EnhancedGitHubPullRequest)
+        : undefined
+    }
+
+    case 'notifications': {
+      const notification = item as EnhancedGitHubNotification
+      const subjectType = getNotificationSubjectType(notification)
+
+      return subjectType === 'Issue' || subjectType === 'PullRequest'
+        ? (notification.issue as EnhancedGitHubIssue) ||
+            (notification.pullRequest as EnhancedGitHubPullRequest)
+        : undefined
+    }
+
+    default:
+      return undefined
+  }
+}
+
+export function getItemOwnersAndRepos(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem | undefined,
+): Array<{ owner: string; repo: string }> {
+  const mapResult: Record<string, any> = {}
+
+  function mapToResult(map: Record<string, any>) {
+    return Object.keys(map)
+      .map(repoFullName => getOwnerAndRepo(repoFullName))
+      .filter(or => !!(or.owner && or.repo)) as Array<{
+      owner: string
+      repo: string
+    }>
+  }
+
+  function addOwnerAndRepo(
+    owner: string | undefined,
+    repo: string | undefined,
+  ) {
+    const _owner = `${owner || ''}`.toLowerCase().trim()
+    const _repo = `${repo || ''}`.toLowerCase().trim()
+    if (!(_owner && _repo)) return -1
+
+    const repoFullName = `${_owner}/${_repo}`
+
+    if (repoFullName in mapResult) return 0
+
+    mapResult[repoFullName] = true
+    return 1
+  }
+
+  if (!item) return []
+
+  switch (type) {
+    case 'activity': {
+      const event = item as EnhancedGitHubEvent
+      const { repo: _repo } = event as GitHubEvent
+      const { repos: _repos } = event as MultipleStarEvent
+      const { commits: _commits } = event.payload as GitHubPushEvent['payload']
+      const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
+
+      const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
+        if (!(r && r.name)) return false
+
+        const { owner, repo } = getOwnerAndRepo(r.name)
+        if (addOwnerAndRepo(owner, repo) === 1) return true
+        return false
+      })
+
+      // ugly and super edge case workaround for repo not being returned on some commit events
+      if (!_allRepos.length && commits[0]) {
+        const _repoFullName = getRepoFullNameFromUrl(commits[0].url)
+        const { owner, repo } = getOwnerAndRepo(_repoFullName)
+        addOwnerAndRepo(owner, repo)
+      }
+
+      return mapToResult(mapResult)
+    }
+
+    case 'issue_or_pr': {
+      const issueOrPR = item as EnhancedGitHubIssueOrPullRequest
+
+      const repoFullName = getRepoFullNameFromUrl(
+        issueOrPR.repository_url || issueOrPR.url || issueOrPR.html_url,
+      )
+      const { owner, repo } = getOwnerAndRepo(repoFullName)
+      addOwnerAndRepo(owner, repo)
+
+      return mapToResult(mapResult)
+    }
+
+    case 'notifications': {
+      const notification = item as EnhancedGitHubNotification
+
+      const repoFullName =
+        (notification &&
+          (notification.repository.full_name ||
+            notification.repository.name)) ||
+        ''
+
+      const { owner, repo } = getOwnerAndRepo(repoFullName)
+      addOwnerAndRepo(owner, repo)
+
+      return mapToResult(mapResult)
+    }
+
+    default:
+      return []
+  }
+}
+
+export function getFilteredItems(
+  type: ColumnSubscription['type'] | undefined,
+  items: EnhancedItem[],
+  filters: ColumnFilters | undefined,
+  mergeSimilar: boolean,
+) {
+  if (type === 'activity') {
+    return getFilteredEvents(
+      items as EnhancedGitHubEvent[],
+      filters,
+      mergeSimilar,
+    )
+  }
+
+  if (type === 'issue_or_pr') {
+    return getFilteredIssueOrPullRequests(
+      items as EnhancedGitHubIssueOrPullRequest[],
+      filters,
+    )
+  }
+
+  if (type === 'notifications') {
+    return getFilteredNotifications(
+      items as EnhancedGitHubNotification[],
+      filters,
+    )
+  }
+
+  console.error(`Not filtered. Unhandled subscription type: ${type}`)
+  return items
+}
+
+const _defaultItemFilterCountMetadata: ItemFilterCountMetadata = {
+  read: 0,
+  unread: 0,
+  saved: 0,
+  total: 0,
+}
+
+function getDefaultItemFilterCountMetadata() {
+  return _.cloneDeep(_defaultItemFilterCountMetadata)
+}
+
+const _defaultItemsFilterMetadata: ItemsFilterMetadata = {
+  inbox: {
+    all: getDefaultItemFilterCountMetadata(),
+    participating: getDefaultItemFilterCountMetadata(),
+  },
+  saved: getDefaultItemFilterCountMetadata(),
+  state: {
+    open: getDefaultItemFilterCountMetadata(),
+    closed: getDefaultItemFilterCountMetadata(),
+    merged: getDefaultItemFilterCountMetadata(),
+  },
+  draft: getDefaultItemFilterCountMetadata(),
+  subjectType: {}, // { issue: getDefaultItemFilterCountMetadata(), ... }
+  subscriptionReason: {}, // { mentioned: getDefaultItemFilterCountMetadata(), ... }
+  eventAction: {}, // { starred: getDefaultItemFilterCountMetadata(), ... }
+  privacy: {
+    public: getDefaultItemFilterCountMetadata(),
+    private: getDefaultItemFilterCountMetadata(),
+  },
+  owners: {},
+}
+
+function getDefaultItemsFilterMetadata() {
+  return _.cloneDeep(_defaultItemsFilterMetadata)
+}
+
+export function getItemsFilterMetadata(
+  type: ColumnSubscription['type'],
+  items: EnhancedItem[],
+): ItemsFilterMetadata {
+  const result: ItemsFilterMetadata = getDefaultItemsFilterMetadata()
+  if (!(items && items.length > 0)) return result
+
+  items.filter(Boolean).forEach(item => {
+    const event =
+      type === 'activity' ? (item as EnhancedGitHubEvent) : undefined
+    const notification =
+      type === 'notifications'
+        ? (item as EnhancedGitHubNotification)
+        : undefined
+
+    const issueOrPR = getItemIssueOrPullRequest(type, item)
+
+    const read = isItemRead(item)
+    const saved = !!item.saved
+    const subjectType = getItemSubjectType(type, item)
+    const subscriptionReason = notification && notification.reason
+    const eventAction = event && getEventMetadata(event).action
+    const privacy = getItemPrivacy(type, item)
+
+    const ownersAndrepos = getItemOwnersAndRepos(type, item)
+
+    function updateNestedCounter(objRef: ItemFilterCountMetadata) {
+      if (read) objRef.read++
+      if (!read) objRef.unread++
+      if (saved) objRef.saved++
+      objRef.total++
+    }
+
+    const inbox =
+      notification && notification.reason !== 'subscribed'
+        ? 'participating'
+        : 'all'
+    updateNestedCounter(result.inbox[inbox])
+    if (inbox !== 'all') updateNestedCounter(result.inbox.all)
+
+    if (saved) updateNestedCounter(result.saved)
+
+    const state = getIssueOrPullRequestState(issueOrPR)
+    if (state) updateNestedCounter(result.state[state])
+
+    if (isDraft(issueOrPR)) updateNestedCounter(result.draft)
+
+    if (subjectType) {
+      if (!result.subjectType[subjectType])
+        result.subjectType[subjectType] = getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.subjectType[subjectType]!)
+    }
+
+    if (subscriptionReason) {
+      if (!result.subscriptionReason[subscriptionReason])
+        result.subscriptionReason[
+          subscriptionReason
+        ] = getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.subscriptionReason[subscriptionReason]!)
+    }
+
+    if (eventAction) {
+      result.eventAction[eventAction] =
+        result.eventAction[eventAction] || getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.eventAction[eventAction]!)
+    }
+
+    if (privacy) {
+      if (!result.privacy[privacy])
+        result.privacy[privacy] = getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.privacy[privacy]!)
+    }
+
+    if (ownersAndrepos && ownersAndrepos.length) {
+      ownersAndrepos.forEach(or => {
+        if (or.owner) {
+          result.owners[or.owner] = result.owners[or.owner] || {
+            metadata: getDefaultItemFilterCountMetadata(),
+            repos: {},
+          }
+
+          updateNestedCounter(result.owners[or.owner]!.metadata!)
+
+          if (or.repo) {
+            result.owners[or.owner].repos![or.repo] =
+              result.owners[or.owner].repos![or.repo] ||
+              getDefaultItemFilterCountMetadata()
+            updateNestedCounter(result.owners[or.owner].repos![or.repo]!)
+          }
+        }
+      })
+    }
+  })
+
+  return result
 }

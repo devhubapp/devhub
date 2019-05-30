@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { Omit, stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
+import { stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'

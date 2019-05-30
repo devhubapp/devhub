@@ -11,20 +11,27 @@ import { ThemedText } from '../themed/ThemedText'
 export interface GenericMessageWithButtonViewProps {
   buttonView: React.ReactNode
   emoji: GitHubEmoji | null
+  fullCenter?: boolean
+  style?: ViewProps['style']
   subtitle: string | undefined | null
   title: string | undefined | null
-  style?: ViewProps['style']
 }
 
 export const GenericMessageWithButtonView = React.memo(
   (props: GenericMessageWithButtonViewProps) => {
-    const { buttonView, emoji, style, subtitle, title } = props
+    const { buttonView, emoji, fullCenter, style, subtitle, title } = props
 
     const emojiImageURL = emoji ? getEmojiImageURL(emoji) : null
 
     return (
       <View
         style={[
+          fullCenter && {
+            flex: 1,
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
           {
             width: '100%',
             padding: contentPadding,

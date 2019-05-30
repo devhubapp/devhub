@@ -12,7 +12,6 @@ import {
   GitHubNotificationSubjectType,
   GitHubPullRequest,
   NotificationPayloadEnhancement,
-  Omit,
   ThemeColors,
 } from '../../types'
 import { capitalize } from '../shared'
@@ -86,7 +85,7 @@ export function getNotificationIconAndColor(
         tooltip: 'Repository vulnerability alert',
       }
     default: {
-      const message = `Unknown event type: ${(event as any).type}`
+      const message = `Unknown notification subject type: ${type}`
       console.error(message)
       return { icon: 'bell', tooltip: '' }
     }

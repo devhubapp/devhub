@@ -1,11 +1,8 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
+import { constants } from '@devhub/core'
 import { Link } from './Link'
-
-const pkg = require('@devhub/core/package.json') // tslint:disable-line
-
-export const appVersion = pkg.version
 
 const styles = StyleSheet.create({
   appVersionLink: {
@@ -21,6 +18,9 @@ const styles = StyleSheet.create({
 })
 
 export function AppVersion() {
+  if (!(constants.APP_VERSION && typeof constants.APP_VERSION === 'string'))
+    return null
+
   return (
     <Link
       analyticsLabel="app_version"
@@ -32,7 +32,11 @@ export function AppVersion() {
         style: styles.appVersion,
       }}
     >
-      {`v${appVersion}`}
+      {`v${constants.APP_VERSION}${
+        constants.IS_BETA && !constants.APP_VERSION.includes('beta')
+          ? ' (beta)'
+          : ''
+      }`}
     </Link>
   )
 }

@@ -11,7 +11,6 @@ import {
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestPayloadEnhancement,
-  Omit,
 } from '../../types'
 import {
   filterRecordHasAnyForcedValue,
@@ -123,7 +122,10 @@ export function getIssueOrPullRequestSubjectType(
   if (item.html_url && item.html_url.includes('/pull/')) return 'PullRequest'
   if (item.url && item.url.includes('/pulls/')) return 'PullRequest'
 
-  return 'Issue'
+  if (item.html_url && item.html_url.includes('/issues/')) return 'Issue'
+  if (item.url && item.url.includes('/issues/')) return 'Issue'
+
+  return null
 }
 
 export function getOlderIssueOrPullRequestDate(

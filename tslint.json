@@ -13,6 +13,7 @@
     "member-access": false,
     "no-console": [true, "debug", "dir", "log", "trace", "warn"],
     "no-empty-interface": false,
+    "no-increment-decrement": false,
     "no-namespace": false,
     "no-reference": false,
     "no-unused-variable": true,

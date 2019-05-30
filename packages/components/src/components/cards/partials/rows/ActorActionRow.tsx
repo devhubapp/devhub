@@ -6,7 +6,6 @@ import {
   getGitHubURLForRelease,
   getGitHubURLForRepo,
   getGitHubURLForUser,
-  Omit,
   ThemeColors,
 } from '@devhub/core'
 import { smallAvatarSize } from '../../../../styles/variables'

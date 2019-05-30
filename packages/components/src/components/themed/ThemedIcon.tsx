@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { OcticonIconProps, Octicons } from '../../libs/vector-icons'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { GitHubUser, Omit } from '@devhub/core'
+import { GitHubUser } from '@devhub/core'
 import { RenderItem, RowList } from './RowList'
 import { UserRow, UserRowProps } from './UserRow'
 

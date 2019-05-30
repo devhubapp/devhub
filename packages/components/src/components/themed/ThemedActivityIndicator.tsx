@@ -1,7 +1,7 @@
 import React from 'react'
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 

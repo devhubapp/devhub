@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleProp } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import {
   ImageWithLoading,
   ImageWithLoadingProps,

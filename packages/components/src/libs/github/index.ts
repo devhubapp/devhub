@@ -4,7 +4,6 @@ import {
   getGitHubIssueSearchQuery,
   GitHubActivityType,
   IssueOrPullRequestColumnSubscription,
-  Omit,
 } from '@devhub/core'
 
 export const octokit = new Octokit()

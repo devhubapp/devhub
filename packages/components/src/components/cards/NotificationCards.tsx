@@ -8,7 +8,6 @@ import {
   EnhancedLoadState,
   getDateSmallText,
   isItemRead,
-  Omit,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
@@ -227,7 +226,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
               analyticsLabel="show_cleared"
               borderOnly
               children="Show cleared items"
-              disabled={loadState !== 'loaded'}
               onPress={() => {
                 setColumnClearedAtFilter({
                   clearedAt: null,

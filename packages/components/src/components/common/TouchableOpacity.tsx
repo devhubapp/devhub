@@ -1,7 +1,6 @@
 import React from 'react'
 import { TouchableOpacity as TouchableOpacityOriginal } from 'react-native'
 
-import { Omit } from '@devhub/core'
 import { Touchable, TouchableProps } from './Touchable'
 
 export interface TouchableOpacityProps

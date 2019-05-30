@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { getGitHubURLForBranch, Omit } from '@devhub/core'
+import { getGitHubURLForBranch } from '@devhub/core'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { Link } from '../../../common/Link'
 import { ThemedIcon } from '../../../themed/ThemedIcon'
