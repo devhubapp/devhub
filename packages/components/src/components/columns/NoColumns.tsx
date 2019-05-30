@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { Omit } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { GenericMessageWithButtonView } from '../cards/GenericMessageWithButtonView'
 import { Column, ColumnProps } from './Column'

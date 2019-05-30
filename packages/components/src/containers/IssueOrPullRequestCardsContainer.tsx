@@ -6,7 +6,6 @@ import {
   getOlderIssueOrPullRequestDate,
   getOwnerAndRepo,
   IssueOrPullRequestColumnSubscription,
-  Omit,
 } from '@devhub/core'
 import { View } from 'react-native'
 import { EmptyCards } from '../components/cards/EmptyCards'

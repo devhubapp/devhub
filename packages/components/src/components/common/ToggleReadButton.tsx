@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ColumnSubscription, Omit } from '@devhub/core'
+import { ColumnSubscription } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import {

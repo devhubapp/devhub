@@ -5,7 +5,6 @@ import {
   EnhancedGitHubEvent,
   getDefaultPaginationPerPage,
   getOlderEventDate,
-  Omit,
 } from '@devhub/core'
 import { View } from 'react-native'
 import { EmptyCards } from '../components/cards/EmptyCards'

@@ -1,4 +1,3 @@
-import { Omit } from '@devhub/core'
 import { OcticonIconProps, Octicons as Icon } from '../../../libs/vector-icons'
 import { createSpringAnimatedComponent } from './helpers'
 

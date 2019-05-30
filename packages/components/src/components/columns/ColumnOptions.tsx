@@ -24,7 +24,6 @@ import {
   itemPassesFilterRecord,
   notificationReasons,
   notificationSubjectTypes,
-  Omit,
   ThemeColors,
 } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'

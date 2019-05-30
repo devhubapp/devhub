@@ -6,7 +6,6 @@ import {
   getFullDateText,
   getGitHubURLForUser,
   GitHubLabel,
-  Omit,
   stripMarkdown,
   ThemeColors,
   trimNewLinesAndSpaces,

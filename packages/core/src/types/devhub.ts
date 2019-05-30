@@ -21,7 +21,6 @@ import {
   GitHubStateType,
   GitHubWatchEvent,
 } from './github'
-import { Omit } from './typescript'
 
 type octokit = InstanceType<typeof Octokit>
 

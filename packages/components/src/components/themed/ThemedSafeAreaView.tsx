@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp, TextProps, TextStyle } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
 import { getThemeColorOrItself } from './helpers'

@@ -53,11 +53,8 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
-# Bundle artifact
 *.jsbundle
-
-# Code
-.vscode
-
+*.tsbuildinfo
 .history
 .jest
+.vscode

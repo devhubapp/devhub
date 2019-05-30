@@ -6,7 +6,7 @@ import React, {
 } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'

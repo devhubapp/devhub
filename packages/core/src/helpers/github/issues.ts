@@ -11,7 +11,6 @@ import {
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestPayloadEnhancement,
-  Omit,
 } from '../../types'
 import {
   filterRecordHasAnyForcedValue,

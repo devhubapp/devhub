@@ -12,7 +12,6 @@ import {
   GitHubNotificationSubjectType,
   GitHubPullRequest,
   NotificationPayloadEnhancement,
-  Omit,
   ThemeColors,
 } from '../../types'
 import { capitalize } from '../shared'

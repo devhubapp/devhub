@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getColumnHeaderDetails, Omit } from '@devhub/core'
+import { getColumnHeaderDetails } from '@devhub/core'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,

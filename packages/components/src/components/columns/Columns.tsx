@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { constants, Omit } from '@devhub/core'
+import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'

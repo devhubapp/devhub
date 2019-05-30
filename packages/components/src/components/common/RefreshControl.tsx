@@ -4,7 +4,6 @@ import {
   RefreshControlProps as RefreshControlPropsOriginal,
 } from 'react-native'
 
-import { Omit } from '@devhub/core'
 import { useTheme } from '../context/ThemeContext'
 import { IntervalRefreshProps } from './IntervalRefresh'
 

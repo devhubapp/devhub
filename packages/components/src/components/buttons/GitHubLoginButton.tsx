@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
 
-import { GitHubIcon, Omit } from '@devhub/core'
+import { GitHubIcon } from '@devhub/core'
 import { contentPadding } from '../../styles/variables'
 import { Button, ButtonProps } from '../common/Button'
 import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'

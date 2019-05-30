@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { Omit } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { contentPadding } from '../../styles/variables'

@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import { LinearGradientProps as OriginalLinearGradientProps } from 'react-native-linear-gradient'
 
-import { Omit } from '@devhub/core'
 import { SpringAnimatedView } from '../../components/animated/spring/SpringAnimatedView'
 
 type LinearGradientPoint =

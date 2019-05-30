@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { TextInput, TextInputProps } from '../common/TextInput'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'

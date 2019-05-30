@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { Omit, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../styles/shared'
 import { useTheme } from '../context/ThemeContext'
 import { GradientLayerOverlay } from './GradientLayerOverlay'

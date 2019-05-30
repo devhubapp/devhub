@@ -1,7 +1,7 @@
-import { Omit } from '@devhub/core'
 import _ from 'lodash'
 import React, { Fragment } from 'react'
 import { Image, ImageProps } from 'react-native'
+
 import { genericParseText } from '../shared'
 
 const emojis = {

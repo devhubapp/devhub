@@ -5,7 +5,6 @@ import {
   getDefaultPaginationPerPage,
   getOlderNotificationDate,
   NotificationColumnSubscription,
-  Omit,
 } from '@devhub/core'
 import {
   NotificationCards,

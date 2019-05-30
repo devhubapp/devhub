@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getGitHubURLForRepo, getGitHubURLForUser, Omit } from '@devhub/core'
+import { getGitHubURLForRepo, getGitHubURLForUser } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { Avatar } from '../../../common/Avatar'

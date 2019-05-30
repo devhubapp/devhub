@@ -10,7 +10,6 @@ import {
   GitHubIssue,
   GitHubPullRequest,
   MultipleStarEvent,
-  Omit,
   ThemeColors,
 } from '../../types'
 import {
