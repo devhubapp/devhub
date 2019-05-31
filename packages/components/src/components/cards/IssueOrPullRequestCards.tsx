@@ -10,7 +10,6 @@ import {
   getIssueOrPullRequestSubjectType,
   isItemRead,
 } from '@devhub/core'
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -22,20 +21,15 @@ import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
-import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import {
   IssueOrPullRequestCard,
   IssueOrPullRequestCardProps,
 } from './IssueOrPullRequestCard'
-import {
-  CardItemSeparator,
-  getCardItemSeparatorThemeColor,
-} from './partials/CardItemSeparator'
+import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableIssueOrPullRequestCard } from './SwipeableIssueOrPullRequestCard'
 
 export interface IssueOrPullRequestCardsProps
@@ -78,10 +72,6 @@ export const IssueOrPullRequestCards = React.memo(
     const flatListRef = React.useRef<
       FlatList<EnhancedGitHubIssueOrPullRequest>
     >(null)
-
-    const { appViewMode } = useAppViewMode()
-    const { inlineMode } = useColumnFilters()
-    const theme = useTheme()
 
     const visibleItemIndexesRef = useRef<number[]>([])
     const getVisibleItemIndex = useCallback(() => {
@@ -162,12 +152,9 @@ export const IssueOrPullRequestCards = React.memo(
       [],
     )
 
-    const _renderItem = ({
-      item,
-    }: {
-      item: EnhancedGitHubIssueOrPullRequest
-      index: number
-    }) => {
+    const _renderItem: FlatListProps<
+      EnhancedGitHubIssueOrPullRequest
+    >['renderItem'] = ({ item }) => {
       if (props.swipeable) {
         return (
           <SwipeableIssueOrPullRequestCard
@@ -215,7 +202,7 @@ export const IssueOrPullRequestCards = React.memo(
 
       return (
         <>
-          <CardItemSeparator muted />
+          <CardItemSeparator muted={!fetchNextPage} />
 
           {fetchNextPage ? (
             <View>
@@ -250,8 +237,6 @@ export const IssueOrPullRequestCards = React.memo(
                 round={false}
                 transparent
               />
-
-              <CardItemSeparator muted />
             </View>
           ) : null}
 
@@ -302,15 +287,6 @@ export const IssueOrPullRequestCards = React.memo(
 
     const rerender = useMemo(() => ({}), [renderItem, renderFooter])
 
-    const contentContainerStyle = useMemo(
-      () => ({
-        borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
-        borderColor:
-          theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
-      }),
-      [theme],
-    )
-
     if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
       return (
         <EmptyCards
@@ -348,7 +324,6 @@ export const IssueOrPullRequestCards = React.memo(
         ListFooterComponent={renderFooter}
         alwaysBounceVertical
         bounces
-        contentContainerStyle={contentContainerStyle}
         data={items}
         disableVirtualization={Platform.OS === 'web'}
         extraData={rerender}

@@ -5,13 +5,13 @@ import { ColumnSubscription, Theme } from '@devhub/core'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as selectors from '../redux/selectors'
 import { themeColorFields } from '../utils/helpers/theme'
-import { getSeparatorThemeColor } from './common/Separator'
+import { getSeparatorThemeColors } from './common/Separator'
 import { useFocusedColumn } from './context/ColumnFocusContext'
 import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme; isLoading: boolean }) {
   const { isLoading, theme: t } = params
-  const separatorColor = t[getSeparatorThemeColor(t.backgroundColor)]
+  const separatorColor = t[getSeparatorThemeColors(t.backgroundColor)[0]]
   const separatorColorLuminance = getLuminance(separatorColor)
   const backgroundColorLuminance = getLuminance(t.backgroundColor)
 

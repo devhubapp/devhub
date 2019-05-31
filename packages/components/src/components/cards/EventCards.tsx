@@ -9,7 +9,6 @@ import {
   getDateSmallText,
   isItemRead,
 } from '@devhub/core'
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -22,18 +21,13 @@ import { ButtonLink } from '../common/ButtonLink'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
-import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard, EventCardProps } from './EventCard'
 import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
-import {
-  CardItemSeparator,
-  getCardItemSeparatorThemeColor,
-} from './partials/CardItemSeparator'
+import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps
@@ -71,10 +65,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubEvent>>(null)
-
-  const { appViewMode } = useAppViewMode()
-  const { inlineMode } = useColumnFilters()
-  const theme = useTheme()
 
   const visibleItemIndexesRef = useRef<number[]>([])
 
@@ -158,7 +148,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   )
 
   const _renderItem: FlatListProps<EnhancedGitHubEvent>['renderItem'] = ({
-    item: item,
+    item,
   }) => {
     if (props.swipeable) {
       return (
@@ -206,7 +196,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator muted />
+        <CardItemSeparator muted={!fetchNextPage} />
 
         {fetchNextPage ? (
           <View>
@@ -237,8 +227,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
               round={false}
               transparent
             />
-
-            <CardItemSeparator muted />
           </View>
         ) : null}
 
@@ -288,15 +276,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   )
 
   const rerender = useMemo(() => ({}), [renderItem, renderFooter])
-
-  const contentContainerStyle = useMemo(
-    () => ({
-      borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
-      borderColor:
-        theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
-    }),
-    [theme],
-  )
 
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
@@ -356,7 +335,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       ListFooterComponent={renderFooter}
       alwaysBounceVertical
       bounces
-      contentContainerStyle={contentContainerStyle}
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}

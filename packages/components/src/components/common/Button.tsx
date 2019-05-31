@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React, { useCallback, useLayoutEffect, useRef } from 'react'
-import { ViewProps } from 'react-native'
+import { StyleSheet, ViewProps } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import { constants } from '@devhub/core'
@@ -20,7 +20,6 @@ import {
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
-import { separatorSize } from './Separator'
 
 export const defaultButtonSize = 36
 
@@ -177,7 +176,7 @@ export const Button = React.memo((props: ButtonProps) => {
           height: size,
           backgroundColor: springAnimatedStyles.touchableBackgroundColor,
           borderColor: springAnimatedStyles.touchableBorderColor,
-          borderWidth: showBorder ? separatorSize : 0,
+          borderWidth: showBorder ? StyleSheet.hairlineWidth : 0,
           borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
         },
         style,

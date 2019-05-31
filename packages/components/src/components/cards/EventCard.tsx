@@ -49,6 +49,7 @@ import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
+import { Separator, separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -476,6 +477,18 @@ export const EventCard = React.memo((props: EventCardProps) => {
           alignVertically && { alignItems: 'center' },
         ]}
       >
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: separatorSize,
+          }}
+        >
+          <Separator horizontal={false} />
+        </View>
+
         {!!showCardBorder && <CardBorder />}
 
         {/* <CenterGuide /> */}

@@ -5,7 +5,7 @@ export function getThemeColorOrItself(
   theme: ThemeColors,
   color:
     | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
+    | ((theme: ThemeColors) => string | undefined)
     | string
     | undefined,
   { enableCSSVariable = false } = {},

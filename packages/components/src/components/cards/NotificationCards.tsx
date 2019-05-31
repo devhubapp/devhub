@@ -9,7 +9,6 @@ import {
   getDateSmallText,
   isItemRead,
 } from '@devhub/core'
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -21,17 +20,12 @@ import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
-import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard, NotificationCardProps } from './NotificationCard'
-import {
-  CardItemSeparator,
-  getCardItemSeparatorThemeColor,
-} from './partials/CardItemSeparator'
+import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps
@@ -69,10 +63,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
-
-  const { appViewMode } = useAppViewMode()
-  const { inlineMode } = useColumnFilters()
-  const theme = useTheme()
 
   const visibleItemIndexesRef = useRef<number[]>([])
 
@@ -154,12 +144,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     [],
   )
 
-  const _renderItem = ({
-    item: item,
-  }: {
-    item: EnhancedGitHubNotification
-    index: number
-  }) => {
+  const _renderItem: FlatListProps<
+    EnhancedGitHubNotification
+  >['renderItem'] = ({ item }) => {
     if (props.swipeable) {
       return (
         <SwipeableNotificationCard
@@ -205,7 +192,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator muted />
+        <CardItemSeparator muted={!fetchNextPage} />
 
         {fetchNextPage ? (
           <View>
@@ -236,8 +223,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
               round={false}
               transparent
             />
-
-            <CardItemSeparator muted />
           </View>
         ) : null}
 
@@ -288,15 +273,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const rerender = useMemo(() => ({}), [renderItem, renderFooter])
 
-  const contentContainerStyle = useMemo(
-    () => ({
-      borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
-      borderColor:
-        theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
-    }),
-    [theme],
-  )
-
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
@@ -334,7 +310,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       ListFooterComponent={renderFooter}
       alwaysBounceVertical
       bounces
-      contentContainerStyle={contentContainerStyle}
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}

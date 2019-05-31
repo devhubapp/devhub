@@ -54,7 +54,7 @@ export function getColumnCardThemeColors(
 } {
   const luminance = getLuminance(backgroundColor)
 
-  if (luminance <= 0.02) {
+  if (luminance <= 0.01) {
     return {
       card: 'backgroundColorLighther3',
       card__hover: 'backgroundColorLighther4',
