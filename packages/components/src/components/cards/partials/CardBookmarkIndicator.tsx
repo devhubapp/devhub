@@ -3,11 +3,11 @@ import React from 'react'
 import { contentPadding, smallAvatarSize } from '../../../styles/variables'
 import { ThemedIcon } from '../../themed/ThemedIcon'
 
-export interface CardFocusBorderProps {
+export interface CardBorderProps {
   size?: number
 }
 
-export function CardBookmarkIndicator(props: CardFocusBorderProps) {
+export function CardBookmarkIndicator(props: CardBorderProps) {
   const { size: _size = smallAvatarSize } = props
 
   const size = _size * 1.3

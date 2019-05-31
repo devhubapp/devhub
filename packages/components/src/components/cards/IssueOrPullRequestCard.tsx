@@ -35,7 +35,7 @@ import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { CardActions } from './partials/CardActions'
 import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
-import { CardFocusBorder } from './partials/CardFocusBorder'
+import { CardBorder } from './partials/CardBorder'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { LabelsView } from './partials/rows/LabelsView'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
@@ -101,7 +101,8 @@ export const IssueOrPullRequestCard = React.memo(
 
     const isRead = isItemRead(issueOrPullRequest)
     const isSaved = saved === true
-    const muted = isRead
+    const muted = false
+    const showCardBorder = Platform.realOS === 'web' && isFocused
 
     const repo = {
       id: '',
@@ -162,7 +163,7 @@ export const IssueOrPullRequestCard = React.memo(
               addBottomAnchor={false}
               avatarUrl={issueOrPullRequest.user.avatar_url}
               backgroundThemeColor={theme =>
-                getCardBackgroundThemeColor(theme, { muted })
+                getCardBackgroundThemeColor(theme, { muted: isRead })
               }
               body={issueOrPullRequest.body}
               bold
@@ -268,14 +269,14 @@ export const IssueOrPullRequestCard = React.memo(
           key={`issue-or-pr-card-${id}-compact-inner`}
           ref={itemRef}
           backgroundColor={theme =>
-            getCardBackgroundThemeColor(theme, { muted })
+            getCardBackgroundThemeColor(theme, { muted: isRead })
           }
           style={[
             cardStyles.compactContainer,
             alignVertically && { alignItems: 'center' },
           ]}
         >
-          {!!isFocused && <CardFocusBorder />}
+          {!!showCardBorder && <CardBorder />}
 
           {/* <CenterGuide /> */}
 
@@ -403,7 +404,7 @@ export const IssueOrPullRequestCard = React.memo(
               <>
                 <LabelsView
                   backgroundThemeColor={theme =>
-                    getCardBackgroundThemeColor(theme, { muted })
+                    getCardBackgroundThemeColor(theme, { muted: isRead })
                   }
                   enableScrollView={isSingleRow}
                   labels={issueOrPullRequest.labels.map(label => ({
@@ -519,11 +520,13 @@ export const IssueOrPullRequestCard = React.memo(
       <ThemedView
         key={`issue-or-pr-card-${id}-inner`}
         ref={itemRef}
-        backgroundColor={theme => getCardBackgroundThemeColor(theme, { muted })}
+        backgroundColor={theme =>
+          getCardBackgroundThemeColor(theme, { muted: isRead })
+        }
         style={cardStyles.container}
       >
         {!!isSaved && <CardBookmarkIndicator />}
-        {!!isFocused && <CardFocusBorder />}
+        {!!showCardBorder && <CardBorder />}
 
         <View style={sharedStyles.flex}>
           <View

@@ -39,7 +39,7 @@ import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { CardActions } from './partials/CardActions'
 import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
-import { CardFocusBorder } from './partials/CardFocusBorder'
+import { CardBorder } from './partials/CardBorder'
 import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
@@ -114,7 +114,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isRead = isItemRead(notification)
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
-  const muted = isRead
+  const muted = false
+  const showCardBorder = Platform.realOS === 'web' && isFocused
 
   const isPrivateAndCantSee =
     isPrivate &&
@@ -296,7 +297,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
             backgroundThemeColor={theme =>
-              getCardBackgroundThemeColor(theme, { muted })
+              getCardBackgroundThemeColor(theme, { muted: isRead })
             }
             body={issueOrPullRequest.body}
             bold
@@ -406,13 +407,15 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       <ThemedView
         key={`notification-card-${id}-compact-inner`}
         ref={itemRef}
-        backgroundColor={theme => getCardBackgroundThemeColor(theme, { muted })}
+        backgroundColor={theme =>
+          getCardBackgroundThemeColor(theme, { muted: isRead })
+        }
         style={[
           cardStyles.compactContainer,
           alignVertically && { alignItems: 'center' },
         ]}
       >
-        {!!isFocused && <CardFocusBorder />}
+        {!!showCardBorder && <CardBorder />}
 
         {/* <CenterGuide /> */}
 
@@ -530,7 +533,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             <>
               <LabelsView
                 backgroundThemeColor={theme =>
-                  getCardBackgroundThemeColor(theme, { muted })
+                  getCardBackgroundThemeColor(theme, { muted: isRead })
                 }
                 labels={issueOrPullRequest.labels.map(label => ({
                   key: `issue-or-pr-row-${
@@ -617,7 +620,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
           <NotificationReason
             backgroundThemeColor={theme =>
-              getCardBackgroundThemeColor(theme, { muted })
+              getCardBackgroundThemeColor(theme, { muted: isRead })
             }
             muted={muted}
             reason={notification.reason as GitHubNotificationReason}
@@ -649,11 +652,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     <ThemedView
       key={`notification-card-${id}-inner`}
       ref={itemRef}
-      backgroundColor={theme => getCardBackgroundThemeColor(theme, { muted })}
+      backgroundColor={theme =>
+        getCardBackgroundThemeColor(theme, { muted: isRead })
+      }
       style={cardStyles.container}
     >
       {!!isSaved && <CardBookmarkIndicator />}
-      {!!isFocused && <CardFocusBorder />}
+      {!!showCardBorder && <CardBorder />}
 
       <View style={sharedStyles.flex}>
         <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
@@ -683,7 +688,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               key={`notification-card-header-${id}`}
               avatarUrl={repoAvatarDetails.avatar_url || undefined}
               backgroundThemeColor={theme =>
-                getCardBackgroundThemeColor(theme, { muted })
+                getCardBackgroundThemeColor(theme, { muted: isRead })
               }
               date={updatedAt}
               ids={[id]}
