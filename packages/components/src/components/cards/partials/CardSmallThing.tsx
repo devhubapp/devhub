@@ -13,7 +13,6 @@ import { cardStyles } from '../styles'
 export interface CardSmallThingProps {
   backgroundColorTheme?: keyof ThemeColors
   icon?: GitHubIcon
-  isRead: boolean
   style?: StyleProp<ViewStyle>
   text: string | number
   url: string

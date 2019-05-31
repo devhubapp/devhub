@@ -28,7 +28,7 @@ export interface ActorActionRowProps
   forkOwnerName: string | undefined
   forkRepositoryName: string | undefined
   isBot: boolean
-  isRead: boolean
+  muted: boolean
   numberOfLines?: number
   ownerName: string
   repositoryName: string
@@ -47,7 +47,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
     forkOwnerName,
     forkRepositoryName,
     isBot,
-    isRead,
+    muted,
     numberOfLines = props.numberOfLines || 1,
     ownerName,
     repositoryName,
@@ -73,7 +73,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
   )
 
   const color: keyof ThemeColors =
-    (isRead && 'foregroundColorMuted60') || 'foregroundColor'
+    (muted && 'foregroundColorMuted60') || 'foregroundColor'
 
   const bodyStr = `${_body || ''}`.replace(_body[0], _body[0].toLowerCase())
 
@@ -149,7 +149,6 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
                 cardStyles.normalText,
                 cardStyles.boldText,
                 cardStyles.smallText,
-                // isRead && { fontWeight: undefined },
                 { lineHeight: smallAvatarSize },
                 textStyle,
               ],

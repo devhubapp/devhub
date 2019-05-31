@@ -28,7 +28,7 @@ export interface NotificationCardHeaderProps {
   ids: Array<string | number>
   isBot: boolean
   isPrivate: boolean
-  isRead: boolean
+  muted: boolean
   reason: GitHubNotificationReason
   smallLeftColumn?: boolean
   userLinkURL: string
@@ -62,7 +62,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
     ids,
     isBot,
     isPrivate,
-    isRead,
+    muted,
     reason,
     smallLeftColumn,
     userLinkURL: _userLinkURL,
@@ -116,15 +116,11 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 <Link
                   href={userLinkURL}
                   textProps={{
-                    color: isRead
-                      ? 'foregroundColorMuted60'
-                      : 'foregroundColor',
-                    // color: 'foregroundColor',
+                    color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
                     numberOfLines: 1,
                     style: [
                       { maxWidth: '100%' },
                       cardStyles.usernameText,
-                      // isRead && { fontWeight: undefined },
                       { lineHeight: undefined },
                     ],
                   }}
@@ -154,7 +150,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
 
               <NotificationReason
                 backgroundThemeColor={backgroundThemeColor}
-                muted={isRead}
+                muted={muted}
                 reason={reason}
               />
             </View>
@@ -186,7 +182,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                     <Text children="  " />
                     <ThemedText
                       color={
-                        isRead
+                        muted
                           ? 'foregroundColorMuted40'
                           : 'foregroundColorMuted60'
                       }

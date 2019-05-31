@@ -15,7 +15,7 @@ export interface RepositoryRowProps
   isForcePush?: boolean
   isFork?: boolean
   isPush?: boolean
-  isRead: boolean
+  muted: boolean
   ownerName: string
   repositoryName: string
   showMoreItemsIndicator?: boolean
@@ -30,7 +30,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
     // isForcePush,
     // isFork,
     // isPush,
-    isRead,
+    muted,
     ownerName,
     repositoryName,
     rightContainerStyle,
@@ -73,8 +73,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                 : getGitHubURLForRepo(ownerName, repositoryName)
             }
             textProps={{
-              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
-              // color: 'foregroundColor',
+              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
               numberOfLines: hideOwner ? 2 : 1,
               style: [cardStyles.normalText, small && cardStyles.smallText],
             }}

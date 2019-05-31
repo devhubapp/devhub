@@ -16,7 +16,7 @@ export interface UserRowProps
   avatarUrl: string
   bold?: boolean
   // hideIcon?: boolean
-  isRead: boolean
+  muted: boolean
   showMoreItemsIndicator?: boolean
   userLinkURL: string
   username: string
@@ -29,7 +29,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
     avatarUrl,
     bold,
     // hideIcon,
-    isRead,
+    muted,
     showMoreItemsIndicator,
     userLinkURL,
     username,
@@ -57,13 +57,10 @@ export const UserRow = React.memo((props: UserRowProps) => {
             }
             textProps={{
               color:
-                isRead || showMoreItemsIndicator
+                muted || showMoreItemsIndicator
                   ? 'foregroundColorMuted60'
                   : 'foregroundColor',
-              style: [
-                bold && cardStyles.boldText,
-                // isRead && { fontWeight: undefined },
-              ],
+              style: [bold && cardStyles.boldText],
             }}
           >
             {showMoreItemsIndicator ? '...' : username}

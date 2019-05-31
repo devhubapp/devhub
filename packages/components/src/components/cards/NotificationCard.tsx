@@ -114,6 +114,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isRead = isItemRead(notification)
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
+  const muted = isRead
 
   const isPrivateAndCantSee =
     isPrivate &&
@@ -242,7 +243,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         ) && (
           <RepositoryRow
             key={`notification-repo-row-${repo.id}`}
-            isRead={isRead}
+            muted={muted}
             ownerName={repoOwnerName}
             repositoryName={repoName}
             small
@@ -256,7 +257,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             key={`notification-${id}-subject-title-row`}
             avatarUrl=""
             body={subject.title}
-            isRead={isRead}
+            muted={muted}
             leftContent="avatar"
             userLinkURL=""
             username=""
@@ -280,7 +281,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             authorUsername={commit.author && commit.author.login}
             bold
             isPrivate={isPrivate}
-            isRead={isRead}
+            muted={muted}
             latestCommentUrl={subject.latest_comment_url}
             message={commit.commit.message}
             url={commit.url || commit.commit.url}
@@ -295,7 +296,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
             backgroundThemeColor={theme =>
-              getCardBackgroundThemeColor(theme, { isRead })
+              getCardBackgroundThemeColor(theme, { muted })
             }
             body={issueOrPullRequest.body}
             bold
@@ -308,7 +309,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             id={issueOrPullRequest.id}
             inlineLabels={false}
             isPrivate={isPrivate}
-            isRead={isRead}
+            muted={muted}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
             labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
@@ -349,7 +350,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             bold
             hideIcon
             isPrivate={isPrivate}
-            isRead={isRead}
+            muted={muted}
             name={release.name || ''}
             ownerName={repoOwnerName || ''}
             repositoryName={repoName || ''}
@@ -368,7 +369,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             addBottomAnchor
             avatarUrl={comment.user.avatar_url}
             body={comment.body}
-            isRead={isRead}
+            muted={muted}
             leftContent="avatar"
             url={comment.html_url}
             userLinkURL={comment.user.html_url || ''}
@@ -381,7 +382,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         {!!isPrivateAndCantSee && (
           <PrivateNotificationRow
             key={`private-notification-row-${notification.id}`}
-            isRead={isRead}
             ownerId={
               (notification.repository.owner &&
                 notification.repository.owner.id) ||
@@ -406,9 +406,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       <ThemedView
         key={`notification-card-${id}-compact-inner`}
         ref={itemRef}
-        backgroundColor={theme =>
-          getCardBackgroundThemeColor(theme, { isRead })
-        }
+        backgroundColor={theme => getCardBackgroundThemeColor(theme, { muted })}
         style={[
           cardStyles.compactContainer,
           alignVertically && { alignItems: 'center' },
@@ -469,7 +467,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   key={`notification-repo-row-${repo.id}`}
                   disableLeft
                   hideOwner
-                  isRead={isRead}
+                  muted={muted}
                   ownerName={repoOwnerName}
                   repositoryName={repoName}
                   rightContainerStyle={{
@@ -509,7 +507,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                // opacity: isRead ? mutedOpacity : 1,
+                // opacity: muted ? mutedOpacity : 1,
               }}
               {...!!cardIconDetails.tooltip &&
                 Platform.select({
@@ -532,7 +530,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             <>
               <LabelsView
                 backgroundThemeColor={theme =>
-                  getCardBackgroundThemeColor(theme, { isRead })
+                  getCardBackgroundThemeColor(theme, { muted })
                 }
                 labels={issueOrPullRequest.labels.map(label => ({
                   key: `issue-or-pr-row-${
@@ -542,7 +540,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   color: label.color && `#${label.color}`,
                   name: label.name,
                 }))}
-                muted={isRead}
+                muted={muted}
                 style={{
                   alignSelf: 'center',
                   justifyContent: 'flex-end',
@@ -555,7 +553,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   overflow: 'hidden',
                 }}
                 textThemeColor={
-                  isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
                 }
               />
 
@@ -582,7 +580,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 return (
                   <ThemedText
                     color={
-                      isRead
+                      muted
                         ? 'foregroundColorMuted40'
                         : 'foregroundColorMuted60'
                     }
@@ -619,9 +617,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
           <NotificationReason
             backgroundThemeColor={theme =>
-              getCardBackgroundThemeColor(theme, { isRead })
+              getCardBackgroundThemeColor(theme, { muted })
             }
-            muted={isRead}
+            muted={muted}
             reason={notification.reason as GitHubNotificationReason}
           />
         </View>
@@ -651,7 +649,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     <ThemedView
       key={`notification-card-${id}-inner`}
       ref={itemRef}
-      backgroundColor={theme => getCardBackgroundThemeColor(theme, { isRead })}
+      backgroundColor={theme => getCardBackgroundThemeColor(theme, { muted })}
       style={cardStyles.container}
     >
       {!!isSaved && <CardBookmarkIndicator />}
@@ -669,7 +667,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                // opacity: isRead ? mutedOpacity : 1,
+                // opacity: muted ? mutedOpacity : 1,
               }}
               {...!!cardIconDetails.tooltip &&
                 Platform.select({
@@ -685,13 +683,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               key={`notification-card-header-${id}`}
               avatarUrl={repoAvatarDetails.avatar_url || undefined}
               backgroundThemeColor={theme =>
-                getCardBackgroundThemeColor(theme, { isRead })
+                getCardBackgroundThemeColor(theme, { muted })
               }
               date={updatedAt}
               ids={[id]}
               isBot={isBot}
               isPrivate={isPrivate}
-              isRead={isRead}
+              muted={muted}
               reason={notification.reason as GitHubNotificationReason}
               smallLeftColumn
               userLinkURL={repoAvatarDetails.html_url || ''}

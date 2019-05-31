@@ -206,7 +206,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator isRead />
+        <CardItemSeparator muted />
 
         {fetchNextPage ? (
           <View>

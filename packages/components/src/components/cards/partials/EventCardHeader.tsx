@@ -26,7 +26,7 @@ export interface EventCardHeaderProps {
   ids: Array<string | number>
   isBot: boolean
   isPrivate?: boolean
-  isRead: boolean
+  muted: boolean
   smallLeftColumn?: boolean
   userLinkURL: string
   username: string
@@ -59,7 +59,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
     ids,
     isBot,
     isPrivate,
-    isRead,
+    muted,
     smallLeftColumn,
     userLinkURL: _userLinkURL,
     username: _username,
@@ -99,14 +99,9 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               <Link
                 href={userLinkURL}
                 textProps={{
-                  color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
-                  // color: 'foregroundColor',
+                  color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
                   numberOfLines: 1,
-                  style: [
-                    cardStyles.usernameText,
-                    // isRead && { fontWeight: undefined },
-                    { lineHeight: undefined },
-                  ],
+                  style: [cardStyles.usernameText, { lineHeight: undefined }],
                 }}
               >
                 {username}
@@ -132,7 +127,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
             <Spacer height={2} />
 
             <ThemedText
-              color={isRead ? 'foregroundColorMuted60' : 'foregroundColor'}
+              color={muted ? 'foregroundColorMuted60' : 'foregroundColor'}
               numberOfLines={1}
               style={cardStyles.headerActionText}
             >
@@ -166,7 +161,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                     <Text children="  " />
                     <ThemedText
                       color={
-                        isRead
+                        muted
                           ? 'foregroundColorMuted40'
                           : 'foregroundColorMuted60'
                       }

@@ -22,6 +22,7 @@ export interface CardActionsProps {
   isSaved: boolean
   itemIds: Array<string | number>
   leftSpacing?: number
+  muted?: boolean
   rightSpacing?: number
   type: ColumnSubscription['type']
 }
@@ -36,6 +37,7 @@ export function CardActions(props: CardActionsProps) {
     leftSpacing = 2 * smallAvatarSize +
       2 * spacingBetweenLeftAndRightColumn +
       contentPadding / 3,
+    muted,
     rightSpacing = 0,
     type,
   } = props
@@ -60,7 +62,7 @@ export function CardActions(props: CardActionsProps) {
         }}
         onPress={() => saveItemsForLater({ itemIds, save: !isSaved })}
         textProps={{
-          color: isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
+          color: muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
           style: { fontSize: smallerTextSize },
         }}
       >
@@ -82,7 +84,7 @@ export function CardActions(props: CardActionsProps) {
           markItemsAsReadOrUnread({ type, itemIds, unread: !!isRead })
         }
         textProps={{
-          color: isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
+          color: muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
           style: { fontSize: smallerTextSize },
         }}
       >
@@ -116,7 +118,7 @@ export function CardActions(props: CardActionsProps) {
               }
               openOnNewTab
               textProps={{
-                color: isRead
+                color: muted
                   ? 'foregroundColorMuted40'
                   : 'foregroundColorMuted60',
                 style: { fontSize: smallerTextSize },

@@ -47,51 +47,51 @@ export function getColumnCardThemeColors(
   backgroundColor: string,
 ): {
   column: keyof ThemeColors
-  unread: keyof ThemeColors
-  unread__hover: keyof ThemeColors
-  read: keyof ThemeColors
-  read__hover: keyof ThemeColors
+  card: keyof ThemeColors
+  card__hover: keyof ThemeColors
+  card__muted: keyof ThemeColors
+  card__muted_hover: keyof ThemeColors
 } {
   const luminance = getLuminance(backgroundColor)
 
   if (luminance <= 0.02) {
     return {
+      card: 'backgroundColorLighther3',
+      card__hover: 'backgroundColorLighther4',
+      card__muted: 'backgroundColor',
+      card__muted_hover: 'backgroundColorLighther2',
       column: 'backgroundColor',
-      read: 'backgroundColor',
-      read__hover: 'backgroundColorLighther2',
-      unread: 'backgroundColorLighther3',
-      unread__hover: 'backgroundColorLighther4',
     }
   }
 
   if (luminance >= 0.6) {
     return {
+      card: 'backgroundColorLighther1',
+      card__hover: 'backgroundColorLighther2',
+      card__muted: 'backgroundColorDarker1',
+      card__muted_hover: 'backgroundColorDarker2',
       column: 'backgroundColor',
-      read: 'backgroundColorDarker1',
-      read__hover: 'backgroundColorDarker2',
-      unread: 'backgroundColorLighther1',
-      unread__hover: 'backgroundColorLighther2',
     }
   }
 
   return {
+    card: 'backgroundColorLighther2',
+    card__hover: 'backgroundColorLighther3',
+    card__muted: 'backgroundColor',
+    card__muted_hover: 'backgroundColorDarker1',
     column: 'backgroundColor',
-    read: 'backgroundColor',
-    read__hover: 'backgroundColorDarker1',
-    unread: 'backgroundColorLighther2',
-    unread__hover: 'backgroundColorLighther3',
   }
 }
 
 export function getCardBackgroundThemeColor(
   theme: ThemeColors,
-  { isRead }: { isRead: boolean },
+  { muted }: { muted: boolean },
 ) {
   const backgroundThemeColors = getColumnCardThemeColors(theme.backgroundColor)
 
   const _backgroundThemeColor =
     // (isFocused && 'backgroundColorLess2') ||
-    (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
+    (muted && backgroundThemeColors.card__muted) || backgroundThemeColors.card
 
   return _backgroundThemeColor
 }

@@ -7,30 +7,30 @@ import { useTheme } from '../../context/ThemeContext'
 
 export function getCardItemSeparatorThemeColor(
   backgroundColor: string,
-  isRead?: boolean,
+  muted?: boolean,
 ): keyof ThemeColors {
   const luminance = getLuminance(backgroundColor)
 
   if (luminance <= 0.02)
-    return isRead ? 'backgroundColorLighther2' : 'backgroundColor'
+    return muted ? 'backgroundColorLighther2' : 'backgroundColor'
 
   if (luminance >= 0.6)
-    return isRead ? 'backgroundColorDarker2' : 'backgroundColorDarker1'
+    return muted ? 'backgroundColorDarker2' : 'backgroundColorDarker1'
 
-  return isRead ? 'backgroundColorDarker1' : 'backgroundColor'
+  return muted ? 'backgroundColorDarker1' : 'backgroundColor'
 }
 
 export function CardItemSeparator(props: {
-  isRead?: boolean
+  muted?: boolean
   leadingItem?: any
 }) {
-  const { leadingItem, isRead: _isRead } = props
+  const { leadingItem, muted: _muted } = props
 
   const theme = useTheme()
 
-  const isRead =
-    typeof _isRead === 'boolean'
-      ? _isRead
+  const muted =
+    typeof _muted === 'boolean'
+      ? _muted
       : leadingItem
       ? isItemRead(leadingItem)
       : false
@@ -39,7 +39,7 @@ export function CardItemSeparator(props: {
     <Separator
       backgroundThemeColor={getCardItemSeparatorThemeColor(
         theme.backgroundColor,
-        isRead,
+        muted,
       )}
       horizontal
     />

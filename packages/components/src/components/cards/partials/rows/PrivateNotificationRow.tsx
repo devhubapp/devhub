@@ -21,7 +21,6 @@ export interface PrivateNotificationRowProps
     BaseRowProps,
     'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
   > {
-  isRead?: boolean
   ownerId?: number | string | undefined
   repoId?: number | string | undefined
 }

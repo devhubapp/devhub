@@ -6,7 +6,6 @@ import { WikiPageRow, WikiPageRowProps } from './WikiPageRow'
 
 export interface WikiPageListRowProps
   extends Omit<WikiPageRowProps, 'showMoreItemsIndicator' | 'title' | 'url'> {
-  isRead: boolean
   maxHeight?: number
   pages: GitHubPage[]
 }

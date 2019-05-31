@@ -10,7 +10,6 @@ export interface CommitListRowProps
     'authorEmail' | 'authorName' | 'message' | 'showMoreItemsIndicator' | 'url'
   > {
   commits: GitHubPushedCommit[]
-  isRead: boolean
   maxHeight?: number
 }
 

@@ -1460,7 +1460,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         />
       </View>
 
-      <CardItemSeparator isRead />
+      <CardItemSeparator muted />
     </ThemedView>
   )
 })
