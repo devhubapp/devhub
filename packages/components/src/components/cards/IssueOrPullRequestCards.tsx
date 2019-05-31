@@ -238,7 +238,6 @@ export const IssueOrPullRequestCards = React.memo(
             <View>
               <Button
                 analyticsLabel="show_cleared"
-                borderOnly
                 children="Show cleared items"
                 onPress={() => {
                   setColumnClearedAtFilter({
@@ -249,7 +248,10 @@ export const IssueOrPullRequestCards = React.memo(
                   if (refresh) refresh()
                 }}
                 round={false}
+                transparent
               />
+
+              <CardItemSeparator muted />
             </View>
           ) : null}
 

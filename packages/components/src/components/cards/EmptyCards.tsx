@@ -182,12 +182,13 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           >
             <Button
               analyticsLabel="show_cleared"
-              borderOnly
               children="Show cleared items"
+              showBorder
               onPress={() => {
                 setColumnClearedAtFilter({ clearedAt: null, columnId })
                 if (refresh) refresh()
               }}
+              transparent
             />
           </View>
         ) : shouldRenderFAB({ sizename }) ? (

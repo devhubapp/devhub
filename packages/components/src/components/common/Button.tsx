@@ -26,7 +26,6 @@ export const defaultButtonSize = 36
 
 export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   backgroundColor?: string
-  borderOnly?: boolean
   children: string | React.ReactNode
   contentContainerStyle?: ViewProps['style']
   disabled?: boolean
@@ -38,13 +37,14 @@ export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   loadingIndicatorStyle?: SpringAnimatedActivityIndicatorProps['style']
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
   round?: boolean
+  showBorder?: boolean
   size?: number | null
+  transparent?: boolean
 }
 
 export const Button = React.memo((props: ButtonProps) => {
   const {
     backgroundColor,
-    borderOnly,
     children,
     contentContainerStyle,
     fontSize,
@@ -54,8 +54,10 @@ export const Button = React.memo((props: ButtonProps) => {
     loading,
     loadingIndicatorStyle,
     round = true,
+    showBorder,
     size: _size,
     style,
+    transparent,
     ...otherProps
   } = props
 
@@ -81,7 +83,7 @@ export const Button = React.memo((props: ButtonProps) => {
         config: getDefaultReactSpringAnimationConfig(),
         immediate,
         activityIndicatorColor: theme.foregroundColor,
-        touchableBackgroundColor: borderOnly
+        touchableBackgroundColor: transparent
           ? 'transparent'
           : backgroundColor
           ? backgroundColor
@@ -100,7 +102,7 @@ export const Button = React.memo((props: ButtonProps) => {
             : rgba(theme.backgroundColorLess3, 0),
         textColor: foregroundColor
           ? foregroundColor
-          : borderOnly
+          : transparent
           ? isHovered || isPressing
             ? hoverForegroundColor || theme.foregroundColor
             : theme.foregroundColorMuted60
@@ -109,13 +111,14 @@ export const Button = React.memo((props: ButtonProps) => {
     },
     [
       backgroundColor,
-      borderOnly,
       cacheRef.current.isHovered,
       cacheRef.current.isPressing,
       cacheRef.current.theme,
       foregroundColor,
       hoverBackgroundColor,
       hoverForegroundColor,
+      showBorder,
+      transparent,
     ],
   )
 
@@ -174,7 +177,7 @@ export const Button = React.memo((props: ButtonProps) => {
           height: size,
           backgroundColor: springAnimatedStyles.touchableBackgroundColor,
           borderColor: springAnimatedStyles.touchableBorderColor,
-          borderWidth: borderOnly ? separatorSize : 0,
+          borderWidth: showBorder ? separatorSize : 0,
           borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
         },
         style,

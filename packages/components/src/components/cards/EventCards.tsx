@@ -225,7 +225,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           <View>
             <Button
               analyticsLabel="show_cleared"
-              borderOnly
               children="Show cleared items"
               onPress={() => {
                 setColumnClearedAtFilter({
@@ -236,7 +235,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
                 if (refresh) refresh()
               }}
               round={false}
+              transparent
             />
+
+            <CardItemSeparator muted />
           </View>
         ) : null}
 
