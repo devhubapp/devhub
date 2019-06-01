@@ -83,6 +83,10 @@ export const EventCardsContainer = React.memo(
       actions.fetchColumnSubscriptionRequest,
     )
 
+    const refreshInstallationsRequest = useReduxAction(
+      actions.refreshInstallationsRequest,
+    )
+
     const subscriptionsDataSelectorRef = useRef(
       selectors.createSubscriptionsDataSelector(),
     )
@@ -129,8 +133,22 @@ export const EventCardsContainer = React.memo(
     }, [fetchData, allItems.length])
 
     const refresh = useCallback(() => {
-      fetchData()
-    }, [fetchData])
+      if (data.errorMessage === 'Bad credentials' && appToken) {
+        refreshInstallationsRequest({
+          appToken,
+          includeInstallationToken: true,
+        })
+      } else {
+        fetchData()
+      }
+    }, [
+      fetchData,
+      mainSubscription &&
+        mainSubscription.data &&
+        mainSubscription.data.errorMessage,
+      ownerResponse && ownerResponse.data && ownerResponse.data.id,
+      appToken,
+    ])
 
     if (!mainSubscription) return null
 
