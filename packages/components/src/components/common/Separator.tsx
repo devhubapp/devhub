@@ -1,11 +1,11 @@
 import { getLuminance } from 'polished'
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { ThemedView } from '../themed/ThemedView'
 
-export const separatorSize = StyleSheet.hairlineWidth * 2
+export const separatorSize = 2
 export const separatorThickSize = 5
 
 export function getSeparatorThemeColors(

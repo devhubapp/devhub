@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react'
 import {
   StyleProp,
-  StyleSheet,
   Text,
   TextProps,
   View,
@@ -107,7 +106,7 @@ export function Label(props: LabelProps) {
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: typeof radius === 'number' ? radius : height / 2,
-          borderWidth: outline ? StyleSheet.hairlineWidth : 0,
+          borderWidth: outline ? 1 : 0,
         },
         containerProps && containerProps.style,
         containerStyle,
