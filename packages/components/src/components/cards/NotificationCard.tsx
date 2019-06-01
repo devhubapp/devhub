@@ -147,10 +147,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       comments: undefined,
       created_at: undefined,
       labels: [] as GitHubLabel[],
-      number: undefined,
+      number: getIssueOrPullRequestNumberFromUrl(
+        subject.url || subject.latest_comment_url,
+      ),
       state: undefined,
       title: subject.title,
-      url: subject.latest_comment_url || subject.url,
+      url: subject.url || subject.latest_comment_url,
       html_url: '',
       user: { avatar_url: '', login: '', html_url: '' },
     }) ||
@@ -165,10 +167,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       comments: undefined,
       labels: [] as GitHubLabel[],
       draft: false,
-      number: undefined,
+      number: getIssueOrPullRequestNumberFromUrl(
+        subject.url || subject.latest_comment_url,
+      ),
       state: undefined,
       title: subject.title,
-      url: subject.latest_comment_url || subject.url,
+      url: subject.url || subject.latest_comment_url,
       html_url: '',
       user: { avatar_url: '', login: '', html_url: '' },
     }) ||
@@ -183,7 +187,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
       created_at: undefined,
       name: subject.title,
       tag_name: '',
-      url: subject.latest_comment_url || subject.url,
+      url: subject.url || subject.latest_comment_url,
     }) ||
     null
 
@@ -201,7 +205,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const issueOrPullRequestNumber = issueOrPullRequest
     ? issueOrPullRequest.number ||
-      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
+      getIssueOrPullRequestNumberFromUrl(
+        issueOrPullRequest.html_url || issueOrPullRequest.url,
+      )
     : undefined
 
   const repoAvatarDetails = {
