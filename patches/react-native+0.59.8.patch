@@ -1,27 +1,79 @@
-diff --git a/node_modules/react-native/React/Views/RCTBorderDrawing.m b/node_modules/react-native/React/Views/RCTBorderDrawing.m
-index 2a8d105..a92db47 100644
---- a/node_modules/react-native/React/Views/RCTBorderDrawing.m
-+++ b/node_modules/react-native/React/Views/RCTBorderDrawing.m
-@@ -224,13 +224,15 @@ static CGContextRef RCTUIGraphicsBeginImageContext(CGSize size, CGColorRef backg
-     borderInsets.right + MAX(cornerInsets.bottomRight.width, cornerInsets.topRight.width)
-   };
+diff --git a/node_modules/react-native/Libraries/Lists/VirtualizedList.js b/node_modules/react-native/Libraries/Lists/VirtualizedList.js
+index e02c7ad..86da589 100644
+--- a/node_modules/react-native/Libraries/Lists/VirtualizedList.js
++++ b/node_modules/react-native/Libraries/Lists/VirtualizedList.js
+@@ -1641,26 +1641,36 @@ class VirtualizedList extends React.PureComponent<Props, State> {
+   }
+ }
  
--  // Asymmetrical edgeInsets cause strange artifacting on iOS 10 and earlier.
--  edgeInsets = (UIEdgeInsets){
--    MAX(edgeInsets.top, edgeInsets.bottom),
--    MAX(edgeInsets.left, edgeInsets.right),
--    MAX(edgeInsets.top, edgeInsets.bottom),
--    MAX(edgeInsets.left, edgeInsets.right),
--  };
-+  if (hasCornerRadii) {
-+    // Asymmetrical edgeInsets cause strange artifacting on iOS 10 and earlier.
-+    edgeInsets = (UIEdgeInsets){
-+      MAX(edgeInsets.top, edgeInsets.bottom),
-+      MAX(edgeInsets.left, edgeInsets.right),
-+      MAX(edgeInsets.top, edgeInsets.bottom),
-+      MAX(edgeInsets.left, edgeInsets.right),
+-class CellRenderer extends React.Component<
+-  {
+-    CellRendererComponent?: ?React.ComponentType<any>,
+-    ItemSeparatorComponent: ?React.ComponentType<*>,
+-    cellKey: string,
+-    fillRateHelper: FillRateHelper,
+-    horizontal: ?boolean,
+-    index: number,
+-    inversionStyle: ViewStyleProp,
+-    item: Item,
+-    onLayout: (event: Object) => void, // This is extracted by ScrollViewStickyHeader
+-    onUnmount: (cellKey: string) => void,
+-    onUpdateSeparators: (cellKeys: Array<?string>, props: Object) => void,
+-    parentProps: {
+-      getItemLayout?: ?Function,
+-      renderItem: renderItemType,
+-    },
+-    prevCellKey: ?string,
++type CellRendererProps = {
++  CellRendererComponent?: ?React.ComponentType<any>,
++  ItemSeparatorComponent: ?React.ComponentType<*>,
++  cellKey: string,
++  fillRateHelper: FillRateHelper,
++  horizontal: ?boolean,
++  index: number,
++  inversionStyle: ViewStyleProp,
++  item: Item,
++  onLayout: (event: Object) => void, // This is extracted by ScrollViewStickyHeader
++  onUnmount: (cellKey: string) => void,
++  onUpdateSeparators: (cellKeys: Array<?string>, props: Object) => void,
++  parentProps: {
++    getItemLayout?: ?Function,
++    renderItem?: ?RenderItemType<Item>,
++    ListItemComponent?: ?(React.ComponentType<any> | React.Element<any>),
+   },
+-  $FlowFixMeState,
++  prevCellKey: ?string,
++};
++
++type CellRendererState = {
++  separatorProps: $ReadOnly<{|
++    highlighted: boolean,
++    leadingItem: ?Item,
++  |}>,
++};
++
++class CellRenderer extends React.Component<
++  CellRendererProps,
++  CellRendererState,
+ > {
+   state = {
+     separatorProps: {
+@@ -1683,6 +1693,18 @@ class CellRenderer extends React.Component<
+     };
+   }
+ 
++  static getDerivedStateFromProps(
++    props: CellRendererProps,
++    prevState: CellRendererState,
++  ): ?CellRendererState {
++    return {
++      separatorProps: {
++        ...prevState.separatorProps,
++        leadingItem: props.item,
++      },
 +    };
 +  }
- 
-   const CGSize size = makeStretchable ? (CGSize){
-     // 1pt for the middle stretchable area along each axis
++
+   // TODO: consider factoring separator stuff out of VirtualizedList into FlatList since it's not
+   // reused by SectionList and we can keep VirtualizedList simpler.
+   _separators = {
