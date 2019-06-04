@@ -115,7 +115,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isRead = isItemRead(notification)
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
-  const muted = false
+  const muted = isRead
   const showCardBorder = Platform.realOS === 'web' && isFocused
 
   const isPrivateAndCantSee =

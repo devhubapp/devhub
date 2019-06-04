@@ -102,7 +102,7 @@ export const IssueOrPullRequestCard = React.memo(
 
     const isRead = isItemRead(issueOrPullRequest)
     const isSaved = saved === true
-    const muted = false
+    const muted = isRead
     const showCardBorder = Platform.realOS === 'web' && isFocused
 
     const repo = {
