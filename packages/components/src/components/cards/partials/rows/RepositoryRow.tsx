@@ -54,6 +54,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
         <Avatar
           isBot={isBot}
           linkURL=""
+          muted={muted}
           small
           style={cardStyles.avatar}
           username={ownerName}

@@ -85,6 +85,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
           avatarUrl={avatarUrl}
           isBot={isBot}
           linkURL={userLinkURL}
+          muted={muted}
           shape={isBot ? undefined : 'circle'}
           small={smallLeftColumn}
           style={cardStyles.avatar}

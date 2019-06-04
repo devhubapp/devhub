@@ -89,6 +89,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           avatarUrl={avatarUrl}
           isBot={isBot}
           linkURL={userLinkURL}
+          muted={muted}
           shape={isBot ? undefined : 'circle'}
           small={smallLeftColumn}
           style={cardStyles.avatar}

@@ -77,6 +77,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             isBot={Boolean(
               authorUsername && authorUsername.indexOf('[bot]') >= 0,
             )}
+            muted={muted}
             small
             style={cardStyles.avatar}
             username={authorUsername}

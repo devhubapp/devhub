@@ -72,6 +72,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             avatarUrl={avatarUrl}
             isBot={isBot}
             linkURL={userLinkURL}
+            muted={muted}
             small
             style={cardStyles.avatar}
             username={username}

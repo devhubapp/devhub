@@ -468,7 +468,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 cardStyles.compactItemFixedHeight,
               ]}
             >
-              <Avatar isBot={isBot} linkURL="" small username={repoOwnerName} />
+              <Avatar
+                isBot={isBot}
+                linkURL=""
+                muted={muted}
+                small
+                username={repoOwnerName}
+              />
             </View>
 
             <Spacer width={spacingBetweenLeftAndRightColumn} />

@@ -128,6 +128,7 @@ export const IssueOrPullRequestRow = React.memo(
               avatarUrl={avatarUrl}
               isBot={isBot}
               linkURL={userLinkURL}
+              muted={muted}
               small
               style={cardStyles.avatar}
               username={username}

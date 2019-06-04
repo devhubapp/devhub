@@ -44,6 +44,7 @@ export const UserRow = React.memo((props: UserRowProps) => {
           avatarUrl={avatarUrl}
           isBot={Boolean(username && username.indexOf('[bot]') >= 0)}
           linkURL={userLinkURL}
+          muted={muted}
           small
           style={cardStyles.avatar}
           username={username}

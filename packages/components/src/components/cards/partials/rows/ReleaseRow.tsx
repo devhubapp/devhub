@@ -89,6 +89,7 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               <Avatar
                 isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
                 linkURL=""
+                muted={muted}
                 small
                 style={cardStyles.avatar}
                 username={ownerName}

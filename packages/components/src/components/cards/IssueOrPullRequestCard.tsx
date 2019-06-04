@@ -326,6 +326,7 @@ export const IssueOrPullRequestCard = React.memo(
                 <Avatar
                   isBot={isBot}
                   linkURL=""
+                  muted={muted}
                   small
                   size={smallAvatarSize}
                   username={repoOwnerName}

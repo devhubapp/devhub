@@ -526,6 +526,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               <Avatar
                 isBot={isBot}
                 linkURL=""
+                muted={muted}
                 small
                 size={smallAvatarSize}
                 username={repoOwnerName}

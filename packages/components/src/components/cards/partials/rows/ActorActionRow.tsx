@@ -126,6 +126,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
           avatarUrl={avatarUrl}
           isBot={isBot}
           linkURL={userLinkURL}
+          muted={muted}
           small={smallLeftColumn}
           style={cardStyles.avatar}
           username={username}

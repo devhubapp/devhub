@@ -46,10 +46,11 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
         // <Avatar
         //   isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
         //   linkURL=""
+        //   muted={muted}
+        //   repo={repositoryName}
         //   small
         //   style={cardStyles.avatar}
         //   username={ownerName}
-        //   repo={repositoryName}
         // />
         <ThemedIcon
           color={muted ? 'foregroundColorMuted60' : 'foregroundColor'}
