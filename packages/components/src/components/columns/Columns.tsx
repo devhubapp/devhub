@@ -180,9 +180,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
     <FlatList
       ref={flatListRef}
       key="columns-flat-list"
-      className="pagingEnabledFix"
       bounces={!swipeable}
       data={columnIds}
+      data-paging-enabled-fix
       disableVirtualization={Platform.OS === 'web'}
       getItemLayout={getItemLayout}
       horizontal

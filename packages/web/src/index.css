@@ -47,11 +47,11 @@ input:focus {
   outline: none !important;
 }
 
-.touchable:not(a) {
+[data-touchable]:not(a) {
   cursor: inherit;
 }
 
 /* https://github.com/necolas/react-native-web/issues/1299 */
-.pagingEnabledFix > div > div > div {
+[data-paging-enabled-fix]  > div > div > div {
   height: 100%;
 }
