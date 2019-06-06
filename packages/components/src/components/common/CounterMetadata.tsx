@@ -2,12 +2,18 @@ import React, { Fragment } from 'react'
 import { StyleSheet } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
-import { contentPadding, radius, smallerTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  mutedOpacity,
+  radius,
+  smallerTextSize,
+} from '../../styles/variables'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 
 export interface CounterMetadataProps {
   alwaysRenderANumber?: boolean
+  backgroundColor?: keyof ThemeColors
   read?: number | undefined
   total?: number | undefined
   unread?: number | undefined
@@ -17,6 +23,7 @@ interface NumberMetadata {
   key: string
   number: number | string
   color: keyof ThemeColors
+  opacity: number
 }
 
 const styles = StyleSheet.create({
@@ -38,7 +45,20 @@ const styles = StyleSheet.create({
 })
 
 export function CounterMetadata(props: CounterMetadataProps) {
-  const { alwaysRenderANumber, read, total, unread } = props
+  const {
+    alwaysRenderANumber,
+    backgroundColor = 'backgroundColorLess2',
+    read,
+    total,
+    unread,
+  } = props
+
+  const mutedColorOpacity =
+    backgroundColor && backgroundColor.startsWith('backgroundColor')
+      ? 1
+      : mutedOpacity
+  const foregroundMutedColor =
+    mutedColorOpacity < 1 ? 'foregroundColor' : 'foregroundColorMuted40'
 
   const firstNumberMetadata: NumberMetadata | undefined =
     unread !== undefined && unread > 0
@@ -46,12 +66,14 @@ export function CounterMetadata(props: CounterMetadataProps) {
           key: 'unread',
           number: formatNumber(unread),
           color: 'foregroundColor',
+          opacity: 1,
         }
       : read !== undefined && read > 0
       ? {
           key: 'read',
           number: formatNumber(read),
-          color: 'foregroundColorMuted40',
+          color: foregroundMutedColor,
+          opacity: mutedColorOpacity,
         }
       : undefined
 
@@ -63,7 +85,8 @@ export function CounterMetadata(props: CounterMetadataProps) {
       ? ({
           key: 'total',
           number: formatNumber(total),
-          color: 'foregroundColorMuted40',
+          color: foregroundMutedColor,
+          opacity: mutedColorOpacity,
         } as NumberMetadata)
       : undefined,
   ].filter(Boolean)
@@ -73,7 +96,8 @@ export function CounterMetadata(props: CounterMetadataProps) {
       numberNodesMetadata.push({
         key: 'zero',
         number: formatNumber(0),
-        color: 'foregroundColorMuted40',
+        color: foregroundMutedColor,
+        opacity: mutedColorOpacity,
       })
     } else {
       return null
@@ -81,21 +105,24 @@ export function CounterMetadata(props: CounterMetadataProps) {
   }
 
   return (
-    <ThemedView backgroundColor="backgroundColorLess2" style={styles.container}>
+    <ThemedView backgroundColor={backgroundColor} style={styles.container}>
       {numberNodesMetadata.map(
         (meta, index) =>
           !!meta && (
             <Fragment key={meta.key}>
               {index > 0 && (
                 <ThemedText
-                  color="foregroundColorMuted40"
-                  style={styles.separator}
+                  color={foregroundMutedColor}
+                  style={[styles.separator, { opacity: mutedColorOpacity }]}
                 >
                   /
                 </ThemedText>
               )}
 
-              <ThemedText color={meta.color} style={styles.number}>
+              <ThemedText
+                color={meta.color}
+                style={[styles.number, { opacity: meta.opacity }]}
+              >
                 {meta.number}
               </ThemedText>
             </Fragment>

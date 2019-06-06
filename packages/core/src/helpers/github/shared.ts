@@ -742,7 +742,8 @@ export function getSubjectTypeMetadata<T extends GitHubItemSubjectType>(
 
     case 'RepositoryVulnerabilityAlert': {
       return {
-        label: 'Security Alert',
+        color: 'red',
+        label: 'Security',
         subjectType,
       }
     }

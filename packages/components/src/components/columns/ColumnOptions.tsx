@@ -245,8 +245,17 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
       : 'all'
 
   function getCheckboxRight(
-    counterMetadataProps: Omit<CounterMetadataProps, 'alwaysRenderANumber'>,
-    alwaysRenderANumber?: boolean,
+    counterMetadataProps: Pick<
+      CounterMetadataProps,
+      'read' | 'total' | 'unread'
+    >,
+    {
+      alwaysRenderANumber,
+      backgroundColor,
+    }: {
+      alwaysRenderANumber?: boolean
+      backgroundColor?: keyof ThemeColors
+    } = {},
   ) {
     return (
       <>
@@ -254,6 +263,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         <CounterMetadata
           {...counterMetadataProps}
           alwaysRenderANumber={alwaysRenderANumber}
+          backgroundColor={backgroundColor}
         />
       </>
     )
@@ -773,6 +783,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   const enableIndeterminateState =
                     !isFilterStrict || checked === defaultBooleanValue
 
+                  const counterMetadataProps =
+                    filteredItemsMetadata.subjectType[item.subjectType]
+
                   return (
                     <Checkbox
                       key={`notification-subject-type-option-${
@@ -800,10 +813,14 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                             : value,
                         })
                       }}
-                      right={getCheckboxRight(
-                        filteredItemsMetadata.subjectType[item.subjectType] ||
-                          {},
-                      )}
+                      right={getCheckboxRight(counterMetadataProps || {}, {
+                        backgroundColor:
+                          item.subjectType === 'RepositoryVulnerabilityAlert' &&
+                          counterMetadataProps &&
+                          counterMetadataProps.unread
+                            ? 'red'
+                            : undefined,
+                      })}
                       squareContainerStyle={checkboxSquareStyle}
                       uncheckedForegroundThemeColor={item.color}
                     />
@@ -875,6 +892,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       ? filters[item.reason]
                       : null
 
+                  const counterMetadataProps =
+                    filteredItemsMetadata.subscriptionReason[item.reason]
+
                   return (
                     <Checkbox
                       key={`notification-reason-option-${item.reason}`}
@@ -903,10 +923,14 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                             : value,
                         })
                       }}
-                      right={getCheckboxRight(
-                        filteredItemsMetadata.subscriptionReason[item.reason] ||
-                          {},
-                      )}
+                      right={getCheckboxRight(counterMetadataProps || {}, {
+                        backgroundColor:
+                          item.reason === 'security_alert' &&
+                          counterMetadataProps &&
+                          counterMetadataProps.unread
+                            ? 'red'
+                            : undefined,
+                      })}
                       squareContainerStyle={checkboxSquareStyle}
                       uncheckedForegroundThemeColor={item.color}
                     />
