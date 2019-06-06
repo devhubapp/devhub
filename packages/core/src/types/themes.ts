@@ -63,5 +63,6 @@ export interface Theme extends ThemeColors {
   id: ThemeName
   displayName: string
   isDark: boolean
+  isInverted: boolean
   invert: () => Theme
 }

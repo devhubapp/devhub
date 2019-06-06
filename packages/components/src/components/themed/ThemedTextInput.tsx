@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { TextInput, TextInputProps } from '../common/TextInput'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
@@ -36,7 +36,7 @@ export const ThemedTextInput = React.forwardRef<
 export type ThemedTextInput = typeof ThemedTextInput
 
 function getStyle(
-  theme: ThemeColors,
+  theme: Theme,
   {
     backgroundColor: _backgroundColor,
     borderColor: _borderColor,

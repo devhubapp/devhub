@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleProp } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import {
   ImageWithLoading,
   ImageWithLoadingProps,
@@ -84,7 +84,7 @@ export const ThemedImageWithLoading = React.forwardRef<
 export type ThemedImageWithLoading = typeof ThemedImageWithLoading
 
 function getStyle(
-  theme: ThemeColors,
+  theme: Theme,
   {
     backgroundColor: _backgroundColor,
     borderColor: _borderColor,

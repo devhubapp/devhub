@@ -2,7 +2,7 @@ import { ThemeColors } from '@devhub/core'
 import { getCSSVariable, supportsCSSVariables } from '../../utils/helpers/theme'
 
 export function getThemeColorOrItself(
-  theme: ThemeColors,
+  theme: ThemeColors & { isInverted: boolean | 0 | 1 },
   color:
     | keyof ThemeColors
     | ((theme: ThemeColors) => string | undefined)
@@ -14,7 +14,7 @@ export function getThemeColorOrItself(
 
   if (_color && typeof _color === 'string' && _color in theme)
     return enableCSSVariable && supportsCSSVariables
-      ? getCSSVariable(_color as keyof ThemeColors)
+      ? getCSSVariable(_color as keyof ThemeColors, !!theme.isInverted)
       : theme[_color as keyof ThemeColors]
 
   return _color

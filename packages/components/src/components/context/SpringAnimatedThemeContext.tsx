@@ -12,12 +12,16 @@ export interface SpringAnimatedThemeProviderProps {
 }
 
 export type SpringAnimatedThemeProviderState = UseSpringProps<
-  ThemeColors & { isDark: 0 | 1 }
+  ThemeColors & { isDark: 0 | 1; isInverted: 0 | 1 }
 >
 
 export const SpringAnimatedThemeContext = React.createContext<
   SpringAnimatedThemeProviderState
->({ ...pickThemeColors(defaultTheme), isDark: defaultTheme.isDark ? 1 : 0 })
+>({
+  ...pickThemeColors(defaultTheme),
+  isDark: defaultTheme.isDark ? 1 : 0,
+  isInverted: defaultTheme.isInverted ? 1 : 0,
+})
 
 export const SpringAnimatedThemeConsumer = SpringAnimatedThemeContext.Consumer
 
@@ -28,6 +32,7 @@ export function SpringAnimatedThemeProvider(
     setSpringAnimatedTheme({
       ...pickThemeColors(theme),
       isDark: (theme.isDark ? 1 : 0) as (0 | 1),
+      isInverted: (theme.isInverted ? 1 : 0) as (0 | 1),
     })
   })
 
@@ -35,6 +40,7 @@ export function SpringAnimatedThemeProvider(
     immediate: true,
     ...pickThemeColors(initialTheme),
     isDark: (initialTheme.isDark ? 1 : 0) as (0 | 1),
+    isInverted: (initialTheme.isInverted ? 1 : 0) as (0 | 1),
   }))
 
   return (

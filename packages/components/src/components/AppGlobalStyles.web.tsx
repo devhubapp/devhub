@@ -15,6 +15,8 @@ function getStyles(params: { theme: Theme; isLoading: boolean }) {
   const separatorColorLuminance = getLuminance(separatorColor)
   const backgroundColorLuminance = getLuminance(t.backgroundColor)
 
+  const invertedTheme = t.invert()
+
   return `
     ::-webkit-scrollbar-thumb {
       background-color: ${
@@ -31,6 +33,9 @@ function getStyles(params: { theme: Theme; isLoading: boolean }) {
     body {
       ${themeColorFields
         .map(field => `--theme_${field}:${t[field]};`)
+        .join('\n')}
+      ${themeColorFields
+        .map(field => `--theme_inverted_${field}:${invertedTheme[field]};`)
         .join('\n')}
       background-color:${t.backgroundColor};
       color: ${t.foregroundColor};

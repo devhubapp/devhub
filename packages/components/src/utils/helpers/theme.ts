@@ -55,14 +55,21 @@ export const supportsCSSVariables =
   _window.CSS.supports &&
   _window.CSS.supports('color', 'var(--fake-var)')
 
-const cssVariablesTheme = {} as ThemeColors
+const cssVariablesTheme = {} as Record<string, string>
 themeColorFields.forEach(field => {
   cssVariablesTheme[field] = `var(--theme_${field})`
+  cssVariablesTheme[`inverted_${field}`] = `var(--theme_inverted_${field})`
 })
 
-export function getCSSVariable(color: keyof ThemeColors) {
-  if (color && typeof color === 'string' && color in cssVariablesTheme)
-    return cssVariablesTheme[color]
+export function getCSSVariable(color: keyof ThemeColors, isInverted?: boolean) {
+  const field =
+    color && typeof color === 'string'
+      ? isInverted
+        ? `inverted_${color}`
+        : color
+      : undefined
+
+  if (field && field in cssVariablesTheme) return cssVariablesTheme[field]
 
   return color
 }

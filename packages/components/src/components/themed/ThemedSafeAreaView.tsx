@@ -33,7 +33,7 @@ export const ThemedSafeAreaView = React.forwardRef<
 })
 
 function getStyle(
-  theme: ThemeColors,
+  theme: ThemeColors & { isInverted: boolean | 0 | 1 },
   {
     backgroundColor: _backgroundColor,
     borderColor: _borderColor,

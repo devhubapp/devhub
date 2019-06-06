@@ -14,6 +14,7 @@ import { ThemedView } from '../themed/ThemedView'
 export interface CounterMetadataProps {
   alwaysRenderANumber?: boolean
   backgroundColor?: keyof ThemeColors
+  foregroundColor?: keyof ThemeColors
   read?: number | undefined
   total?: number | undefined
   unread?: number | undefined
@@ -53,12 +54,13 @@ export function CounterMetadata(props: CounterMetadataProps) {
     unread,
   } = props
 
-  const mutedColorOpacity =
+  const isCustomBackground = !(
     backgroundColor && backgroundColor.startsWith('backgroundColor')
-      ? 1
-      : mutedOpacity
-  const foregroundMutedColor =
-    mutedColorOpacity < 1 ? 'foregroundColor' : 'foregroundColorMuted40'
+  )
+  const mutedColorOpacity = isCustomBackground ? mutedOpacity : 1
+  const foregroundMutedColor = isCustomBackground
+    ? 'foregroundColor'
+    : 'foregroundColorMuted40'
 
   const firstNumberMetadata: NumberMetadata | undefined =
     unread !== undefined && unread > 0

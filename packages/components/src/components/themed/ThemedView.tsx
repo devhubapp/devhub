@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { RefObject, useCallback, useRef } from 'react'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
@@ -51,7 +51,7 @@ export const ThemedView = React.forwardRef<View, ThemedViewProps>(
 )
 
 function getStyle(
-  theme: ThemeColors,
+  theme: Theme,
   {
     backgroundColor: _backgroundColor,
     borderColor: _borderColor,
@@ -73,7 +73,7 @@ function getStyle(
 
 function updateStyle(
   ref: RefObject<View> | null,
-  theme: ThemeColors,
+  theme: Theme,
   {
     backgroundColor,
     borderColor,

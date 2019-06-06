@@ -1,14 +1,14 @@
 import React from 'react'
 import { StyleProp, Text, TextProps, TextStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 
 export interface ThemedTextProps extends Omit<TextProps, 'style'> {
   backgroundColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  color?: keyof ThemeColors | ((theme: ThemeColors) => string)
   children?: React.ReactNode
+  color?: keyof ThemeColors | ((theme: ThemeColors) => string)
   style?: StyleProp<Omit<TextStyle, 'backgroundColor' | 'color'>>
 }
 
@@ -29,7 +29,7 @@ export const ThemedText = React.forwardRef<Text, ThemedTextProps>(
 )
 
 function getStyle(
-  theme: ThemeColors,
+  theme: Theme,
   {
     backgroundColor: _backgroundColor,
     color: _color,
