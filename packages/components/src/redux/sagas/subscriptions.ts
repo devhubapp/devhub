@@ -587,7 +587,8 @@ function* onMarkItemsAsReadOrUnread(
 
   const failedIds: string[] = results
     .map((result: Response<any>, index: number) =>
-      result && result.status >= 200 && result.status < 400
+      result &&
+      ((result.status >= 200 && result.status < 400) || result.status === 404)
         ? undefined
         : action.payload.itemIds[index],
     )
