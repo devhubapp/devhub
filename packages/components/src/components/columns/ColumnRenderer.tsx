@@ -151,7 +151,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const repoTableColumnWidth = useRepoTableColumnWidth()
 
   const columnRef = useRef<View>(null)
-  useTheme(theme => {
+  useTheme(undefined, theme => {
     if (!columnRef.current) return
 
     columnRef.current!.setNativeProps({

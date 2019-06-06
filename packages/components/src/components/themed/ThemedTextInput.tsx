@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp } from 'react-native'
 
-import { Theme, ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { TextInput, TextInputProps } from '../common/TextInput'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
@@ -14,15 +14,23 @@ export interface ThemedTextInputProps extends Omit<TextInputProps, 'style'> {
   style?: StyleProp<
     Omit<TextInputProps['style'], 'backgroundColor' | 'borderColor' | 'color'>
   >
+  themeTransformer?: ThemeTransformer
 }
 
 export const ThemedTextInput = React.forwardRef<
   TextInput,
   ThemedTextInputProps
 >((props, ref) => {
-  const { backgroundColor, borderColor, color, style, ...otherProps } = props
+  const {
+    backgroundColor,
+    borderColor,
+    color,
+    style,
+    themeTransformer,
+    ...otherProps
+  } = props
 
-  const theme = useTheme()
+  const theme = useTheme({ themeTransformer })
 
   return (
     <TextInput

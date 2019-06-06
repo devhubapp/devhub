@@ -153,6 +153,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   )
 
   const initialTheme = useTheme(
+    undefined,
     useCallback(
       theme => {
         if (cacheRef.current.theme === theme) return

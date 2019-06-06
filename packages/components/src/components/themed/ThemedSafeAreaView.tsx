@@ -11,6 +11,7 @@ export interface ThemedSafeAreaViewProps extends Omit<TextProps, 'style'> {
   borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   children?: React.ReactNode
   style?: StyleProp<Omit<TextStyle, 'backgroundColor' | 'borderColor'>>
+  // themeTransformer?: ThemeTransformer
 }
 
 export const ThemedSafeAreaView = React.forwardRef<

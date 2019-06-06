@@ -207,7 +207,7 @@ function AddColumnModalItem({
   payload: AddColumnDetailsPayload | null
   title: string
 }) {
-  const initialTheme = useTheme(theme => {
+  const initialTheme = useTheme(undefined, theme => {
     if (cacheRef.current.theme === theme) return
     cacheRef.current.theme = theme
     updateStyles()

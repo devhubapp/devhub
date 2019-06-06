@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, StyleProp } from 'react-native'
 
-import { Theme, ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import {
   ImageWithLoading,
   ImageWithLoadingProps,
@@ -35,6 +35,7 @@ export interface ThemedImageWithLoadingProps
   style?: StyleProp<
     Omit<ImageWithLoadingProps['style'], 'backgroundColor' | 'borderColor'>
   >
+  themeTransformer?: ThemeTransformer
 }
 
 export const ThemedImageWithLoading = React.forwardRef<
@@ -48,10 +49,11 @@ export const ThemedImageWithLoading = React.forwardRef<
     backgroundColorLoading: _backgroundColorLoading,
     borderColor,
     style,
+    themeTransformer,
     ...otherProps
   } = props
 
-  const theme = useTheme()
+  const theme = useTheme({ themeTransformer })
 
   const backgroundColorFailed = getThemeColorOrItself(
     theme,

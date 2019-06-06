@@ -135,6 +135,7 @@ export function Link(props: LinkProps) {
   ])
 
   const initialTheme = useTheme(
+    undefined,
     useCallback(
       theme => {
         if (cacheRef.current.theme === theme) return

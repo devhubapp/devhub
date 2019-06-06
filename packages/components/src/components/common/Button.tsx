@@ -133,6 +133,7 @@ export const Button = React.memo((props: ButtonProps) => {
   )
 
   const initialTheme = useTheme(
+    undefined,
     useCallback(
       theme => {
         if (cacheRef.current.theme === theme) return

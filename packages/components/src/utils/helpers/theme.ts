@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { Theme, ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 
 export const themeColorFields: Array<keyof ThemeColors> = [
@@ -72,4 +72,19 @@ export function getCSSVariable(color: keyof ThemeColors, isInverted?: boolean) {
   if (field && field in cssVariablesTheme) return cssVariablesTheme[field]
 
   return color
+}
+
+export function transformTheme(
+  theme: Theme,
+  themeTransformer: ThemeTransformer,
+) {
+  if (
+    themeTransformer === 'invert' ||
+    (themeTransformer === 'force-dark' && !theme.isDark) ||
+    (themeTransformer === 'force-light' && theme.isDark)
+  ) {
+    return theme.invert()
+  }
+
+  return theme
 }

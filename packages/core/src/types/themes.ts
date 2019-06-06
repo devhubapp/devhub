@@ -66,3 +66,5 @@ export interface Theme extends ThemeColors {
   isInverted: boolean
   invert: () => Theme
 }
+
+export type ThemeTransformer = 'invert' | 'force-dark' | 'force-light'

@@ -85,6 +85,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   )
 
   const initialTheme = useTheme(
+    undefined,
     useCallback(
       theme => {
         if (cacheRef.current.theme === theme) return
