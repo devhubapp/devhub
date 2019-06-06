@@ -14,11 +14,14 @@ import {
   getItemsFilterMetadata,
   getNotificationReasonMetadata,
   getOwnerAndRepoFormattedFilter,
+  getStateTypeMetadata,
+  getSubjectTypeMetadata,
   GitHubEventSubjectType,
   GitHubIssueOrPullRequestSubjectType,
   GitHubNotificationSubjectType,
   GitHubStateType,
   isReadFilterChecked,
+  issueOrPullRequestStateTypes,
   issueOrPullRequestSubjectTypes,
   isUnreadFilterChecked,
   itemPassesFilterRecord,
@@ -39,11 +42,6 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
-import {
-  getStateTypeMetadata,
-  getSubjectTypeMetadata,
-  issueOrPullRequestStateTypes,
-} from '../../utils/helpers/github/shared'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
