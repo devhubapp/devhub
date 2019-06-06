@@ -67,6 +67,7 @@ export const ImageWithLoading = React.memo(
       if (!node) return
 
       node.title = tooltip || ''
+      if (!tooltip && node.removeAttribute) node.removeAttribute('title')
     }, [imageRef.current, tooltip])
 
     const handleLoad = useCallback(e => {

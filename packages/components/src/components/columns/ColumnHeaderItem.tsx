@@ -188,6 +188,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     if (!node) return
 
     node.title = tooltip || ''
+    if (!tooltip && node.removeAttribute) node.removeAttribute('title')
   }, [containerRef.current, tooltip])
 
   const _username = useReduxState(selectors.currentGitHubUsernameSelector)

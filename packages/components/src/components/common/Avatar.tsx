@@ -91,7 +91,8 @@ export function Avatar(props: AvatarProps) {
 
   if (!uri) return null
 
-  const tooltip = _tooltip === null ? '' : _tooltip || `@${username}`
+  const tooltip =
+    !_tooltip && _tooltip !== undefined ? '' : _tooltip || `@${username}`
 
   const linkUri = disableLink
     ? undefined

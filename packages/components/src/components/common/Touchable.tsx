@@ -58,6 +58,7 @@ export const Touchable = React.forwardRef(
       if (!node) return
 
       node.title = tooltip || ''
+      if (!tooltip && node.removeAttribute) node.removeAttribute('title')
     }, [touchableRef.current, tooltip])
 
     const onPress: typeof _onPress =

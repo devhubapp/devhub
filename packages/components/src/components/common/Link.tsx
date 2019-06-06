@@ -165,6 +165,7 @@ export function Link(props: LinkProps) {
     if (!node) return
 
     node.title = tooltip || ''
+    if (!tooltip && node.removeAttribute) node.removeAttribute('title')
   }, [containerRef.current, tooltip])
 
   const cacheRef = useRef({ theme: initialTheme, isHovered: false })
