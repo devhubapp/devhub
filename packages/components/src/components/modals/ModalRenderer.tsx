@@ -34,8 +34,6 @@ import { KeyboardShortcutsModal } from './KeyboardShortcutsModal'
 function renderModal(modal: ModalPayloadWithIndex) {
   if (!modal) return null
 
-  analytics.trackModalView(modal.name)
-
   switch (modal.name) {
     case 'ADD_COLUMN':
       return <AddColumnModal showBackButton={modal.index >= 1} />
@@ -86,6 +84,11 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const popModal = useReduxAction(actions.popModal)
+
+  useEffect(() => {
+    if (currentOpenedModal && currentOpenedModal.name)
+      analytics.trackModalView(currentOpenedModal.name)
+  }, [currentOpenedModal && currentOpenedModal.name])
 
   useEffect(() => {
     if (!(BackHandler && BackHandler.addEventListener)) return
