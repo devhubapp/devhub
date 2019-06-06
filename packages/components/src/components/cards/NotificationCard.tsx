@@ -267,6 +267,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             body={subject.title}
             muted={muted}
             leftContent="avatar"
+            maxLength={isVulnerabilityAlert ? null : undefined}
             userLinkURL=""
             username=""
             url={

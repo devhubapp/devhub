@@ -23,7 +23,7 @@ export interface CommentRowProps
   avatarUrl: string | undefined
   body: string
   leftContent: 'avatar' | 'icon' | 'none'
-  maxLength?: number | undefined
+  maxLength?: number | null | undefined
   muted: boolean
   numberOfLines?: number
   textStyle?: ThemedTextProps['style']
@@ -51,7 +51,10 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     ...otherProps
   } = props
 
-  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), maxLength)
+  const body = trimNewLinesAndSpaces(
+    stripMarkdown(`${_body || ''}`),
+    maxLength || undefined,
+  )
   if (!body) return null
 
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
