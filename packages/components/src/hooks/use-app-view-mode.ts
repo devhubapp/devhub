@@ -1,4 +1,4 @@
-import { CardViewMode } from '@devhub/core'
+import { AppViewMode, CardViewMode } from '@devhub/core'
 import { useAppLayout } from '../components/context/LayoutContext'
 import * as selectors from '../redux/selectors'
 import { useReduxState } from './use-redux-state'
@@ -21,9 +21,10 @@ export function useAppViewMode() {
 
   const isBigEnoughForMultiColumnView = sizename >= '2-medium'
 
-  const appViewMode = isBigEnoughForMultiColumnView
-    ? _appViewMode
-    : 'single-column'
+  const appViewMode = getAppViewMode(
+    _appViewMode,
+    isBigEnoughForMultiColumnView,
+  )
 
   return {
     appViewMode,
@@ -31,4 +32,11 @@ export function useAppViewMode() {
     getCardViewMode,
     getEnableCompactLabels,
   }
+}
+
+export function getAppViewMode(
+  appViewModeFromRedux: AppViewMode,
+  isBigEnoughForMultiColumnView: boolean,
+) {
+  return isBigEnoughForMultiColumnView ? appViewModeFromRedux : 'single-column'
 }
