@@ -116,6 +116,9 @@ export function CounterMetadata(props: CounterMetadataProps) {
                 <ThemedText
                   color={foregroundMutedColor}
                   style={[styles.separator, { opacity: mutedColorOpacity }]}
+                  themeTransformer={
+                    isCustomBackground ? 'force-dark' : undefined
+                  }
                 >
                   /
                 </ThemedText>
@@ -124,6 +127,7 @@ export function CounterMetadata(props: CounterMetadataProps) {
               <ThemedText
                 color={meta.color}
                 style={[styles.number, { opacity: meta.opacity }]}
+                themeTransformer={isCustomBackground ? 'force-dark' : undefined}
               >
                 {meta.number}
               </ThemedText>
