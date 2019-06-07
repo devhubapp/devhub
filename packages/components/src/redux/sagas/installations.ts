@@ -18,13 +18,15 @@ import { ExtractActionFromActionCreator } from '../types/base'
 
 // Fetch new installation tokens every X minutes
 function* init() {
-  while (true) {
-    let _isFirstTime = true
+  let _isFirstTime = true
 
-    yield race({
+  while (true) {
+    const { action } = yield race({
       delay: delay(1000 * 60 * 5), // 5 minutes
       action: take(['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT']),
     })
+
+    if (action) _isFirstTime = true
 
     const isFirstTime = _isFirstTime
     _isFirstTime = false
