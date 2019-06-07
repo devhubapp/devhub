@@ -98,6 +98,18 @@ const columnTypes: Array<{
       },
       {
         payload: {
+          icon: 'issue-opened',
+          title: 'Issues & Pull Requests',
+          subscription: {
+            type: 'issue_or_pr',
+            subtype: undefined,
+          },
+          paramList: ['owner', 'repo'],
+          isPrivateSupported: true,
+        },
+      },
+      {
+        payload: {
           icon: 'git-pull-request',
           title: 'Pull Requests',
           subscription: {
