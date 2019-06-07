@@ -6,6 +6,7 @@
 This app requires GitHub authentication.<br/>
 DevHub requests access to the user's profile data, e-mail and notifications.
 
+We might contact you via e-mail (rarely) to share things like big updates or important announcements, with the option to unsubscribe any time.
 
 ### Repository and org access
 You have the option to install DevHub's GitHub App in some specific orgs and repositories.
@@ -36,4 +37,4 @@ If you find any bug, please contribute by opening an issue or sending a pull req
 
 ---
 
-Updated: Feb 11th, 2019.
+Updated: June 06th, 2019.
