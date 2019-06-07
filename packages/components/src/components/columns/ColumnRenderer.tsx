@@ -23,6 +23,7 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { emitter } from '../../libs/emitter'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import {
@@ -30,10 +31,12 @@ import {
   contentPadding,
   sidebarSize,
 } from '../../styles/variables'
+import { CardBorder } from '../cards/partials/CardBorder'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { separatorSize, separatorThickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
+import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
@@ -147,6 +150,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     getCardViewMode,
     getEnableCompactLabels,
   } = useAppViewMode()
+  const { focusedColumnId } = useFocusedColumn()
   const columnWidth = useColumnWidth()
   const repoTableColumnWidth = useRepoTableColumnWidth()
 
@@ -278,6 +282,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       renderSideSeparators
     >
       <ColumnHeader key={`column-renderer-${column.id}-header`}>
+        {Platform.realOS === 'web' &&
+          filteredItems.length === 0 &&
+          focusedColumnId === column.id && <CardBorder />}
+
         <ColumnHeaderItem
           analyticsLabel={undefined}
           avatarProps={
