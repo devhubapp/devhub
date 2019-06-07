@@ -59,7 +59,7 @@
     ],
     "publish": {
       "provider": "github",
-      "releaseType": "release"
+      "releaseType": "draft"
     }
   },
   "dependencies": {
