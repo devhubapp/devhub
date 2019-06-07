@@ -32,6 +32,7 @@ export interface NotificationCardsProps
   extends Omit<NotificationCardProps, 'notification' | 'isFocused'> {
   column: Column
   columnIndex: number
+  disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: EnhancedGitHubNotification[]
@@ -52,6 +53,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     cardViewMode,
     column,
     columnIndex,
+    disableItemFocus,
     enableCompactLabels,
     errorMessage,
     fetchNextPage,
@@ -154,7 +156,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current
+            item.id === selectedItemIdRef.current &&
+            !disableItemFocus
           }
           notification={item}
           repoIsKnown={props.repoIsKnown}
@@ -170,7 +173,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current
+            item.id === selectedItemIdRef.current &&
+            !disableItemFocus
           }
           notification={item}
           repoIsKnown={props.repoIsKnown}

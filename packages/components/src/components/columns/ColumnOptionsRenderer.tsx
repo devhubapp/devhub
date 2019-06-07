@@ -156,6 +156,18 @@ export const ColumnOptionsRenderer = React.memo(
                       )
                     : 1
                   : 1,
+              visibility:
+                enableAbsolutePositionAnimation &&
+                absolutePositionAnimation &&
+                fixedPosition &&
+                fixedWidth
+                  ? fixedPosition === 'left' || fixedPosition === 'right'
+                    ? absolutePositionAnimation[fixedPosition].interpolate(
+                        (value: number) =>
+                          fixedWidth + value <= 0 ? 'hidden' : 'visible',
+                      )
+                    : 'visible'
+                  : 'visible',
             },
             enableAbsolutePositionAnimation && absolutePositionAnimation,
             !!fixedWidth && fixedPosition === 'left' && { right: undefined },

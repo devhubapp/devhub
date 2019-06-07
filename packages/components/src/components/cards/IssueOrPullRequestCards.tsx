@@ -39,6 +39,7 @@ export interface IssueOrPullRequestCardsProps
   > {
   column: Column
   columnIndex: number
+  disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: EnhancedGitHubIssueOrPullRequest[]
@@ -59,6 +60,7 @@ export const IssueOrPullRequestCards = React.memo(
       cardViewMode,
       column,
       columnIndex,
+      disableItemFocus,
       enableCompactLabels,
       errorMessage,
       fetchNextPage,
@@ -162,7 +164,8 @@ export const IssueOrPullRequestCards = React.memo(
             enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId &&
-              item.id === selectedItemIdRef.current
+              item.id === selectedItemIdRef.current &&
+              !disableItemFocus
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
@@ -179,7 +182,8 @@ export const IssueOrPullRequestCards = React.memo(
             enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId &&
-              item.id === selectedItemIdRef.current
+              item.id === selectedItemIdRef.current &&
+              !disableItemFocus
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}

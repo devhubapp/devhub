@@ -34,6 +34,7 @@ export interface EventCardsProps
   extends Omit<EventCardProps, 'event' | 'isFocused'> {
   column: Column
   columnIndex: number
+  disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: EnhancedGitHubEvent[]
@@ -55,6 +56,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     column,
     columnIndex,
     enableCompactLabels,
+    disableItemFocus,
     errorMessage,
     fetchNextPage,
     items,
@@ -158,7 +160,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           event={item}
           isFocused={
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current
+            item.id === selectedItemIdRef.current &&
+            !disableItemFocus
           }
           repoIsKnown={props.repoIsKnown}
           swipeable={props.swipeable}
@@ -174,7 +177,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           event={item}
           isFocused={
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current
+            item.id === selectedItemIdRef.current &&
+            !disableItemFocus
           }
           repoIsKnown={props.repoIsKnown}
           swipeable={props.swipeable}

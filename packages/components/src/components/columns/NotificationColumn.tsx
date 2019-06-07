@@ -10,7 +10,7 @@ import { ColumnRenderer } from './ColumnRenderer'
 export interface NotificationColumnProps
   extends Omit<
     NotificationCardsContainerProps,
-    'cardViewMode' | 'enableCompactLabels' | 'repoIsKnown'
+    'cardViewMode' | 'disableItemFocus' | 'enableCompactLabels' | 'repoIsKnown'
   > {
   columnIndex: number
   disableColumnOptions?: boolean
@@ -47,12 +47,13 @@ export const NotificationColumn = React.memo(
         subtitle={headerDetails.subtitle}
         title={headerDetails.title}
       >
-        {({ cardViewMode, enableCompactLabels }) => (
+        {({ cardViewMode, disableItemFocus, enableCompactLabels }) => (
           <NotificationCardsContainer
             {...props}
             key={`notification-cards-container-${column.id}`}
             cardViewMode={cardViewMode}
             columnIndex={columnIndex}
+            disableItemFocus={disableItemFocus}
             enableCompactLabels={enableCompactLabels}
             repoIsKnown={headerDetails.repoIsKnown}
           />

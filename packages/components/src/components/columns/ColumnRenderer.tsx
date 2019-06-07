@@ -104,7 +104,9 @@ export interface ColumnRendererProps {
   avatarUsername?: string
   children: (p: {
     cardViewMode: CardViewMode
+    disableItemFocus: boolean
     enableCompactLabels: boolean
+    isFiltersOpened: boolean
   }) => React.ReactNode
   column: ColumnType
   disableColumnOptions?: boolean
@@ -451,7 +453,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 }: {
                   cardViewMode: CardViewMode
                   enableCompactLabels: boolean
-                }) => children({ cardViewMode, enableCompactLabels })}
+                }) =>
+                  children({
+                    cardViewMode,
+                    disableItemFocus: inlineMode ? false : isFiltersOpened,
+                    enableCompactLabels,
+                    isFiltersOpened,
+                  })
+                }
               </ViewMeasurer>
 
               {!!isFreeTrial && <FreeTrialHeaderMessage />}
