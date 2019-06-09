@@ -9,7 +9,6 @@ import { usePrevious } from '../../hooks/use-previous'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
-import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
@@ -149,38 +148,6 @@ export function ModalRenderer(props: ModalRendererProps) {
       reset: true,
       config: getDefaultReactSpringAnimationConfig(),
       immediate,
-      onStart: ((
-        modal: ModalPayloadWithIndex,
-        state: 'enter' | 'leave' | 'update',
-      ) => {
-        const currentOpenedModalName =
-          (currentOpenedModal && currentOpenedModal.name) ||
-          (previouslyOpenedModal && previouslyOpenedModal.name)
-
-        if (!(modal && modal.name === currentOpenedModalName)) return
-
-        emitter.emit('MODAL_ANIMATION_STEP', {
-          modalName: currentOpenedModalName,
-          state,
-          step: 'start',
-        })
-      }) as any,
-      onRest(
-        modal: ModalPayloadWithIndex,
-        state: 'enter' | 'leave' | 'update',
-      ) {
-        const currentOpenedModalName =
-          (currentOpenedModal && currentOpenedModal.name) ||
-          (previouslyOpenedModal && previouslyOpenedModal.name)
-
-        if (!(modal && modal.name === currentOpenedModalName)) return
-
-        emitter.emit('MODAL_ANIMATION_STEP', {
-          modalName: currentOpenedModalName,
-          state,
-          step: 'finish',
-        })
-      },
       ...(appOrientation === 'portrait'
         ? {
             from: item =>
