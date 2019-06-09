@@ -46,6 +46,7 @@ export const Button = React.memo((props: ButtonProps) => {
     backgroundColor,
     children,
     contentContainerStyle,
+    disabled,
     fontSize,
     foregroundColor,
     hoverBackgroundColor,
@@ -73,7 +74,9 @@ export const Button = React.memo((props: ButtonProps) => {
 
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate: boolean }) => {
-      const { isHovered, isPressing, theme } = cacheRef.current
+      const { isHovered: _isHovered, isPressing, theme } = cacheRef.current
+
+      const isHovered = _isHovered && !disabled
 
       const immediate =
         forceImmediate || constants.DISABLE_ANIMATIONS || isHovered
@@ -113,6 +116,7 @@ export const Button = React.memo((props: ButtonProps) => {
       cacheRef.current.isHovered,
       cacheRef.current.isPressing,
       cacheRef.current.theme,
+      disabled,
       foregroundColor,
       hoverBackgroundColor,
       hoverForegroundColor,
@@ -160,6 +164,7 @@ export const Button = React.memo((props: ButtonProps) => {
     <SpringAnimatedTouchableOpacity
       ref={touchableRef}
       {...otherProps}
+      disabled={disabled}
       onPressIn={() => {
         if (Platform.realOS === 'web') return
 
