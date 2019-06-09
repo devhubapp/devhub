@@ -41,9 +41,8 @@ const getRandomEmoji = () => {
 
 // only one message per app running instance
 // because a chaning message is a bit distractive
-const clearMessage = getRandomClearMessage()
+const randomClearMessage = getRandomClearMessage()
 const randomEmoji = getRandomEmoji()
-const randomEmojiImageURL = getEmojiImageURL(randomEmoji)
 
 export const defaultCardFooterSpacing =
   fabSpacing + Math.abs(fabSize - defaultButtonSize) / 2
@@ -51,6 +50,8 @@ export const defaultCardFooterHeight =
   defaultButtonSize + 2 * defaultCardFooterSpacing
 
 export interface EmptyCardsProps {
+  clearEmoji?: GitHubEmoji
+  clearMessage?: string
   clearedAt: string | undefined
   columnId: string
   emoji?: GitHubEmoji
@@ -63,6 +64,8 @@ export interface EmptyCardsProps {
 
 export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
+    clearEmoji = randomEmoji,
+    clearMessage = randomClearMessage,
     clearedAt,
     columnId,
     emoji = 'warning',
@@ -79,6 +82,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     actions.setColumnClearedAtFilter,
   )
 
+  const clearEmojiURL = getEmojiImageURL(clearEmoji)
   const hasError = errorMessage || loadState === 'error'
 
   const renderContent = () => {
@@ -87,11 +91,6 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       (loadState === 'loading' && !refresh && !fetchNextPage)
     ) {
       return <ThemedActivityIndicator color="foregroundColor" />
-    }
-
-    const containerStyle: ViewStyle = {
-      width: '100%',
-      padding: contentPadding,
     }
 
     if (hasError) {
@@ -116,27 +115,37 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     }
 
     return (
-      <View style={containerStyle}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          padding: contentPadding,
+        }}
+      >
         <ThemedText
-          color="foregroundColorMuted60"
+          color="foregroundColorMuted40"
           style={{
-            lineHeight: 20,
-            fontSize: 14,
+            fontSize: 20,
+            fontWeight: '200',
             textAlign: 'center',
           }}
         >
           {clearMessage}
-          {!!randomEmojiImageURL && (
-            <>
-              <Text children="  " />
-
-              <Image
-                source={{ uri: randomEmojiImageURL }}
-                style={{ width: 16, height: 16 }}
-              />
-            </>
-          )}
         </ThemedText>
+
+        {!!clearEmojiURL && (
+          <>
+            <Spacer width={contentPadding / 2} />
+
+            <Image
+              source={{ uri: clearEmojiURL }}
+              style={{ width: 30, height: 30 }}
+            />
+          </>
+        )}
       </View>
     )
   }
