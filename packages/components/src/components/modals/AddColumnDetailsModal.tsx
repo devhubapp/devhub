@@ -778,6 +778,15 @@ function getNewColumnAndSubscriptions(
             subtype,
           })
 
+          if (subtype === 'USER_RECEIVED_EVENTS') {
+            newColumnFilters.subjectTypes = newColumnFilters.subjectTypes || {
+              Release: true,
+              Repository: true,
+              Tag: true,
+              User: true,
+            }
+          }
+
           break
         }
 

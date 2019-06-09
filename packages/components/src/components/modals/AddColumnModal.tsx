@@ -121,14 +121,6 @@ const columnTypes: Array<{
             subtype: 'USER_EVENTS',
           },
           isPrivateSupported: false,
-          defaultFilters: {
-            subjectTypes: {
-              Release: true,
-              Repository: true,
-              Tag: true,
-              User: true,
-            },
-          },
         },
       },
       {
