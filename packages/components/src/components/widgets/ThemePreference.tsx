@@ -61,7 +61,7 @@ export const ThemePreference = React.memo(() => {
         label={theme.displayName}
         onChange={checked => {
           if (
-            checked === true ||
+            typeof checked === 'boolean' ||
             (currentThemeId === 'auto' && checked === null)
           ) {
             if (currentThemeId === 'auto' && theme.isDark === isNight()) {
