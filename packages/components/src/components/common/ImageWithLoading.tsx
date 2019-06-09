@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { RefObject, useCallback, useEffect, useRef } from 'react'
 import { Image, ImageProps } from 'react-native'
 
@@ -56,9 +57,25 @@ export const ImageWithLoading = React.memo(
     propsRef.current.onLoadEnd = onLoadEnd
     propsRef.current.onLoadStart = onLoadStart
 
+    const callbackRef = useRef({
+      hasCalledOnError: false,
+      hasCalledOnLoad: false,
+      hasCalledOnLoadStart: false,
+      hasCalledOnLoadEnd: false,
+    })
+
     useEffect(() => {
       updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
     }, [])
+
+    useEffect(() => {
+      callbackRef.current = {
+        hasCalledOnError: false,
+        hasCalledOnLoad: false,
+        hasCalledOnLoadStart: false,
+        hasCalledOnLoadEnd: false,
+      }
+    }, [JSON.stringify(otherProps.source || {})])
 
     useEffect(() => {
       if (!(Platform.realOS === 'web')) return
@@ -71,6 +88,9 @@ export const ImageWithLoading = React.memo(
     }, [imageRef.current, tooltip])
 
     const handleLoad = useCallback(e => {
+      if (callbackRef.current.hasCalledOnLoad) return
+      callbackRef.current.hasCalledOnLoad = true
+
       stateRef.current.isLoading = false
       stateRef.current.error = false
       updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
@@ -80,6 +100,9 @@ export const ImageWithLoading = React.memo(
     }, [])
 
     const handleLoadStart = useCallback(() => {
+      if (callbackRef.current.hasCalledOnLoadStart) return
+      callbackRef.current.hasCalledOnLoadStart = true
+
       stateRef.current.isLoading = true
       updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
 
@@ -88,6 +111,9 @@ export const ImageWithLoading = React.memo(
     }, [])
 
     const handleLoadEnd = useCallback(() => {
+      if (callbackRef.current.hasCalledOnLoadEnd) return
+      callbackRef.current.hasCalledOnLoadEnd = true
+
       stateRef.current.isLoading = false
       updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
 
@@ -96,6 +122,9 @@ export const ImageWithLoading = React.memo(
     }, [])
 
     const handleError = useCallback(e => {
+      if (callbackRef.current.hasCalledOnError) return
+      callbackRef.current.hasCalledOnError = true
+
       stateRef.current.isLoading = false
       stateRef.current.error = true
       updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
@@ -115,6 +144,7 @@ export const ImageWithLoading = React.memo(
       />
     )
   }),
+  _.isEqual,
 )
 
 function updateStyles(
