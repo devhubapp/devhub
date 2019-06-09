@@ -1,3 +1,4 @@
+import { ModalPayload } from '@devhub/core'
 import { EventEmitter, EventSubscription } from 'fbemitter'
 
 export type EventEmitter = EventEmitter
@@ -22,6 +23,11 @@ export interface EmitterTypes {
     focusOnVisibleItem?: boolean
     highlight?: boolean
     scrollTo?: boolean
+  }
+  MODAL_ANIMATION_STEP: {
+    modalName: ModalPayload['name']
+    state: 'enter' | 'leave' | 'update'
+    step: 'start' | 'finish'
   }
   PRESSED_KEYBOARD_SHORTCUT: { keys: string[] }
   SCROLL_DOWN_COLUMN: { columnId: string; columnIndex: number }
