@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, View, ViewProps } from 'react-native'
+import { Image, View, ViewProps } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
 import {

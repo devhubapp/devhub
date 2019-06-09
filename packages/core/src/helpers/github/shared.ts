@@ -50,6 +50,45 @@ import {
 import { getNotificationSubjectType } from './notifications'
 import { getRepoFullNameFromUrl } from './url'
 
+const GITHUB_USERNAME_REGEX_PATTERN = '[a-zd](?:[a-zd]|-(?=[a-zd])){0,38}'
+export const GITHUB_USERNAME_REGEX = new RegExp(
+  `^${GITHUB_USERNAME_REGEX_PATTERN}$`,
+  'i',
+)
+
+const GITHUB_REPO_NAME_REGEX_PATTERN = GITHUB_USERNAME_REGEX_PATTERN
+export const GITHUB_REPO_NAME_REGEX = new RegExp(
+  `^${GITHUB_REPO_NAME_REGEX_PATTERN}$`,
+  'i',
+)
+
+const GITHUB_REPO_FULL_NAME_FORMAT_REGEX_PATTERN = '([^/]+)/([^/]+)'
+export const GITHUB_REPO_FULL_NAME_FORMAT_REGEX = new RegExp(
+  `^${GITHUB_REPO_FULL_NAME_FORMAT_REGEX_PATTERN}$`,
+  'i',
+)
+
+const GITHUB_REPO_FULL_NAME_REGEX_PATTERN = `(${GITHUB_USERNAME_REGEX_PATTERN})/(${GITHUB_REPO_NAME_REGEX_PATTERN})`
+export const GITHUB_REPO_FULL_NAME_REGEX = new RegExp(
+  `^${GITHUB_REPO_FULL_NAME_REGEX_PATTERN}$`,
+  'i',
+)
+
+export function isGitHubUsernameValid(username: string) {
+  if (!username) return false
+  return !!username.match(GITHUB_USERNAME_REGEX)
+}
+
+export function isGitHubRepoNameValid(repoName: string) {
+  if (!repoName) return false
+  return !!repoName.match(GITHUB_REPO_NAME_REGEX)
+}
+
+export function isGitHubOwnerAndRepoValid(repoFullName: string) {
+  if (!repoFullName) return false
+  return !!repoFullName.match(GITHUB_REPO_FULL_NAME_REGEX)
+}
+
 export function getDefaultPaginationPerPage(columnType: Column['type']) {
   if (columnType === 'activity') return 50
   if (columnType === 'issue_or_pr') return 10
@@ -284,7 +323,7 @@ export function getUniqueIdForSubscription(subscription: {
     }
 
     default:
-      throw new Error(`Unknown subscription type: ${(s as any).type}`)
+      throw new Error(`Unknown subscription type: ${s && (s as any).type}`)
   }
 }
 
@@ -521,19 +560,19 @@ export function getColumnHeaderDetails(
   }
 }
 
-export function createSubscriptionObjectWithId(
-  subscription: Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>,
-) {
+export function createSubscriptionObjectWithId<
+  S extends Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>
+>(subscription: S) {
   return {
     ...subscription,
     id: getUniqueIdForSubscription(subscription),
   }
 }
 
-export function createSubscriptionObjectsWithId(
-  subscriptions: Array<Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>>,
-) {
-  return (subscriptions as ColumnSubscription[]).map(subscription => ({
+export function createSubscriptionObjectsWithId<
+  S extends Array<Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>>
+>(subscriptions: S) {
+  return subscriptions.map(subscription => ({
     ...subscription,
     id: getUniqueIdForSubscription(subscription),
   }))

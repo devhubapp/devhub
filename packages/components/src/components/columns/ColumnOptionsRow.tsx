@@ -31,14 +31,14 @@ export interface ColumnOptionsRowProps {
   contentContainerStyle?: ViewStyle
   disableBackground?: boolean
   enableBackgroundHover?: boolean
+  forceImmediate?: boolean
   hasChanged: boolean
   headerItemFixedIconSize?: number
   iconName: GitHubIcon
-  forceImmediate?: boolean
   isOpen: boolean
   onToggle: (() => void) | undefined
   openOnHover?: boolean
-  subtitle?: string
+  right?: string | React.ReactNode
   title: string
 }
 
@@ -55,9 +55,12 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     isOpen,
     onToggle,
     openOnHover,
-    subtitle,
+    right: _right,
     title,
   } = props
+
+  const subtitle = _right && typeof _right === 'string' ? _right : undefined
+  const right = subtitle ? undefined : _right
 
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
@@ -211,6 +214,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               {subtitle || '●'}
             </ThemedText>
           )}
+
+          {right}
 
           {!!onToggle && (
             <>

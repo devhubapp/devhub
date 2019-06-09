@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import {
@@ -23,6 +23,7 @@ import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimate
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { fabSize } from '../common/FAB'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { H2 } from '../common/H2'
 import { HeaderMessage } from '../common/HeaderMessage'
 import { Link } from '../common/Link'
@@ -61,19 +62,6 @@ const columnTypes: Array<{
             type: 'notifications',
             subtype: undefined,
           },
-          paramList: ['all'],
-          isPrivateSupported: true,
-        },
-      },
-      {
-        payload: {
-          icon: 'bell',
-          title: 'Repository notifications',
-          subscription: {
-            type: 'notifications',
-            subtype: 'REPO_NOTIFICATIONS',
-          },
-          paramList: ['all', 'owner', 'repo'],
           isPrivateSupported: true,
         },
       },
@@ -92,7 +80,6 @@ const columnTypes: Array<{
             type: 'issue_or_pr',
             subtype: 'ISSUES',
           },
-          paramList: ['owner', 'repo'],
           isPrivateSupported: true,
         },
       },
@@ -104,7 +91,6 @@ const columnTypes: Array<{
             type: 'issue_or_pr',
             subtype: undefined,
           },
-          paramList: ['owner', 'repo'],
           isPrivateSupported: true,
         },
       },
@@ -116,7 +102,6 @@ const columnTypes: Array<{
             type: 'issue_or_pr',
             subtype: 'PULLS',
           },
-          paramList: ['owner', 'repo'],
           isPrivateSupported: true,
         },
       },
@@ -135,7 +120,6 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'USER_EVENTS',
           },
-          paramList: ['username'],
           isPrivateSupported: false,
           defaultFilters: {
             subjectTypes: {
@@ -155,7 +139,6 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'USER_RECEIVED_EVENTS',
           },
-          paramList: ['username'],
           isPrivateSupported: false,
         },
       },
@@ -167,7 +150,6 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'REPO_EVENTS',
           },
-          paramList: ['owner', 'repo'],
           isPrivateSupported: false, // https://github.com/devhubapp/devhub/issues/140
         },
       },
@@ -179,7 +161,6 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'ORG_PUBLIC_EVENTS',
           },
-          paramList: ['org'],
           isPrivateSupported: false,
         },
       },
@@ -276,6 +257,7 @@ function AddColumnModalItem({
     >
       <View
         style={{
+          flex: 1,
           flexDirection: 'row',
           alignItems: 'center',
           padding: contentPadding,
@@ -343,10 +325,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
           </HeaderMessage>
         )}
 
-      <ScrollView
-        style={sharedStyles.flex}
-        contentContainerStyle={sharedStyles.flexGrow}
-      >
+      <FullHeightScrollView style={sharedStyles.flex}>
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
             <SubHeader muted={group.soon} title={group.title}>
@@ -369,7 +348,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
               )}
             </SubHeader>
 
-            <View style={{ marginBottom: contentPadding }}>
+            <View style={sharedStyles.flex}>
               {group.items.map((item, itemIndex) => (
                 <AddColumnModalItem
                   key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
@@ -383,9 +362,17 @@ export function AddColumnModal(props: AddColumnModalProps) {
               ))}
             </View>
 
-            {groupIndex < columnTypes.length - 1 && <Separator horizontal />}
+            {groupIndex < columnTypes.length - 1 && (
+              <>
+                <Spacer height={contentPadding / 2} />
+                <Separator horizontal />
+                <Spacer height={contentPadding / 2} />
+              </>
+            )}
           </View>
         ))}
+
+        <Spacer flex={1} minHeight={contentPadding} />
 
         {!!hasReachedColumnLimit && (
           <ThemedText
@@ -404,12 +391,12 @@ export function AddColumnModal(props: AddColumnModalProps) {
           </ThemedText>
         )}
 
-        <Spacer flex={1} minHeight={contentPadding} />
+        <Spacer height={contentPadding} />
 
         <Spacer
           height={isFabVisible ? fabSize + 2 * fabSpacing : contentPadding}
         />
-      </ScrollView>
+      </FullHeightScrollView>
     </ModalColumn>
   )
 }

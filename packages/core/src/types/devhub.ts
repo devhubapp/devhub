@@ -172,10 +172,10 @@ export type ActivityColumnSubscription = {
 export interface IssueOrPullRequestColumnSubscription {
   id: string
   type: IssueOrPullRequestColumn['type']
-  subtype: 'ISSUES' | 'PULLS'
+  subtype: 'ISSUES' | 'PULLS' | undefined
   params: {
     repoFullName?: string
-    subjectType: GitHubIssueOrPullRequestSubjectType
+    subjectType: GitHubIssueOrPullRequestSubjectType | undefined
     state?: ColumnFilters['state']
     draft?: ColumnFilters['draft']
   }
@@ -313,10 +313,18 @@ export type GenericColumnCreation<
   updatedAt?: string
 }
 
+export type ActivityColumnCreation = GenericColumnCreation<ActivityColumn>
+export type IssueOrPullRequestColumnCreation = GenericColumnCreation<
+  IssueOrPullRequestColumn
+>
+export type NotificationColumnCreation = GenericColumnCreation<
+  NotificationColumn
+>
+
 export type ColumnCreation =
-  | GenericColumnCreation<ActivityColumn>
-  | GenericColumnCreation<IssueOrPullRequestColumn>
-  | GenericColumnCreation<NotificationColumn>
+  | ActivityColumnCreation
+  | IssueOrPullRequestColumnCreation
+  | NotificationColumnCreation
 
 export type GenericColumnSubscriptionCreation<
   ColumnSubscriptionType extends
@@ -330,10 +338,20 @@ export type GenericColumnSubscriptionCreation<
   updatedAt?: string | undefined
 }
 
+export type ActivityColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
+  ActivityColumnSubscription
+>
+export type IssueOrPullRequestColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
+  IssueOrPullRequestColumnSubscription
+>
+export type NotificationColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
+  NotificationColumnSubscription
+>
+
 export type ColumnSubscriptionCreation =
-  | GenericColumnSubscriptionCreation<ActivityColumnSubscription>
-  | GenericColumnSubscriptionCreation<IssueOrPullRequestColumnSubscription>
-  | GenericColumnSubscriptionCreation<NotificationColumnSubscription>
+  | ActivityColumnSubscriptionCreation
+  | IssueOrPullRequestColumnSubscriptionCreation
+  | NotificationColumnSubscriptionCreation
 
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
@@ -341,7 +359,6 @@ export interface AddColumnDetailsPayload {
   title: string
   icon: GitHubIcon
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
-  paramList: ColumnParamField[]
   defaultFilters?: Partial<Column['filters']>
   defaultParams?: Partial<Record<ColumnParamField, any>>
   isPrivateSupported: boolean

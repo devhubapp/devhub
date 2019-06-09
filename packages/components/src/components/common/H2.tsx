@@ -20,7 +20,7 @@ export function H2(props: H2Props) {
       style={[
         {
           marginBottom: withMargin ? contentPadding : undefined,
-          fontWeight: '600',
+          fontWeight: '500',
         },
         style,
       ]}
