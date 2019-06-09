@@ -631,7 +631,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                       right={getCheckboxRight(
                         filteredItemsMetadata.state[item.state],
                       )}
-                      uncheckedForegroundThemeColor={item.color}
+                      // uncheckedForegroundThemeColor={item.color}
                     />
                   )
                 })}
@@ -693,7 +693,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     })
                   }}
                   right={getCheckboxRight(filteredItemsMetadata.draft)}
-                  uncheckedForegroundThemeColor="gray"
+                  // uncheckedForegroundThemeColor="gray"
                 />
               </ColumnOptionsRow>
             )
@@ -822,7 +822,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                             : undefined,
                       })}
                       squareContainerStyle={checkboxSquareStyle}
-                      uncheckedForegroundThemeColor={item.color}
+                      // uncheckedForegroundThemeColor={item.color}
                     />
                   )
                 })}
@@ -932,7 +932,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                             : undefined,
                       })}
                       squareContainerStyle={checkboxSquareStyle}
-                      uncheckedForegroundThemeColor={item.color}
+                      // uncheckedForegroundThemeColor={item.color}
                     />
                   )
                 })}
