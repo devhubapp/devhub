@@ -20,10 +20,11 @@ import { ThemedText } from '../themed/ThemedText'
 import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 
 const clearMessages = [
+  "You're doing great!",
   'All clear!',
   'Awesome!',
   'Good job!',
-  "You're doing great!",
+  'Great work!',
   'You rock!',
 ]
 
@@ -39,9 +40,8 @@ const getRandomEmoji = () => {
   return emojis[randomIndex]
 }
 
-// only one message per app running instance
-// because a chaning message is a bit distractive
-const randomClearMessage = getRandomClearMessage()
+// only one emoji per app session
+// because dynamic content is bit distractive
 const randomEmoji = getRandomEmoji()
 
 export const defaultCardFooterSpacing =
@@ -50,7 +50,7 @@ export const defaultCardFooterHeight =
   defaultButtonSize + 2 * defaultCardFooterSpacing
 
 export interface EmptyCardsProps {
-  clearEmoji?: GitHubEmoji
+  clearEmoji?: GitHubEmoji | null
   clearMessage?: string
   clearedAt: string | undefined
   columnId: string
@@ -65,7 +65,7 @@ export interface EmptyCardsProps {
 export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearEmoji = randomEmoji,
-    clearMessage = randomClearMessage,
+    clearMessage = getRandomClearMessage(),
     clearedAt,
     columnId,
     emoji = 'warning',
@@ -82,7 +82,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     actions.setColumnClearedAtFilter,
   )
 
-  const clearEmojiURL = getEmojiImageURL(clearEmoji)
+  const clearEmojiURL = clearEmoji ? getEmojiImageURL(clearEmoji) : undefined
   const hasError = errorMessage || loadState === 'error'
 
   const renderContent = () => {
@@ -125,24 +125,26 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           padding: contentPadding,
         }}
       >
-        <ThemedText
-          color="foregroundColorMuted40"
-          style={{
-            fontSize: 20,
-            fontWeight: '200',
-            textAlign: 'center',
-          }}
-        >
-          {clearMessage}
-        </ThemedText>
+        {!!clearMessage && (
+          <ThemedText
+            color="foregroundColorMuted40"
+            style={{
+              fontSize: 20,
+              fontWeight: '200',
+              textAlign: 'center',
+            }}
+          >
+            {clearMessage}
+          </ThemedText>
+        )}
 
         {!!clearEmojiURL && (
           <>
-            <Spacer width={contentPadding / 2} />
+            {!!clearMessage && <Spacer width={contentPadding / 2} />}
 
             <Image
               source={{ uri: clearEmojiURL }}
-              style={{ width: 30, height: 30 }}
+              style={{ width: 24, height: 24 }}
             />
           </>
         )}

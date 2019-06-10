@@ -297,7 +297,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     return (
       <EmptyCards
         // clearEmoji="clap"
-        clearMessage="No new notifications"
+        clearMessage="No new notifications!"
         clearedAt={column.filters && column.filters.clearedAt}
         columnId={column.id}
         errorMessage={errorMessage}
