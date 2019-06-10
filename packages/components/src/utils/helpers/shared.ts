@@ -2,6 +2,10 @@ import qs from 'qs'
 import { findDOMNode } from 'react-dom'
 
 import { constants } from '@devhub/core'
+import {
+  AppLayoutProviderState,
+  getLayoutConsumerState,
+} from '../../components/context/LayoutContext'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
@@ -133,4 +137,10 @@ export function genericParseText<T extends string>(
     },
     [] as React.ReactNode[],
   )
+}
+
+export function isBigEnoughForMultiColumnView(
+  sizename?: AppLayoutProviderState['sizename'],
+) {
+  return (sizename || getLayoutConsumerState().sizename) >= '2-medium'
 }

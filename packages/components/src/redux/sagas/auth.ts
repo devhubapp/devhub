@@ -159,7 +159,7 @@ function* onLoginSuccess(
 function* updateLoggedUserOnTools() {
   const state = yield select()
 
-  const appViewMode = selectors._appViewModeSelector(state)
+  const appViewMode = selectors.appViewModeSelector(state)
   const preferredDarkThemePair = selectors.preferredDarkThemePairSelector(state)
   const preferredLightThemePair = selectors.preferredLightThemePairSelector(
     state,

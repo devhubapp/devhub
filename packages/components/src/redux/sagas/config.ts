@@ -21,7 +21,7 @@ function* init() {
 function* onSetAppViewMode() {
   const state = yield select()
 
-  const appViewMode = selectors._appViewModeSelector(state)
+  const appViewMode = selectors.appViewModeSelector(state)
 
   analytics.setDimensions({
     layout_mode: appViewMode,

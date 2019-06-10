@@ -103,7 +103,7 @@ function* onAddColumn(
 function* onMoveColumn(
   action: ExtractActionFromActionCreator<typeof actions.moveColumn>,
 ) {
-  const appViewMode: AppViewMode = yield select(selectors._appViewModeSelector)
+  const appViewMode: AppViewMode = yield select(selectors.appViewModeSelector)
 
   const ids: string[] = yield select(selectors.columnIdsSelector)
   if (!(ids && ids.length)) return
