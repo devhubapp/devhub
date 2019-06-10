@@ -21,6 +21,7 @@ import {
   GitHubNotificationSubjectType,
   GitHubStateType,
   isReadFilterChecked,
+  IssueOrPullRequestColumnFilters,
   issueOrPullRequestStateTypes,
   issueOrPullRequestSubjectTypes,
   isUnreadFilterChecked,
@@ -59,6 +60,7 @@ import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
+import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
@@ -104,6 +106,7 @@ export type ColumnOptionCategory =
   | 'draft'
   | 'event_action'
   | 'inbox'
+  | 'involves'
   | 'notification_reason'
   | 'privacy'
   | 'repos'
@@ -151,12 +154,25 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
       Object.keys(ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos)
         .length > 1)
 
+  const involvingUsers = _.sortBy(
+    Object.keys(
+      (column.filters &&
+        (column.filters as IssueOrPullRequestColumnFilters).involves) ||
+        {},
+    ),
+  )
+  const _shouldShowInvolvesFilter =
+    column.type === 'issue_or_pr' &&
+    !!involvingUsers &&
+    involvingUsers.length >= 1
+
   const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
     column.type === 'notifications' && 'inbox',
     'saved_for_later',
     'unread',
     'state',
     'draft',
+    _shouldShowInvolvesFilter && 'involves',
     'subject_types',
     column.type === 'activity' && 'event_action',
     column.type === 'notifications' && 'notification_reason',
@@ -199,6 +215,9 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const setColumnActivityActionFilter = useReduxAction(
     actions.setColumnActivityActionFilter,
   )
+  // const setColumnInvolvesFilter = useReduxAction(
+  //   actions.setColumnInvolvesFilter,
+  // )
   const setColumnOwnerFilter = useReduxAction(actions.setColumnOwnerFilter)
   const setColumnRepoFilter = useReduxAction(actions.setColumnRepoFilter)
   const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
@@ -308,6 +327,119 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               }
             />
           )}
+
+        {allColumnOptionCategories.includes('involves') &&
+          column.type === 'issue_or_pr' &&
+          (() => {
+            // const filters = column.filters && column.filters.involves
+
+            // const defaultBooleanValue = true
+
+            // const isFilterStrict =
+            //   filterRecordWithThisValueCount(filters, true) >= 1
+            // const filterHasForcedValue = filterRecordHasAnyForcedValue(filters)
+
+            return (
+              <ColumnOptionsRow
+                analyticsLabel="involves"
+                enableBackgroundHover={allowToggleCategories}
+                hasChanged={false}
+                headerItemFixedIconSize={columnHeaderItemContentSize}
+                iconName="person"
+                isOpen={openedOptionCategories.has('involves')}
+                onToggle={
+                  allowToggleCategories
+                    ? () => toggleOpenedOptionCategory('involves')
+                    : undefined
+                }
+                title="Involves user"
+              >
+                {involvingUsers.map(user => {
+                  // const checked =
+                  //   filters && typeof filters[user] === 'boolean'
+                  //     ? filters[user]
+                  //     : null
+
+                  return (
+                    <View
+                      key={`involves-user-${user}`}
+                      style={[
+                        sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding,
+                        sharedStyles.horizontal,
+                      ]}
+                    >
+                      <Avatar
+                        shape="circle"
+                        size={defaultCheckboxSize}
+                        username={user}
+                      />
+
+                      <Spacer width={checkboxLabelSpacing} />
+
+                      <ThemedText
+                        color="foregroundColor"
+                        numberOfLines={1}
+                        style={{
+                          flex: 1,
+                          lineHeight: defaultCheckboxSize,
+                        }}
+                        {...!!user &&
+                          Platform.select({
+                            web: { title: user },
+                          })}
+                      >
+                        {user}
+                      </ThemedText>
+                    </View>
+                  )
+
+                  // return (
+                  //   <Checkbox
+                  //     key={`involves-user-option-${user}`}
+                  //     analyticsLabel={undefined}
+                  //     checked={checked}
+                  //     containerStyle={
+                  //       sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+                  //     }
+                  //     defaultValue={defaultBooleanValue}
+                  //     disabled // to prevent ?q= (empty query) or other invalid search value
+                  //     enableIndeterminateState={
+                  //       false
+                  //       // !isFilterStrict || checked === defaultBooleanValue
+                  //     }
+                  //     label={user}
+                  //     labelTooltip={user}
+                  //     left={
+                  //       <Avatar
+                  //         size={defaultCheckboxSize}
+                  //         shape="circle"
+                  //         username={user}
+                  //       />
+                  //     }
+                  //     onChange={value => {
+                  //       setColumnInvolvesFilter({
+                  //         columnId: column.id,
+                  //         user,
+                  //         value: isFilterStrict
+                  //           ? typeof value === 'boolean'
+                  //             ? defaultBooleanValue
+                  //             : null
+                  //           : filterHasForcedValue
+                  //           ? typeof value === 'boolean'
+                  //             ? !defaultBooleanValue
+                  //             : null
+                  //           : value,
+                  //       })
+                  //     }}
+                  //     squareContainerStyle={
+                  //       sharedColumnOptionsStyles.checkboxSquareContainer
+                  //     }
+                  //   />
+                  // )
+                })}
+              </ColumnOptionsRow>
+            )
+          })()}
 
         {allColumnOptionCategories.includes('saved_for_later') &&
           (() => {
@@ -1353,7 +1485,12 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           <Button
             analyticsLabel="clear_column_filters"
             children="Clear filters"
-            disabled={!columnHasAnyFilter(column.type, column.filters)}
+            disabled={
+              !columnHasAnyFilter(column.type, {
+                ...column.filters,
+                involves: undefined,
+              })
+            }
             onPress={() => {
               clearColumnFilters({ columnId: column.id })
             }}

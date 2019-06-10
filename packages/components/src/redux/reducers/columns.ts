@@ -5,6 +5,8 @@ import {
   ActivityColumn,
   Column,
   filterRecordHasAnyForcedValue,
+  IssueOrPullRequestColumn,
+  IssueOrPullRequestColumnFilters,
   normalizeColumns,
   normalizeSubscriptions,
   NotificationColumn,
@@ -165,7 +167,15 @@ export const columnsReducer: Reducer<State> = (
         const column = draft.byId[action.payload.columnId]
         if (!column) return
 
+        const previousFilters = column.filters
         column.filters = {}
+
+        // cannot delete some filters to avoid invalid search query
+        if (column.type === 'issue_or_pr') {
+          const _column = column as IssueOrPullRequestColumn
+          const _previousFilters = previousFilters as IssueOrPullRequestColumnFilters
+          _column.filters!.involves = _previousFilters.involves
+        }
 
         draft.updatedAt = new Date().toISOString()
       })
@@ -321,6 +331,32 @@ export const columnsReducer: Reducer<State> = (
 
         if (!filterRecordHasAnyForcedValue(column.filters.subjectTypes)) {
           column.filters.subjectTypes = {}
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_INVOLVES_FILTER':
+      return immer(state, draft => {
+        const { columnId, value } = action.payload
+
+        const user = `${action.payload.user || ''}`.toLowerCase()
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        const filters = column.filters as IssueOrPullRequestColumnFilters
+
+        filters.involves = filters.involves || {}
+        filters.involves[user] = filters.involves[user] || undefined
+
+        if (typeof value === 'boolean') {
+          filters.involves[user] = value
+        } else {
+          filters.involves[user] = undefined
         }
 
         draft.updatedAt = new Date().toISOString()

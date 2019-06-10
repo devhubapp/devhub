@@ -283,9 +283,19 @@ export function getGitHubIssueSearchQuery(
 ) {
   const queryArr: string[] = []
 
-  const { draft, repoFullName, state, subjectType } = params
+  const { draft, involves, repoFullName, state, subjectType } = params
 
-  if (repoFullName) queryArr.push(`repo:${repoFullName}`)
+  if (repoFullName) queryArr.push(`repo:${repoFullName}`.toLowerCase())
+
+  if (involves && filterRecordHasAnyForcedValue(involves)) {
+    Object.entries(involves).forEach(([_user, value]) => {
+      const user = `${_user || ''}`.trim().toLowerCase()
+      if (!(user && typeof value === 'boolean')) return
+
+      const negationSign = !value ? '-' : ''
+      queryArr.push(`${negationSign}involves:${user}`)
+    })
+  }
 
   if (subjectType === 'Issue') queryArr.push('is:issue')
   else if (subjectType === 'PullRequest') queryArr.push('is:pr')

@@ -276,6 +276,9 @@ function* onColumnSubscriptionFilterChange(
           ...subscription.params,
           draft: c.filters ? c.filters.draft : subscription.params.draft,
           state: c.filters ? c.filters.state : subscription.params.state,
+          involves: c.filters
+            ? c.filters.involves
+            : subscription.params.involves,
           subjectType:
             includesIssues && !includesPRs
               ? 'Issue'
@@ -361,6 +364,7 @@ export function* columnsSagas() {
       [
         'CLEAR_COLUMN_FILTERS',
         'SET_COLUMN_DRAFT_FILTER',
+        'SET_COLUMN_INVOLVES_FILTER',
         'SET_COLUMN_PARTICIPATING_FILTER',
         'SET_COLUMN_STATE_FILTER',
         'SET_COLUMN_SUBJECT_TYPE_FILTER',

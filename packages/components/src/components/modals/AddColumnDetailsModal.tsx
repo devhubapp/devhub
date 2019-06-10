@@ -18,6 +18,7 @@ import {
   GITHUB_REPO_FULL_NAME_REGEX,
   GITHUB_USERNAME_REGEX,
   guid,
+  IssueOrPullRequestColumnFilters,
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestColumnSubscriptionCreation,
   NotificationColumnFilters,
@@ -53,7 +54,13 @@ import {
   ThemedTextInputProps,
 } from '../themed/ThemedTextInput'
 
-export type FormItem = 'inbox' | 'org' | 'repo' | 'repo_option' | 'user'
+export type FormItem =
+  | 'inbox'
+  | 'org'
+  | 'repo'
+  | 'repo_option'
+  | 'user'
+  | 'user_option'
 
 export const formItemsMetadata = {
   inbox: {
@@ -96,6 +103,10 @@ export const formItemsMetadata = {
         excludeEmptyString: true,
       })
       .required('Required'),
+  },
+  user_option: {
+    initialValue: false,
+    validationSchema: Yup.boolean(),
   },
 }
 
@@ -200,13 +211,32 @@ export const AddColumnDetailsModal = React.memo(
         }
 
         if (
+          subscription.type === 'issue_or_pr' &&
+          formItems.includes('repo_option') &&
+          formItems.includes('user_option') &&
+          !values.repo_option &&
+          !values.user_option
+        ) {
+          validateField('repo_option')
+          validateField('user_option')
+
+          if (!errors.repo_option && !errors.user_option) {
+            errors.repo_option = CIRCLE_CHARACTER
+            errors.user_option = CIRCLE_CHARACTER
+          }
+        }
+
+        if (
           formItems.includes('repo') ||
           (formItems.includes('repo_option') && values.repo_option)
         ) {
           validateField('repo')
         }
 
-        if (formItems.includes('user')) {
+        if (
+          formItems.includes('user') ||
+          (formItems.includes('user_option') && values.user_option)
+        ) {
           validateField('user')
         }
 
@@ -405,6 +435,42 @@ export const AddColumnDetailsModal = React.memo(
             </View>
           )
 
+        case 'user_option':
+          return (
+            <View key={`add-column-details-form-item-${formItem}`}>
+              <Checkbox
+                analyticsLabel={`add_column_details_${formItem}`}
+                checked={formikProps.values.user_option}
+                containerStyle={
+                  sharedColumnOptionsStyles.fullWidthCheckboxContainer
+                }
+                defaultValue={false}
+                label="Involving user..."
+                onChange={value => {
+                  formikProps.setFieldTouched(formItem)
+                  formikProps.setFieldValue(formItem, value)
+                }}
+                right={<ErrorMessage name={formItem} />}
+                squareContainerStyle={
+                  sharedColumnOptionsStyles.checkboxSquareContainer
+                }
+              />
+
+              {formikProps.values.user_option && (
+                <View
+                  style={{
+                    marginLeft:
+                      columnHeaderItemContentSize + contentPadding / 2,
+                  }}
+                >
+                  <Spacer height={contentPadding} />
+
+                  {renderFormItem('user')}
+                </View>
+              )}
+            </View>
+          )
+
         default:
           return null
       }
@@ -561,7 +627,7 @@ function getFormItems({
         case 'ISSUES':
         case 'PULLS':
         default:
-          return ['repo']
+          return ['repo_option', 'user_option']
       }
     }
 
@@ -627,6 +693,10 @@ function getNewColumnAndSubscriptions(
     delete formValues.repo
   }
 
+  if (formItems.includes('user_option') && !formValues.user_option) {
+    delete formValues.user
+  }
+
   const { owner, repo } = formValues.repo
     ? getOwnerAndRepo(formValues.repo)
     : { owner: formValues.org || formValues.user, repo: undefined }
@@ -684,6 +754,11 @@ function getNewColumnAndSubscriptions(
             params: {
               ...(defaultParams as any),
               repoFullName,
+              involves: formValues.user
+                ? {
+                    [formValues.user]: true,
+                  }
+                : undefined,
               subjectType:
                 subtype === 'ISSUES'
                   ? 'Issue'
@@ -695,7 +770,9 @@ function getNewColumnAndSubscriptions(
             subtype,
           })
 
-          newColumnFilters.subjectTypes = newSubscription.params.subjectType
+          const _newColumnFilters = newColumnFilters as IssueOrPullRequestColumnFilters
+          _newColumnFilters.involves = newSubscription.params.involves
+          _newColumnFilters.subjectTypes = newSubscription.params.subjectType
             ? { [newSubscription.params.subjectType]: true }
             : {}
 

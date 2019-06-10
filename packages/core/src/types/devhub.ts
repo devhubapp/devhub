@@ -175,9 +175,10 @@ export interface IssueOrPullRequestColumnSubscription {
   subtype: 'ISSUES' | 'PULLS' | undefined
   params: {
     repoFullName?: string
+    involves?: IssueOrPullRequestColumnFilters['involves']
     subjectType: GitHubIssueOrPullRequestSubjectType | undefined
-    state?: ColumnFilters['state']
-    draft?: ColumnFilters['draft']
+    state?: IssueOrPullRequestColumnFilters['state']
+    draft?: IssueOrPullRequestColumnFilters['draft']
   }
   data: ColumnSubscriptionData<any>
   createdAt: string
@@ -244,6 +245,7 @@ export interface ActivityColumnFilters extends BaseColumnFilters {
 }
 
 export interface IssueOrPullRequestColumnFilters extends BaseColumnFilters {
+  involves?: Partial<Record<string, boolean>>
   subjectTypes?: Partial<Record<GitHubIssueOrPullRequestSubjectType, boolean>>
 }
 
@@ -442,6 +444,10 @@ export interface ItemsFilterMetadata {
   saved: ItemFilterCountMetadata
   state: Record<GitHubStateType, ItemFilterCountMetadata>
   draft: ItemFilterCountMetadata
+
+  // items doesn't have enough info to correctly calculate this metadata
+  // involves: Partial<Record<string, ItemFilterCountMetadata | undefined>>
+
   subjectType: Partial<
     Record<GitHubItemSubjectType, ItemFilterCountMetadata | undefined>
   >

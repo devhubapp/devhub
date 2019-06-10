@@ -291,9 +291,7 @@ export function getUniqueIdForSubscription(subscription: {
 
     case 'issue_or_pr': {
       if (!s.subtype || (s.subtype === 'ISSUES' || s.subtype === 'PULLS')) {
-        return `/search/issues?q=${getGitHubIssueSearchQuery(
-          s.params,
-        )}`.toLowerCase()
+        return `/search/issues?q=${getGitHubIssueSearchQuery(s.params)}`
       }
       throw new Error(
         `No path configured for subscription type ${(s as any).type}: '${
@@ -460,6 +458,16 @@ export function getColumnHeaderDetails(
       const owner = ownerAndRepo.owner!
       const repo = ownerAndRepo.repo!
 
+      const involvesSuffix =
+        s.params &&
+        s.params.involves &&
+        Object.keys(s.params.involves).length === 1 &&
+        (s.params.involves[Object.keys(s.params.involves)[0]] === true
+          ? ` involving ${Object.keys(s.params.involves)[0]}`
+          : s.params.involves[Object.keys(s.params.involves)[0]] === false
+          ? ` not involving ${Object.keys(s.params.involves)[0]}`
+          : '')
+
       switch (s && s.subtype) {
         case 'ISSUES': {
           return {
@@ -471,7 +479,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: !!(owner && repo),
             owner,
             repo,
-            subtitle: 'Issues',
+            subtitle: `Issues${involvesSuffix}`,
             title: repo,
           }
         }
@@ -486,7 +494,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: !!(owner && repo),
             owner,
             repo,
-            subtitle: 'Pull Requests',
+            subtitle: `Pull Requests${involvesSuffix}`,
             title: repo,
           }
         }
@@ -499,7 +507,7 @@ export function getColumnHeaderDetails(
             },
             icon: 'issue-opened',
             repoIsKnown: !!(owner && repo),
-            subtitle: 'Issues & PRs',
+            subtitle: `Issues & PRs${involvesSuffix}`,
             title: repo,
           }
         }
@@ -1040,6 +1048,7 @@ const _defaultItemsFilterMetadata: ItemsFilterMetadata = {
     merged: getDefaultItemFilterCountMetadata(),
   },
   draft: getDefaultItemFilterCountMetadata(),
+  // involves: {},
   subjectType: {}, // { issue: getDefaultItemFilterCountMetadata(), ... }
   subscriptionReason: {}, // { mentioned: getDefaultItemFilterCountMetadata(), ... }
   eventAction: {}, // { starred: getDefaultItemFilterCountMetadata(), ... }
