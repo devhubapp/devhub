@@ -174,7 +174,7 @@ export interface IssueOrPullRequestColumnSubscription {
   type: IssueOrPullRequestColumn['type']
   subtype: 'ISSUES' | 'PULLS' | undefined
   params: {
-    repoFullName?: string
+    owners?: IssueOrPullRequestColumnFilters['owners']
     involves?: IssueOrPullRequestColumnFilters['involves']
     subjectType: GitHubIssueOrPullRequestSubjectType | undefined
     state?: IssueOrPullRequestColumnFilters['state']

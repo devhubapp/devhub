@@ -202,13 +202,17 @@ function* onSetClearedAt(
 
 function* onColumnSubscriptionFilterChange(
   action:
-    | ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>
+    | ExtractActionFromActionCreator<typeof actions.clearColumnFilters>
+    | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnInvolvesFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnOwnerFilter>
     | ExtractActionFromActionCreator<
         typeof actions.setColumnParticipatingFilter
       >
-    | ExtractActionFromActionCreator<typeof actions.setColummSubjectTypeFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnRepoFilter>
     | ExtractActionFromActionCreator<typeof actions.setColummStateTypeFilter>
-    | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>,
+    | ExtractActionFromActionCreator<typeof actions.setColummSubjectTypeFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>,
 ) {
   if (!action.payload.columnId) return
 
@@ -279,6 +283,12 @@ function* onColumnSubscriptionFilterChange(
           involves: c.filters
             ? c.filters.involves
             : subscription.params.involves,
+          owners:
+            action.type === 'CLEAR_COLUMN_FILTERS' ||
+            action.type === 'SET_COLUMN_OWNER_FILTER' ||
+            action.type === 'SET_COLUMN_REPO_FILTER'
+              ? c.filters && c.filters.owners
+              : subscription.params.owners,
           subjectType:
             includesIssues && !includesPRs
               ? 'Issue'
@@ -365,7 +375,9 @@ export function* columnsSagas() {
         'CLEAR_COLUMN_FILTERS',
         'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_INVOLVES_FILTER',
+        'SET_COLUMN_OWNER_FILTER',
         'SET_COLUMN_PARTICIPATING_FILTER',
+        'SET_COLUMN_REPO_FILTER',
         'SET_COLUMN_STATE_FILTER',
         'SET_COLUMN_SUBJECT_TYPE_FILTER',
         'SET_COLUMN_UNREAD_FILTER',

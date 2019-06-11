@@ -30,7 +30,7 @@ import {
   getOlderEventDate,
   getOlderIssueOrPullRequestDate,
   getOlderNotificationDate,
-  getOwnerAndRepo,
+  getSubscriptionOwnerOrOrg,
   GitHubAppTokenType,
   GitHubEvent,
   GitHubIssueOrPullRequest,
@@ -269,15 +269,7 @@ function* onFetchRequest(
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
 
-  const owner =
-    (subscription &&
-      subscription.params &&
-      (('owner' in subscription.params && subscription.params.owner) ||
-        ('org' in subscription.params && subscription.params.org) ||
-        ('repoFullName' in subscription.params &&
-          subscription.params.repoFullName &&
-          getOwnerAndRepo(subscription.params.repoFullName).owner))) ||
-    undefined
+  const owner = getSubscriptionOwnerOrOrg(subscription)
 
   const installationToken = selectors.installationTokenByOwnerSelector(
     state,

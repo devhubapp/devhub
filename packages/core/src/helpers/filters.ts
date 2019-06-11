@@ -122,7 +122,7 @@ export function getFilterCountMetadata(
 export function getOwnerAndRepoFormattedFilter(
   filters: BaseColumnFilters | undefined,
 ) {
-  const ownerFiltersWithRepos = filters && filters.owners
+  const ownerFiltersWithRepos = (filters && filters.owners) || {}
   const ownerFilters = _.mapValues(
     ownerFiltersWithRepos,
     obj => obj && obj.value,
@@ -154,7 +154,41 @@ export function getOwnerAndRepoFormattedFilter(
     repoFilters && filterRecordWithThisValueCount(repoFilters, true)
   )
 
+  const allForcedRepos = Object.keys(repoFilters)
+    .filter(repoFullName => typeof repoFilters[repoFullName] === 'boolean')
+    .map(repoFullName => repoFullName.toLowerCase())
+  const allForcedOwners = Object.keys(ownerFiltersWithRepos)
+    .filter(
+      ownerFilterWithRepo =>
+        !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
+        (typeof ownerFiltersWithRepos[ownerFilterWithRepo]!.value ===
+          'boolean' ||
+          filterRecordHasAnyForcedValue(
+            ownerFiltersWithRepos[ownerFilterWithRepo]!.repos,
+          )),
+    )
+    .map(owner => owner.toLowerCase())
+
+  const allIncludedRepos = Object.keys(repoFilters)
+    .filter(repoFullName => repoFilters[repoFullName] === true)
+    .map(repoFullName => repoFullName.toLowerCase())
+  const allIncludedOwners = Object.keys(ownerFiltersWithRepos)
+    .filter(
+      ownerFilterWithRepo =>
+        !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
+        (ownerFiltersWithRepos[ownerFilterWithRepo]!.value === true ||
+          filterRecordWithThisValueCount(
+            ownerFiltersWithRepos[ownerFilterWithRepo]!.repos,
+            true,
+          )),
+    )
+    .map(owner => owner.toLowerCase())
+
   return {
+    allForcedOwners,
+    allForcedRepos,
+    allIncludedOwners,
+    allIncludedRepos,
     ownerFilterIsStrict,
     ownerFilters,
     ownerFiltersWithRepos,

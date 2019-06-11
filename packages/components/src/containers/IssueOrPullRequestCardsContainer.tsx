@@ -4,7 +4,7 @@ import {
   EnhancedGitHubIssueOrPullRequest,
   getDefaultPaginationPerPage,
   getOlderIssueOrPullRequestDate,
-  getOwnerAndRepo,
+  getSubscriptionOwnerOrOrg,
   IssueOrPullRequestColumnSubscription,
 } from '@devhub/core'
 import { View } from 'react-native'
@@ -58,13 +58,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       .toLowerCase()
       .includes('not found')
 
-    const subscriptionOwnerOrOrg =
-      getOwnerAndRepo(
-        (mainSubscription &&
-          mainSubscription.params &&
-          mainSubscription.params.repoFullName) ||
-          '',
-      ).owner || undefined
+    const subscriptionOwnerOrOrg = getSubscriptionOwnerOrOrg(mainSubscription)
 
     const ownerResponse = useGitHubAPI(
       octokit.users.getByUsername,

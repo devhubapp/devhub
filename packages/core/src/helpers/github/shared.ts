@@ -35,6 +35,7 @@ import {
   getFilteredEvents,
   getFilteredIssueOrPullRequests,
   getFilteredNotifications,
+  getOwnerAndRepoFormattedFilter,
 } from '../filters'
 import {
   getSteppedSize,
@@ -452,63 +453,81 @@ export function getColumnHeaderDetails(
         IssueOrPullRequestColumnSubscription
       >
 
-      const ownerAndRepo = getOwnerAndRepo(
-        (s && s.params && s.params.repoFullName) || '',
-      )
-      const owner = ownerAndRepo.owner!
-      const repo = ownerAndRepo.repo!
+      const {
+        allIncludedOwners,
+        allIncludedRepos,
+      } = getOwnerAndRepoFormattedFilter(column.filters)
 
-      const involvesSuffix =
-        s.params &&
-        s.params.involves &&
-        Object.keys(s.params.involves).length === 1 &&
-        (s.params.involves[Object.keys(s.params.involves)[0]] === true
-          ? ` involving ${Object.keys(s.params.involves)[0]}`
-          : s.params.involves[Object.keys(s.params.involves)[0]] === false
-          ? ` not involving ${Object.keys(s.params.involves)[0]}`
-          : '')
+      const owner =
+        allIncludedOwners.length === 1 ? allIncludedOwners[0] : undefined
+
+      const ownerAndRepo =
+        allIncludedRepos.length === 1
+          ? getOwnerAndRepo(allIncludedRepos[0])
+          : { owner: undefined, repo: undefined }
+
+      let suffix = ''
+
+      const involving =
+        s.params && s.params.involves
+          ? Object.keys(s.params.involves).filter(
+              user =>
+                !!s.params &&
+                s.params.involves &&
+                s.params.involves[user] === true,
+            )
+          : []
+      if (involving.length)
+        suffix += `${suffix ? ', ' : ''} involving ${involving.join(', ')}`
+
+      const notInvolving =
+        s.params && s.params.involves
+          ? Object.keys(s.params.involves).filter(
+              user =>
+                !!s.params &&
+                s.params.involves &&
+                s.params.involves[user] === false,
+            )
+          : []
+      if (notInvolving.length)
+        suffix += `${suffix ? ', ' : ''} not involving ${notInvolving.join(
+          ', ',
+        )}`
+
+      const avatarProps = {
+        repo: ownerAndRepo.repo,
+        username:
+          (ownerAndRepo.repo && ownerAndRepo.owner) ||
+          owner ||
+          involving[0] ||
+          notInvolving[0] ||
+          '',
+      }
 
       switch (s && s.subtype) {
-        case 'ISSUES': {
-          return {
-            avatarProps: {
-              repo,
-              username: owner,
-            },
-            icon: 'issue-opened',
-            repoIsKnown: !!(owner && repo),
-            owner,
-            repo,
-            subtitle: `Issues${involvesSuffix}`,
-            title: repo,
-          }
-        }
-
-        case 'PULLS': {
-          return {
-            avatarProps: {
-              repo,
-              username: owner,
-            },
-            icon: 'git-pull-request',
-            repoIsKnown: !!(owner && repo),
-            owner,
-            repo,
-            subtitle: `Pull Requests${involvesSuffix}`,
-            title: repo,
-          }
-        }
-
+        case 'ISSUES':
+        case 'PULLS':
         default: {
           return {
-            avatarProps: {
-              repo,
-              username: owner,
-            },
-            icon: 'issue-opened',
-            repoIsKnown: !!(owner && repo),
-            subtitle: `Issues & PRs${involvesSuffix}`,
-            title: repo,
+            avatarProps,
+            repoIsKnown: !!(ownerAndRepo.owner && ownerAndRepo.repo),
+            owner: ownerAndRepo.owner || owner || '',
+            repo: ownerAndRepo.repo || '',
+            title: ownerAndRepo.repo || avatarProps.username || '',
+            ...(s.subtype === 'ISSUES'
+              ? {
+                  icon: 'issue-opened',
+                  subtitle: `Issues${suffix}`,
+                }
+              : s.subtype === 'PULLS'
+              ? {
+                  icon: 'git-pull-request',
+                  subtitle: `Pull Requests${suffix}`,
+                }
+              : {
+                  icon: 'issue-opened',
+                  subtitle: `Issues & PRs${suffix}`,
+                }),
           }
         }
       }
@@ -1066,6 +1085,13 @@ function getDefaultItemsFilterMetadata() {
 export function getItemsFilterMetadata(
   type: ColumnSubscription['type'],
   items: EnhancedItem[],
+  {
+    forceIncludeTheseOwners = [],
+    forceIncludeTheseRepos = [],
+  }: {
+    forceIncludeTheseOwners?: string[]
+    forceIncludeTheseRepos?: string[]
+  } = {},
 ): ItemsFilterMetadata {
   const result: ItemsFilterMetadata = getDefaultItemsFilterMetadata()
   if (!(items && items.length > 0)) return result
@@ -1087,7 +1113,7 @@ export function getItemsFilterMetadata(
     const eventAction = event && getEventMetadata(event).action
     const privacy = getItemPrivacy(type, item)
 
-    const ownersAndrepos = getItemOwnersAndRepos(type, item)
+    const ownersAndRepos = getItemOwnersAndRepos(type, item)
 
     function updateNestedCounter(objRef: ItemFilterCountMetadata) {
       if (read) objRef.read++
@@ -1136,8 +1162,8 @@ export function getItemsFilterMetadata(
       updateNestedCounter(result.privacy[privacy]!)
     }
 
-    if (ownersAndrepos && ownersAndrepos.length) {
-      ownersAndrepos.forEach(or => {
+    if (ownersAndRepos && ownersAndRepos.length) {
+      ownersAndRepos.forEach(or => {
         if (or.owner) {
           result.owners[or.owner] = result.owners[or.owner] || {
             metadata: getDefaultItemFilterCountMetadata(),
@@ -1156,6 +1182,32 @@ export function getItemsFilterMetadata(
       })
     }
   })
+
+  if (forceIncludeTheseOwners && forceIncludeTheseOwners.length) {
+    forceIncludeTheseOwners.forEach(owner => {
+      result.owners[owner] = result.owners[owner] || {
+        metadata: getDefaultItemFilterCountMetadata(),
+        repos: {},
+      }
+    })
+  }
+
+  if (forceIncludeTheseRepos && forceIncludeTheseRepos.length) {
+    forceIncludeTheseRepos.forEach(repoFullName => {
+      const { owner, repo } = getOwnerAndRepo(repoFullName)
+      if (!(owner && repo)) return
+
+      result.owners[owner] = result.owners[owner] || {
+        metadata: getDefaultItemFilterCountMetadata(),
+        repos: {},
+      }
+
+      result.owners[owner]!.repos = result.owners[owner]!.repos || {}
+
+      result.owners[owner]!.repos[repo] =
+        result.owners[owner]!.repos[repo] || getDefaultItemFilterCountMetadata()
+    })
+  }
 
   return result
 }

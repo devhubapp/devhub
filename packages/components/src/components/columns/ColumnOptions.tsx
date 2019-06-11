@@ -127,6 +127,14 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   const { allItems } = useColumnData(column.id, false)
 
+  const {
+    allForcedOwners,
+    allForcedRepos,
+    ownerFilters,
+    ownerFiltersWithRepos,
+    repoFilters,
+  } = getOwnerAndRepoFormattedFilter(column.filters)
+
   const ownerOrRepoFilteredItemsMetadata = getItemsFilterMetadata(
     column.type,
     getFilteredItems(
@@ -138,21 +146,19 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
       },
       false,
     ),
+    {
+      forceIncludeTheseOwners: allForcedOwners,
+      forceIncludeTheseRepos: allForcedRepos,
+    },
   )
-
-  const {
-    ownerFilters,
-    ownerFiltersWithRepos,
-    repoFilters,
-  } = getOwnerAndRepoFormattedFilter(column.filters)
 
   const _owners = Object.keys(ownerOrRepoFilteredItemsMetadata.owners || {})
   const _shouldShowOwnerOrRepoFilters =
-    _owners.length > 1 ||
+    _owners.length >= 1 ||
     (_owners.length === 1 &&
       ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos &&
       Object.keys(ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos)
-        .length > 1)
+        .length >= 1)
 
   const involvingUsers = _.sortBy(
     Object.keys(
@@ -161,6 +167,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         {},
     ),
   )
+
   const _shouldShowInvolvesFilter =
     column.type === 'issue_or_pr' &&
     !!involvingUsers &&
@@ -331,7 +338,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         {allColumnOptionCategories.includes('involves') &&
           column.type === 'issue_or_pr' &&
           (() => {
-            // const filters = column.filters && column.filters.involves
+            const filters = column.filters && column.filters.involves
 
             // const defaultBooleanValue = true
 
@@ -355,10 +362,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 title="Involves user"
               >
                 {involvingUsers.map(user => {
-                  // const checked =
-                  //   filters && typeof filters[user] === 'boolean'
-                  //     ? filters[user]
-                  //     : null
+                  const checked =
+                    filters && typeof filters[user] === 'boolean'
+                      ? filters[user]
+                      : null
 
                   return (
                     <View
@@ -388,7 +395,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                             web: { title: user },
                           })}
                       >
-                        {user}
+                        {`${checked === false ? 'not ' : ''}${user || ''}`}
                       </ThemedText>
                     </View>
                   )
@@ -1368,6 +1375,16 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                           sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
                         }
                         defaultValue={defaultBooleanValue}
+                        disabled={
+                          !!(
+                            column.type === 'issue_or_pr' &&
+                            ownerChecked &&
+                            !filterRecordWithThisValueCount(
+                              column.filters && column.filters.involves,
+                              true,
+                            )
+                          )
+                        }
                         enableIndeterminateState={
                           !(isOwnerFilterStrict || isRepoFilterStrict) ||
                           thisOwnerHasStrictRepoFilter ||
@@ -1488,7 +1505,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             disabled={
               !columnHasAnyFilter(column.type, {
                 ...column.filters,
-                involves: undefined,
+                ...(column.type === 'issue_or_pr' && {
+                  involves: undefined,
+                  owners: undefined,
+                }),
               })
             }
             onPress={() => {

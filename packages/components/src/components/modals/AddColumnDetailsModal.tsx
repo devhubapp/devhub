@@ -54,13 +54,19 @@ import {
   ThemedTextInputProps,
 } from '../themed/ThemedTextInput'
 
+type OptionFormItem =
+  | 'org_option'
+  | 'owner_option'
+  | 'repo_option'
+  | 'user_option'
+
 export type FormItem =
   | 'inbox'
   | 'org'
+  | 'owner'
   | 'repo'
-  | 'repo_option'
   | 'user'
-  | 'user_option'
+  | OptionFormItem
 
 export const formItemsMetadata = {
   inbox: {
@@ -77,6 +83,23 @@ export const formItemsMetadata = {
         excludeEmptyString: true,
       })
       .required('Required'),
+  },
+  org_option: {
+    initialValue: false,
+    validationSchema: Yup.boolean(),
+  },
+  owner: {
+    initialValue: '',
+    validationSchema: Yup.string()
+      .matches(GITHUB_USERNAME_REGEX, {
+        message: 'Invalid',
+        excludeEmptyString: true,
+      })
+      .required('Required'),
+  },
+  owner_option: {
+    initialValue: false,
+    validationSchema: Yup.boolean(),
   },
   repo: {
     initialValue: '',
@@ -206,23 +229,33 @@ export const AddColumnDetailsModal = React.memo(
           validateField('inbox')
         }
 
-        if (formItems.includes('org')) {
+        if (
+          formItems.includes('org') ||
+          (formItems.includes('org_option') && values.org_option)
+        ) {
           validateField('org')
         }
 
         if (
-          subscription.type === 'issue_or_pr' &&
-          formItems.includes('repo_option') &&
-          formItems.includes('user_option') &&
-          !values.repo_option &&
-          !values.user_option
+          formItems.includes('owner') ||
+          (formItems.includes('owner_option') && values.owner_option)
         ) {
-          validateField('repo_option')
-          validateField('user_option')
+          validateField('owner')
+        }
 
-          if (!errors.repo_option && !errors.user_option) {
-            errors.repo_option = CIRCLE_CHARACTER
-            errors.user_option = CIRCLE_CHARACTER
+        const optionFormItems = formItems.filter(i => !!i.endsWith('_option'))
+        if (
+          !formItems.some(i => !i.endsWith('_option')) &&
+          !optionFormItems.some(i => values[i])
+        ) {
+          optionFormItems.forEach(optionFormItem =>
+            validateField(optionFormItem),
+          )
+
+          if (!optionFormItems.some(i => errors[i])) {
+            optionFormItems.forEach(optionFormItem => {
+              errors[optionFormItem] = CIRCLE_CHARACTER
+            })
           }
         }
 
@@ -330,6 +363,46 @@ export const AddColumnDetailsModal = React.memo(
       )
     }
 
+    function renderFormItemOption(
+      formItemOption: OptionFormItem,
+      formItem: Exclude<FormItem, OptionFormItem>,
+      label: string,
+    ) {
+      return (
+        <View key={`add-column-details-form-item-${formItemOption}`}>
+          <Checkbox
+            analyticsLabel={`add_column_details_${formItemOption}`}
+            checked={formikProps.values[formItemOption]}
+            containerStyle={
+              sharedColumnOptionsStyles.fullWidthCheckboxContainer
+            }
+            defaultValue={false}
+            label={label}
+            onChange={value => {
+              formikProps.setFieldTouched(formItemOption)
+              formikProps.setFieldValue(formItemOption, value)
+            }}
+            right={<ErrorMessage name={formItemOption} />}
+            squareContainerStyle={
+              sharedColumnOptionsStyles.checkboxSquareContainer
+            }
+          />
+
+          {formikProps.values[formItemOption] && (
+            <View
+              style={{
+                marginLeft: columnHeaderItemContentSize + contentPadding / 2,
+              }}
+            >
+              <Spacer height={contentPadding} />
+
+              {renderFormItem(formItem)}
+            </View>
+          )}
+        </View>
+      )
+    }
+
     function renderFormItem(formItem: FormItem) {
       switch (formItem) {
         case 'inbox':
@@ -364,6 +437,33 @@ export const AddColumnDetailsModal = React.memo(
             </View>
           )
 
+        case 'org_option':
+          return renderFormItemOption(
+            'org_option',
+            'org',
+            'From organization...',
+          )
+
+        case 'owner':
+          return (
+            <View key={`add-column-details-form-item-${formItem}`}>
+              <View style={sharedStyles.horizontal}>
+                <H3 withMargin>Owner</H3>
+                <Spacer flex={1} />
+                <ErrorMessage name={formItem} />
+              </View>
+
+              {renderOwnerForm()}
+            </View>
+          )
+
+        case 'owner_option':
+          return renderFormItemOption(
+            'owner_option',
+            'owner',
+            'From organization or user...',
+          )
+
         case 'repo':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
@@ -385,39 +485,10 @@ export const AddColumnDetailsModal = React.memo(
           )
 
         case 'repo_option':
-          return (
-            <View key={`add-column-details-form-item-${formItem}`}>
-              <Checkbox
-                analyticsLabel={`add_column_details_${formItem}`}
-                checked={formikProps.values.repo_option}
-                containerStyle={
-                  sharedColumnOptionsStyles.fullWidthCheckboxContainer
-                }
-                defaultValue={false}
-                label="From repository..."
-                onChange={value => {
-                  formikProps.setFieldTouched(formItem)
-                  formikProps.setFieldValue(formItem, value)
-                }}
-                right={<ErrorMessage name={formItem} />}
-                squareContainerStyle={
-                  sharedColumnOptionsStyles.checkboxSquareContainer
-                }
-              />
-
-              {formikProps.values.repo_option && (
-                <View
-                  style={{
-                    marginLeft:
-                      columnHeaderItemContentSize + contentPadding / 2,
-                  }}
-                >
-                  <Spacer height={contentPadding} />
-
-                  {renderFormItem('repo')}
-                </View>
-              )}
-            </View>
+          return renderFormItemOption(
+            'repo_option',
+            'repo',
+            'From repository...',
           )
 
         case 'user':
@@ -436,39 +507,10 @@ export const AddColumnDetailsModal = React.memo(
           )
 
         case 'user_option':
-          return (
-            <View key={`add-column-details-form-item-${formItem}`}>
-              <Checkbox
-                analyticsLabel={`add_column_details_${formItem}`}
-                checked={formikProps.values.user_option}
-                containerStyle={
-                  sharedColumnOptionsStyles.fullWidthCheckboxContainer
-                }
-                defaultValue={false}
-                label="Involving user..."
-                onChange={value => {
-                  formikProps.setFieldTouched(formItem)
-                  formikProps.setFieldValue(formItem, value)
-                }}
-                right={<ErrorMessage name={formItem} />}
-                squareContainerStyle={
-                  sharedColumnOptionsStyles.checkboxSquareContainer
-                }
-              />
-
-              {formikProps.values.user_option && (
-                <View
-                  style={{
-                    marginLeft:
-                      columnHeaderItemContentSize + contentPadding / 2,
-                  }}
-                >
-                  <Spacer height={contentPadding} />
-
-                  {renderFormItem('user')}
-                </View>
-              )}
-            </View>
+          return renderFormItemOption(
+            'user_option',
+            'user',
+            'Involving user...',
           )
 
         default:
@@ -551,6 +593,15 @@ export const AddColumnDetailsModal = React.memo(
       })
     }
 
+    function renderOwnerForm(
+      textInputProps: Partial<ThemedTextInputProps> = {},
+    ) {
+      return renderGenericFormTextInput('owner', {
+        placeholder: `E.g.: facebook, ${loggedUsername}`,
+        ...textInputProps,
+      })
+    }
+
     function renderRepoForm(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
@@ -627,7 +678,7 @@ function getFormItems({
         case 'ISSUES':
         case 'PULLS':
         default:
-          return ['repo_option', 'user_option']
+          return ['user_option', 'owner_option', 'repo_option']
       }
     }
 
@@ -689,19 +740,17 @@ function getNewColumnAndSubscriptions(
 ): ColumnAndSubscriptions | null {
   const formValues = { ..._formValues }
 
-  if (formItems.includes('repo_option') && !formValues.repo_option) {
-    delete formValues.repo
-  }
+  const optionFormItems = formItems.filter(i => !!i.endsWith('_option'))
+  optionFormItems.forEach(optionFormItem => {
+    if (formItems.includes(optionFormItem) && !formValues[optionFormItem]) {
+      const formItem = optionFormItem.replace('_option', '') as FormItem
+      delete formValues[formItem]
+    }
+  })
 
-  if (formItems.includes('user_option') && !formValues.user_option) {
-    delete formValues.user
-  }
-
-  const { owner, repo } = formValues.repo
+  const repoOwnerAndRepo = formValues.repo
     ? getOwnerAndRepo(formValues.repo)
-    : { owner: formValues.org || formValues.user, repo: undefined }
-
-  const repoFullName = owner && repo ? `${owner}/${repo}` : undefined
+    : { owner: undefined, repo: undefined }
 
   const newColumnFilters: ColumnFilters | undefined = defaultFilters || {}
   let newSubscription: ColumnSubscriptionCreation & { id: string }
@@ -720,13 +769,16 @@ function getNewColumnAndSubscriptions(
               ...(defaultParams as any),
               all: true,
               participating: formValues.inbox === 'participating',
-              ...(!!(owner && repo) && {
-                owner,
-                repo,
+              ...(!!(repoOwnerAndRepo.owner && repoOwnerAndRepo.repo) && {
+                owner: repoOwnerAndRepo.owner,
+                repo: repoOwnerAndRepo.repo,
               }),
             },
             type,
-            subtype: owner && repo ? 'REPO_NOTIFICATIONS' : undefined,
+            subtype:
+              repoOwnerAndRepo.owner && repoOwnerAndRepo.repo
+                ? 'REPO_NOTIFICATIONS'
+                : undefined,
           })
           ;(newColumnFilters as NotificationColumnFilters).notifications =
             (newColumnFilters as NotificationColumnFilters).notifications || {}
@@ -753,7 +805,24 @@ function getNewColumnAndSubscriptions(
           >({
             params: {
               ...(defaultParams as any),
-              repoFullName,
+              owners: {
+                ...(!!formValues.owner && {
+                  [formValues.owner]: {
+                    value: true,
+                    repos: {},
+                  },
+                }),
+
+                ...(!!repoOwnerAndRepo.owner &&
+                  !!repoOwnerAndRepo.repo && {
+                    [repoOwnerAndRepo.owner]: {
+                      value: true,
+                      repos: {
+                        [repoOwnerAndRepo.repo]: true,
+                      },
+                    },
+                  }),
+              },
               involves: formValues.user
                 ? {
                     [formValues.user]: true,
@@ -775,6 +844,8 @@ function getNewColumnAndSubscriptions(
           _newColumnFilters.subjectTypes = newSubscription.params.subjectType
             ? { [newSubscription.params.subjectType]: true }
             : {}
+          _newColumnFilters.owners =
+            _newColumnFilters.owners || newSubscription.params.owners
 
           break
         }
@@ -795,7 +866,7 @@ function getNewColumnAndSubscriptions(
           >({
             params: {
               ...(defaultParams as any),
-              org: owner,
+              org: formValues.org,
               username: subtype === 'USER_ORG_EVENTS' ? loggedUsername : '',
             },
             type,
@@ -821,15 +892,15 @@ function getNewColumnAndSubscriptions(
 
         case 'REPO_EVENTS':
         case 'REPO_NETWORK_EVENTS': {
-          if (!(owner && repo)) return null
+          if (!(repoOwnerAndRepo.owner && repoOwnerAndRepo.repo)) return null
 
           newSubscription = createSubscriptionObjectWithId<
             ActivityColumnSubscriptionCreation
           >({
             params: {
               ...(defaultParams as any),
-              owner,
-              repo,
+              owner: repoOwnerAndRepo.owner,
+              repo: repoOwnerAndRepo.repo,
             },
             type,
             subtype,
