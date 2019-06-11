@@ -1,7 +1,7 @@
 import { all, delay, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
-  ActivityColumnSubscription,
+  ActivityColumnSubscriptionCreation,
   AppViewMode,
   Column,
   ColumnsAndSubscriptions,
@@ -13,6 +13,7 @@ import {
   isReadFilterChecked,
   IssueOrPullRequestColumn,
   IssueOrPullRequestColumnSubscription,
+  IssueOrPullRequestColumnSubscriptionCreation,
   itemPassesFilterRecord,
   NotificationColumn,
   NotificationColumnSubscription,
@@ -32,21 +33,36 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     },
   }) as NotificationColumnSubscription
 
-  const userReceivedEventsSubscription = createSubscriptionObjectWithId({
+  const userReceivedEventsSubscription = createSubscriptionObjectWithId<
+    ActivityColumnSubscriptionCreation
+  >({
     type: 'activity',
     subtype: 'USER_RECEIVED_EVENTS',
     params: {
       username,
     },
-  }) as ActivityColumnSubscription
+  })
 
-  const userEventsSubscription = createSubscriptionObjectWithId({
+  const involvedIssuesAndPRsSubscription = createSubscriptionObjectWithId<
+    IssueOrPullRequestColumnSubscriptionCreation
+  >({
+    type: 'issue_or_pr',
+    subtype: undefined,
+    params: {
+      involves: username ? { [username.toLowerCase()]: true } : undefined,
+      subjectType: undefined,
+    },
+  })
+
+  const userEventsSubscription = createSubscriptionObjectWithId<
+    ActivityColumnSubscriptionCreation
+  >({
     type: 'activity',
     subtype: 'USER_EVENTS',
     params: {
       username,
     },
-  }) as ActivityColumnSubscription
+  })
 
   const result: ColumnsAndSubscriptions = {
     columns: [
@@ -75,6 +91,20 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       },
       {
         id: guid(),
+        subscriptionIds: [involvedIssuesAndPRsSubscription.id],
+        type: 'issue_or_pr',
+        filters: {
+          involves: involvedIssuesAndPRsSubscription.params.involves,
+          owners: involvedIssuesAndPRsSubscription.params.owners,
+          subjectTypes: involvedIssuesAndPRsSubscription.params.subjectType
+            ? {
+                [involvedIssuesAndPRsSubscription.params.subjectType]: true,
+              }
+            : undefined,
+        },
+      },
+      {
+        id: guid(),
         subscriptionIds: [userEventsSubscription.id],
         type: 'activity',
         filters: undefined,
@@ -83,6 +113,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     subscriptions: [
       notificationSubscription,
       userReceivedEventsSubscription,
+      involvedIssuesAndPRsSubscription,
       userEventsSubscription,
     ],
   }
