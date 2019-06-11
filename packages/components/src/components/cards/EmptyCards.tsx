@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, View, ViewStyle } from 'react-native'
+import { Image, View } from 'react-native'
 
 import { EnhancedLoadState } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'

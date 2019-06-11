@@ -1,7 +1,13 @@
 import _ from 'lodash'
 import moment, { MomentInput } from 'moment'
 
-import { EnhancedGitHubEvent, GitHubNotification } from '..'
+import {
+  ColumnSubscription,
+  EnhancedGitHubEvent,
+  GitHubNotification,
+} from '../types'
+import { getOwnerAndRepoFormattedFilter } from './filters'
+import { getOwnerAndRepo } from './github/shared'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, _.toUpper)
@@ -276,4 +282,33 @@ export function intercalateWithArray<T extends any[], U>(arr: T, separator: U) {
   return _.flatMap(arr, (item, index) =>
     index === 0 ? item : [separator, item],
   )
+}
+
+export function getSubscriptionOwnerOrOrg(
+  subscription: ColumnSubscription | undefined,
+) {
+  if (!(subscription && subscription.params)) return undefined
+
+  if ('owner' in subscription.params && subscription.params.owner)
+    return subscription.params.owner
+
+  if ('org' in subscription.params && subscription.params.org)
+    return subscription.params.org
+
+  const {
+    allIncludedOwners,
+    allIncludedRepos,
+  } = getOwnerAndRepoFormattedFilter(
+    'owners' in subscription.params
+      ? { owners: subscription.params.owners }
+      : undefined,
+  )
+
+  const _org = allIncludedOwners.length === 1 ? allIncludedOwners[0] : undefined
+  const _ownerAndRepo =
+    allIncludedRepos.length === 1
+      ? getOwnerAndRepo(allIncludedOwners[0])
+      : { owner: undefined, repo: undefined }
+
+  return _org || _ownerAndRepo.owner || undefined
 }

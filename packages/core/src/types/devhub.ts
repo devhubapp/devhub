@@ -172,12 +172,13 @@ export type ActivityColumnSubscription = {
 export interface IssueOrPullRequestColumnSubscription {
   id: string
   type: IssueOrPullRequestColumn['type']
-  subtype: 'ISSUES' | 'PULLS'
+  subtype: 'ISSUES' | 'PULLS' | undefined
   params: {
-    repoFullName?: string
-    subjectType: GitHubIssueOrPullRequestSubjectType
-    state?: ColumnFilters['state']
-    draft?: ColumnFilters['draft']
+    owners?: IssueOrPullRequestColumnFilters['owners']
+    involves?: IssueOrPullRequestColumnFilters['involves']
+    subjectType: GitHubIssueOrPullRequestSubjectType | undefined
+    state?: IssueOrPullRequestColumnFilters['state']
+    draft?: IssueOrPullRequestColumnFilters['draft']
   }
   data: ColumnSubscriptionData<any>
   createdAt: string
@@ -244,6 +245,7 @@ export interface ActivityColumnFilters extends BaseColumnFilters {
 }
 
 export interface IssueOrPullRequestColumnFilters extends BaseColumnFilters {
+  involves?: Partial<Record<string, boolean>>
   subjectTypes?: Partial<Record<GitHubIssueOrPullRequestSubjectType, boolean>>
 }
 
@@ -313,10 +315,18 @@ export type GenericColumnCreation<
   updatedAt?: string
 }
 
+export type ActivityColumnCreation = GenericColumnCreation<ActivityColumn>
+export type IssueOrPullRequestColumnCreation = GenericColumnCreation<
+  IssueOrPullRequestColumn
+>
+export type NotificationColumnCreation = GenericColumnCreation<
+  NotificationColumn
+>
+
 export type ColumnCreation =
-  | GenericColumnCreation<ActivityColumn>
-  | GenericColumnCreation<IssueOrPullRequestColumn>
-  | GenericColumnCreation<NotificationColumn>
+  | ActivityColumnCreation
+  | IssueOrPullRequestColumnCreation
+  | NotificationColumnCreation
 
 export type GenericColumnSubscriptionCreation<
   ColumnSubscriptionType extends
@@ -330,10 +340,20 @@ export type GenericColumnSubscriptionCreation<
   updatedAt?: string | undefined
 }
 
+export type ActivityColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
+  ActivityColumnSubscription
+>
+export type IssueOrPullRequestColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
+  IssueOrPullRequestColumnSubscription
+>
+export type NotificationColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
+  NotificationColumnSubscription
+>
+
 export type ColumnSubscriptionCreation =
-  | GenericColumnSubscriptionCreation<ActivityColumnSubscription>
-  | GenericColumnSubscriptionCreation<IssueOrPullRequestColumnSubscription>
-  | GenericColumnSubscriptionCreation<NotificationColumnSubscription>
+  | ActivityColumnSubscriptionCreation
+  | IssueOrPullRequestColumnSubscriptionCreation
+  | NotificationColumnSubscriptionCreation
 
 export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
@@ -341,7 +361,6 @@ export interface AddColumnDetailsPayload {
   title: string
   icon: GitHubIcon
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
-  paramList: ColumnParamField[]
   defaultFilters?: Partial<Column['filters']>
   defaultParams?: Partial<Record<ColumnParamField, any>>
   isPrivateSupported: boolean
@@ -425,6 +444,10 @@ export interface ItemsFilterMetadata {
   saved: ItemFilterCountMetadata
   state: Record<GitHubStateType, ItemFilterCountMetadata>
   draft: ItemFilterCountMetadata
+
+  // items doesn't have enough info to correctly calculate this metadata
+  // involves: Partial<Record<string, ItemFilterCountMetadata | undefined>>
+
   subjectType: Partial<
     Record<GitHubItemSubjectType, ItemFilterCountMetadata | undefined>
   >

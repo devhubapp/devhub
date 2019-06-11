@@ -14,6 +14,7 @@ import {
 } from '../../types'
 import {
   filterRecordHasAnyForcedValue,
+  getOwnerAndRepoFormattedFilter,
   itemPassesFilterRecord,
 } from '../filters'
 import {
@@ -283,9 +284,40 @@ export function getGitHubIssueSearchQuery(
 ) {
   const queryArr: string[] = []
 
-  const { draft, repoFullName, state, subjectType } = params
+  const { draft, involves, owners, state, subjectType } = params
 
-  if (repoFullName) queryArr.push(`repo:${repoFullName}`)
+  if (owners) {
+    const { ownerFiltersWithRepos } = getOwnerAndRepoFormattedFilter({ owners })
+
+    Object.entries(ownerFiltersWithRepos).forEach(([owner, ownerFilter]) => {
+      if (!(owner && ownerFilter)) return
+
+      const reposToPush: string[] = []
+      Object.entries(ownerFilter.repos || {}).forEach(
+        ([repo, repoFilterValue]) => {
+          if (!(repo && repoFilterValue === true)) return
+
+          const repoFullName = `${owner}/${repo}`.toLowerCase()
+          reposToPush.push(repoFullName)
+        },
+      )
+
+      if (ownerFilter.value === true && !reposToPush.length)
+        queryArr.push(`user:${owner}`.toLowerCase())
+
+      reposToPush.forEach(repoFullName => queryArr.push(`repo:${repoFullName}`))
+    })
+  }
+
+  if (involves && filterRecordHasAnyForcedValue(involves)) {
+    Object.entries(involves).forEach(([_user, value]) => {
+      const user = `${_user || ''}`.trim().toLowerCase()
+      if (!(user && typeof value === 'boolean')) return
+
+      const negationSign = !value ? '-' : ''
+      queryArr.push(`${negationSign}involves:${user}`)
+    })
+  }
 
   if (subjectType === 'Issue') queryArr.push('is:issue')
   else if (subjectType === 'PullRequest') queryArr.push('is:pr')

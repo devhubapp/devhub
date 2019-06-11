@@ -116,6 +116,14 @@ export function setColumnUnreadFilter(payload: {
   return createAction('SET_COLUMN_UNREAD_FILTER', payload)
 }
 
+export function setColumnInvolvesFilter(payload: {
+  columnId: string
+  user: string
+  value: boolean | null
+}) {
+  return createAction('SET_COLUMN_INVOLVES_FILTER', payload)
+}
+
 export function setColumnOwnerFilter(payload: {
   columnId: string
   owner: string

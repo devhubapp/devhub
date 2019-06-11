@@ -39,7 +39,7 @@ export const TextInput = React.forwardRef(
           {
             height: 36,
             margin: 0,
-            padding: 0,
+            paddingVertical: 0,
             paddingHorizontal: contentPadding,
             backgroundColor: 'transparent',
             borderRadius: 36 / 2,

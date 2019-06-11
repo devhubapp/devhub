@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React, { useEffect, useRef } from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import {
@@ -16,20 +16,20 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, radius } from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { fabSize } from '../common/FAB'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { H2 } from '../common/H2'
 import { HeaderMessage } from '../common/HeaderMessage'
 import { Link } from '../common/Link'
-import { separatorThickSize } from '../common/Separator'
+import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
-import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
@@ -44,8 +44,6 @@ const columnTypes: Array<{
   type: ColumnSubscription['type']
   icon: GitHubIcon
   items: Array<{
-    title: string
-    icon: GitHubIcon
     payload: AddColumnDetailsPayload | null
   }>
   soon?: boolean
@@ -57,30 +55,13 @@ const columnTypes: Array<{
     icon: 'bell',
     items: [
       {
-        title: 'Notifications',
-        icon: 'bell',
         payload: {
           icon: 'bell',
-          title: 'All notifications',
+          title: 'Notifications',
           subscription: {
             type: 'notifications',
             subtype: undefined,
           },
-          paramList: ['all'],
-          isPrivateSupported: true,
-        },
-      },
-      {
-        title: 'Repository',
-        icon: 'repo',
-        payload: {
-          icon: 'bell',
-          title: 'Repository notifications',
-          subscription: {
-            type: 'notifications',
-            subtype: 'REPO_NOTIFICATIONS',
-          },
-          paramList: ['all', 'owner', 'repo'],
           isPrivateSupported: true,
         },
       },
@@ -92,8 +73,6 @@ const columnTypes: Array<{
     icon: 'issue-opened',
     items: [
       {
-        title: 'Issues',
-        icon: 'issue-opened',
         payload: {
           icon: 'issue-opened',
           title: 'Issues',
@@ -101,13 +80,21 @@ const columnTypes: Array<{
             type: 'issue_or_pr',
             subtype: 'ISSUES',
           },
-          paramList: ['owner', 'repo'],
           isPrivateSupported: true,
         },
       },
       {
-        title: 'Pull Requests',
-        icon: 'git-pull-request',
+        payload: {
+          icon: 'issue-opened',
+          title: 'Issues & Pull Requests',
+          subscription: {
+            type: 'issue_or_pr',
+            subtype: undefined,
+          },
+          isPrivateSupported: true,
+        },
+      },
+      {
         payload: {
           icon: 'git-pull-request',
           title: 'Pull Requests',
@@ -115,7 +102,6 @@ const columnTypes: Array<{
             type: 'issue_or_pr',
             subtype: 'PULLS',
           },
-          paramList: ['owner', 'repo'],
           isPrivateSupported: true,
         },
       },
@@ -127,30 +113,6 @@ const columnTypes: Array<{
     icon: 'note',
     items: [
       {
-        title: 'Dashboard',
-        icon: 'home',
-        payload: {
-          icon: 'home',
-          title: 'User dashboard',
-          subscription: {
-            type: 'activity',
-            subtype: 'USER_RECEIVED_EVENTS',
-          },
-          paramList: ['username'],
-          isPrivateSupported: false,
-          defaultFilters: {
-            subjectTypes: {
-              Release: true,
-              Repository: true,
-              Tag: true,
-              User: true,
-            },
-          },
-        },
-      },
-      {
-        title: 'User',
-        icon: 'person',
         payload: {
           icon: 'person',
           title: 'User activity',
@@ -158,13 +120,21 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'USER_EVENTS',
           },
-          paramList: ['username'],
           isPrivateSupported: false,
         },
       },
       {
-        title: 'Repository',
-        icon: 'repo',
+        payload: {
+          icon: 'home',
+          title: 'User dashboard',
+          subscription: {
+            type: 'activity',
+            subtype: 'USER_RECEIVED_EVENTS',
+          },
+          isPrivateSupported: false,
+        },
+      },
+      {
         payload: {
           icon: 'repo',
           title: 'Repository activity',
@@ -172,13 +142,10 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'REPO_EVENTS',
           },
-          paramList: ['owner', 'repo'],
           isPrivateSupported: false, // https://github.com/devhubapp/devhub/issues/140
         },
       },
       {
-        title: 'Organization',
-        icon: 'organization',
         payload: {
           icon: 'organization',
           title: 'Organization activity',
@@ -186,7 +153,6 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'ORG_PUBLIC_EVENTS',
           },
-          paramList: ['org'],
           isPrivateSupported: false,
         },
       },
@@ -195,13 +161,11 @@ const columnTypes: Array<{
 ]
 
 function AddColumnModalItem({
-  availableWidth,
   disabled,
   icon,
   payload,
   title,
 }: {
-  availableWidth: number
   disabled?: boolean
   icon: GitHubIcon
   payload: AddColumnDetailsPayload | null
@@ -245,15 +209,12 @@ function AddColumnModalItem({
         (isHovered || isPressing) && !disabled
           ? theme.backgroundColorLess2
           : rgba(theme.backgroundColor, 0),
-      borderColor: theme.backgroundColorLess2,
     }
   }
 
   function updateStyles() {
     setSpringAnimatedStyles(getStyles())
   }
-
-  if (!(availableWidth > 0)) return null
 
   return (
     <SpringAnimatedTouchableOpacity
@@ -282,34 +243,31 @@ function AddColumnModalItem({
         updateStyles()
       }}
       style={{
-        width:
-          availableWidth / Math.floor(availableWidth / (82 + contentPadding)),
-        borderRadius: radius,
-        borderWidth: 0,
+        flex: 1,
         ...springAnimatedStyles,
       }}
     >
       <View
         style={{
+          flex: 1,
+          flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center',
-          marginHorizontal: contentPadding / 4,
-          paddingVertical: contentPadding,
+          padding: contentPadding,
         }}
       >
         <ColumnHeaderItem
           analyticsLabel={undefined}
+          fixedIconSize
           iconName={icon}
           iconStyle={{ lineHeight: undefined }}
           noPadding
-          size={24}
-          style={{ alignSelf: 'center', marginBottom: contentPadding / 2 }}
+          size={18}
           tooltip={undefined}
         />
 
-        <ThemedText color="foregroundColor" style={{ textAlign: 'center' }}>
-          {title}
-        </ThemedText>
+        <Spacer width={contentPadding / 2} />
+
+        <ThemedText color="foregroundColor">{title}</ThemedText>
       </View>
     </SpringAnimatedTouchableOpacity>
   )
@@ -324,11 +282,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
     selectors.installationOwnerNamesSelector,
   )
 
-  const columnWidth = useColumnWidth()
   const { sizename } = useAppLayout()
-
-  const outerSpacing = (3 / 4) * contentPadding
-  const availableWidth = columnWidth - 2 * separatorThickSize - 2 * outerSpacing
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
 
@@ -363,10 +317,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
           </HeaderMessage>
         )}
 
-      <ScrollView
-        style={sharedStyles.flex}
-        contentContainerStyle={sharedStyles.flexGrow}
-      >
+      <FullHeightScrollView style={sharedStyles.flex}>
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
             <SubHeader muted={group.soon} title={group.title}>
@@ -389,30 +340,31 @@ export function AddColumnModal(props: AddColumnModalProps) {
               )}
             </SubHeader>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                alignContent: 'flex-start',
-                paddingHorizontal: outerSpacing,
-                marginBottom: outerSpacing,
-              }}
-            >
+            <View style={sharedStyles.flex}>
               {group.items.map((item, itemIndex) => (
                 <AddColumnModalItem
                   key={`add-column-button-group-${groupIndex}-item-${itemIndex}`}
-                  availableWidth={availableWidth}
                   disabled={
                     hasReachedColumnLimit || !item.payload || group.soon
                   }
-                  icon={item.icon}
+                  icon={item.payload ? item.payload.icon : 'mark-github'}
                   payload={item.payload}
-                  title={item.title}
+                  title={item.payload ? item.payload.title : 'Not available'}
                 />
               ))}
             </View>
+
+            {groupIndex < columnTypes.length - 1 && (
+              <>
+                <Spacer height={contentPadding / 2} />
+                <Separator horizontal />
+                <Spacer height={contentPadding / 2} />
+              </>
+            )}
           </View>
         ))}
+
+        <Spacer flex={1} minHeight={contentPadding} />
 
         {!!hasReachedColumnLimit && (
           <ThemedText
@@ -431,12 +383,12 @@ export function AddColumnModal(props: AddColumnModalProps) {
           </ThemedText>
         )}
 
-        <Spacer flex={1} minHeight={contentPadding} />
+        <Spacer height={contentPadding} />
 
         <Spacer
           height={isFabVisible ? fabSize + 2 * fabSpacing : contentPadding}
         />
-      </ScrollView>
+      </FullHeightScrollView>
     </ModalColumn>
   )
 }

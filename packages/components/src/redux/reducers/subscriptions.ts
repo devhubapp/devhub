@@ -256,8 +256,29 @@ export const subscriptionsReducer: Reducer<State> = (
 
         subscription.data = subscription.data || {}
         subscription.data.errorMessage = action.error && action.error.message
+        if (action.error && Array.isArray((action.error as any).errors)) {
+          const errors = (action.error as any).errors
+            .map((e: any) => e.message)
+            .filter(Boolean)
+            .join(' ')
+
+          if (errors) {
+            subscription.data.errorMessage = `${
+              subscription.data.errorMessage
+            }: ${errors}`.trim()
+          }
+        }
         subscription.data.lastFetchedAt = new Date().toISOString()
         subscription.data.loadState = 'error'
+
+        if (
+          action.payload.replaceAllItems &&
+          action.error &&
+          action.error.status &&
+          (action.error.status >= 402 && action.error.status < 500)
+        ) {
+          subscription.data.items = []
+        }
 
         // draft.updatedAt = new Date().toISOString()
       })

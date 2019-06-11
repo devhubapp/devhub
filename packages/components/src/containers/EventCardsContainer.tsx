@@ -5,6 +5,7 @@ import {
   EnhancedGitHubEvent,
   getDefaultPaginationPerPage,
   getOlderEventDate,
+  getSubscriptionOwnerOrOrg,
 } from '@devhub/core'
 import { View } from 'react-native'
 import { EmptyCards } from '../components/cards/EmptyCards'
@@ -54,13 +55,7 @@ export const EventCardsContainer = React.memo(
       .toLowerCase()
       .includes('not found')
 
-    const subscriptionOwnerOrOrg =
-      (mainSubscription &&
-        mainSubscription.params &&
-        (('owner' in mainSubscription.params &&
-          mainSubscription.params.owner) ||
-          ('org' in mainSubscription.params && mainSubscription.params.org))) ||
-      undefined
+    const subscriptionOwnerOrOrg = getSubscriptionOwnerOrOrg(mainSubscription)
 
     const ownerResponse = useGitHubAPI(
       octokit.users.getByUsername,

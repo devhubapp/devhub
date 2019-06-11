@@ -254,7 +254,12 @@ export function Checkbox(props: CheckboxProps) {
         </View>
       )}
 
-      {!!right && right}
+      {!!right && (
+        <>
+          <Spacer width={contentPadding / 2} />
+          {right}
+        </>
+      )}
     </TouchableOpacity>
   )
 }
