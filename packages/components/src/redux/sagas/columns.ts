@@ -64,7 +64,14 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
         id: guid(),
         subscriptionIds: [userReceivedEventsSubscription.id],
         type: 'activity',
-        filters: undefined,
+        filters: {
+          subjectTypes: {
+            Release: true,
+            Repository: true,
+            Tag: true,
+            User: true,
+          },
+        },
       },
       {
         id: guid(),
