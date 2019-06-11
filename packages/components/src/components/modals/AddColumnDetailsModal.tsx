@@ -448,7 +448,7 @@ export const AddColumnDetailsModal = React.memo(
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
               <View style={sharedStyles.horizontal}>
-                <H3 withMargin>Owner</H3>
+                <H3 withMargin>Owner (User or Organization)</H3>
                 <Spacer flex={1} />
                 <ErrorMessage name={formItem} />
               </View>
@@ -458,11 +458,7 @@ export const AddColumnDetailsModal = React.memo(
           )
 
         case 'owner_option':
-          return renderFormItemOption(
-            'owner_option',
-            'owner',
-            'From organization or user...',
-          )
+          return renderFormItemOption('owner_option', 'owner', 'From owner...')
 
         case 'repo':
           return (
@@ -597,7 +593,7 @@ export const AddColumnDetailsModal = React.memo(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       return renderGenericFormTextInput('owner', {
-        placeholder: `E.g.: facebook, ${loggedUsername}`,
+        placeholder: `E.g.: ${loggedUsername}, facebook`,
         ...textInputProps,
       })
     }
