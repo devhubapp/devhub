@@ -49,7 +49,18 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     type: 'issue_or_pr',
     subtype: undefined,
     params: {
-      involves: username ? { [username.toLowerCase()]: true } : undefined,
+      involves: { [username.toLowerCase()]: true },
+      subjectType: undefined,
+    },
+  })
+
+  const myReposIssuesAndPRsSubscription = createSubscriptionObjectWithId<
+    IssueOrPullRequestColumnSubscriptionCreation
+  >({
+    type: 'issue_or_pr',
+    subtype: undefined,
+    params: {
+      owners: { [username.toLowerCase()]: { value: true, repos: {} } },
       subjectType: undefined,
     },
   })
@@ -105,6 +116,20 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       },
       {
         id: guid(),
+        subscriptionIds: [myReposIssuesAndPRsSubscription.id],
+        type: 'issue_or_pr',
+        filters: {
+          involves: myReposIssuesAndPRsSubscription.params.involves,
+          owners: myReposIssuesAndPRsSubscription.params.owners,
+          subjectTypes: myReposIssuesAndPRsSubscription.params.subjectType
+            ? {
+                [myReposIssuesAndPRsSubscription.params.subjectType]: true,
+              }
+            : undefined,
+        },
+      },
+      {
+        id: guid(),
         subscriptionIds: [userEventsSubscription.id],
         type: 'activity',
         filters: undefined,
@@ -114,6 +139,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       notificationSubscription,
       userReceivedEventsSubscription,
       involvedIssuesAndPRsSubscription,
+      myReposIssuesAndPRsSubscription,
       userEventsSubscription,
     ],
   }
