@@ -33,8 +33,8 @@ script:
       yarn clean
       yarn workspace @devhub/web build
       yarn workspace @devhub/desktop build:skipweb --mac
-      now --token $NOW_TOKEN --target production
-      now alias beta.devhubapp.com
+      now --target production --token $NOW_TOKEN
+      now alias beta.devhubapp.com --token $NOW_TOKEN
     fi
 
 before_cache:
