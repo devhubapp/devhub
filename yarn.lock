@@ -5873,10 +5873,10 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
-"formik@npm:@brunolemos/formik":
-  version "2.0.1-rc.4"
-  resolved "https://registry.npmjs.org/@brunolemos/formik/-/formik-2.0.1-rc.4.tgz#3e20ccd0a00695deb931ce11997a79ff519e9310"
-  integrity sha512-nJtw/mH2AGO9EICHQD/hteGvAtz/APJ7q8SfVSf49hXzpkgYXZB9idlWOcZNbWjeeJyzLh+YMT0C7a9N+91HnA==
+formik@2.0.1-rc.5:
+  version "2.0.1-rc.5"
+  resolved "https://registry.npmjs.org/formik/-/formik-2.0.1-rc.5.tgz#856a36036fa27d707aa6879476623b4a7753e158"
+  integrity sha512-EEz+CLL5RYh95di4gdnlfrfCJrsC48Eis+kZhcqhanxlkA2ZMBmMLo7XxUZjMx+8aTZjEBOR3GQZstQ2/44chg==
   dependencies:
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"

@@ -18,7 +18,7 @@
     "axios": "0.18.0",
     "bugsnag-react-native": "2.16.0",
     "fbemitter": "2.1.1",
-    "formik": "npm:@brunolemos/formik",
+    "formik": "2.0.1-rc.5",
     "gravatar": "1.8.0",
     "hoist-non-react-statics": "3.3.0",
     "immer": "2.1.4",
