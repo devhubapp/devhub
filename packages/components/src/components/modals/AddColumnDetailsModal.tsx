@@ -158,7 +158,7 @@ export const AddColumnDetailsModal = React.memo(
       isPrivateSupported,
       showBackButton,
       subscription,
-      title,
+      title: headerTitle,
     } = props
 
     const formItems = getFormItems(subscription)
@@ -281,22 +281,29 @@ export const AddColumnDetailsModal = React.memo(
       formikProps.validateForm()
     }, [])
 
-    function ErrorMessage({ name }: { name: FormItem }) {
-      if (!name) return null
+    function shouldShowError(formItem: FormItem) {
+      if (!formItem) return false
+
       if (
         !(
-          formikProps.touched[name] ||
-          (name.endsWith('_option') &&
+          formikProps.touched[formItem] ||
+          (formItem.endsWith('_option') &&
             Object.keys(formikProps.touched).some(item =>
               item.endsWith('_option'),
             )) ||
           formikProps.submitCount > 0
         )
       )
-        return null
+        return false
 
-      const error = formikProps.errors[name]
-      if (!error) return null
+      const error = formikProps.errors[formItem]
+      return !!error
+    }
+
+    function ErrorMessage({ name }: { name: FormItem }) {
+      if (!shouldShowError(name)) return null
+
+      const error = formikProps.errors[name]!
 
       if (error === CIRCLE_CHARACTER) {
         return (
@@ -318,7 +325,7 @@ export const AddColumnDetailsModal = React.memo(
 
     function renderHeader() {
       return (
-        <SubHeader iconName={icon} title={title}>
+        <SubHeader iconName={icon} title={headerTitle}>
           {typeof isPrivateSupported === 'boolean' &&
             (() => {
               const contentLabel =
@@ -360,6 +367,18 @@ export const AddColumnDetailsModal = React.memo(
               )
             })()}
         </SubHeader>
+      )
+    }
+
+    function renderFormItemHeader(formItem: FormItem, title: string) {
+      return (
+        <View style={sharedStyles.horizontal}>
+          <H3 color={shouldShowError(formItem) ? 'red' : undefined} withMargin>
+            {title}
+          </H3>
+          <Spacer flex={1} />
+          <ErrorMessage name={formItem} />
+        </View>
       )
     }
 
@@ -408,11 +427,7 @@ export const AddColumnDetailsModal = React.memo(
         case 'inbox':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              <View style={sharedStyles.horizontal}>
-                <H3 withMargin>Inbox</H3>
-                <Spacer flex={1} />
-                <ErrorMessage name={formItem} />
-              </View>
+              {renderFormItemHeader(formItem, 'Inbox')}
 
               <ColumnOptionsInboxContent
                 inbox={formikProps.values.inbox}
@@ -427,13 +442,8 @@ export const AddColumnDetailsModal = React.memo(
         case 'org':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              <View style={sharedStyles.horizontal}>
-                <H3 withMargin>Organization</H3>
-                <Spacer flex={1} />
-                <ErrorMessage name={formItem} />
-              </View>
-
-              {renderOrgForm()}
+              {renderFormItemHeader(formItem, 'Organization')}
+              {renderOrgFormField()}
             </View>
           )
 
@@ -447,13 +457,8 @@ export const AddColumnDetailsModal = React.memo(
         case 'owner':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              <View style={sharedStyles.horizontal}>
-                <H3 withMargin>Owner (User or Organization)</H3>
-                <Spacer flex={1} />
-                <ErrorMessage name={formItem} />
-              </View>
-
-              {renderOwnerForm()}
+              {renderFormItemHeader(formItem, 'Owner (User or Org)')}
+              {renderOwnerFormField()}
             </View>
           )
 
@@ -463,13 +468,8 @@ export const AddColumnDetailsModal = React.memo(
         case 'repo':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              <View style={sharedStyles.horizontal}>
-                <H3 withMargin>Repository</H3>
-                <Spacer flex={1} />
-                <ErrorMessage name={formItem} />
-              </View>
-
-              {renderRepoForm(
+              {renderFormItemHeader(formItem, 'Repository')}
+              {renderRepoFormField(
                 subscription.type === 'activity' &&
                   subscription.subtype === 'REPO_EVENTS'
                   ? {
@@ -490,13 +490,8 @@ export const AddColumnDetailsModal = React.memo(
         case 'user':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              <View style={sharedStyles.horizontal}>
-                <H3 withMargin>Username</H3>
-                <Spacer flex={1} />
-                <ErrorMessage name={formItem} />
-              </View>
-
-              {renderUserForm({
+              {renderFormItemHeader(formItem, 'Username')}
+              {renderUserFormField({
                 placeholder: `E.g.: ${loggedUsername}`,
               })}
             </View>
@@ -569,6 +564,7 @@ export const AddColumnDetailsModal = React.memo(
     ) {
       return (
         <ThemedTextInput
+          borderColor={shouldShowError(formItem) ? 'red' : undefined}
           {...defaultTextInputProps}
           onBlur={() => {
             formikProps.setFieldTouched(formItem)
@@ -582,14 +578,16 @@ export const AddColumnDetailsModal = React.memo(
       )
     }
 
-    function renderOrgForm(textInputProps: Partial<ThemedTextInputProps> = {}) {
+    function renderOrgFormField(
+      textInputProps: Partial<ThemedTextInputProps> = {},
+    ) {
       return renderGenericFormTextInput('org', {
         placeholder: 'E.g.: facebook',
         ...textInputProps,
       })
     }
 
-    function renderOwnerForm(
+    function renderOwnerFormField(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       return renderGenericFormTextInput('owner', {
@@ -598,7 +596,7 @@ export const AddColumnDetailsModal = React.memo(
       })
     }
 
-    function renderRepoForm(
+    function renderRepoFormField(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       return renderGenericFormTextInput('repo', {
@@ -607,7 +605,7 @@ export const AddColumnDetailsModal = React.memo(
       })
     }
 
-    function renderUserForm(
+    function renderUserFormField(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       return renderGenericFormTextInput('user', {
