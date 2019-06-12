@@ -195,11 +195,11 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
             <Button
               analyticsLabel="show_cleared"
               children="Show cleared items"
-              showBorder
               onPress={() => {
                 setColumnClearedAtFilter({ clearedAt: null, columnId })
                 if (refresh) refresh()
               }}
+              showBorder
               transparent
             />
           </View>

@@ -21,7 +21,6 @@ import { ButtonLink } from '../common/ButtonLink'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 
@@ -34,8 +33,6 @@ export const AdvancedSettingsModal = React.memo(
     const { showBackButton } = props
 
     const { sizename } = useAppLayout()
-
-    const theme = useTheme()
 
     const [executingOAuth, setExecutingOAuth] = useState<GitHubAppType | null>(
       null,
@@ -115,9 +112,6 @@ export const AdvancedSettingsModal = React.memo(
                     color="foregroundColor"
                     name="keyboard"
                     size={16}
-                    style={{
-                      color: theme.foregroundColor,
-                    }}
                   />
                 </Button>
               </>
@@ -343,8 +337,8 @@ export const AdvancedSettingsModal = React.memo(
               analyticsLabel=""
               disabled={isDeletingAccount || isLoggingIn}
               loading={isDeletingAccount}
-              hoverBackgroundColor={theme.red}
-              hoverForegroundColor="#FFFFFF"
+              hoverBackgroundThemeColor="red"
+              hoverForegroundThemeColor="white"
               onPress={() =>
                 confirm(
                   'Delete Account?',

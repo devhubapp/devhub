@@ -206,7 +206,7 @@ export const IssueOrPullRequestCards = React.memo(
 
       return (
         <>
-          <CardItemSeparator muted={!fetchNextPage} />
+          <CardItemSeparator />
 
           {fetchNextPage ? (
             <View>
@@ -239,7 +239,6 @@ export const IssueOrPullRequestCards = React.memo(
                   if (refresh) refresh()
                 }}
                 round={false}
-                transparent
               />
             </View>
           ) : null}

@@ -3,7 +3,7 @@ import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { constants } from '@devhub/core'
+import { constants, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { defaultTheme } from '../../styles/utils'
@@ -20,18 +20,19 @@ import {
 } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
 
 export const defaultButtonSize = 36
 
 export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
-  backgroundColor?: string
+  backgroundThemeColor?: keyof ThemeColors
   children: string | React.ReactNode
   contentContainerStyle?: ViewProps['style']
   disabled?: boolean
   fontSize?: number
   foregroundColor?: string
-  hoverBackgroundColor?: string
-  hoverForegroundColor?: string
+  hoverBackgroundThemeColor?: keyof ThemeColors
+  hoverForegroundThemeColor?: keyof ThemeColors
   loading?: boolean
   loadingIndicatorStyle?: SpringAnimatedActivityIndicatorProps['style']
   onPress: SpringAnimatedTouchableOpacityProps['onPress']
@@ -43,14 +44,14 @@ export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
 
 export const Button = React.memo((props: ButtonProps) => {
   const {
-    backgroundColor,
+    backgroundThemeColor,
     children,
     contentContainerStyle,
     disabled,
     fontSize,
     foregroundColor,
-    hoverBackgroundColor,
-    hoverForegroundColor,
+    hoverBackgroundThemeColor,
+    hoverForegroundThemeColor,
     loading,
     loadingIndicatorStyle,
     round = true,
@@ -81,6 +82,25 @@ export const Button = React.memo((props: ButtonProps) => {
       const immediate =
         forceImmediate || constants.DISABLE_ANIMATIONS || isHovered
 
+      const backgroundColor = getThemeColorOrItself(theme, backgroundThemeColor)
+      const hoverBackgroundColor = getThemeColorOrItself(
+        theme,
+        hoverBackgroundThemeColor,
+      )
+      const hoverForegroundColor = getThemeColorOrItself(
+        theme,
+        hoverForegroundThemeColor,
+      )
+
+      const textColor =
+        isHovered || isPressing
+          ? hoverForegroundColor || theme.foregroundColor
+          : foregroundColor
+          ? foregroundColor
+          : transparent
+          ? theme.foregroundColorMuted60
+          : theme.foregroundColor
+
       return {
         config: getDefaultReactSpringAnimationConfig(),
         immediate,
@@ -89,37 +109,31 @@ export const Button = React.memo((props: ButtonProps) => {
           ? 'transparent'
           : backgroundColor
           ? backgroundColor
-          : theme.backgroundColorLess3,
+          : theme.backgroundColorLess2,
         touchableBorderColor: backgroundColor
           ? backgroundColor
           : isHovered || isPressing
-          ? hoverBackgroundColor || theme.backgroundColorLess4
-          : theme.backgroundColorLess3,
+          ? hoverBackgroundColor || theme.backgroundColorLess3
+          : theme.backgroundColorLess2,
         innerContainerBackgroundColor:
           isHovered || isPressing
             ? hoverBackgroundColor ||
               (backgroundColor
-                ? theme.backgroundColorTransparent10
-                : theme.backgroundColorLess4)
-            : rgba(theme.backgroundColorLess3, 0),
-        textColor: foregroundColor
-          ? foregroundColor
-          : transparent
-          ? isHovered || isPressing
-            ? hoverForegroundColor || theme.foregroundColor
-            : theme.foregroundColorMuted60
-          : theme.foregroundColor,
+                ? rgba(textColor, 0.04)
+                : theme.backgroundColorLess3)
+            : rgba(theme.backgroundColorLess2, 0),
+        textColor,
       }
     },
     [
-      backgroundColor,
+      backgroundThemeColor,
       cacheRef.current.isHovered,
       cacheRef.current.isPressing,
       cacheRef.current.theme,
       disabled,
       foregroundColor,
-      hoverBackgroundColor,
-      hoverForegroundColor,
+      hoverBackgroundThemeColor,
+      hoverForegroundThemeColor,
       showBorder,
       transparent,
     ],

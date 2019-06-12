@@ -6,6 +6,7 @@ export function getStaticColors({
   isDark: boolean
 }): StaticThemeColors {
   return {
+    black: '#000000',
     blue: isDark ? '#4C9DFF' : '#4895FF',
     blueGray: isDark ? '#7493A2' : '#607D8B',
     brown: isDark ? '#9C7162' : '#795548',
@@ -17,6 +18,7 @@ export function getStaticColors({
     purple: isDark ? '#8569AF' : '#6E5494',
     red: isDark ? '#DE4A40' : '#FF3F34',
     teal: isDark ? '#49D3B4' : '#43C3A7',
+    white: '#FFFFFF',
     yellow: isDark ? '#FFDE57' : '#F1CC52',
   }
 }

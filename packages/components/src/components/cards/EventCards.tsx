@@ -200,7 +200,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator muted={!fetchNextPage} />
+        <CardItemSeparator />
 
         {fetchNextPage ? (
           <View>
@@ -229,7 +229,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
                 if (refresh) refresh()
               }}
               round={false}
-              transparent
             />
           </View>
         ) : null}

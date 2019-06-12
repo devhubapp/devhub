@@ -16,6 +16,7 @@ export interface ThemePair {
 }
 
 export interface StaticThemeColors {
+  black: string
   blue: string
   blueGray: string
   brown: string
@@ -27,6 +28,7 @@ export interface StaticThemeColors {
   purple: string
   red: string
   teal: string
+  white: string
   yellow: string
 }
 
