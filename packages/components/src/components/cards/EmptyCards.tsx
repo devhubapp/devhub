@@ -42,6 +42,7 @@ const getRandomEmoji = () => {
 
 // only one emoji per app session
 // because dynamic content is bit distractive
+const randomClearMessage = getRandomClearMessage()
 const randomEmoji = getRandomEmoji()
 
 export const defaultCardFooterSpacing =
@@ -65,7 +66,7 @@ export interface EmptyCardsProps {
 export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearEmoji = randomEmoji,
-    clearMessage = getRandomClearMessage(),
+    clearMessage = randomClearMessage,
     clearedAt,
     columnId,
     emoji = 'warning',
