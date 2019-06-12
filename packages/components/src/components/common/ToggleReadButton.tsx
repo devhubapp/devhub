@@ -41,7 +41,7 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
       analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
       enableForegroundHover
       fixedIconSize
-      foregroundColor={theme.foregroundColorMuted60}
+      foregroundColor={theme.foregroundColor}
       iconName={isRead ? 'mail-read' : 'mail'}
       noPadding
       onPress={() =>
