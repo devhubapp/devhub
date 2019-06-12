@@ -29,6 +29,7 @@ export interface CommitRowProps
   authorUsername?: string
   bold?: boolean
   hideIcon?: boolean
+  isCommitMainSubject: boolean
   isPrivate: boolean
   latestCommentUrl?: string
   message: string
@@ -46,6 +47,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     authorUsername: _authorUsername,
     bold,
     hideIcon,
+    isCommitMainSubject,
     isPrivate,
     latestCommentUrl,
     message: _message,
@@ -114,7 +116,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               numberOfLines: 1,
               style: [
                 cardStyles.normalText,
-                cardStyles.smallText,
+                !isCommitMainSubject && cardStyles.smallText,
                 bold && cardStyles.boldText,
               ],
             }}

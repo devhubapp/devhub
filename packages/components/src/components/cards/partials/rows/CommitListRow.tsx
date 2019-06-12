@@ -7,7 +7,12 @@ import { RenderItem, RowList } from './RowList'
 export interface CommitListRowProps
   extends Omit<
     CommitRowProps,
-    'authorEmail' | 'authorName' | 'message' | 'showMoreItemsIndicator' | 'url'
+    | 'authorEmail'
+    | 'authorName'
+    | 'isCommitMainSubject'
+    | 'message'
+    | 'showMoreItemsIndicator'
+    | 'url'
   > {
   commits: GitHubPushedCommit[]
   maxHeight?: number
@@ -27,6 +32,7 @@ export const CommitListRow = React.memo((props: CommitListRowProps) => {
         {...props}
         authorEmail={commit.author.email}
         authorName={commit.author.name}
+        isCommitMainSubject={props.commits.length === 1}
         message={commit.message}
         showMoreItemsIndicator={showMoreItemsIndicator}
         url={commit.url}
