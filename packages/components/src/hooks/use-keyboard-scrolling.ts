@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { RefObject, useCallback, useRef } from 'react'
 
 import { FlatList } from '../libs/flatlist'
 import { useEmitter } from './use-emitter'
@@ -17,23 +17,11 @@ export function useKeyboardScrolling(
     items: Array<{ [key: string]: any; id: string | number } | undefined>
   },
 ) {
-  function getFirstId(_items: typeof items) {
-    return _items && _items[0] && _items[0]!.id
-  }
-
   const forceRerender = useForceRerender()
 
   const selectedItemIdRef = useRef<string | number | null | undefined>(
-    getFirstId(items),
+    undefined,
   )
-
-  // focus on first item by default
-  useEffect(() => {
-    if (selectedItemIdRef.current === undefined && getFirstId(items)) {
-      selectedItemIdRef.current = items[0]!.id
-      forceRerender()
-    }
-  }, [selectedItemIdRef.current, getFirstId(items)])
 
   useKeyPressCallback(
     'Escape',
@@ -66,7 +54,7 @@ export function useKeyboardScrolling(
         viewPosition: 0.5,
       })
 
-      const newValue = (item && item.id) || getFirstId(items)
+      const newValue = (item && item.id) || null
       if (selectedItemIdRef.current === newValue) return
 
       selectedItemIdRef.current = newValue
@@ -95,7 +83,7 @@ export function useKeyboardScrolling(
         viewPosition: 0.5,
       })
 
-      const newValue = (item && item.id) || getFirstId(items)
+      const newValue = (item && item.id) || null
       if (selectedItemIdRef.current === newValue) return
 
       selectedItemIdRef.current = newValue
@@ -115,7 +103,7 @@ export function useKeyboardScrolling(
       const newIndex = Math.max(-1, Math.min(index, items.length - 1))
       const item = items[newIndex]
 
-      const newValue = (item && item.id) || getFirstId(items)
+      const newValue = (item && item.id) || null
       if (selectedItemIdRef.current === newValue) return
 
       selectedItemIdRef.current = newValue
