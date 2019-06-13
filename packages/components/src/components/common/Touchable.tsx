@@ -87,12 +87,13 @@ export const Touchable = React.forwardRef(
         {...props}
         ref={touchableRef}
         data-touchable
+        data-touchable-disabled={!!props.disabled}
+        data-touchable-onpress={!!onPress}
         onLongPress={onLongPress}
         onPress={onPress}
         style={[
           props.style,
           props.disabled && { opacity: 0.5 },
-          !onPress && ({ cursor: undefined } as any),
           selectable === true && ({ userSelect: undefined } as any),
         ]}
       />
