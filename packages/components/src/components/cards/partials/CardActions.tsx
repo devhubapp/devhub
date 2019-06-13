@@ -22,7 +22,7 @@ export interface CardActionsProps {
   isSaved: boolean
   itemIds: Array<string | number>
   leftSpacing?: number
-  muted?: boolean
+  muted: boolean
   rightSpacing?: number
   type: ColumnSubscription['type']
 }

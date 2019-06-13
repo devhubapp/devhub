@@ -24,6 +24,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
+  mutedOpacity,
   smallerTextSize,
 } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
@@ -537,7 +538,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                // opacity: muted ? mutedOpacity : 1,
+                opacity: muted ? mutedOpacity : 1,
               }}
               {...!!cardIconDetails.tooltip &&
                 Platform.select({
@@ -667,6 +668,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           <ToggleReadButton
             isRead={isRead}
             itemIds={[id]}
+            muted={muted}
             size={columnHeaderItemContentSize}
             type="notifications"
           />
@@ -699,7 +701,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                // opacity: muted ? mutedOpacity : 1,
+                opacity: muted ? mutedOpacity : 1,
               }}
               {...!!cardIconDetails.tooltip &&
                 Platform.select({
@@ -763,6 +765,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               isRead={isRead}
               isSaved={isSaved}
               itemIds={[id]}
+              muted={muted}
               type="notifications"
             />
           </>

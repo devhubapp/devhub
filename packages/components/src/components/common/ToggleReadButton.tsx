@@ -18,6 +18,7 @@ export interface ToggleReadButtonProps
   extends Omit<ColumnHeaderItemProps, 'tooltip'> {
   isRead: boolean
   itemIds: Array<string | number>
+  muted: boolean
   type: ColumnSubscription['type']
 }
 
@@ -25,6 +26,7 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
   const {
     isRead,
     itemIds,
+    muted,
     size = columnHeaderItemContentSize,
     type,
     ...otherProps
@@ -41,7 +43,9 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
       analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
       enableForegroundHover
       fixedIconSize
-      foregroundColor={theme.foregroundColor}
+      foregroundColor={
+        muted ? theme.foregroundColorMuted60 : theme.foregroundColor
+      }
       iconName={isRead ? 'mail-read' : 'mail'}
       noPadding
       onPress={() =>

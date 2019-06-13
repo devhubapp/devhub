@@ -20,6 +20,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
+  mutedOpacity,
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
@@ -391,7 +392,7 @@ export const IssueOrPullRequestCard = React.memo(
                 style={{
                   fontSize: columnHeaderItemContentSize,
                   textAlign: 'center',
-                  // opacity: muted ? mutedOpacity : 1,
+                  opacity: muted ? mutedOpacity : 1,
                 }}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
@@ -522,6 +523,7 @@ export const IssueOrPullRequestCard = React.memo(
             <ToggleReadButton
               isRead={isRead}
               itemIds={[id]}
+              muted={muted}
               size={columnHeaderItemContentSize}
               type="issue_or_pr"
             />
@@ -561,7 +563,7 @@ export const IssueOrPullRequestCard = React.memo(
                 style={{
                   fontSize: columnHeaderItemContentSize,
                   textAlign: 'center',
-                  // opacity: muted ? mutedOpacity : 1,
+                  opacity: muted ? mutedOpacity : 1,
                 }}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
@@ -618,6 +620,7 @@ export const IssueOrPullRequestCard = React.memo(
                 isRead={isRead}
                 isSaved={isSaved}
                 itemIds={[id]}
+                muted={muted}
                 type="issue_or_pr"
               />
             </>

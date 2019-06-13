@@ -41,6 +41,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
+  mutedOpacity,
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
@@ -591,6 +592,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
+                opacity: muted ? mutedOpacity : 1,
               }}
               {...!!actionTextWithoutColon &&
                 Platform.select({
@@ -711,6 +713,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <ToggleReadButton
             isRead={isRead}
             itemIds={[id]}
+            muted={muted}
             size={columnHeaderItemContentSize}
             type="activity"
           />
@@ -743,7 +746,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                // opacity: muted ? mutedOpacity : 1,
+                opacity: muted ? mutedOpacity : 1,
               }}
               {...!!actionTextWithoutColon &&
                 Platform.select({
@@ -800,6 +803,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               isRead={isRead}
               isSaved={isSaved}
               itemIds={[id]}
+              muted={muted}
               type="activity"
             />
           </>
