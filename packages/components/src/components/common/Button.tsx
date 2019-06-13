@@ -98,9 +98,9 @@ export const Button = React.memo((props: ButtonProps) => {
       const hoverBackgroundColor = getThemeColorOrItself(
         theme,
         hoverBackgroundThemeColor ||
-          (backgroundThemeColor || transparent
-            ? undefined
-            : 'primaryBackgroundColor'),
+          (transparent && backgroundThemeColor) ||
+          (!backgroundThemeColor && 'backgroundColorLess4') ||
+          undefined,
       )
       const foregroundColor =
         (!transparent &&
