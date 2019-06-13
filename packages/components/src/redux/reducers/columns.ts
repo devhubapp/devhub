@@ -11,6 +11,7 @@ import {
   normalizeColumns,
   normalizeSubscriptions,
   NotificationColumn,
+  NotificationColumnFilters,
 } from '@devhub/core'
 import { Reducer } from '../types'
 
@@ -168,8 +169,24 @@ export const columnsReducer: Reducer<State> = (
         const column = draft.byId[action.payload.columnId]
         if (!column) return
 
-        const previousFilters = column.filters
+        const previousFilters = column.filters || {}
         column.filters = {}
+
+        // don't reset inbox filter
+        if (column.type === 'notifications') {
+          const _column = column as NotificationColumn
+          const _previousFilters = previousFilters as NotificationColumnFilters
+
+          if (
+            _previousFilters.notifications &&
+            _previousFilters.notifications.participating
+          ) {
+            _column.filters!.notifications =
+              _column.filters!.notifications || {}
+            _column.filters!.notifications.participating =
+              _previousFilters.notifications.participating
+          }
+        }
 
         // cannot delete some filters to avoid invalid search query
         if (column.type === 'issue_or_pr') {

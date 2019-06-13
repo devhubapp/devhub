@@ -1506,7 +1506,14 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             disabled={
               !columnHasAnyFilter(column.type, {
                 ...column.filters,
+                ...(column.type === 'notifications' && {
+                  notifications: {
+                    ...(column.filters && column.filters.notifications),
+                    participating: undefined,
+                  },
+                }),
                 ...(column.type === 'issue_or_pr' && {
+                  inbox: undefined,
                   involves: undefined,
                   owners: undefined,
                 }),
