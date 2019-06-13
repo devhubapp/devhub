@@ -1317,7 +1317,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="repositories"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={
-                  ownerFilterHasForcedValue || repoFilterHasForcedValue
+                  column.type !== 'issue_or_pr' &&
+                  (ownerFilterHasForcedValue || repoFilterHasForcedValue)
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 iconName="repo"
