@@ -7,7 +7,7 @@
     "email": "bruno@devhubapp.com",
     "url": "https://twitter.com/brunolemos"
   },
-  "description": "TweetDeck for GitHub",
+  "description": "GitHub Notifications Manager & Activity Watcher",
   "repository": "https://github.com/devhubapp/devhub",
   "collective": {
     "type": "opencollective",
