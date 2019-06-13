@@ -16,6 +16,7 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
@@ -196,7 +197,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator />
+        <CardItemSeparator muted={!fetchNextPage} />
 
         {fetchNextPage ? (
           <View>
@@ -212,7 +213,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (
-          <View>
+          <View
+            style={{
+              paddingVertical: contentPadding,
+              paddingHorizontal:
+                cardViewMode === 'compact'
+                  ? contentPadding / 2
+                  : contentPadding,
+            }}
+          >
             <Button
               analyticsLabel="show_cleared"
               children="Show cleared items"
@@ -224,7 +233,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
                 if (refresh) refresh()
               }}
-              round={false}
+              round
+              showBorder
+              transparent
             />
           </View>
         ) : null}

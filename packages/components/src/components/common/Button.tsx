@@ -97,7 +97,10 @@ export const Button = React.memo((props: ButtonProps) => {
       )!
       const hoverBackgroundColor = getThemeColorOrItself(
         theme,
-        hoverBackgroundThemeColor || undefined,
+        hoverBackgroundThemeColor ||
+          (backgroundThemeColor || transparent
+            ? undefined
+            : 'primaryBackgroundColor'),
       )
       const foregroundColor =
         (!transparent &&
@@ -110,9 +113,11 @@ export const Button = React.memo((props: ButtonProps) => {
           ? Math.abs(
               getLuminance(backgroundColor) -
                 getLuminance(theme.foregroundColor),
-            ) < 0.3
+            ) <= 0.5
             ? backgroundColor
-            : theme.foregroundColor
+            : isHovered || isPressing
+            ? theme.foregroundColor
+            : theme.foregroundColorMuted60
           : theme.foregroundColor)
 
       const hoverForegroundColor =
@@ -139,14 +144,17 @@ export const Button = React.memo((props: ButtonProps) => {
         touchableBorderColor:
           isHovered || isPressing
             ? hoverBackgroundColor || backgroundColor
-            : transparent
-            ? hoverBackgroundColor || backgroundColor
             : backgroundColor,
         innerContainerBackgroundColor:
           isHovered || isPressing
             ? hoverBackgroundColor ||
               (transparent ? rgba(backgroundColor, 0) : rgba(textColor, 0.1))
-            : rgba(hoverBackgroundColor || backgroundColor, 0),
+            : rgba(
+                transparent
+                  ? hoverBackgroundColor || backgroundColor
+                  : backgroundColor,
+                0,
+              ),
         textColor,
       }
     },
