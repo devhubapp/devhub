@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Dimensions, ScaledSize } from 'react-native'
+
+import { Platform } from '../libs/platform'
 import { useForceRerender } from './use-force-rerender'
 
 export function useDimensions(only?: 'width' | 'height') {
@@ -32,8 +34,31 @@ export function useDimensions(only?: 'width' | 'height') {
 
     Dimensions.addEventListener('change', handler)
 
+    // fix for iOS safari not properly triggering after pinch to zoom
+    // @see https://github.com/necolas/react-native-web/issues/1369
+    let interval: ReturnType<typeof setInterval>
+    if (Platform.OS === 'web' && Platform.realOS === 'ios') {
+      interval = setInterval(() => {
+        const width = Math.min(
+          window.innerWidth,
+          window.outerWidth || window.innerWidth,
+        )
+        const height = Math.min(
+          window.innerHeight,
+          window.outerHeight || window.innerHeight,
+        )
+        if (!(width > 0 && height > 0)) return
+
+        if (!hasChanged(width, height)) return
+
+        if ((Dimensions as any)._update) (Dimensions as any)._update()
+        else setDimensions(width, height)
+      }, 1000)
+    }
+
     return () => {
       Dimensions.removeEventListener('change', handler)
+      if (interval) clearInterval(interval)
     }
   }, [])
 
