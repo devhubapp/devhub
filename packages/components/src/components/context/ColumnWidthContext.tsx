@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Dimensions, ScaledSize } from 'react-native'
+import React, { useContext } from 'react'
+import { Dimensions } from 'react-native'
 
 import { constants } from '@devhub/core'
+import { useDimensions } from '../../hooks/use-dimensions'
 import { sidebarSize } from '../../styles/variables'
 import { APP_LAYOUT_BREAKPOINTS, getLayoutConsumerState } from './LayoutContext'
 
@@ -12,27 +13,15 @@ export interface ColumnWidthProviderProps {
 export type ColumnWidthProviderState = number
 
 export const ColumnWidthContext = React.createContext<ColumnWidthProviderState>(
-  calculateColumnWidth({ window: Dimensions.get('window') }),
+  calculateColumnWidth({ windowWidth: Dimensions.get('window').width }),
 )
 
 export function ColumnWidthProvider(props: ColumnWidthProviderProps) {
-  const [width, setWidth] = useState(() =>
-    calculateColumnWidth({ window: Dimensions.get('window') }),
-  )
-
-  useEffect(() => {
-    const handler = ({ window }: { window: ScaledSize }) => {
-      const w = calculateColumnWidth({ window })
-      if (w !== width) setWidth(w)
-    }
-
-    Dimensions.addEventListener('change', handler)
-
-    return () => Dimensions.removeEventListener('change', handler)
-  }, [width])
+  const { width: windowWidth } = useDimensions('width')
+  const columnWidth = calculateColumnWidth({ windowWidth })
 
   return (
-    <ColumnWidthContext.Provider value={width}>
+    <ColumnWidthContext.Provider value={columnWidth}>
       {props.children}
     </ColumnWidthContext.Provider>
   )
@@ -41,26 +30,26 @@ export function ColumnWidthProvider(props: ColumnWidthProviderProps) {
 export const ColumnWidthConsumer = ColumnWidthContext.Consumer
 
 function calculateColumnWidth({
-  window,
+  windowWidth,
   minWidth: _minWidth = constants.MIN_COLUMN_WIDTH,
   maxWidth: _maxWidth = constants.MAX_COLUMN_WIDTH,
 }: {
-  window: { width: number; height: number }
+  windowWidth: number
   minWidth?: number
   maxWidth?: number
 }) {
   const horizontal = getLayoutConsumerState().appOrientation === 'landscape'
 
-  const availableWidth = window.width - (horizontal ? sidebarSize : 0)
+  const availableWidth = windowWidth - (horizontal ? sidebarSize : 0)
 
   const minWidth = _minWidth && _minWidth > 0 ? _minWidth : 0
   const maxWidth = Math.min(
-    window.width <= APP_LAYOUT_BREAKPOINTS.MEDIUM
+    windowWidth <= APP_LAYOUT_BREAKPOINTS.MEDIUM
       ? availableWidth
       : _maxWidth && _maxWidth >= 0
       ? _maxWidth
       : availableWidth,
-    window.width,
+    windowWidth,
   )
 
   return Math.max(minWidth, maxWidth)
