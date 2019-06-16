@@ -74,7 +74,9 @@ export function getGitHubAppInstallUri(
   return `${baseUri}${querystring ? `?${querystring}` : ''}`
 }
 
-export async function openAppStore() {
+export async function openAppStore({
+  showReviewModal,
+}: { showReviewModal?: boolean } = {}) {
   try {
     if (Platform.realOS === 'android') {
       let storeUrl = `market://details?id=${constants.GOOGLEPLAY_ID}`
@@ -104,9 +106,13 @@ export async function openAppStore() {
         return true
       }
 
-      storeUrl = `https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=${
-        constants.APPSTORE_ID
-      }&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8`
+      storeUrl = showReviewModal
+        ? `https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=${
+            constants.APPSTORE_ID
+          }&pageNumber=0&sortOrdering=2&mt=8`
+        : `https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=${
+            constants.APPSTORE_ID
+          }&pageNumber=0&sortOrdering=2&mt=8`
       if (__DEV__) console.log(`Requested to open App Store: ${storeUrl}`) // tslint:disable-line no-console
       await Browser.openURL(storeUrl)
       return true

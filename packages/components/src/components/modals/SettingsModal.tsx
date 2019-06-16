@@ -14,6 +14,7 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
+import { ButtonLink } from '../common/ButtonLink'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
@@ -85,21 +86,54 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
         <Spacer height={contentPadding} />
 
-        {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
-          <>
-            <SubHeader title="Rate this app">
-              <Spacer flex={1} />
+        {Platform.OS === 'ios' || Platform.OS === 'android' ? (
+          <SubHeader title="Rate this app">
+            <Spacer flex={1} />
 
-              <Button
-                analyticsLabel="rate_app"
-                onPress={() => openAppStore()}
-                size={32}
-              >
-                <ThemedIcon color="foregroundColor" name="star" size={16} />
-              </Button>
-            </SubHeader>
-          </>
-        )}
+            <Button
+              analyticsLabel="rate_app"
+              onPress={() => openAppStore({ showReviewModal: true })}
+              size={32}
+            >
+              <ThemedIcon color="foregroundColor" name="star" size={16} />
+            </Button>
+          </SubHeader>
+        ) : Platform.realOS === 'ios' || Platform.realOS === 'android' ? (
+          <SubHeader title="Download native app">
+            <Spacer flex={1} />
+
+            <Button
+              analyticsLabel="download_native_app"
+              onPress={() => openAppStore({ showReviewModal: false })}
+              size={32}
+            >
+              <ThemedIcon
+                color="foregroundColor"
+                name="device-mobile"
+                size={16}
+              />
+            </Button>
+          </SubHeader>
+        ) : Platform.OS === 'web' &&
+          !Platform.isElectron &&
+          sizename !== '1-small' ? (
+          <SubHeader title="Download desktop app">
+            <Spacer flex={1} />
+
+            <ButtonLink
+              analyticsLabel="download_desktop_app"
+              href="https://github.com/devhubapp/devhub/releases"
+              openOnNewTab
+              size={32}
+            >
+              <ThemedIcon
+                color="foregroundColor"
+                name="desktop-download"
+                size={16}
+              />
+            </ButtonLink>
+          </SubHeader>
+        ) : null}
 
         <View>
           <SubHeader title="Follow on Twitter">
