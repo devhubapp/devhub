@@ -18,14 +18,12 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
-import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { fabSize } from '../common/FAB'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { H2 } from '../common/H2'
-import { HeaderMessage } from '../common/HeaderMessage'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
@@ -276,16 +274,10 @@ function AddColumnModalItem({
 export function AddColumnModal(props: AddColumnModalProps) {
   const { showBackButton } = props
 
-  const columnIds = useReduxState(selectors.columnIdsSelector)
-  const username = useReduxState(selectors.currentGitHubUsernameSelector)
-  const installationOwnerNames = useReduxState(
-    selectors.installationOwnerNamesSelector,
-  )
-
   const { sizename } = useAppLayout()
+  const columnIds = useReduxState(selectors.columnIdsSelector)
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
-
   const isFabVisible = shouldRenderFAB({ sizename })
 
   return (
@@ -295,28 +287,6 @@ export function AddColumnModal(props: AddColumnModalProps) {
       showBackButton={showBackButton}
       title="Add Column"
     >
-      {!(installationOwnerNames && installationOwnerNames.length) &&
-        username !== 'appledevhub' && (
-          <HeaderMessage>
-            <Link
-              analyticsLabel="install-github-app-to-unlock-private-repository-support"
-              href={getGitHubAppInstallUri()}
-              openOnNewTab
-              textProps={{
-                color: 'foregroundColorMuted60',
-                style: {
-                  flexGrow: 1,
-                  lineHeight: 14,
-                  fontSize: 11,
-                  textAlign: 'center',
-                },
-              }}
-            >
-              ✨ Install the GitHub App to unlock Private Repositories
-            </Link>
-          </HeaderMessage>
-        )}
-
       <FullHeightScrollView style={sharedStyles.flex}>
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
