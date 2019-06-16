@@ -257,8 +257,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             ? undefined
             : {
                 paddingHorizontal: contentPadding / 3,
-                paddingVertical:
-                  showLabel && label ? undefined : contentPadding,
+                paddingVertical: showLabel ? undefined : contentPadding,
               },
           style,
           { backgroundColor: springAnimatedStyles.backgroundColor },
@@ -276,8 +275,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             ? undefined
             : {
                 paddingHorizontal: contentPadding / 3,
-                paddingVertical:
-                  showLabel && label ? undefined : contentPadding,
+                paddingVertical: showLabel ? undefined : contentPadding,
               },
           style,
           { backgroundColor: springAnimatedStyles.backgroundColor },
@@ -375,7 +373,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           )}
         </View>
 
-        {!!showLabel && !!label && (
+        {!!showLabel && (
           <SpringAnimatedText
             style={[
               {
@@ -390,7 +388,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             ]}
             numberOfLines={1}
           >
-            {label}
+            {label || '?'}
           </SpringAnimatedText>
         )}
 

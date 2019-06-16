@@ -458,7 +458,9 @@ const SidebarColumnItem = React.memo(
 
     if (!(column && columnIndex >= 0 && headerDetails)) return null
 
-    const label = `${headerDetails.title || ''}`.toLowerCase()
+    const label = `${headerDetails.title ||
+      headerDetails.subtitle ||
+      ''}`.toLowerCase()
 
     return (
       <ColumnHeaderItem
