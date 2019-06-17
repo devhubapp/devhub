@@ -13,17 +13,17 @@ export function getCardItemSeparatorThemeColors(
 
   if (luminance >= 0.6)
     return muted
-      ? ['backgroundColorDarker3', 'backgroundColor']
-      : ['backgroundColorDarker1', 'backgroundColorLighther2']
+      ? ['backgroundColorDarker4', 'backgroundColorLighther2']
+      : ['backgroundColorDarker2', 'backgroundColorDarker1']
 
   if (luminance <= 0.01)
     return muted
-      ? ['backgroundColorDarker3', 'backgroundColorLighther2']
-      : ['backgroundColorLighther1', 'backgroundColorLighther4']
+      ? ['backgroundColorDarker4', 'backgroundColorLighther2']
+      : ['backgroundColor', 'backgroundColorLighther5']
 
   return muted
-    ? ['backgroundColorDarker2', 'backgroundColorLighther2']
-    : ['backgroundColor', 'backgroundColorLighther4']
+    ? ['backgroundColorDarker4', 'backgroundColorLighther1']
+    : ['backgroundColorDarker1', 'backgroundColorLighther5']
 }
 
 export function CardItemSeparator(props: {

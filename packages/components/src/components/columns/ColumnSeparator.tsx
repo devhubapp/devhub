@@ -25,7 +25,7 @@ export function ColumnSeparator(props: ColumnSeparatorProps) {
       backgroundThemeColor1={
         appViewMode === 'single-column'
           ? 'backgroundColor'
-          : 'backgroundColorDarker1'
+          : 'backgroundColorDarker2'
       }
       horizontal={horizontalSidebar}
       thick={!horizontalSidebar}

@@ -135,7 +135,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const isRead = isItemRead(event)
   const isSaved = saved === true
-  const muted = isRead
+  const muted = false // isRead
   const showCardBorder = Platform.realOS === 'web' && isFocused
 
   const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
@@ -264,6 +264,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <ActorActionRow
             avatarUrl={avatarUrl}
             body={actionText}
+            bold={!isRead}
             branch={isBranchMainEvent(event) ? branchName : undefined}
             forkOwnerName={forkRepoOwnerName}
             forkRepositoryName={forkRepoName}
@@ -356,7 +357,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               getCardBackgroundThemeColor(theme, { muted: isRead })
             }
             body={issueOrPullRequest.body}
-            bold
+            bold={!isRead}
             commentsCount={
               showCardActions ? undefined : issueOrPullRequest.comments
             }
@@ -440,7 +441,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               key={`event-release-row-${release.id}`}
               avatarUrl={release.author.avatar_url}
               body={release.body}
-              bold
+              bold={!isRead}
               branch={release.target_commitish}
               hideIcon
               isPrivate={isPrivate}
@@ -762,6 +763,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               key={`event-card-header-${id}`}
               actionText={actionText}
               avatarUrl={avatarUrl}
+              bold={!isRead}
               date={event.created_at}
               ids={('merged' in event && event.merged) || [id]}
               isBot={isBot}

@@ -22,6 +22,7 @@ import { cardStyles } from '../styles'
 export interface EventCardHeaderProps {
   actionText: string
   avatarUrl: string
+  bold: boolean
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
@@ -55,6 +56,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
   const {
     actionText,
     avatarUrl,
+    bold,
     date,
     ids,
     isBot,
@@ -102,7 +104,11 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 textProps={{
                   color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
                   numberOfLines: 1,
-                  style: [cardStyles.usernameText, { lineHeight: undefined }],
+                  style: [
+                    cardStyles.usernameText,
+                    bold && cardStyles.boldText,
+                    { lineHeight: undefined },
+                  ],
                 }}
               >
                 {username}

@@ -103,7 +103,7 @@ export const IssueOrPullRequestCard = React.memo(
 
     const isRead = isItemRead(issueOrPullRequest)
     const isSaved = saved === true
-    const muted = isRead
+    const muted = false // isRead
     const showCardBorder = Platform.realOS === 'web' && isFocused
 
     const repo = {
@@ -168,7 +168,7 @@ export const IssueOrPullRequestCard = React.memo(
                 getCardBackgroundThemeColor(theme, { muted: isRead })
               }
               body={issueOrPullRequest.body}
-              bold
+              bold={!isRead}
               commentsCount={
                 showCardActions ? undefined : issueOrPullRequest.comments
               }

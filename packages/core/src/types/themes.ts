@@ -41,6 +41,7 @@ export interface ThemeColors extends StaticThemeColors {
   backgroundColorDarker2: string
   backgroundColorDarker3: string
   backgroundColorDarker4: string
+  backgroundColorDarker5: string
   backgroundColorLess1: string
   backgroundColorLess2: string
   backgroundColorLess3: string
@@ -49,6 +50,7 @@ export interface ThemeColors extends StaticThemeColors {
   backgroundColorLighther2: string
   backgroundColorLighther3: string
   backgroundColorLighther4: string
+  backgroundColorLighther5: string
   backgroundColorMore1: string
   backgroundColorMore2: string
   backgroundColorMore3: string

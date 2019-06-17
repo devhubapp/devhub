@@ -80,8 +80,8 @@ export function getColumnCardThemeColors(
   return {
     card: 'backgroundColorLighther2',
     card__hover: 'backgroundColorLighther3',
-    card__muted: 'backgroundColor',
-    card__muted_hover: 'backgroundColorDarker1',
+    card__muted: 'backgroundColorDarker1',
+    card__muted_hover: 'backgroundColorDarker2',
     column: 'backgroundColor',
   }
 }

@@ -24,6 +24,7 @@ import { NotificationReason } from './rows/partials/NotificationReason'
 export interface NotificationCardHeaderProps {
   avatarUrl: string | undefined
   backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
+  bold: boolean
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
@@ -58,6 +59,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const {
     avatarUrl,
     backgroundThemeColor,
+    bold,
     date,
     ids,
     isBot,
@@ -122,6 +124,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                     style: [
                       { maxWidth: '100%' },
                       cardStyles.usernameText,
+                      bold && cardStyles.boldText,
                       { lineHeight: undefined },
                     ],
                   }}

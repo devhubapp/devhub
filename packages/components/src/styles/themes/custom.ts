@@ -24,15 +24,18 @@ export function createThemeFromColor(
   const amount2 = 0.05
   const amount3 = 0.07
   const amount4 = 0.09
+  const amount5 = 0.11
 
   const backgroundColorDarker1 = darken(amount1, color)
   const backgroundColorDarker2 = darken(amount2, color)
   const backgroundColorDarker3 = darken(amount3, color)
   const backgroundColorDarker4 = darken(amount4, color)
+  const backgroundColorDarker5 = darken(amount5, color)
   const backgroundColorLighther1 = lighten(amount1, color)
   const backgroundColorLighther2 = lighten(amount2, color)
   const backgroundColorLighther3 = lighten(amount3, color)
   const backgroundColorLighther4 = lighten(amount4, color)
+  const backgroundColorLighther5 = lighten(amount5, color)
 
   const backgroundColorMore1 = isDark
     ? darken(amount1, color)
@@ -103,6 +106,7 @@ export function createThemeFromColor(
     backgroundColorDarker2,
     backgroundColorDarker3,
     backgroundColorDarker4,
+    backgroundColorDarker5,
     backgroundColorLess1,
     backgroundColorLess2,
     backgroundColorLess3,
@@ -111,6 +115,7 @@ export function createThemeFromColor(
     backgroundColorLighther2,
     backgroundColorLighther3,
     backgroundColorLighther4,
+    backgroundColorLighther5,
     backgroundColorMore1,
     backgroundColorMore2,
     backgroundColorMore3,

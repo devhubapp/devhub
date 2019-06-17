@@ -116,7 +116,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const isRead = isItemRead(notification)
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
-  const muted = isRead
+  const muted = false // isRead
   const showCardBorder = Platform.realOS === 'web' && isFocused
 
   const isPrivateAndCantSee =
@@ -289,7 +289,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             authorEmail={commit.commit.author.email}
             authorName={commit.commit.author.name}
             authorUsername={commit.author && commit.author.login}
-            bold
+            bold={!isRead}
             isCommitMainSubject
             isPrivate={isPrivate}
             latestCommentUrl={subject.latest_comment_url}
@@ -310,7 +310,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               getCardBackgroundThemeColor(theme, { muted: isRead })
             }
             body={issueOrPullRequest.body}
-            bold
+            bold={!isRead}
             commentsCount={
               showCardActions ? undefined : issueOrPullRequest.comments
             }
@@ -358,7 +358,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             key={`notification-release-row-${repo.id}`}
             avatarUrl={release.author.avatar_url}
             body={release.body}
-            bold
+            bold={!isRead}
             hideIcon
             isPrivate={isPrivate}
             muted={muted}
@@ -719,6 +719,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               backgroundThemeColor={theme =>
                 getCardBackgroundThemeColor(theme, { muted: isRead })
               }
+              bold={!isRead}
               date={updatedAt}
               ids={[id]}
               isBot={isBot}

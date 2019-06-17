@@ -24,6 +24,7 @@ export interface ActorActionRowProps
   > {
   avatarUrl: string | undefined
   body: string
+  bold: boolean
   branch: string | undefined
   forkOwnerName: string | undefined
   forkRepositoryName: string | undefined
@@ -43,6 +44,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
   const {
     avatarUrl,
     body: _body,
+    bold,
     branch,
     forkOwnerName,
     forkRepositoryName,
@@ -148,7 +150,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
               numberOfLines,
               style: [
                 cardStyles.normalText,
-                cardStyles.boldText,
+                bold && cardStyles.boldText,
                 cardStyles.smallText,
                 { lineHeight: smallAvatarSize },
                 textStyle,
