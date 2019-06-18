@@ -179,6 +179,7 @@ export interface IssueOrPullRequestColumnSubscription {
     subjectType: GitHubIssueOrPullRequestSubjectType | undefined
     state?: IssueOrPullRequestColumnFilters['state']
     draft?: IssueOrPullRequestColumnFilters['draft']
+    query?: string
   }
   data: ColumnSubscriptionData<any>
   createdAt: string
@@ -212,7 +213,7 @@ export type NotificationColumnSubscription = {
 export interface BaseColumnFilters {
   clearedAt?: string
   draft?: boolean
-  // order?: Array<'asc' | 'desc'>
+  // order?: Array<[string, 'asc' | 'desc']>
   owners?: Partial<
     Record<
       string,
@@ -223,13 +224,8 @@ export interface BaseColumnFilters {
     >
   >
   private?: boolean
+  query?: string
   saved?: boolean
-  // search: {
-  //   exclude?: string
-  //   match?: string
-  //   regex?: string
-  // }
-  // sort?: string[]
   state?: Partial<Record<GitHubStateType, boolean>>
   subjectTypes?:
     | Partial<Record<GitHubEventSubjectType, boolean>>

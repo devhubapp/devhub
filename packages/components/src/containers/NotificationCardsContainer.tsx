@@ -29,7 +29,7 @@ export type NotificationCardsContainerProps = Omit<
 
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
-    const { cardViewMode, column, ...otherProps } = props
+    const { cardViewMode, column, repoIsKnown, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
@@ -55,7 +55,7 @@ export const NotificationCardsContainer = React.memo(
 
     const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubNotification
-    >(column.id, cardViewMode !== 'compact')
+    >(column.id, { mergeSimilar: cardViewMode !== 'compact' })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderNotificationDate(allItems)
@@ -122,6 +122,7 @@ export const NotificationCardsContainer = React.memo(
             : mainSubscription.data.loadState || 'not_loaded'
         }
         refresh={refresh}
+        repoIsKnown={repoIsKnown}
       />
     )
   },

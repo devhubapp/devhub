@@ -185,8 +185,6 @@ export async function getIssuesOrPullRequests<
       const p: SearchIssuesAndPullRequestsParams & {
         headers?: Record<string, string>
       } = {
-        order: 'desc',
-        sort: 'updated',
         ..._.omit(_requestParams, Object.keys(subscriptionParams)),
         q: getGitHubIssueSearchQuery(subscriptionParams),
       }

@@ -7,6 +7,7 @@ import {
   GitHubIcon,
   GitHubIssue,
   GitHubIssueOrPullRequest,
+  GitHubLabel,
   GitHubNotification,
   GitHubNotificationReason,
   GitHubNotificationSubjectType,
@@ -14,15 +15,16 @@ import {
   NotificationPayloadEnhancement,
   ThemeColors,
 } from '../../types'
-import { capitalize } from '../shared'
+import { capitalize, isNotificationPrivate } from '../shared'
 import {
   getCommitIconAndColor,
   getIssueIconAndColor,
   getOwnerAndRepo,
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
+  isItemRead,
 } from './shared'
-import { getCommentIdFromUrl } from './url'
+import { getCommentIdFromUrl, getIssueOrPullRequestNumberFromUrl } from './url'
 
 export const notificationReasons: GitHubNotificationReason[] = [
   'assign',
@@ -479,4 +481,145 @@ export function sortNotifications(
     .uniqBy('id')
     .orderBy('updated_at', 'desc')
     .value()
+}
+
+export function getGitHubNotificationSubItems(
+  notification: EnhancedGitHubNotification,
+) {
+  const {
+    comment,
+    id,
+    repository: repo,
+    saved,
+    subject,
+    updated_at: updatedAt,
+  } = notification
+
+  const isRead = isItemRead(notification)
+  const isSaved = saved === true
+  const isPrivate = isNotificationPrivate(notification)
+
+  const isPrivateAndCantSee =
+    isPrivate &&
+    // !hasPrivateAccess &&
+    !notification.enhanced
+
+  const commit =
+    notification.commit ||
+    (subject.type === 'Commit' && {
+      author: { avatar_url: '', login: '', html_url: '' },
+      commit: {
+        author: {
+          name: '',
+          email: '',
+        },
+        message: subject.title,
+        url: subject.url,
+      },
+      url: subject.url,
+    }) ||
+    null
+
+  const issue =
+    notification.issue ||
+    (subject.type === 'Issue' && {
+      id: undefined,
+      body: undefined,
+      comments: undefined,
+      created_at: undefined,
+      labels: [] as GitHubLabel[],
+      number: getIssueOrPullRequestNumberFromUrl(
+        subject.url || subject.latest_comment_url,
+      ),
+      state: undefined,
+      title: subject.title,
+      url: subject.url || subject.latest_comment_url,
+      html_url: '',
+      user: { avatar_url: '', login: '', html_url: '' },
+    }) ||
+    null
+
+  const pullRequest =
+    notification.pullRequest ||
+    (subject.type === 'PullRequest' && {
+      id: undefined,
+      body: undefined,
+      created_at: undefined,
+      comments: undefined,
+      labels: [] as GitHubLabel[],
+      draft: false,
+      number: getIssueOrPullRequestNumberFromUrl(
+        subject.url || subject.latest_comment_url,
+      ),
+      state: undefined,
+      title: subject.title,
+      url: subject.url || subject.latest_comment_url,
+      html_url: '',
+      user: { avatar_url: '', login: '', html_url: '' },
+    }) ||
+    undefined
+
+  const release =
+    notification.release ||
+    (subject.type === 'Release' && {
+      id: undefined,
+      author: { avatar_url: '', login: '', html_url: '' },
+      body: '',
+      created_at: undefined,
+      name: subject.title,
+      tag_name: '',
+      url: subject.url || subject.latest_comment_url,
+    }) ||
+    undefined
+
+  const issueOrPullRequest = issue || pullRequest
+  const createdAt = issueOrPullRequest && issueOrPullRequest.created_at
+
+  const isRepoInvitation = subject.type === 'RepositoryInvitation'
+  const isVulnerabilityAlert = subject.type === 'RepositoryVulnerabilityAlert'
+
+  const issueOrPullRequestNumber = issueOrPullRequest
+    ? issueOrPullRequest.number ||
+      getIssueOrPullRequestNumberFromUrl(
+        issueOrPullRequest.html_url || issueOrPullRequest.url,
+      )
+    : undefined
+
+  const repoFullName =
+    (notification &&
+      (notification.repository.full_name || notification.repository.name)) ||
+    ''
+
+  const actor =
+    (comment && comment.user) ||
+    (commit && commit.author) ||
+    (release && release.author) ||
+    (issue && issue.user) ||
+    (pullRequest && pullRequest.user) ||
+    null
+
+  const isBot = Boolean(
+    actor && actor.login && actor.login.indexOf('[bot]') >= 0,
+  )
+
+  return {
+    comment,
+    commit,
+    createdAt,
+    id,
+    isBot,
+    isPrivate,
+    isPrivateAndCantSee,
+    isRead,
+    isRepoInvitation,
+    isSaved,
+    isVulnerabilityAlert,
+    issueOrPullRequest,
+    issueOrPullRequestNumber,
+    release,
+    repo,
+    repoFullName,
+    subject,
+    updatedAt,
+  }
 }

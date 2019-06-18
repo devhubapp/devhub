@@ -17,6 +17,7 @@ import {
   getIssueOrPullRequestSubjectType,
   getItemIssueOrPullRequest,
   getItemOwnersAndRepos,
+  getItemSearchableStrings,
   getNotificationSubjectType,
   isDraft,
   isItemRead,
@@ -28,7 +29,11 @@ import {
   mergeSimilarEvents,
   sortEvents,
 } from './github/events'
-import { isEventPrivate, isNotificationPrivate } from './shared'
+import {
+  getSearchQueryTerms,
+  isEventPrivate,
+  isNotificationPrivate,
+} from './shared'
 
 export const filterRecordHasAnyForcedValue = (
   filtersRecord: Record<string, boolean | undefined> | undefined,
@@ -154,35 +159,45 @@ export function getOwnerAndRepoFormattedFilter(
     repoFilters && filterRecordWithThisValueCount(repoFilters, true)
   )
 
-  const allForcedRepos = Object.keys(repoFilters)
-    .filter(repoFullName => typeof repoFilters[repoFullName] === 'boolean')
-    .map(repoFullName => repoFullName.toLowerCase())
-  const allForcedOwners = Object.keys(ownerFiltersWithRepos)
-    .filter(
-      ownerFilterWithRepo =>
-        !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
-        (typeof ownerFiltersWithRepos[ownerFilterWithRepo]!.value ===
-          'boolean' ||
-          filterRecordHasAnyForcedValue(
-            ownerFiltersWithRepos[ownerFilterWithRepo]!.repos,
-          )),
-    )
-    .map(owner => owner.toLowerCase())
+  const allForcedRepos = _.sortBy(
+    Object.keys(repoFilters)
+      .filter(repoFullName => typeof repoFilters[repoFullName] === 'boolean')
+      .map(repoFullName => repoFullName.toLowerCase()),
+  )
 
-  const allIncludedRepos = Object.keys(repoFilters)
-    .filter(repoFullName => repoFilters[repoFullName] === true)
-    .map(repoFullName => repoFullName.toLowerCase())
-  const allIncludedOwners = Object.keys(ownerFiltersWithRepos)
-    .filter(
-      ownerFilterWithRepo =>
-        !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
-        (ownerFiltersWithRepos[ownerFilterWithRepo]!.value === true ||
-          filterRecordWithThisValueCount(
-            ownerFiltersWithRepos[ownerFilterWithRepo]!.repos,
-            true,
-          )),
-    )
-    .map(owner => owner.toLowerCase())
+  const allForcedOwners = _.sortBy(
+    Object.keys(ownerFiltersWithRepos)
+      .filter(
+        ownerFilterWithRepo =>
+          !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
+          (typeof ownerFiltersWithRepos[ownerFilterWithRepo]!.value ===
+            'boolean' ||
+            filterRecordHasAnyForcedValue(
+              ownerFiltersWithRepos[ownerFilterWithRepo]!.repos,
+            )),
+      )
+      .map(owner => owner.toLowerCase()),
+  )
+
+  const allIncludedRepos = _.sortBy(
+    Object.keys(repoFilters)
+      .filter(repoFullName => repoFilters[repoFullName] === true)
+      .map(repoFullName => repoFullName.toLowerCase()),
+  )
+
+  const allIncludedOwners = _.sortBy(
+    Object.keys(ownerFiltersWithRepos)
+      .filter(
+        ownerFilterWithRepo =>
+          !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
+          (ownerFiltersWithRepos[ownerFilterWithRepo]!.value === true ||
+            filterRecordWithThisValueCount(
+              ownerFiltersWithRepos[ownerFilterWithRepo]!.repos,
+              true,
+            )),
+      )
+      .map(owner => owner.toLowerCase()),
+  )
 
   return {
     allForcedOwners,
@@ -246,6 +261,47 @@ export function itemPassesOwnerOrRepoFilter(
   return true
 }
 
+export function itemPassesStringSearchFilter(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem,
+  query: string | undefined,
+) {
+  const itemStrings = getItemSearchableStrings(type, item)
+  const termsToSearchFor = getSearchQueryTerms(query)
+
+  if (!(termsToSearchFor && termsToSearchFor.length)) return true
+  if (!(itemStrings && itemStrings.length)) return true
+
+  return termsToSearchFor.every(termArr => {
+    if (
+      !(
+        termArr &&
+        Array.isArray(termArr) &&
+        (termArr.length === 2 || termArr.length === 3)
+      )
+    )
+      return true
+
+    const [key, value, isNegated] =
+      termArr.length === 2 ? ['', termArr[0], termArr[1]] : termArr
+    if (!(value && typeof value === 'string')) return false
+
+    let searchTerm = key ? `${key}:${value}` : value
+    if (searchTerm[0] === '"' && searchTerm.slice(-1) === '"') {
+      searchTerm = searchTerm.slice(1, -1).trim()
+      if (!searchTerm) return false
+    }
+
+    const found = itemStrings.some(itemString => {
+      if (!(itemString && typeof itemString === 'string')) return false
+
+      return itemString.toLowerCase().includes(searchTerm.toLowerCase())
+    })
+
+    return isNegated ? !found : found
+  })
+}
+
 function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
   if (!filters) return false
 
@@ -254,6 +310,7 @@ function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
   if (typeof filters.saved === 'boolean') return true
   if (typeof filters.draft === 'boolean') return true
   if (typeof filters.unread === 'boolean') return true
+  if (filters.query) return true
 
   if (filters.state && filterRecordHasAnyForcedValue(filters.state)) {
     return true
@@ -331,6 +388,11 @@ export function getFilteredIssueOrPullRequests(
         )
       )
         return false
+
+      // since we call github's search endpoint,
+      // let's let they handle this filter since they also consider all comments and other stuff
+      // if (!itemPassesStringSearchFilter('issue_or_pr', item, filters.query))
+      //   return false
 
       const isStateFilterStrict = filterRecordWithThisValueCount(
         filters.state,
@@ -422,6 +484,9 @@ export function getFilteredNotifications(
       )
         return false
 
+      if (!itemPassesStringSearchFilter('notifications', item, filters.query))
+        return false
+
       if (
         filters.notifications &&
         filters.notifications.participating &&
@@ -501,7 +566,11 @@ export function getFilteredNotifications(
 export function getFilteredEvents(
   events: EnhancedGitHubEvent[],
   filters: ActivityColumnFilters | undefined,
-  mergeSimilar: boolean,
+  {
+    mergeSimilar,
+  }: {
+    mergeSimilar: boolean
+  },
 ) {
   let _events = sortEvents(events)
 
@@ -521,6 +590,9 @@ export function getFilteredEvents(
           ownerAndRepoFormattedFilter,
         )
       )
+        return false
+
+      if (!itemPassesStringSearchFilter('activity', item, filters.query))
         return false
 
       const isStateFilterStrict = filterRecordWithThisValueCount(

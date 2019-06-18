@@ -3,25 +3,49 @@ import moment from 'moment'
 
 import {
   EnhancedGitHubEvent,
+  GitHubCommitCommentEvent,
+  GitHubCreateEvent,
+  GitHubEnhancedEventBase,
   GitHubEvent,
   GitHubEventAction,
   GitHubEventSubjectType,
+  GitHubForkEvent,
+  GitHubGollumEvent,
   GitHubIcon,
   GitHubIssue,
+  GitHubIssuesEvent,
+  GitHubMemberEvent,
+  GitHubPage,
   GitHubPullRequest,
+  GitHubPullRequestEvent,
+  GitHubPushedCommit,
+  GitHubPushEvent,
+  GitHubReleaseEvent,
+  GitHubRepo,
+  GitHubUser,
   MultipleStarEvent,
   ThemeColors,
 } from '../../types'
+import { isEventPrivate } from '../shared'
 import {
   getBranchNameFromRef,
   getCommitIconAndColor,
   getIssueIconAndColor,
+  getOwnerAndRepo,
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
   getTagIconAndColor,
   isDraft,
+  isItemRead,
   isPullRequest,
 } from './shared'
+import {
+  getGitHubAvatarURLFromPayload,
+  getGitHubURLForRepo,
+  getIssueOrPullRequestNumberFromUrl,
+  getRepoFullNameFromObject,
+  getRepoFullNameFromUrl,
+} from './url'
 
 export const eventActions: GitHubEventAction[] = [
   'added',
@@ -850,4 +874,159 @@ export function mergeEventPreservingEnhancement(
   }
 
   return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
+}
+
+export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
+  const {
+    actor,
+    payload,
+    id,
+    saved,
+    type,
+    created_at: createdAt,
+  } = event as EnhancedGitHubEvent
+  const { merged: mergedIds } = event as GitHubEnhancedEventBase
+  const { repo: _repo } = event as GitHubEvent
+  const { repos: _repos } = event as MultipleStarEvent
+
+  const { comment } = payload as GitHubCommitCommentEvent['payload']
+  const { commits: _commits } = payload as GitHubPushEvent['payload']
+  const { forkee } = payload as GitHubForkEvent['payload']
+  const { member: _member } = payload as GitHubMemberEvent['payload']
+  let { release } = payload as GitHubReleaseEvent['payload']
+  const { pages: _pages } = payload as GitHubGollumEvent['payload']
+  const {
+    pull_request: pullRequest,
+  } = payload as GitHubPullRequestEvent['payload']
+  const { issue } = payload as GitHubIssuesEvent['payload']
+  const { ref: branchOrTagRef } = payload as GitHubPushEvent['payload']
+
+  let branchName = getBranchNameFromRef(branchOrTagRef)
+
+  const issueOrPullRequest = (issue || pullRequest) as
+    | typeof issue
+    | typeof pullRequest
+    | undefined
+
+  const issueOrPullRequestNumber = issueOrPullRequest
+    ? issueOrPullRequest.number ||
+      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
+    : undefined
+
+  const isRead = isItemRead(event)
+  const isSaved = saved === true
+
+  const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
+
+  const repos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
+    if (!(r && r.name)) return false
+
+    const or = getOwnerAndRepo(r.name)
+    return !!(or.owner && or.repo)
+  })
+
+  // ugly and super edge case workaround for repo not being returned on some commit events
+  if (!repos.length && commits[0]) {
+    const _repoFullName = getRepoFullNameFromUrl(commits[0].url)
+    const { owner, repo: name } = getOwnerAndRepo(_repoFullName)
+    if (owner && name) {
+      repos.push({
+        id: '',
+        fork: false,
+        private: false,
+        full_name: _repoFullName,
+        owner: { login: name } as any,
+        name,
+        url: getGitHubURLForRepo(owner, name)!,
+        html_url: getGitHubURLForRepo(owner, name)!,
+      })
+    }
+  }
+
+  const users: GitHubUser[] = [_member].filter(Boolean) // TODO
+  const pages: GitHubPage[] = (_pages || []).filter(Boolean)
+
+  const repo = repos.length === 1 ? repos[0] : undefined
+
+  if (event.type === 'CreateEvent' || event.type === 'DeleteEvent') {
+    const p = payload as GitHubCreateEvent['payload']
+
+    if (p.ref_type !== 'branch') branchName = ''
+
+    if (!release && p.ref_type === 'tag') {
+      release = {
+        id: '',
+        name: '',
+        tag_name: p.ref || '',
+        target_commitish: p.master_branch,
+        body: '',
+        draft: false,
+        prerelease: false,
+        created_at: event.created_at,
+        published_at: event.created_at,
+        author: event.actor,
+        assets: [],
+        url: '',
+        html_url: '',
+      }
+    }
+  }
+
+  const commitShas = commits
+    .filter(Boolean)
+    .map((item: GitHubPushedCommit) => item.sha)
+  const pageShas = pages.filter(Boolean).map((item: GitHubPage) => item.sha)
+  const repoIds = repos.filter(Boolean).map((item: GitHubRepo) => item.id)
+  const userIds = users.filter(Boolean).map((item: GitHubUser) => item.id)
+
+  const repoFullName = repo && getRepoFullNameFromObject(repo)
+  const forkRepoFullName = getRepoFullNameFromObject(forkee)
+
+  const isPush = type === 'PushEvent'
+  const isForcePush = isPush && (payload as GitHubPushEvent).forced
+  const isPrivate = isEventPrivate(event)
+
+  const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
+
+  // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
+  // but the correct avatar on payload.abc.user.avatar_url,
+  // so lets get it from there instead
+  const botAvatarURL = isBot
+    ? getGitHubAvatarURLFromPayload(payload, actor.id)
+    : undefined
+
+  const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
+
+  return {
+    actor,
+    avatarUrl,
+    branchName,
+    branchOrTagRef,
+    comment,
+    commitShas,
+    commits,
+    createdAt,
+    forkRepoFullName,
+    forkee,
+    id,
+    isBot,
+    isBranchMainEvent: isBranchMainEvent(event),
+    isForcePush,
+    isPrivate,
+    isPush,
+    isRead,
+    isSaved,
+    isTagMainEvent: isTagMainEvent(event),
+    issueOrPullRequest,
+    issueOrPullRequestNumber,
+    mergedIds,
+    pageShas,
+    pages,
+    release,
+    repoFullName,
+    repoIds,
+    repos,
+    userIds,
+    users,
+  }
 }

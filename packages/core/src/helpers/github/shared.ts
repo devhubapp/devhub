@@ -14,20 +14,18 @@ import {
   EnhancedGitHubPullRequest,
   EnhancedItem,
   GitHubAPIHeaders,
-  GitHubEvent,
+  GitHubComment,
   GitHubIcon,
   GitHubIssueOrPullRequest,
   GitHubItemSubjectType,
   GitHubPrivacy,
   GitHubPullRequest,
-  GitHubPushedCommit,
-  GitHubPushEvent,
+  GitHubRelease,
   GitHubRepo,
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
   ItemFilterCountMetadata,
   ItemsFilterMetadata,
-  MultipleStarEvent,
   NotificationColumnSubscription,
   ThemeColors,
 } from '../../types'
@@ -42,14 +40,17 @@ import {
   isEventPrivate,
   isNotificationPrivate,
 } from '../shared'
-import { getEventMetadata } from './events'
+import { getEventMetadata, getGitHubEventSubItems } from './events'
 import {
   getGitHubIssueSearchQuery,
   getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
 } from './issues'
-import { getNotificationSubjectType } from './notifications'
-import { getRepoFullNameFromUrl } from './url'
+import {
+  getGitHubNotificationSubItems,
+  getNotificationSubjectType,
+} from './notifications'
+import { getCommitShaFromUrl, getRepoFullNameFromUrl } from './url'
 
 const GITHUB_USERNAME_REGEX_PATTERN =
   '[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}'
@@ -495,13 +496,24 @@ export function getColumnHeaderDetails(
           ', ',
         )}`
 
+      const usernames =
+        (ownerAndRepo.repo && ownerAndRepo.owner
+          ? [ownerAndRepo.owner]
+          : undefined) ||
+        (owner ? [owner] : undefined) ||
+        (involving && involving.length ? involving : undefined) ||
+        (notInvolving && notInvolving.length ? notInvolving : undefined) ||
+        (allIncludedOwners && allIncludedOwners.length
+          ? allIncludedOwners
+          : undefined) ||
+        []
+
       const avatarProps = {
         repo: ownerAndRepo.repo,
         username:
           (ownerAndRepo.repo && ownerAndRepo.owner) ||
           owner ||
-          involving[0] ||
-          notInvolving[0] ||
+          usernames[0] ||
           '',
       }
 
@@ -514,7 +526,11 @@ export function getColumnHeaderDetails(
             repoIsKnown: !!(ownerAndRepo.owner && ownerAndRepo.repo),
             owner: ownerAndRepo.owner || owner || '',
             repo: ownerAndRepo.repo || '',
-            title: ownerAndRepo.repo || avatarProps.username || '',
+            title:
+              ownerAndRepo.repo ||
+              (ownerAndRepo.repo && ownerAndRepo.owner) ||
+              usernames.join(',') ||
+              '',
             ...(s.subtype === 'ISSUES'
               ? {
                   icon: 'issue-opened',
@@ -925,6 +941,7 @@ export function getItemIssueOrPullRequest(
 export function getItemOwnersAndRepos(
   type: ColumnSubscription['type'],
   item: EnhancedItem | undefined,
+  { includeFork }: { includeFork?: boolean } = {},
 ): Array<{ owner: string; repo: string }> {
   const mapResult: Record<string, any> = {}
 
@@ -958,25 +975,20 @@ export function getItemOwnersAndRepos(
   switch (type) {
     case 'activity': {
       const event = item as EnhancedGitHubEvent
-      const { repo: _repo } = event as GitHubEvent
-      const { repos: _repos } = event as MultipleStarEvent
-      const { commits: _commits } = event.payload as GitHubPushEvent['payload']
-      const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
+      const { repos, forkee } = getGitHubEventSubItems(event)
 
-      const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
+      const _allRepos: GitHubRepo[] = [
+        ...(repos || []),
+        ...(includeFork && forkee ? [forkee] : []),
+      ]
+
+      _allRepos.forEach(r => {
         if (!(r && r.name)) return false
 
         const { owner, repo } = getOwnerAndRepo(r.name)
         if (addOwnerAndRepo(owner, repo) === 1) return true
         return false
       })
-
-      // ugly and super edge case workaround for repo not being returned on some commit events
-      if (!_allRepos.length && commits[0]) {
-        const _repoFullName = getRepoFullNameFromUrl(commits[0].url)
-        const { owner, repo } = getOwnerAndRepo(_repoFullName)
-        addOwnerAndRepo(owner, repo)
-      }
 
       return mapToResult(mapResult)
     }
@@ -1017,14 +1029,16 @@ export function getFilteredItems(
   type: ColumnSubscription['type'] | undefined,
   items: EnhancedItem[],
   filters: ColumnFilters | undefined,
-  mergeSimilar: boolean,
+  {
+    mergeSimilar,
+  }: {
+    mergeSimilar: boolean
+  },
 ) {
   if (type === 'activity') {
-    return getFilteredEvents(
-      items as EnhancedGitHubEvent[],
-      filters,
+    return getFilteredEvents(items as EnhancedGitHubEvent[], filters, {
       mergeSimilar,
-    )
+    })
   }
 
   if (type === 'issue_or_pr') {
@@ -1095,9 +1109,7 @@ export function getItemsFilterMetadata(
   } = {},
 ): ItemsFilterMetadata {
   const result: ItemsFilterMetadata = getDefaultItemsFilterMetadata()
-  if (!(items && items.length > 0)) return result
-
-  items.filter(Boolean).forEach(item => {
+  ;(items || []).filter(Boolean).forEach(item => {
     const event =
       type === 'activity' ? (item as EnhancedGitHubEvent) : undefined
     const notification =
@@ -1211,4 +1223,196 @@ export function getItemsFilterMetadata(
   }
 
   return result
+}
+
+export function getItemSearchableStrings(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem,
+): string[] {
+  const strings: string[] = []
+
+  const event = type === 'activity' ? (item as EnhancedGitHubEvent) : undefined
+  const notification =
+    type === 'notifications' ? (item as EnhancedGitHubNotification) : undefined
+  const issueOrPullRequest = getItemIssueOrPullRequest(type, item)
+
+  let comment: GitHubComment | undefined
+  let isBot: boolean | undefined
+  let release: Partial<GitHubRelease> | undefined
+
+  const id = item.id
+
+  const ownersAndRepos = getItemOwnersAndRepos(type, item)
+
+  strings.push(`${id || ''}`)
+
+  if (ownersAndRepos && ownersAndRepos.length) {
+    ownersAndRepos.forEach(ownersAndRepo => {
+      strings.push(`${ownersAndRepo.owner}/${ownersAndRepo.repo}`)
+    })
+  }
+
+  if (issueOrPullRequest) {
+    strings.push(`${issueOrPullRequest.body || ''}`)
+    strings.push(`${issueOrPullRequest.created_at || ''}`)
+    strings.push(
+      `${(issueOrPullRequest.id && `#${issueOrPullRequest.id}`) || ''}`,
+    )
+    if (issueOrPullRequest.labels && issueOrPullRequest.labels.length) {
+      issueOrPullRequest.labels.forEach(labelDetails => {
+        const label = labelDetails && `${labelDetails.name || ''}`
+        if (!label) return
+
+        strings.push(`label:${label}`)
+      })
+    }
+    strings.push(`${issueOrPullRequest.title || ''}`)
+    strings.push(`${issueOrPullRequest.updated_at || ''}`)
+    strings.push(
+      `${(issueOrPullRequest.user && issueOrPullRequest.user.login) || ''}`,
+    )
+  }
+
+  if (event) {
+    const {
+      actor,
+      // avatarUrl,
+      branchName,
+      branchOrTagRef,
+      comment: _comment,
+      // commitShas,
+      commits,
+      createdAt,
+      forkRepoFullName,
+      // forkee,
+      // id,
+      isBot: _isBot,
+      // isBranchMainEvent,
+      // isForcePush,
+      // isPrivate,
+      // isPush,
+      // isRead,
+      // isSaved,
+      // isTagMainEvent,
+      // issueOrPullRequest,
+      // issueOrPullRequestNumber,
+      mergedIds,
+      // pageShas,
+      pages,
+      release: _release,
+      // repoIds,
+      // repoFullName,
+      // repos,
+      // userIds,
+      users,
+    } = getGitHubEventSubItems(event)
+
+    comment = _comment
+    isBot = _isBot
+    release = _release
+
+    strings.push(`${(actor && actor.login) || ''}`)
+    strings.push(`${branchName || branchOrTagRef || ''}`)
+    if (commits) {
+      commits.forEach(commit => {
+        if (!commit) return
+
+        const authorEmail = `${(commit.author && commit.author.email) || ''}`
+        const authorName = `${(commit.author && commit.author.name) || ''}`
+        const message = `${commit.message || ''}`
+        const sha = `${commit.sha || ''}`
+
+        if (authorEmail) strings.push(authorEmail)
+        if (authorName) strings.push(authorName)
+        if (message) strings.push(message)
+        if (sha) strings.push(sha)
+      })
+    }
+    strings.push(createdAt)
+    strings.push(forkRepoFullName)
+    if (mergedIds && mergedIds.length) {
+      mergedIds.forEach(mergedId => {
+        strings.push(mergedId)
+      })
+    }
+    if (pages && pages.length) {
+      pages.forEach(page => {
+        strings.push(page.page_name)
+        strings.push(page.sha)
+        strings.push(page.title)
+      })
+    }
+    if (users && users.length) {
+      users.forEach(user => {
+        strings.push(user.login)
+      })
+    }
+  } else if (notification) {
+    const {
+      comment: _comment,
+      commit,
+      createdAt,
+      // id,
+      isBot: _isBot,
+      // isPrivate,
+      // isPrivateAndCantSee,
+      // isRead,
+      // isRepoInvitation,
+      // isSaved,
+      // isVulnerabilityAlert,
+      // issueOrPullRequest,
+      // issueOrPullRequestNumber,
+      release: _release,
+      // repo,
+      // repoFullName,
+      subject,
+      updatedAt,
+    } = getGitHubNotificationSubItems(notification)
+
+    comment = _comment
+    isBot = _isBot
+    release = _release as any // TODO: Fix type error
+
+    if (commit) {
+      const author = commit.commit && commit.commit.author
+
+      const authorLogin = `${(commit.author && commit.author.login) || ''}`
+      const authorEmail = `${(author && author.email) || ''}`
+      const authorName = `${(author && author.name) || ''}`
+      const message = `${(commit.commit && commit.commit.message) || ''}`
+      const sha = `${getCommitShaFromUrl(
+        (commit.commit && commit.commit.url) || commit.url,
+      ) || ''}`
+
+      if (authorLogin) strings.push(authorLogin)
+      if (authorEmail) strings.push(authorEmail)
+      if (authorName) strings.push(authorName)
+      if (message) strings.push(message)
+      if (sha) strings.push(sha)
+    }
+
+    strings.push(`${createdAt || ''}`)
+    strings.push(`${subject.title || ''}`)
+    strings.push(`${updatedAt || ''}`)
+  } else {
+    //
+  }
+
+  if (isBot) strings.push('is:bot')
+
+  if (comment) {
+    strings.push(`${(comment.user && comment.user.login) || ''}`)
+    strings.push(`${comment.body || ''}`)
+  }
+
+  if (release) {
+    strings.push(`${(release.author && release.author.login) || ''}`)
+    strings.push(`${release.body || ''}`)
+    strings.push(`${release.id || ''}`)
+    strings.push(`${release.name || ''}`)
+    strings.push(`${release.published_at || ''}`)
+    strings.push(`${release.tag_name || ''}`)
+  }
+
+  return strings.map(str => `${str || ''}`).filter(Boolean)
 }

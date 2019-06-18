@@ -5,8 +5,6 @@ import {
   ActivityColumn,
   Column,
   filterRecordHasAnyForcedValue,
-  filterRecordWithThisValueCount,
-  IssueOrPullRequestColumn,
   IssueOrPullRequestColumnFilters,
   normalizeColumns,
   normalizeSubscriptions,
@@ -188,19 +186,31 @@ export const columnsReducer: Reducer<State> = (
           }
         }
 
-        // cannot delete some filters to avoid invalid search query
-        if (column.type === 'issue_or_pr') {
-          const _column = column as IssueOrPullRequestColumn
-          const _previousFilters = previousFilters as IssueOrPullRequestColumnFilters
+        // // cannot delete some filters to avoid invalid search query
+        // if (column.type === 'issue_or_pr') {
+        //   const _column = column as IssueOrPullRequestColumn
+        //   const _previousFilters = previousFilters as IssueOrPullRequestColumnFilters
 
-          _column.filters!.involves = _previousFilters.involves
+        //   _column.filters!.involves = _previousFilters.involves
 
-          if (
-            !filterRecordWithThisValueCount(_column.filters!.involves, true)
-          ) {
-            _column.filters!.owners = _previousFilters.owners
-          }
-        }
+        //   if (
+        //     !filterRecordWithThisValueCount(_column.filters!.involves, true)
+        //   ) {
+        //     _column.filters!.owners = _previousFilters.owners
+        //   }
+        // }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'REPLACE_COLUMN_FILTERS':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = action.payload.filters || {}
 
         draft.updatedAt = new Date().toISOString()
       })
