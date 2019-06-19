@@ -39,7 +39,7 @@
 ## Community
 
 Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
-<br/>Join our Slack Community: [Slack Invitation](https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q) (+ beta access!)
+<br/>Join our Slack Community: [Slack Invitation](https://slack.devhubapp.com/)
 
 <br/>
 

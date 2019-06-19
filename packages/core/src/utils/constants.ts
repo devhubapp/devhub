@@ -44,5 +44,4 @@ export const API_BASE_URL = 'https://api.devhubapp.com'
 export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
 
 export const DEVHUB_BETA_URL = 'https://beta.devhubapp.com'
-export const SLACK_INVITE_LINK =
-  'https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q'
+export const SLACK_INVITE_LINK = 'https://slack.devhubapp.com'
