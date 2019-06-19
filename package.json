@@ -15,7 +15,8 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "subdomains/*"
     ],
     "nohoist": [
       "**/react-native-firebase"

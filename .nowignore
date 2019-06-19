@@ -21,7 +21,7 @@ packages/web/dist/**.map
 packages/web/node_modules
 packages/web/package.json
 packages/web/src
-packages/www
 patches
+subdomains
 tsconfig.json
 tslint.json
