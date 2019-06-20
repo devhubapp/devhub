@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export function ColumnSwitcher() {
+export function ColumnArrowSwitcher() {
   const { appViewMode } = useAppViewMode()
   const { focusedColumnId } = useFocusedColumn()
   const { isSharedFiltersOpened } = useColumnFilters()
