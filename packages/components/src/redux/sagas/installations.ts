@@ -18,15 +18,18 @@ import { ExtractActionFromActionCreator } from '../types/base'
 
 // Fetch new installation tokens every X minutes
 function* init() {
-  // let isFirstTime = true
+  let _isFirstTime = true
 
   while (true) {
-    yield race({
-      delay: delay(1000 * 60 * 50),
+    const { action } = yield race({
+      delay: delay(1000 * 60 * 5), // 5 minutes
       action: take(['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT']),
     })
 
-    // if (action && action.type === 'LOGIN_SUCCESS') isFirstTime = true
+    if (action) _isFirstTime = true
+
+    const isFirstTime = _isFirstTime
+    _isFirstTime = false
 
     const state = yield select()
 
@@ -36,6 +39,45 @@ function* init() {
     const appToken = selectors.appTokenSelector(state)
     if (!appToken) continue
 
+    if (isFirstTime) {
+      yield put(
+        actions.refreshInstallationsRequest({
+          appToken,
+          // includeInstallationRepositories: isFirstTime,
+          includeInstallationToken: true,
+        }),
+      )
+
+      continue
+    }
+
+    const lastFetchedAt = selectors.installationsLastFetchedAtSelector(state)
+    const fetchedNMinutesAgo = lastFetchedAt
+      ? (new Date().valueOf() - new Date(lastFetchedAt).valueOf()) / 1000 / 60
+      : undefined
+
+    // if fetched in the last 5 minutes, dont retry yet
+    if (fetchedNMinutesAgo && fetchedNMinutesAgo < 5) continue
+
+    const installations = selectors.installationsArrSelector(state)
+    const hasExpiredInstallationToken = installations.some(
+      installation =>
+        installation &&
+        installation.tokenDetails &&
+        installation.tokenDetails.expiresAt &&
+        new Date(installation.tokenDetails.expiresAt).valueOf() <
+          new Date().valueOf(),
+    )
+
+    // only fetch installations tokens if there are expired ones or havent fetched for 50+ minutes
+    if (
+      !(
+        hasExpiredInstallationToken ||
+        (fetchedNMinutesAgo && fetchedNMinutesAgo > 50)
+      )
+    )
+      continue
+
     yield put(
       actions.refreshInstallationsRequest({
         appToken,
@@ -43,8 +85,6 @@ function* init() {
         includeInstallationToken: true,
       }),
     )
-
-    // isFirstTime = false
   }
 }
 

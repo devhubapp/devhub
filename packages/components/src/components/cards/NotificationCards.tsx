@@ -9,7 +9,6 @@ import {
   getDateSmallText,
   isItemRead,
 } from '@devhub/core'
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -17,27 +16,25 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
-import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { cardSearchTotalHeight, CardsSearchHeader } from './CardsSearchHeader'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard, NotificationCardProps } from './NotificationCard'
-import {
-  CardItemSeparator,
-  getCardItemSeparatorThemeColor,
-} from './partials/CardItemSeparator'
+import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps
   extends Omit<NotificationCardProps, 'notification' | 'isFocused'> {
   column: Column
   columnIndex: number
+  disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: EnhancedGitHubNotification[]
@@ -58,6 +55,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     cardViewMode,
     column,
     columnIndex,
+    disableItemFocus,
     enableCompactLabels,
     errorMessage,
     fetchNextPage,
@@ -69,10 +67,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
-
-  const { appViewMode } = useAppViewMode()
-  const { inlineMode } = useColumnFilters()
-  const theme = useTheme()
 
   const visibleItemIndexesRef = useRef<number[]>([])
 
@@ -154,12 +148,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     [],
   )
 
-  const _renderItem = ({
-    item: item,
-  }: {
-    item: EnhancedGitHubNotification
-    index: number
-  }) => {
+  const _renderItem: FlatListProps<
+    EnhancedGitHubNotification
+  >['renderItem'] = ({ item }) => {
     if (props.swipeable) {
       return (
         <SwipeableNotificationCard
@@ -167,7 +158,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current
+            item.id === selectedItemIdRef.current &&
+            !disableItemFocus
           }
           notification={item}
           repoIsKnown={props.repoIsKnown}
@@ -183,7 +175,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current
+            item.id === selectedItemIdRef.current &&
+            !disableItemFocus
           }
           notification={item}
           repoIsKnown={props.repoIsKnown}
@@ -200,19 +193,32 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     props.swipeable,
   ])
 
+  const renderHeader = useCallback(() => {
+    return (
+      <CardsSearchHeader
+        key={`cards-search-header-column-${column.id}`}
+        columnId={column.id}
+      />
+    )
+  }, [column.id])
+
   const renderFooter = useCallback(() => {
     const { sizename } = useAppLayout()
 
     return (
       <>
-        <CardItemSeparator isRead />
+        <CardItemSeparator muted={!fetchNextPage} />
 
         {fetchNextPage ? (
           <View>
             <Button
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
-              disabled={loadState !== 'loaded'}
+              disabled={
+                loadState === 'loading' ||
+                loadState === 'loading_first' ||
+                loadState === 'loading_more'
+              }
               loading={
                 loadState === 'loading_first' || loadState === 'loading_more'
               }
@@ -221,10 +227,17 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
             />
           </View>
         ) : column.filters && column.filters.clearedAt ? (
-          <View>
+          <View
+            style={{
+              paddingVertical: contentPadding,
+              paddingHorizontal:
+                cardViewMode === 'compact'
+                  ? contentPadding / 2
+                  : contentPadding,
+            }}
+          >
             <Button
               analyticsLabel="show_cleared"
-              borderOnly
               children="Show cleared items"
               onPress={() => {
                 setColumnClearedAtFilter({
@@ -234,7 +247,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
                 if (refresh) refresh()
               }}
-              round={false}
+              round
+              showBorder
+              transparent
             />
           </View>
         ) : null}
@@ -284,22 +299,13 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     [lastFetchedAt, refresh, loadState],
   )
 
-  const rerender = useMemo(() => ({}), [renderItem, renderFooter])
-
-  const contentContainerStyle = useMemo(
-    () => ({
-      borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
-      borderColor:
-        theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
-    }),
-    [theme],
-  )
+  const rerender = useMemo(() => ({}), [renderItem, renderHeader, renderFooter])
 
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
+        column={column}
+        disableSearch
         errorMessage={`You have reached the limit of ${
           constants.COLUMNS_LIMIT
         } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -314,8 +320,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   if (!(items && items.length)) {
     return (
       <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
+        clearMessage="No new notifications!"
+        column={column}
         errorMessage={errorMessage}
         fetchNextPage={fetchNextPage}
         loadState={loadState}
@@ -330,9 +336,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       key="notification-cards-flat-list"
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
+      ListHeaderComponent={renderHeader}
       alwaysBounceVertical
       bounces
-      contentContainerStyle={contentContainerStyle}
+      contentOffset={{ x: 0, y: cardSearchTotalHeight }}
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}

@@ -5,6 +5,7 @@ import {
   EnhancedGitHubEvent,
   getDefaultPaginationPerPage,
   getOlderEventDate,
+  getSubscriptionOwnerOrOrg,
 } from '@devhub/core'
 import { View } from 'react-native'
 import { EmptyCards } from '../components/cards/EmptyCards'
@@ -34,7 +35,7 @@ export type EventCardsContainerProps = Omit<
 
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
-    const { cardViewMode, column, ...otherProps } = props
+    const { cardViewMode, column, repoIsKnown, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -54,13 +55,7 @@ export const EventCardsContainer = React.memo(
       .toLowerCase()
       .includes('not found')
 
-    const subscriptionOwnerOrOrg =
-      (mainSubscription &&
-        mainSubscription.params &&
-        (('owner' in mainSubscription.params &&
-          mainSubscription.params.owner) ||
-          ('org' in mainSubscription.params && mainSubscription.params.org))) ||
-      undefined
+    const subscriptionOwnerOrOrg = getSubscriptionOwnerOrOrg(mainSubscription)
 
     const ownerResponse = useGitHubAPI(
       octokit.users.getByUsername,
@@ -83,6 +78,10 @@ export const EventCardsContainer = React.memo(
       actions.fetchColumnSubscriptionRequest,
     )
 
+    const refreshInstallationsRequest = useReduxAction(
+      actions.refreshInstallationsRequest,
+    )
+
     const subscriptionsDataSelectorRef = useRef(
       selectors.createSubscriptionsDataSelector(),
     )
@@ -93,7 +92,7 @@ export const EventCardsContainer = React.memo(
 
     const { allItems, filteredItems } = useColumnData<EnhancedGitHubEvent>(
       column.id,
-      cardViewMode !== 'compact',
+      { mergeSimilar: cardViewMode !== 'compact' },
     )
 
     const clearedAt = column.filters && column.filters.clearedAt
@@ -129,8 +128,22 @@ export const EventCardsContainer = React.memo(
     }, [fetchData, allItems.length])
 
     const refresh = useCallback(() => {
-      fetchData()
-    }, [fetchData])
+      if (data.errorMessage === 'Bad credentials' && appToken) {
+        refreshInstallationsRequest({
+          appToken,
+          includeInstallationToken: true,
+        })
+      } else {
+        fetchData()
+      }
+    }, [
+      fetchData,
+      mainSubscription &&
+        mainSubscription.data &&
+        mainSubscription.data.errorMessage,
+      ownerResponse && ownerResponse.data && ownerResponse.data.id,
+      appToken,
+    ])
 
     if (!mainSubscription) return null
 
@@ -144,8 +157,9 @@ export const EventCardsContainer = React.memo(
       if (ownerResponse.loadingState === 'loading') {
         return (
           <EmptyCards
-            clearedAt={undefined}
-            columnId={column.id}
+            column={column}
+            disableSearch
+            disableShowClearedView
             fetchNextPage={undefined}
             loadState="loading"
             refresh={undefined}
@@ -251,6 +265,7 @@ export const EventCardsContainer = React.memo(
             : mainSubscription.data.loadState || 'not_loaded'
         }
         refresh={refresh}
+        repoIsKnown={repoIsKnown}
       />
     )
   },

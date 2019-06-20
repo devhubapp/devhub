@@ -8,34 +8,33 @@ import {
   EnhancedLoadState,
   getDateSmallText,
   getIssueOrPullRequestSubjectType,
+  getSearchQueryFromFilter,
   isItemRead,
 } from '@devhub/core'
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
+import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
-import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { cardSearchTotalHeight, CardsSearchHeader } from './CardsSearchHeader'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import {
   IssueOrPullRequestCard,
   IssueOrPullRequestCardProps,
 } from './IssueOrPullRequestCard'
-import {
-  CardItemSeparator,
-  getCardItemSeparatorThemeColor,
-} from './partials/CardItemSeparator'
+import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableIssueOrPullRequestCard } from './SwipeableIssueOrPullRequestCard'
 
 export interface IssueOrPullRequestCardsProps
@@ -45,6 +44,7 @@ export interface IssueOrPullRequestCardsProps
   > {
   column: Column
   columnIndex: number
+  disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: EnhancedGitHubIssueOrPullRequest[]
@@ -65,6 +65,7 @@ export const IssueOrPullRequestCards = React.memo(
       cardViewMode,
       column,
       columnIndex,
+      disableItemFocus,
       enableCompactLabels,
       errorMessage,
       fetchNextPage,
@@ -78,10 +79,6 @@ export const IssueOrPullRequestCards = React.memo(
     const flatListRef = React.useRef<
       FlatList<EnhancedGitHubIssueOrPullRequest>
     >(null)
-
-    const { appViewMode } = useAppViewMode()
-    const { inlineMode } = useColumnFilters()
-    const theme = useTheme()
 
     const visibleItemIndexesRef = useRef<number[]>([])
     const getVisibleItemIndex = useCallback(() => {
@@ -103,10 +100,17 @@ export const IssueOrPullRequestCards = React.memo(
     const hasSelectedItem =
       !!selectedItemIdRef.current && column.id === focusedColumnId
 
+    const loggedUsername = useReduxState(
+      selectors.currentGitHubUsernameSelector,
+    )
+
     const markItemsAsReadOrUnread = useReduxAction(
       actions.markItemsAsReadOrUnread,
     )
     const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
+    const setColumnInvolvesFilter = useReduxAction(
+      actions.setColumnInvolvesFilter,
+    )
 
     useKeyPressCallback(
       's',
@@ -162,12 +166,9 @@ export const IssueOrPullRequestCards = React.memo(
       [],
     )
 
-    const _renderItem = ({
-      item,
-    }: {
-      item: EnhancedGitHubIssueOrPullRequest
-      index: number
-    }) => {
+    const _renderItem: FlatListProps<
+      EnhancedGitHubIssueOrPullRequest
+    >['renderItem'] = ({ item }) => {
       if (props.swipeable) {
         return (
           <SwipeableIssueOrPullRequestCard
@@ -175,7 +176,8 @@ export const IssueOrPullRequestCards = React.memo(
             enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId &&
-              item.id === selectedItemIdRef.current
+              item.id === selectedItemIdRef.current &&
+              !disableItemFocus
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
@@ -192,7 +194,8 @@ export const IssueOrPullRequestCards = React.memo(
             enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId &&
-              item.id === selectedItemIdRef.current
+              item.id === selectedItemIdRef.current &&
+              !disableItemFocus
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
@@ -210,12 +213,21 @@ export const IssueOrPullRequestCards = React.memo(
       props.swipeable,
     ])
 
+    const renderHeader = useCallback(() => {
+      return (
+        <CardsSearchHeader
+          key={`cards-search-header-column-${column.id}`}
+          columnId={column.id}
+        />
+      )
+    }, [column.id])
+
     const renderFooter = useCallback(() => {
       const { sizename } = useAppLayout()
 
       return (
         <>
-          <CardItemSeparator isRead />
+          <CardItemSeparator muted={!fetchNextPage} />
 
           {fetchNextPage ? (
             <View>
@@ -226,7 +238,11 @@ export const IssueOrPullRequestCards = React.memo(
                 children={
                   loadState === 'error' ? 'Oops. Try again' : 'Load more'
                 }
-                disabled={loadState !== 'loaded'}
+                disabled={
+                  loadState === 'loading' ||
+                  loadState === 'loading_first' ||
+                  loadState === 'loading_more'
+                }
                 loading={
                   loadState === 'loading_first' || loadState === 'loading_more'
                 }
@@ -235,10 +251,17 @@ export const IssueOrPullRequestCards = React.memo(
               />
             </View>
           ) : column.filters && column.filters.clearedAt ? (
-            <View>
+            <View
+              style={{
+                paddingVertical: contentPadding,
+                paddingHorizontal:
+                  cardViewMode === 'compact'
+                    ? contentPadding / 2
+                    : contentPadding,
+              }}
+            >
               <Button
                 analyticsLabel="show_cleared"
-                borderOnly
                 children="Show cleared items"
                 onPress={() => {
                   setColumnClearedAtFilter({
@@ -248,7 +271,9 @@ export const IssueOrPullRequestCards = React.memo(
 
                   if (refresh) refresh()
                 }}
-                round={false}
+                round
+                showBorder
+                transparent
               />
             </View>
           ) : null}
@@ -298,22 +323,17 @@ export const IssueOrPullRequestCards = React.memo(
       [lastFetchedAt, refresh, loadState],
     )
 
-    const rerender = useMemo(() => ({}), [renderItem, renderFooter])
-
-    const contentContainerStyle = useMemo(
-      () => ({
-        borderWidth: appViewMode === 'single-column' && inlineMode ? 1 : 0,
-        borderColor:
-          theme[getCardItemSeparatorThemeColor(theme.backgroundColor, true)],
-      }),
-      [theme],
-    )
+    const rerender = useMemo(() => ({}), [
+      renderItem,
+      renderHeader,
+      renderFooter,
+    ])
 
     if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
       return (
         <EmptyCards
-          clearedAt={column.filters && column.filters.clearedAt}
-          columnId={column.id}
+          column={column}
+          disableSearch
           errorMessage={`You have reached the limit of ${
             constants.COLUMNS_LIMIT
           } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -326,10 +346,57 @@ export const IssueOrPullRequestCards = React.memo(
     }
 
     if (!(items && items.length)) {
+      const maybeInvalidFilters = `${errorMessage || ''}`
+        .toLowerCase()
+        .startsWith('validation failed')
+      const messageHasMoreDetails =
+        `${errorMessage || ''}` !== 'validation failed'
+      const emptyFilters =
+        maybeInvalidFilters &&
+        !getSearchQueryFromFilter(column.type, column.filters)
+
+      const exampleFilter = `involves:${loggedUsername || 'gaearon'}`
+
+      if (maybeInvalidFilters) {
+        return (
+          <EmptyCards
+            column={column}
+            emoji={emptyFilters ? 'desert' : 'squirrel'}
+            errorButtonView={
+              <Button
+                analyticsLabel="try_fix_invalid_filter"
+                children={`Add "${exampleFilter}" filter`}
+                onPress={() =>
+                  setColumnInvolvesFilter({
+                    columnId: column.id,
+                    user: loggedUsername || 'gaearon',
+                    value: true,
+                  })
+                }
+              />
+            }
+            errorMessage={
+              emptyFilters
+                ? `You need to add some filters for this search to work. \nExample: ${exampleFilter}`
+                : `Something went wrong. Try changing your search query. \n${
+                    messageHasMoreDetails
+                      ? errorMessage
+                      : `Example: ${exampleFilter}`
+                  }`
+            }
+            errorTitle={
+              emptyFilters ? 'Empty search' : 'Check your search query'
+            }
+            fetchNextPage={undefined}
+            loadState={loadState}
+            refresh={undefined}
+          />
+        )
+      }
+
       return (
         <EmptyCards
-          clearedAt={column.filters && column.filters.clearedAt}
-          columnId={column.id}
+          column={column}
           errorMessage={errorMessage}
           fetchNextPage={fetchNextPage}
           loadState={loadState}
@@ -344,9 +411,10 @@ export const IssueOrPullRequestCards = React.memo(
         key="issue-or-pr-cards-flat-list"
         ItemSeparatorComponent={CardItemSeparator}
         ListFooterComponent={renderFooter}
+        ListHeaderComponent={renderHeader}
         alwaysBounceVertical
         bounces
-        contentContainerStyle={contentContainerStyle}
+        contentOffset={{ x: 0, y: cardSearchTotalHeight }}
         data={items}
         disableVirtualization={Platform.OS === 'web'}
         extraData={rerender}

@@ -65,9 +65,9 @@ export interface CheckboxProps {
   uncheckedBackgroundThemeColor?:
     | keyof ThemeColors
     | ((theme: ThemeColors) => string)
-  uncheckedForegroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
+  // uncheckedForegroundThemeColor?:
+  //   | keyof ThemeColors
+  //   | ((theme: ThemeColors) => string)
 }
 
 export function Checkbox(props: CheckboxProps) {
@@ -90,8 +90,8 @@ export function Checkbox(props: CheckboxProps) {
 
     checkedBackgroundThemeColor = 'primaryBackgroundColor',
     checkedForegroundThemeColor = 'primaryForegroundColor',
-    uncheckedBackgroundThemeColor,
-    uncheckedForegroundThemeColor = 'foregroundColor',
+    uncheckedBackgroundThemeColor = 'backgroundColorLess4',
+    // uncheckedForegroundThemeColor = 'foregroundColor',
   } = props
 
   const lastBooleanRef = useRef(
@@ -153,7 +153,7 @@ export function Checkbox(props: CheckboxProps) {
           borderColor={
             checked || isIndeterminateState
               ? checkedBackgroundThemeColor
-              : uncheckedForegroundThemeColor
+              : uncheckedBackgroundThemeColor
           }
           style={[
             styles.checkbox,
@@ -194,12 +194,18 @@ export function Checkbox(props: CheckboxProps) {
             <ThemedIcon
               color={checkedForegroundThemeColor}
               name="check"
-              size={size - 3}
+              size={size - 5}
               style={{
-                lineHeight: size - 3,
-                paddingLeft: Platform.OS === 'android' ? 0 : 1,
-                paddingTop: Platform.OS === 'ios' ? 1 : 0,
-                paddingBottom: Platform.OS === 'android' ? 1 : 0,
+                lineHeight: size - 5,
+                ...Platform.select({
+                  ios: {
+                    paddingTop: 1,
+                  },
+                  android: {},
+                  default: {
+                    paddingBottom: 1,
+                  },
+                }),
                 textAlign: 'center',
                 opacity: checked ? 1 : 0,
               }}
@@ -248,7 +254,12 @@ export function Checkbox(props: CheckboxProps) {
         </View>
       )}
 
-      {!!right && right}
+      {!!right && (
+        <>
+          <Spacer width={contentPadding / 2} />
+          {right}
+        </>
+      )}
     </TouchableOpacity>
   )
 }

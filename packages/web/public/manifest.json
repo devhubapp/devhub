@@ -1,7 +1,7 @@
 {
   "name": "DevHub",
   "short_name": "DevHub",
-  "description": "TweetDeck for GitHub",
+  "description": "GitHub Notifications Manager & Activity Watcher",
   "lang": "en-US",
   "start_url": "./?utm_source=web_app_manifest",
   "display": "standalone",

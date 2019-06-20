@@ -108,35 +108,25 @@ export const cardStyles = StyleSheet.create({
   usernameText: {
     alignSelf: 'center',
     lineHeight: 20,
-    fontWeight: '500',
-    // color: theme.foregroundColor,
   } as TextStyle,
 
   timestampText: {
     lineHeight: smallerTextSize + 1,
     fontSize: smallerTextSize,
-    // color: theme.foregroundColorMuted60,
   },
 
   smallerText: {
     lineHeight: smallerTextSize + 1,
     fontSize: smallerTextSize,
-    // color: theme.foregroundColorMuted60,
   },
 
   commentText: {
-    // color: theme.foregroundColor,
     lineHeight: 20,
     fontSize: smallTextSize,
   },
 
-  // mutedText: {
-  //   // color: theme.foregroundColorMuted60,
-  // },
-
   normalText: {
     lineHeight: 20,
-    // color: theme.foregroundColor,
     ...Platform.select({
       default: {},
       web: {
@@ -153,7 +143,6 @@ export const cardStyles = StyleSheet.create({
   headerActionText: {
     fontSize: smallTextSize,
     lineHeight: 18,
-    // color: theme.foregroundColor,
     ...Platform.select({
       default: {},
       web: {

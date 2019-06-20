@@ -7,13 +7,12 @@ import { CardSmallThing } from './CardSmallThing'
 export interface CardItemIdProps {
   icon?: GitHubIcon
   id: number | string
-  isRead: boolean
   style?: StyleProp<ViewStyle>
   url: string
 }
 
 export function CardItemId(props: CardItemIdProps) {
-  const { icon, id, isRead, style, url } = props
+  const { icon, id, style, url } = props
 
   if (!(id || icon)) return null
 
@@ -22,5 +21,5 @@ export function CardItemId(props: CardItemIdProps) {
   const text =
     typeof parsedNumber === 'number' ? `#${parsedNumber}` : `${id || ''}`
 
-  return <CardSmallThing isRead={isRead} style={style} text={text} url={url} />
+  return <CardSmallThing style={style} text={text} url={url} />
 }

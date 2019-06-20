@@ -153,6 +153,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   )
 
   const initialTheme = useTheme(
+    undefined,
     useCallback(
       theme => {
         if (cacheRef.current.theme === theme) return
@@ -187,6 +188,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     if (!node) return
 
     node.title = tooltip || ''
+    if (!tooltip && node.removeAttribute) node.removeAttribute('title')
   }, [containerRef.current, tooltip])
 
   const _username = useReduxState(selectors.currentGitHubUsernameSelector)
@@ -255,8 +257,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             ? undefined
             : {
                 paddingHorizontal: contentPadding / 3,
-                paddingVertical:
-                  showLabel && label ? undefined : contentPadding,
+                paddingVertical: showLabel ? undefined : contentPadding,
               },
           style,
           { backgroundColor: springAnimatedStyles.backgroundColor },
@@ -274,8 +275,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             ? undefined
             : {
                 paddingHorizontal: contentPadding / 3,
-                paddingVertical:
-                  showLabel && label ? undefined : contentPadding,
+                paddingVertical: showLabel ? undefined : contentPadding,
               },
           style,
           { backgroundColor: springAnimatedStyles.backgroundColor },
@@ -373,7 +373,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           )}
         </View>
 
-        {!!showLabel && !!label && (
+        {!!showLabel && (
           <SpringAnimatedText
             style={[
               {
@@ -388,7 +388,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             ]}
             numberOfLines={1}
           >
-            {label}
+            {label || '?'}
           </SpringAnimatedText>
         )}
 

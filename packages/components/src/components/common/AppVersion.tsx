@@ -28,15 +28,19 @@ export function AppVersion() {
       openOnNewTab
       style={styles.appVersionLink}
       textProps={{
-        color: 'foregroundColorMuted60',
+        color: 'foregroundColorMuted40',
         style: styles.appVersion,
       }}
     >
-      {`v${constants.APP_VERSION}${
-        constants.IS_BETA && !constants.APP_VERSION.includes('beta')
-          ? ' (beta)'
-          : ''
-      }`}
+      {getAppVersionLabel()}
     </Link>
   )
+}
+
+export function getAppVersionLabel() {
+  return `v${constants.APP_VERSION}${
+    constants.IS_BETA && !constants.APP_VERSION.includes('beta')
+      ? ' (beta)'
+      : ''
+  }`
 }

@@ -4,8 +4,10 @@ import { Image, StyleSheet, View } from 'react-native'
 import url from 'url'
 
 import { constants } from '@devhub/core'
-import { GitHubLoginButton } from '../components/buttons/GitHubLoginButton'
-import { AppVersion } from '../components/common/AppVersion'
+import { getAppVersionLabel } from '../components/common/AppVersion'
+import { FullHeightScrollView } from '../components/common/FullHeightScrollView'
+import { GitHubLoginButton } from '../components/common/GitHubLoginButton'
+import { Link } from '../components/common/Link'
 import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
 import { ThemedText } from '../components/themed/ThemedText'
@@ -18,6 +20,7 @@ import { executeOAuth } from '../libs/oauth'
 import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { sharedStyles } from '../styles/shared'
 import { contentPadding } from '../styles/variables'
 import {
   clearQueryStringFromURL,
@@ -28,13 +31,17 @@ const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disa
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    maxWidth: 400,
+    width: '100%',
+  },
+
+  contentContainer: {
+    flex: 1,
     alignItems: 'stretch',
     alignSelf: 'center',
-    flex: 1,
     justifyContent: 'center',
-    maxWidth: 400,
     padding: contentPadding,
-    width: '100%',
   },
 
   header: {
@@ -51,30 +58,45 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: contentPadding,
   },
 
   logo: {
     alignSelf: 'center',
-    height: 100,
+    height: 80,
     marginBottom: contentPadding / 2,
-    width: 100,
+    width: 80,
   },
 
   title: {
-    fontSize: 18,
+    fontSize: 30,
     fontWeight: 'bold',
-    lineHeight: 26,
+    lineHeight: 36,
+    textAlign: 'center',
   },
 
   subtitle: {
-    fontSize: 14,
-    lineHeight: 18,
+    fontSize: 15,
+    fontWeight: '300',
+    lineHeight: 20,
+    textAlign: 'center',
   },
 
   button: {
     alignSelf: 'stretch',
     marginTop: contentPadding / 2,
+  },
+
+  footerLink: {},
+
+  footerLinkText: {
+    fontSize: 14,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+
+  footerSeparatorText: {
+    paddingHorizontal: contentPadding / 2,
+    fontStyle: 'italic',
   },
 })
 
@@ -85,6 +107,10 @@ export const LoginScreen = React.memo(() => {
   const error = useReduxState(selectors.authErrorSelector)
   const initialErrorRef = useRef(error)
   const loginRequest = useReduxAction(actions.loginRequest)
+
+  useEffect(() => {
+    analytics.trackScreenView('LOGIN_SCREEN')
+  })
 
   // handle oauth flow without popup
   // that passes the token via query string
@@ -152,8 +178,6 @@ export const LoginScreen = React.memo(() => {
     )
   }, [error])
 
-  analytics.trackScreenView('LOGIN_SCREEN')
-
   const loginWithGitHub = async () => {
     setIsExecutingOAuth(true)
 
@@ -182,17 +206,43 @@ export const LoginScreen = React.memo(() => {
 
   return (
     <Screen>
-      <View style={styles.container}>
+      <FullHeightScrollView
+        alwaysBounceVertical={false}
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
         <View style={styles.header} />
 
         <View style={styles.mainContentContainer}>
-          <Image
-            resizeMode="contain"
-            source={logo}
-            style={styles.logo as any}
-          />
+          <Spacer height={contentPadding} />
+
+          <Link
+            analyticsCategory="loginscreen"
+            analyticsLabel="logo"
+            href="https://github.com/devhubapp/devhub"
+            openOnNewTab
+            style={styles.footerLink}
+            textProps={{
+              color: 'foregroundColorMuted40',
+              style: styles.footerLinkText,
+            }}
+          >
+            <Image resizeMode="contain" source={logo} style={styles.logo} />
+          </Link>
+
+          <Spacer height={contentPadding} />
+
+          <ThemedText color="foregroundColor" style={styles.title}>
+            Welcome to DevHub
+          </ThemedText>
 
           <Spacer height={contentPadding / 2} />
+
+          <ThemedText color="foregroundColorMuted60" style={styles.subtitle}>
+            GitHub Notifications Manager & Activity Watcher
+          </ThemedText>
+
+          <Spacer height={contentPadding} />
 
           <GitHubLoginButton
             analyticsLabel="github_login_public"
@@ -201,20 +251,70 @@ export const LoginScreen = React.memo(() => {
             style={styles.button}
             title="Sign in with GitHub"
           />
-
-          <Spacer height={contentPadding} />
         </View>
+
+        <Spacer height={contentPadding} />
 
         <View style={styles.footer}>
-          <ThemedText color="foregroundColor" style={styles.title}>
-            DevHub
-          </ThemedText>
-          <ThemedText color="foregroundColor" style={styles.subtitle}>
-            TweetDeck for GitHub
-          </ThemedText>
-          <AppVersion />
+          <View style={sharedStyles.horizontal}>
+            <Link
+              analyticsCategory="loginscreen"
+              analyticsLabel="twitter"
+              href="https://twitter.com/devhub_app"
+              openOnNewTab
+              style={styles.footerLink}
+              textProps={{
+                color: 'foregroundColorMuted40',
+                style: styles.footerLinkText,
+              }}
+            >
+              Twitter
+            </Link>
+
+            <ThemedText
+              color="foregroundColorMuted25"
+              style={styles.footerSeparatorText}
+            >
+              |
+            </ThemedText>
+
+            <Link
+              analyticsCategory="loginscreen"
+              analyticsLabel="github"
+              href="https://github.com/devhubapp/devhub"
+              openOnNewTab
+              style={styles.footerLink}
+              textProps={{
+                color: 'foregroundColorMuted40',
+                style: styles.footerLinkText,
+              }}
+            >
+              GitHub
+            </Link>
+
+            <ThemedText
+              color="foregroundColorMuted25"
+              style={styles.footerSeparatorText}
+            >
+              |
+            </ThemedText>
+
+            <Link
+              analyticsCategory="loginscreen"
+              analyticsLabel="app_version"
+              href="https://github.com/devhubapp/devhub/releases"
+              openOnNewTab
+              style={styles.footerLink}
+              textProps={{
+                color: 'foregroundColorMuted40',
+                style: styles.footerLinkText,
+              }}
+            >
+              {getAppVersionLabel()}
+            </Link>
+          </View>
         </View>
-      </View>
+      </FullHeightScrollView>
     </Screen>
   )
 })

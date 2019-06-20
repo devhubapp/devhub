@@ -30,7 +30,7 @@ import {
   getOlderEventDate,
   getOlderIssueOrPullRequestDate,
   getOlderNotificationDate,
-  getOwnerAndRepo,
+  getSubscriptionOwnerOrOrg,
   GitHubAppTokenType,
   GitHubEvent,
   GitHubIssueOrPullRequest,
@@ -110,8 +110,11 @@ function* init() {
           .filter(
             s =>
               s &&
-              s.data.loadState !== 'loading' &&
-              s.data.loadState !== 'loading_first' &&
+              !(
+                (s.data.loadState === 'loading' ||
+                  s.data.loadState === 'loading_first') &&
+                !minimumRefetchTimeHasPassed(s, 1 * 60 * 1000)
+              ) &&
               (forceFetchAll ||
                 minimumRefetchTimeHasPassed(
                   s,
@@ -266,15 +269,7 @@ function* onFetchRequest(
 
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
 
-  const owner =
-    (subscription &&
-      subscription.params &&
-      (('owner' in subscription.params && subscription.params.owner) ||
-        ('org' in subscription.params && subscription.params.org) ||
-        ('repoFullName' in subscription.params &&
-          subscription.params.repoFullName &&
-          getOwnerAndRepo(subscription.params.repoFullName).owner))) ||
-    undefined
+  const owner = getSubscriptionOwnerOrOrg(subscription)
 
   const installationToken = selectors.installationTokenByOwnerSelector(
     state,
@@ -584,7 +579,8 @@ function* onMarkItemsAsReadOrUnread(
 
   const failedIds: string[] = results
     .map((result: Response<any>, index: number) =>
-      result && result.status >= 200 && result.status < 400
+      result &&
+      ((result.status >= 200 && result.status < 400) || result.status === 404)
         ? undefined
         : action.payload.itemIds[index],
     )

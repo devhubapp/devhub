@@ -26,12 +26,7 @@ export function fetchSubscriptionRequest(payload: {
   subscriptionId: string
   replaceAllItems: boolean
   params: {
-    [key: string]:
-      | string
-      | number
-      | boolean
-      | Record<string, boolean | undefined>
-      | undefined
+    [key: string]: string | number | boolean | Record<string, any> | undefined
     page: number
     perPage?: number
   }

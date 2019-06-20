@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { Theme, ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 
 export const themeColorFields: Array<keyof ThemeColors> = [
@@ -12,6 +12,7 @@ export const themeColorFields: Array<keyof ThemeColors> = [
   'backgroundColorDarker2',
   'backgroundColorDarker3',
   'backgroundColorDarker4',
+  'backgroundColorDarker5',
   'backgroundColorLess1',
   'backgroundColorLess2',
   'backgroundColorLess3',
@@ -20,6 +21,7 @@ export const themeColorFields: Array<keyof ThemeColors> = [
   'backgroundColorLighther2',
   'backgroundColorLighther3',
   'backgroundColorLighther4',
+  'backgroundColorLighther5',
   'backgroundColorMore1',
   'backgroundColorMore2',
   'backgroundColorMore3',
@@ -55,14 +57,36 @@ export const supportsCSSVariables =
   _window.CSS.supports &&
   _window.CSS.supports('color', 'var(--fake-var)')
 
-const cssVariablesTheme = {} as ThemeColors
+const cssVariablesTheme = {} as Record<string, string>
 themeColorFields.forEach(field => {
   cssVariablesTheme[field] = `var(--theme_${field})`
+  cssVariablesTheme[`inverted_${field}`] = `var(--theme_inverted_${field})`
 })
 
-export function getCSSVariable(color: keyof ThemeColors) {
-  if (color && typeof color === 'string' && color in cssVariablesTheme)
-    return cssVariablesTheme[color]
+export function getCSSVariable(color: keyof ThemeColors, isInverted?: boolean) {
+  const field =
+    color && typeof color === 'string'
+      ? isInverted
+        ? `inverted_${color}`
+        : color
+      : undefined
+
+  if (field && field in cssVariablesTheme) return cssVariablesTheme[field]
 
   return color
+}
+
+export function transformTheme(
+  theme: Theme,
+  themeTransformer: ThemeTransformer,
+) {
+  if (
+    themeTransformer === 'invert' ||
+    (themeTransformer === 'force-dark' && !theme.isDark) ||
+    (themeTransformer === 'force-light' && theme.isDark)
+  ) {
+    return theme.invert()
+  }
+
+  return theme
 }

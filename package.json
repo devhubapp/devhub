@@ -1,13 +1,13 @@
 {
   "name": "devhub",
-  "version": "0.90.1",
+  "version": "0.91.1",
   "private": true,
   "author": {
     "name": "Bruno Lemos",
     "email": "bruno@devhubapp.com",
     "url": "https://twitter.com/brunolemos"
   },
-  "description": "TweetDeck for GitHub",
+  "description": "GitHub Notifications Manager & Activity Watcher",
   "repository": "https://github.com/devhubapp/devhub",
   "collective": {
     "type": "opencollective",
@@ -15,7 +15,8 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "subdomains/*"
     ],
     "nohoist": [
       "**/react-native-firebase"

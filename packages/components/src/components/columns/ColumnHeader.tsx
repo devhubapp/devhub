@@ -23,7 +23,7 @@ export function getColumnHeaderThemeColors(
   //   }
   // }
 
-  // if (luminance <= 0.02) {
+  // if (luminance <= 0.01) {
   //   return {
   //     normal: 'backgroundColor',
   //     hover: 'backgroundColorLess2',

@@ -14,12 +14,14 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
+import { ButtonLink } from '../common/ButtonLink'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
 import { AppViewModePreference } from '../widgets/AppViewModePreference'
 import { ThemePreference } from '../widgets/ThemePreference'
 
@@ -85,74 +87,131 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
         <Spacer height={contentPadding} />
 
-        {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
-          <>
-            <SubHeader title="Rate this app">
-              <Spacer flex={1} />
-
-              <Button
-                analyticsLabel="rate_app"
-                onPress={() => openAppStore()}
-                size={32}
-              >
-                <ThemedIcon color="foregroundColor" name="star" size={16} />
-              </Button>
-            </SubHeader>
-          </>
-        )}
-
-        <View>
-          <SubHeader title="Follow on Twitter">
+        {Platform.OS === 'ios' || Platform.OS === 'android' ? (
+          <SubHeader title="Rate this app">
             <Spacer flex={1} />
 
-            <Link
-              analyticsCategory="preferences_link"
-              analyticsLabel="follow_on_twitter_brunolemos"
-              href="https://twitter.com/brunolemos"
-              openOnNewTab
+            <Button
+              analyticsLabel="rate_app"
+              onPress={() => openAppStore({ showReviewModal: true })}
+              size={32}
             >
-              <Avatar
-                disableLink
-                username="brunolemos"
-                size={24}
-                tooltip="@brunolemos on Twitter"
-              />
-            </Link>
-
-            <Spacer width={contentPadding} />
-
-            <Link
-              analyticsCategory="preferences_link"
-              analyticsLabel="follow_on_twitter_devhub"
-              href="https://twitter.com/devhub_app"
-              openOnNewTab
-            >
-              <Avatar
-                disableLink
-                username="devhubapp"
-                size={24}
-                tooltip="@devhub_app on Twitter"
-              />
-            </Link>
+              <ThemedIcon color="foregroundColor" name="star" size={16} />
+            </Button>
           </SubHeader>
-        </View>
-
-        <View>
-          <SubHeader title="Join Slack Community">
+        ) : Platform.realOS === 'ios' || Platform.realOS === 'android' ? (
+          <SubHeader title="Download native app">
             <Spacer flex={1} />
 
-            <Link
-              analyticsCategory="preferences_link"
-              analyticsLabel="join_slack_community"
-              href={constants.SLACK_INVITE_LINK}
-              openOnNewTab
+            <Button
+              analyticsLabel="download_native_app"
+              onPress={() => openAppStore({ showReviewModal: false })}
+              size={32}
             >
-              <Avatar
-                avatarUrl="https://user-images.githubusercontent.com/619186/57062615-133ae880-6c97-11e9-915d-ae40de664b12.png"
-                disableLink
-                size={24}
+              <ThemedIcon
+                color="foregroundColor"
+                name="device-mobile"
+                size={16}
               />
-            </Link>
+            </Button>
+          </SubHeader>
+        ) : Platform.OS === 'web' &&
+          !Platform.isElectron &&
+          sizename !== '1-small' ? (
+          <SubHeader title="Download desktop app">
+            <Spacer flex={1} />
+
+            <ButtonLink
+              analyticsLabel="download_desktop_app"
+              href="https://github.com/devhubapp/devhub/releases"
+              openOnNewTab
+              size={32}
+            >
+              <ThemedIcon
+                color="foregroundColor"
+                name="desktop-download"
+                size={16}
+              />
+            </ButtonLink>
+          </SubHeader>
+        ) : null}
+
+        <View>
+          <SubHeader title="Community">
+            <Spacer flex={1} />
+
+            <View style={sharedStyles.horizontal}>
+              <Link
+                analyticsCategory="preferences_link"
+                analyticsLabel="twitter"
+                href="https://twitter.com/devhub_app"
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColor',
+                  style: {
+                    fontSize: 14,
+                    lineHeight: 18,
+                    textAlign: 'center',
+                  },
+                }}
+              >
+                Twitter
+              </Link>
+
+              <ThemedText
+                color="foregroundColorMuted25"
+                style={{
+                  fontStyle: 'italic',
+                  paddingHorizontal: contentPadding / 2,
+                }}
+              >
+                |
+              </ThemedText>
+
+              <Link
+                analyticsCategory="preferences_link"
+                analyticsLabel="slack"
+                href={constants.SLACK_INVITE_LINK}
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColor',
+                  style: {
+                    fontSize: 14,
+                    lineHeight: 18,
+                    textAlign: 'center',
+                  },
+                }}
+              >
+                Slack
+              </Link>
+
+              <ThemedText
+                color="foregroundColorMuted25"
+                style={{
+                  fontStyle: 'italic',
+                  paddingHorizontal: contentPadding / 2,
+                }}
+              >
+                |
+              </ThemedText>
+
+              <Link
+                analyticsCategory="preferences_link"
+                analyticsLabel="github"
+                href="https://github.com/devhubapp/devhub"
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColor',
+                  style: {
+                    fontSize: 14,
+                    lineHeight: 18,
+                    textAlign: 'center',
+                  },
+                }}
+              >
+                GitHub
+              </Link>
+            </View>
           </SubHeader>
         </View>
 

@@ -76,7 +76,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
     flatListRef.current.scrollToItem({
       animated: true,
       item: focusedColumnId,
-      viewPosition: 0.5,
+      viewPosition: 0,
     })
   }, [
     flatListRef.current,
@@ -135,7 +135,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const flatListStyle = useMemo(
     () => [
       styles.flatlist,
-      sizename > '1-small' && {
+      sizename > '2-medium' && {
         marginHorizontal: -separatorThickSize / 2,
       },
       style,
@@ -180,9 +180,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
     <FlatList
       ref={flatListRef}
       key="columns-flat-list"
-      className="pagingEnabledFix"
       bounces={!swipeable}
       data={columnIds}
+      data-paging-enabled-fix
       disableVirtualization={Platform.OS === 'web'}
       getItemLayout={getItemLayout}
       horizontal

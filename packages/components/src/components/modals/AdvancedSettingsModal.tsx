@@ -14,6 +14,7 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryParseOAuthParams } from '../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
+import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
@@ -21,8 +22,6 @@ import { ButtonLink } from '../common/ButtonLink'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
-import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 
 export interface AdvancedSettingsModalProps {
@@ -34,8 +33,6 @@ export const AdvancedSettingsModal = React.memo(
     const { showBackButton } = props
 
     const { sizename } = useAppLayout()
-
-    const theme = useTheme()
 
     const [executingOAuth, setExecutingOAuth] = useState<GitHubAppType | null>(
       null,
@@ -111,14 +108,13 @@ export const AdvancedSettingsModal = React.memo(
                   onPress={() => pushModal({ name: 'KEYBOARD_SHORTCUTS' })}
                   size={32}
                 >
-                  <ThemedIcon
-                    color="foregroundColor"
-                    name="keyboard"
-                    size={16}
-                    style={{
-                      color: theme.foregroundColor,
-                    }}
-                  />
+                  {({ springAnimatedStyles }) => (
+                    <SpringAnimatedIcon
+                      name="keyboard"
+                      size={16}
+                      style={{ color: springAnimatedStyles.textColor }}
+                    />
+                  )}
                 </Button>
               </>
             </SubHeader>
@@ -152,7 +148,13 @@ export const AdvancedSettingsModal = React.memo(
                     openOnNewTab
                     size={32}
                   >
-                    <ThemedIcon color="foregroundColor" name="gear" size={16} />
+                    {({ springAnimatedStyles }) => (
+                      <SpringAnimatedIcon
+                        name="gear"
+                        size={16}
+                        style={{ color: springAnimatedStyles.textColor }}
+                      />
+                    )}
                   </ButtonLink>
                 ) : (
                   <Button
@@ -169,11 +171,13 @@ export const AdvancedSettingsModal = React.memo(
                     onPress={() => startOAuth('oauth')}
                     size={32}
                   >
-                    <ThemedIcon
-                      color="foregroundColor"
-                      name={githubOAuthToken ? 'sync' : 'plus'}
-                      size={16}
-                    />
+                    {({ springAnimatedStyles }) => (
+                      <SpringAnimatedIcon
+                        name={githubOAuthToken ? 'sync' : 'plus'}
+                        size={16}
+                        style={{ color: springAnimatedStyles.textColor }}
+                      />
+                    )}
                   </Button>
                 )}
               </View>
@@ -204,7 +208,13 @@ export const AdvancedSettingsModal = React.memo(
                     openOnNewTab
                     size={32}
                   >
-                    <ThemedIcon color="foregroundColor" name="gear" size={16} />
+                    {({ springAnimatedStyles }) => (
+                      <SpringAnimatedIcon
+                        name="gear"
+                        size={16}
+                        style={{ color: springAnimatedStyles.textColor }}
+                      />
+                    )}
                   </ButtonLink>
                 ) : (
                   <Button
@@ -223,11 +233,13 @@ export const AdvancedSettingsModal = React.memo(
                     onPress={() => startOAuth('app')}
                     size={32}
                   >
-                    <ThemedIcon
-                      color="foregroundColor"
-                      name={githubAppToken ? 'sync' : 'plus'}
-                      size={16}
-                    />
+                    {({ springAnimatedStyles }) => (
+                      <SpringAnimatedIcon
+                        name={githubAppToken ? 'sync' : 'plus'}
+                        size={16}
+                        style={{ color: springAnimatedStyles.textColor }}
+                      />
+                    )}
                   </Button>
                 )}
               </View>
@@ -260,11 +272,13 @@ export const AdvancedSettingsModal = React.memo(
                           openOnNewTab={false}
                           size={32}
                         >
-                          <ThemedIcon
-                            color="foregroundColor"
-                            name="plus"
-                            size={16}
-                          />
+                          {({ springAnimatedStyles }) => (
+                            <SpringAnimatedIcon
+                              name="plus"
+                              size={16}
+                              style={{ color: springAnimatedStyles.textColor }}
+                            />
+                          )}
                         </ButtonLink>
                       )}
                     </>
@@ -318,11 +332,15 @@ export const AdvancedSettingsModal = React.memo(
                             openOnNewTab
                             size={32}
                           >
-                            <ThemedIcon
-                              color="foregroundColor"
-                              name="gear"
-                              size={16}
-                            />
+                            {({ springAnimatedStyles }) => (
+                              <SpringAnimatedIcon
+                                name="gear"
+                                size={16}
+                                style={{
+                                  color: springAnimatedStyles.textColor,
+                                }}
+                              />
+                            )}
                           </ButtonLink>
                         </View>
                       ),
@@ -343,8 +361,8 @@ export const AdvancedSettingsModal = React.memo(
               analyticsLabel=""
               disabled={isDeletingAccount || isLoggingIn}
               loading={isDeletingAccount}
-              hoverBackgroundColor={theme.red}
-              hoverForegroundColor="#FFFFFF"
+              hoverBackgroundThemeColor="red"
+              hoverForegroundThemeColor="white"
               onPress={() =>
                 confirm(
                   'Delete Account?',

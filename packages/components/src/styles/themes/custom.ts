@@ -12,6 +12,8 @@ export function createThemeFromColor(
   id: Theme['id'],
   displayName: Theme['displayName'],
   override: Partial<ThemeColors> = {},
+  isInverted?: boolean,
+  invertedTheme?: Theme,
 ): Theme {
   const luminance = getLuminance(color)
   const isDark = luminance <= 0.4
@@ -22,15 +24,18 @@ export function createThemeFromColor(
   const amount2 = 0.05
   const amount3 = 0.07
   const amount4 = 0.09
+  const amount5 = 0.11
 
   const backgroundColorDarker1 = darken(amount1, color)
   const backgroundColorDarker2 = darken(amount2, color)
   const backgroundColorDarker3 = darken(amount3, color)
   const backgroundColorDarker4 = darken(amount4, color)
+  const backgroundColorDarker5 = darken(amount5, color)
   const backgroundColorLighther1 = lighten(amount1, color)
   const backgroundColorLighther2 = lighten(amount2, color)
   const backgroundColorLighther3 = lighten(amount3, color)
   const backgroundColorLighther4 = lighten(amount4, color)
+  const backgroundColorLighther5 = lighten(amount5, color)
 
   const backgroundColorMore1 = isDark
     ? darken(amount1, color)
@@ -83,21 +88,14 @@ export function createThemeFromColor(
       : darken(0.95, override.primaryBackgroundColor)
   }
 
-  let invertedTheme: Theme
-  return createTheme({
+  const theme = createTheme({
     id: id || 'custom',
     displayName: displayName || 'Custom',
     isDark,
+    isInverted: typeof isInverted === 'boolean' ? isInverted : false,
     invert: () => {
-      if (invertedTheme) return invertedTheme
-
-      invertedTheme = createThemeFromColor(
-        invert(color),
-        id,
-        displayName,
-        override,
-      )
-      return invertedTheme
+      // implementation overriden below
+      return theme
     },
 
     primaryBackgroundColor: '#49D3B4',
@@ -108,6 +106,7 @@ export function createThemeFromColor(
     backgroundColorDarker2,
     backgroundColorDarker3,
     backgroundColorDarker4,
+    backgroundColorDarker5,
     backgroundColorLess1,
     backgroundColorLess2,
     backgroundColorLess3,
@@ -116,6 +115,7 @@ export function createThemeFromColor(
     backgroundColorLighther2,
     backgroundColorLighther3,
     backgroundColorLighther4,
+    backgroundColorLighther5,
     backgroundColorMore1,
     backgroundColorMore2,
     backgroundColorMore3,
@@ -131,4 +131,24 @@ export function createThemeFromColor(
 
     ...override,
   })
+
+  const _t = theme as any
+  if (invertedTheme) _t._invertedTheme = invertedTheme
+
+  theme.invert = () => {
+    if (!_t._invertedTheme) {
+      _t._invertedTheme = createThemeFromColor(
+        invert(color),
+        'custom',
+        `${displayName} (inverted)`,
+        override,
+        true,
+        theme,
+      )
+    }
+
+    return _t._invertedTheme
+  }
+
+  return theme
 }

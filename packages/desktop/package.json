@@ -1,6 +1,6 @@
 {
   "name": "@devhub/desktop",
-  "version": "0.90.1",
+  "version": "0.91.1",
   "private": false,
   "main": "dist/index.js",
   "author": {
@@ -8,7 +8,7 @@
     "email": "bruno@devhubapp.com",
     "url": "https://twitter.com/brunolemos"
   },
-  "description": "TweetDeck for GitHub",
+  "description": "GitHub Notifications Manager & Activity Watcher",
   "repository": "https://github.com/devhubapp/devhub",
   "scripts": {
     "build": "yarn build:base && yarn build:web && yarn build:web:post && yarn build:electron",
@@ -59,7 +59,7 @@
     ],
     "publish": {
       "provider": "github",
-      "releaseType": "release"
+      "releaseType": "draft"
     }
   },
   "dependencies": {

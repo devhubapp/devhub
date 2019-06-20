@@ -16,7 +16,7 @@ export interface BranchRowProps
   > {
   branch: string
   isBranchMainEvent: boolean
-  isRead: boolean
+  muted: boolean
   ownerName: string
   repositoryName: string
 }
@@ -27,7 +27,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
   const {
     branch,
     isBranchMainEvent,
-    isRead,
+    muted: _muted,
     ownerName,
     repositoryName,
     ...otherProps
@@ -37,7 +37,7 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
   if (branch === 'master' && !isBranchMainEvent) return null
 
   const hideIcon = true
-  const muted = isRead || !isBranchMainEvent // || branch === 'master'
+  const muted = _muted || !isBranchMainEvent // || branch === 'master'
 
   return (
     <BaseRow
@@ -46,10 +46,11 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
         // <Avatar
         //   isBot={Boolean(ownerName && ownerName.indexOf('[bot]') >= 0)}
         //   linkURL=""
+        //   muted={muted}
+        //   repo={repositoryName}
         //   small
         //   style={cardStyles.avatar}
         //   username={ownerName}
-        //   repo={repositoryName}
         // />
         <ThemedIcon
           color={muted ? 'foregroundColorMuted60' : 'foregroundColor'}

@@ -23,6 +23,7 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { emitter } from '../../libs/emitter'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import {
@@ -30,10 +31,12 @@ import {
   contentPadding,
   sidebarSize,
 } from '../../styles/variables'
+import { CardBorder } from '../cards/partials/CardBorder'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { separatorSize, separatorThickSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
+import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
@@ -47,51 +50,51 @@ export function getColumnCardThemeColors(
   backgroundColor: string,
 ): {
   column: keyof ThemeColors
-  unread: keyof ThemeColors
-  unread__hover: keyof ThemeColors
-  read: keyof ThemeColors
-  read__hover: keyof ThemeColors
+  card: keyof ThemeColors
+  card__hover: keyof ThemeColors
+  card__muted: keyof ThemeColors
+  card__muted_hover: keyof ThemeColors
 } {
   const luminance = getLuminance(backgroundColor)
 
-  if (luminance <= 0.02) {
+  if (luminance <= 0.01) {
     return {
+      card: 'backgroundColorLighther3',
+      card__hover: 'backgroundColorLighther4',
+      card__muted: 'backgroundColor',
+      card__muted_hover: 'backgroundColorLighther2',
       column: 'backgroundColor',
-      read: 'backgroundColor',
-      read__hover: 'backgroundColorLighther2',
-      unread: 'backgroundColorLighther3',
-      unread__hover: 'backgroundColorLighther4',
     }
   }
 
   if (luminance >= 0.6) {
     return {
+      card: 'backgroundColorLighther1',
+      card__hover: 'backgroundColorLighther2',
+      card__muted: 'backgroundColorDarker1',
+      card__muted_hover: 'backgroundColorDarker2',
       column: 'backgroundColor',
-      read: 'backgroundColorDarker1',
-      read__hover: 'backgroundColorDarker2',
-      unread: 'backgroundColorLighther1',
-      unread__hover: 'backgroundColorLighther2',
     }
   }
 
   return {
+    card: 'backgroundColorLighther2',
+    card__hover: 'backgroundColorLighther3',
+    card__muted: 'backgroundColorDarker1',
+    card__muted_hover: 'backgroundColorDarker2',
     column: 'backgroundColor',
-    read: 'backgroundColor',
-    read__hover: 'backgroundColorDarker1',
-    unread: 'backgroundColorLighther2',
-    unread__hover: 'backgroundColorLighther3',
   }
 }
 
 export function getCardBackgroundThemeColor(
   theme: ThemeColors,
-  { isRead }: { isRead: boolean },
+  { muted }: { muted: boolean },
 ) {
   const backgroundThemeColors = getColumnCardThemeColors(theme.backgroundColor)
 
   const _backgroundThemeColor =
     // (isFocused && 'backgroundColorLess2') ||
-    (isRead && backgroundThemeColors.read) || backgroundThemeColors.unread
+    (muted && backgroundThemeColors.card__muted) || backgroundThemeColors.card
 
   return _backgroundThemeColor
 }
@@ -101,7 +104,9 @@ export interface ColumnRendererProps {
   avatarUsername?: string
   children: (p: {
     cardViewMode: CardViewMode
+    disableItemFocus: boolean
     enableCompactLabels: boolean
+    isFiltersOpened: boolean
   }) => React.ReactNode
   column: ColumnType
   disableColumnOptions?: boolean
@@ -147,11 +152,12 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     getCardViewMode,
     getEnableCompactLabels,
   } = useAppViewMode()
+  const { focusedColumnId } = useFocusedColumn()
   const columnWidth = useColumnWidth()
   const repoTableColumnWidth = useRepoTableColumnWidth()
 
   const columnRef = useRef<View>(null)
-  useTheme(theme => {
+  useTheme(undefined, theme => {
     if (!columnRef.current) return
 
     columnRef.current!.setNativeProps({
@@ -172,7 +178,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     [column.id, enableSharedFiltersView],
   )
 
-  const { filteredItems } = useColumnData(column.id, false)
+  const { filteredItems } = useColumnData(column.id, { mergeSimilar: false })
 
   const clearableItems = (filteredItems as any[]).filter(
     (
@@ -278,6 +284,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       renderSideSeparators
     >
       <ColumnHeader key={`column-renderer-${column.id}-header`}>
+        {Platform.realOS === 'web' &&
+          filteredItems.length === 0 &&
+          focusedColumnId === column.id && <CardBorder />}
+
         <ColumnHeaderItem
           analyticsLabel={undefined}
           avatarProps={
@@ -443,7 +453,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 }: {
                   cardViewMode: CardViewMode
                   enableCompactLabels: boolean
-                }) => children({ cardViewMode, enableCompactLabels })}
+                }) =>
+                  children({
+                    cardViewMode,
+                    disableItemFocus: inlineMode ? false : isFiltersOpened,
+                    enableCompactLabels,
+                    isFiltersOpened,
+                  })
+                }
               </ViewMeasurer>
 
               {!!isFreeTrial && <FreeTrialHeaderMessage />}

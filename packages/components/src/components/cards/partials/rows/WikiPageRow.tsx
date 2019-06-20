@@ -17,7 +17,7 @@ export interface WikiPageRowProps
   > {
   bold?: boolean
   hideIcon?: boolean
-  isRead: boolean
+  muted: boolean
   name?: string
   showMoreItemsIndicator?: boolean
   title: string
@@ -30,7 +30,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
   const {
     bold,
     hideIcon,
-    isRead,
+    muted,
     name,
     showMoreItemsIndicator,
     title: _title,
@@ -52,14 +52,9 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
             href={showMoreItemsIndicator ? undefined : fixURL(url)}
             style={cardRowStyles.mainContentContainer}
             textProps={{
-              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
-              // color: 'foregroundColor',
+              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
               numberOfLines: 1,
-              style: [
-                cardStyles.normalText,
-                bold && cardStyles.boldText,
-                // isRead && { fontWeight: undefined },
-              ],
+              style: [cardStyles.normalText, bold && cardStyles.boldText],
             }}
           >
             <>

@@ -8,7 +8,12 @@ import {
   getUserAvatarByEmail,
   getUserAvatarByUsername,
 } from '@devhub/core'
-import { avatarSize, radius, smallAvatarSize } from '../../styles/variables'
+import {
+  avatarSize,
+  mutedOpacity,
+  radius,
+  smallAvatarSize,
+} from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
 import {
   ThemedImageWithLoading,
@@ -26,6 +31,7 @@ export interface AvatarProps
   hitSlop?: TouchableOpacityProps['hitSlop']
   isBot?: boolean
   linkURL?: string
+  muted?: boolean
   repo?: string
   shape?: 'circle' | 'rounded' | 'square'
   size?: number
@@ -45,6 +51,7 @@ export function Avatar(props: AvatarProps) {
     hitSlop,
     isBot: _isBot,
     linkURL,
+    muted,
     repo,
     shape,
     size: _size,
@@ -84,7 +91,8 @@ export function Avatar(props: AvatarProps) {
 
   if (!uri) return null
 
-  const tooltip = _tooltip === null ? '' : _tooltip || `@${username}`
+  const tooltip =
+    !_tooltip && _tooltip !== undefined ? '' : _tooltip || `@${username}`
 
   const linkUri = disableLink
     ? undefined
@@ -127,6 +135,7 @@ export function Avatar(props: AvatarProps) {
                 ? 0
                 : radius,
           },
+          muted && { opacity: mutedOpacity },
           style,
         ]}
         tooltip={tooltip}

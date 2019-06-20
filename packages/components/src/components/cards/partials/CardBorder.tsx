@@ -1,13 +1,10 @@
 import React from 'react'
 
-import { Platform } from '../../../libs/platform'
 import { ThemedView } from '../../themed/ThemedView'
 
-export interface CardFocusBorderProps {}
+export interface CardBorderProps {}
 
-export function CardFocusBorder() {
-  if (Platform.realOS !== 'web') return null
-
+export function CardBorder() {
   return (
     <ThemedView
       backgroundColor="primaryBackgroundColor"

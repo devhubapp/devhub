@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react'
 import {
   StyleProp,
-  StyleSheet,
   Text,
   TextProps,
   View,
@@ -27,7 +26,7 @@ export interface LabelProps {
     | ((theme: ThemeColors) => string)
   containerProps?: ViewProps
   containerStyle?: StyleProp<ViewStyle>
-  enableEmojis?: boolean
+  disableEmojis?: boolean
   hideText?: boolean
   muted?: boolean
   outline?: boolean
@@ -50,7 +49,7 @@ export function Label(props: LabelProps) {
     colorThemeColor: _colorThemeColor,
     containerProps = {},
     containerStyle,
-    enableEmojis,
+    disableEmojis,
     hideText,
     muted,
     outline,
@@ -107,7 +106,7 @@ export function Label(props: LabelProps) {
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: typeof radius === 'number' ? radius : height / 2,
-          borderWidth: outline ? StyleSheet.hairlineWidth : 0,
+          borderWidth: outline ? 1 : 0,
         },
         containerProps && containerProps.style,
         containerStyle,
@@ -163,18 +162,13 @@ export function Label(props: LabelProps) {
           ? parseTextWithEmojisToReactComponents(children, {
               key: `label-text-${children}`,
               imageProps: {
-                style: enableEmojis
-                  ? {
-                      marginHorizontal: 2,
-                      width: small ? 13 : 14,
-                      height: small ? 13 : 14,
-                    }
-                  : {
-                      marginHorizontal: 0,
-                      width: 0,
-                      height: 0,
-                    },
+                style: {
+                  marginHorizontal: 2,
+                  width: small ? 13 : 14,
+                  height: small ? 13 : 14,
+                },
               },
+              stripEmojis: disableEmojis,
             })
           : children}
       </Text>

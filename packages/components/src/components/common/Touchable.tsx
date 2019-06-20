@@ -58,6 +58,7 @@ export const Touchable = React.forwardRef(
       if (!node) return
 
       node.title = tooltip || ''
+      if (!tooltip && node.removeAttribute) node.removeAttribute('title')
     }, [touchableRef.current, tooltip])
 
     const onPress: typeof _onPress =
@@ -84,14 +85,15 @@ export const Touchable = React.forwardRef(
     return (
       <TouchableComponent
         {...props}
-        className="touchable"
         ref={touchableRef}
+        data-touchable
+        data-touchable-disabled={!!props.disabled}
+        data-touchable-onpress={!!onPress}
         onLongPress={onLongPress}
         onPress={onPress}
         style={[
           props.style,
           props.disabled && { opacity: 0.5 },
-          !onPress && ({ cursor: undefined } as any),
           selectable === true && ({ userSelect: undefined } as any),
         ]}
       />

@@ -22,9 +22,9 @@ export interface CommentRowProps
   analyticsLabel?: LinkProps['analyticsLabel']
   avatarUrl: string | undefined
   body: string
-  isRead: boolean
   leftContent: 'avatar' | 'icon' | 'none'
-  maxLength?: number | undefined
+  maxLength?: number | null | undefined
+  muted: boolean
   numberOfLines?: number
   textStyle?: ThemedTextProps['style']
   url?: string
@@ -39,8 +39,8 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     avatarUrl,
     body: _body,
     leftContent,
-    isRead,
     maxLength = props.viewMode === 'compact' ? 60 : 120,
+    muted,
     numberOfLines = props.numberOfLines ||
       (props.viewMode === 'compact' ? 1 : 2),
     textStyle,
@@ -51,7 +51,10 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     ...otherProps
   } = props
 
-  const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), maxLength)
+  const body = trimNewLinesAndSpaces(
+    stripMarkdown(`${_body || ''}`),
+    maxLength || undefined,
+  )
   if (!body) return null
 
   const isBot = Boolean(username && username.indexOf('[bot]') >= 0)
@@ -72,6 +75,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             avatarUrl={avatarUrl}
             isBot={isBot}
             linkURL={userLinkURL}
+            muted={muted}
             small
             style={cardStyles.avatar}
             username={username}
@@ -85,8 +89,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             enableTextWrapper
             href={fixURL(url, { addBottomAnchor })}
             textProps={{
-              color: isRead ? 'foregroundColorMuted60' : 'foregroundColor',
-              // color: 'foregroundColor',
+              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
               numberOfLines,
               style: [cardStyles.commentText, textStyle],
             }}

@@ -9,7 +9,6 @@ export interface UserListRowProps
     UserRowProps,
     'avatarUrl' | 'showMoreItemsIndicator' | 'userLinkURL' | 'username'
   > {
-  isRead: boolean
   maxHeight?: number
   users: GitHubUser[]
 }

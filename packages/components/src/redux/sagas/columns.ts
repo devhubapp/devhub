@@ -1,7 +1,7 @@
 import { all, delay, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
-  ActivityColumnSubscription,
+  ActivityColumnSubscriptionCreation,
   AppViewMode,
   Column,
   ColumnsAndSubscriptions,
@@ -13,6 +13,7 @@ import {
   isReadFilterChecked,
   IssueOrPullRequestColumn,
   IssueOrPullRequestColumnSubscription,
+  IssueOrPullRequestColumnSubscriptionCreation,
   itemPassesFilterRecord,
   NotificationColumn,
   NotificationColumnSubscription,
@@ -32,21 +33,47 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     },
   }) as NotificationColumnSubscription
 
-  const userReceivedEventsSubscription = createSubscriptionObjectWithId({
+  const userReceivedEventsSubscription = createSubscriptionObjectWithId<
+    ActivityColumnSubscriptionCreation
+  >({
     type: 'activity',
     subtype: 'USER_RECEIVED_EVENTS',
     params: {
       username,
     },
-  }) as ActivityColumnSubscription
+  })
 
-  const userEventsSubscription = createSubscriptionObjectWithId({
+  const involvedIssuesAndPRsSubscription = createSubscriptionObjectWithId<
+    IssueOrPullRequestColumnSubscriptionCreation
+  >({
+    type: 'issue_or_pr',
+    subtype: undefined,
+    params: {
+      involves: { [username.toLowerCase()]: true },
+      subjectType: undefined,
+    },
+  })
+
+  const myReposIssuesAndPRsSubscription = createSubscriptionObjectWithId<
+    IssueOrPullRequestColumnSubscriptionCreation
+  >({
+    type: 'issue_or_pr',
+    subtype: undefined,
+    params: {
+      owners: { [username.toLowerCase()]: { value: true, repos: {} } },
+      subjectType: undefined,
+    },
+  })
+
+  const userEventsSubscription = createSubscriptionObjectWithId<
+    ActivityColumnSubscriptionCreation
+  >({
     type: 'activity',
     subtype: 'USER_EVENTS',
     params: {
       username,
     },
-  }) as ActivityColumnSubscription
+  })
 
   const result: ColumnsAndSubscriptions = {
     columns: [
@@ -64,7 +91,42 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
         id: guid(),
         subscriptionIds: [userReceivedEventsSubscription.id],
         type: 'activity',
-        filters: undefined,
+        filters: {
+          subjectTypes: {
+            Release: true,
+            Repository: true,
+            Tag: true,
+            User: true,
+          },
+        },
+      },
+      {
+        id: guid(),
+        subscriptionIds: [involvedIssuesAndPRsSubscription.id],
+        type: 'issue_or_pr',
+        filters: {
+          involves: involvedIssuesAndPRsSubscription.params.involves,
+          owners: involvedIssuesAndPRsSubscription.params.owners,
+          subjectTypes: involvedIssuesAndPRsSubscription.params.subjectType
+            ? {
+                [involvedIssuesAndPRsSubscription.params.subjectType]: true,
+              }
+            : undefined,
+        },
+      },
+      {
+        id: guid(),
+        subscriptionIds: [myReposIssuesAndPRsSubscription.id],
+        type: 'issue_or_pr',
+        filters: {
+          involves: myReposIssuesAndPRsSubscription.params.involves,
+          owners: myReposIssuesAndPRsSubscription.params.owners,
+          subjectTypes: myReposIssuesAndPRsSubscription.params.subjectType
+            ? {
+                [myReposIssuesAndPRsSubscription.params.subjectType]: true,
+              }
+            : undefined,
+        },
       },
       {
         id: guid(),
@@ -76,6 +138,8 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     subscriptions: [
       notificationSubscription,
       userReceivedEventsSubscription,
+      involvedIssuesAndPRsSubscription,
+      myReposIssuesAndPRsSubscription,
       userEventsSubscription,
     ],
   }
@@ -103,7 +167,7 @@ function* onAddColumn(
 function* onMoveColumn(
   action: ExtractActionFromActionCreator<typeof actions.moveColumn>,
 ) {
-  const appViewMode: AppViewMode = yield select(selectors._appViewModeSelector)
+  const appViewMode: AppViewMode = yield select(selectors.appViewModeSelector)
 
   const ids: string[] = yield select(selectors.columnIdsSelector)
   if (!(ids && ids.length)) return
@@ -202,13 +266,18 @@ function* onSetClearedAt(
 
 function* onColumnSubscriptionFilterChange(
   action:
-    | ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>
+    | ExtractActionFromActionCreator<typeof actions.clearColumnFilters>
+    | ExtractActionFromActionCreator<typeof actions.replaceColumnFilters>
+    | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnInvolvesFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnOwnerFilter>
     | ExtractActionFromActionCreator<
         typeof actions.setColumnParticipatingFilter
       >
-    | ExtractActionFromActionCreator<typeof actions.setColummSubjectTypeFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnRepoFilter>
     | ExtractActionFromActionCreator<typeof actions.setColummStateTypeFilter>
-    | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>,
+    | ExtractActionFromActionCreator<typeof actions.setColummSubjectTypeFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnUnreadFilter>,
 ) {
   if (!action.payload.columnId) return
 
@@ -276,6 +345,21 @@ function* onColumnSubscriptionFilterChange(
           ...subscription.params,
           draft: c.filters ? c.filters.draft : subscription.params.draft,
           state: c.filters ? c.filters.state : subscription.params.state,
+          involves: c.filters
+            ? c.filters.involves
+            : subscription.params.involves,
+          owners:
+            action.type === 'CLEAR_COLUMN_FILTERS' ||
+            action.type === 'REPLACE_COLUMN_FILTERS' ||
+            action.type === 'SET_COLUMN_OWNER_FILTER' ||
+            action.type === 'SET_COLUMN_REPO_FILTER'
+              ? c.filters && c.filters.owners
+              : subscription.params.owners,
+          query:
+            action.type === 'CLEAR_COLUMN_FILTERS' ||
+            action.type === 'REPLACE_COLUMN_FILTERS'
+              ? c.filters && c.filters.query
+              : subscription.params.query,
           subjectType:
             includesIssues && !includesPRs
               ? 'Issue'
@@ -360,8 +444,12 @@ export function* columnsSagas() {
     yield takeLatest(
       [
         'CLEAR_COLUMN_FILTERS',
+        'REPLACE_COLUMN_FILTERS',
         'SET_COLUMN_DRAFT_FILTER',
+        'SET_COLUMN_INVOLVES_FILTER',
+        'SET_COLUMN_OWNER_FILTER',
         'SET_COLUMN_PARTICIPATING_FILTER',
+        'SET_COLUMN_REPO_FILTER',
         'SET_COLUMN_STATE_FILTER',
         'SET_COLUMN_SUBJECT_TYPE_FILTER',
         'SET_COLUMN_UNREAD_FILTER',

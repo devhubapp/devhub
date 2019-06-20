@@ -29,12 +29,7 @@ script:
         electronuserland/builder:wine \
         /bin/bash -c "yarn --pure-lockfile && yarn clean && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --linux --win"
     else
-      yarn --pure-lockfile
-      yarn clean
-      yarn workspace @devhub/web build
-      yarn workspace @devhub/desktop build:skipweb --mac
-      now --token $NOW_TOKEN --target production
-      now alias beta.devhubapp.com
+      yarn --pure-lockfile && yarn clean && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --mac && now --target production --token $NOW_TOKEN && now alias beta.devhubapp.com --token $NOW_TOKEN
     fi
 
 before_cache:

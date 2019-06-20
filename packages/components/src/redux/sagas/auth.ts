@@ -159,7 +159,14 @@ function* onLoginSuccess(
 function* updateLoggedUserOnTools() {
   const state = yield select()
 
+  const appViewMode = selectors.appViewModeSelector(state)
+  const preferredDarkThemePair = selectors.preferredDarkThemePairSelector(state)
+  const preferredLightThemePair = selectors.preferredLightThemePairSelector(
+    state,
+  )
+  const themePair = selectors.themePairSelector(state)
   const user = selectors.currentUserSelector(state)
+
   const githubUser = selectors.currentGitHubUserSelector(state)
   const githubOAuthToken = selectors.githubOAuthTokenSelector(state)
   const githubAppToken = selectors.githubAppTokenSelector(state)
@@ -167,6 +174,12 @@ function* updateLoggedUserOnTools() {
   github.authenticate(githubOAuthToken || githubAppToken || null)
 
   analytics.setUser(user && user._id)
+  analytics.setDimensions({
+    dark_theme_id: preferredDarkThemePair.id,
+    layout_mode: appViewMode,
+    light_theme_id: preferredLightThemePair.id,
+    theme_id: themePair.id,
+  })
   bugsnag.setUser(
     (user && user._id) || '',
     (githubUser && (githubUser.login || githubUser.name || githubUser.id)) ||

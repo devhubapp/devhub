@@ -58,6 +58,13 @@ export function clearColumnFilters(payload: { columnId: string }) {
   return createAction('CLEAR_COLUMN_FILTERS', payload)
 }
 
+export function replaceColumnFilters(payload: {
+  columnId: string
+  filters: ColumnFilters
+}) {
+  return createAction('REPLACE_COLUMN_FILTERS', payload)
+}
+
 export function setColumnSavedFilter(payload: {
   columnId: string
   saved?: boolean | null
@@ -114,6 +121,14 @@ export function setColumnUnreadFilter(payload: {
   unread: NotificationColumnFilters['unread']
 }) {
   return createAction('SET_COLUMN_UNREAD_FILTER', payload)
+}
+
+export function setColumnInvolvesFilter(payload: {
+  columnId: string
+  user: string
+  value: boolean | null
+}) {
+  return createAction('SET_COLUMN_INVOLVES_FILTER', payload)
 }
 
 export function setColumnOwnerFilter(payload: {

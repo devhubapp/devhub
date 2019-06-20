@@ -1,11 +1,12 @@
 import React from 'react'
-import { Image, Text, View, ViewProps } from 'react-native'
+import { Image, View, ViewProps } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
 import {
   getEmojiImageURL,
   GitHubEmoji,
 } from '../../utils/helpers/github/emojis'
+import { Spacer } from '../common/Spacer'
 import { ThemedText } from '../themed/ThemedText'
 
 export interface GenericMessageWithButtonViewProps {
@@ -40,34 +41,50 @@ export const GenericMessageWithButtonView = React.memo(
         ]}
       >
         {!!emojiImageURL && (
-          <Image
-            source={{ uri: emojiImageURL }}
-            style={{
-              alignSelf: 'center',
-              width: 16,
-              height: 16,
-              marginBottom: 4,
-            }}
-          />
+          <>
+            <Image
+              source={{ uri: emojiImageURL }}
+              style={{
+                alignSelf: 'center',
+                width: 24,
+                height: 24,
+                marginBottom: 4,
+              }}
+            />
+
+            {!!(title || subtitle) && <Spacer height={contentPadding / 2} />}
+          </>
         )}
 
         <ThemedText
           color="foregroundColorMuted60"
           style={{
-            lineHeight: 20,
-            fontSize: 14,
+            fontSize: 18,
+            fontWeight: '200',
             textAlign: 'center',
           }}
         >
           {title}
-
-          {!!subtitle && (
-            <>
-              {!!title && <Text>{'\n'}</Text>}
-              <Text style={{ fontSize: 13 }}>{subtitle}</Text>
-            </>
-          )}
         </ThemedText>
+
+        {!!subtitle && (
+          <>
+            {!!title && <Spacer height={contentPadding / 2} />}
+
+            <ThemedText
+              color="foregroundColorMuted60"
+              style={{
+                fontSize: 13,
+                fontWeight: '200',
+                textAlign: 'center',
+              }}
+            >
+              {subtitle}
+            </ThemedText>
+          </>
+        )}
+
+        <Spacer height={contentPadding / 2} />
 
         {!!buttonView && (
           <View style={{ padding: contentPadding }}>{buttonView}</View>

@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { createSelector } from 'reselect'
 
+import { Installation } from '@devhub/core'
 import { RootState } from '../../types'
 import { createArraySelector } from '../helpers'
 
@@ -16,6 +17,9 @@ export const installationIdsSelector = (state: RootState) =>
 export const installationOwnerNamesSelector = (state: RootState) =>
   s(state).allOwnerNames || emptyArray
 
+export const installationsLastFetchedAtSelector = (state: RootState) =>
+  s(state).lastFetchedAt
+
 export const installationsLoadStateSelector = (state: RootState) =>
   s(state).loadState
 
@@ -26,7 +30,9 @@ export const installationsArrSelector = createArraySelector(
   (state: RootState) => installationIdsSelector(state),
   (state: RootState) => s(state).byId,
   (ids, byId) =>
-    byId && ids ? ids.map(id => byId[id]).filter(Boolean) : emptyArray,
+    (byId && ids
+      ? ids.map(id => byId[id]).filter(Boolean)
+      : emptyArray) as Installation[],
 )
 
 export const installationByOwnerSelector = createSelector(

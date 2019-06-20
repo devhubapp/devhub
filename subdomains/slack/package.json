@@ -1,0 +1,21 @@
+{
+  "name": "@devhub/slack",
+  "version": "1.0.0",
+  "private": false,
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "cd .",
+    "clean": "cd .",
+    "compile": "cd .",
+    "deploy": "now  --target production",
+    "format": "prettier --write '{.,src/**}/*.js'",
+    "lint": "eslint src",
+    "prepare": "cd ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "5.9.0",
+    "now": "*"
+  }
+}

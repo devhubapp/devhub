@@ -22,7 +22,7 @@ export const MAX_COLUMN_WIDTH = 340
 
 export const DISABLE_ANIMATIONS = false
 export const DISABLE_SWIPEABLE_CARDS = true
-export const DISABLE_SINGLE_COLUMN = !IS_BETA && !IS_LOCALHOST
+export const DISABLE_SINGLE_COLUMN = false
 
 export const DEFAULT_DARK_THEME = 'dark-gray'
 export const DEFAULT_LIGHT_THEME = 'light-blue'
@@ -40,5 +40,4 @@ export const API_BASE_URL = 'https://api.devhubapp.com'
 export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
 
 export const DEVHUB_BETA_URL = 'https://beta.devhubapp.com'
-export const SLACK_INVITE_LINK =
-  'https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q'
+export const SLACK_INVITE_LINK = 'https://slack.devhubapp.com'

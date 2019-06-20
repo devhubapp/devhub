@@ -135,6 +135,7 @@ export function Link(props: LinkProps) {
   ])
 
   const initialTheme = useTheme(
+    undefined,
     useCallback(
       theme => {
         if (cacheRef.current.theme === theme) return
@@ -164,6 +165,7 @@ export function Link(props: LinkProps) {
     if (!node) return
 
     node.title = tooltip || ''
+    if (!tooltip && node.removeAttribute) node.removeAttribute('title')
   }, [containerRef.current, tooltip])
 
   const cacheRef = useRef({ theme: initialTheme, isHovered: false })

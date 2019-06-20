@@ -22,6 +22,7 @@ export const Screen = React.memo((props: ScreenProps) => {
   const { statusBarBackgroundThemeColor, ...viewProps } = props
 
   const initialTheme = useTheme(
+    undefined,
     useCallback(theme => {
       if (cacheRef.current.theme === theme) return
 

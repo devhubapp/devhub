@@ -20,7 +20,7 @@ import { useTheme } from '../context/ThemeContext'
 export const ThemePreference = React.memo(() => {
   const lastThemeId = useRef(defaultTheme.id)
 
-  useTheme(theme => {
+  useTheme(undefined, theme => {
     if (theme.id === 'auto') return
     lastThemeId.current = theme.id
   })
@@ -61,7 +61,7 @@ export const ThemePreference = React.memo(() => {
         label={theme.displayName}
         onChange={checked => {
           if (
-            checked === true ||
+            typeof checked === 'boolean' ||
             (currentThemeId === 'auto' && checked === null)
           ) {
             if (currentThemeId === 'auto' && theme.isDark === isNight()) {

@@ -5,43 +5,56 @@ import { isItemRead, ThemeColors } from '@devhub/core'
 import { Separator } from '../../common/Separator'
 import { useTheme } from '../../context/ThemeContext'
 
-export function getCardItemSeparatorThemeColor(
+export function getCardItemSeparatorThemeColors(
   backgroundColor: string,
-  isRead?: boolean,
-): keyof ThemeColors {
+  muted?: boolean,
+): [keyof ThemeColors, keyof ThemeColors | undefined] {
   const luminance = getLuminance(backgroundColor)
 
-  if (luminance <= 0.02)
-    return isRead ? 'backgroundColorLighther2' : 'backgroundColor'
-
   if (luminance >= 0.6)
-    return isRead ? 'backgroundColorDarker2' : 'backgroundColorDarker1'
+    return muted
+      ? ['backgroundColorDarker4', 'backgroundColorLighther2']
+      : ['backgroundColorDarker2', 'backgroundColorDarker1']
 
-  return isRead ? 'backgroundColorDarker1' : 'backgroundColor'
+  if (luminance <= 0.01)
+    return muted
+      ? ['backgroundColorDarker4', 'backgroundColorLighther2']
+      : ['backgroundColor', 'backgroundColorLighther5']
+
+  return muted
+    ? ['backgroundColorDarker4', 'backgroundColorLighther1']
+    : ['backgroundColorDarker1', 'backgroundColorLighther5']
 }
 
-export function CardItemSeparator(props: {
-  isRead?: boolean
+export interface CardItemSeparatorProps {
+  inverted?: boolean
   leadingItem?: any
-}) {
-  const { leadingItem, isRead: _isRead } = props
+  muted?: boolean
+}
+
+export function CardItemSeparator(props: CardItemSeparatorProps) {
+  const { inverted, leadingItem, muted: _muted } = props
 
   const theme = useTheme()
 
-  const isRead =
-    typeof _isRead === 'boolean'
-      ? _isRead
+  const muted =
+    typeof _muted === 'boolean'
+      ? _muted
       : leadingItem
       ? isItemRead(leadingItem)
       : false
 
+  const cardItemSeparatorThemeColors = getCardItemSeparatorThemeColors(
+    theme.backgroundColor,
+    muted,
+  )
+
   return (
     <Separator
-      backgroundThemeColor={getCardItemSeparatorThemeColor(
-        theme.backgroundColor,
-        isRead,
-      )}
+      backgroundThemeColor1={cardItemSeparatorThemeColors[0]}
+      backgroundThemeColor2={cardItemSeparatorThemeColors[1]}
       horizontal
+      inverted={inverted}
     />
   )
 }

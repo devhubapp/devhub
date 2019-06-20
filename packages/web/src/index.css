@@ -36,10 +36,6 @@ body {
 }
 
 a:hover, a:hover > * {
-  cursor: default;
-}
-
-a[target^="_blank"]:hover, a[target^="_blank"]:hover > * {
   cursor: pointer;
 }
 
@@ -47,11 +43,19 @@ input:focus {
   outline: none !important;
 }
 
-.touchable:not(a) {
-  cursor: inherit;
+[data-touchable] {
+  cursor: default;
+}
+
+[data-touchable="true"][data-touchable-onpress="true"] {
+  cursor: pointer;
+}
+
+[data-touchable="true"][data-touchable-disabled="true"] {
+  cursor: not-allowed;
 }
 
 /* https://github.com/necolas/react-native-web/issues/1299 */
-.pagingEnabledFix > div > div > div {
+[data-paging-enabled-fix]  > div > div > div {
   height: 100%;
 }

@@ -20,6 +20,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
+  mutedOpacity,
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
@@ -28,6 +29,7 @@ import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
+import { Separator, separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -35,7 +37,7 @@ import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { CardActions } from './partials/CardActions'
 import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
-import { CardFocusBorder } from './partials/CardFocusBorder'
+import { CardBorder } from './partials/CardBorder'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { LabelsView } from './partials/rows/LabelsView'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
@@ -101,6 +103,8 @@ export const IssueOrPullRequestCard = React.memo(
 
     const isRead = isItemRead(issueOrPullRequest)
     const isSaved = saved === true
+    const muted = false // isRead
+    const showCardBorder = Platform.realOS === 'web' && isFocused
 
     const repo = {
       id: '',
@@ -146,7 +150,7 @@ export const IssueOrPullRequestCard = React.memo(
           ) && (
             <RepositoryRow
               key={`issue-or-pr-repo-row-${repo.id}`}
-              isRead={isRead}
+              muted={muted}
               ownerName={repoOwnerName}
               repositoryName={repoName}
               small
@@ -161,10 +165,10 @@ export const IssueOrPullRequestCard = React.memo(
               addBottomAnchor={false}
               avatarUrl={issueOrPullRequest.user.avatar_url}
               backgroundThemeColor={theme =>
-                getCardBackgroundThemeColor(theme, { isRead })
+                getCardBackgroundThemeColor(theme, { muted: isRead })
               }
               body={issueOrPullRequest.body}
-              bold
+              bold={!isRead}
               commentsCount={
                 showCardActions ? undefined : issueOrPullRequest.comments
               }
@@ -176,7 +180,7 @@ export const IssueOrPullRequestCard = React.memo(
               // iconName={issueIconName! || pullRequestIconName}
               id={issueOrPullRequest.id}
               isPrivate={!!isPrivate}
-              isRead={isRead}
+              muted={muted}
               issueOrPullRequestNumber={issueOrPullRequestNumber!}
               labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
               owner={repoOwnerName || ''}
@@ -202,7 +206,7 @@ export const IssueOrPullRequestCard = React.memo(
                           <>
                             <ThemedText
                               color={
-                                isRead
+                                muted
                                   ? 'foregroundColorMuted40'
                                   : 'foregroundColorMuted60'
                               }
@@ -267,14 +271,26 @@ export const IssueOrPullRequestCard = React.memo(
           key={`issue-or-pr-card-${id}-compact-inner`}
           ref={itemRef}
           backgroundColor={theme =>
-            getCardBackgroundThemeColor(theme, { isRead })
+            getCardBackgroundThemeColor(theme, { muted: isRead })
           }
           style={[
             cardStyles.compactContainer,
             alignVertically && { alignItems: 'center' },
           ]}
         >
-          {!!isFocused && <CardFocusBorder />}
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: separatorSize,
+            }}
+          >
+            <Separator horizontal={false} />
+          </View>
+
+          {!!showCardBorder && <CardBorder />}
 
           {/* <CenterGuide /> */}
 
@@ -311,6 +327,7 @@ export const IssueOrPullRequestCard = React.memo(
                 <Avatar
                   isBot={isBot}
                   linkURL=""
+                  muted={muted}
                   small
                   size={smallAvatarSize}
                   username={repoOwnerName}
@@ -335,7 +352,7 @@ export const IssueOrPullRequestCard = React.memo(
                     key={`issue-or-pr-repo-row-${repoOwnerName}-${repoName}`}
                     disableLeft
                     hideOwner
-                    isRead={isRead}
+                    muted={muted}
                     ownerName={repoOwnerName}
                     repositoryName={repoName}
                     rightContainerStyle={{
@@ -375,7 +392,7 @@ export const IssueOrPullRequestCard = React.memo(
                 style={{
                   fontSize: columnHeaderItemContentSize,
                   textAlign: 'center',
-                  // opacity: isRead ? mutedOpacity : 1,
+                  opacity: muted ? mutedOpacity : 1,
                 }}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
@@ -402,7 +419,7 @@ export const IssueOrPullRequestCard = React.memo(
               <>
                 <LabelsView
                   backgroundThemeColor={theme =>
-                    getCardBackgroundThemeColor(theme, { isRead })
+                    getCardBackgroundThemeColor(theme, { muted: isRead })
                   }
                   enableScrollView={isSingleRow}
                   labels={issueOrPullRequest.labels.map(label => ({
@@ -413,7 +430,7 @@ export const IssueOrPullRequestCard = React.memo(
                     color: label.color && `#${label.color}`,
                     name: label.name,
                   }))}
-                  muted={isRead}
+                  muted={muted}
                   style={{
                     alignSelf: 'center',
                     justifyContent: 'flex-end',
@@ -426,7 +443,7 @@ export const IssueOrPullRequestCard = React.memo(
                     overflow: 'hidden',
                   }}
                   textThemeColor={
-                    isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                    muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
                   }
                 />
 
@@ -456,7 +473,7 @@ export const IssueOrPullRequestCard = React.memo(
                   return (
                     <ThemedText
                       color={
-                        isRead
+                        muted
                           ? 'foregroundColorMuted40'
                           : 'foregroundColorMuted60'
                       }
@@ -506,6 +523,7 @@ export const IssueOrPullRequestCard = React.memo(
             <ToggleReadButton
               isRead={isRead}
               itemIds={[id]}
+              muted={muted}
               size={columnHeaderItemContentSize}
               type="issue_or_pr"
             />
@@ -519,12 +537,12 @@ export const IssueOrPullRequestCard = React.memo(
         key={`issue-or-pr-card-${id}-inner`}
         ref={itemRef}
         backgroundColor={theme =>
-          getCardBackgroundThemeColor(theme, { isRead })
+          getCardBackgroundThemeColor(theme, { muted: isRead })
         }
         style={cardStyles.container}
       >
         {!!isSaved && <CardBookmarkIndicator />}
-        {!!isFocused && <CardFocusBorder />}
+        {!!showCardBorder && <CardBorder />}
 
         <View style={sharedStyles.flex}>
           <View
@@ -545,7 +563,7 @@ export const IssueOrPullRequestCard = React.memo(
                 style={{
                   fontSize: columnHeaderItemContentSize,
                   textAlign: 'center',
-                  // opacity: isRead ? mutedOpacity : 1,
+                  opacity: muted ? mutedOpacity : 1,
                 }}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
@@ -571,8 +589,8 @@ export const IssueOrPullRequestCard = React.memo(
               }
               isBot={isBot}
               isPrivate={isPrivate}
-              isRead={isRead}
               isSaved={isSaved}
+              muted={muted}
               smallLeftColumn={false}
               userLinkURL={actor.html_url || ''}
               username={actor.display_login || actor.login}
@@ -602,6 +620,7 @@ export const IssueOrPullRequestCard = React.memo(
                 isRead={isRead}
                 isSaved={isSaved}
                 itemIds={[id]}
+                muted={muted}
                 type="issue_or_pr"
               />
             </>

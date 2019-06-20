@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/619186/52172760-33710f00-275d-11e9-9adb-8ea4209e4453.png" height="100" /><br/>
-  <span><b>DevHub</b>: <span>TweetDeck for GitHub</span><br/>
+  <span><b>DevHub</b>: <span>GitHub Notifications Manager & Activity Watcher</span><br/>
   <span><a href="https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=github_repo_link" target="_blank">Android</a>, <a href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=github_repo_link" target="_blank">iOS</a>, <a href="https://devhubapp.com/" target="_blank">Web</a> & <a href="https://github.com/devhubapp/devhub/releases" target="_self">Desktop</a> with <b>95%+ code sharing</b> between them<br/><i>thanks to React Native + React Native Web</i></span><br/>
   <p align="center">
     <a href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=github_repo_button" target="_blank"><img alt="Download on the App Store" height="50" src="https://user-images.githubusercontent.com/619186/52173137-d416fd00-2764-11e9-98c1-77607061f188.png" /></a>
@@ -39,7 +39,7 @@
 ## Community
 
 Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
-<br/>Join our Slack Community: [Slack Invitation](https://join.slack.com/t/devhubapp/shared_invite/enQtNjEyNzMzODg3MzYzLWY1NGUwZTVhM2FlMjY5ZmY5YzE1MThjNzM0NDIzNzQyYzJkMWEyYjRkNTg0MTIxNGJkYmM1ZTRmODE2MTVkY2Q) (+ beta access!)
+<br/>Join our Slack Community: [Slack Invitation](https://slack.devhubapp.com/)
 
 <br/>
 
@@ -50,9 +50,9 @@ DevHub is a mobile and desktop app to help you manage GitHub Notifications and s
 
 ## Features
 
-- [x] **Columns layout**: Like TweetDeck, you can see at a quick glance everything that is going on;
-- [x] **Inbox Zero**: Clear all the seen items and keep your mind clean; See what's new since the last time you checked;
+- [x] **Columns layout**: See at a quick glance everything that is going on;
 - [x] **Filters**: Apply different filters to each column, remove all the noise and make them show just what you want;
+- [x] **Inbox Zero**: Clear all the seen items and keep your mind clean; See what's new since the last time you checked;
 - [x] **Enhanced notifications**: See all the relevant information before opening the notification, like comment content, issue/pull request status, release description, etc.;
 - [x] **Sanely watch repositories**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
 - [x] **Stalk users**: Follow user activities without using the `follow` button; see activities that GitHub doesn't show on your feed, like their issue comments and pushed commits;

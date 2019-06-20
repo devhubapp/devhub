@@ -62,7 +62,20 @@ export const Column = React.memo(
         }
 
         if (Platform.OS === 'web' && columnRef.current) {
-          tryFocus(columnRef.current)
+          const currentFocusedNodeTag =
+            typeof document !== 'undefined' &&
+            document &&
+            document.activeElement &&
+            document.activeElement.tagName
+
+          if (
+            !(
+              currentFocusedNodeTag &&
+              currentFocusedNodeTag.toLowerCase() === 'input'
+            )
+          ) {
+            tryFocus(columnRef.current)
+          }
         }
       },
     )

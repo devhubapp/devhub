@@ -2,26 +2,36 @@ import _ from 'lodash'
 import React, { RefObject, useCallback, useRef } from 'react'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 
 export interface ThemedViewProps extends Omit<ViewProps, 'style'> {
-  backgroundColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string | undefined)
   borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   children?: React.ReactNode
   style?: StyleProp<Omit<ViewStyle, 'backgroundColor' | 'borderColor'>>
+  themeTransformer?: ThemeTransformer
 }
 
 export const ThemedView = React.forwardRef<View, ThemedViewProps>(
   (props, receivedRef: any) => {
-    const { backgroundColor, borderColor, style, ...otherProps } = props
+    const {
+      backgroundColor,
+      borderColor,
+      style,
+      themeTransformer,
+      ...otherProps
+    } = props
 
     const fallbackRef = useRef<View>(null)
     const ref = receivedRef || fallbackRef
 
     const initialTheme = useTheme(
+      { themeTransformer },
       useCallback(
         theme => {
           updateStyle(
@@ -49,7 +59,7 @@ export const ThemedView = React.forwardRef<View, ThemedViewProps>(
 )
 
 function getStyle(
-  theme: ThemeColors,
+  theme: Theme,
   {
     backgroundColor: _backgroundColor,
     borderColor: _borderColor,
@@ -71,7 +81,7 @@ function getStyle(
 
 function updateStyle(
   ref: RefObject<View> | null,
-  theme: ThemeColors,
+  theme: Theme,
   {
     backgroundColor,
     borderColor,

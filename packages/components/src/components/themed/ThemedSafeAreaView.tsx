@@ -11,6 +11,7 @@ export interface ThemedSafeAreaViewProps extends Omit<TextProps, 'style'> {
   borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
   children?: React.ReactNode
   style?: StyleProp<Omit<TextStyle, 'backgroundColor' | 'borderColor'>>
+  // themeTransformer?: ThemeTransformer
 }
 
 export const ThemedSafeAreaView = React.forwardRef<
@@ -33,7 +34,7 @@ export const ThemedSafeAreaView = React.forwardRef<
 })
 
 function getStyle(
-  theme: ThemeColors,
+  theme: ThemeColors & { isInverted: boolean | 0 | 1 },
   {
     backgroundColor: _backgroundColor,
     borderColor: _borderColor,

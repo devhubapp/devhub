@@ -4,36 +4,12 @@ import { View } from 'react-native'
 import {
   CardViewMode,
   EnhancedGitHubEvent,
-  getBranchNameFromRef,
   getDateSmallText,
   getEventIconAndColor,
   getEventMetadata,
   getFullDateText,
-  getGitHubAvatarURLFromPayload,
-  getGitHubURLForRepo,
-  getIssueOrPullRequestNumberFromUrl,
+  getGitHubEventSubItems,
   getOwnerAndRepo,
-  getRepoFullNameFromObject,
-  getRepoFullNameFromUrl,
-  GitHubCommitCommentEvent,
-  GitHubCreateEvent,
-  GitHubEvent,
-  GitHubForkEvent,
-  GitHubGollumEvent,
-  GitHubIssuesEvent,
-  GitHubMemberEvent,
-  GitHubPage,
-  GitHubPullRequestEvent,
-  GitHubPushedCommit,
-  GitHubPushEvent,
-  GitHubReleaseEvent,
-  GitHubRepo,
-  GitHubUser,
-  isBranchMainEvent,
-  isEventPrivate,
-  isItemRead,
-  isTagMainEvent,
-  MultipleStarEvent,
 } from '@devhub/core'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
@@ -41,6 +17,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
+  mutedOpacity,
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
@@ -49,6 +26,7 @@ import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
+import { Separator, separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -56,7 +34,7 @@ import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { CardActions } from './partials/CardActions'
 import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
-import { CardFocusBorder } from './partials/CardFocusBorder'
+import { CardBorder } from './partials/CardBorder'
 import { EventCardHeader } from './partials/EventCardHeader'
 import { ActorActionRow } from './partials/rows/ActorActionRow'
 import { BranchRow } from './partials/rows/BranchRow'
@@ -103,144 +81,71 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   if (!event) return null
 
-  const { actor, payload, id, saved, type } = event as EnhancedGitHubEvent
-  const { repo: _repo } = event as GitHubEvent
-  const { repos: _repos } = event as MultipleStarEvent
-
-  const { comment } = payload as GitHubCommitCommentEvent['payload']
-  const { commits: _commits } = payload as GitHubPushEvent['payload']
-  const { forkee } = payload as GitHubForkEvent['payload']
-  const { member: _member } = payload as GitHubMemberEvent['payload']
-  let { release } = payload as GitHubReleaseEvent['payload']
-  const { pages: _pages } = payload as GitHubGollumEvent['payload']
   const {
-    pull_request: pullRequest,
-  } = payload as GitHubPullRequestEvent['payload']
-  const { issue } = payload as GitHubIssuesEvent['payload']
-  const { ref: branchOrTagRef } = payload as GitHubPushEvent['payload']
-
-  let branchName = getBranchNameFromRef(branchOrTagRef)
-
-  const issueOrPullRequest = (issue || pullRequest) as
-    | typeof issue
-    | typeof pullRequest
-    | undefined
-
-  const issueOrPullRequestNumber = issueOrPullRequest
-    ? issueOrPullRequest.number ||
-      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
-    : undefined
-
-  const isRead = isItemRead(event)
-  const isSaved = saved === true
-
-  const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
-
-  const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
-    if (!(r && r.name)) return false
-
-    const or = getOwnerAndRepo(r.name)
-    return !!(or.owner && or.repo)
-  })
-
-  // ugly and super edge case workaround for repo not being returned on some commit events
-  if (!_allRepos.length && commits[0]) {
-    const _repoFullName = getRepoFullNameFromUrl(commits[0].url)
-    const { owner, repo: name } = getOwnerAndRepo(_repoFullName)
-    if (owner && name) {
-      _allRepos.push({
-        id: '',
-        fork: false,
-        private: false,
-        full_name: _repoFullName,
-        owner: { login: name } as any,
-        name,
-        url: getGitHubURLForRepo(owner, name)!,
-        html_url: getGitHubURLForRepo(owner, name)!,
-      })
-    }
-  }
-
-  const repos: GitHubRepo[] = _allRepos.filter(
-    (r, index) => !!(r && !(repoIsKnown && index === 0)),
-  )
-  const users: GitHubUser[] = [_member].filter(Boolean) // TODO
-  const pages: GitHubPage[] = (_pages || []).filter(Boolean)
-
-  const repo = _allRepos.length === 1 ? _allRepos[0] : undefined
-
-  if (event.type === 'CreateEvent' || event.type === 'DeleteEvent') {
-    const p = payload as GitHubCreateEvent['payload']
-
-    if (p.ref_type !== 'branch') branchName = ''
-
-    if (!release && p.ref_type === 'tag') {
-      release = {
-        id: '',
-        name: '',
-        tag_name: p.ref || '',
-        target_commitish: p.master_branch,
-        body: '',
-        draft: false,
-        prerelease: false,
-        created_at: event.created_at,
-        published_at: event.created_at,
-        author: event.actor,
-        assets: [],
-        url: '',
-        html_url: '',
-      }
-    }
-  }
-
-  const commitIds = commits
-    .filter(Boolean)
-    .map((item: GitHubPushedCommit) => item.sha)
-  const pageIds = pages.filter(Boolean).map((item: GitHubPage) => item.sha)
-  const repoIds = repos.filter(Boolean).map((item: GitHubRepo) => item.id)
-  const userIds = users.filter(Boolean).map((item: GitHubUser) => item.id)
-
-  const repoFullName = repo && getRepoFullNameFromObject(repo)
-  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
-    repoFullName || '',
-  )
-
-  const forkRepoFullName = getRepoFullNameFromObject(forkee)
-  const { owner: forkRepoOwnerName, repo: forkRepoName } = getOwnerAndRepo(
+    actor,
+    avatarUrl,
+    branchName,
+    branchOrTagRef,
+    comment,
+    commitShas,
+    commits,
+    createdAt,
     forkRepoFullName,
-  )
-
-  const cardIconDetails = getEventIconAndColor(event)
-  const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
-  const cardIconColor = cardIconDetails.color
+    forkee,
+    id,
+    isBot,
+    isBranchMainEvent,
+    isForcePush,
+    isPrivate,
+    isPush,
+    isRead,
+    isSaved,
+    isTagMainEvent,
+    issueOrPullRequest,
+    issueOrPullRequestNumber,
+    mergedIds,
+    pageShas,
+    pages,
+    release,
+    repoFullName,
+    repoIds: _repoIds,
+    repos: _repos,
+    userIds,
+    users,
+  } = getGitHubEventSubItems(event)
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
     appendColon: false,
     includeBranch: cardViewMode === 'compact',
     includeFork: cardViewMode === 'compact',
     includeTag: cardViewMode === 'compact',
-    repoIsKnown: repoIsKnown || cardViewMode === 'compact',
+    repoIsKnown,
   }
+
   const { actionText } = getEventMetadata(event, actionTextOptions)
+
   const actionTextWithoutColon = getEventMetadata(event, {
     ...actionTextOptions,
     appendColon: false,
   }).actionText
 
-  const isPush = type === 'PushEvent'
-  const isForcePush = isPush && (payload as GitHubPushEvent).forced
-  const isPrivate = isEventPrivate(event)
+  const cardIconDetails = getEventIconAndColor(event)
+  const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
+  const cardIconColor = cardIconDetails.color
 
-  const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
+  const muted = false // isRead
 
-  // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
-  // but the correct avatar on payload.abc.user.avatar_url,
-  // so lets get it from there instead
-  const botAvatarURL = isBot
-    ? getGitHubAvatarURLFromPayload(payload, actor.id)
-    : undefined
+  const repos = repoIsKnown ? _repos.slice(1) : _repos
+  const repoIds = repoIsKnown ? _repoIds.slice(1) : _repoIds
 
-  const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
+  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
+    repoFullName || '',
+  )
+  const { owner: forkRepoOwnerName, repo: forkRepoName } = getOwnerAndRepo(
+    forkRepoFullName || '',
+  )
+
+  const showCardBorder = Platform.realOS === 'web' && isFocused
 
   const showCardActions = cardViewMode !== 'compact' && !swipeable
 
@@ -260,14 +165,15 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <ActorActionRow
             avatarUrl={avatarUrl}
             body={actionText}
-            branch={isBranchMainEvent(event) ? branchName : undefined}
+            bold={!isRead}
+            branch={isBranchMainEvent ? branchName : undefined}
             forkOwnerName={forkRepoOwnerName}
             forkRepositoryName={forkRepoName}
             isBot={isBot}
-            isRead={isRead}
+            muted={muted}
             ownerName={repoOwnerName || ''}
             repositoryName={repoName || ''}
-            tag={isTagMainEvent(event) ? branchOrTagRef : undefined}
+            tag={isTagMainEvent ? branchOrTagRef : undefined}
             userLinkURL={actor.html_url || ''}
             username={actor.display_login || actor.login}
             viewMode={cardViewMode}
@@ -283,9 +189,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
               key={`event-comment-row-${comment.id}`}
               avatarUrl={comment.user.avatar_url}
               body={comment.body}
-              isRead={isRead}
               leftContent="none"
               maxLength={100}
+              muted={muted}
               url={comment.html_url || comment.url}
               userLinkURL={comment.user.html_url || ''}
               username={comment.user.display_login || comment.user.login}
@@ -301,7 +207,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               key={`event-repo-list-row-${repoIds.join('-')}`}
               isForcePush={isForcePush}
               isPush={isPush}
-              isRead={isRead}
+              muted={muted}
               repos={repos}
               small
               viewMode={cardViewMode}
@@ -310,12 +216,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           )}
 
         {!!branchName &&
-          !(isBranchMainEvent(event) && actionTextOptions!.includeBranch) && (
+          !(isBranchMainEvent && actionTextOptions!.includeBranch) && (
             <BranchRow
               key={`event-branch-row-${branchName}`}
               branch={branchName}
-              isBranchMainEvent={isBranchMainEvent(event)}
-              isRead={isRead}
+              isBranchMainEvent={isBranchMainEvent}
+              muted={muted}
               ownerName={repoOwnerName || ''}
               repositoryName={repoName || ''}
               viewMode={cardViewMode}
@@ -334,7 +240,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             key={`event-fork-row-${forkee.id}`}
             isForcePush={isForcePush}
             isFork
-            isRead={isRead}
+            muted={muted}
             ownerName={forkRepoOwnerName || ''}
             repositoryName={forkRepoName || ''}
             small
@@ -349,10 +255,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
             backgroundThemeColor={theme =>
-              getCardBackgroundThemeColor(theme, { isRead })
+              getCardBackgroundThemeColor(theme, { muted: isRead })
             }
             body={issueOrPullRequest.body}
-            bold
+            bold={!isRead}
             commentsCount={
               showCardActions ? undefined : issueOrPullRequest.comments
             }
@@ -363,7 +269,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             // iconName={issueIconName! || pullRequestIconName}
             id={issueOrPullRequest.id}
             isPrivate={isPrivate}
-            isRead={isRead}
+            muted={muted}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
             labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
@@ -399,7 +305,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {users.length > 0 && (
           <UserListRow
             bold={false}
-            isRead={isRead}
+            muted={muted}
             key={`event-user-list-row-${userIds.join('-')}`}
             users={users}
             viewMode={cardViewMode}
@@ -410,8 +316,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {pages.length > 0 && (
           <WikiPageListRow
             bold={false}
-            isRead={isRead}
-            key={`event-wiki-page-list-row-${pageIds.join('-')}`}
+            muted={muted}
+            key={`event-wiki-page-list-row-${pageShas.join('-')}`}
             pages={pages}
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
@@ -420,27 +326,27 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
         {commits.length > 0 && (
           <CommitListRow
-            key={`event-commit-list-row-${commitIds.join('-')}`}
+            key={`event-commit-list-row-${commitShas.join('-')}`}
             bold={false}
             commits={commits}
             isPrivate={isPrivate}
-            isRead={isRead}
+            muted={muted}
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
 
         {Boolean(release) &&
-          !(isTagMainEvent(event) && actionTextOptions!.includeTag) && (
+          !(isTagMainEvent && actionTextOptions!.includeTag) && (
             <ReleaseRow
               key={`event-release-row-${release.id}`}
               avatarUrl={release.author.avatar_url}
               body={release.body}
-              bold
+              bold={!isRead}
               branch={release.target_commitish}
               hideIcon
               isPrivate={isPrivate}
-              isRead={isRead}
+              muted={muted}
               name={release.name}
               ownerName={repoOwnerName || ''}
               repositoryName={repoName || ''}
@@ -467,14 +373,26 @@ export const EventCard = React.memo((props: EventCardProps) => {
         key={`event-card-${id}-compact-inner`}
         ref={itemRef}
         backgroundColor={theme =>
-          getCardBackgroundThemeColor(theme, { isRead })
+          getCardBackgroundThemeColor(theme, { muted: isRead })
         }
         style={[
           cardStyles.compactContainer,
           alignVertically && { alignItems: 'center' },
         ]}
       >
-        {!!isFocused && <CardFocusBorder />}
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: separatorSize,
+          }}
+        >
+          <Separator horizontal={false} />
+        </View>
+
+        {!!showCardBorder && <CardBorder />}
 
         {/* <CenterGuide /> */}
 
@@ -511,6 +429,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               <Avatar
                 isBot={isBot}
                 linkURL=""
+                muted={muted}
                 small
                 size={smallAvatarSize}
                 username={repoOwnerName}
@@ -535,7 +454,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   key={`notification-repo-row-${repoOwnerName}-${repoName}`}
                   disableLeft
                   hideOwner
-                  isRead={isRead}
+                  muted={muted}
                   ownerName={repoOwnerName}
                   repositoryName={repoName}
                   rightContainerStyle={{
@@ -575,7 +494,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                // opacity: isRead ? mutedOpacity : 1,
+                opacity: muted ? mutedOpacity : 1,
               }}
               {...!!actionTextWithoutColon &&
                 Platform.select({
@@ -602,7 +521,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             <>
               <LabelsView
                 backgroundThemeColor={theme =>
-                  getCardBackgroundThemeColor(theme, { isRead })
+                  getCardBackgroundThemeColor(theme, { muted: isRead })
                 }
                 enableScrollView={isSingleRow}
                 labels={issueOrPullRequest.labels.map(label => ({
@@ -613,7 +532,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   color: label.color && `#${label.color}`,
                   name: label.name,
                 }))}
-                muted={isRead}
+                muted={muted}
                 style={{
                   alignSelf: 'center',
                   justifyContent: 'flex-end',
@@ -626,7 +545,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   overflow: 'hidden',
                 }}
                 textThemeColor={
-                  isRead ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
                 }
               />
 
@@ -644,16 +563,16 @@ export const EventCard = React.memo((props: EventCardProps) => {
             },
           ]}
         >
-          {!!event.created_at && (
-            <IntervalRefresh date={event.created_at}>
+          {!!createdAt && (
+            <IntervalRefresh date={createdAt}>
               {() => {
-                const dateText = getDateSmallText(event.created_at, false)
+                const dateText = getDateSmallText(createdAt, false)
                 if (!dateText) return null
 
                 return (
                   <ThemedText
                     color={
-                      isRead
+                      muted
                         ? 'foregroundColorMuted40'
                         : 'foregroundColorMuted60'
                     }
@@ -664,7 +583,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                       { fontSize: smallerTextSize },
                     ]}
                     {...Platform.select({
-                      web: { title: getFullDateText(event.created_at) },
+                      web: { title: getFullDateText(createdAt) },
                     })}
                   >
                     {!!isPrivate && (
@@ -696,6 +615,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <ToggleReadButton
             isRead={isRead}
             itemIds={[id]}
+            muted={muted}
             size={columnHeaderItemContentSize}
             type="activity"
           />
@@ -708,11 +628,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
     <ThemedView
       key={`event-card-${id}-inner`}
       ref={itemRef}
-      backgroundColor={theme => getCardBackgroundThemeColor(theme, { isRead })}
+      backgroundColor={theme =>
+        getCardBackgroundThemeColor(theme, { muted: isRead })
+      }
       style={cardStyles.container}
     >
       {!!isSaved && <CardBookmarkIndicator />}
-      {!!isFocused && <CardFocusBorder />}
+      {!!showCardBorder && <CardBorder />}
 
       <View style={sharedStyles.flex}>
         <View style={[{ width: '100%' }, sharedStyles.horizontal]}>
@@ -726,7 +648,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               style={{
                 fontSize: columnHeaderItemContentSize,
                 textAlign: 'center',
-                // opacity: isRead ? mutedOpacity : 1,
+                opacity: muted ? mutedOpacity : 1,
               }}
               {...!!actionTextWithoutColon &&
                 Platform.select({
@@ -742,11 +664,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
               key={`event-card-header-${id}`}
               actionText={actionText}
               avatarUrl={avatarUrl}
-              date={event.created_at}
-              ids={('merged' in event && event.merged) || [id]}
+              bold={!isRead}
+              date={createdAt}
+              ids={mergedIds || [id]}
               isBot={isBot}
               isPrivate={isPrivate}
-              isRead={isRead}
+              muted={muted}
               smallLeftColumn
               userLinkURL={actor.html_url || ''}
               username={actor.display_login || actor.login}
@@ -783,6 +706,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
               isRead={isRead}
               isSaved={isSaved}
               itemIds={[id]}
+              muted={muted}
               type="activity"
             />
           </>

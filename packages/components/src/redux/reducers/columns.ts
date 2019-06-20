@@ -5,9 +5,11 @@ import {
   ActivityColumn,
   Column,
   filterRecordHasAnyForcedValue,
+  IssueOrPullRequestColumnFilters,
   normalizeColumns,
   normalizeSubscriptions,
   NotificationColumn,
+  NotificationColumnFilters,
 } from '@devhub/core'
 import { Reducer } from '../types'
 
@@ -165,7 +167,50 @@ export const columnsReducer: Reducer<State> = (
         const column = draft.byId[action.payload.columnId]
         if (!column) return
 
+        const previousFilters = column.filters || {}
         column.filters = {}
+
+        // don't reset inbox filter
+        if (column.type === 'notifications') {
+          const _column = column as NotificationColumn
+          const _previousFilters = previousFilters as NotificationColumnFilters
+
+          if (
+            _previousFilters.notifications &&
+            _previousFilters.notifications.participating
+          ) {
+            _column.filters!.notifications =
+              _column.filters!.notifications || {}
+            _column.filters!.notifications.participating =
+              _previousFilters.notifications.participating
+          }
+        }
+
+        // // cannot delete some filters to avoid invalid search query
+        // if (column.type === 'issue_or_pr') {
+        //   const _column = column as IssueOrPullRequestColumn
+        //   const _previousFilters = previousFilters as IssueOrPullRequestColumnFilters
+
+        //   _column.filters!.involves = _previousFilters.involves
+
+        //   if (
+        //     !filterRecordWithThisValueCount(_column.filters!.involves, true)
+        //   ) {
+        //     _column.filters!.owners = _previousFilters.owners
+        //   }
+        // }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'REPLACE_COLUMN_FILTERS':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = action.payload.filters || {}
 
         draft.updatedAt = new Date().toISOString()
       })
@@ -321,6 +366,32 @@ export const columnsReducer: Reducer<State> = (
 
         if (!filterRecordHasAnyForcedValue(column.filters.subjectTypes)) {
           column.filters.subjectTypes = {}
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_INVOLVES_FILTER':
+      return immer(state, draft => {
+        const { columnId, value } = action.payload
+
+        const user = `${action.payload.user || ''}`.toLowerCase()
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        const filters = column.filters as IssueOrPullRequestColumnFilters
+
+        filters.involves = filters.involves || {}
+        filters.involves[user] = filters.involves[user] || undefined
+
+        if (typeof value === 'boolean') {
+          filters.involves[user] = value
+        } else {
+          filters.involves[user] = undefined
         }
 
         draft.updatedAt = new Date().toISOString()

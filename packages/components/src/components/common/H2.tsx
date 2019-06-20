@@ -2,25 +2,26 @@ import React from 'react'
 import { TextProps } from 'react-native'
 
 import { contentPadding } from '../../styles/variables'
-import { ThemedText } from '../themed/ThemedText'
+import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
 
 export type H2Props = TextProps & {
   children: string
+  color?: ThemedTextProps['color']
   muted?: boolean
   withMargin?: boolean
 }
 
 export function H2(props: H2Props) {
-  const { children, muted, style, withMargin, ...otherProps } = props
+  const { children, color, muted, style, withMargin, ...otherProps } = props
 
   return (
     <ThemedText
-      color={muted ? 'foregroundColorMuted60' : 'foregroundColor'}
+      color={color || (muted ? 'foregroundColorMuted60' : 'foregroundColor')}
       {...otherProps}
       style={[
         {
           marginBottom: withMargin ? contentPadding : undefined,
-          fontWeight: '600',
+          fontWeight: '500',
         },
         style,
       ]}

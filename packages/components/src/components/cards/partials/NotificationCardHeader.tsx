@@ -24,11 +24,12 @@ import { NotificationReason } from './rows/partials/NotificationReason'
 export interface NotificationCardHeaderProps {
   avatarUrl: string | undefined
   backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
+  bold: boolean
   date: MomentInput
   ids: Array<string | number>
   isBot: boolean
   isPrivate: boolean
-  isRead: boolean
+  muted: boolean
   reason: GitHubNotificationReason
   smallLeftColumn?: boolean
   userLinkURL: string
@@ -58,11 +59,12 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
   const {
     avatarUrl,
     backgroundThemeColor,
+    bold,
     date,
     ids,
     isBot,
     isPrivate,
-    isRead,
+    muted,
     reason,
     smallLeftColumn,
     userLinkURL: _userLinkURL,
@@ -89,6 +91,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
           avatarUrl={avatarUrl}
           isBot={isBot}
           linkURL={userLinkURL}
+          muted={muted}
           shape={isBot ? undefined : 'circle'}
           small={smallLeftColumn}
           style={cardStyles.avatar}
@@ -116,15 +119,12 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 <Link
                   href={userLinkURL}
                   textProps={{
-                    color: isRead
-                      ? 'foregroundColorMuted60'
-                      : 'foregroundColor',
-                    // color: 'foregroundColor',
+                    color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
                     numberOfLines: 1,
                     style: [
                       { maxWidth: '100%' },
                       cardStyles.usernameText,
-                      // isRead && { fontWeight: undefined },
+                      bold && cardStyles.boldText,
                       { lineHeight: undefined },
                     ],
                   }}
@@ -154,7 +154,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
 
               <NotificationReason
                 backgroundThemeColor={backgroundThemeColor}
-                muted={isRead}
+                muted={muted}
                 reason={reason}
               />
             </View>
@@ -186,7 +186,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                     <Text children="  " />
                     <ThemedText
                       color={
-                        isRead
+                        muted
                           ? 'foregroundColorMuted40'
                           : 'foregroundColorMuted60'
                       }
