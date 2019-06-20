@@ -1,8 +1,13 @@
 import React from 'react'
+import { StyleSheet, View } from 'react-native'
 
 import { AppViewMode, ThemeColors } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
-import { Separator, SeparatorProps } from '../common/Separator'
+import {
+  Separator,
+  SeparatorProps,
+  separatorThickSize,
+} from '../common/Separator'
 import { useAppLayout } from '../context/LayoutContext'
 
 export function getColumnCardBackgroundThemeColor(
@@ -12,24 +17,51 @@ export function getColumnCardBackgroundThemeColor(
   return 'backgroundColor'
 }
 
-export interface ColumnSeparatorProps extends SeparatorProps {}
+export function getColumnSeparatorSize() {
+  return separatorThickSize
+}
+
+export interface ColumnSeparatorProps
+  extends Pick<SeparatorProps, 'half' | 'zIndex'> {}
+
+const styles = StyleSheet.create({
+  separatorCenterContainer: {
+    width: separatorThickSize,
+    alignItems: 'center',
+  },
+
+  separatorCenterContainer__half: {
+    width: separatorThickSize / 2,
+  },
+})
 
 export function ColumnSeparator(props: ColumnSeparatorProps) {
-  const { appOrientation } = useAppLayout()
+  const { half, zIndex } = props
+
+  const { sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
 
-  const horizontalSidebar = appOrientation === 'portrait'
+  if (appViewMode === 'single-column' || sizename === '1-small') {
+    return (
+      <View
+        style={[
+          styles.separatorCenterContainer,
+          half && styles.separatorCenterContainer__half,
+          !!zIndex && { zIndex },
+        ]}
+      >
+        <Separator horizontal={false} zIndex={zIndex} />
+      </View>
+    )
+  }
 
   return (
     <Separator
-      backgroundThemeColor1={
-        appViewMode === 'single-column'
-          ? 'backgroundColor'
-          : 'backgroundColorDarker2'
-      }
-      horizontal={horizontalSidebar}
-      thick={!horizontalSidebar}
-      {...props}
+      backgroundThemeColor1="backgroundColorDarker2"
+      half={half}
+      horizontal={false}
+      thick
+      zIndex={zIndex}
     />
   )
 }

@@ -33,7 +33,7 @@ import {
 } from '../../styles/variables'
 import { CardBorder } from '../cards/partials/CardBorder'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
-import { separatorSize, separatorThickSize } from '../common/Separator'
+import { separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
@@ -45,6 +45,7 @@ import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
+import { getColumnSeparatorSize } from './ColumnSeparator'
 
 export function getColumnCardThemeColors(
   backgroundColor: string,
@@ -146,7 +147,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     ? _isSharedFiltersOpened
     : _isLocalFiltersOpened
 
-  const { appOrientation } = useAppLayout()
+  const { appOrientation, sizename } = useAppLayout()
   const {
     appViewMode,
     getCardViewMode,
@@ -267,11 +268,15 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
   const estimatedInitialCardWidth =
     appViewMode === 'multi-column'
-      ? columnWidth
+      ? columnWidth - getColumnSeparatorSize()
       : Dimensions.get('window').width -
-        (enableSharedFiltersView && inlineMode ? fixedWidth : 0) -
+        (enableSharedFiltersView && inlineMode
+          ? fixedWidth + getColumnSeparatorSize()
+          : 0) -
         (appOrientation !== 'portrait'
-          ? sidebarSize + 2 * separatorThickSize
+          ? sidebarSize + getColumnSeparatorSize()
+          : sizename === '1-small'
+          ? 0
           : separatorSize)
 
   return (
@@ -281,7 +286,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}
-      renderSideSeparators
+      renderSideSeparators={appViewMode === 'multi-column'}
     >
       <ColumnHeader key={`column-renderer-${column.id}-header`}>
         {Platform.realOS === 'web' &&

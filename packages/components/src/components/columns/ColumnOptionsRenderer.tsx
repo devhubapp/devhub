@@ -19,6 +19,7 @@ import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptions } from './ColumnOptions'
+import { ColumnSeparator } from './ColumnSeparator'
 
 export interface ColumnOptionsRendererProps {
   close: (() => void) | undefined
@@ -229,6 +230,8 @@ export const ColumnOptionsRenderer = React.memo(
             />
           </ConditionalWrap>
         </SpringAnimatedView>
+
+        {!!inlineMode && <ColumnSeparator />}
       </>
     )
   },

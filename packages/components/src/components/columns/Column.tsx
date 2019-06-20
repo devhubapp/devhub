@@ -8,7 +8,6 @@ import { contentPadding } from '../../styles/variables'
 import { tryFocus } from '../../utils/helpers/shared'
 import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
-import { useAppLayout } from '../context/LayoutContext'
 import { ThemedView } from '../themed/ThemedView'
 import { ColumnSeparator } from './ColumnSeparator'
 
@@ -40,7 +39,6 @@ export const Column = React.memo(
 
     const columnBorderRef = useRef<View>(null)
 
-    const { sizename } = useAppLayout()
     const columnWidth = useColumnWidth()
 
     useEmitter(
@@ -96,21 +94,9 @@ export const Column = React.memo(
           style,
         ]}
       >
-        {!!renderSideSeparators && (
-          <ColumnSeparator
-            half
-            horizontal={false}
-            thick={sizename > '1-small'}
-          />
-        )}
+        {!!renderSideSeparators && <ColumnSeparator half />}
         <View style={sharedStyles.flex}>{children}</View>
-        {!!renderSideSeparators && (
-          <ColumnSeparator
-            half
-            horizontal={false}
-            thick={sizename > '1-small'}
-          />
-        )}
+        {!!renderSideSeparators && <ColumnSeparator half />}
 
         <ThemedView
           ref={columnBorderRef}
