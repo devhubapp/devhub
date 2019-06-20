@@ -291,7 +291,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       <ColumnHeader key={`column-renderer-${column.id}-header`}>
         {Platform.realOS === 'web' &&
           filteredItems.length === 0 &&
-          focusedColumnId === column.id && <CardBorder />}
+          focusedColumnId === column.id &&
+          appViewMode === 'multi-column' && <CardBorder />}
 
         <ColumnHeaderItem
           analyticsLabel={undefined}
