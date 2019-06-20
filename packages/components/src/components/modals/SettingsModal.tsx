@@ -21,6 +21,7 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
 import { AppViewModePreference } from '../widgets/AppViewModePreference'
 import { ThemePreference } from '../widgets/ThemePreference'
 
@@ -136,57 +137,81 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         ) : null}
 
         <View>
-          <SubHeader title="Follow on Twitter">
+          <SubHeader title="Community">
             <Spacer flex={1} />
 
-            <Link
-              analyticsCategory="preferences_link"
-              analyticsLabel="follow_on_twitter_brunolemos"
-              href="https://twitter.com/brunolemos"
-              openOnNewTab
-            >
-              <Avatar
-                disableLink
-                username="brunolemos"
-                size={24}
-                tooltip="@brunolemos on Twitter"
-              />
-            </Link>
+            <View style={sharedStyles.horizontal}>
+              <Link
+                analyticsCategory="preferences_link"
+                analyticsLabel="twitter"
+                href="https://twitter.com/devhub_app"
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColor',
+                  style: {
+                    fontSize: 14,
+                    lineHeight: 18,
+                    textAlign: 'center',
+                  },
+                }}
+              >
+                Twitter
+              </Link>
 
-            <Spacer width={contentPadding} />
+              <ThemedText
+                color="foregroundColorMuted25"
+                style={{
+                  fontStyle: 'italic',
+                  paddingHorizontal: contentPadding / 2,
+                }}
+              >
+                |
+              </ThemedText>
 
-            <Link
-              analyticsCategory="preferences_link"
-              analyticsLabel="follow_on_twitter_devhub"
-              href="https://twitter.com/devhub_app"
-              openOnNewTab
-            >
-              <Avatar
-                disableLink
-                username="devhubapp"
-                size={24}
-                tooltip="@devhub_app on Twitter"
-              />
-            </Link>
-          </SubHeader>
-        </View>
+              <Link
+                analyticsCategory="preferences_link"
+                analyticsLabel="slack"
+                href={constants.SLACK_INVITE_LINK}
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColor',
+                  style: {
+                    fontSize: 14,
+                    lineHeight: 18,
+                    textAlign: 'center',
+                  },
+                }}
+              >
+                Slack
+              </Link>
 
-        <View>
-          <SubHeader title="Join Slack Community">
-            <Spacer flex={1} />
+              <ThemedText
+                color="foregroundColorMuted25"
+                style={{
+                  fontStyle: 'italic',
+                  paddingHorizontal: contentPadding / 2,
+                }}
+              >
+                |
+              </ThemedText>
 
-            <Link
-              analyticsCategory="preferences_link"
-              analyticsLabel="join_slack_community"
-              href={constants.SLACK_INVITE_LINK}
-              openOnNewTab
-            >
-              <Avatar
-                avatarUrl="https://user-images.githubusercontent.com/619186/57062615-133ae880-6c97-11e9-915d-ae40de664b12.png"
-                disableLink
-                size={24}
-              />
-            </Link>
+              <Link
+                analyticsCategory="preferences_link"
+                analyticsLabel="github"
+                href="https://github.com/devhubapp/devhub"
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColor',
+                  style: {
+                    fontSize: 14,
+                    lineHeight: 18,
+                    textAlign: 'center',
+                  },
+                }}
+              >
+                GitHub
+              </Link>
+            </View>
           </SubHeader>
         </View>
 
