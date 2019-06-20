@@ -410,7 +410,7 @@ export const MainScreen = React.memo(() => {
           />
 
           <ColumnsRenderer key="columns-renderer" />
-          <ColumnArrowSwitcher key="column-arrow-switcher-renderer" />
+          {/* <ColumnArrowSwitcher key="column-arrow-switcher-renderer" /> */}
           <FABRenderer key="fab-renderer" />
         </ConditionalWrap>
       </View>
