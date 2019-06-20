@@ -45,7 +45,6 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		60EFC7011AA849D496DCEC2C /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27AA4F7C08944EB48AFA4996 /* libRNFirebase.a */; };
 		6A3D419810B34BC2C871D649 /* libPods-devhub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2D46220C64268F2FC76533 /* libPods-devhub.a */; };
-		70D960BBA2EE45CCA3743FB5 /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02455BF605234E42836FB0D9 /* libRCTGoogleAnalyticsBridge.a */; };
 		7ED0838018F5422AA40D51BB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C004FC430E247649BC8DCB5 /* CoreData.framework */; };
 		7FC9F95B44E64398A3976B78 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8888F60F6C304A58BF18E9E8 /* libRNVectorIcons.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -290,13 +289,6 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFirebase;
 		};
-		2EC3352C21A4989A007C8892 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D7601ED2F8134DA4B08D6B30 /* RCTGoogleAnalyticsBridge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A79185C61C30694E001236A6;
-			remoteInfo = RCTGoogleAnalyticsBridge;
-		};
 		2EF683A922644D6C006FC7D1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BF2D6EB839AA4F1CBDA91A7A /* BugsnagReactNative.xcodeproj */;
@@ -435,7 +427,6 @@
 		00E356EE1AD99517003FC87E /* devhubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = devhubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* devhubTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = devhubTests.m; sourceTree = "<group>"; };
-		02455BF605234E42836FB0D9 /* libRCTGoogleAnalyticsBridge.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTGoogleAnalyticsBridge.a; sourceTree = "<group>"; };
 		02C5ECB675A9487381E93537 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		0441F9718DDD44B287FA1B68 /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		12697B233D884F2EB9A7D7F0 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../../../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
@@ -478,7 +469,6 @@
 		C1520CE5C137943E997C36CD /* Pods-devhub.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-devhub.release.xcconfig"; path = "Pods/Target Support Files/Pods-devhub/Pods-devhub.release.xcconfig"; sourceTree = "<group>"; };
 		C32C469D820B4B1CB740B0D9 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		D59EE38FE98B402B99250666 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
-		D7601ED2F8134DA4B08D6B30 /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
 		FA6EFEAAAEB7487F9CC33B59 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		FD2D46220C64268F2FC76533 /* libPods-devhub.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-devhub.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -516,7 +506,6 @@
 				2E0B32F621C9EE9800275D1B /* libSplashScreen.a in Frameworks */,
 				95F555B8BE324524957EC796 /* libRNScreens.a in Frameworks */,
 				C2434B7ADC1743A68D380C24 /* libz.tbd in Frameworks */,
-				70D960BBA2EE45CCA3743FB5 /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
 				7ED0838018F5422AA40D51BB /* CoreData.framework in Frameworks */,
 				A68A9F71E59A49258150955F /* SystemConfiguration.framework in Frameworks */,
 				9394292F679C4C23ADC2055F /* libsqlite3.0.tbd in Frameworks */,
@@ -733,7 +722,6 @@
 				D59EE38FE98B402B99250666 /* libBVLinearGradient.a */,
 				0441F9718DDD44B287FA1B68 /* libSplashScreen.a */,
 				922A6C7C23614601BC85B6D6 /* libRNScreens.a */,
-				02455BF605234E42836FB0D9 /* libRCTGoogleAnalyticsBridge.a */,
 				27AA4F7C08944EB48AFA4996 /* libRNFirebase.a */,
 				4A7B304CE67D4BE2BCFF446B /* libBugsnagReactNative.a */,
 			);
@@ -762,14 +750,6 @@
 			isa = PBXGroup;
 			children = (
 				2EB534BE21BF56AB00287F7A /* libRNFirebase.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		2EC3352921A49899007C8892 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2EC3352D21A4989A007C8892 /* libRCTGoogleAnalyticsBridge.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -820,7 +800,6 @@
 				12697B233D884F2EB9A7D7F0 /* BVLinearGradient.xcodeproj */,
 				40B4448D993A4CA2ABDDA557 /* SplashScreen.xcodeproj */,
 				961B335E70A74BD9B59B6237 /* RNScreens.xcodeproj */,
-				D7601ED2F8134DA4B08D6B30 /* RCTGoogleAnalyticsBridge.xcodeproj */,
 				57716D5B6BA1484B8D9D4E4B /* RNFirebase.xcodeproj */,
 				2E98FD7522445E120083350D /* RNInAppBrowser.xcodeproj */,
 				2E98FDAC224632560083350D /* RNStoreReview.xcodeproj */,
@@ -1034,10 +1013,6 @@
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
 					ProjectRef = 00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */;
-				},
-				{
-					ProductGroup = 2EC3352921A49899007C8892 /* Products */;
-					ProjectRef = D7601ED2F8134DA4B08D6B30 /* RCTGoogleAnalyticsBridge.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302BC1ABCB91800DB3ED1 /* Products */;
@@ -1326,13 +1301,6 @@
 			fileType = archive.ar;
 			path = libRNFirebase.a;
 			remoteRef = 2EB534BD21BF56AB00287F7A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2EC3352D21A4989A007C8892 /* libRCTGoogleAnalyticsBridge.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRCTGoogleAnalyticsBridge.a;
-			remoteRef = 2EC3352C21A4989A007C8892 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		2EF683AA22644D6C006FC7D1 /* libBugsnagReactNative.a */ = {
@@ -1627,7 +1595,6 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
@@ -1659,7 +1626,6 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
@@ -1698,7 +1664,6 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient/**",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios/**",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
@@ -1739,7 +1704,6 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient/**",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios/**",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
@@ -1780,7 +1744,6 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);
@@ -1821,7 +1784,6 @@
 					"$(SRCROOT)/../../../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../../../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../../../node_modules/react-native-screens/ios/**",
-					"$(SRCROOT)/../../../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../../../node_modules/bugsnag-react-native/cocoa/**",
 				);

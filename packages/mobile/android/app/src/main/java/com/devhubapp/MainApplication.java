@@ -3,7 +3,6 @@ package com.devhubapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
@@ -37,7 +36,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNFirebasePackage(),
             new RNFirebaseAnalyticsPackage(),
-            new GoogleAnalyticsBridgePackage(),
             new VectorIconsPackage(),
             new SplashScreenReactPackage(),
             new RNScreensPackage(),

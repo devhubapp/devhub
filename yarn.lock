@@ -11642,11 +11642,6 @@ react-native-gesture-handler@1.1.0:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-react-native-google-analytics-bridge@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-google-analytics-bridge/-/react-native-google-analytics-bridge-7.1.0.tgz#f950ad05907467fbd0703649b46dc6ddf5ceb1b0"
-  integrity sha512-HtFrsTk9fGXumYUKCxS8gzFobAS+vcBMzSgpYN+YQGPAvK4xgogTpz1u19BxzjsjV85xm+aaIA/t0SkRDXVjEQ==
-
 react-native-inappbrowser-reborn@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-inappbrowser-reborn/-/react-native-inappbrowser-reborn-2.0.0.tgz#5ebd4519e6ad2f0565f89200955474c0edc56c13"

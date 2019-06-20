@@ -20,7 +20,6 @@
     "react": "16.8.6",
     "react-native": "0.59.8",
     "react-native-firebase": "5.2.3",
-    "react-native-google-analytics-bridge": "7.1.0",
     "react-native-inappbrowser-reborn": "2.0.0",
     "react-native-screens": "1.0.0-alpha.22",
     "react-native-store-review": "0.1.5"
