@@ -28,6 +28,7 @@ import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface ColumnHeaderItemProps {
+  activeOpacity?: TouchableOpacityProps['activeOpacity']
   analyticsAction?: TouchableOpacityProps['analyticsAction']
   analyticsLabel?: TouchableOpacityProps['analyticsLabel']
   avatarProps?: Partial<AvatarProps>
@@ -67,6 +68,7 @@ export interface ColumnHeaderItemProps {
 
 export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   const {
+    activeOpacity,
     analyticsAction,
     analyticsLabel,
     avatarProps: _avatarProps,
@@ -78,7 +80,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     fixedIconSize,
     forceHoverState,
     foregroundColor,
-    hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
+    hoverBackgroundThemeColor: _hoverBackgroundThemeColor = 'backgroundColorLess1',
     hoverForegroundThemeColor: _hoverForegroundThemeColor,
     iconName,
     iconStyle,
@@ -124,7 +126,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         immediate,
         backgroundColor:
           isHovered && enableBackgroundHover
-            ? hoverBackgroundThemeColor || theme.backgroundColorLess1
+            ? hoverBackgroundThemeColor || 'transparent'
             : rgba(backgroundColor || theme.backgroundColor, 0),
         foregroundColor:
           isHovered && enableForegroundHover
@@ -246,6 +248,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     onPress ? (
       <SpringAnimatedTouchableOpacity
         ref={containerRef}
+        activeOpacity={activeOpacity}
         analyticsAction={analyticsAction}
         analyticsLabel={analyticsLabel}
         disabled={disabled}
