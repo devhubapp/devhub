@@ -24,6 +24,7 @@ import {
   NotificationColumnFilters,
   NotificationColumnSubscription,
   NotificationColumnSubscriptionCreation,
+  ThemeColors,
 } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -300,14 +301,24 @@ export const AddColumnDetailsModal = React.memo(
       return !!error
     }
 
-    function ErrorMessage({ name }: { name: FormItem }) {
+    function ErrorMessage({
+      name,
+      required,
+    }: {
+      name: FormItem
+      required: boolean | undefined
+    }) {
       if (!shouldShowError(name)) return null
 
-      const error = formikProps.errors[name]!
+      let error = formikProps.errors[name]!
+      if (error === 'Required' && required === false) error = 'Empty'
 
       if (error === CIRCLE_CHARACTER) {
         return (
-          <ThemedText color="yellow" style={{ fontSize: smallerTextSize }}>
+          <ThemedText
+            color={getErrorColor({ required: false })}
+            style={{ fontSize: smallerTextSize }}
+          >
             {error}
           </ThemedText>
         )
@@ -315,7 +326,7 @@ export const AddColumnDetailsModal = React.memo(
 
       return (
         <ThemedText
-          color="red"
+          color={getErrorColor({ required })}
           style={{ fontSize: smallTextSize, fontStyle: 'italic' }}
         >
           {error}
@@ -370,14 +381,25 @@ export const AddColumnDetailsModal = React.memo(
       )
     }
 
-    function renderFormItemHeader(formItem: FormItem, title: string) {
+    function renderFormItemHeader(
+      formItem: FormItem,
+      title: string,
+      { required }: { required: boolean | undefined },
+    ) {
       return (
         <View style={sharedStyles.horizontal}>
-          <H3 color={shouldShowError(formItem) ? 'red' : undefined} withMargin>
+          <H3
+            color={
+              shouldShowError(formItem)
+                ? getErrorColor({ required })
+                : undefined
+            }
+            withMargin
+          >
             {title}
           </H3>
           <Spacer flex={1} />
-          <ErrorMessage name={formItem} />
+          <ErrorMessage name={formItem} required={required} />
         </View>
       )
     }
@@ -386,6 +408,7 @@ export const AddColumnDetailsModal = React.memo(
       formItemOption: OptionFormItem,
       formItem: Exclude<FormItem, OptionFormItem>,
       label: string,
+      { required }: { required: boolean | undefined },
     ) {
       return (
         <View key={`add-column-details-form-item-${formItemOption}`}>
@@ -401,7 +424,7 @@ export const AddColumnDetailsModal = React.memo(
               formikProps.setFieldTouched(formItemOption)
               formikProps.setFieldValue(formItemOption, value)
             }}
-            right={<ErrorMessage name={formItemOption} />}
+            right={<ErrorMessage name={formItemOption} required={required} />}
             squareContainerStyle={
               sharedColumnOptionsStyles.checkboxSquareContainer
             }
@@ -415,19 +438,22 @@ export const AddColumnDetailsModal = React.memo(
             >
               <Spacer height={contentPadding} />
 
-              {renderFormItem(formItem)}
+              {renderFormItem(formItem, { required: false })}
             </View>
           )}
         </View>
       )
     }
 
-    function renderFormItem(formItem: FormItem) {
+    function renderFormItem(
+      formItem: FormItem,
+      { required }: { required?: boolean } = {},
+    ) {
       switch (formItem) {
         case 'inbox':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              {renderFormItemHeader(formItem, 'Inbox')}
+              {renderFormItemHeader(formItem, 'Inbox', { required })}
 
               <ColumnOptionsInboxContent
                 inbox={formikProps.values.inbox}
@@ -442,8 +468,8 @@ export const AddColumnDetailsModal = React.memo(
         case 'org':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              {renderFormItemHeader(formItem, 'Organization')}
-              {renderOrgFormField()}
+              {renderFormItemHeader(formItem, 'Organization', { required })}
+              {renderOrgFormField(required)}
             </View>
           )
 
@@ -452,24 +478,33 @@ export const AddColumnDetailsModal = React.memo(
             'org_option',
             'org',
             'From organization...',
+            { required },
           )
 
         case 'owner':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              {renderFormItemHeader(formItem, 'Owner (User or Org)')}
-              {renderOwnerFormField()}
+              {renderFormItemHeader(formItem, 'Owner (User or Org)', {
+                required,
+              })}
+              {renderOwnerFormField(required)}
             </View>
           )
 
         case 'owner_option':
-          return renderFormItemOption('owner_option', 'owner', 'From owner...')
+          return renderFormItemOption(
+            'owner_option',
+            'owner',
+            'From owner...',
+            { required },
+          )
 
         case 'repo':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              {renderFormItemHeader(formItem, 'Repository')}
+              {renderFormItemHeader(formItem, 'Repository', { required })}
               {renderRepoFormField(
+                required,
                 subscription.type === 'activity' &&
                   subscription.subtype === 'REPO_EVENTS'
                   ? {
@@ -485,13 +520,14 @@ export const AddColumnDetailsModal = React.memo(
             'repo_option',
             'repo',
             'From repository...',
+            { required },
           )
 
         case 'user':
           return (
             <View key={`add-column-details-form-item-${formItem}`}>
-              {renderFormItemHeader(formItem, 'Username')}
-              {renderUserFormField({
+              {renderFormItemHeader(formItem, 'Username', { required })}
+              {renderUserFormField(required, {
                 placeholder: `E.g.: ${loggedUsername}`,
               })}
             </View>
@@ -502,6 +538,7 @@ export const AddColumnDetailsModal = React.memo(
             'user_option',
             'user',
             'Involving user...',
+            { required },
           )
 
         default:
@@ -551,7 +588,6 @@ export const AddColumnDetailsModal = React.memo(
       autoCorrect: false,
       autoFocus: false,
       blurOnSubmit: false,
-      color: 'foregroundColor',
       placeholder: '',
       onSubmitEditing: () => {
         formikProps.submitForm()
@@ -560,11 +596,21 @@ export const AddColumnDetailsModal = React.memo(
 
     function renderGenericFormTextInput<F extends FormItem>(
       formItem: F,
+      required: boolean = true,
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
+      const errorColor = getErrorColor({ required })
+
       return (
         <ThemedTextInput
-          borderColor={shouldShowError(formItem) ? 'red' : undefined}
+          textInputKey={`add-column-details-text-input-${formItem}`}
+          borderThemeColor={shouldShowError(formItem) ? errorColor : undefined}
+          borderHoverThemeColor={
+            shouldShowError(formItem) ? errorColor : undefined
+          }
+          borderFocusThemeColor={
+            shouldShowError(formItem) ? errorColor : undefined
+          }
           {...defaultTextInputProps}
           onBlur={() => {
             formikProps.setFieldTouched(formItem)
@@ -579,36 +625,40 @@ export const AddColumnDetailsModal = React.memo(
     }
 
     function renderOrgFormField(
+      required: boolean | undefined,
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
-      return renderGenericFormTextInput('org', {
+      return renderGenericFormTextInput('org', required, {
         placeholder: 'E.g.: facebook',
         ...textInputProps,
       })
     }
 
     function renderOwnerFormField(
+      required: boolean | undefined,
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
-      return renderGenericFormTextInput('owner', {
+      return renderGenericFormTextInput('owner', required, {
         placeholder: `E.g.: ${loggedUsername}, facebook`,
         ...textInputProps,
       })
     }
 
     function renderRepoFormField(
+      required: boolean | undefined,
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
-      return renderGenericFormTextInput('repo', {
+      return renderGenericFormTextInput('repo', required, {
         placeholder: 'E.g.: facebook/react',
         ...textInputProps,
       })
     }
 
     function renderUserFormField(
+      required: boolean | undefined,
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
-      return renderGenericFormTextInput('user', {
+      return renderGenericFormTextInput('user', required, {
         placeholder: `E.g.: ${loggedUsername}`,
         ...textInputProps,
       })
@@ -956,4 +1006,10 @@ function getNewColumnAndSubscriptions(
     column: newColumn,
     subscriptions: [newSubscription],
   }
+}
+
+function getErrorColor({
+  required,
+}: { required?: boolean } = {}): keyof ThemeColors {
+  return required === false ? 'orange' : 'red'
 }

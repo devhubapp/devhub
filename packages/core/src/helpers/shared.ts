@@ -2,12 +2,30 @@ import _ from 'lodash'
 import moment, { MomentInput } from 'moment'
 
 import {
+  ActivityColumnFilters,
+  Column,
+  ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
+  EnhancedGitHubNotification,
+  GitHubEventAction,
+  GitHubItemSubjectType,
   GitHubNotification,
+  GitHubStateType,
+  IssueOrPullRequestColumnFilters,
+  NotificationColumnFilters,
 } from '../types'
 import { getOwnerAndRepoFormattedFilter } from './filters'
-import { getOwnerAndRepo } from './github/shared'
+import {
+  allSubjectTypes,
+  eventActions,
+  eventSubjectTypes,
+  getOwnerAndRepo,
+  issueOrPullRequestStateTypes,
+  issueOrPullRequestSubjectTypes,
+  notificationReasons,
+  notificationSubjectTypes,
+} from './github'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, _.toUpper)
@@ -78,6 +96,10 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
 
   if (daysDiff <= 3) {
     return `${daysDiff}d${includeExactTime ? ` (${timeText})` : ''}`
+  }
+
+  if (momentDate.year() !== moment().year()) {
+    return momentDate.format('L').toLowerCase()
   }
 
   return momentDate.format('MMM Do').toLowerCase()
@@ -311,4 +333,518 @@ export function getSubscriptionOwnerOrOrg(
       : { owner: undefined, repo: undefined }
 
   return _org || _ownerAndRepo.owner || undefined
+}
+
+export function getSearchQueryFromFilter(
+  type: Column['type'],
+  filters: ColumnFilters | undefined,
+): string {
+  if (!(type && filters)) return ''
+
+  const queries: string[] = []
+
+  const {
+    // clearedAt,
+    draft,
+    owners,
+    private: _private,
+    query,
+    saved,
+    state: states,
+    subjectTypes,
+    unread,
+  } = filters
+
+  const { activity } = filters as ActivityColumnFilters
+  const { involves } = filters as IssueOrPullRequestColumnFilters
+  const { notifications } = filters as NotificationColumnFilters
+
+  function getMaybeNegate(filter: boolean | null | undefined) {
+    return filter === false ? '-' : ''
+  }
+
+  function handleRecordFilter(
+    queryKey: string,
+    filterRecord: Record<string, boolean | undefined> | undefined,
+    transform?: (
+      key: string,
+      value: boolean | undefined,
+    ) => [string, boolean | undefined],
+  ) {
+    if (!filterRecord) return
+
+    const include: string[] = []
+    const exclude: string[] = []
+    Object.entries(filterRecord).forEach(params => {
+      const [_item, value] = transform
+        ? transform(params[0], params[1])
+        : params
+
+      const item = `${_item || ''}`.toLowerCase().trim()
+      if (!(item && typeof value === 'boolean')) return
+
+      if (value) include.push(item)
+      else if (value === false) exclude.push(item)
+    })
+
+    if (include.length)
+      queries.push(`${queryKey}:${_.sortBy(include).join(',')}`)
+    if (exclude.length)
+      queries.push(`-${queryKey}:${_.sortBy(exclude).join(',')}`)
+  }
+
+  if (type === 'notifications') {
+    const inbox =
+      notifications && notifications.participating ? 'participating' : 'all'
+    queries.push(`inbox:${inbox}`)
+  }
+
+  if (owners) {
+    const { ownerFilters, repoFilters } = getOwnerAndRepoFormattedFilter({
+      owners,
+    })
+
+    handleRecordFilter('owner', ownerFilters)
+    handleRecordFilter('repo', repoFilters)
+  }
+
+  if (involves) {
+    handleRecordFilter('involves', involves)
+  }
+
+  if (typeof saved === 'boolean') {
+    const n = getMaybeNegate(saved)
+    queries.push(`${n}is:saved`)
+  }
+
+  if (unread === true) queries.push('is:unread')
+  if (unread === false) queries.push('is:read')
+
+  if (typeof _private === 'boolean')
+    queries.push(_private ? 'is:private' : 'is:public')
+
+  if (subjectTypes)
+    handleRecordFilter('is', subjectTypes, (_key, value) => {
+      const key = `${_key || ''}`.toLowerCase().trim()
+      if (key === 'pullrequest') return ['pr', value]
+      return [key, value]
+    })
+
+  if (states) handleRecordFilter('is', states)
+
+  if (typeof draft === 'boolean') {
+    const n = getMaybeNegate(draft)
+    queries.push(`${n}is:draft`)
+  }
+
+  if (notifications && notifications.reasons)
+    handleRecordFilter('reason', notifications.reasons)
+
+  if (activity && activity.actions)
+    handleRecordFilter('action', activity.actions)
+
+  // if (clearedAt) queries.push(`clear:${clearedAt}`)
+
+  if (query) queries.push(query)
+
+  return queries.join(' ')
+}
+
+export function getSearchQueryTerms(
+  query: string | undefined,
+): Array<[string, boolean] | [string, string, boolean]> {
+  if (!(query && typeof query === 'string')) return []
+
+  let q = query
+
+  q = q.replace(/(^|\s)NOT(\s)/gi, '$1-').trim()
+
+  // TODO: Fix regex
+  // const exactStringsWithBackslash = q.match(/("-?([^\\][^"])+")/g)
+  // if (exactStringsWithBackslash && exactStringsWithBackslash.length) {
+  //   exactStringsWithBackslash.forEach((str, index) => {
+  //     q = q.replace(str, '')
+  //   })
+  // }
+
+  const otherExactStrings = q.match(/(-?"[^"]+")/g)
+  if (otherExactStrings && otherExactStrings.length) {
+    otherExactStrings.forEach(str => {
+      q = q.replace(str, '')
+    })
+  }
+
+  q = q.replace(/\s+/g, ' ').trim()
+
+  const queryItems: string[] = q
+    .split(' ')
+    .map(queryItem => {
+      const dotParts = queryItem.split(':')
+
+      // handle queries with comma, like: owner:facebook,styled-components
+      // by splitting them into: owner:facebook owner:styled-components
+      if (
+        dotParts.length === 2 &&
+        dotParts[0] &&
+        dotParts[1] &&
+        dotParts[1].split(',').length > 1
+      ) {
+        return dotParts[1]
+          .split(',')
+          .map(subItem => subItem && `${dotParts[0]}:${subItem.trim()}`)
+          .filter(Boolean)
+      }
+
+      return queryItem
+    })
+    .flat()
+    .filter(Boolean)
+
+  const otherStrings: string[] = []
+  const keyValueItems: Array<[string, string, boolean]> = []
+
+  queryItems.forEach(queryItem => {
+    const dotParts = queryItem.split(':')
+
+    if (dotParts.length === 1) {
+      otherStrings.push(dotParts[0])
+    } else if (dotParts.length === 2) {
+      const _key = dotParts[0]
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase()
+      const isNegated = _key[0] === '-'
+      const key = isNegated ? _key.slice(1) : _key
+      const value = dotParts[1]
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase()
+
+      if (key && value) {
+        keyValueItems.push([key, value, isNegated])
+      }
+    }
+  })
+
+  const stringItems = [
+    // ...(exactStringsWithBackslash || []),
+    ...(otherExactStrings || []),
+    ...(otherStrings || []),
+  ]
+    .map(_str => {
+      if (!(_str && typeof _str === 'string')) return undefined
+
+      let isNegated = false
+      let str = _str
+
+      if (str[0] === '-') {
+        isNegated = true
+        str = _str.slice(1)
+      }
+
+      return [str, isNegated]
+    })
+    .filter(Boolean) as Array<[string, boolean]>
+
+  return [...keyValueItems, ...stringItems]
+}
+
+export function getFilterFromSearchQuery(
+  type: Column['type'],
+  query: string | undefined,
+  otherFilters?: Pick<ColumnFilters, 'clearedAt'> | undefined,
+): ColumnFilters {
+  const filters: ColumnFilters = {
+    ...otherFilters,
+  }
+
+  if (!type) return filters
+
+  const searchTerms = getSearchQueryTerms(query)
+
+  let unknownKeyValueQueries = ''
+  filters.query = ''
+
+  searchTerms.forEach(searchTerm => {
+    if (Array.isArray(searchTerm) && searchTerm.length === 2) {
+      const [_query, _isNegated] = searchTerm
+      if (
+        !(
+          _query &&
+          typeof _query === 'string' &&
+          typeof _isNegated === 'boolean'
+        )
+      )
+        return
+
+      const _str = `${_isNegated ? '-' : ''}${_query}`
+      filters.query = `${filters.query} ${_str}`.trim()
+      return
+    }
+
+    if (!(Array.isArray(searchTerm) && searchTerm.length === 3)) return
+
+    const [key, value, isNegated] = searchTerm
+
+    if (
+      !(
+        key &&
+        value &&
+        typeof key === 'string' &&
+        typeof value === 'string' &&
+        typeof isNegated === 'boolean'
+      )
+    )
+      return
+
+    const activityFilters = filters as ActivityColumnFilters
+    const issueOrPRFilters = filters as IssueOrPullRequestColumnFilters
+    const notificationsFilters = filters as NotificationColumnFilters
+
+    switch (key) {
+      case 'inbox': {
+        const inbox = `${value || ''}`.toLowerCase().trim()
+
+        if (type === 'notifications') {
+          notificationsFilters.notifications =
+            notificationsFilters.notifications || {}
+          notificationsFilters.notifications.participating =
+            inbox === 'participating'
+        }
+        break
+      }
+
+      case 'org':
+      case 'owner':
+      case 'user': {
+        const owner = `${value || ''}`.toLowerCase().trim()
+        filters.owners = filters.owners || {}
+        filters.owners[owner] = filters.owners[owner] || {
+          repos: {},
+          value: undefined,
+        }
+        filters.owners[owner]!.value = !isNegated
+        break
+      }
+
+      case 'repo': {
+        const repoFullName = `${value || ''}`.toLowerCase().trim()
+        const { owner, repo } = getOwnerAndRepo(repoFullName)
+        if (!(owner && repo)) return
+
+        filters.owners = filters.owners || {}
+        filters.owners[owner] = filters.owners[owner] || {
+          repos: {},
+          value: undefined,
+        }
+        filters.owners[owner]!.repos = filters.owners[owner]!.repos || {}
+        filters.owners[owner]!.repos![repo] = !isNegated
+        break
+      }
+
+      case 'involves': {
+        const user = `${value || ''}`.toLowerCase().trim()
+        issueOrPRFilters.involves = issueOrPRFilters.involves || {}
+        issueOrPRFilters.involves[user] = !isNegated
+        break
+      }
+
+      case 'is': {
+        switch (value) {
+          case 'saved': {
+            filters.saved = !isNegated
+            break
+          }
+
+          case 'unread': {
+            filters.unread = !isNegated
+            break
+          }
+
+          case 'read': {
+            filters.unread = !!isNegated
+            break
+          }
+
+          case 'public': {
+            filters.private = !!isNegated
+            break
+          }
+
+          case 'private': {
+            filters.private = !isNegated
+            break
+          }
+
+          case 'draft': {
+            filters.draft = !isNegated
+            break
+          }
+
+          case 'open': {
+            filters.state = filters.state || {}
+            filters.state.open = !isNegated
+            break
+          }
+
+          case 'closed': {
+            filters.state = filters.state || {}
+            filters.state.closed = !isNegated
+            break
+          }
+
+          case 'merged': {
+            filters.state = filters.state || {}
+            filters.state.merged = !isNegated
+            break
+          }
+
+          case 'pr': {
+            filters.subjectTypes = filters.subjectTypes || {}
+            ;(filters.subjectTypes as Record<
+              GitHubItemSubjectType,
+              boolean
+            >).PullRequest = !isNegated
+            break
+          }
+
+          default: {
+            const validSubjectTypes =
+              type === 'activity'
+                ? eventSubjectTypes
+                : type === 'issue_or_pr'
+                ? issueOrPullRequestSubjectTypes
+                : type === 'notifications'
+                ? notificationSubjectTypes
+                : allSubjectTypes
+
+            if (
+              validSubjectTypes
+                .map(subjectType => subjectType.toLowerCase())
+                .includes(value)
+            ) {
+              filters.subjectTypes = filters.subjectTypes || {}
+
+              validSubjectTypes.forEach(subjectType => {
+                if (subjectType.toLowerCase() === value) {
+                  ;(filters.subjectTypes as Record<
+                    GitHubItemSubjectType,
+                    boolean
+                  >)[subjectType] = !isNegated
+                }
+              })
+              break
+            }
+
+            // TODO: Investigate
+            // for some reason that I don't know,
+            // the code was not going to the next "default" here,
+            // so I had to copy-paste the code code below
+            if (key && value) {
+              const q = `${isNegated ? '-' : ''}${key}:${value}`
+              unknownKeyValueQueries = `${unknownKeyValueQueries} ${q}`.trim()
+              break
+            }
+          }
+        }
+      }
+
+      case 'action': {
+        if (type !== 'activity') return
+
+        const action = `${value || ''}`.toLowerCase().trim() as
+          | GitHubEventAction
+          | string
+
+        activityFilters.activity = activityFilters.activity || {}
+        activityFilters.activity.actions =
+          activityFilters.activity.actions || {}
+
+        // invalid
+        if (!eventActions.includes(action as GitHubEventAction)) return
+
+        activityFilters.activity.actions[
+          action as GitHubEventAction
+        ] = !isNegated
+        break
+      }
+
+      case 'state': {
+        const state = `${value || ''}`.toLowerCase().trim() as
+          | GitHubStateType
+          | string
+
+        filters.state = filters.state || {}
+
+        // invalid
+        if (!issueOrPullRequestStateTypes.includes(state as GitHubStateType))
+          return
+
+        filters.state[state as GitHubStateType] = !isNegated
+        break
+      }
+
+      case 'type': {
+        const subjectType = `${value || ''}`.toLowerCase().trim() as
+          | GitHubItemSubjectType
+          | string
+
+        filters.subjectTypes = filters.subjectTypes || {}
+        const subjectTypesFilter = filters.subjectTypes as Record<
+          GitHubItemSubjectType,
+          boolean
+        >
+
+        // invalid
+        if (!allSubjectTypes.includes(subjectType as GitHubItemSubjectType))
+          return
+
+        subjectTypesFilter[subjectType as GitHubItemSubjectType] = !isNegated
+        break
+      }
+
+      case 'reason': {
+        if (type !== 'notifications') return
+
+        const reason = `${value || ''}`.toLowerCase().trim() as
+          | EnhancedGitHubNotification['reason']
+          | string
+
+        notificationsFilters.notifications =
+          notificationsFilters.notifications || {}
+        notificationsFilters.notifications.reasons =
+          notificationsFilters.notifications.reasons || {}
+        const reasonsFilter = notificationsFilters.notifications
+          .reasons as Record<EnhancedGitHubNotification['reason'], boolean>
+
+        // invalid
+        if (
+          !notificationReasons.includes(
+            reason as EnhancedGitHubNotification['reason'],
+          )
+        )
+          return
+
+        reasonsFilter[
+          reason as EnhancedGitHubNotification['reason']
+        ] = !isNegated
+        break
+      }
+
+      default: {
+        if (key && value) {
+          const q = `${isNegated ? '-' : ''}${key}:${value}`
+          unknownKeyValueQueries = `${unknownKeyValueQueries} ${q}`.trim()
+        }
+
+        return
+      }
+    }
+  })
+
+  filters.query = filters.query || ''
+  if (unknownKeyValueQueries)
+    filters.query = `${unknownKeyValueQueries} ${filters.query}`.trim()
+
+  return filters
 }

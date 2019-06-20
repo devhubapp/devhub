@@ -25,9 +25,9 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { cardSearchTotalHeight, CardsSearchHeader } from './CardsSearchHeader'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard, EventCardProps } from './EventCard'
-import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
 import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
@@ -196,6 +196,15 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     props.repoIsKnown,
   ])
 
+  const renderHeader = useCallback(() => {
+    return (
+      <CardsSearchHeader
+        key={`cards-search-header-column-${column.id}`}
+        columnId={column.id}
+      />
+    )
+  }, [column.id])
+
   const renderFooter = useCallback(() => {
     const { sizename } = useAppLayout()
 
@@ -208,7 +217,11 @@ export const EventCards = React.memo((props: EventCardsProps) => {
             <Button
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
-              disabled={loadState !== 'loaded'}
+              disabled={
+                loadState === 'loading' ||
+                loadState === 'loading_first' ||
+                loadState === 'loading_more'
+              }
               loading={
                 loadState === 'loading_first' || loadState === 'loading_more'
               }
@@ -289,13 +302,13 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     [lastFetchedAt, refresh, loadState],
   )
 
-  const rerender = useMemo(() => ({}), [renderItem, renderFooter])
+  const rerender = useMemo(() => ({}), [renderItem, renderHeader, renderFooter])
 
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
+        column={column}
+        disableSearch
         errorMessage={`You have reached the limit of ${
           constants.COLUMNS_LIMIT
         } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -310,30 +323,31 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   if (!(items && items.length)) {
     if (errorMessage === 'Resource not accessible by integration') {
       return (
-        <GenericMessageWithButtonView
-          buttonView={
-            !!refresh && (
-              <ButtonLink
-                analyticsLabel="open_private_issue"
-                children="Open GitHub Issue To Upvote"
-                disabled={loadState !== 'error'}
-                href="https://github.com/devhubapp/devhub/issues/140"
-                loading={loadState === 'loading'}
-              />
-            )
-          }
+        <EmptyCards
+          column={column}
+          disableSearch
           emoji="confused"
-          fullCenter
-          title="Private access temporarily disabled"
-          subtitle="GitHub has temporarily disabled private access for GitHub Apps on their API. Please upvote the issue below to show your interest on a fix."
+          errorButtonView={
+            <ButtonLink
+              analyticsLabel="open_private_issue"
+              children="Open GitHub Issue To Upvote"
+              disabled={loadState !== 'error'}
+              href="https://github.com/devhubapp/devhub/issues/140"
+              loading={loadState === 'loading'}
+            />
+          }
+          errorTitle="Private access temporarily disabled"
+          errorMessage="GitHub has temporarily disabled private access for GitHub Apps on their API. Please upvote the issue below to show your interest on a fix."
+          fetchNextPage={undefined}
+          loadState={loadState}
+          refresh={refresh}
         />
       )
     }
 
     return (
       <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
+        column={column}
         errorMessage={errorMessage}
         fetchNextPage={fetchNextPage}
         loadState={loadState}
@@ -347,8 +361,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       ref={flatListRef}
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
+      ListHeaderComponent={renderHeader}
       alwaysBounceVertical
       bounces
+      contentOffset={{ x: 0, y: cardSearchTotalHeight }}
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}

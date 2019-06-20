@@ -24,6 +24,7 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { cardSearchTotalHeight, CardsSearchHeader } from './CardsSearchHeader'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard, NotificationCardProps } from './NotificationCard'
 import { CardItemSeparator } from './partials/CardItemSeparator'
@@ -192,6 +193,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     props.swipeable,
   ])
 
+  const renderHeader = useCallback(() => {
+    return (
+      <CardsSearchHeader
+        key={`cards-search-header-column-${column.id}`}
+        columnId={column.id}
+      />
+    )
+  }, [column.id])
+
   const renderFooter = useCallback(() => {
     const { sizename } = useAppLayout()
 
@@ -204,7 +214,11 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
             <Button
               analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
               children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
-              disabled={loadState !== 'loaded'}
+              disabled={
+                loadState === 'loading' ||
+                loadState === 'loading_first' ||
+                loadState === 'loading_more'
+              }
               loading={
                 loadState === 'loading_first' || loadState === 'loading_more'
               }
@@ -285,13 +299,13 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     [lastFetchedAt, refresh, loadState],
   )
 
-  const rerender = useMemo(() => ({}), [renderItem, renderFooter])
+  const rerender = useMemo(() => ({}), [renderItem, renderHeader, renderFooter])
 
   if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
     return (
       <EmptyCards
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
+        column={column}
+        disableSearch
         errorMessage={`You have reached the limit of ${
           constants.COLUMNS_LIMIT
         } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -306,10 +320,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   if (!(items && items.length)) {
     return (
       <EmptyCards
-        // clearEmoji="clap"
         clearMessage="No new notifications!"
-        clearedAt={column.filters && column.filters.clearedAt}
-        columnId={column.id}
+        column={column}
         errorMessage={errorMessage}
         fetchNextPage={fetchNextPage}
         loadState={loadState}
@@ -324,8 +336,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       key="notification-cards-flat-list"
       ItemSeparatorComponent={CardItemSeparator}
       ListFooterComponent={renderFooter}
+      ListHeaderComponent={renderHeader}
       alwaysBounceVertical
       bounces
+      contentOffset={{ x: 0, y: cardSearchTotalHeight }}
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}

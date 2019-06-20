@@ -1,4 +1,5 @@
 export * from './events'
+export * from './generic'
 export * from './issues'
 export * from './notifications'
 export * from './shared'

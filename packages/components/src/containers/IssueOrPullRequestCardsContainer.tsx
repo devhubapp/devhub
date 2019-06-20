@@ -38,7 +38,7 @@ export type IssueOrPullRequestCardsContainerProps = Omit<
 
 export const IssueOrPullRequestCardsContainer = React.memo(
   (props: IssueOrPullRequestCardsContainerProps) => {
-    const { cardViewMode, column, ...otherProps } = props
+    const { cardViewMode, column, repoIsKnown, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -83,7 +83,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
 
     const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubIssueOrPullRequest
-    >(column.id, cardViewMode !== 'compact')
+    >(column.id, { mergeSimilar: cardViewMode !== 'compact' })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderIssueOrPullRequestDate(allItems)
@@ -133,8 +133,8 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       if (ownerResponse.loadingState === 'loading') {
         return (
           <EmptyCards
-            clearedAt={undefined}
-            columnId={column.id}
+            column={column}
+            disableSearch
             fetchNextPage={undefined}
             loadState="loading"
             refresh={undefined}
@@ -240,6 +240,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
             : mainSubscription.data.loadState || 'not_loaded'
         }
         refresh={refresh}
+        repoIsKnown={repoIsKnown}
       />
     )
   },

@@ -125,7 +125,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     startWithFiltersExpanded,
   } = props
 
-  const { allItems } = useColumnData(column.id, false)
+  const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
+    mergeSimilar: false,
+  }
+
+  const { allItems } = useColumnData(column.id, getFilteredItemsOptions)
 
   const {
     allForcedOwners,
@@ -144,7 +148,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         ...column.filters,
         owners: undefined,
       },
-      false,
+      getFilteredItemsOptions,
     ),
     {
       forceIncludeTheseOwners: allForcedOwners,
@@ -458,7 +462,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 column.type,
                 allItems,
                 { ...column.filters, saved: undefined },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -521,7 +525,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 column.type,
                 allItems,
                 { ...column.filters, unread: undefined },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -642,7 +646,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             //   defaultBooleanValue,
             // )
 
-            const supportsOnlyOne = column.type === 'issue_or_pr'
+            const supportsOnlyOne = true // column.type === 'issue_or_pr'
 
             const filteredItemsMetadata = getItemsFilterMetadata(
               column.type,
@@ -650,7 +654,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 column.type,
                 allItems,
                 { ...column.filters, state: undefined },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -759,7 +763,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 column.type,
                 allItems,
                 { ...column.filters, draft: undefined },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -861,7 +865,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 column.type,
                 allItems,
                 { ...column.filters, subjectTypes: undefined },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -979,7 +983,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     reasons: undefined,
                   },
                 },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -1093,7 +1097,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     actions: undefined,
                   },
                 },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -1186,7 +1190,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   ...column.filters,
                   private: undefined,
                 },
-                false,
+                getFilteredItemsOptions,
               ),
             )
 
@@ -1317,8 +1321,8 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                 analyticsLabel="repositories"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={
-                  column.type !== 'issue_or_pr' &&
-                  (ownerFilterHasForcedValue || repoFilterHasForcedValue)
+                  // column.type !== 'issue_or_pr' &&
+                  ownerFilterHasForcedValue || repoFilterHasForcedValue
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 iconName="repo"
@@ -1376,16 +1380,16 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                           sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
                         }
                         defaultValue={defaultBooleanValue}
-                        disabled={
-                          !!(
-                            column.type === 'issue_or_pr' &&
-                            ownerChecked &&
-                            !filterRecordWithThisValueCount(
-                              column.filters && column.filters.involves,
-                              true,
-                            )
-                          )
-                        }
+                        // disabled={
+                        //   !!(
+                        //     column.type === 'issue_or_pr' &&
+                        //     ownerChecked &&
+                        //     !filterRecordWithThisValueCount(
+                        //       column.filters && column.filters.involves,
+                        //       true,
+                        //     )
+                        //   )
+                        // }
                         enableIndeterminateState={
                           !(isOwnerFilterStrict || isRepoFilterStrict) ||
                           thisOwnerHasStrictRepoFilter ||
@@ -1512,11 +1516,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                     participating: undefined,
                   },
                 }),
-                ...(column.type === 'issue_or_pr' && {
-                  inbox: undefined,
-                  involves: undefined,
-                  owners: undefined,
-                }),
+                // ...(column.type === 'issue_or_pr' && {
+                //   involves: undefined,
+                //   owners: undefined,
+                // }),
               })
             }
             onPress={() => {

@@ -267,6 +267,7 @@ function* onSetClearedAt(
 function* onColumnSubscriptionFilterChange(
   action:
     | ExtractActionFromActionCreator<typeof actions.clearColumnFilters>
+    | ExtractActionFromActionCreator<typeof actions.replaceColumnFilters>
     | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnInvolvesFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnOwnerFilter>
@@ -349,10 +350,16 @@ function* onColumnSubscriptionFilterChange(
             : subscription.params.involves,
           owners:
             action.type === 'CLEAR_COLUMN_FILTERS' ||
+            action.type === 'REPLACE_COLUMN_FILTERS' ||
             action.type === 'SET_COLUMN_OWNER_FILTER' ||
             action.type === 'SET_COLUMN_REPO_FILTER'
               ? c.filters && c.filters.owners
               : subscription.params.owners,
+          query:
+            action.type === 'CLEAR_COLUMN_FILTERS' ||
+            action.type === 'REPLACE_COLUMN_FILTERS'
+              ? c.filters && c.filters.query
+              : subscription.params.query,
           subjectType:
             includesIssues && !includesPRs
               ? 'Issue'
@@ -437,6 +444,7 @@ export function* columnsSagas() {
     yield takeLatest(
       [
         'CLEAR_COLUMN_FILTERS',
+        'REPLACE_COLUMN_FILTERS',
         'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_INVOLVES_FILTER',
         'SET_COLUMN_OWNER_FILTER',

@@ -98,6 +98,7 @@ export const LabelsView = (props: LabelsViewProps) => {
             paddingHorizontal: horizontalSpacing,
             paddingVertical: verticalSpacing,
           }}
+          disableEmojis
           hideText={hideText}
           outline={false}
           small

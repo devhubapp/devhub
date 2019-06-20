@@ -7,7 +7,11 @@ import { useReduxState } from './use-redux-state'
 
 export function useColumnData<ItemT extends EnhancedItem>(
   columnId: string,
-  mergeSimilar: boolean,
+  {
+    mergeSimilar,
+  }: {
+    mergeSimilar: boolean
+  },
 ) {
   const subscriptionsDataSelectorRef = useRef(
     selectors.createSubscriptionsDataSelector(),
@@ -40,7 +44,9 @@ export function useColumnData<ItemT extends EnhancedItem>(
 
   const filteredItems = useMemo(() => {
     if (!column) return allItems
-    return getFilteredItems(column.type, allItems, column.filters, mergeSimilar)
+    return getFilteredItems(column.type, allItems, column.filters, {
+      mergeSimilar,
+    })
   }, [
     column && column.type,
     allItems,

@@ -1544,12 +1544,14 @@ export interface EmojiParseOptions {
   before?: React.ReactNode
   imageProps?: Omit<ImageProps, 'source'>
   key: string
+  stripEmojis?: boolean
 }
 
 function getComponent(
   emojiImageURL: string | undefined,
-  { alt, before, after, imageProps }: EmojiParseOptions,
+  { alt, before, after, imageProps, stripEmojis }: EmojiParseOptions,
 ): React.ReactNode {
+  if (stripEmojis) return null
   if (!emojiImageURL) return null
 
   return (

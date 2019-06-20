@@ -27,6 +27,7 @@ export interface SeparatorProps {
   backgroundThemeColor2?: keyof ThemeColors
   half?: boolean
   horizontal?: boolean
+  inverted?: boolean
   thick?: boolean
   zIndex?: number
 }
@@ -37,6 +38,7 @@ export const Separator = React.memo((props: SeparatorProps) => {
     backgroundThemeColor2: _backgroundThemeColor2,
     half,
     horizontal,
+    inverted,
     thick,
     zIndex,
   } = props
@@ -67,8 +69,11 @@ export const Separator = React.memo((props: SeparatorProps) => {
     <View
       style={
         horizontal
-          ? { flexDirection: 'column', width: '100%' }
-          : { flexDirection: 'row', height: '100%' }
+          ? {
+              flexDirection: inverted ? 'column-reverse' : 'column',
+              width: '100%',
+            }
+          : { flexDirection: inverted ? 'row-reverse' : 'row', height: '100%' }
       }
     >
       {!!backgroundThemeColor1 && (

@@ -17,6 +17,7 @@ import {
   getOwnerAndRepoFormattedFilter,
   itemPassesFilterRecord,
 } from '../filters'
+import { getSearchQueryTerms } from '../shared'
 import {
   getIssueIconAndColor,
   getOwnerAndRepo,
@@ -281,10 +282,39 @@ export function sortIssuesOrPullRequests(
 
 export function getGitHubIssueSearchQuery(
   params: IssueOrPullRequestColumnSubscription['params'],
+  includeDefaultSorting: boolean = true,
 ) {
-  const queryArr: string[] = []
+  const queries: string[] = []
 
-  const { draft, involves, owners, state, subjectType } = params
+  const { draft, involves, owners, state, subjectType, query } = params
+
+  if (query) {
+    const termsToSearchFor = getSearchQueryTerms(query)
+
+    const convertedQuery = termsToSearchFor
+      .map(termArr => {
+        if (
+          !(
+            termArr &&
+            Array.isArray(termArr) &&
+            (termArr.length === 2 || termArr.length === 3)
+          )
+        )
+          return ''
+
+        const [key, value, isNegated] =
+          termArr.length === 2 ? ['', termArr[0], termArr[1]] : termArr
+        if (!(value && typeof value === 'string')) return false
+
+        const searchTerm = key ? `${key}:${value}` : value
+
+        return isNegated ? `NOT ${searchTerm}` : searchTerm
+      })
+      .filter(Boolean)
+      .join(' ')
+
+    queries.push(convertedQuery)
+  }
 
   if (owners) {
     const { ownerFiltersWithRepos } = getOwnerAndRepoFormattedFilter({ owners })
@@ -303,9 +333,9 @@ export function getGitHubIssueSearchQuery(
       )
 
       if (ownerFilter.value === true && !reposToPush.length)
-        queryArr.push(`user:${owner}`.toLowerCase())
+        queries.push(`user:${owner}`.toLowerCase())
 
-      reposToPush.forEach(repoFullName => queryArr.push(`repo:${repoFullName}`))
+      reposToPush.forEach(repoFullName => queries.push(`repo:${repoFullName}`))
     })
   }
 
@@ -315,16 +345,16 @@ export function getGitHubIssueSearchQuery(
       if (!(user && typeof value === 'boolean')) return
 
       const negationSign = !value ? '-' : ''
-      queryArr.push(`${negationSign}involves:${user}`)
+      queries.push(`${negationSign}involves:${user}`)
     })
   }
 
-  if (subjectType === 'Issue') queryArr.push('is:issue')
-  else if (subjectType === 'PullRequest') queryArr.push('is:pr')
+  if (subjectType === 'Issue') queries.push('is:issue')
+  else if (subjectType === 'PullRequest') queries.push('is:pr')
 
   if (typeof draft === 'boolean') {
-    if (draft) queryArr.push('is:draft')
-    else queryArr.push('-is:draft')
+    if (draft) queries.push('is:draft')
+    else queries.push('-is:draft')
   }
 
   if (state && filterRecordHasAnyForcedValue(state)) {
@@ -336,37 +366,37 @@ export function getGitHubIssueSearchQuery(
     switch (includesExactly) {
       // 001
       case 'merged': {
-        queryArr.push('is:merged')
+        queries.push('is:merged')
         break
       }
 
       // 010
       case 'closed': {
-        queryArr.push('state:closed')
+        queries.push('state:closed')
         break
       }
 
       // 011
       case 'closed,merged': {
-        queryArr.push('-state:open')
+        queries.push('-state:open')
         break
       }
 
       // 100
       case 'open': {
-        queryArr.push('state:open')
+        queries.push('state:open')
         break
       }
 
       // 101 (NOT POSSIBLE ON GITHUB)
       // case 'open,merged': {
-      //   queryArr.push('is:merged')
+      //   queries.push('is:merged')
       //   break
       // }
 
       // 110 (NOT POSSIBLE ON GITHUB)
       // case 'open,closed': {
-      //   queryArr.push('is:unmerged')
+      //   queries.push('is:unmerged')
       //   break
       // }
 
@@ -378,5 +408,20 @@ export function getGitHubIssueSearchQuery(
     }
   }
 
-  return queryArr.join(' ')
+  if (includeDefaultSorting) {
+    const searchTerms = getSearchQueryTerms(query)
+    if (
+      !searchTerms.find(
+        searchTerm =>
+          searchTerm &&
+          Array.isArray(searchTerm) &&
+          searchTerm.length === 3 &&
+          searchTerm[0] === 'sort',
+      )
+    ) {
+      queries.join('sort:updated-desc')
+    }
+  }
+
+  return queries.join(' ')
 }

@@ -178,7 +178,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     [column.id, enableSharedFiltersView],
   )
 
-  const { filteredItems } = useColumnData(column.id, false)
+  const { filteredItems } = useColumnData(column.id, { mergeSimilar: false })
 
   const clearableItems = (filteredItems as any[]).filter(
     (

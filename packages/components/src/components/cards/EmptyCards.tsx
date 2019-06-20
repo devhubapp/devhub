@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, View } from 'react-native'
 
-import { EnhancedLoadState } from '@devhub/core'
+import { Column, EnhancedLoadState } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
@@ -12,12 +12,17 @@ import {
 } from '../../utils/helpers/github/emojis'
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'
 import { ThemedText } from '../themed/ThemedText'
-import { GenericMessageWithButtonView } from './GenericMessageWithButtonView'
+import { cardSearchTotalHeight, CardsSearchHeader } from './CardsSearchHeader'
+import {
+  GenericMessageWithButtonView,
+  GenericMessageWithButtonViewProps,
+} from './GenericMessageWithButtonView'
 
 const clearMessages = [
   "You're doing great!",
@@ -53,9 +58,11 @@ export const defaultCardFooterHeight =
 export interface EmptyCardsProps {
   clearEmoji?: GitHubEmoji | null
   clearMessage?: string
-  clearedAt: string | undefined
-  columnId: string
-  emoji?: GitHubEmoji
+  column: Column
+  disableSearch?: boolean
+  disableShowClearedView?: boolean
+  emoji?: GitHubEmoji | null
+  errorButtonView?: GenericMessageWithButtonViewProps['buttonView']
   errorMessage?: string
   errorTitle?: string
   fetchNextPage: (() => void) | undefined
@@ -67,9 +74,11 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearEmoji = randomEmoji,
     clearMessage = randomClearMessage,
-    clearedAt,
-    columnId,
+    column,
+    disableSearch,
+    disableShowClearedView,
     emoji = 'warning',
+    errorButtonView,
     errorMessage,
     errorTitle = 'Something went wrong',
     fetchNextPage,
@@ -98,7 +107,8 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       return (
         <GenericMessageWithButtonView
           buttonView={
-            !!refresh && (
+            errorButtonView ||
+            (!!refresh && (
               <Button
                 analyticsLabel="try_again"
                 children="Try again"
@@ -106,7 +116,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
                 loading={loadState === 'loading'}
                 onPress={() => refresh()}
               />
-            )
+            ))
           }
           emoji={emoji}
           title={errorTitle}
@@ -154,7 +164,17 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   }
 
   return (
-    <View style={sharedStyles.flex}>
+    <FullHeightScrollView
+      contentOffset={{ x: 0, y: disableSearch ? 0 : cardSearchTotalHeight }}
+      style={sharedStyles.flex}
+    >
+      {!disableSearch && (
+        <CardsSearchHeader
+          key={`cards-search-header-column-${column.id}`}
+          columnId={column.id}
+        />
+      )}
+
       <View style={{ height: defaultCardFooterHeight }} />
 
       <View
@@ -163,7 +183,6 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           alignContent: 'center',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: contentPadding,
         }}
       >
         {renderContent()}
@@ -180,12 +199,14 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
             <Button
               analyticsLabel="load_more"
               children="Load more"
-              disabled={loadState !== 'loaded'}
+              disabled={loadState === 'loading' || loadState === 'loading_more'}
               loading={loadState === 'loading_more'}
               onPress={fetchNextPage}
             />
           </View>
-        ) : clearedAt ? (
+        ) : !disableShowClearedView &&
+          column.filters &&
+          column.filters.clearedAt ? (
           <View
             style={{
               paddingHorizontal: contentPadding,
@@ -196,7 +217,10 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
               analyticsLabel="show_cleared"
               children="Show cleared items"
               onPress={() => {
-                setColumnClearedAtFilter({ clearedAt: null, columnId })
+                setColumnClearedAtFilter({
+                  clearedAt: null,
+                  columnId: column.id,
+                })
                 if (refresh) refresh()
               }}
               showBorder
@@ -207,6 +231,6 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           <Spacer height={fabSize + 2 * fabSpacing} />
         ) : null}
       </View>
-    </View>
+    </FullHeightScrollView>
   )
 })

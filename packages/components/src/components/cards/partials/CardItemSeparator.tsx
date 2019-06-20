@@ -26,11 +26,14 @@ export function getCardItemSeparatorThemeColors(
     : ['backgroundColorDarker1', 'backgroundColorLighther5']
 }
 
-export function CardItemSeparator(props: {
-  muted?: boolean
+export interface CardItemSeparatorProps {
+  inverted?: boolean
   leadingItem?: any
-}) {
-  const { leadingItem, muted: _muted } = props
+  muted?: boolean
+}
+
+export function CardItemSeparator(props: CardItemSeparatorProps) {
+  const { inverted, leadingItem, muted: _muted } = props
 
   const theme = useTheme()
 
@@ -51,6 +54,7 @@ export function CardItemSeparator(props: {
       backgroundThemeColor1={cardItemSeparatorThemeColors[0]}
       backgroundThemeColor2={cardItemSeparatorThemeColors[1]}
       horizontal
+      inverted={inverted}
     />
   )
 }

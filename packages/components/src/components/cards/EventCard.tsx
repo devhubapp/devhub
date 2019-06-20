@@ -4,36 +4,12 @@ import { View } from 'react-native'
 import {
   CardViewMode,
   EnhancedGitHubEvent,
-  getBranchNameFromRef,
   getDateSmallText,
   getEventIconAndColor,
   getEventMetadata,
   getFullDateText,
-  getGitHubAvatarURLFromPayload,
-  getGitHubURLForRepo,
-  getIssueOrPullRequestNumberFromUrl,
+  getGitHubEventSubItems,
   getOwnerAndRepo,
-  getRepoFullNameFromObject,
-  getRepoFullNameFromUrl,
-  GitHubCommitCommentEvent,
-  GitHubCreateEvent,
-  GitHubEvent,
-  GitHubForkEvent,
-  GitHubGollumEvent,
-  GitHubIssuesEvent,
-  GitHubMemberEvent,
-  GitHubPage,
-  GitHubPullRequestEvent,
-  GitHubPushedCommit,
-  GitHubPushEvent,
-  GitHubReleaseEvent,
-  GitHubRepo,
-  GitHubUser,
-  isBranchMainEvent,
-  isEventPrivate,
-  isItemRead,
-  isTagMainEvent,
-  MultipleStarEvent,
 } from '@devhub/core'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
@@ -105,146 +81,71 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   if (!event) return null
 
-  const { actor, payload, id, saved, type } = event as EnhancedGitHubEvent
-  const { repo: _repo } = event as GitHubEvent
-  const { repos: _repos } = event as MultipleStarEvent
-
-  const { comment } = payload as GitHubCommitCommentEvent['payload']
-  const { commits: _commits } = payload as GitHubPushEvent['payload']
-  const { forkee } = payload as GitHubForkEvent['payload']
-  const { member: _member } = payload as GitHubMemberEvent['payload']
-  let { release } = payload as GitHubReleaseEvent['payload']
-  const { pages: _pages } = payload as GitHubGollumEvent['payload']
   const {
-    pull_request: pullRequest,
-  } = payload as GitHubPullRequestEvent['payload']
-  const { issue } = payload as GitHubIssuesEvent['payload']
-  const { ref: branchOrTagRef } = payload as GitHubPushEvent['payload']
-
-  let branchName = getBranchNameFromRef(branchOrTagRef)
-
-  const issueOrPullRequest = (issue || pullRequest) as
-    | typeof issue
-    | typeof pullRequest
-    | undefined
-
-  const issueOrPullRequestNumber = issueOrPullRequest
-    ? issueOrPullRequest.number ||
-      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
-    : undefined
-
-  const isRead = isItemRead(event)
-  const isSaved = saved === true
-  const muted = false // isRead
-  const showCardBorder = Platform.realOS === 'web' && isFocused
-
-  const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
-
-  const _allRepos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
-    if (!(r && r.name)) return false
-
-    const or = getOwnerAndRepo(r.name)
-    return !!(or.owner && or.repo)
-  })
-
-  // ugly and super edge case workaround for repo not being returned on some commit events
-  if (!_allRepos.length && commits[0]) {
-    const _repoFullName = getRepoFullNameFromUrl(commits[0].url)
-    const { owner, repo: name } = getOwnerAndRepo(_repoFullName)
-    if (owner && name) {
-      _allRepos.push({
-        id: '',
-        fork: false,
-        private: false,
-        full_name: _repoFullName,
-        owner: { login: name } as any,
-        name,
-        url: getGitHubURLForRepo(owner, name)!,
-        html_url: getGitHubURLForRepo(owner, name)!,
-      })
-    }
-  }
-
-  const repos: GitHubRepo[] = _allRepos.filter(
-    (r, index) => !!(r && !(repoIsKnown && index === 0)),
-  )
-  const users: GitHubUser[] = [_member].filter(Boolean) // TODO
-  const pages: GitHubPage[] = (_pages || []).filter(Boolean)
-
-  const repo = _allRepos.length === 1 ? _allRepos[0] : undefined
-
-  if (event.type === 'CreateEvent' || event.type === 'DeleteEvent') {
-    const p = payload as GitHubCreateEvent['payload']
-
-    if (p.ref_type !== 'branch') branchName = ''
-
-    if (!release && p.ref_type === 'tag') {
-      release = {
-        id: '',
-        name: '',
-        tag_name: p.ref || '',
-        target_commitish: p.master_branch,
-        body: '',
-        draft: false,
-        prerelease: false,
-        created_at: event.created_at,
-        published_at: event.created_at,
-        author: event.actor,
-        assets: [],
-        url: '',
-        html_url: '',
-      }
-    }
-  }
-
-  const commitIds = commits
-    .filter(Boolean)
-    .map((item: GitHubPushedCommit) => item.sha)
-  const pageIds = pages.filter(Boolean).map((item: GitHubPage) => item.sha)
-  const repoIds = repos.filter(Boolean).map((item: GitHubRepo) => item.id)
-  const userIds = users.filter(Boolean).map((item: GitHubUser) => item.id)
-
-  const repoFullName = repo && getRepoFullNameFromObject(repo)
-  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
-    repoFullName || '',
-  )
-
-  const forkRepoFullName = getRepoFullNameFromObject(forkee)
-  const { owner: forkRepoOwnerName, repo: forkRepoName } = getOwnerAndRepo(
+    actor,
+    avatarUrl,
+    branchName,
+    branchOrTagRef,
+    comment,
+    commitShas,
+    commits,
+    createdAt,
     forkRepoFullName,
-  )
-
-  const cardIconDetails = getEventIconAndColor(event)
-  const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
-  const cardIconColor = cardIconDetails.color
+    forkee,
+    id,
+    isBot,
+    isBranchMainEvent,
+    isForcePush,
+    isPrivate,
+    isPush,
+    isRead,
+    isSaved,
+    isTagMainEvent,
+    issueOrPullRequest,
+    issueOrPullRequestNumber,
+    mergedIds,
+    pageShas,
+    pages,
+    release,
+    repoFullName,
+    repoIds: _repoIds,
+    repos: _repos,
+    userIds,
+    users,
+  } = getGitHubEventSubItems(event)
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
     appendColon: false,
     includeBranch: cardViewMode === 'compact',
     includeFork: cardViewMode === 'compact',
     includeTag: cardViewMode === 'compact',
-    repoIsKnown: repoIsKnown || cardViewMode === 'compact',
+    repoIsKnown,
   }
+
   const { actionText } = getEventMetadata(event, actionTextOptions)
+
   const actionTextWithoutColon = getEventMetadata(event, {
     ...actionTextOptions,
     appendColon: false,
   }).actionText
 
-  const isPush = type === 'PushEvent'
-  const isForcePush = isPush && (payload as GitHubPushEvent).forced
-  const isPrivate = isEventPrivate(event)
+  const cardIconDetails = getEventIconAndColor(event)
+  const cardIconName = cardIconDetails.subIcon || cardIconDetails.icon
+  const cardIconColor = cardIconDetails.color
 
-  const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
+  const muted = false // isRead
 
-  // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
-  // but the correct avatar on payload.abc.user.avatar_url,
-  // so lets get it from there instead
-  const botAvatarURL = isBot
-    ? getGitHubAvatarURLFromPayload(payload, actor.id)
-    : undefined
+  const repos = repoIsKnown ? _repos.slice(1) : _repos
+  const repoIds = repoIsKnown ? _repoIds.slice(1) : _repoIds
 
-  const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
+  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
+    repoFullName || '',
+  )
+  const { owner: forkRepoOwnerName, repo: forkRepoName } = getOwnerAndRepo(
+    forkRepoFullName || '',
+  )
+
+  const showCardBorder = Platform.realOS === 'web' && isFocused
 
   const showCardActions = cardViewMode !== 'compact' && !swipeable
 
@@ -265,14 +166,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
             avatarUrl={avatarUrl}
             body={actionText}
             bold={!isRead}
-            branch={isBranchMainEvent(event) ? branchName : undefined}
+            branch={isBranchMainEvent ? branchName : undefined}
             forkOwnerName={forkRepoOwnerName}
             forkRepositoryName={forkRepoName}
             isBot={isBot}
             muted={muted}
             ownerName={repoOwnerName || ''}
             repositoryName={repoName || ''}
-            tag={isTagMainEvent(event) ? branchOrTagRef : undefined}
+            tag={isTagMainEvent ? branchOrTagRef : undefined}
             userLinkURL={actor.html_url || ''}
             username={actor.display_login || actor.login}
             viewMode={cardViewMode}
@@ -315,11 +216,11 @@ export const EventCard = React.memo((props: EventCardProps) => {
           )}
 
         {!!branchName &&
-          !(isBranchMainEvent(event) && actionTextOptions!.includeBranch) && (
+          !(isBranchMainEvent && actionTextOptions!.includeBranch) && (
             <BranchRow
               key={`event-branch-row-${branchName}`}
               branch={branchName}
-              isBranchMainEvent={isBranchMainEvent(event)}
+              isBranchMainEvent={isBranchMainEvent}
               muted={muted}
               ownerName={repoOwnerName || ''}
               repositoryName={repoName || ''}
@@ -416,7 +317,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <WikiPageListRow
             bold={false}
             muted={muted}
-            key={`event-wiki-page-list-row-${pageIds.join('-')}`}
+            key={`event-wiki-page-list-row-${pageShas.join('-')}`}
             pages={pages}
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
@@ -425,7 +326,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
         {commits.length > 0 && (
           <CommitListRow
-            key={`event-commit-list-row-${commitIds.join('-')}`}
+            key={`event-commit-list-row-${commitShas.join('-')}`}
             bold={false}
             commits={commits}
             isPrivate={isPrivate}
@@ -436,7 +337,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         )}
 
         {Boolean(release) &&
-          !(isTagMainEvent(event) && actionTextOptions!.includeTag) && (
+          !(isTagMainEvent && actionTextOptions!.includeTag) && (
             <ReleaseRow
               key={`event-release-row-${release.id}`}
               avatarUrl={release.author.avatar_url}
@@ -662,10 +563,10 @@ export const EventCard = React.memo((props: EventCardProps) => {
             },
           ]}
         >
-          {!!event.created_at && (
-            <IntervalRefresh date={event.created_at}>
+          {!!createdAt && (
+            <IntervalRefresh date={createdAt}>
               {() => {
-                const dateText = getDateSmallText(event.created_at, false)
+                const dateText = getDateSmallText(createdAt, false)
                 if (!dateText) return null
 
                 return (
@@ -682,7 +583,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                       { fontSize: smallerTextSize },
                     ]}
                     {...Platform.select({
-                      web: { title: getFullDateText(event.created_at) },
+                      web: { title: getFullDateText(createdAt) },
                     })}
                   >
                     {!!isPrivate && (
@@ -764,8 +665,8 @@ export const EventCard = React.memo((props: EventCardProps) => {
               actionText={actionText}
               avatarUrl={avatarUrl}
               bold={!isRead}
-              date={event.created_at}
-              ids={('merged' in event && event.merged) || [id]}
+              date={createdAt}
+              ids={mergedIds || [id]}
               isBot={isBot}
               isPrivate={isPrivate}
               muted={muted}
