@@ -89,7 +89,10 @@ export const Button = React.memo((props: ButtonProps) => {
 
       const isHovered = _isHovered && !disabled
 
-      const immediate = forceImmediate || constants.DISABLE_ANIMATIONS
+      const immediate =
+        forceImmediate ||
+        constants.DISABLE_ANIMATIONS ||
+        Platform.realOS !== 'web'
 
       const backgroundColor = getThemeColorOrItself(
         theme,
@@ -211,6 +214,7 @@ export const Button = React.memo((props: ButtonProps) => {
     <SpringAnimatedTouchableOpacity
       ref={touchableRef}
       {...otherProps}
+      activeOpacity={Platform.realOS !== 'web' ? 1 : otherProps.activeOpacity}
       disabled={disabled}
       onPressIn={() => {
         if (Platform.realOS === 'web') return

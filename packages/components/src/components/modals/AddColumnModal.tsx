@@ -198,7 +198,8 @@ function AddColumnModalItem({
 
   function getStyles() {
     const { isHovered, isPressing, theme } = cacheRef.current
-    const immediate = constants.DISABLE_ANIMATIONS || isHovered
+    const immediate =
+      constants.DISABLE_ANIMATIONS || isHovered || Platform.realOS !== 'web'
 
     return {
       config: getDefaultReactSpringAnimationConfig(),
@@ -217,6 +218,7 @@ function AddColumnModalItem({
   return (
     <SpringAnimatedTouchableOpacity
       ref={touchableRef}
+      activeOpacity={Platform.realOS !== 'web' ? 1 : undefined}
       analyticsLabel={undefined}
       disabled={disabled || !payload}
       onPress={

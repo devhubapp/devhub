@@ -47,7 +47,6 @@ export function FAB(props: FABProps) {
       ref={touchableRef}
       analyticsCategory="fab"
       {...otherProps}
-      activeOpacity={1}
       hitSlop={{
         top: contentPadding / 2,
         bottom: contentPadding / 2,

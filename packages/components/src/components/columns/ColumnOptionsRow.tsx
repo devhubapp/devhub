@@ -67,7 +67,10 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
       const { isHovered, isPressing, theme } = cacheRef.current
       const immediate =
-        constants.DISABLE_ANIMATIONS || forceImmediate || isHovered
+        constants.DISABLE_ANIMATIONS ||
+        forceImmediate ||
+        isHovered ||
+        Platform.realOS !== 'web'
 
       return {
         config: getDefaultReactSpringAnimationConfig(),

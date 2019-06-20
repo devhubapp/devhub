@@ -68,7 +68,9 @@ export interface ColumnHeaderItemProps {
 
 export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   const {
-    activeOpacity,
+    activeOpacity = Platform.realOS !== 'web' && props.enableBackgroundHover
+      ? 1
+      : undefined,
     analyticsAction,
     analyticsLabel,
     avatarProps: _avatarProps,
@@ -119,7 +121,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         constants.DISABLE_ANIMATIONS ||
         forceImmediate ||
         isHovered ||
-        !!(enableForegroundHover && !enableBackgroundHover)
+        !!(enableForegroundHover && !enableBackgroundHover) ||
+        (Platform.OS === 'web' && Platform.realOS !== 'web')
 
       return {
         config: getDefaultReactSpringAnimationConfig(),

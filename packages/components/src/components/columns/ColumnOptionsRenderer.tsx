@@ -53,6 +53,7 @@ export const ColumnOptionsRenderer = React.memo(
     const { column, columnIndex } = useColumn(columnId)
 
     const immediate = constants.DISABLE_ANIMATIONS
+
     const overlayTransition = useTransition<boolean, any>(
       isOpen ? [true] : [],
       () => 'column-options-overlay',
