@@ -1,5 +1,5 @@
 import { RootState } from '../types'
-import { loginCountSelector } from './counters'
+import { countersSelector } from './counters'
 
 const s = (state: RootState) => state.app || {}
 
@@ -8,7 +8,7 @@ export const allBannerMessagesSelector = (state: RootState) =>
 
 export const bannerMessageSelector = (state: RootState) => {
   const banners = allBannerMessagesSelector(state)
-  const loginCount = loginCountSelector(state)
+  const loginCount = countersSelector(state).loginSuccess
 
   const filteredBanners = banners.filter(
     banner =>

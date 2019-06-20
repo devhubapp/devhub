@@ -119,8 +119,11 @@ function* onLoginRequest(
       throw new Error('Invalid response')
     }
 
+    const appViewMode = yield select(selectors.appViewModeSelector)
+
     yield put(
       actions.loginSuccess({
+        appViewMode,
         appToken: data.login.appToken,
         user: data.login.user,
       }),
@@ -148,7 +151,8 @@ function* onLoginSuccess(
   clearOAuthQueryParams()
 
   if (StoreReview.isAvailable) {
-    const loginCount = yield select(selectors.loginCountSelector)
+    const state = yield select()
+    const { loginSuccess: loginCount } = selectors.countersSelector(state)
 
     if (loginCount >= 5 && loginCount % 5 === 0) {
       StoreReview.requestReview()
