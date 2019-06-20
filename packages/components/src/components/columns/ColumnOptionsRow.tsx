@@ -14,6 +14,7 @@ import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animat
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
+import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import {
   TouchableOpacity,
@@ -243,6 +244,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         >
           {children}
         </View>
+
+        <Separator horizontal />
       </ConditionalWrap>
     </SpringAnimatedView>
   )
