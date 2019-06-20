@@ -18,7 +18,7 @@ import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'
 import { ThemedText } from '../themed/ThemedText'
-import { cardSearchTotalHeight, CardsSearchHeader } from './CardsSearchHeader'
+import { CardsSearchHeader } from './CardsSearchHeader'
 import {
   GenericMessageWithButtonView,
   GenericMessageWithButtonViewProps,
@@ -165,7 +165,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
 
   return (
     <FullHeightScrollView
-      contentOffset={{ x: 0, y: disableSearch ? 0 : cardSearchTotalHeight }}
+      // contentOffset={{ x: 0, y: disableSearch ? 0 : cardSearchTotalHeight }}
       style={sharedStyles.flex}
     >
       {!disableSearch && (

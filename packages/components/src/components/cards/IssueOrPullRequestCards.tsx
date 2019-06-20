@@ -28,7 +28,7 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
-import { cardSearchTotalHeight, CardsSearchHeader } from './CardsSearchHeader'
+import { CardsSearchHeader } from './CardsSearchHeader'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import {
   IssueOrPullRequestCard,
@@ -414,7 +414,7 @@ export const IssueOrPullRequestCards = React.memo(
         ListHeaderComponent={renderHeader}
         alwaysBounceVertical
         bounces
-        contentOffset={{ x: 0, y: cardSearchTotalHeight }}
+        // contentOffset={{ x: 0, y: cardSearchTotalHeight }}
         data={items}
         disableVirtualization={Platform.OS === 'web'}
         extraData={rerender}
