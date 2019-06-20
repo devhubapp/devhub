@@ -337,7 +337,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
             />
           }
           errorTitle="Private access temporarily disabled"
-          errorMessage="GitHub has temporarily disabled private access for GitHub Apps on their API. Please upvote the issue below to show your interest on a fix."
+          errorMessage="GitHub has temporarily disabled private access for this specific API endpoint. Please upvote the issue below to show your interest on a fix."
           fetchNextPage={undefined}
           loadState={loadState}
           refresh={refresh}
