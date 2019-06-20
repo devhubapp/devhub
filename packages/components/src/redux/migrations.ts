@@ -382,4 +382,12 @@ export default {
         delete subscriptionParams.repoFullName
       })
     }),
+  13: (state: RootState) =>
+    immer(state, draft => {
+      draft.auth = draft.auth || {}
+      draft.counters = draft.counters || {}
+
+      const loginCount = (draft.auth as any).loginCount || 0
+      draft.counters.loginSuccess = loginCount || 0
+    }),
 }

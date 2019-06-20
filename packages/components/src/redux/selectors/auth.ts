@@ -10,8 +10,6 @@ export const authErrorSelector = (state: RootState) => s(state).error
 export const isDeletingAccountSelector = (state: RootState) =>
   s(state).isDeletingAccount
 
-export const loginCountSelector = (state: RootState) => s(state).loginCount
-
 export const isLoggingInSelector = (state: RootState) => s(state).isLoggingIn
 
 export const isLoggedSelector = (state: RootState) =>

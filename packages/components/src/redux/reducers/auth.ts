@@ -16,7 +16,6 @@ export interface State {
   error: AuthError | null
   isDeletingAccount: boolean
   isLoggingIn: boolean
-  loginCount: number
   user: Pick<User, '_id' | 'createdAt' | 'lastLoginAt' | 'updatedAt'> | null
 }
 
@@ -25,7 +24,6 @@ const initialState: State = {
   error: null,
   isDeletingAccount: false,
   isLoggingIn: false,
-  loginCount: 0,
   user: null,
 }
 
@@ -44,7 +42,6 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
         error: null,
         isDeletingAccount: false,
         isLoggingIn: true,
-        loginCount: state.loginCount,
         user: state.user,
       }
 
@@ -54,7 +51,6 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
         error: null,
         isDeletingAccount: false,
         isLoggingIn: false,
-        loginCount: (state.loginCount || 0) + 1,
         user: action.payload.user && {
           _id: action.payload.user._id,
           lastLoginAt:

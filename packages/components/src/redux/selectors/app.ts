@@ -1,5 +1,5 @@
 import { RootState } from '../types'
-import { loginCountSelector } from './auth'
+import { loginCountSelector } from './counters'
 
 const s = (state: RootState) => state.app || {}
 
