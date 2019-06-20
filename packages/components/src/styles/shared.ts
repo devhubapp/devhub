@@ -8,7 +8,7 @@ export const sharedStyles = StyleSheet.create({
   },
 
   flexGrow: {
-    flex: 1,
+    flexGrow: 1,
   },
 
   flexWrap: {

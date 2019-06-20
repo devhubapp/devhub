@@ -170,7 +170,7 @@ export const IssueOrPullRequestRow = React.memo(
                   enableTextWrapper
                   href={htmlUrl}
                   style={[
-                    !inlineLabels && !rightTitle && sharedStyles.flexGrow,
+                    !inlineLabels && !rightTitle && sharedStyles.flex,
                     { alignSelf: 'flex-start' },
                     !!inlineLabels &&
                       labels &&
