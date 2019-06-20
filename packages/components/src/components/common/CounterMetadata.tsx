@@ -30,9 +30,11 @@ interface NumberMetadata {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderRadius: radius,
     paddingVertical: contentPadding / 8,
     paddingHorizontal: contentPadding / 2,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: radius,
   },
 
   number: {
@@ -48,11 +50,16 @@ const styles = StyleSheet.create({
 export function CounterMetadata(props: CounterMetadataProps) {
   const {
     alwaysRenderANumber,
-    backgroundColor = 'backgroundColorLess2',
+    backgroundColor: _backgroundColor,
     read,
     total,
     unread,
   } = props
+
+  const backgroundColor =
+    _backgroundColor || (unread ? 'backgroundColorLess2' : undefined)
+
+  const borderColor = !unread ? 'backgroundColorLess2' : undefined
 
   const isCustomBackground = !(
     backgroundColor && backgroundColor.startsWith('backgroundColor')
@@ -107,7 +114,11 @@ export function CounterMetadata(props: CounterMetadataProps) {
   }
 
   return (
-    <ThemedView backgroundColor={backgroundColor} style={styles.container}>
+    <ThemedView
+      backgroundColor={backgroundColor}
+      borderColor={borderColor}
+      style={styles.container}
+    >
       {numberNodesMetadata.map(
         (meta, index) =>
           !!meta && (
