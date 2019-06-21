@@ -1025,6 +1025,49 @@ export function getItemOwnersAndRepos(
   }
 }
 
+export function getItemIsBot(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem,
+): boolean {
+  if (!item) return false
+
+  switch (type) {
+    case 'activity': {
+      const event = item as EnhancedGitHubEvent
+      const { actor } = event
+      return !!(actor && actor.login && actor.login.indexOf('[bot]') >= 0)
+    }
+
+    case 'issue_or_pr': {
+      const issueOrPR = item as EnhancedGitHubIssueOrPullRequest
+      const { user } = issueOrPR
+
+      return !!(user && user.login && user.login.indexOf('[bot]') >= 0)
+    }
+
+    case 'notifications': {
+      const notification = item as EnhancedGitHubNotification
+      const { comment, commit, release, issue, pullRequest } = notification
+
+      const actor =
+        (comment && comment.user) ||
+        (commit && commit.author) ||
+        (release && release.author) ||
+        (issue && issue.user) ||
+        (pullRequest && pullRequest.user) ||
+        null
+
+      return (
+        !!(actor && actor.login && actor.login.indexOf('[bot]') >= 0) ||
+        notification.reason === 'security_alert'
+      )
+    }
+
+    default:
+      return false
+  }
+}
+
 export function getFilteredItems(
   type: ColumnSubscription['type'] | undefined,
   items: EnhancedItem[],
@@ -1081,6 +1124,7 @@ const _defaultItemsFilterMetadata: ItemsFilterMetadata = {
     closed: getDefaultItemFilterCountMetadata(),
     merged: getDefaultItemFilterCountMetadata(),
   },
+  bot: getDefaultItemFilterCountMetadata(),
   draft: getDefaultItemFilterCountMetadata(),
   // involves: {},
   subjectType: {}, // { issue: getDefaultItemFilterCountMetadata(), ... }
@@ -1148,6 +1192,8 @@ export function getItemsFilterMetadata(
     if (state) updateNestedCounter(result.state[state])
 
     if (isDraft(issueOrPR)) updateNestedCounter(result.draft)
+
+    if (getItemIsBot(type, item)) updateNestedCounter(result.bot)
 
     if (subjectType) {
       if (!result.subjectType[subjectType])
@@ -1237,7 +1283,6 @@ export function getItemSearchableStrings(
   const issueOrPullRequest = getItemIssueOrPullRequest(type, item)
 
   let comment: GitHubComment | undefined
-  let isBot: boolean | undefined
   let release: Partial<GitHubRelease> | undefined
 
   const id = item.id
@@ -1286,7 +1331,7 @@ export function getItemSearchableStrings(
       forkRepoFullName,
       // forkee,
       // id,
-      isBot: _isBot,
+      // isBot,
       // isBranchMainEvent,
       // isForcePush,
       // isPrivate,
@@ -1308,7 +1353,6 @@ export function getItemSearchableStrings(
     } = getGitHubEventSubItems(event)
 
     comment = _comment
-    isBot = _isBot
     release = _release
 
     strings.push(`${(actor && actor.login) || ''}`)
@@ -1353,7 +1397,7 @@ export function getItemSearchableStrings(
       commit,
       createdAt,
       // id,
-      isBot: _isBot,
+      // isBot,
       // isPrivate,
       // isPrivateAndCantSee,
       // isRead,
@@ -1370,7 +1414,6 @@ export function getItemSearchableStrings(
     } = getGitHubNotificationSubItems(notification)
 
     comment = _comment
-    isBot = _isBot
     release = _release as any // TODO: Fix type error
 
     if (commit) {
@@ -1397,8 +1440,6 @@ export function getItemSearchableStrings(
   } else {
     //
   }
-
-  if (isBot) strings.push('is:bot')
 
   if (comment) {
     strings.push(`${(comment.user && comment.user.login) || ''}`)

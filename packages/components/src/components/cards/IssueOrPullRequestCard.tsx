@@ -9,6 +9,7 @@ import {
   getGitHubURLForRepo,
   getIssueOrPullRequestIconAndColor,
   getIssueOrPullRequestNumberFromUrl,
+  getItemIsBot,
   getOwnerAndRepo,
   getRepoFullNameFromUrl,
   GitHubIssueOrPullRequestSubjectType,
@@ -84,7 +85,6 @@ export const IssueOrPullRequestCard = React.memo(
       repository_url,
       saved,
       url,
-      user,
       html_url: htmlURL,
     } = issueOrPullRequest as EnhancedGitHubIssueOrPullRequest
 
@@ -116,9 +116,7 @@ export const IssueOrPullRequestCard = React.memo(
       html_url: getGitHubURLForRepo(repoOwnerName!, repoName!)!,
     }
 
-    const isBot = Boolean(
-      user && user.login && user.login.indexOf('[bot]') >= 0,
-    )
+    const isBot = getItemIsBot('issue_or_pr', issueOrPullRequest)
 
     const cardIconDetails = getIssueOrPullRequestIconAndColor(
       type,

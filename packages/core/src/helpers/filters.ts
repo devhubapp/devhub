@@ -15,6 +15,7 @@ import {
 import {
   getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
+  getItemIsBot,
   getItemIssueOrPullRequest,
   getItemOwnersAndRepos,
   getItemSearchableStrings,
@@ -306,9 +307,10 @@ function baseColumnHasAnyFilter(filters: BaseColumnFilters | undefined) {
   if (!filters) return false
 
   if (filters.clearedAt) return true
+  if (typeof filters.bot === 'boolean') return true
+  if (typeof filters.draft === 'boolean') return true
   if (typeof filters.private === 'boolean') return true
   if (typeof filters.saved === 'boolean') return true
-  if (typeof filters.draft === 'boolean') return true
   if (typeof filters.unread === 'boolean') return true
   if (filters.query) return true
 
@@ -417,6 +419,12 @@ export function getFilteredIssueOrPullRequests(
         return false
 
       if (
+        typeof filters.bot === 'boolean' &&
+        filters.bot !== getItemIsBot('issue_or_pr', item)
+      )
+        return false
+
+      if (
         (filters.draft === true &&
           (!issueOrPR || filters.draft !== isDraft(issueOrPR))) ||
         (filters.draft === false &&
@@ -513,6 +521,12 @@ export function getFilteredNotifications(
             getIssueOrPullRequestState(issueOrPR)!,
             true,
           ))
+      )
+        return false
+
+      if (
+        typeof filters.bot === 'boolean' &&
+        filters.bot !== getItemIsBot('notifications', item)
       )
         return false
 
@@ -614,6 +628,12 @@ export function getFilteredEvents(
             getIssueOrPullRequestState(issueOrPR)!,
             true,
           ))
+      )
+        return false
+
+      if (
+        typeof filters.bot === 'boolean' &&
+        filters.bot !== getItemIsBot('activity', item)
       )
         return false
 

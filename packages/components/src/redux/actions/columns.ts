@@ -100,6 +100,13 @@ export function setColummStateTypeFilter<T extends GitHubStateType>(payload: {
   return createAction('SET_COLUMN_STATE_FILTER', payload)
 }
 
+export function setColummBotFilter(payload: {
+  columnId: string
+  bot: ColumnFilters['bot']
+}) {
+  return createAction('SET_COLUMN_BOT_FILTER', payload)
+}
+
 export function setColummDraftFilter(payload: {
   columnId: string
   draft: ColumnFilters['draft']

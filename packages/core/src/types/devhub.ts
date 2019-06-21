@@ -211,6 +211,7 @@ export type NotificationColumnSubscription = {
     })
 
 export interface BaseColumnFilters {
+  bot?: boolean
   clearedAt?: string
   draft?: boolean
   // order?: Array<[string, 'asc' | 'desc']>
@@ -441,6 +442,7 @@ export interface ItemsFilterMetadata {
   saved: ItemFilterCountMetadata
   state: Record<GitHubStateType, ItemFilterCountMetadata>
   draft: ItemFilterCountMetadata
+  bot: ItemFilterCountMetadata
 
   // items doesn't have enough info to correctly calculate this metadata
   // involves: Partial<Record<string, ItemFilterCountMetadata | undefined>>

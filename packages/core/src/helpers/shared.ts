@@ -345,6 +345,7 @@ export function getSearchQueryFromFilter(
 
   const {
     // clearedAt,
+    bot,
     draft,
     owners,
     private: _private,
@@ -431,6 +432,11 @@ export function getSearchQueryFromFilter(
     })
 
   if (states) handleRecordFilter('is', states)
+
+  if (typeof bot === 'boolean') {
+    const n = getMaybeNegate(bot)
+    queries.push(`${n}is:bot`)
+  }
 
   if (typeof draft === 'boolean') {
     const n = getMaybeNegate(draft)
@@ -673,6 +679,11 @@ export function getFilterFromSearchQuery(
 
           case 'private': {
             filters.private = !isNegated
+            break
+          }
+
+          case 'bot': {
+            filters.bot = !isNegated
             break
           }
 

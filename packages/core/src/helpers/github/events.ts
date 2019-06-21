@@ -31,6 +31,7 @@ import {
   getBranchNameFromRef,
   getCommitIconAndColor,
   getIssueIconAndColor,
+  getItemIsBot,
   getOwnerAndRepo,
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
@@ -986,7 +987,7 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   const isForcePush = isPush && (payload as GitHubPushEvent).forced
   const isPrivate = isEventPrivate(event)
 
-  const isBot = Boolean(actor.login && actor.login.indexOf('[bot]') >= 0)
+  const isBot = getItemIsBot('activity', event)
 
   // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
   // but the correct avatar on payload.abc.user.avatar_url,

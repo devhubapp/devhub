@@ -332,6 +332,19 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
       })
 
+    case 'SET_COLUMN_BOT_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const column = draft.byId[action.payload.columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.bot = action.payload.bot
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
     case 'SET_COLUMN_DRAFT_FILTER':
       return immer(state, draft => {
         if (!draft.byId) return

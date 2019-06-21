@@ -103,6 +103,7 @@ export interface ColumnOptionsProps {
 }
 
 export type ColumnOptionCategory =
+  | 'bot'
   | 'draft'
   | 'event_action'
   | 'inbox'
@@ -183,6 +184,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     'unread',
     'state',
     'draft',
+    'bot',
     _shouldShowInvolvesFilter && 'involves',
     'subject_types',
     column.type === 'activity' && 'event_action',
@@ -236,6 +238,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const setColummStateTypeFilter = useReduxAction(
     actions.setColummStateTypeFilter,
   )
+  const setColummBotFilter = useReduxAction(actions.setColummBotFilter)
   const setColummDraftFilter = useReduxAction(actions.setColummDraftFilter)
   const setColummSubjectTypeFilter = useReduxAction(
     actions.setColummSubjectTypeFilter,
@@ -811,6 +814,68 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
                   }}
                   right={getCheckboxRight(filteredItemsMetadata.draft)}
                   // uncheckedForegroundThemeColor="gray"
+                />
+              </ColumnOptionsRow>
+            )
+          })()}
+
+        {allColumnOptionCategories.includes('bot') &&
+          (() => {
+            const bot = column.filters && column.filters.bot
+            const defaultBooleanValue = true
+
+            const filteredItemsMetadata = getItemsFilterMetadata(
+              column.type,
+              getFilteredItems(
+                column.type,
+                allItems,
+                { ...column.filters, bot: undefined },
+                getFilteredItemsOptions,
+              ),
+            )
+
+            return (
+              <ColumnOptionsRow
+                analyticsLabel="bot_options_row"
+                enableBackgroundHover={allowToggleCategories}
+                hasChanged={typeof bot === 'boolean'}
+                headerItemFixedIconSize={columnHeaderItemContentSize}
+                iconName="hubot"
+                isOpen={openedOptionCategories.has('bot')}
+                onToggle={
+                  allowToggleCategories
+                    ? () => toggleOpenedOptionCategory('bot')
+                    : undefined
+                }
+                title="Bots"
+                // right={
+                //   bot === true
+                //     ? 'Bots only'
+                //     : bot === false
+                //     ? 'Excluded'
+                //     : 'Included'
+                // }
+              >
+                <Checkbox
+                  key="bot-type-option"
+                  analyticsLabel={undefined}
+                  checked={typeof bot === 'boolean' ? bot : null}
+                  containerStyle={
+                    sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+                  }
+                  defaultValue={defaultBooleanValue}
+                  squareContainerStyle={
+                    sharedColumnOptionsStyles.checkboxSquareContainer
+                  }
+                  enableIndeterminateState
+                  label="Bots"
+                  onChange={value => {
+                    setColummBotFilter({
+                      columnId: column.id,
+                      bot: typeof value === 'boolean' ? value : undefined,
+                    })
+                  }}
+                  right={getCheckboxRight(filteredItemsMetadata.bot)}
                 />
               </ColumnOptionsRow>
             )

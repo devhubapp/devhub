@@ -19,6 +19,7 @@ import { capitalize, isNotificationPrivate } from '../shared'
 import {
   getCommitIconAndColor,
   getIssueIconAndColor,
+  getItemIsBot,
   getOwnerAndRepo,
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
@@ -590,17 +591,7 @@ export function getGitHubNotificationSubItems(
       (notification.repository.full_name || notification.repository.name)) ||
     ''
 
-  const actor =
-    (comment && comment.user) ||
-    (commit && commit.author) ||
-    (release && release.author) ||
-    (issue && issue.user) ||
-    (pullRequest && pullRequest.user) ||
-    null
-
-  const isBot = Boolean(
-    actor && actor.login && actor.login.indexOf('[bot]') >= 0,
-  )
+  const isBot = getItemIsBot('notifications', notification)
 
   return {
     comment,
