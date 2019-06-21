@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React from 'react'
 
 import {
@@ -6,47 +7,40 @@ import {
   GitHubRepo,
 } from '@devhub/core'
 import { RepositoryRow, RepositoryRowProps } from './RepositoryRow'
-import { RenderItem, RowList } from './RowList'
+import { RenderItem, RowList, RowListProps, rowListProps } from './RowList'
 
-export interface RepositoryListRowProps
-  extends Omit<
-    RepositoryRowProps,
-    'ownerName' | 'repositoryName' | 'showMoreItemsIndicator'
-  > {
-  maxHeight?: number
-  repos: GitHubRepo[]
-}
+interface ListProps extends Omit<RowListProps<GitHubRepo>, 'renderItem'> {}
+interface ItemProps
+  extends Omit<RepositoryRowProps, 'ownerName' | 'repositoryName'> {}
 
-export const RepositoryListRow = React.memo((props: RepositoryListRowProps) => {
-  const renderItem: RenderItem<GitHubRepo> = ({
-    item: repo,
-    index,
-    showMoreItemsIndicator,
-  }) => {
-    if (!(repo && repo.id)) return null
+export interface RepositoryListRowProps extends ListProps, ItemProps {}
 
-    const repoFullName = getRepoFullNameFromObject(repo)
-    const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
-      repoFullName,
-    )
+export const RepositoryListRow = React.memo(
+  (_props: RepositoryListRowProps) => {
+    const listProps = _.pick(_props, rowListProps) as ListProps
+    const itemProps = _.omit(_props, rowListProps) as ItemProps
 
-    if (!(repoOwnerName && repoName)) return null
+    const renderItem: RenderItem<GitHubRepo> = ({ item: repo, index }) => {
+      if (!(repo && repo.id)) return null
 
-    return (
-      <RepositoryRow
-        {...props}
-        key={`repo-row-${repo.id}`}
-        ownerName={repoOwnerName!}
-        repositoryName={repoName!}
-        showMoreItemsIndicator={showMoreItemsIndicator}
-        withTopMargin={index === 0 ? props.withTopMargin : true}
-      />
-    )
-  }
+      const repoFullName = getRepoFullNameFromObject(repo)
+      const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
+        repoFullName,
+      )
 
-  const { repos, ...otherProps } = props
+      if (!(repoOwnerName && repoName)) return null
 
-  if (!(repos && repos.length > 0)) return null
+      return (
+        <RepositoryRow
+          {...itemProps}
+          key={`repo-row-${repo.id}`}
+          ownerName={repoOwnerName!}
+          repositoryName={repoName!}
+          withTopMargin={index === 0 ? itemProps.withTopMargin : true}
+        />
+      )
+    }
 
-  return <RowList {...otherProps} data={repos} renderItem={renderItem} />
-})
+    return <RowList {...listProps} renderItem={renderItem} />
+  },
+)

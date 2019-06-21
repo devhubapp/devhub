@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../styles/shared'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
 import { GradientLayerOverlay } from './GradientLayerOverlay'
 import {
   GradientLayerOverlayProps,
@@ -13,19 +14,29 @@ import {
 
 export { To as From, ToWithVH as FromWithVH }
 
-export interface AnimatedTransparentTextOverlayProps
+export interface TransparentTextOverlayProps
   extends Omit<GradientLayerOverlayProps, 'to' | 'color'> {
   to: ToWithVH
-  themeColor: keyof ThemeColors
+  themeColor: keyof ThemeColors | ((theme: ThemeColors) => string | undefined)
 }
 
-export const AnimatedTransparentTextOverlay = React.memo(
-  React.forwardRef<View, AnimatedTransparentTextOverlayProps>((props, ref) => {
-    return null
-
-    const { children, containerStyle, themeColor, to, ...otherProps } = props
+export const TransparentTextOverlay = React.memo(
+  React.forwardRef<View, TransparentTextOverlayProps>((props, ref) => {
+    const {
+      children,
+      containerStyle,
+      themeColor: _themeColor,
+      to,
+      ...otherProps
+    } = props
 
     const theme = useTheme()
+
+    const color = getThemeColorOrItself(theme, _themeColor, {
+      enableCSSVariable: false,
+    })
+
+    if (!color) return null
 
     return (
       <View
@@ -39,35 +50,19 @@ export const AnimatedTransparentTextOverlay = React.memo(
         ]}
       >
         {(to === 'vertical' || to === 'bottom') && (
-          <GradientLayerOverlay
-            {...otherProps}
-            color={theme[themeColor]}
-            to="bottom"
-          />
+          <GradientLayerOverlay {...otherProps} color={color} to="bottom" />
         )}
 
         {(to === 'vertical' || to === 'top') && (
-          <GradientLayerOverlay
-            {...otherProps}
-            color={theme[themeColor]}
-            to="top"
-          />
+          <GradientLayerOverlay {...otherProps} color={color} to="top" />
         )}
 
         {(to === 'horizontal' || to === 'right') && (
-          <GradientLayerOverlay
-            {...otherProps}
-            color={theme[themeColor]}
-            to="right"
-          />
+          <GradientLayerOverlay {...otherProps} color={color} to="right" />
         )}
 
         {(to === 'horizontal' || to === 'left') && (
-          <GradientLayerOverlay
-            {...otherProps}
-            color={theme[themeColor]}
-            to="left"
-          />
+          <GradientLayerOverlay {...otherProps} color={color} to="left" />
         )}
 
         {children}

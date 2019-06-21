@@ -5,7 +5,6 @@ import { Dimensions, StyleSheet, View } from 'react-native'
 import url from 'url'
 
 import { AppBannerMessage } from '../components/banners/AppBannerMessage'
-import { ColumnArrowSwitcher } from '../components/columns/ColumnArrowSwitcher'
 import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
 import { ConditionalWrap } from '../components/common/ConditionalWrap'

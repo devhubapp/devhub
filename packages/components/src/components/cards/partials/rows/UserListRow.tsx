@@ -1,42 +1,34 @@
+import _ from 'lodash'
 import React from 'react'
 
 import { GitHubUser } from '@devhub/core'
-import { RenderItem, RowList } from './RowList'
+import { RenderItem, RowList, RowListProps, rowListProps } from './RowList'
 import { UserRow, UserRowProps } from './UserRow'
 
-export interface UserListRowProps
-  extends Omit<
-    UserRowProps,
-    'avatarUrl' | 'showMoreItemsIndicator' | 'userLinkURL' | 'username'
-  > {
-  maxHeight?: number
-  users: GitHubUser[]
-}
+interface ListProps extends Omit<RowListProps<GitHubUser>, 'renderItem'> {}
+interface ItemProps
+  extends Omit<UserRowProps, 'avatarUrl' | 'userLinkURL' | 'username'> {}
 
-export const UserListRow = React.memo((props: UserListRowProps) => {
-  const renderItem: RenderItem<GitHubUser> = ({
-    item: user,
-    index,
-    showMoreItemsIndicator,
-  }) => {
+export interface UserListRowProps extends ListProps, ItemProps {}
+
+export const UserListRow = React.memo((_props: UserListRowProps) => {
+  const listProps = _.pick(_props, rowListProps) as ListProps
+  const itemProps = _.omit(_props, rowListProps) as ItemProps
+
+  const renderItem: RenderItem<GitHubUser> = ({ item: user, index }) => {
     if (!(user && user.id && user.login)) return null
 
     return (
       <UserRow
         key={`user-row-${user.id}`}
-        {...props}
+        {...itemProps}
         avatarUrl={user.avatar_url}
-        showMoreItemsIndicator={showMoreItemsIndicator}
         userLinkURL={user.html_url || ''}
         username={user.display_login || user.login}
-        withTopMargin={index === 0 ? props.withTopMargin : true}
+        withTopMargin={index === 0 ? itemProps.withTopMargin : true}
       />
     )
   }
 
-  const { users, ...otherProps } = props
-
-  if (!(users && users.length > 0)) return null
-
-  return <RowList {...otherProps} data={users} renderItem={renderItem} />
+  return <RowList {...listProps} renderItem={renderItem} />
 })

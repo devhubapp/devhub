@@ -204,10 +204,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
           (cardViewMode !== 'compact' || repos.length > 1) && (
             <RepositoryListRow
               key={`event-repo-list-row-${repoIds.join('-')}`}
+              data={repos}
               isForcePush={isForcePush}
               isPush={isPush}
               muted={muted}
-              repos={repos}
+              overlayThemeColor={theme =>
+                getCardBackgroundThemeColor(theme, { muted: isRead })
+              }
               small
               viewMode={cardViewMode}
               withTopMargin={getWithTopMargin()}
@@ -304,9 +307,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {users.length > 0 && (
           <UserListRow
             bold={false}
-            muted={muted}
+            data={users}
             key={`event-user-list-row-${userIds.join('-')}`}
-            users={users}
+            muted={muted}
+            overlayThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { muted: isRead })
+            }
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
@@ -315,9 +321,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
         {pages.length > 0 && (
           <WikiPageListRow
             bold={false}
-            muted={muted}
+            data={pages}
             key={`event-wiki-page-list-row-${pageShas.join('-')}`}
-            pages={pages}
+            muted={muted}
+            overlayThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { muted: isRead })
+            }
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
@@ -327,9 +336,12 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <CommitListRow
             key={`event-commit-list-row-${commitShas.join('-')}`}
             bold={false}
-            commits={commits}
+            data={commits}
             isPrivate={isPrivate}
             muted={muted}
+            overlayThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { muted: isRead })
+            }
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />

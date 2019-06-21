@@ -470,7 +470,6 @@ const SidebarColumnItem = React.memo(
       enableBackgroundHover,
       enableForegroundHover,
       highlight,
-      horizontal,
       itemContainerStyle,
       showLabel,
       small,

@@ -18,7 +18,6 @@ export interface RepositoryRowProps
   muted: boolean
   ownerName: string
   repositoryName: string
-  showMoreItemsIndicator?: boolean
   small?: boolean
 }
 
@@ -34,7 +33,6 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
     ownerName,
     repositoryName,
     rightContainerStyle,
-    showMoreItemsIndicator,
     small,
     ...otherProps
   } = props
@@ -68,11 +66,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
       right={
         <>
           <Link
-            href={
-              showMoreItemsIndicator
-                ? undefined
-                : getGitHubURLForRepo(ownerName, repositoryName)
-            }
+            href={getGitHubURLForRepo(ownerName, repositoryName)}
             textProps={{
               color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
               numberOfLines: hideOwner ? 2 : 1,
@@ -87,7 +81,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
                 cardStyles.icon,
               ]}
             />{' '} */}
-            {showMoreItemsIndicator ? '' : repositoryName}
+            {repositoryName}
           </Link>
 
           {!!(ownerName && !hideOwner) && (
@@ -95,18 +89,14 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               {!!repositoryName && <Spacer width={contentPadding / 3} />}
 
               <Link
-                href={
-                  showMoreItemsIndicator
-                    ? undefined
-                    : getGitHubURLForUser(ownerName)
-                }
+                href={getGitHubURLForUser(ownerName)}
                 textProps={{
                   color: 'foregroundColorMuted60',
                   numberOfLines: 1,
                   style: [cardStyles.normalText, small && cardStyles.smallText],
                 }}
               >
-                {showMoreItemsIndicator ? '...' : ownerName}
+                {ownerName}
               </Link>
             </>
           )}

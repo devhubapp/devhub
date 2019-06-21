@@ -17,7 +17,6 @@ export interface UserRowProps
   bold?: boolean
   // hideIcon?: boolean
   muted: boolean
-  showMoreItemsIndicator?: boolean
   userLinkURL: string
   username: string
 }
@@ -30,7 +29,6 @@ export const UserRow = React.memo((props: UserRowProps) => {
     bold,
     // hideIcon,
     muted,
-    showMoreItemsIndicator,
     userLinkURL,
     username,
     ...otherProps
@@ -53,18 +51,13 @@ export const UserRow = React.memo((props: UserRowProps) => {
       right={
         <View style={cardRowStyles.mainContentContainer}>
           <Link
-            href={
-              showMoreItemsIndicator ? undefined : getGitHubURLForUser(username)
-            }
+            href={getGitHubURLForUser(username)}
             textProps={{
-              color:
-                muted || showMoreItemsIndicator
-                  ? 'foregroundColorMuted60'
-                  : 'foregroundColor',
+              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
               style: [bold && cardStyles.boldText],
             }}
           >
-            {showMoreItemsIndicator ? '...' : username}
+            {username}
           </Link>
         </View>
       }

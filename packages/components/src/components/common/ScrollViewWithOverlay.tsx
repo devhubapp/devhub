@@ -10,17 +10,17 @@ import {
 import { FlatList } from '../../libs/flatlist'
 import { contentPadding } from '../../styles/variables'
 import {
-  AnimatedTransparentTextOverlay,
-  AnimatedTransparentTextOverlayProps,
+  TransparentTextOverlay,
+  TransparentTextOverlayProps,
 } from '../common/TransparentTextOverlay'
 
 export interface ScrollViewWithOverlayProps extends ScrollViewProps {
   ScrollViewComponent?: typeof ScrollView | typeof FlatList | any
   children?: React.ReactNode
   containerStyle?: ViewProps['style']
-  overlayThemeColor?: AnimatedTransparentTextOverlayProps['themeColor']
-  overlaySize?: AnimatedTransparentTextOverlayProps['size']
-  overlaySpacing?: AnimatedTransparentTextOverlayProps['spacing']
+  overlayThemeColor?: TransparentTextOverlayProps['themeColor']
+  overlaySize?: TransparentTextOverlayProps['size']
+  overlaySpacing?: TransparentTextOverlayProps['spacing']
 }
 
 export const ScrollViewWithOverlay = React.forwardRef(
@@ -30,7 +30,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
       containerStyle,
       horizontal,
       overlaySize = contentPadding,
-      overlaySpacing = contentPadding / 2,
+      overlaySpacing,
       overlayThemeColor = 'backgroundColor',
       ...restProps
     } = props
@@ -142,7 +142,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
           onScroll={onScroll}
         />
 
-        <AnimatedTransparentTextOverlay
+        <TransparentTextOverlay
           ref={leftOrTopOverlayRef}
           containerStyle={StyleSheet.absoluteFill}
           size={overlaySize}
@@ -151,7 +151,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
           to={horizontal ? 'right' : 'bottom'}
         />
 
-        <AnimatedTransparentTextOverlay
+        <TransparentTextOverlay
           ref={rightOrBottomOverlayRef}
           containerStyle={StyleSheet.absoluteFill}
           size={overlaySize}

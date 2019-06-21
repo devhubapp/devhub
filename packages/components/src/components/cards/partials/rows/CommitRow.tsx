@@ -34,7 +34,6 @@ export interface CommitRowProps
   latestCommentUrl?: string
   message: string
   muted: boolean
-  showMoreItemsIndicator?: boolean
   url: string
 }
 
@@ -52,7 +51,6 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     latestCommentUrl,
     message: _message,
     muted,
-    showMoreItemsIndicator,
     url,
     ...otherProps
   } = props
@@ -100,16 +98,11 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
         <View style={cardRowStyles.mainContentContainer}>
           <Link
             enableTextWrapper
-            href={
-              showMoreItemsIndicator
-                ? undefined
-                : fixURL(url, {
-                    commentId:
-                      (latestCommentUrl &&
-                        getCommentIdFromUrl(latestCommentUrl)) ||
-                      undefined,
-                  })
-            }
+            href={fixURL(url, {
+              commentId:
+                (latestCommentUrl && getCommentIdFromUrl(latestCommentUrl)) ||
+                undefined,
+            })}
             style={sharedStyles.flex}
             textProps={{
               color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
@@ -133,13 +126,13 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
                   />{' '}
                 </>
               )}
-              {showMoreItemsIndicator ? '' : message}
+              {message}
               {Boolean(byText) && (
                 <ThemedText
                   color="foregroundColorMuted60"
                   style={[cardStyles.normalText, cardStyles.smallText]}
                 >
-                  {showMoreItemsIndicator ? '...' : ` by ${byText}`}
+                  {` by ${byText}`}
                 </ThemedText>
               )}
             </>

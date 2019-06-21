@@ -5,7 +5,6 @@ import { trimNewLinesAndSpaces } from '@devhub/core'
 import { fixURL } from '../../../../utils/helpers/github/url'
 import { Link } from '../../../common/Link'
 import { ThemedIcon } from '../../../themed/ThemedIcon'
-import { ThemedText } from '../../../themed/ThemedText'
 import { cardStyles } from '../../styles'
 import { BaseRow, BaseRowProps } from './partials/BaseRow'
 import { cardRowStyles } from './styles'
@@ -19,7 +18,6 @@ export interface WikiPageRowProps
   hideIcon?: boolean
   muted: boolean
   name?: string
-  showMoreItemsIndicator?: boolean
   title: string
   url: string
 }
@@ -32,7 +30,6 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
     hideIcon,
     muted,
     name,
-    showMoreItemsIndicator,
     title: _title,
     url,
     ...otherProps
@@ -49,7 +46,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
         <View style={cardRowStyles.mainContentContainer}>
           <Link
             enableTextWrapper
-            href={showMoreItemsIndicator ? undefined : fixURL(url)}
+            href={fixURL(url)}
             style={cardRowStyles.mainContentContainer}
             textProps={{
               color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
@@ -63,12 +60,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
                   <ThemedIcon name="book" size={13} style={cardStyles.icon} />{' '}
                 </>
               )}
-              {showMoreItemsIndicator ? '' : title}
-              {!!showMoreItemsIndicator && (
-                <ThemedText color="foregroundColorMuted60" numberOfLines={1}>
-                  ...
-                </ThemedText>
-              )}
+              {title}
             </>
           </Link>
         </View>
