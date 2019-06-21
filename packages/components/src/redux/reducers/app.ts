@@ -1,6 +1,6 @@
 import immer from 'immer'
 
-import { BannerMessage, constants } from '@devhub/core'
+import { BannerMessage } from '@devhub/core'
 import { REHYDRATE } from 'redux-persist'
 import { Reducer } from '../types'
 
@@ -9,18 +9,7 @@ export interface State {
 }
 
 const initialState: State = {
-  banners: [
-    {
-      id: 'join_our_slack',
-      message:
-        'Join our brand new Slack Community and get exclusive access to new features in beta :rocket:',
-      href: constants.SLACK_INVITE_LINK,
-      openOnNewTab: true,
-      minLoginCount: 3,
-      closedAt: undefined,
-      createdAt: '2019-05-02T08:00:00.000Z',
-    },
-  ],
+  banners: [],
 }
 
 export const appReducer: Reducer<State> = (state = initialState, action) => {
