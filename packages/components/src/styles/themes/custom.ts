@@ -80,12 +80,7 @@ export function createThemeFromColor(
     override.primaryBackgroundColor &&
     !override.primaryForegroundColor
   ) {
-    const isPrimaryBackgroundDark =
-      getLuminance(override.primaryBackgroundColor) <= 0.4
-
-    override.primaryForegroundColor = isPrimaryBackgroundDark
-      ? lighten(0.95, override.primaryBackgroundColor)
-      : darken(0.95, override.primaryBackgroundColor)
+    override.primaryForegroundColor = backgroundColorMore2
   }
 
   const theme = createTheme({

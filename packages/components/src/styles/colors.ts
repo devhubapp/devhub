@@ -7,7 +7,7 @@ export function getStaticColors({
 }): StaticThemeColors {
   return {
     black: '#000000',
-    blue: isDark ? '#4C9DFF' : '#4895FF',
+    blue: isDark ? '#6E9BEA' : '#3666B9',
     blueGray: isDark ? '#7493A2' : '#607D8B',
     brown: isDark ? '#9C7162' : '#795548',
     gray: isDark ? '#ACACB0' : '#A4A4A8',
@@ -15,7 +15,7 @@ export function getStaticColors({
     lightRed: isDark ? '#FF6E64' : '#FF665C',
     orange: isDark ? '#FFB251' : '#FFAA4D',
     pink: isDark ? '#FF6496' : '#FF5C91',
-    purple: isDark ? '#8569AF' : '#6E5494',
+    purple: isDark ? '#A772Ef' : '#562992',
     red: isDark ? '#DE4A40' : '#FF3F34',
     teal: isDark ? '#49D3B4' : '#43C3A7',
     white: '#FFFFFF',
