@@ -8,7 +8,6 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { darkThemesArr, lightThemesArr } from '../../styles/themes'
-import { defaultTheme } from '../../styles/utils'
 import { contentPadding } from '../../styles/variables'
 import { Checkbox } from '../common/Checkbox'
 import { H3 } from '../common/H3'
@@ -18,12 +17,12 @@ import { Switch } from '../common/Switch'
 import { useTheme } from '../context/ThemeContext'
 
 export const ThemePreference = React.memo(() => {
-  const lastThemeId = useRef(defaultTheme.id)
-
-  useTheme(undefined, theme => {
+  const initialTheme = useTheme(undefined, theme => {
     if (theme.id === 'auto') return
     lastThemeId.current = theme.id
   })
+
+  const lastThemeId = useRef(initialTheme.id)
 
   const currentThemeId = useReduxState(selectors.themePairSelector).id
 

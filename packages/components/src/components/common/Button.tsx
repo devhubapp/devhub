@@ -6,7 +6,6 @@ import { AnimatedValue, useSpring } from 'react-spring/native'
 import { constants, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
-import { defaultTheme } from '../../styles/utils'
 import { contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import {
@@ -76,12 +75,6 @@ export const Button = React.memo((props: ButtonProps) => {
     typeof _size === 'number' || _size === null
       ? _size || undefined
       : defaultButtonSize
-
-  const cacheRef = useRef({
-    isHovered: false,
-    isPressing: false,
-    theme: defaultTheme,
-  })
 
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate: boolean }) => {
@@ -163,9 +156,6 @@ export const Button = React.memo((props: ButtonProps) => {
     },
     [
       backgroundThemeColor,
-      cacheRef.current.isHovered,
-      cacheRef.current.isPressing,
-      cacheRef.current.theme,
       disabled,
       foregroundThemeColor,
       hoverBackgroundThemeColor,
@@ -174,10 +164,6 @@ export const Button = React.memo((props: ButtonProps) => {
       transparent,
     ],
   )
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
-    ReturnType<typeof getStyles>
-  >(() => getStyles({ forceImmediate: true }))
 
   const updateStyles = useCallback(
     ({ forceImmediate }: { forceImmediate: boolean }) => {
@@ -197,14 +183,22 @@ export const Button = React.memo((props: ButtonProps) => {
       [updateStyles],
     ),
   )
-  cacheRef.current.theme = initialTheme
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(touchableRef, isHovered => {
     cacheRef.current.isHovered = isHovered
     updateStyles({ forceImmediate: false })
   })
-  cacheRef.current.isHovered = initialIsHovered
+
+  const cacheRef = useRef({
+    isHovered: initialIsHovered,
+    isPressing: false,
+    theme: initialTheme,
+  })
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
+    ReturnType<typeof getStyles>
+  >(() => getStyles({ forceImmediate: true }))
 
   useLayoutEffect(() => {
     updateStyles({ forceImmediate: true })
