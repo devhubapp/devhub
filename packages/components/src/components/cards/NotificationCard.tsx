@@ -342,7 +342,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View style={cardStyles.compactItemFixedHeight}>
           <BookmarkButton
             isSaved={isSaved}
-            itemIds={[id]}
+            itemIds={id}
             size={columnHeaderItemContentSize}
           />
         </View>
@@ -557,7 +557,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         >
           <ToggleReadButton
             isRead={isRead}
-            itemIds={[id]}
+            itemIds={id}
             muted={muted}
             size={columnHeaderItemContentSize}
             type="notifications"

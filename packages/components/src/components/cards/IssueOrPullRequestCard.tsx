@@ -292,7 +292,7 @@ export const IssueOrPullRequestCard = React.memo(
           <View style={cardStyles.compactItemFixedHeight}>
             <BookmarkButton
               isSaved={isSaved}
-              itemIds={[id]}
+              itemIds={id}
               size={columnHeaderItemContentSize}
             />
           </View>
@@ -509,7 +509,7 @@ export const IssueOrPullRequestCard = React.memo(
           >
             <ToggleReadButton
               isRead={isRead}
-              itemIds={[id]}
+              itemIds={id}
               muted={muted}
               size={columnHeaderItemContentSize}
               type="issue_or_pr"

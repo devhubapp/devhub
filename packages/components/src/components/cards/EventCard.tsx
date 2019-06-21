@@ -406,7 +406,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         <View style={cardStyles.compactItemFixedHeight}>
           <BookmarkButton
             isSaved={isSaved}
-            itemIds={[id]}
+            itemIds={id}
             size={columnHeaderItemContentSize}
           />
         </View>
@@ -613,7 +613,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
         >
           <ToggleReadButton
             isRead={isRead}
-            itemIds={[id]}
+            itemIds={id}
             muted={muted}
             size={columnHeaderItemContentSize}
             type="activity"

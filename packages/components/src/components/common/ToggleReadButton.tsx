@@ -11,28 +11,29 @@ import {
   ColumnHeaderItem,
   ColumnHeaderItemProps,
 } from '../columns/ColumnHeaderItem'
-import { useTheme } from '../context/ThemeContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 
 export interface ToggleReadButtonProps
   extends Omit<ColumnHeaderItemProps, 'tooltip'> {
   isRead: boolean
-  itemIds: Array<string | number>
+  itemIds: string | number | Array<string | number>
   muted: boolean
   type: ColumnSubscription['type']
 }
 
-export function ToggleReadButton(props: ToggleReadButtonProps) {
+export const ToggleReadButton = React.memo((props: ToggleReadButtonProps) => {
   const {
     isRead,
-    itemIds,
+    itemIds: _itemIds,
     muted,
     size = columnHeaderItemContentSize,
     type,
     ...otherProps
   } = props
 
-  const theme = useTheme()
+  const itemIds = Array.isArray(_itemIds)
+    ? _itemIds.filter(Boolean)
+    : [_itemIds].filter(Boolean)
 
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
@@ -43,8 +44,8 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
       analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
       enableForegroundHover
       fixedIconSize
-      foregroundColor={
-        muted ? theme.foregroundColorMuted60 : theme.foregroundColor
+      foregroundThemeColor={
+        muted ? 'foregroundColorMuted60' : 'foregroundColor'
       }
       iconName={isRead ? 'mail-read' : 'mail'}
       noPadding
@@ -72,4 +73,4 @@ export function ToggleReadButton(props: ToggleReadButtonProps) {
       ]}
     />
   )
-}
+})
