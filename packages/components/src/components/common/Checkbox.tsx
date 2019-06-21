@@ -197,7 +197,7 @@ export function Checkbox(props: CheckboxProps) {
               size={size - 5}
               style={{
                 lineHeight: size - 5,
-                ...Platform.select({
+                ...Platform.selectUsingRealOS({
                   ios: {
                     paddingTop: 1,
                   },
