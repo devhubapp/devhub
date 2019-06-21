@@ -56,6 +56,14 @@ export const configReducer: Reducer<State> = (state = initialState, action) => {
         }
       })
 
+    case 'TOGGLE_APP_VIEW_MODE':
+      return immer(state, draft => {
+        draft.appViewMode =
+          state.appViewMode === 'single-column'
+            ? 'multi-column'
+            : 'single-column'
+      })
+
     default:
       return state
   }

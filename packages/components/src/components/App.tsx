@@ -13,6 +13,7 @@ import { AppGlobalStyles } from './AppGlobalStyles'
 import { ColumnFiltersProvider } from './context/ColumnFiltersContext'
 import { ColumnFocusProvider } from './context/ColumnFocusContext'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
+import { DeepLinkProvider } from './context/DeepLinkContext'
 import { AppLayoutProvider } from './context/LayoutContext'
 import { SpringAnimatedThemeProvider } from './context/SpringAnimatedThemeContext'
 
@@ -29,20 +30,22 @@ export function App() {
       <ReduxProvider store={store}>
         <ReduxStoreProvider>
           <PersistGate loading={null} persistor={persistor}>
-            <AppLayoutProvider>
-              <ColumnFocusProvider>
-                <ColumnFiltersProvider>
-                  <ColumnWidthProvider>
-                    <SpringAnimatedThemeProvider>
-                      <>
-                        <AppGlobalStyles key="app-global-styles" />
-                        <AppNavigator key="app-navigator" />
-                      </>
-                    </SpringAnimatedThemeProvider>
-                  </ColumnWidthProvider>
-                </ColumnFiltersProvider>
-              </ColumnFocusProvider>
-            </AppLayoutProvider>
+            <DeepLinkProvider>
+              <AppLayoutProvider>
+                <ColumnFocusProvider>
+                  <ColumnFiltersProvider>
+                    <ColumnWidthProvider>
+                      <SpringAnimatedThemeProvider>
+                        <>
+                          <AppGlobalStyles key="app-global-styles" />
+                          <AppNavigator key="app-navigator" />
+                        </>
+                      </SpringAnimatedThemeProvider>
+                    </ColumnWidthProvider>
+                  </ColumnFiltersProvider>
+                </ColumnFocusProvider>
+              </AppLayoutProvider>
+            </DeepLinkProvider>
           </PersistGate>
         </ReduxStoreProvider>
       </ReduxProvider>

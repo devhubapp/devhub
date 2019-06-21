@@ -15,6 +15,7 @@ import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import url from 'url'
 
+import { constants } from '@devhub/core'
 import { __DEV__ } from './libs/electron-is-dev'
 import { WindowState, windowStateKeeper } from './libs/electron-window-state'
 
@@ -269,12 +270,14 @@ function init() {
     config.set('launchCount', config.get('launchCount', 0) + 1)
 
     if (__DEV__ && process.platform === 'win32') {
-      app.removeAsDefaultProtocolClient('devhub')
-      app.setAsDefaultProtocolClient('devhub', process.execPath, [
-        path.resolve(process.argv[1]),
-      ])
+      app.removeAsDefaultProtocolClient(constants.APP_DEEP_LINK_SCHEMA)
+      app.setAsDefaultProtocolClient(
+        constants.APP_DEEP_LINK_SCHEMA,
+        process.execPath,
+        [path.resolve(process.argv[1])],
+      )
     } else {
-      app.setAsDefaultProtocolClient('devhub')
+      app.setAsDefaultProtocolClient(constants.APP_DEEP_LINK_SCHEMA)
     }
 
     createTray()
@@ -329,7 +332,7 @@ function init() {
       'new-window',
       (event, uri, _frameName, _disposition, _options) => {
         if (
-          !app.isDefaultProtocolClient('devhub') &&
+          !app.isDefaultProtocolClient(constants.APP_DEEP_LINK_SCHEMA) &&
           `${url.parse(uri).pathname || ''}`.startsWith('/oauth')
         )
           return
@@ -353,8 +356,8 @@ function init() {
     if (!(e && uri && typeof uri === 'string')) returnValue = false
     else if (uri.startsWith('http://') || uri.startsWith('https://'))
       returnValue = true
-    else if (uri.startsWith('devhub://'))
-      returnValue = app.isDefaultProtocolClient('devhub')
+    else if (uri.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`))
+      returnValue = app.isDefaultProtocolClient(constants.APP_DEEP_LINK_SCHEMA)
 
     e.returnValue = returnValue
   })
@@ -362,7 +365,14 @@ function init() {
   ipcMain.on('open-url', (_e: any, uri?: string) => {
     if (!mainWindow) return
 
-    if (!(uri && typeof uri === 'string' && uri.startsWith('devhub://'))) return
+    if (
+      !(
+        uri &&
+        typeof uri === 'string' &&
+        uri.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)
+      )
+    )
+      return
     mainWindow.webContents.send('open-url', url)
   })
 

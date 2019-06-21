@@ -48,6 +48,9 @@ export function* configSagas() {
   yield all([
     yield fork(init),
     yield takeLatest(['SET_THEME', 'SET_PREFERRABLE_THEME'], onThemeChange),
-    yield takeLatest('SET_APP_VIEW_MODE', onSetAppViewMode),
+    yield takeLatest(
+      ['SET_APP_VIEW_MODE', 'TOGGLE_APP_VIEW_MODE'],
+      onSetAppViewMode,
+    ),
   ])
 }

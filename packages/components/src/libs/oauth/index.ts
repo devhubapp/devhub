@@ -9,7 +9,7 @@ import {
   OAuthResponseData,
 } from './helpers'
 
-const redirectUri = 'devhub://github/oauth'
+const redirectUri = constants.APP_DEEP_LINK_URLS.github_oauth
 
 export async function executeOAuth(
   gitHubAppType: GitHubAppType | 'both',

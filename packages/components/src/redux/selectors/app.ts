@@ -1,3 +1,4 @@
+import { getLayoutConsumerState } from '../../components/context/LayoutContext'
 import { RootState } from '../types'
 import { countersSelector } from './counters'
 
@@ -10,6 +11,8 @@ export const bannerMessageSelector = (state: RootState) => {
   const banners = allBannerMessagesSelector(state)
   const loginCount = countersSelector(state).loginSuccess
 
+  const { sizename } = getLayoutConsumerState()
+
   const filteredBanners = banners.filter(
     banner =>
       !!(
@@ -17,6 +20,7 @@ export const bannerMessageSelector = (state: RootState) => {
         banner.id &&
         banner.message &&
         (!banner.minLoginCount || loginCount >= banner.minLoginCount) &&
+        (!banner.disableOnSmallScreens || sizename !== '1-small') &&
         !banner.closedAt
       ),
   )

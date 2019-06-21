@@ -28,10 +28,12 @@ export const countReducer: Reducer<State> = (
     }
 
     case 'SET_APP_VIEW_MODE':
+    case 'TOGGLE_APP_VIEW_MODE': {
       return {
         ...state,
         appViewModeChange: (state.appViewModeChange || 0) + 1,
       }
+    }
 
     case 'LOGIN_SUCCESS':
       return {

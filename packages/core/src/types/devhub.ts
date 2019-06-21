@@ -420,6 +420,7 @@ export interface BannerMessage {
   message: string
   href?: string
   openOnNewTab?: boolean
+  disableOnSmallScreens?: boolean
   minLoginCount?: number
   closedAt?: string | undefined
   createdAt?: string

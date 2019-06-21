@@ -39,7 +39,7 @@ export function AppBannerMessage() {
         >
           <Link
             analyticsCategory="banner_link"
-            analyticsLabel={bannerMessage.id.replace(/-/g, '_')}
+            analyticsLabel={bannerMessage.id}
             href={bannerMessage.href}
             openOnNewTab={bannerMessage.openOnNewTab}
             tooltip={undefined}
@@ -49,8 +49,8 @@ export function AppBannerMessage() {
                 key: `banner-message-${bannerMessage.message}`,
                 imageProps: {
                   style: {
-                    width: 14,
-                    height: 14,
+                    width: 16,
+                    height: 16,
                   },
                 },
               })}

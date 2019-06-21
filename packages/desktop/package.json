@@ -63,6 +63,7 @@
     }
   },
   "dependencies": {
+    "@devhub/core": "0.91.1",
     "electron-store": "2.0.0",
     "electron-updater": "4.0.6",
     "jsonfile": "5.0.0",

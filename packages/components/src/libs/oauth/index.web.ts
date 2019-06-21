@@ -12,7 +12,7 @@ import {
 } from './helpers'
 
 const schemaRedirectUri = Platform.isElectron
-  ? 'devhub://github/oauth'
+  ? constants.APP_DEEP_LINK_URLS.github_oauth
   : undefined
 
 function getPopupTarget() {

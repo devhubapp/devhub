@@ -6,10 +6,11 @@ import React, {
 } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { constants, ThemeColors } from '@devhub/core'
 import { rgba } from 'polished'
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
+import { emitter } from '../../libs/emitter'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
 import { findNode } from '../../utils/helpers/shared'
@@ -44,19 +45,32 @@ export interface LinkProps
 export function Link(props: LinkProps) {
   const {
     allowEmptyLink,
-    analyticsLabel,
+    analyticsLabel: _analyticsLabel,
     backgroundThemeColor,
     enableBackgroundHover,
     enableForegroundHover = true,
     enableTextWrapper,
     hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
     hoverForegroundThemeColor: _hoverForegroundThemeColor,
-    href,
+    href: _href,
+    onPress: _onPress,
     openOnNewTab: _openOnNewTab = true,
     textProps,
     tooltip,
     ...otherProps
   } = props
+
+  const analyticsLabel = _analyticsLabel && _analyticsLabel.replace(/-/g, '_')
+
+  const isDeepLink =
+    _href && _href.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)
+  const href = isDeepLink ? undefined : _href
+  const onPress = isDeepLink
+    ? (e: any) => {
+        emitter.emit('DEEP_LINK', { url: _href! })
+        if (_onPress) _onPress(e)
+      }
+    : _onPress
 
   const flatContainerStyle =
     StyleSheet.flatten([{ maxWidth: '100%' }, otherProps.style]) || {}
@@ -171,7 +185,7 @@ export function Link(props: LinkProps) {
   const cacheRef = useRef({ theme: initialTheme, isHovered: false })
   cacheRef.current.theme = initialTheme
 
-  const renderTouchable = href || otherProps.onPress || allowEmptyLink
+  const renderTouchable = href || onPress || allowEmptyLink
 
   let finalProps: any
   if (renderTouchable) {
@@ -187,7 +201,7 @@ export function Link(props: LinkProps) {
         default: {
           ...otherProps,
           onPress:
-            otherProps.onPress ||
+            onPress ||
             (href
               ? href.startsWith('http')
                 ? () => Browser.openURL(href)
@@ -198,6 +212,7 @@ export function Link(props: LinkProps) {
         web: {
           accessibilityRole: 'link',
           href,
+          onPress,
           selectable: true,
           target: openOnNewTab ? '_blank' : '_self',
           ...otherProps,
@@ -208,6 +223,7 @@ export function Link(props: LinkProps) {
   } else {
     finalProps = {
       ...otherProps,
+      onPress,
       style: flatContainerStyle,
     }
   }

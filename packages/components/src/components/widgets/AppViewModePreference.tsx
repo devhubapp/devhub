@@ -1,12 +1,15 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Image, View } from 'react-native'
 
 import { AppViewMode, constants } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { getEmojiImageURL } from '../../utils/helpers/github/emojis'
 import { Checkbox } from '../common/Checkbox'
 import { H2 } from '../common/H2'
 import { Link } from '../common/Link'
@@ -24,6 +27,8 @@ export const AppViewModePreference = React.memo(
       appViewMode: currentAppViewMode,
       canSwitchAppViewMode,
     } = useAppViewMode()
+
+    const counters = useReduxState(selectors.countersSelector)
     const setAppViewMode = useReduxAction(actions.setAppViewMode)
 
     if (!canSwitchAppViewMode) return null
@@ -68,6 +73,14 @@ export const AppViewModePreference = React.memo(
                 style={sharedStyles.flex}
               />
             </Link>
+          )}
+
+          {!(counters.appViewModeChange >= 1) && (
+            <Image
+              accessibilityLabel="New!"
+              source={{ uri: getEmojiImageURL('sparkles') }}
+              style={{ marginLeft: contentPadding / 2, width: 16, height: 16 }}
+            />
           )}
         </SubHeader>
 

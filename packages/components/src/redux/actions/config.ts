@@ -22,3 +22,7 @@ export function dayNightSwitch() {
 export function setAppViewMode(appViewMode: AppViewMode) {
   return createAction('SET_APP_VIEW_MODE', appViewMode)
 }
+
+export function toggleAppViewMode() {
+  return createAction('TOGGLE_APP_VIEW_MODE')
+}

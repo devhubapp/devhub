@@ -1,6 +1,7 @@
 import { EventEmitter } from 'fbemitter'
 import InAppBrowserReborn from 'react-native-inappbrowser-reborn'
 
+import { constants } from '@devhub/core'
 import { BrowserCrossPlatform } from '.'
 import { bugsnag } from '../bugsnag'
 import { Linking } from '../linking'
@@ -58,7 +59,7 @@ export const Browser: BrowserCrossPlatform = {
 }
 
 Linking.addEventListener('url', ({ url }) => {
-  if (url && url.startsWith('devhub://')) {
+  if (url && url.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)) {
     InAppBrowserReborn.close()
   }
 })

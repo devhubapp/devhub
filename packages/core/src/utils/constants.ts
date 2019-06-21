@@ -41,3 +41,10 @@ export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
 
 export const DEVHUB_BETA_URL = 'https://beta.devhubapp.com'
 export const SLACK_INVITE_LINK = 'https://slack.devhubapp.com'
+
+export const APP_DEEP_LINK_SCHEMA = 'devhub'
+export const APP_DEEP_LINK_URLS = {
+  github_oauth: `${APP_DEEP_LINK_SCHEMA}://github/oauth`,
+  preferences: `${APP_DEEP_LINK_SCHEMA}://preferences`,
+  redux_action: `${APP_DEEP_LINK_SCHEMA}://action`,
+}

@@ -55,7 +55,7 @@ export function getGitHubAppInstallUri(
   const redirectUri =
     options.redirectUri ||
     (Platform.OS === 'ios' || Platform.OS === 'android' || Platform.isElectron
-      ? 'devhub://'
+      ? `${constants.APP_DEEP_LINK_SCHEMA}://`
       : Platform.OS === 'web'
       ? window.location.origin
       : '')
