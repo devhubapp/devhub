@@ -32,9 +32,9 @@ export function getAboutMenuItems() {
       },
     },
     { type: 'separator' },
-    ...(getOtherConfigMenuItems().length
+    ...(getOpenAtLoginMenuItem()
       ? ([
-          ...getOtherConfigMenuItems(),
+          getOpenAtLoginMenuItem(),
           { type: 'separator' },
         ] as MenuItemConstructorOptions[])
       : []),
@@ -58,10 +58,29 @@ export function getOptionsMenuItems() {
   return menuItems
 }
 
-export function getOtherConfigMenuItems() {
-  const menuItems: MenuItemConstructorOptions[] = []
+export function getOpenAtLoginMenuItem() {
+  if (!constants.FEATURE_FLAGS.OPEN_AT_LOGIN) return []
 
-  return menuItems
+  const menuItem: MenuItemConstructorOptions = {
+    type: 'checkbox',
+    label: 'Open at Login',
+    checked: app.getLoginItemSettings().openAtLogin,
+    enabled: true,
+    visible: true,
+    click(item) {
+      config.store.set(
+        'openAtLoginChangeCount',
+        (config.store.get('openAtLoginChangeCount') || 0) + 1,
+      )
+
+      app.setLoginItemSettings({
+        openAtLogin: item.checked,
+        openAsHidden: true,
+      })
+    },
+  }
+
+  return menuItem
 }
 
 export function getUpdaterMenuItem() {
@@ -432,6 +451,12 @@ export function getTrayMenuItems() {
       type: 'separator',
       visible: !isCurrentWindow,
     },
+    ...(getOpenAtLoginMenuItem()
+      ? ([
+          getOpenAtLoginMenuItem(),
+          { type: 'separator' },
+        ] as MenuItemConstructorOptions[])
+      : []),
     ...getOptionsMenuItems(),
     { type: 'separator' },
     getUpdaterMenuItem(),

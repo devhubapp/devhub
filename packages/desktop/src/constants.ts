@@ -9,6 +9,7 @@ export const START_URL = __DEV__
   : `file://${path.join(__dirname, 'web/index.html')}`
 
 export const FEATURE_FLAGS = {
+  OPEN_AT_LOGIN: process.platform !== 'linux',
   LOCK_ON_CENTER: process.platform !== 'linux',
 }
 

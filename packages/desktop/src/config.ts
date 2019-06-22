@@ -4,6 +4,7 @@ import * as constants from './constants'
 
 export const store = new Store({
   defaults: {
+    openAtLoginChangeCount: 0,
     lockOnCenter: false,
     launchCount: 0,
     isMenuBarMode: false,

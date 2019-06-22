@@ -26,6 +26,19 @@ function setupBrowserExtensions() {
 function init() {
   app.setName('DevHub')
 
+  const openAtLoginChangeCount = config.store.get('openAtLoginChangeCount')
+  if (!(openAtLoginChangeCount >= 1)) {
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      openAsHidden: true,
+    })
+
+    config.store.set(
+      'openAtLoginChangeCount',
+      (openAtLoginChangeCount || 0) + 1,
+    )
+  }
+
   const gotTheLock = app.requestSingleInstanceLock()
   if (!gotTheLock) {
     app.quit()
