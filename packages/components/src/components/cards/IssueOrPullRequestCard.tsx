@@ -139,21 +139,80 @@ export const IssueOrPullRequestCard = React.memo(
     function renderContent() {
       return (
         <>
-          {!!(
-            repoOwnerName &&
-            repoName &&
-            !repoIsKnown &&
-            cardViewMode !== 'compact'
-          ) && (
-            <RepositoryRow
-              key={`issue-or-pr-repo-row-${repo.id}`}
-              muted={muted}
-              ownerName={repoOwnerName}
-              repositoryName={repoName}
-              small
-              viewMode={cardViewMode}
-              withTopMargin={getWithTopMargin()}
-            />
+          {cardViewMode !== 'compact' && (
+            <View
+              style={[
+                sharedStyles.flexGrow,
+                sharedStyles.horizontal,
+                { maxWidth: '100%' },
+              ]}
+            >
+              {!!(repoOwnerName && repoName && !repoIsKnown) && (
+                <RepositoryRow
+                  key={`issue-or-pr-repo-row-${repo.id}`}
+                  containerStyle={sharedStyles.flex}
+                  muted={muted}
+                  ownerName={repoOwnerName}
+                  repositoryName={repoName}
+                  rightContainerStyle={sharedStyles.flex}
+                  small
+                  viewMode={cardViewMode}
+                  withTopMargin={getWithTopMargin()}
+                />
+              )}
+
+              {!!issueOrPullRequest.updated_at && (
+                <View
+                  style={[
+                    cardStyles.compactItemFixedHeight,
+                    sharedStyles.horizontal,
+                  ]}
+                >
+                  <Spacer width={contentPadding / 2} />
+
+                  <IntervalRefresh date={issueOrPullRequest.updated_at}>
+                    {() => {
+                      const createdAt = issueOrPullRequest.created_at
+                      const updatedAt = issueOrPullRequest.updated_at
+
+                      const dateText = getDateSmallText(updatedAt, false)
+                      if (!dateText) return null
+
+                      return (
+                        <>
+                          <ThemedText
+                            color={
+                              muted
+                                ? 'foregroundColorMuted40'
+                                : 'foregroundColorMuted60'
+                            }
+                            numberOfLines={1}
+                            style={cardStyles.smallerText}
+                            {...Platform.select({
+                              web: {
+                                title: `${
+                                  createdAt
+                                    ? `Created: ${getFullDateText(createdAt)}\n`
+                                    : ''
+                                }Updated: ${getFullDateText(updatedAt)}`,
+                              },
+                            })}
+                          >
+                            {/* <ThemedIcon
+                                name="clock"
+                                style={cardStyles.smallerText}
+                              />{' '} */}
+                            {dateText}
+                          </ThemedText>
+                        </>
+                      )
+                    }}
+                  </IntervalRefresh>
+
+                  <Spacer width={contentPadding / 3} />
+                </View>
+              )}
+            </View>
           )}
 
           {!!issueOrPullRequest && (
@@ -182,60 +241,7 @@ export const IssueOrPullRequestCard = React.memo(
               labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
               owner={repoOwnerName || ''}
               repo={repoName || ''}
-              rightTitle={
-                !!issueOrPullRequest.updated_at &&
-                cardViewMode !== 'compact' && (
-                  <View
-                    style={[
-                      cardStyles.compactItemFixedHeight,
-                      sharedStyles.horizontal,
-                    ]}
-                  >
-                    <IntervalRefresh date={issueOrPullRequest.updated_at}>
-                      {() => {
-                        const createdAt = issueOrPullRequest.created_at
-                        const updatedAt = issueOrPullRequest.updated_at
-
-                        const dateText = getDateSmallText(updatedAt, false)
-                        if (!dateText) return null
-
-                        return (
-                          <>
-                            <ThemedText
-                              color={
-                                muted
-                                  ? 'foregroundColorMuted40'
-                                  : 'foregroundColorMuted60'
-                              }
-                              numberOfLines={1}
-                              style={cardStyles.smallerText}
-                              {...Platform.select({
-                                web: {
-                                  title: `${
-                                    createdAt
-                                      ? `Created: ${getFullDateText(
-                                          createdAt,
-                                        )}\n`
-                                      : ''
-                                  }Updated: ${getFullDateText(updatedAt)}`,
-                                },
-                              })}
-                            >
-                              {/* <ThemedIcon
-                                name="clock"
-                                style={cardStyles.smallerText}
-                              />{' '} */}
-                              {dateText}
-                            </ThemedText>
-                          </>
-                        )
-                      }}
-                    </IntervalRefresh>
-
-                    <Spacer width={contentPadding / 3} />
-                  </View>
-                )
-              }
+              rightTitle={<Spacer width={contentPadding / 3} />}
               showBodyRow={
                 false
                 // issueOrPullRequest &&
@@ -446,8 +452,8 @@ export const IssueOrPullRequestCard = React.memo(
               },
             ]}
           >
-            {!!issueOrPullRequest.created_at && (
-              <IntervalRefresh date={issueOrPullRequest.created_at}>
+            {!!issueOrPullRequest.updated_at && (
+              <IntervalRefresh date={issueOrPullRequest.updated_at}>
                 {() => {
                   const createdAt = issueOrPullRequest.created_at
                   const updatedAt = issueOrPullRequest.updated_at
