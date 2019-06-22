@@ -38,6 +38,7 @@ export const appReducer: Reducer<State> = (state = initialState, action) => {
             .concat(initialState.banners)
             .map(banner => {
               if (!(banner && banner.id)) return banner
+              if (banner.id === 'join_our_slack') return
 
               const updatedBanner = initialState.banners.find(
                 b => b.id === banner.id,
@@ -50,7 +51,8 @@ export const appReducer: Reducer<State> = (state = initialState, action) => {
               }
 
               return banner
-            }),
+            })
+            .filter(Boolean) as State['banners'],
           'id',
         ),
       }
