@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "@octokit/rest": "16.20.0",
+    "axios": "0.18.0",
     "gravatar": "1.8.0",
     "immer": "2.1.4",
     "json-to-graphql-query": "1.9.0",
     "lodash": "4.17.11",
-    "moment": "2.24.0"
+    "moment": "2.24.0",
+    "qs": "6.6.0"
   },
   "devDependencies": {
     "@octokit/webhooks": "5.3.3",
