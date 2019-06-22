@@ -1,6 +1,6 @@
 // Modified version of: https://github.com/mawie81/electron-window-state
 
-import electron from 'electron'
+import electron, { BrowserWindow, Rectangle } from 'electron'
 import jsonfile from 'jsonfile'
 import mkdirp from 'mkdirp'
 import path from 'path'
@@ -41,7 +41,7 @@ export interface WindowInternalState {
 
 export interface WindowState extends WindowInternalState {
   /** Register listeners on the given `BrowserWindow` for events that are related to size or position changes (resize, move). It will also restore the window's maximized or full screen state. When the window is closed we automatically remove the listeners and save the state. */
-  manage: (window: Electron.BrowserWindow) => void
+  manage: (window: BrowserWindow) => void
   /** Removes all listeners of the managed `BrowserWindow` in case it does not need to be managed anymore. */
   unmanage: () => void
 }
@@ -51,7 +51,7 @@ export function windowStateKeeper(options: WindowStateOptions): WindowState {
   const screen = electron.screen || electron.remote.screen
 
   let state: WindowInternalState
-  let winRef: Electron.BrowserWindow | null = null
+  let winRef: BrowserWindow | null = null
   let updateStateTimer: number
   let saveStateTimer: number
 
@@ -70,7 +70,7 @@ export function windowStateKeeper(options: WindowStateOptions): WindowState {
 
   const fullStoreFileName = path.join(config.path, config.file)
 
-  function isNormal(win: Electron.BrowserWindow) {
+  function isNormal(win: BrowserWindow) {
     return !win.isMaximized() && !win.isMinimized() && !win.isFullScreen()
   }
 
@@ -101,7 +101,7 @@ export function windowStateKeeper(options: WindowStateOptions): WindowState {
     }
   }
 
-  function windowWithinBounds(bounds: Electron.Rectangle) {
+  function windowWithinBounds(bounds: Rectangle) {
     return (
       state.x >= bounds.x &&
       state.y >= bounds.y &&
@@ -136,7 +136,7 @@ export function windowStateKeeper(options: WindowStateOptions): WindowState {
     }
   }
 
-  function updateState(_win?: Electron.BrowserWindow) {
+  function updateState(_win?: BrowserWindow) {
     const win = _win || winRef
 
     if (!win) {
@@ -162,7 +162,7 @@ export function windowStateKeeper(options: WindowStateOptions): WindowState {
     }
   }
 
-  function saveState(win?: Electron.BrowserWindow) {
+  function saveState(win?: BrowserWindow) {
     // Update window state only if it was provided
     if (win) {
       updateState(win)
@@ -196,7 +196,7 @@ export function windowStateKeeper(options: WindowStateOptions): WindowState {
     saveState()
   }
 
-  function manage(win: Electron.BrowserWindow) {
+  function manage(win: BrowserWindow) {
     winRef = win
 
     if (config.maximize && state.isMaximized) {
