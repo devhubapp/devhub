@@ -104,9 +104,6 @@ function init() {
 
   app.on('activate', () => {
     window.updateOrRecreateWindow()
-
-    const mainWindow = window.getMainWindow()
-    mainWindow.show()
   })
 
   app.on('web-contents-created', (_event, webContents) => {

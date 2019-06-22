@@ -1,4 +1,5 @@
 import {
+  app,
   BrowserWindow,
   BrowserWindowConstructorOptions,
   screen,
@@ -9,6 +10,7 @@ import * as config from './config'
 import * as constants from './constants'
 import * as dock from './dock'
 import * as helpers from './helpers'
+import { __DEV__ } from './libs/electron-is-dev'
 import { WindowState, windowStateKeeper } from './libs/electron-window-state'
 import * as menu from './menu'
 import * as tray from './tray'
@@ -39,17 +41,24 @@ export function init() {
   })
 
   mainWindow = createWindow()
-
   update()
 }
 
+let mainWindowReadyToShowCount = 0
 export function createWindow() {
   const win = new BrowserWindow(getBrowserWindowOptions())
 
   win.loadURL(constants.START_URL)
 
   win.once('ready-to-show', () => {
-    win.show()
+    mainWindowReadyToShowCount++
+    if (
+      mainWindowReadyToShowCount === 1 &&
+      (__DEV__ || app.getLoginItemSettings().wasOpenedAsHidden)
+    )
+      return
+
+    helpers.showWindow(win)
   })
 
   win.on('show', () => {
@@ -104,7 +113,7 @@ export function getBrowserWindowOptions() {
         ? undefined
         : path.join(__dirname, '../assets/icons/icon.png'),
     resizable: true,
-    show: true,
+    show: false,
     title: 'DevHub',
     webPreferences: {
       affinity: 'main-window',
@@ -149,7 +158,6 @@ export function getBrowserWindowOptions() {
 }
 
 export function update() {
-  helpers.showWindow(mainWindow)
   menu.updateMenu()
   tray.updateTrayHightlightMode()
   updateBrowserWindowOptions()
@@ -163,6 +171,7 @@ export function updateOrRecreateWindow() {
   }
 
   update()
+  helpers.showWindow(mainWindow)
 }
 
 function updateBrowserWindowOptions() {
