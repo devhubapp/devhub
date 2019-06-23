@@ -131,6 +131,7 @@ export function getUpdaterMenuItem() {
       label = 'Update downloaded. Click to restart.'
 
       click = () => {
+        updater.getAutoUpdater().autoInstallOnAppQuit = true
         app.relaunch()
         app.quit()
       }

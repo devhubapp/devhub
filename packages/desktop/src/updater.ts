@@ -1,4 +1,4 @@
-import { dialog } from 'electron'
+import { app, dialog, Notification } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 import * as menu from './menu'
@@ -23,11 +23,9 @@ let updateInfo: {
 export async function init() {
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
-  autoUpdater.checkForUpdatesAndNotify()
 
-  setInterval(() => {
-    autoUpdater.checkForUpdatesAndNotify()
-  }, 60 * 60 * 1000)
+  checkForUpdatesAndNotify()
+  setInterval(checkForUpdatesAndNotify, 60 * 60 * 1000)
 }
 
 export function getUpdateInfo() {
@@ -39,7 +37,39 @@ export function getAutoUpdater() {
 }
 
 export async function checkForUpdatesAndNotify() {
-  return autoUpdater.checkForUpdatesAndNotify()
+  try {
+    const result = await autoUpdater.checkForUpdates()
+    if (!(result && result.downloadPromise)) return result
+
+    try {
+      await result.downloadPromise
+
+      const version =
+        result.updateInfo.version && result.updateInfo.version.startsWith('v')
+          ? result.updateInfo.version.slice(1)
+          : result.updateInfo.version
+
+      const notification = new Notification({
+        title: '🚀 New version available',
+        body: `${app.getName()} v${version} has been downloaded. Tap to install.`,
+      })
+
+      notification.addListener('click', () => {
+        autoUpdater.autoInstallOnAppQuit = true
+        app.relaunch()
+        app.quit()
+      })
+
+      notification.show()
+    } catch (error) {
+      console.error(error)
+    }
+
+    return result
+  } catch (error) {
+    console.error(error)
+    return null
+  }
 }
 
 export function register() {
