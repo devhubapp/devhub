@@ -14,7 +14,7 @@ export function getSeparatorThemeColors(
   const luminance = getLuminance(backgroundColor)
 
   if (luminance >= 0.6)
-    return ['backgroundColorDarker1', 'backgroundColorLighther3']
+    return ['backgroundColorDarker2', 'backgroundColorLighther3']
 
   if (luminance <= 0.01)
     return ['backgroundColorDarker3', 'backgroundColorLighther2']

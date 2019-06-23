@@ -14,7 +14,7 @@ export function getCardItemSeparatorThemeColors(
   if (luminance >= 0.6)
     return muted
       ? ['backgroundColorDarker4', 'backgroundColorLighther2']
-      : ['backgroundColorDarker2', 'backgroundColorDarker1']
+      : ['backgroundColorDarker2', 'backgroundColorLighther2']
 
   if (luminance <= 0.01)
     return muted
