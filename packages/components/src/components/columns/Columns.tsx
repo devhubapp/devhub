@@ -132,16 +132,11 @@ export const Columns = React.memo((props: ColumnsProps) => {
     string
   >['onScrollToIndexFailed'] = useCallback(_onScrollToIndexFailed, [])
 
-  const flatListStyle = useMemo(
-    () => [
-      styles.flatlist,
-      sizename > '2-medium' && {
-        marginHorizontal: -separatorThickSize / 2,
-      },
-      style,
-    ],
-    [style, sizename, separatorThickSize],
-  )
+  const flatListStyle = useMemo(() => [styles.flatlist, style], [
+    style,
+    sizename,
+    separatorThickSize,
+  ])
 
   /*
   const _onViewableItemsChanged: FlatListProps<

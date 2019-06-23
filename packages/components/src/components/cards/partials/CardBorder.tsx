@@ -14,6 +14,7 @@ export function CardBorder() {
         bottom: 0,
         left: 0,
         width: 2,
+        zIndex: 1000,
       }}
     />
   )

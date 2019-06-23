@@ -1,6 +1,6 @@
 import { getLuminance } from 'polished'
 import React from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { ThemedView } from '../themed/ThemedView'
@@ -22,7 +22,38 @@ export function getSeparatorThemeColors(
   return ['backgroundColorDarker2', 'backgroundColorLighther2']
 }
 
+const styles = StyleSheet.create({
+  absoluteTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+
+  absoluteBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+
+  absoluteLeft: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+  },
+
+  absoluteRight: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+  },
+})
+
 export interface SeparatorProps {
+  absolute?: 'none' | 'top' | 'bottom' | 'left' | 'right'
   backgroundThemeColor1?: keyof ThemeColors
   backgroundThemeColor2?: keyof ThemeColors
   half?: boolean
@@ -34,6 +65,7 @@ export interface SeparatorProps {
 
 export const Separator = React.memo((props: SeparatorProps) => {
   const {
+    absolute,
     backgroundThemeColor1: _backgroundThemeColor1,
     backgroundThemeColor2: _backgroundThemeColor2,
     half,
@@ -58,23 +90,35 @@ export const Separator = React.memo((props: SeparatorProps) => {
     (half ? 2 : 1) /
     (_twoSeparators ? 2 : 1)
 
+  const absoluteStyle =
+    absolute === 'top'
+      ? styles.absoluteTop
+      : absolute === 'bottom'
+      ? styles.absoluteBottom
+      : absolute === 'left'
+      ? styles.absoluteLeft
+      : absolute === 'right'
+      ? styles.absoluteRight
+      : undefined
+
   const separatorStyle = [
     horizontal
       ? { width: '100%', height: size }
       : { width: size, height: '100%' },
-    !!zIndex && { zIndex },
   ]
 
   return (
     <View
-      style={
+      style={[
         horizontal
           ? {
               flexDirection: inverted ? 'column-reverse' : 'column',
               width: '100%',
             }
-          : { flexDirection: inverted ? 'row-reverse' : 'row', height: '100%' }
-      }
+          : { flexDirection: inverted ? 'row-reverse' : 'row', height: '100%' },
+        absoluteStyle,
+        !!zIndex && { zIndex },
+      ]}
     >
       {!!backgroundThemeColor1 && (
         <ThemedView

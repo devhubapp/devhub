@@ -18,7 +18,8 @@ export interface ColumnProps extends ViewProps {
   columnId: string
   fullWidth?: boolean
   pagingEnabled?: boolean
-  renderSideSeparators?: boolean
+  renderLeftSeparator?: boolean
+  renderRightSeparator?: boolean
   style?: StyleProp<ViewStyle>
 }
 
@@ -29,7 +30,8 @@ export const Column = React.memo(
       columnId,
       fullWidth,
       pagingEnabled,
-      renderSideSeparators,
+      renderLeftSeparator,
+      renderRightSeparator,
       style,
       ...otherProps
     } = props
@@ -94,9 +96,9 @@ export const Column = React.memo(
           style,
         ]}
       >
-        {!!renderSideSeparators && <ColumnSeparator half />}
+        {!!renderLeftSeparator && <ColumnSeparator half />}
         <View style={sharedStyles.flex}>{children}</View>
-        {!!renderSideSeparators && <ColumnSeparator half />}
+        {!!renderRightSeparator && <ColumnSeparator half />}
 
         <ThemedView
           ref={columnBorderRef}

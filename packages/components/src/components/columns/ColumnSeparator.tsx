@@ -21,9 +21,6 @@ export function getColumnSeparatorSize() {
   return separatorThickSize
 }
 
-export interface ColumnSeparatorProps
-  extends Pick<SeparatorProps, 'half' | 'zIndex'> {}
-
 const styles = StyleSheet.create({
   separatorCenterContainer: {
     width: separatorThickSize,
@@ -35,8 +32,13 @@ const styles = StyleSheet.create({
   },
 })
 
+export interface ColumnSeparatorProps
+  extends Pick<SeparatorProps, 'half' | 'zIndex'> {
+  absolute?: 'none' | 'left' | 'right'
+}
+
 export function ColumnSeparator(props: ColumnSeparatorProps) {
-  const { half, zIndex } = props
+  const { absolute, half, zIndex } = props
 
   const { sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
@@ -50,13 +52,14 @@ export function ColumnSeparator(props: ColumnSeparatorProps) {
           !!zIndex && { zIndex },
         ]}
       >
-        <Separator horizontal={false} zIndex={zIndex} />
+        <Separator absolute={absolute} horizontal={false} zIndex={zIndex} />
       </View>
     )
   }
 
   return (
     <Separator
+      absolute={absolute}
       backgroundThemeColor1="backgroundColorDarker2"
       half={half}
       horizontal={false}

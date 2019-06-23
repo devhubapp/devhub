@@ -38,6 +38,7 @@ export const IssueOrPullRequestColumn = React.memo(
           headerDetails.avatarProps && headerDetails.avatarProps.username
         }
         column={column}
+        columnIndex={columnIndex}
         disableColumnOptions={disableColumnOptions}
         icon={headerDetails.icon}
         owner={headerDetails.owner}

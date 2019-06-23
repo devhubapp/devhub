@@ -110,6 +110,7 @@ export interface ColumnRendererProps {
     isFiltersOpened: boolean
   }) => React.ReactNode
   column: ColumnType
+  columnIndex: number
   disableColumnOptions?: boolean
   icon: GitHubIcon
   owner: string | undefined
@@ -126,6 +127,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     avatarUsername,
     children,
     column,
+    columnIndex,
     disableColumnOptions,
     icon,
     owner,
@@ -261,23 +263,33 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     ) => !isItemRead(item),
   )
 
-  const estimatedContainerHeight =
+  const renderLeftSeparator =
+    appViewMode === 'multi-column' &&
+    !(columnIndex === 0 && appOrientation === 'landscape')
+
+  const renderRightSeparator = appViewMode === 'multi-column'
+
+  const estimatedInitialCardWidth = Math.round(
+    appViewMode === 'multi-column'
+      ? columnWidth -
+          (renderLeftSeparator ? getColumnSeparatorSize() / 2 : 0) -
+          (renderRightSeparator ? getColumnSeparatorSize() / 2 : 0)
+      : Dimensions.get('window').width -
+          (enableSharedFiltersView && inlineMode
+            ? fixedWidth + getColumnSeparatorSize()
+            : 0) -
+          (appOrientation !== 'portrait'
+            ? sidebarSize + getColumnSeparatorSize()
+            : sizename === '1-small'
+            ? 0
+            : separatorSize),
+  )
+
+  const estimatedContainerHeight = Math.round(
     appOrientation === 'portrait'
       ? Dimensions.get('window').height - columnHeaderHeight - sidebarSize - 2
-      : Dimensions.get('window').height - columnHeaderHeight - 1
-
-  const estimatedInitialCardWidth =
-    appViewMode === 'multi-column'
-      ? columnWidth - getColumnSeparatorSize()
-      : Dimensions.get('window').width -
-        (enableSharedFiltersView && inlineMode
-          ? fixedWidth + getColumnSeparatorSize()
-          : 0) -
-        (appOrientation !== 'portrait'
-          ? sidebarSize + getColumnSeparatorSize()
-          : sizename === '1-small'
-          ? 0
-          : separatorSize)
+      : Dimensions.get('window').height - columnHeaderHeight - 1,
+  )
 
   return (
     <Column
@@ -286,7 +298,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}
-      renderSideSeparators={appViewMode === 'multi-column'}
+      renderLeftSeparator={renderLeftSeparator}
+      renderRightSeparator={renderRightSeparator}
     >
       <ColumnHeader key={`column-renderer-${column.id}-header`}>
         {Platform.realOS === 'web' &&
