@@ -17,7 +17,6 @@ import { fixURL } from '../../../../utils/helpers/github/url'
 import { Avatar } from '../../../common/Avatar'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
 import { IntervalRefresh } from '../../../common/IntervalRefresh'
-import { LabelProps } from '../../../common/Label'
 import { Link } from '../../../common/Link'
 import { Spacer } from '../../../common/Spacer'
 import { ThemedIcon, ThemedIconProps } from '../../../themed/ThemedIcon'
@@ -36,7 +35,7 @@ export interface IssueOrPullRequestRowProps
   > {
   addBottomAnchor?: boolean
   avatarUrl: string | undefined
-  backgroundThemeColor: LabelProps['backgroundThemeColor']
+  backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
   body: string | undefined
   bold?: boolean
   commentsCount?: number

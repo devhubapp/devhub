@@ -1,15 +1,17 @@
 import React, { Fragment, useEffect, useRef } from 'react'
 import { ScrollView, ViewProps } from 'react-native'
 
-import { GitHubLabel } from '@devhub/core'
+import { GitHubLabel, ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
 import { hiddenLabelSize, Label, LabelProps } from '../../../common/Label'
+import { ScrollViewWithOverlay } from '../../../common/ScrollViewWithOverlay'
 import { TouchableOpacity } from '../../../common/TouchableOpacity'
 
 export interface LabelsViewProps
   extends Omit<LabelProps, 'children' | 'color' | 'containerStyle'> {
+  backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
   enableScrollView?: boolean
   fragment?: boolean
   hideText?: boolean
@@ -23,6 +25,7 @@ export interface LabelsViewProps
 
 export const LabelsView = (props: LabelsViewProps) => {
   const {
+    backgroundThemeColor,
     enableScrollView,
     fragment,
     hideText,
@@ -78,9 +81,13 @@ export const LabelsView = (props: LabelsViewProps) => {
             <ConditionalWrap
               condition={!!enableScrollView}
               wrap={c => (
-                <ScrollView ref={scrollViewRef} horizontal>
+                <ScrollViewWithOverlay
+                  ref={scrollViewRef}
+                  horizontal
+                  overlayThemeColor={backgroundThemeColor}
+                >
                   {c}
-                </ScrollView>
+                </ScrollViewWithOverlay>
               )}
             >
               {children}
@@ -92,6 +99,7 @@ export const LabelsView = (props: LabelsViewProps) => {
       {labels.map(label => (
         <Label
           key={label.key}
+          backgroundThemeColor={backgroundThemeColor}
           colorThemeColor={label.color}
           containerStyle={{
             alignSelf: 'flex-start',
