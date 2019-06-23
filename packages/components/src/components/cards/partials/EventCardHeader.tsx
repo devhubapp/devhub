@@ -20,7 +20,7 @@ import { ThemedView } from '../../themed/ThemedView'
 import { cardStyles } from '../styles'
 
 export interface EventCardHeaderProps {
-  actionText: string
+  ActionTextComponent: React.ReactNode
   avatarUrl: string
   bold: boolean
   date: MomentInput
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 
 export function EventCardHeader(props: EventCardHeaderProps) {
   const {
-    actionText,
+    ActionTextComponent,
     avatarUrl,
     bold,
     date,
@@ -133,13 +133,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
 
             <Spacer height={2} />
 
-            <ThemedText
-              color={muted ? 'foregroundColorMuted60' : 'foregroundColor'}
-              numberOfLines={1}
-              style={cardStyles.headerActionText}
-            >
-              {actionText.toLowerCase()}
-            </ThemedText>
+            {ActionTextComponent}
           </View>
 
           <View

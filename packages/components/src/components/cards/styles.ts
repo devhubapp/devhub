@@ -139,15 +139,4 @@ export const cardStyles = StyleSheet.create({
     lineHeight: 20,
     marginRight: 2,
   },
-
-  headerActionText: {
-    fontSize: smallTextSize,
-    lineHeight: 18,
-    ...Platform.select({
-      default: {},
-      web: {
-        wordWrap: 'break-word',
-      },
-    }),
-  },
 })

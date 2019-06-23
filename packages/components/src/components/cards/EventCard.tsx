@@ -41,6 +41,7 @@ import { CommentRow } from './partials/rows/CommentRow'
 import { CommitListRow } from './partials/rows/CommitListRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
 import { LabelsView } from './partials/rows/LabelsView'
+import { ActionText } from './partials/rows/partials/ActionText'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryListRow } from './partials/rows/RepositoryListRow'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
@@ -115,7 +116,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
     appendColon: false,
-    includeBranch: cardViewMode === 'compact',
+    includeBranch: cardViewMode === 'compact' || event.type === 'PushEvent',
     includeFork: cardViewMode === 'compact',
     includeTag: cardViewMode === 'compact',
     repoIsKnown,
@@ -157,22 +158,34 @@ export const EventCard = React.memo((props: EventCardProps) => {
     return _withTopMargin
   }
 
+  const ActionTextComponent = (
+    <ActionText
+      body={actionText}
+      branch={actionTextOptions!.includeBranch ? branchName : undefined}
+      forkOwnerName={
+        actionTextOptions!.includeFork ? forkRepoOwnerName : undefined
+      }
+      forkRepositoryName={
+        actionTextOptions!.includeFork ? forkRepoName : undefined
+      }
+      muted={muted}
+      numberOfLines={1}
+      ownerName={repoOwnerName || ''}
+      repositoryName={repoName || ''}
+      tag={actionTextOptions!.includeTag ? branchOrTagRef : undefined}
+    />
+  )
+
   function renderContent() {
     return (
       <>
         {!!actionText && cardViewMode === 'compact' && (
           <ActorActionRow
+            ActionTextComponent={ActionTextComponent}
             avatarUrl={avatarUrl}
-            body={actionText}
             bold={!isRead}
-            branch={isBranchMainEvent ? branchName : undefined}
-            forkOwnerName={forkRepoOwnerName}
-            forkRepositoryName={forkRepoName}
             isBot={isBot}
             muted={muted}
-            ownerName={repoOwnerName || ''}
-            repositoryName={repoName || ''}
-            tag={isTagMainEvent ? branchOrTagRef : undefined}
             userLinkURL={actor.html_url || ''}
             username={actor.display_login || actor.login}
             viewMode={cardViewMode}
@@ -661,7 +674,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
           <View style={sharedStyles.flex}>
             <EventCardHeader
               key={`event-card-header-${id}`}
-              actionText={actionText}
+              ActionTextComponent={ActionTextComponent}
               avatarUrl={avatarUrl}
               bold={!isRead}
               date={createdAt}
