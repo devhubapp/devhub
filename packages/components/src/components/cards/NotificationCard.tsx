@@ -191,12 +191,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             authorEmail={commit.commit.author.email}
             authorName={commit.commit.author.name}
             authorUsername={commit.author && commit.author.login}
+            big
             bold={!isRead}
-            isCommitMainSubject
+            hideIcon
             isPrivate={isPrivate}
             latestCommentUrl={subject.latest_comment_url}
             message={commit.commit.message}
             muted={muted}
+            numberOfLines={2}
             url={commit.url || commit.commit.url}
             viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}

@@ -27,13 +27,14 @@ export interface CommitRowProps
   authorEmail: string
   authorName: string
   authorUsername?: string
+  big: boolean
   bold?: boolean
   hideIcon?: boolean
-  isCommitMainSubject: boolean
   isPrivate: boolean
   latestCommentUrl?: string
   message: string
   muted: boolean
+  numberOfLines?: number
   url: string
 }
 
@@ -44,13 +45,14 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     authorEmail,
     authorName,
     authorUsername: _authorUsername,
+    big,
     bold,
     hideIcon,
-    isCommitMainSubject,
     isPrivate,
     latestCommentUrl,
     message: _message,
     muted,
+    numberOfLines = 1,
     url,
     ...otherProps
   } = props
@@ -106,17 +108,16 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             style={sharedStyles.flex}
             textProps={{
               color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
-              numberOfLines: 1,
+              numberOfLines,
               style: [
                 cardStyles.normalText,
-                !isCommitMainSubject && cardStyles.smallText,
+                !big && cardStyles.smallText,
                 bold && cardStyles.boldText,
               ],
             }}
             tooltip={`${_message}${byText ? `\n\n${byText}` : ''}`}
           >
             <>
-              {' '}
               {!hideIcon && (
                 <>
                   <ThemedIcon

@@ -10,7 +10,7 @@ interface ListProps
 interface ItemProps
   extends Omit<
     CommitRowProps,
-    'authorEmail' | 'authorName' | 'isCommitMainSubject' | 'message' | 'url'
+    'authorEmail' | 'authorName' | 'big' | 'message' | 'url'
   > {}
 
 export interface CommitListRowProps extends ListProps, ItemProps {}
@@ -31,7 +31,7 @@ export const CommitListRow = React.memo((_props: CommitListRowProps) => {
         {...itemProps}
         authorEmail={commit.author.email}
         authorName={commit.author.name}
-        isCommitMainSubject={!!listProps.data && listProps.data.length === 1}
+        big={false}
         message={commit.message}
         url={commit.url}
         withTopMargin={index === 0 ? !!itemProps.withTopMargin : true}
