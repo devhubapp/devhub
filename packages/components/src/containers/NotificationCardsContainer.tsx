@@ -45,15 +45,11 @@ export const NotificationCardsContainer = React.memo(
 
     const data = (mainSubscription && mainSubscription.data) || {}
 
-    const installationsLoadState = useReduxState(
-      selectors.installationsLoadStateSelector,
-    )
-
     const fetchColumnSubscriptionRequest = useReduxAction(
       actions.fetchColumnSubscriptionRequest,
     )
 
-    const { allItems, filteredItems } = useColumnData<
+    const { allItems, filteredItems, loadState } = useColumnData<
       EnhancedGitHubNotification
     >(column.id, { mergeSimilar: cardViewMode !== 'compact' })
 
@@ -116,11 +112,7 @@ export const NotificationCardsContainer = React.memo(
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
-        loadState={
-          installationsLoadState === 'loading' && !filteredItems.length
-            ? 'loading_first'
-            : mainSubscription.data.loadState || 'not_loaded'
-        }
+        loadState={loadState}
         refresh={refresh}
         repoIsKnown={repoIsKnown}
       />

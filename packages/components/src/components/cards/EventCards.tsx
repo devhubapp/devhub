@@ -18,6 +18,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { ColumnLoadingIndicator } from '../columns/ColumnLoadingIndicator'
 import { Button, defaultButtonSize } from '../common/Button'
 import { ButtonLink } from '../common/ButtonLink'
 import { fabSize } from '../common/FAB'
@@ -201,10 +202,14 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const renderHeader = useCallback(() => {
     return (
-      <CardsSearchHeader
-        key={`cards-search-header-column-${column.id}`}
-        columnId={column.id}
-      />
+      <>
+        <CardsSearchHeader
+          key={`cards-search-header-column-${column.id}`}
+          columnId={column.id}
+        />
+
+        <ColumnLoadingIndicator columnId={column.id} />
+      </>
     )
   }, [column.id])
 
@@ -225,9 +230,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
                 loadState === 'loading_first' ||
                 loadState === 'loading_more'
               }
-              loading={
-                loadState === 'loading_first' || loadState === 'loading_more'
-              }
+              loading={loadState === 'loading_more'}
               onPress={fetchNextPage}
               round={false}
             />
@@ -295,7 +298,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       <RefreshControl
         intervalRefresh={lastFetchedAt}
         onRefresh={refresh}
-        refreshing={loadState === 'loading' || loadState === 'loading_first'}
+        refreshing={false}
         title={
           lastFetchedAt
             ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
@@ -303,7 +306,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         }
       />
     ),
-    [lastFetchedAt, refresh, loadState],
+    [lastFetchedAt, refresh],
   )
 
   const rerender = useMemo(() => ({}), [renderItem, renderHeader, renderFooter])
@@ -350,6 +353,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     return (
       <EmptyCards
         column={column}
+        disableLoadingIndicator
         errorMessage={errorMessage}
         fetchNextPage={fetchNextPage}
         loadState={loadState}
@@ -382,6 +386,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       refreshControl={refreshControl}
       removeClippedSubviews={Platform.OS !== 'web'}
       renderItem={renderItem}
+      stickyHeaderIndices={[0]}
       viewabilityConfig={viewabilityConfig}
       windowSize={2}
     />

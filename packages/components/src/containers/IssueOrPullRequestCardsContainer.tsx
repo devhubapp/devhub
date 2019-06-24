@@ -81,7 +81,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       actions.fetchColumnSubscriptionRequest,
     )
 
-    const { allItems, filteredItems } = useColumnData<
+    const { allItems, filteredItems, loadState } = useColumnData<
       EnhancedGitHubIssueOrPullRequest
     >(column.id, { mergeSimilar: cardViewMode !== 'compact' })
 
@@ -233,11 +233,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
-        loadState={
-          installationsLoadState === 'loading' && !filteredItems.length
-            ? 'loading_first'
-            : mainSubscription.data.loadState || 'not_loaded'
-        }
+        loadState={loadState}
         refresh={refresh}
         repoIsKnown={repoIsKnown}
       />

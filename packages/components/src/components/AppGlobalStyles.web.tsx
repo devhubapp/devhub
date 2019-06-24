@@ -1,9 +1,8 @@
 import { darken, getLuminance, lighten } from 'polished'
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
-import { ColumnSubscription, Theme } from '@devhub/core'
-import { useReduxState } from '../hooks/use-redux-state'
-import * as selectors from '../redux/selectors'
+import { Theme } from '@devhub/core'
+import { useColumnData } from '../hooks/use-column-data'
 import { themeColorFields } from '../utils/helpers/theme'
 import { getSeparatorThemeColors } from './common/Separator'
 import { useFocusedColumn } from './context/ColumnFocusContext'
@@ -48,21 +47,14 @@ export const AppGlobalStyles = React.memo(() => {
   const theme = useTheme()
 
   const { focusedColumnId } = useFocusedColumn()
-  const mainSubscription = useReduxState(
-    useCallback(
-      state =>
-        selectors.columnSubscriptionSelector(state, focusedColumnId || ''),
-      [focusedColumnId],
-    ),
-  ) as ColumnSubscription | undefined
+  const { loadState } = useColumnData(focusedColumnId || '')
 
   const isLoading = !!(
-    mainSubscription &&
-    mainSubscription.data &&
-    (mainSubscription.data.loadState === 'loading' ||
-      mainSubscription.data.loadState === 'loading_first' ||
-      mainSubscription.data.loadState === 'loading_more')
+    loadState === 'loading' ||
+    loadState === 'loading_first' ||
+    loadState === 'loading_more'
   )
+
   const styles = getStyles({ theme, isLoading })
 
   return useMemo(() => <style key="app-global-styles-inner">{styles}</style>, [

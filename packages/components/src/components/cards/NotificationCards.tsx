@@ -18,6 +18,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { ColumnLoadingIndicator } from '../columns/ColumnLoadingIndicator'
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
@@ -198,10 +199,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const renderHeader = useCallback(() => {
     return (
-      <CardsSearchHeader
-        key={`cards-search-header-column-${column.id}`}
-        columnId={column.id}
-      />
+      <>
+        <CardsSearchHeader
+          key={`cards-search-header-column-${column.id}`}
+          columnId={column.id}
+        />
+
+        <ColumnLoadingIndicator columnId={column.id} />
+      </>
     )
   }, [column.id])
 
@@ -222,9 +227,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
                 loadState === 'loading_first' ||
                 loadState === 'loading_more'
               }
-              loading={
-                loadState === 'loading_first' || loadState === 'loading_more'
-              }
+              loading={loadState === 'loading_more'}
               onPress={fetchNextPage}
               round={false}
             />
@@ -292,7 +295,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       <RefreshControl
         intervalRefresh={lastFetchedAt}
         onRefresh={refresh}
-        refreshing={loadState === 'loading' || loadState === 'loading_first'}
+        refreshing={false}
         title={
           lastFetchedAt
             ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
@@ -300,7 +303,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         }
       />
     ),
-    [lastFetchedAt, refresh, loadState],
+    [lastFetchedAt, refresh],
   )
 
   const rerender = useMemo(() => ({}), [renderItem, renderHeader, renderFooter])
@@ -325,6 +328,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       <EmptyCards
         clearMessage="No new notifications!"
         column={column}
+        disableLoadingIndicator
         errorMessage={errorMessage}
         fetchNextPage={fetchNextPage}
         loadState={loadState}
@@ -358,6 +362,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       refreshControl={refreshControl}
       removeClippedSubviews={Platform.OS !== 'web'}
       renderItem={renderItem}
+      stickyHeaderIndices={[0]}
       viewabilityConfig={viewabilityConfig}
       windowSize={2}
     />

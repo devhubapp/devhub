@@ -54,6 +54,7 @@ export interface EmptyCardsProps {
   clearEmoji?: GitHubEmoji | null
   clearMessage?: string
   column: Column
+  disableLoadingIndicator?: boolean
   emoji?: GitHubEmoji | null
   errorButtonView?: GenericMessageWithButtonViewProps['buttonView']
   errorMessage?: string
@@ -67,6 +68,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearEmoji = randomEmoji,
     clearMessage = randomClearMessage,
+    disableLoadingIndicator,
     emoji = 'warning',
     errorButtonView,
     errorMessage,
@@ -84,6 +86,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       loadState === 'loading_first' ||
       (loadState === 'loading' && !refresh && !fetchNextPage)
     ) {
+      if (disableLoadingIndicator) return null
       return <ThemedActivityIndicator color="foregroundColor" />
     }
 
@@ -97,7 +100,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
                 analyticsLabel="try_again"
                 children="Try again"
                 disabled={loadState !== 'error'}
-                loading={loadState === 'loading'}
+                loading={!disableLoadingIndicator && loadState === 'loading'}
                 onPress={() => refresh()}
               />
             ))

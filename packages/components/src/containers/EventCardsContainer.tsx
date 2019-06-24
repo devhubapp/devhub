@@ -90,10 +90,9 @@ export const EventCardsContainer = React.memo(
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
     }, [cardViewMode, ...column.subscriptionIds])
 
-    const { allItems, filteredItems } = useColumnData<EnhancedGitHubEvent>(
-      column.id,
-      { mergeSimilar: cardViewMode !== 'compact' },
-    )
+    const { allItems, filteredItems, loadState } = useColumnData<
+      EnhancedGitHubEvent
+    >(column.id, { mergeSimilar: cardViewMode !== 'compact' })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderEventDate(allItems)
@@ -257,11 +256,7 @@ export const EventCardsContainer = React.memo(
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
-        loadState={
-          installationsLoadState === 'loading' && !filteredItems.length
-            ? 'loading_first'
-            : mainSubscription.data.loadState || 'not_loaded'
-        }
+        loadState={loadState}
         refresh={refresh}
         repoIsKnown={repoIsKnown}
       />

@@ -22,6 +22,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { ColumnLoadingIndicator } from '../columns/ColumnLoadingIndicator'
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
@@ -218,10 +219,14 @@ export const IssueOrPullRequestCards = React.memo(
 
     const renderHeader = useCallback(() => {
       return (
-        <CardsSearchHeader
-          key={`cards-search-header-column-${column.id}`}
-          columnId={column.id}
-        />
+        <>
+          <CardsSearchHeader
+            key={`cards-search-header-column-${column.id}`}
+            columnId={column.id}
+          />
+
+          <ColumnLoadingIndicator columnId={column.id} />
+        </>
       )
     }, [column.id])
 
@@ -246,9 +251,7 @@ export const IssueOrPullRequestCards = React.memo(
                   loadState === 'loading_first' ||
                   loadState === 'loading_more'
                 }
-                loading={
-                  loadState === 'loading_first' || loadState === 'loading_more'
-                }
+                loading={loadState === 'loading_more'}
                 onPress={fetchNextPage}
                 round={false}
               />
@@ -316,7 +319,7 @@ export const IssueOrPullRequestCards = React.memo(
         <RefreshControl
           intervalRefresh={lastFetchedAt}
           onRefresh={refresh}
-          refreshing={loadState === 'loading' || loadState === 'loading_first'}
+          refreshing={false}
           title={
             lastFetchedAt
               ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
@@ -324,7 +327,7 @@ export const IssueOrPullRequestCards = React.memo(
           }
         />
       ),
-      [lastFetchedAt, refresh, loadState],
+      [lastFetchedAt, refresh],
     )
 
     const rerender = useMemo(() => ({}), [
@@ -364,6 +367,7 @@ export const IssueOrPullRequestCards = React.memo(
         return (
           <EmptyCards
             column={column}
+            disableLoadingIndicator
             emoji={emptyFilters ? 'desert' : 'squirrel'}
             errorButtonView={
               <Button
@@ -400,6 +404,7 @@ export const IssueOrPullRequestCards = React.memo(
       return (
         <EmptyCards
           column={column}
+          disableLoadingIndicator
           errorMessage={errorMessage}
           fetchNextPage={fetchNextPage}
           loadState={loadState}
@@ -433,6 +438,7 @@ export const IssueOrPullRequestCards = React.memo(
         refreshControl={refreshControl}
         removeClippedSubviews={Platform.OS !== 'web'}
         renderItem={renderItem}
+        stickyHeaderIndices={[0]}
         viewabilityConfig={viewabilityConfig}
         windowSize={2}
       />
