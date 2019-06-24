@@ -58,7 +58,10 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   const onBlur = useCallback(() => {
     setIsFocused(false)
 
-    if (formikProps.values.query === formikProps.initialValues.query) return
+    if (
+      formikProps.values.query.trim() === formikProps.initialValues.query.trim()
+    )
+      return
 
     formikProps.setFieldTouched('query', true)
   }, [formikProps.values.query, formikProps.initialValues.query])

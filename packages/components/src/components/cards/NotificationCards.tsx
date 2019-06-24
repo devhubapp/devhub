@@ -16,8 +16,9 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { Button } from '../common/Button'
+import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
@@ -148,6 +149,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     [],
   )
 
+  const isEmpty = !items.length
+
   const _renderItem: FlatListProps<
     EnhancedGitHubNotification
   >['renderItem'] = ({ item }) => {
@@ -207,7 +210,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator muted={!fetchNextPage} />
+        {!isEmpty && <CardItemSeparator muted={!fetchNextPage} />}
 
         {fetchNextPage ? (
           <View>
@@ -229,7 +232,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         ) : column.filters && column.filters.clearedAt ? (
           <View
             style={{
-              paddingVertical: contentPadding,
+              paddingVertical: fabSpacing + (fabSize - defaultButtonSize) / 2,
               paddingHorizontal:
                 cardViewMode === 'compact'
                   ? contentPadding / 2
@@ -254,12 +257,13 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           </View>
         ) : null}
 
-        {shouldRenderFAB({ sizename }) && (
+        {!isEmpty && shouldRenderFAB({ sizename }) && (
           <Spacer height={fabSize + 2 * fabSpacing} />
         )}
       </>
     )
   }, [
+    isEmpty,
     fetchNextPage,
     loadState,
     column.filters && column.filters.clearedAt,
@@ -305,7 +309,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     return (
       <EmptyCards
         column={column}
-        disableSearch
         errorMessage={`You have reached the limit of ${
           constants.COLUMNS_LIMIT
         } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -317,7 +320,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     )
   }
 
-  if (!(items && items.length)) {
+  function renderEmptyComponent() {
     return (
       <EmptyCards
         clearMessage="No new notifications!"
@@ -335,11 +338,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       ref={flatListRef}
       key="notification-cards-flat-list"
       ItemSeparatorComponent={CardItemSeparator}
+      ListEmptyComponent={renderEmptyComponent}
       ListFooterComponent={renderFooter}
       ListHeaderComponent={renderHeader}
       alwaysBounceVertical
       bounces
+      contentContainerStyle={isEmpty && sharedStyles.flexGrow}
       // contentOffset={{ x: 0, y: cardSearchTotalHeight }}
+      data-flatlist-with-header-content-container-full-height-fix={isEmpty}
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}

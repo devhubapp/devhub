@@ -2,8 +2,6 @@ import React from 'react'
 import { Image, View } from 'react-native'
 
 import { Column, EnhancedLoadState } from '@devhub/core'
-import { useReduxAction } from '../../hooks/use-redux-action'
-import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
@@ -12,13 +10,10 @@ import {
 } from '../../utils/helpers/github/emojis'
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
-import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Spacer } from '../common/Spacer'
-import { useAppLayout } from '../context/LayoutContext'
-import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { fabSpacing } from '../layout/FABRenderer'
 import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'
 import { ThemedText } from '../themed/ThemedText'
-import { CardsSearchHeader } from './CardsSearchHeader'
 import {
   GenericMessageWithButtonView,
   GenericMessageWithButtonViewProps,
@@ -59,8 +54,6 @@ export interface EmptyCardsProps {
   clearEmoji?: GitHubEmoji | null
   clearMessage?: string
   column: Column
-  disableSearch?: boolean
-  disableShowClearedView?: boolean
   emoji?: GitHubEmoji | null
   errorButtonView?: GenericMessageWithButtonViewProps['buttonView']
   errorMessage?: string
@@ -74,9 +67,6 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearEmoji = randomEmoji,
     clearMessage = randomClearMessage,
-    column,
-    disableSearch,
-    disableShowClearedView,
     emoji = 'warning',
     errorButtonView,
     errorMessage,
@@ -85,12 +75,6 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     loadState,
     refresh,
   } = props
-
-  const { sizename } = useAppLayout()
-
-  const setColumnClearedAtFilter = useReduxAction(
-    actions.setColumnClearedAtFilter,
-  )
 
   const clearEmojiURL = clearEmoji ? getEmojiImageURL(clearEmoji) : undefined
   const hasError = errorMessage || loadState === 'error'
@@ -164,73 +148,8 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   }
 
   return (
-    <FullHeightScrollView
-      // contentOffset={{ x: 0, y: disableSearch ? 0 : cardSearchTotalHeight }}
-      style={sharedStyles.flex}
-    >
-      {!disableSearch && (
-        <CardsSearchHeader
-          key={`cards-search-header-column-${column.id}`}
-          columnId={column.id}
-        />
-      )}
-
-      <View style={{ height: defaultCardFooterHeight }} />
-
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {renderContent()}
-      </View>
-
-      <View style={{ minHeight: defaultCardFooterHeight }}>
-        {hasError || loadState === 'loading_first' ? null : fetchNextPage ? (
-          <View
-            style={{
-              paddingHorizontal: contentPadding,
-              paddingVertical: defaultCardFooterSpacing,
-            }}
-          >
-            <Button
-              analyticsLabel="load_more"
-              children="Load more"
-              disabled={loadState === 'loading' || loadState === 'loading_more'}
-              loading={loadState === 'loading_more'}
-              onPress={fetchNextPage}
-            />
-          </View>
-        ) : !disableShowClearedView &&
-          column.filters &&
-          column.filters.clearedAt ? (
-          <View
-            style={{
-              paddingHorizontal: contentPadding,
-              paddingVertical: defaultCardFooterSpacing,
-            }}
-          >
-            <Button
-              analyticsLabel="show_cleared"
-              children="Show cleared items"
-              onPress={() => {
-                setColumnClearedAtFilter({
-                  clearedAt: null,
-                  columnId: column.id,
-                })
-                if (refresh) refresh()
-              }}
-              showBorder
-              transparent
-            />
-          </View>
-        ) : shouldRenderFAB({ sizename }) ? (
-          <Spacer height={fabSize + 2 * fabSpacing} />
-        ) : null}
-      </View>
-    </FullHeightScrollView>
+    <View style={[sharedStyles.flex, sharedStyles.center]}>
+      {renderContent()}
+    </View>
   )
 })

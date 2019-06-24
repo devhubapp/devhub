@@ -20,8 +20,9 @@ import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { Button } from '../common/Button'
+import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
 import { Spacer } from '../common/Spacer'
@@ -166,6 +167,8 @@ export const IssueOrPullRequestCards = React.memo(
       [],
     )
 
+    const isEmpty = !items.length
+
     const _renderItem: FlatListProps<
       EnhancedGitHubIssueOrPullRequest
     >['renderItem'] = ({ item }) => {
@@ -227,7 +230,7 @@ export const IssueOrPullRequestCards = React.memo(
 
       return (
         <>
-          <CardItemSeparator muted={!fetchNextPage} />
+          {!isEmpty && <CardItemSeparator muted={!fetchNextPage} />}
 
           {fetchNextPage ? (
             <View>
@@ -253,7 +256,7 @@ export const IssueOrPullRequestCards = React.memo(
           ) : column.filters && column.filters.clearedAt ? (
             <View
               style={{
-                paddingVertical: contentPadding,
+                paddingVertical: fabSpacing + (fabSize - defaultButtonSize) / 2,
                 paddingHorizontal:
                   cardViewMode === 'compact'
                     ? contentPadding / 2
@@ -278,12 +281,13 @@ export const IssueOrPullRequestCards = React.memo(
             </View>
           ) : null}
 
-          {shouldRenderFAB({ sizename }) && (
+          {!isEmpty && shouldRenderFAB({ sizename }) && (
             <Spacer height={fabSize + 2 * fabSpacing} />
           )}
         </>
       )
     }, [
+      isEmpty,
       fetchNextPage,
       loadState,
       column.filters && column.filters.clearedAt,
@@ -333,7 +337,6 @@ export const IssueOrPullRequestCards = React.memo(
       return (
         <EmptyCards
           column={column}
-          disableSearch
           errorMessage={`You have reached the limit of ${
             constants.COLUMNS_LIMIT
           } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -345,7 +348,7 @@ export const IssueOrPullRequestCards = React.memo(
       )
     }
 
-    if (!(items && items.length)) {
+    function renderEmptyComponent() {
       const maybeInvalidFilters = `${errorMessage || ''}`
         .toLowerCase()
         .startsWith('validation failed')
@@ -410,11 +413,14 @@ export const IssueOrPullRequestCards = React.memo(
         ref={flatListRef}
         key="issue-or-pr-cards-flat-list"
         ItemSeparatorComponent={CardItemSeparator}
+        ListEmptyComponent={renderEmptyComponent}
         ListFooterComponent={renderFooter}
         ListHeaderComponent={renderHeader}
         alwaysBounceVertical
         bounces
+        contentContainerStyle={isEmpty && sharedStyles.flexGrow}
         // contentOffset={{ x: 0, y: cardSearchTotalHeight }}
+        data-flatlist-with-header-content-container-full-height-fix={isEmpty}
         data={items}
         disableVirtualization={Platform.OS === 'web'}
         extraData={rerender}

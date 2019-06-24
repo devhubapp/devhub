@@ -134,7 +134,6 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         return (
           <EmptyCards
             column={column}
-            disableSearch
             fetchNextPage={undefined}
             loadState="loading"
             refresh={undefined}

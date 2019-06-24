@@ -16,8 +16,9 @@ import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { Button } from '../common/Button'
+import { Button, defaultButtonSize } from '../common/Button'
 import { ButtonLink } from '../common/ButtonLink'
 import { fabSize } from '../common/FAB'
 import { RefreshControl } from '../common/RefreshControl'
@@ -150,6 +151,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     [],
   )
 
+  const isEmpty = !items.length
+
   const _renderItem: FlatListProps<EnhancedGitHubEvent>['renderItem'] = ({
     item,
   }) => {
@@ -210,7 +213,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
     return (
       <>
-        <CardItemSeparator muted={!fetchNextPage} />
+        {!isEmpty && <CardItemSeparator muted={!fetchNextPage} />}
 
         {fetchNextPage ? (
           <View>
@@ -232,7 +235,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         ) : column.filters && column.filters.clearedAt ? (
           <View
             style={{
-              paddingVertical: contentPadding,
+              paddingVertical: fabSpacing + (fabSize - defaultButtonSize) / 2,
               paddingHorizontal:
                 cardViewMode === 'compact'
                   ? contentPadding / 2
@@ -257,12 +260,13 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           </View>
         ) : null}
 
-        {shouldRenderFAB({ sizename }) && (
+        {!isEmpty && shouldRenderFAB({ sizename }) && (
           <Spacer height={fabSize + 2 * fabSpacing} />
         )}
       </>
     )
   }, [
+    isEmpty,
     fetchNextPage,
     loadState,
     column.id,
@@ -308,7 +312,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     return (
       <EmptyCards
         column={column}
-        disableSearch
         errorMessage={`You have reached the limit of ${
           constants.COLUMNS_LIMIT
         } columns. This is to maintain a healthy usage of the GitHub API.`}
@@ -320,31 +323,30 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     )
   }
 
-  if (!(items && items.length)) {
-    if (errorMessage === 'Resource not accessible by integration') {
-      return (
-        <EmptyCards
-          column={column}
-          disableSearch
-          emoji="confused"
-          errorButtonView={
-            <ButtonLink
-              analyticsLabel="open_private_issue"
-              children="Open GitHub Issue To Upvote"
-              disabled={loadState !== 'error'}
-              href="https://github.com/devhubapp/devhub/issues/140"
-              loading={loadState === 'loading'}
-            />
-          }
-          errorTitle="Private access temporarily disabled"
-          errorMessage="GitHub has temporarily disabled private access for this specific API endpoint. Please upvote the issue below to show your interest on a fix."
-          fetchNextPage={undefined}
-          loadState={loadState}
-          refresh={refresh}
-        />
-      )
-    }
+  if (isEmpty && errorMessage === 'Resource not accessible by integration') {
+    return (
+      <EmptyCards
+        column={column}
+        emoji="confused"
+        errorButtonView={
+          <ButtonLink
+            analyticsLabel="open_private_issue"
+            children="Open GitHub Issue To Upvote"
+            disabled={loadState !== 'error'}
+            href="https://github.com/devhubapp/devhub/issues/140"
+            loading={loadState === 'loading'}
+          />
+        }
+        errorTitle="Private access temporarily disabled"
+        errorMessage="GitHub has temporarily disabled private access for this specific API endpoint. Please upvote the issue below to show your interest on a fix."
+        fetchNextPage={undefined}
+        loadState={loadState}
+        refresh={refresh}
+      />
+    )
+  }
 
+  function renderEmptyComponent() {
     return (
       <EmptyCards
         column={column}
@@ -360,11 +362,14 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     <FlatList
       ref={flatListRef}
       ItemSeparatorComponent={CardItemSeparator}
+      ListEmptyComponent={renderEmptyComponent}
       ListFooterComponent={renderFooter}
       ListHeaderComponent={renderHeader}
       alwaysBounceVertical
       bounces
+      contentContainerStyle={isEmpty && sharedStyles.flexGrow}
       // contentOffset={{ x: 0, y: cardSearchTotalHeight }}
+      data-flatlist-with-header-content-container-full-height-fix={isEmpty}
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}

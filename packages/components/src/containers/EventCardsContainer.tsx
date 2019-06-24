@@ -158,8 +158,6 @@ export const EventCardsContainer = React.memo(
         return (
           <EmptyCards
             column={column}
-            disableSearch
-            disableShowClearedView
             fetchNextPage={undefined}
             loadState="loading"
             refresh={undefined}
