@@ -8,14 +8,35 @@
   </p>
 </p>
 
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/57279337-28d95500-707f-11e9-9b2b-60c1af41277a.jpg)
+
+## Why
+
+DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications** and stay on top of **repository activities**. Save **custom searches**, apply **filters** and don't miss anything important.
+
+<br/>
+
+## Screenshots
+
+### Desktop
+
+#### Multi-column view
+
+![DevHub Desktop - Multi-column view](https://user-images.githubusercontent.com/619186/60048043-9bd77300-96a1-11e9-96c3-ad4ebd33e550.jpg)
+
+#### Single-column view
+
+![DevHub Desktop - Single-column view](https://user-images.githubusercontent.com/619186/60048044-9c700980-96a1-11e9-9661-0866b60a3ed9.jpg)
+
+#### Menubar
 
 ![DevHub Menubar](assets/static/menubar-co.jpg)
 
+### Mobile
+
 <p align="center">
-  <img alt="DevHub Mobile - Notifications" height="620" src="https://user-images.githubusercontent.com/619186/57279347-2f67cc80-707f-11e9-8457-e892ff1f57c0.png" />
-  <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/57279348-2f67cc80-707f-11e9-8804-073b5d88a4cd.png" />
-  <img alt="DevHub Mobile - Events" height="620" src="https://user-images.githubusercontent.com/619186/57279349-30006300-707f-11e9-9edc-283fea7785a4.png" />
+  <img alt="DevHub Mobile - Notifications" height="620" src="https://user-images.githubusercontent.com/619186/60048202-012b6400-96a2-11e9-9996-4ee048cdd403.jpg" />
+  <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/60048203-012b6400-96a2-11e9-93f5-0989839be64e.jpg" />
+  <img alt="DevHub Mobile - Issues & Pull Requests" height="620" src="https://user-images.githubusercontent.com/619186/60048249-1e603280-96a2-11e9-9961-c91b73ca1c8c.jpg" />
 </p>
 
 <br/>
@@ -36,35 +57,25 @@
 <br/>
 
 
-## Community
-
-Follow DevHub on Twitter: [@devhub_app](https://twitter.com/devhub_app)
-<br/>Join our Slack Community: [Slack Invitation](https://slack.devhubapp.com/)
-
-<br/>
-
-
-## Why
-
-DevHub is a mobile and desktop app to help you manage GitHub Notifications and stay on top of repository activities.
-
 ## Features
 
-- [x] **Columns layout**: See at a quick glance everything that is going on;
-- [x] **Filters**: Apply different filters to each column, remove all the noise and make them show just what you want;
-- [x] **Inbox Zero**: Clear all the seen items and keep your mind clean; See what's new since the last time you checked;
-- [x] **Enhanced notifications**: See all the relevant information before opening the notification, like comment content, issue/pull request status, release description, etc.;
-- [x] **Sanely watch repositories**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
-- [x] **Stalk users**: Follow user activities without using the `follow` button; see activities that GitHub doesn't show on your feed, like their issue comments and pushed commits;
-- [x] **Home/Dashboard**: See yours or other users' home screen (a.k.a. GitHub Dashboard), a great way to discover new repositories and interesting developers;
+- [x] **Multi-column layout**: See at a quick glance everything that is going on (like TweetDeck!);
+- [x] **Single-column layout**: Do focused work, a single task at a time;
+- [x] **Filters**: Apply different filters to each column, save your custom searches to make your life easier;
+- [x] **Inbox Zero**: Clear all the seen items and gain peace of mind;
+- [x] **Notifications manager**: See all the relevant information before opening the notification, like comment content, issue/pull request status, release description, etc.;
+- [x] **Repository watcher**: Keep up to date with repositories' activities without using the `watch` feature so your notifications don't get cluttered;
+- [x] **User stalking**: Follow user activities without using the `follow` button; see activities that GitHub doesn't show on your feed, like their issue comments and pushed commits;
+- [x] **Home/Dashboard**: See yours or other users' home screen (a.k.a. GitHub Dashboard), a great way to discover interesting repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Keyboard shortcuts**: Do anything using only the keyboard ([see shortcuts below](#keyboard-shortcuts));
 - [x] **Theme support**: Choose between 6 light or dark themes; Automatically toggle on day/night switch;
-- [x] **And more!**: Private repos support, desktop apps, native mobile apps, open source, modern tech stack, ...
+- [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech stack, ...
+
+<br/>
 
 ### Next features:
 
-- [ ] **More filters**: Filter by labels, users, regex text and more; ([#131](https://github.com/devhubapp/devhub/issues/131))
 - [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
 - [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
 - [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
@@ -73,6 +84,7 @@ DevHub is a mobile and desktop app to help you manage GitHub Notifications and s
 
 > Which one do you want first? Any other recommendations? Search for [existing feature requests](https://github.com/devhubapp/devhub/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc) and add a 👍 reaction on them, or create a new one. Feel free to ping me (@brunolemos) if you feel it's something important.
 
+<!--
 #### About paid features
 
 ##### What features will be paid?
@@ -91,15 +103,9 @@ DevHub is a mobile and desktop app to help you manage GitHub Notifications and s
 DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook, it is made by a single developer that could be making $200k+ on Facebook, but instead makes $0 working on this full time. If you want the project to live and be actively maintained, understand that it will need a revenue and consider donating or subscribing to the paid plan once it launches.
 
 > [Join the discussion](https://github.com/devhubapp/devhub/issues/106)!
-
+-->
 
 <br/>
-
-
-## Contributors
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/undefined/undefinedgraphs/contributors"><img src="https://opencollective.com/devhub/contributors.svg?width=890&button=false" /></a>
 
 ## Backers
 
@@ -123,17 +129,12 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/devhub/sponsor/9/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/9/avatar.svg"></a>
 
 
-## Donate...
+## Donate
 
-### ...to DevHub
-
-- [OpenCollective](https://opencollective.com/devhub)
-- [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
-
-### ...to [@brunolemos](https://twitter.com/brunolemos)
-
-- [Patreon](https://www.patreon.com/brunolemos)
-- [Crypto](https://commerce.coinbase.com/checkout/f314f3d3-2310-43ad-a2d0-c0c6462e792c)
+- [DevHub - OpenCollective](https://opencollective.com/devhub)
+- [DevHub - Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
+- [@brunolemos - Patreon](https://www.patreon.com/brunolemos)
+- [@brunolemos - Crypto](https://commerce.coinbase.com/checkout/f314f3d3-2310-43ad-a2d0-c0c6462e792c)
 
 <br/>
 
@@ -150,6 +151,9 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 - [Redux Saga](https://github.com/redux-saga/redux-saga/)
 - [Reselect](https://github.com/reduxjs/reselect)
 - [GraphQL](https://github.com/facebook/graphql)
+
+
+<br/>
 
 ## Contributing
 
@@ -183,6 +187,19 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 <br/>
 <br/>
 
+
+## Community
+
+<div>
+<img height="20" src="https://user-images.githubusercontent.com/619186/60049645-1c4ba300-96a5-11e9-9fc5-eb1e833a2d86.png" /> 
+Twitter: <a href="https://twitter.com/devhub_app">@devhub_app</a>
+<br/>
+
+<img height="20" src="https://user-images.githubusercontent.com/619186/60049613-04741f00-96a5-11e9-8d29-07b904bd7808.png" /> 
+Slack: <a href="https://slack.devhubapp.com/">Slack Invitation</a>
+</div>
+
+<br/>
 
 ## Author
 
