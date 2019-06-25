@@ -1571,7 +1571,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
         >
           <Button
             analyticsLabel="clear_column_filters"
-            children="Clear filters"
+            children="Reset filters"
             disabled={
               !columnHasAnyFilter(column.type, {
                 ...column.filters,
