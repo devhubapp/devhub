@@ -33,6 +33,7 @@ import {
 import { TouchableOpacityProps } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
+import { ThemedView } from '../themed/ThemedView'
 
 export interface ColumnHeaderItemProps {
   activeOpacity?: TouchableOpacityProps['activeOpacity']
@@ -62,6 +63,7 @@ export interface ColumnHeaderItemProps {
     | ((theme: ThemeColors) => string)
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
+  isUnread?: boolean
   label?: string
   mainContainerStyle?: StyleProp<ViewStyle>
   noPadding?: boolean
@@ -99,6 +101,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     hoverForegroundThemeColor,
     iconName,
     iconStyle,
+    isUnread,
     label: _label,
     mainContainerStyle,
     noPadding,
@@ -313,6 +316,18 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 marginRight: hasText ? contentPadding / 2 : 0,
               }}
             >
+              {isUnread && (
+                <ThemedView
+                  backgroundColor="primaryBackgroundColor"
+                  style={{
+                    position: 'absolute',
+                    right: contentPadding - (3 / 2) * size,
+                    width: 7,
+                    height: 7,
+                    borderRadius: 4,
+                  }}
+                />
+              )}
               {!!username ? (
                 <Avatar
                   isBot={false}
