@@ -1,9 +1,15 @@
 import React, { useLayoutEffect, useRef } from 'react'
 import { Image, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { getGitHubURLForUser, ModalPayload } from '@devhub/core'
+import {
+  getFilteredItems,
+  getGitHubURLForUser,
+  getItemsFilterMetadata,
+  ModalPayload,
+} from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
+import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
@@ -599,6 +605,33 @@ const SidebarColumnItem = React.memo(
 
     if (!(column && columnIndex >= 0 && headerDetails)) return null
 
+    const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
+      mergeSimilar: false,
+    }
+
+    const { allItems } = useColumnData(column.id, getFilteredItemsOptions)
+
+    const filteredItemsMetadata = getItemsFilterMetadata(
+      column.type,
+      getFilteredItems(
+        column.type,
+        allItems,
+        { ...column.filters, unread: undefined },
+        getFilteredItemsOptions,
+      ),
+    )
+
+    const inbox =
+      column.type === 'notifications' &&
+      column.filters &&
+      column.filters.notifications &&
+      column.filters.notifications.participating
+        ? 'participating'
+        : 'all'
+
+    const isUnread =
+      filteredItemsMetadata.inbox[inbox].unread > 0 ? true : false
+
     const label = `${headerDetails.title ||
       headerDetails.subtitle ||
       ''}`.toLowerCase()
@@ -624,6 +657,7 @@ const SidebarColumnItem = React.memo(
         }
         hoverForegroundThemeColor={hoverForegroundThemeColor}
         iconName={headerDetails.icon}
+        isUnread={isUnread}
         label={label}
         noPadding
         onPress={() => {
