@@ -68,3 +68,5 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
     />
   )
 })
+
+WikiPageRow.displayName = 'WikiPageRow'

@@ -41,3 +41,5 @@ export const CommitListRow = React.memo((_props: CommitListRowProps) => {
 
   return <RowList {...listProps} renderItem={renderItem} />
 })
+
+CommitListRow.displayName = 'CommitListRow'

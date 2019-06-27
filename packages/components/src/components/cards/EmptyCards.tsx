@@ -156,3 +156,5 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     </View>
   )
 })
+
+EmptyCards.displayName = 'EmptyCards'

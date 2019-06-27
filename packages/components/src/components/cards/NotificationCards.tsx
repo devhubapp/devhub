@@ -368,3 +368,5 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     />
   )
 })
+
+NotificationCards.displayName = 'NotificationCards'

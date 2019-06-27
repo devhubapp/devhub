@@ -135,3 +135,5 @@ export const ActionText = React.memo((props: ActionTextProps) => {
     </View>
   )
 })
+
+ActionText.displayName = 'ActionText'

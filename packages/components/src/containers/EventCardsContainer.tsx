@@ -263,3 +263,5 @@ export const EventCardsContainer = React.memo(
     )
   },
 )
+
+EventCardsContainer.displayName = 'EventCardsContainer'

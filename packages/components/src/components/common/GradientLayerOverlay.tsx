@@ -101,3 +101,5 @@ export const GradientLayerOverlay = React.forwardRef(
     )
   },
 )
+
+GradientLayerOverlay.displayName = 'GradientLayerOverlay'

@@ -147,6 +147,8 @@ export const ImageWithLoading = React.memo(
   _.isEqual,
 )
 
+ImageWithLoading.displayName = 'ImageWithLoading'
+
 function updateStyles(
   imageRef: RefObject<Image>,
   {

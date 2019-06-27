@@ -63,3 +63,5 @@ export const IssueOrPullRequestColumn = React.memo(
     )
   },
 )
+
+IssueOrPullRequestColumn.displayName = 'IssueOrPullRequestColumn'

@@ -82,3 +82,5 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
     }
   }
 })
+
+ColumnContainer.displayName = 'ColumnContainer'

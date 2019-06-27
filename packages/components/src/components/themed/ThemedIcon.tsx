@@ -24,3 +24,5 @@ export const ThemedIcon = (props: ThemedIconProps) => {
 
   return <Octicons {...otherProps} color={color} />
 }
+
+ThemedIcon.displayName = 'ThemedIcon'

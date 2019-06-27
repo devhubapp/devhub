@@ -729,3 +729,5 @@ export const EventCard = React.memo((props: EventCardProps) => {
     </ThemedView>
   )
 })
+
+EventCard.displayName = 'EventCard'

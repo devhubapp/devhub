@@ -112,3 +112,5 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     />
   )
 })
+
+CommentRow.displayName = 'CommentRow'

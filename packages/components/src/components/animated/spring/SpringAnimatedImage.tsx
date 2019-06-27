@@ -5,3 +5,4 @@ import { createSpringAnimatedComponent } from './helpers'
 export interface SpringAnimatedImageProps extends ImageProps {}
 
 export const SpringAnimatedImage = createSpringAnimatedComponent(Image)
+;(SpringAnimatedImage as any).displayName = 'SpringAnimatedImage'

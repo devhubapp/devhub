@@ -24,3 +24,5 @@ export const ThemedActivityIndicator = (
 
   return <ActivityIndicator {...otherProps} color={color} />
 }
+
+ThemedActivityIndicator.displayName = 'ThemedActivityIndicator'

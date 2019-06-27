@@ -27,3 +27,5 @@ export const FlatListWithOverlay = React.forwardRef(
     )
   },
 )
+
+FlatListWithOverlay.displayName = 'FlatListWithOverlay'

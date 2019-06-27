@@ -74,3 +74,5 @@ export const ToggleReadButton = React.memo((props: ToggleReadButtonProps) => {
     />
   )
 })
+
+ToggleReadButton.displayName = 'TextInput'

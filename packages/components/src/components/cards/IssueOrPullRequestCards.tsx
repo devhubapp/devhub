@@ -445,3 +445,5 @@ export const IssueOrPullRequestCards = React.memo(
     )
   },
 )
+
+IssueOrPullRequestCards.displayName = 'IssueOrPullRequestCards'

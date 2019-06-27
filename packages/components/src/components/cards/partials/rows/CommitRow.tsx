@@ -143,3 +143,5 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
     />
   )
 })
+
+CommitRow.displayName = 'CommitRow'

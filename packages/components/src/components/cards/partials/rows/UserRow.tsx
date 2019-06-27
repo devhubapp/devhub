@@ -64,3 +64,5 @@ export const UserRow = React.memo((props: UserRowProps) => {
     />
   )
 })
+
+UserRow.displayName = 'UserRow'

@@ -623,3 +623,5 @@ export const IssueOrPullRequestCard = React.memo(
     )
   },
 )
+
+IssueOrPullRequestCard.displayName = 'IssueOrPullRequestCard'

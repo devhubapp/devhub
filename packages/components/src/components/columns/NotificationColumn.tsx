@@ -63,3 +63,5 @@ export const NotificationColumn = React.memo(
     )
   },
 )
+
+NotificationColumn.displayName = 'NotificationColumn'

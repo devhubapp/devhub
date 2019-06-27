@@ -138,3 +138,5 @@ export const Separator = React.memo((props: SeparatorProps) => {
     </View>
   )
 })
+
+Separator.displayName = 'Separator'

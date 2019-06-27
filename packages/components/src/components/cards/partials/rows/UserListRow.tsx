@@ -32,3 +32,5 @@ export const UserListRow = React.memo((_props: UserListRowProps) => {
 
   return <RowList {...listProps} renderItem={renderItem} />
 })
+
+UserListRow.displayName = 'UserListRow'

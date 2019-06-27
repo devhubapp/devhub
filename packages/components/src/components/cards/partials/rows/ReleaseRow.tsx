@@ -145,3 +145,5 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
     </View>
   )
 })
+
+ReleaseRow.displayName = 'ReleaseRow'

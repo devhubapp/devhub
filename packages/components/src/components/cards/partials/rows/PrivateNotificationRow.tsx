@@ -142,3 +142,5 @@ export const PrivateNotificationRow = React.memo(
     )
   },
 )
+
+PrivateNotificationRow.displayName = 'PrivateNotificationRow'

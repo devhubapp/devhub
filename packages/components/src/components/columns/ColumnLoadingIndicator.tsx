@@ -32,3 +32,5 @@ export const ColumnLoadingIndicator = React.memo(
     )
   },
 )
+
+ColumnLoadingIndicator.displayName = 'ColumnLoadingIndicator'

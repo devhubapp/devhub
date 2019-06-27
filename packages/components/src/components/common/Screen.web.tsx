@@ -52,6 +52,8 @@ export const Screen = React.memo((props: ScreenProps) => {
   )
 })
 
+Screen.displayName = 'Screen'
+
 function updateStyles({
   theme,
   statusBarBackgroundThemeColor,

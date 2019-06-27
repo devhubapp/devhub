@@ -163,3 +163,5 @@ export const ScrollViewWithOverlay = React.forwardRef(
     )
   },
 )
+
+ScrollViewWithOverlay.displayName = 'ScrollViewWithOverlay'

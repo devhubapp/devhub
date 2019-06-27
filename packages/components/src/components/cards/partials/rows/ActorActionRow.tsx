@@ -96,3 +96,5 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
     />
   )
 })
+
+ActorActionRow.displayName = 'ActorActionRow'

@@ -114,6 +114,8 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   )
 })
 
+CardsSearchHeader.displayName = 'CardsSearchHeader'
+
 function focusColumn(columnId: string) {
   emitter.emit('FOCUS_ON_COLUMN', {
     columnId,

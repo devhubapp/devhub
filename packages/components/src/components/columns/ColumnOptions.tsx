@@ -1719,3 +1719,5 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     </ThemedView>
   )
 })
+
+ColumnOptions.displayName = 'ColumnOptions'

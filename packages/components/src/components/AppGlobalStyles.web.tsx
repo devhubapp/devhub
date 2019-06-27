@@ -61,3 +61,5 @@ export const AppGlobalStyles = React.memo(() => {
     styles,
   ])
 })
+
+AppGlobalStyles.displayName = 'AppGlobalStyles'

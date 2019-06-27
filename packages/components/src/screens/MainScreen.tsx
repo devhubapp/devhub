@@ -416,3 +416,5 @@ export const MainScreen = React.memo(() => {
     </Screen>
   )
 })
+
+MainScreen.displayName = 'MainScreen'

@@ -86,3 +86,5 @@ export const BranchRow = React.memo((props: BranchRowProps) => {
     />
   )
 })
+
+BranchRow.displayName = 'BranchRow'

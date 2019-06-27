@@ -15,6 +15,7 @@ export type ColumnWidthProviderState = number
 export const ColumnWidthContext = React.createContext<ColumnWidthProviderState>(
   calculateColumnWidth({ windowWidth: Dimensions.get('window').width }),
 )
+ColumnWidthContext.displayName = 'ColumnWidthContext'
 
 export function ColumnWidthProvider(props: ColumnWidthProviderProps) {
   const { width: windowWidth } = useDimensions('width')
@@ -28,6 +29,7 @@ export function ColumnWidthProvider(props: ColumnWidthProviderProps) {
 }
 
 export const ColumnWidthConsumer = ColumnWidthContext.Consumer
+;(ColumnWidthConsumer as any).displayName = 'ColumnWidthConsumer'
 
 function calculateColumnWidth({
   windowWidth,

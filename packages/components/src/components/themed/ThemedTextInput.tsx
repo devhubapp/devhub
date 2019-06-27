@@ -120,4 +120,6 @@ export const ThemedTextInput = React.forwardRef<
   )
 })
 
+ThemedTextInput.displayName = 'ThemedTextInput'
+
 export type ThemedTextInput = typeof ThemedTextInput

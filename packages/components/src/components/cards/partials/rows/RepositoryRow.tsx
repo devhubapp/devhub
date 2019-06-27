@@ -105,3 +105,5 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
     />
   )
 })
+
+RepositoryRow.displayName = 'RepositoryRow'

@@ -59,3 +59,5 @@ export const SearchBar = React.memo(
     )
   }),
 )
+
+SearchBar.displayName = 'SearchBar'

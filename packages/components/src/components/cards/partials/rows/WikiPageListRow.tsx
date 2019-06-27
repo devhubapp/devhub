@@ -30,3 +30,5 @@ export const WikiPageListRow = React.memo((_props: WikiPageListRowProps) => {
 
   return <RowList {...listProps} renderItem={renderItem} />
 })
+
+WikiPageListRow.displayName = 'WikiPageListRow'

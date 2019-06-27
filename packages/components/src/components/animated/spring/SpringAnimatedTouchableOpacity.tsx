@@ -10,3 +10,5 @@ export interface SpringAnimatedTouchableOpacityProps
 export const SpringAnimatedTouchableOpacity = createSpringAnimatedComponent(
   TouchableOpacity,
 )
+;(SpringAnimatedTouchableOpacity as any).displayName =
+  'SpringAnimatedTouchableOpacity'

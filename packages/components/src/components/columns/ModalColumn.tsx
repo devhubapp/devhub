@@ -128,3 +128,5 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
     </Column>
   )
 })
+
+ModalColumn.displayName = 'ModalColumn'

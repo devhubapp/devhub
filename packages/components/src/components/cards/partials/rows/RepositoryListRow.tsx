@@ -44,3 +44,5 @@ export const RepositoryListRow = React.memo(
     return <RowList {...listProps} renderItem={renderItem} />
   },
 )
+
+RepositoryListRow.displayName = 'RepositoryListRow'

@@ -93,3 +93,5 @@ export const GenericMessageWithButtonView = React.memo(
     )
   },
 )
+
+GenericMessageWithButtonView.displayName = 'GenericMessageWithButtonView'

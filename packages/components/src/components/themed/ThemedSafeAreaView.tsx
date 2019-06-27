@@ -33,6 +33,8 @@ export const ThemedSafeAreaView = React.forwardRef<
   )
 })
 
+ThemedSafeAreaView.displayName = 'ThemedSafeAreaView'
+
 function getStyle(
   theme: ThemeColors & { isInverted: boolean | 0 | 1 },
   {

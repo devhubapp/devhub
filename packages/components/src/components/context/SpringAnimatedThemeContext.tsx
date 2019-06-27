@@ -22,8 +22,11 @@ export const SpringAnimatedThemeContext = React.createContext<
   isDark: defaultTheme.isDark ? 1 : 0,
   isInverted: defaultTheme.isInverted ? 1 : 0,
 })
+SpringAnimatedThemeContext.displayName = 'SpringAnimatedThemeContext'
 
 export const SpringAnimatedThemeConsumer = SpringAnimatedThemeContext.Consumer
+;(SpringAnimatedThemeConsumer as any).displayName =
+  'SpringAnimatedThemeConsumer'
 
 export function SpringAnimatedThemeProvider(
   props: SpringAnimatedThemeProviderProps,

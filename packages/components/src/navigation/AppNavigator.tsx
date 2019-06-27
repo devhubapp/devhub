@@ -11,3 +11,5 @@ export const AppNavigator = React.memo(() => {
   if (user) return <MainScreen key="app-main-screen" />
   return <LoginScreen key="app-login-screen" />
 })
+
+AppNavigator.displayName = 'AppNavigator'

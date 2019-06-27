@@ -8,3 +8,5 @@ export interface SpringAnimatedActivityIndicatorProps
 export const SpringAnimatedActivityIndicator = createSpringAnimatedComponent(
   ActivityIndicator,
 )
+;(SpringAnimatedActivityIndicator as any).displayName =
+  'SpringAnimatedActivityIndicator'

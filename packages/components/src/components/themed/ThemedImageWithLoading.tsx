@@ -83,6 +83,8 @@ export const ThemedImageWithLoading = React.forwardRef<
   )
 })
 
+ThemedImageWithLoading.displayName = 'ThemedImageWithLoading'
+
 export type ThemedImageWithLoading = typeof ThemedImageWithLoading
 
 function getStyle(

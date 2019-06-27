@@ -246,3 +246,5 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
     </ModalColumn>
   )
 })
+
+SettingsModal.displayName = 'SettingsModal'

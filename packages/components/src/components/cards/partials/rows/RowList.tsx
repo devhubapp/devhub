@@ -98,3 +98,5 @@ export const RowList = React.memo((props: RowListProps<any>) => {
     </View>
   )
 })
+
+RowList.displayName = 'RowList'

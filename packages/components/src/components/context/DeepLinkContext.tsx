@@ -17,6 +17,7 @@ export type DeepLinkProviderState = undefined
 export const DeepLinkContext = React.createContext<DeepLinkProviderState>(
   undefined,
 )
+DeepLinkContext.displayName = 'DeepLinkContext'
 
 export function DeepLinkProvider(props: DeepLinkProviderProps) {
   const store = useReduxStore()
@@ -75,3 +76,4 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
 }
 
 export const DeepLinkConsumer = DeepLinkContext.Consumer
+;(DeepLinkConsumer as any).displayName = 'DeepLinkConsumer'

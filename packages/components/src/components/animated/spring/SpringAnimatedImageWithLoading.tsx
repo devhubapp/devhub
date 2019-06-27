@@ -10,3 +10,5 @@ export interface SpringAnimatedImageWithLoadingProps
 export const SpringAnimatedImageWithLoading = createSpringAnimatedComponent(
   ImageWithLoading,
 )
+;(SpringAnimatedImageWithLoading as any).displayName =
+  'SpringAnimatedImageWithLoading'

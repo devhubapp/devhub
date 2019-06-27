@@ -70,3 +70,5 @@ export const TransparentTextOverlay = React.memo(
     )
   }),
 )
+
+TransparentTextOverlay.displayName = 'TransparentTextOverlay'

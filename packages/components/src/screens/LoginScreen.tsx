@@ -318,3 +318,5 @@ export const LoginScreen = React.memo(() => {
     </Screen>
   )
 })
+
+LoginScreen.displayName = 'LoginScreen'

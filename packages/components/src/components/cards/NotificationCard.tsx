@@ -669,3 +669,5 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     </ThemedView>
   )
 })
+
+NotificationCard.displayName = 'NotificationCard'

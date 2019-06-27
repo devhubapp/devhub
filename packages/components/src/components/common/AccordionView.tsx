@@ -89,3 +89,5 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
     </SpringAnimatedView>
   )
 })
+
+AccordionView.displayName = 'AccordionView'

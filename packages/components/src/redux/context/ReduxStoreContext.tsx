@@ -13,6 +13,7 @@ export type ReduxStoreProviderState = Store<RootState>
 export const ReduxStoreContext = React.createContext<ReduxStoreProviderState>(
   undefined as any,
 )
+ReduxStoreContext.displayName = 'ReduxStoreContext'
 
 export function ReduxStoreProvider(props: ReduxStoreProviderProps) {
   const { store } = useContext(ReactReduxContext)
@@ -21,6 +22,7 @@ export function ReduxStoreProvider(props: ReduxStoreProviderProps) {
 }
 
 export const ReduxStoreConsumer = ReduxStoreContext.Consumer
+;(ReduxStoreConsumer as any).displayName = 'ReduxStoreConsumer'
 
 export function useReduxStore() {
   return useContext(ReduxStoreContext)

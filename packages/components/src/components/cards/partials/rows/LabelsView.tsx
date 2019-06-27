@@ -118,3 +118,5 @@ export const LabelsView = (props: LabelsViewProps) => {
     </ConditionalWrap>
   )
 }
+
+LabelsView.displayName = 'LabelsView'

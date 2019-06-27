@@ -426,3 +426,5 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     </ConditionalWrap>
   )
 })
+
+ColumnHeaderItem.displayName = 'ColumnHeaderItem'

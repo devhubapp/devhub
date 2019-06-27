@@ -120,3 +120,5 @@ export const Column = React.memo(
     )
   }),
 )
+
+Column.displayName = 'Column'

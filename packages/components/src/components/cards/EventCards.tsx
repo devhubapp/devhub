@@ -392,3 +392,5 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     />
   )
 })
+
+EventCards.displayName = 'EventCards'

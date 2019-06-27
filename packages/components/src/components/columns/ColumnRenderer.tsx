@@ -490,3 +490,5 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     </Column>
   )
 })
+
+ColumnRenderer.displayName = 'ColumnRenderer'

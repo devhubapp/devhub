@@ -29,3 +29,5 @@ export const RefreshControl = React.memo((props: RefreshControlProps) => {
     />
   )
 })
+
+RefreshControl.displayName = 'RefreshControl'

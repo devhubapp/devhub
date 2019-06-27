@@ -53,3 +53,5 @@ export const BookmarkButton = React.memo((props: BookmarkButtonProps) => {
     />
   )
 })
+
+BookmarkButton.displayName = 'BookmarkButton'

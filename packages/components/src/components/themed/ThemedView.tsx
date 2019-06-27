@@ -58,6 +58,8 @@ export const ThemedView = React.forwardRef<View, ThemedViewProps>(
   },
 )
 
+ThemedView.displayName = 'ThemedView'
+
 function getStyle(
   theme: Theme,
   {

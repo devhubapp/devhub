@@ -61,3 +61,5 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
     </ColumnRenderer>
   )
 })
+
+EventColumn.displayName = 'EventColumn'

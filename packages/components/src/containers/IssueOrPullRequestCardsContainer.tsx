@@ -240,3 +240,6 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     )
   },
 )
+
+IssueOrPullRequestCardsContainer.displayName =
+  'IssueOrPullRequestCardsContainer'

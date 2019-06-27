@@ -47,3 +47,5 @@ export const FullHeightScrollView = React.memo(
     )
   },
 )
+
+FullHeightScrollView.displayName = 'FullHeightScrollView'

@@ -94,3 +94,5 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
     </View>
   )
 })
+
+NoTokenView.displayName = 'NoTokenView'

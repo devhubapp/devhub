@@ -119,3 +119,5 @@ export const NotificationCardsContainer = React.memo(
     )
   },
 )
+
+NotificationCardsContainer.displayName = 'NotificationCardsContainer'

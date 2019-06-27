@@ -570,6 +570,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   )
 })
 
+Sidebar.displayName = 'Sidebar'
+
 const SidebarColumnItem = React.memo(
   (props: {
     activeOpacity?: ColumnHeaderItemProps['activeOpacity']
@@ -684,3 +686,5 @@ const SidebarColumnItem = React.memo(
     )
   },
 )
+
+SidebarColumnItem.displayName = 'SidebarColumnItem'

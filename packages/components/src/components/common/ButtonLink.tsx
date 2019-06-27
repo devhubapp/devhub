@@ -43,3 +43,5 @@ export const ButtonLink = React.memo((props: ButtonLinkProps) => {
     />
   )
 })
+
+ButtonLink.displayName = 'ButtonLink'

@@ -698,6 +698,8 @@ export const AddColumnDetailsModal = React.memo(
   },
 )
 
+AddColumnDetailsModal.displayName = 'AddColumnDetailsModal'
+
 function getFormItems({
   type: _type,
   subtype: _subtype,

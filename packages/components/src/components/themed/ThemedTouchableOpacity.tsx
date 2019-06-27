@@ -41,3 +41,5 @@ export const ThemedTouchableOpacity = React.forwardRef<
     />
   )
 })
+
+ThemedTouchableOpacity.displayName = 'ThemedTouchableOpacity'

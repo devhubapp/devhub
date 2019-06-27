@@ -274,3 +274,5 @@ export const Button = React.memo((props: ButtonProps) => {
     </SpringAnimatedTouchableOpacity>
   )
 })
+
+Button.displayName = 'Button'

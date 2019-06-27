@@ -9,3 +9,4 @@ export const SpringAnimatedIcon = (createSpringAnimatedComponent(
 ) as unknown) as React.ForwardRefExoticComponent<
   SpringAnimatedIconProps & React.RefAttributes<Icon>
 >
+;(SpringAnimatedIcon as any).displayName = 'SpringAnimatedIcon'

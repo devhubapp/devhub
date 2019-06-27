@@ -8,5 +8,6 @@ export interface SpringAnimatedSafeAreaViewProps extends ViewProps {}
 export const SpringAnimatedSafeAreaView = createSpringAnimatedComponent(
   SafeAreaView,
 )
+;(SpringAnimatedSafeAreaView as any).displayName = 'SpringAnimatedSafeAreaView'
 
 export type SpringAnimatedSafeAreaView = SafeAreaView

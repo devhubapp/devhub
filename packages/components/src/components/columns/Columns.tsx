@@ -198,3 +198,5 @@ export const Columns = React.memo((props: ColumnsProps) => {
     />
   )
 })
+
+Columns.displayName = 'Columns'

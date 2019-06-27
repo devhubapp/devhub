@@ -101,3 +101,5 @@ export const AppViewModePreference = React.memo(
     )
   },
 )
+
+AppViewModePreference.displayName = 'AppViewModePreference'

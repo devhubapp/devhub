@@ -87,3 +87,5 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
     </View>
   )
 })
+
+ProgressBar.displayName = 'ProgressBar'

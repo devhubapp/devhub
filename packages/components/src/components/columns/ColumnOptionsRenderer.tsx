@@ -237,3 +237,5 @@ export const ColumnOptionsRenderer = React.memo(
     )
   },
 )
+
+ColumnOptionsRenderer.displayName = 'ColumnOptionsRenderer'

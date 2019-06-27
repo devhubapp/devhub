@@ -391,3 +391,5 @@ export const IssueOrPullRequestRow = React.memo(
     )
   },
 )
+
+IssueOrPullRequestRow.displayName = 'IssueOrPullRequestRow'

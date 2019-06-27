@@ -385,3 +385,5 @@ export const AdvancedSettingsModal = React.memo(
     )
   },
 )
+
+AdvancedSettingsModal.displayName = 'AdvancedSettingsModal'

@@ -122,3 +122,5 @@ export const ThemePreference = React.memo(() => {
     </View>
   )
 })
+
+ThemePreference.displayName = 'ThemePreference'

@@ -101,4 +101,6 @@ export const Touchable = React.forwardRef(
   },
 )
 
+Touchable.displayName = 'Touchable'
+
 export type Touchable = TouchableOpacity
