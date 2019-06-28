@@ -51,7 +51,11 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
             textProps={{
               color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
               numberOfLines: 1,
-              style: [cardStyles.normalText, bold && cardStyles.boldText],
+              style: [
+                cardStyles.normalText,
+                cardStyles.smallText,
+                bold && cardStyles.boldText,
+              ],
             }}
           >
             <>
