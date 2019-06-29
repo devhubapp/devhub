@@ -150,11 +150,16 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           isHovered && enableBackgroundHover
             ? hoverBackgroundColor || 'transparent'
             : rgba(backgroundColor || theme.backgroundColor, 0),
+        backgroundColorWithoutTransparency:
+          isHovered && enableBackgroundHover
+            ? hoverBackgroundColor || 'transparent'
+            : backgroundColor || theme.backgroundColor,
         foregroundColor:
           isHovered && enableForegroundHover
             ? hoverForegroundColor || theme.primaryBackgroundColor
             : foregroundColor || theme.foregroundColor,
         mutedForegroundColor: theme.foregroundColorMuted60,
+        primaryBackgroundColor: theme.primaryBackgroundColor,
       }
     },
     [
@@ -316,18 +321,25 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 marginRight: hasText ? contentPadding / 2 : 0,
               }}
             >
-              {isUnread && (
-                <ThemedView
-                  backgroundColor="primaryBackgroundColor"
+              {!!isUnread && (
+                <SpringAnimatedView
                   style={{
                     position: 'absolute',
-                    right: contentPadding - (3 / 2) * size,
-                    width: 7,
-                    height: 7,
-                    borderRadius: 4,
+                    ...(showLabel ? { top: -2 } : { bottom: -3 }),
+                    right: -7,
+                    width: 12,
+                    height: 12,
+                    backgroundColor:
+                      springAnimatedStyles.primaryBackgroundColor,
+                    borderColor:
+                      springAnimatedStyles.backgroundColorWithoutTransparency,
+                    borderWidth: 2,
+                    borderRadius: 12 / 2,
+                    zIndex: 1,
                   }}
                 />
               )}
+
               {!!username ? (
                 <Avatar
                   isBot={false}
