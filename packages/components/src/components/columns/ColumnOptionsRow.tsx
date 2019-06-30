@@ -63,9 +63,16 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   const subtitle = _right && typeof _right === 'string' ? _right : undefined
   const right = subtitle ? undefined : _right
 
+  const theme = useTheme()
+
+  const cacheRef = useRef({
+    isHovered: false,
+    isPressing: false,
+  })
+
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
-      const { isHovered, isPressing, theme } = cacheRef.current
+      const { isHovered, isPressing } = cacheRef.current
       const immediate =
         constants.DISABLE_ANIMATIONS ||
         forceImmediate ||
@@ -81,7 +88,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
       }
     },
-    [enableBackgroundHover, isOpen],
+    [enableBackgroundHover, isOpen, theme],
   )
 
   const updateStyles = useCallback(
@@ -89,18 +96,6 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       setSpringAnimatedStyles(getStyles({ forceImmediate }))
     },
     [getStyles],
-  )
-
-  const initialTheme = useTheme(
-    undefined,
-    useCallback(
-      theme => {
-        if (cacheRef.current.theme === theme) return
-        cacheRef.current.theme = theme
-        updateStyles({ forceImmediate: true })
-      },
-      [updateStyles],
-    ),
   )
 
   const touchableRef = useRef(null)
@@ -113,13 +108,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       if (openOnHover && onToggle && !isOpen) onToggle()
     },
   )
-
-  const cacheRef = useRef({
-    isHovered: initialIsHovered,
-    isPressing: false,
-    theme: initialTheme,
-  })
-  cacheRef.current.theme = initialTheme
+  cacheRef.current.isHovered = initialIsHovered
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 

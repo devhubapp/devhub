@@ -17,12 +17,10 @@ import { Switch } from '../common/Switch'
 import { useTheme } from '../context/ThemeContext'
 
 export const ThemePreference = React.memo(() => {
-  const initialTheme = useTheme(undefined, theme => {
-    if (theme.id === 'auto') return
-    lastThemeId.current = theme.id
-  })
+  const appTheme = useTheme()
 
-  const lastThemeId = useRef(initialTheme.id)
+  const lastThemeId = useRef(appTheme.id)
+  if (appTheme.id !== 'auto') lastThemeId.current = appTheme.id
 
   const currentThemeId = useReduxState(selectors.themePairSelector).id
 

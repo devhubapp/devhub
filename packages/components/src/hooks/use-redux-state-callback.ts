@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useCallback, useEffect, useRef } from 'react'
+import { useStore } from 'react-redux'
 
-import { useReduxStore } from '../redux/context/ReduxStoreContext'
 import { RootState } from '../redux/types'
 import { useForceRerender } from './use-force-rerender'
 
@@ -11,21 +11,34 @@ export type ExtractSelector<S> = S extends (state: any) => infer R
 
 type Result<S> = S extends (...args: any[]) => infer R ? R : any
 
-export function useReduxState<S extends (state: any) => any>(selector: S) {
-  const store = useReduxStore()
+export function useReduxStateCallback<S extends (state: any) => any>(
+  selector: S,
+  callback: (value: Result<S>) => void,
+  { skipFirstCallback }: { skipFirstCallback?: boolean } = {},
+) {
+  const store = useStore()
   const forceRerender = useForceRerender()
 
   const result = selector(store.getState())
   const cacheRef = useRef<Result<S>>(result)
   cacheRef.current = result
 
-  const resolve = useCallback((value: Result<S>) => {
-    if (cacheRef.current === value || _.isEqual(cacheRef.current, value)) return
+  const resolve = useCallback(
+    (value: Result<S>) => {
+      if (cacheRef.current === value || _.isEqual(cacheRef.current, value))
+        return
 
-    cacheRef.current = value
+      cacheRef.current = value
 
-    forceRerender()
-  }, [])
+      if (callback) {
+        callback(value)
+        return
+      }
+
+      forceRerender()
+    },
+    [callback],
+  )
 
   const update = useCallback(() => {
     if (!selector) {
@@ -44,6 +57,10 @@ export function useReduxState<S extends (state: any) => any>(selector: S) {
       update()
     })
   }, [store, update])
+
+  useEffect(() => {
+    if (callback && !skipFirstCallback) callback(cacheRef.current)
+  })
 
   return cacheRef.current
 }

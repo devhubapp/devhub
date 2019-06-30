@@ -33,7 +33,6 @@ import {
 import { TouchableOpacityProps } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
-import { ThemedView } from '../themed/ThemedView'
 
 export interface ColumnHeaderItemProps {
   activeOpacity?: TouchableOpacityProps['activeOpacity']
@@ -119,9 +118,13 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     tooltip,
   } = props
 
+  const theme = useTheme()
+
+  const cacheRef = useRef({ isHovered: false })
+
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
-      const { isHovered: _isHovered, theme } = cacheRef.current
+      const { isHovered: _isHovered } = cacheRef.current
 
       const backgroundColor = getThemeColorOrItself(theme, backgroundThemeColor)
       const foregroundColor = getThemeColorOrItself(theme, foregroundThemeColor)
@@ -171,8 +174,11 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       foregroundThemeColor,
       hoverBackgroundThemeColor,
       hoverForegroundThemeColor,
+      theme,
     ],
   )
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
   const updateStyles = useCallback(
     ({ forceImmediate }: { forceImmediate?: boolean }) => {
@@ -181,34 +187,18 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     [getStyles],
   )
 
-  const initialTheme = useTheme(
-    undefined,
-    useCallback(
-      theme => {
-        if (cacheRef.current.theme === theme) return
-        cacheRef.current.theme = theme
-        updateStyles({ forceImmediate: true })
-      },
-      [updateStyles],
-    ),
-  )
-
   const containerRef = useRef<View>(null)
-  useHover(
+  const initialIsHovered = useHover(
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     isHovered => {
       cacheRef.current.isHovered = isHovered
       updateStyles({ forceImmediate: false })
     },
   )
-
-  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
-  cacheRef.current.theme = initialTheme
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
+  cacheRef.current.isHovered = initialIsHovered
 
   useLayoutEffect(() => {
-    updateStyles({ forceImmediate: false })
+    updateStyles({ forceImmediate: true })
   }, [updateStyles])
 
   useLayoutEffect(() => {

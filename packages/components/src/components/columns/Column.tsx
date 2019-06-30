@@ -1,6 +1,7 @@
 import React, { ReactNode, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
+import { ThemeColors } from '@devhub/core'
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -14,6 +15,9 @@ import { ColumnSeparator } from './ColumnSeparator'
 export const columnMargin = contentPadding / 2
 
 export interface ColumnProps extends ViewProps {
+  backgroundColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string | undefined)
   children?: ReactNode
   columnId: string
   fullWidth?: boolean
@@ -26,6 +30,7 @@ export interface ColumnProps extends ViewProps {
 export const Column = React.memo(
   React.forwardRef((props: ColumnProps, ref) => {
     const {
+      backgroundColor = 'backgroundColor',
       children,
       columnId,
       fullWidth,
@@ -85,7 +90,7 @@ export const Column = React.memo(
         {...otherProps}
         ref={columnRef}
         key={`column-${columnId}-inner`}
-        backgroundColor="backgroundColor"
+        backgroundColor={backgroundColor}
         style={[
           sharedStyles.horizontal,
           {

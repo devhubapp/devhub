@@ -1,5 +1,5 @@
 import { getLuminance } from 'polished'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 
 import {
@@ -39,7 +39,6 @@ import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
-import { useTheme } from '../context/ThemeContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
 import { Column } from './Column'
 import { ColumnHeader } from './ColumnHeader'
@@ -139,37 +138,31 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   } = props
 
   const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
+
   const {
     enableSharedFiltersView,
     fixedWidth,
     inlineMode,
     isSharedFiltersOpened: _isSharedFiltersOpened,
   } = useColumnFilters()
+
   const isFiltersOpened = enableSharedFiltersView
     ? _isSharedFiltersOpened
     : _isLocalFiltersOpened
 
   const { appOrientation, sizename } = useAppLayout()
+
   const {
     appViewMode,
     getCardViewMode,
     getEnableCompactLabels,
   } = useAppViewMode()
+
   const { focusedColumnId } = useFocusedColumn()
+
   const columnWidth = useColumnWidth()
+
   const repoTableColumnWidth = useRepoTableColumnWidth()
-
-  const columnRef = useRef<View>(null)
-  useTheme(undefined, theme => {
-    if (!columnRef.current) return
-
-    columnRef.current!.setNativeProps({
-      style: {
-        backgroundColor:
-          theme[getColumnCardThemeColors(theme.backgroundColor).column],
-      },
-    })
-  })
 
   useEmitter(
     'TOGGLE_COLUMN_FILTERS',
@@ -294,7 +287,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   return (
     <Column
       key={`column-renderer-${column.id}-inner-container`}
-      ref={columnRef}
+      backgroundColor={theme =>
+        theme[getColumnCardThemeColors(theme.backgroundColor).column]
+      }
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}
