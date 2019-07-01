@@ -618,7 +618,7 @@ const SidebarColumnItem = React.memo(
       getFilteredItems(
         column.type,
         allItems,
-        { ...column.filters, unread: undefined },
+        column.filters,
         getFilteredItemsOptions,
       ),
     )
@@ -631,8 +631,7 @@ const SidebarColumnItem = React.memo(
         ? 'participating'
         : 'all'
 
-    const isUnread =
-      filteredItemsMetadata.inbox[inbox].unread > 0 ? true : false
+    const isUnread = filteredItemsMetadata.inbox[inbox].unread > 0
 
     const label = `${headerDetails.title ||
       headerDetails.subtitle ||

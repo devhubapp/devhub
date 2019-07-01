@@ -7,6 +7,7 @@ import url from 'url'
 import { AppBannerMessage } from '../components/banners/AppBannerMessage'
 import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
+import { AppIconBadge } from '../components/common/AppIconBadge'
 import { ConditionalWrap } from '../components/common/ConditionalWrap'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
@@ -362,6 +363,7 @@ export const MainScreen = React.memo(() => {
   return (
     <Screen statusBarBackgroundThemeColor="header" useSafeArea={false}>
       <AppBannerMessage />
+      <AppIconBadge />
 
       <View
         style={[

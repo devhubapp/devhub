@@ -6,6 +6,20 @@ import * as helpers from './helpers'
 import * as menu from './menu'
 import * as window from './window'
 
+const inactiveIcon = path.join(
+  __dirname,
+  `../assets/icons/${
+    process.platform === 'darwin' ? 'trayIconTemplate' : 'trayIconWhite'
+  }.png`,
+)
+
+const activeIcon = path.join(
+  __dirname,
+  `../assets/icons/${
+    process.platform === 'darwin' ? 'trayIconActive' : 'trayIconWhite'
+  }.png`,
+)
+
 let tray: Tray | null = null
 
 export function getTray() {
@@ -13,14 +27,7 @@ export function getTray() {
 }
 
 export function createTray() {
-  const trayIcon = nativeImage.createFromPath(
-    path.join(
-      __dirname,
-      `../assets/icons/${
-        process.platform === 'darwin' ? 'trayIconTemplate' : 'trayIconWhite'
-      }.png`,
-    ),
-  )
+  const trayIcon = nativeImage.createFromPath(activeIcon)
 
   if (tray && !tray.isDestroyed()) tray.destroy()
 
@@ -120,4 +127,12 @@ export function alignWindowWithTray(win: BrowserWindow) {
   )
 
   win.setPosition(fixedX, fixedY)
+}
+
+export function updateIconState(unreadCount: number) {
+  if (unreadCount > 0) {
+    tray!.setImage(activeIcon)
+  } else {
+    tray!.setImage(inactiveIcon)
+  }
 }
