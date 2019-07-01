@@ -2,6 +2,7 @@ import React, {
   AnchorHTMLAttributes,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
 } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
@@ -79,10 +80,12 @@ export function Link(props: LinkProps) {
 
   const openOnNewTab = _openOnNewTab || Platform.isElectron
 
-  const updateStyles = useCallback(() => {
-    if (!(enableBackgroundHover || enableForegroundHover)) return
+  const cacheRef = useRef({ isHovered: false })
 
-    const { isHovered, theme } = cacheRef.current
+  const theme = useTheme()
+
+  const updateStyles = useCallback(() => {
+    const { isHovered } = cacheRef.current
 
     const hoverBackgroundThemeColor = getThemeColorOrItself(
       theme,
@@ -146,23 +149,12 @@ export function Link(props: LinkProps) {
     flatContainerStyle.backgroundColor,
     flatTextStyle.color,
     textProps && textProps.color,
+    theme,
   ])
-
-  const initialTheme = useTheme(
-    undefined,
-    useCallback(
-      theme => {
-        if (cacheRef.current.theme === theme) return
-        cacheRef.current.theme = theme
-        updateStyles()
-      },
-      [updateStyles],
-    ),
-  )
 
   const containerRef = useRef<View>(null)
   const textRef = useRef<Text>(null)
-  useHover(
+  const initialIsHovered = useHover(
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     useCallback(
       isHovered => {
@@ -172,6 +164,11 @@ export function Link(props: LinkProps) {
       [updateStyles],
     ),
   )
+  cacheRef.current.isHovered = initialIsHovered
+
+  useLayoutEffect(() => {
+    updateStyles()
+  }, [updateStyles])
 
   useEffect(() => {
     if (!(Platform.realOS === 'web')) return
@@ -181,9 +178,6 @@ export function Link(props: LinkProps) {
     node.title = tooltip || ''
     if (!tooltip && node.removeAttribute) node.removeAttribute('title')
   }, [containerRef.current, tooltip])
-
-  const cacheRef = useRef({ theme: initialTheme, isHovered: false })
-  cacheRef.current.theme = initialTheme
 
   const renderTouchable = href || onPress || allowEmptyLink
 

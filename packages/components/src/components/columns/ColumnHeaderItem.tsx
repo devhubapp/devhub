@@ -33,7 +33,6 @@ import {
 import { TouchableOpacityProps } from '../common/TouchableOpacity'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
-import { ThemedView } from '../themed/ThemedView'
 
 export interface ColumnHeaderItemProps {
   activeOpacity?: TouchableOpacityProps['activeOpacity']
@@ -119,9 +118,13 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     tooltip,
   } = props
 
+  const theme = useTheme()
+
+  const cacheRef = useRef({ isHovered: false })
+
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate?: boolean } = {}) => {
-      const { isHovered: _isHovered, theme } = cacheRef.current
+      const { isHovered: _isHovered } = cacheRef.current
 
       const backgroundColor = getThemeColorOrItself(theme, backgroundThemeColor)
       const foregroundColor = getThemeColorOrItself(theme, foregroundThemeColor)
@@ -150,11 +153,16 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           isHovered && enableBackgroundHover
             ? hoverBackgroundColor || 'transparent'
             : rgba(backgroundColor || theme.backgroundColor, 0),
+        backgroundColorWithoutTransparency:
+          isHovered && enableBackgroundHover
+            ? hoverBackgroundColor || 'transparent'
+            : backgroundColor || theme.backgroundColor,
         foregroundColor:
           isHovered && enableForegroundHover
             ? hoverForegroundColor || theme.primaryBackgroundColor
             : foregroundColor || theme.foregroundColor,
         mutedForegroundColor: theme.foregroundColorMuted60,
+        primaryBackgroundColor: theme.primaryBackgroundColor,
       }
     },
     [
@@ -166,8 +174,11 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       foregroundThemeColor,
       hoverBackgroundThemeColor,
       hoverForegroundThemeColor,
+      theme,
     ],
   )
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
   const updateStyles = useCallback(
     ({ forceImmediate }: { forceImmediate?: boolean }) => {
@@ -176,34 +187,18 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     [getStyles],
   )
 
-  const initialTheme = useTheme(
-    undefined,
-    useCallback(
-      theme => {
-        if (cacheRef.current.theme === theme) return
-        cacheRef.current.theme = theme
-        updateStyles({ forceImmediate: true })
-      },
-      [updateStyles],
-    ),
-  )
-
   const containerRef = useRef<View>(null)
-  useHover(
+  const initialIsHovered = useHover(
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     isHovered => {
       cacheRef.current.isHovered = isHovered
       updateStyles({ forceImmediate: false })
     },
   )
-
-  const cacheRef = useRef({ isHovered: false, theme: initialTheme })
-  cacheRef.current.theme = initialTheme
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
+  cacheRef.current.isHovered = initialIsHovered
 
   useLayoutEffect(() => {
-    updateStyles({ forceImmediate: false })
+    updateStyles({ forceImmediate: true })
   }, [updateStyles])
 
   useLayoutEffect(() => {
@@ -316,18 +311,25 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 marginRight: hasText ? contentPadding / 2 : 0,
               }}
             >
-              {isUnread && (
-                <ThemedView
-                  backgroundColor="primaryBackgroundColor"
+              {!!isUnread && (
+                <SpringAnimatedView
                   style={{
                     position: 'absolute',
-                    right: contentPadding - (3 / 2) * size,
-                    width: 7,
-                    height: 7,
-                    borderRadius: 4,
+                    ...(showLabel ? { top: -2 } : { bottom: -3 }),
+                    right: -7,
+                    width: 12,
+                    height: 12,
+                    backgroundColor:
+                      springAnimatedStyles.primaryBackgroundColor,
+                    borderColor:
+                      springAnimatedStyles.backgroundColorWithoutTransparency,
+                    borderWidth: 2,
+                    borderRadius: 12 / 2,
+                    zIndex: 1,
                   }}
                 />
               )}
+
               {!!username ? (
                 <Avatar
                   isBot={false}

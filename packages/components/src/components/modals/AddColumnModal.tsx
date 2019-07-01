@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -169,35 +169,25 @@ function AddColumnModalItem({
   payload: AddColumnDetailsPayload | null
   title: string
 }) {
-  const initialTheme = useTheme(undefined, theme => {
-    if (cacheRef.current.theme === theme) return
-    cacheRef.current.theme = theme
-    updateStyles()
+  const cacheRef = useRef({
+    isHovered: false,
+    isPressing: false,
   })
+
+  const theme = useTheme()
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(touchableRef, isHovered => {
     cacheRef.current.isHovered = isHovered
     updateStyles()
   })
-
-  const cacheRef = useRef({
-    isHovered: initialIsHovered,
-    isPressing: false,
-    theme: initialTheme,
-  })
-  cacheRef.current.theme = initialTheme
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
-
-  useEffect(() => {
-    updateStyles()
-  }, [disabled])
+  cacheRef.current.isHovered = initialIsHovered
 
   const pushModal = useReduxAction(actions.pushModal)
 
-  function getStyles() {
-    const { isHovered, isPressing, theme } = cacheRef.current
+  const getStyles = useCallback(() => {
+    const { isHovered, isPressing } = cacheRef.current
+
     const immediate =
       constants.DISABLE_ANIMATIONS || isHovered || Platform.realOS !== 'web'
 
@@ -209,11 +199,17 @@ function AddColumnModalItem({
           ? theme.backgroundColorLess2
           : rgba(theme.backgroundColor, 0),
     }
-  }
+  }, [disabled, theme])
 
-  function updateStyles() {
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
+
+  const updateStyles = useCallback(() => {
     setSpringAnimatedStyles(getStyles())
-  }
+  }, [getStyles])
+
+  useLayoutEffect(() => {
+    updateStyles()
+  }, [updateStyles])
 
   return (
     <SpringAnimatedTouchableOpacity

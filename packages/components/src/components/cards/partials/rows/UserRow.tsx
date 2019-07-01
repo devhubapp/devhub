@@ -54,7 +54,11 @@ export const UserRow = React.memo((props: UserRowProps) => {
             href={getGitHubURLForUser(username)}
             textProps={{
               color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
-              style: [bold && cardStyles.boldText],
+              style: [
+                cardStyles.normalText,
+                cardStyles.smallText,
+                bold && cardStyles.boldText,
+              ],
             }}
           >
             {username}

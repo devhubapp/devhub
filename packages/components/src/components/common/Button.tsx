@@ -76,9 +76,16 @@ export const Button = React.memo((props: ButtonProps) => {
       ? _size || undefined
       : defaultButtonSize
 
+  const cacheRef = useRef({
+    isHovered: false,
+    isPressing: false,
+  })
+
+  const theme = useTheme()
+
   const getStyles = useCallback(
     ({ forceImmediate }: { forceImmediate: boolean }) => {
-      const { isHovered: _isHovered, isPressing, theme } = cacheRef.current
+      const { isHovered: _isHovered, isPressing } = cacheRef.current
 
       const isHovered = _isHovered && !disabled
 
@@ -161,9 +168,14 @@ export const Button = React.memo((props: ButtonProps) => {
       hoverBackgroundThemeColor,
       hoverForegroundThemeColor,
       showBorder,
+      theme,
       transparent,
     ],
   )
+
+  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
+    ReturnType<typeof getStyles>
+  >(() => getStyles({ forceImmediate: true }))
 
   const updateStyles = useCallback(
     ({ forceImmediate }: { forceImmediate: boolean }) => {
@@ -172,37 +184,16 @@ export const Button = React.memo((props: ButtonProps) => {
     [getStyles],
   )
 
-  const initialTheme = useTheme(
-    undefined,
-    useCallback(
-      theme => {
-        if (cacheRef.current.theme === theme) return
-        cacheRef.current.theme = theme
-        updateStyles({ forceImmediate: true })
-      },
-      [updateStyles],
-    ),
-  )
-
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(touchableRef, isHovered => {
     cacheRef.current.isHovered = isHovered
     updateStyles({ forceImmediate: false })
   })
-
-  const cacheRef = useRef({
-    isHovered: initialIsHovered,
-    isPressing: false,
-    theme: initialTheme,
-  })
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
-    ReturnType<typeof getStyles>
-  >(() => getStyles({ forceImmediate: true }))
+  cacheRef.current.isHovered = initialIsHovered
 
   useLayoutEffect(() => {
     updateStyles({ forceImmediate: true })
-  })
+  }, [updateStyles])
 
   return (
     <SpringAnimatedTouchableOpacity

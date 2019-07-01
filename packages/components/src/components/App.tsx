@@ -7,7 +7,6 @@ import '../libs/analytics'
 import { HelmetProvider } from '../libs/helmet'
 import { AppNavigator } from '../navigation/AppNavigator'
 import { enableNetworkInterceptors } from '../network-interceptor'
-import { ReduxStoreProvider } from '../redux/context/ReduxStoreContext'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
 import { ColumnFiltersProvider } from './context/ColumnFiltersContext'
@@ -29,28 +28,26 @@ export function App() {
     // <StrictMode>
     <HelmetProvider>
       <ReduxProvider store={store}>
-        <ReduxStoreProvider>
-          <PersistGate loading={null} persistor={persistor}>
-            <DeepLinkProvider>
-              <AppLayoutProvider>
-                <ColumnFocusProvider>
-                  <ColumnFiltersProvider>
-                    <ColumnWidthProvider>
-                      <SpringAnimatedThemeProvider>
-                        <UnreadCountProvider>
-                          <>
-                            <AppGlobalStyles key="app-global-styles" />
-                            <AppNavigator key="app-navigator" />
-                          </>
-                        </UnreadCountProvider>
-                      </SpringAnimatedThemeProvider>
-                    </ColumnWidthProvider>
-                  </ColumnFiltersProvider>
-                </ColumnFocusProvider>
-              </AppLayoutProvider>
-            </DeepLinkProvider>
-          </PersistGate>
-        </ReduxStoreProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <DeepLinkProvider>
+            <AppLayoutProvider>
+              <ColumnFocusProvider>
+                <ColumnFiltersProvider>
+                  <ColumnWidthProvider>
+                    <SpringAnimatedThemeProvider>
+                      <UnreadCountProvider>
+                        <>
+                          <AppGlobalStyles key="app-global-styles" />
+                          <AppNavigator key="app-navigator" />
+                        </>
+                      </UnreadCountProvider>
+                    </SpringAnimatedThemeProvider>
+                  </ColumnWidthProvider>
+                </ColumnFiltersProvider>
+              </ColumnFocusProvider>
+            </AppLayoutProvider>
+          </DeepLinkProvider>
+        </PersistGate>
       </ReduxProvider>
     </HelmetProvider>
     // </StrictMode>

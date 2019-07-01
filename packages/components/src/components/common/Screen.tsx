@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useLayoutEffect } from 'react'
 import {
   KeyboardAvoidingView,
   StatusBar,
@@ -41,27 +41,14 @@ export function Screen(props: ScreenProps) {
     ...viewProps
   } = props
 
-  const initialTheme = useTheme(
-    undefined,
-    useCallback(theme => {
-      if (cacheRef.current.theme === theme) return
+  const theme = useTheme()
 
-      cacheRef.current.theme = theme
-
-      updateStyles({
-        theme: cacheRef.current.theme,
-        statusBarBackgroundThemeColor:
-          cacheRef.current.statusBarBackgroundThemeColor,
-      })
-    }, []),
-  )
-
-  const cacheRef = useRef({
-    theme: initialTheme,
-    statusBarBackgroundThemeColor,
-  })
-  cacheRef.current.theme = initialTheme
-  cacheRef.current.statusBarBackgroundThemeColor = statusBarBackgroundThemeColor
+  useLayoutEffect(() => {
+    updateStyles({
+      statusBarBackgroundThemeColor,
+      theme,
+    })
+  }, [statusBarBackgroundThemeColor, theme])
 
   useEffect(() => {
     if (SplashScreen) {

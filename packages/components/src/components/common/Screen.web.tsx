@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useRef } from 'react'
+import React, { ReactNode, useLayoutEffect } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { Theme, ThemeColors } from '@devhub/core'
@@ -21,27 +21,14 @@ const styles = StyleSheet.create({
 export const Screen = React.memo((props: ScreenProps) => {
   const { statusBarBackgroundThemeColor, ...viewProps } = props
 
-  const initialTheme = useTheme(
-    undefined,
-    useCallback(theme => {
-      if (cacheRef.current.theme === theme) return
+  const theme = useTheme()
 
-      cacheRef.current.theme = theme
-
-      updateStyles({
-        theme: cacheRef.current.theme,
-        statusBarBackgroundThemeColor:
-          cacheRef.current.statusBarBackgroundThemeColor,
-      })
-    }, []),
-  )
-
-  const cacheRef = useRef({
-    theme: initialTheme,
-    statusBarBackgroundThemeColor,
-  })
-  cacheRef.current.theme = initialTheme
-  cacheRef.current.statusBarBackgroundThemeColor = statusBarBackgroundThemeColor
+  useLayoutEffect(() => {
+    updateStyles({
+      statusBarBackgroundThemeColor,
+      theme,
+    })
+  }, [statusBarBackgroundThemeColor, theme])
 
   return (
     <ThemedView
