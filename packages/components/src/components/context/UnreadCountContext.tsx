@@ -40,7 +40,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       getFilteredItems(
         column.type,
         allItems,
-        { ...column.filters, unread: undefined },
+        column.filters,
         getFilteredItemsOptions,
       ),
     )
