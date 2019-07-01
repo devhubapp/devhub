@@ -1,6 +1,10 @@
 import React, { useContext } from 'react'
 
-import { getFilteredItems, getItemsFilterMetadata } from '@devhub/core'
+import {
+  EnhancedItem,
+  getFilteredItems,
+  getItemsFilterMetadata,
+} from '@devhub/core'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
@@ -19,11 +23,17 @@ UnreadCountContext.displayName = 'UnreadCountContext'
 export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const columns = useReduxState(selectors.columnsArrSelector)
 
+  // TODO: Fix memoization
+  const subscriptionsDataSelector = selectors.createSubscriptionsDataSelector()
+
   const totalUnreadCount = columns.reduce((acc, column) => {
     const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
       mergeSimilar: false,
     }
-    const { allItems } = useColumnData(column.id, getFilteredItemsOptions)
+
+    const allItems: EnhancedItem[] = useReduxState(state =>
+      subscriptionsDataSelector(state, column.subscriptionIds),
+    )
 
     const filteredItemsMetadata = getItemsFilterMetadata(
       column.type,
