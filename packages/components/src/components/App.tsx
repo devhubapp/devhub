@@ -16,6 +16,7 @@ import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DeepLinkProvider } from './context/DeepLinkContext'
 import { AppLayoutProvider } from './context/LayoutContext'
 import { SpringAnimatedThemeProvider } from './context/SpringAnimatedThemeContext'
+import { UnreadCountProvider } from './context/UnreadCountContext'
 
 enableNetworkInterceptors()
 
@@ -36,10 +37,12 @@ export function App() {
                   <ColumnFiltersProvider>
                     <ColumnWidthProvider>
                       <SpringAnimatedThemeProvider>
-                        <>
-                          <AppGlobalStyles key="app-global-styles" />
-                          <AppNavigator key="app-navigator" />
-                        </>
+                        <UnreadCountProvider>
+                          <>
+                            <AppGlobalStyles key="app-global-styles" />
+                            <AppNavigator key="app-navigator" />
+                          </>
+                        </UnreadCountProvider>
                       </SpringAnimatedThemeProvider>
                     </ColumnWidthProvider>
                   </ColumnFiltersProvider>

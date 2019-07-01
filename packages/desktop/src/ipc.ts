@@ -1,6 +1,7 @@
 import { app, ipcMain } from 'electron'
 
 import * as constants from './constants'
+import * as tray from './tray'
 import * as window from './window'
 
 export function register() {
@@ -45,5 +46,9 @@ export function register() {
     const mainWindow = window.getMainWindow()
     if (!mainWindow) return
     mainWindow.setFullScreen(false)
+  })
+
+  ipcMain.on('unread-counter', (_e: any, unreadCount: any) => {
+    tray.updateIconState(unreadCount)
   })
 }
