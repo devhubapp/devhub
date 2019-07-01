@@ -1,12 +1,12 @@
 import _ from 'lodash'
 import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { constants } from '@devhub/core'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { analytics } from '../../libs/analytics'
 import * as actions from '../../redux/actions'
-import { useReduxStore } from '../../redux/context/ReduxStoreContext'
 
 export interface DeepLinkProviderProps {
   children?: React.ReactNode
@@ -20,7 +20,7 @@ export const DeepLinkContext = React.createContext<DeepLinkProviderState>(
 DeepLinkContext.displayName = 'DeepLinkContext'
 
 export function DeepLinkProvider(props: DeepLinkProviderProps) {
-  const store = useReduxStore()
+  const dispatch = useDispatch()
   const pushModal = useReduxAction(actions.pushModal)
 
   useEmitter(
@@ -51,7 +51,7 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
       switch (suffixes[0]) {
         case suffixMap.redux_action: {
           if (suffixes[1]) {
-            store.dispatch({ type: suffixes[1] })
+            dispatch({ type: suffixes[1] })
             break
           }
         }
