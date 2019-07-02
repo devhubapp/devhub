@@ -3,8 +3,6 @@ import React, { useContext } from 'react'
 import {
   ColumnSubscription,
   getFilteredItems,
-  getItemInbox,
-  getItemsFilterMetadata,
   getItemsFromSubscriptions,
 } from '@devhub/core'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -25,12 +23,10 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const columns = useReduxState(selectors.columnsArrSelector)
   const subscriptions = useReduxState(selectors.subscriptionsArrSelector)
 
-  const totalUnreadCount = columns.reduce((total, column) => {
-    if (!(column && column.type === 'notifications')) return total
+  const unreadIds = new Set<string>([])
 
-    const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
-      mergeSimilar: false,
-    }
+  columns.forEach(column => {
+    if (!(column && column.type === 'notifications')) return
 
     const columnSubscriptions = column.subscriptionIds
       .map(subscriptionId =>
@@ -39,25 +35,26 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       .filter(Boolean) as ColumnSubscription[]
 
     const columnItems = getItemsFromSubscriptions(columnSubscriptions)
+    const unreadColumnItems =
+      column.filters && column.filters.unread === false
+        ? []
+        : getFilteredItems(
+            column.type,
+            columnItems,
+            { ...column.filters, unread: true },
+            { mergeSimilar: false },
+          )
 
-    const filteredItemsMetadata = getItemsFilterMetadata(
-      column.type,
-      getFilteredItems(
-        column.type,
-        columnItems,
-        column.filters,
-        getFilteredItemsOptions,
-      ),
-    )
+    unreadColumnItems.forEach(item => {
+      if (!(item && item.id)) return
+      if (unreadIds.has(`${item.id}`)) return
 
-    const inbox = getItemInbox(column.type, column.filters)
-
-    const columnUnreadCount = filteredItemsMetadata.inbox[inbox].unread
-    return total + columnUnreadCount
-  }, 0)
+      unreadIds.add(`${item.id}`)
+    })
+  })
 
   return (
-    <UnreadCountContext.Provider value={totalUnreadCount}>
+    <UnreadCountContext.Provider value={unreadIds.size}>
       {props.children}
     </UnreadCountContext.Provider>
   )
