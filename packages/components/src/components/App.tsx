@@ -9,6 +9,7 @@ import { AppNavigator } from '../navigation/AppNavigator'
 import { enableNetworkInterceptors } from '../network-interceptor'
 import { configureStore } from '../redux/store'
 import { AppGlobalStyles } from './AppGlobalStyles'
+import { AppIconBadge } from './common/AppIconBadge'
 import { ColumnFiltersProvider } from './context/ColumnFiltersContext'
 import { ColumnFocusProvider } from './context/ColumnFocusContext'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
@@ -35,12 +36,14 @@ export function App() {
                 <ColumnFiltersProvider>
                   <ColumnWidthProvider>
                     <SpringAnimatedThemeProvider>
-                      <UnreadCountProvider>
-                        <>
-                          <AppGlobalStyles key="app-global-styles" />
-                          <AppNavigator key="app-navigator" />
-                        </>
-                      </UnreadCountProvider>
+                      <>
+                        <AppGlobalStyles key="app-global-styles" />
+                        <AppNavigator key="app-navigator" />
+
+                        <UnreadCountProvider>
+                          <AppIconBadge />
+                        </UnreadCountProvider>
+                      </>
                     </SpringAnimatedThemeProvider>
                   </ColumnWidthProvider>
                 </ColumnFiltersProvider>

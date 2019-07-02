@@ -1,6 +1,7 @@
 import { app, ipcMain } from 'electron'
 
 import * as constants from './constants'
+import { getDock } from './dock'
 import * as tray from './tray'
 import * as window from './window'
 
@@ -49,6 +50,9 @@ export function register() {
   })
 
   ipcMain.on('unread-counter', (_e: any, unreadCount: any) => {
-    tray.updateIconState(unreadCount)
+    tray.updateUnreadState(unreadCount)
+
+    const dock = getDock()
+    if (dock) dock.setBadge(unreadCount > 0 ? `${unreadCount}` : '')
   })
 }

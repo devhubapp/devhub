@@ -1,4 +1,4 @@
-import { BrowserWindow, nativeImage, screen, Tray } from 'electron'
+import { app, BrowserWindow, nativeImage, screen, Tray } from 'electron'
 import path from 'path'
 
 import * as config from './config'
@@ -6,17 +6,19 @@ import * as helpers from './helpers'
 import * as menu from './menu'
 import * as window from './window'
 
-const inactiveIcon = path.join(
+const trayIcon = path.join(
   __dirname,
   `../assets/icons/${
     process.platform === 'darwin' ? 'trayIconTemplate' : 'trayIconWhite'
   }.png`,
 )
 
-const activeIcon = path.join(
+const trayIconWithBadge = path.join(
   __dirname,
   `../assets/icons/${
-    process.platform === 'darwin' ? 'trayIconActive' : 'trayIconWhite'
+    process.platform === 'darwin'
+      ? 'trayIconWithBadge'
+      : 'trayIconWhiteWithBadge'
   }.png`,
 )
 
@@ -27,11 +29,11 @@ export function getTray() {
 }
 
 export function createTray() {
-  const trayIcon = nativeImage.createFromPath(activeIcon)
+  const image = nativeImage.createFromPath(trayIcon)
 
   if (tray && !tray.isDestroyed()) tray.destroy()
 
-  tray = new Tray(trayIcon)
+  tray = new Tray(image)
 
   tray.on('click', () => {
     const mainWindow = window.getMainWindow()
@@ -129,10 +131,14 @@ export function alignWindowWithTray(win: BrowserWindow) {
   win.setPosition(fixedX, fixedY)
 }
 
-export function updateIconState(unreadCount: number) {
-  if (unreadCount > 0) {
-    tray!.setImage(activeIcon)
-  } else {
-    tray!.setImage(inactiveIcon)
-  }
+export function updateUnreadState(unreadCount: number) {
+  if (!tray) return
+
+  tray.setImage(unreadCount > 0 ? trayIconWithBadge : trayIcon)
+  tray.setTitle(unreadCount > 0 ? `${unreadCount}` : '')
+  tray.setToolTip(
+    `${app.getName()}${
+      unreadCount > 0 ? ` (${unreadCount} unread items)` : ''
+    }`,
+  )
 }
