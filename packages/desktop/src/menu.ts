@@ -22,7 +22,7 @@ export function getAboutMenuItems() {
           {
             label: 'About',
             role: 'about',
-          },
+          } as MenuItemConstructorOptions,
         ]
       : []),
     {
@@ -68,10 +68,10 @@ export function getOpenAtLoginMenuItem() {
     enabled: true,
     visible: true,
     click(item) {
-      config.store.set(
-        'openAtLoginChangeCount',
-        (config.store.get('openAtLoginChangeCount') || 0) + 1,
-      )
+      const openAtLoginChangeCount =
+        (config.store.get('openAtLoginChangeCount') as number) || 0
+
+      config.store.set('openAtLoginChangeCount', openAtLoginChangeCount + 1)
 
       app.setLoginItemSettings({
         openAtLogin: item.checked,
@@ -203,7 +203,7 @@ export function getModeMenuItems() {
 
   const isCurrentWindow =
     mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || config.store.get('isMenuBarMode')
+  const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
     {
@@ -233,7 +233,7 @@ export function getWindowOptionsMenuItems() {
   const mainWindow = window.getMainWindow()
   const isCurrentWindow =
     mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || config.store.get('isMenuBarMode')
+  const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
     constants.FEATURE_FLAGS.LOCK_ON_CENTER
@@ -271,7 +271,7 @@ export function getMainMenuItems() {
   const mainWindow = window.getMainWindow()
   const isCurrentWindow =
     mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || config.store.get('isMenuBarMode')
+  const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: Array<MenuItemConstructorOptions | undefined> = [
     ...(process.platform === 'darwin'
@@ -398,7 +398,7 @@ export function getWindowMenuItems() {
   const mainWindow = window.getMainWindow()
   const isCurrentWindow =
     mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || config.store.get('isMenuBarMode')
+  const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
     {
@@ -438,7 +438,7 @@ export function getTrayMenuItems() {
   const mainWindow = window.getMainWindow()
   const isCurrentWindow =
     mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
-  const enabled = isCurrentWindow || config.store.get('isMenuBarMode')
+  const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
     {

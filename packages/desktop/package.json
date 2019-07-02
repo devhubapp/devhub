@@ -40,7 +40,8 @@
     },
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "icons/icon.png"
+      "icon": "icons/icon.png",
+      "darkModeSupport": true
     },
     "win": {
       "icon": "icons/icon.ico"
@@ -64,20 +65,20 @@
   },
   "dependencies": {
     "@devhub/core": "0.92.0",
-    "electron-store": "2.0.0",
-    "electron-updater": "4.0.6",
+    "electron": "5.0.4",
+    "electron-store": "4.0.0",
+    "electron-updater": "4.0.14",
     "jsonfile": "5.0.0",
     "mkdirp": "0.5.1"
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "2.2.0",
-    "@types/electron-store": "1.3.1",
+    "@types/electron-store": "3.2.0",
     "@types/jsonfile": "5.0.0",
     "@types/mkdirp": "0.5.2",
-    "electron": "4.1.0",
-    "electron-builder": "20.39.0",
+    "electron-builder": "20.44.4",
     "electron-devtools-installer": "2.2.4",
-    "nodemon": "1.18.10",
+    "nodemon": "1.19.1",
     "tslint": "5.14.0",
     "typescript": "3.5.1",
     "wait-on": "3.2.0"

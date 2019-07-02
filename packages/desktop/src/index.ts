@@ -26,7 +26,9 @@ function setupBrowserExtensions() {
 function init() {
   app.setName('DevHub')
 
-  const openAtLoginChangeCount = config.store.get('openAtLoginChangeCount')
+  const openAtLoginChangeCount = config.store.get(
+    'openAtLoginChangeCount',
+  ) as number
   if (!(openAtLoginChangeCount >= 1)) {
     app.setLoginItemSettings({
       openAtLogin: true,
@@ -55,7 +57,10 @@ function init() {
   })
 
   app.on('ready', () => {
-    config.store.set('launchCount', config.store.get('launchCount', 0) + 1)
+    config.store.set(
+      'launchCount',
+      (config.store.get('launchCount', 0) as number) + 1,
+    )
 
     if (__DEV__ && process.platform === 'win32') {
       app.removeAsDefaultProtocolClient(constants.shared.APP_DEEP_LINK_SCHEMA)
