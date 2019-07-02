@@ -1,6 +1,8 @@
 platform :ios, '9.0'
 
 target 'devhub' do
+  pod 'Firebase/Analytics'
   pod 'Firebase/Core'
-
+  pod 'Firebase/Messaging'
+  pod 'GoogleIDFASupport'
 end

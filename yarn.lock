@@ -11633,13 +11633,13 @@ react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
-react-native-firebase@5.2.3:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-5.2.3.tgz#1e7867b32028cad24785b181aa9aba07e3787109"
-  integrity sha512-8XLioEQDSN8o0Uiu1cEb4Y50yC5PvECQjSV/+b6A9TzWmLrrfYwXkUWQH1Rua8OUWXAXCobknV6JQeKa3NsvJA==
+react-native-firebase@5.5.4:
+  version "5.5.4"
+  resolved "https://registry.npmjs.org/react-native-firebase/-/react-native-firebase-5.5.4.tgz#1c71d2b21a11fdb5177f7e7c05c8bf3130fb88d7"
+  integrity sha512-D7eGeVb9M69se98Munziqmy6kQ+ymgNtHqFB6lrHRdVLnUd5v0caI6iQ/kY8zrqVUD+lU3Sui2+Lm9qHZUhbDw==
   dependencies:
     opencollective-postinstall "^2.0.0"
-    prop-types "^15.6.2"
+    prop-types "^15.7.2"
 
 react-native-gesture-handler@1.1.0:
   version "1.1.0"
