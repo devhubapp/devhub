@@ -25,7 +25,9 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const columns = useReduxState(selectors.columnsArrSelector)
   const subscriptions = useReduxState(selectors.subscriptionsArrSelector)
 
-  const totalUnreadCount = columns.reduce((acc, column) => {
+  const totalUnreadCount = columns.reduce((total, column) => {
+    if (!(column && column.type === 'notifications')) return total
+
     const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
       mergeSimilar: false,
     }
@@ -51,7 +53,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     const inbox = getItemInbox(column.type, column.filters)
 
     const columnUnreadCount = filteredItemsMetadata.inbox[inbox].unread
-    return acc + columnUnreadCount
+    return total + columnUnreadCount
   }, 0)
 
   return (
